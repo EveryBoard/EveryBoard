@@ -1,0 +1,8 @@
+<div>
+  <p>{{ inscriptionDate }}</p>>
+  <div ngFor="let game of listGames" class="classByGame">
+      <p>{{ game.totalPartWin }} for {{ game.totalPartPlayed }} = {{ game.percentageVictory }}</p>
+      <p>{{ game.totalComptabilisedPartWin }} for {{ game.totalComptabilisedPartPlayed }} = {{ game.percentageComptabilisedVictory }}</p>
+      <p>{{ game.totalFriendlyPartWin }} for {{ game.totalFriendlyPartPlayed }} = {{ game.percentageFriendlyVictory }}</p>
+  </div>
+</div>

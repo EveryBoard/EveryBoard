@@ -1,0 +1,21 @@
+<div style="text-align:center">
+  <h3 *ngIf='observerRole<2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
+  <h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
+  <table style="font-size: 73px;">
+    <tr *ngIf='observerRole<2' (click)="choose($event);">
+      <th id='t0'>0</th>
+      <th id='t1'>1</th>
+      <th id='t2'>2</th>
+      <th id='t3'>3</th>
+      <th id='t4'>4</th>
+      <th id='t5'>5</th>
+      <th id='t6'>6</th>
+    </tr>
+    <tr *ngFor="let line of board.reverse()">
+        <td *ngFor="let case of line">
+         {{ case }}
+        </td>
+      </tr>
+  </table>
+  <h1> last move {{ (observedPartie | async)?.lastMove}}</h1>
+</div>

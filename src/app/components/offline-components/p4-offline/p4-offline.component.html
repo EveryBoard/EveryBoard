@@ -1,0 +1,19 @@
+<div style="text-align:center">
+  <table style="font-size: 73px;">
+    <tr (click)="choose($event);">
+      <th id='t0'>0</th>
+      <th id='t1'>1</th>
+      <th id='t2'>2</th>
+      <th id='t3'>3</th>
+      <th id='t4'>4</th>
+      <th id='t5'>5</th>
+      <th id='t6'>6</th>
+    </tr>
+    <tr *ngFor="let line of board.reverse()">
+        <td *ngFor="let case of line">
+         {{ case }}
+        </td>
+      </tr>
+  </table>
+  <button (click)="switchPlayerOne()">{{playerOneIsMyBot ? 'Robot' : 'Humain'}}</button>
+  <button (click)="switchPlayerTwo()">{{playerTwoIsMyBot ? 'Robot' : 'Humain'}}</button>
