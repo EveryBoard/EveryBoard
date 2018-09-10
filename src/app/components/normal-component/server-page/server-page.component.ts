@@ -1,6 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { IUser } from '../../../domain/iuser';
-import { ICurrentPart } from '../../../domain/icurrentpart';
+import { ICurrentPart, ICurrentPartId } from '../../../domain/icurrentpart';
+
+import { Observable } from 'rxjs';
+import { AngularFirestore } from 'angularfire2/firestore';
+import { map } from 'rxjs/operators';
+
+import { IdPartService } from '../../../services/id-part.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-server-page',
@@ -9,11 +16,17 @@ import { ICurrentPart } from '../../../domain/icurrentpart';
 })
 export class ServerPageComponent implements OnInit {
 
-  readonly partList: Array<ICurrentPart>;
+  observedPartieIds: Observable<ICurrentPartId[]>;
   readonly userList: Array<IUser>;
   readonly gameList: Array<String> = ['P4', 'Awale', 'Quarto'];
 
-  constructor() {
+  choosedId: string;
+
+  constructor(private afs: AngularFirestore,
+              private _route: Router,
+              private partieIdService: IdPartService
+            ) {
+    /*
     const p1: ICurrentPart = {
       'typeGame' : 'P4',
       'playerZero' : 'thePlayerZero',
@@ -27,6 +40,7 @@ export class ServerPageComponent implements OnInit {
       'turn' : 15
     };
     this.partList = [p1, p2];
+    */
     const u1: IUser = {
       'id': 0,
       'pseudo' : 'roger',
@@ -42,10 +56,23 @@ export class ServerPageComponent implements OnInit {
       'status' : 0,
     };
     this.userList = [u1, u2];
+
   }
 
   ngOnInit() {
-
+    this.observedPartieIds = this.afs.collection('parties')
+      .snapshotChanges().pipe(map(actions => {
+        return actions.map(a => {
+          const data = a.payload.doc.data() as ICurrentPart;
+          const id = a.payload.doc.id;
+          return { 'id': id, 'partie' : data };
+        });
+    }));
+  }
+  selectGame(id: string) {
+    console.log('server page choose this part id : "' + id + '"');
+    this.partieIdService.changeMessage(id);
+    this._route.navigate(['P4Online']);
   }
 
 }

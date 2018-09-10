@@ -2,10 +2,13 @@ import { Component, OnInit } from '@angular/core';
 import { P4Rules } from '../../../games/games.p4/P4Rules';
 import { MoveX } from '../../../jscaip/MoveX';
 
-import { AngularFirestore, AngularFirestoreCollection, AngularFirestoreDocument, DocumentReference } from 'angularfire2/firestore';
-import { Observable } from 'rxjs';
+import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
+import { Observable, Subscription } from 'rxjs';
 import { map } from 'rxjs/operators';
+
 import { ICurrentPart } from '../../../domain/icurrentpart';
+
+import { IdPartService } from '../../../services/id-part.service';
 
 @Component({
   selector: 'app-p4-online',
@@ -20,12 +23,14 @@ export class P4OnlineComponent implements OnInit {
   players: string[];
   board: Array<Array<number>>;
 
-  partieId: string; // must be received at page loading
-
   observedPartie: Observable<ICurrentPart>;
   partieDocument: AngularFirestoreDocument<ICurrentPart>;
 
-  constructor(private afs: AngularFirestore) {}
+  partieId: string;
+
+  constructor(private afs: AngularFirestore,
+              private partieIdService: IdPartService) {
+  }
 
   ngOnInit() { // totally adaptable to other Rules
     // MNode.ruler = this.rules;
@@ -33,7 +38,11 @@ export class P4OnlineComponent implements OnInit {
     // shoud be some kind of session-scope
     this.observerRole = 1; // to see if the player is player zero (0) or one (1) or observatory (2+)
     this.players = ['premier', 'deuxième'];
-    this.partieId = 'defaultGame';
+    this.partieIdService.currentMessage.subscribe(message => {
+      this.partieId = message;
+    });
+
+    console.log('this.partieId : "' + this.partieId + '"');
 
     this.rules.setInitialBoard();
     this.board = this.rules.node.gamePartSlice.getCopiedBoard();
@@ -42,19 +51,23 @@ export class P4OnlineComponent implements OnInit {
       .pipe(map(actions => {
         return actions.payload.data() as ICurrentPart;
       }));
-    this.observedPartie.subscribe((currentPartie) => {
+
+    this.observedPartie.subscribe((updatedICurrentPart) => {
       console.log('Vous êtes dans la subscription');
-      if (currentPartie.turn > this.rules.node.gamePartSlice.turn) {
+      console.log('updatedICurrentPart . turn ' + updatedICurrentPart.turn);
+      console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
+      if (updatedICurrentPart.turn > this.rules.node.gamePartSlice.turn) {
         P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
-        const bol: boolean = this.rules.choose(MoveX.get(currentPartie.lastMove));
+        const bol: boolean = this.rules.choose(MoveX.get(updatedICurrentPart.lastMove));
         console.log('après choosing du mouvement');
         P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
         console.log('nouveau mouvement effectué quelque part ' + bol);
-        this.updateBoard();
       } else {
         console.log('nouvrau mouvement effectué MAIS mauvais tour');
       }
+      this.updateBoard();
     });
+
     this.partieDocument = this.afs.doc('parties/' + this.partieId);
   }
   updateBoard() {

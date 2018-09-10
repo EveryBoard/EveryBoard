@@ -7,11 +7,12 @@
       <th>Player 1</th>
       <th>Turn</th>
     </tr>
-    <tr *ngFor="let part of partList">
-      <td>{{ part.typeGame }}</td>
-      <td>{{ part.playerZero }}</td>
-      <td>{{ part.playerOne }}</td>
-      <td>{{ part.turn }}</td>
+    <tr *ngFor="let part of observedPartieIds | async"
+        (click)="selectGame(part.id)">
+      <td>{{ part.partie.typeGame }}</td>
+      <td>{{ part.partie.playerZero }}</td>
+      <td>{{ part.partie.playerOne }}</td>
+      <td>{{ part.partie.turn }}</td>
     </tr>
   </table>
 </div>

@@ -1,10 +1,11 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { FooterComponent } from './components/normal-component/footer/footer.component';
-import { HttpClientModule} from '@angular/common/http';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpModule } from '@angular/http';
 
 import { RouterModule, Route} from '@angular/router';
 
@@ -17,6 +18,7 @@ import { P4OfflineComponent } from './components/offline-components/p4-offline/p
 
 import { AngularFireModule } from 'angularfire2';
 import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { IdPartService } from './services/id-part.service';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAt5QHXLnm2Uf9X7VN6XPPiSaipoh3oRHo',
@@ -54,12 +56,14 @@ const routes: Route [] = [
   imports: [
     BrowserModule,
     HttpClientModule,
+    HttpModule,
     RouterModule.forRoot(routes),
+    ReactiveFormsModule,
     FormsModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFirestoreModule
   ],
-  providers: [],
+  providers: [IdPartService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

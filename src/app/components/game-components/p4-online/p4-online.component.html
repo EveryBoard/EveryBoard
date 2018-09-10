@@ -1,6 +1,8 @@
 <div style="text-align:center">
   <h3 *ngIf='observerRole<2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
   <h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
+
+  <h2> Vous jouez la partie d'id : {{ partieId }}</h2>
   <table style="font-size: 73px;">
     <tr *ngIf='observerRole<2' (click)="choose($event);">
       <th id='t0'>0</th>

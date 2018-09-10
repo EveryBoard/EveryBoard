@@ -2,7 +2,6 @@ import { Move } from './Move';
 import { SCORE } from './SCORE';
 import { Rules } from './Rules';
 import { GamePartSlice } from './GamePartSlice';
-import { P4Rules } from '../games/games.p4/P4Rules';
 
 export class MNode<R extends Rules> {
   // TODO calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
@@ -131,7 +130,6 @@ export class MNode<R extends Rules> {
       console.log(mother);
 
       console.log('and with board');
-      P4Rules.debugPrintBiArray(this.gamePartSlice.getCopiedBoard());
     }
   }
   getNodeStatus(): String {
