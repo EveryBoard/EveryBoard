@@ -1,5 +1,5 @@
 <div style="text-align:center">
-  <table style="font-size: 73px;">
+  <table>
     <tr (click)="choose($event);">
       <th id='t0'>0</th>
       <th id='t1'>1</th>
@@ -9,11 +9,18 @@
       <th id='t5'>5</th>
       <th id='t6'>6</th>
     </tr>
-    <tr *ngFor="let line of board.reverse()">
-        <td *ngFor="let case of line">
-         {{ case }}
-        </td>
-      </tr>
+    <tr style="margin:0px; padding:0px;" *ngFor="let line of board.reverse()">
+      <td *ngFor="let case of line">
+
+        <img width="100" height="100"
+             *ngIf="case==0" src="../../../../../src/assets/images/empty_circle.svg"/>
+        <img width="100" height="100"
+             *ngIf="case==1" src="../../../../../src/assets/images/yellow_circle.svg.png"/>
+        <img width="100" height="100"
+             *ngIf="case==2" src="../../../../../src/assets/images/brown_circle.svg.png"/>
+
+      </td>
+    </tr>
   </table>
   <button (click)="switchPlayerOne()">{{playerOneIsMyBot ? 'Robot' : 'Humain'}}</button>
   <button (click)="switchPlayerTwo()">{{playerTwoIsMyBot ? 'Robot' : 'Humain'}}</button>

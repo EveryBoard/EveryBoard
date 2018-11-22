@@ -13,8 +13,8 @@ export class P4OfflineComponent implements OnInit {
   rules = new P4Rules();
   playerOneIsMyBot = false;
   playerTwoIsMyBot = false;
-  aiDepth = 4;
-  botTimeOut = this.aiDepth * 500;
+  aiDepth = 6;
+  botTimeOut = 500 ; // this.aiDepth * 500;
   board: Array<Array<number>>;
 
   constructor() {}
