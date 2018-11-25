@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
-export class IdPartService {
+export class UserNameService {
 
-  private messageSource = new BehaviorSubject('');
+  private messageSource = new BehaviorSubject('not connected');
   currentMessage = this.messageSource.asObservable();
 
   constructor() { }

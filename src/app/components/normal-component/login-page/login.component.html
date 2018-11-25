@@ -10,12 +10,12 @@
 
     <input type="button"
            value='Connect as guest'
-           [routerLink]="['/connectAsGuest']" />
+           (click)="connectAsGuest()" />
 
     <input type="button"
            value='Log as member'
            disabled='disabled'
-           [routerLink]="['/logAsMember']"/><br/>
+           (click)="logAsMember()"/><br/>
 
     <a href="./createAccount">Not member yet ? Create an account</a>
   </form>

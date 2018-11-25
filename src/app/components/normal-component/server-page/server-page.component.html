@@ -8,7 +8,7 @@
       <th>Turn</th>
     </tr>
     <tr *ngFor="let part of observedPartieIds | async"
-        (click)="selectGame(part.id)">
+        (click)="joinGame(part.id + ':' + part.partie.typeGame)">
       <td>{{ part.partie.typeGame }}</td>
       <td>{{ part.partie.playerZero }}</td>
       <td>{{ part.partie.playerOne }}</td>
@@ -16,21 +16,24 @@
     </tr>
   </table>
 </div>
+
 <div id="onlineUser">
-  <p> Online Users : </p>
+  <p> Fake Online Users : </p>
   <ul>
     <li *ngFor="let user of userList">{{ user.pseudo }}</li>
   </ul>
 </div>
+
 <div id="gameCreator">
   <p>choisi le jeu que tu crée</p>
-  <select>
-    <option *ngFor="let game of gameList" value="game.name">
-      {{ game }}
+  <select [(ngModel)]='selectedGame'>
+    <option *ngFor="let gameName of gameNameList" value={{gameName}}>
+      {{ gameName }}
     </option>
   </select>
-  <input type="button" value="create game">
+  <input type="button" value="create game" (click)="createGame()">
 </div>
+
 <div id="chat">
   <p>ici c'est le tchat (could do)</p>
 </div>

@@ -8,14 +8,13 @@ import { map } from 'rxjs/operators';
 
 import { ICurrentPart } from '../../../domain/icurrentpart';
 
-import { IdPartService } from '../../../services/id-part.service';
+import { GameInfoService } from '../../../services/game-info-service';
 
 @Component({
   selector: 'app-p4-online',
   templateUrl: './p4-online.component.html',
   styleUrls: ['./p4-online.component.css']
 })
-
 export class P4OnlineComponent implements OnInit {
 
   rules = new P4Rules();
@@ -23,13 +22,15 @@ export class P4OnlineComponent implements OnInit {
   players: string[];
   board: Array<Array<number>>;
 
+  imageLocation = '../../../../../src/assets/images/';
+  imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
+
   observedPartie: Observable<ICurrentPart>;
   partieDocument: AngularFirestoreDocument<ICurrentPart>;
 
   partieId: string;
 
-  constructor(private afs: AngularFirestore,
-              private partieIdService: IdPartService) {
+  constructor(private afs: AngularFirestore, private gameInfoService: GameInfoService) {
   }
 
   ngOnInit() { // totally adaptable to other Rules
@@ -37,9 +38,10 @@ export class P4OnlineComponent implements OnInit {
 
     // shoud be some kind of session-scope
     this.observerRole = 1; // to see if the player is player zero (0) or one (1) or observatory (2+)
-    this.players = ['premier', 'deuxième'];
-    this.partieIdService.currentMessage.subscribe(message => {
-      this.partieId = message;
+    this.players = ['premier', 'deuxième']; // todo : get real users
+    this.gameInfoService.currentMessage.subscribe(message => {
+      const separator = message.indexOf(':');
+      this.partieId = message.substring(0, separator);
     });
 
     console.log('this.partieId : "' + this.partieId + '"');
@@ -70,12 +72,14 @@ export class P4OnlineComponent implements OnInit {
 
     this.partieDocument = this.afs.doc('parties/' + this.partieId);
   }
+
   updateBoard() {
     this.board = this.rules.node.gamePartSlice.getCopiedBoard();
     P4Rules.debugPrintBiArray(this.board);
     const boardValue: number = P4Rules._getBoardValue(this.rules.node);
     console.log('updateBoard : boardValue = ' + boardValue);
   }
+
   choose(event: MouseEvent): void {
     if (!this.rules.node.isEndGame()) {
       const x: number = Number(event.srcElement.id.substring(1, 2));
@@ -103,9 +107,11 @@ export class P4OnlineComponent implements OnInit {
       console.log('La partie est finie');
     }
   }
+
   isPlayerTurn() {
     return true;
   }
+
   proposeMoveToJavaService(move: MoveX): boolean {
     const docRef = this.partieDocument.ref;
     docRef.get()
@@ -118,15 +124,19 @@ export class P4OnlineComponent implements OnInit {
     });
     return true;
   }
+
   debugPrintArray(b: Array<Array<number>>) {
     for (const line of b) {
       console.log(line);
     }
   }
+
   debugModifyArray(b: Array<number>) {
     b[3] = 5;
   }
+
   debugReassignArray(b: Array<number>) {
     b = [-1, -1, -1, -1, -73];
   }
+
 }
