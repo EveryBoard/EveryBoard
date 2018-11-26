@@ -9,6 +9,7 @@ import { map } from 'rxjs/operators';
 import { ICurrentPart } from '../../../domain/icurrentpart';
 
 import { GameInfoService } from '../../../services/game-info-service';
+import {UserNameService} from '../../../services/user-name-service';
 
 @Component({
   selector: 'app-p4-online',
@@ -28,12 +29,16 @@ export class P4OnlineComponent implements OnInit {
   observedPartie: Observable<ICurrentPart>;
   partieDocument: AngularFirestoreDocument<ICurrentPart>;
 
-  partieId: string;
+  partId: string;
+  userName: string;
 
-  constructor(private afs: AngularFirestore, private gameInfoService: GameInfoService) {
+  constructor(private afs: AngularFirestore,
+              private gameInfoService: GameInfoService,
+              private userNameService: UserNameService) {
   }
 
-  ngOnInit() { // totally adaptable to other Rules
+  ngOnInit() {
+    // totally adaptable to other Rules
     // MNode.ruler = this.rules;
 
     // shoud be some kind of session-scope
@@ -41,24 +46,29 @@ export class P4OnlineComponent implements OnInit {
     this.players = ['premier', 'deuxième']; // todo : get real users
     this.gameInfoService.currentMessage.subscribe(message => {
       const separator = message.indexOf(':');
-      this.partieId = message.substring(0, separator);
+      this.partId = message.substring(0, separator);
     });
+    this.userNameService.currentMessage.subscribe( message => {
+      this.userName = message;
+    })
 
-    console.log('this.partieId : "' + this.partieId + '"');
+    console.log('this.partId : "' + this.partId + '"');
 
     this.rules.setInitialBoard();
     this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
-    this.observedPartie = this.afs.collection('parties').doc(this.partieId).snapshotChanges()
+    this.observedPartie = this.afs.collection('parties').doc(this.partId).snapshotChanges()
       .pipe(map(actions => {
         return actions.payload.data() as ICurrentPart;
       }));
 
     this.observedPartie.subscribe((updatedICurrentPart) => {
       console.log('Vous êtes dans la subscription');
-      console.log('updatedICurrentPart . turn ' + updatedICurrentPart.turn);
+      console.log('updatedICurrentPart.turn ' + updatedICurrentPart.turn);
       console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
-      if (updatedICurrentPart.turn > this.rules.node.gamePartSlice.turn) {
+      this.players = [ updatedICurrentPart.playerZero,
+                       updatedICurrentPart.playerOne];
+      if (updatedICurrentPart.turn === this.rules.node.gamePartSlice.turn + 1) {
         P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
         const bol: boolean = this.rules.choose(MoveX.get(updatedICurrentPart.lastMove));
         console.log('après choosing du mouvement');
@@ -70,7 +80,7 @@ export class P4OnlineComponent implements OnInit {
       this.updateBoard();
     });
 
-    this.partieDocument = this.afs.doc('parties/' + this.partieId);
+    this.partieDocument = this.afs.doc('parties/' + this.partId);
   }
 
   updateBoard() {
@@ -94,11 +104,7 @@ export class P4OnlineComponent implements OnInit {
           console.log('Et javascript estime que votre mouvement est légal');
           // player make a correct move
           // let's confirm on java-server-side that the move is legal
-          if (this.proposeMoveToJavaService(MoveX.get(x))) {
-            console.log('Java a accepté ton mouvement également, ça devrais s\'afficher automatiquement');
-          } else {
-            console.log('it seem your move is legal to javascript but illegal to java-server');
-          }
+          this.updateDBBoard(MoveX.get(x));
         }
       } else {
         console.log('Mais c\'est pas ton tour!');
@@ -109,20 +115,20 @@ export class P4OnlineComponent implements OnInit {
   }
 
   isPlayerTurn() {
-    return true;
+    const indexPlayer = this.rules.node.gamePartSlice.turn % 2;
+    return this.players[indexPlayer] === this.userName;
   }
 
-  proposeMoveToJavaService(move: MoveX): boolean {
+  updateDBBoard(move: MoveX) {
     const docRef = this.partieDocument.ref;
     docRef.get()
     .then((doc) => {
       const oldTurn = doc.get('turn');
       docRef.update({'lastMove' : move.x,
-                     'turn' : oldTurn + 1});
+                          'turn' : oldTurn + 1});
     }).catch((error) => {
       console.log(error);
     });
-    return true;
   }
 
   debugPrintArray(b: Array<Array<number>>) {
