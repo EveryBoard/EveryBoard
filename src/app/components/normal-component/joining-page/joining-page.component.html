@@ -1,0 +1,22 @@
+<div>
+
+  <div *ngIf="creator">
+    <h3>Vous voulez donc créer une partie de {{ gameName }}</h3>
+  </div>
+
+  <div>
+    <h6>
+      Voici la liste des joueurs à vouloir joindre cette partie :
+    </h6>
+    <ul>
+      <li *ngFor="let joiner of (observedJoinerList | async).names">
+        <button (click)="startGameWithPlayer(joiner)"
+                *ngIf="creator">
+          Jouer contre : {{ joiner }}
+        </button>
+        <p *ngIf="!creator"> {{ joiner }}</p>
+      </li>
+    </ul>
+  </div>
+
+</div>

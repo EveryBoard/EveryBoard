@@ -2,9 +2,9 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
-export class IdPartService {
+export class GameInfoService {
 
-  private messageSource = new BehaviorSubject('');
+  private messageSource = new BehaviorSubject(':');
   currentMessage = this.messageSource.asObservable();
 
   constructor() { }

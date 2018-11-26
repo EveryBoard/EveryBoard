@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import {UserNameService} from '../../../services/user-name-service';
 
 @Component({
   selector: 'app-header',
@@ -7,9 +8,13 @@ import { Component, OnInit } from '@angular/core';
 })
 export class HeaderComponent implements OnInit {
 
-  constructor() { }
+  userName: String;
+
+  constructor(private userNameService: UserNameService) { }
 
   ngOnInit() {
+    this.userNameService.currentMessage.subscribe( message =>
+      this.userName = message);
   }
 
 }

@@ -3,7 +3,7 @@
   <h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
 
   <h2> Vous jouez la partie d'id : {{ partieId }}</h2>
-  <table style="font-size: 73px;">
+  <table>
     <tr *ngIf='observerRole<2' (click)="choose($event);">
       <th id='t0'>0</th>
       <th id='t1'>1</th>
@@ -15,7 +15,8 @@
     </tr>
     <tr *ngFor="let line of board.reverse()">
         <td *ngFor="let case of line">
-         {{ case }}
+          <img width="100" height="100"
+               [src]='imageLocation+imagesNames[case]'/>
         </td>
       </tr>
   </table>

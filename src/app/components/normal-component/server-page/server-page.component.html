@@ -8,6 +8,7 @@
       <th>Turn</th>
     </tr>
     <tr *ngFor="let part of observedPartieIds | async"
+        (click)="joinGame(part.id + ':' + part.partie.typeGame)">
       <td>{{ part.partie.typeGame }}</td>
       <td>{{ part.partie.playerZero }}</td>
       <td>{{ part.partie.playerOne }}</td>
