@@ -3,7 +3,7 @@ import { P4Rules } from '../../../games/games.p4/P4Rules';
 import { MoveX } from '../../../jscaip/MoveX';
 
 import { AngularFirestore, AngularFirestoreDocument } from 'angularfire2/firestore';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import { ICurrentPart } from '../../../domain/icurrentpart';
@@ -26,8 +26,8 @@ export class P4OnlineComponent implements OnInit {
   imageLocation = '../../../../../src/assets/images/';
   imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
 
-  observedPartie: Observable<ICurrentPart>;
-  partieDocument: AngularFirestoreDocument<ICurrentPart>;
+  observedPart: Observable<ICurrentPart>;
+  partDocument: AngularFirestoreDocument<ICurrentPart>;
 
   partId: string;
   userName: string;
@@ -50,19 +50,19 @@ export class P4OnlineComponent implements OnInit {
     });
     this.userNameService.currentMessage.subscribe( message => {
       this.userName = message;
-    })
+    });
 
     console.log('this.partId : "' + this.partId + '"');
 
     this.rules.setInitialBoard();
     this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
-    this.observedPartie = this.afs.collection('parties').doc(this.partId).snapshotChanges()
+    this.observedPart = this.afs.collection('parties').doc(this.partId).snapshotChanges()
       .pipe(map(actions => {
         return actions.payload.data() as ICurrentPart;
       }));
 
-    this.observedPartie.subscribe((updatedICurrentPart) => {
+    this.observedPart.subscribe((updatedICurrentPart) => {
       console.log('Vous êtes dans la subscription');
       console.log('updatedICurrentPart.turn ' + updatedICurrentPart.turn);
       console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
@@ -71,10 +71,8 @@ export class P4OnlineComponent implements OnInit {
       this.observerRole = 2;
       if (this.players[0] === this.userName) {
         this.observerRole = 0;
-      } else {
-        if (this.players[1] === this.userName) {
-          this.observerRole = 1;
-        }
+      } else if (this.players[1] === this.userName) {
+        this.observerRole = 1;
       }
       const listMoves = updatedICurrentPart.listMoves;
       const nbPlayedMoves = listMoves.length;
@@ -90,7 +88,7 @@ export class P4OnlineComponent implements OnInit {
       this.updateBoard();
     });
 
-    this.partieDocument = this.afs.doc('parties/' + this.partId);
+    this.partDocument = this.afs.doc('parties/' + this.partId);
   }
 
   updateBoard() {
@@ -101,26 +99,27 @@ export class P4OnlineComponent implements OnInit {
   }
 
   choose(event: MouseEvent): void {
-    if (!this.rules.node.isEndGame()) {
-      const x: number = Number(event.srcElement.id.substring(1, 2));
+    if (this.isPlayerTurn()) {
+      const x: number = Number(event.srcElement.id.substring(2, 3));
       console.log('vous tentez un mouvement en colonne ' + x);
-      const turn = this.rules.node.gamePartSlice.turn % 2;
-      if (this.isPlayerTurn()) {
+      if (!this.rules.node.isEndGame()) {
         console.log('ça tente bien c\'est votre tour');
         // player's turn
-        if (!this.rules.choose(MoveX.get(x))) {
+        const choosedMove = MoveX.get(x);
+        if (!this.rules.choose(choosedMove)) {
           console.log('Mais c\'est un mouvement illegal');
         } else {
           console.log('Et javascript estime que votre mouvement est légal');
           // player make a correct move
           // let's confirm on java-server-side that the move is legal
-          this.updateDBBoard(MoveX.get(x));
+          this.updateDBBoard(choosedMove);
         }
       } else {
-        console.log('Mais c\'est pas ton tour (' + this.players[(this.rules.node.gamePartSlice.turn % 2)] + ' vs ' + this.userName + ') !');
+        console.log('Malheureusement la partie est finie');
+        // todo : option de clonage revision commentage
       }
     } else {
-      console.log('La partie est finie');
+      console.log('Mais c\'est pas ton tour !');
     }
   }
 
@@ -130,7 +129,7 @@ export class P4OnlineComponent implements OnInit {
   }
 
   updateDBBoard(move: MoveX) {
-    const docRef = this.partieDocument.ref;
+    const docRef = this.partDocument.ref;
     docRef.get()
     .then((doc) => {
       const turn: number = doc.get('turn') + 1;

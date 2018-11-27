@@ -17,7 +17,7 @@ import { UserNameService } from '../../../services/user-name-service';
 })
 export class ServerPageComponent implements OnInit {
 
-  observedPartieIds: Observable<ICurrentPartId[]>;
+  observedPartIds: Observable<ICurrentPartId[]>;
   readonly userList: Array<IUser>;
   readonly gameNameList: String[] = ['P4', 'Awale', 'Quarto'];
   selectedGame: string;
@@ -26,23 +26,7 @@ export class ServerPageComponent implements OnInit {
   constructor(private afs: AngularFirestore,
               private _route: Router,
               private gameInfoService: GameInfoService,
-              private userNameService: UserNameService
-  ) {
-    /*
-    const p1: ICurrentPart = {
-      'typeGame' : 'P4',
-      'playerZero' : 'thePlayerZero',
-      'playerOne' : 'thePlayerOne',
-      'turn' : 0
-    };
-    const p2: ICurrentPart = {
-      'typeGame' : 'Awale',
-      'playerZero' : 'the2',
-      'playerOne' : 'the3',
-      'turn' : 15
-    };
-    this.partList = [p1, p2];
-    */
+              private userNameService: UserNameService) {
     const u1: IUser = {
       'id': 0,
       'pseudo' : 'roger',
@@ -64,7 +48,7 @@ export class ServerPageComponent implements OnInit {
   ngOnInit() {
     this.userNameService.currentMessage.subscribe( message =>
       this.userName = message);
-    this.observedPartieIds = this.afs.collection('parties')
+    this.observedPartIds = this.afs.collection('parties')
       .snapshotChanges().pipe(map(actions => {
         return actions.map(a => {
           const data = a.payload.doc.data() as ICurrentPart;

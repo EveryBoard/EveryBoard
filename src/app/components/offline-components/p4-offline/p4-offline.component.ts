@@ -21,7 +21,8 @@ export class P4OfflineComponent implements OnInit {
 
   constructor() {}
 
-  ngOnInit() { // totally adaptable to other Rules
+  ngOnInit() {
+    // totally adaptable to other Rules
     // MNode.ruler = this.rules;
     this.rules.setInitialBoard();
     this.board = this.rules.node.gamePartSlice.getCopiedBoard();
@@ -61,25 +62,37 @@ export class P4OfflineComponent implements OnInit {
     this.proposeAIToPlay();
   }
 
-  choose(event: MouseEvent): void {
-    if (!this.rules.node.isEndGame()) {
-      const turn = this.rules.node.gamePartSlice.turn % 2;
-      if (! [this.playerOneIsMyBot, this.playerTwoIsMyBot][turn]) {
-        // human's turn
-        const x: number = Number(event.srcElement.id.substring(1, 2));
-        if (!this.rules.choose(MoveX.get(x))) {
-          console.log('Mouvement illegal');
-        } else {
-          // human make a correct move, let's see if it's AI Turn
-          // and let's also update the board
-          this.updateBoard();
-          this.proposeAIToPlay();
-        }
-      } else {
-        console.log('AI take ages to play, AMARITE?');
-      }
-    } else {
+  trackByCase(index: number, _case: number): number {
+    return _case;
+  }
+  trackByLine(index: number, column: number[]): number[] {
+    return column;
+  }
+
+  choose(event: MouseEvent): boolean {
+    if (this.rules.node.isEndGame()) {
       console.log('La partie est finie');
+      return false;
+    }
+
+    // the game is not ended
+    const turn = this.rules.node.gamePartSlice.turn % 2;
+    if ([this.playerOneIsMyBot, this.playerTwoIsMyBot][turn]) {
+      console.log('AI take ages to play, AMARITE?');
+      return false;
+    }
+
+    // human's turn
+    const x: number = Number(event.srcElement.id.substring(2, 3));
+    if (this.rules.choose(MoveX.get(x))) {
+      // human make a correct move, let's see if it's AI Turn
+      // and let's also update the board
+      this.updateBoard();
+      this.proposeAIToPlay();
+      return true;
+    } else {
+      console.log('Mouvement illegal');
+      return false;
     }
   }
 

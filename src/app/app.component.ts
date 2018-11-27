@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { UserNameService } from './services/user-name-service';
 
 @Component({
   selector: 'app-root',
@@ -8,5 +9,5 @@ import { Component } from '@angular/core';
 export class AppComponent {
   title = 'Multi Game';
 
-  constructor() {}
+  constructor(private userNameService: UserNameService) {}
 }

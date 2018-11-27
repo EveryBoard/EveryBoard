@@ -7,7 +7,7 @@
       <th>Player 1</th>
       <th>Turn</th>
     </tr>
-    <tr *ngFor="let part of observedPartieIds | async"
+    <tr *ngFor="let part of observedPartIds | async"
         (click)="joinGame(part.id + ':' + part.part.typeGame)">
       <td>{{ part.part.typeGame }}</td>
       <td>{{ part.part.playerZero }}</td>

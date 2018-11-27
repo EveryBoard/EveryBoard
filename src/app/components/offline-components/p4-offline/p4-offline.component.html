@@ -1,18 +1,11 @@
 <div style="text-align:center">
-  <table>
-    <tr (click)="choose($event);">
-      <th id='t0'>0</th>
-      <th id='t1'>1</th>
-      <th id='t2'>2</th>
-      <th id='t3'>3</th>
-      <th id='t4'>4</th>
-      <th id='t5'>5</th>
-      <th id='t6'>6</th>
-    </tr>
-    <tr style="margin:0px; padding:0px;" *ngFor="let line of board.reverse()">
-      <td *ngFor="let case of line">
+  <table (click)="choose($event);">
+    <tr style="margin:0px; padding:0px;" *ngFor="let line of board.reverse(); trackBy: trackByLine; index as y;">
+      <td *ngFor="let case of line; trackBy: trackByCase; index as x; ">
         <img width="100" height="100"
-             [src]='imageLocation+imagesNames[case]'/>
+             [src]='imageLocation+imagesNames[case]'
+             id="{{'t'+y+x}}"
+        />
       </td>
     </tr>
   </table>

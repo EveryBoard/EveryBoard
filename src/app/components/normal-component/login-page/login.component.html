@@ -1,22 +1,30 @@
 <div>
-  <form>
-    <input type="text"
-           value='userName'
-           (keypress)='checkUsernameConditions($event)' /><br/>
+    <form [formGroup]="userForm">
+        <label>
+          User Name:
+          <input type="text"
+                 formControlName='userName'
+                 required  minlength="4"/>
+        </label>
+        <br/>
 
-    <input type="password"
-           value='password'
-           (keypress)='checkPasswordConditions($event)' /><br/>
+        <label>
+            Password:
+            <input type="text"
+                   formControlName='password'
+                   required minlength="4"/>
+        </label>
+        <br/>
 
-    <input type="button"
-           value='Connect as guest'
-           (click)="connectAsGuest()" />
+        <button type="submit"
+            [disabled]="!userForm.valid"
+            (click)="connectAsGuest()" >Connect as Guest</button>
 
-    <input type="button"
-           value='Log as member'
-           disabled='disabled'
-           (click)="logAsMember()"/><br/>
+        <button type="submit"
+                [disabled]="!userForm.valid"
+                (click)="logAsMember()"> Log as Member</button>
+        <br/>
 
-    <a href="./createAccount">Not member yet ? Create an account</a>
-  </form>
+        <a href="./createAccount">Not member yet ? Create an account</a>
+    </form>
 </div>

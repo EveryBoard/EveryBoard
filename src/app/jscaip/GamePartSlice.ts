@@ -54,7 +54,7 @@ export class GamePartSlice {
  }
 
  public static copyArray(array: number[]): number[] {
-  const retour: Array < number> = new Array < number>();
+  const retour: Array < number> = new Array <number>();
   let x = 0;
   while (x  <  array.length) {
    retour[x] = array[x];

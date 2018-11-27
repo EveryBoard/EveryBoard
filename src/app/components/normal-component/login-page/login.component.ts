@@ -1,5 +1,7 @@
 import { Component, OnInit } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import {Router} from '@angular/router';
+
 import {UserNameService} from '../../../services/user-name-service';
 
 @Component({
@@ -9,16 +11,16 @@ import {UserNameService} from '../../../services/user-name-service';
 })
 export class LoginComponent implements OnInit {
 
+  userForm = this.formBuilder.group({
+    userName: ['', Validators.required],
+    password: ['', Validators.required]
+  });
+
   constructor(private _route: Router,
-              private userNameService: UserNameService) { }
+              private userNameService: UserNameService,
+              private formBuilder: FormBuilder) { }
 
   ngOnInit() {
-  }
-
-  checkPasswordConditions(e: KeyboardEvent) {
-  }
-
-  checkUsernameConditions(e: KeyboardEvent) {
   }
 
   connectAsGuest() {
