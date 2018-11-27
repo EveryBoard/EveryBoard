@@ -68,14 +68,24 @@ export class P4OnlineComponent implements OnInit {
       console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
       this.players = [ updatedICurrentPart.playerZero,
                        updatedICurrentPart.playerOne];
-      if (updatedICurrentPart.turn === this.rules.node.gamePartSlice.turn + 1) {
+      this.observerRole = 2;
+      if (this.players[0] === this.userName) {
+        this.observerRole = 0;
+      } else {
+        if (this.players[1] === this.userName) {
+          this.observerRole = 1;
+        }
+      }
+      const listMoves = updatedICurrentPart.listMoves;
+      const nbPlayedMoves = listMoves.length;
+      let currentPartTurn;
+      while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
         P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
-        const bol: boolean = this.rules.choose(MoveX.get(updatedICurrentPart.lastMove));
+        currentPartTurn = this.rules.node.gamePartSlice.turn;
+        const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
         console.log('après choosing du mouvement');
         P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
         console.log('nouveau mouvement effectué quelque part ' + bol);
-      } else {
-        console.log('nouvrau mouvement effectué MAIS mauvais tour');
       }
       this.updateBoard();
     });
@@ -107,7 +117,7 @@ export class P4OnlineComponent implements OnInit {
           this.updateDBBoard(MoveX.get(x));
         }
       } else {
-        console.log('Mais c\'est pas ton tour!');
+        console.log('Mais c\'est pas ton tour (' + this.players[(this.rules.node.gamePartSlice.turn % 2)] + ' vs ' + this.userName + ') !');
       }
     } else {
       console.log('La partie est finie');
@@ -123,9 +133,11 @@ export class P4OnlineComponent implements OnInit {
     const docRef = this.partieDocument.ref;
     docRef.get()
     .then((doc) => {
-      const oldTurn = doc.get('turn');
-      docRef.update({'lastMove' : move.x,
-                          'turn' : oldTurn + 1});
+      const turn: number = doc.get('turn') + 1;
+      const listMoves: number[] = doc.get('listMoves');
+      listMoves[listMoves.length] = move.x;
+      docRef.update({'listMoves' : listMoves,
+                          'turn'      : turn});
     }).catch((error) => {
       console.log(error);
     });

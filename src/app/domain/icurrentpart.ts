@@ -2,7 +2,7 @@ export interface ICurrentPart {
   typeGame: string;
   playerZero: string; // id
   playerOne?: string; // id
-  turn?: number;
+  turn: number; // -1 before it begin, 0 initial floor
   beginning?: string; // should be date
 
   typePart?: number; // amicale, comptabilisée, pédagogique
@@ -11,10 +11,10 @@ export interface ICurrentPart {
   scorePlayerZero?: number;
   scorePlayerOne?: number;
 
-  historic?: string; // id (null si non sauvegardée, id d’une Historique sinon)
-  lastMove?: number; // ONLY VALABLE FOR P4
+  historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
+  listMoves: number[]; // ONLY VALABLE FOR Number-encoded games
 }
 export interface ICurrentPartId {
   id: string;
-  partie: ICurrentPart;
+  part: ICurrentPart;
 }

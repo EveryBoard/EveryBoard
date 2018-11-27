@@ -1,8 +1,8 @@
 <div style="text-align:center">
-  <h3 *ngIf='observerRole<2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
+  <h3 *ngIf='observerRole <2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
   <h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
 
-  <h2> Vous jouez la partie d'id : {{ partieId }}</h2>
+  <h3> Vous jouez la partie d'id : {{ partId }}</h3>
   <table>
     <tr *ngIf='observerRole<2' (click)="choose($event);">
       <th id='t0'>0</th>
@@ -20,5 +20,5 @@
         </td>
       </tr>
   </table>
-  <h1> last move {{ (observedPartie | async)?.lastMove}}</h1>
+  <h1> list moves {{ (observedPartie | async)?.listMoves}}</h1>
 </div>

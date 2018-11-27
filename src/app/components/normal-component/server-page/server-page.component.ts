@@ -69,7 +69,7 @@ export class ServerPageComponent implements OnInit {
         return actions.map(a => {
           const data = a.payload.doc.data() as ICurrentPart;
           const id = a.payload.doc.id;
-          return { 'id': id, 'partie' : data };
+          return { 'id': id, 'part' : data };
         });
       }));
     console.log('server page component ON INIT');
@@ -97,7 +97,7 @@ export class ServerPageComponent implements OnInit {
         .add({
           'beginning'       : 'pas implémenté',
           'historic'        : 'pas implémenté',
-          'lastMove'        : -1,
+          'listMoves'       : [],
           'playerZero'      : this.userName,
           'playerOne'       : '',
           'result'          : 'pas implémenté',
