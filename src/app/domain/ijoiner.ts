@@ -1,8 +1,8 @@
 export interface IJoiner {
-  names: string[];
+	names: string[];
 }
 
 export interface IJoinerId {
-  id: string;
-  joiner: IJoiner;
+	id: string;
+	joiner: IJoiner;
 }

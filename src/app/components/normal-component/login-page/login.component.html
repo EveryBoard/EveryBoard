@@ -4,7 +4,7 @@
           User Name:
           <input type="text"
                  formControlName='userName'
-                 required  minlength="4"/>
+                 />
         </label>
         <br/>
 
@@ -12,16 +12,15 @@
             Password:
             <input type="text"
                    formControlName='password'
-                   required minlength="4"/>
+                   />
         </label>
         <br/>
 
         <button type="submit"
-            [disabled]="!userForm.valid"
             (click)="connectAsGuest()" >Connect as Guest</button>
 
         <button type="submit"
-                [disabled]="!userForm.valid"
+                disabled
                 (click)="logAsMember()"> Log as Member</button>
         <br/>
 

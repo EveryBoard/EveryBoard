@@ -1,17 +1,18 @@
-import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
+import {Injectable} from '@angular/core';
+import {BehaviorSubject} from 'rxjs';
 
 @Injectable({
-  providedIn : 'root'
+	providedIn: 'root'
 })
 export class GameInfoService {
 
-  private messageSource = new BehaviorSubject(':');
-  currentMessage = this.messageSource.asObservable();
+	private messageSource = new BehaviorSubject(':');
+	currentMessage = this.messageSource.asObservable();
 
-  constructor() { }
+	constructor() {
+	}
 
-  changeMessage(message: string) {
-    this.messageSource.next(message);
-  }
+	changeMessage(message: string) {
+		this.messageSource.next(message);
+	}
 }

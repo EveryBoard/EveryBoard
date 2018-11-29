@@ -1,39 +1,39 @@
 <div id="actualGame">
-  <p>List of actual games</p>
-  <table>
-    <tr>
-      <th>Game Name</th>
-      <th>Player 0</th>
-      <th>Player 1</th>
-      <th>Turn</th>
-    </tr>
-    <tr *ngFor="let part of observedPartIds | async"
-        (click)="joinGame(part.id + ':' + part.part.typeGame)">
-      <td>{{ part.part.typeGame }}</td>
-      <td>{{ part.part.playerZero }}</td>
-      <td>{{ part.part.playerOne }}</td>
-      <td>{{ part.part.turn }}</td>
-    </tr>
-  </table>
+	<p>List of actual games</p>
+	<table>
+		<tr>
+			<th>Game Name</th>
+			<th>Player 0</th>
+			<th>Player 1</th>
+			<th>Turn</th>
+		</tr>
+		<tr *ngFor="let part of partIds"
+			(click)="joinGame(part.id + ':' + part.part.typeGame)">
+			<td>{{ part.part.typeGame }}</td>
+			<td>{{ part.part.playerZero }}</td>
+			<td>{{ part.part.playerOne }}</td>
+			<td>{{ part.part.turn }}</td>
+		</tr>
+	</table>
 </div>
 
 <div id="onlineUser">
-  <p> Fake Online Users : </p>
-  <ul>
-    <li *ngFor="let user of userList">{{ user.pseudo }}</li>
-  </ul>
+	<p> Fake Online Users : </p>
+	<ul>
+		<li *ngFor="let user of userList">{{ user.pseudo }}</li>
+	</ul>
 </div>
 
 <div id="gameCreator">
-  <p>choisi le jeu que tu crée</p>
-  <select [(ngModel)]='selectedGame'>
-    <option *ngFor="let gameName of gameNameList" value={{gameName}}>
-      {{ gameName }}
-    </option>
-  </select>
-  <input type="button" value="create game" (click)="createGame()">
+	<p>choisi le jeu que tu crée</p>
+	<select [(ngModel)]='selectedGame'>
+		<option *ngFor="let gameName of gameNameList" value={{gameName}}>
+			{{ gameName }}
+		</option>
+	</select>
+	<input type="button" value="create game" (click)="createGame()">
 </div>
 
 <div id="chat">
-  <p>ici c'est le tchat (could do)</p>
+	<p>ici c'est le tchat (could do)</p>
 </div>
