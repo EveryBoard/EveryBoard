@@ -3,7 +3,7 @@ import {Coord} from './Coord';
 
 export class GamePartSlice {
 
-	private readonly board: number[][];
+	protected readonly board: number[][];
 
 	public readonly turn: number;
 

@@ -38,8 +38,10 @@ export class MoveCoord extends Move {
 			if (obj.coord !== null) {
 				return false;
 			}
-		} else if (!this.coord.equals(obj.coord)) {
-			return false;
+		} else {
+			if (!this.coord.equals(obj.coord)) {
+				return false;
+			}
 		}
 		return true;
 	}

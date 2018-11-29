@@ -1,0 +1,24 @@
+<div style="text-align:center">
+	<table *ngIf="observerRole!=1"
+		   (click)="choose($event);">
+		<tr style="margin:0px; padding:0px;"
+			*ngFor="let line of board.reverse(); index as y;">
+			<td *ngFor="let case of line; index as x; ">
+				<span id="{{'t'+y.toString()+x}}">
+					: {{ case }} :
+				</span>
+			</td>
+		</tr>
+	</table>
+	<table *ngIf="observerRole==1"
+		   (click)="choose($event);">
+		<tr style="margin:0px; padding:0px;"
+			*ngFor="let line of board; index as y;">
+			<td *ngFor="let case of line.reverse(); index as x; ">
+				<span id="{{'t'+(1-y).toString()+(5-x).toString()}}">
+					: {{ case }} :
+				</span>
+			</td>
+		</tr>
+	</table>
+</div>

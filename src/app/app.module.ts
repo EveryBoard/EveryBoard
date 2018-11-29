@@ -23,6 +23,8 @@ import {P4OfflineComponent} from './components/offline-components/p4-offline/p4-
 
 import {UserNameService} from './services/user-name-service';
 import {GameInfoService} from './services/game-info-service';
+import { AwaleOnlineComponent } from './components/game-components/awale-online/awale-online.component';
+import { AwaleOfflineComponent } from './components/offline-components/awale-offline/awale-offline.component';
 
 const firebaseConfig = {
 	apiKey: 'AIzaSyAt5QHXLnm2Uf9X7VN6XPPiSaipoh3oRHo',
@@ -40,6 +42,8 @@ const routes: Route [] = [
 	{path: 'joiningPage', 'component': JoiningPageComponent},
 	{path: 'P4Online', 'component': P4OnlineComponent},
 	{path: 'P4Offline', 'component': P4OfflineComponent},
+	{path: 'AwaleOnline', 'component': AwaleOnlineComponent},
+	{path: 'AwaleOffline', 'component': AwaleOfflineComponent},
 
 	{path: '', redirectTo: 'login-page', pathMatch: 'full'},
 	{path: '**', 'component': LoginComponent}
@@ -54,10 +58,11 @@ const routes: Route [] = [
 		P4OfflineComponent,
 		ServerPageComponent,
 		StatisticPageComponent,
-		P4OfflineComponent,
 		P4OnlineComponent,
 		CreateAccountComponent,
-		JoiningPageComponent
+		JoiningPageComponent,
+		AwaleOnlineComponent,
+		AwaleOfflineComponent
 	],
 	imports: [
 		BrowserModule,

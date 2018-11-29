@@ -10,7 +10,7 @@ export class Coord {
 	}
 
 	public getNext(dir: Coord): Coord { // TODO enum DIRECTION & remplacer la Coord en arg par une DIRECTION
-										// return the next coord in the direction 'dir'
+		// return the next coord in the direction 'dir'
 		return new Coord(this.x + dir.x, this.y + dir.y);
 	}
 
@@ -34,10 +34,6 @@ export class Coord {
 		return true;
 	}
 
-	equals(arg0: any): any {
-		throw new Error('Method not implemented.');
-	}
-
 	// @Override
 	// public int hashCode() {
 	//  final int prime = 31;
@@ -47,21 +43,23 @@ export class Coord {
 	//  return result;
 	// }
 
-	// @Override
-	// public boolean equals(Object obj) {
-	//  if (this === obj)
-	//   return true;
-	//  if (obj === null)
-	//   return false;
-	//  if (getClass() !== obj.getClass())
-	//   return false;
-	//  Coord other = (Coord) obj;
-	//  if (x !== other.x)
-	//   return false;
-	//  if (y !== other.y)
-	//   return false;
-	//  return true;
-	// }
+	equals(obj: any): boolean {
+		if (this === obj) {
+			return true;
+		}
+		if (obj === null) {
+			return false;
+		}
+		if (!(obj instanceof Coord)) {
+			return false;
+		}
+		const other: Coord = obj as Coord;
+		if (other.x !== this.x) {
+			return false;
+		} if (this.y !== other.y) {
+			return false;
+		} return true;
+	}
 
 	// @Override
 	// public String toString() {

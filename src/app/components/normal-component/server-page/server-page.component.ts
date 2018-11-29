@@ -20,7 +20,7 @@ export class ServerPageComponent implements OnInit {
 	partIds: ICurrentPartId[];
 	observedPartIds: Observable<ICurrentPartId[]>;
 	readonly userList: Array<IUser>;
-	readonly gameNameList: String[] = ['P4'];
+	readonly gameNameList: String[] = ['P4', 'Awale'];
 	selectedGame: string;
 	userName: string;
 
@@ -85,6 +85,10 @@ export class ServerPageComponent implements OnInit {
 			});
 		this.gameInfoService.changeMessage(info);
 		this._route.navigate(['joiningPage']);
+	}
+
+	playLocally() {
+		this._route.navigate([this.selectedGame + 'Offline']);
 	}
 
 	createGame() {

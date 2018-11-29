@@ -1,0 +1,14 @@
+<div style="text-align:center">
+	<table (click)="choose($event);">
+		<tr style="margin:0px; padding:0px;"
+			*ngFor="let line of board.reverse(); trackBy: trackByLine; index as y;">
+			<td *ngFor="let case of line; trackBy: trackByCase; index as x; ">
+				<span id="{{'t'+y+x}}">
+					: {{ case }} :
+				</span>
+			</td>
+		</tr>
+	</table>
+	<button (click)="switchPlayerOne()">{{playerOneIsMyBot ? 'Robot' : 'Humain'}}</button>
+	<button (click)="switchPlayerTwo()">{{playerTwoIsMyBot ? 'Robot' : 'Humain'}}</button>
+</div>

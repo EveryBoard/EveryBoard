@@ -17,7 +17,7 @@ export class P4PartSlice extends GamePartSlice {
 
 	// statics :
 
-	public static getStartingBoard(): number[][] {
+	static getStartingBoard(): number[][] {
 		const board: number[][] = GamePartSlice.createBiArray(7, 6, P4Rules.UNOCCUPIED);
 		return board;
 	}
