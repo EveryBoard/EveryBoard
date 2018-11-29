@@ -118,7 +118,6 @@ export class ServerPageComponent implements OnInit {
 				});
 		}
 	}
-
 	canCreateGame(): boolean {
 		// todo: vérifier que l'utilisateur n'as pas une partie en cours
 		let i = 0;

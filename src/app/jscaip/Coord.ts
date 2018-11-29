@@ -14,7 +14,8 @@ export class Coord {
 		return new Coord(this.x + dir.x, this.y + dir.y);
 	}
 
-	public getPrevious(dir: Coord): Coord { // TODO caster dir en DIRECTION
+	public getPrevious(dir: Coord): Coord {
+		// TODO caster dir en DIRECTION
 		return new Coord(this.x - dir.x, this.y - dir.y);
 	}
 
@@ -65,5 +66,4 @@ export class Coord {
 	// public String toString() {
 	//  return '(' + x + ', ' + y + ')';
 	// }
-
 }
