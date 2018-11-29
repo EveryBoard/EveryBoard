@@ -1,16 +1,17 @@
 <div style="text-align:center">
-  <h3 *ngIf='observerRole <2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
-  <h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
+	<a [routerLink]="['/server']"> Retour au menu ! </a>
+	<h3 *ngIf='observerRole <2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
+	<h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
 
-  <h3> Vous jouez la partie d'id : {{ partId }}</h3>
-  <table (click)="choose($event);">
-    <tr *ngFor="let line of board.reverse(); index as y;">
-        <td *ngFor="let case of line; index as x;">
-          <img width="100" height="100"
-               id="{{'t'+y+x}}"
-               [src]='imageLocation+imagesNames[case]'/>
-        </td>
-      </tr>
-  </table>
-  <h1> list moves {{ (observedPart | async)?.listMoves}}</h1>
+	<h3> Vous jouez la partie d'id : {{ partId }}</h3>
+	<table (click)="choose($event);">
+		<tr *ngFor="let line of board.reverse(); index as y;">
+			<td *ngFor="let case of line; index as x;">
+				<img width="100" height="100"
+					 id="{{'t'+y+x}}"
+					 [src]='imageLocation+imagesNames[case]'/>
+			</td>
+		</tr>
+	</table>
+	<h1> list moves {{ (observedPart | async)?.listMoves}}</h1>
 </div>

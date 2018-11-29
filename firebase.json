@@ -1,0 +1,10 @@
+{
+  "hosting": {
+    "public": "pantheonsgame",
+    "ignore": [
+      "firebase.json",
+      "**/.*",
+      "**/node_modules/**"
+    ]
+  }
+}
