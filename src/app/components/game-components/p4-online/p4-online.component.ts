@@ -33,6 +33,7 @@ export class P4OnlineComponent implements OnInit {
 
 	partId: string;
 	userName: string;
+	currentPlayer: string;
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
@@ -93,6 +94,7 @@ export class P4OnlineComponent implements OnInit {
 
 	updateBoard() {
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
+		this.currentPlayer = this.players[(1 + this.rules.node.gamePartSlice.turn) % 2];
 	}
 
 	choose(event: MouseEvent): boolean {

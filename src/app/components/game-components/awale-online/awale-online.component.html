@@ -1,4 +1,5 @@
 <div style="text-align:center">
+	<p> C'est au tour de {{ currentPlayer }} </p>
 	<table *ngIf="observerRole!=1"
 		   (click)="choose($event);">
 		<tr style="margin:0px; padding:0px;"
@@ -21,4 +22,5 @@
 			</td>
 		</tr>
 	</table>
+	{{ captured[0] }} - {{ captured[1] }}
 </div>

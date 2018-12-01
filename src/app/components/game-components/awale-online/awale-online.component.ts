@@ -8,6 +8,7 @@ import {UserNameService} from '../../../services/user-name-service';
 import {map} from 'rxjs/operators';
 import {MoveX} from '../../../jscaip/MoveX';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
+import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
 
 @Component({
 	selector: 'app-awale-online',
@@ -26,6 +27,8 @@ export class AwaleOnlineComponent implements OnInit {
 
 	partId: string;
 	userName: string;
+	currentPlayer: string;
+	captured: number[];
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
@@ -86,6 +89,9 @@ export class AwaleOnlineComponent implements OnInit {
 
 	updateBoard() {
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
+		const awalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+		this.captured = awalePartSlice.getCapturedCopy();
+		this.currentPlayer = this.players[awalePartSlice.turn % 2];
 	}
 
 	choose(event: MouseEvent): boolean {
