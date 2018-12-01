@@ -29,18 +29,20 @@ export class ServerPageComponent implements OnInit {
 				private gameInfoService: GameInfoService,
 				private userNameService: UserNameService) {
 		const u1: IUser = {
-			'id': 0,
-			'pseudo': 'roger',
-			'email': 'who care',
-			'dateInscription': new Date(),
-			'status': 0,
+			code: '1234',
+			pseudo: 'roger',
+			email: 'who care',
+			inscriptionDate: new Date(),
+			lastActionTime: new Date(),
+			status: 0,
 		};
 		const u2: IUser = {
-			'id': 1,
-			'pseudo': 'beniuiui',
-			'email': 'lol@mdr.com',
-			'dateInscription': new Date(),
-			'status': 0,
+			code: 'root',
+			pseudo: 'beniuiui',
+			email: 'lol@mdr.com',
+			inscriptionDate: new Date(),
+			lastActionTime: new Date(),
+			status: 0,
 		};
 		this.userList = [u1, u2];
 		console.log('server page component constructor');
@@ -118,8 +120,8 @@ export class ServerPageComponent implements OnInit {
 				});
 		}
 	}
+
 	canCreateGame(): boolean {
-		// todo: vérifier que l'utilisateur n'as pas une partie en cours
 		let i = 0;
 		let found = false; // todo : faire en stream pour le sexe
 		let playerZero: string;

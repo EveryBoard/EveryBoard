@@ -2,7 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {P4Rules} from '../../../games/games.p4/P4Rules';
 import {MoveX} from '../../../jscaip/MoveX';
 
-import {AngularFirestore, AngularFirestoreDocument} from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
@@ -63,7 +63,7 @@ export class P4OnlineComponent implements OnInit {
 				return actions.payload.data() as ICurrentPart;
 			}));
 
-		this.observedPart.subscribe((updatedICurrentPart) => {
+		this.observedPart.subscribe(updatedICurrentPart => {
 			console.log('Vous êtes dans la subscription');
 			console.log('updatedICurrentPart.turn ' + updatedICurrentPart.turn);
 			console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
@@ -129,7 +129,7 @@ export class P4OnlineComponent implements OnInit {
 	}
 
 	setVictory(victoriousPlayer: string) {
-		const docRef = this.partDocument.ref;
+		const docRef: DocumentReference = this.partDocument.ref;
 		docRef.update({
 			'winner': victoriousPlayer,
 			'result': 3

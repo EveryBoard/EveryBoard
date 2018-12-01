@@ -1,29 +1,34 @@
 <div>
-    <form [formGroup]="userForm">
-        <label>
-          User Name:
-          <input type="text"
-                 formControlName='userName'
-                 />
-        </label>
+    <form>
+		<label for="pseudoId"> User Name </label>
+		<input id="pseudoId"
+			   [(ngModel)]='user.pseudo'
+			   name='pseudo'
+			   type="text" />
         <br/>
 
-        <label>
-            Password:
-            <input type="text"
-                   formControlName='password'
-                   />
-        </label>
+		<label for="passwordId"> Password </label>
+		<input id="passwordId"
+			   [(ngModel)]='user.code'
+			   name="code"
+			   type="password" />
         <br/>
 
         <button type="submit"
-            (click)="connectAsGuest()" >Connect as Guest</button>
+				(click)="connectAsGuest()" >Invité anonyme</button>
+		Exemple : guest123 <br/>
 
-        <button type="submit"
+		<button type="submit"
+				(click)="logAsHalfMember()" >Demi membre</button>
+		Exemple : jean, password:jaja (non crypté)
+		<br/>
+
+        <!-- <button type="submit"
                 disabled
                 (click)="logAsMember()"> Log as Member</button>
-        <br/>
-
+		Pas encore prêt
+        <br/> -->
+		<span style="color:red"> {{ errorMessage }}</span><br/>
         <a href="./createAccount">Not member yet ? Create an account</a>
     </form>
 </div>
