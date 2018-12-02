@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {MoveX} from '../../../jscaip/MoveX';
+import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
 
 @Component({
 	selector: 'app-awale-offline',
@@ -15,6 +16,7 @@ export class AwaleOfflineComponent implements OnInit {
 	aiDepth = 5;
 	botTimeOut = 500; // this.aiDepth * 500;
 	board: Array<Array<number>>;
+	captured: number[] = [0, 0];
 
 	constructor() {
 	}
@@ -44,9 +46,10 @@ export class AwaleOfflineComponent implements OnInit {
 	}
 
 	updateBoard() {
-		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
+		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+		this.board = awalePartSlice.getCopiedBoard();
 		const statique: number = this.rules.getBoardValue(this.rules.node);
-
+		this.captured = awalePartSlice.captured;
 		console.log('boardValue = ' + statique);
 	}
 

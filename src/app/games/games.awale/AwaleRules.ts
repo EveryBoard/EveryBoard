@@ -19,11 +19,11 @@ export class AwaleRules extends Rules {
 		console.log('mansoon');
 		let sum = 0;
 		let x = 0;
-		while (x < 6) {
+		do {
 			sum += board[mansooningPlayer][x];
 			board[mansooningPlayer][x] = 0;
 			x++;
-		}
+		} while (x < 6);
 		return sum;
 	}
 
@@ -39,7 +39,8 @@ export class AwaleRules extends Rules {
 			console.log('\nin isLegal(' + move + ', ' + turn + ', ' + AwaleRules.printInLine(board) + ')');
 		}
 		const y: number = move.coord.y;
-		const player: number = turn;
+		const player: number = turn % 2;
+		const ennemi: number = (turn + 1) % 2;
 
 		if (y !== player) {
 			return [-1, -1]; // on ne distribue que ses maisons
@@ -49,7 +50,7 @@ export class AwaleRules extends Rules {
 			return [-1, -1]; // on ne distribue pas une case vide
 		}
 
-		if (AwaleRules.isStarving((y + 1) % 2, board) && !AwaleRules.doesDistribute(x, y, board)) {
+		if (AwaleRules.isStarving(ennemi, board) && !AwaleRules.doesDistribute(x, y, board)) {
 			// you can distribute but you don't, illegal move
 			if (AwaleRules.VERBOSE) {
 				console.log('you can distribute but you don\'t, illegal move');
