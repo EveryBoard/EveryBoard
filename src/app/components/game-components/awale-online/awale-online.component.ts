@@ -28,7 +28,10 @@ export class AwaleOnlineComponent implements OnInit {
 	partId: string;
 	userName: string;
 	currentPlayer: string;
+	gameStatus: string;
 	captured: number[];
+	// imageLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/'; // en prod
+	imageLocation = '../../../../../src/assets/images/circled_numbers/'; // en dev
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
@@ -92,6 +95,9 @@ export class AwaleOnlineComponent implements OnInit {
 		const awalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
 		this.captured = awalePartSlice.getCapturedCopy();
 		this.currentPlayer = this.players[awalePartSlice.turn % 2];
+		this.gameStatus = this.rules.node.isEndGame() ?
+			this.players[awalePartSlice.turn % 2] + ' a gagné!' :
+			'c\'est au tour de ' + this.currentPlayer;
 	}
 
 	choose(event: MouseEvent): boolean {

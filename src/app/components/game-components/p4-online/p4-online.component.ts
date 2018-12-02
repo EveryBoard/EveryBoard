@@ -10,6 +10,7 @@ import {ICurrentPart} from '../../../domain/icurrentpart';
 
 import {GameInfoService} from '../../../services/game-info-service';
 import {UserNameService} from '../../../services/user-name-service';
+import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
 
 @Component({
 	selector: 'app-p4-online',
@@ -34,6 +35,7 @@ export class P4OnlineComponent implements OnInit {
 	partId: string;
 	userName: string;
 	currentPlayer: string;
+	gameStatus: string;
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
@@ -93,8 +95,12 @@ export class P4OnlineComponent implements OnInit {
 	}
 
 	updateBoard() {
-		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
-		this.currentPlayer = this.players[(1 + this.rules.node.gamePartSlice.turn) % 2];
+		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
+		this.board = p4PartSlice.getCopiedBoard();
+		this.currentPlayer = this.players[(1 + p4PartSlice.turn) % 2];
+		this.gameStatus = this.rules.node.isEndGame() ?
+			this.players[p4PartSlice.turn % 2] + ' a gagné!' :
+			'c\'est au tour de ' + this.currentPlayer;
 	}
 
 	choose(event: MouseEvent): boolean {

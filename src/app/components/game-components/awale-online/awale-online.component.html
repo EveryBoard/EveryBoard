@@ -5,9 +5,9 @@
 		<tr style="margin:0px; padding:0px;"
 			*ngFor="let line of board.reverse(); index as y;">
 			<td *ngFor="let case of line; index as x; ">
-				<span id="{{'t'+y.toString()+x}}">
-					: {{ case }} :
-				</span>
+				<img width="100" heigh="100"
+					 id="{{'t'+y.toString()+x}}"
+					 src="{{ imageLocation + case + '.svg'}}" />
 			</td>
 		</tr>
 	</table>
@@ -16,9 +16,9 @@
 		<tr style="margin:0px; padding:0px;"
 			*ngFor="let line of board; index as y;">
 			<td *ngFor="let case of line.reverse(); index as x; ">
-				<span id="{{'t'+(1-y).toString()+(5-x).toString()}}">
-					: {{ case }} :
-				</span>
+				<img width="100" heigh="100"
+					 id="{{'t'+(1-y).toString()+(5-x).toString()}}"
+					 src="{{ imageLocation + case + '.svg'}}" />
 			</td>
 		</tr>
 	</table>
