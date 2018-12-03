@@ -9,7 +9,7 @@ import {AwalePartSlice} from './AwalePartSlice';
 
 export class AwaleRules extends Rules {
 
-	static VERBOSE = false;
+	static VERBOSE = true;
 
 	private static mansoon(mansooningPlayer: number, board: number[][]): number {
 		/* capture all the seeds of the mansooning player
@@ -50,7 +50,7 @@ export class AwaleRules extends Rules {
 			return [-1, -1]; // on ne distribue pas une case vide
 		}
 
-		if (AwaleRules.isStarving(ennemi, board) && !AwaleRules.doesDistribute(x, y, board)) {
+		if (!AwaleRules.doesDistribute(x, y, board) && AwaleRules.isStarving(ennemi, board) ) {
 			// you can distribute but you don't, illegal move
 			if (AwaleRules.VERBOSE) {
 				console.log('you can distribute but you don\'t, illegal move');
@@ -64,8 +64,8 @@ export class AwaleRules extends Rules {
 		}
 		const lastCase: number[] = AwaleRules.distribute(x, y, board); // do the distribution and retrieve the landing part
 		// of the last stone
-		const ennemy: number = lastCase[1];
-		if (ennemy === player) {
+		const landingCamp: number = lastCase[1];
+		if (landingCamp === player) {
 			if (AwaleRules.VERBOSE) {
 				console.log('distribution terminée dans son propre camps');
 			}
@@ -75,8 +75,8 @@ export class AwaleRules extends Rules {
 		}
 		// on as donc terminé la distribution dans le camps adverse, capture est de mise
 		const boardBeforeCapture: number[][] = GamePartSlice.copyBiArray(board);
-		captured[player] = AwaleRules.capture(lastCase[0], ennemy, player, board);
-		if (AwaleRules.isStarving(ennemy, board)) {
+		captured[player] = AwaleRules.capture(lastCase[0], ennemi, player, board);
+		if (AwaleRules.isStarving(ennemi, board)) {
 			if (captured[player] > 0) {
 				// if the distribution would capture all seeds
 				if (AwaleRules.VERBOSE) {
@@ -87,9 +87,12 @@ export class AwaleRules extends Rules {
 				captured = [0, 0];
 			}
 		}
-		if (AwaleRules.isStarving(player, board)) {
-			// if the player distributed his last seeds
-			captured[ennemy] += AwaleRules.mansoon(ennemy, board);
+		if (AwaleRules.isStarving(player, board) && !AwaleRules.canDistribute(ennemi, board)) {
+			// if the player distributed his last seeds and the opposant could not give him seeds
+			if (AwaleRules.VERBOSE) {
+				console.log('You just gave you last seed on the opponent could not give it back to you');
+			}
+			captured[ennemi] += AwaleRules.mansoon(ennemi, board);
 		}
 
 		move = new MoveCoordAndCapture(x, y, captured);

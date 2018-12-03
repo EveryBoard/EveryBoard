@@ -1,5 +1,9 @@
-<div style="text-align:center">
-	<p> C'est au tour de {{ currentPlayer }} </p>
+<div>
+	<a [routerLink]="['/server']"> Retour au menu ! </a>
+	<h3 *ngIf='observerRole <2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
+	<p> {{ gameStatus }} </p>
+	<h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
+
 	<table *ngIf="observerRole!=1"
 		   (click)="choose($event);">
 		<tr style="margin:0px; padding:0px;"
@@ -15,7 +19,7 @@
 		   (click)="choose($event);">
 		<tr style="margin:0px; padding:0px;"
 			*ngFor="let line of board; index as y;">
-			<td *ngFor="let case of line.reverse(); index as x; ">
+			<td *ngFor="let case of line.reverse(); index as x;">
 				<img width="100" heigh="100"
 					 id="{{'t'+(1-y).toString()+(5-x).toString()}}"
 					 src="{{ imageLocation + case + '.svg'}}" />
