@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {IUser} from '../../../domain/iuser';
+import {IUser, IUserId} from '../../../domain/iuser';
 import {ICurrentPart, ICurrentPartId} from '../../../domain/icurrentpart';
 
 import {Observable} from 'rxjs';
@@ -18,8 +18,8 @@ import {UserNameService} from '../../../services/user-name-service';
 export class ServerPageComponent implements OnInit {
 
 	partIds: ICurrentPartId[];
-	observedPartIds: Observable<ICurrentPartId[]>;
-	readonly userList: Array<IUser>;
+	// observedPartIds: Observable<ICurrentPartId[]>;
+	activeUserList: IUserId[];
 	readonly gameNameList: String[] = ['P4', 'Awale'];
 	selectedGame: string;
 	userName: string;
@@ -44,14 +44,13 @@ export class ServerPageComponent implements OnInit {
 			lastActionTime: new Date(),
 			status: 0,
 		};
-		this.userList = [u1, u2];
 		console.log('server page component constructor');
 	}
 
 	ngOnInit() {
 		this.userNameService.currentMessage.subscribe(message =>
 			this.userName = message);
-		this.observedPartIds = this.afs.collection('parties')
+		/* this.observedPartIds = this.afs.collection('parties')
 			.snapshotChanges().pipe(
 				map(actions => {
 					return actions.map(a => {
@@ -59,7 +58,7 @@ export class ServerPageComponent implements OnInit {
 						const id = a.payload.doc.id;
 						return {'id': id, 'part': data};
 					});
-				}));
+				})); */
 		this.afs.collection('parties').ref
 			.where('result', '==', 5)
 			.onSnapshot( (querySnapshot) => {
@@ -67,9 +66,20 @@ export class ServerPageComponent implements OnInit {
 				querySnapshot.forEach(doc => {
 					const data = doc.data() as ICurrentPart;
 					const id = doc.id;
-					tmpPartIds.push({'id': id, 'part': data});
+					tmpPartIds.push({id: id, part: data});
 				});
 				this.partIds = tmpPartIds;
+			});
+		this.afs.collection('joueurs').ref
+			.where('lastActionTime', '>=', Date.now() - (1000 * 60 * 10))
+			.onSnapshot((querySnapshot) => {
+				const tmpActiveUserIds: IUserId[] = [];
+				querySnapshot.forEach( doc => {
+					const data = doc.data() as IUser;
+					const id = doc.id;
+					tmpActiveUserIds.push({id: id, user: data});
+				});
+				this.activeUserList = tmpActiveUserIds;
 			});
 		console.log('server page component ON INIT');
 	}

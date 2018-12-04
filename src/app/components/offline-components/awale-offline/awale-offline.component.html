@@ -3,9 +3,10 @@
 		<tr style="margin:0px; padding:0px;"
 			*ngFor="let line of board.reverse(); trackBy: trackByLine; index as y;">
 			<td *ngFor="let case of line; trackBy: trackByCase; index as x; ">
-				<span id="{{'t'+y+x}}">
-					: {{ case }} :
-				</span>
+				<img width="100" heigh="100"
+					 id="{{'t'+y.toString()+x}}"
+					 alt=":{{ case }}:"
+					 src="{{ imagesLocation + case + '.svg'}}" />
 			</td>
 		</tr>
 	</table>

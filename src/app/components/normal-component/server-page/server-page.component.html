@@ -16,11 +16,10 @@
 		</tr>
 	</table>
 </div>
-
 <div id="onlineUser">
 	<p> Fake Online Users : </p>
 	<ul>
-		<li *ngFor="let user of userList">{{ user.pseudo }}</li>
+		<li *ngFor="let user of activeUserList">{{ user.user.pseudo }} : {{ user.user.lastActionTime | date:'yyyy-MM-dd hh:mm:ss a':'+0100'}}</li>
 	</ul>
 </div>
 

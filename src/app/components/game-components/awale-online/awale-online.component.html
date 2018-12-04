@@ -11,7 +11,8 @@
 			<td *ngFor="let case of line; index as x; ">
 				<img width="100" heigh="100"
 					 id="{{'t'+y.toString()+x}}"
-					 src="{{ imageLocation + case + '.svg'}}" />
+					 alt=":{{ case }}:"
+					 src="{{ imagesLocation + case + '.svg'}}" />
 			</td>
 		</tr>
 	</table>
@@ -22,9 +23,11 @@
 			<td *ngFor="let case of line.reverse(); index as x;">
 				<img width="100" heigh="100"
 					 id="{{'t'+(1-y).toString()+(5-x).toString()}}"
-					 src="{{ imageLocation + case + '.svg'}}" />
+					 alt=":{{ case }}:"
+					 src="{{ imagesLocation + case + '.svg'}}" />
 			</td>
 		</tr>
 	</table>
-	{{ captured[0] }} - {{ captured[1] }}
+	{{ players[0] }} : {{ captured[0] }} <br/>
+	{{ players[0] }} : {{ captured[1] }}
 </div>

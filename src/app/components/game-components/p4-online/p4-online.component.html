@@ -9,7 +9,8 @@
 			<td *ngFor="let case of line; index as x;">
 				<img width="100" height="100"
 					 id="{{'t'+y+x}}"
-					 [src]='imageLocation+imagesNames[case]'/>
+					 alt=":{{ case }}:"
+					 [src]='imagesLocation+imagesNames[case]'/>
 			</td>
 		</tr>
 	</table>

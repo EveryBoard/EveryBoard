@@ -24,8 +24,7 @@ export class P4OnlineComponent implements OnInit {
 	players: string[];
 	board: Array<Array<number>>;
 
-	// imageLocation = '../../../../../src/assets/images/'; // en dev
-	imageLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod :
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/';
 
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
 

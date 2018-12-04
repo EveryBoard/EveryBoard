@@ -18,6 +18,8 @@ export class AwaleOfflineComponent implements OnInit {
 	board: Array<Array<number>>;
 	captured: number[] = [0, 0];
 
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
+
 	constructor() {
 	}
 

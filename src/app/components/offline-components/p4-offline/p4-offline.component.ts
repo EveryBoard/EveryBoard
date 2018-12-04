@@ -16,7 +16,7 @@ export class P4OfflineComponent implements OnInit {
 	botTimeOut = 500; // this.aiDepth * 500;
 	board: Array<Array<number>>;
 
-	imageLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod :
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod :
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
 
 	constructor() {
