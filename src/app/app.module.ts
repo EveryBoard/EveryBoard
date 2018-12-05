@@ -21,12 +21,12 @@ import {StatisticPageComponent} from './components/normal-component/statistic-pa
 import {P4OnlineComponent} from './components/game-components/p4-online/p4-online.component';
 import {P4OfflineComponent} from './components/offline-components/p4-offline/p4-offline.component';
 
-import {UserNameService} from './services/user-name-service';
+import {UserService} from './services/user-service';
 import {GameInfoService} from './services/game-info-service';
-import { AwaleOnlineComponent } from './components/game-components/awale-online/awale-online.component';
-import { AwaleOfflineComponent } from './components/offline-components/awale-offline/awale-offline.component';
+import {AwaleOnlineComponent} from './components/game-components/awale-online/awale-online.component';
+import {AwaleOfflineComponent} from './components/offline-components/awale-offline/awale-offline.component';
 
-const firebaseConfig = {
+const firestoreConfig = {
 	apiKey: 'AIzaSyAt5QHXLnm2Uf9X7VN6XPPiSaipoh3oRHo',
 	authDomain: 'firestore-c9d47.firebaseapp.com',
 	databaseURL: 'https://firestore-c9d47.firebaseio.com',
@@ -36,14 +36,14 @@ const firebaseConfig = {
 };
 
 const routes: Route [] = [
-	{path: 'server', 'component': ServerPageComponent},
-	{path: 'statistic', 'component': StatisticPageComponent},
-	{path: 'createAccount', 'component': CreateAccountComponent},
-	{path: 'joiningPage', 'component': JoiningPageComponent},
-	{path: 'P4Online', 'component': P4OnlineComponent},
-	{path: 'P4Offline', 'component': P4OfflineComponent},
-	{path: 'AwaleOnline', 'component': AwaleOnlineComponent},
-	{path: 'AwaleOffline', 'component': AwaleOfflineComponent},
+	{path: 'server',		component: ServerPageComponent},
+	{path: 'statistic',		component: StatisticPageComponent},
+	{path: 'createAccount',	component: CreateAccountComponent},
+	{path: 'joiningPage', 	component: JoiningPageComponent},
+	{path: 'P4Online',		component: P4OnlineComponent},
+	{path: 'P4Offline', 	component: P4OfflineComponent},
+	{path: 'AwaleOnline',	component: AwaleOnlineComponent},
+	{path: 'AwaleOffline',	component: AwaleOfflineComponent},
 
 	{path: '', redirectTo: 'login-page', pathMatch: 'full'},
 	{path: '**', 'component': LoginComponent}
@@ -71,10 +71,10 @@ const routes: Route [] = [
 		RouterModule.forRoot(routes),
 		ReactiveFormsModule,
 		FormsModule,
-		AngularFireModule.initializeApp(firebaseConfig),
+		AngularFireModule.initializeApp(firestoreConfig),
 		AngularFirestoreModule
 	],
-	providers: [UserNameService, GameInfoService],
+	providers: [UserService, GameInfoService],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

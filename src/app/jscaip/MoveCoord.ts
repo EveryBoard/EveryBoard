@@ -46,11 +46,12 @@ export class MoveCoord extends Move {
 		return true;
 	}
 
-	/*
-    public String toString() {
-     return 'MoveCoord [coord = ' + coord + ']';
-    }
-    */
+	public String;
+
+	toString() {
+		return 'MoveCoord [coord = ' + this.coord.toString() + ']';
+	}
+
 	getCopy(): Move {
 		return new MoveCoord(this.coord.x, this.coord.y);
 	}

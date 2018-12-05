@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {ICurrentPart} from '../../../domain/icurrentpart';
 import {AngularFirestore, AngularFirestoreDocument} from 'angularfire2/firestore';
 import {GameInfoService} from '../../../services/game-info-service';
-import {UserNameService} from '../../../services/user-name-service';
+import {UserService} from '../../../services/user-service';
 import {map} from 'rxjs/operators';
 import {MoveX} from '../../../jscaip/MoveX';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
@@ -34,37 +34,32 @@ export class AwaleOnlineComponent implements OnInit {
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
-				private userNameService: UserNameService) {
+				private userService: UserService) {
 	}
 
 	ngOnInit() {
+		console.log('awale online on init');
 		// totally adaptable to other Rules
 		// MNode.ruler = this.rules;
 
 		// should be some kind of session-scope
-		this.gameInfoService.currentMessage.subscribe(message => {
-			const separator = message.indexOf(':');
-			this.partId = message.substring(0, separator);
-		});
+		this.gameInfoService.currentPartId.subscribe(partId =>
+			this.partId = partId);
 
-		// this.userName = this.userNameService.userName;
-		this.userNameService.currentMessage.subscribe(message => {
-			this.userName = message;
-		});
+		this.userService.currentUsername.subscribe(message =>
+			this.userName = message);
 
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
-		this.observedPart = this.afs.collection('parties').doc(this.partId).snapshotChanges()
+		this.observedPart = this.afs.doc('parties/' + this.partId).snapshotChanges()
 			.pipe(map(actions => {
+				console.log('inside snapshotchange of observedPart');
 				return actions.payload.data() as ICurrentPart;
 			}));
 
-		this.observedPart.subscribe((updatedICurrentPart) => {
-			console.log('Vous êtes dans la subscription');
-			console.log('updatedICurrentPart.turn ' + updatedICurrentPart.turn);
-			console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
-
+		this.observedPart.subscribe(updatedICurrentPart => {
+			console.log('vous êtes dans la subscription de retournant : ' + JSON.stringify(updatedICurrentPart));
 			// todo : améliorer, ça ne doit pas être set à chaque fois
 			this.players = [updatedICurrentPart.playerZero,
 				updatedICurrentPart.playerOne];
@@ -75,13 +70,17 @@ export class AwaleOnlineComponent implements OnInit {
 				this.observerRole = 1;
 			}
 
-			const listMoves = updatedICurrentPart.listMoves;
-			const nbPlayedMoves = listMoves.length;
-			let currentPartTurn;
-			while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
+			const listMoves: number[] = updatedICurrentPart.listMoves;
+			const nbPlayedMoves: number = listMoves.length;
+			let localPartTurn: number = this.rules.node.gamePartSlice.turn;
+			while (localPartTurn < nbPlayedMoves) {
 				P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
-				currentPartTurn = this.rules.node.gamePartSlice.turn;
-				const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
+				localPartTurn = this.rules.node.gamePartSlice.turn;
+				const validMove: boolean = this.rules.choose(MoveX.get(listMoves[localPartTurn]));
+				if (!validMove) {
+					console.log('MAAAMAAAMIIIHAAA, coup invalide venant de la db ! ');
+					console.log(localPartTurn + ' en local vs en remote ' + nbPlayedMoves);
+				}
 			}
 			this.updateBoard();
 		});
@@ -100,6 +99,7 @@ export class AwaleOnlineComponent implements OnInit {
 	}
 
 	choose(event: MouseEvent): boolean {
+		this.userService.updateUserActivity();
 		if (this.isPlayerTurn()) {
 			const x: number = Number(event.srcElement.id.substring(2, 3));
 			console.log('vous tentez un mouvement en colonne ' + x);

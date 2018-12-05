@@ -36,17 +36,23 @@ export class AwaleRules extends Rules {
 		let captured = [0, 0];
 
 		if (AwaleRules.VERBOSE) {
-			console.log('\nin isLegal(' + move + ', ' + turn + ', ' + AwaleRules.printInLine(board) + ')');
+			console.log('\nin isLegal(' + move.toString() + ', ' + turn + ', ' + AwaleRules.printInLine(board) + ')');
 		}
 		const y: number = move.coord.y;
 		const player: number = turn % 2;
 		const ennemi: number = (turn + 1) % 2;
 
 		if (y !== player) {
+			if (AwaleRules.VERBOSE) {
+				console.log('on ne distribue pas la maison des autres!!');
+			}
 			return [-1, -1]; // on ne distribue que ses maisons
 		}
 		const x: number = move.coord.x;
 		if (board[y][x] === 0) {
+			if (AwaleRules.VERBOSE) {
+				console.log('on ne distribue pas un de ses maisons vides!!');
+			}
 			return [-1, -1]; // on ne distribue pas une case vide
 		}
 

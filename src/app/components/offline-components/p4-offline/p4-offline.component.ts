@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {P4Rules} from '../../../games/games.p4/P4Rules';
 import {MoveX} from '../../../jscaip/MoveX';
+import {UserService} from '../../../services/user-service';
 
 @Component({
 	selector: 'app-p4-offline',
@@ -19,8 +20,7 @@ export class P4OfflineComponent implements OnInit {
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod :
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
 
-	constructor() {
-	}
+	constructor(private userService: UserService) {}
 
 	ngOnInit() {
 		// totally adaptable to other Rules
@@ -72,6 +72,7 @@ export class P4OfflineComponent implements OnInit {
 	}
 
 	choose(event: MouseEvent): boolean {
+		this.userService.updateUserActivity();
 		if (this.rules.node.isEndGame()) {
 			console.log('La partie est finie');
 			return false;

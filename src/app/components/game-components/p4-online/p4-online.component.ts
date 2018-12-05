@@ -9,7 +9,7 @@ import {map} from 'rxjs/operators';
 import {ICurrentPart} from '../../../domain/icurrentpart';
 
 import {GameInfoService} from '../../../services/game-info-service';
-import {UserNameService} from '../../../services/user-name-service';
+import {UserService} from '../../../services/user-service';
 import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
 
 @Component({
@@ -38,7 +38,7 @@ export class P4OnlineComponent implements OnInit {
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
-				private userNameService: UserNameService) {
+				private userService: UserService) {
 	}
 
 	ngOnInit() {
@@ -46,13 +46,11 @@ export class P4OnlineComponent implements OnInit {
 		// MNode.ruler = this.rules;
 
 		// should be some kind of session-scope
-		this.gameInfoService.currentMessage.subscribe(message => {
-			const separator = message.indexOf(':');
-			this.partId = message.substring(0, separator);
-		});
+		this.gameInfoService.currentPartId.subscribe(gameId =>
+			this.partId = gameId);
 
 		// this.userName = this.userNameService.userName;
-		this.userNameService.currentMessage.subscribe(message => {
+		this.userService.currentUsername.subscribe(message => {
 			this.userName = message;
 		});
 
@@ -98,11 +96,12 @@ export class P4OnlineComponent implements OnInit {
 		this.board = p4PartSlice.getCopiedBoard();
 		this.currentPlayer = this.players[(1 + p4PartSlice.turn) % 2];
 		this.gameStatus = this.rules.node.isEndGame() ?
-			this.players[p4PartSlice.turn % 2] + ' a gagné!' :
+			this.players[(p4PartSlice.turn + 1) % 2] + ' a gagné!' :
 			'c\'est au tour de ' + this.currentPlayer;
 	}
 
 	choose(event: MouseEvent): boolean {
+		this.userService.updateUserActivity();
 		if (this.isPlayerTurn()) {
 			const x: number = Number(event.srcElement.id.substring(2, 3));
 			console.log('vous tentez un mouvement en colonne ' + x);

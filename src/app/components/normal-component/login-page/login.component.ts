@@ -1,12 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 
-import {UserNameService} from '../../../services/user-name-service';
+import {UserService} from '../../../services/user-service';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {IUser, IUserId, User} from '../../../domain/iuser';
-import {map} from 'rxjs/operators';
-import {ICurrentPart} from '../../../domain/icurrentpart';
 
 @Component({
 	selector: 'app-login',
@@ -22,7 +19,7 @@ export class LoginComponent implements OnInit {
 	private unsubscribe;
 
 	constructor(private _route: Router,
-				private userNameService: UserNameService,
+				private userService: UserService,
 				private afs: AngularFirestore) {
 	}
 
@@ -31,7 +28,10 @@ export class LoginComponent implements OnInit {
 
 	connectAsGuest() {
 		const guestName: string = this.getUnusedGuestName();
-		this.userNameService.changeMessage(guestName);
+
+		this.userService.changeUser(guestName, '');
+		// for now guest don't have document in the db notifying their presence or absence
+
 		this._route.navigate(['server']);
 	}
 
@@ -110,14 +110,8 @@ export class LoginComponent implements OnInit {
 	}
 
 	logValidHalfMember() {
-		console.log('log valid user now with id ' + this.userDocId + ' and mc ' + this.matchingCode);
-		this.afs.collection('joueurs')
-			.doc(this.userDocId).update({
-				lastActionTime: Date.now(),
-				status: -2 // TODO calculate what that must be
-			});
-		this.userNameService.changeMessage(this.user.pseudo);
-		console.log('logs about to be unseable');
+		this.userService.changeUser(this.user.pseudo, this.userDocId);
+		this.userService.updateUserActivity();
 		this._route.navigate(['server']);
 	}
 

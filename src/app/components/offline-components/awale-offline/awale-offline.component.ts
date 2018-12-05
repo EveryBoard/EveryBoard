@@ -2,6 +2,7 @@ import {Component, OnInit} from '@angular/core';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {MoveX} from '../../../jscaip/MoveX';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
+import {UserService} from '../../../services/user-service';
 
 @Component({
 	selector: 'app-awale-offline',
@@ -20,7 +21,7 @@ export class AwaleOfflineComponent implements OnInit {
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
 
-	constructor() {
+	constructor(private userService: UserService) {
 	}
 
 	ngOnInit() {
@@ -74,6 +75,7 @@ export class AwaleOfflineComponent implements OnInit {
 	}
 
 	choose(event: MouseEvent): boolean {
+		this.userService.updateUserActivity();
 		if (this.rules.node.isEndGame()) {
 			console.log('La partie est finie');
 			return false;
