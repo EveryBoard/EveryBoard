@@ -4,7 +4,7 @@ import {Observable} from 'rxjs';
 import {ICurrentPart} from '../../../domain/icurrentpart';
 import {AngularFirestore, AngularFirestoreDocument} from 'angularfire2/firestore';
 import {GameInfoService} from '../../../services/game-info-service';
-import {UserNameService} from '../../../services/user-name-service';
+import {UserService} from '../../../services/user-service';
 import {map} from 'rxjs/operators';
 import {MoveX} from '../../../jscaip/MoveX';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
@@ -28,13 +28,16 @@ export class AwaleOnlineComponent implements OnInit {
 	partId: string;
 	userName: string;
 	currentPlayer: string;
-	gameStatus: string;
-	captured: number[];
+	captured: number[] = [0, 0];
+	turn = 0;
+	endGame = false;
+	victoriousPlayer: string;
+
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
-				private userNameService: UserNameService) {
+				private userService: UserService) {
 	}
 
 	ngOnInit() {
@@ -42,16 +45,10 @@ export class AwaleOnlineComponent implements OnInit {
 		// MNode.ruler = this.rules;
 
 		// should be some kind of session-scope
-		this.gameInfoService.currentMessage.subscribe(message => {
-			const separator = message.indexOf(':');
-			this.partId = message.substring(0, separator);
-		});
-
-		// this.userName = this.userNameService.userName;
-		this.userNameService.currentMessage.subscribe(message => {
-			this.userName = message;
-		});
-
+		this.gameInfoService.currentPartId.subscribe(partId =>
+			this.partId = partId);
+		this.userService.currentUsername.subscribe(message =>
+			this.userName = message);
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
@@ -76,6 +73,11 @@ export class AwaleOnlineComponent implements OnInit {
 			}
 
 			const listMoves = updatedICurrentPart.listMoves;
+			this.turn = updatedICurrentPart.turn;
+			if (updatedICurrentPart.result === 3) {
+				this.endGame = true;
+				this.victoriousPlayer = updatedICurrentPart.winner;
+			}
 			const nbPlayedMoves = listMoves.length;
 			let currentPartTurn;
 			while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
@@ -90,13 +92,11 @@ export class AwaleOnlineComponent implements OnInit {
 	}
 
 	updateBoard() {
-		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 		const awalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+		this.board = awalePartSlice.getCopiedBoard();
 		this.captured = awalePartSlice.getCapturedCopy();
+		this.turn = awalePartSlice.turn;
 		this.currentPlayer = this.players[awalePartSlice.turn % 2];
-		this.gameStatus = this.rules.node.isEndGame() ?
-			this.players[(awalePartSlice.turn + 1) % 2] + ' a gagné!' :
-			'c\'est au tour de ' + this.currentPlayer;
 	}
 
 	choose(event: MouseEvent): boolean {
@@ -119,8 +119,7 @@ export class AwaleOnlineComponent implements OnInit {
 				// let's confirm on java-server-side that the move is legal
 				this.updateDBBoard(choosedMove);
 				if (this.rules.node.isEndGame()) {
-					const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
-					this.setVictory(victoriousPlayer);
+					this.notifyVictory();
 				}
 			} else {
 				console.log('Mais c\'est un mouvement illegal');
@@ -130,7 +129,10 @@ export class AwaleOnlineComponent implements OnInit {
 		}
 	}
 
-	setVictory(victoriousPlayer: string) {
+	notifyVictory() {
+		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
+		this.endGame = true;
+		this.victoriousPlayer = victoriousPlayer;
 		const docRef = this.partDocument.ref;
 		docRef.update({
 			'winner': victoriousPlayer,

@@ -8,7 +8,8 @@ import {filter, map} from 'rxjs/operators';
 
 import {Router} from '@angular/router';
 import {GameInfoService} from '../../../services/game-info-service';
-import {UserNameService} from '../../../services/user-name-service';
+import {UserService} from '../../../services/user-service';
+import {UserDAO} from '../../../dao/UserDAO';
 
 @Component({
 	selector: 'app-server-page',
@@ -24,41 +25,17 @@ export class ServerPageComponent implements OnInit {
 	selectedGame: string;
 	userName: string;
 
-	constructor(private afs: AngularFirestore,
+	constructor(private userDAO: UserDAO,
+				private afs: AngularFirestore,
 				private _route: Router,
 				private gameInfoService: GameInfoService,
-				private userNameService: UserNameService) {
-		const u1: IUser = {
-			code: '1234',
-			pseudo: 'roger',
-			email: 'who care',
-			inscriptionDate: new Date(),
-			lastActionTime: new Date(),
-			status: 0,
-		};
-		const u2: IUser = {
-			code: 'root',
-			pseudo: 'beniuiui',
-			email: 'lol@mdr.com',
-			inscriptionDate: new Date(),
-			lastActionTime: new Date(),
-			status: 0,
-		};
+				private userService: UserService) {
 		console.log('server page component constructor');
 	}
 
 	ngOnInit() {
-		this.userNameService.currentMessage.subscribe(message =>
+		this.userService.currentUsername.subscribe(message =>
 			this.userName = message);
-		/* this.observedPartIds = this.afs.collection('parties')
-			.snapshotChanges().pipe(
-				map(actions => {
-					return actions.map(a => {
-						const data = a.payload.doc.data() as ICurrentPart;
-						const id = a.payload.doc.id;
-						return {'id': id, 'part': data};
-					});
-				})); */
 		this.afs.collection('parties').ref
 			.where('result', '==', 5)
 			.onSnapshot( (querySnapshot) => {
@@ -70,8 +47,8 @@ export class ServerPageComponent implements OnInit {
 				});
 				this.partIds = tmpPartIds;
 			});
-		this.afs.collection('joueurs').ref
-			.where('lastActionTime', '>=', Date.now() - (1000 * 60 * 10))
+
+		this.userDAO.observeAllActiveUser()
 			.onSnapshot((querySnapshot) => {
 				const tmpActiveUserIds: IUserId[] = [];
 				querySnapshot.forEach( doc => {
@@ -81,21 +58,26 @@ export class ServerPageComponent implements OnInit {
 				});
 				this.activeUserList = tmpActiveUserIds;
 			});
-		console.log('server page component ON INIT');
 	}
 
-	joinGame(info: string) {
-		console.log('server page choose this part info : [' + info + ']');
-		const separator = info.indexOf(':');
-		const id = info.substring(0, separator);
-		const docRef = this.afs.doc('joiners/' + id).ref;
-		docRef.get()
-			.then(doc => {
-				const joinerList: string[] = doc.get('names');
-				joinerList[joinerList.length] = this.userName;
-				docRef.update({'names': joinerList});
+	joinGame(partId: string, typeGame: string) {
+		console.log('about to join a ' + typeGame + ' of id [' + partId + ']');
+		const partRef = this.afs.doc('parties/' + partId).ref;
+		const joinerRef = this.afs.doc('joiners/' + partId).ref;
+		partRef.get()
+			.then(partDoc => {
+				const creator = partDoc.get('playerZero');
+				joinerRef.get()
+					.then(joinerDoc => {
+						const joinerList: string[] = joinerDoc.get('names');
+						if (!joinerList.includes(this.userName) &&
+							(this.userName !== creator)) {
+							joinerList[joinerList.length] = this.userName;
+							joinerRef.update({'names': joinerList});
+						}
+					});
 			});
-		this.gameInfoService.changeMessage(info);
+		this.gameInfoService.changeGame(partId, typeGame);
 		this._route.navigate(['joiningPage']);
 	}
 
@@ -108,7 +90,6 @@ export class ServerPageComponent implements OnInit {
 		if (this.canCreateGame()) {
 			this.afs.collection('parties')
 				.add({
-					'beginning': 'pas implémenté',
 					'historic': 'pas implémenté',
 					'listMoves': [],
 					'playerZero': this.userName,
@@ -125,7 +106,7 @@ export class ServerPageComponent implements OnInit {
 					this.afs.collection('joiners')
 						.doc(docRef.id)
 						.set({'names': []});
-					this.gameInfoService.changeMessage(docRef.id + ':' + this.selectedGame);
+					this.gameInfoService.changeGame(docRef.id, this.selectedGame);
 					this._route.navigate(['joiningPage']);
 				});
 		}
@@ -137,7 +118,7 @@ export class ServerPageComponent implements OnInit {
 		let playerZero: string;
 		let playerOne: string;
 		while (	(i < this.partIds.length) &&
-				(!found)) {
+		(!found)) {
 			playerZero = this.partIds[i].part.playerZero;
 			playerOne = this.partIds[i++].part.playerOne;
 			found = (this.userName === playerZero) || (this.userName === playerOne);

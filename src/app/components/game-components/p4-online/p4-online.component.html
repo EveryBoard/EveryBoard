@@ -1,7 +1,8 @@
 <div>
-	<a [routerLink]="['/server']"> Retour au menu ! </a>
 	<h3 *ngIf='observerRole <2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
-	<p> {{ gameStatus }} </p>
+	<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
+	<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
+	<h3 *ngIf="endGame"> Victoire de {{ victoriousPlayer }} </h3>
 	<h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
 
 	<table (click)="choose($event);">
@@ -14,4 +15,5 @@
 			</td>
 		</tr>
 	</table>
+	Tour : {{ turn }} <br/>
 </div>

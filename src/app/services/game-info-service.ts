@@ -6,13 +6,24 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class GameInfoService {
 
-	private messageSource = new BehaviorSubject(':');
-	currentMessage = this.messageSource.asObservable();
+	private gameName = new BehaviorSubject(':');
+	private partId = new BehaviorSubject('');
 
-	constructor() {
+	currentGameName = this.gameName.asObservable();
+	currentPartId = this.partId.asObservable();
+
+	constructor() {}
+
+	changeGame(partId: string, gameName: string) {
+		this.changePartId(partId);
+		this.changeGameName(gameName);
 	}
 
-	changeMessage(message: string) {
-		this.messageSource.next(message);
+	changeGameName(gameName: string) {
+		this.gameName.next(gameName);
+	}
+
+	changePartId(partId: string) {
+		this.partId.next(partId);
 	}
 }

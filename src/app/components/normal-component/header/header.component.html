@@ -1,4 +1,3 @@
-<div>
-  Bienvenu sur Pantheon's Game <br/>
-  Tu es {{ userName }}
-</div>
+Bienvenu sur <a [routerLink]="['/server']">Pantheon's Game</a>
+<span *ngIf="userName !== ''">, {{ userName }}</span>
+<span *ngIf="userName === ''">, <a [routerLink]="['/login-page']">connecte toi!</a></span>
