@@ -36,7 +36,7 @@ export class P4OnlineComponent implements OnInit {
 	currentPlayer: string;
 	turn = 0;
 	endGame = false;
-	victoriousPlayer: string;
+	winner: string;
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
@@ -79,7 +79,7 @@ export class P4OnlineComponent implements OnInit {
 			}
 			if (updatedICurrentPart.result === 3) {
 				this.endGame = true;
-				this.victoriousPlayer = updatedICurrentPart.winner;
+				this.winner = updatedICurrentPart.winner;
 			}
 			const listMoves = updatedICurrentPart.listMoves;
 			const nbPlayedMoves = listMoves.length;

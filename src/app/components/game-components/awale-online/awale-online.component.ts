@@ -31,7 +31,7 @@ export class AwaleOnlineComponent implements OnInit {
 	captured: number[] = [0, 0];
 	turn = 0;
 	endGame = false;
-	victoriousPlayer: string;
+	winner: string;
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
 
@@ -76,7 +76,7 @@ export class AwaleOnlineComponent implements OnInit {
 			this.turn = updatedICurrentPart.turn;
 			if (updatedICurrentPart.result === 3) {
 				this.endGame = true;
-				this.victoriousPlayer = updatedICurrentPart.winner;
+				this.winner = updatedICurrentPart.winner;
 			}
 			const nbPlayedMoves = listMoves.length;
 			let currentPartTurn;
@@ -132,7 +132,7 @@ export class AwaleOnlineComponent implements OnInit {
 	notifyVictory() {
 		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
 		this.endGame = true;
-		this.victoriousPlayer = victoriousPlayer;
+		this.winner = victoriousPlayer;
 		const docRef = this.partDocument.ref;
 		docRef.update({
 			'winner': victoriousPlayer,
