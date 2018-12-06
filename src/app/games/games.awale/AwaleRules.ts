@@ -305,7 +305,7 @@ export class AwaleRules extends Rules {
 		return c1 - c0;
 	}
 
-	choose(resultlessMove: MoveX): boolean {
+	choose(resultlessMove: MoveCoord): boolean {
 		if (this.node.hasMoves()) { // if calculation has already been done by the AI
 			const choix: MNode<AwaleRules> = this.node.getNode(resultlessMove); // let's not doing if twice
 			if (choix != null) {
@@ -316,23 +316,29 @@ export class AwaleRules extends Rules {
 		const turn: number = this.node.gamePartSlice.turn;
 		const player = turn % 2;
 		const ennemy = (turn + 1) % 2;
-		const x: number = resultlessMove.x;
-		const movexy: MoveCoord = new MoveCoord(x, player);
+		const x: number = resultlessMove.coord.x;
+		const y: number = resultlessMove.coord.y;
+		if (AwaleRules.VERBOSE) {
+			console.log('choose(' + resultlessMove.toString() + ') -> ' + ' at turn ' + turn);
+		}
 		const board: number[][] = this.node.gamePartSlice.getCopiedBoard();
-		const moveResult: number[] = AwaleRules.isLegal(movexy, player, board);
+		const moveResult: number[] = AwaleRules.isLegal(
+			resultlessMove,
+			this.node.gamePartSlice.turn,
+			board);
 		if (moveResult[0] === -1) {
 			return false;
 		}
 
-		const moveAndResult = new MoveCoordAndCapture(x, player, moveResult);
+		const moveAndResult = new MoveCoordAndCapture(x, y, moveResult);
 		const awalePartSlice: AwalePartSlice = this.node.gamePartSlice as AwalePartSlice;
 		const captured: number[] = awalePartSlice.getCapturedCopy();
 
 		captured[player] += moveResult[player];
 		captured[ennemy] += moveResult[ennemy];
 
-		const partSlice: AwalePartSlice = new AwalePartSlice(board, turn + 1, captured);
-		const son: MNode<AwaleRules> = new MNode(this.node, moveAndResult, partSlice);
+		const newPartSlice: AwalePartSlice = new AwalePartSlice(board, turn + 1, captured);
+		const son: MNode<AwaleRules> = new MNode(this.node, moveAndResult, newPartSlice);
 		this.node = son;
 		return true;
 	}
