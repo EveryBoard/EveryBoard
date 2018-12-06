@@ -25,15 +25,7 @@ import {UserService} from './services/user-service';
 import {GameInfoService} from './services/game-info-service';
 import { AwaleOnlineComponent } from './components/game-components/awale-online/awale-online.component';
 import { AwaleOfflineComponent } from './components/offline-components/awale-offline/awale-offline.component';
-
-const firebaseConfig = {
-	apiKey: 'AIzaSyAt5QHXLnm2Uf9X7VN6XPPiSaipoh3oRHo',
-	authDomain: 'firestore-c9d47.firebaseapp.com',
-	databaseURL: 'https://firestore-c9d47.firebaseio.com',
-	projectId: 'firestore-c9d47',
-	storageBucket: 'firestore-c9d47.appspot.com',
-	messagingSenderId: '936588361631'
-};
+import {firebaseConfig} from './firebaseConfig';
 
 const routes: Route [] = [
 	{path: 'server', 'component': ServerPageComponent},
