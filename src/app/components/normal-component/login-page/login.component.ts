@@ -28,10 +28,15 @@ export class LoginComponent implements OnInit {
 
 	connectAsGuest() {
 		const guestName: string = this.getUnusedGuestName();
+<<<<<<< HEAD
 
 		this.userService.changeUser(guestName, '');
 		// for now guest don't have document in the db notifying their presence or absence
 
+=======
+		this.userService.changeUser(guestName, '');
+		// for now guest don't have document in the db notifying their presence or absence
+>>>>>>> small-security-amelioration
 		this._route.navigate(['server']);
 	}
 
@@ -110,8 +115,19 @@ export class LoginComponent implements OnInit {
 	}
 
 	logValidHalfMember() {
+<<<<<<< HEAD
 		this.userService.changeUser(this.user.pseudo, this.userDocId);
 		this.userService.updateUserActivity();
+=======
+		console.log('log valid user now with id ' + this.userDocId + ' and mc ' + this.matchingCode);
+		this.afs.collection('joueurs')
+			.doc(this.userDocId).update({
+				lastActionTime: Date.now(),
+				status: -2 // TODO calculate what that must be
+			});
+		this.userService.changeUser(this.user.pseudo, this.userDocId);
+		console.log('logs about to be unseable');
+>>>>>>> small-security-amelioration
 		this._route.navigate(['server']);
 	}
 

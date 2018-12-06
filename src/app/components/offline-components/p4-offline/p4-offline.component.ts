@@ -16,6 +16,7 @@ export class P4OfflineComponent implements OnInit {
 	aiDepth = 5;
 	botTimeOut = 500; // this.aiDepth * 500;
 	board: Array<Array<number>>;
+	turn = 0;
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod :
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
@@ -48,9 +49,10 @@ export class P4OfflineComponent implements OnInit {
 
 	updateBoard() {
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
-		const statique: number = P4Rules._getBoardValue(this.rules.node);
+		// const statique: number = P4Rules._getBoardValue(this.rules.node);
 
-		console.log('boardValue = ' + statique);
+		// console.log('boardValue = ' + statique);
+		this.turn = this.rules.node.gamePartSlice.turn;
 	}
 
 	switchPlayerOne() { // totally adaptable to other Rules

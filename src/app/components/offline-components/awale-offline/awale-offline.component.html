@@ -6,10 +6,11 @@
 				<img width="100" heigh="100"
 					 id="{{'t'+y.toString()+x}}"
 					 alt=":{{ case }}:"
-					 src="{{ imagesLocation + case + '.svg'}}" />
+					 src="{{ imagesLocation + case + '.svg'}}"/>
 			</td>
 		</tr>
 	</table>
+	Tour : {{ turn }} <br/>
 	<button (click)="switchPlayerOne()">{{playerOneIsMyBot ? 'Robot' : 'Humain'}}</button>
 	<span> Joueur 0 : {{ captured[0] }} </span><br/>
 

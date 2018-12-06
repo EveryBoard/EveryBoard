@@ -34,7 +34,9 @@ export class P4OnlineComponent implements OnInit {
 	partId: string;
 	userName: string;
 	currentPlayer: string;
-	gameStatus: string;
+	turn = 0;
+	endGame = false;
+	winner: string;
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
@@ -46,6 +48,7 @@ export class P4OnlineComponent implements OnInit {
 		// MNode.ruler = this.rules;
 
 		// should be some kind of session-scope
+<<<<<<< HEAD
 		this.gameInfoService.currentPartId.subscribe(gameId =>
 			this.partId = gameId);
 
@@ -53,6 +56,14 @@ export class P4OnlineComponent implements OnInit {
 		this.userService.currentUsername.subscribe(message => {
 			this.userName = message;
 		});
+=======
+		// should be some kind of session-scope
+		this.gameInfoService.currentPartId.subscribe(partId =>
+			this.partId = partId);
+
+		this.userService.currentUsername.subscribe(message =>
+			this.userName = message);
+>>>>>>> small-security-amelioration
 
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
@@ -76,7 +87,10 @@ export class P4OnlineComponent implements OnInit {
 			} else if (this.players[1] === this.userName) {
 				this.observerRole = 1;
 			}
-
+			if (updatedICurrentPart.result === 3) {
+				this.endGame = true;
+				this.winner = updatedICurrentPart.winner;
+			}
 			const listMoves = updatedICurrentPart.listMoves;
 			const nbPlayedMoves = listMoves.length;
 			let currentPartTurn;
@@ -94,10 +108,15 @@ export class P4OnlineComponent implements OnInit {
 	updateBoard() {
 		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
 		this.board = p4PartSlice.getCopiedBoard();
+<<<<<<< HEAD
 		this.currentPlayer = this.players[(1 + p4PartSlice.turn) % 2];
 		this.gameStatus = this.rules.node.isEndGame() ?
 			this.players[(p4PartSlice.turn + 1) % 2] + ' a gagné!' :
 			'c\'est au tour de ' + this.currentPlayer;
+=======
+		this.turn = p4PartSlice.turn;
+		this.currentPlayer = this.players[p4PartSlice.turn % 2];
+>>>>>>> small-security-amelioration
 	}
 
 	choose(event: MouseEvent): boolean {
@@ -121,8 +140,7 @@ export class P4OnlineComponent implements OnInit {
 				// let's confirm on java-server-side that the move is legal
 				this.updateDBBoard(choosedMove);
 				if (this.rules.node.isEndGame()) {
-					const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
-					this.setVictory(victoriousPlayer);
+					this.notifyVictory();
 				}
 			} else {
 				console.log('Mais c\'est un mouvement illegal');
@@ -132,7 +150,8 @@ export class P4OnlineComponent implements OnInit {
 		}
 	}
 
-	setVictory(victoriousPlayer: string) {
+	notifyVictory() {
+		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
 		const docRef: DocumentReference = this.partDocument.ref;
 		docRef.update({
 			'winner': victoriousPlayer,

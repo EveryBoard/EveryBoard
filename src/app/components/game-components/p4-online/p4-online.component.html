@@ -1,7 +1,21 @@
 <div>
+<<<<<<< HEAD
 	<h3 *ngIf='observerRole <2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
 	<p> {{ gameStatus }} </p>
 	<h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
+=======
+	<h3 *ngIf="observerRole <2"> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
+	<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
+
+	<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
+	<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
+
+	<div *ngIf="endGame">
+		<h3 *ngIf="(winner===userName)"> Vous avez gagné </h3>
+		<h3 *ngIf="(winner!==userName) && (observerRole<2)"> Vous avez perdu </h3>
+		<h3 *ngIf="(winner!==userName) && (observerRole>=2)"> Victoire de {{ winner }} </h3>
+	</div>
+>>>>>>> small-security-amelioration
 
 	<table (click)="choose($event);">
 		<tr *ngFor="let line of board.reverse(); index as y;">
@@ -13,4 +27,5 @@
 			</td>
 		</tr>
 	</table>
+	Tour : {{ turn }} <br/>
 </div>

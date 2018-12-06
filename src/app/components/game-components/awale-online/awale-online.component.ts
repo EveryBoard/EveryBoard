@@ -31,8 +31,17 @@ export class AwaleOnlineComponent implements OnInit {
 
 	partId: string;
 	userName: string;
+<<<<<<< HEAD
 	gameStatus: string;
 	captured: number[];
+=======
+	currentPlayer: string;
+	captured: number[] = [0, 0];
+	turn = 0;
+	endGame = false;
+	winner: string;
+
+>>>>>>> small-security-amelioration
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
 
 	constructor(private afs: AngularFirestore,
@@ -48,10 +57,15 @@ export class AwaleOnlineComponent implements OnInit {
 		// should be some kind of session-scope
 		this.gameInfoService.currentPartId.subscribe(partId =>
 			this.partId = partId);
+<<<<<<< HEAD
 
 		this.userService.currentUsername.subscribe(message =>
 			this.userName = message);
 
+=======
+		this.userService.currentUsername.subscribe(message =>
+			this.userName = message);
+>>>>>>> small-security-amelioration
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
@@ -74,12 +88,24 @@ export class AwaleOnlineComponent implements OnInit {
 				this.observerRole = 1;
 			}
 
+<<<<<<< HEAD
 			this.listMoves = updatedICurrentPart.listMoves;
 			this.turn = updatedICurrentPart.turn;
 			const nbPlayedMoves: number = this.listMoves.length;
 			let localPartTurn: number = this.rules.node.gamePartSlice.turn;
 			this.localTurn = this.rules.node.gamePartSlice.turn; // DEBUG
 			while (localPartTurn < nbPlayedMoves) {
+=======
+			const listMoves = updatedICurrentPart.listMoves;
+			this.turn = updatedICurrentPart.turn;
+			if (updatedICurrentPart.result === 3) {
+				this.endGame = true;
+				this.winner = updatedICurrentPart.winner;
+			}
+			const nbPlayedMoves = listMoves.length;
+			let currentPartTurn;
+			while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
+>>>>>>> small-security-amelioration
 				P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
 				localPartTurn = this.rules.node.gamePartSlice.turn;
 				this.localTurn = this.rules.node.gamePartSlice.turn; // DEBUG
@@ -100,12 +126,17 @@ export class AwaleOnlineComponent implements OnInit {
 	}
 
 	updateBoard() {
-		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 		const awalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+		this.board = awalePartSlice.getCopiedBoard();
 		this.captured = awalePartSlice.getCapturedCopy();
+<<<<<<< HEAD
 		this.gameStatus = this.rules.node.isEndGame() ?
 			this.players[(this.turn + 1) % 2] + ' a gagné!' :
 			'c\'est au tour de ' + this.players[this.turn % 2];
+=======
+		this.turn = awalePartSlice.turn;
+		this.currentPlayer = this.players[awalePartSlice.turn % 2];
+>>>>>>> small-security-amelioration
 	}
 
 	choose(event: MouseEvent): boolean {
@@ -130,8 +161,12 @@ export class AwaleOnlineComponent implements OnInit {
 				// let's confirm on java-server-side that the move is legal
 				this.updateDBBoard(choosedMove);
 				if (this.rules.node.isEndGame()) {
+<<<<<<< HEAD
 					const victoriousPlayer = this.players[(this.turn + 1) % 2];
 					this.setVictory(victoriousPlayer);
+=======
+					this.notifyVictory();
+>>>>>>> small-security-amelioration
 				}
 			} else {
 				console.log('Mais c\'est un mouvement illegal');
@@ -141,7 +176,10 @@ export class AwaleOnlineComponent implements OnInit {
 		}
 	}
 
-	setVictory(victoriousPlayer: string) {
+	notifyVictory() {
+		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
+		this.endGame = true;
+		this.winner = victoriousPlayer;
 		const docRef = this.partDocument.ref;
 		docRef.update({
 			winner: victoriousPlayer,

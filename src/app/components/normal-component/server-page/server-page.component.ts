@@ -118,7 +118,7 @@ export class ServerPageComponent implements OnInit {
 		let playerZero: string;
 		let playerOne: string;
 		while (	(i < this.partIds.length) &&
-				(!found)) {
+		(!found)) {
 			playerZero = this.partIds[i].part.playerZero;
 			playerOne = this.partIds[i++].part.playerOne;
 			found = (this.userName === playerZero) || (this.userName === playerOne);
