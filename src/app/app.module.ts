@@ -25,15 +25,7 @@ import {UserService} from './services/user-service';
 import {GameInfoService} from './services/game-info-service';
 import { AwaleOnlineComponent } from './components/game-components/awale-online/awale-online.component';
 import { AwaleOfflineComponent } from './components/offline-components/awale-offline/awale-offline.component';
-
-const firebaseConfig = {
-	apiKey: 'NOPE',
-	authDomain: 'NOPE',
-	databaseURL: 'NOPE',
-	projectId: 'NOPE',
-	storageBucket: 'NOPE',
-	messagingSenderId: 'NOPE'
-};
+import {firebaseConfig} from './firebaseConfig';
 
 const routes: Route [] = [
 	{path: 'server', 'component': ServerPageComponent},
