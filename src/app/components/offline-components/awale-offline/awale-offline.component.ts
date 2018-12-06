@@ -17,6 +17,7 @@ export class AwaleOfflineComponent implements OnInit {
 	botTimeOut = 500; // this.aiDepth * 500;
 	board: Array<Array<number>>;
 	captured: number[] = [0, 0];
+	turn = 0;
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
 
@@ -50,9 +51,10 @@ export class AwaleOfflineComponent implements OnInit {
 	updateBoard() {
 		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
 		this.board = awalePartSlice.getCopiedBoard();
-		const statique: number = this.rules.getBoardValue(this.rules.node);
+		// const statique: number = this.rules.getBoardValue(this.rules.node);
 		this.captured = awalePartSlice.captured;
-		console.log('boardValue = ' + statique);
+		this.turn = this.rules.node.gamePartSlice.turn;
+		// console.log('boardValue = ' + statique);
 	}
 
 	switchPlayerOne() { // totally adaptable to other Rules

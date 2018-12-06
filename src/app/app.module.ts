@@ -21,7 +21,7 @@ import {StatisticPageComponent} from './components/normal-component/statistic-pa
 import {P4OnlineComponent} from './components/game-components/p4-online/p4-online.component';
 import {P4OfflineComponent} from './components/offline-components/p4-offline/p4-offline.component';
 
-import {UserNameService} from './services/user-name-service';
+import {UserService} from './services/user-service';
 import {GameInfoService} from './services/game-info-service';
 import { AwaleOnlineComponent } from './components/game-components/awale-online/awale-online.component';
 import { AwaleOfflineComponent } from './components/offline-components/awale-offline/awale-offline.component';
@@ -74,7 +74,7 @@ const routes: Route [] = [
 		AngularFireModule.initializeApp(firebaseConfig),
 		AngularFirestoreModule
 	],
-	providers: [UserNameService, GameInfoService],
+	providers: [UserService, GameInfoService],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

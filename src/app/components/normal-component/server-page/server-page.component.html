@@ -8,7 +8,7 @@
 			<th>Turn</th>
 		</tr>
 		<tr *ngFor="let part of partIds"
-			(click)="joinGame(part.id + ':' + part.part.typeGame)">
+			(click)="joinGame(part.id, part.part.typeGame)">
 			<td>{{ part.part.typeGame }}</td>
 			<td>{{ part.part.playerZero }}</td>
 			<td>{{ part.part.playerOne }}</td>
@@ -19,7 +19,7 @@
 <div id="onlineUser">
 	<p> Fake Online Users : </p>
 	<ul>
-		<li *ngFor="let user of activeUserList">{{ user.user.pseudo }} : {{ user.user.lastActionTime | date:'yyyy-MM-dd hh:mm:ss a':'+0100'}}</li>
+		<li *ngFor="let user of activeUserList">{{ user.user.pseudo }} : {{ user.user.lastActionTime | date:'HH:mm:ss':'+0100'}}</li>
 	</ul>
 </div>
 

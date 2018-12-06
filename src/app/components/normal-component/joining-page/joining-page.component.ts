@@ -5,7 +5,7 @@ import {Observable} from 'rxjs';
 import {IJoiner} from '../../../domain/ijoiner';
 import {ICurrentPart} from '../../../domain/icurrentpart';
 import {Router} from '@angular/router';
-import {UserNameService} from '../../../services/user-name-service';
+import {UserService} from '../../../services/user-service';
 
 @Component({
 	selector: 'app-joining-page',
@@ -16,28 +16,25 @@ export class JoiningPageComponent implements OnInit {
 
 	observedJoinerList: Observable<IJoiner>;
 	partId: string;
-	typeGame: string;
+	gameName: string;
 	creator: boolean;
 	userName: string;
 
 	private observedGameDoc: AngularFirestoreDocument<ICurrentPart>;
+	private observedJoinerDoc: AngularFirestoreDocument<IJoiner>;
 
 	constructor(private afs: AngularFirestore,
 				private _route: Router,
 				private gameInfoService: GameInfoService,
-				private userNameService: UserNameService) {
-	}
+				private userService: UserService) {}
 
 	ngOnInit() {
-		console.log('ngOnInit joining page');
-		this.gameInfoService.currentMessage.subscribe(receivedIdAndType => {
-			const separator = receivedIdAndType.indexOf(':');
-			this.partId = receivedIdAndType.substring(0, separator);
-			const len = receivedIdAndType.length;
-			this.typeGame = receivedIdAndType.substring(separator + 1, len);
-			// retrieve db info and make them visible to the html
-		});
-		this.userNameService.currentMessage.subscribe(userName => {
+		this.gameInfoService.currentGameName.subscribe(gameName =>
+			this.gameName = gameName);
+		// retrieve db info and make them visible to the html
+		this.gameInfoService.currentPartId.subscribe(partId =>
+			this.partId = partId);
+		this.userService.currentUsername.subscribe(userName => {
 			this.userName = userName;
 		});
 		this.setData();
@@ -45,30 +42,49 @@ export class JoiningPageComponent implements OnInit {
 	}
 
 	setData() {
-		console.log('setData of ' + this.partId + ' and ' + this.typeGame);
-		const observedJoinerDoc: AngularFirestoreDocument<IJoiner> = this.afs.doc('joiners/' + this.partId);
-		this.observedJoinerList = observedJoinerDoc.valueChanges();
+		console.log(this.partId + 'la partie qu\'on va charger');
+		this.observedJoinerDoc = this.afs.doc('joiners/' + this.partId);
+		this.observedJoinerList = this.observedJoinerDoc.valueChanges();
+		this.observedGameDoc = this.afs.doc('parties/' + this.partId);
 	}
 
 	setBeginningRedirection() {
-		console.log('setBeginningRedirection');
 		// called after the game creation
-		this.observedGameDoc = this.afs.doc('parties/' + this.partId);
-		this.observedGameDoc.valueChanges().subscribe(actualPart => {
-			this.creator = (actualPart.playerZero === this.userName);
-			if (actualPart.playerOne !== '') {
-				// when playerOne is set, it is because player zero (the game creator) choose him
-				// all joiner-wannabe, the creator, and the chosen one, are then redirected to the game component
-				this._route.navigate([actualPart.typeGame + 'Online']);
-			}
-		});
+		this.observedGameDoc.valueChanges()
+			.subscribe(actualPart => {
+				this.creator = (actualPart.playerZero === this.userName);
+				if (actualPart.playerOne !== '') {
+					// when playerOne is set, it is because player zero (the game creator) choose him
+					// all joiner-wannabe, the creator, and the chosen one, are then redirected to the game component
+					this._route.navigate([actualPart.typeGame + 'Online']);
+				}
+			});
 	}
 
 	startGameWithPlayer(joiner: string) {
 		this.observedGameDoc.update({
-			'playerOne': joiner,
-			'turn': 0
+			playerOne: joiner,
+			turn: 0,
+			beginning: Date.now()
 		});
+	}
+
+	cancelGame() {
+		this.observedJoinerDoc.delete();
+		this.observedGameDoc.delete();
+		this._route.navigate(['server']);
+	}
+
+	cancelGameJoining() {
+		this.observedJoinerDoc.ref.get()
+			.then( joinersDoc => {
+				const joiners = joinersDoc.data() as IJoiner;
+				const joinersList: string[] = joiners.names;
+				const index = joinersList.indexOf(this.userName);
+				joinersList.splice(index, 1);
+				this.observedJoinerDoc.update({names : joinersList});
+			});
+		this._route.navigate(['server']);
 	}
 
 }
