@@ -82,7 +82,7 @@ export class AwaleOnlineComponent implements OnInit {
 				this.winner = updatedICurrentPart.winner;
 			}
 			const nbPlayedMoves = listMoves.length;
-			let currentPartTurn;
+			let localPartTurn;
 			while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 				P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
 				localPartTurn = this.rules.node.gamePartSlice.turn;

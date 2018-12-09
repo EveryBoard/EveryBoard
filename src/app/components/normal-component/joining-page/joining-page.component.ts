@@ -58,11 +58,7 @@ export class JoiningPageComponent implements OnInit {
 					// all joiner-wannabe, the creator, and the chosen one, are then redirected to the game component
 					this._route.navigate([actualPart.typeGame + 'Online']);
 				}
-<<<<<<< HEAD
-		});
-=======
 			});
->>>>>>> small-security-amelioration
 	}
 
 	startGameWithPlayer(joiner: string) {

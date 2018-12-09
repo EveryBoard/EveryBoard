@@ -15,13 +15,8 @@ export class UserDAO {
 		// update the user with pseudo to notifify that he's been doing something
 		this.afs.collection('joueurs')
 			.doc(userDocId).update({
-<<<<<<< HEAD
-				lastActionTime: Date.now(),
-				status: -2 // TODO calculate what that must be
-=======
 			lastActionTime: Date.now(),
 			status: -2 // TODO calculate what that must be
->>>>>>> small-security-amelioration
 		});
 	}
 }

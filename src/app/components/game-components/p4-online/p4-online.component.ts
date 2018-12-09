@@ -48,22 +48,11 @@ export class P4OnlineComponent implements OnInit {
 		// MNode.ruler = this.rules;
 
 		// should be some kind of session-scope
-<<<<<<< HEAD
-		this.gameInfoService.currentPartId.subscribe(gameId =>
-			this.partId = gameId);
-
-		// this.userName = this.userNameService.userName;
-		this.userService.currentUsername.subscribe(message => {
-			this.userName = message;
-		});
-=======
-		// should be some kind of session-scope
 		this.gameInfoService.currentPartId.subscribe(partId =>
 			this.partId = partId);
 
 		this.userService.currentUsername.subscribe(message =>
 			this.userName = message);
->>>>>>> small-security-amelioration
 
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
@@ -108,15 +97,8 @@ export class P4OnlineComponent implements OnInit {
 	updateBoard() {
 		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
 		this.board = p4PartSlice.getCopiedBoard();
-<<<<<<< HEAD
-		this.currentPlayer = this.players[(1 + p4PartSlice.turn) % 2];
-		this.gameStatus = this.rules.node.isEndGame() ?
-			this.players[(p4PartSlice.turn + 1) % 2] + ' a gagné!' :
-			'c\'est au tour de ' + this.currentPlayer;
-=======
 		this.turn = p4PartSlice.turn;
 		this.currentPlayer = this.players[p4PartSlice.turn % 2];
->>>>>>> small-security-amelioration
 	}
 
 	choose(event: MouseEvent): boolean {

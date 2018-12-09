@@ -3,11 +3,7 @@ export interface ICurrentPart {
 	playerZero: string; // id
 	playerOne?: string; // id
 	turn: number; // -1 before it begin, 0 initial floor
-<<<<<<< HEAD
-	beginning?: number; // should be date, is a timestamp
-=======
 	beginning?: number; // should be date; is a timestamp
->>>>>>> small-security-amelioration
 
 	typePart?: number; // amicale, comptabilisée, pédagogique
 	result?: number;

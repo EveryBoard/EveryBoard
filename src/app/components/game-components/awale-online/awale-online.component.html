@@ -1,9 +1,4 @@
 <div>
-<<<<<<< HEAD
-	<h3 *ngIf='observerRole<2'> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
-	<p> {{ gameStatus }} </p>
-	<h3 *ngIf='observerRole>=2'> {{ players[0] }} vs {{ players[1] }}</h3>
-=======
 	<h3 *ngIf="observerRole <2"> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
 	<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
 
@@ -16,7 +11,6 @@
 		<h3 *ngIf="(winner!==userName) && (observerRole>=2)"> Victoire de {{ winner }} </h3>
 		<h3><a [routerLink]="['/server']"> Retourner au serveur : </a></h3>
 	</div>
->>>>>>> small-security-amelioration
 
 	<table *ngIf="observerRole!=1"
 		   (click)="choose($event);">
@@ -44,13 +38,5 @@
 	</table>
 	Tour : {{ turn }} <br/>
 	{{ players[0] }} : {{ captured[0] }} <br/>
-<<<<<<< HEAD
-	{{ players[1] }} : {{ captured[1] }}<br/>
-	ListMoves : {{ listMoves }} <br/>
-	Turn : {{ turn }} <br/>
-	LocalTurn : {{ localTurn}}
-
-=======
 	{{ players[1] }} : {{ captured[1] }} <br/>
->>>>>>> small-security-amelioration
 </div>
