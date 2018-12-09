@@ -1,4 +1,5 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
+import {QuartoEnum} from './QuartoEnum';
 
 export class QuartoPartSlice extends GamePartSlice {
 
@@ -13,63 +14,60 @@ export class QuartoPartSlice extends GamePartSlice {
 
 	static getInitialBoard(): QuartoPartSlice {
 		const partSlice: QuartoPartSlice = new QuartoPartSlice(
-			GamePartSlice.createBiArray(4, 4, QuartoEnum.UNOCCUPIED.getValue()),
+			GamePartSlice.createBiArray(4, 4, QuartoEnum.UNOCCUPIED),
 		0,
-			QuartoEnum.AAAA.getValue());
-	//this.board[0][0] = QuartoEnum.AAAA.getValue();
-	//this.board[1][0] = QuartoEnum.AAAB.getValue();
-	//this.board[2][0] = QuartoEnum.AABA.getValue();
-	//this.board[3][0] = QuartoEnum.AABB.getValue();
-	return partSlice;
-	// 0--- en 3, 3
-	// 00-- en 2, 1
-	// safe : 1101 1110
-}
+			QuartoEnum.AAAA);
+		// this.board[0][0] = QuartoEnum.AAAA.getValue();
+		// this.board[1][0] = QuartoEnum.AAAB.getValue();
+		// this.board[2][0] = QuartoEnum.AABA.getValue();
+		// this.board[3][0] = QuartoEnum.AABB.getValue();
+		return partSlice;
+	}
 
-public static List<QuartoEnum> getFullPawnsList() {
-	QuartoEnum[] all = QuartoEnum.values();
-	List<QuartoEnum> filtered = new ArrayList<QuartoEnum>(16);
-	for (QuartoEnum q : all) {
-		if (q != QuartoEnum.UNOCCUPIED) {
-			filtered.add(q);
+	static getFullPawnsList(): Array<QuartoEnum> {
+		const all: QuartoEnum[] = QuartoEnum.values();
+		const filtered: Array<QuartoEnum> = new Array<QuartoEnum>(16);
+		for (const q of all) {
+			if (q !== QuartoEnum.UNOCCUPIED) {
+				filtered.push(q);
+			}
 		}
+		return filtered;
 	}
-	return filtered;
-}
 
-public static boolean isGivable(int pawn, int[][] board, int pieceInHand) {
-	if (pawn == pieceInHand) {
-		return false;
-	}
-	return QuartoPartSlice.isPlacable(pawn, board);
-}
-
-public static boolean isPlacable(int pawn, int[][] board) {
-	// return true if the pawn is not already placed on the board
-	boolean found = false;
-	int indexY = 0;
-	int indexX;
-	while (!found && (indexY<4)) {
-		indexX = 0;
-		while (!found && (indexX<4)) {
-			found = board[indexY][indexX]==pawn;
-			indexX++;
+	static isGivable(pawn: number, board: number[][], pieceInHand: number): boolean {
+		if (pawn === pieceInHand) {
+			return false;
 		}
-		indexY++;
+		return QuartoPartSlice.isPlacable(pawn, board);
 	}
-	return !found;
-}
 
-public List<QuartoEnum> getRemainingPawns() {
-	// return the pawn that are nor on the board nor the one that you have in your hand
-	// (hence, the one that your about to put on the board)
-	List<QuartoEnum> allPawn = QuartoPartSlice.getFullPawnsList();
-	List<QuartoEnum> remainingPawns = new ArrayList<>();
-	for (QuartoEnum quartoEnum : allPawn) {
-		if (QuartoPartSlice.isGivable(quartoEnum.getValue(), this.board, this.pieceInHand)){
-			remainingPawns.add(quartoEnum);
+	static isPlacable(pawn: number, board: number[][]): boolean {
+		// return true if the pawn is not already placed on the board
+		let found = false;
+		let indexY = 0;
+		let indexX: number;
+		while (!found && (indexY < 4)) {
+			indexX = 0;
+			while (!found && (indexX < 4)) {
+				found = board[indexY][indexX] === pawn;
+				indexX++;
+			}
+			indexY++;
 		}
+		return !found;
 	}
-	return remainingPawns;
-}
+
+	public getRemainingPawns(): Array<QuartoEnum> {
+		// return the pawn that are nor on the board nor the one that you have in your hand
+		// (hence, the one that your about to put on the board)
+		const allPawn: Array<QuartoEnum> = QuartoPartSlice.getFullPawnsList();
+		const remainingPawns: Array<QuartoEnum> = new Array<QuartoEnum>();
+		for (const quartoEnum of allPawn) {
+			if (QuartoPartSlice.isGivable(quartoEnum, this.board, this.pieceInHand)){
+				remainingPawns.push(quartoEnum);
+			}
+		}
+		return remainingPawns;
+	}
 }

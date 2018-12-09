@@ -2,7 +2,7 @@ import {MoveCoord} from '../../jscaip/MoveCoord';
 
 export class QuartoMove extends MoveCoord {
 
-	protected piece: number;
+	readonly piece: number;
 
 	constructor(x: number, y: number, piece: number) {
 		/* (x, y) is the coord where you put the 'inHand' quarto piece

@@ -4,6 +4,7 @@ import {MNode} from '../../jscaip/MNode';
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {QuartoPartSlice} from './QuartoPartSlice';
 import {QuartoMove} from './QuartoMove';
+import {QuartoEnum} from './QuartoEnum';
 
 class CaseSensible {
 
@@ -126,7 +127,7 @@ class Critere {
 	}
 
 	mergeWithQE(qe: QuartoEnum): boolean {
-		return this.mergeWithNumber(qe.getValue());
+		return this.mergeWithNumber(qe);
 	}
 
 	isAllNull(): boolean {
@@ -153,7 +154,7 @@ class Critere {
 	}
 
 	matchQE(qe: QuartoEnum): boolean {
-		return this.match(new Critere(qe.getValue()));
+		return this.match(new Critere(qe));
 	}
 
 	matchInt(c: number): boolean {
@@ -161,7 +162,10 @@ class Critere {
 	}
 
 	toString(): string {
-		return 'Critere{' + Arrays.toString(this.subCritere) + '}';
+		return 'Critere{' + QuartoRules.printArray(
+			this.subCritere.map( b => {
+				return (b === true) ? 1 : 0 ;
+			})) + '}';
 	}
 
 }
@@ -188,7 +192,52 @@ export class QuartoRules extends Rules {
 	// c (x, y) est la coordonnées de la première case
 	// d (x, y) est la direction de la ligne en question
 
+	public node: MNode<QuartoRules>;
 	// enum boolean {TRUE, FALSE, NULL}
+
+	private static isOccupied(qcase: number): boolean {
+		return (qcase !== QuartoEnum.UNOCCUPIED);
+	}
+
+	static printArray(array: number[]) {
+		console.log('[');
+		for (const i of array) {
+			console.log(i + ' ');
+		}
+		console.log(']');
+	}
+
+	private static isLegal(move: QuartoMove, player: number, quartoPartSlice: QuartoPartSlice): number {
+		/* pieceInHand is the one to be placed
+         * move.piece is the one gave to the next player
+         */
+		const x: number = move.coord.x;
+		const y: number = move.coord.y;
+		const choosenPiece: number = move.piece;
+		const board: number[][] = quartoPartSlice.getCopiedBoard();
+		const pieceInHand: number = quartoPartSlice.pieceInHand;
+		if (choosenPiece < 0) {
+			// nombre trop bas, ce n'est pas une pièce
+			return QuartoRules.INVALID_MOVE;
+		}
+		if (choosenPiece > 15) {
+			// nombre trop grand, ce n'est pas une pièce
+			return QuartoRules.INVALID_MOVE;
+		}
+		if (QuartoRules.isOccupied(board[y][x])) {
+			// on ne joue pas sur une case occupée
+			return QuartoRules.INVALID_MOVE;
+		}
+		if (!QuartoPartSlice.isPlacable(choosenPiece, board)) {
+			// la piece est déjà sur le plateau
+			return QuartoRules.INVALID_MOVE;
+		}
+		if (pieceInHand === choosenPiece) {
+			// la pièce donnée est la même que celle en main, c'est illégal
+			return QuartoRules.INVALID_MOVE;
+		}
+		return QuartoRules.VALID_MOVE;
+	}
 
 	// Overrides :
 
@@ -211,8 +260,8 @@ export class QuartoRules extends Rules {
 		if (moveResult === QuartoRules.INVALID_MOVE) {
 			return false;
 		}
-		const y: number = quartoMove.getY();
-		const x: number = quartoMove.getX();
+		const y: number = quartoMove.coord.y;
+		const x: number = quartoMove.coord.x;
 		const piece: number = quartoMove.piece;
 		board[y][x] = quartoPartSlice.pieceInHand;
 		const partSlice: QuartoPartSlice = new QuartoPartSlice(board, turn + 1, piece);
@@ -221,94 +270,64 @@ export class QuartoRules extends Rules {
 		return true;
 	}
 
-		private static isLegal(move: QuartoMove, player: number, quartoPartSlice: QuartoPartSlice ): number {
-			/* pieceInHand is the one to be placed
-			 * move.piece is the one gave to the next player
-			 */
-			const x: number = move.getX();
-			const y: number = move.getY();
-			const choosenPiece: number = move.piece;
-			const board: number[][] = quartoPartSlice.getBoard();
-			const pieceInHand: number = quartoPartSlice.pieceInHand;
-			if (choosenPiece < 0) {
-				// nombre trop bas, ce n'est pas une pièce
-				return QuartoRules.INVALID_MOVE;
-			}
-			if (choosenPiece > 15) {
-			// nombre trop grand, ce n'est pas une pièce
-			return QuartoRules.INVALID_MOVE;
-		}
-		if (QuartoRules.isOccupied(board[y][x])) {
-			// on ne joue pas sur une case occupée
-			return QuartoRules.INVALID_MOVE;
-		}
-		if (!QuartoPartSlice.isPlacable(choosenPiece, board)) {
-			// la piece est déjà sur le plateau
-			return QuartoRules.INVALID_MOVE;
-		}
-		if (pieceInHand === choosenPiece) {
-			// la pièce donnée est la même que celle en main, c'est illégal
-			return QuartoRules.INVALID_MOVE;
-		}
-		return QuartoRules.VALID_MOVE;
-	}
-
 	setInitialBoard() {
 		if (this.node === null) {
-			this.node = new MNode(QuartoPartSlice.getInitialBoard(), this);
+			this.node = MNode.getFirstNode(QuartoPartSlice.getInitialBoard(), this);
 		} else {
 			this.node = this.node.getInitialNode();
 		}
 	}
 
-	getListMoves(MNode node): {'key': Move, 'value': GamePartSlice}[] {
-		const listMoves: {'key': Move, 'value': GamePartSlice}[] = [];
+	getListMoves(n: MNode<QuartoRules>): { 'key': Move, 'value': GamePartSlice }[] {
+		const listMoves: { 'key': Move, 'value': GamePartSlice }[] = [];
 
-		const partSlice: QuartoPartSlice = (QuartoPartSlice) node.getGamePartSlice();
-		let moveAppliedPartSlice: QuartoPartSlice ;
+		const partSlice: QuartoPartSlice = n.gamePartSlice as QuartoPartSlice;
+		let moveAppliedPartSlice: QuartoPartSlice;
 
-		const board: number[][] = partSlice.getBoard();
+		const board: number[][] = partSlice.getCopiedBoard();
 		const pawns: Array<QuartoEnum> = partSlice.getRemainingPawns();
 		const inHand: number = partSlice.pieceInHand;
 
-		let nextBoard: number[][] ;
-		const nextTurn: number = partSlice.getTurn() + 1;
+		let nextBoard: number[][];
+		const nextTurn: number = partSlice.turn + 1;
 
 
 		for (let y = 0; y < 4; y++) {
 			for (let x = 0; x < 4; x++) {
-				if (board[y][x] === QuartoEnum.UNOCCUPIED.getValue()) {
+				if (board[y][x] === QuartoEnum.UNOCCUPIED) {
 					// Pour chaque cases vides
 					for (const remainingPiece of pawns) { // piece est la pièce qu'on va donner
 						nextBoard = partSlice.getCopiedBoard();
 						nextBoard[y][x] = inHand; // on place la pièce qu'on a en main en (x, y)
 
-						const move: QuartoMove = new QuartoMove(x, y, remainingPiece.getValue()); // synthèse du mouvement listé
+						const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthèse du mouvement listé
 						moveAppliedPartSlice = new QuartoPartSlice(
 							nextBoard,
 							nextTurn,
-							remainingPiece.getValue()); // plateau obtenu
+							remainingPiece); // plateau obtenu
 
 						listMoves.push({'key': move, 'value': moveAppliedPartSlice});
 					}
 				}
 			}
 		}
-		if (listMoves.isEmpty()) { console.log('WTF BORDAILE'); }
+		if (listMoves.length === 0) {
+			console.log('WTF BORDAILE');
+		}
 		// console.log(node + ' has ' + listMoves.size() + ' sons ');
 		return listMoves;
 	}
 
-	getBoardValue(node: MNode): number {
-		const quartoSlice: QuartoPartSlice = node.getGamePartSlice() as QuartoPartSlice;
-		const board: number[][] = quartoSlice.getBoard();
+	getBoardValue(node: MNode<QuartoRules>): number {
+		const quartoSlice: QuartoPartSlice = node.gamePartSlice as QuartoPartSlice;
+		const board: number[][] = quartoSlice.getCopiedBoard();
 		// console.log('Node : ' + node);
 		// console.log('board : ' + Arrays.toString(board[0]) + Arrays.toString(board[1]) + Arrays.toString(board[2])
 		// + Arrays.toString(board[3]));
 
-		let nbCasesVides: number ;
-		let cx, cy, dx, dy, c: number ;
-		const casesSensibles : CaseSensible[] = new CaseSensible[7];
+		let nbCasesVides: number;
+		let cx, cy, dx, dy, c: number;
+		const casesSensibles: CaseSensible[] = new CaseSensible[7];
 		let nbCasesSensibles = 0;
 		let cs: CaseSensible;
 		let commonCrit: Critere;
@@ -316,7 +335,7 @@ export class QuartoRules extends Rules {
 		let preVictory = false; // nous permet d'éviter des vérifications inutiles
 
 		// console.log('testons le plateau');
-		for ( const line of QuartoRules.lines) {
+		for (const line of QuartoRules.lines) {
 			// pour chaque ligne (les horizontales, verticales, puis diagonales
 			cx = line[0];
 			cy = line[1];
@@ -331,14 +350,16 @@ export class QuartoRules extends Rules {
 				c = board[cy][cx];
 				commonCrit = new Critere(c);
 				while (QuartoRules.isOccupied(c) && !commonCrit.isAllNull() && (i < 3)) {
-					i++; cy += dy; cx += dx; // on regarde la case suivante
+					i++;
+					cy += dy;
+					cx += dx; // on regarde la case suivante
 					c = board[cy][cx];
-					commonCrit.mergeWith(c);
+					commonCrit.mergeWithNumber(c);
 				}
 				if (QuartoRules.isOccupied(c) && !commonCrit.isAllNull()) {
 					// the last case was occupied, and there was some common critere on all the four pieces
 					// that's what victory is like in Quarto
-					return (quartoSlice.getTurn() % 2 === 0) ? Integer.MIN_VALUE : Integer.MAX_VALUE ;
+					return (quartoSlice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
 				}
 			} else {
 				// on cherche pour une victoire, pré victoire, ou un score normal
@@ -347,7 +368,7 @@ export class QuartoRules extends Rules {
 				for (let i = 0; i < 4; i++, cy += dy, cx += dx) {
 					c = board[cy][cx];
 					// on analyse toute la ligne
-					if (c === QuartoEnum.UNOCCUPIED.getValue()) {
+					if (c === QuartoEnum.UNOCCUPIED) {
 						// si la case C est inoccupée
 						nbCasesVides++;
 						if (cs === null) {
@@ -371,7 +392,7 @@ export class QuartoRules extends Rules {
 							if (QuartoRules.VERBOSE) {
 								console.log('merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString());
 							}
-							commonCrit.mergeWith(c);
+							commonCrit.mergeWithNumber(c);
 							if (QuartoRules.VERBOSE) {
 								console.log(' = ' + commonCrit.toString() + '\n');
 							}
@@ -379,7 +400,8 @@ export class QuartoRules extends Rules {
 					}
 				}
 				if (QuartoRules.VERBOSE) {
-					console.log(' ' + line[0] + line[1] + line[2] + line[3] + 'contient ' + nbCasesVides + ' case vides au tour ' + node.getTurn());
+					console.log(' ' + line[0] + line[1] + line[2] + line[3] +
+						'contient ' + nbCasesVides + ' case vides au tour ' + node.gamePartSlice.turn);
 				}
 
 
@@ -392,22 +414,22 @@ export class QuartoRules extends Rules {
 					// console.log('Cette ligne n'est pas nulle et elle a un critère en commun entre toutes ses pièces');
 					if (nbCasesVides === 0) {
 						if (QuartoRules.VERBOSE || true) {
-							console.log('Victoire! ' + commonCrit.toString() + ' at line' + Arrays.toString(line));
-							console.log(Arrays.toString(board[0]));
-							console.log(Arrays.toString(board[1]));
-							console.log(Arrays.toString(board[2]));
-							console.log(Arrays.toString(board[3]));
+							console.log('Victoire! ' + commonCrit.toString() + ' at line' + QuartoRules.printArray(line));
+							console.log(QuartoRules.printArray(board[0]));
+							console.log(QuartoRules.printArray(board[1]));
+							console.log(QuartoRules.printArray(board[2]));
+							console.log(QuartoRules.printArray(board[3]));
 						}
-						return (quartoSlice.getTurn() % 2 === 0) ? Integer.MAX_VALUE : Integer.MIN_VALUE; // max or min
+						return (quartoSlice.turn % 2 === 0) ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER; // max or min
 					} else if (nbCasesVides === 1) {
 						// si il n'y a qu'une case vide, alors la case sensible qu'on avais trouvé et assigné
 						// est dans ce cas bel et bien une case sensible
-						if (commonCrit.match(quartoSlice.pieceInHand)) {
+						if (commonCrit.matchInt(quartoSlice.pieceInHand)) {
 							if (QuartoRules.VERBOSE) {
 								console.log('Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
 							}
 							preVictory = true;
-							score = (quartoSlice.getTurn() % 2 === 0) ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;
+							score = (quartoSlice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;
 						}
 						cs.addCritere(commonCrit);
 						casesSensibles[nbCasesSensibles] = cs;
@@ -418,52 +440,6 @@ export class QuartoRules extends Rules {
 		}
 		return score;
 
-	}
-
-	// methods :
-
-	private static isOccupied(qcase: number): boolean {
-		return (qcase !== QuartoEnum.UNOCCUPIED.getValue());
-	}
-
-	private static getCommonCrit( critA: number[] , critB: number[]): number[] {
-		const commonOnes: number = critA[1] & critB[1];
-		const commonZeros: number = critA[0] & critB[0];
-		return new number[]{commonZeros, commonOnes};
-	}
-
-	private getRowsScore(y: number, board: number[][], turn: number): number {
-		return this.getLineScore(board[y], turn);
-	}
-
-	private getColumnScore(x: number, board: number[][], turn: number): number {
-		const line: number[] = [board[0][x], board[1][x], board[2][x], board[3][x]];
-		return this.getLineScore(line, turn);
-	}
-
-	private getLineScore(line: number[] , turn: number): number {
-		let commonOnes: number = line[0];
-		let commonZeros: number = (15 - line[0]);
-		for (const i = 0; i < 4; i++) {
-			if (line[i] === QuartoEnum.UNOCCUPIED.getValue()) { return 0; }
-			else {
-				commonOnes &= line[i];
-				commonZeros &= (15 - line[i]);
-			}
-		}
-		if (commonOnes !== 0) { return (turn % 2 === 0) ? Integer.MIN_VALUE : Integer.MAX_VALUE; }
-		if (commonZeros !== 0) { return (turn % 2 === 0) ? Integer.MIN_VALUE : Integer.MAX_VALUE; }
-		printArray(line);
-		console.log('ligne sans victoire');
-		return 0;
-	}
-
-	private printArray(array: number[]) {
-		console.log('[');
-		for (const i of array) {
-			console.log(i + ' ');
-		}
-		console.log(']');
 	}
 
 }
