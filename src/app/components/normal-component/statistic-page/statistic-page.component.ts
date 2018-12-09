@@ -7,6 +7,9 @@ import {Component, OnInit} from '@angular/core';
 })
 export class StatisticPageComponent implements OnInit {
 
+	inscriptionDate = 'TODO';
+	game = 'TODO';
+
 	constructor() {
 	}
 
