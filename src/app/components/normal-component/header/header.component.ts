@@ -7,6 +7,7 @@ import {UserService} from '../../../services/user-service';
 	styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
+	static refreshingPresenceTimeout = 15 * 1000;
 
 	userName: string;
 
@@ -27,6 +28,6 @@ export class HeaderComponent implements OnInit {
 			console.log('inside the timeout!');
 			this.userService.updateUserActivity();
 			this.startUserPresenceNotification();
-		}, 1000 * 15);
+		}, HeaderComponent.refreshingPresenceTimeout);
 	}
 }

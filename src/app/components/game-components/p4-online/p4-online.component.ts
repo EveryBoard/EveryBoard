@@ -11,6 +11,7 @@ import {ICurrentPart} from '../../../domain/icurrentpart';
 import {GameInfoService} from '../../../services/game-info-service';
 import {UserService} from '../../../services/user-service';
 import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
+import {Router} from '@angular/router';
 
 @Component({
 	selector: 'app-p4-online',
@@ -40,6 +41,7 @@ export class P4OnlineComponent implements OnInit {
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
+				private _route: Router,
 				private userService: UserService) {
 	}
 
@@ -69,18 +71,21 @@ export class P4OnlineComponent implements OnInit {
 			console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
 
 			// todo : améliorer, ça ne doit pas être set à chaque fois
-			this.players = [updatedICurrentPart.playerZero,
-							updatedICurrentPart.playerOne];
+			this.players = [
+				updatedICurrentPart.playerZero,
+				updatedICurrentPart.playerOne];
 			this.observerRole = 2;
 			if (this.players[0] === this.userName) {
 				this.observerRole = 0;
 			} else if (this.players[1] === this.userName) {
 				this.observerRole = 1;
 			}
-			if (updatedICurrentPart.result === 3) {
+
+			if (this.isFinished(updatedICurrentPart.result)) {
 				this.endGame = true;
 				this.winner = updatedICurrentPart.winner;
 			}
+
 			const listMoves = updatedICurrentPart.listMoves;
 			const nbPlayedMoves = listMoves.length;
 			let currentPartTurn;
@@ -93,6 +98,23 @@ export class P4OnlineComponent implements OnInit {
 		});
 
 		this.partDocument = this.afs.doc('parties/' + this.partId);
+	}
+
+	isFinished(result: number) {
+		return ((result === 3) || (result === 1)); // fonctionne pour l'instant avec la victoire normale et l'abandon
+	}
+
+	backToServer() {
+		this._route.navigate(['server']);
+	}
+
+	resign() {
+		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
+		const docRef: DocumentReference = this.partDocument.ref;
+		docRef.update({
+			winner: victoriousPlayer,
+			result: 1
+		}); // resign
 	}
 
 	updateBoard() {

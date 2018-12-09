@@ -1,5 +1,8 @@
 <div>
-	<h3 *ngIf="observerRole <2"> Vous jouez contre {{ players[(observerRole+1)%2] }}</h3>
+	<div *ngIf="observerRole <2">
+		<h3> Vous jouez contre {{ players[(observerRole+1)%2] }} </h3>
+		<button (click)="resign()"> Abandonner </button>
+	</div>
 	<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
 
 	<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
@@ -9,7 +12,7 @@
 		<h3 *ngIf="(winner===userName)"> Vous avez gagné </h3>
 		<h3 *ngIf="(winner!==userName) && (observerRole<2)"> Vous avez perdu </h3>
 		<h3 *ngIf="(winner!==userName) && (observerRole>=2)"> Victoire de {{ winner }} </h3>
-		<h3><a [routerLink]="['/server']"> Retourner au serveur : </a></h3>
+		<button (click)="backToServer()">Retour au serveur</button>
 	</div>
 
 	<table (click)="choose($event);">

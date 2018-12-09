@@ -2,13 +2,14 @@ import {Component, OnInit} from '@angular/core';
 import {P4Rules} from '../../../games/games.p4/P4Rules';
 import {Observable} from 'rxjs';
 import {ICurrentPart} from '../../../domain/icurrentpart';
-import {AngularFirestore, AngularFirestoreDocument} from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
 import {GameInfoService} from '../../../services/game-info-service';
 import {UserService} from '../../../services/user-service';
 import {map} from 'rxjs/operators';
 import {MoveX} from '../../../jscaip/MoveX';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
+import {Router} from '@angular/router';
 
 @Component({
 	selector: 'app-awale-online',
@@ -37,6 +38,7 @@ export class AwaleOnlineComponent implements OnInit {
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
+				private _route: Router,
 				private userService: UserService) {
 	}
 
@@ -74,7 +76,7 @@ export class AwaleOnlineComponent implements OnInit {
 
 			const listMoves = updatedICurrentPart.listMoves;
 			this.turn = updatedICurrentPart.turn;
-			if (updatedICurrentPart.result === 3) {
+			if (this.isFinished(updatedICurrentPart.result)) {
 				this.endGame = true;
 				this.winner = updatedICurrentPart.winner;
 			}
@@ -127,6 +129,23 @@ export class AwaleOnlineComponent implements OnInit {
 		} else {
 			console.log('Mais c\'est pas ton tour !');
 		}
+	}
+
+	isFinished(result: number) {
+		return ((result === 3) || (result === 1)); // fonctionne pour l'instant avec la victoire normale et l'abandon
+	}
+
+	backToServer() {
+		this._route.navigate(['server']);
+	}
+
+	resign() {
+		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
+		const docRef: DocumentReference = this.partDocument.ref;
+		docRef.update({
+			winner: victoriousPlayer,
+			result: 1
+		}); // resign
 	}
 
 	notifyVictory() {
