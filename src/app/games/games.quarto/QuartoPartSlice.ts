@@ -1,5 +1,6 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {QuartoEnum} from './QuartoEnum';
+import {P4Rules} from '../games.p4/P4Rules';
 
 export class QuartoPartSlice extends GamePartSlice {
 
@@ -12,16 +13,9 @@ export class QuartoPartSlice extends GamePartSlice {
 		this.pieceInHand = pieceInHand;
 	}
 
-	static getInitialBoard(): QuartoPartSlice {
-		const partSlice: QuartoPartSlice = new QuartoPartSlice(
-			GamePartSlice.createBiArray(4, 4, QuartoEnum.UNOCCUPIED),
-		0,
-			QuartoEnum.AAAA);
-		// this.board[0][0] = QuartoEnum.AAAA.getValue();
-		// this.board[1][0] = QuartoEnum.AAAB.getValue();
-		// this.board[2][0] = QuartoEnum.AABA.getValue();
-		// this.board[3][0] = QuartoEnum.AABB.getValue();
-		return partSlice;
+	static getStartingBoard(): number[][] {
+		const board: number[][] = GamePartSlice.createBiArray(4, 4, QuartoEnum.UNOCCUPIED);
+		return board;
 	}
 
 	static getFullPawnsList(): Array<QuartoEnum> {

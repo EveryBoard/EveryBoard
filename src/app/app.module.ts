@@ -23,9 +23,10 @@ import {P4OfflineComponent} from './components/offline-components/p4-offline/p4-
 
 import {UserService} from './services/user-service';
 import {GameInfoService} from './services/game-info-service';
-import { AwaleOnlineComponent } from './components/game-components/awale-online/awale-online.component';
-import { AwaleOfflineComponent } from './components/offline-components/awale-offline/awale-offline.component';
+import {AwaleOnlineComponent} from './components/game-components/awale-online/awale-online.component';
+import {AwaleOfflineComponent} from './components/offline-components/awale-offline/awale-offline.component';
 import {firebaseConfig} from './firebaseConfig';
+import {QuartoOnlineComponent} from './components/game-components/quarto-online/quarto-online.component';
 
 const routes: Route [] = [
 	{path: 'server', 'component': ServerPageComponent},
@@ -36,6 +37,7 @@ const routes: Route [] = [
 	{path: 'P4Offline', 'component': P4OfflineComponent},
 	{path: 'AwaleOnline', 'component': AwaleOnlineComponent},
 	{path: 'AwaleOffline', 'component': AwaleOfflineComponent},
+	{path: 'QuartoOnline', 'component': QuartoOnlineComponent},
 
 	{path: '', redirectTo: 'login-page', pathMatch: 'full'},
 	{path: '**', 'component': LoginComponent}
@@ -54,7 +56,8 @@ const routes: Route [] = [
 		CreateAccountComponent,
 		JoiningPageComponent,
 		AwaleOnlineComponent,
-		AwaleOfflineComponent
+		AwaleOfflineComponent,
+		QuartoOnlineComponent
 	],
 	imports: [
 		BrowserModule,

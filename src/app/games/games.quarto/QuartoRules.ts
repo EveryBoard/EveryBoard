@@ -5,6 +5,7 @@ import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {QuartoPartSlice} from './QuartoPartSlice';
 import {QuartoMove} from './QuartoMove';
 import {QuartoEnum} from './QuartoEnum';
+import {P4PartSlice} from '../games.p4/P4PartSlice';
 
 class CaseSensible {
 
@@ -15,7 +16,7 @@ class CaseSensible {
 	y: number;
 
 	constructor(x: number, y: number) {
-		this.criteres = new Critere[3];
+		this.criteres = new Array<Critere>(3);
 		/* une case sensible peut faire au maxium partie de trois lignes
 		 * l'horizontale, la verticale, la diagonale
 		 */
@@ -46,7 +47,7 @@ class CaseSensible {
 		// retourne l'index de l'endroit ou on pourrait le mettre si il n'est pas dedans
 		let i: number;
 		for (i = 0; i < 3; i++) {
-			if (this.criteres[i] === null) {
+			if (this.criteres[i] == null) {
 				return -i - 1; // n'est pas contenu et il reste de la place à l'indice i
 			}
 			if (this.criteres[i].equals(c)) {
@@ -111,7 +112,7 @@ class Critere {
 				// sur leurs i'ième critère respectifs, alors il n'y a pas de critère en commun (NULL)
 				this.subCritere[i] = null;
 			}
-			if (this.subCritere[i] === null) {
+			if (this.subCritere[i] == null) {
 				// si après ceci le i'ième critère de cette représentation est NULL, alors il perd un critère
 				nonNull--;
 			}
@@ -241,6 +242,14 @@ export class QuartoRules extends Rules {
 
 	// Overrides :
 
+	constructor() {
+		super();
+		this.node = MNode.getFirstNode(
+			new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA),
+			this
+		);
+	}
+
 	choose(move: Move): boolean {
 		const quartoMove: QuartoMove = move as QuartoMove;
 		console.log('choosing ' + quartoMove);
@@ -271,8 +280,10 @@ export class QuartoRules extends Rules {
 	}
 
 	setInitialBoard() {
-		if (this.node === null) {
-			this.node = MNode.getFirstNode(QuartoPartSlice.getInitialBoard(), this);
+		if (this.node == null) {
+			this.node = MNode.getFirstNode(
+				new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA),
+				this);
 		} else {
 			this.node = this.node.getInitialNode();
 		}
@@ -327,7 +338,7 @@ export class QuartoRules extends Rules {
 
 		let nbCasesVides: number;
 		let cx, cy, dx, dy, c: number;
-		const casesSensibles: CaseSensible[] = new CaseSensible[7];
+		const casesSensibles: Array<CaseSensible> = new Array<CaseSensible>(7);
 		let nbCasesSensibles = 0;
 		let cs: CaseSensible;
 		let commonCrit: Critere;
@@ -371,7 +382,7 @@ export class QuartoRules extends Rules {
 					if (c === QuartoEnum.UNOCCUPIED) {
 						// si la case C est inoccupée
 						nbCasesVides++;
-						if (cs === null) {
+						if (cs == null) {
 							cs = new CaseSensible(cx, cy);
 						}
 					} else {
@@ -380,7 +391,7 @@ export class QuartoRules extends Rules {
 						// console.log('board : ' + Arrays.toString(board[0]) + Arrays.toString(board[1]) + Arrays.toString(board[2])
 						// + Arrays.toString(board[3]));
 						// console.log('case occupée en ' + cx + ', ' + cy + ' qui contient ' + c);
-						if (commonCrit === null) {
+						if (commonCrit == null) {
 							if (QuartoRules.VERBOSE) {
 								console.log('setcase vide en (' + cx + ', ' + cy + ') = ' + c);
 							}

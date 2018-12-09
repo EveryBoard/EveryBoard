@@ -21,7 +21,7 @@ export class ServerPageComponent implements OnInit {
 	partIds: ICurrentPartId[];
 	// observedPartIds: Observable<ICurrentPartId[]>;
 	activeUserList: IUserId[];
-	readonly gameNameList: String[] = ['P4', 'Awale'];
+	readonly gameNameList: String[] = ['P4', 'Awale', 'Quarto'];
 	selectedGame: string;
 	userName: string;
 
