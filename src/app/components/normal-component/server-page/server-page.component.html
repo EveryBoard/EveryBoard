@@ -1,19 +1,23 @@
 <div id="actualGame">
 	<p>List of actual games</p>
-	<table>
-		<tr>
-			<th>Game Name</th>
-			<th>Player 0</th>
-			<th>Player 1</th>
-			<th>Turn</th>
-		</tr>
-		<tr *ngFor="let part of partIds"
-			(click)="joinGame(part.id, part.part.typeGame)">
-			<td>{{ part.part.typeGame }}</td>
-			<td>{{ part.part.playerZero }}</td>
-			<td>{{ part.part.playerOne }}</td>
-			<td>{{ part.part.turn }}</td>
-		</tr>
+	<table class="table table-hover">
+		<thead>
+			<tr>
+				<th scope="col">Game Name</th>
+				<th scope="col">Player 0</th>
+				<th scope="col">Player 1</th>
+				<th scope="col">Turn</th>
+			</tr>
+		</thead>
+		<tbody>
+			<tr *ngFor="let part of partIds"
+				(click)="joinGame(part.id, part.part.typeGame)">
+				<td>{{ part.part.typeGame }}</td>
+				<td>{{ part.part.playerZero }}</td>
+				<td>{{ part.part.playerOne }}</td>
+				<td>{{ part.part.turn }}</td>
+			</tr>
+		</tbody>
 	</table>
 </div>
 <div id="onlineUser">
@@ -22,7 +26,6 @@
 		<li *ngFor="let user of activeUserList">{{ user.user.pseudo }} : {{ user.user.lastActionTime | date:'HH:mm:ss':'+0100'}}</li>
 	</ul>
 </div>
-
 <div id="gameCreator">
 	<p>choisi le jeu que tu crée</p>
 	<select [(ngModel)]='selectedGame'>
@@ -33,7 +36,6 @@
 	<input type="button" value="online game" (click)="createGame()">
 	<input type="button" value="local game" (click)="playLocally()">
 </div>
-
 <!--
 <div id="chat">
 	<p>ici c'est le tchat (could do)</p>

@@ -14,6 +14,7 @@
 		<h3 *ngIf="(winner===userName)"> Vous avez gagné </h3>
 		<h3 *ngIf="(winner!==userName) && (observerRole<2)"> Vous avez perdu </h3>
 		<h3 *ngIf="(winner!==userName) && (observerRole>=2)"> Victoire de {{ winner }} </h3>
+		<h3><a [routerLink]="['/server']"> Retourner au serveur : </a></h3>
 	</div>
 >>>>>>> small-security-amelioration
 
