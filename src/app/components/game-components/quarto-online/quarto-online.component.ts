@@ -38,8 +38,8 @@ export class QuartoOnlineComponent implements OnInit {
 	private choosenX = -1;
 	private choosenY = -1;
 
-	// imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
-	imagesLocation = 'src/assets/images/quarto/'; // en dev
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
+	// imagesLocation = 'src/assets/images/quarto/'; // en dev
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,

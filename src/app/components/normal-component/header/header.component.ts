@@ -14,8 +14,19 @@ export class HeaderComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.userService.currentUsername.subscribe(message =>
-			this.userName = message);
+		this.userService.currentUsername.subscribe(message => {
+			this.userName = message;
+			if (message !== '') {
+				this.startUserPresenceNotification();
+			}
+		});
 	}
 
+	startUserPresenceNotification() {
+		setTimeout(() => {
+			console.log('inside the timeout!');
+			this.userService.updateUserActivity();
+			this.startUserPresenceNotification();
+		}, 1000 * 15);
+	}
 }

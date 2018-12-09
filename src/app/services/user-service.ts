@@ -22,10 +22,10 @@ export class UserService {
 	}
 
 	updateUserActivity() {
-		this.currentUserDocId.subscribe( next => {
-			if (next !== '') {
-				this.userDAO.updateUserDocuActivity(next);
-			}
-		});
+		const currentUserDocId = this.userDocId.getValue();
+		if (currentUserDocId === '') {
+			return;
+		}
+		this.userDAO.updateUserDocuActivity(currentUserDocId);
 	}
 }
