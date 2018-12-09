@@ -1,7 +1,11 @@
 <div>
 	<div *ngIf="observerRole <2">
-		<h3> Vous jouez contre {{ players[(observerRole+1)%2] }} </h3>
+		<h3> Vous jouez contre {{ opposant.user.pseudo }} </h3>
 		<button (click)="resign()"> Abandonner </button>
+		<button *ngIf="allowedTimeoutVictory"
+				(click)="notifyTimeout()">
+			{{ opposant.user.pseudo }} ne réagit plus, cliquez pour gagner par time out
+		</button>
 	</div>
 	<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
 

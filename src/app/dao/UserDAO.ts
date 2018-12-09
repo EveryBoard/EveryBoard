@@ -20,4 +20,8 @@ export class UserDAO {
 			status: -2 // TODO calculate what that must be
 		});
 	}
+	getUserDocRefByUserName(username: string): Query {
+		return this.afs.collection('joueurs').ref
+			.where('pseudo', '==', username).limit(1);
+	}
 }

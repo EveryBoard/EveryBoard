@@ -10,6 +10,9 @@ import {MoveX} from '../../../jscaip/MoveX';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
 import {Router} from '@angular/router';
+import {UserDAO} from '../../../dao/UserDAO';
+import {IUser, IUserId} from '../../../domain/iuser';
+import {HeaderComponent} from '../../normal-component/header/header.component';
 
 @Component({
 	selector: 'app-awale-online',
@@ -20,7 +23,7 @@ export class AwaleOnlineComponent implements OnInit {
 
 	rules = new AwaleRules();
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
-	players: string[];
+	players: string[] = null;
 	board: Array<Array<number>>;
 
 	observedPart: Observable<ICurrentPart>;
@@ -33,13 +36,16 @@ export class AwaleOnlineComponent implements OnInit {
 	turn = 0;
 	endGame = false;
 	winner: string;
+	opposant: IUserId;
+	allowedTimeoutVictory = false;
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
 				private _route: Router,
-				private userService: UserService) {
+				private userService: UserService,
+				private userDao: UserDAO) {
 	}
 
 	ngOnInit() {
@@ -65,13 +71,32 @@ export class AwaleOnlineComponent implements OnInit {
 			console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
 
 			// todo : améliorer, ça ne doit pas être set à chaque fois
-			this.players = [updatedICurrentPart.playerZero,
-				updatedICurrentPart.playerOne];
-			this.observerRole = 2;
-			if (this.players[0] === this.userName) {
-				this.observerRole = 0;
-			} else if (this.players[1] === this.userName) {
-				this.observerRole = 1;
+			if (this.players == null) {
+				this.players = [
+					updatedICurrentPart.playerZero,
+					updatedICurrentPart.playerOne];
+				this.observerRole = 2;
+				let opposantName = '';
+				if (this.players[0] === this.userName) {
+					this.observerRole = 0;
+					opposantName = this.players[1];
+				} else if (this.players[1] === this.userName) {
+					this.observerRole = 1;
+					opposantName = this.players[0];
+				}
+				if (opposantName !== '') {
+					this.userDao.getUserDocRefByUserName(opposantName)
+						.onSnapshot((querySnapshot) => {
+							let opposant: IUserId;
+							querySnapshot.forEach(doc => {
+								const data = doc.data() as IUser;
+								const id = doc.id;
+								opposant = {id: id, user: data};
+							});
+							this.opposant = opposant;
+							this.startWatchingForOpponentTimeout();
+						});
+				}
 			}
 
 			const listMoves = updatedICurrentPart.listMoves;
@@ -91,6 +116,32 @@ export class AwaleOnlineComponent implements OnInit {
 		});
 
 		this.partDocument = this.afs.doc('parties/' + this.partId);
+	}
+
+	startWatchingForOpponentTimeout() {
+		if (this.hasTimedOut(this.opposant)) {
+			this.allowTimeoutVictory(this.opposant);
+		} else {
+			this.forbidTimeoutVictory(this.opposant);
+		}
+		setTimeout( () => this.startWatchingForOpponentTimeout(),
+			HeaderComponent.refreshingPresenceTimeout);
+	}
+
+	hasTimedOut(opposant: IUserId) {
+		const timeOutDuree = 30 * 1000;
+		console.log('lastActionTime of your opponant : ' + opposant.user.lastActionTime);
+		const mtn: number = Date.now();
+		console.log('delta/1000 : ' + ((mtn - opposant.user.lastActionTime) / 1000));
+		return (opposant.user.lastActionTime + timeOutDuree < Date.now());
+	}
+
+	allowTimeoutVictory(opposant: IUserId) {
+		this.allowedTimeoutVictory = true;
+	}
+
+	forbidTimeoutVictory(opposant: IUserId) {
+		this.allowedTimeoutVictory = false;
 	}
 
 	updateBoard() {
@@ -132,7 +183,8 @@ export class AwaleOnlineComponent implements OnInit {
 	}
 
 	isFinished(result: number) {
-		return ((result === 3) || (result === 1)); // fonctionne pour l'instant avec la victoire normale et l'abandon
+		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
+		return ((result === 3) || (result === 1) || (result === 4));
 	}
 
 	backToServer() {
@@ -154,14 +206,25 @@ export class AwaleOnlineComponent implements OnInit {
 		this.winner = victoriousPlayer;
 		const docRef = this.partDocument.ref;
 		docRef.update({
-			'winner': victoriousPlayer,
-			'result': 3
+			winner: victoriousPlayer,
+			result: 3
 		});
 	}
 
 	isPlayerTurn() {
 		const indexPlayer = this.rules.node.gamePartSlice.turn % 2;
 		return this.players[indexPlayer] === this.userName;
+	}
+
+	notifyTimeout() {
+		const victoriousPlayer = this.userName;
+		this.endGame = true;
+		this.winner = victoriousPlayer;
+		const docRef = this.partDocument.ref;
+		docRef.update({
+			winner: victoriousPlayer,
+			result: 4
+		});
 	}
 
 	updateDBBoard(move: MoveX) {

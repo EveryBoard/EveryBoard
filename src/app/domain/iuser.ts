@@ -2,8 +2,8 @@ export interface IUser {
 	code: string;
 	pseudo: string;
 	email?: string;
-	inscriptionDate?: Date;
-	lastActionTime: Date;
+	inscriptionDate?: number;
+	lastActionTime: number;
 	status?: number; // playing, waiting-joiner, observering, chat-room, inactive, offline
 }
 export interface IUserId {
@@ -15,7 +15,7 @@ export class User {
 		public code: string, // lol
 		public pseudo: string,
 		public email: string,
-		public inscriptionDate: Date,
-		public lastActionTime: Date,
+		public inscriptionDate: number,
+		public lastActionTime: number,
 		public status: number) {}
 }
