@@ -88,7 +88,7 @@ export class AwaleRules extends Rules {
 			}
 		}
 		if (AwaleRules.isStarving(player, board) && !AwaleRules.canDistribute(ennemi, board)) {
-			// if the player distributed his last seeds and the opposant could not give him seeds
+			// if the player distributed his last seeds and the opponent could not give him seeds
 			if (AwaleRules.VERBOSE) {
 				console.log('You just gave you last seed on the opponent could not give it back to you');
 			}

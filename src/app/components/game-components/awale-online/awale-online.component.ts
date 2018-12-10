@@ -36,7 +36,7 @@ export class AwaleOnlineComponent implements OnInit {
 	turn = 0;
 	endGame = false;
 	winner: string;
-	opposant: IUserId;
+	opponent: IUserId;
 	allowedTimeoutVictory = false;
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
@@ -57,6 +57,7 @@ export class AwaleOnlineComponent implements OnInit {
 			this.partId = partId);
 		this.userService.currentUsername.subscribe(message =>
 			this.userName = message);
+
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
@@ -65,64 +66,65 @@ export class AwaleOnlineComponent implements OnInit {
 				return actions.payload.data() as ICurrentPart;
 			}));
 
-		this.observedPart.subscribe((updatedICurrentPart) => {
-			console.log('Vous êtes dans la subscription');
-			console.log('updatedICurrentPart.turn ' + updatedICurrentPart.turn);
-			console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
-
-			// todo : améliorer, ça ne doit pas être set à chaque fois
-			if (this.players == null) {
-				this.players = [
-					updatedICurrentPart.playerZero,
-					updatedICurrentPart.playerOne];
-				this.observerRole = 2;
-				let opposantName = '';
-				if (this.players[0] === this.userName) {
-					this.observerRole = 0;
-					opposantName = this.players[1];
-				} else if (this.players[1] === this.userName) {
-					this.observerRole = 1;
-					opposantName = this.players[0];
-				}
-				if (opposantName !== '') {
-					this.userDao.getUserDocRefByUserName(opposantName)
-						.onSnapshot((querySnapshot) => {
-							let opposant: IUserId;
-							querySnapshot.forEach(doc => {
-								const data = doc.data() as IUser;
-								const id = doc.id;
-								opposant = {id: id, user: data};
-							});
-							this.opposant = opposant;
-							this.startWatchingForOpponentTimeout();
-						});
-				}
-			}
-
-			const listMoves = updatedICurrentPart.listMoves;
-			this.turn = updatedICurrentPart.turn;
-			if (this.isFinished(updatedICurrentPart.result)) {
-				this.endGame = true;
-				this.winner = updatedICurrentPart.winner;
-			}
-			const nbPlayedMoves = listMoves.length;
-			let currentPartTurn;
-			while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
-				P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
-				currentPartTurn = this.rules.node.gamePartSlice.turn;
-				const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
-			}
-			this.updateBoard();
-		});
+		this.observedPart.subscribe(updatedICurrentPart =>
+			this.onCurrentPartUpdate(updatedICurrentPart));
 
 		this.partDocument = this.afs.doc('parties/' + this.partId);
 	}
 
+	onCurrentPartUpdate(updatedICurrentPart: ICurrentPart) {
+		if (this.players == null) {
+			this.setPlayersDatas(updatedICurrentPart);
+		}
+		if (this.isFinished(updatedICurrentPart.result)) {
+			this.endGame = true;
+			this.winner = updatedICurrentPart.winner;
+		}
+		const listMoves = updatedICurrentPart.listMoves;
+		this.turn = updatedICurrentPart.turn;
+
+		const nbPlayedMoves = listMoves.length;
+		let currentPartTurn;
+		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
+			currentPartTurn = this.rules.node.gamePartSlice.turn;
+			const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
+		}
+		this.updateBoard();
+	}
+
+	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
+		this.players = [
+			updatedICurrentPart.playerZero,
+			updatedICurrentPart.playerOne];
+		this.observerRole = 2;
+		let opponentName = '';
+		if (this.players[0] === this.userName) {
+			this.observerRole = 0;
+			opponentName = this.players[1];
+		} else if (this.players[1] === this.userName) {
+			this.observerRole = 1;
+			opponentName = this.players[0];
+		}
+		if (opponentName !== '') {
+			this.userDao.getUserDocRefByUserName(opponentName)
+				.onSnapshot((querySnapshot) => {
+					let opponent: IUserId;
+					querySnapshot.forEach(doc => {
+						const data = doc.data() as IUser;
+						const id = doc.id;
+						opponent = {id: id, user: data};
+					});
+					this.opponent = opponent;
+					this.startWatchingForOpponentTimeout();
+				});
+		}
+	}
+
 	startWatchingForOpponentTimeout() {
-		if (this.hasTimedOut(this.opposant)) {
-			this.allowTimeoutVictory(this.opposant);
+		if (this.hasTimedOut(this.opponent)) {
+			this.allowTimeoutVictory();
 		} else {
-			this.forbidTimeoutVictory(this.opposant);
+			this.forbidTimeoutVictory();
 		}
 		setTimeout( () => this.startWatchingForOpponentTimeout(),
 			HeaderComponent.refreshingPresenceTimeout);
@@ -136,11 +138,11 @@ export class AwaleOnlineComponent implements OnInit {
 		return (opposant.user.lastActionTime + timeOutDuree < Date.now());
 	}
 
-	allowTimeoutVictory(opposant: IUserId) {
+	allowTimeoutVictory() {
 		this.allowedTimeoutVictory = true;
 	}
 
-	forbidTimeoutVictory(opposant: IUserId) {
+	forbidTimeoutVictory() {
 		this.allowedTimeoutVictory = false;
 	}
 
@@ -242,20 +244,5 @@ export class AwaleOnlineComponent implements OnInit {
 			console.log(error);
 		});
 	}
-
-	debugPrintArray(b: Array<Array<number>>) {
-		for (const line of b) {
-			console.log(line);
-		}
-	}
-
-	debugModifyArray(b: Array<number>) {
-		b[3] = 5;
-	}
-
-	debugReassignArray(b: Array<number>) {
-		b = [-1, -1, -1, -1, -73];
-	}
-
 
 }

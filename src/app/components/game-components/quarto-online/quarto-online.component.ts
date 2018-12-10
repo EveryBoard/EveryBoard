@@ -1,17 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {Observable} from 'rxjs';
-import {ICurrentPart} from '../../../domain/icurrentpart';
+import {Router} from '@angular/router';
 import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
+
+import {Observable} from 'rxjs';
+import {map} from 'rxjs/operators';
+
+import {ICurrentPart} from '../../../domain/icurrentpart';
 import {GameInfoService} from '../../../services/game-info-service';
 import {UserService} from '../../../services/user-service';
 import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
-import {map} from 'rxjs/operators';
-import {MoveCoord} from '../../../jscaip/MoveCoord';
 import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
-import {P4Rules} from '../../../games/games.p4/P4Rules';
 import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
 import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
-import {Router} from '@angular/router';
+import {IUser, IUserId} from '../../../domain/iuser';
+import {HeaderComponent} from '../../normal-component/header/header.component'; // TODO: constantifier maggle
+import {UserDAO} from '../../../dao/UserDAO';
 
 @Component({
 	selector: 'app-quarto-online',
@@ -39,13 +42,16 @@ export class QuartoOnlineComponent implements OnInit {
 	private choosenX = -1;
 	private choosenY = -1;
 
+	opponent: IUserId;
+	allowedTimeoutVictory = false;
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
 	// imagesLocation = 'src/assets/images/quarto/'; // en dev
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
 				private _route: Router,
-				private userService: UserService) {
+				private userService: UserService,
+				private userDao: UserDAO) {
 	}
 
 	ngOnInit() {
@@ -57,6 +63,7 @@ export class QuartoOnlineComponent implements OnInit {
 			this.partId = partId);
 		this.userService.currentUsername.subscribe(message =>
 			this.userName = message);
+
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
@@ -65,39 +72,59 @@ export class QuartoOnlineComponent implements OnInit {
 				return actions.payload.data() as ICurrentPart;
 			}));
 
-		this.observedPart.subscribe((updatedICurrentPart) => {
-			console.log('Vous êtes dans la subscription');
-			console.log('updatedICurrentPart.turn ' + updatedICurrentPart.turn);
-			console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
-
-			// todo : améliorer, ça ne doit pas être set à chaque fois
-			this.players = [updatedICurrentPart.playerZero,
-				updatedICurrentPart.playerOne];
-			this.observerRole = 2;
-			if (this.players[0] === this.userName) {
-				this.observerRole = 0;
-			} else if (this.players[1] === this.userName) {
-				this.observerRole = 1;
-			}
-
-			const listMoves = updatedICurrentPart.listMoves;
-			this.turn = updatedICurrentPart.turn;
-			if (this.isFinished(updatedICurrentPart.result)) {
-				this.endGame = true;
-				this.winner = updatedICurrentPart.winner;
-			}
-			const nbPlayedMoves = listMoves.length;
-			let currentPartTurn;
-			while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
-				P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
-				currentPartTurn = this.rules.node.gamePartSlice.turn;
-				const move: QuartoMove = QuartoMove.decode(listMoves[currentPartTurn]);
-				const bol: boolean = this.rules.choose(move);
-			}
-			this.updateBoard();
-		});
+		this.observedPart.subscribe(updatedICurrentPart =>
+			this.onCurrentPartUpdate(updatedICurrentPart));
 
 		this.partDocument = this.afs.doc('parties/' + this.partId);
+	}
+
+	onCurrentPartUpdate(updatedICurrentPart: ICurrentPart) {
+		if (this.players == null) {
+			this.setPlayersDatas(updatedICurrentPart);
+		}
+		if (this.isFinished(updatedICurrentPart.result)) {
+			this.endGame = true;
+			this.winner = updatedICurrentPart.winner;
+		}
+		const listMoves = updatedICurrentPart.listMoves;
+		this.turn = updatedICurrentPart.turn;
+
+		const nbPlayedMoves = listMoves.length;
+		let currentPartTurn;
+		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
+			currentPartTurn = this.rules.node.gamePartSlice.turn;
+			const move: QuartoMove = QuartoMove.decode(listMoves[currentPartTurn]);
+			const bol: boolean = this.rules.choose(move);
+		}
+		this.updateBoard();
+	}
+
+	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
+		this.players = [
+			updatedICurrentPart.playerZero,
+			updatedICurrentPart.playerOne];
+		this.observerRole = 2;
+		let opponentName = '';
+		if (this.players[0] === this.userName) {
+			this.observerRole = 0;
+			opponentName = this.players[1];
+		} else if (this.players[1] === this.userName) {
+			this.observerRole = 1;
+			opponentName = this.players[0];
+		}
+		if (opponentName !== '') {
+			this.userDao.getUserDocRefByUserName(opponentName)
+				.onSnapshot((querySnapshot) => {
+					let opponent: IUserId;
+					querySnapshot.forEach(doc => {
+						const data = doc.data() as IUser;
+						const id = doc.id;
+						opponent = {id: id, user: data};
+					});
+					this.opponent = opponent;
+					this.startWatchingForOpponentTimeout();
+				});
+		}
 	}
 
 	updateBoard() {
@@ -108,8 +135,33 @@ export class QuartoOnlineComponent implements OnInit {
 		this.pieceInHand = quartoPartSlice.pieceInHand;
 	}
 
+	startWatchingForOpponentTimeout() {
+		if (this.opponentHasTimedOut()) {
+			this.allowTimeoutVictory();
+		} else {
+			this.forbidTimeoutVictory();
+		}
+		setTimeout( () => this.startWatchingForOpponentTimeout(),
+			HeaderComponent.refreshingPresenceTimeout);
+	}
+
+	opponentHasTimedOut() {
+		const timeOutDuree = 30 * 1000;
+		console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
+		return (this.opponent.user.lastActionTime + timeOutDuree < Date.now());
+	}
+
+	allowTimeoutVictory() {
+		this.allowedTimeoutVictory = true;
+	}
+
+	forbidTimeoutVictory() {
+		this.allowedTimeoutVictory = false;
+	}
+
 	isFinished(result: number) {
-		return ((result === 3) || (result === 1)); // fonctionne pour l'instant avec la victoire normale et l'abandon
+		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
+		return ((result === 3) || (result === 1) || (result === 4));
 	}
 
 	backToServer() {
@@ -184,6 +236,17 @@ export class QuartoOnlineComponent implements OnInit {
 			console.log('Mais c\'est un mouvement illegal');
 			return false;
 		}
+	}
+
+	notifyTimeout() {
+		const victoriousPlayer = this.userName;
+		this.endGame = true;
+		this.winner = victoriousPlayer;
+		const docRef = this.partDocument.ref;
+		docRef.update({
+			winner: victoriousPlayer,
+			result: 4
+		});
 	}
 
 	notifyVictory() {

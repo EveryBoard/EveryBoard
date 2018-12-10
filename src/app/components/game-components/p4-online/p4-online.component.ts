@@ -12,6 +12,9 @@ import {GameInfoService} from '../../../services/game-info-service';
 import {UserService} from '../../../services/user-service';
 import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
 import {Router} from '@angular/router';
+import {HeaderComponent} from '../../normal-component/header/header.component';
+import {IUser, IUserId} from '../../../domain/iuser';
+import {UserDAO} from '../../../dao/UserDAO';
 
 @Component({
 	selector: 'app-p4-online',
@@ -38,11 +41,14 @@ export class P4OnlineComponent implements OnInit {
 	turn = 0;
 	endGame = false;
 	winner: string;
+	opponent: IUserId;
+	allowedTimeoutVictory = false;
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
 				private _route: Router,
-				private userService: UserService) {
+				private userService: UserService,
+				private userDao: UserDAO) {
 	}
 
 	ngOnInit() {
@@ -50,10 +56,8 @@ export class P4OnlineComponent implements OnInit {
 		// MNode.ruler = this.rules;
 
 		// should be some kind of session-scope
-		// should be some kind of session-scope
 		this.gameInfoService.currentPartId.subscribe(partId =>
 			this.partId = partId);
-
 		this.userService.currentUsername.subscribe(message =>
 			this.userName = message);
 
@@ -65,43 +69,100 @@ export class P4OnlineComponent implements OnInit {
 				return actions.payload.data() as ICurrentPart;
 			}));
 
-		this.observedPart.subscribe(updatedICurrentPart => {
-			console.log('Vous êtes dans la subscription');
-			console.log('updatedICurrentPart.turn ' + updatedICurrentPart.turn);
-			console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
-
-			// todo : améliorer, ça ne doit pas être set à chaque fois
-			this.players = [
-				updatedICurrentPart.playerZero,
-				updatedICurrentPart.playerOne];
-			this.observerRole = 2;
-			if (this.players[0] === this.userName) {
-				this.observerRole = 0;
-			} else if (this.players[1] === this.userName) {
-				this.observerRole = 1;
-			}
-
-			if (this.isFinished(updatedICurrentPart.result)) {
-				this.endGame = true;
-				this.winner = updatedICurrentPart.winner;
-			}
-
-			const listMoves = updatedICurrentPart.listMoves;
-			const nbPlayedMoves = listMoves.length;
-			let currentPartTurn;
-			while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
-				P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
-				currentPartTurn = this.rules.node.gamePartSlice.turn;
-				const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
-			}
-			this.updateBoard();
-		});
+		this.observedPart.subscribe(updatedICurrentPart =>
+			this.onCurrentPartUpdate(updatedICurrentPart));
 
 		this.partDocument = this.afs.doc('parties/' + this.partId);
 	}
 
+	onCurrentPartUpdate(updatedICurrentPart: ICurrentPart) {
+		if (this.players == null) {
+			this.setPlayersDatas(updatedICurrentPart);
+		}
+		if (this.isFinished(updatedICurrentPart.result)) {
+			this.endGame = true;
+			this.winner = updatedICurrentPart.winner;
+		}
+		const listMoves = updatedICurrentPart.listMoves;
+		this.turn = updatedICurrentPart.turn;
+
+		const nbPlayedMoves = listMoves.length;
+		let currentPartTurn;
+		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
+			currentPartTurn = this.rules.node.gamePartSlice.turn;
+			const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
+		}
+		this.updateBoard();
+	}
+
+	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
+		this.players = [
+			updatedICurrentPart.playerZero,
+			updatedICurrentPart.playerOne];
+		this.observerRole = 2;
+		let opponentName = '';
+		if (this.players[0] === this.userName) {
+			this.observerRole = 0;
+			opponentName = this.players[1];
+		} else if (this.players[1] === this.userName) {
+			this.observerRole = 1;
+			opponentName = this.players[0];
+		}
+		if (opponentName !== '') {
+			this.userDao.getUserDocRefByUserName(opponentName)
+				.onSnapshot((querySnapshot) => {
+					let opponent: IUserId;
+					querySnapshot.forEach(doc => {
+						const data = doc.data() as IUser;
+						const id = doc.id;
+						opponent = {id: id, user: data};
+					});
+					this.opponent = opponent;
+					this.startWatchingForOpponentTimeout();
+				});
+		}
+	}
+
+	startWatchingForOpponentTimeout() {
+		if (this.hasTimedOut(this.opponent)) {
+			this.allowTimeoutVictory();
+		} else {
+			this.forbidTimeoutVictory();
+		}
+		setTimeout( () => this.startWatchingForOpponentTimeout(),
+			HeaderComponent.refreshingPresenceTimeout);
+	}
+
+	hasTimedOut(opponent: IUserId) {
+		const timeOutDuree = 30 * 1000;
+		console.log('lastActionTime of your opponant : ' + opponent.user.lastActionTime);
+		const mtn: number = Date.now();
+		console.log('delta/1000 : ' + ((mtn - opponent.user.lastActionTime) / 1000));
+		return (opponent.user.lastActionTime + timeOutDuree < Date.now());
+	}
+
+	notifyTimeout() {
+		const victoriousPlayer = this.userName;
+		this.endGame = true;
+		this.winner = victoriousPlayer;
+		const docRef = this.partDocument.ref;
+		docRef.update({
+			winner: victoriousPlayer,
+			result: 4
+		});
+	}
+
+	allowTimeoutVictory() {
+		this.allowedTimeoutVictory = true;
+	}
+
+	forbidTimeoutVictory() {
+		this.allowedTimeoutVictory = false;
+	}
+
 	isFinished(result: number) {
-		return ((result === 3) || (result === 1)); // fonctionne pour l'instant avec la victoire normale et l'abandon
+		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
+		return ((result === 3) || (result === 1) || (result === 4));
 	}
 
 	backToServer() {
@@ -182,20 +243,6 @@ export class P4OnlineComponent implements OnInit {
 			}).catch((error) => {
 			console.log(error);
 		});
-	}
-
-	debugPrintArray(b: Array<Array<number>>) {
-		for (const line of b) {
-			console.log(line);
-		}
-	}
-
-	debugModifyArray(b: Array<number>) {
-		b[3] = 5;
-	}
-
-	debugReassignArray(b: Array<number>) {
-		b = [-1, -1, -1, -1, -73];
 	}
 
 }
