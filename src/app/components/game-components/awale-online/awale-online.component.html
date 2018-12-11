@@ -2,10 +2,13 @@
 	<div *ngIf="observerRole <2">
 		<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
 		<button *ngIf="!endGame" (click)="resign()"> Abandonner </button>
-		<button *ngIf="allowedTimeoutVictory && !endGame"
-				(click)="notifyTimeout()">
-			{{ opponent.user.pseudo }} ne réagit plus, cliquez pour gagner par time out
-		</button>
+		<div *ngIf="allowedTimeoutVictory && !endGame">
+			{{ opponent.user.pseudo }} ne réagit plus :
+			<button (click)="notifyTimeout()">
+				Victoire par timeout?
+			</button>
+		</div>
+		<div> Tour : {{ turn }} </div>
 	</div>
 	<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
 
@@ -43,7 +46,6 @@
 			</td>
 		</tr>
 	</table>
-	Tour : {{ turn }} <br/>
 	{{ players[0] }} : {{ captured[0] }} <br/>
 	{{ players[1] }} : {{ captured[1] }} <br/>
 </div>

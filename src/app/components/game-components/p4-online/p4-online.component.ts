@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreDocument, DocumentReference, QuerySnapshot} from 'angularfire2/firestore';
 import {Router} from '@angular/router';
 
 import {Observable} from 'rxjs';
@@ -48,12 +48,8 @@ export class P4OnlineComponent implements OnInit {
 	opponent: IUserId = null;
 	allowedTimeoutVictory = false;
 
-	private opSub: () => void;
-
-	constructor(private afs: AngularFirestore,
-				private gameInfoService: GameInfoService,
-				private _route: Router,
-				private userService: UserService,
+	constructor(private afs: AngularFirestore, private gameInfoService: GameInfoService,
+				private _route: Router,        private userService: UserService,
 				private userDao: UserDAO) {
 	}
 
@@ -85,7 +81,8 @@ export class P4OnlineComponent implements OnInit {
 		if (this.players == null) {
 			this.setPlayersDatas(updatedICurrentPart);
 		}
-		if (this.isFinished(updatedICurrentPart.result)) {
+		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
+		if ([1, 3, 4].includes(updatedICurrentPart.result)) {
 			this.endGame = true;
 			this.winner = updatedICurrentPart.winner;
 		}
@@ -115,34 +112,29 @@ export class P4OnlineComponent implements OnInit {
 			opponentName = this.players[0];
 		}
 		if (opponentName !== '') {
-			console.log('opponentName = ' + JSON.stringify(opponentName));
-			this.opSub = this.userDao.getUserDocRefByUserName(opponentName)
-				.onSnapshot((querySnapshot) => {
-					querySnapshot.forEach(doc => {
-						const data = doc.data() as IUser;
-						const id = doc.id;
-						if (this.opponent == null) {
-							this.opponent = {id: id, user: data};
-							this.startWatchingForOpponentTimeout();
-						}
-						this.opponent = {id: id, user: data};
-					});
-				});
+			this.userDao.getUserDocRefByUserName(opponentName)
+				.onSnapshot(userQuerySnapshot =>
+					this.onUserUpdate(userQuerySnapshot));
 		}
 	}
 
-	updateBoard() {
-		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
-		this.board = p4PartSlice.getCopiedBoard();
-		this.turn = p4PartSlice.turn;
-		this.currentPlayer = this.players[p4PartSlice.turn % 2];
+	onUserUpdate(userQuerySnapshot: QuerySnapshot<any>) {
+		userQuerySnapshot.forEach(doc => {
+			const data = doc.data() as IUser;
+			const id = doc.id;
+			if (this.opponent == null) {
+				this.opponent = {id: id, user: data};
+				this.startWatchingForOpponentTimeout();
+			}
+			this.opponent = {id: id, user: data};
+		});
 	}
 
 	startWatchingForOpponentTimeout() {
 		if (this.opponentHasTimedOut()) {
-			this.allowTimeoutVictory();
+			this.allowedTimeoutVictory = true;
 		} else {
-			this.forbidTimeoutVictory();
+			this.allowedTimeoutVictory = false;
 		}
 		setTimeout(() => this.startWatchingForOpponentTimeout(),
 			HeaderComponent.refreshingPresenceTimeout);
@@ -152,19 +144,6 @@ export class P4OnlineComponent implements OnInit {
 		const timeOutDuree = 30 * 1000;
 		console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
 		return (this.opponent.user.lastActionTime + timeOutDuree < Date.now());
-	}
-
-	allowTimeoutVictory() {
-		this.allowedTimeoutVictory = true;
-	}
-
-	forbidTimeoutVictory() {
-		this.allowedTimeoutVictory = false;
-	}
-
-	isFinished(result: number) {
-		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
-		return ((result === 3) || (result === 1) || (result === 4));
 	}
 
 	backToServer() {
@@ -205,6 +184,13 @@ export class P4OnlineComponent implements OnInit {
 	isPlayerTurn() {
 		const indexPlayer = this.rules.node.gamePartSlice.turn % 2;
 		return this.players[indexPlayer] === this.userName;
+	}
+
+	updateBoard() {
+		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
+		this.board = p4PartSlice.getCopiedBoard();
+		this.turn = p4PartSlice.turn;
+		this.currentPlayer = this.players[p4PartSlice.turn % 2];
 	}
 
 	updateDBBoard(move: MoveX) {

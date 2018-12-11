@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreDocument, DocumentReference, QuerySnapshot} from 'angularfire2/firestore';
 import {Router} from '@angular/router';
 
 import {Observable} from 'rxjs';
@@ -47,10 +47,8 @@ export class AwaleOnlineComponent implements OnInit {
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
 
-	constructor(private afs: AngularFirestore,
-				private gameInfoService: GameInfoService,
-				private _route: Router,
-				private userService: UserService,
+	constructor(private afs: AngularFirestore, private gameInfoService: GameInfoService,
+				private _route: Router,        private userService: UserService,
 				private userDao: UserDAO) {
 	}
 
@@ -82,7 +80,8 @@ export class AwaleOnlineComponent implements OnInit {
 		if (this.players == null) {
 			this.setPlayersDatas(updatedICurrentPart);
 		}
-		if (this.isFinished(updatedICurrentPart.result)) {
+		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
+		if ([1, 3, 4].includes(updatedICurrentPart.result)) {
 			this.endGame = true;
 			this.winner = updatedICurrentPart.winner;
 		}
@@ -113,33 +112,28 @@ export class AwaleOnlineComponent implements OnInit {
 		}
 		if (opponentName !== '') {
 			this.userDao.getUserDocRefByUserName(opponentName)
-				.onSnapshot((querySnapshot) => {
-					let opponent: IUserId;
-					querySnapshot.forEach(doc => {
-						const data = doc.data() as IUser;
-						const id = doc.id;
-						opponent = {id: id, user: data};
-					});
-					this.opponent = opponent;
-					this.startWatchingForOpponentTimeout();
-				});
+				.onSnapshot(userQuerySnapshot =>
+					this.onUserUpdate(userQuerySnapshot));
 		}
 	}
 
-	updateBoard() {
-		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
-		this.board = awalePartSlice.getCopiedBoard();
-		this.turn = awalePartSlice.turn;
-		this.currentPlayer = this.players[awalePartSlice.turn % 2];
-
-		this.captured = awalePartSlice.getCapturedCopy();
+	onUserUpdate(userQuerySnapshot: QuerySnapshot<any>) {
+		userQuerySnapshot.forEach(doc => {
+			const data = doc.data() as IUser;
+			const id = doc.id;
+			if (this.opponent == null) {
+				this.opponent = {id: id, user: data};
+				this.startWatchingForOpponentTimeout();
+			}
+			this.opponent = {id: id, user: data};
+		});
 	}
 
 	startWatchingForOpponentTimeout() {
 		if (this.opponentHasTimedOut()) {
-			this.allowTimeoutVictory();
+			this.allowedTimeoutVictory = true;
 		} else {
-			this.forbidTimeoutVictory();
+			this.allowedTimeoutVictory = false;
 		}
 		setTimeout(() => this.startWatchingForOpponentTimeout(),
 			HeaderComponent.refreshingPresenceTimeout);
@@ -149,19 +143,6 @@ export class AwaleOnlineComponent implements OnInit {
 		const timeOutDuree = 30 * 1000;
 		console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
 		return (this.opponent.user.lastActionTime + timeOutDuree < Date.now());
-	}
-
-	allowTimeoutVictory() {
-		this.allowedTimeoutVictory = true;
-	}
-
-	forbidTimeoutVictory() {
-		this.allowedTimeoutVictory = false;
-	}
-
-	isFinished(result: number) {
-		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
-		return ((result === 3) || (result === 1) || (result === 4));
 	}
 
 	backToServer() {
@@ -194,14 +175,23 @@ export class AwaleOnlineComponent implements OnInit {
 		this.winner = victoriousPlayer;
 		const docRef = this.partDocument.ref;
 		docRef.update({
-			winner: victoriousPlayer,
-			result: 3
+			'winner': victoriousPlayer,
+			'result': 3
 		});
 	}
 
 	isPlayerTurn() {
 		const indexPlayer = this.rules.node.gamePartSlice.turn % 2;
 		return this.players[indexPlayer] === this.userName;
+	}
+
+	updateBoard() {
+		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+		this.board = awalePartSlice.getCopiedBoard();
+		this.turn = awalePartSlice.turn;
+		this.currentPlayer = this.players[awalePartSlice.turn % 2];
+
+		this.captured = awalePartSlice.getCapturedCopy();
 	}
 
 	updateDBBoard(move: MoveX) {
