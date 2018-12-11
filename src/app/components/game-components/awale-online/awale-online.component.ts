@@ -1,18 +1,24 @@
 import {Component, OnInit} from '@angular/core';
-import {P4Rules} from '../../../games/games.p4/P4Rules';
-import {Observable} from 'rxjs';
-import {ICurrentPart} from '../../../domain/icurrentpart';
 import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
-import {GameInfoService} from '../../../services/game-info-service';
-import {UserService} from '../../../services/user-service';
+import {Router} from '@angular/router';
+
+import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
+
+import {UserDAO} from '../../../dao/UserDAO';
+
+import {ICurrentPart} from '../../../domain/icurrentpart';
+import {IUser, IUserId} from '../../../domain/iuser';
+
+import {UserService} from '../../../services/user-service';
+import {GameInfoService} from '../../../services/game-info-service';
+
+import {HeaderComponent} from '../../normal-component/header/header.component';
+
 import {MoveX} from '../../../jscaip/MoveX';
+
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
-import {Router} from '@angular/router';
-import {UserDAO} from '../../../dao/UserDAO';
-import {IUser, IUserId} from '../../../domain/iuser';
-import {HeaderComponent} from '../../normal-component/header/header.component';
 
 @Component({
 	selector: 'app-awale-online',
@@ -120,22 +126,29 @@ export class AwaleOnlineComponent implements OnInit {
 		}
 	}
 
+	updateBoard() {
+		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+		this.board = awalePartSlice.getCopiedBoard();
+		this.turn = awalePartSlice.turn;
+		this.currentPlayer = this.players[awalePartSlice.turn % 2];
+
+		this.captured = awalePartSlice.getCapturedCopy();
+	}
+
 	startWatchingForOpponentTimeout() {
-		if (this.hasTimedOut(this.opponent)) {
+		if (this.opponentHasTimedOut()) {
 			this.allowTimeoutVictory();
 		} else {
 			this.forbidTimeoutVictory();
 		}
-		setTimeout( () => this.startWatchingForOpponentTimeout(),
+		setTimeout(() => this.startWatchingForOpponentTimeout(),
 			HeaderComponent.refreshingPresenceTimeout);
 	}
 
-	hasTimedOut(opposant: IUserId) {
+	opponentHasTimedOut() {
 		const timeOutDuree = 30 * 1000;
-		console.log('lastActionTime of your opponant : ' + opposant.user.lastActionTime);
-		const mtn: number = Date.now();
-		console.log('delta/1000 : ' + ((mtn - opposant.user.lastActionTime) / 1000));
-		return (opposant.user.lastActionTime + timeOutDuree < Date.now());
+		console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
+		return (this.opponent.user.lastActionTime + timeOutDuree < Date.now());
 	}
 
 	allowTimeoutVictory() {
@@ -144,44 +157,6 @@ export class AwaleOnlineComponent implements OnInit {
 
 	forbidTimeoutVictory() {
 		this.allowedTimeoutVictory = false;
-	}
-
-	updateBoard() {
-		const awalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
-		this.board = awalePartSlice.getCopiedBoard();
-		this.captured = awalePartSlice.getCapturedCopy();
-		this.turn = awalePartSlice.turn;
-		this.currentPlayer = this.players[awalePartSlice.turn % 2];
-	}
-
-	choose(event: MouseEvent): boolean {
-		if (this.isPlayerTurn()) {
-			const x: number = Number(event.srcElement.id.substring(2, 3));
-			console.log('vous tentez un mouvement en colonne ' + x);
-
-			if (this.rules.node.isEndGame()) {
-				console.log('Malheureusement la partie est finie');
-				// todo : option de clonage revision commentage
-				return false;
-			}
-
-			console.log('ça tente bien c\'est votre tour');
-			// player's turn
-			const choosedMove = MoveX.get(x);
-			if (this.rules.choose(choosedMove)) {
-				console.log('Et javascript estime que votre mouvement est légal');
-				// player make a correct move
-				// let's confirm on java-server-side that the move is legal
-				this.updateDBBoard(choosedMove);
-				if (this.rules.node.isEndGame()) {
-					this.notifyVictory();
-				}
-			} else {
-				console.log('Mais c\'est un mouvement illegal');
-			}
-		} else {
-			console.log('Mais c\'est pas ton tour !');
-		}
 	}
 
 	isFinished(result: number) {
@@ -202,6 +177,17 @@ export class AwaleOnlineComponent implements OnInit {
 		}); // resign
 	}
 
+	notifyTimeout() {
+		const victoriousPlayer = this.userName;
+		this.endGame = true;
+		this.winner = victoriousPlayer;
+		const docRef = this.partDocument.ref;
+		docRef.update({
+			winner: victoriousPlayer,
+			result: 4
+		});
+	}
+
 	notifyVictory() {
 		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
 		this.endGame = true;
@@ -218,17 +204,6 @@ export class AwaleOnlineComponent implements OnInit {
 		return this.players[indexPlayer] === this.userName;
 	}
 
-	notifyTimeout() {
-		const victoriousPlayer = this.userName;
-		this.endGame = true;
-		this.winner = victoriousPlayer;
-		const docRef = this.partDocument.ref;
-		docRef.update({
-			winner: victoriousPlayer,
-			result: 4
-		});
-	}
-
 	updateDBBoard(move: MoveX) {
 		const docRef = this.partDocument.ref;
 		docRef.get()
@@ -243,6 +218,36 @@ export class AwaleOnlineComponent implements OnInit {
 			}).catch((error) => {
 			console.log(error);
 		});
+	}
+
+	choose(event: MouseEvent): boolean {
+		if (!this.isPlayerTurn()) {
+			console.log('Mais c\'est pas ton tour !'); // todo : réactive notification
+			return false;
+		}
+		const x: number = Number(event.srcElement.id.substring(2, 3));
+		console.log('vous tentez un mouvement en colonne ' + x);
+
+		if (this.rules.node.isEndGame()) {
+			console.log('Malheureusement la partie est finie');
+			// todo : option de clonage revision commentage
+			return false;
+		}
+
+		console.log('ça tente bien c\'est votre tour');
+		// player's turn
+		const choosedMove = MoveX.get(x);
+		if (this.rules.choose(choosedMove)) {
+			console.log('Et javascript estime que votre mouvement est légal');
+			// player make a correct move
+			// let's confirm on java-server-side that the move is legal
+			this.updateDBBoard(choosedMove);
+			if (this.rules.node.isEndGame()) {
+				this.notifyVictory();
+			}
+		} else {
+			console.log('Mais c\'est un mouvement illegal');
+		}
 	}
 
 }

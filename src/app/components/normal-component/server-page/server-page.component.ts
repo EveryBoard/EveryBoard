@@ -1,15 +1,14 @@
 import {Component, OnInit} from '@angular/core';
+import {AngularFirestore} from 'angularfire2/firestore';
+import {Router} from '@angular/router';
+
+import {UserDAO} from '../../../dao/UserDAO';
+
 import {IUser, IUserId} from '../../../domain/iuser';
 import {ICurrentPart, ICurrentPartId} from '../../../domain/icurrentpart';
 
-import {Observable} from 'rxjs';
-import {AngularFirestore} from 'angularfire2/firestore';
-import {filter, map} from 'rxjs/operators';
-
-import {Router} from '@angular/router';
 import {GameInfoService} from '../../../services/game-info-service';
 import {UserService} from '../../../services/user-service';
-import {UserDAO} from '../../../dao/UserDAO';
 
 @Component({
 	selector: 'app-server-page',
@@ -19,7 +18,6 @@ import {UserDAO} from '../../../dao/UserDAO';
 export class ServerPageComponent implements OnInit {
 
 	partIds: ICurrentPartId[];
-	// observedPartIds: Observable<ICurrentPartId[]>;
 	activeUserList: IUserId[];
 	readonly gameNameList: String[] = ['P4', 'Awale', 'Quarto'];
 	selectedGame: string;
@@ -29,15 +27,13 @@ export class ServerPageComponent implements OnInit {
 				private afs: AngularFirestore,
 				private _route: Router,
 				private gameInfoService: GameInfoService,
-				private userService: UserService) {
-		console.log('server page component constructor');
-	}
+				private userService: UserService) {}
 
 	ngOnInit() {
 		this.userService.currentUsername.subscribe(message =>
 			this.userName = message);
 		this.afs.collection('parties').ref
-			.where('result', '==', 5)
+			.where('result', '==', 5) // TODO : afs se fait appeler par les DAO !
 			.onSnapshot( (querySnapshot) => {
 				const tmpPartIds: ICurrentPartId[] = [];
 				querySnapshot.forEach(doc => {
@@ -61,7 +57,6 @@ export class ServerPageComponent implements OnInit {
 	}
 
 	joinGame(partId: string, typeGame: string) {
-		console.log('about to join a ' + typeGame + ' of id [' + partId + ']');
 		const partRef = this.afs.doc('parties/' + partId).ref;
 		const joinerRef = this.afs.doc('joiners/' + partId).ref;
 		partRef.get()
@@ -86,7 +81,6 @@ export class ServerPageComponent implements OnInit {
 	}
 
 	createGame() {
-		console.log('want to create a ' + this.selectedGame);
 		if (this.canCreateGame()) {
 			this.afs.collection('parties')
 				.add({
@@ -125,4 +119,5 @@ export class ServerPageComponent implements OnInit {
 		}
 		return !found;
 	}
+
 }

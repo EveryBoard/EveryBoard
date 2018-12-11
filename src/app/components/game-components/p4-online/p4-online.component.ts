@@ -1,20 +1,24 @@
 import {Component, OnInit} from '@angular/core';
-import {P4Rules} from '../../../games/games.p4/P4Rules';
-import {MoveX} from '../../../jscaip/MoveX';
-
 import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
+import {Router} from '@angular/router';
+
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {ICurrentPart} from '../../../domain/icurrentpart';
-
-import {GameInfoService} from '../../../services/game-info-service';
-import {UserService} from '../../../services/user-service';
-import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
-import {Router} from '@angular/router';
-import {HeaderComponent} from '../../normal-component/header/header.component';
-import {IUser, IUserId} from '../../../domain/iuser';
 import {UserDAO} from '../../../dao/UserDAO';
+
+import {ICurrentPart} from '../../../domain/icurrentpart';
+import {IUser, IUserId} from '../../../domain/iuser';
+
+import {UserService} from '../../../services/user-service';
+import {GameInfoService} from '../../../services/game-info-service';
+
+import {HeaderComponent} from '../../normal-component/header/header.component';
+
+import {MoveX} from '../../../jscaip/MoveX';
+
+import {P4Rules} from '../../../games/games.p4/P4Rules';
+import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
 
 @Component({
 	selector: 'app-p4-online',
@@ -25,7 +29,7 @@ export class P4OnlineComponent implements OnInit {
 
 	rules = new P4Rules();
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
-	players: string[];
+	players: string[] = null ;
 	board: Array<Array<number>>;
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/';
@@ -41,8 +45,10 @@ export class P4OnlineComponent implements OnInit {
 	turn = 0;
 	endGame = false;
 	winner: string;
-	opponent: IUserId;
+	opponent: IUserId = null;
 	allowedTimeoutVictory = false;
+
+	private opSub: () => void;
 
 	constructor(private afs: AngularFirestore,
 				private gameInfoService: GameInfoService,
@@ -109,47 +115,43 @@ export class P4OnlineComponent implements OnInit {
 			opponentName = this.players[0];
 		}
 		if (opponentName !== '') {
-			this.userDao.getUserDocRefByUserName(opponentName)
+			console.log('opponentName = ' + JSON.stringify(opponentName));
+			this.opSub = this.userDao.getUserDocRefByUserName(opponentName)
 				.onSnapshot((querySnapshot) => {
-					let opponent: IUserId;
 					querySnapshot.forEach(doc => {
 						const data = doc.data() as IUser;
 						const id = doc.id;
-						opponent = {id: id, user: data};
+						if (this.opponent == null) {
+							this.opponent = {id: id, user: data};
+							this.startWatchingForOpponentTimeout();
+						}
+						this.opponent = {id: id, user: data};
 					});
-					this.opponent = opponent;
-					this.startWatchingForOpponentTimeout();
 				});
 		}
 	}
 
+	updateBoard() {
+		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
+		this.board = p4PartSlice.getCopiedBoard();
+		this.turn = p4PartSlice.turn;
+		this.currentPlayer = this.players[p4PartSlice.turn % 2];
+	}
+
 	startWatchingForOpponentTimeout() {
-		if (this.hasTimedOut(this.opponent)) {
+		if (this.opponentHasTimedOut()) {
 			this.allowTimeoutVictory();
 		} else {
 			this.forbidTimeoutVictory();
 		}
-		setTimeout( () => this.startWatchingForOpponentTimeout(),
+		setTimeout(() => this.startWatchingForOpponentTimeout(),
 			HeaderComponent.refreshingPresenceTimeout);
 	}
 
-	hasTimedOut(opponent: IUserId) {
+	opponentHasTimedOut() {
 		const timeOutDuree = 30 * 1000;
-		console.log('lastActionTime of your opponant : ' + opponent.user.lastActionTime);
-		const mtn: number = Date.now();
-		console.log('delta/1000 : ' + ((mtn - opponent.user.lastActionTime) / 1000));
-		return (opponent.user.lastActionTime + timeOutDuree < Date.now());
-	}
-
-	notifyTimeout() {
-		const victoriousPlayer = this.userName;
-		this.endGame = true;
-		this.winner = victoriousPlayer;
-		const docRef = this.partDocument.ref;
-		docRef.update({
-			winner: victoriousPlayer,
-			result: 4
-		});
+		console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
+		return (this.opponent.user.lastActionTime + timeOutDuree < Date.now());
 	}
 
 	allowTimeoutVictory() {
@@ -178,46 +180,22 @@ export class P4OnlineComponent implements OnInit {
 		}); // resign
 	}
 
-	updateBoard() {
-		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
-		this.board = p4PartSlice.getCopiedBoard();
-		this.turn = p4PartSlice.turn;
-		this.currentPlayer = this.players[p4PartSlice.turn % 2];
-	}
-
-	choose(event: MouseEvent): boolean {
-		if (this.isPlayerTurn()) {
-			const x: number = Number(event.srcElement.id.substring(2, 3));
-			console.log('vous tentez un mouvement en colonne ' + x);
-
-			if (this.rules.node.isEndGame()) {
-				console.log('Malheureusement la partie est finie');
-				// todo : option de clonage revision commentage
-				return false;
-			}
-
-			console.log('ça tente bien c\'est votre tour');
-			// player's turn
-			const choosedMove = MoveX.get(x);
-			if (this.rules.choose(choosedMove)) {
-				console.log('Et javascript estime que votre mouvement est légal');
-				// player make a correct move
-				// let's confirm on java-server-side that the move is legal
-				this.updateDBBoard(choosedMove);
-				if (this.rules.node.isEndGame()) {
-					this.notifyVictory();
-				}
-			} else {
-				console.log('Mais c\'est un mouvement illegal');
-			}
-		} else {
-			console.log('Mais c\'est pas ton tour !');
-		}
+	notifyTimeout() {
+		const victoriousPlayer = this.userName;
+		this.endGame = true;
+		this.winner = victoriousPlayer;
+		const docRef = this.partDocument.ref;
+		docRef.update({
+			winner: victoriousPlayer,
+			result: 4
+		});
 	}
 
 	notifyVictory() {
 		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
-		const docRef: DocumentReference = this.partDocument.ref;
+		this.endGame = true;
+		this.winner = victoriousPlayer;
+		const docRef = this.partDocument.ref;
 		docRef.update({
 			'winner': victoriousPlayer,
 			'result': 3
@@ -243,6 +221,36 @@ export class P4OnlineComponent implements OnInit {
 			}).catch((error) => {
 			console.log(error);
 		});
+	}
+
+	choose(event: MouseEvent): boolean {
+		if (!this.isPlayerTurn()) {
+			console.log('Mais c\'est pas ton tour !');
+			return false;
+		}
+		const x: number = Number(event.srcElement.id.substring(2, 3));
+		console.log('vous tentez un mouvement en colonne ' + x);
+
+		if (this.rules.node.isEndGame()) {
+			console.log('Malheureusement la partie est finie');
+			// todo : option de clonage revision commentage
+			return false;
+		}
+
+		console.log('ça tente bien c\'est votre tour');
+		// player's turn
+		const choosedMove = MoveX.get(x);
+		if (this.rules.choose(choosedMove)) {
+			console.log('Et javascript estime que votre mouvement est légal');
+			// player make a correct move
+			// let's confirm on java-server-side that the move is legal
+			this.updateDBBoard(choosedMove);
+			if (this.rules.node.isEndGame()) {
+				this.notifyVictory();
+			}
+		} else {
+			console.log('Mais c\'est un mouvement illegal');
+		}
 	}
 
 }

@@ -49,17 +49,14 @@ export class LoginComponent implements OnInit {
 			 *	  		-> on lui dit que c'est prit ou mauvais code
 			 *	  -> sinon on crée l'user et le connecte
 			 */
-			console.log('cherchons ' + this.user.pseudo);
 			this.unsubscribe = this.afs
 				.collection('joueurs').ref
 				.where('pseudo', '==', this.user.pseudo)
 				.onSnapshot( querySnapshot => {
-					console.log('inside onSnapshot, with hasPendingWrites = ' + querySnapshot.metadata.hasPendingWrites);
 					const users: IUserId[] = [];
 					querySnapshot.forEach( doc => {
 						users.push({ id: doc.id, user: doc.data() as IUser});
 					});
-					console.log('docs of users = ' + JSON.stringify(users));
 					if (users.length === 0) {
 						this.onNewUser();
 					} else {
@@ -77,7 +74,6 @@ export class LoginComponent implements OnInit {
 		this.unsubscribe();
 		if (this.user.code === user.user.code) {
 			this.userDocId = user.id;
-			console.log('mot de passe correct, loggons ce membre! ');
 			this.logValidHalfMember();
 		} else {
 			this.errorMessage = 'code incorrect !';
@@ -86,16 +82,12 @@ export class LoginComponent implements OnInit {
 
 	onNewUser() {
 		this.unsubscribe();
-		if (this.matchingCode === undefined) {
-			console.log('il faut créer un user et puis le connecter!');
+		if (this.matchingCode === undefined) { // todo : remplacer par ==
 			this.createHalfMemberThenLog();
-		} else {
-			console.log('on est arrivé ici avec un matching code ' + this.matchingCode);
 		}
 	}
 
 	createHalfMemberThenLog() {
-		console.log('create user now ' + this.userDocId + ':' + this.matchingCode);
 		this.afs.collection('joueurs').add({
 			code: this.user.code,
 			pseudo: this.user.pseudo,
@@ -105,20 +97,17 @@ export class LoginComponent implements OnInit {
 			status : -1
 		}).then((docRef) => {
 			this.userDocId = docRef.id;
-			console.log('utilisateur crée avec un id : ' + this.userDocId + 'loggons le !');
 			this.logValidHalfMember();
 		});
 	}
 
 	logValidHalfMember() {
-		console.log('log valid user now with id ' + this.userDocId + ' and mc ' + this.matchingCode);
 		this.afs.collection('joueurs')
 			.doc(this.userDocId).update({
 				lastActionTime: Date.now(),
 				status: -2 // TODO calculate what that must be
 			});
 		this.userService.changeUser(this.user.pseudo, this.userDocId);
-		console.log('logs about to be unseable');
 		this._route.navigate(['server']);
 	}
 
@@ -129,6 +118,7 @@ export class LoginComponent implements OnInit {
 	getUnusedGuestName(): string {
 		// todo: randomiser de 0000 à 9999 et rajouter les "0" de gauche
 		// todo: vérifier l'absence de collisions
+		// todo: interdire ce nom aux user normaux
 
 		let index: number = 1000 + (Math.random() * 9000); // [1000:9999]
 		index = index - (index % 1);
