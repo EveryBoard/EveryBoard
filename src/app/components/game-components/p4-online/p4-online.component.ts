@@ -1,15 +1,23 @@
 import {Component, OnInit} from '@angular/core';
-import {P4Rules} from '../../../games/games.p4/P4Rules';
-import {MoveX} from '../../../jscaip/MoveX';
+import {AngularFirestore, AngularFirestoreDocument, DocumentReference, QuerySnapshot} from 'angularfire2/firestore';
+import {Router} from '@angular/router';
 
-import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
 import {Observable} from 'rxjs';
 import {map} from 'rxjs/operators';
 
-import {ICurrentPart} from '../../../domain/icurrentpart';
+import {UserDAO} from '../../../dao/UserDAO';
 
-import {GameInfoService} from '../../../services/game-info-service';
+import {ICurrentPart} from '../../../domain/icurrentpart';
+import {IUser, IUserId} from '../../../domain/iuser';
+
 import {UserService} from '../../../services/user-service';
+import {GameInfoService} from '../../../services/game-info-service';
+
+import {HeaderComponent} from '../../normal-component/header/header.component';
+
+import {MoveX} from '../../../jscaip/MoveX';
+
+import {P4Rules} from '../../../games/games.p4/P4Rules';
 import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
 
 @Component({
@@ -21,7 +29,7 @@ export class P4OnlineComponent implements OnInit {
 
 	rules = new P4Rules();
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
-	players: string[];
+	players: string[] = null ;
 	board: Array<Array<number>>;
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/';
@@ -37,10 +45,12 @@ export class P4OnlineComponent implements OnInit {
 	turn = 0;
 	endGame = false;
 	winner: string;
+	opponent: IUserId = null;
+	allowedTimeoutVictory = false;
 
-	constructor(private afs: AngularFirestore,
-				private gameInfoService: GameInfoService,
-				private userService: UserService) {
+	constructor(private afs: AngularFirestore, private gameInfoService: GameInfoService,
+				private _route: Router,        private userService: UserService,
+				private userDao: UserDAO) {
 	}
 
 	ngOnInit() {
@@ -50,7 +60,6 @@ export class P4OnlineComponent implements OnInit {
 		// should be some kind of session-scope
 		this.gameInfoService.currentPartId.subscribe(partId =>
 			this.partId = partId);
-
 		this.userService.currentUsername.subscribe(message =>
 			this.userName = message);
 
@@ -62,79 +71,110 @@ export class P4OnlineComponent implements OnInit {
 				return actions.payload.data() as ICurrentPart;
 			}));
 
-		this.observedPart.subscribe(updatedICurrentPart => {
-			console.log('Vous êtes dans la subscription');
-			console.log('updatedICurrentPart.turn ' + updatedICurrentPart.turn);
-			console.log('this.rules.node.gamePartSlice.turn ' + this.rules.node.gamePartSlice.turn);
-
-			// todo : améliorer, ça ne doit pas être set à chaque fois
-			this.players = [updatedICurrentPart.playerZero,
-							updatedICurrentPart.playerOne];
-			this.observerRole = 2;
-			if (this.players[0] === this.userName) {
-				this.observerRole = 0;
-			} else if (this.players[1] === this.userName) {
-				this.observerRole = 1;
-			}
-			if (updatedICurrentPart.result === 3) {
-				this.endGame = true;
-				this.winner = updatedICurrentPart.winner;
-			}
-			const listMoves = updatedICurrentPart.listMoves;
-			const nbPlayedMoves = listMoves.length;
-			let currentPartTurn;
-			while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
-				P4Rules.debugPrintBiArray(this.rules.node.gamePartSlice.getCopiedBoard());
-				currentPartTurn = this.rules.node.gamePartSlice.turn;
-				const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
-			}
-			this.updateBoard();
-		});
+		this.observedPart.subscribe(updatedICurrentPart =>
+			this.onCurrentPartUpdate(updatedICurrentPart));
 
 		this.partDocument = this.afs.doc('parties/' + this.partId);
 	}
 
-	updateBoard() {
-		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
-		this.board = p4PartSlice.getCopiedBoard();
-		this.turn = p4PartSlice.turn;
-		this.currentPlayer = this.players[p4PartSlice.turn % 2];
+	onCurrentPartUpdate(updatedICurrentPart: ICurrentPart) {
+		if (this.players == null) {
+			this.setPlayersDatas(updatedICurrentPart);
+		}
+		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
+		if ([1, 3, 4].includes(updatedICurrentPart.result)) {
+			this.endGame = true;
+			this.winner = updatedICurrentPart.winner;
+		}
+		const listMoves = updatedICurrentPart.listMoves;
+		this.turn = updatedICurrentPart.turn;
+
+		const nbPlayedMoves = listMoves.length;
+		let currentPartTurn;
+		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
+			currentPartTurn = this.rules.node.gamePartSlice.turn;
+			const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
+		}
+		this.updateBoard();
 	}
 
-	choose(event: MouseEvent): boolean {
-		this.userService.updateUserActivity();
-		if (this.isPlayerTurn()) {
-			const x: number = Number(event.srcElement.id.substring(2, 3));
-			console.log('vous tentez un mouvement en colonne ' + x);
-
-			if (this.rules.node.isEndGame()) {
-				console.log('Malheureusement la partie est finie');
-				// todo : option de clonage revision commentage
-				return false;
-			}
-
-			console.log('ça tente bien c\'est votre tour');
-			// player's turn
-			const choosedMove = MoveX.get(x);
-			if (this.rules.choose(choosedMove)) {
-				console.log('Et javascript estime que votre mouvement est légal');
-				// player make a correct move
-				// let's confirm on java-server-side that the move is legal
-				this.updateDBBoard(choosedMove);
-				if (this.rules.node.isEndGame()) {
-					this.notifyVictory();
-				}
-			} else {
-				console.log('Mais c\'est un mouvement illegal');
-			}
-		} else {
-			console.log('Mais c\'est pas ton tour !');
+	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
+		this.players = [
+			updatedICurrentPart.playerZero,
+			updatedICurrentPart.playerOne];
+		this.observerRole = 2;
+		let opponentName = '';
+		if (this.players[0] === this.userName) {
+			this.observerRole = 0;
+			opponentName = this.players[1];
+		} else if (this.players[1] === this.userName) {
+			this.observerRole = 1;
+			opponentName = this.players[0];
 		}
+		if (opponentName !== '') {
+			this.userDao.getUserDocRefByUserName(opponentName)
+				.onSnapshot(userQuerySnapshot =>
+					this.onUserUpdate(userQuerySnapshot));
+		}
+	}
+
+	onUserUpdate(userQuerySnapshot: QuerySnapshot<any>) {
+		userQuerySnapshot.forEach(doc => {
+			const data = doc.data() as IUser;
+			const id = doc.id;
+			if (this.opponent == null) {
+				this.opponent = {id: id, user: data};
+				this.startWatchingForOpponentTimeout();
+			}
+			this.opponent = {id: id, user: data};
+		});
+	}
+
+	startWatchingForOpponentTimeout() {
+		if (this.opponentHasTimedOut()) {
+			this.allowedTimeoutVictory = true;
+		} else {
+			this.allowedTimeoutVictory = false;
+		}
+		setTimeout(() => this.startWatchingForOpponentTimeout(),
+			HeaderComponent.refreshingPresenceTimeout);
+	}
+
+	opponentHasTimedOut() {
+		const timeOutDuree = 30 * 1000;
+		console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
+		return (this.opponent.user.lastActionTime + timeOutDuree < Date.now());
+	}
+
+	backToServer() {
+		this._route.navigate(['server']);
+	}
+
+	resign() {
+		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
+		const docRef: DocumentReference = this.partDocument.ref;
+		docRef.update({
+			winner: victoriousPlayer,
+			result: 1
+		}); // resign
+	}
+
+	notifyTimeout() {
+		const victoriousPlayer = this.userName;
+		this.endGame = true;
+		this.winner = victoriousPlayer;
+		const docRef = this.partDocument.ref;
+		docRef.update({
+			winner: victoriousPlayer,
+			result: 4
+		});
 	}
 
 	notifyVictory() {
 		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
-		const docRef: DocumentReference = this.partDocument.ref;
+		this.endGame = true;
+		this.winner = victoriousPlayer;
+		const docRef = this.partDocument.ref;
 		docRef.update({
 			'winner': victoriousPlayer,
 			'result': 3
@@ -144,6 +184,13 @@ export class P4OnlineComponent implements OnInit {
 	isPlayerTurn() {
 		const indexPlayer = this.rules.node.gamePartSlice.turn % 2;
 		return this.players[indexPlayer] === this.userName;
+	}
+
+	updateBoard() {
+		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
+		this.board = p4PartSlice.getCopiedBoard();
+		this.turn = p4PartSlice.turn;
+		this.currentPlayer = this.players[p4PartSlice.turn % 2];
 	}
 
 	updateDBBoard(move: MoveX) {
@@ -162,18 +209,34 @@ export class P4OnlineComponent implements OnInit {
 		});
 	}
 
-	debugPrintArray(b: Array<Array<number>>) {
-		for (const line of b) {
-			console.log(line);
+	choose(event: MouseEvent): boolean {
+		if (!this.isPlayerTurn()) {
+			console.log('Mais c\'est pas ton tour !');
+			return false;
 		}
-	}
+		const x: number = Number(event.srcElement.id.substring(2, 3));
+		console.log('vous tentez un mouvement en colonne ' + x);
 
-	debugModifyArray(b: Array<number>) {
-		b[3] = 5;
-	}
+		if (this.rules.node.isEndGame()) {
+			console.log('Malheureusement la partie est finie');
+			// todo : option de clonage revision commentage
+			return false;
+		}
 
-	debugReassignArray(b: Array<number>) {
-		b = [-1, -1, -1, -1, -73];
+		console.log('ça tente bien c\'est votre tour');
+		// player's turn
+		const choosedMove = MoveX.get(x);
+		if (this.rules.choose(choosedMove)) {
+			console.log('Et javascript estime que votre mouvement est légal');
+			// player make a correct move
+			// let's confirm on java-server-side that the move is legal
+			this.updateDBBoard(choosedMove);
+			if (this.rules.node.isEndGame()) {
+				this.notifyVictory();
+			}
+		} else {
+			console.log('Mais c\'est un mouvement illegal');
+		}
 	}
 
 }

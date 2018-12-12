@@ -13,21 +13,21 @@ import {IUser, IUserId} from '../../../domain/iuser';
 import {UserService} from '../../../services/user-service';
 import {GameInfoService} from '../../../services/game-info-service';
 
-import {HeaderComponent} from '../../normal-component/header/header.component';
+import {HeaderComponent} from '../../normal-component/header/header.component'; // TODO: constantifier maggle
 
-import {MoveX} from '../../../jscaip/MoveX';
-
-import {AwaleRules} from '../../../games/games.awale/AwaleRules';
-import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
+import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
+import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
+import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
+import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
 
 @Component({
-	selector: 'app-awale-online',
-	templateUrl: './awale-online.component.html',
-	styleUrls: ['./awale-online.component.css']
+	selector: 'app-quarto-online',
+	templateUrl: './quarto-online.component.html',
+	styleUrls: ['./quarto-online.component.css']
 })
-export class AwaleOnlineComponent implements OnInit {
+export class QuartoOnlineComponent implements OnInit {
 
-	rules = new AwaleRules();
+	rules = new QuartoRules();
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
 	players: string[] = null;
 	board: Array<Array<number>>;
@@ -38,14 +38,18 @@ export class AwaleOnlineComponent implements OnInit {
 	partId: string;
 	userName: string;
 	currentPlayer: string;
-	captured: number[] = [0, 0];
 	turn = 0;
+	pieceInHand = 0;
 	endGame = false;
 	winner: string;
+
+	private choosenX = -1;
+	private choosenY = -1;
+
 	opponent: IUserId;
 	allowedTimeoutVictory = false;
-
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
+	// imagesLocation = 'src/assets/images/quarto/'; // en dev
 
 	constructor(private afs: AngularFirestore, private gameInfoService: GameInfoService,
 				private _route: Router,        private userService: UserService,
@@ -92,7 +96,8 @@ export class AwaleOnlineComponent implements OnInit {
 		let currentPartTurn;
 		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.rules.node.gamePartSlice.turn;
-			const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
+			const quartoMove: QuartoMove = QuartoMove.decode(listMoves[currentPartTurn]);
+			const bol: boolean = this.rules.choose(quartoMove);
 		}
 		this.updateBoard();
 	}
@@ -186,21 +191,21 @@ export class AwaleOnlineComponent implements OnInit {
 	}
 
 	updateBoard() {
-		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
-		this.board = awalePartSlice.getCopiedBoard();
-		this.turn = awalePartSlice.turn;
-		this.currentPlayer = this.players[awalePartSlice.turn % 2];
+		const quartoPartSlice = this.rules.node.gamePartSlice as QuartoPartSlice;
+		this.board = quartoPartSlice.getCopiedBoard();
+		this.turn = quartoPartSlice.turn;
+		this.currentPlayer = this.players[quartoPartSlice.turn % 2];
 
-		this.captured = awalePartSlice.getCapturedCopy();
+		this.pieceInHand = quartoPartSlice.pieceInHand;
 	}
 
-	updateDBBoard(move: MoveX) {
+	updateDBBoard(move: QuartoMove) {
 		const docRef = this.partDocument.ref;
 		docRef.get()
 			.then((doc) => {
 				const turn: number = doc.get('turn') + 1;
 				const listMoves: number[] = doc.get('listMoves');
-				listMoves[listMoves.length] = move.x;
+				listMoves[listMoves.length] = QuartoMove.encode(move);
 				docRef.update({
 					'listMoves': listMoves,
 					'turn': turn
@@ -210,35 +215,64 @@ export class AwaleOnlineComponent implements OnInit {
 		});
 	}
 
-	choose(event: MouseEvent): boolean {
+	chooseCoord(event: MouseEvent): boolean {
 		if (!this.isPlayerTurn()) {
-			console.log('Mais c\'est pas ton tour !'); // todo : réactive notification
+			console.log('ce n\'est pas ton tour!');
+			return false;
+		}
+		if (this.rules.node.isEndGame()) {
+			console.log('la partie est finie');
 			return false;
 		}
 		const x: number = Number(event.srcElement.id.substring(2, 3));
-		console.log('vous tentez un mouvement en colonne ' + x);
+		const y: number = Number(event.srcElement.id.substring(1, 2));
+		if (this.board[y][x] === QuartoEnum.UNOCCUPIED) {
+			this.putOnBoard(x, y);
+			return true;
+		}
+		return false;
+	}
 
-		if (this.rules.node.isEndGame()) {
-			console.log('Malheureusement la partie est finie');
-			// todo : option de clonage revision commentage
+	putOnBoard(x: number, y: number) {
+		this.choosenX = x;
+		this.choosenY = y;
+		// TODO : enlever le précédent s'il y en
+		// TODO : placer virtuellement la pieceInHand sur le board
+	}
+
+	choosePiece(event: MouseEvent): boolean {
+		if (!this.isPlayerTurn()) {
+			console.log('ce n\'est pas ton tour!');
 			return false;
 		}
-
-		console.log('ça tente bien c\'est votre tour');
-		// player's turn
-		const choosedMove = MoveX.get(x);
+		if (this.rules.node.isEndGame()) {
+			console.log('la partie est finie');
+			return false;
+		} // TODO : refactor ça avec chooseCoord
+		if (this.choosenX === -1) {
+			console.log('choisis une pièce d\'abord');
+			return false;
+		}
+		const piece: number = Number(event.srcElement.id.substring(1));
+		const choosedMove = new QuartoMove(this.choosenX, this.choosenY, piece);
 		if (this.rules.choose(choosedMove)) {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
+			this.choosenX = -1;
+			this.choosenY = -1;
 			this.updateDBBoard(choosedMove);
 			if (this.rules.node.isEndGame()) {
 				this.notifyVictory();
 			}
+			return true;
 		} else {
 			console.log('Mais c\'est un mouvement illegal');
+			return false;
 		}
 	}
 
-
+	isRemaining(pawn: number) {
+		return QuartoPartSlice.isGivable(pawn, this.board, this.pieceInHand);
+	}
 }

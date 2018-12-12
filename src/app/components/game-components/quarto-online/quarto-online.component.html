@@ -1,0 +1,60 @@
+<div>
+	<div id="up" style="align-content: center; text-align: center">
+		<div *ngIf="observerRole <2">
+			<div> Vous jouez contre {{ opponent.user.pseudo }} </div>
+			<button *ngIf="!endGame" (click)="resign()"> Abandonner </button>
+			<br/>
+			<div *ngIf="allowedTimeoutVictory && !endGame">
+				{{ opponent.user.pseudo }} ne réagit plus :
+				<button (click)="notifyTimeout()">
+					Victoire par timeout?
+				</button>
+			</div>
+		</div>
+		<div *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</div>
+
+		<div *ngIf="(!endGame) && (currentPlayer !== userName)"> C'est au tour de {{ currentPlayer }} </div>
+		<div *ngIf="(!endGame) && (currentPlayer === userName)"> C'est à votre tour ! </div>
+
+		<div *ngIf="endGame">
+			<div *ngIf="(winner===userName)"> Vous avez gagné </div>
+			<div *ngIf="(winner!==userName) && (observerRole<2)"> Vous avez perdu </div>
+			<div *ngIf="(winner!==userName) && (observerRole>=2)"> Victoire de {{ winner }} </div>
+			<button (click)="backToServer()">Retour au serveur</button>
+		</div>
+		<div> Tour : {{ turn }} </div>
+	</div>
+
+	<div id="down" class="flex-container" style="display:flex; flex-flow: row wrap; justify-content: space-around;">
+		<div id="board">
+			<table (click)="chooseCoord($event);">
+				<tr *ngFor="let line of board; index as y;">
+					<td *ngFor="let case of line; index as x;">
+						<img width="100" height="100"
+							 id="{{'t'+y+x}}"
+							 alt=":{{ case }}:"
+							 [src]='imagesLocation+[case]+".svg"'/>
+					</td>
+				</tr>
+			</table>
+			Pièce en main :
+			<img width="100" height="100"
+				 alt=":{{ pieceInHand }}:"
+				 [src]='imagesLocation+pieceInHand+".svg"'/>
+		</div>
+
+		<div id="piece">
+			<table (click)="choosePiece($event);">
+				<tr *ngFor="let line of board; index as y;">
+					<td *ngFor="let case of line; index as x;">
+						<img *ngIf="isRemaining((4*y)+x)"
+							 width="100" height="100"
+							 id="{{'p'+((4*y)+x)}}"
+							 alt=":{{ ((4*y)+x) }}:"
+							 [src]='imagesLocation+[((4*y)+x)]+".svg"'/>
+					</td>
+				</tr>
+			</table>
+		</div>
+	</div>
+</div>

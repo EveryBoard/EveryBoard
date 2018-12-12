@@ -456,7 +456,7 @@ export class P4Rules extends Rules {
 	}
 
 	static _getBoardValue(n: MNode<P4Rules>): number {
-		/* if (n.getMother() === null) {
+		/* if (n.getMother() == null) {
           return P4Rules.getBoardValueFromScratch(n);
         } else {
           return P4Rules.getBoardValueShortened(n);
@@ -513,7 +513,7 @@ export class P4Rules extends Rules {
 	}
 
 	setInitialBoard() {
-		if (this.node === null) {
+		if (this.node == null) {
 			this.node = MNode.getFirstNode(
 				new P4PartSlice(P4PartSlice.getStartingBoard(), 0),
 				this
