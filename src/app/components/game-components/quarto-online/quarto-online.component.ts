@@ -48,8 +48,8 @@ export class QuartoOnlineComponent implements OnInit {
 
 	opponent: IUserId;
 	allowedTimeoutVictory = false;
-	// imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
-	imagesLocation = 'src/assets/images/quarto/'; // en dev
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
+	// imagesLocation = 'src/assets/images/quarto/'; // en dev
 
 	constructor(private afs: AngularFirestore, private gameInfoService: GameInfoService,
 				private _route: Router,        private userService: UserService,
