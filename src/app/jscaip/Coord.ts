@@ -57,13 +57,14 @@ export class Coord {
 		const other: Coord = obj as Coord;
 		if (other.x !== this.x) {
 			return false;
-		} if (this.y !== other.y) {
+		}
+		if (this.y !== other.y) {
 			return false;
-		} return true;
+		}
+		return true;
 	}
 
-	// @Override
-	// public String toString() {
-	//  return '(' + x + ', ' + y + ')';
-	// }
+	toString(): string {
+		return '(' + this.x + ', ' + this.y + ')';
+	}
 }

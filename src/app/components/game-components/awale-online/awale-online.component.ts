@@ -240,4 +240,5 @@ export class AwaleOnlineComponent implements OnInit {
 		}
 	}
 
+
 }

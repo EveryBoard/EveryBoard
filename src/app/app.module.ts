@@ -29,14 +29,14 @@ import {firebaseConfig} from './firebaseConfig';
 import {QuartoOnlineComponent} from './components/game-components/quarto-online/quarto-online.component';
 
 const routes: Route [] = [
-	{path: 'server', 'component': ServerPageComponent},
-	{path: 'statistic', 'component': StatisticPageComponent},
-	{path: 'createAccount', 'component': CreateAccountComponent},
-	{path: 'joiningPage', 'component': JoiningPageComponent},
-	{path: 'P4Online', 'component': P4OnlineComponent},
-	{path: 'P4Offline', 'component': P4OfflineComponent},
-	{path: 'AwaleOnline', 'component': AwaleOnlineComponent},
-	{path: 'AwaleOffline', 'component': AwaleOfflineComponent},
+	{path: 'server',        component: ServerPageComponent},
+	{path: 'statistic',     component: StatisticPageComponent},
+	{path: 'createAccount', component: CreateAccountComponent},
+	{path: 'joiningPage',   component: JoiningPageComponent},
+	{path: 'P4Online',      component: P4OnlineComponent},
+	{path: 'P4Offline',     component: P4OfflineComponent},
+	{path: 'AwaleOnline',   component: AwaleOnlineComponent},
+	{path: 'AwaleOffline',  component: AwaleOfflineComponent},
 	{path: 'QuartoOnline', 'component': QuartoOnlineComponent},
 
 	{path: '', redirectTo: 'login-page', pathMatch: 'full'},

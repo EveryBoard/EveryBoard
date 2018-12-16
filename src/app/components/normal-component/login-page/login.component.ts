@@ -1,12 +1,9 @@
 import {Component, OnInit} from '@angular/core';
-import {FormBuilder, Validators} from '@angular/forms';
 import {Router} from '@angular/router';
 
 import {UserService} from '../../../services/user-service';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {IUser, IUserId, User} from '../../../domain/iuser';
-import {map} from 'rxjs/operators';
-import {ICurrentPart} from '../../../domain/icurrentpart';
 
 @Component({
 	selector: 'app-login',

@@ -1,7 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
-import {MoveX} from '../../../jscaip/MoveX';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
+import {UserService} from '../../../services/user-service';
+import {MoveCoord} from '../../../jscaip/MoveCoord';
 
 @Component({
 	selector: 'app-awale-offline',
@@ -21,7 +22,7 @@ export class AwaleOfflineComponent implements OnInit {
 
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
 
-	constructor() {
+	constructor(private userService: UserService) {
 	}
 
 	ngOnInit() {
@@ -39,7 +40,7 @@ export class AwaleOfflineComponent implements OnInit {
 			setTimeout(() => {
 				// called only when it's AI's Turn
 				if (!this.rules.node.isEndGame()) {
-					const aiMove: MoveX = <MoveX>this.rules.node.findBestMoveAndSetDepth(this.aiDepth).getMove();
+					const aiMove: MoveCoord = <MoveCoord>this.rules.node.findBestMoveAndSetDepth(this.aiDepth).getMove();
 					this.rules.choose(aiMove);
 					this.updateBoard();
 					this.proposeAIToPlay();
@@ -76,6 +77,7 @@ export class AwaleOfflineComponent implements OnInit {
 	}
 
 	choose(event: MouseEvent): boolean {
+		this.userService.updateUserActivity();
 		if (this.rules.node.isEndGame()) {
 			console.log('La partie est finie');
 			return false;
@@ -90,8 +92,9 @@ export class AwaleOfflineComponent implements OnInit {
 
 		// human's turn
 		const x: number = Number(event.srcElement.id.substring(2, 3));
+		const y: number = Number(event.srcElement.id.substring(1, 2));
 		console.log('vous tentez un mouvement en ' + x + '(' + event.srcElement.id + ')');
-		if (this.rules.choose(MoveX.get(x))) {
+		if (this.rules.choose(new MoveCoord(x, y))) {
 			// human make a correct move, let's see if it's AI Turn
 			// and let's also update the board
 			this.updateBoard();

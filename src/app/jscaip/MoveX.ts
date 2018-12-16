@@ -43,5 +43,9 @@ export class MoveX extends Move {
 		}
 		return true;
 	}
+
+	public toString(): string {
+		return 'MoveX(' + this.x + ')';
+	}
 }
 
