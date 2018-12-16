@@ -1,9 +1,59 @@
-div {
+.circled {
 	border-style: solid;
-	padding: 25px;
 	border-radius: 25px;
+	padding: 1%;
+	overflow: auto;
 }
+/* .leftcolumn {
+	float: left;
+	width: 80%;
+	height: 100%;
+	overflow: auto;
+}
+.rightcolumn {
+	float: right;
+	width: 20%;
+	height: 100%;
+	overflow: auto;
+} */
 
+#actualGame {
+	background-color: #F0F0F0;
+	min-height: 79%; /* Full height */
+	margin-bottom: 1%;
+	min-width: 79%;
+	margin-right: 1%;
+	float: left;
+	/* position: fixed; /* Make it stick, even on scroll */
+	overflow: auto; /* Enable scrolling if the sidenav has too much content */
+}
+#gameCreator {
+	background-color: #D0D0D0;
+	min-height: 19%; /* Full height */
+	margin-bottom: 1%;
+	min-width: 19%;
+	margin-left: 1%;
+	/* position: fixed; /* Make it stick, even on scroll */
+	overflow: auto; /* Enable scrolling if the sidenav has too much content */
+	align-content: center;
+}
+#chat {
+	background-color: #D0D0D0;
+	min-height: 19%;
+	margin-top: 1%;
+	min-width: 79%;
+	margin-right: 1%;
+	overflow: auto;
+	float: left;
+}
+#onlineUser {
+	background-color: #F0F0F0;
+	min-height: 79%;
+	margin-top: 1%;
+	min-width: 19%;
+	margin-left: 1%;
+	overflow: auto;
+}
 .table-hover tbody tr:hover td {
 
 }

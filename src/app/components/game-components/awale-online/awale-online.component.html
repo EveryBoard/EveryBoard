@@ -1,4 +1,4 @@
-<div>
+<div class="container" style="position: relative; align-content: center;">
 	<div *ngIf="observerRole <2">
 		<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
 		<button *ngIf="!endGame" (click)="resign()"> Abandonner </button>
@@ -25,10 +25,10 @@
 	<table *ngIf="observerRole!=1"
 		   (click)="choose($event);">
 		<tr style="margin:0px; padding:0px;"
-			*ngFor="let line of board; index as y;">
+			*ngFor="let line of board.reverse(); index as y;">
 			<td *ngFor="let case of line; index as x; ">
 				<img width="100" heigh="100"
-					 id="{{'t'+y.toString()+x}}"
+					 id="{{ 't'+(1-y)+x }}"
 					 alt=":{{ case }}:"
 					 src="{{ imagesLocation + case + '.svg'}}" />
 			</td>
@@ -37,10 +37,10 @@
 	<table *ngIf="observerRole==1"
 		   (click)="choose($event);">
 		<tr style="margin:0px; padding:0px;"
-			*ngFor="let line of board.reverse(); index as y;">
+			*ngFor="let line of board; index as y;">
 			<td *ngFor="let case of line.reverse(); index as x;">
 				<img width="100" heigh="100"
-					 id="{{'t'+(1-y).toString()+(5-x).toString()}}"
+					 id="{{ 't'+y+(5-x) }}"
 					 alt=":{{ case }}:"
 					 src="{{ imagesLocation + case + '.svg'}}" />
 			</td>

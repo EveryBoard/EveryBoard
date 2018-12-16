@@ -1,15 +1,17 @@
-<div id="actualGame">
-	<p>List of actual games</p>
-	<table class="table table-hover">
-		<thead>
+<div class="container-fluid">
+
+	<div id="actualGame" class="circled">
+		<p>List of actual games</p>
+		<table class="table table-hover">
+			<thead>
 			<tr>
 				<th scope="col">Game Name</th>
 				<th scope="col">Player 0</th>
 				<th scope="col">Player 1</th>
 				<th scope="col">Turn</th>
 			</tr>
-		</thead>
-		<tbody>
+			</thead>
+			<tbody>
 			<tr *ngFor="let part of partIds"
 				(click)="joinGame(part.id, part.part.typeGame)">
 				<td>{{ part.part.typeGame }}</td>
@@ -17,27 +19,44 @@
 				<td>{{ part.part.playerOne }}</td>
 				<td>{{ part.part.turn }}</td>
 			</tr>
-		</tbody>
-	</table>
+			</tbody>
+		</table>
+	</div>
+
+	<div id="chat" class="circled">
+		<h2> Parle à tes amis ! </h2>
+		<p> En travaux ... </p>
+	</div>
+
+	<div id="gameCreator" class="circled form-group">
+		<label for="gameType">Créer un jeu</label>
+		<select id="gameType"
+				class="form-control"
+				[(ngModel)]='selectedGame'>
+			<option *ngFor="let gameName of gameNameList"
+					value={{gameName}}
+					class="form-control">
+				{{ gameName }}
+			</option>
+		</select>
+		<br/>
+		<input type="button"
+			   value="online game"
+			   (click)="createGame()"
+			   class="btn btn-primary btn-block">
+		<br/>
+		<input type="button"
+			   value="local game"
+			   (click)="playLocally()"
+			   class="btn btn-primary btn-block">
+	</div>
+
+	<div id="onlineUser" class="circled">
+		<p> Recent User : </p>
+		<ul>
+			<li *ngFor="let user of activeUserList">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
+				date:'HH:mm:ss':'+0100'}}
+			</li>
+		</ul>
+	</div>
 </div>
-<div id="onlineUser">
-	<p> Recent User : </p>
-	<ul>
-		<li *ngFor="let user of activeUserList">{{ user.user.pseudo }} : {{ user.user.lastActionTime | date:'HH:mm:ss':'+0100'}}</li>
-	</ul>
-</div>
-<div id="gameCreator">
-	<p>choisi le jeu que tu crée</p>
-	<select [(ngModel)]='selectedGame'>
-		<option *ngFor="let gameName of gameNameList" value={{gameName}}>
-			{{ gameName }}
-		</option>
-	</select>
-	<input type="button" value="online game" (click)="createGame()">
-	<input type="button" value="local game" (click)="playLocally()">
-</div>
-<!--
-<div id="chat">
-	<p>ici c'est le tchat (could do)</p>
-</div>
--->

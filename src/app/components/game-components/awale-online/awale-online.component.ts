@@ -19,6 +19,7 @@ import {MoveX} from '../../../jscaip/MoveX';
 
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
+import {MoveCoord} from '../../../jscaip/MoveCoord';
 
 @Component({
 	selector: 'app-awale-online',
@@ -49,8 +50,7 @@ export class AwaleOnlineComponent implements OnInit {
 
 	constructor(private afs: AngularFirestore, private gameInfoService: GameInfoService,
 				private _route: Router,        private userService: UserService,
-				private userDao: UserDAO) {
-	}
+				private userDao: UserDAO) {}
 
 	ngOnInit() {
 		// totally adaptable to other Rules
@@ -92,7 +92,8 @@ export class AwaleOnlineComponent implements OnInit {
 		let currentPartTurn;
 		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.rules.node.gamePartSlice.turn;
-			const bol: boolean = this.rules.choose(MoveX.get(listMoves[currentPartTurn]));
+			const choosedMove = new MoveCoord(listMoves[currentPartTurn], currentPartTurn % 2);
+			const bol: boolean = this.rules.choose(choosedMove);
 		}
 		this.updateBoard();
 	}
@@ -216,6 +217,7 @@ export class AwaleOnlineComponent implements OnInit {
 			return false;
 		}
 		const x: number = Number(event.srcElement.id.substring(2, 3));
+		const y: number = Number(event.srcElement.id.substring(1, 2));
 		console.log('vous tentez un mouvement en colonne ' + x);
 
 		if (this.rules.node.isEndGame()) {
@@ -226,12 +228,12 @@ export class AwaleOnlineComponent implements OnInit {
 
 		console.log('ça tente bien c\'est votre tour');
 		// player's turn
-		const choosedMove = MoveX.get(x);
+		const choosedMove = new MoveCoord(x, y);
 		if (this.rules.choose(choosedMove)) {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
-			this.updateDBBoard(choosedMove);
+			this.updateDBBoard(MoveX.get(x));
 			if (this.rules.node.isEndGame()) {
 				this.notifyVictory();
 			}
@@ -239,6 +241,5 @@ export class AwaleOnlineComponent implements OnInit {
 			console.log('Mais c\'est un mouvement illegal');
 		}
 	}
-
 
 }
