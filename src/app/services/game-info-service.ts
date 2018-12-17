@@ -6,8 +6,8 @@ import {BehaviorSubject} from 'rxjs';
 })
 export class GameInfoService {
 
-	private gameName = new BehaviorSubject(':');
-	private partId = new BehaviorSubject('');
+	private gameName = new BehaviorSubject<string>(':');
+	private partId = new BehaviorSubject<string>('');
 
 	currentGameName = this.gameName.asObservable();
 	currentPartId = this.partId.asObservable();

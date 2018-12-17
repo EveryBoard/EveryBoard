@@ -19,7 +19,7 @@ export class ServerPageComponent implements OnInit {
 
 	partIds: ICurrentPartId[];
 	activeUserList: IUserId[];
-	readonly gameNameList: String[] = ['P4', 'Awale', 'Quarto'];
+	readonly gameNameList: String[] = ['P4', 'Awale', 'Quarto', 'QuartoNew'];
 	selectedGame: string;
 	userName: string;
 
