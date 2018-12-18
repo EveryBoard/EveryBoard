@@ -213,4 +213,5 @@ export abstract class OnlineGame {
 	abstract decodeMove(encodedMove: number): Move;
 
 	abstract encodeMove(move: Move): number;
+
 }
