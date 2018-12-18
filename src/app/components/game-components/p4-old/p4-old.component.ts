@@ -21,11 +21,11 @@ import {P4Rules} from '../../../games/games.p4/P4Rules';
 import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
 
 @Component({
-	selector: 'app-p4-online',
-	templateUrl: './p4-online.component.html',
-	styleUrls: ['./p4-online.component.css']
+	selector: 'app-p4-old',
+	templateUrl: './p4-old.component.html',
+	styleUrls: ['./p4-old.component.css']
 })
-export class P4OnlineComponent implements OnInit {
+export class P4OldComponent implements OnInit {
 
 	rules = new P4Rules();
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)

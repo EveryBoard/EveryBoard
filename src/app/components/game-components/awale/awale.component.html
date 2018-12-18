@@ -1,0 +1,51 @@
+<div class="container" style="position: relative; align-content: center;">
+	<div *ngIf="observerRole <2">
+		<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
+		<button *ngIf="!endGame" (click)="resign()"> Abandonner </button>
+		<div *ngIf="allowedTimeoutVictory && !endGame">
+			{{ opponent.user.pseudo }} ne réagit plus :
+			<button (click)="notifyTimeout()">
+				Victoire par timeout?
+			</button>
+		</div>
+		<div> Tour : {{ turn }} </div>
+	</div>
+	<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
+
+	<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
+	<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
+
+	<div *ngIf="endGame">
+		<h3 *ngIf="(winner===userName)"> Vous avez gagné </h3>
+		<h3 *ngIf="(winner!==userName) && (observerRole<2)"> Vous avez perdu </h3>
+		<h3 *ngIf="(winner!==userName) && (observerRole>=2)"> Victoire de {{ winner }} </h3>
+		<button (click)="backToServer()">Retour au serveur</button>
+	</div>
+
+	<table *ngIf="observerRole!=1"
+		   (click)="choose($event);">
+		<tr style="margin:0px; padding:0px;"
+			*ngFor="let line of board.reverse(); index as y;">
+			<td *ngFor="let case of line; index as x; ">
+				<img width="100" heigh="100"
+					 id="{{ 't'+(1-y)+x }}"
+					 alt=":{{ case }}:"
+					 src="{{ imagesLocation + case + '.svg'}}" />
+			</td>
+		</tr>
+	</table>
+	<table *ngIf="observerRole==1"
+		   (click)="choose($event);">
+		<tr style="margin:0px; padding:0px;"
+			*ngFor="let line of board; index as y;">
+			<td *ngFor="let case of line.reverse(); index as x;">
+				<img width="100" heigh="100"
+					 id="{{ 't'+y+(5-x) }}"
+					 alt=":{{ case }}:"
+					 src="{{ imagesLocation + case + '.svg'}}" />
+			</td>
+		</tr>
+	</table>
+	{{ players[0] }} : {{ captured[0] }} <br/>
+	{{ players[1] }} : {{ captured[1] }} <br/>
+</div>

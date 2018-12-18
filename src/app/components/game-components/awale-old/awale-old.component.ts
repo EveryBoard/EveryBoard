@@ -22,11 +22,11 @@ import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
 
 @Component({
-	selector: 'app-awale-online',
-	templateUrl: './awale-online.component.html',
-	styleUrls: ['./awale-online.component.css']
+	selector: 'app-awale-old',
+	templateUrl: './awale-old.component.html',
+	styleUrls: ['./awale-old.component.css']
 })
-export class AwaleOnlineComponent implements OnInit {
+export class AwaleOldComponent implements OnInit {
 
 	rules = new AwaleRules();
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)

@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QuartoNewComponent } from './quarto-new.component';
+import { P4OldComponent } from './p4-old.component';
 
-describe('QuartoNewComponent', () => {
-  let component: QuartoNewComponent;
-  let fixture: ComponentFixture<QuartoNewComponent>;
+describe('P4OldComponent', () => {
+  let component: P4OldComponent;
+  let fixture: ComponentFixture<P4OldComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QuartoNewComponent ]
+      declarations: [ P4OldComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QuartoNewComponent);
+    fixture = TestBed.createComponent(P4OldComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

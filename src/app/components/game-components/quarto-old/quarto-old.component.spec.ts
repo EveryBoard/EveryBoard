@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { QuartoOnlineComponent } from './quarto-online.component';
+import { QuartoOldComponent } from './quarto-old.component';
 
-describe('QuartoOnlineComponent', () => {
-  let component: QuartoOnlineComponent;
-  let fixture: ComponentFixture<QuartoOnlineComponent>;
+describe('QuartoOldComponent', () => {
+  let component: QuartoOldComponent;
+  let fixture: ComponentFixture<QuartoOldComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ QuartoOnlineComponent ]
+      declarations: [ QuartoOldComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(QuartoOnlineComponent);
+    fixture = TestBed.createComponent(QuartoOldComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

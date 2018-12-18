@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AwaleOnlineComponent } from './awale-online.component';
+import { P4Component } from './p4.component';
 
-describe('AwaleOnlineComponent', () => {
-  let component: AwaleOnlineComponent;
-  let fixture: ComponentFixture<AwaleOnlineComponent>;
+describe('P4Component', () => {
+  let component: P4Component;
+  let fixture: ComponentFixture<P4Component>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AwaleOnlineComponent ]
+      declarations: [ P4Component ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AwaleOnlineComponent);
+    fixture = TestBed.createComponent(P4Component);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

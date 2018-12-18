@@ -21,11 +21,11 @@ import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
 import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
 
 @Component({
-	selector: 'app-quarto-online',
-	templateUrl: './quarto-online.component.html',
-	styleUrls: ['./quarto-online.component.css']
+	selector: 'app-quarto-old',
+	templateUrl: './quarto-old.component.html',
+	styleUrls: ['./quarto-old.component.css']
 })
-export class QuartoOnlineComponent implements OnInit {
+export class QuartoOldComponent implements OnInit {
 
 	rules = new QuartoRules();
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)

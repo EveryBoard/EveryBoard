@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GameParentComponent } from './game-parent.component';
+import { AwaleOldComponent } from './awale-old.component';
 
-describe('GameParentComponent', () => {
-  let component: GameParentComponent;
-  let fixture: ComponentFixture<GameParentComponent>;
+describe('AwaleOldComponent', () => {
+  let component: AwaleOldComponent;
+  let fixture: ComponentFixture<AwaleOldComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GameParentComponent ]
+      declarations: [ AwaleOldComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GameParentComponent);
+    fixture = TestBed.createComponent(AwaleOldComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

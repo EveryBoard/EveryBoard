@@ -1,18 +1,46 @@
-import {GameComponentComponent} from '../game-component/game-component.component';
+import {Component, OnInit} from '@angular/core';
 import {Move} from '../../../jscaip/Move';
+
 import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
 import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
 import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
-import {Component} from '@angular/core';
+import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
+import {OnlineGame} from '../OnlineGame';
+import {GameInfoService} from '../../../services/game-info-service';
+import {Router} from '@angular/router';
+import {UserService} from '../../../services/user-service';
+import {UserDAO} from '../../../dao/UserDAO';
+import {PartDAO} from '../../../dao/PartDAO';
 
-export class GameParentComponent extends GameComponentComponent {
+@Component({
+	selector: 'app-quarto',
+	templateUrl: './quarto.component.html',
+	styleUrls: ['./quarto.component.css']
+})
+export class QuartoComponent extends OnlineGame implements OnInit {
 
+	rules = new QuartoRules();
+
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
+	// imagesLocation = 'src/assets/images/quarto/'; // en dev
 	private choosenX = -1;
 	private choosenY = -1;
 	pieceInHand = 0;
 
+	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, userDao: UserDAO, partDao: PartDAO) {
+		super(gameInfoService, _route, userService, userDao, partDao);
+	}
+
+	ngOnInit() {
+		this.onInit();
+	}
+
 	decodeMove(encodedMove: number): Move {
 		return QuartoMove.decode(encodedMove);
+	}
+
+	encodeMove(move: QuartoMove): number {
+		return QuartoMove.encode(move);
 	}
 
 	updateBoard() {
@@ -22,22 +50,6 @@ export class GameParentComponent extends GameComponentComponent {
 		this.currentPlayer = this.players[quartoPartSlice.turn % 2];
 
 		this.pieceInHand = quartoPartSlice.pieceInHand;
-	}
-
-	updateDBBoard(move: QuartoMove) {
-		const docRef = this.partDocument.ref;
-		docRef.get()
-			.then((doc) => {
-				const turn: number = doc.get('turn') + 1;
-				const listMoves: number[] = doc.get('listMoves');
-				listMoves[listMoves.length] = QuartoMove.encode(move);
-				docRef.update({
-					'listMoves': listMoves,
-					'turn': turn
-				});
-			}).catch((error) => {
-			console.log(error);
-		});
 	}
 
 	chooseCoord(event: MouseEvent): boolean {
