@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {OnlineGame} from '../OnlineGame';
 import {GameInfoService} from '../../../services/game-info-service';
 import {Router} from '@angular/router';
@@ -15,7 +15,7 @@ import {P4Rules} from '../../../games/games.p4/P4Rules';
 	templateUrl: './p4.component.html',
 	styleUrls: ['./p4.component.css']
 })
-export class P4Component extends OnlineGame implements OnInit {
+export class P4Component extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new P4Rules();
 
@@ -31,6 +31,10 @@ export class P4Component extends OnlineGame implements OnInit {
 
 	ngOnInit() {
 		this.onInit();
+	}
+
+	ngOnDestroy() {
+		this.onDestroy();
 	}
 
 	decodeMove(encodedMove: number): Move {
@@ -77,6 +81,5 @@ export class P4Component extends OnlineGame implements OnInit {
 			console.log('Mais c\'est un mouvement illegal');
 		}
 	}
-
 
 }

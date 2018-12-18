@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {GameInfoService} from '../../../services/game-info-service';
 import {Router} from '@angular/router';
 import {UserService} from '../../../services/user-service';
@@ -14,7 +14,7 @@ import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
 	templateUrl: './awale.component.html',
 	styleUrls: ['./awale.component.css']
 })
-export class AwaleComponent extends OnlineGame implements OnInit {
+export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new AwaleRules();
 
@@ -29,6 +29,10 @@ export class AwaleComponent extends OnlineGame implements OnInit {
 
 	ngOnInit() {
 		this.onInit();
+	}
+
+	ngOnDestroy() {
+		this.onDestroy();
 	}
 
 	choose(event: MouseEvent): boolean {

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {Move} from '../../../jscaip/Move';
 
 import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
@@ -17,7 +17,7 @@ import {PartDAO} from '../../../dao/PartDAO';
 	templateUrl: './quarto.component.html',
 	styleUrls: ['./quarto.component.css']
 })
-export class QuartoComponent extends OnlineGame implements OnInit {
+export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new QuartoRules();
 
@@ -33,6 +33,10 @@ export class QuartoComponent extends OnlineGame implements OnInit {
 
 	ngOnInit() {
 		this.onInit();
+	}
+
+	ngOnDestroy() {
+		this.onDestroy();
 	}
 
 	decodeMove(encodedMove: number): Move {

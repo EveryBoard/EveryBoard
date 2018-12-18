@@ -9,17 +9,17 @@ import {Injectable} from '@angular/core';
 })
 export class PartDAO {
 
-	constructor(private afs: AngularFirestore) {
-	}
+	constructor(private afs: AngularFirestore) {}
 
 	getPartByID(partId: string): Observable<ICurrentPart> {
-		return this.afs.collection('parties').doc(partId).snapshotChanges()
+		return this.afs.doc('parties/' + partId).snapshotChanges()
 			.pipe(map(actions => {
 				return actions.payload.data() as ICurrentPart;
 			}));
 	}
 
-	getPartDoc(partId: string): AngularFirestoreDocument<ICurrentPart> {
+	getPartDocById(partId: string): AngularFirestoreDocument<ICurrentPart> {
 		return this.afs.doc('parties/' + partId);
 	}
+
 }

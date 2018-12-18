@@ -4,7 +4,7 @@ import {ICurrentPart} from '../../domain/icurrentpart';
 import {AngularFirestoreDocument, DocumentReference, QuerySnapshot} from 'angularfire2/firestore';
 import {IUser, IUserId} from '../../domain/iuser';
 import {HeaderComponent} from '../normal-component/header/header.component';
-import {Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 import {GameInfoService} from '../../services/game-info-service';
 import {Router} from '@angular/router';
 import {UserService} from '../../services/user-service';
@@ -26,9 +26,14 @@ export abstract class OnlineGame {
 	turn = 0;
 	endGame = false;
 	winner: string;
-	opponent: IUserId;
+	opponent: IUserId = null;
 	currentPlayer: string;
 	allowedTimeoutVictory = false;
+
+	private gameInfoServiceSubscription: Subscription;
+	private userSubscription: Subscription;
+	private observedPartSubscription: Subscription;
+	private opponentSubscription: () => void;
 
 	constructor(
 		private gameInfoService: GameInfoService,
@@ -41,20 +46,23 @@ export abstract class OnlineGame {
 
 	onInit() {
 		// should be some kind of session-scope
-		this.gameInfoService.currentPartId.subscribe(partId =>
-			this.partId = partId);
-		this.userService.currentUsername.subscribe(message =>
-			this.userName = message);
+		this.gameInfoServiceSubscription =
+			this.gameInfoService.currentPartId.subscribe(partId =>
+				this.partId = partId);
+		this.userSubscription =
+			this.userService.currentUsername.subscribe(message =>
+				this.userName = message);
 
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
 		this.observedPart = this.partDao.getPartByID(this.partId);
 
-		this.observedPart.subscribe(updatedICurrentPart =>
-			this.onCurrentPartUpdate(updatedICurrentPart));
+		this.observedPartSubscription =
+			this.observedPart.subscribe(updatedICurrentPart =>
+				this.onCurrentPartUpdate(updatedICurrentPart));
 
-		this.partDocument = this.partDao.getPartDoc(this.partId);
+		this.partDocument = this.partDao.getPartDocById(this.partId);
 
 	}
 
@@ -95,9 +103,11 @@ export abstract class OnlineGame {
 			opponentName = this.players[0];
 		}
 		if (opponentName !== '') {
-			this.userDao.getUserDocRefByUserName(opponentName)
-				.onSnapshot(userQuerySnapshot =>
-					this.onUserUpdate(userQuerySnapshot));
+			console.log('settage de l\'abonnement');
+			this.opponentSubscription =
+				this.userDao.getUserDocRefByUserName(opponentName)
+					.onSnapshot(userQuerySnapshot =>
+						this.onUserUpdate(userQuerySnapshot));
 		}
 	}
 
@@ -119,8 +129,13 @@ export abstract class OnlineGame {
 		} else {
 			this.allowedTimeoutVictory = false;
 		}
-		setTimeout(() => this.startWatchingForOpponentTimeout(),
-			HeaderComponent.refreshingPresenceTimeout);
+		if (!this.endGame) {
+			console.log('la partie n\'est pas terminée!');
+			setTimeout(() => this.startWatchingForOpponentTimeout(),
+				HeaderComponent.refreshingPresenceTimeout);
+		} else {
+			console.log('La partie est terminée yeeees');
+		}
 	}
 
 	opponentHasTimedOut() {
@@ -183,6 +198,14 @@ export abstract class OnlineGame {
 			}).catch((error) => {
 			console.log(error);
 		});
+	}
+
+	onDestroy() {
+		console.log('désabonnement!!!');
+		this.gameInfoServiceSubscription.unsubscribe();
+		this.userSubscription.unsubscribe();
+		this.observedPartSubscription.unsubscribe();
+		this.opponentSubscription();
 	}
 
 	abstract updateBoard(): void;
