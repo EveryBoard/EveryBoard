@@ -21,26 +21,20 @@ import {LoginComponent} from './components/normal-component/login-page/login.com
 import {ServerPageComponent} from './components/normal-component/server-page/server-page.component';
 import {StatisticPageComponent} from './components/normal-component/statistic-page/statistic-page.component';
 
-import {P4OldComponent} from './components/game-components/p4-old/p4-old.component';
 import {P4OfflineComponent} from './components/offline-components/p4-offline/p4-offline.component';
-
-import {AwaleOldComponent} from './components/game-components/awale-old/awale-old.component';
 import {AwaleOfflineComponent} from './components/offline-components/awale-offline/awale-offline.component';
+
 import {firebaseConfig} from './firebaseConfig';
-import {QuartoOldComponent} from './components/game-components/quarto-old/quarto-old.component';
+
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
-import { P4Component } from './components/game-components/p4/p4.component';
-import { AwaleComponent } from './components/game-components/awale/awale.component';
+import {P4Component} from './components/game-components/p4/p4.component';
+import {AwaleComponent} from './components/game-components/awale/awale.component';
 
 const routes: Route [] = [
 	{path: 'server',			component: ServerPageComponent},
 	{path: 'statistic',			component: StatisticPageComponent},
 	{path: 'createAccount',		component: CreateAccountComponent},
 	{path: 'joiningPage',		component: JoiningPageComponent},
-
-	{path: 'P4OldOnline',		component: P4OldComponent},
-	{path: 'QuartoOldOnline',	component: QuartoOldComponent},
-	{path: 'AwaleOldOnline',		component: AwaleOldComponent},
 
 	{path: 'P4Offline',			component: P4OfflineComponent},
 	{path: 'AwaleOffline',		component: AwaleOfflineComponent},
@@ -65,10 +59,6 @@ const routes: Route [] = [
 		CreateAccountComponent,
 		JoiningPageComponent,
 		AwaleOfflineComponent,
-
-		AwaleOldComponent,
-		QuartoOldComponent,
-		P4OldComponent,
 
 		QuartoComponent,
 		P4Component,

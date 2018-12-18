@@ -5,7 +5,6 @@ import {UserService} from '../../../services/user-service';
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
 import {OnlineGame} from '../OnlineGame';
-import {MoveX} from '../../../jscaip/MoveX';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
@@ -21,7 +20,8 @@ export class AwaleComponent extends OnlineGame implements OnInit {
 
 	captured: number[] = [0, 0];
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
+	// imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/'; // en prod
+	imagesLocation = 'src/assets/images/circled_numbers/';
 
 	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, userDao: UserDAO, partDao: PartDAO) {
 		super(gameInfoService, _route, userService, userDao, partDao);
@@ -53,7 +53,7 @@ export class AwaleComponent extends OnlineGame implements OnInit {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
-			this.updateDBBoard(MoveX.get(x));
+			this.updateDBBoard(choosedMove);
 			if (this.rules.node.isEndGame()) {
 				this.notifyVictory();
 			}
@@ -62,12 +62,17 @@ export class AwaleComponent extends OnlineGame implements OnInit {
 		}
 	}
 
-	decodeMove(encodedMove: number): MoveX {
-		return MoveX.get(encodedMove);
+	decodeMove(encodedMove: number): MoveCoord {
+		const x = encodedMove % 6;
+		const y = (encodedMove - x) / 6;
+		return new MoveCoord(x, y);
 	}
 
-	encodeMove(move: MoveX): number {
-		return move.x;
+	encodeMove(move: MoveCoord): number {
+		// An awalé move goes on x from o to 5
+		// and y from 0 to 1
+		// encoded as y*6 + x
+		return (move.coord.y * 6) + move.coord.x;
 	}
 
 	updateBoard(): void {
