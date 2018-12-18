@@ -28,5 +28,4 @@ export class UserDAO {
 			.where('pseudo', '==', username).limit(1);
 	}
 
-	getUserDoc
 }
