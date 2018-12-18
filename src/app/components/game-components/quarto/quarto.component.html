@@ -2,31 +2,36 @@
 
 	<div id="up" style="align-content: center; text-align: center">
 		<div *ngIf="observerRole <2">
-			<div> Vous jouez contre {{ opponent.user.pseudo }} </div>
+			<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
 			<button *ngIf="!endGame" (click)="resign()"> Abandonner </button>
-			<br/>
 			<div *ngIf="allowedTimeoutVictory && !endGame">
-				{{ opponent.user.pseudo }} ne réagit plus :
-				<button (click)="notifyTimeout()">
-					Victoire par timeout?
-				</button>
+				<h3>
+					{{ opponent.user.pseudo }} ne réagit plus :
+					<button (click)="notifyTimeout()">
+						Victoire par timeout?
+					</button>
+				</h3>
 			</div>
+			<div> Tour : {{ turn }} </div>
 		</div>
-		<div *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</div>
-
-		<div *ngIf="(!endGame) && (currentPlayer !== userName)"> C'est au tour de {{ currentPlayer }} </div>
-		<div *ngIf="(!endGame) && (currentPlayer === userName)"> C'est à votre tour ! </div>
-
+		<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
+		<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
+		<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
 		<div *ngIf="endGame">
-			<div *ngIf="(winner===userName)"> Vous avez gagné </div>
-			<div *ngIf="(winner!==userName) && (observerRole<2)"> Vous avez perdu </div>
-			<div *ngIf="(winner!==userName) && (observerRole>=2)"> Victoire de {{ winner }} </div>
+			<div *ngIf="winner != null">
+				<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
+				<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu face à {{ winner }}</h3>
+				<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
+			</div>
+			<div *ngIf="winner === null">
+				<h3> Match nul </h3>
+			</div>
 			<button (click)="backToServer()">Retour au serveur</button>
 		</div>
-		<div> Tour : {{ turn }} </div>
 	</div>
 
 	<div id="down" class="flex-container" style="display:flex; flex-flow: row wrap; justify-content: space-around;">
+
 		<div id="board">
 			<table (click)="chooseCoord($event);">
 				<tr *ngFor="let line of board; index as y;">
@@ -57,6 +62,7 @@
 				</tr>
 			</table>
 		</div>
+
 	</div>
 
 </div>

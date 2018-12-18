@@ -14,18 +14,22 @@ export class QuartoMove extends MoveCoord {
 	}
 
 	static encode(qm: QuartoMove): number {
+		/* x va de 0 à 3
+		 * y va de 0 à 3
+		 * p va de 0 à 16 compris, 16 pour le dernier tour
+		 */
 		const x: number = qm.coord.x;
 		const y: number = qm.coord.y;
 		const p: number = qm.piece;
-		return (x * 64) + (y * 16) + p;
+		return (x * 128) + (y * 32) + p;
 	}
 
 	static decode(xyp: number): QuartoMove {
 		// traduit en UN entier le pion choisis, encodé sous la forme binaire
-		// xx yy pppp
-		const piece: number = xyp % 16; // résultat de 0 à 15
+		// xx yy ppppp
+		const piece: number = xyp % 32; // résultat de 0 à 16
 		xyp -= piece;
-		xyp /= 16;
+		xyp /= 32;
 		const y: number = xyp % 4;
 		xyp -= y;
 		xyp /= 4;

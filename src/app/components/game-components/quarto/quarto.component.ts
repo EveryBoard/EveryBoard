@@ -21,8 +21,9 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new QuartoRules();
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
-	// imagesLocation = 'src/assets/images/quarto/'; // en dev
+	// imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
+	imagesLocation = 'src/assets/images/quarto/'; // en dev
+
 	private choosenX = -1;
 	private choosenY = -1;
 	pieceInHand = 0;
@@ -69,9 +70,35 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 		const y: number = Number(event.srcElement.id.substring(1, 2));
 		if (this.board[y][x] === QuartoEnum.UNOCCUPIED) {
 			this.putOnBoard(x, y);
+			if (this.turn === 15) {
+				// plus de pièce à placer, on place automatiquement
+				return this.suggestMove(new QuartoMove(x, y, QuartoEnum.UNOCCUPIED));
+			}
 			return true;
 		}
 		return false;
+	}
+
+	suggestMove(choosedMove: QuartoMove): boolean {
+		if (this.rules.choose(choosedMove)) {
+			console.log('Et javascript estime que votre mouvement est légal');
+			// player make a correct move
+			// let's confirm on java-server-side that the move is legal
+			this.choosenX = -1;
+			this.choosenY = -1;
+			this.updateDBBoard(choosedMove);
+			if (this.rules.node.isEndGame()) {
+				if (this.rules.node.getOwnValue() === 0) {
+					this.notifyDraw();
+				} else {
+					this.notifyVictory();
+				}
+			}
+			return true;
+		} else {
+			console.log('Mais c\'est un mouvement illegal');
+			return false;
+		}
 	}
 
 	putOnBoard(x: number, y: number) {
@@ -96,21 +123,7 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 		}
 		const piece: number = Number(event.srcElement.id.substring(1));
 		const choosedMove = new QuartoMove(this.choosenX, this.choosenY, piece);
-		if (this.rules.choose(choosedMove)) {
-			console.log('Et javascript estime que votre mouvement est légal');
-			// player make a correct move
-			// let's confirm on java-server-side that the move is legal
-			this.choosenX = -1;
-			this.choosenY = -1;
-			this.updateDBBoard(choosedMove);
-			if (this.rules.node.isEndGame()) {
-				this.notifyVictory();
-			}
-			return true;
-		} else {
-			console.log('Mais c\'est un mouvement illegal');
-			return false;
-		}
+		return this.suggestMove(choosedMove);
 	}
 
 	isRemaining(pawn: number) {

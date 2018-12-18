@@ -172,7 +172,7 @@ class Critere {
 }
 
 export class QuartoRules extends Rules {
-	static VERBOSE = false;
+	static VERBOSE = true;
 
 	private static readonly INVALID_MOVE = -1;
 	private static readonly VALID_MOVE = 1;
@@ -221,12 +221,20 @@ export class QuartoRules extends Rules {
 			// nombre trop bas, ce n'est pas une pièce
 			return QuartoRules.INVALID_MOVE;
 		}
-		if (choosenPiece > 15) {
+		if (choosenPiece > 16) {
+			if (QuartoRules.VERBOSE) { console.log(); }
 			// nombre trop grand, ce n'est pas une pièce
 			return QuartoRules.INVALID_MOVE;
 		}
 		if (QuartoRules.isOccupied(board[y][x])) {
 			// on ne joue pas sur une case occupée
+			return QuartoRules.INVALID_MOVE;
+		}
+		if (choosenPiece === 16) {
+			if (quartoPartSlice.turn === 15) {
+				// on doit donner une pièce ! sauf au dernier tour
+				return QuartoRules.VALID_MOVE;
+			}
 			return QuartoRules.INVALID_MOVE;
 		}
 		if (!QuartoPartSlice.isPlacable(choosenPiece, board)) {

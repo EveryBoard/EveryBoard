@@ -25,7 +25,7 @@ export abstract class OnlineGame {
 	userName: string;
 	turn = 0;
 	endGame = false;
-	winner: string;
+	winner = '';
 	opponent: IUserId = null;
 	currentPlayer: string;
 	allowedTimeoutVictory = false;
@@ -75,6 +75,10 @@ export abstract class OnlineGame {
 		if ([1, 3, 4].includes(updatedICurrentPart.result)) {
 			this.endGame = true;
 			this.winner = updatedICurrentPart.winner;
+		}
+		if (updatedICurrentPart.result === 0) {
+			this.endGame = true;
+			this.winner = null;
 		}
 		const listMoves = updatedICurrentPart.listMoves;
 		this.turn = updatedICurrentPart.turn;
@@ -155,6 +159,14 @@ export abstract class OnlineGame {
 			winner: victoriousPlayer,
 			result: 1
 		}); // resign
+	}
+
+	notifyDraw() {
+		this.endGame = true;
+		const docRef = this.partDocument.ref;
+		docRef.update({
+			result: 0
+		}); // DRAW CONSTANT
 	}
 
 	notifyTimeout() {

@@ -19,7 +19,8 @@ export class P4Component extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new P4Rules();
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/';
+	// imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	imagesLocation = 'src/assets/images/'; // en dev
 
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
 
@@ -75,7 +76,11 @@ export class P4Component extends OnlineGame implements OnInit, OnDestroy {
 			// let's confirm on java-server-side that the move is legal
 			this.updateDBBoard(choosedMove);
 			if (this.rules.node.isEndGame()) {
-				this.notifyVictory();
+				if (this.rules.node.getOwnValue() === 0) {
+					this.notifyDraw();
+				} else {
+					this.notifyVictory();
+				}
 			}
 		} else {
 			console.log('Mais c\'est un mouvement illegal');

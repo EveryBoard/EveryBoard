@@ -59,7 +59,11 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 			// let's confirm on java-server-side that the move is legal
 			this.updateDBBoard(choosedMove);
 			if (this.rules.node.isEndGame()) {
-				this.notifyVictory();
+				if (this.rules.node.getOwnValue() === 0) {
+					this.notifyDraw();
+				} else {
+					this.notifyVictory();
+				}
 			}
 		} else {
 			console.log('Mais c\'est un mouvement illegal');
