@@ -9,6 +9,7 @@ import {ICurrentPart, ICurrentPartId} from '../../../domain/icurrentpart';
 
 import {GameInfoService} from '../../../services/game-info-service';
 import {UserService} from '../../../services/user-service';
+import {IJoiner} from '../../../domain/ijoiner';
 
 @Component({
 	selector: 'app-server-page',
@@ -64,11 +65,11 @@ export class ServerPageComponent implements OnInit {
 				const creator = partDoc.get('playerZero');
 				joinerRef.get()
 					.then(joinerDoc => {
-						const joinerList: string[] = joinerDoc.get('names');
+						const joinerList: string[] = joinerDoc.get('candidatesNames');
 						if (!joinerList.includes(this.userName) &&
 							(this.userName !== creator)) {
 							joinerList[joinerList.length] = this.userName;
-							joinerRef.update({'names': joinerList});
+							joinerRef.update({candidatesNames: joinerList});
 						}
 					});
 			});
@@ -84,22 +85,30 @@ export class ServerPageComponent implements OnInit {
 		if (this.canCreateGame()) {
 			this.afs.collection('parties')
 				.add({
-					'historic': 'pas implémenté',
-					'listMoves': [],
-					'playerZero': this.userName,
-					'playerOne': '',
-					'result': 5, // todo : constantiser ça, bordel
-					'scorePlayerZero': 'pas implémenté',
-					'scorePlayerOne': 'pas implémenté',
-					'turn': -1,
-					'typeGame': this.selectedGame,
-					'typePart': 'pas implémenté',
-					'winner': ''
+					historic: 'pas implémenté',
+					listMoves: [],
+					playerZero: this.userName, // TODO: supprimer, il n'y a pas de createur par défaut
+					playerOne: '',
+					result: 5, // todo : constantiser ça, bordel
+					scorePlayerZero: 'pas implémenté',
+					scorePlayerOne: 'pas implémenté',
+					turn: -1,
+					typeGame: this.selectedGame,
+					typePart: 'pas implémenté',
+					winner: ''
 				})
-				.then((docRef) => {
+				.then(docRef => {
+					const newJoiner: IJoiner = {
+						candidatesNames: [],
+						creator: this.userName,
+						chosenPlayer: '',
+						timeoutMinimalDuration: 60,
+						firstPlayer: 0, // par défaut: le créateur
+						partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
+					};
 					this.afs.collection('joiners')
 						.doc(docRef.id)
-						.set({'names': []});
+						.set(newJoiner);
 					this.gameInfoService.changeGame(docRef.id, this.selectedGame);
 					this._route.navigate(['joiningPage']);
 				});

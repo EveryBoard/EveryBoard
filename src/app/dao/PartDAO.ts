@@ -11,7 +11,7 @@ export class PartDAO {
 
 	constructor(private afs: AngularFirestore) {}
 
-	getPartByID(partId: string): Observable<ICurrentPart> {
+	getPartObservableById(partId: string): Observable<ICurrentPart> {
 		return this.afs.doc('parties/' + partId).snapshotChanges()
 			.pipe(map(actions => {
 				return actions.payload.data() as ICurrentPart;

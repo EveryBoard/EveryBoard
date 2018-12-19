@@ -1,21 +1,75 @@
-<div>
+<div class="container-fluid">
 
-	<h4>Création d'une partie de {{ gameName }}</h4>
-	<h4 *ngIf="creator" (click)="cancelGame()"> Cliquez içi pour annuler la partie</h4>
-	<h4 *ngIf="!creator" (click)="cancelGameJoining()"> Cliquez içi pour quitter le jeu</h4>
-	<div>
-		<h6>
-			Voici la liste des joueurs à vouloir joindre cette partie :
-		</h6>
-		<ul>
-			<li *ngFor="let joiner of (observedJoinerList | async).names">
-				<button (click)="startGameWithPlayer(joiner)"
-						*ngIf="creator">
-					Jouer contre : {{ joiner }}
-				</button>
-				<p *ngIf="!creator"> {{ joiner }}</p>
-			</li>
-		</ul>
+	<div id="players" class="circled">
+		<div class="row">
+			<h4>Création d'une partie de {{ gameName }}</h4> <hr/>
+			<h4 *ngIf="creator" (click)="cancelGameCreation()"> Cliquez içi pour annuler la partie</h4>
+			<h4 *ngIf="!creator" (click)="cancelGameJoining()"> Cliquez içi pour quitter le jeu</h4>
+		</div>
+		<form>
+			<input type="radio" value="male" checked> Vous commencez <br/>
+			<input type="radio" value="female"> Il commence <br/>
+			<input type="radio" value="other"> Au hasard <br/>
+		</form>
+	</div>
+
+	<div class="row">
+
+		<div class="col-sm-9">
+
+			<div id="gameConfig" class="circled form-group">
+				<label> Type de jeu : </label> PAS IMPLÉMENTÉ <br/>
+
+				<label for="timeout"> Durée du timeout : </label>
+				<input id="timeout"
+					   class="form-control"
+					   type="number"
+					   name="quantity"
+					   min="60"
+					   [disabled]="!creator"
+					   [value]="timeout"> <br/>
+
+				<label> Temps par coups : </label> PAS IMPLÉMENTÉ <br/>
+				<label> Durée totale : </label> PAS IMPLÉMENTÉ <br/>
+
+				<input type="button"
+					   *ngIf="creator"
+					   (click)="proposeConfig()"
+						class="btn btn-primary btn-block"
+						value="Proposer">
+				<br/>
+				<input type="button"
+					   *ngIf="chosenPlayer"
+					   (click)="acceptConfig()"
+					   class="btn btn-primary btn-block"
+					   value="Accepter et commencer">
+				<br/>
+			</div>
+
+			<div id="chat" class="circled">
+				<h4> Parle à tes amis ! </h4>
+				<h6> En travaux </h6>
+			</div>
+
+		</div>
+
+		<div class="col-sm-3">
+			<div id="joiners" class="circled">
+				<h4>
+					Voici la liste des joueurs à vouloir joindre cette partie :
+				</h4>
+				<ul *ngIf="currentJoiner != null">
+					<li *ngFor="let joinerName of currentJoiner.candidatesNames">
+						<button *ngIf="creator"
+								(click)="changeChosenPlayer(joinerName)">
+							Jouer contre : {{ joinerName }}
+						</button>
+						<p *ngIf="!creator"> {{ joinerName }}</p>
+					</li>
+				</ul>
+			</div>
+		</div>
+
 	</div>
 
 </div>

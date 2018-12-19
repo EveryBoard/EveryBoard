@@ -56,7 +56,7 @@ export abstract class OnlineGame {
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
-		this.observedPart = this.partDao.getPartByID(this.partId);
+		this.observedPart = this.partDao.getPartObservableById(this.partId);
 
 		this.observedPartSubscription =
 			this.observedPart.subscribe(updatedICurrentPart =>
