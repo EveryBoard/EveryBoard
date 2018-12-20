@@ -103,7 +103,7 @@ export class ServerPageComponent implements OnInit {
 						creator: this.userName,
 						chosenPlayer: '',
 						timeoutMinimalDuration: 60,
-						firstPlayer: 0, // par défaut: le créateur
+						firstPlayer: '0', // par défaut: le créateur
 						partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
 					};
 					this.afs.collection('joiners')
@@ -120,8 +120,7 @@ export class ServerPageComponent implements OnInit {
 		let found = false; // todo : faire en stream pour le sexe
 		let playerZero: string;
 		let playerOne: string;
-		while (	(i < this.partIds.length) &&
-		(!found)) {
+		while (	(i < this.partIds.length) && (!found)) {
 			playerZero = this.partIds[i].part.playerZero;
 			playerOne = this.partIds[i++].part.playerOne;
 			found = (this.userName === playerZero) || (this.userName === playerOne);

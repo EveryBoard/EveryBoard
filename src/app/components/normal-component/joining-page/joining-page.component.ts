@@ -1,10 +1,12 @@
 import {Component, OnInit} from '@angular/core';
+
 import {GameInfoService} from '../../../services/game-info-service';
 import {IJoiner} from '../../../domain/ijoiner';
 import {Router} from '@angular/router';
 import {UserService} from '../../../services/user-service';
 import {JoinerService} from '../../../services/JoinerService';
 import {PartService} from '../../../services/PartService';
+import {Subscription} from 'rxjs';
 
 @Component({
 	selector: 'app-joining-page',
@@ -18,11 +20,18 @@ export class JoiningPageComponent implements OnInit {
 	gameName: string;
 	userName: string;
 
-	creator: boolean;
-	chosenPlayer: boolean;
+	userIsCreator: boolean;
+	userIsChosenPlayer: boolean;
+	acceptingDisabled = true;
+	proposingDisabled = true;
+	proposalSent = false;
 
 	// Game Configuration Values
 	timeout = 60;
+	firstPlayer = '0';
+
+	// Subscription
+	private joinerSub: Subscription;
 
 	constructor(private _route: Router,
 				private gameInfoService: GameInfoService,
@@ -41,7 +50,7 @@ export class JoiningPageComponent implements OnInit {
 				this.gameInfoService.currentPartId.subscribe(partId => {
 					this.partId = partId;
 
-					this.joinerService.getJoinerObservable(partId).subscribe(
+					this.joinerSub = this.joinerService.getJoinerObservable(partId).subscribe(
 						iJoiner => this.onCurrentJoinerUpdate(iJoiner));
 				});
 			});
@@ -49,14 +58,29 @@ export class JoiningPageComponent implements OnInit {
 	}
 
 	onCurrentJoinerUpdate(iJoiner: IJoiner) {
+		if (iJoiner == null) {
+			console.log('WHAT THE FUBRUUUUU');
+		}
+
 		if (this.currentJoiner == null) {
 			this.currentJoiner = iJoiner;
-			this.creator = (iJoiner.creator === this.userName);
-			this.chosenPlayer = (this.userName === iJoiner.chosenPlayer);
+			this.userIsCreator = (this.userName === iJoiner.creator);
+			this.userIsChosenPlayer = (this.userName === iJoiner.chosenPlayer);
 			return; // first received
 		}
 		if (iJoiner.chosenPlayer !== this.currentJoiner.chosenPlayer) {
-			this.onChosenPlayerChange();
+			this.userIsChosenPlayer = (this.userName === iJoiner.chosenPlayer);
+		}
+		if (this.userIsCreator) {
+			// the aim is to make proposing part enabled only on part status 1 (waiting for creator to propose game terms)
+			this.proposalSent = iJoiner.partStatus > 1;
+			this.proposingDisabled = (iJoiner.partStatus !== 1);
+		} else {
+			this.timeout = iJoiner.timeoutMinimalDuration;
+			this.firstPlayer = iJoiner.firstPlayer;
+			if (this.userIsChosenPlayer) {
+				this.acceptingDisabled = (iJoiner.partStatus !== 2);
+			}
 		}
 		if (iJoiner.partStatus === 3) {
 			// the game can start
@@ -69,42 +93,35 @@ export class JoiningPageComponent implements OnInit {
 
 	cancelGameCreation() {
 		// callable only by the creator
+		this.joinerSub.unsubscribe();
 		this.partService.cancelGame();
-		this.joinerService.deleteJoinerDoc(); // TODO ne communiquer qu'avec un CreationPartService
+		this.joinerService.cancelGame(); // TODO ne communiquer qu'avec un CreationPartService
 		this._route.navigate(['server']);
 	}
 
 	cancelGameJoining() {
-		this.joinerService.removePlayerFromJoinerList(this.userName);
+		this.joinerService.removePlayerFromJoiningPage(this.userName);
 		this._route.navigate(['server']);
 	}
 
 	changeChosenPlayer(pseudo: string) {
-		this.joinerService.changeChosenPlayer(pseudo).then(
-			onfullfilled => this.chosenPlayer = (this.userName === pseudo));
+		this.joinerService.setChosenPlayer(pseudo);
 	}
 
-	onChosenPlayerChange() {
-		// function called whenever the game creator selected an [other] opponent to play against
+	proposeConfig() {
+		// called by the creator
 
-		// if joiner :
-		// 		acceptConfig disabled
-		// if creator :
-		// 		proposeConfig enabled
+		// send the proposal to opponent
+		// status become 2 (waiting joiner confirmation)
+		this.joinerService.proposeConfig(this.timeout, this.firstPlayer);
 	}
 
 	acceptConfig() {
 		// called by the joiner
 
+		// trigger the beginning redirection that will be called on every subscribed user
 		// status become 3 (game started)
 		this.joinerService.acceptConfig();
-
-		// afterword the beginning redirection will be called on every subscribed user
-	}
-
-	proposeConfig() {
-		// disable everything
-		// send the proposal to opponent
 	}
 
 }

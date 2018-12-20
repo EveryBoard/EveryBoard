@@ -1,16 +1,13 @@
 <div class="container-fluid">
-
+	<div *ngIf="currentJoiner"> DEBUG : {{ timeout + ":" + firstPlayer }} status {{ currentJoiner.partStatus }}</div>
 	<div id="players" class="circled">
 		<div class="row">
-			<h4>Création d'une partie de {{ gameName }}</h4> <hr/>
-			<h4 *ngIf="creator" (click)="cancelGameCreation()"> Cliquez içi pour annuler la partie</h4>
-			<h4 *ngIf="!creator" (click)="cancelGameJoining()"> Cliquez içi pour quitter le jeu</h4>
+			<h4>Création d'une partie de {{ gameName }}</h4>
+			<hr/>
+			<h4 *ngIf="userIsCreator" (click)="cancelGameCreation()"> Cliquez içi pour annuler la partie</h4>
+			<h4 *ngIf="!userIsCreator" (click)="cancelGameJoining()"> Cliquez içi pour quitter le jeu</h4>
 		</div>
-		<form>
-			<input type="radio" value="male" checked> Vous commencez <br/>
-			<input type="radio" value="female"> Il commence <br/>
-			<input type="radio" value="other"> Au hasard <br/>
-		</form>
+		<div *ngIf="currentJoiner && currentJoiner.chosenPlayer!==''"> vs {{ currentJoiner.chosenPlayer }}</div>
 	</div>
 
 	<div class="row">
@@ -18,6 +15,24 @@
 		<div class="col-sm-9">
 
 			<div id="gameConfig" class="circled form-group">
+				<label> Premier joueur : </label>
+				<fieldset id="firstPlayer"
+						  [disabled]="!userIsCreator || proposalSent">
+					<input type="radio"
+						   [(ngModel)]="firstPlayer"
+						   value="0" checked>
+					{{ currentJoiner.creator }}
+
+					<input type="radio"
+						   [(ngModel)]="firstPlayer"
+						   value="1">
+					{{ currentJoiner.chosenPlayer }}
+
+					<input type="radio"
+						   [(ngModel)]="firstPlayer"
+						   value="2">
+					Au hasard <br/>
+				</fieldset>
 				<label> Type de jeu : </label> PAS IMPLÉMENTÉ <br/>
 
 				<label for="timeout"> Durée du timeout : </label>
@@ -26,21 +41,24 @@
 					   type="number"
 					   name="quantity"
 					   min="60"
-					   [disabled]="!creator"
-					   [value]="timeout"> <br/>
+					   [(ngModel)]="timeout"
+					   [ngModelOptions]="{standalone: true}"
+					   [disabled]="!userIsCreator || proposalSent"> <br/>
 
 				<label> Temps par coups : </label> PAS IMPLÉMENTÉ <br/>
 				<label> Durée totale : </label> PAS IMPLÉMENTÉ <br/>
 
 				<input type="button"
-					   *ngIf="creator"
+					   *ngIf="userIsCreator"
 					   (click)="proposeConfig()"
-						class="btn btn-primary btn-block"
-						value="Proposer">
+					   [disabled]="proposingDisabled"
+					   class="btn btn-primary btn-block"
+					   value="Proposer">
 				<br/>
 				<input type="button"
-					   *ngIf="chosenPlayer"
+					   *ngIf="userIsChosenPlayer"
 					   (click)="acceptConfig()"
+					   [disabled]="acceptingDisabled"
 					   class="btn btn-primary btn-block"
 					   value="Accepter et commencer">
 				<br/>
@@ -60,11 +78,11 @@
 				</h4>
 				<ul *ngIf="currentJoiner != null">
 					<li *ngFor="let joinerName of currentJoiner.candidatesNames">
-						<button *ngIf="creator"
+						<button *ngIf="userIsCreator"
 								(click)="changeChosenPlayer(joinerName)">
 							Jouer contre : {{ joinerName }}
 						</button>
-						<p *ngIf="!creator"> {{ joinerName }}</p>
+						<p *ngIf="!userIsCreator"> {{ joinerName }}</p>
 					</li>
 				</ul>
 			</div>

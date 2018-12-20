@@ -10,28 +10,28 @@ import {IJoiner} from '../domain/ijoiner';
 })
 export class PartService {
 
-	private observedGameDoc: AngularFirestoreDocument<ICurrentPart> = null;
+	private observedPartDoc: AngularFirestoreDocument<ICurrentPart> = null;
 
 	constructor(private partDao: PartDAO) {}
 
 	getPartObservable(docId: string): Observable<ICurrentPart> {
-		this.observedGameDoc = this.partDao.getPartDocById(docId);
+		this.setObservedPartDoc(docId);
 		return this.partDao.getPartObservableById(docId);
 	}
 
-	isStarted(actualPart: ICurrentPart) {
-		return actualPart.playerOne !== '';
+	setObservedPartDoc(docId: string) {
+		this.observedPartDoc = this.partDao.getPartDocById(docId);
 	}
 
 	startGameWithConfig(joiner: IJoiner): Promise<void> {
 		let firstPlayer = joiner.creator;
 		let secondPlayer = joiner.chosenPlayer;
-		if (joiner.firstPlayer === 1) {
+		if (joiner.firstPlayer === '1') {
 			// the opposite config is planned
 			secondPlayer = joiner.creator;
 			firstPlayer = joiner.chosenPlayer;
 		}
-		return this.observedGameDoc.update({
+		return this.observedPartDoc.update({
 			playerZero: firstPlayer,
 			playerOne: secondPlayer,
 			turn: 0,
@@ -41,7 +41,7 @@ export class PartService {
 
 	cancelGame(): Promise<void> {
 		// cancel the currently observed game
-		return this.observedGameDoc.delete();
+		return this.observedPartDoc.delete();
 	}
 
 }

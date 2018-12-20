@@ -8,6 +8,7 @@ import {OnlineGame} from '../OnlineGame';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
+import {JoinerService} from '../../../services/JoinerService';
 
 @Component({
 	selector: 'app-awale',
@@ -23,8 +24,8 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 	// imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/'; // en prod
 	imagesLocation = 'src/assets/images/circled_numbers/';
 
-	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, userDao: UserDAO, partDao: PartDAO) {
-		super(gameInfoService, _route, userService, userDao, partDao);
+	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService) {
+		super(gameInfoService, _route, userService, userDao, partDao, joinerService);
 	}
 
 	ngOnInit() {

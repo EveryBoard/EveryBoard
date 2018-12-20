@@ -11,6 +11,7 @@ import {Router} from '@angular/router';
 import {UserService} from '../../../services/user-service';
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
+import {JoinerService} from '../../../services/JoinerService';
 
 @Component({
 	selector: 'app-quarto',
@@ -28,8 +29,8 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 	private choosenY = -1;
 	pieceInHand = 0;
 
-	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, userDao: UserDAO, partDao: PartDAO) {
-		super(gameInfoService, _route, userService, userDao, partDao);
+	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService) {
+		super(gameInfoService, _route, userService, userDao, partDao, joinerService);
 	}
 
 	ngOnInit() {

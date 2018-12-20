@@ -10,6 +10,7 @@ import {Router} from '@angular/router';
 import {UserService} from '../../services/user-service';
 import {UserDAO} from '../../dao/UserDAO';
 import {PartDAO} from '../../dao/PartDAO';
+import {JoinerService} from '../../services/JoinerService';
 
 export abstract class OnlineGame {
 	rules: Rules;
@@ -29,6 +30,7 @@ export abstract class OnlineGame {
 	opponent: IUserId = null;
 	currentPlayer: string;
 	allowedTimeoutVictory = false;
+	timeout = 60;
 
 	private gameInfoServiceSubscription: Subscription;
 	private userSubscription: Subscription;
@@ -40,24 +42,27 @@ export abstract class OnlineGame {
 		private _route: Router,
 		private userService: UserService,
 		private userDao: UserDAO,
-		private partDao: PartDAO) {
-		console.log('OnlineGame constructor');
-	}
+		private partDao: PartDAO,
+		private joinerService: JoinerService) {} // TODO un component n'appelle pas un DAO !!
 
 	onInit() {
 		// should be some kind of session-scope
 		this.gameInfoServiceSubscription =
 			this.gameInfoService.currentPartId.subscribe(partId =>
-				this.partId = partId);
+				this.partId = partId); // delivery
 		this.userSubscription =
-			this.userService.currentUsername.subscribe(message =>
-				this.userName = message);
+			this.userService.currentUsername.subscribe(userName =>
+				this.userName = userName); // delivery
 
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
 		this.observedPart = this.partDao.getPartObservableById(this.partId);
-
+		this.joinerService.getJoinerByPartId(this.partId)
+			.then( iJoiner => {
+				this.timeout = iJoiner.timeoutMinimalDuration;
+				console.log('le timout est fixé à ' + this.timeout);
+			}).catch( fail => console.log('there was a problem trying to get iJoiner timeout'));
 		this.observedPartSubscription =
 			this.observedPart.subscribe(updatedICurrentPart =>
 				this.onCurrentPartUpdate(updatedICurrentPart));
@@ -107,7 +112,6 @@ export abstract class OnlineGame {
 			opponentName = this.players[0];
 		}
 		if (opponentName !== '') {
-			console.log('settage de l\'abonnement');
 			this.opponentSubscription =
 				this.userDao.getUserDocRefByUserName(opponentName)
 					.onSnapshot(userQuerySnapshot =>
@@ -143,9 +147,8 @@ export abstract class OnlineGame {
 	}
 
 	opponentHasTimedOut() {
-		const timeOutDuree = 30 * 1000;
 		console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
-		return (this.opponent.user.lastActionTime + timeOutDuree < Date.now());
+		return (this.opponent.user.lastActionTime + (this.timeout * 1000) < Date.now());
 	}
 
 	backToServer() {
