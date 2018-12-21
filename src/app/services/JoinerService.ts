@@ -1,10 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {IJoiner} from '../domain/ijoiner';
+import {IJoiner, IJoinerId} from '../domain/ijoiner';
 import {AngularFirestoreDocument} from 'angularfire2/firestore';
 import {JoinerDAO} from '../dao/JoinerDAO';
-import {PartService} from './PartService';
-import {ICurrentPart} from '../domain/icurrentpart';
 
 @Injectable({
 	providedIn : 'root'
@@ -13,10 +11,9 @@ export class JoinerService {
 
 	private followedJoinerId: string;
 	private followedJoinerDoc: AngularFirestoreDocument<IJoiner> = null; // TODO : est-ce bien correct point de vue couches DAO/SERVICE?
-	private followedJoinerObservable: Observable<IJoiner>;
+	private followedJoinerObservable: Observable<IJoinerId>;
 
-	constructor(private joinerDao: JoinerDAO,
-				private partService: PartService) {}
+	constructor(private joinerDao: JoinerDAO) {}
 
 	startObservingJoiner(docId: string) {
 		if (this.followedJoinerDoc != null) {
@@ -24,13 +21,11 @@ export class JoinerService {
 		}
 		this.followedJoinerId = docId;
 		this.followedJoinerDoc = this.joinerDao.getJoinerDocById(docId);
-		this.followedJoinerObservable = this.joinerDao.getJoinerObservableById(docId);
+		this.followedJoinerObservable = this.joinerDao.getJoinerIdObservableById(docId);
 	}
 
-	getJoinerObservable(docId: string): Observable<IJoiner> {
-		this.followedJoinerDoc = this.joinerDao.getJoinerDocById(docId);
-		this.partService.startObservingPart(docId);
-		return this.joinerDao.getJoinerObservableById(docId);
+	getJoinerIdObservable(): Observable<IJoinerId> {
+		return this.followedJoinerObservable;
 	}
 
 	removePlayerFromJoiningPage(userName: string) {
@@ -58,7 +53,8 @@ export class JoinerService {
 	}
 
 	cancelGame(): Promise<void> {
-		return this.followedJoinerDoc.delete();
+		return this.followedJoinerDoc.delete().then(
+			onfullfilled => this.stopObservingPart());
 	}
 
 	setChosenPlayer(chosenPlayersPseudo: string): Promise<void> {

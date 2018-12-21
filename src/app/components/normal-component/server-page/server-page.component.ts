@@ -10,6 +10,7 @@ import {ICurrentPart, ICurrentPartId} from '../../../domain/icurrentpart';
 import {GameInfoService} from '../../../services/game-info-service';
 import {UserService} from '../../../services/user-service';
 import {IJoiner} from '../../../domain/ijoiner';
+import {PartService} from '../../../services/PartService';
 
 @Component({
 	selector: 'app-server-page',
@@ -19,21 +20,20 @@ import {IJoiner} from '../../../domain/ijoiner';
 export class ServerPageComponent implements OnInit {
 
 	partIds: ICurrentPartId[];
-	activeUserList: IUserId[];
+	activeUsers: IUserId[];
 	readonly gameNameList: String[] = ['P4', 'Awale', 'Quarto'];
 	selectedGame: string;
 	userName: string;
 
-	constructor(private userDAO: UserDAO,
-				private afs: AngularFirestore,
-				private _route: Router,
+	constructor(private _route: Router,
 				private gameInfoService: GameInfoService,
-				private userService: UserService) {}
+				private userService: UserService,
+				private partService: PartService) {}
 
 	ngOnInit() {
-		this.userService.currentUsername.subscribe(message =>
+		this.userService.currentUsernameObservable.subscribe(message =>
 			this.userName = message);
-		this.afs.collection('parties').ref
+		/* this.afs.collection('parties').ref
 			.where('result', '==', 5) // TODO : afs se fait appeler par les DAO !
 			.onSnapshot( (querySnapshot) => {
 				const tmpPartIds: ICurrentPartId[] = [];
@@ -43,36 +43,18 @@ export class ServerPageComponent implements OnInit {
 					tmpPartIds.push({id: id, part: data});
 				});
 				this.partIds = tmpPartIds;
-			});
+			}); */ // OLD
+		this.partService.observeAllActivePart();
+		this.partService.currentActivePartObservable.subscribe(
+			currentActivePart => this.partIds = currentActivePart);
 
-		this.userDAO.observeAllActiveUser()
-			.onSnapshot((querySnapshot) => {
-				const tmpActiveUserIds: IUserId[] = [];
-				querySnapshot.forEach( doc => {
-					const data = doc.data() as IUser;
-					const id = doc.id;
-					tmpActiveUserIds.push({id: id, user: data});
-				});
-				this.activeUserList = tmpActiveUserIds;
-			});
+		this.userService.observeAllActiveUser();
+		this.userService.currentActiveUsersObservable.subscribe(
+			currentActiveUsers => this.activeUsers = currentActiveUsers);
 	}
 
 	joinGame(partId: string, typeGame: string) {
-		const partRef = this.afs.doc('parties/' + partId).ref;
-		const joinerRef = this.afs.doc('joiners/' + partId).ref;
-		partRef.get()
-			.then(partDoc => {
-				const creator = partDoc.get('playerZero');
-				joinerRef.get()
-					.then(joinerDoc => {
-						const joinerList: string[] = joinerDoc.get('candidatesNames');
-						if (!joinerList.includes(this.userName) &&
-							(this.userName !== creator)) {
-							joinerList[joinerList.length] = this.userName;
-							joinerRef.update({candidatesNames: joinerList});
-						}
-					});
-			});
+		this.partService.joinGame(partId, this.userName);
 		this.gameInfoService.changeGame(partId, typeGame);
 		this._route.navigate(['joiningPage']);
 	}
@@ -83,20 +65,21 @@ export class ServerPageComponent implements OnInit {
 
 	createGame() {
 		if (this.canCreateGame()) {
+			/* const newPart: ICurrentPart = {
+				historic: 'pas implémenté',
+				listMoves: [],
+				playerZero: this.userName, // TODO: supprimer, il n'y a pas de createur par défaut
+				playerOne: '',
+				result: 5, // todo : constantiser ça, bordel
+				scorePlayerZero: 'pas implémenté',
+				scorePlayerOne: 'pas implémenté',
+				turn: -1,
+				typeGame: this.selectedGame,
+				typePart: 'pas implémenté',
+				winner: ''
+			};
 			this.afs.collection('parties')
-				.add({
-					historic: 'pas implémenté',
-					listMoves: [],
-					playerZero: this.userName, // TODO: supprimer, il n'y a pas de createur par défaut
-					playerOne: '',
-					result: 5, // todo : constantiser ça, bordel
-					scorePlayerZero: 'pas implémenté',
-					scorePlayerOne: 'pas implémenté',
-					turn: -1,
-					typeGame: this.selectedGame,
-					typePart: 'pas implémenté',
-					winner: ''
-				})
+				.add(newPart)
 				.then(docRef => {
 					const newJoiner: IJoiner = {
 						candidatesNames: [],
@@ -106,12 +89,14 @@ export class ServerPageComponent implements OnInit {
 						firstPlayer: '0', // par défaut: le créateur
 						partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
 					};
-					this.afs.collection('joiners')
-						.doc(docRef.id)
+					this.afs.collection('joiners').doc(docRef.id)
 						.set(newJoiner);
 					this.gameInfoService.changeGame(docRef.id, this.selectedGame);
 					this._route.navigate(['joiningPage']);
-				});
+				}); */ // old
+			this.partService.createGame(this.userName, this.selectedGame).then(oncreated => {
+				this._route.navigate(['joiningPage']);
+			});
 		}
 	}
 

@@ -51,7 +51,7 @@ export abstract class OnlineGame {
 			this.gameInfoService.currentPartId.subscribe(partId =>
 				this.partId = partId); // delivery
 		this.userSubscription =
-			this.userService.currentUsername.subscribe(userName =>
+			this.userService.currentUsernameObservable.subscribe(userName =>
 				this.userName = userName); // delivery
 
 		this.rules.setInitialBoard();

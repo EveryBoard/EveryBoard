@@ -1,6 +1,10 @@
 <div class="container-fluid"
 	 *ngIf="currentJoiner">
-	<div> DEBUG : timeout = {{ timeout }} <br/> firstPlayer = {{ firstPlayer }} status {{ currentJoiner.partStatus }} </div>
+	<div>
+		DEBUG : timeout = {{ timeout}} or {{ currentJoiner.timeoutMinimalDuration }}<br/>
+		firstPlayer = {{ firstPlayer }} or {{ currentJoiner.firstPlayer }}<br/>
+		status {{ currentJoiner.partStatus }}
+	</div>
 	<div id="players" class="circled">
 		<div class="row">
 			<h4>Création d'une partie de {{ gameName }} par {{ currentJoiner.creator }}</h4>
@@ -22,13 +26,16 @@
 					<input type="radio"
 						   [(ngModel)]="firstPlayer"
 						   value="0" checked>
-					{{ currentJoiner.creator }}
+					{{ currentJoiner.creator==userName ? "Toi" : currentJoiner.creator }}
 
 					<input type="radio"
 						   [(ngModel)]="firstPlayer"
 						   value="1">
-					{{ currentJoiner.chosenPlayer }}
-
+					{{ currentJoiner.chosenPlayer==userName ?
+							"Toi" :
+							((currentJoiner.chosenPlayer) ?
+									currentJoiner.chosenPlayer :
+									"ton adversaire") }}
 					<input type="radio"
 						   [(ngModel)]="firstPlayer"
 						   value="2">
@@ -80,7 +87,7 @@
 				<ul>
 					<li *ngFor="let joinerName of currentJoiner.candidatesNames">
 						<button *ngIf="userIsCreator"
-								(click)="changeChosenPlayer(joinerName)">
+								(click)="setChosenPlayer(joinerName)">
 							Jouer contre : {{ joinerName }}
 						</button>
 						<p *ngIf="!userIsCreator"> {{ joinerName }}</p>

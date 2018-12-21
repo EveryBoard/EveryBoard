@@ -1,5 +1,5 @@
 import {Observable} from 'rxjs';
-import {IJoiner} from '../domain/ijoiner';
+import {IJoiner, IJoinerId} from '../domain/ijoiner';
 import {Injectable} from '@angular/core';
 import {AngularFirestore, AngularFirestoreDocument} from 'angularfire2/firestore';
 import {map} from 'rxjs/operators';
@@ -11,15 +11,16 @@ export class JoinerDAO {
 
 	constructor(private afs: AngularFirestore) {}
 
-	getJoinerObservableById(id: string): Observable<IJoiner> {
+	getJoinerIdObservableById(id: string): Observable<IJoinerId> {
 		return this.afs.doc('joiners/' + id).snapshotChanges()
 			.pipe(map(actions => {
-				return actions.payload.data() as IJoiner;
+				return {
+					joiner: actions.payload.data() as IJoiner,
+					id: id};
 			}));
 	}
 
 	getJoinerDocById(joinerId: string): AngularFirestoreDocument<IJoiner> {
 		return this.afs.doc('joiners/' + joinerId);
 	}
-
 }

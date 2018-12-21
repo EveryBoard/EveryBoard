@@ -1,5 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../../services/user-service';
+import {Router} from '@angular/router';
 
 @Component({
 	selector: 'app-header',
@@ -11,11 +12,12 @@ export class HeaderComponent implements OnInit {
 
 	userName: string;
 
-	constructor(private userService: UserService) {
+	constructor(private _route: Router,
+				private userService: UserService) {
 	}
 
 	ngOnInit() {
-		this.userService.currentUsername.subscribe(message => {
+		this.userService.currentUsernameObservable.subscribe(message => {
 			this.userName = message;
 			if (message !== '') {
 				this.startUserPresenceNotification();
@@ -31,6 +33,6 @@ export class HeaderComponent implements OnInit {
 	}
 
 	backToServer() {
-
+		this._route.navigate(['server']);
 	}
 }

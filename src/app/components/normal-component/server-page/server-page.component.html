@@ -42,10 +42,12 @@
 		<br/>
 		<input type="button"
 			   value="online game"
+			   [disabled]="!selectedGame"
 			   (click)="createGame()"
 			   class="btn btn-primary btn-block">
 		<br/>
 		<input type="button"
+			   [disabled]="!selectedGame"
 			   value="local game"
 			   (click)="playLocally()"
 			   class="btn btn-primary btn-block">
@@ -54,7 +56,7 @@
 	<div id="onlineUser" class="circled">
 		<p> Recent User : </p>
 		<ul>
-			<li *ngFor="let user of activeUserList">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
+			<li *ngFor="let user of activeUsers">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
 				date:'HH:mm:ss':'+0100'}}
 			</li>
 		</ul>
