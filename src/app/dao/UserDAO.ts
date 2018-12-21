@@ -14,7 +14,6 @@ export class UserDAO {
 	}
 
 	updateUserDocuActivity(userDocId: string) {
-		console.log('user presence is being updated');
 		// update the user with pseudo to notifify that he's been doing something
 		this.afs.collection('joueurs')
 			.doc(userDocId).update({

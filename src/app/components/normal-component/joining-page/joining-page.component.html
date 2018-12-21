@@ -1,13 +1,14 @@
-<div class="container-fluid">
-	<div *ngIf="currentJoiner"> DEBUG : {{ timeout + ":" + firstPlayer }} status {{ currentJoiner.partStatus }}</div>
+<div class="container-fluid"
+	 *ngIf="currentJoiner">
+	<div> DEBUG : timeout = {{ timeout }} <br/> firstPlayer = {{ firstPlayer }} status {{ currentJoiner.partStatus }} </div>
 	<div id="players" class="circled">
 		<div class="row">
-			<h4>Création d'une partie de {{ gameName }}</h4>
+			<h4>Création d'une partie de {{ gameName }} par {{ currentJoiner.creator }}</h4>
 			<hr/>
-			<h4 *ngIf="userIsCreator" (click)="cancelGameCreation()"> Cliquez içi pour annuler la partie</h4>
-			<h4 *ngIf="!userIsCreator" (click)="cancelGameJoining()"> Cliquez içi pour quitter le jeu</h4>
+			<h4 *ngIf="userIsCreator" (click)="cancelGameCreation()"> Annuler la partie </h4>
+			<h4 *ngIf="!userIsCreator" (click)="cancelGameJoining()"> Quitter le jeu </h4>
 		</div>
-		<div *ngIf="currentJoiner && currentJoiner.chosenPlayer!==''"> vs {{ currentJoiner.chosenPlayer }}</div>
+		<div *ngIf="currentJoiner.chosenPlayer!==''"> Adversaire : {{ currentJoiner.chosenPlayer }}</div>
 	</div>
 
 	<div class="row">
@@ -76,7 +77,7 @@
 				<h4>
 					Voici la liste des joueurs à vouloir joindre cette partie :
 				</h4>
-				<ul *ngIf="currentJoiner != null">
+				<ul>
 					<li *ngFor="let joinerName of currentJoiner.candidatesNames">
 						<button *ngIf="userIsCreator"
 								(click)="changeChosenPlayer(joinerName)">

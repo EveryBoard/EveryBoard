@@ -81,8 +81,9 @@ export abstract class OnlineGame {
 			this.endGame = true;
 			this.winner = updatedICurrentPart.winner;
 		}
-		if (updatedICurrentPart.result === 0) {
+		if (updatedICurrentPart.result === 0) { // match nul
 			this.endGame = true;
+			console.log('match nul means winner = ' + updatedICurrentPart.winner);
 			this.winner = null;
 		}
 		const listMoves = updatedICurrentPart.listMoves;

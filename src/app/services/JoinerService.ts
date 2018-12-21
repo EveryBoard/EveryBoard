@@ -4,25 +4,37 @@ import {IJoiner} from '../domain/ijoiner';
 import {AngularFirestoreDocument} from 'angularfire2/firestore';
 import {JoinerDAO} from '../dao/JoinerDAO';
 import {PartService} from './PartService';
+import {ICurrentPart} from '../domain/icurrentpart';
 
 @Injectable({
 	providedIn : 'root'
 })
 export class JoinerService {
 
-	private observedJoinerDoc: AngularFirestoreDocument<IJoiner> = null;
+	private followedJoinerId: string;
+	private followedJoinerDoc: AngularFirestoreDocument<IJoiner> = null; // TODO : est-ce bien correct point de vue couches DAO/SERVICE?
+	private followedJoinerObservable: Observable<IJoiner>;
 
 	constructor(private joinerDao: JoinerDAO,
 				private partService: PartService) {}
 
+	startObservingJoiner(docId: string) {
+		if (this.followedJoinerDoc != null) {
+			this.stopObservingPart();
+		}
+		this.followedJoinerId = docId;
+		this.followedJoinerDoc = this.joinerDao.getJoinerDocById(docId);
+		this.followedJoinerObservable = this.joinerDao.getJoinerObservableById(docId);
+	}
+
 	getJoinerObservable(docId: string): Observable<IJoiner> {
-		this.observedJoinerDoc = this.joinerDao.getJoinerDocById(docId);
-		this.partService.setObservedPartDoc(docId);
+		this.followedJoinerDoc = this.joinerDao.getJoinerDocById(docId);
+		this.partService.startObservingPart(docId);
 		return this.joinerDao.getJoinerObservableById(docId);
 	}
 
 	removePlayerFromJoiningPage(userName: string) {
-		this.observedJoinerDoc.ref.get()
+		this.followedJoinerDoc.ref.get()
 			.then(joinersDoc => {
 				const joiners = joinersDoc.data() as IJoiner;
 				const joinersList: string[] = joiners.candidatesNames;
@@ -37,7 +49,7 @@ export class JoinerService {
 					chosenPlayer = '';
 					partStatus = 0;
 				}
-				this.observedJoinerDoc.update({
+				this.followedJoinerDoc.update({
 					partStatus: partStatus,
 					candidatesNames: joinersList,
 					chosenPlayer: chosenPlayer
@@ -46,11 +58,11 @@ export class JoinerService {
 	}
 
 	cancelGame(): Promise<void> {
-		return this.observedJoinerDoc.delete();
+		return this.followedJoinerDoc.delete();
 	}
 
 	setChosenPlayer(chosenPlayersPseudo: string): Promise<void> {
-		return this.observedJoinerDoc.ref.get()
+		return this.followedJoinerDoc.ref.get()
 			.then(joinersDoc => {
 				const joiners = joinersDoc.data() as IJoiner;
 				const candidatesNames: string[] = joiners.candidatesNames;
@@ -64,7 +76,7 @@ export class JoinerService {
 						candidatesNames.push(oldChosenPlayer);
 						// so he don't just disappear
 					}
-					this.observedJoinerDoc.update({
+					this.followedJoinerDoc.update({
 						partStatus: 1,
 						candidatesNames: candidatesNames,
 						chosenPlayer: chosenPlayersPseudo
@@ -74,7 +86,7 @@ export class JoinerService {
 	}
 
 	proposeConfig(timeout: number, firstPlayer: string): Promise<void> {
-		return this.observedJoinerDoc.update({
+		return this.followedJoinerDoc.update({
 			partStatus: 2,
 			timeoutMinimalDuration: timeout,
 			firstPlayer: firstPlayer
@@ -82,7 +94,7 @@ export class JoinerService {
 	}
 
 	acceptConfig(): Promise<void> {
-		return this.observedJoinerDoc.update({ partStatus: 3 });
+		return this.followedJoinerDoc.update({ partStatus: 3 });
 	}
 
 	getJoinerByPartId(partId: string): Promise<IJoiner> {
@@ -90,6 +102,12 @@ export class JoinerService {
 			const joiner = docRef.data() as IJoiner;
 			return joiner;
 		});
+	}
+
+	stopObservingPart() {
+		this.followedJoinerId = null;
+		this.followedJoinerDoc = null;
+		this.followedJoinerObservable = null;
 	}
 
 }

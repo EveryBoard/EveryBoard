@@ -1,26 +1,42 @@
-import {Observable} from 'rxjs';
-import {ICurrentPart} from '../domain/icurrentpart';
-import {PartDAO} from '../dao/PartDAO';
-import {AngularFirestoreDocument} from 'angularfire2/firestore';
 import {Injectable} from '@angular/core';
+import {AngularFirestoreDocument} from 'angularfire2/firestore';
+import {Observable} from 'rxjs';
+
+import {PartDAO} from '../dao/PartDAO';
+
+import {ICurrentPart} from '../domain/icurrentpart';
 import {IJoiner} from '../domain/ijoiner';
+
+import {JoinerService} from './JoinerService';
 
 @Injectable({
 	providedIn : 'root'
 })
 export class PartService {
 
-	private observedPartDoc: AngularFirestoreDocument<ICurrentPart> = null;
+	private followedPartId: string;
+	private followedPartDoc: AngularFirestoreDocument<ICurrentPart> = null; // TODO : est-ce bien correct point de vue couches DAO/SERVICE?
+	private followedPartObservable: Observable<ICurrentPart>;
 
-	constructor(private partDao: PartDAO) {}
+	constructor(private partDao: PartDAO,
+				private joinerService: JoinerService) {}
 
-	getPartObservable(docId: string): Observable<ICurrentPart> {
-		this.setObservedPartDoc(docId);
-		return this.partDao.getPartObservableById(docId);
+	startObservingPart(docId: string) {
+		this.joinerService.startObservingJoiner(docId);
+		if (this.followedPartDoc != null) {
+			this.stopObservingPart();
+		}
+		this.followedPartId = docId;
+		this.followedPartDoc = this.partDao.getPartDocById(docId);
+		this.followedPartObservable = this.partDao.getPartObservableById(docId);
 	}
 
-	setObservedPartDoc(docId: string) {
-		this.observedPartDoc = this.partDao.getPartDocById(docId);
+	getPartId(): string {
+		return this.followedPartId;
+	}
+
+	getPartObservable(): Observable<ICurrentPart> {
+		return this.followedPartObservable;
 	}
 
 	startGameWithConfig(joiner: IJoiner): Promise<void> {
@@ -31,7 +47,7 @@ export class PartService {
 			secondPlayer = joiner.creator;
 			firstPlayer = joiner.chosenPlayer;
 		}
-		return this.observedPartDoc.update({
+		return this.followedPartDoc.update({
 			playerZero: firstPlayer,
 			playerOne: secondPlayer,
 			turn: 0,
@@ -41,7 +57,14 @@ export class PartService {
 
 	cancelGame(): Promise<void> {
 		// cancel the currently observed game
-		return this.observedPartDoc.delete();
+		return this.followedPartDoc.delete().then(
+			onfullfilled => this.stopObservingPart());
+	}
+
+	stopObservingPart() {
+		this.followedPartId = null;
+		this.followedPartDoc = null;
+		this.followedPartObservable = null;
 	}
 
 }

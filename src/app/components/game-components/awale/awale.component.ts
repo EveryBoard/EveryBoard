@@ -24,7 +24,8 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/'; // en prod
 	// imagesLocation = 'src/assets/images/circled_numbers/'; // en dev
 
-	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService) {
+	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, joinerService: JoinerService,
+				userDao: UserDAO, partDao: PartDAO) {
 		super(gameInfoService, _route, userService, userDao, partDao, joinerService);
 	}
 

@@ -43,17 +43,26 @@ export class JoiningPageComponent implements OnInit {
 	ngOnInit() {
 		this.gameInfoService.currentGameName.subscribe(gameName => {
 			this.gameName = gameName;
-
-			this.userService.currentUsername.subscribe(userName => {
-				this.userName = userName;
-
-				this.gameInfoService.currentPartId.subscribe(partId => {
-					this.partId = partId;
-
-					this.joinerSub = this.joinerService.getJoinerObservable(partId).subscribe(
-						iJoiner => this.onCurrentJoinerUpdate(iJoiner));
+			if (gameName !== '') {
+				this.userService.currentUsername.subscribe(userName => {
+					this.userName = userName;
+					if (userName !== '') {
+						this.gameInfoService.currentPartId.subscribe(partId => {
+							this.partId = partId;
+							if (partId !== '') {
+								this.joinerSub = this.joinerService.getJoinerObservable(partId).subscribe(
+									iJoiner => this.onCurrentJoinerUpdate(iJoiner));
+							} else {
+								console.log('we did not receive userName error');
+							}
+						});
+					} else {
+						console.log('we did not receive userName error');
+					}
 				});
-			});
+			} else {
+				console.log('we did not receive gameName error');
+			}
 		});
 	}
 
