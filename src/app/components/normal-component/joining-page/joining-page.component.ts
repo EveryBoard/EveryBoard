@@ -59,7 +59,7 @@ export class JoiningPageComponent implements OnInit, OnDestroy {
 								this.joinerSub = this.partService.getJoinerIdObservable().subscribe(
 									iJoiner => this.onCurrentJoinerUpdate(iJoiner));
 							} else {
-								console.log('we did not receive userName error');
+								console.log('we did not receive partId error');
 								this._route.navigate(['server']);
 							}
 						});
@@ -81,50 +81,6 @@ export class JoiningPageComponent implements OnInit, OnDestroy {
 		this.partSub.unsubscribe();
 		this.joinerSub.unsubscribe();
 		console.log('subscriptions cancelled');
-	}
-
-	private onCurrentJoinerUpdateOld(iJoinerId: IJoinerId) {
-		const randomNum = Date.now() % (100 * 1000);
-		if ((iJoinerId == null) || (iJoinerId.joiner == null)) {
-			// on reçoit un iJoinerId null
-			console.log('LAST update : currentJoiner (' + ((iJoinerId == null) ? 'null' : iJoinerId.id) + ') has been deleted : ' + randomNum);
-			this.partService.stopObservingPart();
-			this._route.navigate(['server']);
-			return;
-		}
-		if (this.currentJoiner == null) {
-			console.log('FIRST update of currentJoiner (' + ((iJoinerId == null) ? 'null' : iJoinerId.id) + ') ' + randomNum);
-			this.currentJoiner = iJoinerId.joiner;
-			this.userIsCreator = (this.userName === iJoinerId.joiner.creator);
-			this.userIsChosenPlayer = (this.userName === iJoinerId.joiner.chosenPlayer);
-			if (iJoinerId.joiner.partStatus === 3) {
-				console.log('vous cette partie avait déjà commencé!');
-				this._route.navigate([this.gameName + 'Online']);
-			}
-			return; // first received
-		}
-		console.log('UPDATE : currentJoiner (' + ((iJoinerId == null) ? 'null' : iJoinerId.id) + ') ' + randomNum);
-		if (this.userIsCreator) {
-			// the aim is to make proposing part enabled only on part status 1 (waiting for creator to propose game terms)
-			this.proposalSent = iJoinerId.joiner.partStatus > 1;
-			this.proposingDisabled = (iJoinerId.joiner.partStatus !== 1);
-		} else {
-			if (iJoinerId.joiner.chosenPlayer !== this.currentJoiner.chosenPlayer) {
-				this.userIsChosenPlayer = (this.userName === iJoinerId.joiner.chosenPlayer);
-			}
-			this.timeout = iJoinerId.joiner.timeoutMinimalDuration;
-			this.firstPlayer = iJoinerId.joiner.firstPlayer;
-			if (this.userIsChosenPlayer) {
-				this.acceptingDisabled = (iJoinerId.joiner.partStatus !== 2);
-			}
-		}
-		if ((iJoinerId.joiner.partStatus === 3) && (this.currentJoiner.partStatus !== 3)) {
-			console.log('the part is now started by an update !');
-			// the game JUST started
-			this.partService.startGameWithConfig(iJoinerId.joiner).then(
-				onFullFilled => this._route.navigate([this.gameName + 'Online']));
-		}
-		this.currentJoiner = iJoinerId.joiner;
 	}
 
 	private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
@@ -155,7 +111,7 @@ export class JoiningPageComponent implements OnInit, OnDestroy {
 	}
 
 	private onGameStarted() {
-		this._route.navigate(['server']);
+		this._route.navigate([this.gameName + 'Online']);
 	}
 
 	private updateJoiner(iJoinerId: IJoinerId) {
@@ -202,7 +158,7 @@ export class JoiningPageComponent implements OnInit, OnDestroy {
 
 		// trigger the beginning redirection that will be called on every subscribed user
 		// status become 3 (game started)
-		this.partService.acceptConfig();
+		this.partService.acceptConfig(this.currentJoiner);
 	}
 
 }

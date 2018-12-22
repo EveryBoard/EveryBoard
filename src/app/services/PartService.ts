@@ -93,7 +93,8 @@ export class PartService {
 				onPartCancelled => this.stopObservingPart()));
 	}
 
-	acceptConfig(): Promise<void> {
+	acceptConfig(joiner: IJoiner): Promise<void> {
+		this.startGameWithConfig(joiner);
 		return this.joinerService.acceptConfig();
 	}
 
@@ -139,7 +140,7 @@ export class PartService {
 		this.joinerService.removePlayerFromJoiningPage(userName);
 	}
 
-	startGameWithConfig(joiner: IJoiner): Promise<void> {
+	private startGameWithConfig(joiner: IJoiner): Promise<void> {
 		let firstPlayer = joiner.creator;
 		let secondPlayer = joiner.chosenPlayer;
 		if (joiner.firstPlayer === '2' && (Math.random() < 0.5)) {
