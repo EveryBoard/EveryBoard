@@ -1,4 +1,4 @@
-import {DIRECTIONS, XY} from '../../jscaip/DIRECTION';
+import {DIRECTION, DIRECTIONS, XY} from '../../jscaip/DIRECTION';
 import {Coord} from '../../jscaip/Coord';
 import {Rules} from '../../jscaip/Rules';
 import {MoveX} from '../../jscaip/MoveX';
@@ -11,7 +11,7 @@ export class P4Rules extends Rules {
 
 	static VERBOSE = false;
 
-	static readonly DIRECTIONS: XY[] = [
+	/* static readonly DIRECTIONS: XY[] = [
 		DIRECTIONS[0],
 		DIRECTIONS[1],
 		DIRECTIONS[2],
@@ -20,7 +20,7 @@ export class P4Rules extends Rules {
 		DIRECTIONS[5],
 		DIRECTIONS[6],
 		DIRECTIONS[7]
-	];
+	]; */
 
 	static readonly UNOCCUPIED: number = 0;
 	static readonly PAWN_O: number = 1;
@@ -97,9 +97,8 @@ export class P4Rules extends Rules {
 		return 0; // shouldn't append
 	}
 
-	static getHalfLineScore(board: number[][], i: Coord, dir: Coord,
-							ennemi: number, allie: number
-	): number[] {
+	static getHalfLineScore(board: number[][], i: Coord, dir: DIRECTION,
+							ennemi: number, allie: number): number[] {
 		/* Anciennement nommé 'countLine'
        *
        * pour une case i(iX, iY) contenant un pion 'allie' (dont les ennemis sont naturellement 'ennemi'
@@ -158,13 +157,11 @@ export class P4Rules extends Rules {
 		const distByDirs: number[] = [];
 		const alliesByDirs: number[] = [];
 
-		let dir: Coord;
 		let tmpDist: number;
 		let tmpAllies: number;
-		let tmpData: number[] = [];
+		let tmpData: number[];
 		let i = 0;
-		while (i < 8) {
-			dir = new Coord(DIRECTIONS[i].x, DIRECTIONS[i].y);
+		for (const dir of DIRECTIONS) {
 			tmpData = P4Rules.getHalfLineScore(board, c, dir, ennemi, allie);
 			tmpDist = tmpData[0];
 			tmpAllies = tmpData[1];

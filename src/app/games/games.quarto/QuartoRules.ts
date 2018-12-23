@@ -262,7 +262,7 @@ export class QuartoRules extends Rules {
 		const quartoMove: QuartoMove = move as QuartoMove;
 		console.log('choosing ' + quartoMove);
 		// if (this.node.hasMoves()) { // if calculation has already been done by the AI
-		// 	Node choix = this.node.getNode(move);// let's not doing if twice
+		// 	Node choix = this.node.getSonByMove(move);// let's not doing if twice
 		// 	if (choix !== null) {
 		// 		this.node = choix; // qui devient le plateau actuel
 		// 		return true;

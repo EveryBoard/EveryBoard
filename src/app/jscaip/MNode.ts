@@ -420,12 +420,11 @@ export class MNode<R extends Rules> {
 		}
 	}
 
-	getNode(move: Move): MNode<R> | null {
-		// TODO rename according to the fact that it's getSonByMove
+	getSonByMove(move: Move): MNode<R> | null {
 		/* int index = this.moves.indexOf(moveX);
-      if (index === - 1) return null;
-      return this.childs.get(index);
-       */ // old version
+		if (index === - 1) return null;
+		return this.childs.get(index);
+		*/ // old version
 		if (!this.childs) {
 			return null;
 		}

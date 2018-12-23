@@ -307,7 +307,7 @@ export class AwaleRules extends Rules {
 
 	choose(resultlessMove: MoveCoord): boolean {
 		if (this.node.hasMoves()) { // if calculation has already been done by the AI
-			const choix: MNode<AwaleRules> = this.node.getNode(resultlessMove); // let's not doing if twice
+			const choix: MNode<AwaleRules> = this.node.getSonByMove(resultlessMove); // let's not doing if twice
 			if (choix != null) {
 				this.node = choix; // qui devient le plateau actuel
 				return true;
