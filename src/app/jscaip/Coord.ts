@@ -35,12 +35,30 @@ export class Coord {
 
 	getLeft(dir: DIRECTION): Coord {
 		// looking in the direction "dir", we just go one step left
-		// \  | /         x
-		// <- O -> become x
-		// /  | \         x
-		//
+		// since the directions in DIRECTIONS are sorted in horlogic order,
+		// we just need to take the one before the previous (-2/8 = -90°)
+		// also, math logic seem's to suggest that (x, y) become (y, -x)
+		// the second solution seem's better
 		// (--) -> (-+)
-		// (0-) -> (
+		// (0-) -> (-0)
+		// (+-) -> (--)
+		// (+0) -> (0-)
+		// (++) -> (+-)
+		// (0+) -> (0+)
+		// (-+) -> (++)
+		// (-0) -> (0+)
+		// ...
+		const newX = this.x +  dir.y;
+		const newY = this.y + -dir.x; // (this.x, thix.y) + (dir.y, -dir.x)
+		return new Coord(newX, newY);
+	}
+
+	getRight(dir: DIRECTION): Coord {
+		// looking in the direction "dir", we just go one step right
+		// see getLeft's logic, it's the opposite
+		const newX = this.x + -dir.y;
+		const newY = this.y +  dir.x; // (this.x, thix.y) + (-dir.y, dir.x)
+		return new Coord(newX, newY);
 	}
 
 	isInRange(sizeX: number, sizeY: number): boolean {

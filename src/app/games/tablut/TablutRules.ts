@@ -139,7 +139,7 @@ export class TablutRules extends Rules {
 			board[opposing.y][opposing.x] = TablutPartSlice.UNOCCUPIED;
 			return opposing;
 		}
-		const isOpposingUnocuppiedThrone: boolean = TablutRules.isUnoccupiedThrone(opposing);
+		const isOpposingUnocuppiedThrone: boolean = TablutRules.isEmptyThrone(opposing);
 		if (isOpposingUnocuppiedThrone && TablutRules.CAPTURE_PAWN_AGAINST_THRONE_RULES) {
 
 		}
@@ -177,19 +177,18 @@ export class TablutRules extends Rules {
 		 * c partipate in the capture
 		 *
 		 *  1: allied is out-of-range
-		 *      2: if two other are invaders                            -> capture king (1 border + 3 invaders)
+		 *      2: if two other are invaders AND LEGAL                  -> capture king (1 border + 3 invaders)
 		 *      3: if one invaders and one empty throne
 		 *          3.1: if king capturable by empty-throne and borders -> capture king (1 border, 1 throne, 2 invaders)
-		 *  4: allied is empty
-		 *      5: if allied is not a throne                            -> no capture
-		 *      here, allied is a throne
+		 *  4: back is empty
+		 *      5: if back is not a throne                              -> no capture
+		 *      here, back is an empty throne
 		 *      6: if king not capturable by empty throne               -> no capture
 		 *      7: if king capturable by 2                              -> capture king (1 invader + throne)
 		 *      8: else if two-other-coord are invader                  -> capture king (3 invaders + throne)
-		 *  9: allied is an invader                                     -> no capture
-		 * here allied is an invader
-		 * 10: if king is capturable by two                             -> capture king (2 invaders)
-		 * 11: if 2 others around king are invaders                     -> capture king (4 invaders)
+		 *  9: allied is an invader
+		 *     10: if king is capturable by two                         -> capture king (2 invaders)
+		 *     11: if 2 others around king are invaders                 -> capture king (4 invaders)
 		 * So these are the different victory way for the invaders :
 		 * - 2 invaders
 		 * - 1 invaders 1 empty-throne
@@ -198,16 +197,78 @@ export class TablutRules extends Rules {
 		 * - 3 invaders 1 border
 		 * - 4 invaders
 		 */
-		const kingCoord = c.getNext(d);
-		const alliedCoord = kingCoord.getNext(d);
-		if (!alliedCoord.isInRange(TablutRules.WIDTH, TablutRules.WIDTH)) { // 1
+		const kingCoord: Coord = c.getNext(d);
 
+		const backCoord: Coord = kingCoord.getNext(d); // the piece that just move is always considered in front
+		const back: number = TablutRules.getOwner(turn, backCoord, board);
+
+		const leftCoord: Coord = kingCoord.getLeft(d);
+		const left: number = TablutRules.getOwner(turn, leftCoord, board);
+
+		const rightCoord: Coord = kingCoord.getRight(d);
+		const right: number = TablutRules.getOwner(turn, rightCoord, board);
+
+		if (!backCoord.isInRange(TablutRules.WIDTH, TablutRules.WIDTH)) { /////////////////////// 1
+			let nbInvaders: number = (left === TablutRules.PLAYER ? 1 : 0);
+			nbInvaders += (right === TablutRules.PLAYER ? 1 : 0);
+			if (nbInvaders === 2 && TablutRules.THREE_INVADER_AND_A_BORDER_CAN_CAPTURE_KING) { // 2
+				// king captured by 3 invaders against 1 border
+				return kingCoord;
+			} else if (nbInvaders === 1) {
+				if (TablutRules.isEmptyThrone(leftCoord, board) ||
+					TablutRules.isEmptyThrone(rightCoord, board)) {
+					if (TablutRules.CAPTURE_KING_AGAINST_THRONE_RULES) { //////////////////////// 3
+						// king captured by 1 border, 1 throne, 2 invaders
+						return kingCoord;
+					}
+				}
+			}
+			// those were the only two way to capture against the borde
+			return null;
 		}
+		if (back === TablutRules.NONE) { //////////////////////////////////////////////////////// 4
+			if (!TablutRules.isThrone(backCoord)) { ///////////////////////////////////////////// 5
+				return null;
+			} // here, back is an empty throne
+			if (!TablutRules.CAPTURE_KING_AGAINST_THRONE_RULES) { /////////////////////////////// 6
+				return null;
+			} // here king is capturable by this empty throne
+			if (TablutRules.NORMAL_CAPTURE_WORK_ON_THE_KING) { ////////////////////////////////// 7
+				return kingCoord; // king captured by 1 invader and 1 throne
+			}
+			if (left === TablutRules.PLAYER && right === TablutRules.PLAYER) {
+				return kingCoord; // king captured by 3 invaders + 1 throne
+			}
+		}
+		if (back === TablutRules.PLAYER) {
+			if (TablutRules.NORMAL_CAPTURE_WORK_ON_THE_KING) {
+				return kingCoord; // king captured by two invaders
+			}
+			if (left === TablutRules.PLAYER && right === TablutRules.PLAYER) {
+				return kingCoord; // king captured by 4 invaders
+			}
+		}
+		return null;
 	}
 
-	private static isUnoccupiedThrone(opposing: Coord): boolean {
-		// TODO Auto-generated method stub
+	private static isEmptyThrone(c: Coord, board: number[][]): boolean {
+		if (TablutRules.isThrone(c)) {
+			return board[c.y][c.x] === TablutPartSlice.UNOCCUPIED;
+		}
 		return false;
+	}
+
+	private static isThrone(c: Coord): boolean {
+		const fin = TablutRules.WIDTH - 1;
+		if (c.x === 0) {
+			return (c.y === 0) || (c.y === fin);
+		} else if (c.x === fin) { // TODO: c'est à TablutPartSlice d'avoir largeur ! pas aux règles
+			return (c.y === 0) || (c.y === fin);
+		} else {
+			let center = TablutRules.WIDTH / 2;
+			center -= center % 2;
+			return (c.x === center && c.y === center);
+		}
 	}
 
 	private static getOwner(turn: number, c: Coord, board: number[][]): number {
@@ -239,6 +300,21 @@ export class TablutRules extends Rules {
 
 	getListMoves(n: MNode<TablutRules>): { key: MoveCoordToCoordAndCapture, value: TablutPartSlice }[] {
 		// TODO Auto-generated method stub
+		const currentPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
+		const currentBoard: number[][] = currentPartSlice.getCopiedBoard();
+		const currentTurn: number = currentPartSlice.turn;
+		let coord: Coord;
+		let owner: number;
+		for (let y = 0; y < TablutRules.WIDTH; y++) {
+			for (let x = 0; x < TablutRules.WIDTH; x++) {
+				// pour chaque case
+				coord = new Coord(x, y);
+				owner = TablutRules.getOwner(currentTurn, coord, currentBoard);
+				if (owner === TablutRules.PLAYER) {
+					// pour chaque pion du joueur
+				}
+			}
+		}
 		return null;
 	}
 
@@ -284,7 +360,7 @@ export class TablutRules extends Rules {
 	setInitialBoard() {
 		if (this.node == null) {
 			this.node = MNode.getFirstNode(
-				new TablutPartSlice(TablutPartSlice.getStartingBoard(), 0),
+				new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0), // TODO: rendre ça configurable
 				this
 			);
 		} else {
