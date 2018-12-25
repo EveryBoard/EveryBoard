@@ -1,0 +1,31 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+	 width="500px" height="500px"
+	 viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+	<circle id="e1_circle"
+			cx="250" cy="250"
+			style="fill:#996633;stroke:black;stroke-width:40px;"
+			r="230"/>
+	<line x1="250" y1="20"
+		  x2="250" y2="480"
+		  stroke-width="40px"
+		  stroke="black" />
+
+	<line x1="250" y1="100"
+		  x2="25" y2="325"
+		  stroke-width="40px"
+		  stroke="black" />
+	<line x1="250" y1="100"
+		  x2="475" y2="325"
+		  stroke-width="40px"
+		  stroke="black" />
+
+	<line x1="250" y1="200"
+		  x2="75" y2="375"
+		  stroke-width="40px"
+		  stroke="black" />
+	<line x1="250" y1="200"
+		  x2="425" y2="375"
+		  stroke-width="40px"
+		  stroke="black" />
+
+</svg>
