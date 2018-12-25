@@ -32,6 +32,7 @@ export class TablutRules extends Rules {
 	static readonly PAWN_COORD_UNOCCUPIED_ERROR = TablutRules.i++;
 	static readonly MOVING_OPPONENT_PIECE_ERROR = TablutRules.i++;
 	static readonly LANDING_ON_OCCUPIED_CASE_ERROR = TablutRules.i++;
+	static readonly PAWN_LANDING_ON_THRONE_ERROR = TablutRules.i++; // TODO: for both king and pawns
 
 	private static readonly NONE = TablutRules.i++;
 	private static readonly ENNEMY = TablutRules.i++;
@@ -347,6 +348,34 @@ export class TablutRules extends Rules {
 		}
 		return destinations;
 	}
+
+	static getKingCoord(board: number[][]): Coord {
+		for (let y = 0; y < TablutRules.WIDTH; y++) {
+			for (let x = 0; x < TablutRules.WIDTH; x++) {
+				if (TablutRules.isKing(board[y][x])) {
+					return new Coord(x, y);
+				}
+			}
+		}
+		return null;
+	}
+
+	static getInvaderVictoryValue(n: MNode<TablutRules>): number {
+		const tablutPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
+		if (tablutPartSlice.invaderStart) {
+			return Number.MIN_SAFE_INTEGER;
+		}
+		return Number.MAX_SAFE_INTEGER;
+	}
+
+	static getDefenderVictoryValue(n: MNode<TablutRules>): number {
+		const tablutPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
+		if (tablutPartSlice.invaderStart) {
+			return Number.MAX_SAFE_INTEGER;
+		}
+		return Number.MIN_SAFE_INTEGER;
+	}
+
 	// instance methods :
 
 	getListMoves(n: MNode<TablutRules>): { key: MoveCoordToCoordAndCapture, value: TablutPartSlice }[] {
@@ -418,14 +447,23 @@ export class TablutRules extends Rules {
 		// 1. is the king escaped ?
 		// 2. is the king captured ?
 		// 3. is one player immobilised ?
-		// 4.
+		// 4. let's just for now just count the pawns
 		const board: number[][] = n.gamePartSlice.getCopiedBoard();
-		if (TablutRules.hasKingEscaped(board)) {
-			return
+		const kingCoord: Coord = TablutRules.getKingCoord(board);
+		if (kingCoord == null) { // the king is dead, long live the king
+			return TablutRules.getInvaderVictoryValue(n);
 		}
-		if (TablutRules.isKingCaptured(board)) {
-			// invaders won
+		if (TablutRules.isThrone(kingCoord) && ((kingCoord.x === TablutRules.WIDTH) || (kingCoord.x !== 0))) {
+			// king reached one corner !
+			return TablutRules.getDefenderVictoryValue(n);
 		}
+		if (TablutRules.isPlayerImmobilised(0, board)) {
+			return Number.MIN_SAFE_INTEGER;
+		}
+		if (TablutRules.isPlayerImmobilised(1, board)) {
+			return Number.MAX_SAFE_INTEGER;
+		}
+		const invaders;
 		return 0;
 	}
 

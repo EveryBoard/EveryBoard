@@ -10,10 +10,12 @@ export class TablutPartSlice extends GamePartSlice {
 	public static readonly PLAYER_ONE_KING = 3;
 	public static readonly PLAYER_ONE_PAWN = 4;
 
+	public invaderStart: boolean;
+
 	// statics methods :
 
-	static getStartingBoard(zeroAttack: boolean): number[][] {
-		if (zeroAttack) {
+	static getStartingBoard(invaderStart: boolean): number[][] {
+		if (invaderStart) {
 			return this.getStartingBoardLike(this.PLAYER_ONE_KING, this.PLAYER_ONE_PAWN, this.PLAYER_ZERO_PAWN);
 		}
 		return this.getStartingBoardLike(this.PLAYER_ZERO_KING, this.PLAYER_ZERO_PAWN, this.PLAYER_ONE_PAWN);
@@ -32,8 +34,9 @@ export class TablutPartSlice extends GamePartSlice {
 		return board;
 	}
 
-	constructor(b: number[][], turn: number) {
+	constructor(b: number[][], turn: number, invaderStart: boolean) {
 		super(b, turn);
+		this.invaderStart = invaderStart;
 	}
 
 }
