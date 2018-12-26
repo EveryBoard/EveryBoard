@@ -29,7 +29,8 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 	private choosenY = -1;
 	pieceInHand = 0;
 
-	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService) {
+	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService,
+				userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService) {
 		super(gameInfoService, _route, userService, userDao, partDao, joinerService);
 	}
 

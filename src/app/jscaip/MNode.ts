@@ -5,7 +5,7 @@ import {GamePartSlice} from './GamePartSlice';
 
 export class MNode<R extends Rules> {
 	// TODO calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
-	// TODO choose ONE commenting langage, for fuck's sake.
+	// TODO onClick ONE commenting langage, for fuck's sake.
 	// TODO check for the proper use of LinkedList to optimise the stuff
 
 	// static fields
@@ -294,37 +294,38 @@ export class MNode<R extends Rules> {
        * g. l'ajouter à this.childs
        * h. ne rien changer à sa depth avant que la Node ne soit calculée
        */
+		const localVerbose = false;
 		const moves: {
 			key: Move;
 			value: GamePartSlice;
 		}[] = MNode.ruler.getListMoves(this);
 		this.childs = new Array<MNode<R>>();
-		if (MNode.VERBOSE) {
+		if (MNode.VERBOSE || localVerbose) {
 			console.log('createChilds received listMoves from ruler');
 			console.log(moves);
 		}
 		for (const entry of moves) {
-			if (MNode.VERBOSE) {
+			if (MNode.VERBOSE || localVerbose) {
 				console.log('in the loop');
 				console.log(entry);
 			}
 			const move: Move = entry.key;
 			const board: GamePartSlice = entry.value;
-			if (MNode.VERBOSE) {
+			if (MNode.VERBOSE || localVerbose) {
 				console.log('move and board retrieved from the entry');
 			}
 			const child: MNode<R> = new MNode<R>(this, move, board);
-			if (MNode.VERBOSE) {
+			if (MNode.VERBOSE || localVerbose) {
 				console.log('child created');
 				console.log(child);
 			}
 			this.childs.push(child);
 		}
-		if (MNode.VERBOSE) {
+		if (MNode.VERBOSE || localVerbose) {
 			console.log('out of the loop');
 		}
 		if (this.isEndGame()) {
-			if (MNode.VERBOSE) {
+			if (MNode.VERBOSE || localVerbose) {
 				console.log('Node.createChilds has found a endGame');
 			}
 		}
@@ -491,7 +492,7 @@ export class MNode<R extends Rules> {
    } */
 
 	isEndGame(): boolean {
-		const localVerbose = false;
+		const localVerbose = true;
 
 		const scoreStatus: SCORE = MNode.getScoreStatus(this.ownValue);
 		if (MNode.VERBOSE || localVerbose) {

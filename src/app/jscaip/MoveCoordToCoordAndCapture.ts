@@ -5,9 +5,9 @@ export class MoveCoordToCoordAndCapture extends MoveCoord {
 
 	// non static fields :
 
-	readonly end: Coord ;
+	readonly end: Coord;
 
-	private captures: Coord[] ;
+	private captures: Coord[];
 
 	constructor(c: Coord, e: Coord) {
 		super(c.x, c.y);
@@ -20,6 +20,10 @@ export class MoveCoordToCoordAndCapture extends MoveCoord {
 
 	getCaptures(i: number): Coord {
 		return this.captures[i];
+	}
+
+	toString() {
+		return 'MC->C&C [coord = ' + this.coord.toString() + ' to ' + this.end.toString() + ']';
 	}
 
 }

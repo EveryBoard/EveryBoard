@@ -29,6 +29,7 @@ import {firebaseConfig} from './firebaseConfig';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {P4Component} from './components/game-components/p4/p4.component';
 import {AwaleComponent} from './components/game-components/awale/awale.component';
+import {TablutComponent} from './components/game-components/tablut/tablut.component';
 
 const routes: Route [] = [
 	{path: 'server',			component: ServerPageComponent},
@@ -42,6 +43,7 @@ const routes: Route [] = [
 	{path: 'QuartoOnline',		component: QuartoComponent},
 	{path: 'P4Online',			component: P4Component},
 	{path: 'AwaleOnline',		component: AwaleComponent},
+	{path: 'TablutOnline',		component: TablutComponent},
 
 	{path: '', redirectTo: 'login-page', pathMatch: 'full'},
 	{path: '**', 'component': LoginComponent}
@@ -62,7 +64,8 @@ const routes: Route [] = [
 
 		QuartoComponent,
 		P4Component,
-		AwaleComponent
+		AwaleComponent,
+		TablutComponent
 	],
 	imports: [
 		BrowserModule,

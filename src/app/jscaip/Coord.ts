@@ -78,14 +78,14 @@ export class Coord {
 	}
 
 	getDirectionToward(c: Coord): DIRECTION {
-		const dx: number = Coord.getBinarised(this.x - c.x) + 1;
-		const dy: number = Coord.getBinarised(this.y - c.y) + 1;
+		const dx: number = Coord.getBinarised(c.x - this.x) + 1;
+		const dy: number = Coord.getBinarised(c.y - this.y) + 1;
 		return DIR_ARRAY[dy][dx];
 	}
 
 	getOrthogonalDirectionToward(c: Coord): ORTHOGONALE {
-		const dx: number = Coord.getBinarised(this.x - c.x) + 1;
-		const dy: number = Coord.getBinarised(this.y - c.y) + 1;
+		const dx: number = Coord.getBinarised(c.x - this.x) + 1;
+		const dy: number = Coord.getBinarised(c.y - this.y) + 1;
 		return ORTH_ARRAY[dy][dx];
 	}
 

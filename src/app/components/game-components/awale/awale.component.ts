@@ -37,7 +37,7 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 		this.onDestroy();
 	}
 
-	choose(event: MouseEvent): boolean {
+	onClick(event: MouseEvent): boolean {
 		if (!this.isPlayerTurn()) {
 			console.log('Mais c\'est pas ton tour !'); // todo : réactive notification
 			return false;

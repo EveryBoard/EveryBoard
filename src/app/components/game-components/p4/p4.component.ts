@@ -54,7 +54,7 @@ export class P4Component extends OnlineGame implements OnInit, OnDestroy {
 		this.currentPlayer = this.players[p4PartSlice.turn % 2];
 	}
 
-	choose(event: MouseEvent): boolean {
+	onClick(event: MouseEvent): boolean {
 		if (!this.isPlayerTurn()) {
 			console.log('Mais c\'est pas ton tour !');
 			return false;

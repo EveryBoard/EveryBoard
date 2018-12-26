@@ -479,7 +479,7 @@ export class P4Rules extends Rules {
 	// Overrides:
 	choose(move: MoveX): boolean {
 		if (P4Rules.VERBOSE) {
-			console.log('P4Rules.choose called');
+			console.log('P4Rules.onClick called');
 		}
 		if (!this.node) {
 			return false;

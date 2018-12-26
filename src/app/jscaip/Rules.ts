@@ -13,7 +13,7 @@ export abstract class Rules {
      */
 
 	abstract getListMoves<R_1 extends Rules>(n: MNode<R_1>): { key: Move, value: GamePartSlice }[] ;
-	/* has to be implemented for each rule so that the AI can choose amongst theses informations
+	/* has to be implemented for each rule so that the AI can onClick amongst theses informations
      * this function could give an incomplete set of data if some of them are redondant
      * or also if some of them are too bad to be interesting to count, as a matter of performance
      */
@@ -25,7 +25,7 @@ export abstract class Rules {
 
 	abstract choose(move: Move): boolean;
 	/* used to the the rules to update board
-     * return true if the choose was legal, and the node uploaded
+     * return true if the onClick was legal, and the node uploaded
      * return false otherwise
      */
 

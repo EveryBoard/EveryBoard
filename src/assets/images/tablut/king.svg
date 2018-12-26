@@ -2,7 +2,7 @@
 	 width="500px" height="500px"
 	 viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
 	<circle cx="250" cy="250"
-			style="fill:none;stroke:black;stroke-width:40px;"
+			style="fill:#ffb31a;stroke:black;stroke-width:40px;"
 			r="230"/>
 
 	<line x1="150" y1="150"
