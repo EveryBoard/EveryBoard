@@ -11,6 +11,7 @@ import {UserService} from '../../services/user-service';
 import {UserDAO} from '../../dao/UserDAO';
 import {PartDAO} from '../../dao/PartDAO';
 import {JoinerService} from '../../services/JoinerService';
+import {MoveCoordToCoordAndCapture} from '../../jscaip/MoveCoordToCoordAndCapture';
 
 export abstract class OnlineGame {
 	rules: Rules;
@@ -91,10 +92,17 @@ export abstract class OnlineGame {
 
 		const nbPlayedMoves = listMoves.length;
 		let currentPartTurn;
+		console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
+			+ listMoves);
 		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.rules.node.gamePartSlice.turn;
-			const choosedMove = this.decodeMove(listMoves[currentPartTurn]);
-			const bol: boolean = this.rules.choose(choosedMove);
+			const choosedMove: MoveCoordToCoordAndCapture = this.decodeMove(listMoves[currentPartTurn]) as MoveCoordToCoordAndCapture;
+			console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
+				+ listMoves + ' choosed move : ' + choosedMove);
+			const correctDBMove: boolean = this.rules.choose(choosedMove);
+			if (!correctDBMove) {
+				console.log('we received an incorrect db move !' + choosedMove + ' and ' + listMoves);
+			}
 		}
 		this.updateBoard();
 	}
@@ -166,6 +174,7 @@ export abstract class OnlineGame {
 	}
 
 	notifyDraw() {
+		console.log('égalité!');
 		this.endGame = true;
 		const docRef = this.partDocument.ref;
 		docRef.update({
@@ -185,6 +194,7 @@ export abstract class OnlineGame {
 	}
 
 	notifyVictory() {
+		console.log('victoire!');
 		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
 		this.endGame = true;
 		this.winner = victoriousPlayer;
@@ -211,9 +221,8 @@ export abstract class OnlineGame {
 					'listMoves': listMoves,
 					'turn': turn
 				});
-			}).catch((error) => {
-			console.log(error);
-		});
+			})
+			.catch(error => console.log(error));
 	}
 
 	onDestroy() {

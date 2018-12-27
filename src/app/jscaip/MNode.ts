@@ -492,7 +492,7 @@ export class MNode<R extends Rules> {
    } */
 
 	isEndGame(): boolean {
-		const localVerbose = true;
+		const localVerbose = false;
 
 		const scoreStatus: SCORE = MNode.getScoreStatus(this.ownValue);
 		if (MNode.VERBOSE || localVerbose) {
@@ -508,7 +508,7 @@ export class MNode<R extends Rules> {
 
 		if (this.childs === null) {
 			if (MNode.VERBOSE || localVerbose) {
-				console.log('[calculating childs...]');
+				console.log('uncalculated childs : [calculating childs...]');
 			}
 			this.createChilds();
 		}
