@@ -222,10 +222,16 @@ export class TablutRules extends Rules {
 		const back: number = this.getRelativeOwner(player, invaderStart, backCoord, board);
 
 		const leftCoord: Coord = kingCoord.getLeft(d);
-		const left: number = this.getRelativeOwner(player, invaderStart, leftCoord, board);
+		const leftInRange: boolean = leftCoord.isInRange(this.WIDTH, this.WIDTH);
+		const left: number = leftInRange ?
+			this.getRelativeOwner(player, invaderStart, leftCoord, board) :
+			this.NONE;
 
 		const rightCoord: Coord = kingCoord.getRight(d);
-		const right: number = this.getRelativeOwner(player, invaderStart, rightCoord, board);
+		const rightInRange: boolean = rightCoord.isInRange(this.WIDTH, this.WIDTH);
+		const right: number = rightInRange ?
+			this.getRelativeOwner(player, invaderStart, rightCoord, board) :
+			this.NONE;
 
 		if (!backCoord.isInRange(this.WIDTH, this.WIDTH)) { /////////////////////// 1
 			let nbInvaders: number = (left === this.PLAYER ? 1 : 0);
