@@ -21,6 +21,10 @@ export namespace DIRECTION {
 	export function isOrthogonal(d: DIRECTION) {
 		return (d.x === 0) || (d.y === 0);
 	}
+	export function getOpposite(dir: DIRECTION): DIRECTION {
+		const index: number = DIRECTIONS.indexOf(dir);
+		return DIRECTIONS[(index + 4) % 8];
+	}
 }
 
 /* export let DIRECTION = {
@@ -41,13 +45,13 @@ export interface XY {
 
 export const DIRECTIONS: ReadonlyArray<DIRECTION> = [
 	{x: -1, y: -1},
-	{x: -1, y:  0},
-	{x: -1, y: +1},
 	{x:  0, y: -1},
-	{x:  0, y: +1},
 	{x: +1, y: -1},
 	{x: +1, y:  0},
-	{x: +1, y: +1}
+	{x: +1, y: +1},
+	{x:  0, y: +1},
+	{x: -1, y: +1},
+	{x: -1, y:  0},
 ];
 
 export const ORTHOGONALES: ReadonlyArray<ORTHOGONALE> = [

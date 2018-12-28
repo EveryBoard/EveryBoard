@@ -1,6 +1,5 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {QuartoEnum} from './QuartoEnum';
-import {P4Rules} from '../games.p4/P4Rules';
 
 export class QuartoPartSlice extends GamePartSlice {
 
@@ -58,10 +57,11 @@ export class QuartoPartSlice extends GamePartSlice {
 		const allPawn: Array<QuartoEnum> = QuartoPartSlice.getFullPawnsList();
 		const remainingPawns: Array<QuartoEnum> = new Array<QuartoEnum>();
 		for (const quartoEnum of allPawn) {
-			if (QuartoPartSlice.isGivable(quartoEnum, this.board, this.pieceInHand)){
+			if (QuartoPartSlice.isGivable(quartoEnum, this.board, this.pieceInHand)) {
 				remainingPawns.push(quartoEnum);
 			}
 		}
 		return remainingPawns;
 	}
+
 }

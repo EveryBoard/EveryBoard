@@ -46,8 +46,6 @@ export class MoveCoord extends Move {
 		return true;
 	}
 
-	public String;
-
 	toString() {
 		return 'MoveCoord [coord = ' + this.coord.toString() + ']';
 	}

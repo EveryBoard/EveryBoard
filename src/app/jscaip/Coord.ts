@@ -61,6 +61,10 @@ export class Coord {
 		return new Coord(newX, newY);
 	}
 
+	getOpposite(): Coord {
+		return new Coord( -this.x, -this.y);
+	}
+
 	isInRange(sizeX: number, sizeY: number): boolean {
 		if (this.x < 0) {
 			return false;
@@ -90,7 +94,7 @@ export class Coord {
 	}
 
 	getOrthogonalDistance(c: Coord): number {
-		return (this.x - c.x) + (this.y - c.y);
+		return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
 	}
 
 	equals(obj: any): boolean {

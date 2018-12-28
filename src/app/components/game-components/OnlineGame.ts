@@ -92,13 +92,12 @@ export abstract class OnlineGame {
 
 		const nbPlayedMoves = listMoves.length;
 		let currentPartTurn;
-		console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
-			+ listMoves);
+		// console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : ' + listMoves);
 		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.rules.node.gamePartSlice.turn;
 			const choosedMove: MoveCoordToCoordAndCapture = this.decodeMove(listMoves[currentPartTurn]) as MoveCoordToCoordAndCapture;
-			console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
-				+ listMoves + ' choosed move : ' + choosedMove);
+			// console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
+			// 	+ listMoves + ' choosed move : ' + choosedMove);
 			const correctDBMove: boolean = this.rules.choose(choosedMove);
 			if (!correctDBMove) {
 				console.log('we received an incorrect db move !' + choosedMove + ' and ' + listMoves);
@@ -147,11 +146,11 @@ export abstract class OnlineGame {
 			this.allowedTimeoutVictory = false;
 		}
 		if (!this.endGame) {
-			console.log('la partie n\'est pas terminée!');
+			// console.log('la partie n\'est pas terminée!');
 			setTimeout(() => this.startWatchingForOpponentTimeout(),
 				HeaderComponent.refreshingPresenceTimeout);
 		} else {
-			console.log('La partie est terminée yeeees');
+			console.log('La partie est terminée');
 		}
 	}
 
@@ -194,7 +193,6 @@ export abstract class OnlineGame {
 	}
 
 	notifyVictory() {
-		console.log('victoire!');
 		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
 		this.endGame = true;
 		this.winner = victoriousPlayer;
@@ -226,7 +224,6 @@ export abstract class OnlineGame {
 	}
 
 	onDestroy() {
-		console.log('désabonnement!!!');
 		this.gameInfoServiceSubscription.unsubscribe();
 		this.userSubscription.unsubscribe();
 		this.observedPartSubscription.unsubscribe();

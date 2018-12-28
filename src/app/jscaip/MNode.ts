@@ -188,7 +188,7 @@ export class MNode<R extends Rules> {
 					console.log('Childs created');
 				}
 				// here it's not a calculation - leaf but now we can check if it's a rule - leaf
-				if (this.childs && (<any>this.childs).length === 0) {
+				if (this.childs && (<any>this.childs).length === 0) { // TODO correct
 					// here this.depth !== 0 and this.hasAlreadyChild()
 					// so this is the last condition needed to see if it's a leaf - by - rules
 					if (MNode.VERBOSE) {

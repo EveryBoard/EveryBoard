@@ -50,12 +50,12 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	suggestMove(choosedMove: MoveCoordToCoordAndCapture): boolean {
 		let result: boolean;
+		TablutRules.VERBOSE = true;
 		if (this.rules.choose(choosedMove)) {
+			TablutRules.VERBOSE = false;
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
-			// OLD this.choosenX = -1;
-			// OLD this.choosenY = -1;
 			this.updateDBBoard(choosedMove);
 			if (this.rules.node.isEndGame()) {
 				if (this.rules.node.getOwnValue() === 0) {
@@ -77,6 +77,7 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 		this.choosenX = -1;
 		this.choosenY = -1;
 	}
+
 	onClick(event: MouseEvent) {
 		console.log('onClick');
 		if (this.choosenX === -1) {

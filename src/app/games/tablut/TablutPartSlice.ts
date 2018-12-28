@@ -14,13 +14,6 @@ export class TablutPartSlice extends GamePartSlice {
 
 	// statics methods :
 
-	/* OLD static getStartingBoard(invaderStart: boolean): number[][] {
-		if (invaderStart) {
-			return this.getStartingBoardLike(this.PLAYER_ONE_KING, this.PLAYER_ONE_PAWN, this.PLAYER_ZERO_PAWN);
-		}
-		return this.getStartingBoardLike(this.PLAYER_ZERO_KING, this.PLAYER_ZERO_PAWN, this.PLAYER_ONE_PAWN);
-	} */
-
 	static getStartingBoard(invaderStart: boolean): number[][] {
 		const board: number[][] = GamePartSlice.createBiArray(9, 9, this.UNOCCUPIED);
 		board[4][4] = invaderStart ? this.PLAYER_ONE_KING : this.PLAYER_ZERO_KING;
@@ -38,6 +31,13 @@ export class TablutPartSlice extends GamePartSlice {
 		// one side of the furthest
 		board[0][5] = this.INVADERS; board[8][5] = this.INVADERS; board[5][0] = this.INVADERS; board[5][8] = this.INVADERS;
 		// the other side
+		/* TESTS board[4][4] = invaderStart ? this.PLAYER_ONE_KING : this.PLAYER_ZERO_KING;
+
+		board[2][6] = this.DEFENDERS; board[2][2] = this.DEFENDERS;
+		board[2][5] = this.INVADERS;
+
+		board[7][6] = this.DEFENDERS;
+		board[7][7] = this.INVADERS; board[6][5] = this.INVADERS; */
 		return board;
 	}
 
