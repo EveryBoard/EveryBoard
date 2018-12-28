@@ -30,11 +30,17 @@
 	<div>
 		<table (click)="onClick($event);">
 			<tr *ngFor="let line of board.reverse(); index as y;">
-				<td *ngFor="let case of line; index as x;">
+				<td *ngFor="let case of line; index as x;"
+					style="position:relative;">
 					<img width="100" height="100"
 						 id="{{'t'+y+x}}"
 						 alt=":{{ case }}:"
 						 [src]='imagesLocation+imagesNames[case]'/>
+					<img *ngIf="lastX===x"
+						 width="100" height="100"
+						 alt="highlighted"
+						 [src]="imagesLocation+'highlight.svg'"
+						 style="position:absolute; top:0; left:0;"/>
 				</td>
 			</tr>
 		</table>

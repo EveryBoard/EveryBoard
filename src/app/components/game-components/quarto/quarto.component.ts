@@ -12,6 +12,7 @@ import {UserService} from '../../../services/user-service';
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
 import {JoinerService} from '../../../services/JoinerService';
+import {MoveX} from '../../../jscaip/MoveX';
 
 @Component({
 	selector: 'app-quarto',
@@ -22,11 +23,13 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new QuartoRules();
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/quarto/'; // en prod
-	// imagesLocation = 'src/assets/images/quarto/'; // en dev
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	// imagesLocation = 'src/assets/images/'; // en dev
 
-	private choosenX = -1;
-	private choosenY = -1;
+	choosenX = -1;
+	choosenY = -1;
+	lastX: number;
+	lastY: number;
 	pieceInHand = 0;
 
 	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService,
@@ -52,11 +55,15 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	updateBoard() {
 		const quartoPartSlice = this.rules.node.gamePartSlice as QuartoPartSlice;
+		const move: QuartoMove = this.rules.node.getMove() as QuartoMove;
 		this.board = quartoPartSlice.getCopiedBoard();
+		this.pieceInHand = quartoPartSlice.pieceInHand;
+
 		this.turn = quartoPartSlice.turn;
 		this.currentPlayer = this.players[quartoPartSlice.turn % 2];
 
-		this.pieceInHand = quartoPartSlice.pieceInHand;
+		this.lastX = move.coord.x;
+		this.lastY = move.coord.y;
 	}
 
 	chooseCoord(event: MouseEvent): boolean {

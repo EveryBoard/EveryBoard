@@ -20,12 +20,12 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new TablutRules();
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/tablut/'; // en prod
-	// imagesLocation = 'src/assets/images/tablut/'; // en dev
+	// imagesLocation = 'gaviall/pantheonsgame/assets/images/tablut/'; // en prod
+	imagesLocation = 'src/assets/images/tablut/'; // en dev
 	imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
 
-	private choosenX = -1;
-	private choosenY = -1;
+	choosenX = -1;
+	choosenY = -1;
 
 	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService,
 				userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService) {
@@ -42,10 +42,13 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	updateBoard() {
 		const tablutPartSlice = this.rules.node.gamePartSlice as TablutPartSlice;
+		const move = this.rules.node.getMove() as MoveCoordToCoordAndCapture;
 		this.board = tablutPartSlice.getCopiedBoard();
 		this.turn = tablutPartSlice.turn;
 		this.currentPlayer = this.players[tablutPartSlice.turn % 2];
 
+		this.choosenX = move.coord.x;
+		this.choosenY = move.coord.y;
 	}
 
 	suggestMove(choosedMove: MoveCoordToCoordAndCapture): boolean {

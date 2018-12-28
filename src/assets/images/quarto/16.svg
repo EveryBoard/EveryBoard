@@ -3,5 +3,5 @@
 	 viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
 	<rect height="490" width="490"
 		  x="5" y="5"
-		  style="fill:grey;stroke:black;stroke-width:10px;" />
+		  style="fill:none;stroke:black;stroke-width:10px;" />
 </svg>
