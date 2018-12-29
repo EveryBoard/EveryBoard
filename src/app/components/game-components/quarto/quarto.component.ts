@@ -64,8 +64,11 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 		this.turn = quartoPartSlice.turn;
 		this.currentPlayer = this.players[quartoPartSlice.turn % 2];
 
-		this.lastX = move.coord.x;
-		this.lastY = move.coord.y;
+		if (move != null) {
+			this.lastX = move.coord.x;
+			this.lastY = move.coord.y;
+		}
+
 		this.choosenX = -1;
 		this.choosenY = -1;
 		this.pieceToGive = -1;
@@ -103,7 +106,7 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 			}
 			return true; // the user has just choosen his coord
 		}
-		console.log('NOT a legal place to put the piece because ' +  + x + ', ' + y + ' : ' + this.board[y][x]);
+		console.log('NOT a legal place to put the piece because ' + +x + ', ' + y + ' : ' + this.board[y][x]);
 		// the user choosed an occupied place of the board, so an illegal move, so we cancel all
 		this.cancelMove();
 		return false;

@@ -1,9 +1,9 @@
 <div>
 
-	<div id="up" style="align-content: center; text-align: center">
-		<div *ngIf="observerRole <2">
+	<div id="info" style="align-content: center; text-align: center">
+		<div *ngIf="opponent && observerRole <2">
 			<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
-			<button *ngIf="!endGame" (click)="resign()"> Abandonner </button>
+			<button *ngIf="!endGame" (click)="resign()"> Abandonner</button>
 			<div *ngIf="allowedTimeoutVictory && !endGame">
 				<h3>
 					{{ opponent.user.pseudo }} ne réagit plus :
@@ -12,7 +12,7 @@
 					</button>
 				</h3>
 			</div>
-			<div> Tour : {{ turn }} </div>
+			<div> Tour : {{ turn }}</div>
 		</div>
 		<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
 		<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
@@ -30,7 +30,7 @@
 		</div>
 	</div>
 
-	<div id="down" class="flex-container" style="display:flex; flex-flow: row wrap; justify-content: space-around;">
+	<div id="game" class="flex-container" style="display:flex; flex-flow: row wrap; justify-content: space-around;">
 
 		<div id="board">
 			<table (click)="chooseCoord($event);">
@@ -42,7 +42,7 @@
 							 id="{{'t'+y+x}}"
 							 alt="highlighted"
 							 [src]="imagesLocation+'squared_highlight.svg'"
-							 style="position:absolute; top:0; left:0;" />
+							 style="position:absolute; top:0; left:0;"/>
 						<img width="100" height="100"
 							 id="{{'u'+y+x}}"
 							 alt=":{{ case }}:"
@@ -52,7 +52,7 @@
 							 id="{{'v'+y+x}}"
 							 alt="piece in hand that you just put on the board"
 							 [src]="imagesLocation+'quarto/'+pieceInHand+'.svg'"
-							 style="position:absolute; top:0; left:0;" />
+							 style="position:absolute; top:0; left:0;"/>
 					</td>
 				</tr>
 			</table>

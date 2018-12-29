@@ -51,11 +51,15 @@ export class P4Component extends OnlineGame implements OnInit, OnDestroy {
 
 	updateBoard(): void {
 		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
+		const lastMove: MoveX = this.rules.node.getMove() as MoveX;
+
 		this.board = p4PartSlice.getCopiedBoard();
 		this.turn = p4PartSlice.turn;
 		this.currentPlayer = this.players[p4PartSlice.turn % 2];
-		const lastMove: MoveX = this.rules.node.getMove() as MoveX;
-		this.lastX = lastMove === null ? -1 : lastMove.x;
+
+		if (lastMove !== null) {
+			this.lastX = lastMove.x;
+		}
 	}
 
 	onClick(event: MouseEvent): boolean {

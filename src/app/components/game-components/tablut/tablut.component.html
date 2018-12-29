@@ -1,33 +1,36 @@
 <div>
-	<div *ngIf="opponent && observerRole <2">
-		<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
-		<button *ngIf="!endGame" (click)="resign()"> Abandonner </button>
-		<div *ngIf="allowedTimeoutVictory && !endGame">
-			<h3>
-				{{ opponent.user.pseudo }} ne réagit plus :
-				<button (click)="notifyTimeout()">
-					Victoire par timeout?
-				</button>
-			</h3>
+
+	<div id="info">
+		<div *ngIf="opponent && observerRole <2">
+			<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
+			<button *ngIf="!endGame" (click)="resign()"> Abandonner</button>
+			<div *ngIf="allowedTimeoutVictory && !endGame">
+				<h3>
+					{{ opponent.user.pseudo }} ne réagit plus :
+					<button (click)="notifyTimeout()">
+						Victoire par timeout?
+					</button>
+				</h3>
+			</div>
+			<div> Tour : {{ turn }}</div>
 		</div>
-		<div> Tour : {{ turn }} </div>
-	</div>
-	<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
-	<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
-	<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
-	<div *ngIf="endGame">
-		<div *ngIf="winner != null">
-			<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
-			<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu face à {{ winner }}</h3>
-			<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
+		<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
+		<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
+		<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
+		<div *ngIf="endGame">
+			<div *ngIf="winner != null">
+				<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
+				<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu face à {{ winner }}</h3>
+				<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
+			</div>
+			<div *ngIf="winner === null">
+				<h3> Match nul </h3>
+			</div>
+			<button (click)="backToServer()">Retour au serveur</button>
 		</div>
-		<div *ngIf="winner === null">
-			<h3> Match nul </h3>
-		</div>
-		<button (click)="backToServer()">Retour au serveur</button>
 	</div>
 
-	<div>
+	<div id="board">
 		<table (click)="onClick($event);">
 			<tr *ngFor="let line of board; index as y;">
 				<td *ngFor="let case of line; index as x;">
@@ -39,4 +42,5 @@
 			</tr>
 		</table>
 	</div>
+
 </div>

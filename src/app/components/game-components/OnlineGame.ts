@@ -11,7 +11,6 @@ import {UserService} from '../../services/user-service';
 import {UserDAO} from '../../dao/UserDAO';
 import {PartDAO} from '../../dao/PartDAO';
 import {JoinerService} from '../../services/JoinerService';
-import {MoveCoordToCoordAndCapture} from '../../jscaip/MoveCoordToCoordAndCapture';
 
 export abstract class OnlineGame {
 	rules: Rules;
@@ -73,6 +72,7 @@ export abstract class OnlineGame {
 	}
 
 	onCurrentPartUpdate(updatedICurrentPart: ICurrentPart) {
+		console.log('currentPartUpdate');
 		if (this.players == null) {
 			this.setPlayersDatas(updatedICurrentPart);
 		}
@@ -95,9 +95,9 @@ export abstract class OnlineGame {
 		// console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : ' + listMoves);
 		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.rules.node.gamePartSlice.turn;
-			const choosedMove: MoveCoordToCoordAndCapture = this.decodeMove(listMoves[currentPartTurn]) as MoveCoordToCoordAndCapture;
-			// console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
-			// 	+ listMoves + ' choosed move : ' + choosedMove);
+			const choosedMove = this.decodeMove(listMoves[currentPartTurn]);
+			console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
+				+ listMoves + ' choosed move : ' + choosedMove);
 			const correctDBMove: boolean = this.rules.choose(choosedMove);
 			if (!correctDBMove) {
 				console.log('we received an incorrect db move !' + choosedMove + ' and ' + listMoves);
