@@ -23,8 +23,8 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new QuartoRules();
 
-	// imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
-	imagesLocation = 'src/assets/images/'; // en dev
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	// imagesLocation = 'src/assets/images/'; // en dev
 
 	choosenX = -1; // the piece clicked by the user
 	choosenY = -1;

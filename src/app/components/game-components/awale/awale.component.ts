@@ -26,8 +26,8 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	captured: number[] = [0, 0];
 
-	// imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
-	imagesLocation = 'src/assets/images/'; // en dev
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	// imagesLocation = 'src/assets/images/'; // en dev
 
 	lastX = -1;
 	lastY = -1;
