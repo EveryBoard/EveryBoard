@@ -37,13 +37,14 @@
 				<tr *ngFor="let line of board; index as y;">
 					<td *ngFor="let case of line; index as x;"
 						style="position:relative;">
-						<img *ngIf="lastX===x && lastY===y"
+						<img *ngIf="(lastX===x && lastY===y) || (choosenX===x && choosenY===y)"
 							 width="100" height="100"
+							 id="{{'t'+y+x}}"
 							 alt="highlighted"
 							 [src]="imagesLocation+'squared_highlight.svg'"
 							 style="position:absolute; top:0; left:0;" />
 						<img width="100" height="100"
-							 id="{{'t'+y+x}}"
+							 id="{{'u'+y+x}}"
 							 alt=":{{ case }}:"
 							 [src]='imagesLocation+"quarto/"+[case]+".svg"'/>
 					</td>
@@ -65,8 +66,9 @@
 							 id="{{'p'+((4*y)+x)}}"
 							 alt=":{{ ((4*y)+x) }}:"
 							 [src]='imagesLocation+"quarto/"+[((4*y)+x)]+".svg"'/>
-						<img *ngIf="choosenX===x && choosenY===y"
+						<img *ngIf="((4*y)+x) === pieceToGive"
 							 width="100" height="100"
+							 id="{{'q'+((4*y)+x)}}"
 							 alt="highlighted"
 							 [src]="imagesLocation+'squared_highlight.svg'"
 							 style="position:absolute; top:0; left:0;"/>

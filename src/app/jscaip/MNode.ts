@@ -5,7 +5,7 @@ import {GamePartSlice} from './GamePartSlice';
 
 export class MNode<R extends Rules> {
 	// TODO calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
-	// TODO onClick ONE commenting langage, for fuck's sake.
+	// TODO choose ONE commenting langage, for fuck's sake.
 	// TODO check for the proper use of LinkedList to optimise the stuff
 
 	// static fields

@@ -171,8 +171,8 @@ class Critere {
 
 }
 
-export class QuartoRules extends Rules {
-	static VERBOSE = true;
+export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefined et null comme valeur de move !!
+	static VERBOSE = false;
 
 	private static readonly INVALID_MOVE = -1;
 	private static readonly VALID_MOVE = 1;
@@ -432,7 +432,7 @@ export class QuartoRules extends Rules {
 					// Cette ligne n'est pas nulle et elle a un critère en commun entre toutes ses pièces
 					// console.log('Cette ligne n'est pas nulle et elle a un critère en commun entre toutes ses pièces');
 					if (nbCasesVides === 0) {
-						if (QuartoRules.VERBOSE || true) {
+						if (QuartoRules.VERBOSE) {
 							console.log('Victoire! ' + commonCrit.toString() + ' at line' + QuartoRules.printArray(line));
 							console.log(QuartoRules.printArray(board[0]));
 							console.log(QuartoRules.printArray(board[1]));

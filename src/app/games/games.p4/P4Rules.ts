@@ -9,7 +9,7 @@ import {P4PartSlice} from './P4PartSlice';
 export class P4Rules extends Rules {
 	// statics fields:
 
-	static VERBOSE = false;
+	static VERBOSE = true;
 
 	/* static readonly DIRECTIONS: XY[] = [
 		DIRECTIONS[0],
@@ -94,7 +94,8 @@ export class P4Rules extends Rules {
 		if (camp === P4Rules.PAWN_X) {
 			return +1;
 		}
-		return 0; // shouldn't append
+		throw new Error('Illegal case content for P4, nor X pawn nor O pawn.'); // NEW, shouldnt append
+		// OLDDLY return 0; // shouldn't append
 	}
 
 	static getHalfLineScore(board: number[][], i: Coord, dir: DIRECTION,
@@ -116,17 +117,16 @@ export class P4Rules extends Rules {
 			c = board[co.y][co.x];
 			if (c === ennemi) {
 				return [freeSpaces, allies];
-			} else {
-				if (c === allie && allAlliesAreSideBySide) {
-					allies++;
-				} else {
-					allAlliesAreSideBySide = false; // on arrête de compter les alliées sur cette ligne
-				}
-				// dès que l'un d'entre eux n'est plus collé
-				freeSpaces++;
-				// co = new Coord(co.x + dir.x, co.y + dir.y);
-				co = co.getNext(dir);
 			}
+			if (c === allie && allAlliesAreSideBySide) {
+				allies++;
+			} else {
+				allAlliesAreSideBySide = false; // on arrête de compter les alliées sur cette ligne
+			}
+			// dès que l'un d'entre eux n'est plus collé
+			freeSpaces++;
+			// co = new Coord(co.x + dir.x, co.y + dir.y);
+			co = co.getNext(dir);
 		}
 		return [freeSpaces, allies];
 	}
@@ -145,6 +145,7 @@ export class P4Rules extends Rules {
 		}
 		if (board[c.y][c.x] === P4Rules.UNOCCUPIED) {
 			console.log('CACA');
+			// TODO : choisir entre "return 0" et "throw new Error('cannot call getCaseScore on empty case')"
 		}
 		// anciennement nommé countPossibility
 		let score = 0; // final result, count the theoretical victorys possibility
@@ -173,7 +174,7 @@ export class P4Rules extends Rules {
 		while (i < 4) {
 			// pour chaque duo de direction
 			// lineAllies = 1 + alliesByDirs[i] + alliesByDirs[7 - i];
-			lineAllies = alliesByDirs[i] + alliesByDirs[7 - i]; // in the two opposite dirs
+			lineAllies = alliesByDirs[i] + alliesByDirs[i + 4]; // in the two opposite dirs
 			// System.out.println('lineAllies = ' + lineAllies + ' in (' + x + ', ' + y + ') pour dir ' + i);
 			if (lineAllies > 2) {
 				if (P4Rules.VERBOSE) {
@@ -479,7 +480,7 @@ export class P4Rules extends Rules {
 	// Overrides:
 	choose(move: MoveX): boolean {
 		if (P4Rules.VERBOSE) {
-			console.log('P4Rules.onClick called');
+			console.log('P4Rules.choose called');
 		}
 		if (!this.node) {
 			return false;

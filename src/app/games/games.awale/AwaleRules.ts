@@ -319,7 +319,7 @@ export class AwaleRules extends Rules {
 		const x: number = resultlessMove.coord.x;
 		const y: number = resultlessMove.coord.y;
 		if (AwaleRules.VERBOSE) {
-			console.log('onClick(' + resultlessMove.toString() + ') -> ' + ' at turn ' + turn);
+			console.log('choose(' + resultlessMove.toString() + ') -> ' + ' at turn ' + turn);
 		}
 		const board: number[][] = this.node.gamePartSlice.getCopiedBoard();
 		const moveResult: number[] = AwaleRules.isLegal(

@@ -24,6 +24,9 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/'; // en prod
 	// imagesLocation = 'src/assets/images/circled_numbers/'; // en dev
 
+	lastX = -1;
+	lastY = -1;
+
 	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, joinerService: JoinerService,
 				userDao: UserDAO, partDao: PartDAO) {
 		super(gameInfoService, _route, userService, userDao, partDao, joinerService);
@@ -38,22 +41,24 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 	}
 
 	onClick(event: MouseEvent): boolean {
-		if (!this.isPlayerTurn()) {
-			console.log('Mais c\'est pas ton tour !'); // todo : réactive notification
-			return false;
-		}
-		const x: number = Number(event.srcElement.id.substring(2, 3));
-		const y: number = Number(event.srcElement.id.substring(1, 2));
-		console.log('vous tentez un mouvement en colonne ' + x);
-
 		if (this.rules.node.isEndGame()) {
 			console.log('Malheureusement la partie est finie');
 			// todo : option de clonage revision commentage
 			return false;
 		}
-
+		if (!this.isPlayerTurn()) {
+			console.log('Mais c\'est pas ton tour !'); // todo : réactive notification
+			return false;
+		}
 		console.log('ça tente bien c\'est votre tour');
 		// player's turn
+
+		const x: number = Number(event.srcElement.id.substring(2, 3));
+		const y: number = Number(event.srcElement.id.substring(1, 2));
+		console.log('vous tentez un mouvement en colonne ' + x);
+
+		this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
+		// we stop showing him the last move
 		const choosedMove = new MoveCoord(x, y);
 		if (this.rules.choose(choosedMove)) {
 			console.log('Et javascript estime que votre mouvement est légal');
@@ -87,11 +92,14 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	updateBoard(): void {
 		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+		const awaleMove: MoveCoord = this.rules.node.getMove() as MoveCoord;
+
 		this.board = awalePartSlice.getCopiedBoard();
 		this.turn = awalePartSlice.turn;
 		this.currentPlayer = this.players[awalePartSlice.turn % 2];
 
 		this.captured = awalePartSlice.getCapturedCopy();
+		this.lastX = awaleMove.coord.x; this.lastY = awaleMove.coord.y;
 	}
 
 }

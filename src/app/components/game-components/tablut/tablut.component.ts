@@ -20,8 +20,8 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new TablutRules();
 
-	// imagesLocation = 'gaviall/pantheonsgame/assets/images/tablut/'; // en prod
-	imagesLocation = 'src/assets/images/tablut/'; // en dev
+	imagesLocation = 'gaviall/pantheonsgame/assets/images/tablut/'; // en prod
+	// imagesLocation = 'src/assets/images/tablut/'; // en dev
 	imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
 
 	choosenX = -1;

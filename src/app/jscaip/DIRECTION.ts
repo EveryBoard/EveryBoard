@@ -43,6 +43,10 @@ export interface XY {
 	readonly y: number;
 }
 
+/* triées dans l'ordre horloger de sorte que DIRECTIONS[i]
+ * soit la direction opposée à DIRECTIONS[i+1]
+ * changer l'ordre affecterait le puissance 4
+ */
 export const DIRECTIONS: ReadonlyArray<DIRECTION> = [
 	{x: -1, y: -1},
 	{x:  0, y: -1},

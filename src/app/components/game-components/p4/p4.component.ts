@@ -20,8 +20,8 @@ export class P4Component extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new P4Rules();
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
-	// imagesLocation = 'src/assets/images/'; // en dev
+	// imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	imagesLocation = 'src/assets/images/'; // en dev
 
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
 
