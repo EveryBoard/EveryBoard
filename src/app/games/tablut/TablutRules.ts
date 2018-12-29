@@ -360,7 +360,7 @@ export class TablutRules extends Rules {
 		return owner;
 	}
 
-	private static getRelativeOwner(player: 0|1, invaderStart: boolean, c: Coord, board: number[][]): number {
+	static getRelativeOwner(player: 0|1, invaderStart: boolean, c: Coord, board: number[][]): number {
 		if (!c.isInRange(TablutRules.WIDTH, TablutRules.WIDTH)) {
 			throw new Error('cannot call getRelativeOwner on Out Of Range Coord' + c);
 		}

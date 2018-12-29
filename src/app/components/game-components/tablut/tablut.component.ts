@@ -20,10 +20,14 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new TablutRules();
 
-	// imagesLocation = 'gaviall/pantheonsgame/assets/images/tablut/'; // en prod
-	imagesLocation = 'src/assets/images/tablut/'; // en dev
+	// imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	imagesLocation = 'src/assets/images/'; // en dev
 	imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
 
+	movingX = -1; // coord of the piece who left
+	movingY = -1;
+	arrivingX = -1; // coord of the piece who arrived
+	arrivingY = -1;
 	choosenX = -1;
 	choosenY = -1;
 
@@ -48,9 +52,13 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 		this.currentPlayer = this.players[tablutPartSlice.turn % 2];
 
 		if (move != null) {
-			this.choosenX = move.coord.x;
-			this.choosenY = move.coord.y;
+			this.movingX = move.coord.x;
+			this.movingY = move.coord.y;
+			this.arrivingX = move.end.x;
+			this.arrivingY = move.end.y;
 		}
+
+		this.cancelMove();
 	}
 
 	suggestMove(choosedMove: MoveCoordToCoordAndCapture): boolean {
@@ -71,14 +79,9 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 		} else {
 			console.log('Mais c\'est un mouvement illegal');
 			result = false;
+			this.cancelMove();
 		}
-		this.unSelectPiece();
 		return result;
-	}
-
-	unSelectPiece() {
-		this.choosenX = -1;
-		this.choosenY = -1;
 	}
 
 	onClick(event: MouseEvent) {
@@ -91,6 +94,9 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 	}
 
 	chooseDestination(event: MouseEvent): boolean {
+		const x: number = Number(event.srcElement.id.substring(2, 3));
+		const y: number = Number(event.srcElement.id.substring(1, 2));
+
 		console.log('chooseDestination');
 		if (!this.isPlayerTurn()) {
 			console.log('ce n\'est pas ton tour!');
@@ -106,13 +112,14 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 		} // TODO : vérifier au moins que la case n'est pas occupée
 		console.log('piece choisie, partie en cours, c\'est ton tour');
 		const choosedPiece: Coord = new Coord(this.choosenX, this.choosenY);
-		const x: number = Number(event.srcElement.id.substring(2, 3));
-		const y: number = Number(event.srcElement.id.substring(1, 2));
 		const choosedDestination: Coord = new Coord(x, y);
 		return this.suggestMove(new MoveCoordToCoordAndCapture(choosedPiece, choosedDestination));
 	}
 
 	choosePiece(event: MouseEvent): boolean {
+		const x: number = Number(event.srcElement.id.substring(2, 3));
+		const y: number = Number(event.srcElement.id.substring(1, 2));
+
 		console.log('choosePiece');
 		if (!this.isPlayerTurn()) {
 			console.log('ce n\'est pas ton tour!');
@@ -123,15 +130,39 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 			console.log('la partie est finie');
 			return false;
 		}
-		const x: number = Number(event.srcElement.id.substring(2, 3));
-		const y: number = Number(event.srcElement.id.substring(1, 2));
-		if (this.board[y][x] !== TablutPartSlice.UNOCCUPIED) {
+		this.hideLastMove(); // now the user tried to choose something
+		// so I guess he don't need to see what's the last move of the opponent
+
+		if (this.pieceBelongToPlayer(x, y)) {
 			this.showSelectedPiece(x, y);
 			console.log('selected piece = (' + x + ', ' + y + ')');
 			return true;
 		}
+		this.cancelMove();
 		console.log('no selected piece');
 		return false;
+	}
+
+	pieceBelongToPlayer(x: number, y: number) {
+		if (this.observerRole > 1) {
+			throw new Error('pieceBelongToPlayer cannot be called by an observer');
+		}
+		const player = this.observerRole === 0 ? 0 : 1;
+		const invaderStart = (this.rules.node.gamePartSlice as TablutPartSlice).invaderStart;
+		const coord: Coord = new Coord(x, y);
+		return TablutRules.getRelativeOwner(player, invaderStart, coord, this.board);
+	}
+
+	hideLastMove() {
+		this.movingX = -1;
+		this.movingY = -1;
+		this.arrivingX = -1;
+		this.arrivingY = -1;
+	}
+
+	cancelMove() {
+		this.choosenX = -1;
+		this.choosenY = -1;
 	}
 
 	showSelectedPiece(x: number, y: number) {
@@ -143,12 +174,15 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	decodeMove(encodedMove: number): MoveCoordToCoordAndCapture {
 		const ay = encodedMove % 16;
-		encodedMove = encodedMove / 16; encodedMove -= encodedMove % 1;
+		encodedMove = encodedMove / 16;
+		encodedMove -= encodedMove % 1;
 		const ax = encodedMove % 16;
 		const arrive: Coord = new Coord(ax, ay);
-		encodedMove = encodedMove / 16; encodedMove -= encodedMove % 1;
+		encodedMove = encodedMove / 16;
+		encodedMove -= encodedMove % 1;
 		const dy = encodedMove % 16;
-		encodedMove = encodedMove / 16; encodedMove -= encodedMove % 1;
+		encodedMove = encodedMove / 16;
+		encodedMove -= encodedMove % 1;
 		const dx = encodedMove % 16;
 		const depart: Coord = new Coord(dx, dy);
 		return new MoveCoordToCoordAndCapture(depart, arrive);
