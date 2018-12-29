@@ -639,9 +639,7 @@ export class TablutRules extends Rules {
 
 		// test
 		const player: 0|1 = turn % 2 === 0 ? 0 : 1;
-		TablutRules.VERBOSE = true; // DEBUG
 		const attemptResult: number = TablutRules.tryMove(player, invaderStart, move, board);
-		TablutRules.VERBOSE = false; // DEBUG
 		if (TablutRules.VERBOSE) {
 			console.log('attemptResult for tablut rules choosing '
 				+ move + ' : ' + attemptResult + ' at turn : ' + turn + ' of player ' + player); }

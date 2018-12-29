@@ -38,6 +38,7 @@
 						 [src]='imagesLocation+imagesNames[case]'/>
 					<img *ngIf="lastX===x"
 						 width="100" height="100"
+						 id="{{'u'+y+x}}"
 						 alt="highlighted"
 						 [src]="imagesLocation+'highlight.svg'"
 						 style="position:absolute; top:0; left:0;"/>

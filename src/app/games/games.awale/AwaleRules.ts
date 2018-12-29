@@ -1,7 +1,6 @@
 import {Rules} from '../../jscaip/Rules';
 import {MNode} from '../../jscaip/MNode';
 import {Move} from '../../jscaip/Move';
-import {MoveX} from '../../jscaip/MoveX';
 import {MoveCoord} from '../../jscaip/MoveCoord';
 import {MoveCoordAndCapture} from '../../jscaip/MoveCoordAndCapture';
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
@@ -9,7 +8,7 @@ import {AwalePartSlice} from './AwalePartSlice';
 
 export class AwaleRules extends Rules {
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	private static mansoon(mansooningPlayer: number, board: number[][]): number {
 		/* capture all the seeds of the mansooning player

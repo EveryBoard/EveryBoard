@@ -31,11 +31,18 @@
 		   (click)="onClick($event);">
 		<tr style="margin:0px; padding:0px;"
 			*ngFor="let line of board.reverse(); index as y;">
-			<td *ngFor="let case of line; index as x; ">
+			<td *ngFor="let case of line; index as x;"
+				style="position:relative;">
 				<img width="100" heigh="100"
 					 id="{{ 't'+(1-y)+x }}"
 					 alt=":{{ case }}:"
-					 src="{{ imagesLocation + case + '.svg'}}" />
+					 src="{{ imagesLocation + 'circled_numbers/' + case + '.svg'}}" />
+				<img *ngIf="lastX === x && lastY === (1-y)"
+					 width="100" heigh="100"
+					 id="{{ 'u'+(1-y)+x }}"
+					 alt=":{{ case }}:"
+					 src="{{ imagesLocation + 'highlight.svg'}}"
+					 style="position:absolute; top:0; left:0;"/>
 			</td>
 		</tr>
 	</table>
@@ -43,11 +50,18 @@
 		   (click)="onClick($event);">
 		<tr style="margin:0px; padding:0px;"
 			*ngFor="let line of board; index as y;">
-			<td *ngFor="let case of line.reverse(); index as x;">
+			<td *ngFor="let case of line.reverse(); index as x;"
+				style="position:relative;">
 				<img width="100" heigh="100"
 					 id="{{ 't'+y+(5-x) }}"
 					 alt=":{{ case }}:"
-					 src="{{ imagesLocation + case + '.svg'}}" />
+					 src="{{ imagesLocation + 'circled_numbers/' + case + '.svg'}}" />
+				<img *ngIf="lastX === x && lastY === (1-y)"
+					 width="100" heigh="100"
+					 id="{{ 'u'+y+(5-x) }}"
+					 alt=":{{ case }}:"
+					 src="{{ imagesLocation + 'highlight.svg'}}"
+					 style="position:absolute; top:0; left:0;"/>
 			</td>
 		</tr>
 	</table>

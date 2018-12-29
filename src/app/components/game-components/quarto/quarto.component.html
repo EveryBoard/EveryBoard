@@ -47,11 +47,17 @@
 							 id="{{'u'+y+x}}"
 							 alt=":{{ case }}:"
 							 [src]='imagesLocation+"quarto/"+[case]+".svg"'/>
+						<img *ngIf="(choosenX===x && choosenY===y)"
+							 width="100" height="100"
+							 id="{{'v'+y+x}}"
+							 alt="piece in hand that you just put on the board"
+							 [src]="imagesLocation+'quarto/'+pieceInHand+'.svg'"
+							 style="position:absolute; top:0; left:0;" />
 					</td>
 				</tr>
 			</table>
 			Pièce en main :
-			<img width="100" height="100"
+			<img *ngIf="choosenX === -1" width="100" height="100"
 				 alt=":{{ pieceInHand }}:"
 				 [src]='imagesLocation+"quarto/"+pieceInHand+".svg"'/>
 		</div>

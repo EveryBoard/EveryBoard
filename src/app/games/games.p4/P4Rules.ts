@@ -9,7 +9,7 @@ import {P4PartSlice} from './P4PartSlice';
 export class P4Rules extends Rules {
 	// statics fields:
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	/* static readonly DIRECTIONS: XY[] = [
 		DIRECTIONS[0],

@@ -1,13 +1,18 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {GameInfoService} from '../../../services/game-info-service';
 import {Router} from '@angular/router';
-import {UserService} from '../../../services/user-service';
+
+import {OnlineGame} from '../OnlineGame';
+
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
-import {OnlineGame} from '../OnlineGame';
-import {AwaleRules} from '../../../games/games.awale/AwaleRules';
+
 import {MoveCoord} from '../../../jscaip/MoveCoord';
+
+import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
+
+import {UserService} from '../../../services/user-service';
+import {GameInfoService} from '../../../services/game-info-service';
 import {JoinerService} from '../../../services/JoinerService';
 
 @Component({
@@ -21,8 +26,8 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	captured: number[] = [0, 0];
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/'; // en prod
-	// imagesLocation = 'src/assets/images/circled_numbers/'; // en dev
+	// imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	imagesLocation = 'src/assets/images/'; // en dev
 
 	lastX = -1;
 	lastY = -1;
@@ -55,7 +60,7 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 
 		const x: number = Number(event.srcElement.id.substring(2, 3));
 		const y: number = Number(event.srcElement.id.substring(1, 2));
-		console.log('vous tentez un mouvement en colonne ' + x);
+		console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
 
 		this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
 		// we stop showing him the last move
