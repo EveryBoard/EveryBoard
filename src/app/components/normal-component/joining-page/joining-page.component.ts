@@ -3,9 +3,10 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {GameInfoService} from '../../../services/game-info-service';
 import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
 import {Router} from '@angular/router';
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 import {PartService} from '../../../services/PartService';
 import {Subscription} from 'rxjs';
+import {environment} from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-joining-page',
@@ -60,26 +61,26 @@ export class JoiningPageComponent implements OnInit, OnDestroy {
 									iJoiner => this.onCurrentJoinerUpdate(iJoiner));
 							} else {
 								console.log('we did not receive partId error');
-								this._route.navigate(['server']);
+								this._route.navigate(['/server']);
 							}
 						});
 					} else {
 						console.log('we did not receive userName error');
-						this._route.navigate(['server']);
+						this._route.navigate(['/server']);
 					}
 				});
 			} else {
 				console.log('we did not receive gameName error');
-				this._route.navigate(['server']);
+				this._route.navigate(['/server']);
 			}
 		});
 	}
 
 	ngOnDestroy() {
-		this.gameNameSub.unsubscribe();
-		this.userSub.unsubscribe();
-		this.partSub.unsubscribe();
-		this.joinerSub.unsubscribe();
+		if (this.gameNameSub && this.gameNameSub.unsubscribe) { this.gameNameSub.unsubscribe(); }
+		if (this.userSub && this.userSub.unsubscribe) { this.userSub.unsubscribe(); }
+		if (this.partSub && this.partSub.unsubscribe) { this.partSub.unsubscribe(); }
+		if (this.joinerSub && this.joinerSub.unsubscribe) { this.joinerSub.unsubscribe(); }
 		console.log('subscriptions cancelled');
 	}
 
@@ -103,7 +104,7 @@ export class JoiningPageComponent implements OnInit, OnDestroy {
 
 	private onGameCancelling() {
 		this.partService.stopObservingPart();
-		this._route.navigate(['server']);
+		this._route.navigate(['/server']);
 	}
 
 	private isGameStarted(iJoinerId: IJoinerId) {
@@ -132,13 +133,13 @@ export class JoiningPageComponent implements OnInit, OnDestroy {
 		// callable only by the creator
 		this.joinerSub.unsubscribe();
 		this.partService.cancelGame().then( onCancel =>
-			this._route.navigate(['server']));
+			this._route.navigate(['/server']));
 	}
 
 	cancelGameJoining() {
 		this.partService.removePlayerFromJoiningPage(this.userName);
 		this.partService.stopObservingPart(); // NEW HERE TODO : mettre dans removePlayerFromJoiningPage
-		this._route.navigate(['server']);
+		this._route.navigate(['/server']);
 	}
 
 	setChosenPlayer(pseudo: string) {

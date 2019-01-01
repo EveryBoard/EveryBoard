@@ -8,7 +8,7 @@ import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
 import {OnlineGame} from '../OnlineGame';
 import {GameInfoService} from '../../../services/game-info-service';
 import {Router} from '@angular/router';
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
 import {JoinerService} from '../../../services/JoinerService';
@@ -23,7 +23,7 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new QuartoRules();
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	imagesLocation = 'assets/images/'; // en prod
 	// imagesLocation = 'src/assets/images/'; // en dev
 
 	choosenX = -1; // the piece clicked by the user

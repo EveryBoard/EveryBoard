@@ -8,7 +8,7 @@ import {RouterModule, Route} from '@angular/router';
 import {AngularFireModule} from 'angularfire2';
 import {AngularFirestoreModule} from 'angularfire2/firestore';
 
-import {UserService} from './services/user-service';
+import {UserService} from './services/UserService';
 import {GameInfoService} from './services/game-info-service';
 
 import {AppComponent} from './app.component';
@@ -30,8 +30,11 @@ import {QuartoComponent} from './components/game-components/quarto/quarto.compon
 import {P4Component} from './components/game-components/p4/p4.component';
 import {AwaleComponent} from './components/game-components/awale/awale.component';
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
+import {QuartoOfflineComponent} from './components/offline-components/quarto-offline/quarto-offline.component';
+import {TablutOfflineComponent} from './components/offline-components/tablut-offline/tablut-offline.component';
 
 const routes: Route [] = [
+	{path: 'login',				component: LoginComponent},
 	{path: 'server',			component: ServerPageComponent},
 	{path: 'statistic',			component: StatisticPageComponent},
 	{path: 'createAccount',		component: CreateAccountComponent},
@@ -45,8 +48,8 @@ const routes: Route [] = [
 	{path: 'AwaleOnline',		component: AwaleComponent},
 	{path: 'TablutOnline',		component: TablutComponent},
 
-	{path: '', redirectTo: 'login-page', pathMatch: 'full'},
-	{path: '**', 'component': LoginComponent}
+	{path: '', redirectTo: 'server', pathMatch: 'full'},
+	{path: '**', 'component': ServerPageComponent}
 ];
 
 @NgModule({
@@ -65,13 +68,15 @@ const routes: Route [] = [
 		QuartoComponent,
 		P4Component,
 		AwaleComponent,
-		TablutComponent
+		TablutComponent,
+		QuartoOfflineComponent,
+		TablutOfflineComponent
 	],
 	imports: [
 		BrowserModule,
 		HttpClientModule,
 		HttpModule,
-		RouterModule.forRoot(routes),
+		RouterModule.forRoot(routes, {useHash: true}),
 		ReactiveFormsModule,
 		FormsModule,
 		AngularFireModule.initializeApp(firebaseConfig),

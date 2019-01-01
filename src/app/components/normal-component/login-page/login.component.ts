@@ -1,9 +1,10 @@
 import {Component, OnInit} from '@angular/core';
 import {Router} from '@angular/router';
 
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {IUser, IUserId, User} from '../../../domain/iuser';
+import {environment} from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-login',
@@ -30,7 +31,7 @@ export class LoginComponent implements OnInit {
 		const guestName: string = this.getUnusedGuestName();
 		this.userService.changeUser(guestName, '');
 		// for now guest don't have document in the db notifying their presence or absence
-		this._route.navigate(['server']);
+		this._route.navigate(['/server']);
 	}
 
 	logAsMember() {
@@ -105,7 +106,7 @@ export class LoginComponent implements OnInit {
 				status: -2 // TODO calculate what that must be
 			});
 		this.userService.changeUser(this.user.pseudo, this.userDocId);
-		this._route.navigate(['server']);
+		this._route.navigate(['/server']);
 	}
 
 	formValid(): boolean {

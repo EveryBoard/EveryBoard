@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 import {Router} from '@angular/router';
+import {environment} from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-header',
@@ -33,6 +34,6 @@ export class HeaderComponent implements OnInit {
 	}
 
 	backToServer() {
-		this._route.navigate(['server']);
+		this._route.navigate(['/server']);
 	}
 }

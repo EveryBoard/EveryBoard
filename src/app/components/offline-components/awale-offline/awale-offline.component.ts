@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
 
 @Component({
@@ -20,7 +20,7 @@ export class AwaleOfflineComponent implements OnInit {
 	captured: number[] = [0, 0];
 	turn = 0;
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/circled_numbers/';
+	imagesLocation = '/assets/images/circled_numbers/';
 
 	constructor(private userService: UserService) {
 	}

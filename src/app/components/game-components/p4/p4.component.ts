@@ -2,7 +2,7 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {OnlineGame} from '../OnlineGame';
 import {GameInfoService} from '../../../services/game-info-service';
 import {Router} from '@angular/router';
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
 import {Move} from '../../../jscaip/Move';
@@ -20,7 +20,7 @@ export class P4Component extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new P4Rules();
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	imagesLocation = 'assets/images/'; // en prod
 	// imagesLocation = 'src/assets/images/'; // en dev
 
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];

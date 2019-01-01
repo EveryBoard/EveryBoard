@@ -7,10 +7,11 @@ import {HeaderComponent} from '../normal-component/header/header.component';
 import {Observable, Subscription} from 'rxjs';
 import {GameInfoService} from '../../services/game-info-service';
 import {Router} from '@angular/router';
-import {UserService} from '../../services/user-service';
+import {UserService} from '../../services/UserService';
 import {UserDAO} from '../../dao/UserDAO';
 import {PartDAO} from '../../dao/PartDAO';
 import {JoinerService} from '../../services/JoinerService';
+import {environment} from '../../../environments/environment';
 
 export abstract class OnlineGame {
 	rules: Rules;
@@ -160,7 +161,7 @@ export abstract class OnlineGame {
 	}
 
 	backToServer() {
-		this._route.navigate(['server']);
+		this._route.navigate(['/server']);
 	}
 
 	resign() {
@@ -224,10 +225,18 @@ export abstract class OnlineGame {
 	}
 
 	onDestroy() {
-		this.gameInfoServiceSubscription.unsubscribe();
-		this.userSubscription.unsubscribe();
-		this.observedPartSubscription.unsubscribe();
-		this.opponentSubscription();
+		if (this.gameInfoServiceSubscription && this.gameInfoServiceSubscription.unsubscribe) {
+			this.gameInfoServiceSubscription.unsubscribe();
+		}
+		if (this.userSubscription && this.userSubscription.unsubscribe) {
+			this.userSubscription.unsubscribe();
+		}
+		if (this.observedPartSubscription && this.observedPartSubscription.unsubscribe) {
+			this.observedPartSubscription.unsubscribe();
+		}
+		if (this.opponentSubscription) {
+			this.opponentSubscription();
+		}
 	}
 
 	abstract updateBoard(): void;

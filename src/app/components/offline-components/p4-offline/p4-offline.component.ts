@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {P4Rules} from '../../../games/games.p4/P4Rules';
 import {MoveX} from '../../../jscaip/MoveX';
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 
 @Component({
 	selector: 'app-p4-offline',
@@ -18,8 +18,8 @@ export class P4OfflineComponent implements OnInit {
 	board: Array<Array<number>>;
 	turn = 0;
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod :
-	// imagesLocation = '/src/assets/images/' ; // en dev
+	// imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod :
+	imagesLocation = '/src/assets/images/' ; // en dev
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
 
 	constructor(private userService: UserService) {}

@@ -11,7 +11,7 @@ import {MoveCoord} from '../../../jscaip/MoveCoord';
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
 
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 import {GameInfoService} from '../../../services/game-info-service';
 import {JoinerService} from '../../../services/JoinerService';
 
@@ -26,7 +26,7 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	captured: number[] = [0, 0];
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	imagesLocation = 'assets/images/'; // en prod
 	// imagesLocation = 'src/assets/images/'; // en dev
 
 	lastX = -1;

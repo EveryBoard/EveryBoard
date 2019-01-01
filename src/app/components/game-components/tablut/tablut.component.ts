@@ -4,7 +4,7 @@ import {MoveCoordToCoordAndCapture} from '../../../jscaip/MoveCoordToCoordAndCap
 import {Coord} from '../../../jscaip/Coord';
 import {GameInfoService} from '../../../services/game-info-service';
 import {Router} from '@angular/router';
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
 import {JoinerService} from '../../../services/JoinerService';
@@ -20,7 +20,7 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	rules = new TablutRules();
 
-	imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod
+	imagesLocation = 'assets/images/'; // en prod';
 	// imagesLocation = 'src/assets/images/'; // en dev
 	imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
 

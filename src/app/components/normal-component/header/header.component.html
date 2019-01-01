@@ -1,5 +1,21 @@
+<!--
 <div style="text-align: center">
 	<a class="page-link" (click)="backToServer()"> Welcome to Pantheon's Game </a>
 	<span *ngIf="userName !== ''"> {{ userName }} </span>
-	<span *ngIf="userName === ''"><a class="page-link" [routerLink]="['/login-page']">connecte toi!</a></span>
+	<span *ngIf="userName === ''"><a class="page-link" [routerLink]="['/login']">connecte toi!</a></span>
 </div>
+-->
+<nav class="navbar navbar-expand navbar-light bg-light">
+	<a class="navbar-brand" (click)="backToServer()"> Welcome to Pantheon's Game </a>
+	<ul class="nav nav-pills">
+		<li>
+			<a class="nav-link" [routerLink]="['/server']"> Voir les parties en cours </a>
+		</li>
+		<li *ngIf="userName !== ''">
+			<a class="nav-link" >{{ userName }} </a>
+		</li>
+		<li *ngIf="userName === ''">
+			<a class="nav-link" [routerLink]="['/login']">Connecte toi!</a>
+		</li>
+	</ul>
+</nav>

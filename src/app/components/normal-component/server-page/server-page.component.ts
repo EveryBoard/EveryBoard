@@ -8,9 +8,10 @@ import {IUser, IUserId} from '../../../domain/iuser';
 import {ICurrentPart, ICurrentPartId} from '../../../domain/icurrentpart';
 
 import {GameInfoService} from '../../../services/game-info-service';
-import {UserService} from '../../../services/user-service';
+import {UserService} from '../../../services/UserService';
 import {IJoiner} from '../../../domain/ijoiner';
 import {PartService} from '../../../services/PartService';
+import {environment} from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-server-page',
@@ -56,7 +57,7 @@ export class ServerPageComponent implements OnInit {
 	joinGame(partId: string, typeGame: string) {
 		this.partService.joinGame(partId, this.userName);
 		this.gameInfoService.changeGame(partId, typeGame);
-		this._route.navigate(['joiningPage']);
+		this._route.navigate(['/joiningPage']);
 	}
 
 	playLocally() {
@@ -92,10 +93,10 @@ export class ServerPageComponent implements OnInit {
 					this.afs.collection('joiners').doc(docRef.id)
 						.set(newJoiner);
 					this.gameInfoService.changeGame(docRef.id, this.selectedGame);
-					this._route.navigate(['joiningPage']);
+					this._route.navigate(['/joiningPage']);
 				}); */ // old
 			this.partService.createGame(this.userName, this.selectedGame).then(oncreated => {
-				this._route.navigate(['joiningPage']);
+				this._route.navigate(['/joiningPage']);
 			});
 		}
 	}

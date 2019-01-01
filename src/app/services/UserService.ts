@@ -8,8 +8,8 @@ import {IUser, IUserId} from '../domain/iuser';
 })
 export class UserService {
 	// TODO : token en sessionStorage, voir martiastrid
-	private userName = new BehaviorSubject('');
-	private userDocId = new BehaviorSubject('');
+	private userName = this.getUserName();
+	private userDocId = new BehaviorSubject<string>('');
 	private activeUsers = new BehaviorSubject<IUserId[]>([]);
 
 	currentUsernameObservable = this.userName.asObservable();
@@ -19,7 +19,9 @@ export class UserService {
 	constructor(private userDAO: UserDAO) {}
 
 	changeUser(username: string, userDocId: string) {
+		// sessionStorage.setItem('userName', username);
 		this.userName.next(username);
+
 		this.userDocId.next(userDocId);
 	}
 
@@ -44,4 +46,13 @@ export class UserService {
 			});
 	}
 
+	getUserName(): BehaviorSubject<string> {
+		// let currentValue: string = sessionStorage.getItem('userName');
+		// if (currentValue == null) {
+		// 	currentValue = '';
+		// }
+		// console.log('that is what we received from session storage : [' + currentValue + ']');
+		// return new BehaviorSubject<string>(currentValue);
+		return new BehaviorSubject<string>('');
+	}
 }
