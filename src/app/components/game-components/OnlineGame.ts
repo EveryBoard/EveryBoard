@@ -1,17 +1,22 @@
-import {Rules} from '../../jscaip/Rules';
-import {Move} from '../../jscaip/Move';
-import {ICurrentPart} from '../../domain/icurrentpart';
-import {AngularFirestoreDocument, DocumentReference, QuerySnapshot} from 'angularfire2/firestore';
-import {IUser, IUserId} from '../../domain/iuser';
-import {HeaderComponent} from '../normal-component/header/header.component';
-import {Observable, Subscription} from 'rxjs';
-import {GameInfoService} from '../../services/game-info-service';
 import {Router} from '@angular/router';
-import {UserService} from '../../services/UserService';
+
+import {AngularFirestoreDocument, DocumentReference, QuerySnapshot} from 'angularfire2/firestore';
+import {Observable, Subscription} from 'rxjs';
+
+import {HeaderComponent} from '../normal-component/header/header.component';
+
 import {UserDAO} from '../../dao/UserDAO';
 import {PartDAO} from '../../dao/PartDAO';
+
+import {ICurrentPart} from '../../domain/icurrentpart';
+import {IUser, IUserId} from '../../domain/iuser';
+
+import {Rules} from '../../jscaip/Rules';
+import {Move} from '../../jscaip/Move';
+
+import {GameInfoService} from '../../services/game-info-service';
+import {UserService} from '../../services/UserService';
 import {JoinerService} from '../../services/JoinerService';
-import {environment} from '../../../environments/environment';
 
 export abstract class OnlineGame {
 	rules: Rules;
@@ -33,18 +38,18 @@ export abstract class OnlineGame {
 	allowedTimeoutVictory = false;
 	timeout = 60;
 
-	private gameInfoServiceSubscription: Subscription;
-	private userSubscription: Subscription;
-	private observedPartSubscription: Subscription;
-	private opponentSubscription: () => void;
+	protected gameInfoServiceSubscription: Subscription;
+	protected userSubscription: Subscription;
+	protected observedPartSubscription: Subscription;
+	protected opponentSubscription: () => void;
 
 	constructor(
 		private gameInfoService: GameInfoService,
-		private _route: Router,
-		private userService: UserService,
-		private userDao: UserDAO,
-		private partDao: PartDAO,
-		private joinerService: JoinerService) {} // TODO un component n'appelle pas un DAO !!
+		protected _route: Router,
+		protected userService: UserService,
+		protected userDao: UserDAO,
+		protected partDao: PartDAO,
+		protected joinerService: JoinerService) {} // TODO un component n'appelle pas un DAO !!
 
 	onInit() {
 		// should be some kind of session-scope

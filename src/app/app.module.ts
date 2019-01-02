@@ -32,6 +32,7 @@ import {AwaleComponent} from './components/game-components/awale/awale.component
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
 import {QuartoOfflineComponent} from './components/offline-components/quarto-offline/quarto-offline.component';
 import {TablutOfflineComponent} from './components/offline-components/tablut-offline/tablut-offline.component';
+import { P4GameComponent } from './components/game-components/p4-game/p4-game.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -43,10 +44,12 @@ const routes: Route [] = [
 	{path: 'P4Offline',			component: P4OfflineComponent},
 	{path: 'AwaleOffline',		component: AwaleOfflineComponent},
 
-	{path: 'QuartoOnline',		component: QuartoComponent},
 	{path: 'P4Online',			component: P4Component},
+	{path: 'QuartoOnline',		component: QuartoComponent},
 	{path: 'AwaleOnline',		component: AwaleComponent},
 	{path: 'TablutOnline',		component: TablutComponent},
+
+	{path: 'P4/:id',			component: P4GameComponent},
 
 	{path: '', redirectTo: 'server', pathMatch: 'full'},
 	{path: '**', 'component': ServerPageComponent}
@@ -70,7 +73,8 @@ const routes: Route [] = [
 		AwaleComponent,
 		TablutComponent,
 		QuartoOfflineComponent,
-		TablutOfflineComponent
+		TablutOfflineComponent,
+		P4GameComponent
 	],
 	imports: [
 		BrowserModule,
