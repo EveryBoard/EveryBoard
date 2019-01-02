@@ -1,15 +1,16 @@
-import { Component, OnInit } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
-  selector: 'app-quarto-offline',
-  templateUrl: './quarto-offline.component.html',
-  styleUrls: ['./quarto-offline.component.css']
+	selector: 'app-quarto-offline',
+	templateUrl: './quarto-offline.component.html',
+	styleUrls: ['./quarto-offline.component.css']
 })
 export class QuartoOfflineComponent implements OnInit {
 
-  constructor() { }
+	constructor() {
+	}
 
-  ngOnInit() {
-  }
+	ngOnInit() {
+	}
 
 }

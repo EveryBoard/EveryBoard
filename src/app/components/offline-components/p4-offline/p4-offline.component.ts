@@ -18,8 +18,8 @@ export class P4OfflineComponent implements OnInit {
 	board: Array<Array<number>>;
 	turn = 0;
 
-	// imagesLocation = 'gaviall/pantheonsgame/assets/images/'; // en prod :
-	imagesLocation = '/src/assets/images/' ; // en dev
+	imagesLocation = 'assets/images/'; // en prod :
+	// imagesLocation = '/src/assets/images/' ; // en dev
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
 
 	constructor(private userService: UserService) {}

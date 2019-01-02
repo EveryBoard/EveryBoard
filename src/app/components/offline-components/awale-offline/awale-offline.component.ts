@@ -20,7 +20,7 @@ export class AwaleOfflineComponent implements OnInit {
 	captured: number[] = [0, 0];
 	turn = 0;
 
-	imagesLocation = '/assets/images/circled_numbers/';
+	imagesLocation = 'assets/images/circled_numbers/';
 
 	constructor(private userService: UserService) {
 	}
