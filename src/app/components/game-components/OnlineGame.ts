@@ -1,4 +1,4 @@
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {AngularFirestoreDocument, DocumentReference, QuerySnapshot} from 'angularfire2/firestore';
 import {Observable, Subscription} from 'rxjs';
@@ -14,7 +14,6 @@ import {IUser, IUserId} from '../../domain/iuser';
 import {Rules} from '../../jscaip/Rules';
 import {Move} from '../../jscaip/Move';
 
-import {GameInfoService} from '../../services/game-info-service';
 import {UserService} from '../../services/UserService';
 import {JoinerService} from '../../services/JoinerService';
 
@@ -30,7 +29,7 @@ export abstract class OnlineGame {
 
 	partId: string;
 	userName: string;
-	turn = 0;
+	turn = -1;
 	endGame = false;
 	winner = '';
 	opponent: IUserId = null;
@@ -38,24 +37,21 @@ export abstract class OnlineGame {
 	allowedTimeoutVictory = false;
 	timeout = 60;
 
-	protected gameInfoServiceSubscription: Subscription;
 	protected userSubscription: Subscription;
 	protected observedPartSubscription: Subscription;
 	protected opponentSubscription: () => void;
 
 	constructor(
-		private gameInfoService: GameInfoService,
-		protected _route: Router,
-		protected userService: UserService,
-		protected userDao: UserDAO,
-		protected partDao: PartDAO,
-		protected joinerService: JoinerService) {} // TODO un component n'appelle pas un DAO !!
+		private _route: Router,
+		private actRoute: ActivatedRoute,
+		private userService: UserService,
+		private userDao: UserDAO,
+		private partDao: PartDAO,
+		private joinerService: JoinerService) {} // TODO un component n'appelle pas un DAO !!
 
 	onInit() {
+		this.partId = this.actRoute.snapshot.paramMap.get('id');
 		// should be some kind of session-scope
-		this.gameInfoServiceSubscription =
-			this.gameInfoService.currentPartId.subscribe(partId =>
-				this.partId = partId); // delivery
 		this.userSubscription =
 			this.userService.currentUsernameObservable.subscribe(userName =>
 				this.userName = userName); // delivery
@@ -230,9 +226,6 @@ export abstract class OnlineGame {
 	}
 
 	onDestroy() {
-		if (this.gameInfoServiceSubscription && this.gameInfoServiceSubscription.unsubscribe) {
-			this.gameInfoServiceSubscription.unsubscribe();
-		}
 		if (this.userSubscription && this.userSubscription.unsubscribe) {
 			this.userSubscription.unsubscribe();
 		}

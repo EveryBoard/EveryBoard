@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 
 import {OnlineGame} from '../OnlineGame';
 
@@ -32,9 +32,10 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 	lastX = -1;
 	lastY = -1;
 
-	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService, joinerService: JoinerService,
+	constructor(_route: Router, actRoute: ActivatedRoute,
+				userService: UserService, joinerService: JoinerService,
 				userDao: UserDAO, partDao: PartDAO) {
-		super(gameInfoService, _route, userService, userDao, partDao, joinerService);
+		super(_route, actRoute, userService, userDao, partDao, joinerService);
 	}
 
 	ngOnInit() {

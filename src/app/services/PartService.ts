@@ -29,6 +29,7 @@ export class PartService {
 	}
 
 	createGame(creatorName: string, typeGame: string): Promise<void> {
+		console.log('PartService.createGame');
 		const newPart: ICurrentPart = {
 			historic: 'pas implémenté',
 			listMoves: [],
@@ -60,6 +61,7 @@ export class PartService {
 	}
 
 	joinGame(partId: string, userName: string) {
+		console.log('PartService.joinGame');
 		const partRef = this.afs.doc('parties/' + partId).ref;
 		const joinerRef = this.afs.doc('joiners/' + partId).ref;
 		partRef.get()

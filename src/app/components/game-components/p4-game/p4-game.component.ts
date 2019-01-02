@@ -27,37 +27,13 @@ export class P4GameComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	lastX: number;
 
-	constructor(gameInfoService: GameInfoService,	_route: Router,
-				userService: UserService,			userDao: UserDAO,
-				partDao: PartDAO, joinerService: JoinerService, private actRoute: ActivatedRoute) {
-		super(gameInfoService, _route, userService, userDao, partDao, joinerService);
+	constructor(_route: Router, userService: UserService, userDao: UserDAO,
+				partDao: PartDAO, joinerService: JoinerService, actRoute: ActivatedRoute) {
+		super(_route, actRoute, userService, userDao, partDao, joinerService);
 	}
 
 	ngOnInit() {
-		// should be some kind of session-scope
-		this.partId = this.actRoute.snapshot.paramMap.get('id');
-		this.userSubscription =
-			this.userService.currentUsernameObservable.subscribe(userName =>
-				this.userName = userName); // delivery
-
-		this.rules.setInitialBoard();
-		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
-
-		this.observedPart = this.partDao.getPartObservableById(this.partId);
-		if (this.observedPart == null) {
-			console.log('pas trouvé la partie ' + this.partId);
-			this._route.navigate(['cacadlabite']);
-		}
-		this.joinerService.getJoinerByPartId(this.partId)
-			.then( iJoiner => {
-				this.timeout = iJoiner.timeoutMinimalDuration;
-				console.log('le timout est fixé à ' + this.timeout);
-			}).catch( fail => console.log('there was a problem trying to get iJoiner timeout'));
-		this.observedPartSubscription =
-			this.observedPart.subscribe(updatedICurrentPart =>
-				this.onCurrentPartUpdate(updatedICurrentPart));
-
-		this.partDocument = this.partDao.getPartDocById(this.partId);
+		this.onInit();
 	}
 
 	ngOnDestroy() {

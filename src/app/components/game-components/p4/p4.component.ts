@@ -1,7 +1,7 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import {OnlineGame} from '../OnlineGame';
 import {GameInfoService} from '../../../services/game-info-service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
@@ -27,10 +27,10 @@ export class P4Component extends OnlineGame implements OnInit, OnDestroy {
 
 	lastX: number;
 
-	constructor(gameInfoService: GameInfoService,	_route: Router,
+	constructor(_route: Router, actRoute: ActivatedRoute,
 				userService: UserService,			userDao: UserDAO,
 				partDao: PartDAO, joinerService: JoinerService) {
-		super(gameInfoService, _route, userService, userDao, partDao, joinerService);
+		super(_route, actRoute, userService, userDao, partDao, joinerService);
 	}
 
 	ngOnInit() {

@@ -7,7 +7,7 @@ import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
 import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
 import {OnlineGame} from '../OnlineGame';
 import {GameInfoService} from '../../../services/game-info-service';
-import {Router} from '@angular/router';
+import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
@@ -33,9 +33,9 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 	pieceInHand = 0; // the piece that the current user must place on the board
 	pieceToGive = -1; // the piece that the user want to give to the opponent
 
-	constructor(gameInfoService: GameInfoService, _route: Router, userService: UserService,
+	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
 				userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService) {
-		super(gameInfoService, _route, userService, userDao, partDao, joinerService);
+		super(_route, actRoute, userService, userDao, partDao, joinerService);
 	}
 
 	ngOnInit() {

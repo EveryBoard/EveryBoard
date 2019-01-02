@@ -34,17 +34,6 @@ export class ServerPageComponent implements OnInit {
 	ngOnInit() {
 		this.userService.currentUsernameObservable.subscribe(message =>
 			this.userName = message);
-		/* this.afs.collection('parties').ref
-			.where('result', '==', 5) // TODO : afs se fait appeler par les DAO !
-			.onSnapshot( (querySnapshot) => {
-				const tmpPartIds: ICurrentPartId[] = [];
-				querySnapshot.forEach(doc => {
-					const data = doc.data() as ICurrentPart;
-					const id = doc.id;
-					tmpPartIds.push({id: id, part: data});
-				});
-				this.partIds = tmpPartIds;
-			}); */ // OLD
 		this.partService.observeAllActivePart();
 		this.partService.currentActivePartObservable.subscribe(
 			currentActivePart => this.partIds = currentActivePart);
@@ -57,7 +46,7 @@ export class ServerPageComponent implements OnInit {
 	joinGame(partId: string, typeGame: string) {
 		this.partService.joinGame(partId, this.userName);
 		this.gameInfoService.changeGame(partId, typeGame);
-		this._route.navigate(['/joiningPage']);
+		this._route.navigate(['/' + typeGame, partId]);
 	}
 
 	playLocally() {
@@ -66,35 +55,6 @@ export class ServerPageComponent implements OnInit {
 
 	createGame() {
 		if (this.canCreateGame()) {
-			/* const newPart: ICurrentPart = {
-				historic: 'pas implémenté',
-				listMoves: [],
-				playerZero: this.userName, // TODO: supprimer, il n'y a pas de createur par défaut
-				playerOne: '',
-				result: 5, // todo : constantiser ça, bordel
-				scorePlayerZero: 'pas implémenté',
-				scorePlayerOne: 'pas implémenté',
-				turn: -1,
-				typeGame: this.selectedGame,
-				typePart: 'pas implémenté',
-				winner: ''
-			};
-			this.afs.collection('parties')
-				.add(newPart)
-				.then(docRef => {
-					const newJoiner: IJoiner = {
-						candidatesNames: [],
-						creator: this.userName,
-						chosenPlayer: '',
-						timeoutMinimalDuration: 60,
-						firstPlayer: '0', // par défaut: le créateur
-						partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
-					};
-					this.afs.collection('joiners').doc(docRef.id)
-						.set(newJoiner);
-					this.gameInfoService.changeGame(docRef.id, this.selectedGame);
-					this._route.navigate(['/joiningPage']);
-				}); */ // old
 			this.partService.createGame(this.userName, this.selectedGame).then(oncreated => {
 				this._route.navigate(['/joiningPage']);
 			});
