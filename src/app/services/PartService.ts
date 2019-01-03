@@ -57,6 +57,7 @@ export class PartService {
 				this.afs.collection('joiners').doc(docRef.id)
 					.set(newJoiner);
 				this.gameInfoService.changeGame(docRef.id, typeGame);
+				this.startObservingPart(docRef.id);
 			});
 	}
 

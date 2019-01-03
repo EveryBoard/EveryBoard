@@ -1,4 +1,11 @@
-<div class="container" style="position: relative; align-content: center;">
+<app-part-creation *ngIf="gameStarted === false"
+				   [partId]="partId"
+				   (gameStartNotification)="startGame()">
+</app-part-creation>
+
+<div *ngIf="gameStarted === true"
+	 class="container"
+	 style="position: relative; align-content: center;">
 
 	<div id="info">
 		<div *ngIf="opponent && observerRole <2">

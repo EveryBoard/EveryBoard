@@ -29,6 +29,7 @@ export abstract class OnlineGame {
 
 	partId: string;
 	userName: string;
+	gameStarted = false;
 	turn = -1;
 	endGame = false;
 	winner = '';
@@ -50,6 +51,7 @@ export abstract class OnlineGame {
 		private joinerService: JoinerService) {} // TODO un component n'appelle pas un DAO !!
 
 	onInit() {
+		console.log('OnlineGame initializing');
 		this.partId = this.actRoute.snapshot.paramMap.get('id');
 		// should be some kind of session-scope
 		this.userSubscription =
@@ -71,6 +73,11 @@ export abstract class OnlineGame {
 
 		this.partDocument = this.partDao.getPartDocById(this.partId);
 
+	}
+
+	startGame() {
+		console.log('OnlineGame.startGame !');
+		this.gameStarted = true;
 	}
 
 	onCurrentPartUpdate(updatedICurrentPart: ICurrentPart) {

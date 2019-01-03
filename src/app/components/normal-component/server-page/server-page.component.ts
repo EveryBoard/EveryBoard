@@ -56,7 +56,7 @@ export class ServerPageComponent implements OnInit {
 	createGame() {
 		if (this.canCreateGame()) {
 			this.partService.createGame(this.userName, this.selectedGame).then(oncreated => {
-				this._route.navigate(['/joiningPage']);
+				this._route.navigate(['/' + this.selectedGame, this.partService.getPartId()]);
 			});
 		}
 	}

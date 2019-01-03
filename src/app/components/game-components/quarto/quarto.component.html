@@ -1,4 +1,9 @@
-<div>
+<app-part-creation *ngIf="gameStarted === false"
+				   [partId]="partId"
+				   (gameStartNotification)="startGame()">
+</app-part-creation>
+
+<div *ngIf="gameStarted === true">
 
 	<div id="info" style="align-content: center; text-align: center">
 		<div *ngIf="opponent && observerRole <2">

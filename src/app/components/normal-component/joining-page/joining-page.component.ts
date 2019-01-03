@@ -112,7 +112,7 @@ export class JoiningPageComponent implements OnInit, OnDestroy {
 	}
 
 	private onGameStarted() {
-		this._route.navigate([this.gameName + 'Online']);
+		this._route.navigate(['/' + this.gameName, this.partId]);
 	}
 
 	private updateJoiner(iJoinerId: IJoinerId) {

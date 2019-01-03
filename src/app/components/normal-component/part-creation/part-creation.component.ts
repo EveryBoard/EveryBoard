@@ -1,4 +1,4 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
 import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
@@ -13,6 +13,7 @@ import {PartService} from '../../../services/PartService';
 export class PartCreationComponent implements OnInit, OnDestroy {
 
 	@Input() partId: string;
+	@Output() gameStartNotification: EventEmitter<void> = new EventEmitter<void>();
 
 	currentJoiner: IJoiner = null;
 	// OLD gameName: string;
@@ -80,8 +81,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		}
 		if (this.isGameStarted(iJoinerId)) {
 			console.log('the game has started');
-			// return this.onGameStarted(); OLD
-			return; // new
+			return this.onGameStarted();
 		}
 		console.log('game update');
 		// here game is nor cancelled nor started, no reason to redirect anything
@@ -101,9 +101,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		return iJoinerId && iJoinerId.joiner && (iJoinerId.joiner.partStatus === 3);
 	}
 
-	/* OLD private onGameStarted() {
-		this._route.navigate([this.gameName + 'Online']);
-	} */
+	private onGameStarted() {
+		this.gameStartNotification.emit();
+	}
 
 	private updateJoiner(iJoinerId: IJoinerId) {
 		this.userIsCreator = (this.userName === iJoinerId.joiner.creator);

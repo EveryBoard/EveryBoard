@@ -48,7 +48,7 @@ const routes: Route [] = [
 	{path: 'Quarto/:id',		component: QuartoComponent},
 	{path: 'Awale/:id',			component: AwaleComponent},
 	{path: 'Tablut/:id',		component: TablutComponent},
-	{path: 'P4/:id',			component: P4GameComponent},
+	{path: 'P4/:id',			component: P4Component},
 
 	{path: '', redirectTo: 'server', pathMatch: 'full'},
 	{path: '**', 'component': ServerPageComponent}
