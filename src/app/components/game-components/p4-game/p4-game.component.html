@@ -1,8 +1,9 @@
-<app-part-creation *ngIf="turn<0"
-				   [partId]="partId">
+<app-part-creation *ngIf="gameStarted === false"
+				   [partId]="partId"
+				   (gameStartNotification)="startGame()">
 </app-part-creation>
-DEBUGTURN : {{ turn }}
-<div *ngIf="turn >= 0">
+
+<div *ngIf="gameStarted === true">
 
 	<div id="info">
 		<div *ngIf="opponent && observerRole <2">

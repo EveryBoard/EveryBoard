@@ -3,7 +3,7 @@ import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
-import {PartService} from '../../../services/PartService';
+import {GameService} from '../../../services/game.service';
 
 @Component({
 	selector: 'app-part-creation',
@@ -36,10 +36,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
 	constructor(private _route: Router,
 				private userService: UserService,
-				private partService: PartService) {
+				private partService: GameService) {
 	}
 
 	ngOnInit() {
+		console.log('PartCreationComponent ngOnInit');
 		this.userSub = this.userService.currentUsernameObservable.subscribe(userName => {
 			console.log('user name received : ' + userName);
 			this.userName = userName;
@@ -47,7 +48,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 				console.log('part id received by mother-component: ' + this.partId);
 				if (this.partId !== '') {
 					console.log('joining COMPO initialisation start observing part ' + this.partId);
-					this.partService.startObservingPart(this.partId);
+					this.partService.startObservingPart(this.partId); // // TODO : SUPERFLU  ???
 					this.joinerSub = this.partService.getJoinerIdObservable().subscribe(
 						iJoiner => this.onCurrentJoinerUpdate(iJoiner));
 				} else {
@@ -71,7 +72,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		if (this.joinerSub && this.joinerSub.unsubscribe) {
 			this.joinerSub.unsubscribe();
 		}
-		console.log('subscriptions cancelled');
+		console.log('PartCreation ngOnDestroy : subscriptions cancelled');
 	}
 
 	private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
@@ -103,6 +104,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
 	private onGameStarted() {
 		this.gameStartNotification.emit();
+		// this.ngOnDestroy();
 	}
 
 	private updateJoiner(iJoinerId: IJoinerId) {

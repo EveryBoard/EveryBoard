@@ -13,13 +13,14 @@ import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
 import {JoinerService} from '../../../services/JoinerService';
 import {MoveX} from '../../../jscaip/MoveX';
+import {GameService} from '../../../services/game.service';
 
 @Component({
 	selector: 'app-quarto',
 	templateUrl: './quarto.component.html',
 	styleUrls: ['./quarto.component.css']
 })
-export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
+export class QuartoComponent extends OnlineGame implements OnDestroy {
 
 	rules = new QuartoRules();
 
@@ -34,16 +35,8 @@ export class QuartoComponent extends OnlineGame implements OnInit, OnDestroy {
 	pieceToGive = -1; // the piece that the user want to give to the opponent
 
 	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
-				userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService) {
-		super(_route, actRoute, userService, userDao, partDao, joinerService);
-	}
-
-	ngOnInit() {
-		this.onInit();
-	}
-
-	ngOnDestroy() {
-		this.onDestroy();
+				userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, userDao, partDao, joinerService, partService);
 	}
 
 	decodeMove(encodedMove: number): Move {

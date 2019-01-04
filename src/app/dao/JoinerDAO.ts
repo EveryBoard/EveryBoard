@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
 import {IJoiner, IJoinerId} from '../domain/ijoiner';
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreDocument} from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
 import {map} from 'rxjs/operators';
 
 @Injectable({
@@ -20,7 +20,18 @@ export class JoinerDAO {
 			}));
 	}
 
-	getJoinerDocById(joinerId: string): AngularFirestoreDocument<IJoiner> {
+	getJoinerDocById(joinerId: string): AngularFirestoreDocument<IJoiner> { // TODO: AFD belong to DAO's scope
 		return this.afs.doc('joiners/' + joinerId);
 	}
+
+	set(id: string, joiner: IJoiner): Promise<void> {
+		return this.afs
+			.collection('joiners')
+			.doc(id).set(joiner);
+	}
+
+	getJoinerDocRefById(id: string): DocumentReference {
+		return this.afs.doc('joiners/' + id).ref;
+	}
+
 }

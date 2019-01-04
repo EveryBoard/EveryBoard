@@ -9,13 +9,14 @@ import {PartDAO} from '../../../dao/PartDAO';
 import {JoinerService} from '../../../services/JoinerService';
 import {TablutRules} from '../../../games/tablut/TablutRules';
 import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
+import {GameService} from '../../../services/game.service';
 
 @Component({
 	selector: 'app-tablut',
 	templateUrl: './tablut.component.html',
 	styleUrls: ['./tablut.component.css']
 })
-export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
+export class TablutComponent extends OnlineGame {
 
 	rules = new TablutRules();
 
@@ -31,16 +32,8 @@ export class TablutComponent extends OnlineGame implements OnInit, OnDestroy {
 	choosenY = -1;
 
 	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
-				userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService) {
-		super(_route, actRoute, userService, userDao, partDao, joinerService);
-	}
-
-	ngOnInit() {
-		this.onInit();
-	}
-
-	ngOnDestroy() {
-		this.onDestroy();
+				userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, userDao, partDao, joinerService, partService);
 	}
 
 	updateBoard() {

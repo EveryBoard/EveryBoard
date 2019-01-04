@@ -10,13 +10,14 @@ import {MoveX} from '../../../jscaip/MoveX';
 import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
 import {P4Rules} from '../../../games/games.p4/P4Rules';
 import {JoinerService} from '../../../services/JoinerService';
+import {GameService} from '../../../services/game.service';
 
 @Component({
 	selector: 'app-p4',
 	templateUrl: './p4.component.html',
 	styleUrls: ['./p4.component.css']
 })
-export class P4Component extends OnlineGame implements OnInit, OnDestroy {
+export class P4Component extends OnlineGame {
 
 	rules = new P4Rules();
 
@@ -29,16 +30,8 @@ export class P4Component extends OnlineGame implements OnInit, OnDestroy {
 
 	constructor(_route: Router, actRoute: ActivatedRoute,
 				userService: UserService,			userDao: UserDAO,
-				partDao: PartDAO, joinerService: JoinerService) {
-		super(_route, actRoute, userService, userDao, partDao, joinerService);
-	}
-
-	ngOnInit() {
-		this.onInit();
-	}
-
-	ngOnDestroy() {
-		this.onDestroy();
+				partDao: PartDAO, joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, userDao, partDao, joinerService, partService);
 	}
 
 	decodeMove(encodedMove: number): Move {

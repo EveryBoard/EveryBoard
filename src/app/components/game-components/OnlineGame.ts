@@ -16,8 +16,10 @@ import {Move} from '../../jscaip/Move';
 
 import {UserService} from '../../services/UserService';
 import {JoinerService} from '../../services/JoinerService';
+import {OnDestroy, OnInit} from '@angular/core';
+import {GameService} from '../../services/game.service';
 
-export abstract class OnlineGame {
+export abstract class OnlineGame implements OnInit, OnDestroy {
 	rules: Rules;
 
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
@@ -48,11 +50,17 @@ export abstract class OnlineGame {
 		private userService: UserService,
 		private userDao: UserDAO,
 		private partDao: PartDAO,
-		private joinerService: JoinerService) {} // TODO un component n'appelle pas un DAO !!
+		private joinerService: JoinerService,
+		private partService: GameService) {} // TODO un component n'appelle pas un DAO !!
 
-	onInit() {
-		console.log('OnlineGame initializing');
+	ngOnInit() {
+		console.log('OnlineGame ngOnInit');
 		this.partId = this.actRoute.snapshot.paramMap.get('id');
+	}
+
+	startGame() {
+		console.log('OnlineGame.startGame !');
+		this.gameStarted = true;
 		// should be some kind of session-scope
 		this.userSubscription =
 			this.userService.currentUsernameObservable.subscribe(userName =>
@@ -71,13 +79,7 @@ export abstract class OnlineGame {
 			this.observedPart.subscribe(updatedICurrentPart =>
 				this.onCurrentPartUpdate(updatedICurrentPart));
 
-		this.partDocument = this.partDao.getPartDocById(this.partId);
-
-	}
-
-	startGame() {
-		console.log('OnlineGame.startGame !');
-		this.gameStarted = true;
+		this.partDocument = this.partDao.getPartAFDocById(this.partId);
 	}
 
 	onCurrentPartUpdate(updatedICurrentPart: ICurrentPart) {
@@ -232,7 +234,7 @@ export abstract class OnlineGame {
 			.catch(error => console.log(error));
 	}
 
-	onDestroy() {
+	ngOnDestroy() {
 		if (this.userSubscription && this.userSubscription.unsubscribe) {
 			this.userSubscription.unsubscribe();
 		}
@@ -242,6 +244,8 @@ export abstract class OnlineGame {
 		if (this.opponentSubscription) {
 			this.opponentSubscription();
 		}
+		this.partService.stopObservingPart();
+		console.log('OnlineGame.onDestroy');
 	}
 
 	abstract updateBoard(): void;

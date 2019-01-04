@@ -4,7 +4,7 @@ import {GameInfoService} from '../../../services/game-info-service';
 import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
 import {Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
-import {PartService} from '../../../services/PartService';
+import {GameService} from '../../../services/game.service';
 import {Subscription} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 
@@ -39,10 +39,11 @@ export class JoiningPageComponent implements OnInit, OnDestroy {
 	constructor(private _route: Router,
 				private gameInfoService: GameInfoService,
 				private userService: UserService,
-				private partService: PartService) {
+				private partService: GameService) {
 	}
 
 	ngOnInit() {
+		alert('deprecated as fuck just leave it !!!! NO JOINING PAGE');
 		this.gameNameSub = this.gameInfoService.currentGameName.subscribe(gameName => {
 			console.log('game name received : ' + gameName);
 			this.gameName = gameName;

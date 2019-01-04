@@ -16,12 +16,18 @@ export class JoinerService {
 	constructor(private joinerDao: JoinerDAO) {}
 
 	startObservingJoiner(docId: string) {
-		if (this.followedJoinerDoc != null) {
-			this.stopObservingPart();
+		if (this.followedJoinerDoc == null) {
+			console.log('[start watching joiner ' + docId);
+			this.followedJoinerId = docId;
+			this.followedJoinerDoc = this.joinerDao.getJoinerDocById(docId);
+			this.followedJoinerObservable = this.joinerDao.getJoinerIdObservableById(docId);
+		} else if (docId === this.followedJoinerId) {
+			console.log('already observing this part (' + docId + ')');
+		} else {
+			alert('we were already observing ' + this.followedJoinerId + ' then you ask to watch' + docId + 'you are gross (no I\'m bugged)');
+			this.stopObservingJoiner();
+			this.startObservingJoiner(docId);
 		}
-		this.followedJoinerId = docId;
-		this.followedJoinerDoc = this.joinerDao.getJoinerDocById(docId);
-		this.followedJoinerObservable = this.joinerDao.getJoinerIdObservableById(docId);
 	}
 
 	getJoinerIdObservable(): Observable<IJoinerId> {
@@ -54,7 +60,7 @@ export class JoinerService {
 
 	cancelGame(): Promise<void> {
 		return this.followedJoinerDoc.delete().then(
-			onfullfilled => this.stopObservingPart());
+			onfullfilled => this.stopObservingJoiner());
 	}
 
 	setChosenPlayer(chosenPlayersPseudo: string): Promise<void> {
@@ -100,10 +106,21 @@ export class JoinerService {
 		});
 	}
 
-	stopObservingPart() {
-		this.followedJoinerId = null;
-		this.followedJoinerDoc = null;
-		this.followedJoinerObservable = null;
+	stopObservingJoiner() {
+		if (this.followedJoinerId == null) {
+			console.log('we already stop watching doc');
+		} else {
+			console.log('stopped watching joiner ' + this.followedJoinerId + ']');
+			this.followedJoinerId = null;
+			this.followedJoinerDoc = null;
+			this.followedJoinerObservable = null;
+		}
+	}
+
+	// DELEGATE
+
+	set(id: string, joiner: IJoiner): Promise<void> {
+		return this.joinerDao.set(id, joiner);
 	}
 
 }

@@ -14,13 +14,14 @@ import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
 import {UserService} from '../../../services/UserService';
 import {GameInfoService} from '../../../services/game-info-service';
 import {JoinerService} from '../../../services/JoinerService';
+import {GameService} from '../../../services/game.service';
 
 @Component({
 	selector: 'app-awale',
 	templateUrl: './awale.component.html',
 	styleUrls: ['./awale.component.css']
 })
-export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
+export class AwaleComponent extends OnlineGame {
 
 	rules = new AwaleRules();
 
@@ -34,16 +35,8 @@ export class AwaleComponent extends OnlineGame implements OnInit, OnDestroy {
 
 	constructor(_route: Router, actRoute: ActivatedRoute,
 				userService: UserService, joinerService: JoinerService,
-				userDao: UserDAO, partDao: PartDAO) {
-		super(_route, actRoute, userService, userDao, partDao, joinerService);
-	}
-
-	ngOnInit() {
-		this.onInit();
-	}
-
-	ngOnDestroy() {
-		this.onDestroy();
+				userDao: UserDAO, partDao: PartDAO, partService: GameService) {
+		super(_route, actRoute, userService, userDao, partDao, joinerService, partService);
 	}
 
 	/*onClick(event: MouseEvent): boolean {

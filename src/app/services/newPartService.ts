@@ -13,7 +13,7 @@ import {GameInfoService} from './game-info-service';
 @Injectable({
 	providedIn: 'root'
 })
-export class PartService {
+export class NewPartService {
 
 	private currentActivePart = new BehaviorSubject<ICurrentPartId[]>([]);
 	currentActivePartObservable = this.currentActivePart.asObservable();
@@ -24,16 +24,15 @@ export class PartService {
 
 	constructor(private afs: AngularFirestore,
 				private partDao: PartDAO,
-				private joinerService: JoinerService,
-				private gameInfoService: GameInfoService) {
+				private joinerService: JoinerService) {
 	}
 
 	createGame(creatorName: string, typeGame: string): Promise<void> {
-		console.log('PartService.createGame');
+		console.log('oldPartService.createAndJoinGame');
 		const newPart: ICurrentPart = {
 			historic: 'pas implémenté',
 			listMoves: [],
-			playerZero: creatorName, // TODO: supprimer, il n'y a pas de createur par défaut
+			playerZero: creatorName, // TODO: supprimer, il n'y a pas de premier joueur par défaut
 			playerOne: '',
 			result: 5, // todo : constantiser ça, bordel
 			scorePlayerZero: 'pas implémenté',
@@ -54,15 +53,26 @@ export class PartService {
 		return this.afs.collection('parties')
 			.add(newPart)
 			.then(docRef => {
+				this.followedPartId = docRef.id;
 				this.afs.collection('joiners').doc(docRef.id)
 					.set(newJoiner);
-				this.gameInfoService.changeGame(docRef.id, typeGame);
-				this.startObservingPart(docRef.id);
 			});
 	}
 
+	private startObservingPart(docId: string) {
+		console.log('[ we start to observe ' + docId);
+		if (this.followedPartId != null) {
+			console.log('euh, on observais déjà une partie en fait, malpropre...');
+			this.stopObservingPart();
+		}
+		this.followedPartId = docId;
+		this.followedPartDoc = this.partDao.getPartAFDocById(docId);
+		this.followedPartObservable = this.partDao.getPartObservableById(docId);
+		this.joinerService.startObservingJoiner(docId);
+	}
+
 	joinGame(partId: string, userName: string) {
-		console.log('PartService.joinGame');
+		console.log('oldPartService.joinGame');
 		const partRef = this.afs.doc('parties/' + partId).ref;
 		const joinerRef = this.afs.doc('joiners/' + partId).ref;
 		partRef.get()
@@ -99,18 +109,6 @@ export class PartService {
 	acceptConfig(joiner: IJoiner): Promise<void> {
 		this.startGameWithConfig(joiner);
 		return this.joinerService.acceptConfig();
-	}
-
-	startObservingPart(docId: string) {
-		console.log('[ we start to observe ' + docId);
-		if (this.followedPartDoc != null) {
-			console.log('euh, on observais déjà une partie en fait, malpropre...');
-			this.stopObservingPart();
-		}
-		this.followedPartId = docId;
-		this.followedPartDoc = this.partDao.getPartDocById(docId);
-		this.followedPartObservable = this.partDao.getPartObservableById(docId);
-		this.joinerService.startObservingJoiner(docId);
 	}
 
 	observeAllActivePart() {
