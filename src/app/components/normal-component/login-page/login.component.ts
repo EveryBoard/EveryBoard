@@ -4,7 +4,6 @@ import {Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {IUser, IUserId, User} from '../../../domain/iuser';
-import {environment} from '../../../../environments/environment';
 
 @Component({
 	selector: 'app-login',
@@ -15,21 +14,17 @@ export class LoginComponent implements OnInit {
 
 	user = new User('', '', '', null, null, null);
 	errorMessage: string;
-	private userDocId: string = null;
-	private matchingCode: boolean;
-	private unsubscribe;
 
 	constructor(private _route: Router,
 				private userService: UserService,
 				private afs: AngularFirestore) {
 	}
 
-	ngOnInit() {
-	}
+	ngOnInit() {}
 
 	connectAsGuest() {
 		const guestName: string = this.getUnusedGuestName();
-		this.userService.changeUser(guestName, '');
+		// this.userService.changeUser(guestName, '');
 		// for now guest don't have document in the db notifying their presence or absence
 		this._route.navigate(['/server']);
 	}
@@ -47,27 +42,13 @@ export class LoginComponent implements OnInit {
 			 *	  		-> on lui dit que c'est prit ou mauvais code
 			 *	  -> sinon on crée l'user et le connecte
 			 */
-			this.unsubscribe = this.afs
-				.collection('joueurs').ref
-				.where('pseudo', '==', this.user.pseudo)
-				.onSnapshot( querySnapshot => {
-					const users: IUserId[] = [];
-					querySnapshot.forEach( doc => {
-						users.push({ id: doc.id, user: doc.data() as IUser});
-					});
-					if (users.length === 0) {
-						this.onNewUser();
-					} else {
-						this.onFoundUser(users[0]);
-					}
-				}, error => {
-					this.errorMessage = 'essaye à nouveau, j\'ai pas compris c\'qui se passe';
-				});
+			this.userService.logAsHalfMember(this.user.pseudo, this.user.code);
 		} else {
 			this.errorMessage = 'nom d\'utilisateur ou mot de passe trop court';
 		}
 	}
 
+	/*
 	onFoundUser(user: IUserId) {
 		this.unsubscribe();
 		if (this.user.code === user.user.code) {
@@ -107,7 +88,7 @@ export class LoginComponent implements OnInit {
 			});
 		this.userService.changeUser(this.user.pseudo, this.userDocId);
 		this._route.navigate(['/server']);
-	}
+	} */
 
 	formValid(): boolean {
 		return this.user.pseudo.length >= 4 && this.user.code.length >= 4;

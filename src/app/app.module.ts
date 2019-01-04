@@ -16,7 +16,6 @@ import {AppComponent} from './app.component';
 import {CreateAccountComponent} from './components/normal-component/create-account/create-account.component';
 import {FooterComponent} from './components/normal-component/footer/footer.component';
 import {HeaderComponent} from './components/normal-component/header/header.component';
-import {JoiningPageComponent} from './components/normal-component/old-joining-page/joining-page.component';
 import {LoginComponent} from './components/normal-component/login-page/login.component';
 import {ServerPageComponent} from './components/normal-component/server-page/server-page.component';
 import {StatisticPageComponent} from './components/normal-component/statistic-page/statistic-page.component';
@@ -40,7 +39,6 @@ const routes: Route [] = [
 	{path: 'server',			component: ServerPageComponent},
 	{path: 'statistic',			component: StatisticPageComponent},
 	{path: 'createAccount',		component: CreateAccountComponent},
-	{path: 'joiningPage',		component: JoiningPageComponent},
 
 	{path: 'P4Offline',			component: P4OfflineComponent},
 	{path: 'AwaleOffline',		component: AwaleOfflineComponent},
@@ -64,7 +62,6 @@ const routes: Route [] = [
 		ServerPageComponent,
 		StatisticPageComponent,
 		CreateAccountComponent,
-		JoiningPageComponent,
 		AwaleOfflineComponent,
 
 		QuartoComponent,

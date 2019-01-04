@@ -1,17 +1,14 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {AngularFirestore} from 'angularfire2/firestore';
 import {Router} from '@angular/router';
 
-import {UserDAO} from '../../../dao/UserDAO';
+import {Subscription} from 'rxjs';
 
-import {IUser, IUserId} from '../../../domain/iuser';
-import {ICurrentPart, ICurrentPartId} from '../../../domain/icurrentpart';
+import {IUserId} from '../../../domain/iuser';
+import {ICurrentPartId} from '../../../domain/icurrentpart';
 
 import {GameInfoService} from '../../../services/game-info-service';
 import {UserService} from '../../../services/UserService';
-import {IJoiner} from '../../../domain/ijoiner';
 import {GameService} from '../../../services/game.service';
-import {Subscription} from 'rxjs';
 
 @Component({
 	selector: 'app-server-page',

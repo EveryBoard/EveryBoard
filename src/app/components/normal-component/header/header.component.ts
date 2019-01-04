@@ -9,7 +9,7 @@ import {environment} from '../../../../environments/environment';
 	styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-	static refreshingPresenceTimeout = 10 * 1000;
+	static refreshingPresenceTimeout = 60 * 1000;
 
 	userName: string;
 

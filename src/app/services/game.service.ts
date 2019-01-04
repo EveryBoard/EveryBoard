@@ -24,8 +24,7 @@ export class GameService {
 	private followedPartDoc: AngularFirestoreDocument<ICurrentPart> = null; // TODO : est-ce bien correct point de vue couches DAO/SERVICE?
 	private followedPartObservable: Observable<ICurrentPart>;
 
-	constructor(private afs: AngularFirestore,
-				private route: Router,
+	constructor(private route: Router,
 				private partDao: PartDAO,
 				private joinerDao: JoinerDAO,
 				private joinerService: JoinerService,
@@ -133,18 +132,7 @@ export class GameService {
 	}
 
 	observeAllActivePart() {
-		/* OLD const allAcsssstivePartSub: () => void = this.afs.collection('parties').ref
-			.where('result', '==', 5) // TODO : afs se fait appeler par les DAO !
-			.onSnapshot(querySnapshot => {
-				const tmpPartIds: ICurrentPartId[] = [];
-				querySnapshot.forEach(doc => {
-					const data = doc.data() as ICurrentPart;
-					const id = doc.id;
-					tmpPartIds.push({id: id, part: data});
-				});
-				this.currentActivePart.next(tmpPartIds);
-			}); */
-		const allActivesPartSub: () => void = this.partDao
+		const allActivesPartSub: () => void = this.partDao // TODO: utiliser
 			.observeAllActivePart(querySnapshot => {
 				const tmpPartIds: ICurrentPartId[] = [];
 				querySnapshot.forEach(doc => {
