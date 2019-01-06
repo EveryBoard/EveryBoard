@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {OnlineGame} from '../OnlineGame';
 import {MoveCoordToCoordAndCapture} from '../../../jscaip/MoveCoordToCoordAndCapture';
 import {Coord} from '../../../jscaip/Coord';

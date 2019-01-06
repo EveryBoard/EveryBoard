@@ -16,8 +16,7 @@ export class LoginComponent implements OnInit {
 	errorMessage: string;
 
 	constructor(private _route: Router,
-				private userService: UserService,
-				private afs: AngularFirestore) {
+				private userService: UserService) {
 	}
 
 	ngOnInit() {}
@@ -47,48 +46,6 @@ export class LoginComponent implements OnInit {
 			this.errorMessage = 'nom d\'utilisateur ou mot de passe trop court';
 		}
 	}
-
-	/*
-	onFoundUser(user: IUserId) {
-		this.unsubscribe();
-		if (this.user.code === user.user.code) {
-			this.userDocId = user.id;
-			this.logValidHalfMember();
-		} else {
-			this.errorMessage = 'code incorrect !';
-		}
-	}
-
-	onNewUser() {
-		this.unsubscribe();
-		if (this.matchingCode === undefined) { // todo : remplacer par ==
-			this.createHalfMemberThenLog();
-		}
-	}
-
-	createHalfMemberThenLog() {
-		this.afs.collection('joueurs').add({
-			code: this.user.code,
-			pseudo: this.user.pseudo,
-			email: '',
-			inscriptionDate: Date.now(),
-			lastActionTime: Date.now(),
-			status : -1
-		}).then((docRef) => {
-			this.userDocId = docRef.id;
-			this.logValidHalfMember();
-		});
-	}
-
-	logValidHalfMember() {
-		this.afs.collection('joueurs')
-			.doc(this.userDocId).update({
-				lastActionTime: Date.now(),
-				status: -2 // TODO calculate what that must be
-			});
-		this.userService.changeUser(this.user.pseudo, this.userDocId);
-		this._route.navigate(['/server']);
-	} */
 
 	formValid(): boolean {
 		return this.user.pseudo.length >= 4 && this.user.code.length >= 4;

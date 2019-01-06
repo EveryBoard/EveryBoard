@@ -27,7 +27,7 @@ export class AwaleRules extends Rules {
 	}
 
 	private static isLegal(move: MoveCoord, turn: number, board: number[][]): number[] {
-		/* modify the move to add the capture
+		/* modify the move to addPart the capture
     	 * modify the board to get the after-move result
     	 * return -1 if it's not legal, if so, the board should not be affected
     	 * return the number captured otherwise
@@ -221,7 +221,7 @@ export class AwaleRules extends Rules {
 		}
 
 		do {
-			captured += target; // we add to the player score the captured seeds
+			captured += target; // we addPart to the player score the captured seeds
 			board[y][x] = 0; // since now they're capture, we get them off the board
 			console.log('case (' + x + ', ' + y + ') capturée');
 			x += direction;
@@ -256,7 +256,7 @@ export class AwaleRules extends Rules {
 
 				// if (AwaleRules.VERBOSE || localVerbose) Console.log('legality is ' + moveResult);
 				if (moveResult[0] > -1) {
-					// if the move is legal, we add it to the listMoves
+					// if the move is legal, we addPart it to the listMoves
 					awalePartSlice = n.gamePartSlice as AwalePartSlice;
 					const capturedCopy: number[] = awalePartSlice.getCapturedCopy();
 					capturedCopy[player] += moveResult[player];

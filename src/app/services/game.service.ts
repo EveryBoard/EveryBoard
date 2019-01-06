@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
+import {AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 import {PartDAO} from '../dao/PartDAO';
@@ -32,7 +32,7 @@ export class GameService {
 	}
 
 	createAndJoinGame(creatorName: string, typeGame: string) {
-		console.log('oldPartService.createAndJoinGame');
+		console.log('GameService.createAndJoinGame');
 		const newPart: ICurrentPart = {
 			historic: 'pas implémenté',
 			listMoves: [],
@@ -55,19 +55,19 @@ export class GameService {
 			partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
 		};
 		this.partDao
-			.add(newPart)
-			.then(docRef => {
-				console.log('partDao.add fullfilled for ' + docRef.id);
+			.addPartNew(newPart)
+			.then(docId => {
+				console.log('partDao.addPart fullfilled for ' + docId);
 				this.joinerService
-					.set(docRef.id, newJoiner)
+					.set(docId, newJoiner)
 					.then(onfullfilled => {
-						console.log('joinerService.set fullfilled for ' + docRef.id);
-						this.gameInfoService.changeGame(docRef.id, typeGame); // TODO : usefull ?
-						this.startObservingPart(docRef.id);
-						this.route.navigate(['/' + typeGame, docRef.id]);
+						console.log('joinerService.set fullfilled for ' + docId);
+						this.gameInfoService.changeGame(docId, typeGame); // TODO : usefull ?
+						this.startObservingPart(docId);
+						this.route.navigate(['/' + typeGame, docId]);
 					})
 					.catch(onrejected =>
-						console.log('joinerService.set(' + docRef.id + ', ' + JSON.stringify(newJoiner) + ') has failed'));
+						console.log('joinerService.set(' + docId + ', ' + JSON.stringify(newJoiner) + ') has failed'));
 			});
 	}
 

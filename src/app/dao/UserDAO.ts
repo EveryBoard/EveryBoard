@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore, Query} from 'angularfire2/firestore';
+import {AngularFirestore, DocumentReference, Query, QuerySnapshot} from 'angularfire2/firestore';
+import {IUser, PIUser} from '../domain/iuser';
 
 @Injectable({
 	providedIn: 'root'
@@ -27,4 +28,20 @@ export class UserDAO {
 			.where('pseudo', '==', username).limit(1);
 	}
 
+	getUserByPseudo(pseudo: string, callback: (snapshot: QuerySnapshot<IUser>) => void): () => void {
+		return this.afs
+			.collection('joueurs').ref
+			.where('pseudo', '==', pseudo)
+			.onSnapshot(callback);
+	}
+
+	updateUserById(id: string, modif: PIUser): Promise<void> {
+		return this.afs.collection('joueurs')
+			.doc(id).update(modif);
+	}
+
+	addUser(newUser: IUser): Promise<DocumentReference> {
+		return this.afs.collection('joueurs')
+			.add(newUser);
+	}
 }

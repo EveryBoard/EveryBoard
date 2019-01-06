@@ -1,6 +1,5 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {OnlineGame} from '../OnlineGame';
-import {GameInfoService} from '../../../services/game-info-service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
 import {UserDAO} from '../../../dao/UserDAO';

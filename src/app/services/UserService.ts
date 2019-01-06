@@ -2,7 +2,6 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {UserDAO} from '../dao/UserDAO';
 import {IUser, IUserId} from '../domain/iuser';
-import {AngularFirestore} from 'angularfire2/firestore';
 import {Router} from '@angular/router';
 
 @Injectable({
@@ -21,8 +20,8 @@ export class UserService {
 	private unsubscribe: () => void;
 
 	constructor(private _route: Router,
-				private userDAO: UserDAO,
-				private afs: AngularFirestore) {}
+				private userDAO: UserDAO) {
+	}
 
 	private changeUser(username: string, userDocId: string) {
 		this.userName.next(username);
@@ -61,22 +60,17 @@ export class UserService {
 			 *	  		-> on lui dit que c'est prit ou mauvais code
 			 *	  -> sinon on crée l'user et le connecte
 			 */
-		this.unsubscribe = this.afs
-			.collection('joueurs').ref
-			.where('pseudo', '==', pseudo)
-			.onSnapshot( querySnapshot => {
-				const users: IUserId[] = [];
-				querySnapshot.forEach( doc => {
-					users.push({ id: doc.id, user: doc.data() as IUser});
-				});
-				if (users.length === 0) {
-					this.onNewUser(pseudo, code);
-				} else {
-					this.onFoundUser(pseudo, code, users[0]);
-				}
-			}, error => {
-				console.log('essaye à nouveau, j\'ai pas compris c\'qui se passe');
+		this.unsubscribe = this.userDAO.getUserByPseudo(pseudo, querySnapshot => {
+			const users: IUserId[] = [];
+			querySnapshot.forEach(doc => {
+				users.push({id: doc.id, user: doc.data() as IUser});
 			});
+			if (users.length === 0) {
+				this.onNewUser(pseudo, code);
+			} else {
+				this.onFoundUser(pseudo, code, users[0]);
+			}
+		});
 	}
 
 	private onNewUser(pseudo: string, code: string) {
@@ -85,16 +79,16 @@ export class UserService {
 	}
 
 	private createHalfMemberThenLog(pseudo: string, code: string) {
-		this.afs.collection('joueurs').add({
+		const newUser: IUser = {
 			code: code,
 			pseudo: pseudo,
 			email: '',
 			inscriptionDate: Date.now(),
 			lastActionTime: Date.now(),
-			status : -1
-		}).then((docRef) => {
-			this.logValidHalfMember(pseudo, code, docRef.id);
-		});
+			status: -1
+		};
+		this.userDAO.addUser(newUser)
+			.then(docRef => this.logValidHalfMember(pseudo, code, docRef.id));
 	}
 
 	private onFoundUser(pseudo: string, code: string, foundUser: IUserId) {
@@ -107,11 +101,10 @@ export class UserService {
 	}
 
 	private logValidHalfMember(pseudo: string, code: string, id: string) {
-		this.afs.collection('joueurs')
-			.doc(id).update({
+		this.userDAO.updateUserById(id, {
 			lastActionTime: Date.now(),
 			status: -2 // TODO calculate what that must be
-		});
+		}); // TODO addPart .then
 		this.changeUser(pseudo, id);
 		this._route.navigate(['/server']);
 	}

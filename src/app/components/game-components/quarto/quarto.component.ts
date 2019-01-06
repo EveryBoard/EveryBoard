@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {Move} from '../../../jscaip/Move';
 
 import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
@@ -6,13 +6,11 @@ import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
 import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
 import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
 import {OnlineGame} from '../OnlineGame';
-import {GameInfoService} from '../../../services/game-info-service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
 import {UserDAO} from '../../../dao/UserDAO';
 import {PartDAO} from '../../../dao/PartDAO';
 import {JoinerService} from '../../../services/JoinerService';
-import {MoveX} from '../../../jscaip/MoveX';
 import {GameService} from '../../../services/game.service';
 
 @Component({
@@ -20,7 +18,7 @@ import {GameService} from '../../../services/game.service';
 	templateUrl: './quarto.component.html',
 	styleUrls: ['./quarto.component.css']
 })
-export class QuartoComponent extends OnlineGame implements OnDestroy {
+export class QuartoComponent extends OnlineGame {
 
 	rules = new QuartoRules();
 

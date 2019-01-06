@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 
 import {OnlineGame} from '../OnlineGame';
@@ -12,7 +12,6 @@ import {AwaleRules} from '../../../games/games.awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
 
 import {UserService} from '../../../services/UserService';
-import {GameInfoService} from '../../../services/game-info-service';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/game.service';
 

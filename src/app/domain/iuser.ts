@@ -6,10 +6,21 @@ export interface IUser {
 	lastActionTime: number;
 	status?: number; // playing, waiting-joiner, observering, chat-room, inactive, offline
 }
+
+export interface PIUser {
+	code?: string;
+	pseudo?: string;
+	email?: string;
+	inscriptionDate?: number;
+	lastActionTime?: number;
+	status?: number; // playing, waiting-joiner, observering, chat-room, inactive, offline
+}
+
 export interface IUserId {
 	id: string;
 	user: IUser;
 }
+
 export class User {
 	constructor(
 		public code: string, // lol
