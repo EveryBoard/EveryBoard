@@ -79,7 +79,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			this.observedPart.subscribe(updatedICurrentPart =>
 				this.onCurrentPartUpdate(updatedICurrentPart));
 
-		this.partDocument = this.partDao.getPartAFDocById(this.partId);
+		this.partDocument = this.partDao.TODELETE_getPartAFDocById(this.partId);
 	}
 
 	onCurrentPartUpdate(updatedICurrentPart: ICurrentPart) {
@@ -174,10 +174,18 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this._route.navigate(['/server']);
 	}
 
-	resign() {
+	oldresign() {
 		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
 		const docRef: DocumentReference = this.partDocument.ref;
 		docRef.update({
+			winner: victoriousPlayer,
+			result: 1
+		}); // resign
+	}
+
+	resign() {
+		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
+		this.partDao.updatePartById(this.partId, {
 			winner: victoriousPlayer,
 			result: 1
 		}); // resign

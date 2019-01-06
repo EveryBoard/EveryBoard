@@ -1,7 +1,7 @@
 import {map} from 'rxjs/operators';
-import {ICurrentPart, ICurrentPartId} from '../domain/icurrentpart';
+import {ICurrentPart, PICurrentPart} from '../domain/icurrentpart';
 import {Observable} from 'rxjs';
-import {AngularFirestore, AngularFirestoreDocument, DocumentReference, QuerySnapshot} from 'angularfire2/firestore';
+import {AngularFirestore, AngularFirestoreDocument, DocumentReference, DocumentSnapshot, QuerySnapshot} from 'angularfire2/firestore';
 import {Injectable} from '@angular/core';
 
 @Injectable({
@@ -19,18 +19,21 @@ export class PartDAO {
 			}));
 	}
 
-	getPartAFDocById(partId: string): AngularFirestoreDocument<ICurrentPart> { // TODO: refactor, AFD belong to DAO's scope ?
+	TODELETE_getPartAFDocById(partId: string): AngularFirestoreDocument<ICurrentPart> { // TODO: refactor, AFD belong to DAO's scope ?
 		return this.afs.doc('parties/' + partId);
 	}
 
-	getPartDocRefById(partId: string): DocumentReference {
-		return this.afs.doc('parties/' + partId)
-			.ref;
+	getPartById(partId: string): Promise<ICurrentPart> {
+		const docSnapshotPromise = this.afs.doc('parties/' + partId).ref.get();
+		return new Promise((resolve, reject) => {
+			docSnapshotPromise.then(documentSnapshot => {
+				resolve(documentSnapshot.data() as ICurrentPart);
+			});
+		});
 	}
 
-	private addPart(newPart: ICurrentPart): Promise<DocumentReference> {
-		return this.afs.collection('parties')
-			.add(newPart);
+	updatePartById(partId: string, modif: PICurrentPart): Promise<void> {
+		return this.afs.doc('parties/' + partId).ref.update(modif);
 	}
 
 	observeAllActivePart(callback: (snapshot: QuerySnapshot<ICurrentPart>) => void): () => void {
@@ -42,7 +45,8 @@ export class PartDAO {
 	addPartNew(newPart: ICurrentPart): Promise<string> {
 		// returns the id of the created part
 		console.log('addPartNew');
-		const docRefPromise: Promise<DocumentReference> = this.addPart(newPart);
+		const docRefPromise: Promise<DocumentReference> = this.afs.collection('parties')
+			.add(newPart);
 		return new Promise((resolve, reject) => {
 			console.log('custom Promise Fullfilled or excecuting ??');
 			console.log(resolve);
@@ -52,4 +56,5 @@ export class PartDAO {
 			});
 		});
 	}
+
 }

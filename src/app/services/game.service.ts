@@ -73,11 +73,10 @@ export class GameService {
 
 	joinGame(partId: string, userName: string): Promise<void> {
 		console.log('oldPartService.joinGame');
-		const partRef: DocumentReference = this.partDao.getPartDocRefById(partId);
+		const partPromise: Promise<ICurrentPart> = this.partDao.getPartById(partId);
 		const joinerRef: DocumentReference = this.joinerDao.getJoinerDocRefById(partId);
-		return partRef.get()
-			.then(partDoc => {
-				const creator = partDoc.get('playerZero');
+		return partPromise.then(part => {
+				const creator = part.playerZero;
 				joinerRef
 					.get()
 					.then(joinerDoc => {
@@ -121,7 +120,7 @@ export class GameService {
 		} else if (this.followedPartId == null) {
 			console.log('[ we start to observe ' + docId);
 			this.followedPartId = docId;
-			this.followedPartDoc = this.partDao.getPartAFDocById(docId);
+			this.followedPartDoc = this.partDao.TODELETE_getPartAFDocById(docId);
 			this.followedPartObservable = this.partDao.getPartObservableById(docId);
 			this.joinerService.startObservingJoiner(docId);
 		} else {
