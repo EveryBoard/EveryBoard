@@ -1,7 +1,10 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
-import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
+
+import {Subscription} from 'rxjs';
+
+import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
+
 import {UserService} from '../../../services/UserService';
 import {GameService} from '../../../services/game.service';
 
@@ -16,7 +19,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	@Output() gameStartNotification: EventEmitter<void> = new EventEmitter<void>();
 
 	currentJoiner: IJoiner = null;
-	// OLD gameName: string;
+
 	userName: string;
 
 	userIsCreator: boolean;

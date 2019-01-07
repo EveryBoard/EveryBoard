@@ -29,8 +29,8 @@ export class AwaleComponent extends OnlineGame {
 	lastX = -1;
 	lastY = -1;
 
-	constructor(_route: Router, actRoute: ActivatedRoute,
-				userService: UserService, joinerService: JoinerService, partService: GameService) {
+	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
+				joinerService: JoinerService, partService: GameService) {
 		super(_route, actRoute, userService, joinerService, partService);
 	}
 

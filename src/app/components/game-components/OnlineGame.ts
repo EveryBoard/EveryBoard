@@ -44,7 +44,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		private actRoute: ActivatedRoute,
 		private userService: UserService,
 		private joinerService: JoinerService,
-		private partService: GameService) {} // TODO un component n'appelle pas un DAO !!
+		private partService: GameService) {}
 
 	ngOnInit() {
 		console.log('OnlineGame ngOnInit');

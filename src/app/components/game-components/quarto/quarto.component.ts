@@ -1,12 +1,15 @@
+import {ActivatedRoute, Router} from '@angular/router';
 import {Component} from '@angular/core';
+
+import {OnlineGame} from '../OnlineGame';
+
 import {Move} from '../../../jscaip/Move';
 
 import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
 import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
 import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
 import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
-import {OnlineGame} from '../OnlineGame';
-import {ActivatedRoute, Router} from '@angular/router';
+
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/game.service';

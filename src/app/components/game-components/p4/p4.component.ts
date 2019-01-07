@@ -1,13 +1,16 @@
 import {Component} from '@angular/core';
-import {OnlineGame} from '../OnlineGame';
 import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from '../../../services/UserService';
+
+import {OnlineGame} from '../OnlineGame';
 import {Move} from '../../../jscaip/Move';
+
 import {MoveX} from '../../../jscaip/MoveX';
 import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
 import {P4Rules} from '../../../games/games.p4/P4Rules';
+
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/game.service';
+import {UserService} from '../../../services/UserService';
 
 @Component({
 	selector: 'app-p4',

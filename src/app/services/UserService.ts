@@ -14,13 +14,12 @@ export class UserService {
 	private activeUsers = new BehaviorSubject<IUserId[]>([]);
 
 	currentUsernameObservable = this.userName.asObservable();
-	currentUserDocIdObservable = this.userDocId.asObservable();
 	currentActiveUsersObservable = this.activeUsers.asObservable();
 
 	private unsubscribe: () => void;
 
 	constructor(private _route: Router,
-				private userDAO: UserDAO) {
+				private userDao: UserDAO) {
 	}
 
 	private changeUser(username: string, userDocId: string) {
@@ -33,11 +32,11 @@ export class UserService {
 		if (currentUserDocId === '') {
 			return;
 		}
-		this.userDAO.updateUserDocActivity(currentUserDocId);
+		this.userDao.updateUserDocActivity(currentUserDocId);
 	}
 
 	observeAllActiveUser() {
-		this.userDAO.observeAllActiveUser(activeUserIds =>
+		this.userDao.observeAllActiveUser(activeUserIds =>
 			this.activeUsers.next(activeUserIds));
 	}
 
@@ -52,7 +51,7 @@ export class UserService {
 			 *	  		-> on lui dit que c'est prit ou mauvais code
 			 *	  -> sinon on crée l'user et le connecte
 			 */
-		this.unsubscribe = this.userDAO.observeUserByPseudo(pseudo, foundUser => {
+		this.unsubscribe = this.userDao.observeUserByPseudo(pseudo, foundUser => {
 			if (foundUser === undefined) {
 				this.onNewUser(pseudo, code);
 			} else {
@@ -75,7 +74,7 @@ export class UserService {
 			lastActionTime: Date.now(),
 			status: -1
 		};
-		this.userDAO.createUser(newUser)
+		this.userDao.createUser(newUser)
 			.then(userId => this.logValidHalfMember(pseudo, code, userId));
 	}
 
@@ -89,7 +88,7 @@ export class UserService {
 	}
 
 	private logValidHalfMember(pseudo: string, code: string, id: string) {
-		this.userDAO.updateUserById(id, {
+		this.userDao.updateUserById(id, {
 			lastActionTime: Date.now(),
 			status: -2 // TODO calculate what that must be
 		}); // TODO addPart .then
@@ -101,7 +100,7 @@ export class UserService {
 
 	observeUserByPseudo(pseudo: string, callback: (user: IUserId) => void): () => void {
 		// the callback will be called on the foundUser
-		return this.userDAO.observeUserByPseudo(pseudo, callback);
+		return this.userDao.observeUserByPseudo(pseudo, callback);
 	}
 
 }
