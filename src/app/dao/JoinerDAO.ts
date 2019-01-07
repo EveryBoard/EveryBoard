@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
-import {IJoiner, IJoinerId} from '../domain/ijoiner';
+import {IJoiner, IJoinerId, PIJoiner} from '../domain/ijoiner';
 import {Injectable} from '@angular/core';
-import {AngularFirestore, AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
+import {AngularFirestore} from 'angularfire2/firestore';
 import {map} from 'rxjs/operators';
 
 @Injectable({
@@ -20,18 +20,41 @@ export class JoinerDAO {
 			}));
 	}
 
-	getJoinerDocById(joinerId: string): AngularFirestoreDocument<IJoiner> { // TODO: AFD belong to DAO's scope
-		return this.afs.doc('joiners/' + joinerId);
-	}
-
 	set(id: string, joiner: IJoiner): Promise<void> {
 		return this.afs
 			.collection('joiners')
 			.doc(id).set(joiner);
 	}
 
-	getJoinerDocRefById(id: string): DocumentReference {
-		return this.afs.doc('joiners/' + id).ref;
+	// Simple CRUD
+
+	createJoiner(newJoiner: IJoiner): Promise<string> {
+		// returns the id of the created joiners
+		return new Promise((resolve, reject) => {
+			this.afs.collection('joiners')
+				.add(newJoiner)
+				.then(docRef => resolve(docRef.id))
+				.catch(onRejected => reject(onRejected));
+		});
+	}
+
+	readJoinerById(joinerId: string): Promise<IJoiner> {
+		return new Promise((resolve, reject) => {
+			this.afs
+				.doc('joiners/' + joinerId).ref.get()
+				.then(documentSnapshot => resolve(documentSnapshot.data() as IJoiner))
+				.catch(onRejected => reject(onRejected));
+		});
+	}
+
+	updateJoinerById(joinerId: string, modification: PIJoiner): Promise<void> {
+		return this.afs
+			.doc('joiners/' + joinerId).ref
+			.update(modification);
+	}
+
+	deletePartById(joinerId: string): Promise<void> {
+		return this.afs.doc('joiners/' + joinerId).ref.delete();
 	}
 
 }

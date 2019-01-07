@@ -1,5 +1,4 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestoreDocument, DocumentReference} from 'angularfire2/firestore';
 import {BehaviorSubject, Observable} from 'rxjs';
 
 import {PartDAO} from '../dao/PartDAO';
@@ -21,7 +20,6 @@ export class GameService {
 	currentActivePartObservable = this.currentActivePart.asObservable();
 
 	private followedPartId: string;
-	private followedPartDoc: AngularFirestoreDocument<ICurrentPart> = null; // TODO : est-ce bien correct point de vue couches DAO/SERVICE?
 	private followedPartObservable: Observable<ICurrentPart>;
 
 	constructor(private route: Router,
@@ -55,7 +53,7 @@ export class GameService {
 			partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
 		};
 		this.partDao
-			.addPartNew(newPart)
+			.createPart(newPart)
 			.then(docId => {
 				console.log('partDao.addPart fullfilled for ' + docId);
 				this.joinerService
@@ -73,23 +71,21 @@ export class GameService {
 
 	joinGame(partId: string, userName: string): Promise<void> {
 		console.log('oldPartService.joinGame');
-		const partPromise: Promise<ICurrentPart> = this.partDao.getPartById(partId);
-		const joinerRef: DocumentReference = this.joinerDao.getJoinerDocRefById(partId);
+		const partPromise: Promise<ICurrentPart> = this.partDao.readPartById(partId);
+		const joinerPromise: Promise<IJoiner> = this.joinerDao.readJoinerById(partId);
 		return partPromise.then(part => {
 				const creator = part.playerZero;
-				joinerRef
-					.get()
-					.then(joinerDoc => {
-						const joinerList: string[] = joinerDoc.get('candidatesNames');
+				joinerPromise
+					.then(joiner => {
+						const joinerList: string[] = joiner.candidatesNames;
 						if (!joinerList.includes(userName) &&
 							(userName !== creator)) {
 							joinerList[joinerList.length] = userName;
-							joinerRef
-								.update({candidatesNames: joinerList})
-								.catch(onrejected => console.log('partService.joiningGame joiner Update rejected'));
+							this.joinerDao.updateJoinerById(partId, {candidatesNames: joinerList})
+								.catch(onRejected => console.log('partService.joiningGame joiner Update rejected'));
 						}
 					})
-					.catch(onrejected => console.log('partService.joiningGame get joiner rejected'));
+					.catch(onRejected => console.log('partService.joiningGame get joiner rejected'));
 			});
 	}
 
@@ -104,9 +100,10 @@ export class GameService {
 	cancelGame(): Promise<void> {
 		console.log('part service will cancel game ' + this.followedPartId);
 		// cancel the currently observed game
-		return this.joinerService.cancelGame().then(
-			onJoiningCancelled => this.followedPartDoc.delete().then(
-				onPartCancelled => this.stopObservingPart()));
+		return this.joinerService.cancelGame()
+			.then(onJoiningCancelled =>
+				this.partDao.deletePartById(this.followedPartId)
+					.then(onPartCancelled => this.stopObservingPart()));
 	}
 
 	acceptConfig(joiner: IJoiner): Promise<void> {
@@ -120,7 +117,6 @@ export class GameService {
 		} else if (this.followedPartId == null) {
 			console.log('[ we start to observe ' + docId);
 			this.followedPartId = docId;
-			this.followedPartDoc = this.partDao.TODELETE_getPartAFDocById(docId);
 			this.followedPartObservable = this.partDao.getPartObservableById(docId);
 			this.joinerService.startObservingJoiner(docId);
 		} else {
@@ -131,16 +127,8 @@ export class GameService {
 	}
 
 	observeAllActivePart() {
-		const allActivesPartSub: () => void = this.partDao // TODO: utiliser
-			.observeAllActivePart(querySnapshot => {
-				const tmpPartIds: ICurrentPartId[] = [];
-				querySnapshot.forEach(doc => {
-					const data = doc.data() as ICurrentPart;
-					const id = doc.id;
-					tmpPartIds.push({id: id, part: data});
-				});
-				this.currentActivePart.next(tmpPartIds);
-			});
+		const allActivesPartSub: () => void = this.partDao // TODO: utiliser pour se désabonner
+			.observeAllActivePart(partIds => this.currentActivePart.next(partIds));
 	}
 
 	getPartId(): string {
@@ -171,7 +159,7 @@ export class GameService {
 			secondPlayer = joiner.creator;
 			firstPlayer = joiner.chosenPlayer;
 		}
-		return this.followedPartDoc.update({
+		return this.partDao.updatePartById(this.followedPartId, {
 			playerZero: firstPlayer,
 			playerOne: secondPlayer,
 			turn: 0,
@@ -186,7 +174,6 @@ export class GameService {
 			console.log('we stop observing ' + this.followedPartId + ']');
 			this.joinerService.stopObservingJoiner();
 			this.followedPartId = null;
-			this.followedPartDoc = null;
 			this.followedPartObservable = null;
 		}
 	}

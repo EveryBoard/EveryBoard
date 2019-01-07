@@ -1,6 +1,5 @@
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {AngularFirestoreDocument, DocumentReference, QuerySnapshot} from 'angularfire2/firestore';
 import {Observable, Subscription} from 'rxjs';
 
 import {HeaderComponent} from '../normal-component/header/header.component';
@@ -9,7 +8,7 @@ import {UserDAO} from '../../dao/UserDAO';
 import {PartDAO} from '../../dao/PartDAO';
 
 import {ICurrentPart} from '../../domain/icurrentpart';
-import {IUser, IUserId} from '../../domain/iuser';
+import {IUserId} from '../../domain/iuser';
 
 import {Rules} from '../../jscaip/Rules';
 import {Move} from '../../jscaip/Move';
@@ -27,7 +26,6 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	board: Array<Array<number>>;
 
 	observedPart: Observable<ICurrentPart>;
-	partDocument: AngularFirestoreDocument<ICurrentPart>;
 
 	partId: string;
 	userName: string;
@@ -78,8 +76,6 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.observedPartSubscription =
 			this.observedPart.subscribe(updatedICurrentPart =>
 				this.onCurrentPartUpdate(updatedICurrentPart));
-
-		this.partDocument = this.partDao.TODELETE_getPartAFDocById(this.partId);
 	}
 
 	onCurrentPartUpdate(updatedICurrentPart: ICurrentPart) {
@@ -131,23 +127,21 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			opponentName = this.players[0];
 		}
 		if (opponentName !== '') {
-			this.opponentSubscription =
+			/* this.opponentSubscription =
 				this.userDao.getUserDocRefByUserName(opponentName)
 					.onSnapshot(userQuerySnapshot =>
-						this.onUserUpdate(userQuerySnapshot));
+						this.onUserUpdate(userQuerySnapshot)); */
+			this.opponentSubscription =
+				this.userDao.observeUserByPseudo(opponentName,
+					callback => {
+					console.log('userFound : ' + callback);
+						if (this.opponent == null) {
+							this.opponent = callback;
+							this.startWatchingForOpponentTimeout();
+						}
+						this.opponent = callback;
+					});
 		}
-	}
-
-	onUserUpdate(userQuerySnapshot: QuerySnapshot<any>) {
-		userQuerySnapshot.forEach(doc => {
-			const data = doc.data() as IUser;
-			const id = doc.id;
-			if (this.opponent == null) {
-				this.opponent = {id: id, user: data};
-				this.startWatchingForOpponentTimeout();
-			}
-			this.opponent = {id: id, user: data};
-		});
 	}
 
 	startWatchingForOpponentTimeout() {
@@ -174,15 +168,6 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this._route.navigate(['/server']);
 	}
 
-	oldresign() {
-		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
-		const docRef: DocumentReference = this.partDocument.ref;
-		docRef.update({
-			winner: victoriousPlayer,
-			result: 1
-		}); // resign
-	}
-
 	resign() {
 		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
 		this.partDao.updatePartById(this.partId, {
@@ -194,8 +179,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	notifyDraw() {
 		console.log('égalité!');
 		this.endGame = true;
-		const docRef = this.partDocument.ref;
-		docRef.update({
+		this.partDao.updatePartById(this.partId, {
 			result: 0
 		}); // DRAW CONSTANT
 	}
@@ -204,8 +188,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		const victoriousPlayer = this.userName;
 		this.endGame = true;
 		this.winner = victoriousPlayer;
-		const docRef = this.partDocument.ref;
-		docRef.update({
+		this.partDao.updatePartById(this.partId, {
 			winner: victoriousPlayer,
 			result: 4
 		});
@@ -215,8 +198,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
 		this.endGame = true;
 		this.winner = victoriousPlayer;
-		const docRef = this.partDocument.ref;
-		docRef.update({
+		this.partDao.updatePartById(this.partId, {
 			'winner': victoriousPlayer,
 			'result': 3
 		});
@@ -228,13 +210,12 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	updateDBBoard(move: Move) {
-		const docRef = this.partDocument.ref;
-		docRef.get()
-			.then((doc) => {
-				const turn: number = doc.get('turn') + 1;
-				const listMoves: number[] = doc.get('listMoves');
+		this.partDao.readPartById(this.partId)
+			.then(part => {
+				const turn: number = part.turn + 1;
+				const listMoves: number[] = part.listMoves;
 				listMoves[listMoves.length] = this.encodeMove(move);
-				docRef.update({
+				this.partDao.updatePartById(this.partId, {
 					'listMoves': listMoves,
 					'turn': turn
 				});

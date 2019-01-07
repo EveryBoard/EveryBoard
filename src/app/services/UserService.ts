@@ -33,20 +33,12 @@ export class UserService {
 		if (currentUserDocId === '') {
 			return;
 		}
-		this.userDAO.updateUserDocuActivity(currentUserDocId);
+		this.userDAO.updateUserDocActivity(currentUserDocId);
 	}
 
 	observeAllActiveUser() {
-		this.userDAO.observeAllActiveUser()
-			.onSnapshot((querySnapshot) => {
-				const tmpActiveUserIds: IUserId[] = [];
-				querySnapshot.forEach(doc => {
-					const data = doc.data() as IUser;
-					const id = doc.id;
-					tmpActiveUserIds.push({id: id, user: data});
-				});
-				this.activeUsers.next(tmpActiveUserIds);
-			});
+		this.userDAO.observeAllActiveUser(activeUserIds =>
+			this.activeUsers.next(activeUserIds));
 	}
 
 	private getUserName(): BehaviorSubject<string> {
@@ -60,15 +52,11 @@ export class UserService {
 			 *	  		-> on lui dit que c'est prit ou mauvais code
 			 *	  -> sinon on crée l'user et le connecte
 			 */
-		this.unsubscribe = this.userDAO.getUserByPseudo(pseudo, querySnapshot => {
-			const users: IUserId[] = [];
-			querySnapshot.forEach(doc => {
-				users.push({id: doc.id, user: doc.data() as IUser});
-			});
-			if (users.length === 0) {
+		this.unsubscribe = this.userDAO.observeUserByPseudo(pseudo, foundUser => {
+			if (foundUser === undefined) {
 				this.onNewUser(pseudo, code);
 			} else {
-				this.onFoundUser(pseudo, code, users[0]);
+				this.onFoundUser(pseudo, code, foundUser);
 			}
 		});
 	}
@@ -87,8 +75,8 @@ export class UserService {
 			lastActionTime: Date.now(),
 			status: -1
 		};
-		this.userDAO.addUser(newUser)
-			.then(docRef => this.logValidHalfMember(pseudo, code, docRef.id));
+		this.userDAO.createUser(newUser)
+			.then(userId => this.logValidHalfMember(pseudo, code, userId));
 	}
 
 	private onFoundUser(pseudo: string, code: string, foundUser: IUserId) {
