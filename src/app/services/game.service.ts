@@ -131,6 +131,52 @@ export class GameService {
 			.observeAllActivePart(partIds => this.currentActivePart.next(partIds));
 	}
 
+	resign(partId: string, winner: string) {
+		return this.partDao.updatePartById(partId, {
+			winner: winner,
+			result: 1
+		}); // resign
+	}
+
+	notifyDraw(partId: string) {
+		this.partDao.updatePartById(partId, {
+			result: 0
+		}); // DRAW CONSTANT
+	}
+
+	notifyTimeout(partId: string, winner: string) {
+		this.partDao.updatePartById(partId, {
+			winner: winner,
+			result: 4
+		});
+	}
+
+	notifyVictory(partId: string, winner: string) {
+		this.partDao.updatePartById(partId, {
+			'winner': winner,
+			'result': 3
+		});
+	}
+
+	updateDBBoard(encodedMove: number, partId: string) {
+		this.partDao.readPartById(partId)
+			.then(part => {
+				const turn: number = part.turn + 1;
+				const listMoves: number[] = part.listMoves;
+				listMoves[listMoves.length] = encodedMove;
+				this.partDao.updatePartById(partId, {
+					'listMoves': listMoves,
+					'turn': turn
+				});
+			})
+			.catch(error => console.log(error));
+	}
+
+	// DELEGATE
+	getPartObservableById(partId: string): Observable<ICurrentPart> {
+		return this.partDao.getPartObservableById(partId);
+	}
+
 	getPartId(): string {
 		return this.followedPartId;
 	}

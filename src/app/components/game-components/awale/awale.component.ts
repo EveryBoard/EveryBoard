@@ -3,9 +3,6 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {OnlineGame} from '../OnlineGame';
 
-import {UserDAO} from '../../../dao/UserDAO';
-import {PartDAO} from '../../../dao/PartDAO';
-
 import {MoveCoord} from '../../../jscaip/MoveCoord';
 
 import {AwaleRules} from '../../../games/games.awale/AwaleRules';
@@ -33,9 +30,8 @@ export class AwaleComponent extends OnlineGame {
 	lastY = -1;
 
 	constructor(_route: Router, actRoute: ActivatedRoute,
-				userService: UserService, joinerService: JoinerService,
-				userDao: UserDAO, partDao: PartDAO, partService: GameService) {
-		super(_route, actRoute, userService, userDao, partDao, joinerService, partService);
+				userService: UserService, joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
 	}
 
 	onClick(x: number, y: number): boolean {

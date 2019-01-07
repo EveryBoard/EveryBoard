@@ -4,8 +4,6 @@ import {MoveCoordToCoordAndCapture} from '../../../jscaip/MoveCoordToCoordAndCap
 import {Coord} from '../../../jscaip/Coord';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
-import {UserDAO} from '../../../dao/UserDAO';
-import {PartDAO} from '../../../dao/PartDAO';
 import {JoinerService} from '../../../services/JoinerService';
 import {TablutRules} from '../../../games/tablut/TablutRules';
 import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
@@ -32,8 +30,8 @@ export class TablutComponent extends OnlineGame {
 	choosenY = -1;
 
 	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
-				userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService, partService: GameService) {
-		super(_route, actRoute, userService, userDao, partDao, joinerService, partService);
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
 	}
 
 	updateBoard() {

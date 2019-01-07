@@ -2,8 +2,6 @@ import {Component} from '@angular/core';
 import {OnlineGame} from '../OnlineGame';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
-import {UserDAO} from '../../../dao/UserDAO';
-import {PartDAO} from '../../../dao/PartDAO';
 import {Move} from '../../../jscaip/Move';
 import {MoveX} from '../../../jscaip/MoveX';
 import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
@@ -28,9 +26,9 @@ export class P4Component extends OnlineGame {
 	lastX: number;
 
 	constructor(_route: Router, actRoute: ActivatedRoute,
-				userService: UserService,			userDao: UserDAO,
-				partDao: PartDAO, joinerService: JoinerService, partService: GameService) {
-		super(_route, actRoute, userService, userDao, partDao, joinerService, partService);
+				userService: UserService,
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
 	}
 
 	decodeMove(encodedMove: number): Move {

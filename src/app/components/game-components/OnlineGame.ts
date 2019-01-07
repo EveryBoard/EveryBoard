@@ -4,9 +4,6 @@ import {Observable, Subscription} from 'rxjs';
 
 import {HeaderComponent} from '../normal-component/header/header.component';
 
-import {UserDAO} from '../../dao/UserDAO';
-import {PartDAO} from '../../dao/PartDAO';
-
 import {ICurrentPart} from '../../domain/icurrentpart';
 import {IUserId} from '../../domain/iuser';
 
@@ -46,8 +43,6 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		private _route: Router,
 		private actRoute: ActivatedRoute,
 		private userService: UserService,
-		private userDao: UserDAO,
-		private partDao: PartDAO,
 		private joinerService: JoinerService,
 		private partService: GameService) {} // TODO un component n'appelle pas un DAO !!
 
@@ -67,12 +62,13 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
-		this.observedPart = this.partDao.getPartObservableById(this.partId);
 		this.joinerService.getJoinerByPartId(this.partId)
 			.then( iJoiner => {
 				this.timeout = iJoiner.timeoutMinimalDuration;
 				console.log('le timout est fixé à ' + this.timeout);
 			}).catch( fail => console.log('there was a problem trying to get iJoiner timeout'));
+
+		this.observedPart = this.partService.getPartObservableById(this.partId);
 		this.observedPartSubscription =
 			this.observedPart.subscribe(updatedICurrentPart =>
 				this.onCurrentPartUpdate(updatedICurrentPart));
@@ -127,12 +123,8 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			opponentName = this.players[0];
 		}
 		if (opponentName !== '') {
-			/* this.opponentSubscription =
-				this.userDao.getUserDocRefByUserName(opponentName)
-					.onSnapshot(userQuerySnapshot =>
-						this.onUserUpdate(userQuerySnapshot)); */
 			this.opponentSubscription =
-				this.userDao.observeUserByPseudo(opponentName,
+				this.userService.observeUserByPseudo(opponentName,
 					callback => {
 					console.log('userFound : ' + callback);
 						if (this.opponent == null) {
@@ -170,38 +162,26 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	resign() {
 		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
-		this.partDao.updatePartById(this.partId, {
-			winner: victoriousPlayer,
-			result: 1
-		}); // resign
+		this.partService.resign(this.partId, victoriousPlayer);
 	}
 
 	notifyDraw() {
-		console.log('égalité!');
 		this.endGame = true;
-		this.partDao.updatePartById(this.partId, {
-			result: 0
-		}); // DRAW CONSTANT
+		this.partService.notifyDraw(this.partId);
 	}
 
 	notifyTimeout() {
 		const victoriousPlayer = this.userName;
 		this.endGame = true;
 		this.winner = victoriousPlayer;
-		this.partDao.updatePartById(this.partId, {
-			winner: victoriousPlayer,
-			result: 4
-		});
+		this.partService.notifyTimeout(this.partId, victoriousPlayer);
 	}
 
 	notifyVictory() {
 		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
 		this.endGame = true;
 		this.winner = victoriousPlayer;
-		this.partDao.updatePartById(this.partId, {
-			'winner': victoriousPlayer,
-			'result': 3
-		});
+		this.partService.notifyVictory(this.partId, victoriousPlayer);
 	}
 
 	isPlayerTurn() {
@@ -210,17 +190,8 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	updateDBBoard(move: Move) {
-		this.partDao.readPartById(this.partId)
-			.then(part => {
-				const turn: number = part.turn + 1;
-				const listMoves: number[] = part.listMoves;
-				listMoves[listMoves.length] = this.encodeMove(move);
-				this.partDao.updatePartById(this.partId, {
-					'listMoves': listMoves,
-					'turn': turn
-				});
-			})
-			.catch(error => console.log(error));
+		const encodedMove: number = this.encodeMove(move);
+		this.partService.updateDBBoard(encodedMove, this.partId);
 	}
 
 	ngOnDestroy() {

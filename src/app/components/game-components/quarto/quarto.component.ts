@@ -8,8 +8,6 @@ import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
 import {OnlineGame} from '../OnlineGame';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
-import {UserDAO} from '../../../dao/UserDAO';
-import {PartDAO} from '../../../dao/PartDAO';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/game.service';
 
@@ -33,8 +31,8 @@ export class QuartoComponent extends OnlineGame {
 	pieceToGive = -1; // the piece that the user want to give to the opponent
 
 	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
-				userDao: UserDAO, partDao: PartDAO, joinerService: JoinerService, partService: GameService) {
-		super(_route, actRoute, userService, userDao, partDao, joinerService, partService);
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
 	}
 
 	decodeMove(encodedMove: number): Move {

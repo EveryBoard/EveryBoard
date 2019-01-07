@@ -96,4 +96,12 @@ export class UserService {
 		this.changeUser(pseudo, id);
 		this._route.navigate(['/server']);
 	}
+
+	// Delegate
+
+	observeUserByPseudo(pseudo: string, callback: (user: IUserId) => void): () => void {
+		// the callback will be called on the foundUser
+		return this.userDAO.observeUserByPseudo(pseudo, callback);
+	}
+
 }
