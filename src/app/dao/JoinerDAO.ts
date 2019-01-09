@@ -48,9 +48,14 @@ export class JoinerDAO {
 	}
 
 	updateJoinerById(joinerId: string, modification: PIJoiner): Promise<void> {
-		return this.afs
-			.doc('joiners/' + joinerId).ref
-			.update(modification);
+		console.log('joiner update : ' + joinerId);
+		return new Promise((resolve, reject) => {
+			this.afs
+				.doc('joiners/' + joinerId).ref
+				.update(modification)
+				.then(onFullFilled => resolve(onFullFilled))
+				.catch(onReject => reject(onReject));
+		});
 	}
 
 	deletePartById(joinerId: string): Promise<void> {

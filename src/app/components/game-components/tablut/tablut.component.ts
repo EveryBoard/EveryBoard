@@ -7,7 +7,7 @@ import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {TablutRules} from '../../../games/tablut/TablutRules';
 import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
-import {GameService} from '../../../services/game.service';
+import {GameService} from '../../../services/GameService';
 
 @Component({
 	selector: 'app-tablut',

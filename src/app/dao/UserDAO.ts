@@ -24,9 +24,10 @@ export class UserDAO {
 			});
 	}
 
-	observeAllActiveUser(callback: (users: IUserId[]) => void): () => void {
-		return this.afs.collection('joueurs').ref
-			.where('lastActionTime', '>=', Date.now() - (1000 * 60 * 10))
+	observeAllActiveUser(callback: (users: IUserId[]) => void, timeOutedTimestamp: number): () => void {
+		return this.afs
+			.collection('joueurs').ref
+			.where('lastActionTime', '>=', timeOutedTimestamp)
 			.onSnapshot(querySnapshot => {
 				const activeUserIds: IUserId[] = [];
 				querySnapshot.forEach(doc => {
@@ -40,7 +41,8 @@ export class UserDAO {
 
 	updateUserDocActivity(userDocId: string): Promise<void> {
 		// update the user with pseudo to notifify that he's been doing something
-		return this.afs.doc('joueurs/' + userDocId)
+		return this.afs
+			.doc('joueurs/' + userDocId)
 			.update({
 				lastActionTime: Date.now(),
 				status: -2 // TODO calculate what that must be

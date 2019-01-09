@@ -13,7 +13,7 @@ import {Move} from '../../jscaip/Move';
 import {UserService} from '../../services/UserService';
 import {JoinerService} from '../../services/JoinerService';
 import {OnDestroy, OnInit} from '@angular/core';
-import {GameService} from '../../services/game.service';
+import {GameService} from '../../services/GameService';
 
 export abstract class OnlineGame implements OnInit, OnDestroy {
 	rules: Rules;
@@ -62,7 +62,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
-		this.joinerService.getJoinerByPartId(this.partId)
+		this.joinerService.readJoinerById(this.partId)
 			.then( iJoiner => {
 				this.timeout = iJoiner.timeoutMinimalDuration;
 				console.log('le timout est fixé à ' + this.timeout);

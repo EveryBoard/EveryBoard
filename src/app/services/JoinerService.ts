@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs';
-import {IJoiner, IJoinerId} from '../domain/ijoiner';
+import {IJoiner, IJoinerId, PIJoiner} from '../domain/ijoiner';
 import {JoinerDAO} from '../dao/JoinerDAO';
 
 @Injectable({
@@ -32,7 +32,25 @@ export class JoinerService {
 		return this.followedJoinerObservable;
 	}
 
+	joinGame(creator: string, userName: string, partId: string): Promise<void> {
+		return this.joinerDao
+			.readJoinerById(partId)
+			.then(joiner => {
+				const joinerList: string[] = joiner.candidatesNames;
+				if (!joinerList.includes(userName) &&
+					(userName !== creator)) {
+					joinerList[joinerList.length] = userName;
+					this.joinerDao
+						.updateJoinerById(partId, {candidatesNames: joinerList})
+						.then(onfullfilled => console.log('partService.joiningGame joiner update success'))
+						.catch(onRejected => console.log('partService.joiningGame joiner Update rejected'));
+				}
+			})
+			.catch(onRejected => console.log('partService.joiningGame get joiner rejected'));
+	}
+
 	removePlayerFromJoiningPage(userName: string) {
+		console.log('JoinerService.remove ' + userName + ' from joining page ' + this.followedJoinerId);
 		this.joinerDao
 			.readJoinerById(this.followedJoinerId)
 			.then(joiner => {
@@ -49,19 +67,23 @@ export class JoinerService {
 					chosenPlayer = '';
 					partStatus = 0;
 				}
+				const modification: PIJoiner = {
+					partStatus: partStatus,
+					candidatesNames: joinersList,
+					chosenPlayer: chosenPlayer
+				};
 				this.joinerDao
-					.updateJoinerById(this.followedJoinerId, {
-						partStatus: partStatus,
-						candidatesNames: joinersList,
-						chosenPlayer: chosenPlayer
-					});
+					.updateJoinerById(this.followedJoinerId, modification)
+					.then(onFullfilled => console.log('joinerById updated, you\'re no longer in it'))
+					.catch(console.log);
 			});
 	}
 
 	cancelGame(): Promise<void> {
+		console.log('JoinerService.cancelGame ' + this.followedJoinerId);
 		return this.joinerDao
 			.deletePartById(this.followedJoinerId)
-			.then(onfullfilled => this.stopObservingJoiner());
+			.then(onFullFilled => this.stopObservingJoiner());
 	}
 
 	setChosenPlayer(chosenPlayersPseudo: string): Promise<void> {
@@ -101,10 +123,6 @@ export class JoinerService {
 			.updateJoinerById(this.followedJoinerId, {partStatus: 3});
 	}
 
-	getJoinerByPartId(partId: string): Promise<IJoiner> {
-		return this.joinerDao.readJoinerById(partId);
-	}
-
 	stopObservingJoiner() {
 		if (this.followedJoinerId == null) {
 			console.log('we already stop watching doc');
@@ -116,6 +134,10 @@ export class JoinerService {
 	}
 
 	// DELEGATE
+
+	readJoinerById(partId: string): Promise<IJoiner> {
+		return this.joinerDao.readJoinerById(partId);
+	}
 
 	set(id: string, joiner: IJoiner): Promise<void> {
 		return this.joinerDao.set(id, joiner);

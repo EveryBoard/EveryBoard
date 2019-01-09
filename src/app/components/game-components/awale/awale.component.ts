@@ -10,7 +10,7 @@ import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
 
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
-import {GameService} from '../../../services/game.service';
+import {GameService} from '../../../services/GameService';
 
 @Component({
 	selector: 'app-awale',

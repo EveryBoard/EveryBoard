@@ -6,9 +6,8 @@ import {Subscription} from 'rxjs';
 import {IUserId} from '../../../domain/iuser';
 import {ICurrentPartId} from '../../../domain/icurrentpart';
 
-import {GameInfoService} from '../../../services/game-info-service';
 import {UserService} from '../../../services/UserService';
-import {GameService} from '../../../services/game.service';
+import {GameService} from '../../../services/GameService';
 
 @Component({
 	selector: 'app-server-page',
@@ -28,7 +27,6 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 	private currentActiveUserSub: Subscription;
 
 	constructor(private _route: Router,
-				private gameInfoService: GameInfoService,
 				private userService: UserService,
 				private partService: GameService) {}
 

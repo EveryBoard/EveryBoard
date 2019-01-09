@@ -6,7 +6,7 @@ import {Subscription} from 'rxjs';
 import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
 
 import {UserService} from '../../../services/UserService';
-import {GameService} from '../../../services/game.service';
+import {GameService} from '../../../services/GameService';
 
 @Component({
 	selector: 'app-part-creation',
@@ -52,8 +52,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 				if (this.partId !== '') {
 					console.log('joining COMPO initialisation start observing part ' + this.partId);
 					this.partService.startObservingPart(this.partId); // // TODO : SUPERFLU  ???
-					this.joinerSub = this.partService.getJoinerIdObservable().subscribe(
-						iJoiner => this.onCurrentJoinerUpdate(iJoiner));
+					this.joinerSub = this.partService
+						.getJoinerIdObservable()
+						.subscribe(iJoiner => this.onCurrentJoinerUpdate(iJoiner));
 				} else {
 					console.log('we did not receive partId error');
 					this._route.navigate(['/server']);
@@ -133,7 +134,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
 	cancelGameJoining() {
 		this.partService.removePlayerFromJoiningPage(this.userName);
-		this.partService.stopObservingPart(); // NEW HERE TODO : mettre dans removePlayerFromJoiningPage
+		this.partService.stopObservingPart(); // TODO : mettre dans removePlayerFromJoiningPage
 		this._route.navigate(['/server']);
 	}
 

@@ -9,7 +9,9 @@ import {AngularFireModule} from 'angularfire2';
 import {AngularFirestoreModule} from 'angularfire2/firestore';
 
 import {UserService} from './services/UserService';
-import {GameInfoService} from './services/game-info-service';
+import {AuthenticationService} from './services/AuthenticationService';
+import {GameService} from './services/GameService';
+import {JoinerService} from './services/JoinerService';
 
 import {AppComponent} from './app.component';
 
@@ -82,7 +84,7 @@ const routes: Route [] = [
 		AngularFireModule.initializeApp(firebaseConfig),
 		AngularFirestoreModule
 	],
-	providers: [UserService, GameInfoService],
+	providers: [AuthenticationService, GameService, JoinerService, UserService],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

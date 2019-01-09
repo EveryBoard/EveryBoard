@@ -36,8 +36,10 @@ export class UserService {
 	}
 
 	observeAllActiveUser() {
-		this.userDao.observeAllActiveUser(activeUserIds =>
-			this.activeUsers.next(activeUserIds));
+		this.userDao
+			.observeAllActiveUser(
+				activeUserIds => this.activeUsers.next(activeUserIds),
+				Date.now() - (1000 * 60 * 10));
 	}
 
 	private getUserName(): BehaviorSubject<string> {
