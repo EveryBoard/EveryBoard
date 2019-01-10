@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
+import {Observable, Subscription} from 'rxjs';
 
 import {PartDAO} from '../dao/PartDAO';
 
@@ -8,26 +8,135 @@ import {IJoiner, IJoinerId} from '../domain/ijoiner';
 
 import {JoinerService} from './JoinerService';
 import {Router} from '@angular/router';
+import {ActivesPartsService} from './ActivesPartsService';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class GameService {
 
-	private currentActivePart = new BehaviorSubject<ICurrentPartId[]>([]);
-	currentActivePartObservable = this.currentActivePart.asObservable();
-
 	private followedPartId: string;
-	private followedPartObservable: Observable<ICurrentPart>;
+	private followedPartObs: Observable<ICurrentPartId>;
+	private followedPartSub: Subscription;
 
 	constructor(private route: Router,
 				private partDao: PartDAO,
+				private activesPartsService: ActivesPartsService,
 				private joinerService: JoinerService) {
 	}
 
-	observeAllActivePart() {
-		const allActivesPartSub: () => void = this.partDao // TODO: utiliser pour se désabonner
-			.observeAllActivePart(partIds => this.currentActivePart.next(partIds));
+	// on Server Component
+
+	createGame(creatorName: string, typeGame: string): Promise<string> {
+		console.log('GameService.createGame');
+		const newPart: ICurrentPart = {
+			historic: 'pas implémenté',
+			listMoves: [],
+			playerZero: creatorName, // TODO: supprimer, il n'y a pas de createur par défaut
+			playerOne: '',
+			result: 5, // todo : constantiser ça, bordel
+			scorePlayerZero: 'pas implémenté',
+			scorePlayerOne: 'pas implémenté',
+			turn: -1,
+			typeGame: typeGame,
+			typePart: 'pas implémenté',
+			winner: ''
+		};
+		const newJoiner: IJoiner = {
+			candidatesNames: [],
+			creator: creatorName,
+			chosenPlayer: '',
+			timeoutMinimalDuration: 60,
+			firstPlayer: '0', // par défaut: le créateur
+			partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
+		};
+		return new Promise((resolve, reject) => {
+			this.partDao
+				.createPart(newPart)
+				.then(docId => {
+					this.joinerService
+						.set(docId, newJoiner)
+						.then(onFullFilled => {
+							resolve(docId);
+						})
+						.catch(onRejected => {
+							console.log('joinerService.set(' + docId + ', ' + JSON.stringify(newJoiner) + ') has failed');
+							reject(onRejected);
+						});
+				}).catch(onRejected => {
+				console.log('partDao failed to create part');
+				reject(onRejected);
+			});
+		});
+	}
+
+	getActivesPartsObs() {
+		// TODO: désabonnements de sûreté aux autres abonnements activesParts
+		this.activesPartsService.startObserving();
+		return this.activesPartsService.activesPartsObs;
+	}
+
+	unSubFromActivesPartsObs() {
+		this.activesPartsService.stopObserving();
+	}
+
+	// on Part Creation Component
+
+	startGameWithConfig(joiner: IJoiner): Promise<void> {
+		let firstPlayer = joiner.creator;
+		let secondPlayer = joiner.chosenPlayer;
+		if (joiner.firstPlayer === '2' && (Math.random() < 0.5)) {
+			joiner.firstPlayer = '1';
+			// random
+		}
+		if (joiner.firstPlayer === '1') {
+			// the opposite config is planned
+			secondPlayer = joiner.creator;
+			firstPlayer = joiner.chosenPlayer;
+		}
+		return this.partDao.updatePartById(this.followedPartId, {
+			playerZero: firstPlayer,
+			playerOne: secondPlayer,
+			turn: 0,
+			beginning: Date.now()
+		});
+	}
+
+	deletePart(partId: string): Promise<string> {
+		console.log('JoinerService.deletePart ' + partId);
+		return new Promise((resolve, reject) => {
+			if (partId == null) {
+				console.log('followed part id is null');
+				reject();
+			}
+			this.partDao
+				.deletePartById(partId)
+				.then(onFullFilled => resolve(partId))
+				.catch(onRejected => reject());
+		});
+	}
+
+	acceptConfig(joiner: IJoiner): Promise<void> {
+		this.startGameWithConfig(joiner);
+		return this.joinerService.acceptConfig();
+	}
+
+	// on OnlineGame Component
+
+	startObserving(partId: string, callback: (iPart: ICurrentPartId) => void) {
+		if (this.followedPartId == null) {
+			console.log('[start watching part ' + partId);
+			this.followedPartId = partId;
+			this.followedPartObs = this.partDao.getPartObsById(partId);
+			this.followedPartSub = this.followedPartObs
+				.subscribe(onFullFilled => callback(onFullFilled));
+		} else if (partId === this.followedPartId) {
+			console.log('!!!already observing this part (' + partId + ')');
+		} else {
+			alert('!!!we were already observing ' + this.followedPartId + ' then you ask to watch' + partId + 'you are gross (no I\'m bugged)');
+			this.stopObserving();
+			this.startObserving(partId, callback);
+		}
 	}
 
 	resign(partId: string, winner: string): Promise<void> {
@@ -71,70 +180,43 @@ export class GameService {
 			.catch(error => console.log(error));
 	}
 
-	private startGameWithConfig(joiner: IJoiner): Promise<void> {
-		let firstPlayer = joiner.creator;
-		let secondPlayer = joiner.chosenPlayer;
-		if (joiner.firstPlayer === '2' && (Math.random() < 0.5)) {
-			joiner.firstPlayer = '1';
-			// random
+	stopObservingPart() {
+		if (this.followedPartId == null) {
+			console.log('no part to stop observing');
+		} else {
+			console.log('we stop observing ' + this.followedPartId + ']');
+			// this.joinerService.stopObserving();
+			this.followedPartId = null;
+			this.followedPartObs = null;
 		}
-		if (joiner.firstPlayer === '1') {
-			// the opposite config is planned
-			secondPlayer = joiner.creator;
-			firstPlayer = joiner.chosenPlayer;
-		}
-		return this.partDao.updatePartById(this.followedPartId, {
-			playerZero: firstPlayer,
-			playerOne: secondPlayer,
-			turn: 0,
-			beginning: Date.now()
-		});
 	}
 
-	joinGame(partId: string, userName: string): Promise<void> {
-		console.log('GameService.joinGame ' + partId);
-		const partPromise: Promise<ICurrentPart> = this.partDao.readPartById(partId);
-		return partPromise.then(part =>
-			this.joinerService.joinGame(part.playerZero, userName, partId));
+	stopObserving() {
+		if (this.followedPartId == null) {
+			console.log('!!!we already stop watching doc');
+		} else {
+			console.log('stopped watching joiner ' + this.followedPartId + ']');
+			this.followedPartId = null;
+			this.followedPartSub.unsubscribe();
+			this.followedPartObs = null;
+		}
 	}
 
-	createAndJoinGame(creatorName: string, typeGame: string) {
-		console.log('GameService.createAndJoinGame');
-		const newPart: ICurrentPart = {
-			historic: 'pas implémenté',
-			listMoves: [],
-			playerZero: creatorName, // TODO: supprimer, il n'y a pas de createur par défaut
-			playerOne: '',
-			result: 5, // todo : constantiser ça, bordel
-			scorePlayerZero: 'pas implémenté',
-			scorePlayerOne: 'pas implémenté',
-			turn: -1,
-			typeGame: typeGame,
-			typePart: 'pas implémenté',
-			winner: ''
-		};
-		const newJoiner: IJoiner = {
-			candidatesNames: [],
-			creator: creatorName,
-			chosenPlayer: '',
-			timeoutMinimalDuration: 60,
-			firstPlayer: '0', // par défaut: le créateur
-			partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
-		};
-		this.partDao
-			.createPart(newPart)
-			.then(docId => {
-				console.log('partDao.addPart fullfilled for ' + docId);
-				this.joinerService
-					.set(docId, newJoiner)
-					.then(onfullfilled => {
-						console.log('joinerService.set fullfilled for ' + docId);
-						this.startObservingPart(docId);
-						this.route.navigate(['/' + typeGame, docId]);
-					})
-					.catch(onrejected =>
-						console.log('joinerService.set(' + docId + ', ' + JSON.stringify(newJoiner) + ') has failed'));
-			});
+	// old
+
+	startObservingPartOld(docId: string) {
+		if (this.followedPartId === docId) {
+			console.log('partie ' + docId + 'déjà en cours d\'observation');
+		} else if (this.followedPartId == null) {
+			console.log('[ we start to observe ' + docId);
+			this.followedPartId = docId;
+			this.followedPartObs = this.partDao.getPartObsById(docId);
+			// this.joinerService.startObserving(docId);
+		} else {
+			alert('we were already observing ' + this.followedPartId + ' then you ask to watch' + docId + 'you are gross (no I\'m bugged)');
+			this.stopObservingPart();
+			this.startObservingPartOld(docId);
+		}
 	}
 
 	proposeConfig(timeout: number, firstPlayer: string): Promise<void> {
@@ -144,58 +226,26 @@ export class GameService {
 	cancelGame(): Promise<void> {
 		console.log('GameService will cancel game ' + this.followedPartId);
 		// cancel the currently observed game
-		return this.joinerService
-			.cancelGame()
-			.then(onJoiningCancelled =>
-				this.partDao
-					.deletePartById(this.followedPartId)
-					.then(onPartCancelled => this.stopObservingPart()));
-	}
-
-	acceptConfig(joiner: IJoiner): Promise<void> {
-		this.startGameWithConfig(joiner);
-		return this.joinerService.acceptConfig();
-	}
-
-	startObservingPart(docId: string) {
-		if (this.followedPartId === docId) {
-			console.log('partie ' + docId + 'déjà en cours d\'observation');
-		} else if (this.followedPartId == null) {
-			console.log('[ we start to observe ' + docId);
-			this.followedPartId = docId;
-			this.followedPartObservable = this.partDao.getPartObservableById(docId);
-			this.joinerService.startObservingJoiner(docId);
-		} else {
-			alert('we were already observing ' + this.followedPartId + ' then you ask to watch' + docId + 'you are gross (no I\'m bugged)');
-			this.stopObservingPart();
-			this.startObservingPart(docId);
-		}
-	}
-
-	stopObservingPart() {
-		if (this.followedPartId == null) {
-			console.log('no part to stop observing');
-		} else {
-			console.log('we stop observing ' + this.followedPartId + ']');
-			this.joinerService.stopObservingJoiner();
-			this.followedPartId = null;
-			this.followedPartObservable = null;
-		}
+		return new Promise((resolve, reject) => {
+			this.joinerService
+				.deleteJoiner()
+				.then(onJoiningCancelled =>
+					this.partDao
+						.deletePartById(this.followedPartId)
+						.then(onPartCancelled => {
+							this.stopObservingPart();
+							resolve(onPartCancelled);
+						})
+						.catch(onReject => reject(onReject)))
+				.catch(onReject => reject(onReject));
+		});
 	}
 
 	// DELEGATE
 
-	getPartObservableById(partId: string): Observable<ICurrentPart> {
-		return this.partDao.getPartObservableById(partId);
-	}
-
-	getJoinerIdObservable(): Observable<IJoinerId> {
-		return this.joinerService.getJoinerIdObservable();
-	}
-
-	removePlayerFromJoiningPage(userName: string) {
-		this.joinerService.removePlayerFromJoiningPage(userName);
-	}
+	/* getPartObservableById(partId: string): Observable<ICurrentPart> {
+		return this.partDao.getPartObsById(partId);
+	} */ // OLD
 
 	setChosenPlayer(pseudo: string): Promise<void> {
 		return this.joinerService.setChosenPlayer(pseudo);

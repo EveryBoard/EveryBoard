@@ -11,6 +11,7 @@ import {P4Rules} from '../../../games/games.p4/P4Rules';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
 import {UserService} from '../../../services/UserService';
+import {ActivesUsersService} from '../../../services/ActivesUsersService';
 
 @Component({
 	selector: 'app-p4',
@@ -30,8 +31,8 @@ export class P4Component extends OnlineGame {
 
 	constructor(_route: Router, actRoute: ActivatedRoute,
 				userService: UserService,
-				joinerService: JoinerService, partService: GameService) {
-		super(_route, actRoute, userService, joinerService, partService);
+				joinerService: JoinerService, partService: GameService, activesUsersService: ActivesUsersService) {
+		super(_route, actRoute, userService, joinerService, partService, activesUsersService);
 	}
 
 	decodeMove(encodedMove: number): Move {

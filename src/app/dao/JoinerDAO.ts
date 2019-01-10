@@ -5,18 +5,20 @@ import {AngularFirestore} from 'angularfire2/firestore';
 import {map} from 'rxjs/operators';
 
 @Injectable({
-	providedIn : 'root'
+	providedIn: 'root'
 })
 export class JoinerDAO {
 
-	constructor(private afs: AngularFirestore) {}
+	constructor(private afs: AngularFirestore) {
+	}
 
-	getJoinerIdObservableById(id: string): Observable<IJoinerId> {
+	getJoinerObsById(id: string): Observable<IJoinerId> {
 		return this.afs.doc('joiners/' + id).snapshotChanges()
 			.pipe(map(actions => {
 				return {
 					joiner: actions.payload.data() as IJoiner,
-					id: id};
+					id: id
+				};
 			}));
 	}
 
@@ -48,17 +50,12 @@ export class JoinerDAO {
 	}
 
 	updateJoinerById(joinerId: string, modification: PIJoiner): Promise<void> {
-		console.log('joiner update : ' + joinerId);
-		return new Promise((resolve, reject) => {
-			this.afs
-				.doc('joiners/' + joinerId).ref
-				.update(modification)
-				.then(onFullFilled => resolve(onFullFilled))
-				.catch(onReject => reject(onReject));
-		});
+		return this.afs
+			.doc('joiners/' + joinerId).ref
+			.update(modification);
 	}
 
-	deletePartById(joinerId: string): Promise<void> {
+	deleteById(joinerId: string): Promise<void> {
 		return this.afs.doc('joiners/' + joinerId).ref.delete();
 	}
 

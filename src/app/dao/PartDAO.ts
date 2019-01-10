@@ -11,17 +11,20 @@ export class PartDAO {
 
 	constructor(private afs: AngularFirestore) {}
 
-	getPartObservableById(partId: string): Observable<ICurrentPart> {
-		return this.afs.doc('parties/' + partId)
-			.snapshotChanges()
+	getPartObsById(partId: string): Observable<ICurrentPartId> {
+		return this.afs.doc('parties/' + partId).snapshotChanges()
 			.pipe(map(actions => {
-				return actions.payload.data() as ICurrentPart;
+				return {
+					part: actions.payload.data() as ICurrentPart,
+					id: partId
+				};
 			}));
 	}
 
-	observeAllActivePart(callback: (parts: ICurrentPartId[]) => void): () => void {
-		// the callback will be called on the list of all actives parts
-		return this.afs.collection('parties').ref
+	observeActivesParts(callback: (parts: ICurrentPartId[]) => void): () => void {
+		// the callback will be called on the list of all actives activesParts
+		return this.afs
+			.collection('parties').ref
 			.where('result', '==', 5)
 			.onSnapshot(querySnapshot => {
 				const partIds: ICurrentPartId[] = [];

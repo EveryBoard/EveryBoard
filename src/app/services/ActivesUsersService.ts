@@ -7,26 +7,27 @@ import {UserDAO} from '../dao/UserDAO';
 	providedIn: 'root'
 })
 export class ActivesUsersService {
-	private activeUsers = new BehaviorSubject<IUserId[]>([]);
+	refreshingPresenceTimeout = 60 * 1000;
+	private activesUsersBS = new BehaviorSubject<IUserId[]>([]);
 
-	currentActiveUsersObservable = this.activeUsers.asObservable();
+	activesUsersObs = this.activesUsersBS.asObservable();
 
 	private unsubscribe: () => void;
 
 	constructor(private userDao: UserDAO) {}
 
 	startObserving() {
-		const timeOutedTimestamp: number = Date.now() - (1000 * 60 * 10);
-		const callback = (activeUserIds: IUserId[]) => {
-			console.log('one user must have change a thing');
-			activeUserIds = activeUserIds.filter(userId => userId.user.lastActionTime >= timeOutedTimestamp);
-			this.activeUsers.next(activeUserIds);
-		};
-		this.unsubscribe = this.userDao.observeAllActiveUser(callback, timeOutedTimestamp);
+		const refreshingPresenceTimeout: number = this.refreshingPresenceTimeout;
+		const timeOutedTimestamp: number = Date.now() - refreshingPresenceTimeout;
+		this.unsubscribe = this.userDao.observeActivesUsers(
+			timeOutedTimestamp,
+			activeUserIds => {
+				activeUserIds = activeUserIds.filter(userId => userId.user.lastActionTime >= timeOutedTimestamp);
+				this.activesUsersBS.next(activeUserIds); // TODO: vérifier fonctionnement du filtre
+			});
 	}
 
 	stopObserving() {
-		console.log('stopObserving user\'s activities');
 		this.unsubscribe();
 	}
 

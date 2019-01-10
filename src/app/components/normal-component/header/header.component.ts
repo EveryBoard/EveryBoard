@@ -1,6 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {UserService} from '../../../services/UserService';
 import {Router} from '@angular/router';
+import {ActivesUsersService} from '../../../services/ActivesUsersService';
 
 @Component({
 	selector: 'app-header',
@@ -8,16 +9,16 @@ import {Router} from '@angular/router';
 	styleUrls: ['./header.component.css']
 })
 export class HeaderComponent implements OnInit {
-	static refreshingPresenceTimeout = 60 * 1000;
 
 	userName: string;
 
 	constructor(private _route: Router,
-				private userService: UserService) {
+				private userService: UserService,
+				private activesUsersService: ActivesUsersService) {
 	}
 
 	ngOnInit() {
-		this.userService.currentUsernameObservable.subscribe(message => {
+		this.userService.usernameObs.subscribe(message => {
 			this.userName = message;
 			if (message !== '') {
 				this.startUserPresenceNotification();
@@ -28,9 +29,8 @@ export class HeaderComponent implements OnInit {
 	startUserPresenceNotification() {
 		setTimeout(() => {
 			this.userService.updateUserActivity();
-			console.log('I do hereby, notify my js activity, once a minute.');
 			this.startUserPresenceNotification();
-		}, HeaderComponent.refreshingPresenceTimeout);
+		}, this.activesUsersService.refreshingPresenceTimeout);
 	}
 
 	backToServer() {

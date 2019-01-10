@@ -24,7 +24,7 @@ export class UserDAO {
 			});
 	}
 
-	observeAllActiveUser(callback: (users: IUserId[]) => void, timeOutedTimestamp: number): () => void {
+	observeActivesUsers(timeOutedTimestamp: number, callback: (users: IUserId[]) => void): () => void {
 		return this.afs
 			.collection('joueurs').ref
 			.where('lastActionTime', '>=', timeOutedTimestamp)

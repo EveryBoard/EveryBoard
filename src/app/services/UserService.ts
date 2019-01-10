@@ -1,24 +1,24 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {UserDAO} from '../dao/UserDAO';
 import {IUser, IUserId} from '../domain/iuser';
 import {Router} from '@angular/router';
+import {ActivesUsersService} from './ActivesUsersService';
 
 @Injectable({
 	providedIn: 'root'
 })
 export class UserService {
 	// TODO : token en sessionStorage, voir martiastrid
-	private userName = this.getUserName();
+	private userName = this.getUserNameBS();
 	private userDocId = new BehaviorSubject<string>('');
-	private activeUsers = new BehaviorSubject<IUserId[]>([]);
 
-	currentUsernameObservable = this.userName.asObservable();
-	currentActiveUsersObservable = this.activeUsers.asObservable();
+	usernameObs = this.userName.asObservable();
 
 	private unsubscribe: () => void;
 
 	constructor(private _route: Router,
+				private activesUsersService: ActivesUsersService,
 				private userDao: UserDAO) {
 	}
 
@@ -26,6 +26,8 @@ export class UserService {
 		this.userName.next(username);
 		this.userDocId.next(userDocId);
 	}
+
+	// on all pages (header then)
 
 	updateUserActivity() {
 		const currentUserDocId = this.userDocId.getValue();
@@ -35,14 +37,21 @@ export class UserService {
 		this.userDao.updateUserDocActivity(currentUserDocId);
 	}
 
-	observeAllActiveUser() {
-		this.userDao
-			.observeAllActiveUser(
-				activeUserIds => this.activeUsers.next(activeUserIds),
-				Date.now() - (1000 * 60 * 10));
+	// On Server Component
+
+	getActivesUsersObs(): Observable<IUserId[]> {
+		// TODO: désabonnements aux autres services user
+		this.activesUsersService.startObserving();
+		return this.activesUsersService.activesUsersObs;
 	}
 
-	private getUserName(): BehaviorSubject<string> {
+	unSubFromActivesUsersObs() {
+		this.activesUsersService.stopObserving();
+	}
+
+	// autres
+
+	private getUserNameBS(): BehaviorSubject<string> {
 		return new BehaviorSubject<string>('');
 	}
 
@@ -100,7 +109,7 @@ export class UserService {
 
 	// Delegate
 
-	observeUserByPseudo(pseudo: string, callback: (user: IUserId) => void): () => void {
+	REFACTOR_observeUserByPseudo(pseudo: string, callback: (user: IUserId) => void): () => void {
 		// the callback will be called on the foundUser
 		return this.userDao.observeUserByPseudo(pseudo, callback);
 	}

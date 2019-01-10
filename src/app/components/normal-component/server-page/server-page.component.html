@@ -12,7 +12,7 @@
 			</tr>
 			</thead>
 			<tbody>
-			<tr *ngFor="let part of partIds"
+			<tr *ngFor="let part of activesParts"
 				(click)="joinGame(part.id, part.part.typeGame)">
 				<td>{{ part.part.typeGame }}</td>
 				<td>{{ part.part.playerZero }}</td>
@@ -56,7 +56,7 @@
 	<div id="onlineUser" class="circled">
 		<p> Recent User : </p>
 		<ul>
-			<li *ngFor="let user of activeUsers">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
+			<li *ngFor="let user of activesUsers">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
 				date:'HH:mm:ss':'+0100'}}
 			</li>
 		</ul>

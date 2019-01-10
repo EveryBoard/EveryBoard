@@ -8,6 +8,7 @@ import {JoinerService} from '../../../services/JoinerService';
 import {TablutRules} from '../../../games/tablut/TablutRules';
 import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
 import {GameService} from '../../../services/GameService';
+import {ActivesUsersService} from '../../../services/ActivesUsersService';
 
 @Component({
 	selector: 'app-tablut',
@@ -30,8 +31,8 @@ export class TablutComponent extends OnlineGame {
 	choosenY = -1;
 
 	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
-				joinerService: JoinerService, partService: GameService) {
-		super(_route, actRoute, userService, joinerService, partService);
+				joinerService: JoinerService, partService: GameService, activesUsersService: ActivesUsersService) {
+		super(_route, actRoute, userService, joinerService, partService, activesUsersService);
 	}
 
 	updateBoard() {
