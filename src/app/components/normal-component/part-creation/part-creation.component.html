@@ -5,8 +5,8 @@
 		<div class="row">
 			<h4>Création d'une partie par {{ currentJoiner.creator }}</h4>
 			<hr/>
-			<h4 *ngIf="userIsCreator" (click)="cancelGameCreation()"> Annuler la partie </h4>
-			<h4 *ngIf="!userIsCreator" (click)="cancelGameJoining()"> Quitter le jeu </h4>
+			<h4 *ngIf="userIsCreator" (click)="cancelAndLeave()"> Annuler la partie </h4>
+			<h4 *ngIf="!userIsCreator" (click)="cancelAndLeave()"> Quitter le jeu </h4>
 		</div>
 		<div *ngIf="currentJoiner.chosenPlayer!==''"> Adversaire : {{ currentJoiner.chosenPlayer }}</div>
 	</div>

@@ -23,8 +23,6 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	players: string[] = null;
 	board: Array<Array<number>>;
 
-	observedPart: Observable<ICurrentPart>;
-
 	partId: string;
 	userName: string;
 	gameStarted = false;
@@ -36,7 +34,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	allowedTimeoutVictory = false;
 	timeout = 60;
 
-	protected userSubscription: Subscription;
+	protected userSub: Subscription;
 	protected observedPartSubscription: Subscription;
 	protected opponentSubscription: () => void;
 
@@ -54,11 +52,11 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.partId = this.actRoute.snapshot.paramMap.get('id');
 	}
 
-	startGame() {
-		console.log('OnlineGame.startGame !');
+	protected startGame() {
+		console.log('OnlineGame.startGame ! (if ' + this.gameStarted + ' is true then next line is useless)');
 		this.gameStarted = true;
 		// should be some kind of session-scope
-		this.userSubscription =
+		this.userSub =
 			this.userService.usernameObs.subscribe(userName => {
 				this.userName = userName;
 
@@ -71,8 +69,10 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 						this.timeout = iJoiner.timeoutMinimalDuration;
 						console.log('le timout est fixé à ' + this.timeout);
 
-						this.gameService.startObserving(this.partId, iPart =>
-							this.onCurrentPartUpdate(iPart));
+						this.gameService.startObserving(this.partId, iPart => {
+							console.log('On s\'apprête à observer la partie ' + this.partId);
+							this.onCurrentPartUpdate(iPart);
+						});
 
 						/*this.observedPart = this.gameService.getPartObservableById(this.partId);
 						this.observedPartSubscription =
@@ -85,8 +85,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			});
 	}
 
-	onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
-		console.log('currentPartUpdate');
+	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
+		console.log('currentPartUpdate: ');
+		console.log(JSON.stringify(updatedICurrentPart));
 		const part: ICurrentPart = updatedICurrentPart.part;
 		if (this.players == null) {
 			this.setPlayersDatas(part);
@@ -149,7 +150,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	startWatchingForOpponentTimeout() {
-		if (this.opponentHasTimedOut()) {
+		if (this.hasOpponentTimedOut()) {
 			this.allowedTimeoutVictory = true;
 		} else {
 			this.allowedTimeoutVictory = false;
@@ -163,7 +164,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		}
 	}
 
-	opponentHasTimedOut() {
+	protected hasOpponentTimedOut() {
 		console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
 		return (this.opponent.user.lastActionTime + (this.timeout * 1000) < Date.now());
 	}
@@ -209,8 +210,8 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		if (this.gameStarted === true) {
 			console.log('vous quittez un composant d\'une partie : unSub Part');
-			if (this.userSubscription && this.userSubscription.unsubscribe) {
-				this.userSubscription.unsubscribe();
+			if (this.userSub && this.userSub.unsubscribe) {
+				this.userSub.unsubscribe();
 			}
 			if (this.observedPartSubscription && this.observedPartSubscription.unsubscribe) {
 				this.observedPartSubscription.unsubscribe();

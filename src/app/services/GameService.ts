@@ -82,7 +82,7 @@ export class GameService {
 
 	// on Part Creation Component
 
-	startGameWithConfig(joiner: IJoiner): Promise<void> {
+	private startGameWithConfig(joiner: IJoiner): Promise<void> {
 		let firstPlayer = joiner.creator;
 		let secondPlayer = joiner.chosenPlayer;
 		if (joiner.firstPlayer === '2' && (Math.random() < 0.5)) {
@@ -94,12 +94,13 @@ export class GameService {
 			secondPlayer = joiner.creator;
 			firstPlayer = joiner.chosenPlayer;
 		}
-		return this.partDao.updatePartById(this.followedPartId, {
+		const modification = {
 			playerZero: firstPlayer,
 			playerOne: secondPlayer,
 			turn: 0,
 			beginning: Date.now()
-		});
+		};
+		return this.partDao.updatePartById(this.followedPartId, modification);
 	}
 
 	deletePart(partId: string): Promise<string> {
@@ -116,9 +117,46 @@ export class GameService {
 		});
 	}
 
+	OLDacceptConfig(joiner: IJoiner): Promise<void> {
+		return new Promise((resolve, reject) => {
+			if (this.followedPartId == null || this.followedPartId === undefined) {
+				console.log('!!! pas de partie en cours d\'observation, comment accepter la config??');
+				reject();
+			}
+			this.startGameWithConfig(joiner)
+				.then(onGameStartedWithConfig => {
+					this.joinerService
+						.acceptConfig()
+						.then(onSignalSent => resolve(onSignalSent))
+						.catch(onRejected => reject(onRejected));
+				})
+				.catch(onRejected => {
+					console.log('GameService.startGameWithConfig failed');
+					console.log(onRejected);
+					reject(onRejected);
+				});
+		});
+	}
+
 	acceptConfig(joiner: IJoiner): Promise<void> {
-		this.startGameWithConfig(joiner);
-		return this.joinerService.acceptConfig();
+		return new Promise((resolve, reject) => {
+			if (this.followedPartId == null || this.followedPartId === undefined) {
+				console.log('!!! pas de partie en cours d\'observation, comment accepter la config??');
+				reject();
+			}
+			this.joinerService
+				.acceptConfig()
+				.then(onConfigAccepted => {
+					this.startGameWithConfig(joiner)
+						.then(onSignalSent => resolve(onSignalSent))
+						.catch(onRejected => reject(onRejected));
+				})
+				.catch(onRejected => {
+					console.log('GameService.startGameWithConfig failed');
+					console.log(onRejected);
+					reject(onRejected);
+				});
+		});
 	}
 
 	// on OnlineGame Component

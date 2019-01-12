@@ -15,13 +15,17 @@ import {JoinerService} from '../../../services/JoinerService';
 	styleUrls: ['./part-creation.component.css']
 })
 export class PartCreationComponent implements OnInit, OnDestroy {
+	/* PageCreationComponent are always child components of OnlineGames component (one to one)
+	 * they need common data so mother calculate/retrieve then share them with her child
+	 */
 
 	@Input() partId: string;
+	@Input() userName: string;
+
 	@Output() gameStartNotification = new EventEmitter<void>();
+	gameStarted = false; // notify that the game has started, a thing evaluated with the joiner doc game status
 
 	currentJoiner: IJoiner = null;
-
-	userName: string;
 
 	userIsCreator: boolean;
 	userIsChosenPlayer: boolean;
@@ -44,30 +48,25 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		this.userSub = this.userService.usernameObs.subscribe(userName => {
-			this.userName = userName;
-			if (userName !== '') {
-				if (this.partId !== '') {
-					console.log('PartCreationComponent ngOnInit correctly starting (' + userName + ', ' + this.partId + ')');
-					this.joinerService
-						.joinGame(this.partId, this.userName)
-						.then(onFullFilled =>
-							this.joinerService.startObserving(this.partId, iJoiner =>
-								this.onCurrentJoinerUpdate(iJoiner)))
-						.catch(onRejected => {
-							console.log('!!!PartCreationComponent joining game FAILED because : ');
-							console.log(onRejected);
-							this._route.navigate(['/server']);
-						});
-				} else {
-					console.log('PartCreationComponent we did not receive partId error');
+		if (this.userName === '') { // TODO: ces vérifications doivent être faite par le composant mère, et une seule fois ??
+			console.log('PartCreationComponent we did not receive userName error');
+			this._route.navigate(['/server']);
+		} else if (this.partId === '') {
+			console.log('PartCreationComponent we did not receive partId error');
+			this._route.navigate(['/server']);
+		} else {
+			console.log('PartCreationComponent ngOnInit correctly starting (' + this.userName + ', ' + this.partId + ')');
+			this.joinerService
+				.joinGame(this.partId, this.userName)
+				.then(onFullFilled =>
+					this.joinerService.startObserving(this.partId, iJoiner =>
+						this.onCurrentJoinerUpdate(iJoiner)))
+				.catch(onRejected => {
+					console.log('!!!PartCreationComponent joining game FAILED because : ');
+					console.log(onRejected);
 					this._route.navigate(['/server']);
-				}
-			} else {
-				console.log('PartCreationComponent we did not receive userName error');
-				this._route.navigate(['/server']);
-			}
-		});
+				});
+		}
 	}
 
 	ngOnDestroy() {
@@ -77,15 +76,27 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		if (this.partSub && this.partSub.unsubscribe) {
 			this.partSub.unsubscribe();
 		}
-		if (!this.userIsCreator) {
-			console.log('vous quittez le channel ' + this.userName);
-			this.joinerService
-				.cancelJoining(this.userName)
-				.then(onFullFilled => console.log('you left the channel'))
-				.catch(onRejected => { console.log('cancelJoining failed'); console.log(onRejected); });
+		if (this.gameStarted) {
+			this.joinerService.stopObserving();
+		} else {
+			if (this.userIsCreator) {
+				console.log('you leave, creator');
+				this.cancelGameCreation().then(onFullFilled =>
+					this.joinerService.stopObserving());
+			} else {
+				console.log('vous quittez le channel ' + this.userName);
+				this.joinerService
+					.cancelJoining(this.userName)
+					.then(onFullFilled => {
+						this.joinerService.stopObserving();
+						console.log('you left the channel, joiner');
+					})
+					.catch(onRejected => {
+						console.log('cancelJoining failed');
+						console.log(onRejected);
+					});
+			}
 		}
-		this.joinerService.stopObserving();
-		console.log('PartCreation ngOnDestroy : subscriptions cancelled');
 	}
 
 	private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
@@ -116,6 +127,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
 	private onGameStarted() {
 		this.gameStartNotification.emit();
+		this.gameStarted = true;
+		console.log('game seem to have started, an event has been emit and a boolean changed!');
 	}
 
 	private updateJoiner(iJoinerId: IJoinerId) {
@@ -133,53 +146,32 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		this.currentJoiner = iJoinerId.joiner;
 	}
 
-	cancelGameCreation() {
+	private cancelGameCreation(): Promise<void> {
 		// callable only by the creator
-		this.gameService
-			.deletePart(this.partId)
-			.then(then => {
-				console.log('part suppressed');
-				this.joinerService
-					.deleteJoiner()
-					.then( onFullFilled => {
-						console.log('joiner and part suppressed !');
-						this._route.navigate(['/server']);
-					})
-					.catch(onRejected => {
-						console.log('joiner could not be cancelled');
-						this._route.navigate(['/server']);
-					});
-			})
-			.catch(fail => {
-				console.log('delete part failed');
-				this._route.navigate(['/server']);
-			});
+		return new Promise((resolve, reject) => {
+			this.gameService
+				.deletePart(this.partId)
+				.then(then => {
+					console.log('part suppressed');
+					this.joinerService
+						.deleteJoiner()
+						.then(onFullFilled => {
+							console.log('joiner and part suppressed !');
+							resolve(onFullFilled);
+						})
+						.catch(onRejected => {
+							console.log('joiner could not be cancelled');
+							reject(onRejected);
+						});
+				})
+				.catch(fail => {
+					console.log('delete part failed');
+					reject(fail);
+				});
+		});
 	}
 
-	oldcancelGame() {
-		// callable only by the creator
-		this.joinerService
-			.deleteJoiner()
-			.then(then => {
-				console.log('joiner suppressed');
-				this.gameService
-					.deletePart(this.partId)
-					.then( onFullFilled => {
-						console.log('part suppressed');
-						this._route.navigate(['/server']);
-					})
-					.catch(onRejected => {
-						console.log('part could not be cancelled');
-						this._route.navigate(['/server']);
-					});
-			})
-			.catch(fail => {
-				console.log('delete joiner failed');
-				this._route.navigate(['/server']);
-			});
-	}
-
-	cancelGameJoining() {
+	cancelAndLeave() {
 		this._route.navigate(['/server']);
 	}
 
@@ -200,6 +192,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
 		// trigger the beginning redirection that will be called on every subscribed user
 		// status become 3 (game started)
+		console.log('let\'s accept config of ' + this.partId);
 		return this.gameService.acceptConfig(this.currentJoiner);
 	}
 

@@ -145,6 +145,7 @@ export class JoinerService {
 	}
 
 	acceptConfig(): Promise<void> {
+		console.log('JoinerService :: let s accept config from ' + this.followedJoinerId);
 		return this.joinerDao
 			.updateJoinerById(this.followedJoinerId, {partStatus: 3});
 	}
