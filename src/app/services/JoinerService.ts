@@ -145,6 +145,9 @@ export class JoinerService {
 	}
 
 	acceptConfig(): Promise<void> {
+		if (this.followedJoinerId == null) {
+			console.log('BUG GOING TO HAPPEND cause acceptConfig when no observing Joiner !!');
+		}
 		console.log('JoinerService :: let s accept config from ' + this.followedJoinerId);
 		return this.joinerDao
 			.updateJoinerById(this.followedJoinerId, {partStatus: 3});

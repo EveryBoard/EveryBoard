@@ -144,8 +144,7 @@ export class P4Rules extends Rules {
 			P4Rules.debugPrintBiArray(board);
 		}
 		if (board[c.y][c.x] === P4Rules.UNOCCUPIED) {
-			console.log('CACA');
-			// TODO : choisir entre "return 0" et "throw new Error('cannot call getCaseScore on empty case')"
+			throw new Error('cannot call getCaseScore on empty case');
 		}
 		// anciennement nommé countPossibility
 		let score = 0; // final result, count the theoretical victorys possibility
@@ -353,7 +352,7 @@ export class P4Rules extends Rules {
 			} else {
 				// cette case est différente de la précédente
 				if (nInALine === 4) {
-					if (P4Rules.VERBOSE || true) {
+					if (P4Rules.VERBOSE) {
 						console.log('there is some kind of victory here 2');
 					}
 					return aligner === P4Rules.PAWN_O
@@ -370,7 +369,7 @@ export class P4Rules extends Rules {
 			y++;
 		}
 		if (nInALine === 4) {
-			if (P4Rules.VERBOSE || true) {
+			if (P4Rules.VERBOSE) {
 				console.log('there is some kind of victory here 3');
 			}
 			return aligner === P4Rules.PAWN_O

@@ -18,7 +18,7 @@ export class HeaderComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.userService.usernameObs.subscribe(message => {
+		this.userService.userNameObs.subscribe(message => {
 			this.userName = message;
 			if (message !== '') {
 				this.startUserPresenceNotification();

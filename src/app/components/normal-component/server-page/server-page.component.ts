@@ -32,7 +32,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
 	ngOnInit() {
 		this.userNameSub =
-			this.userService.usernameObs
+			this.userService.userNameObs
 				.subscribe(userName => this.userName = userName);
 
 		this.activesPartsSub = this.gameService
@@ -75,7 +75,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 					this._route.navigate(['/' + this.selectedGame, createdDocId]);
 				})
 				.catch(onRejected => {
-					console.log('gameService Failed to create a game');
+					console.log('gameService Failed to create a game: ');
+					console.log(JSON.stringify(onRejected));
 				});
 		} else {
 			console.log('vous devez vous connecter pour créer une partie'); // TODO: redirect vers la connection

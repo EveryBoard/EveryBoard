@@ -1,8 +1,6 @@
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {Observable, Subscription} from 'rxjs';
-
-import {HeaderComponent} from '../normal-component/header/header.component';
+import {Subscription} from 'rxjs';
 
 import {ICurrentPart, ICurrentPartId} from '../../domain/icurrentpart';
 import {IUserId} from '../../domain/iuser';
@@ -48,46 +46,40 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		console.log('OnlineGame ngOnInit');
 		this.partId = this.actRoute.snapshot.paramMap.get('id');
+		this.userSub = this.userService.userNameObs
+			.subscribe(userName => this.userName = userName);
 	}
 
 	protected startGame() {
-		console.log('OnlineGame.startGame ! (if ' + this.gameStarted + ' is true then next line is useless)');
+		if (this.gameStarted) {
+			console.log('!!!OnlineGame.startGame next line is sometimes useless)');
+		} else {
+			console.log('OnlineGame.startGame next line is not useless)');
+		}
 		this.gameStarted = true;
 		// should be some kind of session-scope
-		this.userSub =
-			this.userService.usernameObs.subscribe(userName => {
-				this.userName = userName;
 
-				this.rules.setInitialBoard();
-				this.board = this.rules.node.gamePartSlice.getCopiedBoard();
+		this.rules.setInitialBoard();
+		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
-				this.joinerService
-					.readJoinerById(this.partId)
-					.then(iJoiner => {
-						this.timeout = iJoiner.timeoutMinimalDuration;
-						console.log('le timout est fixé à ' + this.timeout);
+		this.joinerService
+			.readJoinerById(this.partId)
+			.then(iJoiner => {
+				this.timeout = iJoiner.timeoutMinimalDuration;
+				// console.log('le timout est fixé à ' + this.timeout);
 
-						this.gameService.startObserving(this.partId, iPart => {
-							console.log('On s\'apprête à observer la partie ' + this.partId);
-							this.onCurrentPartUpdate(iPart);
-						});
-
-						/*this.observedPart = this.gameService.getPartObservableById(this.partId);
-						this.observedPartSubscription =
-							this.observedPart.subscribe(updatedICurrentPart =>
-								this.onCurrentPartUpdate(updatedICurrentPart));
-					*/
-
-					})
-					.catch(fail => console.log('there was a problem trying to get iJoiner timeout'));
+				this.gameService.startObserving(this.partId, iPart => {
+					this.onCurrentPartUpdate(iPart);
+				});
+			})
+			.catch(fail => {
+				console.log('there was a problem trying to get iJoiner timeout becuase : ');
+				console.log(JSON.stringify(fail));
 			});
 	}
 
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
-		console.log('currentPartUpdate: ');
-		console.log(JSON.stringify(updatedICurrentPart));
 		const part: ICurrentPart = updatedICurrentPart.part;
 		if (this.players == null) {
 			this.setPlayersDatas(part);
@@ -112,8 +104,8 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.rules.node.gamePartSlice.turn;
 			const choosedMove = this.decodeMove(listMoves[currentPartTurn]);
-			console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
-				+ listMoves + ' choosed move : ' + choosedMove);
+			// console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
+			// 	+ listMoves + ' choosed move : ' + choosedMove);
 			const correctDBMove: boolean = this.rules.choose(choosedMove);
 			if (!correctDBMove) {
 				console.log('we received an incorrect db move !' + choosedMove + ' and ' + listMoves);
@@ -123,6 +115,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
+		// console.log('OnlineGame set player\'s data!');
 		this.players = [
 			updatedICurrentPart.playerZero,
 			updatedICurrentPart.playerOne];
@@ -139,7 +132,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			this.opponentSubscription =
 				this.userService.REFACTOR_observeUserByPseudo(opponentName,
 					callback => {
-						console.log('userFound : ' + callback);
+						// console.log('userFound : ' + JSON.stringify(callback));
 						if (this.opponent == null) {
 							this.opponent = callback;
 							this.startWatchingForOpponentTimeout();
@@ -165,7 +158,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	protected hasOpponentTimedOut() {
-		console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
+		// console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
 		return (this.opponent.user.lastActionTime + (this.timeout * 1000) < Date.now());
 	}
 
@@ -209,7 +202,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	ngOnDestroy() {
 		if (this.gameStarted === true) {
-			console.log('vous quittez un composant d\'une partie : unSub Part');
+			// console.log('vous quittez un composant d\'une partie : unSub Part');
 			if (this.userSub && this.userSub.unsubscribe) {
 				this.userSub.unsubscribe();
 			}
@@ -221,7 +214,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			}
 			this.gameService.stopObservingPart();
 		}
-		console.log('OnlineGame.onDestroy');
+		// console.log('OnlineGame.onDestroy');
 	}
 
 	abstract updateBoard(): void;

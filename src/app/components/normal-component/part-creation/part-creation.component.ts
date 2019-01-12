@@ -48,6 +48,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
+		console.log('PartCreation Component Initializing...');
 		if (this.userName === '') { // TODO: ces vérifications doivent être faite par le composant mère, et une seule fois ??
 			console.log('PartCreationComponent we did not receive userName error');
 			this._route.navigate(['/server']);
@@ -67,6 +68,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 					this._route.navigate(['/server']);
 				});
 		}
+		console.log('PartCreation Component Initialized!');
 	}
 
 	ngOnDestroy() {
@@ -193,6 +195,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		// trigger the beginning redirection that will be called on every subscribed user
 		// status become 3 (game started)
 		console.log('let\'s accept config of ' + this.partId);
+		console.log('GameService observing : ');
 		return this.gameService.acceptConfig(this.currentJoiner);
 	}
 

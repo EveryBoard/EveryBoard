@@ -132,7 +132,7 @@ export class GameService {
 				})
 				.catch(onRejected => {
 					console.log('GameService.startGameWithConfig failed');
-					console.log(onRejected);
+					console.log(JSON.stringify(onRejected));
 					reject(onRejected);
 				});
 		});
@@ -140,10 +140,10 @@ export class GameService {
 
 	acceptConfig(joiner: IJoiner): Promise<void> {
 		return new Promise((resolve, reject) => {
-			if (this.followedPartId == null || this.followedPartId === undefined) {
+			/* if (this.followedPartId == null || this.followedPartId === undefined) {
 				console.log('!!! pas de partie en cours d\'observation, comment accepter la config??');
 				reject();
-			}
+			} */ // OLDLY, seem's to allow bug anyway, let's try to suppress it
 			this.joinerService
 				.acceptConfig()
 				.then(onConfigAccepted => {

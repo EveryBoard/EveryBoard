@@ -13,7 +13,7 @@ export class UserService {
 	private userName = this.getUserNameBS();
 	private userDocId = new BehaviorSubject<string>('');
 
-	usernameObs = this.userName.asObservable();
+	userNameObs = this.userName.asObservable();
 
 	private unsubscribe: () => void;
 
