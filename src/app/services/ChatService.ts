@@ -1,9 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {IChatId} from '../domain/ichat';
+import {IChat, IChatId} from '../domain/ichat';
 import {ChatDAO} from '../dao/ChatDAO';
 import {IMessage} from '../domain/imessage';
-import {Message} from '@angular/compiler/src/i18n/i18n_ast';
 
 @Injectable({
 	providedIn: 'root'
@@ -75,6 +74,12 @@ export class ChatService {
 			this.followedChatSub.unsubscribe();
 			this.followedChatObs = null;
 		}
+	}
+
+	// delegate
+
+	set(id: string, chat: IChat) {
+		return this.chatDao.set(id, chat);
 	}
 
 }

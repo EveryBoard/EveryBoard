@@ -25,7 +25,7 @@ export class JoinerService {
 		} else if (joinerId === this.followedJoinerId) {
 			console.log('!!!already observing this joiner (' + joinerId + ')');
 		} else {
-			alert('!!!we were already observing ' + this.followedJoinerId + ' then you ask to watch' + joinerId + 'you are gross (no I\'m bugged)');
+			alert('!!!we were already observing ' + this.followedJoinerId + ' then you ask to watch ' + joinerId + ' you are gross (no I\'m bugged)');
 			this.stopObserving();
 			this.startObserving(joinerId, callback);
 		}
@@ -157,7 +157,6 @@ export class JoinerService {
 		if (this.followedJoinerId == null) {
 			console.log('!!!we already stop watching doc');
 		} else {
-			// console.log('stopped watching joiner ' + this.followedJoinerId + ']');
 			this.followedJoinerId = null;
 			this.followedJoinerSub.unsubscribe();
 			this.followedJoinerObs = null;

@@ -4,6 +4,8 @@ import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {HttpModule} from '@angular/http';
 import {RouterModule, Route} from '@angular/router';
+import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {MaterialModule} from '../material-modules'
 
 import {AngularFireModule} from 'angularfire2';
 import {AngularFirestoreModule} from 'angularfire2/firestore';
@@ -35,6 +37,7 @@ import {QuartoOfflineComponent} from './components/offline-components/quarto-off
 import {TablutOfflineComponent} from './components/offline-components/tablut-offline/tablut-offline.component';
 import {PartCreationComponent} from './components/normal-component/part-creation/part-creation.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
+import {ChatService} from './services/ChatService';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -61,6 +64,7 @@ const routes: Route [] = [
 		FooterComponent,
 		LoginComponent,
 		ServerPageComponent,
+		ChatComponent,
 		StatisticPageComponent,
 		CreateAccountComponent,
 		PartCreationComponent,
@@ -74,7 +78,6 @@ const routes: Route [] = [
 		P4OfflineComponent,
 		QuartoOfflineComponent,
 		TablutOfflineComponent,
-		ChatComponent
 	],
 	imports: [
 		BrowserModule,
@@ -84,9 +87,11 @@ const routes: Route [] = [
 		ReactiveFormsModule,
 		FormsModule,
 		AngularFireModule.initializeApp(firebaseConfig),
-		AngularFirestoreModule
+		AngularFirestoreModule,
+		BrowserAnimationsModule,
+		MaterialModule
 	],
-	providers: [AuthenticationService, GameService, JoinerService, UserService],
+	providers: [AuthenticationService, GameService, JoinerService, UserService, ChatService],
 	bootstrap: [AppComponent]
 })
 export class AppModule {

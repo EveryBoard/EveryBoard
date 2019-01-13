@@ -5,7 +5,7 @@ export interface IChat {
 	 *
 	 */
 	messages: IMessage[];
-	status: number; // 0: open, 1: closed;
+	status: string; // 0: open, 1: closed; NOT IMPLEMENT YET : TODO
 }
 
 export interface PIChat {

@@ -69,8 +69,9 @@
 			</div>
 
 			<div id="chat" class="circled">
-				<h4> Parle à tes amis ! </h4>
-				<h6> En travaux </h6>
+				<app-chat [userName]="userName"
+						  [chatId]="partId"
+						  turn="null"></app-chat>
 			</div>
 
 		</div>

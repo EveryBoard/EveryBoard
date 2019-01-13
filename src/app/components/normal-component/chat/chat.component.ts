@@ -11,10 +11,14 @@ export class ChatComponent implements OnInit {
 
 	@Input() chatId: string;
 	@Input() userName: string;
+	@Input() turn: number;
 
 	chat: IMessage[];
+	userMessage: string;
 
-	constructor(private chatService: ChatService) {
+	constructor(private chatService: ChatService) {}
+
+	ngOnInit() {
 		if (this.chatId == null || this.chatId === '') {
 			console.log('Chat Id is null, keep your attempt, it suck');
 		} else if (this.userName == null || this.userName === '') {
@@ -24,8 +28,12 @@ export class ChatComponent implements OnInit {
 		}
 	}
 
-	ngOnInit() {
-
+	sendMessage() {
+		if (this.userName === '') {
+			console.log('je t\'envois un toast car t\'es pas connecté donc tu te tait!');
+		}
+		this.chatService.sendMessage(this.userName, this.turn, this.userMessage);
+		this.userMessage = '';
 	}
 
 }

@@ -9,6 +9,9 @@ import {IJoiner} from '../domain/ijoiner';
 import {JoinerService} from './JoinerService';
 import {Router} from '@angular/router';
 import {ActivesPartsService} from './ActivesPartsService';
+import {ChatService} from './ChatService';
+import {IMessage} from '../domain/imessage';
+import {IChat} from '../domain/ichat';
 
 @Injectable({
 	providedIn: 'root'
@@ -22,7 +25,8 @@ export class GameService {
 	constructor(private route: Router,
 				private partDao: PartDAO,
 				private activesPartsService: ActivesPartsService,
-				private joinerService: JoinerService) {}
+				private joinerService: JoinerService,
+				private chatService: ChatService) {}
 
 	// on Server Component
 
@@ -49,6 +53,10 @@ export class GameService {
 			firstPlayer: '0', // par défaut: le créateur
 			partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
 		};
+		const newChat: IChat = {
+			status: 'not implemented',
+			messages: []
+		};
 		return new Promise((resolve, reject) => {
 			this.partDao
 				.createPart(newPart)
@@ -56,7 +64,15 @@ export class GameService {
 					this.joinerService
 						.set(docId, newJoiner)
 						.then(onFullFilled => {
-							resolve(docId);
+							this.chatService
+								.set(docId, newChat)
+								.then(onChatCreated => {
+									resolve(docId);
+								})
+								.catch(onRejected => {
+									console.log('chatService.set' + docId + ', ' + JSON.stringify(newJoiner) + ') has failed');
+									reject(onRejected);
+								});
 						})
 						.catch(onRejected => {
 							console.log('joinerService.set(' + docId + ', ' + JSON.stringify(newJoiner) + ') has failed');
@@ -149,7 +165,7 @@ export class GameService {
 		} else if (partId === this.followedPartId) {
 			console.log('!!!already observing this part (' + partId + ')');
 		} else {
-			alert('!!!we were already observing ' + this.followedPartId + ' then you ask to watch' + partId + 'you are gross (no I\'m bugged)');
+			alert('!!!we were already observing ' + this.followedPartId + ' then you ask to watch ' + partId + ' you are gross (no I\'m bugged)');
 			this.stopObserving();
 			this.startObserving(partId, callback);
 		}
