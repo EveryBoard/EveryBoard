@@ -4,3 +4,12 @@
 
 html, body { height: 100%; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+.circled {
+	border-style: solid;
+	border-radius: 25px;
+	overflow: auto;
+	margin-bottom: 1%;
+	padding: 2%;
+	align-content: center;
+}
+

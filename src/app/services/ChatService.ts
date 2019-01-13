@@ -69,11 +69,25 @@ export class ChatService {
 		if (this.followedChatId == null) {
 			console.log('!!!we already stop watching doc');
 		} else {
-			// console.log('stopped watching chat ' + this.followedChatId + ']');
+			console.log('stopped watching chat ' + this.followedChatId + ']');
 			this.followedChatId = null;
 			this.followedChatSub.unsubscribe();
 			this.followedChatObs = null;
 		}
+	}
+
+	deleteChat(chatId: string): Promise<void> {
+		console.log('ChatService.deleteChat ' + chatId);
+		return new Promise((resolve, reject) => {
+			if (chatId == null) {
+				console.log('followed chat id is null');
+				reject();
+			}
+			this.chatDao
+				.deleteById(chatId)
+				.then(onFullFilled => resolve())
+				.catch(onRejected => reject());
+		});
 	}
 
 	// delegate

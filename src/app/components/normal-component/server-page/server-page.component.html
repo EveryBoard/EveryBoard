@@ -1,66 +1,74 @@
 <div class="container-fluid">
 
-	<div id="actualGame" class="circled">
-		<p>List of actual games</p>
-		<table class="table table-hover">
-			<thead>
-			<tr>
-				<th scope="col">Game Name</th>
-				<th scope="col">Player 0</th>
-				<th scope="col">Player 1</th>
-				<th scope="col">Turn</th>
-			</tr>
-			</thead>
-			<tbody>
-			<tr *ngFor="let part of activesParts"
-				(click)="joinGame(part.id, part.part.typeGame)">
-				<td>{{ part.part.typeGame }}</td>
-				<td>{{ part.part.playerZero }}</td>
-				<td>{{ part.part.playerOne }}</td>
-				<td>{{ part.part.turn }}</td>
-			</tr>
-			</tbody>
-		</table>
+	<div class="col-sm-9">
+
+		<div id="actualGame" class="circled">
+			<p>List of actual games</p>
+			<table class="table table-hover">
+				<thead>
+				<tr>
+					<th scope="col">Game Name</th>
+					<th scope="col">Player 0</th>
+					<th scope="col">Player 1</th>
+					<th scope="col">Turn</th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr *ngFor="let part of activesParts"
+					(click)="joinGame(part.id, part.part.typeGame)">
+					<td>{{ part.part.typeGame }}</td>
+					<td>{{ part.part.playerZero }}</td>
+					<td>{{ part.part.playerOne }}</td>
+					<td>{{ part.part.turn }}</td>
+				</tr>
+				</tbody>
+			</table>
+		</div>
+
+		<div id="chat" class="circled">
+			<app-chat [userName]="userName"
+					  chatId="server"
+					  turn="null"></app-chat>
+		</div>
+
 	</div>
 
-	<div id="chat" class="circled">
-		<app-chat [userName]="userName"
-				  chatId="server"
-				  turn="null"></app-chat>
-	</div>
+	<div class="col-sm-3">
 
-	<div id="gameCreator" class="circled form-group">
-		<label for="gameType">Créer un jeu</label>
-		<select id="gameType"
-				class="form-control"
-				[(ngModel)]='selectedGame'>
-			<option *ngFor="let gameName of gameNameList"
-					value={{gameName}}
-					class="form-control">
-				{{ gameName }}
-			</option>
-		</select>
-		<br/>
-		<input type="button"
-			   value="online game"
-			   [disabled]="!selectedGame"
-			   (click)="createGame()"
-			   class="btn btn-primary btn-block">
-		<br/>
-		<input type="button"
-			   [disabled]="!selectedGame"
-			   value="local game"
-			   (click)="playLocally()"
-			   class="btn btn-primary btn-block">
-	</div>
+		<div id="gameCreator" class="circled form-group">
+			<label for="gameType">Créer un jeu</label>
+			<select id="gameType"
+					class="form-control"
+					[(ngModel)]='selectedGame'>
+				<option *ngFor="let gameName of gameNameList"
+						value={{gameName}}
+						class="form-control">
+					{{ gameName }}
+				</option>
+			</select>
+			<br/>
+			<input type="button"
+				   value="online game"
+				   [disabled]="!selectedGame"
+				   (click)="createGame()"
+				   class="btn btn-primary btn-block">
+			<br/>
+			<input type="button"
+				   [disabled]="!selectedGame"
+				   value="local game"
+				   (click)="playLocally()"
+				   class="btn btn-primary btn-block">
+		</div>
 
-	<div id="onlineUser" class="circled">
-		<p> Recent User : </p>
-		<ul>
-			<li *ngFor="let user of activesUsers">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
-				date:'HH:mm:ss':'+0100'}}
-			</li>
-		</ul>
+		<div id="onlineUser" class="circled">
+			<p> Recent User : </p>
+			<ul>
+				<li *ngFor="let user of activesUsers">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
+					date:'HH:mm:ss':'+0100'}}
+				</li>
+			</ul>
+		</div>
+
 	</div>
 
 </div>

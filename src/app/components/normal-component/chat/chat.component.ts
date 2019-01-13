@@ -1,4 +1,4 @@
-import {Component, Input, OnInit} from '@angular/core';
+import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ChatService} from '../../../services/ChatService';
 import {IMessage} from '../../../domain/imessage';
 
@@ -7,7 +7,7 @@ import {IMessage} from '../../../domain/imessage';
 	templateUrl: './chat.component.html',
 	styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
 
 	@Input() chatId: string;
 	@Input() userName: string;
@@ -36,4 +36,7 @@ export class ChatComponent implements OnInit {
 		this.userMessage = '';
 	}
 
+	ngOnDestroy() {
+		this.chatService.stopObserving();
+	}
 }

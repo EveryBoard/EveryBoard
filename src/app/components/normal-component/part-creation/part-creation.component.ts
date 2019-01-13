@@ -8,6 +8,7 @@ import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
 import {UserService} from '../../../services/UserService';
 import {GameService} from '../../../services/GameService';
 import {JoinerService} from '../../../services/JoinerService';
+import {ChatService} from '../../../services/ChatService';
 
 @Component({
 	selector: 'app-part-creation',
@@ -44,7 +45,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	constructor(private _route: Router,
 				private userService: UserService,
 				private gameService: GameService,
-				private joinerService: JoinerService) {
+				private joinerService: JoinerService,
+				private chatService: ChatService) {
 	}
 
 	ngOnInit() {
@@ -157,8 +159,17 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 					this.joinerService
 						.deleteJoiner()
 						.then(onFullFilled => {
-							console.log('joiner and part suppressed !');
-							resolve(onFullFilled);
+							console.log('joiner and part suppressed');
+							this.chatService
+								.deleteChat(this.partId)
+								.then(onSuccess => {
+									console.log('joiner, part, and chat suppressed');
+									resolve(onSuccess);
+								})
+								.catch(onRejected => {
+									console.log('chat could not be cancelled');
+									reject(onRejected);
+								});
 						})
 						.catch(onRejected => {
 							console.log('joiner could not be cancelled');
