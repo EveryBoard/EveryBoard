@@ -73,9 +73,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 					this.onCurrentPartUpdate(iPart);
 				});
 			})
-			.catch(fail => {
+			.catch(onRejected => {
 				console.log('there was a problem trying to get iJoiner timeout becuase : ');
-				console.log(JSON.stringify(fail));
+				console.log(JSON.stringify(onRejected));
 			});
 	}
 

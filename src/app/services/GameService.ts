@@ -4,7 +4,7 @@ import {Observable, Subscription} from 'rxjs';
 import {PartDAO} from '../dao/PartDAO';
 
 import {ICurrentPart, ICurrentPartId} from '../domain/icurrentpart';
-import {IJoiner, IJoinerId} from '../domain/ijoiner';
+import {IJoiner} from '../domain/ijoiner';
 
 import {JoinerService} from './JoinerService';
 import {Router} from '@angular/router';
@@ -22,8 +22,7 @@ export class GameService {
 	constructor(private route: Router,
 				private partDao: PartDAO,
 				private activesPartsService: ActivesPartsService,
-				private joinerService: JoinerService) {
-	}
+				private joinerService: JoinerService) {}
 
 	// on Server Component
 
@@ -114,27 +113,6 @@ export class GameService {
 				.deletePartById(partId)
 				.then(onFullFilled => resolve(partId))
 				.catch(onRejected => reject());
-		});
-	}
-
-	OLDacceptConfig(joiner: IJoiner): Promise<void> {
-		return new Promise((resolve, reject) => {
-			if (this.followedPartId == null || this.followedPartId === undefined) {
-				console.log('!!! pas de partie en cours d\'observation, comment accepter la config??');
-				reject();
-			}
-			this.startGameWithConfig(joiner)
-				.then(onGameStartedWithConfig => {
-					this.joinerService
-						.acceptConfig()
-						.then(onSignalSent => resolve(onSignalSent))
-						.catch(onRejected => reject(onRejected));
-				})
-				.catch(onRejected => {
-					console.log('GameService.startGameWithConfig failed');
-					console.log(JSON.stringify(onRejected));
-					reject(onRejected);
-				});
 		});
 	}
 

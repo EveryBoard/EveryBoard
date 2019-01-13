@@ -23,7 +23,7 @@ export class JoinerService {
 			this.followedJoinerSub = this.followedJoinerObs
 				.subscribe(onFullFilled => callback(onFullFilled));
 		} else if (joinerId === this.followedJoinerId) {
-			console.log('!!!already observing this part (' + joinerId + ')');
+			console.log('!!!already observing this joiner (' + joinerId + ')');
 		} else {
 			alert('!!!we were already observing ' + this.followedJoinerId + ' then you ask to watch' + joinerId + 'you are gross (no I\'m bugged)');
 			this.stopObserving();
@@ -58,10 +58,10 @@ export class JoinerService {
 	}
 
 	cancelJoining(userName: string): Promise<void> {
-		console.log('JoinerService.remove ' + userName + ' from joining page ' + this.followedJoinerId);
+		// console.log('JoinerService.remove ' + userName + ' from joining page ' + this.followedJoinerId);
 		return new Promise((resolve, reject) => {
 			if (this.followedJoinerId == null) {
-				console.log('cannot cancel joining when not following a part');
+				console.log('cannot cancel joining when not following a joiner');
 				reject();
 			} else {
 				this.joinerDao
@@ -148,7 +148,7 @@ export class JoinerService {
 		if (this.followedJoinerId == null) {
 			console.log('BUG GOING TO HAPPEND cause acceptConfig when no observing Joiner !!');
 		}
-		console.log('JoinerService :: let s accept config from ' + this.followedJoinerId);
+		// console.log('JoinerService :: let s accept config from ' + this.followedJoinerId);
 		return this.joinerDao
 			.updateJoinerById(this.followedJoinerId, {partStatus: 3});
 	}
@@ -157,7 +157,7 @@ export class JoinerService {
 		if (this.followedJoinerId == null) {
 			console.log('!!!we already stop watching doc');
 		} else {
-			console.log('stopped watching joiner ' + this.followedJoinerId + ']');
+			// console.log('stopped watching joiner ' + this.followedJoinerId + ']');
 			this.followedJoinerId = null;
 			this.followedJoinerSub.unsubscribe();
 			this.followedJoinerObs = null;

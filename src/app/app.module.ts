@@ -34,6 +34,7 @@ import {TablutComponent} from './components/game-components/tablut/tablut.compon
 import {QuartoOfflineComponent} from './components/offline-components/quarto-offline/quarto-offline.component';
 import {TablutOfflineComponent} from './components/offline-components/tablut-offline/tablut-offline.component';
 import {PartCreationComponent} from './components/normal-component/part-creation/part-creation.component';
+import { ChatComponent } from './components/normal-component/chat/chat.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -72,7 +73,8 @@ const routes: Route [] = [
 		AwaleOfflineComponent,
 		P4OfflineComponent,
 		QuartoOfflineComponent,
-		TablutOfflineComponent
+		TablutOfflineComponent,
+		ChatComponent
 	],
 	imports: [
 		BrowserModule,
