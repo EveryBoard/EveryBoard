@@ -20,6 +20,10 @@ export class ChatService {
 			console.log('you\'re not allow to sent message here');
 			return;
 		}
+		if (this.forbiddenMessage(message)) {
+			console.log('HOW DARE YOU SAY THAT !');
+			return;
+		}
 		this.chatDao
 			.readChatById(this.followedChatId)
 			.then( iChat => {
@@ -47,6 +51,13 @@ export class ChatService {
 
 	userForbid(chatId: string, userName: string): boolean {
 		return false; // TODO: implémenter le blocage de chat
+	}
+
+	forbiddenMessage(message: string) {
+		if (message === '') {
+			return true;
+		}
+		return false;
 	}
 
 	startObserving(chatId: string, callback: (iChat: IChatId) => void) {

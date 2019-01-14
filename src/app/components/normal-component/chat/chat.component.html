@@ -15,12 +15,12 @@
 						style="max-height: 15%;"
 						align="start"
 						*ngIf="userName!=''">
-			<input id="inputMessage"
-				   matInput
+			<input matInput
 				   #message
 				   maxlength="128"
 				   placeholder="Envoyez un message!"
-				   [(ngModel)]="userMessage">
+				   [(ngModel)]="userMessage"
+				   [ngModelOptions]="{standalone: true}">
 			<mat-icon matSuffix (click)="sendMessage()">send</mat-icon>
 			<mat-hint align="start">
 				<strong>Soyez courtois lol</strong>
