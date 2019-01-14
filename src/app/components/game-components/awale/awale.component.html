@@ -1,94 +1,101 @@
-<app-part-creation *ngIf="gameStarted === false"
-				   [partId]="partId"
-				   [userName]="userName"
-				   (gameStartNotification)="startGame()">
-</app-part-creation>
+<div style="max-height: 90%; height: 90%;">
+	<app-part-creation id="partCreation"
+					   style="max-height: 70%; height: 70%;"
+					   *ngIf="gameStarted === false"
+					   [partId]="partId"
+					   [userName]="userName"
+					   (gameStartNotification)="startGame()">
+	</app-part-creation>
 
-<div *ngIf="gameStarted === true"
-	 class="container"
-	 style="position: relative; align-content: center;">
+	<div id="game"
+		 *ngIf="gameStarted === true"
+		 class="container"
+		 style="max-height: 70%; height: 70%; position: relative; align-content: center;">
 
-	<div id="info">
-		<div *ngIf="opponent && observerRole <2">
-			<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
-			<button *ngIf="!endGame" (click)="resign()"> Abandonner</button>
-			<div *ngIf="allowedTimeoutVictory && !endGame">
-				<h3>
-					{{ opponent.user.pseudo }} ne réagit plus :
-					<button (click)="notifyTimeout()">
-						Victoire par timeout?
-					</button>
-				</h3>
+		<div id="info">
+			<div *ngIf="opponent && observerRole <2">
+				<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
+				<button *ngIf="!endGame" (click)="resign()"> Abandonner</button>
+				<div *ngIf="allowedTimeoutVictory && !endGame">
+					<h3>
+						{{ opponent.user.pseudo }} ne réagit plus :
+						<button (click)="notifyTimeout()">
+							Victoire par timeout?
+						</button>
+					</h3>
+				</div>
+				<div> Tour : {{ turn }}</div>
 			</div>
-			<div> Tour : {{ turn }}</div>
+			<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
+			<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
+			<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
+			<div *ngIf="endGame">
+				<div *ngIf="winner != null">
+					<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
+					<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu face à {{ winner }}</h3>
+					<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
+				</div>
+				<div *ngIf="winner === null">
+					<h3> Match nul </h3>
+				</div>
+				<button (click)="backToServer()">Retour au serveur</button>
+			</div>
 		</div>
-		<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
-		<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
-		<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
-		<div *ngIf="endGame">
-			<div *ngIf="winner != null">
-				<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
-				<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu face à {{ winner }}</h3>
-				<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
-			</div>
-			<div *ngIf="winner === null">
-				<h3> Match nul </h3>
-			</div>
-			<button (click)="backToServer()">Retour au serveur</button>
+
+		<div id="scoreInfo" *ngIf="players && captured">
+			<h3> {{ players[0] }} : {{ captured[0] }} </h3>
+			<h3> {{ players[1] }} : {{ captured[1] }} </h3>
 		</div>
+
+		<div id="board">
+			<table *ngIf="observerRole!=1">
+				<tr style="margin:0px; padding:0px;"
+					*ngFor="let line of board.reverse(); index as y;">
+					<td *ngFor="let case of line; index as x;"
+						style="position:relative;"
+						(click)="onClick(x, 1-y)">
+						<img width="100" heigh="100"
+							 id="{{ 't'+(1-y)+x }}"
+							 alt=":{{ case }}:"
+							 [src]="imagesLocation + 'circled_numbers/' + case + '.svg'"/>
+						<img *ngIf="lastX === x && lastY === (1-y)"
+							 width="100" heigh="100"
+							 id="{{ 'u'+(1-y)+x }}"
+							 alt=":{{ case }}:"
+							 [src]="imagesLocation + 'highlight.svg'"
+							 style="position:absolute; top:0; left:0;"/>
+					</td>
+				</tr>
+			</table>
+
+			<table *ngIf="observerRole==1">
+				<tr style="margin:0px; padding:0px;"
+					*ngFor="let line of board; index as y;">
+					<td *ngFor="let case of line.reverse(); index as x;"
+						style="position:relative;"
+						(click)="onClick(5-x, y);">
+						<img width="100" heigh="100"
+							 id="{{ 't'+y+(5-x) }}"
+							 alt=":{{ case }}:"
+							 [src]="imagesLocation + 'circled_numbers/' + case + '.svg'"/>
+						<img *ngIf="lastX === (5-x) && lastY === y"
+							 width="100" heigh="100"
+							 id="{{ 'u'+y+(5-x) }}"
+							 alt=":{{ case }}:"
+							 [src]="imagesLocation + 'highlight.svg'"
+							 style="position:absolute; top:0; left:0;"/>
+					</td>
+				</tr>
+			</table>
+		</div>
+
 	</div>
 
-	<div id="scoreInfo" *ngIf="players && captured">
-		<h3> {{ players[0] }} : {{ captured[0] }} </h3>
-		<h3> {{ players[1] }} : {{ captured[1] }} </h3>
+	<div id="chat"
+		 style="max-height: 30%; height: 30%"
+		 class="circled">
+		<app-chat [userName]="userName"
+				  [chatId]="partId"
+				  [turn]="turn"></app-chat>
 	</div>
-
-	<div id="board">
-		<table *ngIf="observerRole!=1">
-			<tr style="margin:0px; padding:0px;"
-				*ngFor="let line of board.reverse(); index as y;">
-				<td *ngFor="let case of line; index as x;"
-					style="position:relative;"
-					(click)="onClick(x, 1-y)">
-					<img width="100" heigh="100"
-						 id="{{ 't'+(1-y)+x }}"
-						 alt=":{{ case }}:"
-						 [src]="imagesLocation + 'circled_numbers/' + case + '.svg'"/>
-					<img *ngIf="lastX === x && lastY === (1-y)"
-						 width="100" heigh="100"
-						 id="{{ 'u'+(1-y)+x }}"
-						 alt=":{{ case }}:"
-						 [src]="imagesLocation + 'highlight.svg'"
-						 style="position:absolute; top:0; left:0;"/>
-				</td>
-			</tr>
-		</table>
-
-		<table *ngIf="observerRole==1">
-			<tr style="margin:0px; padding:0px;"
-				*ngFor="let line of board; index as y;">
-				<td *ngFor="let case of line.reverse(); index as x;"
-					style="position:relative;"
-					(click)="onClick(5-x, y);">
-					<img width="100" heigh="100"
-						 id="{{ 't'+y+(5-x) }}"
-						 alt=":{{ case }}:"
-						 [src]="imagesLocation + 'circled_numbers/' + case + '.svg'"/>
-					<img *ngIf="lastX === (5-x) && lastY === y"
-						 width="100" heigh="100"
-						 id="{{ 'u'+y+(5-x) }}"
-						 alt=":{{ case }}:"
-						 [src]="imagesLocation + 'highlight.svg'"
-						 style="position:absolute; top:0; left:0;"/>
-				</td>
-			</tr>
-		</table>
-	</div>
-
-</div>
-
-<div id="chat" class="circled">
-	<app-chat [userName]="userName"
-			  [chatId]="partId"
-			  [turn]="null"></app-chat>
 </div>

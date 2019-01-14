@@ -22,7 +22,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 		if (this.chatId == null || this.chatId === '') {
 			console.log('Chat Id is null, keep your attempt, it suck');
 		} else if (this.userName == null || this.userName === '') {
-			console.log('ChatCompo : get yourself a userName yoy twat');
+			console.log('ChatCompo : get yourself a userName you twat');
+			const msg: IMessage = {sender: 'fake', content: 'bonjour', postedTime: Date.now(), lastTurnThen: null};
+			this.chat = [msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg];
 		} else {
 			this.chatService.startObserving(this.chatId, chat => this.chat = chat.chat.messages);
 		}

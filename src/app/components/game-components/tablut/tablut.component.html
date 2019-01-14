@@ -1,65 +1,72 @@
-<app-part-creation *ngIf="gameStarted === false"
-				   [partId]="partId"
-				   [userName]="userName"
-				   (gameStartNotification)="startGame()">
-</app-part-creation>
+<div style="max-height: 80%; height: 80%;">
+	<app-part-creation id="partCreation"
+					   style=""
+					   *ngIf="gameStarted === false"
+					   [partId]="partId"
+					   [userName]="userName"
+					   (gameStartNotification)="startGame()">
+	</app-part-creation>
 
-<div *ngIf="gameStarted === true">
+	<div id="game"
+		 *ngIf="gameStarted === true">
 
-	<div id="info">
-		<div *ngIf="opponent && observerRole <2">
-			<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
-			<button *ngIf="!endGame" (click)="resign()"> Abandonner</button>
-			<div *ngIf="allowedTimeoutVictory && !endGame">
-				<h3>
-					{{ opponent.user.pseudo }} ne réagit plus :
-					<button (click)="notifyTimeout()">
-						Victoire par timeout?
-					</button>
-				</h3>
+		<div id="info">
+			<div *ngIf="opponent && observerRole <2">
+				<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
+				<button *ngIf="!endGame" (click)="resign()"> Abandonner</button>
+				<div *ngIf="allowedTimeoutVictory && !endGame">
+					<h3>
+						{{ opponent.user.pseudo }} ne réagit plus :
+						<button (click)="notifyTimeout()">
+							Victoire par timeout?
+						</button>
+					</h3>
+				</div>
+				<div> Tour : {{ turn }}</div>
 			</div>
-			<div> Tour : {{ turn }}</div>
+			<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
+			<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
+			<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
+			<div *ngIf="endGame">
+				<div *ngIf="winner != null">
+					<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
+					<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu face à {{ winner }}</h3>
+					<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
+				</div>
+				<div *ngIf="winner === null">
+					<h3> Match nul </h3>
+				</div>
+				<button (click)="backToServer()">Retour au serveur</button>
+			</div>
 		</div>
-		<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
-		<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
-		<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
-		<div *ngIf="endGame">
-			<div *ngIf="winner != null">
-				<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
-				<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu face à {{ winner }}</h3>
-				<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
-			</div>
-			<div *ngIf="winner === null">
-				<h3> Match nul </h3>
-			</div>
-			<button (click)="backToServer()">Retour au serveur</button>
+
+		<div id="board">
+			<table (click)="onClick($event);">
+				<tr *ngFor="let line of board; index as y;">
+					<td *ngFor="let case of line; index as x;"
+						style="position:relative;">
+						<img
+							*ngIf="(arrivingX===x && arrivingY===y) || (choosenX===x && choosenY===y) || (movingX===x && movingY===y)"
+							width="100" height="100"
+							id="{{'t'+y+x}}"
+							alt="highlighted"
+							[src]="imagesLocation+'highlight.svg'"
+							style="position:absolute; top:0; left:0;"/>
+						<img width="100" height="100"
+							 id="{{'u'+y+x}}"
+							 alt=":{{ case }}:"
+							 [src]="imagesLocation+'tablut/'+imagesNames[case]"/>
+					</td>
+				</tr>
+			</table>
 		</div>
+
 	</div>
 
-	<div id="board">
-		<table (click)="onClick($event);">
-			<tr *ngFor="let line of board; index as y;">
-				<td *ngFor="let case of line; index as x;"
-					style="position:relative;">
-					<img *ngIf="(arrivingX===x && arrivingY===y) || (choosenX===x && choosenY===y) || (movingX===x && movingY===y)"
-						 width="100" height="100"
-						 id="{{'t'+y+x}}"
-						 alt="highlighted"
-						 [src]="imagesLocation+'highlight.svg'"
-						 style="position:absolute; top:0; left:0;"/>
-					<img width="100" height="100"
-						 id="{{'u'+y+x}}"
-						 alt=":{{ case }}:"
-						 [src]="imagesLocation+'tablut/'+imagesNames[case]"/>
-				</td>
-			</tr>
-		</table>
+	<div id="chat"
+		 class="circled">
+		<app-chat [userName]="userName"
+				  [chatId]="partId"
+				  [turn]="turn"></app-chat>
 	</div>
-
-</div>
-
-<div id="chat" class="circled">
-	<app-chat [userName]="userName"
-			  [chatId]="partId"
-			  [turn]="null"></app-chat>
 </div>

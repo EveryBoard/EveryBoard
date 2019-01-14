@@ -2,14 +2,14 @@
 
 @import '@angular/material/prebuilt-themes/deeppurple-amber.css';
 
-html, body { height: 100%; }
+html, body { height: 100%; background-color: #EEEEEE; }
 body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
 .circled {
 	border-style: solid;
 	border-radius: 25px;
-	overflow: auto;
-	margin-bottom: 1%;
 	padding: 2%;
+	margin: 0;
 	align-content: center;
+	position: relative;
+	display: block;
 }
-
