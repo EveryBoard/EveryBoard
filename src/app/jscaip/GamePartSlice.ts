@@ -1,6 +1,5 @@
 import {Coord} from './Coord';
 
-
 export class GamePartSlice {
 
 	protected readonly board: number[][];

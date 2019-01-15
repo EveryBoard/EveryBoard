@@ -509,7 +509,7 @@ export class P4Rules extends Rules {
 		return true;
 	}
 
-	setInitialBoard() {
+	setInitialBoard(): void {
 		if (this.node == null) {
 			this.node = MNode.getFirstNode(
 				new P4PartSlice(P4PartSlice.getStartingBoard(), 0),

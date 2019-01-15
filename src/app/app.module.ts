@@ -38,6 +38,7 @@ import {TablutOfflineComponent} from './components/offline-components/tablut-off
 import {PartCreationComponent} from './components/normal-component/part-creation/part-creation.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import {ChatService} from './services/ChatService';
+import { OthelloComponent } from './components/game-components/othello/othello.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -78,6 +79,7 @@ const routes: Route [] = [
 		P4OfflineComponent,
 		QuartoOfflineComponent,
 		TablutOfflineComponent,
+		OthelloComponent,
 	],
 	imports: [
 		BrowserModule,

@@ -5,7 +5,6 @@ import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {QuartoPartSlice} from './QuartoPartSlice';
 import {QuartoMove} from './QuartoMove';
 import {QuartoEnum} from './QuartoEnum';
-import {P4PartSlice} from '../games.p4/P4PartSlice';
 
 class CaseSensible {
 
