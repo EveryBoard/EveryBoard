@@ -1,4 +1,4 @@
-<div style="max-height: 68%; height: 68%;">
+<div style="max-height: 80%; height: 80%;">
 	<app-part-creation id="partCreation"
 					   style="max-height: 70%; height: 70%;"
 					   *ngIf="gameStarted === false"
@@ -10,7 +10,7 @@
 	<div id="game"
 		 *ngIf="gameStarted === true"
 		 class="container"
-		 style="max-height: 70%; height: 70%; position: relative; align-content: center;">
+		 style="position: relative; align-content: center;">
 
 		<div id="info">
 			<div *ngIf="opponent && observerRole <2">
@@ -66,11 +66,10 @@
 
 	</div>
 
-	<!-- <div id="chat"
-		 style="max-height: 30%; height: 30%"
+	<div id="chat"
 		 class="circled">
 		<app-chat [userName]="userName"
 				  [chatId]="partId"
 				  [turn]="turn"></app-chat>
-	</div> -->
+	</div>
 </div>
