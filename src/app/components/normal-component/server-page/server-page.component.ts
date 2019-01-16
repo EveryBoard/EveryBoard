@@ -18,7 +18,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
 	activesParts: ICurrentPartId[];
 	activesUsers: IUserId[];
-	readonly gameNameList: String[] = ['P4', 'Awale', 'Quarto', 'Tablut'];
+	readonly gameNameList: String[] = ['P4', 'Awale', 'Quarto', 'Tablut', 'Reversi'];
 	selectedGame: string;
 	userName: string;
 

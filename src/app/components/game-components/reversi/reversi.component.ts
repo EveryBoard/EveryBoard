@@ -6,17 +6,17 @@ import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
 import {ActivesUsersService} from '../../../services/ActivesUsersService';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
-import {OthelloRules} from '../../../games/othello/OthelloRules';
-import {OthelloPartSlice} from '../../../games/othello/OthelloPartSlice';
+import {ReversiRules} from '../../../games/reversi/ReversiRules';
+import {ReversiPartSlice} from '../../../games/reversi/ReversiPartSlice';
 
 @Component({
-	selector: 'app-othello',
-	templateUrl: './othello.component.html',
-	styleUrls: ['./othello.component.css']
+	selector: 'app-reversi',
+	templateUrl: './reversi.component.html',
+	styleUrls: ['./reversi.component.css']
 })
-export class OthelloComponent extends OnlineGame{
+export class ReversiComponent extends OnlineGame {
 
-	rules = new OthelloRules();
+	rules = new ReversiRules();
 
 	imagesLocation = 'assets/images/'; // en prod
 	// imagesLocation = 'src/assets/images/'; // en dev
@@ -80,12 +80,12 @@ export class OthelloComponent extends OnlineGame{
 
 	updateBoard(): void {
 		console.log('updateBoard');
-		const othelloPartSlice: OthelloPartSlice = this.rules.node.gamePartSlice as OthelloPartSlice;
+		const reversiPartSlice: ReversiPartSlice = this.rules.node.gamePartSlice as ReversiPartSlice;
 		const moveCoord: MoveCoord = this.rules.node.getMove() as MoveCoord;
 
-		this.board = othelloPartSlice.getCopiedBoard();
-		this.turn = othelloPartSlice.turn;
-		this.currentPlayer = this.players[othelloPartSlice.turn % 2];
+		this.board = reversiPartSlice.getCopiedBoard();
+		this.turn = reversiPartSlice.turn;
+		this.currentPlayer = this.players[reversiPartSlice.turn % 2];
 
 		if (moveCoord != null) {
 			this.lastX = moveCoord.coord.x;

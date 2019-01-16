@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { OthelloComponent } from './othello.component';
+import { ReversiComponent } from './reversi.component';
 
-describe('OthelloComponent', () => {
-  let component: OthelloComponent;
-  let fixture: ComponentFixture<OthelloComponent>;
+describe('ReversiComponent', () => {
+  let component: ReversiComponent;
+  let fixture: ComponentFixture<ReversiComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ OthelloComponent ]
+      declarations: [ ReversiComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(OthelloComponent);
+    fixture = TestBed.createComponent(ReversiComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

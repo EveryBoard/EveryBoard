@@ -38,7 +38,7 @@ import {TablutOfflineComponent} from './components/offline-components/tablut-off
 import {PartCreationComponent} from './components/normal-component/part-creation/part-creation.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import {ChatService} from './services/ChatService';
-import { OthelloComponent } from './components/game-components/othello/othello.component';
+import { ReversiComponent } from './components/game-components/reversi/reversi.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -53,6 +53,7 @@ const routes: Route [] = [
 	{path: 'Awale/:id',			component: AwaleComponent},
 	{path: 'Tablut/:id',		component: TablutComponent},
 	{path: 'P4/:id',			component: P4Component},
+	{path: 'Reversi/:id',			component: ReversiComponent},
 
 	{path: '', redirectTo: 'server', pathMatch: 'full'},
 	{path: '**', 'component': ServerPageComponent}
@@ -79,7 +80,7 @@ const routes: Route [] = [
 		P4OfflineComponent,
 		QuartoOfflineComponent,
 		TablutOfflineComponent,
-		OthelloComponent,
+		ReversiComponent,
 	],
 	imports: [
 		BrowserModule,

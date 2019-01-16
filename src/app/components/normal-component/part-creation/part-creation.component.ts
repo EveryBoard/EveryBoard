@@ -117,7 +117,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		this.updateJoiner(iJoinerId);
 	}
 
-	private isGameCanceled(iJoinerId: IJoinerId) {
+	private isGameCanceled(iJoinerId: IJoinerId): boolean {
 		return (iJoinerId == null) || (iJoinerId.joiner == null);
 	}
 
@@ -125,13 +125,15 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		this._route.navigate(['/server']);
 	}
 
-	private isGameStarted(iJoinerId: IJoinerId) {
+	private isGameStarted(iJoinerId: IJoinerId): boolean {
 		return iJoinerId && iJoinerId.joiner && (iJoinerId.joiner.partStatus === 3);
 	}
 
 	private onGameStarted() {
+		console.log('partCreationOnGameStarted called');
 		this.gameStartNotification.emit();
 		this.gameStarted = true;
+		console.log('partCreationOnGameStarted finished');
 	}
 
 	private updateJoiner(iJoinerId: IJoinerId) {

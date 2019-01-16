@@ -52,10 +52,10 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	protected startGame() {
-		if (this.gameStarted) {
-			console.log('!!!OnlineGame.startGame next line is sometimes useless)');
+		if (this.gameStarted === true) {
+			console.log('!!!OnlineGame.startGame next line is useless)');
 		} else {
-			console.log('OnlineGame.startGame next line is not useless)');
+			console.log('OnlineGame.startGame next line is usefull sparadra)');
 		}
 		this.gameStarted = true;
 		// should be some kind of session-scope
@@ -80,8 +80,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
+		console.log('part updated: ' + JSON.stringify(updatedICurrentPart));
 		const part: ICurrentPart = updatedICurrentPart.part;
-		if (this.players == null) {
+		if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra
 			this.setPlayersDatas(part);
 		}
 

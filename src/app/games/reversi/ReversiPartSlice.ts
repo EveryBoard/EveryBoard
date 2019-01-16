@@ -1,7 +1,7 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {Coord} from '../../jscaip/Coord';
 
-export class OthelloPartSlice extends GamePartSlice {
+export class ReversiPartSlice extends GamePartSlice {
 	static readonly PLAYER_ZERO = 0;
 	static readonly PLAYER_ONE = 1;
 	static readonly UNOCCUPIED = 2;
