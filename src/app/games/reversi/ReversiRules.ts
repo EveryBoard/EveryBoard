@@ -57,7 +57,7 @@ export class ReversiRules extends Rules {
 		return []; // we found the end of the board before we found 	the newt pawn like 'searchedPawn'
 	}
 
-	static getCoordsBetween(direction: DIRECTION, first: Coord, end: Coord): Coord[] {
+	static getCoordsBetween(direction: DIRECTION, first: Coord, end: Coord): Coord[] { // TODO: incorporer la GamePartSlice comme util?
 		/* expected that both 'first' and 'sandwicher' are in range
 		 * expected that 'sandwicher' is after 'first' in 'direction' 's direction
 		 * return all the direction between 'first' and 'sandwicher', sandwicher excluded
@@ -71,67 +71,24 @@ export class ReversiRules extends Rules {
 		return coords;
 	}
 
-	choose(move: MoveCoord): boolean {
-		let choix: MNode<ReversiRules>;
-		/*if (this.node.hasMoves()) { // if calculation has already been done by the AI
-			choix = this.node.getSonByMove(move); // let's not doing if twice
-			if (choix != null) {
-				this.node = choix; // qui devient le plateau actuel
-				return true;
-			}
-		}*/
-		const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice as ReversiPartSlice;
-		const turn: number = this.node.gamePartSlice.turn;
-		const player: number = turn % 2;
-		const board: number[][] = reversiPartSlice.getCopiedBoard();
-
-		const switcheds = ReversiRules.getAllSwitcheds(move, turn, board);
-		if (board[move.coord.y][move.coord.x] !== ReversiPartSlice.UNOCCUPIED){
-			return false;
+	static isGameEnded(reversiPartSlice: ReversiPartSlice): boolean {
+		const turn: number = reversiPartSlice.turn;
+		if (turn === 64) {
+			return true;
 		}
-		if (switcheds.length === 0) {
-			return false;
-		} // else :
-		console.log(switcheds.length + ' retournés');
-		for (const switched of switcheds) {
-			if (player === board[switched.y][switched.x]) {
-				console.log(switched + 'was already switched!');
-			}
-			board[switched.y][switched.x] = player;
-		}
-		board[move.coord.y][move.coord.x] = player;
-		const newPartSlice: ReversiPartSlice = new ReversiPartSlice(board, turn + 1);
-		choix = new MNode(this.node, move, newPartSlice);
-		this.node = choix;
-		return true;
+		const currentPlayerChoices: { key: MoveCoord; value: ReversiPartSlice }[] = this.getListMoves(reversiPartSlice);
+		// if the current player cannot play, then the part is ended
+		return (currentPlayerChoices.length === 0);
 	}
 
-	getBoardValue(n: MNode<ReversiRules>): number {
-		const board: number[][] = n.gamePartSlice.getCopiedBoard();
-		let player0Count = 0;
-		let player1Count = 0;
-		for (let y = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
-			for (let x = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
-				if (board[y][x] === ReversiPartSlice.PLAYER_ZERO) {
-					player0Count++;
-				}
-				if (board[y][x] === ReversiPartSlice.PLAYER_ONE) {
-					player1Count++;
-				}
-			}
-		}
-		return player1Count - player0Count;
-	}
-
-	getListMoves(n: MNode<ReversiRules>): { key: MoveCoord; value: ReversiPartSlice }[] {
+	static getListMoves(reversiPartSlice: ReversiPartSlice): { 'key': MoveCoord, 'value': ReversiPartSlice }[] {
 		const listMoves: { 'key': MoveCoord, 'value': ReversiPartSlice }[] = [];
 
-		const partSlice: ReversiPartSlice = n.gamePartSlice as ReversiPartSlice;
 		let moveAppliedPartSlice: ReversiPartSlice;
 
-		const board: number[][] = partSlice.getCopiedBoard();
+		const board: number[][] = reversiPartSlice.getCopiedBoard();
 		let nextBoard: number[][];
-		const nextTurn: number = partSlice.turn + 1;
+		const nextTurn: number = reversiPartSlice.turn + 1;
 
 		const player = nextTurn === 0 ? ReversiPartSlice.PLAYER_ONE : ReversiPartSlice.PLAYER_ZERO;
 		const ennemy = nextTurn === 0 ? ReversiPartSlice.PLAYER_ZERO : ReversiPartSlice.PLAYER_ONE;
@@ -140,7 +97,7 @@ export class ReversiRules extends Rules {
 			for (let x = 0; x < 8; x++) {
 				if (board[y][x] === ReversiPartSlice.UNOCCUPIED) {
 					// For each empty cases
-					nextBoard = partSlice.getCopiedBoard();
+					nextBoard = reversiPartSlice.getCopiedBoard();
 					const ennemyNeighboors = ReversiPartSlice.getNeighbooringPawnLike(nextBoard, ennemy, x, y);
 					if (ennemyNeighboors.length > 0) {
 						// if one of the 8 neighbooring case is an ennemy then, there could be a switch, and hence a legal move
@@ -156,7 +113,93 @@ export class ReversiRules extends Rules {
 				}
 			}
 		}
+		if (listMoves.length === 0) {
+			// when the user cannot play, his only move is to pass, which he cannot do otherwise
+			const movePass: MoveCoord = new MoveCoord(-1, -1);
+			// board unchanged, only the turn changed "pass"
+			moveAppliedPartSlice = new ReversiPartSlice(reversiPartSlice.getCopiedBoard(), nextTurn);
+			listMoves.push({'key': movePass, 'value': moveAppliedPartSlice});
+		}
 		return listMoves;
+	}
+
+	choose(move: MoveCoord): boolean {
+		let choix: MNode<ReversiRules>;
+		/*if (this.node.hasMoves()) { // if calculation has already been done by the AI
+			choix = this.node.getSonByMove(move); // let's not doing if twice
+			if (choix != null) {
+				this.node = choix; // qui devient le plateau actuel
+				return true;
+			}
+		}*/
+		const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice as ReversiPartSlice;
+		const turn: number = this.node.gamePartSlice.turn;
+		const player: number = turn % 2;
+		const board: number[][] = reversiPartSlice.getCopiedBoard();
+		if (move.equals(MoveCoord.pass)) {
+			// let's check that pass is a legal move right now
+			const listMoves = this.getListMoves(this.node); // TODO TYPE THIS
+			if (listMoves.length === 0 && listMoves[0].key.equals(MoveCoord.pass)) {
+				// if he had no choice but to pass, then passing is legal !
+				const sameBoardDifferentTurn: ReversiPartSlice =
+					new ReversiPartSlice(board, turn + 1);
+				choix = new MNode(this.node, move, sameBoardDifferentTurn);
+				this.node = choix;
+				return true;
+			} // else
+			return false;
+		}
+		const switcheds = ReversiRules.getAllSwitcheds(move, turn, board);
+		if (board[move.coord.y][move.coord.x] !== ReversiPartSlice.UNOCCUPIED) {
+			return false;
+		}
+		if (switcheds.length === 0) {
+			return false;
+		} // else :
+		console.log(switcheds.length + ' retournés');
+		for (const switched of switcheds) {
+			if (player === board[switched.y][switched.x]) {
+				alert(switched + 'was already switched!');
+			}
+			board[switched.y][switched.x] = player;
+		}
+		board[move.coord.y][move.coord.x] = player;
+		const newPartSlice: ReversiPartSlice = new ReversiPartSlice(board, turn + 1);
+		choix = new MNode(this.node, move, newPartSlice);
+		this.node = choix;
+		return true;
+	}
+
+	getBoardValue(n: MNode<ReversiRules>): number {
+		const reversiPartSlice: ReversiPartSlice = n.gamePartSlice as ReversiPartSlice;
+		const board: number[][] = n.gamePartSlice.getCopiedBoard();
+		let player0Count = 0;
+		let player1Count = 0;
+		for (let y = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
+			for (let x = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
+				if (board[y][x] === ReversiPartSlice.PLAYER_ZERO) {
+					player0Count++;
+				}
+				if (board[y][x] === ReversiPartSlice.PLAYER_ONE) {
+					player1Count++;
+				}
+			}
+		}
+		const diff: number = player1Count - player0Count;
+		if (ReversiRules.isGameEnded(reversiPartSlice)) {
+			if (diff < 0) { // player 0 won
+				return Number.MIN_SAFE_INTEGER;
+			}
+			if (diff > 0) { // player 1 won
+				return Number.MAX_SAFE_INTEGER;
+			}
+			// else : equality
+		}
+		return diff;
+	}
+
+	getListMoves(n: MNode<ReversiRules>): { key: MoveCoord; value: ReversiPartSlice }[] {
+		return ReversiRules.getListMoves(n.gamePartSlice as ReversiPartSlice);
 	}
 
 	setInitialBoard(): void {
