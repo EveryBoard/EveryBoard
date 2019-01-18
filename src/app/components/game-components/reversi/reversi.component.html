@@ -43,6 +43,9 @@
 		</div>
 
 		<div id="board">
+			<button *ngIf="mustPass && (currentPlayer===userName)"
+					(click)="pass()"
+					mat-stroked-button>Tu dois passer ton tour, clique pour ce faire!</button>
 			<table>
 				<tr style="margin:0px; padding:0px;"
 					*ngFor="let line of board; index as y;">

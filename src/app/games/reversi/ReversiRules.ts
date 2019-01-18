@@ -6,6 +6,8 @@ import {Coord} from '../../jscaip/Coord';
 import {DIRECTION, DIRECTIONS} from '../../jscaip/DIRECTION';
 
 export class ReversiRules extends Rules {
+	static readonly pass: MoveCoord = new MoveCoord(-1, 1);
+	static readonly passNumber: number = -1;
 
 	static getAllSwitcheds(move: MoveCoord, turn: number, board: number[][]): Coord[] {
 		// try the move, do it if legal, and return the switched pieces
@@ -16,7 +18,7 @@ export class ReversiRules extends Rules {
 			player = ReversiPartSlice.PLAYER_ONE;
 			ennemy = ReversiPartSlice.PLAYER_ZERO;
 		}
-		console.log(player + ' essaye de capturer');
+		// console.log(player + ' essaye de capturer');
 		for (const direction of DIRECTIONS) {
 			const firstCase: Coord = move.coord.getNext(direction);
 			if (firstCase.isInRange(ReversiPartSlice.BOARD_WIDTH, ReversiPartSlice.BOARD_HEIGHT)) {
@@ -29,7 +31,7 @@ export class ReversiRules extends Rules {
 				}
 			}
 		}
-		console.log(move + ' : switched : ' + switcheds);
+		// console.log(move + ' : switched : ' + switcheds);
 		return switcheds;
 	}
 
@@ -72,16 +74,24 @@ export class ReversiRules extends Rules {
 	}
 
 	static isGameEnded(reversiPartSlice: ReversiPartSlice): boolean {
-		const turn: number = reversiPartSlice.turn;
-		if (turn === 64) {
-			return true;
-		}
-		const currentPlayerChoices: { key: MoveCoord; value: ReversiPartSlice }[] = this.getListMoves(reversiPartSlice);
-		// if the current player cannot play, then the part is ended
-		return (currentPlayerChoices.length === 0);
+		return this.playerCanOnlyPass(reversiPartSlice)
+			&& this.nextPlayerCantOnlyPass(reversiPartSlice);
 	}
 
-	static getListMoves(reversiPartSlice: ReversiPartSlice): { 'key': MoveCoord, 'value': ReversiPartSlice }[] {
+	static playerCanOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
+		const currentPlayerChoices: { key: MoveCoord; value: ReversiPartSlice }[] = this.getListMoves(reversiPartSlice);
+		// if the current player cannot play, then the part is ended
+		return (currentPlayerChoices.length === 1) && currentPlayerChoices[0].key.equals(this.pass);
+	}
+
+	static nextPlayerCantOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
+		const nextBoard: number[][] = reversiPartSlice.getCopiedBoard();
+		const nextTurn: number = reversiPartSlice.turn + 1;
+		const nextPartSlice: ReversiPartSlice = new ReversiPartSlice(nextBoard, nextTurn);
+		return this.playerCanOnlyPass(nextPartSlice);
+	}
+
+	static getListMoves(reversiPartSlice: ReversiPartSlice): {'key': MoveCoord, 'value': ReversiPartSlice }[] {
 		const listMoves: { 'key': MoveCoord, 'value': ReversiPartSlice }[] = [];
 
 		let moveAppliedPartSlice: ReversiPartSlice;
@@ -90,8 +100,8 @@ export class ReversiRules extends Rules {
 		let nextBoard: number[][];
 		const nextTurn: number = reversiPartSlice.turn + 1;
 
-		const player = nextTurn === 0 ? ReversiPartSlice.PLAYER_ONE : ReversiPartSlice.PLAYER_ZERO;
-		const ennemy = nextTurn === 0 ? ReversiPartSlice.PLAYER_ZERO : ReversiPartSlice.PLAYER_ONE;
+		const player = (nextTurn % 2 === 0) ? ReversiPartSlice.PLAYER_ONE : ReversiPartSlice.PLAYER_ZERO;
+		const ennemy = (nextTurn % 2 === 0) ? ReversiPartSlice.PLAYER_ZERO : ReversiPartSlice.PLAYER_ONE;
 
 		for (let y = 0; y < 8; y++) {
 			for (let x = 0; x < 8; x++) {
@@ -105,6 +115,12 @@ export class ReversiRules extends Rules {
 						const result: Coord[] = ReversiRules.getAllSwitcheds(move, player, nextBoard);
 						if (result.length > 0) {
 							// there was switched piece and hence, a legal move
+							for (const switched of result) {
+								if (player === board[switched.y][switched.x]) {
+									alert(switched + 'was already switched!');
+								}
+								nextBoard[switched.y][switched.x] = player;
+							}
 							nextBoard[y][x] = player;
 							moveAppliedPartSlice = new ReversiPartSlice(nextBoard, nextTurn);
 							listMoves.push({'key': move, 'value': moveAppliedPartSlice});
@@ -115,10 +131,10 @@ export class ReversiRules extends Rules {
 		}
 		if (listMoves.length === 0) {
 			// when the user cannot play, his only move is to pass, which he cannot do otherwise
-			const movePass: MoveCoord = new MoveCoord(-1, -1);
 			// board unchanged, only the turn changed "pass"
+			// console.log('f91 The user can do nothing but pass at turn ' + (nextTurn - 1));
 			moveAppliedPartSlice = new ReversiPartSlice(reversiPartSlice.getCopiedBoard(), nextTurn);
-			listMoves.push({'key': movePass, 'value': moveAppliedPartSlice});
+			listMoves.push({'key': ReversiRules.pass, 'value': moveAppliedPartSlice});
 		}
 		return listMoves;
 	}
@@ -136,17 +152,16 @@ export class ReversiRules extends Rules {
 		const turn: number = this.node.gamePartSlice.turn;
 		const player: number = turn % 2;
 		const board: number[][] = reversiPartSlice.getCopiedBoard();
-		if (move.equals(MoveCoord.pass)) {
+		if (move.equals(ReversiRules.pass)) { // if the player pass
 			// let's check that pass is a legal move right now
-			const listMoves = this.getListMoves(this.node); // TODO TYPE THIS
-			if (listMoves.length === 0 && listMoves[0].key.equals(MoveCoord.pass)) {
+			if (ReversiRules.playerCanOnlyPass(reversiPartSlice)) {
 				// if he had no choice but to pass, then passing is legal !
 				const sameBoardDifferentTurn: ReversiPartSlice =
 					new ReversiPartSlice(board, turn + 1);
 				choix = new MNode(this.node, move, sameBoardDifferentTurn);
 				this.node = choix;
 				return true;
-			} // else
+			} // else, passing was illegal
 			return false;
 		}
 		const switcheds = ReversiRules.getAllSwitcheds(move, turn, board);
@@ -156,7 +171,7 @@ export class ReversiRules extends Rules {
 		if (switcheds.length === 0) {
 			return false;
 		} // else :
-		console.log(switcheds.length + ' retournés');
+		// console.log(switcheds.length + ' retournés');
 		for (const switched of switcheds) {
 			if (player === board[switched.y][switched.x]) {
 				alert(switched + 'was already switched!');

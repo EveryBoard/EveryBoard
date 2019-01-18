@@ -2,7 +2,6 @@ import {Move} from './Move';
 import {Coord} from './Coord';
 
 export class MoveCoord extends Move {
-	static readonly pass: MoveCoord = new MoveCoord(-1, -1);
 
 	readonly coord: Coord;
 

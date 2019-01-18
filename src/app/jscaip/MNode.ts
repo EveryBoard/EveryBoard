@@ -84,11 +84,11 @@ export class MNode<R extends Rules> {
        * because it's how we encode the boardValue if there's a victory
        */
 		if (score === Number.MAX_SAFE_INTEGER) {
-			// System.out.println('VICTORY');
+			console.log('VICTORY');
 			return SCORE.VICTORY;
 		}
 		if (score === Number.MIN_SAFE_INTEGER) {
-			// System.out.println('VICTORY');
+			console.log('VICTORY');
 			return SCORE.VICTORY;
 		}
 		if (score === Number.MIN_SAFE_INTEGER + 1) {
@@ -492,7 +492,7 @@ export class MNode<R extends Rules> {
    } */
 
 	isEndGame(): boolean {
-		const localVerbose = false;
+		const localVerbose = true;
 
 		const scoreStatus: SCORE = MNode.getScoreStatus(this.ownValue);
 		if (MNode.VERBOSE || localVerbose) {
@@ -501,7 +501,7 @@ export class MNode<R extends Rules> {
 
 		if (scoreStatus === SCORE.VICTORY) {
 			if (MNode.VERBOSE || localVerbose) {
-				console.log('victory found');
+				console.log('MNode.isEndGame by victory');
 			}
 			return true;
 		}
@@ -521,13 +521,13 @@ export class MNode<R extends Rules> {
 
 		if (this.childs && this.childs.length === 0) {
 			if (MNode.VERBOSE || localVerbose) {
-				console.log('end by no - child');
+				console.log('MNode.isEndGame by  by no-child after calculation');
 			}
 			return true;
 		}
 
 		if (MNode.VERBOSE || localVerbose) {
-			console.log('nor VICTORY nor childs.isEmpty');
+			console.log('MNode.isEndGame : no (childs and normal score)');
 		}
 
 		return false;

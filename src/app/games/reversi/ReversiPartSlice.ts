@@ -13,10 +13,11 @@ export class ReversiPartSlice extends GamePartSlice {
 
 	static getStartingBoard(): number[][] {
 		const board: number[][] = GamePartSlice.createBiArray(8, 8, this.UNOCCUPIED);
+		board[3][3] = this.PLAYER_ZERO;
+		board[4][4] = this.PLAYER_ZERO;
 		board[3][4] = this.PLAYER_ONE;
 		board[4][3] = this.PLAYER_ONE;
-		board[4][4] = this.PLAYER_ZERO;
-		board[3][3] = this.PLAYER_ZERO;
+
 		return board;
 	}
 

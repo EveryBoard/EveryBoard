@@ -185,7 +185,15 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	notifyVictory() {
-		const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
+		// const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
+		// Previous line is wrong, assume that last player who notice the victory is the victorious, wrong as fuck
+		let victoriousPlayer = this.players[0]; // by default
+		if (![Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER].includes(this.rules.node.getOwnValue())) {
+			alert('how the fuck did you notice victory?');
+		}
+		if (this.rules.node.getOwnValue() === Number.MAX_SAFE_INTEGER) {
+			victoriousPlayer = this.players[1];
+		}
 		this.endGame = true;
 		this.winner = victoriousPlayer;
 		this.gameService.notifyVictory(this.partId, victoriousPlayer);

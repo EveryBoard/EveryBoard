@@ -23,6 +23,7 @@ export class ReversiComponent extends OnlineGame {
 
 	lastX = -1;
 	lastY = -1;
+	mustPass = false;
 
 	constructor(_route: Router, actRoute: ActivatedRoute,
 				userService: UserService,
@@ -31,6 +32,11 @@ export class ReversiComponent extends OnlineGame {
 	}
 
 	onClick(x: number, y: number): boolean {
+		const reversiPartSlice = this.rules.node.gamePartSlice as ReversiPartSlice;
+		console.log('f9 0 nb choices : ' + ReversiRules.getListMoves(reversiPartSlice).length);
+		console.log('f9 0 choices static : ' + JSON.stringify(ReversiRules.getListMoves(reversiPartSlice)));
+		console.log('f9 0 choices nonono : ' + JSON.stringify(this.rules.getListMoves(this.rules.node)));
+		console.log('f9 0 board value : ' + this.rules.node.getOwnValue());
 		if (this.rules.node.isEndGame()) {
 			console.log('Malheureusement la partie est finie');
 			// todo : option de clonage revision commentage
@@ -66,6 +72,9 @@ export class ReversiComponent extends OnlineGame {
 	}
 
 	decodeMove(encodedMove: number): MoveCoord {
+		if (encodedMove === ReversiRules.passNumber) {
+			return ReversiRules.pass;
+		}
 		const x = encodedMove % 8; // TODO: vérifier ici le cas où ce sera pas un plateau de taille standard 8x8
 		const y = (encodedMove - x) / 8;
 		return new MoveCoord(x, y);
@@ -75,6 +84,9 @@ export class ReversiComponent extends OnlineGame {
 		// A quarto move goes on x from o to 7
 		// and y from 0 to 7
 		// encoded as y*8 + x
+		if (move.equals(ReversiRules.pass)) {
+			return ReversiRules.passNumber;
+		}
 		return (move.coord.y * 8) + move.coord.x;
 	}
 
@@ -91,6 +103,19 @@ export class ReversiComponent extends OnlineGame {
 			this.lastX = moveCoord.coord.x;
 			this.lastY = moveCoord.coord.y;
 		}
+		console.log('f9 choices : ' + JSON.stringify(ReversiRules.getListMoves(reversiPartSlice)));
+		console.log('f9 board value : ' + this.rules.node.getOwnValue());
+		if (ReversiRules.playerCanOnlyPass(reversiPartSlice) && (!this.endGame)) {
+			console.log('f9 l\'utilisateur ne peut que passer son tour!');
+			this.mustPass = true;
+		} else {
+			console.log('f9 they pretend that you have choices, is it true');
+			this.mustPass = false;
+		}
+	}
+
+	pass() {
+		this.onClick(ReversiRules.pass.coord.x, ReversiRules.pass.coord.y);
 	}
 
 }
