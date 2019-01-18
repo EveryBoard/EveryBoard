@@ -47,7 +47,7 @@ export class P4Component extends OnlineGame {
 		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
 		const lastMove: MoveX = this.rules.node.getMove() as MoveX;
 
-		this.board = p4PartSlice.getCopiedBoard();
+		this.board = p4PartSlice.getCopiedBoard().reverse();
 		this.turn = p4PartSlice.turn;
 		this.currentPlayer = this.players[p4PartSlice.turn % 2];
 
@@ -56,12 +56,12 @@ export class P4Component extends OnlineGame {
 		}
 	}
 
-	onClick(event: MouseEvent): boolean {
+	onClick(x: number): boolean {
 		if (!this.isPlayerTurn()) {
 			console.log('Mais c\'est pas ton tour !');
 			return false;
 		}
-		const x: number = Number(event.srcElement.id.substring(2, 3));
+		// const x: number = Number(event.srcElement.id.substring(2, 3));
 		console.log('vous tentez un mouvement en colonne ' + x);
 
 		if (this.rules.node.isEndGame()) {
