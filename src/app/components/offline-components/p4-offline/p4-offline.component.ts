@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {P4Rules} from '../../../games/games.p4/P4Rules';
+import {P4Rules} from '../../../games/p4/P4Rules';
 import {MoveX} from '../../../jscaip/MoveX';
 import {UserService} from '../../../services/UserService';
 

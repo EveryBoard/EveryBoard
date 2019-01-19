@@ -5,8 +5,8 @@ import {OnlineGame} from '../OnlineGame';
 
 import {MoveCoord} from '../../../jscaip/MoveCoord';
 
-import {AwaleRules} from '../../../games/games.awale/AwaleRules';
-import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
+import {AwaleRules} from '../../../games/awale/AwaleRules';
+import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
@@ -88,7 +88,14 @@ export class AwaleComponent extends OnlineGame {
 		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
 		const awaleMove: MoveCoord = this.rules.node.getMove() as MoveCoord;
 
-		this.board = awalePartSlice.getCopiedBoard();
+		if (this.observerRole === 1) {
+			const orientedBoard: number[][] = [];
+			awalePartSlice.getCopiedBoard().forEach(
+				line => orientedBoard.push(line.reverse()));
+			this.board = orientedBoard;
+		} else {
+			this.board = awalePartSlice.getCopiedBoard().reverse();
+		}
 		this.turn = awalePartSlice.turn;
 		this.currentPlayer = this.players[awalePartSlice.turn % 2];
 

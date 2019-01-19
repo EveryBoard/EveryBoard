@@ -1,6 +1,6 @@
 <div style="text-align:center">
 	<table (click)="onClick($event);">
-		<tr style="margin:0px; padding:0px;" *ngFor="let line of board.reverse(); trackBy: trackByLine; index as y;">
+		<tr style="margin:0px; padding:0px;" *ngFor="let line of board; trackBy: trackByLine; index as y;">
 			<td *ngFor="let case of line; trackBy: trackByCase; index as x; ">
 				<img width="100" height="100"
 					 [src]='imagesLocation+imagesNames[case]'

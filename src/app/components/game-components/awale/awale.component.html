@@ -50,17 +50,17 @@
 		<div id="board">
 			<table *ngIf="observerRole!=1">
 				<tr style="margin:0px; padding:0px;"
-					*ngFor="let line of board.reverse(); index as y;">
+					*ngFor="let line of board; index as y;">
 					<td *ngFor="let case of line; index as x;"
 						style="position:relative;"
 						(click)="onClick(x, 1-y)">
 						<img width="100" heigh="100"
-							 id="{{ 't'+(1-y)+x }}"
+							 id="{{ 't'+y+x }}"
 							 alt=":{{ case }}:"
 							 [src]="imagesLocation + 'circled_numbers/' + case + '.svg'"/>
 						<img *ngIf="lastX === x && lastY === (1-y)"
 							 width="100" heigh="100"
-							 id="{{ 'u'+(1-y)+x }}"
+							 id="{{ 'u'+y+x }}"
 							 alt=":{{ case }}:"
 							 [src]="imagesLocation + 'highlight.svg'"
 							 style="position:absolute; top:0; left:0;"/>
@@ -71,16 +71,16 @@
 			<table *ngIf="observerRole==1">
 				<tr style="margin:0px; padding:0px;"
 					*ngFor="let line of board; index as y;">
-					<td *ngFor="let case of line.reverse(); index as x;"
+					<td *ngFor="let case of line; index as x;"
 						style="position:relative;"
 						(click)="onClick(5-x, y);">
 						<img width="100" heigh="100"
-							 id="{{ 't'+y+(5-x) }}"
+							 id="{{ 'v'+y+x }}"
 							 alt=":{{ case }}:"
 							 [src]="imagesLocation + 'circled_numbers/' + case + '.svg'"/>
 						<img *ngIf="lastX === (5-x) && lastY === y"
 							 width="100" heigh="100"
-							 id="{{ 'u'+y+(5-x) }}"
+							 id="{{ 'w'+y+x }}"
 							 alt=":{{ case }}:"
 							 [src]="imagesLocation + 'highlight.svg'"
 							 style="position:absolute; top:0; left:0;"/>

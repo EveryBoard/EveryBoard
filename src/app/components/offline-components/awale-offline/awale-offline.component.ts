@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core';
-import {AwaleRules} from '../../../games/games.awale/AwaleRules';
-import {AwalePartSlice} from '../../../games/games.awale/AwalePartSlice';
+import {AwaleRules} from '../../../games/awale/AwaleRules';
+import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 import {UserService} from '../../../services/UserService';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
 

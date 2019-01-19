@@ -5,8 +5,8 @@ import {OnlineGame} from '../OnlineGame';
 import {Move} from '../../../jscaip/Move';
 
 import {MoveX} from '../../../jscaip/MoveX';
-import {P4PartSlice} from '../../../games/games.p4/P4PartSlice';
-import {P4Rules} from '../../../games/games.p4/P4Rules';
+import {P4PartSlice} from '../../../games/p4/P4PartSlice';
+import {P4Rules} from '../../../games/p4/P4Rules';
 
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
