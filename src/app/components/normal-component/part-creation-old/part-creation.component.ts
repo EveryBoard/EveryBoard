@@ -1,25 +1,22 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
-import {FormBuilder, FormGroup, Validators} from '@angular/forms';
-import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
-import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
+
+import {Subscription} from 'rxjs';
+
+import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
+
 import {UserService} from '../../../services/UserService';
 import {GameService} from '../../../services/GameService';
 import {JoinerService} from '../../../services/JoinerService';
 import {ChatService} from '../../../services/ChatService';
 
 @Component({
-	selector: 'app-part-creation',
+	selector: 'app-part-creation-old',
 	templateUrl: './part-creation.component.html',
 	styleUrls: ['./part-creation.component.css']
 })
 export class PartCreationComponent implements OnInit, OnDestroy {
-	/* First  : choosing an opponent
-	 * Second : proposing the rules
-	 * Third  : waiting opponent to agree
-	 * Fourth : starting
-	 *
-	 * PageCreationComponent are always child components of OnlineGames component (one to one)
+	/* PageCreationComponent are always child components of OnlineGames component (one to one)
 	 * they need common data so mother calculate/retrieve then share them with her child
 	 */
 
@@ -32,9 +29,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	currentJoiner: IJoiner = null;
 
 	userIsCreator: boolean;
-
 	userIsChosenPlayer: boolean;
-
 	acceptingDisabled = true;
 	proposingDisabled = true;
 	proposalSent = false;
@@ -47,15 +42,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	private userSub: Subscription;
 	private partSub: Subscription;
 
-	opponentFormGroup: FormGroup;
-	configFormGroup: FormGroup;
-
 	constructor(private _route: Router,
 				private userService: UserService,
 				private gameService: GameService,
 				private joinerService: JoinerService,
-				private chatService: ChatService,
-				private _formBuilder: FormBuilder) {
+				private chatService: ChatService) {
 	}
 
 	ngOnInit() {
@@ -63,30 +54,22 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		if (this.userName === '') { // TODO: ces vérifications doivent être faite par le composant mère, et une seule fois ??
 			console.log('PartCreationComponent we did not receive userName error');
 			this._route.navigate(['/server']);
-			return;
-		}
-		if (this.partId === '') {
+		} else if (this.partId === '') {
 			console.log('PartCreationComponent we did not receive partId error');
 			this._route.navigate(['/server']);
-			return;
+		} else {
+			// console.log('PartCreationComponent ngOnInit correctly starting (' + this.userName + ', ' + this.partId + ')');
+			this.joinerService
+				.joinGame(this.partId, this.userName)
+				.then(onFullFilled =>
+					this.joinerService.startObserving(this.partId, iJoiner =>
+						this.onCurrentJoinerUpdate(iJoiner)))
+				.catch(onRejected => {
+					console.log('!!!PartCreationComponent joining game FAILED because : ');
+					console.log(onRejected);
+					this._route.navigate(['/server']);
+				});
 		}
-		// console.log('PartCreationComponent ngOnInit correctly starting (' + this.userName + ', ' + this.partId + ')');
-		this.opponentFormGroup = this._formBuilder.group({
-			chosenOpponent: ['', Validators.required]
-		});
-		this.configFormGroup = this._formBuilder.group({
-			firstPlayer: ['', Validators.required]
-		});
-		this.joinerService
-			.joinGame(this.partId, this.userName)
-			.then(onFullFilled =>
-				this.joinerService.startObserving(this.partId, iJoiner =>
-					this.onCurrentJoinerUpdate(iJoiner)))
-			.catch(onRejected => {
-				console.log('!!!PartCreationComponent joining game FAILED because : ');
-				console.log(onRejected);
-				this._route.navigate(['/server']);
-			});
 		// console.log('PartCreation Component Initialized!');
 	}
 
@@ -207,7 +190,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	}
 
 	setChosenPlayer(pseudo: string): Promise<void> {
-		console.log('set chosen player to ' + JSON.stringify(pseudo));
 		return this.joinerService.setChosenPlayer(pseudo);
 	}
 

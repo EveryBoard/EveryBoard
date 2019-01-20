@@ -2,82 +2,121 @@
 	 style="height: 100%"
 	 *ngIf="currentJoiner">
 
-	<div id="players"
-		 style="height: 20%; min-height: 20%"
-		 class="circled row">
-		<h4 align="start" >Création d'une partie par {{ currentJoiner.creator }}</h4>
-		<h4 align="end" *ngIf="userIsCreator" (click)="cancelAndLeave()"> Annuler la partie </h4>
-		<h4 align="end" *ngIf="!userIsCreator" (click)="cancelAndLeave()"> Quitter le jeu </h4>
-		<div *ngIf="currentJoiner.chosenPlayer!==''"> Adversaire : {{ currentJoiner.chosenPlayer }}</div>
-	</div>
-
 	<div class="row"
-		 style="height: 80%; min-height: 80%">
+		 style="height: 100%; min-height: 100%">
 
-		<div id="gameConfig" class="circled form-group col-sm-9">
-			<label> Premier joueur : </label>
-			<fieldset id="firstPlayer"
-					  [disabled]="!userIsCreator || proposalSent">
-				<input type="radio"
-					   [(ngModel)]="firstPlayer"
-					   value="0" checked>
-				{{ currentJoiner.creator==userName ? "Toi" : currentJoiner.creator }}
+		<mat-horizontal-stepper id="creatorDiv"
+								class="circled col-sm-10"
+								linear #stepper
+								*ngIf="userIsCreator">
 
-				<input type="radio"
-					   [(ngModel)]="firstPlayer"
-					   value="1">
-				{{ currentJoiner.chosenPlayer==userName ?
-				"Toi" :
-				((currentJoiner.chosenPlayer) ?
-				currentJoiner.chosenPlayer :
-				"ton adversaire") }}
-				<input type="radio"
-					   [(ngModel)]="firstPlayer"
-					   value="2">
-				Au hasard <br/>
-			</fieldset>
-			<label> Type de jeu : </label> PAS IMPLÉMENTÉ <br/>
+			<mat-step [stepControl]="opponentFormGroup" editable="true">
+				<ng-template matStepLabel>Selection d'un adversaire</ng-template>
 
-			<label for="timeout"> Durée du timeout : </label>
-			<input id="timeout"
-				   class="form-control"
-				   type="number"
-				   name="quantity"
-				   min="60"
-				   [(ngModel)]="timeout"
-				   [ngModelOptions]="{standalone: true}"
-				   [disabled]="!userIsCreator || proposalSent"> <br/>
+				<div *ngIf="currentJoiner.candidatesNames.length === 0"> Attendez qu'un utilisateur vous rejoigne!</div>
 
-			<label> Temps par coups : </label> PAS IMPLÉMENTÉ <br/>
-			<label> Durée totale : </label> PAS IMPLÉMENTÉ <br/>
+				<form *ngIf="currentJoiner.candidatesNames.length > 0"
+					  [formGroup]="opponentFormGroup">
+					<mat-radio-group class="example-radio-group"
+									 formControlName="chosenOpponent"
+									 required>
+						<mat-radio-button class="example-radio-button"
+										  *ngFor="let joinerName of currentJoiner.candidatesNames"
+										  [value]="joinerName">
+							{{joinerName}}
+						</mat-radio-button>
+					</mat-radio-group>
+					<div *ngIf="opponentFormGroup.get('chosenOpponent').value !== ''">
+						<button (click)="setChosenPlayer(opponentFormGroup.get('chosenOpponent').value)"
+								mat-button
+								matStepperNext>
+							Jouer contre {{ opponentFormGroup.get('chosenOpponent').value }}
+						</button>
+						<button (click)="setChosenPlayer('')"
+								mat-button>
+							Annuler
+						</button>
+					</div>
 
-			<input type="button"
-				   *ngIf="userIsCreator"
-				   (click)="proposeConfig()"
-				   [disabled]="proposingDisabled"
-				   class="btn btn-primary btn-block"
-				   value="Proposer">
-			<br/>
-			<input type="button"
-				   *ngIf="userIsChosenPlayer"
-				   (click)="acceptConfig()"
-				   [disabled]="acceptingDisabled"
-				   class="btn btn-primary btn-block"
-				   value="Accepter et commencer">
-			<br/>
+				</form>
+
+			</mat-step>
+
+			<mat-step [stepControl]="configFormGroup"
+					  editable="true">
+				<form [formGroup]="configFormGroup">
+					<ng-template matStepLabel>Configuez la partie</ng-template>
+
+					<mat-radio-group class="example-radio-group" formControlName="firstPlayer" required>
+						<mat-radio-button class="example-radio-button" value="0"> Toi</mat-radio-button>
+						<mat-radio-button class="example-radio-button" value="1"> {{ currentJoiner.chosenPlayer }}
+						</mat-radio-button>
+						<mat-radio-button class="example-radio-button" value="2"> Au Hasard</mat-radio-button>
+					</mat-radio-group>
+
+					<div>
+						<button mat-button matStepperPrevious (click)="setChosenPlayer('')"> Changer d'adversaire
+						</button>
+						<button mat-button matStepperNext (click)="proposeConfig()"> Proposer config</button>
+					</div>
+				</form>
+			</mat-step>
+
+			<mat-step>
+				<ng-template matStepLabel>Done</ng-template>
+				Attendez la confirmation de {{ currentJoiner.chosenPlayer }}
+				<div>
+					<button mat-button matStepperPrevious>Revenir sur la config</button>
+				</div>
+			</mat-step>
+
+		</mat-horizontal-stepper>
+
+		<div id="chosenPlayerDiv"
+			 *ngIf="userIsChosenPlayer" class="circled col-sm-10">
+
+			<div> Vous avez été choisi comme adversaire !</div>
+
+			<div id="whoPlaysFirst">
+				<div *ngIf="!proposalSent">
+					{{ currentJoiner.creator }} est en train de se décider
+				</div>
+				<div *ngIf="proposalSent">
+					<div *ngIf="currentJoiner.firstPlayer === '0'">
+						{{ currentJoiner.creator }} propose que tu commence
+					</div>
+					<div *ngIf="currentJoiner.firstPlayer === '1'">
+						{{ currentJoiner.creator }} veut commencer
+					</div>
+					<div *ngIf="currentJoiner.firstPlayer === '2'">
+						{{ currentJoiner.creator }} propose que ce soit au hasard
+					</div>
+				</div>
+			</div>
+
+			<button mat-button
+					(click)="acceptConfig()"
+					[disabled]="acceptingDisabled">
+				Accepter et commencer
+			</button>
+
+		</div>
+
+		<div id="guestDiv"
+			 *ngIf="!userIsCreator && !userIsChosenPlayer"
+			 class="circled col-sm-10">
+
+			<div> Adversaire choisi : {{ currentJoiner.chosenPlayer }}</div>
+
 		</div>
 
 		<div id="joiners" class="circled col-sm-2">
 			<h4>
-				Voici la liste des joueurs à vouloir joindre cette partie :
+				Joueurs présents :
 			</h4>
 			<ul>
 				<li *ngFor="let joinerName of currentJoiner.candidatesNames">
-					<button *ngIf="userIsCreator"
-							(click)="setChosenPlayer(joinerName)">
-						Jouer contre : {{ joinerName }}
-					</button>
-					<p *ngIf="!userIsCreator"> {{ joinerName }}</p>
+					<p> {{ joinerName }}</p>
 				</li>
 			</ul>
 		</div>
@@ -85,3 +124,9 @@
 	</div>
 
 </div>
+
+
+<!-- Copyright 2018 Google Inc. All Rights Reserved.
+    Use of this source code is governed by an MIT-style license that
+    can be found in the LICENSE file at http://angular.io/license -->
+
