@@ -75,7 +75,6 @@ export class P4OfflineComponent implements OnInit {
 	}
 
 	onClick(event: MouseEvent): boolean {
-		this.userService.updateUserActivity();
 		if (this.rules.node.isEndGame()) {
 			console.log('La partie est finie');
 			return false;

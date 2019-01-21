@@ -27,8 +27,8 @@ export class ReversiComponent extends OnlineGame {
 
 	constructor(_route: Router, actRoute: ActivatedRoute,
 				userService: UserService,
-				joinerService: JoinerService, partService: GameService, activesUsersService: ActivesUsersService) {
-		super(_route, actRoute, userService, joinerService, partService, activesUsersService);
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
 	}
 
 	onClick(x: number, y: number): boolean {

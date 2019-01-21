@@ -11,7 +11,7 @@ import {User} from '../../../domain/iuser';
 })
 export class LoginComponent implements OnInit {
 
-	user = new User('', '', '', null, null, null);
+	user = new User('', '', '', null, null, null, null);
 	errorMessage: string;
 
 	constructor(private _route: Router,

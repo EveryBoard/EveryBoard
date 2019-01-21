@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore} from 'angularfire2/firestore';
 import {IUser, IUserId, PIUser} from '../domain/iuser';
+import {IJoiner} from '../domain/ijoiner';
 
 @Injectable({
 	providedIn: 'root'
@@ -39,14 +40,22 @@ export class UserDAO {
 			});
 	}
 
-	updateUserDocActivity(userDocId: string): Promise<void> {
+	updateUserDocActivity(userDocId: string, activityIsAMove: boolean): Promise<void> {
 		// update the user with pseudo to notifify that he's been doing something
+		const now = Date.now();
+		const moveUpdate: PIUser = {
+			lastActionTime: now,
+			lastMoveTime: now,
+			status: -2 // TODO calculate what that must be
+		};
+		const nonMoveUpdate: PIUser = {
+			lastActionTime: now,
+			status: -2 // TODO calculate what that must be
+		};
+		const update: PIUser = activityIsAMove ? moveUpdate : nonMoveUpdate;
 		return this.afs
 			.doc('joueurs/' + userDocId)
-			.update({
-				lastActionTime: Date.now(),
-				status: -2 // TODO calculate what that must be
-			});
+			.update(update);
 	}
 
 	// Simple CRUD

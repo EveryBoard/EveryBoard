@@ -29,12 +29,12 @@ export class UserService {
 
 	// on all pages (header then)
 
-	updateUserActivity() {
+	updateUserActivity(activityIsAMove: boolean) {
 		const currentUserDocId = this.userDocId.getValue();
 		if (currentUserDocId === '') {
 			return;
 		}
-		this.userDao.updateUserDocActivity(currentUserDocId);
+		this.userDao.updateUserDocActivity(currentUserDocId, activityIsAMove);
 	}
 
 	// On Server Component

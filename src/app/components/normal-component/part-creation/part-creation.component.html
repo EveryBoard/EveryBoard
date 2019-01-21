@@ -10,7 +10,7 @@
 								linear #stepper
 								*ngIf="userIsCreator">
 
-			<mat-step [stepControl]="opponentFormGroup" editable="true">
+			<mat-step [stepControl]="opponentFormGroup" editable="false">
 				<ng-template matStepLabel>Selection d'un adversaire</ng-template>
 
 				<div *ngIf="currentJoiner.candidatesNames.length === 0"> Attendez qu'un utilisateur vous rejoigne!</div>
@@ -42,10 +42,9 @@
 
 			</mat-step>
 
-			<mat-step [stepControl]="configFormGroup"
-					  editable="true">
+			<mat-step [stepControl]="configFormGroup" editable="false">
 				<form [formGroup]="configFormGroup">
-					<ng-template matStepLabel>Configuez la partie</ng-template>
+					<ng-template matStepLabel>Configurez la partie</ng-template>
 
 					<mat-radio-group class="example-radio-group" formControlName="firstPlayer" required>
 						<mat-radio-button class="example-radio-button" value="0"> Toi</mat-radio-button>
@@ -53,6 +52,16 @@
 						</mat-radio-button>
 						<mat-radio-button class="example-radio-button" value="2"> Au Hasard</mat-radio-button>
 					</mat-radio-group>
+					Durée maximum
+					<mat-slider
+						class="example-margin"
+						formControlName="maximalMoveDuration"
+						[max]="300"
+						[min]="10"
+						[step]="10"
+						[thumbLabel]="true"
+						required>
+					</mat-slider>
 
 					<div>
 						<button mat-button matStepperPrevious (click)="setChosenPlayer('')"> Changer d'adversaire

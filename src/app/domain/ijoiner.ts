@@ -16,7 +16,7 @@ export interface IJoiner {
 	 * 4 : part finished
 	 */
 
-	timeoutMinimalDuration: number;
+	// cancel feature for cause of smart phone bugs timeoutMinimalDuration: number;
 	maximalMoveDuration?: number;
 	totalPartDuration?: number;
 	gameType?: number;
@@ -49,7 +49,6 @@ export interface PIJoiner {
 	 * 4 : part finished
 	 */
 
-	timeoutMinimalDuration?: number;
 	maximalMoveDuration?: number;
 	totalPartDuration?: number;
 	gameType?: number;

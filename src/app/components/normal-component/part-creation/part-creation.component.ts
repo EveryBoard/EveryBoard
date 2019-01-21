@@ -40,8 +40,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	proposalSent = false;
 
 	// Game Configuration Values
-	timeout = 60;
+	// timeout = 60;
 	firstPlayer = '0';
+	maximalMoveDuration = 30;
 
 	// Subscription
 	private userSub: Subscription;
@@ -75,7 +76,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 			chosenOpponent: ['', Validators.required]
 		});
 		this.configFormGroup = this._formBuilder.group({
-			firstPlayer: ['', Validators.required]
+			firstPlayer: ['', Validators.required],
+			maximalMoveDuration: ['', Validators.required]
 		});
 		this.joinerService
 			.joinGame(this.partId, this.userName)
@@ -161,7 +163,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 			this.proposalSent = iJoinerId.joiner.partStatus > 1;
 			this.proposingDisabled = (iJoinerId.joiner.partStatus !== 1);
 		} else {
-			this.timeout = iJoinerId.joiner.timeoutMinimalDuration;
+			// this.timeout = iJoinerId.joiner.timeoutMinimalDuration;
+			this.maximalMoveDuration = iJoinerId.joiner.maximalMoveDuration;
 			this.firstPlayer = iJoinerId.joiner.firstPlayer;
 			this.acceptingDisabled = (iJoinerId.joiner.partStatus !== 2);
 		}
@@ -216,7 +219,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
 		// send the proposal to opponent
 		// status become 2 (waiting joiner confirmation)
-		return this.joinerService.proposeConfig(this.timeout, this.firstPlayer);
+		const maxMoveDur: number = this.configFormGroup.get('maximalMoveDuration').value;
+		const firstPlayer: string = this.configFormGroup.get('firstPlayer').value;
+		return this.joinerService.proposeConfig(maxMoveDur, firstPlayer);
 	}
 
 	acceptConfig(): Promise<void> {

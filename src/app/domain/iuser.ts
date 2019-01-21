@@ -4,6 +4,7 @@ export interface IUser {
 	email?: string;
 	inscriptionDate?: number;
 	lastActionTime: number;
+	lastMoveTime?: number;
 	status?: number; // playing, waiting-joiner, observering, chat-room, inactive, offline
 }
 
@@ -13,6 +14,7 @@ export interface PIUser {
 	email?: string;
 	inscriptionDate?: number;
 	lastActionTime?: number;
+	lastMoveTime?: number;
 	status?: number; // playing, waiting-joiner, observering, chat-room, inactive, offline
 }
 
@@ -28,5 +30,6 @@ export class User {
 		public email: string,
 		public inscriptionDate: number,
 		public lastActionTime: number,
+		public lastMoveTime: number,
 		public status: number) {}
 }

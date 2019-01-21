@@ -31,8 +31,8 @@ export class P4Component extends OnlineGame {
 
 	constructor(_route: Router, actRoute: ActivatedRoute,
 				userService: UserService,
-				joinerService: JoinerService, partService: GameService, activesUsersService: ActivesUsersService) {
-		super(_route, actRoute, userService, joinerService, partService, activesUsersService);
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
 	}
 
 	decodeMove(encodedMove: number): Move {

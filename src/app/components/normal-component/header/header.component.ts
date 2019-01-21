@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
 
 	startUserPresenceNotification() {
 		setTimeout(() => {
-			this.userService.updateUserActivity();
+			this.userService.updateUserActivity(false);
 			this.startUserPresenceNotification();
 		}, this.activesUsersService.refreshingPresenceTimeout);
 	}

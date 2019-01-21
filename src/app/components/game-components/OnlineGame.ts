@@ -12,7 +12,6 @@ import {UserService} from '../../services/UserService';
 import {JoinerService} from '../../services/JoinerService';
 import {OnDestroy, OnInit} from '@angular/core';
 import {GameService} from '../../services/GameService';
-import {ActivesUsersService} from '../../services/ActivesUsersService';
 
 export abstract class OnlineGame implements OnInit, OnDestroy {
 	rules: Rules;
@@ -29,8 +28,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	winner = '';
 	opponent: IUserId = null;
 	currentPlayer: string;
-	allowedTimeoutVictory = false;
-	timeout = 60;
+	allowedOutOfTimeVictory = false;
+	maximalMoveDuration = 60;
+	gameBeginningTime: number;
 
 	protected userSub: Subscription;
 	protected observedPartSubscription: Subscription;
@@ -41,8 +41,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		private actRoute: ActivatedRoute,
 		private userService: UserService,
 		private joinerService: JoinerService,
-		private gameService: GameService,
-		private activesUsersService: ActivesUsersService) {
+		private gameService: GameService) {
 	}
 
 	ngOnInit() {
@@ -66,8 +65,8 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.joinerService
 			.readJoinerById(this.partId)
 			.then(iJoiner => {
-				this.timeout = iJoiner.timeoutMinimalDuration;
-				// console.log('le timout est fixé à ' + this.timeout);
+				this.maximalMoveDuration = iJoiner.maximalMoveDuration;
+				console.log('maximalMoveDuration est fixé à ' + this.maximalMoveDuration);
 
 				this.gameService.startObserving(this.partId, iPart => {
 					this.onCurrentPartUpdate(iPart);
@@ -121,6 +120,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			updatedICurrentPart.playerZero,
 			updatedICurrentPart.playerOne];
 		this.observerRole = 2;
+		this.gameBeginningTime = updatedICurrentPart.beginning;
 		let opponentName = '';
 		if (this.players[0] === this.userName) {
 			this.observerRole = 0;
@@ -136,31 +136,38 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 						// console.log('userFound : ' + JSON.stringify(callback));
 						if (this.opponent == null) {
 							this.opponent = callback;
-							this.startWatchingForOpponentTimeout();
+							this.startWatchingIfOpponentRunOutOfTime();
 						}
 						this.opponent = callback;
 					});
 		}
 	}
 
-	startWatchingForOpponentTimeout() {
-		if (this.hasOpponentTimedOut()) {
-			this.allowedTimeoutVictory = true;
+	startWatchingIfOpponentRunOutOfTime() {
+		if (this.didOpponentRunOutOfTime()) {
+			this.allowedOutOfTimeVictory = true;
 		} else {
-			this.allowedTimeoutVictory = false;
+			this.allowedOutOfTimeVictory = false;
 		}
 		if (!this.endGame) {
-			// console.log('la partie n\'est pas terminée!');
-			setTimeout(() => this.startWatchingForOpponentTimeout(),
-				this.activesUsersService.refreshingPresenceTimeout);
+			let remainingTime: number =
+				Math.max(this.opponent.user.lastMoveTime, this.gameBeginningTime)
+				+ (this.maximalMoveDuration * 1000)
+				- Date.now();
+			remainingTime = remainingTime < 0 ? (this.maximalMoveDuration * 1000) : remainingTime;
+			console.log('la partie n\'est pas terminée! last move : ' + this.opponent.user.lastMoveTime + 'so this remain : ' + remainingTime);
+			setTimeout(() => this.startWatchingIfOpponentRunOutOfTime(),
+				remainingTime);
 		} else {
 			console.log('La partie est terminée');
 		}
 	}
 
-	protected hasOpponentTimedOut() {
-		// console.log('lastActionTime of your opponant : ' + this.opponent.user.lastActionTime);
-		return (this.opponent.user.lastActionTime + (this.timeout * 1000) < Date.now());
+	protected didOpponentRunOutOfTime(): boolean {
+		console.log('lastMoveTime of your opponent : ' + this.opponent.user.lastMoveTime);
+		return Math.max(this.opponent.user.lastMoveTime, this.gameBeginningTime)
+				+ (this.maximalMoveDuration * 1000)
+				< Date.now();
 	}
 
 	backToServer() {
@@ -206,7 +213,11 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	updateDBBoard(move: Move) {
 		const encodedMove: number = this.encodeMove(move);
-		this.gameService.updateDBBoard(encodedMove, this.partId);
+		this.gameService
+			.updateDBBoard(encodedMove, this.partId)
+			.then(onFullFilled => {
+				this.userService.updateUserActivity(true);
+			});
 	}
 
 	ngOnDestroy() {

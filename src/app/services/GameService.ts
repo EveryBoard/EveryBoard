@@ -49,7 +49,7 @@ export class GameService {
 			candidatesNames: [],
 			creator: creatorName,
 			chosenPlayer: '',
-			timeoutMinimalDuration: 60,
+			// abandonned feature timeoutMinimalDuration: 60,
 			firstPlayer: '0', // par défaut: le créateur
 			partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
 		};
@@ -198,16 +198,19 @@ export class GameService {
 		});
 	}
 
-	updateDBBoard(encodedMove: number, partId: string) {
-		this.partDao.readPartById(partId)
+	updateDBBoard(encodedMove: number, partId: string): Promise<void> {
+		return this.partDao.readPartById(partId)
 			.then(part => {
 				const turn: number = part.turn + 1;
 				const listMoves: number[] = part.listMoves;
 				listMoves[listMoves.length] = encodedMove;
-				this.partDao.updatePartById(partId, {
-					'listMoves': listMoves,
-					'turn': turn
-				});
+				this.partDao
+					.updatePartById(partId, {
+						'listMoves': listMoves,
+						'turn': turn })
+					.catch(onRejected => {
+						console.log('part update failed because ' + JSON.stringify(onRejected))
+					});
 			})
 			.catch(error => console.log(error));
 	}

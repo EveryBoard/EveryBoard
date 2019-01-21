@@ -31,8 +31,8 @@ export class TablutComponent extends OnlineGame {
 	choosenY = -1;
 
 	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
-				joinerService: JoinerService, partService: GameService, activesUsersService: ActivesUsersService) {
-		super(_route, actRoute, userService, joinerService, partService, activesUsersService);
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
 	}
 
 	updateBoard() {

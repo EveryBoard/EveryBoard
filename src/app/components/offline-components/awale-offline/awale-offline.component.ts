@@ -77,7 +77,6 @@ export class AwaleOfflineComponent implements OnInit {
 	}
 
 	choose(event: MouseEvent): boolean {
-		this.userService.updateUserActivity();
 		if (this.rules.node.isEndGame()) {
 			console.log('La partie est finie');
 			return false;

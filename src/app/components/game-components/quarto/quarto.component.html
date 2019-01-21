@@ -13,7 +13,7 @@
 			<div *ngIf="opponent && observerRole <2">
 				<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
 				<button *ngIf="!endGame" (click)="resign()"> Abandonner</button>
-				<div *ngIf="allowedTimeoutVictory && !endGame">
+				<div *ngIf="allowedOutOfTimeVictory && !endGame">
 					<h3>
 						{{ opponent.user.pseudo }} ne réagit plus :
 						<button (click)="notifyTimeout()">

@@ -35,8 +35,8 @@ export class QuartoComponent extends OnlineGame {
 	pieceToGive = -1; // the piece that the user want to give to the opponent
 
 	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
-				joinerService: JoinerService, partService: GameService, activesUsersService: ActivesUsersService) {
-		super(_route, actRoute, userService, joinerService, partService, activesUsersService);
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
 	}
 
 	decodeMove(encodedMove: number): Move {
