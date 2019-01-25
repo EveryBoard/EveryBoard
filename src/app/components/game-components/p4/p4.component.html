@@ -6,22 +6,40 @@
 					   [userName]="userName"
 					   (gameStartNotification)="startGame()">
 	</app-part-creation>
-
 	<div id="game"
 		 *ngIf="gameStarted === true">
 
 		<div id="info">
+			<div>
+				<span style="alignment: left">
+					{{ players[0] }} :
+					<app-count-down (outOfTimeAction)="reachedOutOfTime(0)"
+									[(duration)]="playerZeroRemainingTime"
+									[(paused)]="!isPlayerZeroTurn"
+									[initialDuration]="maximalMoveDuration">
+					</app-count-down>
+				</span>
+				<span style="alignment: right">
+					{{ players[1] }} :
+					<app-count-down (outOfTimeAction)="reachedOutOfTime(1)"
+									[(duration)]="playerOneRemainingTime"
+									[(paused)]="!isPlayerOneTurn"
+									[initialDuration]="maximalMoveDuration">
+
+					</app-count-down>
+				</span>
+			</div>
 			<div *ngIf="opponent && observerRole <2">
 				<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
 				<button *ngIf="!endGame" (click)="resign()"> Abandonner</button>
-				<div *ngIf="allowedOutOfTimeVictory && !endGame">
+				<!-- <div *ngIf="allowedOutOfTimeVictory && !endGame">
 					<h3>
 						{{ opponent.user.pseudo }} ne réagit plus :
-						<button (click)="notifyTimeout()">
+						<button (click)="notifyTimeoutVictory()">
 							Victoire par timeout?
 						</button>
 					</h3>
-				</div>
+				</div> -->
 				<div> Tour : {{ turn }}</div>
 			</div>
 			<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
@@ -46,12 +64,12 @@
 					<td *ngFor="let case of line; index as x;"
 						style="position:relative;"
 						(click)="onClick(x);">
-						<img width="100" height="100"
+						<img width="50" height="50"
 							 id="{{'t'+y+x}}"
 							 alt=":{{ case }}:"
 							 [src]='imagesLocation+imagesNames[case]'/>
 						<img *ngIf="lastX===x"
-							 width="100" height="100"
+							 width="50" height="50"
 							 id="{{'u'+y+x}}"
 							 alt="highlighted"
 							 [src]="imagesLocation+'highlight.svg'"

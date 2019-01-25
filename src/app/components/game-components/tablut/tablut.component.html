@@ -17,7 +17,7 @@
 				<div *ngIf="allowedOutOfTimeVictory && !endGame">
 					<h3>
 						{{ opponent.user.pseudo }} as mis trop de temps à jouer :
-						<button (click)="notifyTimeout()">
+						<button (click)="notifyTimeoutVictory()">
 							Cliquer pour gagner
 						</button>
 					</h3>

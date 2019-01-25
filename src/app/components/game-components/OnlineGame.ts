@@ -29,8 +29,15 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	opponent: IUserId = null;
 	currentPlayer: string;
 	allowedOutOfTimeVictory = false;
-	maximalMoveDuration = 60;
+
+	maximalMoveDuration: number;
+	maximalMoveDurationForZero: number;
+	maximalMoveDurationForOne: number;
 	gameBeginningTime: number;
+	playerZeroRemainingTime: number;
+	playerOneRemainingTime: number;
+	isPlayerZeroTurn = false;
+	isPlayerOneTurn = false;
 
 	protected userSub: Subscription;
 	protected observedPartSubscription: Subscription;
@@ -57,6 +64,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			console.log('OnlineGame.startGame next line is usefull sparadra)');
 		}
 		this.gameStarted = true;
+		this.startCountdownFor(0);
 		// should be some kind of session-scope
 
 		this.rules.setInitialBoard();
@@ -86,14 +94,15 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		}
 
 		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
-		if ([1, 3, 4].includes(part.result)) {
+		if ([0, 1, 3, 4].includes(part.result)) {
 			this.endGame = true;
-			this.winner = part.winner;
-		}
-		if (part.result === 0) { // match nul
-			this.endGame = true;
-			console.log('match nul means winner = ' + part.winner);
-			this.winner = null;
+			this.stopCountdowns();
+			if (part.result === 0) { // match nul
+				console.log('match nul means winner = ' + part.winner);
+				this.winner = null;
+			} else { // victory
+				this.winner = part.winner;
+			}
 		}
 		const listMoves = part.listMoves;
 		this.turn = part.turn;
@@ -112,6 +121,27 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			}
 		}
 		this.updateBoard();
+		if (!this.endGame) {
+			this.startCountdownFor(this.turn % 2 === 0 ? 0 : 1);
+		}
+	}
+
+	private startCountdownFor(player: 0|1) {
+		console.log('ooosss start count down for ' + player + ' some : ' + this.maximalMoveDuration);
+		this.maximalMoveDurationForZero = this.maximalMoveDuration;
+		this.maximalMoveDurationForOne = this.maximalMoveDuration;
+		if (player === 0) {
+			this.isPlayerZeroTurn = false;
+			this.isPlayerOneTurn = true;
+		} else {
+			this.isPlayerZeroTurn = true;
+			this.isPlayerOneTurn = false;
+		}
+	}
+
+	private stopCountdowns() {
+		this.isPlayerZeroTurn = false;
+		this.isPlayerOneTurn = false;
 	}
 
 	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
@@ -136,30 +166,29 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 						// console.log('userFound : ' + JSON.stringify(callback));
 						if (this.opponent == null) {
 							this.opponent = callback;
-							this.startWatchingIfOpponentRunOutOfTime();
+							// OLDLY this.startWatchingIfOpponentRunOutOfTime();
 						}
 						this.opponent = callback;
 					});
 		}
 	}
 
-	startWatchingIfOpponentRunOutOfTime() {
+	oldstartWatchingIfOpponentRunOutOfTime() {
 		if (this.didOpponentRunOutOfTime()) {
-			this.allowedOutOfTimeVictory = true;
+			this.notifyTimeoutVictory(this.userName);
 		} else {
-			this.allowedOutOfTimeVictory = false;
-		}
-		if (!this.endGame) {
-			let remainingTime: number =
-				Math.max(this.opponent.user.lastMoveTime, this.gameBeginningTime)
-				+ (this.maximalMoveDuration * 1000)
-				- Date.now();
-			remainingTime = remainingTime < 0 ? (this.maximalMoveDuration * 1000) : remainingTime;
-			console.log('la partie n\'est pas terminée! last move : ' + this.opponent.user.lastMoveTime + 'so this remain : ' + remainingTime);
-			setTimeout(() => this.startWatchingIfOpponentRunOutOfTime(),
-				remainingTime);
-		} else {
-			console.log('La partie est terminée');
+			if (!this.endGame) {
+				let remainingTime: number =
+					Math.max(this.opponent.user.lastMoveTime, this.gameBeginningTime)
+					+ (this.maximalMoveDuration * 1000)
+					- Date.now();
+				remainingTime = remainingTime < 0 ? (this.maximalMoveDuration * 1000) : remainingTime;
+				console.log('la partie n\'est pas terminée! last move : ' + this.opponent.user.lastMoveTime + 'so this remain : ' + remainingTime);
+				setTimeout(() => this.oldstartWatchingIfOpponentRunOutOfTime(),
+					remainingTime);
+			} else {
+				console.log('La partie est terminée');
+			}
 		}
 	}
 
@@ -168,6 +197,19 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		return Math.max(this.opponent.user.lastMoveTime, this.gameBeginningTime)
 				+ (this.maximalMoveDuration * 1000)
 				< Date.now();
+	}
+
+	reachedOutOfTime(player: 0|1) {
+		if (player === this.observerRole) {
+			// the player has run out of time, he'll notify his own defeat by time
+			this.notifyTimeoutVictory(this.opponent.user.pseudo);
+		} else {
+			// the other player has timeout
+			if (!this.endGame) {
+				this.notifyTimeoutVictory(this.userName);
+				this.endGame = true;
+			}
+		}
 	}
 
 	backToServer() {
@@ -184,8 +226,8 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.gameService.notifyDraw(this.partId);
 	}
 
-	notifyTimeout() {
-		const victoriousPlayer = this.userName;
+	notifyTimeoutVictory(victoriousPlayer: string) {
+		// const victoriousPlayer = this.userName;
 		this.endGame = true;
 		this.winner = victoriousPlayer;
 		this.gameService.notifyTimeout(this.partId, victoriousPlayer);
@@ -235,6 +277,15 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			this.gameService.stopObservingPart();
 		}
 		// console.log('OnlineGame.onDestroy');
+	}
+
+	onTurnStart() {
+		// if it is user's turn
+		//       we start a compte-à-rebour to tell him he can't play when he's done
+		// if it's not
+		//  	 we start a compte-à-rebour to launch victory from the opponent side
+		// if the player play too close to the end of the limit, so that the player.lastMoveTime is encoded as very close
+		// but on the waiter side the end-code is called, how to avoid this cases of "you win... wait no you don't" :D
 	}
 
 	abstract updateBoard(): void;

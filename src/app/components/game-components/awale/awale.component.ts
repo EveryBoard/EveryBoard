@@ -11,7 +11,6 @@ import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
-import {ActivesUsersService} from '../../../services/ActivesUsersService';
 
 @Component({
 	selector: 'app-awale',

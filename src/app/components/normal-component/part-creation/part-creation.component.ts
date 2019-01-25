@@ -77,7 +77,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		});
 		this.configFormGroup = this._formBuilder.group({
 			firstPlayer: ['', Validators.required],
-			maximalMoveDuration: ['', Validators.required]
+			maximalMoveDuration: [10, Validators.required]
 		});
 		this.joinerService
 			.joinGame(this.partId, this.userName)
@@ -159,8 +159,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		// Update the form depending on which state we're on now
 		this.userIsCreator = (this.userName === iJoinerId.joiner.creator);
 		this.userIsChosenPlayer = (this.userName === iJoinerId.joiner.chosenPlayer);
+		this.proposalSent = iJoinerId.joiner.partStatus > 1;
 		if (this.userIsCreator) {
-			this.proposalSent = iJoinerId.joiner.partStatus > 1;
 			this.proposingDisabled = (iJoinerId.joiner.partStatus !== 1);
 		} else {
 			// this.timeout = iJoinerId.joiner.timeoutMinimalDuration;

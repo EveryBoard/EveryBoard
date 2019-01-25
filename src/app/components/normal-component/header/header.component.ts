@@ -36,4 +36,5 @@ export class HeaderComponent implements OnInit {
 	backToServer() {
 		this._route.navigate(['/server']);
 	}
+
 }

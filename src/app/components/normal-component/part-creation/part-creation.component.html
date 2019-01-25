@@ -52,31 +52,33 @@
 						</mat-radio-button>
 						<mat-radio-button class="example-radio-button" value="2"> Au Hasard</mat-radio-button>
 					</mat-radio-group>
-					Durée maximum
-					<mat-slider
-						class="example-margin"
-						formControlName="maximalMoveDuration"
-						[max]="300"
-						[min]="10"
-						[step]="10"
-						[thumbLabel]="true"
-						required>
-					</mat-slider>
-
+					<div> Durée maximum d'un tour :
+						<mat-slider
+							class="example-margin"
+							formControlName="maximalMoveDuration"
+							[max]="300"
+							[min]="10"
+							[step]="10"
+							(value)="10"
+							[thumbLabel]="true"
+							required>
+						</mat-slider>
+					</div>
 					<div>
-						<button mat-button matStepperPrevious (click)="setChosenPlayer('')"> Changer d'adversaire
-						</button>
+						<!-- <button mat-button matStepperPrevious (click)="setChosenPlayer('')"> Changer d'adversaire
+						</button>-->
 						<button mat-button matStepperNext (click)="proposeConfig()"> Proposer config</button>
 					</div>
 				</form>
 			</mat-step>
 
-			<mat-step>
+			<mat-step editable="false">
 				<ng-template matStepLabel>Done</ng-template>
 				Attendez la confirmation de {{ currentJoiner.chosenPlayer }}
-				<div>
+				La partie commencera automatiquement
+				<!--<div>
 					<button mat-button matStepperPrevious>Revenir sur la config</button>
-				</div>
+				</div>-->
 			</mat-step>
 
 		</mat-horizontal-stepper>
@@ -95,19 +97,19 @@
 						{{ currentJoiner.creator }} propose que tu commence
 					</div>
 					<div *ngIf="currentJoiner.firstPlayer === '1'">
-						{{ currentJoiner.creator }} veut commencer
+						{{ currentJoiner.creator }} propose qu'il commence
 					</div>
 					<div *ngIf="currentJoiner.firstPlayer === '2'">
-						{{ currentJoiner.creator }} propose que ce soit au hasard
+						{{ currentJoiner.creator }} propose que le premier joueur soit choisi au hasard
 					</div>
+					<div> Il propose : {{ currentJoiner.maximalMoveDuration }} seconde par tour maximum</div>
+					<button mat-button
+							(click)="acceptConfig()"
+							[disabled]="acceptingDisabled">
+						Accepter et commencer
+					</button>
 				</div>
 			</div>
-
-			<button mat-button
-					(click)="acceptConfig()"
-					[disabled]="acceptingDisabled">
-				Accepter et commencer
-			</button>
 
 		</div>
 

@@ -19,7 +19,7 @@
 				<div *ngIf="allowedOutOfTimeVictory && !endGame">
 					<h3>
 						{{ opponent.user.pseudo }} ne réagit plus :
-						<button (click)="notifyTimeout()">
+						<button (click)="notifyTimeoutVictory()">
 							Victoire par timeout?
 						</button>
 					</h3>

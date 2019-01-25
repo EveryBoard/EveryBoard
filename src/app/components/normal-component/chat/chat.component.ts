@@ -41,4 +41,5 @@ export class ChatComponent implements OnInit, OnDestroy {
 	ngOnDestroy() {
 		this.chatService.stopObserving();
 	}
+
 }

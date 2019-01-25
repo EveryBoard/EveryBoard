@@ -3,7 +3,9 @@ export interface ICurrentPart {
 	playerZero: string; // id
 	turn: number; // -1 before it begin, 0 initial floor
 	playerOne?: string; // id
+
 	beginning?: number; // should be date; is a timestamp
+	lastMove?: number; // should/could? be a date; is a timestamp
 
 	typePart?: number|string; // amicale, comptabilisée, pédagogique
 	result?: number;
@@ -33,6 +35,7 @@ export interface PICurrentPart {
 	turn?: number; // -1 before it begin, 0 initial floor
 	playerOne?: string; // id
 	beginning?: number; // should be date; is a timestamp
+	lastMove?: number; // should/could? be a date; is a timestamp
 
 	typePart?: number|string; // amicale, comptabilisée, pédagogique
 	result?: number;

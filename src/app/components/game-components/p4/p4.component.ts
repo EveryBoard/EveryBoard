@@ -11,7 +11,6 @@ import {P4Rules} from '../../../games/p4/P4Rules';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
 import {UserService} from '../../../services/UserService';
-import {ActivesUsersService} from '../../../services/ActivesUsersService';
 
 @Component({
 	selector: 'app-p4',
