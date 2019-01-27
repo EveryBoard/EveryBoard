@@ -11,7 +11,8 @@ import {GameService} from '../../../services/GameService';
 
 @Component({
 	selector: 'app-tablut',
-	templateUrl: './tablut.component.html'
+	templateUrl: './tablut.component.html',
+	styleUrls: ['../onlineGame.css']
 })
 export class TablutComponent extends OnlineGame {
 

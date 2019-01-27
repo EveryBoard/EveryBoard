@@ -10,28 +10,24 @@
 
 	<div id="game"
 		 *ngIf="gameStarted === true"
-		 class="container"
-		 style="height: 60%; position: relative; align-content: center;">
+		 class="container">
 
 		<div id="info">
 			<div>
-				<span style="alignment: left">
-					{{ players[0] }} :
+				<h3 style="alignment: left"> {{ players[0] }} :
 					<app-count-down (outOfTimeAction)="reachedOutOfTime(0)"
 									[(duration)]="playerZeroRemainingTime"
 									[(paused)]="!isPlayerZeroTurn"
 									[initialDuration]="maximalMoveDuration">
 					</app-count-down>
-				</span>
-				<span style="alignment: right">
-					{{ players[1] }} :
+				</h3>
+				<h3 style="alignment: right"> {{ players[1] }} :
 					<app-count-down (outOfTimeAction)="reachedOutOfTime(1)"
 									[(duration)]="playerOneRemainingTime"
 									[(paused)]="!isPlayerOneTurn"
 									[initialDuration]="maximalMoveDuration">
-
 					</app-count-down>
-				</span>
+				</h3>
 			</div>
 			<div *ngIf="opponent && observerRole <2">
 				<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>

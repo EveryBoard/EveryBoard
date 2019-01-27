@@ -16,7 +16,8 @@ import {GameService} from '../../../services/GameService';
 
 @Component({
 	selector: 'app-quarto',
-	templateUrl: './quarto.component.html'
+	templateUrl: './quarto.component.html',
+	styleUrls: ['../onlineGame.css']
 })
 export class QuartoComponent extends OnlineGame {
 

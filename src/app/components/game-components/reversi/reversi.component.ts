@@ -10,7 +10,8 @@ import {ReversiPartSlice} from '../../../games/reversi/ReversiPartSlice';
 
 @Component({
 	selector: 'app-reversi',
-	templateUrl: './reversi.component.html'
+	templateUrl: './reversi.component.html',
+	styleUrls: ['../onlineGame.css']
 })
 export class ReversiComponent extends OnlineGame {
 

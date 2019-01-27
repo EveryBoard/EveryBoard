@@ -1,0 +1,10 @@
+#info {
+	display:flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+}
+#game {
+	height: 60%;
+	position: relative;
+	align-content: center;
+}
