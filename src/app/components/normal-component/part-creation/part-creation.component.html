@@ -1,14 +1,8 @@
-<div class="container-fluid"
-	 style="height: 100%"
-	 *ngIf="currentJoiner">
+<div *ngIf="currentJoiner" style="height: 60%;">
 
-	<div class="row"
-		 style="height: 100%; min-height: 100%">
+	<div id="gameConfig" class="circled col-sm-10" style="height: 100%; max-height: 100%">
 
-		<mat-horizontal-stepper id="creatorDiv"
-								class="circled col-sm-10"
-								linear #stepper
-								*ngIf="userIsCreator">
+		<mat-horizontal-stepper id="creatorDiv" linear #stepper *ngIf="userIsCreator">
 
 			<mat-step [stepControl]="opponentFormGroup" editable="false">
 				<ng-template matStepLabel>Selection d'un adversaire</ng-template>
@@ -66,7 +60,7 @@
 					</div>
 					<div>
 						<!-- <button mat-button matStepperPrevious (click)="setChosenPlayer('')"> Changer d'adversaire
-						</button>-->
+                        </button>-->
 						<button mat-button matStepperNext (click)="proposeConfig()"> Proposer config</button>
 					</div>
 				</form>
@@ -77,14 +71,13 @@
 				Attendez la confirmation de {{ currentJoiner.chosenPlayer }}
 				La partie commencera automatiquement
 				<!--<div>
-					<button mat-button matStepperPrevious>Revenir sur la config</button>
-				</div>-->
+                    <button mat-button matStepperPrevious>Revenir sur la config</button>
+                </div>-->
 			</mat-step>
 
 		</mat-horizontal-stepper>
 
-		<div id="chosenPlayerDiv"
-			 *ngIf="userIsChosenPlayer" class="circled col-sm-10">
+		<div id="chosenPlayerDiv" *ngIf="userIsChosenPlayer">
 
 			<div> Vous avez été choisi comme adversaire !</div>
 
@@ -113,25 +106,21 @@
 
 		</div>
 
-		<div id="guestDiv"
-			 *ngIf="!userIsCreator && !userIsChosenPlayer"
-			 class="circled col-sm-10">
+		<div id="guestDiv" *ngIf="!userIsCreator && !userIsChosenPlayer">
 
-			<div> Adversaire choisi : {{ currentJoiner.chosenPlayer }}</div>
+			Adversaire choisi : {{ currentJoiner.chosenPlayer }}
 
 		</div>
 
-		<div id="joiners" class="circled col-sm-2">
-			<h4>
-				Joueurs présents :
-			</h4>
-			<ul>
-				<li *ngFor="let joinerName of currentJoiner.candidatesNames">
-					<p> {{ joinerName }}</p>
-				</li>
-			</ul>
-		</div>
+	</div>
 
+	<div id="joiners" class="circled col-sm-2" style="height: 100%; max-height: 100%">
+		<h4> Joueurs présents : </h4>
+		<ul>
+			<li *ngFor="let joinerName of currentJoiner.candidatesNames">
+				<p> {{ joinerName }}</p>
+			</li>
+		</ul>
 	</div>
 
 </div>

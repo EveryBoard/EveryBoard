@@ -14,8 +14,7 @@ import {GameService} from '../../../services/GameService';
 
 @Component({
 	selector: 'app-awale',
-	templateUrl: './awale.component.html',
-	styleUrls: ['./awale.component.css']
+	templateUrl: './awale.component.html'
 })
 export class AwaleComponent extends OnlineGame {
 

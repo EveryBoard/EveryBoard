@@ -14,8 +14,7 @@ import {UserService} from '../../../services/UserService';
 
 @Component({
 	selector: 'app-p4',
-	templateUrl: './p4.component.html',
-	styleUrls: ['./p4.component.css']
+	templateUrl: './p4.component.html'
 })
 export class P4Component extends OnlineGame {
 

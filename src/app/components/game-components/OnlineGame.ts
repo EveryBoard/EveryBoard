@@ -122,12 +122,11 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		}
 		this.updateBoard();
 		if (!this.endGame) {
-			this.startCountdownFor(this.turn % 2 === 0 ? 0 : 1);
+			this.startCountdownFor(this.turn % 2 === 0 ? 1 : 0);
 		}
 	}
 
 	private startCountdownFor(player: 0|1) {
-		console.log('ooosss start count down for ' + player + ' some : ' + this.maximalMoveDuration);
 		this.maximalMoveDurationForZero = this.maximalMoveDuration;
 		this.maximalMoveDurationForOne = this.maximalMoveDuration;
 		if (player === 0) {

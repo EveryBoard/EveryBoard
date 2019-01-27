@@ -13,12 +13,10 @@ import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
-import {ActivesUsersService} from '../../../services/ActivesUsersService';
 
 @Component({
 	selector: 'app-quarto',
-	templateUrl: './quarto.component.html',
-	styleUrls: ['./quarto.component.css']
+	templateUrl: './quarto.component.html'
 })
 export class QuartoComponent extends OnlineGame {
 

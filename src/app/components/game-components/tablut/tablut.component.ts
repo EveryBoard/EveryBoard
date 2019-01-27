@@ -8,12 +8,10 @@ import {JoinerService} from '../../../services/JoinerService';
 import {TablutRules} from '../../../games/tablut/TablutRules';
 import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
 import {GameService} from '../../../services/GameService';
-import {ActivesUsersService} from '../../../services/ActivesUsersService';
 
 @Component({
 	selector: 'app-tablut',
-	templateUrl: './tablut.component.html',
-	styleUrls: ['./tablut.component.css']
+	templateUrl: './tablut.component.html'
 })
 export class TablutComponent extends OnlineGame {
 
@@ -22,6 +20,7 @@ export class TablutComponent extends OnlineGame {
 	imagesLocation = 'assets/images/'; // en prod';
 	// imagesLocation = 'src/assets/images/'; // en dev
 	imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
+	UNOCCUPIED = 0;
 
 	movingX = -1; // coord of the piece who left
 	movingY = -1;
@@ -154,6 +153,10 @@ export class TablutComponent extends OnlineGame {
 	cancelMove() {
 		this.choosenX = -1;
 		this.choosenY = -1;
+	}
+
+	isThrone(x: number, y: number): boolean {
+		return TablutRules.isThrone(new Coord(x, y));
 	}
 
 	showSelectedPiece(x: number, y: number) {

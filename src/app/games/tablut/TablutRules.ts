@@ -311,7 +311,7 @@ export class TablutRules extends Rules {
 		return false;
 	}
 
-	private static isThrone(c: Coord): boolean {
+	public static isThrone(c: Coord): boolean {
 		if (this.isExternalThrone(c)) {
 			return true;
 		} else {

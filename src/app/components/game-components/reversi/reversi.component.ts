@@ -4,15 +4,13 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
-import {ActivesUsersService} from '../../../services/ActivesUsersService';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
 import {ReversiRules} from '../../../games/reversi/ReversiRules';
 import {ReversiPartSlice} from '../../../games/reversi/ReversiPartSlice';
 
 @Component({
 	selector: 'app-reversi',
-	templateUrl: './reversi.component.html',
-	styleUrls: ['./reversi.component.css']
+	templateUrl: './reversi.component.html'
 })
 export class ReversiComponent extends OnlineGame {
 

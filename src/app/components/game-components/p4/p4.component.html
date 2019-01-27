@@ -1,4 +1,5 @@
-<div style="max-height: 80%; height: 80%;">
+<div class="container-fluid"
+	 style="height: 88%; max-height: 88%">
 
 	<app-part-creation id="partCreation"
 					   *ngIf="gameStarted === false"
@@ -6,8 +7,11 @@
 					   [userName]="userName"
 					   (gameStartNotification)="startGame()">
 	</app-part-creation>
+
 	<div id="game"
-		 *ngIf="gameStarted === true">
+		 *ngIf="gameStarted === true"
+		 class="container"
+		 style="height: 60%; position: relative; align-content: center;">
 
 		<div id="info">
 			<div>
@@ -81,9 +85,10 @@
 
 	</div>
 
-	<div id="chat" class="circled">
+	<div id="chat" class="circled" style="height: 40%; max-height: 40%; float: bottom;">
 		<app-chat [userName]="userName"
 				  [chatId]="partId"
 				  [turn]="turn"></app-chat>
 	</div>
+
 </div>
