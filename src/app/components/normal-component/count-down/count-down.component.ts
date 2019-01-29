@@ -12,6 +12,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
 	@Input() initialDuration: number;
 	@Input() duration: number;
 	@Input() paused: boolean;
+	@Input() autoRefill: boolean;
 
 	@Output() outOfTimeAction = new EventEmitter<void>();
 
@@ -30,8 +31,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
 				this.ended = true;
 				this.outOfTimeAction.emit();
 			}
-		} else {
-			this.duration = this.initialDuration;
+		} else if (this.autoRefill) {
+				this.duration = this.initialDuration;
 		}
 		if (!this.ended) {
 			setTimeout(() => this.decDuration(),

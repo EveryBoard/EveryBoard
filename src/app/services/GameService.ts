@@ -254,8 +254,8 @@ export class GameService {
 		}
 	}
 
-	proposeConfig(timeout: number, firstPlayer: string): Promise<void> {
-		return this.joinerService.proposeConfig(timeout, firstPlayer);
+	proposeConfig(maxMoveDur: number, firstPlayer: string, totalPartDur): Promise<void> {
+		return this.joinerService.proposeConfig(maxMoveDur, firstPlayer, totalPartDur);
 	}
 
 	cancelGame(): Promise<void> {

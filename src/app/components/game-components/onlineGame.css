@@ -1,10 +1,23 @@
-#info {
-	display:flex;
-	flex-flow: row wrap;
-	justify-content: space-around;
-}
 #game {
 	height: 60%;
 	position: relative;
 	align-content: center;
+}
+#board {
+	height: 100%;
+	display:flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+}
+#info {
+	height: 100%;
+	display:flex;
+	flex-flow: row wrap;
+	justify-content: space-around;
+}
+.inforow {
+	min-height: 8%;
+	max-height: 8%;
+	width: 100%;
+	padding-bottom: 5px;
 }

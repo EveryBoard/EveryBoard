@@ -21,7 +21,7 @@ export class AwaleComponent extends OnlineGame {
 
 	rules = new AwaleRules();
 
-	captured: number[] = [0, 0];
+	scores: number[] = [0, 0];
 
 	imagesLocation = 'assets/images/'; // en prod
 	// imagesLocation = 'src/assets/images/'; // en dev
@@ -98,7 +98,7 @@ export class AwaleComponent extends OnlineGame {
 		this.turn = awalePartSlice.turn;
 		this.currentPlayer = this.players[awalePartSlice.turn % 2];
 
-		this.captured = awalePartSlice.getCapturedCopy();
+		this.scores = awalePartSlice.getCapturedCopy();
 		if (awaleMove != null) {
 			this.lastX = awaleMove.coord.x;
 			this.lastY = awaleMove.coord.y;

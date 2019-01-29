@@ -22,7 +22,7 @@ export class ReversiComponent extends OnlineGame {
 
 	lastX = -1;
 	lastY = -1;
-	mustPass = false;
+	canPass = false;
 
 	constructor(_route: Router, actRoute: ActivatedRoute,
 				userService: UserService,
@@ -106,10 +106,10 @@ export class ReversiComponent extends OnlineGame {
 		console.log('f9 board value : ' + this.rules.node.getOwnValue());
 		if (ReversiRules.playerCanOnlyPass(reversiPartSlice) && (!this.endGame)) {
 			console.log('f9 l\'utilisateur ne peut que passer son tour!');
-			this.mustPass = true;
+			this.canPass = true;
 		} else {
 			console.log('f9 they pretend that you have choices, is it true');
-			this.mustPass = false;
+			this.canPass = false;
 		}
 	}
 

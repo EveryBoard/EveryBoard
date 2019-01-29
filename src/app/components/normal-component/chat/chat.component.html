@@ -2,7 +2,7 @@
 	<form class="example-form">
 
 		<!-- Messages -->
-		<div style="height: 85%; overflow: auto">
+		<div style="height: 75%; overflow: auto">
 			<mat-list *ngIf="chat">
 				<p *ngFor="let msg of chat">
 					[{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] {{ msg.sender }} : {{ msg.content }}
@@ -12,7 +12,7 @@
 
 		<!-- Text Input -->
 		<mat-form-field class="full-width"
-						style="max-height: 15%;"
+						style="max-height: 25%;"
 						align="start"
 						*ngIf="userName!=''">
 			<input matInput

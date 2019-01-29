@@ -8,58 +8,11 @@
 					   (gameStartNotification)="startGame()">
 	</app-part-creation>
 
-	<div id="game"
-		 *ngIf="gameStarted === true"
-		 class="container">
+	<div id="game" class="flex-container"
+		 *ngIf="gameStarted === true">
 
-		<div id="info">
-			<div>
-				<h3 style="alignment: left"> {{ players[0] }} :
-					<app-count-down (outOfTimeAction)="reachedOutOfTime(0)"
-									[(duration)]="playerZeroRemainingTime"
-									[(paused)]="!isPlayerZeroTurn"
-									[initialDuration]="maximalMoveDuration">
-					</app-count-down>
-				</h3>
-				<h3 style="alignment: right"> {{ players[1] }} :
-					<app-count-down (outOfTimeAction)="reachedOutOfTime(1)"
-									[(duration)]="playerOneRemainingTime"
-									[(paused)]="!isPlayerOneTurn"
-									[initialDuration]="maximalMoveDuration">
-					</app-count-down>
-				</h3>
-			</div>
-			<div *ngIf="opponent && observerRole <2">
-				<h3> Vous jouez contre {{ opponent.user.pseudo }} </h3>
-				<button *ngIf="!endGame" (click)="resign()"> Abandonner</button>
-				<!-- <div *ngIf="allowedOutOfTimeVictory && !endGame">
-					<h3>
-						{{ opponent.user.pseudo }} ne réagit plus :
-						<button (click)="notifyTimeoutVictory()">
-							Victoire par timeout?
-						</button>
-					</h3>
-				</div> -->
-				<div> Tour : {{ turn }}</div>
-			</div>
-			<h3 *ngIf="observerRole>=2"> {{ players[0] }} vs {{ players[1] }}</h3>
-			<h3 *ngIf="(!endGame) && (currentPlayer!==userName)"> C'est au tour de {{ currentPlayer }} </h3>
-			<h3 *ngIf="(!endGame) && (currentPlayer===userName)"> C'est à votre tour ! </h3>
-			<div *ngIf="endGame">
-				<div *ngIf="winner != null">
-					<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
-					<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu face à {{ winner }}</h3>
-					<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
-				</div>
-				<div *ngIf="winner === null">
-					<h3> Match nul </h3>
-				</div>
-				<button (click)="backToServer()">Retour au serveur</button>
-			</div>
-		</div>
-
-		<div id="board">
-			<button *ngIf="mustPass && (currentPlayer===userName)"
+		<div id="board" class="flex-container circled col-sm-9">
+			<button *ngIf="canPass && (currentPlayer===userName)"
 					(click)="pass()"
 					mat-stroked-button>Tu dois passer ton tour, clique pour ce faire!</button>
 			<table>
@@ -81,6 +34,77 @@
 					</td>
 				</tr>
 			</table>
+		</div>
+
+		<div id="info" class="circled col-sm-3">
+			<div class="inforow">
+				<h4 style="float: left"> {{ players[0] }} </h4>
+				<h4 style="float: right"> {{ players[1] }} </h4>
+			</div>
+			<div class="inforow">
+				<app-count-down style="float: left"
+								(outOfTimeAction)="reachedOutOfTime(0)"
+								[duration]="totalPartDuration"
+								[(paused)]="!isPlayerZeroTurn"
+								[autoRefill]="false"
+								[initialDuration]="totalPartDuration">
+				</app-count-down>
+				<app-count-down style="float: right"
+								(outOfTimeAction)="reachedOutOfTime(1)"
+								[duration]="totalPartDuration"
+								[autoRefill]="false"
+								[(paused)]="!isPlayerOneTurn"
+								[initialDuration]="totalPartDuration">
+				</app-count-down>
+			</div>
+			<div class="inforow">
+				<app-count-down style="float: left"
+								(outOfTimeAction)="reachedOutOfTime(0)"
+								[duration]="maximalMoveDuration"
+								[(paused)]="!isPlayerZeroTurn"
+								[autoRefill]="true"
+								[initialDuration]="maximalMoveDuration">
+				</app-count-down>
+				<app-count-down style="float: right"
+								(outOfTimeAction)="reachedOutOfTime(1)"
+								[duration]="maximalMoveDuration"
+								[autoRefill]="true"
+								[(paused)]="!isPlayerOneTurn"
+								[initialDuration]="maximalMoveDuration">
+				</app-count-down>
+			</div>
+			<div class="inforow" *ngIf="scores">
+				<h4 style="float: left"> {{ scores[0] }} pts </h4>
+				<h4 style="float: right"> {{ scores[1] }} pts </h4>
+			</div>
+			<div *ngIf="!endGame" class="inforow">
+				<h4> {{ turn }}ème tour : c'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
+			</div>
+			<div class="inforow" *ngIf="!endGame && opponent && observerRole <2">
+				<button mat-stroked-button (click)="resign()"> Abandonner </button>
+			</div>
+			<div *ngIf="!endGame && (observerRole < 2)" class="inforow">
+				<button *ngIf="canPass && (currentPlayer===userName)"
+						(click)="pass()" mat-stroked-button>
+					Passer son tour
+				</button>
+			</div>
+			<!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
+			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div>
+			<div *ngIf="endGame && (observerRole < 2)" class="inforow"> Rematch TODO </div> -->
+			<div class="inforow" *ngIf="endGame">
+				<div *ngIf="winner != null">
+					<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
+					<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu </h3>
+					<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
+				</div>
+				<div *ngIf="winner === null">
+					<h3> Match nul </h3>
+				</div>
+			</div>
+			<div *ngIf="endGame" class="inforow">
+				<button mat-stroked-button (click)="backToServer()">Retour au serveur</button>
+			</div>
 		</div>
 
 	</div>

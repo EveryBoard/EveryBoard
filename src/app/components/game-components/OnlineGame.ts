@@ -18,6 +18,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
 	players: string[] = null;
+	scores: number[] = null;
 	board: Array<Array<number>>;
 
 	partId: string;
@@ -28,9 +29,10 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	winner = '';
 	opponent: IUserId = null;
 	currentPlayer: string;
-	allowedOutOfTimeVictory = false;
 
+	canPass: boolean = null;
 	maximalMoveDuration: number;
+	totalPartDuration: number;
 	maximalMoveDurationForZero: number;
 	maximalMoveDurationForOne: number;
 	gameBeginningTime: number;
@@ -74,14 +76,14 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			.readJoinerById(this.partId)
 			.then(iJoiner => {
 				this.maximalMoveDuration = iJoiner.maximalMoveDuration;
-				console.log('maximalMoveDuration est fixé à ' + this.maximalMoveDuration);
-
+				this.totalPartDuration = iJoiner.totalPartDuration;
+				this.startCountdownFor(0);
 				this.gameService.startObserving(this.partId, iPart => {
 					this.onCurrentPartUpdate(iPart);
 				});
 			})
 			.catch(onRejected => {
-				console.log('there was a problem trying to get iJoiner timeout becuase : ');
+				console.log('there was a problem trying to get iJoiner timeout because : ');
 				console.log(JSON.stringify(onRejected));
 			});
 	}
@@ -278,13 +280,8 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		// console.log('OnlineGame.onDestroy');
 	}
 
-	onTurnStart() {
-		// if it is user's turn
-		//       we start a compte-à-rebour to tell him he can't play when he's done
-		// if it's not
-		//  	 we start a compte-à-rebour to launch victory from the opponent side
-		// if the player play too close to the end of the limit, so that the player.lastMoveTime is encoded as very close
-		// but on the waiter side the end-code is called, how to avoid this cases of "you win... wait no you don't" :D
+	pass() {
+		alert('TODO, Should not be there, call the coder ! Must be overrid');
 	}
 
 	abstract updateBoard(): void;

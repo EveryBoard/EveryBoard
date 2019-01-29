@@ -137,13 +137,14 @@ export class JoinerService {
 			});
 	}
 
-	proposeConfig(maximalMoveDuration: number, firstPlayer: string): Promise<void> {
+	proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
 		console.log('proposeConfig : ' + maximalMoveDuration + ' : ' + firstPlayer);
 		console.log(' on : ' + this.followedJoinerId);
 		return this.joinerDao.updateJoinerById(this.followedJoinerId, {
 			partStatus: 2,
 			// timeoutMinimalDuration: timeout,
 			maximalMoveDuration: maximalMoveDuration,
+			totalPartDuration: totalPartDuration,
 			firstPlayer: firstPlayer
 		});
 	}

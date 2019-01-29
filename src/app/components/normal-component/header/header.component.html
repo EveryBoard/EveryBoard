@@ -14,3 +14,38 @@
 		</ul>
 	</nav>
 </div>
+<!-- TEST <div>
+	<div class="inforow">
+		<app-count-down style="float: left"
+						(outOfTimeAction)="reachedOutOfTime(0)"
+						[duration]="100"
+						[(paused)]="!isPlayerZeroTurn"
+						[autoRefill]="false"
+						[initialDuration]="100">
+		</app-count-down>
+		<app-count-down style="float: right"
+						(outOfTimeAction)="reachedOutOfTime(1)"
+						[duration]="100"
+						[autoRefill]="false"
+						[(paused)]="!isPlayerOneTurn"
+						[initialDuration]="100">
+		</app-count-down>
+	</div>
+	<div class="inforow">
+		<app-count-down style="float: left"
+						(outOfTimeAction)="reachedOutOfTime(0)"
+						[duration]="20"
+						[(paused)]="!isPlayerZeroTurn"
+						[autoRefill]="true"
+						[initialDuration]="20">
+		</app-count-down>
+		<app-count-down style="float: right"
+						(outOfTimeAction)="reachedOutOfTime(1)"
+						[duration]="20"
+						[autoRefill]="true"
+						[(paused)]="!isPlayerOneTurn"
+						[initialDuration]="20">
+		</app-count-down>
+	</div>
+	<button (click)="move()">MOVE</button>
+</div> -->

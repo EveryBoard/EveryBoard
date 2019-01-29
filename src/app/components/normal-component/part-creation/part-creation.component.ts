@@ -77,7 +77,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		});
 		this.configFormGroup = this._formBuilder.group({
 			firstPlayer: ['', Validators.required],
-			maximalMoveDuration: [10, Validators.required]
+			maximalMoveDuration: [10, Validators.required],
+			totalPartDuration: [60, Validators.required]
 		});
 		this.joinerService
 			.joinGame(this.partId, this.userName)
@@ -221,7 +222,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 		// status become 2 (waiting joiner confirmation)
 		const maxMoveDur: number = this.configFormGroup.get('maximalMoveDuration').value;
 		const firstPlayer: string = this.configFormGroup.get('firstPlayer').value;
-		return this.joinerService.proposeConfig(maxMoveDur, firstPlayer);
+		const totalPartDuration: number = this.configFormGroup.get('totalPartDuration').value;
+		return this.joinerService.proposeConfig(maxMoveDur, firstPlayer, totalPartDuration);
 	}
 
 	acceptConfig(): Promise<void> {

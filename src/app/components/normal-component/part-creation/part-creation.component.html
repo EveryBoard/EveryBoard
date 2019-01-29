@@ -53,7 +53,17 @@
 							[max]="300"
 							[min]="10"
 							[step]="10"
-							(value)="10"
+							[thumbLabel]="true"
+							required>
+						</mat-slider>
+					</div>
+					<div> Durée maximum de la partie (par joueur) :
+						<mat-slider
+							class="example-margin"
+							formControlName="totalPartDuration"
+							[max]="3600"
+							[min]="60"
+							[step]="30"
 							[thumbLabel]="true"
 							required>
 						</mat-slider>
@@ -79,23 +89,24 @@
 
 		<div id="chosenPlayerDiv" *ngIf="userIsChosenPlayer">
 
-			<div> Vous avez été choisi comme adversaire !</div>
+			<h3> Vous avez été choisi comme adversaire !</h3>
 
 			<div id="whoPlaysFirst">
-				<div *ngIf="!proposalSent">
+				<h4 *ngIf="!proposalSent">
 					{{ currentJoiner.creator }} est en train de se décider
-				</div>
+				</h4>
 				<div *ngIf="proposalSent">
-					<div *ngIf="currentJoiner.firstPlayer === '0'">
+					<h4 *ngIf="currentJoiner.firstPlayer === '0'">
 						{{ currentJoiner.creator }} propose que tu commence
-					</div>
-					<div *ngIf="currentJoiner.firstPlayer === '1'">
+					</h4>
+					<h4 *ngIf="currentJoiner.firstPlayer === '1'">
 						{{ currentJoiner.creator }} propose qu'il commence
-					</div>
-					<div *ngIf="currentJoiner.firstPlayer === '2'">
+					</h4>
+					<h4 *ngIf="currentJoiner.firstPlayer === '2'">
 						{{ currentJoiner.creator }} propose que le premier joueur soit choisi au hasard
-					</div>
-					<div> Il propose : {{ currentJoiner.maximalMoveDuration }} seconde par tour maximum</div>
+					</h4>
+					<h4> Il propose : {{ currentJoiner.maximalMoveDuration }}s/tour maximum </h4>
+					<h4> Et : {{ currentJoiner.totalPartDuration }}s/joueur maximum </h4>
 					<button mat-button
 							(click)="acceptConfig()"
 							[disabled]="acceptingDisabled">
