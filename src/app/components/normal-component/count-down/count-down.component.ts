@@ -24,7 +24,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
 	}
 
 	decDuration() {
-		console.log(' decrementing : ' + this.duration);
+		// console.log(' decrementing : ' + this.duration);
 		if (!this.paused) {
 			this.duration = this.duration - 1;
 			if (this.duration <= 0) {

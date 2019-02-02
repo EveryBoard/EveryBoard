@@ -128,7 +128,7 @@
 					<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu </h3>
 					<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
 				</div>
-				<div *ngIf="winner === null">
+				<div *ngIf="winner == null">
 					<h3> Match nul </h3>
 				</div>
 			</div>

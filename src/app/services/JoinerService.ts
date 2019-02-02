@@ -68,7 +68,7 @@ export class JoinerService {
 				this.joinerDao
 					.readJoinerById(this.followedJoinerId)
 					.then(joiner => {
-						if (joiner == null || joiner === undefined) {
+						if (joiner == null) {
 							reject(joiner);
 						} else {
 							const joinersList: string[] = joiner.candidatesNames;

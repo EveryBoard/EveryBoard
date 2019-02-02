@@ -12,6 +12,7 @@ import {ActivesPartsService} from './ActivesPartsService';
 import {ChatService} from './ChatService';
 import {IMessage} from '../domain/imessage';
 import {IChat} from '../domain/ichat';
+import {MGPRequest} from '../domain/request';
 
 @Injectable({
 	providedIn: 'root'
@@ -26,7 +27,8 @@ export class GameService {
 				private partDao: PartDAO,
 				private activesPartsService: ActivesPartsService,
 				private joinerService: JoinerService,
-				private chatService: ChatService) {}
+				private chatService: ChatService) {
+	}
 
 	// on Server Component
 
@@ -134,10 +136,10 @@ export class GameService {
 
 	acceptConfig(joiner: IJoiner): Promise<void> {
 		return new Promise((resolve, reject) => {
-			/* if (this.followedPartId == null || this.followedPartId === undefined) {
+			if (this.followedPartId == null) {
 				console.log('!!! pas de partie en cours d\'observation, comment accepter la config??');
 				reject();
-			} */ // OLDLY, seem's to allow bug anyway, let's try to suppress it
+			} // OLDLY, seem's to allow bug anyway, let's try to suppress it
 			this.joinerService
 				.acceptConfig()
 				.then(onConfigAccepted => {
@@ -174,27 +176,85 @@ export class GameService {
 	resign(partId: string, winner: string): Promise<void> {
 		return this.partDao.updatePartById(partId, {
 			winner: winner,
-			result: 1
+			result: 1,
+			request: null
 		}); // resign
 	}
 
 	notifyDraw(partId: string): Promise<void> {
 		return this.partDao.updatePartById(partId, {
-			result: 0
+			result: 0,
+			request: null
 		}); // DRAW CONSTANT
 	}
 
 	notifyTimeout(partId: string, winner: string): Promise<void> {
 		return this.partDao.updatePartById(partId, {
 			winner: winner,
-			result: 4
+			result: 4,
+			request: null
 		});
 	}
 
 	notifyVictory(partId: string, winner: string): Promise<void> {
 		return this.partDao.updatePartById(partId, {
 			'winner': winner,
-			'result': 3
+			'result': 3,
+			request: null
+		});
+	}
+
+	proposeRematch(partId: string, oberserverRole: 0 | 1): Promise<void> {
+		const req: MGPRequest = {code: 6 + oberserverRole};
+		return this.partDao.updatePartById(partId, {request: req});
+	}
+
+	acceptRematch(part: ICurrentPartId, callback: (iPart: ICurrentPartId) => void): Promise<void> {
+		return new Promise((resolve, reject) => {
+			this.joinerService
+				.readJoinerById(part.id)
+				.then(iJoiner => {
+					this.createGame(iJoiner.creator, part.part.typeGame)
+						.then(rematchId => {
+							let firstPlayer: string = iJoiner.firstPlayer;
+							if (firstPlayer === '2') {
+								if (part.part.playerZero === iJoiner.creator) {
+									// the creator started the previous game thank to hazard
+									firstPlayer = '1'; // so he won't start this one
+								} else {
+									firstPlayer = '0';
+								}
+							} else {
+								firstPlayer = firstPlayer === '0' ? '1' : '0';
+							}
+							const newJoiner: IJoiner = {
+								candidatesNames: iJoiner.candidatesNames,
+								creator: iJoiner.creator,
+								chosenPlayer: iJoiner.chosenPlayer,
+								firstPlayer: firstPlayer,
+								partStatus: 3, // already started
+								maximalMoveDuration: iJoiner.maximalMoveDuration,
+								totalPartDuration: iJoiner.totalPartDuration,
+								gameType: iJoiner.gameType
+							};
+							this.startObserving(rematchId, callback);
+							this.acceptConfig(newJoiner)
+								.then(onSuccess => {
+									const req: MGPRequest = {
+										code: 8,
+										partId: rematchId,
+										gameType: part.part.typeGame
+									};
+									this.partDao
+										.updatePartById(part.id, {request: req})
+										.then(onAccepted => resolve(onSuccess))
+										.catch(() => reject());
+								})
+								.catch(() => reject());
+						})
+						.catch(() => reject());
+				})
+				.catch(() => reject());
 		});
 	}
 
@@ -207,9 +267,11 @@ export class GameService {
 				this.partDao
 					.updatePartById(partId, {
 						'listMoves': listMoves,
-						'turn': turn })
+						'turn': turn,
+						request: null
+					})
 					.catch(onRejected => {
-						console.log('part update failed because ' + JSON.stringify(onRejected))
+						console.log('part update failed because ' + JSON.stringify(onRejected));
 					});
 			})
 			.catch(error => console.log(error));
@@ -235,55 +297,6 @@ export class GameService {
 			this.followedPartSub.unsubscribe();
 			this.followedPartObs = null;
 		}
-	}
-
-	// old
-
-	startObservingPartOld(docId: string) {
-		if (this.followedPartId === docId) {
-			console.log('partie ' + docId + 'déjà en cours d\'observation');
-		} else if (this.followedPartId == null) {
-			console.log('[ we start to observe ' + docId);
-			this.followedPartId = docId;
-			this.followedPartObs = this.partDao.getPartObsById(docId);
-			// this.joinerService.startObserving(docId);
-		} else {
-			alert('we were already observing ' + this.followedPartId + ' then you ask to watch' + docId + 'you are gross (no I\'m bugged)');
-			this.stopObservingPart();
-			this.startObservingPartOld(docId);
-		}
-	}
-
-	proposeConfig(maxMoveDur: number, firstPlayer: string, totalPartDur): Promise<void> {
-		return this.joinerService.proposeConfig(maxMoveDur, firstPlayer, totalPartDur);
-	}
-
-	cancelGame(): Promise<void> {
-		console.log('GameService will cancel game ' + this.followedPartId);
-		// cancel the currently observed game
-		return new Promise((resolve, reject) => {
-			this.joinerService
-				.deleteJoiner()
-				.then(onJoiningCancelled =>
-					this.partDao
-						.deletePartById(this.followedPartId)
-						.then(onPartCancelled => {
-							this.stopObservingPart();
-							resolve(onPartCancelled);
-						})
-						.catch(onReject => reject(onReject)))
-				.catch(onReject => reject(onReject));
-		});
-	}
-
-	// DELEGATE
-
-	/* getPartObservableById(partId: string): Observable<ICurrentPart> {
-		return this.partDao.getPartObsById(partId);
-	} */ // OLD
-
-	setChosenPlayer(pseudo: string): Promise<void> {
-		return this.joinerService.setChosenPlayer(pseudo);
 	}
 
 }

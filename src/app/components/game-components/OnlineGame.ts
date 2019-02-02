@@ -12,27 +12,34 @@ import {UserService} from '../../services/UserService';
 import {JoinerService} from '../../services/JoinerService';
 import {OnDestroy, OnInit} from '@angular/core';
 import {GameService} from '../../services/GameService';
+import {MGPRequest} from '../../domain/request';
 
 export abstract class OnlineGame implements OnInit, OnDestroy {
 	rules: Rules;
 
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
-	players: string[] = null;
-	scores: number[] = null;
-	board: Array<Array<number>>;
 
-	partId: string;
+	currentPart: ICurrentPartId;
+	players: string[] = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
+	scores: number[] = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
+	partId: string; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+	turn = -1; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+	winner = ''; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+
+	maximalMoveDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+	totalPartDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+
+	board: Array<Array<number>>;
 	userName: string;
 	gameStarted = false;
-	turn = -1;
 	endGame = false;
-	winner = '';
 	opponent: IUserId = null;
 	currentPlayer: string;
 
 	canPass: boolean = null;
-	maximalMoveDuration: number;
-	totalPartDuration: number;
+	rematchProposed: boolean = null;
+	opponentProposedRematch: boolean = null;
+
 	maximalMoveDurationForZero: number;
 	maximalMoveDurationForOne: number;
 	gameBeginningTime: number;
@@ -89,12 +96,15 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
+		this.currentPart = updatedICurrentPart;
 		console.log('part updated: ' + JSON.stringify(updatedICurrentPart));
 		const part: ICurrentPart = updatedICurrentPart.part;
 		if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra
 			this.setPlayersDatas(part);
 		}
-
+		if (updatedICurrentPart.part.request != null) {
+			this.onRequest(updatedICurrentPart.part.request);
+		}
 		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
 		if ([0, 1, 3, 4].includes(part.result)) {
 			this.endGame = true;
@@ -125,6 +135,31 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.updateBoard();
 		if (!this.endGame) {
 			this.startCountdownFor(this.turn % 2 === 0 ? 1 : 0);
+		}
+	}
+
+	protected onRequest(request: MGPRequest) {
+		switch (request.code) {
+			case 6: // 0 propose un rematch
+				this.rematchProposed = true;
+				if (this.observerRole === 1) {
+					console.log('ton adversaire te propose une revanche, 1');
+					this.opponentProposedRematch = true;
+				}
+				break;
+			case 7: // 1 propose un rematch
+				this.rematchProposed = true;
+				if (this.observerRole === 0) {
+					console.log('ton adversaire te propose une revanche, 0');
+					this.opponentProposedRematch = true;
+				}
+				break;
+			case 8: // rematch accepted
+				this._route.navigate(['/' + request.gameType + '/' + request.partId]);
+				break;
+			default:
+				alert('there was an error : ' + JSON.stringify(request) + ' has ' + request.code);
+				break;
 		}
 	}
 
@@ -165,31 +200,12 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 				this.userService.REFACTOR_observeUserByPseudo(opponentName,
 					callback => {
 						// console.log('userFound : ' + JSON.stringify(callback));
-						if (this.opponent == null) {
-							this.opponent = callback;
+						// if (this.opponent == null) {
+							// this.opponent = callback;
 							// OLDLY this.startWatchingIfOpponentRunOutOfTime();
-						}
+						// }
 						this.opponent = callback;
 					});
-		}
-	}
-
-	oldstartWatchingIfOpponentRunOutOfTime() {
-		if (this.didOpponentRunOutOfTime()) {
-			this.notifyTimeoutVictory(this.userName);
-		} else {
-			if (!this.endGame) {
-				let remainingTime: number =
-					Math.max(this.opponent.user.lastMoveTime, this.gameBeginningTime)
-					+ (this.maximalMoveDuration * 1000)
-					- Date.now();
-				remainingTime = remainingTime < 0 ? (this.maximalMoveDuration * 1000) : remainingTime;
-				console.log('la partie n\'est pas terminée! last move : ' + this.opponent.user.lastMoveTime + 'so this remain : ' + remainingTime);
-				setTimeout(() => this.oldstartWatchingIfOpponentRunOutOfTime(),
-					remainingTime);
-			} else {
-				console.log('La partie est terminée');
-			}
 		}
 	}
 
@@ -282,6 +298,20 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	pass() {
 		alert('TODO, Should not be there, call the coder ! Must be overrid');
+	}
+
+	acceptRematch() {
+		if (this.observerRole === 0 || this.observerRole === 1) {
+			this.gameService.acceptRematch(this.currentPart, iPart => {
+				this.onCurrentPartUpdate(iPart);
+			});
+		}
+	}
+
+	proposeRematch() {
+		if (this.observerRole === 0 || this.observerRole === 1) {
+			this.gameService.proposeRematch(this.currentPart.id, this.observerRole);
+		}
 	}
 
 	abstract updateBoard(): void;

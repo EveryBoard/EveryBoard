@@ -86,15 +86,24 @@
 				</button>
 			</div>
 			<!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
-			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div>
-			<div *ngIf="endGame && (observerRole < 2)" class="inforow"> Rematch TODO </div> -->
+			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> -->
+			<div *ngIf="endGame && (observerRole < 2)" class="inforow">
+				<button *ngIf="!rematchProposed"
+						(click)="proposeRematch()">
+					Proposer un rematch
+				</button>
+				<button *ngIf="rematchProposed && opponentProposedRematch===true"
+						(click)="acceptRematch()">
+					Accepter le rematch
+				</button>
+			</div>
 			<div class="inforow" *ngIf="endGame">
 				<div *ngIf="winner != null">
 					<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
 					<h3 *ngIf="(winner !== userName) && (observerRole < 2)"> Vous avez perdu </h3>
 					<h3 *ngIf="(winner !== userName) && (observerRole >= 2)"> Victoire de {{ winner }} </h3>
 				</div>
-				<div *ngIf="winner === null">
+				<div *ngIf="winner == null">
 					<h3> Match nul </h3>
 				</div>
 			</div>

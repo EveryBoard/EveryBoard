@@ -54,7 +54,7 @@ const routes: Route [] = [
 	{path: 'Awale/:id',			component: AwaleComponent},
 	{path: 'Tablut/:id',		component: TablutComponent},
 	{path: 'P4/:id',			component: P4Component},
-	{path: 'Reversi/:id',			component: ReversiComponent},
+	{path: 'Reversi/:id',		component: ReversiComponent},
 
 	{path: '', redirectTo: 'server', pathMatch: 'full'},
 	{path: '**', 'component': ServerPageComponent}
