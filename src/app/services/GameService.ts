@@ -32,10 +32,9 @@ export class GameService {
 
 	// on Server Component
 
-	createGame(creatorName: string, typeGame: string): Promise<string> {
-		console.log('GameService.createGame');
+	protected createPart(creatorName: string, typeGame: string): Promise<string> {
+		console.log('GameService.createPart for ' + creatorName + ' of type ' + typeGame);
 		const newPart: ICurrentPart = {
-			historic: 'pas implémenté',
 			listMoves: [],
 			playerZero: creatorName, // TODO: supprimer, il n'y a pas de createur par défaut
 			playerOne: '',
@@ -44,9 +43,12 @@ export class GameService {
 			scorePlayerOne: 'pas implémenté',
 			turn: -1,
 			typeGame: typeGame,
-			typePart: 'pas implémenté',
 			winner: ''
 		};
+		return this.partDao.createPart(newPart);
+	}
+
+	protected createJoiner(creatorName: string, joinerId: string): Promise<void> {
 		const newJoiner: IJoiner = {
 			candidatesNames: [],
 			creator: creatorName,
@@ -55,35 +57,45 @@ export class GameService {
 			firstPlayer: '0', // par défaut: le créateur
 			partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
 		};
+		return this.joinerService.set(joinerId, newJoiner);
+	}
+
+	protected createChat(chatId: string): Promise<void> {
 		const newChat: IChat = {
 			status: 'not implemented',
 			messages: []
 		};
+		return this.chatService.set(chatId, newChat);
+	}
+
+	createGame(creatorName: string, typeGame: string): Promise<string> {
+		console.log('GameService.createGame for ' + creatorName + ' of type ' + typeGame);
 		return new Promise((resolve, reject) => {
-			this.partDao
-				.createPart(newPart)
+			this.createPart(creatorName, typeGame)
 				.then(docId => {
-					this.joinerService
-						.set(docId, newJoiner)
+					this.createJoiner(creatorName, docId)
 						.then(onFullFilled => {
-							this.chatService
-								.set(docId, newChat)
+							this.createChat(docId)
 								.then(onChatCreated => {
 									resolve(docId);
 								})
 								.catch(onRejected => {
-									console.log('chatService.set' + docId + ', ' + JSON.stringify(newJoiner) + ') has failed');
+									console.log('chatService.set' + docId + ' has failed because ');
+									console.log(JSON.stringify(onRejected));
 									reject(onRejected);
 								});
 						})
 						.catch(onRejected => {
-							console.log('joinerService.set(' + docId + ', ' + JSON.stringify(newJoiner) + ') has failed');
+							console.log('joinerService.set(' + docId + ' has failed because ');
+							console.log(JSON.stringify(onRejected));
 							reject(onRejected);
 						});
-				}).catch(onRejected => {
-				console.log('partDao failed to create part');
-				reject(onRejected);
-			});
+				})
+				.catch(onRejected => {
+					console.log('partDao failed to create part because');
+					console.log(JSON.stringify(onRejected));
+					reject(onRejected);
+				});
 		});
 	}
 
@@ -130,14 +142,14 @@ export class GameService {
 			this.partDao
 				.deletePartById(partId)
 				.then(onFullFilled => resolve(partId))
-				.catch(onRejected => reject());
+				.catch(onRejected => reject(onRejected));
 		});
 	}
 
 	acceptConfig(joiner: IJoiner): Promise<void> {
 		return new Promise((resolve, reject) => {
 			if (this.followedPartId == null) {
-				console.log('!!! pas de partie en cours d\'observation, comment accepter la config??');
+				console.log('!!! pas de partie en cours d\'observation, comment accepter la config ' + joiner + '??');
 				reject();
 			} // OLDLY, seem's to allow bug anyway, let's try to suppress it
 			this.joinerService
@@ -234,27 +246,42 @@ export class GameService {
 								firstPlayer: firstPlayer,
 								partStatus: 3, // already started
 								maximalMoveDuration: iJoiner.maximalMoveDuration,
-								totalPartDuration: iJoiner.totalPartDuration,
-								gameType: iJoiner.gameType
+								totalPartDuration: iJoiner.totalPartDuration
 							};
-							this.startObserving(rematchId, callback);
-							this.acceptConfig(newJoiner)
-								.then(onSuccess => {
-									const req: MGPRequest = {
-										code: 8,
-										partId: rematchId,
-										gameType: part.part.typeGame
-									};
+							const req: MGPRequest = {
+								code: 8,
+								partId: rematchId,
+								typeGame: part.part.typeGame
+							};
+							this.joinerService
+								.updateJoinerById(rematchId, newJoiner)
+								.then(onFullFilled => {
 									this.partDao
 										.updatePartById(part.id, {request: req})
-										.then(onAccepted => resolve(onSuccess))
-										.catch(() => reject());
+										.then(onAccepted => resolve())
+										.catch(onRejected => {
+											console.log('updating part failed, rematch cannot be created because ');
+											console.log(JSON.stringify(onRejected));
+											reject(onRejected);
+										});
 								})
-								.catch(() => reject());
+								.catch(onRejected => {
+									console.log('creation joiner failed, rematch cannot be created because ');
+									console.log(JSON.stringify(onRejected));
+									reject(onRejected);
+								});
 						})
-						.catch(() => reject());
+						.catch(onRejected => {
+							console.log('creation part failed, rematch cannot be created because ');
+							console.log(JSON.stringify(onRejected));
+							reject(onRejected);
+						});
 				})
-				.catch(() => reject());
+				.catch(onRejected => {
+					console.log('reading current joiner failed, rematch cannot be created because ');
+					console.log(JSON.stringify(onRejected));
+					reject(onRejected);
+				});
 		});
 	}
 

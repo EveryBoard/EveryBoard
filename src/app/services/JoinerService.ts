@@ -178,4 +178,8 @@ export class JoinerService {
 		return this.joinerDao.set(id, joiner);
 	}
 
+	updateJoinerById(id: string, update: PIJoiner): Promise<void> {
+		return this.joinerDao.updateJoinerById(id, update);
+	}
+
 }

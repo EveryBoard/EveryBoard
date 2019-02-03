@@ -97,7 +97,7 @@ export class ChatService {
 			this.chatDao
 				.deleteById(chatId)
 				.then(onFullFilled => resolve())
-				.catch(onRejected => reject());
+				.catch(onRejected => reject(onRejected));
 		});
 	}
 

@@ -64,4 +64,4 @@ export interface PICurrentPart {
 	historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
 	listMoves?: number[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
 	request?: MGPRequest;
-	}
+}

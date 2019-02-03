@@ -58,6 +58,20 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		private userService: UserService,
 		private joinerService: JoinerService,
 		private gameService: GameService) {
+		this.players = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
+		this.scores = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
+		this.turn = -1; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+		this.winner = ''; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+
+		this.gameStarted = false;
+		this.endGame = false;
+		this.opponent = null;
+
+		this.canPass = null;
+		this.rematchProposed = null;
+		this.opponentProposedRematch = null;
+		this.isPlayerZeroTurn = false;
+		this.isPlayerOneTurn = false;
 	}
 
 	ngOnInit() {
@@ -155,7 +169,14 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 				}
 				break;
 			case 8: // rematch accepted
-				this._route.navigate(['/' + request.gameType + '/' + request.partId]);
+				alert('Rematch accepted !');
+				this._route
+					.navigate(['/' + request.typeGame + '/' + request.partId])
+					.then(onSuccess => {
+						this.ngOnDestroy();
+						this.ngOnInit();
+						this.startGame();
+					});
 				break;
 			default:
 				alert('there was an error : ' + JSON.stringify(request) + ' has ' + request.code);
@@ -163,7 +184,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		}
 	}
 
-	private startCountdownFor(player: 0|1) {
+	private startCountdownFor(player: 0 | 1) {
 		this.maximalMoveDurationForZero = this.maximalMoveDuration;
 		this.maximalMoveDurationForOne = this.maximalMoveDuration;
 		if (player === 0) {
@@ -201,8 +222,8 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 					callback => {
 						// console.log('userFound : ' + JSON.stringify(callback));
 						// if (this.opponent == null) {
-							// this.opponent = callback;
-							// OLDLY this.startWatchingIfOpponentRunOutOfTime();
+						// this.opponent = callback;
+						// OLDLY this.startWatchingIfOpponentRunOutOfTime();
 						// }
 						this.opponent = callback;
 					});
@@ -212,11 +233,11 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	protected didOpponentRunOutOfTime(): boolean {
 		console.log('lastMoveTime of your opponent : ' + this.opponent.user.lastMoveTime);
 		return Math.max(this.opponent.user.lastMoveTime, this.gameBeginningTime)
-				+ (this.maximalMoveDuration * 1000)
-				< Date.now();
+			+ (this.maximalMoveDuration * 1000)
+			< Date.now();
 	}
 
-	reachedOutOfTime(player: 0|1) {
+	reachedOutOfTime(player: 0 | 1) {
 		if (player === this.observerRole) {
 			// the player has run out of time, he'll notify his own defeat by time
 			this.notifyTimeoutVictory(this.opponent.user.pseudo);

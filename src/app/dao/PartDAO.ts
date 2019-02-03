@@ -41,11 +41,19 @@ export class PartDAO {
 
 	createPart(newPart: ICurrentPart): Promise<string> {
 		// returns the id of the created part
+		console.log('PartDAO.createPart : ');
+		console.log(JSON.stringify(newPart));
 		return new Promise((resolve, reject) => {
 			this.afs.collection('parties')
 				.add(newPart)
 				.then(docRef => resolve(docRef.id))
-				.catch(onRejected => reject(onRejected));
+				.catch(onRejected => {
+					console.log('PartDAO.createPart with arg:');
+					console.log(JSON.stringify(newPart));
+					console.log('failed because :');
+					console.log(onRejected);
+					reject(onRejected);
+				});
 		});
 	}
 

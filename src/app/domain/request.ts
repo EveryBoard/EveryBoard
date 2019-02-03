@@ -1,7 +1,7 @@
 	export class MGPRequest {
 	code: number;
 	partId?: string;
-	gameType?: string;
+	typeGame?: string;
 	/* if code==8 then partId and typeGame
 	 *
 	 */
