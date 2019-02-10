@@ -39,7 +39,8 @@ import {PartCreationComponent} from './components/normal-component/part-creation
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import {ChatService} from './services/ChatService';
 import { ReversiComponent } from './components/game-components/reversi/reversi.component';
-import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
+import { OldCountDownComponent } from './components/normal-component/old-count-down/old-count-down.component';
+import {CountDownComponent} from './components/normal-component/count-down/count-down.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -82,7 +83,8 @@ const routes: Route [] = [
 		QuartoOfflineComponent,
 		TablutOfflineComponent,
 		ReversiComponent,
-		CountDownComponent,
+		OldCountDownComponent,
+		CountDownComponent
 	],
 	imports: [
 		BrowserModule,

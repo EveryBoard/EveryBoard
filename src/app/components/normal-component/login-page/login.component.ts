@@ -1,24 +1,34 @@
-import {Component, OnInit} from '@angular/core';
+import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
 import {Router} from '@angular/router';
 
 import {UserService} from '../../../services/UserService';
 import {User} from '../../../domain/iuser';
+import {CountDownComponent} from '../count-down/count-down.component';
 
 @Component({
 	selector: 'app-login',
 	templateUrl: './login.component.html',
 	styleUrls: ['./login.component.css']
 })
-export class LoginComponent implements OnInit {
+export class LoginComponent {
 
 	user = new User('', '', '', null, null, null, null);
 	errorMessage: string;
 
-	constructor(private _route: Router,
-				private userService: UserService) {
+	/* @ViewChild('chrono') chrono: CountDownComponent;
+	reachedOutOfTime() { alert('time over dude'); }
+	pause() {
+		this.chrono.pause();
 	}
+	resume() {
+		this.chrono.resume();
+	}
+	ngAfterViewInit() {
+		this.chrono.start(15 * 1000);
+	} */
 
-	ngOnInit() {}
+	constructor(private _route: Router,
+				private userService: UserService) {}
 
 	connectAsGuest() {
 		const guestName: string = this.getUnusedGuestName();

@@ -1,6 +1,6 @@
 import {ActivatedRoute, Router} from '@angular/router';
 
-import {Subscription} from 'rxjs';
+import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 
 import {ICurrentPart, ICurrentPartId} from '../../domain/icurrentpart';
 import {IUserId} from '../../domain/iuser';
@@ -10,12 +10,17 @@ import {Move} from '../../jscaip/Move';
 
 import {UserService} from '../../services/UserService';
 import {JoinerService} from '../../services/JoinerService';
-import {OnDestroy, OnInit} from '@angular/core';
+import {AfterViewInit, OnDestroy, OnInit, ViewChild} from '@angular/core';
 import {GameService} from '../../services/GameService';
 import {MGPRequest} from '../../domain/request';
+import {CountDownComponent} from '../normal-component/count-down/count-down.component';
 
 export abstract class OnlineGame implements OnInit, OnDestroy {
 	rules: Rules;
+	@ViewChild('chronoZeroGlobal') chronoZeroGlobal: CountDownComponent;
+	@ViewChild('chronoOneGlobal') chronoOneGlobal: CountDownComponent;
+	@ViewChild('chronoZeroLocal') chronoZeroLocal: CountDownComponent;
+	@ViewChild('chronoOneLocal') chronoOneLocal: CountDownComponent;
 
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
 
@@ -40,13 +45,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	rematchProposed: boolean = null;
 	opponentProposedRematch: boolean = null;
 
-	maximalMoveDurationForZero: number;
-	maximalMoveDurationForOne: number;
 	gameBeginningTime: number;
-	playerZeroRemainingTime: number;
-	playerOneRemainingTime: number;
-	isPlayerZeroTurn = false;
-	isPlayerOneTurn = false;
 
 	protected userSub: Subscription;
 	protected observedPartSubscription: Subscription;
@@ -70,11 +69,10 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.canPass = null;
 		this.rematchProposed = null;
 		this.opponentProposedRematch = null;
-		this.isPlayerZeroTurn = false;
-		this.isPlayerOneTurn = false;
 	}
 
 	ngOnInit() {
+		console.log('OnlineGame.ngOnInit');
 		this.partId = this.actRoute.snapshot.paramMap.get('id');
 		this.userSub = this.userService.userNameObs
 			.subscribe(userName => this.userName = userName);
@@ -87,7 +85,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			console.log('OnlineGame.startGame next line is usefull sparadra)');
 		}
 		this.gameStarted = true;
-		this.startCountdownFor(0);
+
 		// should be some kind of session-scope
 
 		this.rules.setInitialBoard();
@@ -96,9 +94,11 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.joinerService
 			.readJoinerById(this.partId)
 			.then(iJoiner => {
-				this.maximalMoveDuration = iJoiner.maximalMoveDuration;
-				this.totalPartDuration = iJoiner.totalPartDuration;
-				this.startCountdownFor(0);
+				this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
+				this.totalPartDuration = iJoiner.totalPartDuration * 1000;
+				console.log('og::starting game chrono called once');
+				this.startGameChronos(this.totalPartDuration, this.totalPartDuration, 0);
+				// TODO: recharger une page dont les deux joueurs étaient partis
 				this.gameService.startObserving(this.partId, iPart => {
 					this.onCurrentPartUpdate(iPart);
 				});
@@ -114,6 +114,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		console.log('part updated: ' + JSON.stringify(updatedICurrentPart));
 		const part: ICurrentPart = updatedICurrentPart.part;
 		if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra
+			console.log('part update : let\'s set players datas');
 			this.setPlayersDatas(part);
 		}
 		if (updatedICurrentPart.part.request != null) {
@@ -135,20 +136,34 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 		const nbPlayedMoves = listMoves.length;
 		let currentPartTurn;
+		let updateIsMove = false;
 		// console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : ' + listMoves);
+		console.log('update before : ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
 		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.rules.node.gamePartSlice.turn;
 			const choosedMove = this.decodeMove(listMoves[currentPartTurn]);
 			// console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
 			// 	+ listMoves + ' choosed move : ' + choosedMove);
 			const correctDBMove: boolean = this.rules.choose(choosedMove);
+			updateIsMove = true;
 			if (!correctDBMove) {
 				console.log('we received an incorrect db move !' + choosedMove + ' and ' + listMoves);
 			}
 		}
 		this.updateBoard();
-		if (!this.endGame) {
-			this.startCountdownFor(this.turn % 2 === 0 ? 1 : 0);
+		console.log('update make turns be : ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+		if ((!this.endGame) && updateIsMove) {
+			console.log('cdc::new move + ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+			const firstPlayedTurn = 0; // TODO: cette endroit pourrait être appellé à un mouvement qui n'est pas le 0
+			// (reprise de partie après double perte de connection...)
+			if (this.turn === (firstPlayedTurn + 1)) {
+				this.startGameChronos(this.totalPartDuration, this.totalPartDuration, this.turn % 2 === 0 ? 0 : 1);
+			} else {
+				this.startCountdownFor(this.turn % 2 === 0 ? 0 : 1);
+			}
+		}
+		if (!updateIsMove) {
+			console.log('cette update n\'est pas un mouvement ! ');
 		}
 	}
 
@@ -184,21 +199,43 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		}
 	}
 
-	private startCountdownFor(player: 0 | 1) {
-		this.maximalMoveDurationForZero = this.maximalMoveDuration;
-		this.maximalMoveDurationForOne = this.maximalMoveDuration;
+	private startGameChronos(durationZero: number, durationOne: number, player: 0 | 1) {
 		if (player === 0) {
-			this.isPlayerZeroTurn = false;
-			this.isPlayerOneTurn = true;
+			console.log('og:cdc:: first turn of 0');
+			this.chronoZeroGlobal.start(durationZero);
+			this.chronoZeroLocal.start(this.maximalMoveDuration);
+			this.chronoOneGlobal.pause(); // TODO : remove more intelligently
+			this.chronoOneLocal.stop(); // that means with ifPreviousMoveHasBeenDone
 		} else {
-			this.isPlayerZeroTurn = true;
-			this.isPlayerOneTurn = false;
+			console.log('og:cdc:: first turn of 1');
+			this.chronoOneGlobal.start(durationOne);
+			this.chronoOneLocal.start(this.maximalMoveDuration);
+			this.chronoZeroGlobal.pause();
+			this.chronoZeroLocal.stop();
+		}
+	}
+
+	private startCountdownFor(player: 0 | 1) {
+		console.log('og:cdc:: startCountdownFor ' + player );
+		if (player === 0) {
+			this.chronoZeroGlobal.resume();
+			this.chronoZeroLocal.start(this.maximalMoveDuration);
+			this.chronoOneGlobal.pause();
+			this.chronoOneLocal.stop();
+		} else {
+			this.chronoZeroGlobal.pause();
+			this.chronoZeroLocal.stop();
+			this.chronoOneGlobal.resume();
+			this.chronoOneLocal.start(this.maximalMoveDuration);
 		}
 	}
 
 	private stopCountdowns() {
-		this.isPlayerZeroTurn = false;
-		this.isPlayerOneTurn = false;
+		console.log('cdc::stop count downs');
+		this.chronoZeroGlobal.stop();
+		this.chronoZeroLocal.stop();
+		this.chronoOneGlobal.stop();
+		this.chronoOneLocal.stop();
 	}
 
 	setPlayersDatas(updatedICurrentPart: ICurrentPart) {

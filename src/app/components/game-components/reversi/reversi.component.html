@@ -42,36 +42,36 @@
 				<h4 style="float: right"> {{ players[1] }} </h4>
 			</div>
 			<div class="inforow">
-				<app-count-down style="float: left"
+				<app-old-count-down style="float: left"
 								(outOfTimeAction)="reachedOutOfTime(0)"
 								[duration]="totalPartDuration"
 								[(paused)]="!isPlayerZeroTurn"
 								[autoRefill]="false"
 								[initialDuration]="totalPartDuration">
-				</app-count-down>
-				<app-count-down style="float: right"
+				</app-old-count-down>
+				<app-old-count-down style="float: right"
 								(outOfTimeAction)="reachedOutOfTime(1)"
 								[duration]="totalPartDuration"
 								[autoRefill]="false"
 								[(paused)]="!isPlayerOneTurn"
 								[initialDuration]="totalPartDuration">
-				</app-count-down>
+				</app-old-count-down>
 			</div>
 			<div class="inforow">
-				<app-count-down style="float: left"
+				<app-old-count-down style="float: left"
 								(outOfTimeAction)="reachedOutOfTime(0)"
 								[duration]="maximalMoveDuration"
 								[(paused)]="!isPlayerZeroTurn"
 								[autoRefill]="true"
 								[initialDuration]="maximalMoveDuration">
-				</app-count-down>
-				<app-count-down style="float: right"
+				</app-old-count-down>
+				<app-old-count-down style="float: right"
 								(outOfTimeAction)="reachedOutOfTime(1)"
 								[duration]="maximalMoveDuration"
 								[autoRefill]="true"
 								[(paused)]="!isPlayerOneTurn"
 								[initialDuration]="maximalMoveDuration">
-				</app-count-down>
+				</app-old-count-down>
 			</div>
 			<div class="inforow" *ngIf="scores">
 				<h4 style="float: left"> {{ scores[0] }} pts </h4>

@@ -33,7 +33,7 @@ export class AwaleOfflineComponent implements OnInit {
 	}
 
 	proposeAIToPlay() {
-		// check if ai's turn has come, if so, make her play after a delay
+		// check if ai's turn has come, if so, make her start after a delay
 		const turn = this.rules.node.gamePartSlice.turn % 2;
 		if ([this.playerOneIsMyBot, this.playerTwoIsMyBot][turn]) {
 			// bot's turn

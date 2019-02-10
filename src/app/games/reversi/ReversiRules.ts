@@ -80,7 +80,7 @@ export class ReversiRules extends Rules {
 
 	static playerCanOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
 		const currentPlayerChoices: { key: MoveCoord; value: ReversiPartSlice }[] = this.getListMoves(reversiPartSlice);
-		// if the current player cannot play, then the part is ended
+		// if the current player cannot start, then the part is ended
 		return (currentPlayerChoices.length === 1) && currentPlayerChoices[0].key.equals(this.pass);
 	}
 
@@ -130,7 +130,7 @@ export class ReversiRules extends Rules {
 			}
 		}
 		if (listMoves.length === 0) {
-			// when the user cannot play, his only move is to pass, which he cannot do otherwise
+			// when the user cannot start, his only move is to pass, which he cannot do otherwise
 			// board unchanged, only the turn changed "pass"
 			// console.log('f91 The user can do nothing but pass at turn ' + (nextTurn - 1));
 			moveAppliedPartSlice = new ReversiPartSlice(reversiPartSlice.getCopiedBoard(), nextTurn);

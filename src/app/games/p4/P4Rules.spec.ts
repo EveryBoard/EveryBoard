@@ -45,7 +45,7 @@ fdescribe('P4Rules', () => {
 		part.choose(MoveX.get(4)); // three in a line
 		part.choose(MoveX.get(5)); // right block
 
-		part.choose(MoveX.get(5)); // play over and don't win
+		part.choose(MoveX.get(5)); // start over and don't win
 		expect(part.getBoardValue(part.node)).toBeLessThan(Number.MAX_SAFE_INTEGER);
 	});
 
@@ -60,7 +60,7 @@ fdescribe('P4Rules', () => {
 		part.choose(MoveX.get(4)); // three in a line
 		part.choose(MoveX.get(5)); // right block
 
-		part.choose(MoveX.get(1)); // play over another pawn and don't win
+		part.choose(MoveX.get(1)); // start over another pawn and don't win
 		expect(part.getBoardValue(part.node)).toBeLessThan(Number.MAX_SAFE_INTEGER);
 	});
 

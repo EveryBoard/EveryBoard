@@ -60,7 +60,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		// console.log('PartCreation Component Initializing...');
+		console.log('PartCreationComponent.ngOnInit');
 		if (this.userName === '') { // TODO: ces vérifications doivent être faite par le composant mère, et une seule fois ??
 			console.log('PartCreationComponent we did not receive userName error');
 			this._route.navigate(['/server']);
