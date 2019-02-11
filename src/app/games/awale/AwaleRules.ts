@@ -26,7 +26,7 @@ export class AwaleRules extends Rules {
 		return sum;
 	}
 
-	private static isLegal(move: MoveCoord, turn: number, board: number[][]): number[] {
+	private static getLegality(move: MoveCoord, turn: number, board: number[][]): number[] {
 		/* modify the move to addPart the capture
     	 * modify the board to get the after-move result
     	 * return -1 if it's not legal, if so, the board should not be affected
@@ -35,7 +35,7 @@ export class AwaleRules extends Rules {
 		let captured = [0, 0];
 
 		if (AwaleRules.VERBOSE) {
-			console.log('\nin isLegal(' + move.toString() + ', ' + turn + ', ' + AwaleRules.printInLine(board) + ')');
+			console.log('\nin getLegality(' + move.toString() + ', ' + turn + ', ' + AwaleRules.printInLine(board) + ')');
 		}
 		const y: number = move.coord.y;
 		const player: number = turn % 2;
@@ -252,7 +252,7 @@ export class AwaleRules extends Rules {
 				// if (AwaleRules.VERBOSE || localVerbose) Console.log('non empty case at (' + x + ', ' + player + ')');
 				move = new MoveCoord(x, player);
 				const boardArray: number[][] = n.gamePartSlice.getCopiedBoard();
-				const moveResult: number[] = AwaleRules.isLegal(move, player, boardArray); // see if the move is legal
+				const moveResult: number[] = AwaleRules.getLegality(move, player, boardArray); // see if the move is legal
 
 				// if (AwaleRules.VERBOSE || localVerbose) Console.log('legality is ' + moveResult);
 				if (moveResult[0] > -1) {
@@ -321,7 +321,7 @@ export class AwaleRules extends Rules {
 			console.log('choose(' + resultlessMove.toString() + ') -> ' + ' at turn ' + turn);
 		}
 		const board: number[][] = this.node.gamePartSlice.getCopiedBoard();
-		const moveResult: number[] = AwaleRules.isLegal(
+		const moveResult: number[] = AwaleRules.getLegality(
 			resultlessMove,
 			this.node.gamePartSlice.turn,
 			board);
@@ -340,6 +340,13 @@ export class AwaleRules extends Rules {
 		const son: MNode<AwaleRules> = new MNode(this.node, moveAndResult, newPartSlice);
 		this.node = son;
 		return true;
+	}
+
+	isLegal(move: MoveCoord): boolean { // TODO: use it, refactor
+		const turn = this.node.gamePartSlice.turn;
+		const board = this.node.gamePartSlice.getCopiedBoard();
+		const legality: number[] = AwaleRules.getLegality(move, turn, board);
+		return legality[0] !== -1;
 	}
 
 	setInitialBoard() {

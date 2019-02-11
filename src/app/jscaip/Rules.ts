@@ -29,6 +29,11 @@ export abstract class Rules {
      * return false otherwise
      */
 
+	abstract isLegal(move: Move): boolean;
+	/* return true if the move is legal
+	 * don't do any modification to the board
+	 */
+
 	abstract setInitialBoard(): void;
 	/* set the initial board
      */

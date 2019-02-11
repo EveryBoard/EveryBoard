@@ -2,7 +2,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 
 import {BehaviorSubject, Observable, Subject, Subscription} from 'rxjs';
 
-import {ICurrentPart, ICurrentPartId} from '../../domain/icurrentpart';
+import {ICurrentPart, ICurrentPartId, PICurrentPart} from '../../domain/icurrentpart';
 import {IUserId} from '../../domain/iuser';
 
 import {Rules} from '../../jscaip/Rules';
@@ -109,10 +109,39 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			});
 	}
 
+	protected spotDifferenceBetweenUpdateAndCurrentData(update: ICurrentPart): PICurrentPart {
+		const difference: PICurrentPart = {};
+		if (update.typeGame !== this.currentPart.part.typeGame) {
+			difference.typeGame = update.typeGame;
+		}
+		if (update.playerZero !== this.currentPart.part.playerZero) {
+			difference.playerZero = update.playerZero;
+		}
+		if (update.turn !== this.currentPart.part.turn) {
+			difference.turn = update.turn;
+		}
+		if (update.playerOne !== this.currentPart.part.playerOne) {
+			difference.playerOne = update.playerOne;
+		}
+		if (update.beginning !== this.currentPart.part.beginning) {
+			difference.beginning = update.beginning;
+		}
+		if (update.result !== this.currentPart.part.result) {
+			difference.result = update.result;
+		}
+		if (update.listMoves !== this.currentPart.part.listMoves) {
+			difference.listMoves = update.listMoves;
+		}
+		if (update.request !== this.currentPart.part.request) {
+			difference.request = update.request;
+		}
+		return difference;
+	}
+
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
-		this.currentPart = updatedICurrentPart;
-		console.log('part updated: ' + JSON.stringify(updatedICurrentPart));
 		const part: ICurrentPart = updatedICurrentPart.part;
+		console.log('part updated: ' + JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(updatedICurrentPart.part)));
+		this.currentPart = updatedICurrentPart;
 		if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra
 			console.log('part update : let\'s set players datas');
 			this.setPlayersDatas(part);
@@ -147,8 +176,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			const correctDBMove: boolean = this.rules.choose(choosedMove);
 			updateIsMove = true;
 			if (!correctDBMove) {
-				console.log('we received an incorrect db move !' + choosedMove + ' and ' + listMoves);
+				console.log('!!!!!!we received an incorrect db move !' + choosedMove + ' and ' + listMoves);
 			}
+
 		}
 		this.updateBoard();
 		console.log('update make turns be : ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
@@ -334,6 +364,14 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			.updateDBBoard(encodedMove, this.partId)
 			.then(onFullFilled => {
 				this.userService.updateUserActivity(true);
+				// NEWLY :
+				if (this.rules.node.isEndGame()) {
+					if (this.rules.node.getOwnValue() === 0) {
+						this.notifyDraw();
+					} else {
+						this.notifyVictory();
+					}
+				}
 			});
 	}
 

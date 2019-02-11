@@ -207,9 +207,9 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
 		console.log(']');
 	}
 
-	private static isLegal(move: QuartoMove, player: number, quartoPartSlice: QuartoPartSlice): number {
+	private static isLegal(move: QuartoMove, quartoPartSlice: QuartoPartSlice): number {
 		/* pieceInHand is the one to be placed
-         * move.piece is the one gave to the next player
+         * move.piece is the one gave to the next players
          */
 		const x: number = move.coord.x;
 		const y: number = move.coord.y;
@@ -272,7 +272,7 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
 		const player: number = turn % 2;
 
 		const board: number[][] = this.node.gamePartSlice.getCopiedBoard();
-		const moveResult: number = QuartoRules.isLegal(quartoMove, player, quartoPartSlice);
+		const moveResult: number = QuartoRules.isLegal(quartoMove, quartoPartSlice);
 		if (moveResult === QuartoRules.INVALID_MOVE) {
 			return false;
 		}
@@ -284,6 +284,12 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
 		const son: MNode<QuartoRules> = new MNode(this.node, move, partSlice);
 		this.node = son;
 		return true;
+	}
+
+	isLegal(move: Move): boolean {
+		const quartoMove = move as QuartoMove;
+		const quartoPartSlice = this.node.gamePartSlice as QuartoPartSlice;
+		return QuartoRules.isLegal(quartoMove, quartoPartSlice) === QuartoRules.VALID_MOVE;
 	}
 
 	setInitialBoard() {

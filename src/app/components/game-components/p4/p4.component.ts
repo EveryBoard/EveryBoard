@@ -72,18 +72,18 @@ export class P4Component extends OnlineGame {
 		console.log('ça tente bien c\'est votre tour');
 		// player's turn
 		const choosedMove = MoveX.get(x);
-		if (this.rules.choose(choosedMove)) {
+		if (this.rules.isLegal(choosedMove)) {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
 			this.updateDBBoard(choosedMove);
-			if (this.rules.node.isEndGame()) {
+			/* if (this.rules.node.isEndGame()) {
 				if (this.rules.node.getOwnValue() === 0) {
 					this.notifyDraw();
 				} else {
 					this.notifyVictory();
 				}
-			}
+			} */ // OLDLY
 		} else {
 			console.log('Mais c\'est un mouvement illegal');
 		}

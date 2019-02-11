@@ -632,7 +632,7 @@ export class TablutRules extends Rules {
 		} */
 
 		// copies
-		let partSlice: TablutPartSlice = this.node.gamePartSlice as TablutPartSlice;
+		const partSlice = this.node.gamePartSlice as TablutPartSlice;
 		const board: number[][] = partSlice.getCopiedBoard();
 		const turn: number = partSlice.turn;
 		const invaderStart: boolean = partSlice.invaderStart;
@@ -646,11 +646,23 @@ export class TablutRules extends Rules {
 		if (attemptResult !== TablutRules.SUCCESS) {
 			return false;
 		}
-		partSlice = new TablutPartSlice(board, turn + 1, invaderStart);
-		son = new MNode<TablutRules>(this.node, move, partSlice);
+		const newPartSlice = new TablutPartSlice(board, turn + 1, invaderStart);
+		son = new MNode<TablutRules>(this.node, move, newPartSlice);
 		this.node.keepOnlyChoosenChild(son);
 		this.node = son;
 		return true;
+	}
+
+	isLegal(move: MoveCoordToCoordAndCapture): boolean {
+		// copies
+		const partSlice: TablutPartSlice = this.node.gamePartSlice as TablutPartSlice;
+		const board: number[][] = partSlice.getCopiedBoard();
+		const turn: number = partSlice.turn;
+		const invaderStart: boolean = partSlice.invaderStart;
+
+		// test
+		const player: 0|1 = turn % 2 === 0 ? 0 : 1;
+		return TablutRules.tryMove(player, invaderStart, move, board) === TablutRules.SUCCESS;
 	}
 
 	setInitialBoard() {

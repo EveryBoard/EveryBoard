@@ -185,6 +185,28 @@ export class ReversiRules extends Rules {
 		return true;
 	}
 
+	isLegal(move: MoveCoord): boolean {
+		// TODO : refactor with choose
+		const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice as ReversiPartSlice;
+		const turn: number = this.node.gamePartSlice.turn;
+		const board: number[][] = reversiPartSlice.getCopiedBoard();
+		if (move.equals(ReversiRules.pass)) { // if the player pass
+			// let's check that pass is a legal move right now
+			if (ReversiRules.playerCanOnlyPass(reversiPartSlice)) {
+				// if he had no choice but to pass, then passing is legal !
+				return true;
+			} // else, passing was illegal
+			return false;
+		}
+		if (board[move.coord.y][move.coord.x] !== ReversiPartSlice.UNOCCUPIED) {
+			return false;
+		}
+		const switcheds = ReversiRules.getAllSwitcheds(move, turn, board);
+		if (switcheds.length === 0) {
+			return false;
+		}
+	}
+
 	getBoardValue(n: MNode<ReversiRules>): number {
 		const reversiPartSlice: ReversiPartSlice = n.gamePartSlice as ReversiPartSlice;
 		const board: number[][] = n.gamePartSlice.getCopiedBoard();

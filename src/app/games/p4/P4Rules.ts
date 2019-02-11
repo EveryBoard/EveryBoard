@@ -509,6 +509,10 @@ export class P4Rules extends Rules {
 		return true;
 	}
 
+	isLegal(move: MoveX): boolean {
+		return this.node.gamePartSlice.getBoardByXY(move.x, 5) === P4Rules.UNOCCUPIED;
+	}
+
 	setInitialBoard(): void {
 		if (this.node == null) {
 			this.node = MNode.getFirstNode(
