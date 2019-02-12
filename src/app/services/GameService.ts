@@ -32,12 +32,12 @@ export class GameService {
 
 	// on Server Component
 
-	protected createPart(creatorName: string, typeGame: string): Promise<string> {
+	protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
 		console.log('GameService.createPart for ' + creatorName + ' of type ' + typeGame);
 		const newPart: ICurrentPart = {
 			listMoves: [],
-			playerZero: creatorName, // TODO: supprimer, il n'y a pas de createur par défaut
-			playerOne: '',
+			playerZero: creatorName,
+			playerOne: chosenPlayer,
 			result: 5, // todo : constantiser ça, bordel
 			scorePlayerZero: 'pas implémenté',
 			scorePlayerOne: 'pas implémenté',
@@ -68,10 +68,10 @@ export class GameService {
 		return this.chatService.set(chatId, newChat);
 	}
 
-	createGame(creatorName: string, typeGame: string): Promise<string> {
+	createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
 		console.log('GameService.createGame for ' + creatorName + ' of type ' + typeGame);
 		return new Promise((resolve, reject) => {
-			this.createPart(creatorName, typeGame)
+			this.createPart(creatorName, typeGame, chosenPlayer)
 				.then(docId => {
 					this.createJoiner(creatorName, docId)
 						.then(onFullFilled => {
@@ -221,12 +221,12 @@ export class GameService {
 		return this.partDao.updatePartById(partId, {request: req});
 	}
 
-	acceptRematch(part: ICurrentPartId, callback: (iPart: ICurrentPartId) => void): Promise<void> {
+	acceptRematch(part: ICurrentPartId, callback: (iPart: ICurrentPartId) => void): Promise<void> { // TODO: supprimer l'callback
 		return new Promise((resolve, reject) => {
 			this.joinerService
 				.readJoinerById(part.id)
 				.then(iJoiner => {
-					this.createGame(iJoiner.creator, part.part.typeGame)
+					this.createGame(iJoiner.creator, part.part.typeGame, iJoiner.chosenPlayer)
 						.then(rematchId => {
 							let firstPlayer: string = iJoiner.firstPlayer;
 							if (firstPlayer === '2') {

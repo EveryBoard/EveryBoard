@@ -24,7 +24,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
 
-	currentPart: ICurrentPartId;
+	currentPart: ICurrentPart;
 	players: string[] = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
 	scores: number[] = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
 	partId: string; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
@@ -57,6 +57,22 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		private userService: UserService,
 		private joinerService: JoinerService,
 		private gameService: GameService) {
+		/* this.players = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
+		this.scores = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
+		this.turn = -1; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+		this.winner = ''; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+
+		this.gameStarted = false;
+		this.endGame = false;
+		this.opponent = null;
+
+		this.canPass = null;
+		this.rematchProposed = null;
+		this.opponentProposedRematch = null; */ // OLDLY
+	}
+
+	ngOnInit() {
+		console.log('OnlineGame.ngOnInit');
 		this.players = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
 		this.scores = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
 		this.turn = -1; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
@@ -69,10 +85,6 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.canPass = null;
 		this.rematchProposed = null;
 		this.opponentProposedRematch = null;
-	}
-
-	ngOnInit() {
-		console.log('OnlineGame.ngOnInit');
 		this.partId = this.actRoute.snapshot.paramMap.get('id');
 		this.userSub = this.userService.userNameObs
 			.subscribe(userName => this.userName = userName);
@@ -111,28 +123,33 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	protected spotDifferenceBetweenUpdateAndCurrentData(update: ICurrentPart): PICurrentPart {
 		const difference: PICurrentPart = {};
-		if (update.typeGame !== this.currentPart.part.typeGame) {
+		if (update == null || this.currentPart == null) {
+			console.log('update : ' + JSON.stringify(update));
+			console.log('current: ' + JSON.stringify(this.currentPart));
+			return {};
+		}
+		if (update.typeGame !== this.currentPart.typeGame) {
 			difference.typeGame = update.typeGame;
 		}
-		if (update.playerZero !== this.currentPart.part.playerZero) {
+		if (update.playerZero !== this.currentPart.playerZero) {
 			difference.playerZero = update.playerZero;
 		}
-		if (update.turn !== this.currentPart.part.turn) {
+		if (update.turn !== this.currentPart.turn) {
 			difference.turn = update.turn;
 		}
-		if (update.playerOne !== this.currentPart.part.playerOne) {
+		if (update.playerOne !== this.currentPart.playerOne) {
 			difference.playerOne = update.playerOne;
 		}
-		if (update.beginning !== this.currentPart.part.beginning) {
+		if (update.beginning !== this.currentPart.beginning) {
 			difference.beginning = update.beginning;
 		}
-		if (update.result !== this.currentPart.part.result) {
+		if (update.result !== this.currentPart.result) {
 			difference.result = update.result;
 		}
-		if (update.listMoves !== this.currentPart.part.listMoves) {
+		if (update.listMoves !== this.currentPart.listMoves) {
 			difference.listMoves = update.listMoves;
 		}
-		if (update.request !== this.currentPart.part.request) {
+		if (update.request !== this.currentPart.request) {
 			difference.request = update.request;
 		}
 		return difference;
@@ -140,14 +157,14 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
 		const part: ICurrentPart = updatedICurrentPart.part;
-		console.log('part updated: ' + JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(updatedICurrentPart.part)));
-		this.currentPart = updatedICurrentPart;
+		console.log('part updated: ' + JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(part)));
+		this.currentPart = part;
 		if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra
 			console.log('part update : let\'s set players datas');
 			this.setPlayersDatas(part);
 		}
-		if (updatedICurrentPart.part.request != null) {
-			this.onRequest(updatedICurrentPart.part.request);
+		if (part.request != null) {
+			this.onRequest(part.request);
 		}
 		// fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
 		if ([0, 1, 3, 4].includes(part.result)) {
@@ -214,7 +231,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 				}
 				break;
 			case 8: // rematch accepted
-				alert('Rematch accepted !');
+				console.log('Rematch accepted !');
 				this._route
 					.navigate(['/' + request.typeGame + '/' + request.partId])
 					.then(onSuccess => {
@@ -398,7 +415,11 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	acceptRematch() {
 		if (this.observerRole === 0 || this.observerRole === 1) {
-			this.gameService.acceptRematch(this.currentPart, iPart => {
+			const partId: ICurrentPartId = {
+				part: this.currentPart,
+				id: this.partId
+			};
+			this.gameService.acceptRematch(partId, iPart => {
 				this.onCurrentPartUpdate(iPart);
 			});
 		}
@@ -406,7 +427,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	proposeRematch() {
 		if (this.observerRole === 0 || this.observerRole === 1) {
-			this.gameService.proposeRematch(this.currentPart.id, this.observerRole);
+			this.gameService.proposeRematch(this.partId, this.observerRole);
 		}
 	}
 

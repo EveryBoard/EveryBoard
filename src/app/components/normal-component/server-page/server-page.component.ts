@@ -69,7 +69,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 	createGame() {
 		if (this.canCreateGame()) {
 			this.gameService
-				.createGame(this.userName, this.selectedGame) // create Part and Joiner
+				.createGame(this.userName, this.selectedGame, '') // create Part and Joiner
 				.then(createdDocId => {
 					this._route.navigate(['/' + this.selectedGame, createdDocId]);
 				})
