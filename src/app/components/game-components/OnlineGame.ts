@@ -195,6 +195,14 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			if (!correctDBMove) {
 				console.log('!!!!!!we received an incorrect db move !' + choosedMove + ' and ' + listMoves);
 			}
+			// NEWLY :
+			if (this.rules.node.isEndGame()) {
+				if (this.rules.node.getOwnValue() === 0) {
+					this.notifyDraw();
+				} else {
+					this.notifyVictory();
+				}
+			}
 
 		}
 		this.updateBoard();
@@ -381,23 +389,15 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			.updateDBBoard(encodedMove, this.partId)
 			.then(onFullFilled => {
 				this.userService.updateUserActivity(true);
-				// NEWLY :
-				if (this.rules.node.isEndGame()) {
-					if (this.rules.node.getOwnValue() === 0) {
-						this.notifyDraw();
-					} else {
-						this.notifyVictory();
-					}
-				}
 			});
 	}
 
 	ngOnDestroy() {
+		if (this.userSub && this.userSub.unsubscribe) {
+			this.userSub.unsubscribe();
+		}
 		if (this.gameStarted === true) {
 			// console.log('vous quittez un composant d\'une partie : unSub Part');
-			if (this.userSub && this.userSub.unsubscribe) {
-				this.userSub.unsubscribe();
-			}
 			if (this.observedPartSubscription && this.observedPartSubscription.unsubscribe) {
 				this.observedPartSubscription.unsubscribe();
 			}

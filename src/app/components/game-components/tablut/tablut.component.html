@@ -39,41 +39,33 @@
 		</div>
 
 		<div id="info" class="circled col-sm-3">
-			<div class="inforow">
+			<div *ngIf="players" class="inforow">
 				<h4 style="float: left"> {{ players[0] }} </h4>
 				<h4 style="float: right"> {{ players[1] }} </h4>
 			</div>
 			<div class="inforow">
-				<app-old-count-down style="float: left"
-								(outOfTimeAction)="reachedOutOfTime(0)"
-								[duration]="totalPartDuration"
-								[(paused)]="!isPlayerZeroTurn"
-								[autoRefill]="false"
-								[initialDuration]="totalPartDuration">
-				</app-old-count-down>
-				<app-old-count-down style="float: right"
-								(outOfTimeAction)="reachedOutOfTime(1)"
-								[duration]="totalPartDuration"
-								[autoRefill]="false"
-								[(paused)]="!isPlayerOneTurn"
-								[initialDuration]="totalPartDuration">
-				</app-old-count-down>
+				<app-count-down #chronoZeroGlobal
+								style="float: left"
+								debugName="chrono Zero Global"
+								(outOfTimeAction)="reachedOutOfTime(0)">
+				</app-count-down>
+				<app-count-down #chronoOneGlobal
+								style="float: right"
+								debugName="chrono One Global"
+								(outOfTimeAction)="reachedOutOfTime(1)">
+				</app-count-down>
 			</div>
 			<div class="inforow">
-				<app-old-count-down style="float: left"
-								(outOfTimeAction)="reachedOutOfTime(0)"
-								[duration]="maximalMoveDuration"
-								[(paused)]="!isPlayerZeroTurn"
-								[autoRefill]="true"
-								[initialDuration]="maximalMoveDuration">
-				</app-old-count-down>
-				<app-old-count-down style="float: right"
-								(outOfTimeAction)="reachedOutOfTime(1)"
-								[duration]="maximalMoveDuration"
-								[autoRefill]="true"
-								[(paused)]="!isPlayerOneTurn"
-								[initialDuration]="maximalMoveDuration">
-				</app-old-count-down>
+				<app-count-down #chronoZeroLocal
+								style="float: left"
+								debugName="chrono Zero Local"
+								(outOfTimeAction)="reachedOutOfTime(0)">
+				</app-count-down>
+				<app-count-down #chronoOneLocal
+								style="float: right"
+								debugName="chrono One Local"
+								(outOfTimeAction)="reachedOutOfTime(1)">
+				</app-count-down>
 			</div>
 			<div class="inforow" *ngIf="scores">
 				<h4 style="float: left"> {{ scores[0] }} pts </h4>
@@ -92,8 +84,17 @@
 				</button>
 			</div>
 			<!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
-			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div>
-			<div *ngIf="endGame && (observerRole < 2)" class="inforow"> Rematch TODO </div> -->
+			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> -->
+			<div *ngIf="endGame && (observerRole < 2)" class="inforow">
+				<button *ngIf="!rematchProposed"
+						(click)="proposeRematch()">
+					Proposer un rematch
+				</button>
+				<button *ngIf="rematchProposed && opponentProposedRematch===true"
+						(click)="acceptRematch()">
+					Accepter le rematch
+				</button>
+			</div>
 			<div class="inforow" *ngIf="endGame">
 				<div *ngIf="winner != null">
 					<h3 *ngIf="(winner === userName)"> Vous avez gagné </h3>
