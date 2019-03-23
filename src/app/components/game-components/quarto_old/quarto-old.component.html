@@ -1,8 +1,15 @@
-<!--
 <div class="container-fluid"
 	 style="height: 88%; max-height: 88%">
 
-	<div id="game" class="flex-container">
+	<app-part-creation id="partCreation"
+					   *ngIf="gameStarted === false"
+					   [partId]="partId"
+					   [userName]="userName"
+					   (gameStartNotification)="startGame()">
+	</app-part-creation>
+
+	<div id="game" class="flex-container"
+		 *ngIf="gameStarted === true">
 
 		<div id="board" class="flex-container circled col-sm-9">
 
@@ -104,8 +111,8 @@
 					Passer son tour
 				</button>
 			</div>
-			&lt;!&ndash;<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
-			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> &ndash;&gt;
+			<!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
+			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> -->
 			<div *ngIf="endGame && (observerRole < 2)" class="inforow">
 				<button *ngIf="!rematchProposed"
 						(click)="proposeRematch()">
@@ -140,4 +147,3 @@
 	</div>
 
 </div>
--->

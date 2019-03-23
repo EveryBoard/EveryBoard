@@ -3,50 +3,29 @@ import {AwaleRules} from '../../../games/awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 import {UserService} from '../../../services/UserService';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
+import {OfflineGame} from '../OfflineGame';
+import {Move} from '../../../jscaip/Move';
 
 @Component({
 	selector: 'app-awale-offline',
 	templateUrl: './awale-offline.component.html',
 	styleUrls: ['./awale-offline.component.css']
 })
-export class AwaleOfflineComponent implements OnInit {
+export class AwaleOfflineComponent extends OfflineGame {
 
-	rules = new AwaleRules();
 	playerOneIsMyBot = false;
 	playerTwoIsMyBot = false;
 	aiDepth = 5;
 	botTimeOut = 500; // this.aiDepth * 500;
 	board: Array<Array<number>>;
-	captured: number[] = [0, 0];
 	turn = 0;
 
 	imagesLocation = 'assets/images/circled_numbers/';
+	captured: number[] = [0, 0];
+	rules = new AwaleRules();
 
-	constructor(private userService: UserService) {
-	}
-
-	ngOnInit() {
-		// totally adaptable to other Rules
-		// MNode.ruler = this.rules;
-		this.rules.setInitialBoard();
-		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
-	}
-
-	proposeAIToPlay() {
-		// check if ai's turn has come, if so, make her start after a delay
-		const turn = this.rules.node.gamePartSlice.turn % 2;
-		if ([this.playerOneIsMyBot, this.playerTwoIsMyBot][turn]) {
-			// bot's turn
-			setTimeout(() => {
-				// called only when it's AI's Turn
-				if (!this.rules.node.isEndGame()) {
-					const aiMove: MoveCoord = <MoveCoord>this.rules.node.findBestMoveAndSetDepth(this.aiDepth).getMove();
-					this.rules.choose(aiMove);
-					this.updateBoard();
-					this.proposeAIToPlay();
-				}
-			}, this.botTimeOut);
-		}
+	constructor() {
+		super();
 	}
 
 	updateBoard() {
@@ -56,16 +35,6 @@ export class AwaleOfflineComponent implements OnInit {
 		this.captured = awalePartSlice.captured;
 		this.turn = this.rules.node.gamePartSlice.turn;
 		// console.log('boardValue = ' + statique);
-	}
-
-	switchPlayerOne() { // totally adaptable to other Rules
-		this.playerOneIsMyBot = !this.playerOneIsMyBot;
-		this.proposeAIToPlay();
-	}
-
-	switchPlayerTwo() { // totally adaptable to other Rules
-		this.playerTwoIsMyBot = !this.playerTwoIsMyBot;
-		this.proposeAIToPlay();
 	}
 
 	trackByCase(index: number, _case: number): number {
@@ -103,20 +72,6 @@ export class AwaleOfflineComponent implements OnInit {
 			console.log('Mouvement illegal');
 			return false;
 		}
-	}
-
-	debugPrintArray(b: Array<Array<number>>) {
-		for (const line of b) {
-			console.log(line);
-		}
-	}
-
-	debugModifyArray(b: Array<number>) {
-		b[3] = 5;
-	}
-
-	debugReassignArray(b: Array<number>) {
-		b = [-1, -1, -1, -1, -73];
 	}
 
 }

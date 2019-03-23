@@ -1,9 +1,9 @@
 import {UserService} from '../../services/UserService';
-import {MoveCoord} from '../../jscaip/MoveCoord';
 import {Rules} from '../../jscaip/Rules';
 import {Move} from '../../jscaip/Move';
+import {OnInit} from '@angular/core';
 
-export abstract class OfflineGame {
+export abstract class OfflineGame implements OnInit {
 	rules: Rules;
 
 	playerOneIsMyBot = false;
@@ -13,10 +13,11 @@ export abstract class OfflineGame {
 
 	board: Array<Array<number>>;
 	turn = 0;
-	constructor(private userService: UserService) {
+
+	protected constructor() {
 	}
 
-	onInit() {
+	ngOnInit() {
 		// totally adaptable to other Rules
 		// MNode.ruler = this.rules;
 		this.rules.setInitialBoard();
@@ -40,6 +41,16 @@ export abstract class OfflineGame {
 		}
 	}
 
-	public abstract updateBoard();
+	switchPlayerOne() { // totally adaptable to other Rules
+		this.playerOneIsMyBot = !this.playerOneIsMyBot;
+		this.proposeAIToPlay();
+	}
+
+	switchPlayerTwo() { // totally adaptable to other Rules
+		this.playerTwoIsMyBot = !this.playerTwoIsMyBot;
+		this.proposeAIToPlay();
+	}
+
+	abstract updateBoard();
 
 }

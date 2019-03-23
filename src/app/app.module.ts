@@ -29,18 +29,20 @@ import {AwaleOfflineComponent} from './components/offline-components/awale-offli
 
 import {firebaseConfig} from './firebaseConfig';
 
-import {QuartoComponent} from './components/game-components/quarto/quarto.component';
+import {QuartoOldComponent} from './components/game-components/quarto_old/quarto-old.component';
 import {P4Component} from './components/game-components/p4/p4.component';
 import {AwaleComponent} from './components/game-components/awale/awale.component';
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
 import {QuartoOfflineComponent} from './components/offline-components/quarto-offline/quarto-offline.component';
 import {TablutOfflineComponent} from './components/offline-components/tablut-offline/tablut-offline.component';
 import {PartCreationComponent} from './components/normal-component/part-creation/part-creation.component';
-import { ChatComponent } from './components/normal-component/chat/chat.component';
+import {ChatComponent} from './components/normal-component/chat/chat.component';
 import {ChatService} from './services/ChatService';
-import { ReversiComponent } from './components/game-components/reversi/reversi.component';
-import { OldCountDownComponent } from './components/normal-component/old-count-down/old-count-down.component';
+import {ReversiComponent} from './components/game-components/reversi/reversi.component';
+import {OldCountDownComponent} from './components/normal-component/old-count-down/old-count-down.component';
 import {CountDownComponent} from './components/normal-component/count-down/count-down.component';
+import {QuartoComponent} from './components/game-components/quarto/quarto.component';
+import {P4NewComponent} from './components/game-components/p4-new/p4-new.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -48,22 +50,25 @@ const routes: Route [] = [
 	{path: 'statistic',			component: StatisticPageComponent},
 	{path: 'createAccount',		component: CreateAccountComponent},
 
+	{path: 'Quarto/:id',		component: QuartoComponent},
+
 	{path: 'P4Offline',			component: P4OfflineComponent},
 	{path: 'AwaleOffline',		component: AwaleOfflineComponent},
+	{path: 'QuartoOffline',		component: QuartoOfflineComponent},
 
-	{path: 'Quarto/:id',		component: QuartoComponent},
+	{path: 'QuartoOld/:id',		component: QuartoOldComponent},
 	{path: 'Awale/:id',			component: AwaleComponent},
 	{path: 'Tablut/:id',		component: TablutComponent},
 	{path: 'P4/:id',			component: P4Component},
 	{path: 'Reversi/:id',		component: ReversiComponent},
 
 	{path: '', redirectTo: 'server', pathMatch: 'full'},
-	{path: '**', 'component': ServerPageComponent}
+	{path: '**', 				component: ServerPageComponent}
 ];
 
 @NgModule({
 	declarations: [
-		AppComponent,
+		AppComponent, // TODO voir à supprimer ? est-ce utile ?
 		HeaderComponent,
 		FooterComponent,
 		LoginComponent,
@@ -74,17 +79,21 @@ const routes: Route [] = [
 		PartCreationComponent,
 
 		QuartoComponent,
+
 		P4Component,
 		AwaleComponent,
 		TablutComponent,
 
+		QuartoOldComponent,
 		AwaleOfflineComponent,
 		P4OfflineComponent,
 		QuartoOfflineComponent,
 		TablutOfflineComponent,
 		ReversiComponent,
+
 		OldCountDownComponent,
-		CountDownComponent
+		CountDownComponent,
+		P4NewComponent,
 	],
 	imports: [
 		BrowserModule,

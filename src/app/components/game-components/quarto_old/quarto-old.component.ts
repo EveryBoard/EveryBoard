@@ -1,21 +1,25 @@
-import {Component, OnInit} from '@angular/core';
-import {GameComponent} from '../GameComponent';
+import {ActivatedRoute, Router} from '@angular/router';
+import {Component} from '@angular/core';
+
+import {OnlineGame} from '../OnlineGame';
+
 import {Move} from '../../../jscaip/Move';
+
 import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
 import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
-import {ActivatedRoute, Router} from '@angular/router';
+import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
+import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
+
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
-import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
-import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
 
 @Component({
 	selector: 'app-quarto',
-	templateUrl: './quarto.component.html',
-	styleUrls: ['./quarto.component.css']
+	templateUrl: './quarto-old.component.html',
+	styleUrls: ['../onlineGame.css']
 })
-export class QuartoComponent extends GameComponent {
+export class QuartoOldComponent extends OnlineGame {
 
 	rules = new QuartoRules();
 
@@ -34,8 +38,18 @@ export class QuartoComponent extends GameComponent {
 		super(_route, actRoute, userService, joinerService, partService);
 	}
 
+	// implementing abstract method from OnlineGame
+
+	decodeMove(encodedMove: number): Move {
+		return QuartoMove.decode(encodedMove);
+	}
+
+	encodeMove(move: QuartoMove): number {
+		return QuartoMove.encode(move);
+	}
+
 	updateBoard() {
-		console.log('update online board');
+		console.log('update board');
 		const quartoPartSlice = this.rules.node.gamePartSlice as QuartoPartSlice;
 		const move: QuartoMove = this.rules.node.getMove() as QuartoMove;
 		this.board = quartoPartSlice.getCopiedBoard();
@@ -52,30 +66,9 @@ export class QuartoComponent extends GameComponent {
 		this.cancelMove();
 	}
 
-	chooseMove(move: Move): boolean {
-		if (!this.rules.isLegal(move)) {
-			return false;
-		}
-		if (!this.isPlayerTurn()) {
-			return false;
-		}
-		this.updateDBBoard(move);
-
-	}
-
-	/********************************** For Online Game **********************************/
-
-	decodeMove(encodedMove: number): Move {
-		return QuartoMove.decode(encodedMove);
-	}
-
-	encodeMove(move: QuartoMove): number {
-		return QuartoMove.encode(move);
-	}
-
 	// creating method for Quarto
 
-	chooseCoord(event: MouseEvent): boolean { // TODO: passer X et Y en argument de fonction, pas le mouse event
+	chooseCoord(event: MouseEvent): boolean {
 		console.log('choose coord');
 		// called when the user click on the quarto board
 		if (!this.isPlayerTurn()) {
@@ -113,7 +106,7 @@ export class QuartoComponent extends GameComponent {
 		return false;
 	}
 
-	choosePiece(event: MouseEvent): boolean { // TODO: passer X et Y en argument de fonction, pas le mouse event
+	choosePiece(event: MouseEvent): boolean {
 		if (!this.isPlayerTurn()) {
 			console.log('ce n\'est pas ton tour!');
 			return false;
@@ -171,6 +164,13 @@ export class QuartoComponent extends GameComponent {
 			this.choosenX = -1;
 			this.choosenY = -1;
 			this.updateDBBoard(choosedMove);
+			/* if (this.rules.node.isEndGame()) {
+				if (this.rules.node.getOwnValue() === 0) {
+					this.notifyDraw();
+				} else {
+					this.notifyVictory();
+				}
+			} */ // OLDLY
 			return true;
 		} else {
 			console.log('Mais c\'est un mouvement illegal');

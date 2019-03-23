@@ -21,8 +21,7 @@ export class P4Component extends OnlineGame {
 
 	rules = new P4Rules();
 
-	imagesLocation = 'assets/images/'; // en prod
-	// imagesLocation = 'src/assets/images/'; // en dev
+	imagesLocation = 'assets/images/';
 
 	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
 
@@ -56,20 +55,16 @@ export class P4Component extends OnlineGame {
 	}
 
 	onClick(x: number): boolean {
-		if (!this.isPlayerTurn()) {
-			console.log('Mais c\'est pas ton tour !');
-			return false;
-		}
-		// const x: number = Number(event.srcElement.id.substring(2, 3));
-		console.log('vous tentez un mouvement en colonne ' + x);
-
 		if (this.rules.node.isEndGame()) {
 			console.log('Malheureusement la partie est finie');
 			// todo : option de clonage revision commentage
 			return false;
 		}
+		if (!this.isPlayerTurn()) {
+			console.log('Mais c\'est pas ton tour !');
+			return false;
+		}
 
-		console.log('ça tente bien c\'est votre tour');
 		// player's turn
 		const choosedMove = MoveX.get(x);
 		if (this.rules.isLegal(choosedMove)) {

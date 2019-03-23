@@ -9,7 +9,7 @@ fdescribe('P4Rules', () => {
 		expect(new P4Rules()).toBeTruthy();
 	});
 
-	it('shoud be an end game', () => {
+	it('should be an end game', () => {
 		const part = new P4Rules();
 		part.choose(MoveX.get(3));
 		part.choose(MoveX.get(2));
@@ -21,7 +21,7 @@ fdescribe('P4Rules', () => {
 		expect(part.getBoardValue(part.node)).toEqual(Number.MIN_SAFE_INTEGER);
 	});
 
-	it('shoud be an end game', () => {
+	it('should be an end game', () => {
 		const part = new P4Rules();
 		part.choose(MoveX.get(6));
 		part.choose(MoveX.get(2));
@@ -34,7 +34,7 @@ fdescribe('P4Rules', () => {
 		expect(part.getBoardValue(part.node)).toEqual(Number.MAX_SAFE_INTEGER);
 	});
 
-	it('shoud be an end game', () => {
+	it('should be an end game', () => {
 		const part = new P4Rules();
 		part.choose(MoveX.get(3));
 		part.choose(MoveX.get(3));
@@ -49,7 +49,7 @@ fdescribe('P4Rules', () => {
 		expect(part.getBoardValue(part.node)).toBeLessThan(Number.MAX_SAFE_INTEGER);
 	});
 
-	it('shoud be an end game', () => {
+	it('should be an end game', () => {
 		const part = new P4Rules();
 		part.choose(MoveX.get(3));
 		part.choose(MoveX.get(3));
