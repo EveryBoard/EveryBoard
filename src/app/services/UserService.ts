@@ -22,6 +22,10 @@ export class UserService {
 				private userDao: UserDAO) {
 	}
 
+	getCurrentUser(): string {
+		return this.userName.getValue();
+	}
+
 	private changeUser(username: string, userDocId: string) {
 		this.userName.next(username);
 		this.userDocId.next(userDocId);

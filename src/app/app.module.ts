@@ -10,6 +10,8 @@ import {MaterialModule} from '../material-modules';
 import {AngularFireModule} from 'angularfire2';
 import {AngularFirestoreModule} from 'angularfire2/firestore';
 
+import {GameIncluderDirective} from './directives/game-includer.directive';
+
 import {UserService} from './services/UserService';
 import {AuthenticationService} from './services/AuthenticationService';
 import {GameService} from './services/GameService';
@@ -43,6 +45,7 @@ import {OldCountDownComponent} from './components/normal-component/old-count-dow
 import {CountDownComponent} from './components/normal-component/count-down/count-down.component';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {P4NewComponent} from './components/game-components/p4-new/p4-new.component';
+import { GameWrapperComponent } from './components/game-components/game-wrapper/game-wrapper.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -68,6 +71,8 @@ const routes: Route [] = [
 
 @NgModule({
 	declarations: [
+		GameIncluderDirective,
+
 		AppComponent, // TODO voir à supprimer ? est-ce utile ?
 		HeaderComponent,
 		FooterComponent,
@@ -94,6 +99,7 @@ const routes: Route [] = [
 		OldCountDownComponent,
 		CountDownComponent,
 		P4NewComponent,
+		GameWrapperComponent,
 	],
 	imports: [
 		BrowserModule,

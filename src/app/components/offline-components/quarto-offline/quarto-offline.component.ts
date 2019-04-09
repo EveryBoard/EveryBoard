@@ -4,7 +4,7 @@ import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
 import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
 import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
 import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
-import {GameComponent} from '../../game-components/GameComponent';
+import {Aborted_AbstractGameComponent} from '../../game-components/Aborted_AbstractGameComponent';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';

@@ -1,5 +1,4 @@
-import {Component, OnInit} from '@angular/core';
-import {GameComponent} from '../GameComponent';
+import {Component} from '@angular/core';
 import {P4PartSlice} from '../../../games/p4/P4PartSlice';
 import {MoveX} from '../../../jscaip/MoveX';
 import {P4Rules} from '../../../games/p4/P4Rules';
@@ -8,13 +7,14 @@ import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
 import {Move} from '../../../jscaip/Move';
+import {AbstractGameComponent} from '../AbstractGameComponent';
 
 @Component({
 	selector: 'app-p4-new',
 	templateUrl: './p4-new.component.html',
 	styleUrls: []
 })
-export class P4NewComponent extends GameComponent {
+export class P4NewComponent extends AbstractGameComponent {
 
 	/*************************** Common Fields **************************/
 
@@ -26,14 +26,6 @@ export class P4NewComponent extends GameComponent {
 
 	lastX: number;
 
-	/*************************** Common Methods **************************/
-
-	constructor(_route: Router, actRoute: ActivatedRoute,
-				userService: UserService,
-				joinerService: JoinerService, partService: GameService) {
-		super(_route, actRoute, userService, joinerService, partService);
-	}
-
 	onClick(x: number) {
 		const choosedMove = MoveX.get(x);
 		this.chooseMove(choosedMove);
@@ -44,15 +36,10 @@ export class P4NewComponent extends GameComponent {
 		const lastMove: MoveX = this.rules.node.getMove() as MoveX;
 
 		this.board = p4PartSlice.getCopiedBoard().reverse();
-		this.turn = p4PartSlice.turn;
-		this.currentPlayer = this.players[p4PartSlice.turn % 2];
-
 		if (lastMove !== null) {
 			this.lastX = lastMove.x;
 		}
 	}
-
-	/************************** Online Method ***************************/
 
 	decodeMove(encodedMove: number): Move {
 		return MoveX.get(encodedMove);

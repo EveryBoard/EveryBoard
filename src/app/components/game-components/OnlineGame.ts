@@ -16,40 +16,40 @@ import {MGPRequest} from '../../domain/request';
 import {CountDownComponent} from '../normal-component/count-down/count-down.component';
 
 export abstract class OnlineGame implements OnInit, OnDestroy {
-	rules: Rules;
-	@ViewChild('chronoZeroGlobal') chronoZeroGlobal: CountDownComponent;
-	@ViewChild('chronoOneGlobal') chronoOneGlobal: CountDownComponent;
-	@ViewChild('chronoZeroLocal') chronoZeroLocal: CountDownComponent;
-	@ViewChild('chronoOneLocal') chronoOneLocal: CountDownComponent;
+	rules: Rules; // moved to: AbstractGameComponent
+	@ViewChild('chronoZeroGlobal') chronoZeroGlobal: CountDownComponent; // moved to: GameWrapper
+	@ViewChild('chronoOneGlobal') chronoOneGlobal: CountDownComponent; // moved to: GameWrapper
+	@ViewChild('chronoZeroLocal') chronoZeroLocal: CountDownComponent; // moved to: GameWrapper
+	@ViewChild('chronoOneLocal') chronoOneLocal: CountDownComponent; // moved to: GameWrapper
 
-	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2)
+	observerRole: number; // to see if the player is player zero (0) or one (1) or observatory (2) moved to: GameWrapper
 
-	currentPart: ICurrentPart;
-	players: string[] = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
-	scores: number[] = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
-	partId: string; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
-	turn = -1; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
-	winner = ''; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+	currentPart: ICurrentPart; // moved to: GameWrapper
+	players: string[] = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart moved to: removed
+	scores: number[] = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart moved to: removed
+	partId: string; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId moved to: removed
+	turn = -1; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId moved to: removed
+	winner = ''; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId moved to: removed
 
-	maximalMoveDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
-	totalPartDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
+	maximalMoveDuration: number; // TODO: rendre inutile, remplacé par une instance d'IJoinerId moved to: GameWrapper
+	totalPartDuration: number; // TODO: rendre inutile, remplacé par une instance d'ICurrentPartId moved to: GameWrapper
 
-	board: Array<Array<number>>;
-	userName: string;
-	gameStarted = false;
-	endGame = false;
-	opponent: IUserId = null;
-	currentPlayer: string;
+	board: Array<Array<number>>; // moved to: AbstractGameComponent
+	userName: string; // moved to: GameWrapper
+	gameStarted = false; // moved to: GameWrapper
+	endGame = false; // moved to: GameWrapper
+	opponent: IUserId = null; // moved to: GameWrapper
+	currentPlayer: string; // moved to: GameWrapper
 
-	canPass: boolean = null;
-	rematchProposed: boolean = null;
-	opponentProposedRematch: boolean = null;
+	canPass: boolean = null; // moved to: both
+	rematchProposed: boolean = null; // moved to: GameWrapper
+	opponentProposedRematch: boolean = null; // moved to: GameWrapper
 
-	gameBeginningTime: number;
+	gameBeginningTime: number; // moved to: GameWrapper
 
-	protected userSub: Subscription;
-	protected observedPartSubscription: Subscription;
-	protected opponentSubscription: () => void;
+	protected userSub: Subscription; // moved to: GameWrapper
+	protected observedPartSubscription: Subscription; // moved to: GameWrapper
+	protected opponentSubscription: () => void; // moved to: GameWrapper
 
 	constructor(
 		private _route: Router,
@@ -88,7 +88,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.partId = this.actRoute.snapshot.paramMap.get('id');
 		this.userSub = this.userService.userNameObs
 			.subscribe(userName => this.userName = userName);
-	}
+	} // moved to: GameWrapper
 
 	protected startGame() {
 		if (this.gameStarted === true) {
@@ -119,7 +119,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 				console.log('there was a problem trying to get iJoiner timeout because : ');
 				console.log(JSON.stringify(onRejected));
 			});
-	}
+	} // moved to: GameWrapper
 
 	protected spotDifferenceBetweenUpdateAndCurrentData(update: ICurrentPart): PICurrentPart {
 		const difference: PICurrentPart = {};
@@ -153,7 +153,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			difference.request = update.request;
 		}
 		return difference;
-	}
+	} // moved to: GameWrapper
 
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
 		const part: ICurrentPart = updatedICurrentPart.part;
@@ -220,7 +220,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		if (!updateIsMove) {
 			console.log('cette update n\'est pas un mouvement ! ');
 		}
-	}
+	} // moved to: GameWrapper
 
 	protected onRequest(request: MGPRequest) {
 		switch (request.code) {
@@ -252,7 +252,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 				alert('there was an error : ' + JSON.stringify(request) + ' has ' + request.code);
 				break;
 		}
-	}
+	} // moved to: GameWrapper
 
 	private startGameChronos(durationZero: number, durationOne: number, player: 0 | 1) {
 		if (player === 0) {
@@ -268,7 +268,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			this.chronoZeroGlobal.pause();
 			this.chronoZeroLocal.stop();
 		}
-	}
+	} // moved to: GameWrapper
 
 	private startCountdownFor(player: 0 | 1) {
 		console.log('og:cdc:: startCountdownFor ' + player );
@@ -283,7 +283,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			this.chronoOneGlobal.resume();
 			this.chronoOneLocal.start(this.maximalMoveDuration);
 		}
-	}
+	} // moved to: GameWrapper
 
 	private stopCountdowns() {
 		console.log('cdc::stop count downs');
@@ -291,7 +291,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.chronoZeroLocal.stop();
 		this.chronoOneGlobal.stop();
 		this.chronoOneLocal.stop();
-	}
+	} // moved to: GameWrapper
 
 	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
 		// console.log('OnlineGame set player\'s data!');
@@ -320,7 +320,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 						this.opponent = callback;
 					});
 		}
-	}
+	} // moved to: GameWrapper
 
 	protected didOpponentRunOutOfTime(): boolean {
 		console.log('lastMoveTime of your opponent : ' + this.opponent.user.lastMoveTime);
@@ -340,28 +340,28 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 				this.endGame = true;
 			}
 		}
-	}
+	} // moved to: GameWrapper
 
 	backToServer() {
 		this._route.navigate(['/server']);
-	}
+	} // moved to: removed
 
 	resign() {
 		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
 		this.gameService.resign(this.partId, victoriousPlayer);
-	}
+	} // moved to: GameWrapper
 
 	notifyDraw() {
 		this.endGame = true;
 		this.gameService.notifyDraw(this.partId);
-	}
+	} // moved to: GameWrapper
 
 	notifyTimeoutVictory(victoriousPlayer: string) {
 		// const victoriousPlayer = this.userName;
 		this.endGame = true;
 		this.winner = victoriousPlayer;
 		this.gameService.notifyTimeout(this.partId, victoriousPlayer);
-	}
+	} // moved to: GameWrapper
 
 	notifyVictory() {
 		// const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
@@ -376,12 +376,12 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		this.endGame = true;
 		this.winner = victoriousPlayer;
 		this.gameService.notifyVictory(this.partId, victoriousPlayer);
-	}
+	} // moved to: GameWrapper
 
 	isPlayerTurn() {
 		const indexPlayer = this.rules.node.gamePartSlice.turn % 2;
 		return this.players[indexPlayer] === this.userName;
-	}
+	} // moved to: GameWrapper
 
 	updateDBBoard(move: Move) {
 		const encodedMove: number = this.encodeMove(move);
@@ -390,7 +390,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			.then(onFullFilled => {
 				this.userService.updateUserActivity(true);
 			});
-	}
+	} // moved to: GameWrapper
 
 	ngOnDestroy() {
 		if (this.userSub && this.userSub.unsubscribe) {
@@ -407,11 +407,11 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			this.gameService.stopObservingPart();
 		}
 		// console.log('OnlineGame.onDestroy');
-	}
+	} // moved to: GameWrapper
 
 	pass() {
 		alert('TODO, Should not be there, call the coder ! Must be overrid');
-	}
+	} // moved to: GameWrapper
 
 	acceptRematch() {
 		if (this.observerRole === 0 || this.observerRole === 1) {
@@ -423,17 +423,17 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 				this.onCurrentPartUpdate(iPart);
 			});
 		}
-	}
+	} // moved to: GameWrapper
 
 	proposeRematch() {
 		if (this.observerRole === 0 || this.observerRole === 1) {
 			this.gameService.proposeRematch(this.partId, this.observerRole);
 		}
-	}
+	} // moved to: GameWrapper
 
-	abstract updateBoard(): void;
+	abstract updateBoard(): void; // moved to: AbstractGameComponent
 
-	abstract decodeMove(encodedMove: number): Move;
+	abstract decodeMove(encodedMove: number): Move; // moved to: AbstractGameComponent
 
-	abstract encodeMove(move: Move): number;
+	abstract encodeMove(move: Move): number; // moved to: AbstractGameComponent
 }

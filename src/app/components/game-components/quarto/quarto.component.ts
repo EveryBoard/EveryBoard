@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {GameComponent} from '../GameComponent';
+import {Aborted_AbstractGameComponent} from '../Aborted_AbstractGameComponent';
 import {Move} from '../../../jscaip/Move';
 import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
 import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
@@ -9,13 +9,14 @@ import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
 import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
 import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
+import {AbstractGameComponent} from '../AbstractGameComponent';
 
 @Component({
 	selector: 'app-quarto',
 	templateUrl: './quarto.component.html',
 	styleUrls: ['./quarto.component.css']
 })
-export class QuartoComponent extends GameComponent {
+export class QuartoComponent extends AbstractGameComponent {
 
 	rules = new QuartoRules();
 
@@ -29,11 +30,6 @@ export class QuartoComponent extends GameComponent {
 	pieceInHand = 0; // the piece that the current user must place on the board
 	pieceToGive = -1; // the piece that the user want to give to the opponent
 
-	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
-				joinerService: JoinerService, partService: GameService) {
-		super(_route, actRoute, userService, joinerService, partService);
-	}
-
 	updateBoard() {
 		console.log('update online board');
 		const quartoPartSlice = this.rules.node.gamePartSlice as QuartoPartSlice;
@@ -41,26 +37,12 @@ export class QuartoComponent extends GameComponent {
 		this.board = quartoPartSlice.getCopiedBoard();
 		this.pieceInHand = quartoPartSlice.pieceInHand;
 
-		this.turn = quartoPartSlice.turn;
-		this.currentPlayer = this.players[quartoPartSlice.turn % 2];
-
 		if (move != null) {
 			this.lastX = move.coord.x;
 			this.lastY = move.coord.y;
 		}
 
 		this.cancelMove();
-	}
-
-	chooseMove(move: Move): boolean {
-		if (!this.rules.isLegal(move)) {
-			return false;
-		}
-		if (!this.isPlayerTurn()) {
-			return false;
-		}
-		this.updateDBBoard(move);
-
 	}
 
 	/********************************** For Online Game **********************************/
@@ -78,10 +60,6 @@ export class QuartoComponent extends GameComponent {
 	chooseCoord(event: MouseEvent): boolean { // TODO: passer X et Y en argument de fonction, pas le mouse event
 		console.log('choose coord');
 		// called when the user click on the quarto board
-		if (!this.isPlayerTurn()) {
-			console.log('ce n\'est pas ton tour!');
-			return false;
-		}
 		if (this.rules.node.isEndGame()) {
 			console.log('la partie est finie');
 			return false;
@@ -96,7 +74,7 @@ export class QuartoComponent extends GameComponent {
 			console.log('legal place to put the piece because ' + x + ', ' + y + ' : ' + this.board[y][x]);
 			// if it's a legal place to put the piece
 			this.showPieceInHandOnBoard(x, y); // let's show the user his decision
-			if (this.turn === 15) {
+			if (this.rules.node.gamePartSlice.turn === 15) {
 				// on last turn user won't be able to click on a piece to give
 				// thereby we must put his piece in hand right
 				return this.suggestMove(new QuartoMove(x, y, QuartoEnum.UNOCCUPIED));
@@ -114,10 +92,6 @@ export class QuartoComponent extends GameComponent {
 	}
 
 	choosePiece(event: MouseEvent): boolean { // TODO: passer X et Y en argument de fonction, pas le mouse event
-		if (!this.isPlayerTurn()) {
-			console.log('ce n\'est pas ton tour!');
-			return false;
-		}
 		if (this.rules.node.isEndGame()) {
 			console.log('la partie est finie');
 			return false;
@@ -170,7 +144,7 @@ export class QuartoComponent extends GameComponent {
 			// let's confirm on java-server-side that the move is legal
 			this.choosenX = -1;
 			this.choosenY = -1;
-			this.updateDBBoard(choosedMove);
+			this.chooseMove(choosedMove);
 			return true;
 		} else {
 			console.log('Mais c\'est un mouvement illegal');
