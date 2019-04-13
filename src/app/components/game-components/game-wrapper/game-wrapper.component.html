@@ -3,13 +3,13 @@
 
 	<app-part-creation id="partCreation"
 					   *ngIf="gameStarted === false"
-					   [partId]="currentPartId?.id"
+					   [partId]="currentPartId.id"
 					   [userName]="userName"
 					   (gameStartNotification)="startGame()">
 	</app-part-creation>
 
 	<div id="game" class="flex-container"
-		 *ngIf="gameStarted === true">
+		 *ngIf="gameStarted === true && currentPartId">
 
 		<ng-template appGameIncluder></ng-template>
 
@@ -88,7 +88,8 @@
 	</div>
 
 	<div id="chat" class="circled" style="height: 40%; max-height: 40%; float: bottom;">
-		<app-chat [userName]="userName"
+		<app-chat *ngIf="currentPartId.part"
+				  [userName]="userName"
 				  [chatId]="currentPartId.id"
 				  [turn]="currentPartId.part.turn"></app-chat>
 	</div>

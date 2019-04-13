@@ -56,6 +56,7 @@ export class UserService {
 	// autres
 
 	private getUserNameBS(): BehaviorSubject<string> {
+		// const currentUser: {'user': string; 'pw': string} = JSON.parse(sessionStorage.getItem('currentUser'));
 		return new BehaviorSubject<string>('');
 	}
 

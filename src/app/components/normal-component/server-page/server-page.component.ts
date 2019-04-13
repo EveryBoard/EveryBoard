@@ -52,7 +52,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 				.then(onFullFilled => this._route.navigate(['/' + typeGame, partId]))
 				.catch(onRejected => console.log('joiningGame failed (part ref not found I guess)'));
 				*/ // OLDLY
-			this._route.navigate(['/' + typeGame, partId]); // NEW
+			this._route.navigate(['/play/' + typeGame, partId]); // NEW
 		} else {
 			console.log('vous devez vous connecter pour rejoindre??'); // TODO: redirect vers la connection, doit il ??
 		}
@@ -71,7 +71,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 			this.gameService
 				.createGame(this.userName, this.selectedGame, '') // create Part and Joiner
 				.then(createdDocId => {
-					this._route.navigate(['/' + this.selectedGame, createdDocId]);
+					this._route.navigate(['/play/' + this.selectedGame, createdDocId]);
 				})
 				.catch(onRejected => {
 					console.log('gameService Failed to create a game: ');

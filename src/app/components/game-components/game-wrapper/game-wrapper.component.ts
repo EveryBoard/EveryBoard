@@ -20,13 +20,12 @@ import {MGPRequest} from '../../../domain/request';
 
 @Component({
 	selector: 'app-game-wrapper',
-	templateUrl: './game-wrapper.component.html',
-	styleUrls: ['./game-wrapper.component.css']
+	templateUrl: './game-wrapper.component.html'
 })
 export class GameWrapperComponent implements OnInit {
 
 	// component loading
-	@ViewChild(GameIncluderDirective) gameIncluder: GameIncluderDirective;
+	@ViewChild(GameIncluderDirective) appGameIncluder: GameIncluderDirective;
 	private componentInstance: AbstractGameComponent;
 
 	// GameWrapping's Template
@@ -68,18 +67,32 @@ export class GameWrapperComponent implements OnInit {
 	}
 
 	ngOnInit() {
-		this.loadGameComponent();
-		this.resetGameDatas();
+		console.log('le component est initialisé');
+		this.currentPartId = {id: this.actRoute.snapshot.paramMap.get('id'), part: null};
+		this.userSub = this.userService.userNameObs
+			.subscribe(userName => this.userName = userName);
 	}
 
 	loadGameComponent() {
 		const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
 		const component = this.getMatchingComponent(compoString);
 		const componentFactory: ComponentFactory<any> = this.componentFactoryResolver.resolveComponentFactory(component);
-		const componentRef: ComponentRef<any> = this.gameIncluder.viewContainerRef.createComponent(componentFactory);
+		const componentRef: ComponentRef<any> = this.appGameIncluder.viewContainerRef.createComponent(componentFactory);
 		this.componentInstance = <AbstractGameComponent>componentRef.instance;
 		this.componentInstance.chooseMove = this.receiveChildData;
 		this.canPass = this.componentInstance.canPass;
+	}
+
+	getMatchingComponent(compoString: string): Type<AbstractGameComponent> { // TODO figure out the difference with Type<any>
+		switch (compoString) {
+			case 'P4':
+				return P4NewComponent;
+			case 'Quarto':
+				return QuartoComponent;
+			default:
+				this.router.navigate(['/error']);
+				return null;
+		}
 	}
 
 	resetGameDatas() {
@@ -99,13 +112,15 @@ export class GameWrapperComponent implements OnInit {
 	}
 
 	protected startGame() {
+		console.log('start game !');
 		if (this.gameStarted === true) {
 			console.log('!!!OnlineGame.startGame next line is useless)');
 		} else {
 			console.log('OnlineGame.startGame next line is usefull sparadra)');
 		}
 		this.gameStarted = true;
-
+		this.loadGameComponent();
+		this.resetGameDatas();
 		// should be some kind of session-scope
 
 		this.componentInstance.rules.setInitialBoard();
@@ -316,18 +331,6 @@ export class GameWrapperComponent implements OnInit {
 						// }
 						this.opponent = callback;
 					});
-		}
-	}
-
-	getMatchingComponent(compoString: string): Type<AbstractGameComponent> { // TODO figure out the difference with Type<any>
-		switch (compoString) {
-			case 'p4':
-				return P4NewComponent;
-			case 'quarto':
-				return QuartoComponent;
-			default:
-				this.router.navigate(['/error']);
-				return null;
 		}
 	}
 

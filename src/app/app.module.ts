@@ -65,6 +65,7 @@ const routes: Route [] = [
 	{path: 'P4/:id',			component: P4Component},
 	{path: 'Reversi/:id',		component: ReversiComponent},
 
+	{path: 'play/:compo/:id',	component: GameWrapperComponent},
 	{path: '', redirectTo: 'server', pathMatch: 'full'},
 	{path: '**', 				component: ServerPageComponent}
 ];
@@ -100,6 +101,9 @@ const routes: Route [] = [
 		CountDownComponent,
 		P4NewComponent,
 		GameWrapperComponent,
+	],
+	entryComponents: [
+		P4NewComponent, QuartoComponent
 	],
 	imports: [
 		BrowserModule,
