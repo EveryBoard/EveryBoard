@@ -10,7 +10,6 @@ import {JoinerService} from './JoinerService';
 import {Router} from '@angular/router';
 import {ActivesPartsService} from './ActivesPartsService';
 import {ChatService} from './ChatService';
-import {IMessage} from '../domain/imessage';
 import {IChat} from '../domain/ichat';
 import {MGPRequest} from '../domain/request';
 
@@ -149,7 +148,7 @@ export class GameService {
 	acceptConfig(joiner: IJoiner): Promise<void> {
 		return new Promise((resolve, reject) => {
 			if (this.followedPartId == null) {
-				console.log('!!! pas de partie en cours d\'observation, comment accepter la config ' + joiner + '??');
+				console.log('!!! pas de partie en cours d\'observation, comment accepter la config ', joiner , '??');
 				reject();
 			} // OLDLY, seem's to allow bug anyway, let's try to suppress it
 			this.joinerService
@@ -177,9 +176,11 @@ export class GameService {
 			this.followedPartSub = this.followedPartObs
 				.subscribe(onFullFilled => callback(onFullFilled));
 		} else if (partId === this.followedPartId) {
-			console.log('!!!already observing this part (' + partId + ')');
+			console.log('!!! already observing this part (' + partId + ')');
+		} else if (partId == null) {
+			console.log('!!! we are observing ' + this.followedPartId + ' then you ask to watch nothing...');
 		} else {
-			alert('!!!we were already observing ' + this.followedPartId + ' then you ask to watch ' + partId + ' you are gross (no I\'m bugged)');
+			alert('!!! we were already observing ' + this.followedPartId + ' then you ask to watch ' + partId + ' you are gross (no I\'m bugged)');
 			this.stopObserving();
 			this.startObserving(partId, callback);
 		}

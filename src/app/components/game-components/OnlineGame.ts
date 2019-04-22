@@ -108,7 +108,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			.then(iJoiner => {
 				this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
 				this.totalPartDuration = iJoiner.totalPartDuration * 1000;
-				console.log('og::starting game chrono called once');
+				console.log('About to start games chronos');
 				this.startGameChronos(this.totalPartDuration, this.totalPartDuration, 0);
 				// TODO: recharger une page dont les deux joueurs étaient partis
 				this.gameService.startObserving(this.partId, iPart => {

@@ -45,7 +45,7 @@ import {OldCountDownComponent} from './components/normal-component/old-count-dow
 import {CountDownComponent} from './components/normal-component/count-down/count-down.component';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {P4NewComponent} from './components/game-components/p4-new/p4-new.component';
-import { GameWrapperComponent } from './components/game-components/game-wrapper/game-wrapper.component';
+import {GameWrapperComponent} from './components/game-components/game-wrapper/game-wrapper.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},

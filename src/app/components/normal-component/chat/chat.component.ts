@@ -1,6 +1,7 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core';
 import {ChatService} from '../../../services/ChatService';
 import {IMessage} from '../../../domain/imessage';
+import {UserService} from '../../../services/UserService';
 
 @Component({
 	selector: 'app-chat',
@@ -10,22 +11,31 @@ import {IMessage} from '../../../domain/imessage';
 export class ChatComponent implements OnInit, OnDestroy {
 
 	@Input() chatId: string;
-	@Input() userName: string;
 	@Input() turn: number;
+	userName: string;
 
 	chat: IMessage[];
 	userMessage: string;
 
-	constructor(private chatService: ChatService) {}
+	constructor(private chatService: ChatService, private userService: UserService) {}
 
 	ngOnInit() {
+		console.log('chat component initialisation');
+		this.userService.userNameObs.subscribe(username => {
+			this.userName = username;
+			this.loadChatContent();
+		});
+	}
+
+	loadChatContent() {
 		if (this.chatId == null || this.chatId === '') {
-			console.log('Chat Id is null, keep your attempt, it suck');
+			console.log('No chat to join mentionned');
 		} else if (this.userName == null || this.userName === '') {
-			console.log('ChatCompo : get yourself a userName you twat');
+			console.log('Only logged users can access the chat');
 			const msg: IMessage = {sender: 'fake', content: 'bonjour', postedTime: Date.now(), lastTurnThen: null};
 			this.chat = [msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg];
 		} else {
+			console.log(this.userName + ' logged');
 			this.chatService.startObserving(this.chatId, chat => this.chat = chat.chat.messages);
 		}
 	}
@@ -39,6 +49,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
+		console.log('chat component destroyed');
 		this.chatService.stopObserving();
 	}
 

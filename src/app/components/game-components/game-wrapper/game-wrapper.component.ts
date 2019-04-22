@@ -1,4 +1,13 @@
-import {Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, OnInit, Type, ViewChild} from '@angular/core';
+import {
+	Component,
+	ComponentFactory,
+	ComponentFactoryResolver,
+	ComponentRef,
+	OnInit,
+	Type,
+	ViewChild,
+	ViewContainerRef
+} from '@angular/core';
 import {GameIncluderDirective} from '../../../directives/game-includer.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {QuartoComponent} from '../quarto/quarto.component';
@@ -25,7 +34,7 @@ import {MGPRequest} from '../../../domain/request';
 export class GameWrapperComponent implements OnInit {
 
 	// component loading
-	@ViewChild(GameIncluderDirective) appGameIncluder: GameIncluderDirective;
+	@ViewChild(GameIncluderDirective) gameCompo: GameIncluderDirective;
 	private componentInstance: AbstractGameComponent;
 
 	// GameWrapping's Template
@@ -35,7 +44,8 @@ export class GameWrapperComponent implements OnInit {
 	@ViewChild('chronoOneLocal') chronoOneLocal: CountDownComponent;
 
 	// link between GameWrapping's template and remote opponent
-	currentPartId: ICurrentPartId;
+	currentPart: ICurrentPart;
+	currentPartId: string;
 	players: string[];
 	observerRole: number;
 	userName = this.userService.getCurrentUser();
@@ -63,23 +73,28 @@ export class GameWrapperComponent implements OnInit {
 				private gameService: GameService,
 				private userService: UserService,
 				private joinerService: JoinerService,
-				private route: Router) {
+				private route: Router,
+				private viewContainerRef: ViewContainerRef) {
 	}
 
 	ngOnInit() {
 		console.log('le component est initialisé');
-		this.currentPartId = {id: this.actRoute.snapshot.paramMap.get('id'), part: null};
+		this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
 		this.userSub = this.userService.userNameObs
 			.subscribe(userName => this.userName = userName);
 	}
 
 	loadGameComponent() {
+		console.log('Loading now game component');
+		console.log(this.gameCompo);
 		const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
 		const component = this.getMatchingComponent(compoString);
 		const componentFactory: ComponentFactory<any> = this.componentFactoryResolver.resolveComponentFactory(component);
-		const componentRef: ComponentRef<any> = this.appGameIncluder.viewContainerRef.createComponent(componentFactory);
+		// const componentRef: ComponentRef<any> = this.gameCompo.viewContainerRef.createComponent(componentFactory);
+		const componentRef: ComponentRef<any> = this.viewContainerRef.createComponent(componentFactory);
 		this.componentInstance = <AbstractGameComponent>componentRef.instance;
-		this.componentInstance.chooseMove = this.receiveChildData;
+		this.componentInstance.chooseMove = this.receiveChildData; // so that when the game component do a move
+		// the game wrapper can then act accordingly to the chosen move.
 		this.canPass = this.componentInstance.canPass;
 	}
 
@@ -106,7 +121,7 @@ export class GameWrapperComponent implements OnInit {
 		this.canPass = null;
 		this.rematchProposed = null;
 		this.opponentProposedRematch = null;
-		this.currentPartId.id = this.actRoute.snapshot.paramMap.get('id');
+		this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
 		this.userSub = this.userService.userNameObs
 			.subscribe(userName => this.userName = userName);
 	}
@@ -119,28 +134,36 @@ export class GameWrapperComponent implements OnInit {
 			console.log('OnlineGame.startGame next line is usefull sparadra)');
 		}
 		this.gameStarted = true;
+		// console.log('S-30: game component about to be load and start 30 sec after unless : ' + this.currentPart);
+		// setTimeout(() => {
+			this.afterGameComponentViewProbablyInit();
+		// }, 30000);
+	}
+
+	protected afterGameComponentViewProbablyInit() {
+		console.log('after game component view probably init');
 		this.loadGameComponent();
-		this.resetGameDatas();
+		// this.resetGameDatas();
 		// should be some kind of session-scope
 
 		this.componentInstance.rules.setInitialBoard();
 		this.componentInstance.board = this.componentInstance.rules.node.gamePartSlice.getCopiedBoard();
 
 		this.joinerService
-			.readJoinerById(this.currentPartId.id)
+			.readJoinerById(this.currentPartId)
 			.then(iJoiner => {
 				this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
 				this.totalPartDuration = iJoiner.totalPartDuration * 1000;
-				console.log('og::starting game chrono called once');
+				console.log('Starting game chrono called once');
 				this.startGameChronos(this.totalPartDuration, this.totalPartDuration, 0);
 				// TODO: recharger une page dont les deux joueurs étaient partis
-				this.gameService.startObserving(this.currentPartId.id, iPart => {
+				this.gameService.startObserving(this.currentPartId, iPart => {
 					this.onCurrentPartUpdate(iPart);
 				});
 			})
 			.catch(onRejected => {
 				console.log('there was a problem trying to get iJoiner timeout because : ');
-				console.log(JSON.stringify(onRejected));
+				console.log(onRejected);
 			});
 	}
 
@@ -151,28 +174,28 @@ export class GameWrapperComponent implements OnInit {
 			console.log('current: ' + JSON.stringify(this.currentPartId));
 			return {};
 		}
-		if (update.typeGame !== this.currentPartId.part.typeGame) {
+		if (update.typeGame !== this.currentPart.typeGame) {
 			difference.typeGame = update.typeGame;
 		}
-		if (update.playerZero !== this.currentPartId.part.playerZero) {
+		if (update.playerZero !== this.currentPart.playerZero) {
 			difference.playerZero = update.playerZero;
 		}
-		if (update.turn !== this.currentPartId.part.turn) {
+		if (update.turn !== this.currentPart.turn) {
 			difference.turn = update.turn;
 		}
-		if (update.playerOne !== this.currentPartId.part.playerOne) {
+		if (update.playerOne !== this.currentPart.playerOne) {
 			difference.playerOne = update.playerOne;
 		}
-		if (update.beginning !== this.currentPartId.part.beginning) {
+		if (update.beginning !== this.currentPart.beginning) {
 			difference.beginning = update.beginning;
 		}
-		if (update.result !== this.currentPartId.part.result) {
+		if (update.result !== this.currentPart.result) {
 			difference.result = update.result;
 		}
-		if (update.listMoves !== this.currentPartId.part.listMoves) {
+		if (update.listMoves !== this.currentPart.listMoves) {
 			difference.listMoves = update.listMoves;
 		}
-		if (update.request !== this.currentPartId.part.request) {
+		if (update.request !== this.currentPart.request) {
 			difference.request = update.request;
 		}
 		return difference;
@@ -181,7 +204,7 @@ export class GameWrapperComponent implements OnInit {
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
 		const part: ICurrentPart = updatedICurrentPart.part;
 		console.log('part updated: ' + JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(part)));
-		this.currentPartId.part = part;
+		this.currentPart = part;
 		if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra
 			console.log('part update : let\'s set players datas');
 			this.setPlayersDatas(part);
@@ -248,14 +271,14 @@ export class GameWrapperComponent implements OnInit {
 
 	notifyDraw() {
 		this.endGame = true;
-		this.gameService.notifyDraw(this.currentPartId.id);
+		this.gameService.notifyDraw(this.currentPartId);
 	}
 
 	notifyTimeoutVictory(victoriousPlayer: string) {
 		// const victoriousPlayer = this.userName;
 		this.endGame = true;
-		this.currentPartId.part.winner = victoriousPlayer; // oldly in this.winner var
-		this.gameService.notifyTimeout(this.currentPartId.id, victoriousPlayer);
+		this.currentPart.winner = victoriousPlayer; // oldly in this.winner var
+		this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer);
 	}
 
 	notifyVictory() {
@@ -269,8 +292,8 @@ export class GameWrapperComponent implements OnInit {
 			victoriousPlayer = this.players[1];
 		}
 		this.endGame = true;
-		this.currentPartId.part.winner = victoriousPlayer; // oldly in this.winner var
-		this.gameService.notifyVictory(this.currentPartId.id, victoriousPlayer);
+		this.currentPart.winner = victoriousPlayer; // oldly in this.winner var
+		this.gameService.notifyVictory(this.currentPartId, victoriousPlayer);
 	}
 
 	protected onRequest(request: MGPRequest) {
@@ -354,7 +377,7 @@ export class GameWrapperComponent implements OnInit {
 	updateDBBoard(move: Move) {
 		const encodedMove: number = this.componentInstance.encodeMove(move);
 		this.gameService
-			.updateDBBoard(encodedMove, this.currentPartId.id)
+			.updateDBBoard(encodedMove, this.currentPartId)
 			.then(onFullFilled => {
 				this.userService.updateUserActivity(true);
 			});
@@ -362,7 +385,7 @@ export class GameWrapperComponent implements OnInit {
 
 	resign() {
 		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
-		this.gameService.resign(this.currentPartId.id, victoriousPlayer);
+		this.gameService.resign(this.currentPartId, victoriousPlayer);
 	}
 
 	isPlayerTurn() {
@@ -406,7 +429,11 @@ export class GameWrapperComponent implements OnInit {
 
 	acceptRematch() {
 		if (this.observerRole === 0 || this.observerRole === 1) {
-			this.gameService.acceptRematch(this.currentPartId, iPart => {
+			const currentPartId: ICurrentPartId = {
+				id: this.currentPartId,
+				part: this.currentPart
+			};
+			this.gameService.acceptRematch(currentPartId, iPart => {
 				this.onCurrentPartUpdate(iPart);
 			});
 		}
@@ -414,19 +441,18 @@ export class GameWrapperComponent implements OnInit {
 
 	proposeRematch() {
 		if (this.observerRole === 0 || this.observerRole === 1) {
-			this.gameService.proposeRematch(this.currentPartId.id, this.observerRole);
+			this.gameService.proposeRematch(this.currentPartId, this.observerRole);
 		}
 	}
 
 	private startGameChronos(durationZero: number, durationOne: number, player: 0 | 1) {
+		console.log('og:cdc:: first turn of ' + player);
 		if (player === 0) {
-			console.log('og:cdc:: first turn of 0');
 			this.chronoZeroGlobal.start(durationZero);
 			this.chronoZeroLocal.start(this.maximalMoveDuration);
 			this.chronoOneGlobal.pause(); // TODO : remove more intelligently
 			this.chronoOneLocal.stop(); // that means with ifPreviousMoveHasBeenDone
 		} else {
-			console.log('og:cdc:: first turn of 1');
 			this.chronoOneGlobal.start(durationOne);
 			this.chronoOneLocal.start(this.maximalMoveDuration);
 			this.chronoZeroGlobal.pause();

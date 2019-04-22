@@ -4,6 +4,7 @@ import {UserDAO} from '../dao/UserDAO';
 import {IUser, IUserId} from '../domain/iuser';
 import {Router} from '@angular/router';
 import {ActivesUsersService} from './ActivesUsersService';
+import {current} from 'codelyzer/util/syntaxKind';
 
 @Injectable({
 	providedIn: 'root'
@@ -26,7 +27,8 @@ export class UserService {
 		return this.userName.getValue();
 	}
 
-	private changeUser(username: string, userDocId: string) {
+	private changeUser(username: string, userDocId: string, password: string) {
+		sessionStorage.setItem('currentUser', JSON.stringify({user: username, pw: password}));
 		this.userName.next(username);
 		this.userDocId.next(userDocId);
 	}
@@ -56,7 +58,11 @@ export class UserService {
 	// autres
 
 	private getUserNameBS(): BehaviorSubject<string> {
-		// const currentUser: {'user': string; 'pw': string} = JSON.parse(sessionStorage.getItem('currentUser'));
+		const currentUser: {'user': string; 'pw': string} = JSON.parse(sessionStorage.getItem('currentUser'));
+		if (currentUser != null) {
+			console.log('trying to log ' + JSON.stringify(currentUser));
+			this.logAsHalfMember(currentUser.user, currentUser.pw);
+		}
 		return new BehaviorSubject<string>('');
 	}
 
@@ -108,7 +114,7 @@ export class UserService {
 			lastActionTime: Date.now(),
 			status: -2 // TODO calculate what that must be
 		}); // TODO addPart .then
-		this.changeUser(pseudo, id);
+		this.changeUser(pseudo, id, code);
 		this._route.navigate(['/server']);
 	}
 

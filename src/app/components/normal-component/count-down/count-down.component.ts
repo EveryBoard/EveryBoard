@@ -17,7 +17,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
 	@Output() outOfTimeAction = new EventEmitter<void>();
 
 	ngOnInit() {
-		console.log('cdc::ngOnInit');
+		console.log('chrono::ngOnInit');
 	}
 
 	start(duration: number) {
