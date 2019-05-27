@@ -6,6 +6,8 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 })
 export class CountDownComponent implements OnInit, OnDestroy {
 
+	static VERBOSE = false;
+
 	@Input() debugName: string;
 	remainingTime: number;
 	private timeoutHandleGlobal: number;
@@ -16,18 +18,26 @@ export class CountDownComponent implements OnInit, OnDestroy {
 
 	@Output() outOfTimeAction = new EventEmitter<void>();
 
+	constructor() {}
+
 	ngOnInit() {
-		console.log('chrono::ngOnInit');
+		if (CountDownComponent.VERBOSE) {
+			console.log('chrono::ngOnInit');
+		}
 	}
 
 	start(duration: number) {
 		// duration is in ms
 		if (this.isStarted) {
 			// it's a restart
-			console.log('!!!cdc::' + this.debugName + '::start:: WHAT THE FUCK THE TIMEOUT WHERE ALREADY STARTED DUUUUDE');
+			if (CountDownComponent.VERBOSE) {
+				console.log('!!!cdc::' + this.debugName + '::start:: WHAT THE FUCK THE TIMEOUT WHERE ALREADY STARTED DUUUUDE');
+			}
 			return;
 		}
-		console.log('cdc::' + this.debugName + '::start ' + (duration / 1000) + ' s');
+		if (CountDownComponent.VERBOSE) {
+			console.log('cdc::' + this.debugName + '::start ' + (duration / 1000) + ' s');
+		}
 		this.isStarted = true;
 		this.remainingTime = duration;
 		this.resume();
@@ -35,38 +45,54 @@ export class CountDownComponent implements OnInit, OnDestroy {
 
 	pause() {
 		if (this.isPaused) {
-			console.log('!!!cdc::' + this.debugName + '::pause:: it is already paused');
+			if (CountDownComponent.VERBOSE) {
+				console.log('!!!cdc::' + this.debugName + '::pause:: it is already paused');
+			}
 			return;
 		}
 		if (!this.isStarted) {
-			console.log('!!!cdc::' + this.debugName + '::pause:: it is not started yet');
+			if (CountDownComponent.VERBOSE) {
+				console.log('!!!cdc::' + this.debugName + '::pause:: it is not started yet');
+			}
 			return;
 		}
-		console.log('cdc::' + this.debugName + '::pause');
+		if (CountDownComponent.VERBOSE) {
+			console.log('cdc::' + this.debugName + '::pause');
+		}
 		const useFull: boolean = this.clearTimeouts();
 		if (!useFull) {
-			console.log('!!!cdc::' + this.debugName + '::pause SHOUDLNT HAPPEND !!!! MY DEAR SIR, why pause something not started ?');
+			if (CountDownComponent.VERBOSE) {
+				console.log('!!!cdc::' + this.debugName + '::pause SHOUDLNT HAPPEND !!!! MY DEAR SIR, why pause something not started ?');
+			} // TODO: make an exception out of this
 		}
 		this.isPaused = true;
 		this.updateShownTime();
 	}
 
 	stop() {
-		console.log('cdc::' + this.debugName + '::stop that call pause');
+		if (CountDownComponent.VERBOSE) {
+			console.log('cdc::' + this.debugName + '::stop that call pause');
+		}
 		this.pause();
 		this.isStarted = false;
 	}
 
 	resume() {
 		if (!this.isPaused) {
-			console.log('!!!cdc::' + this.debugName + '::resume it is not paused, how to resume?');
+			if (CountDownComponent.VERBOSE) {
+				console.log('!!!cdc::' + this.debugName + '::resume it is not paused, how to resume?');
+			}
 			return;
 		}
-		console.log('cdc::' + this.debugName + '::resume for ' + this.remainingTime);
+		if (CountDownComponent.VERBOSE) {
+			console.log('cdc::' + this.debugName + '::resume for ' + this.remainingTime);
+		}
 		this.startTime = Date.now();
 		this.isPaused = false;
 		this.timeoutHandleGlobal = setTimeout(() => {
-			console.log('cdc::' + this.debugName + '::end reached');
+			if (CountDownComponent.VERBOSE) {
+				console.log('cdc::' + this.debugName + '::end reached');
+			}
 			this.onEndReached();
 		}, this.remainingTime);
 		this.timeoutHandleSec = setTimeout(() => {
@@ -79,7 +105,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
 		this.isStarted = false;
 		this.clearTimeouts();
 		this.remainingTime = 0;
-		alert('cdc::' + this.debugName + '::fini');
+		if (CountDownComponent.VERBOSE) {
+			alert('cdc::' + this.debugName + '::fini');
+		}
 		this.outOfTimeAction.emit();
 	}
 
@@ -93,7 +121,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
 	}
 
 	clearTimeouts(): boolean {
-		console.log('cdc::clearTimeouts');
+		if (CountDownComponent.VERBOSE) {
+			console.log('cdc::clearTimeouts');
+		}
 		let useFull = false;
 		if (this.timeoutHandleSec) {
 			clearTimeout(this.timeoutHandleSec);
@@ -108,10 +138,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
 		return useFull;
 	}
 
-	constructor() {
-	}
-
 	ngOnDestroy() {
 		this.clearTimeouts();
 	}
+
 }

@@ -2,19 +2,13 @@ import {
 	Component,
 	ComponentFactory,
 	ComponentFactoryResolver,
-	ComponentRef,
+	ComponentRef, OnDestroy,
 	OnInit,
 	Type,
-	ViewChild,
-	ViewContainerRef
+	ViewChild
 } from '@angular/core';
-import {GameIncluderDirective} from '../../../directives/game-includer.directive';
 import {ActivatedRoute, Router} from '@angular/router';
 import {QuartoComponent} from '../quarto/quarto.component';
-import {P4Component} from '../p4/p4.component';
-import {ReversiComponent} from '../reversi/reversi.component';
-import {TablutComponent} from '../tablut/tablut.component';
-import {AwaleRules} from '../../../games/awale/AwaleRules';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import {P4NewComponent} from '../p4-new/p4-new.component';
 import {Move} from '../../../jscaip/Move';
@@ -26,15 +20,20 @@ import {IUserId} from '../../../domain/iuser';
 import {Subscription} from 'rxjs';
 import {JoinerService} from '../../../services/JoinerService';
 import {MGPRequest} from '../../../domain/request';
+import {GameIncluderComponent} from '../game-includer/game-includer.component';
+import {TablutComponent} from '../tablut/tablut.component';
 
 @Component({
 	selector: 'app-game-wrapper',
-	templateUrl: './game-wrapper.component.html'
+	templateUrl: './game-wrapper.component.html',
+	styleUrls: ['./game-wrapper.component.css']
 })
-export class GameWrapperComponent implements OnInit {
+export class GameWrapperComponent implements OnInit, OnDestroy {
+
+	static VERBOSE = true;
 
 	// component loading
-	@ViewChild(GameIncluderDirective) gameCompo: GameIncluderDirective;
+	@ViewChild(GameIncluderComponent) gameCompo: GameIncluderComponent;
 	private componentInstance: AbstractGameComponent;
 
 	// GameWrapping's Template
@@ -73,29 +72,16 @@ export class GameWrapperComponent implements OnInit {
 				private gameService: GameService,
 				private userService: UserService,
 				private joinerService: JoinerService,
-				private route: Router,
-				private viewContainerRef: ViewContainerRef) {
+				private route: Router) {
 	}
 
 	ngOnInit() {
-		console.log('le component est initialisé');
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('le component est initialisé');
+		}
 		this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
 		this.userSub = this.userService.userNameObs
 			.subscribe(userName => this.userName = userName);
-	}
-
-	loadGameComponent() {
-		console.log('Loading now game component');
-		console.log(this.gameCompo);
-		const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
-		const component = this.getMatchingComponent(compoString);
-		const componentFactory: ComponentFactory<any> = this.componentFactoryResolver.resolveComponentFactory(component);
-		// const componentRef: ComponentRef<any> = this.gameCompo.viewContainerRef.createComponent(componentFactory);
-		const componentRef: ComponentRef<any> = this.viewContainerRef.createComponent(componentFactory);
-		this.componentInstance = <AbstractGameComponent>componentRef.instance;
-		this.componentInstance.chooseMove = this.receiveChildData; // so that when the game component do a move
-		// the game wrapper can then act accordingly to the chosen move.
-		this.canPass = this.componentInstance.canPass;
 	}
 
 	getMatchingComponent(compoString: string): Type<AbstractGameComponent> { // TODO figure out the difference with Type<any>
@@ -104,6 +90,8 @@ export class GameWrapperComponent implements OnInit {
 				return P4NewComponent;
 			case 'Quarto':
 				return QuartoComponent;
+			// case 'Tablut':
+			// 	return TablutComponent;
 			default:
 				this.router.navigate(['/error']);
 				return null;
@@ -111,7 +99,9 @@ export class GameWrapperComponent implements OnInit {
 	}
 
 	resetGameDatas() {
-		console.log('OnlineGame.resetGameDatas');
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('OnlineGame.resetGameDatas');
+		}
 		this.players = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
 
 		this.gameStarted = false;
@@ -127,28 +117,44 @@ export class GameWrapperComponent implements OnInit {
 	}
 
 	protected startGame() {
-		console.log('start game !');
-		if (this.gameStarted === true) {
-			console.log('!!!OnlineGame.startGame next line is useless)');
-		} else {
-			console.log('OnlineGame.startGame next line is usefull sparadra)');
+		if (GameWrapperComponent.VERBOSE) {
+			if (this.gameStarted === true) {
+				console.log('!!!GameWrapper.startGame next line is NOT usefull)');
+			} else {
+				console.log('GameWrapper.startGame next line is USEFULL sparadra)');
+			}
 		}
 		this.gameStarted = true;
-		// console.log('S-30: game component about to be load and start 30 sec after unless : ' + this.currentPart);
-		// setTimeout(() => {
+		setTimeout(() => {
+			// the small waiting is there to make sur that the chronos are charged
 			this.afterGameComponentViewProbablyInit();
-		// }, 30000);
+		}, 1);
+
+		this.readJoiner(); // NEWLY
+
 	}
 
 	protected afterGameComponentViewProbablyInit() {
-		console.log('after game component view probably init');
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('GameWrapper.afterGameComponentViewProbablyInit');
+		}
 		this.loadGameComponent();
 		// this.resetGameDatas();
 		// should be some kind of session-scope
 
+		this.launchGame();
+
+	}
+
+	protected launchGame() {
 		this.componentInstance.rules.setInitialBoard();
 		this.componentInstance.board = this.componentInstance.rules.node.gamePartSlice.getCopiedBoard();
 
+		// this.readJoiner(); // OLDLY, didnt work anyway
+
+	}
+
+	protected readJoiner() {
 		this.joinerService
 			.readJoinerById(this.currentPartId)
 			.then(iJoiner => {
@@ -167,35 +173,59 @@ export class GameWrapperComponent implements OnInit {
 			});
 	}
 
+	protected loadGameComponent() {
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('Loading now game component');
+			console.log('gameCompo: ', this.gameCompo);
+		}
+		const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
+		const component = this.getMatchingComponent(compoString);
+		const componentFactory: ComponentFactory<any> = this.componentFactoryResolver.resolveComponentFactory(component);
+		const componentRef: ComponentRef<any> = this.gameCompo.viewContainerRef.createComponent(componentFactory);
+		// const componentRef: ComponentRef<any> = this.viewContainerRef.createComponent(componentFactory);
+		this.componentInstance = <AbstractGameComponent>componentRef.instance;
+		this.componentInstance.chooseMove = this.receiveChildData; // so that when the game component do a move
+		// the game wrapper can then act accordingly to the chosen move.
+		this.canPass = this.componentInstance.canPass;
+	}
+
 	protected spotDifferenceBetweenUpdateAndCurrentData(update: ICurrentPart): PICurrentPart {
 		const difference: PICurrentPart = {};
-		if (update == null || this.currentPartId == null) {
-			console.log('update : ' + JSON.stringify(update));
-			console.log('current: ' + JSON.stringify(this.currentPartId));
+		if (update == null || this.currentPart == null) {
+			if (GameWrapperComponent.VERBOSE) {
+				console.log('update : ' + JSON.stringify(update));
+				console.log('current: ' + JSON.stringify(this.currentPartId));
+			}
 			return {};
 		}
-		if (update.typeGame !== this.currentPart.typeGame) {
+		if (update.typeGame		!== this.currentPart.typeGame) {
 			difference.typeGame = update.typeGame;
 		}
-		if (update.playerZero !== this.currentPart.playerZero) {
+		if (update.playerZero	!== this.currentPart.playerZero) {
 			difference.playerZero = update.playerZero;
 		}
-		if (update.turn !== this.currentPart.turn) {
+		if (update.turn			!== this.currentPart.turn) {
 			difference.turn = update.turn;
 		}
-		if (update.playerOne !== this.currentPart.playerOne) {
+		if (update.playerOne	!== this.currentPart.playerOne) {
+			if (GameWrapperComponent.VERBOSE) {
+				console.log('playerOne changed from "' + this.currentPart.playerOne + '" to "' + update.playerOne + '"');
+			}
 			difference.playerOne = update.playerOne;
 		}
-		if (update.beginning !== this.currentPart.beginning) {
+		if (update.beginning	!== this.currentPart.beginning) {
+			if (GameWrapperComponent.VERBOSE) {
+				console.log('beginning changed from "' + this.currentPart.beginning + '" to "' + update.beginning + '"');
+			}
 			difference.beginning = update.beginning;
 		}
-		if (update.result !== this.currentPart.result) {
+		if (update.result		!== this.currentPart.result) {
 			difference.result = update.result;
 		}
-		if (update.listMoves !== this.currentPart.listMoves) {
+		if (update.listMoves	!== this.currentPart.listMoves) {
 			difference.listMoves = update.listMoves;
 		}
-		if (update.request !== this.currentPart.request) {
+		if (update.request		!== this.currentPart.request) {
 			difference.request = update.request;
 		}
 		return difference;
@@ -203,10 +233,15 @@ export class GameWrapperComponent implements OnInit {
 
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
 		const part: ICurrentPart = updatedICurrentPart.part;
-		console.log('part updated: ' + JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(part)));
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('part updated !');
+			console.log(JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(part)));
+		}
 		this.currentPart = part;
 		if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra
-			console.log('part update : let\'s set players datas');
+			if (GameWrapperComponent.VERBOSE) {
+				console.log('part update : let\'s set players datas');
+			}
 			this.setPlayersDatas(part);
 		}
 		if (part.request != null) {
@@ -217,7 +252,9 @@ export class GameWrapperComponent implements OnInit {
 			this.endGame = true;
 			this.stopCountdowns();
 			if (part.result === 0) { // match nul
-				console.log('match nul means winner = ' + part.winner);
+				if (GameWrapperComponent.VERBOSE) {
+					console.log('match nul means winner = ' + part.winner);
+				}
 				// this.winner = null;
 			// } else { // victory
 			// 	this.winner = part.winner;
@@ -229,9 +266,16 @@ export class GameWrapperComponent implements OnInit {
 		const nbPlayedMoves = listMoves.length;
 		let currentPartTurn;
 		let updateIsMove = false;
-		// console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : ' + listMoves);
-		// console.log('update before : ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
-		console.log('update before : turn = ' + part.turn + ', ' + this.componentInstance.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+		if (GameWrapperComponent.VERBOSE) {
+			// console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : ' + listMoves);
+			// console.log('update before : ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+			// console.log('update before : turn = ' + part.turn + ', ' + this.componentInstance.rules.node.
+			// 		gamePartSlice.turn + '==' + nbPlayedMoves);
+			console.log('Before = part.turn = ' + part.turn);
+			console.log('Before = this.turn = ' + 'is abandonned');
+			console.log('Before = this...gamePartSlice.turn = ' + this.componentInstance.rules.node.gamePartSlice.turn);
+			console.log('Before = nbPlayedMoves = ' + nbPlayedMoves);
+		}
 		while (this.componentInstance.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.componentInstance.rules.node.gamePartSlice.turn;
 			const choosedMove = this.componentInstance.decodeMove(listMoves[currentPartTurn]);
@@ -253,7 +297,12 @@ export class GameWrapperComponent implements OnInit {
 
 		}
 		this.componentInstance.updateBoard();
-		console.log('update makes turn = ' + part.turn + ', ' + this.componentInstance.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('After = part.turn = ' + part.turn);
+			console.log('After = this.turn = ' + 'is abandonned');
+			console.log('After = this...gamePartSlice.turn = ' + this.componentInstance.rules.node.gamePartSlice.turn);
+			console.log('After = nbPlayedMoves = ' + nbPlayedMoves);
+		}
 		if ((!this.endGame) && updateIsMove) {
 			console.log('cdc::new move turn:' + part.turn + ', ' + this.componentInstance.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
 			const firstPlayedTurn = 0; // TODO: cette endroit pourrait être appellé à un mouvement qui n'est pas le 0
@@ -265,7 +314,9 @@ export class GameWrapperComponent implements OnInit {
 			}
 		}
 		if (!updateIsMove) {
-			console.log('cette update n\'est pas un mouvement ! ');
+			if (GameWrapperComponent.VERBOSE) {
+				console.log('cette update n\'est pas un mouvement ! ');
+			}
 		}
 	}
 
@@ -329,7 +380,9 @@ export class GameWrapperComponent implements OnInit {
 	}
 
 	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
-		// console.log('OnlineGame set player\'s data!');
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('GameWrapper.setPlayersDatas(' + JSON.stringify(updatedICurrentPart) + ')');
+		}
 		this.players = [
 			updatedICurrentPart.playerZero,
 			updatedICurrentPart.playerOne];
@@ -357,24 +410,23 @@ export class GameWrapperComponent implements OnInit {
 		}
 	}
 
-	// callChild() {
-	// 	this.componentInstance.applyExternalMove(null);
-	// 	console.log('I mave my son do a null move ! BIG LAUGH, HE PRBBLY BUGGED');
-	// }
-
 	receiveChildData = (move: Move): boolean => {
-		console.log('as a dad, me voici au courant ! (' + move + '), for I am : ');
-		console.log(this);
 		if (!this.componentInstance.rules.isLegal(move)) {
+			console.log('move illegal');
 			return false;
 		}
 		if (!this.isPlayerTurn()) {
+			console.log('not your turn');
 			return false;
 		}
+		console.log('board about to update');
 		this.updateDBBoard(move);
 	}
 
 	updateDBBoard(move: Move) {
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('let\'s update db board');
+		}
 		const encodedMove: number = this.componentInstance.encodeMove(move);
 		this.gameService
 			.updateDBBoard(encodedMove, this.currentPartId)
@@ -390,6 +442,9 @@ export class GameWrapperComponent implements OnInit {
 
 	isPlayerTurn() {
 		const indexPlayer = this.componentInstance.rules.node.gamePartSlice.turn % 2;
+		if (GameWrapperComponent.VERBOSE) {
+			console.log(this.players, ' : ', this.userName);
+		}
 		return this.players[indexPlayer] === this.userName;
 	}
 
@@ -446,7 +501,9 @@ export class GameWrapperComponent implements OnInit {
 	}
 
 	private startGameChronos(durationZero: number, durationOne: number, player: 0 | 1) {
-		console.log('og:cdc:: first turn of ' + player);
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('og:cdc:: first turn of ' + player);
+		}
 		if (player === 0) {
 			this.chronoZeroGlobal.start(durationZero);
 			this.chronoZeroLocal.start(this.maximalMoveDuration);
@@ -461,7 +518,9 @@ export class GameWrapperComponent implements OnInit {
 	}
 
 	private startCountdownFor(player: 0 | 1) {
-		console.log('og:cdc:: startCountdownFor ' + player );
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('og:cdc:: startCountdownFor ' + player);
+		}
 		if (player === 0) {
 			this.chronoZeroGlobal.resume();
 			this.chronoZeroLocal.start(this.maximalMoveDuration);
@@ -476,11 +535,30 @@ export class GameWrapperComponent implements OnInit {
 	}
 
 	private stopCountdowns() {
-		console.log('cdc::stop count downs');
+		if (GameWrapperComponent.VERBOSE) {
+			console.log('cdc::stop count downs');
+		}
 		this.chronoZeroGlobal.stop();
 		this.chronoZeroLocal.stop();
 		this.chronoOneGlobal.stop();
 		this.chronoOneLocal.stop();
+	}
+
+	ngOnDestroy() {
+		if (this.userSub && this.userSub.unsubscribe) {
+			this.userSub.unsubscribe();
+		}
+		if (this.gameStarted === true) {
+			// console.log('vous quittez un composant d\'une partie : unSub Part');
+			if (this.observedPartSubscription && this.observedPartSubscription.unsubscribe) {
+				this.observedPartSubscription.unsubscribe();
+			}
+			if (this.opponentSubscription) {
+				this.opponentSubscription();
+			}
+			this.gameService.stopObservingPart();
+		}
+		// console.log('OnlineGame.onDestroy');
 	}
 
 }

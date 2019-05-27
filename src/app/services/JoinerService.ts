@@ -8,6 +8,8 @@ import {JoinerDAO} from '../dao/JoinerDAO';
 })
 export class JoinerService {
 
+	static VERBOSE = true;
+
 	private followedJoinerId: string;
 	private followedJoinerObs: Observable<IJoinerId>;
 	private followedJoinerSub: Subscription;
@@ -17,13 +19,17 @@ export class JoinerService {
 
 	startObserving(joinerId: string, callback: (iJoiner: IJoinerId) => void) {
 		if (this.followedJoinerId == null) {
-			console.log('[start watching joiner ' + joinerId);
+			if (JoinerService.VERBOSE) {
+				console.log('[start watching joiner ' + joinerId);
+			}
 			this.followedJoinerId = joinerId;
-			this.followedJoinerObs = this.joinerDao.getJoinerObsById(joinerId);
+			this.followedJoinerObs = this.joinerDao.getObservable(joinerId);
 			this.followedJoinerSub = this.followedJoinerObs
 				.subscribe(onFullFilled => callback(onFullFilled));
 		} else if (joinerId === this.followedJoinerId) {
-			console.log('!!!already observing this joiner (' + joinerId + ')');
+			if (JoinerService.VERBOSE) {
+				console.log('!!!already observing this joiner (' + joinerId + ')');
+			}
 		} else {
 			alert('!!!we were already observing ' + this.followedJoinerId
 				+ ' then you ask to watch ' + joinerId + ' you are gross (no I\'m bugged)');
@@ -33,10 +39,12 @@ export class JoinerService {
 	}
 
 	joinGame(partId: string, userName: string): Promise<void> {
-		console.log('JoinerService : try to join ' + userName + ' to ' + partId);
+		if (JoinerService.VERBOSE) {
+			console.log('JoinerService.joinGame(' + partId + ', ' + userName + ')');
+		}
 		return new Promise((resolve, reject) => {
 			this.joinerDao
-				.readJoinerById(partId)
+				.read(partId)
 				.then(joiner => {
 					if (!joiner) {
 						reject(joiner);
@@ -46,7 +54,7 @@ export class JoinerService {
 						(userName !== joiner.creator)) {
 						joinerList[joinerList.length] = userName;
 						this.joinerDao
-							.updateJoinerById(partId, {candidatesNames: joinerList})
+							.update(partId, {candidatesNames: joinerList})
 							.then(onFullFilled => resolve(onFullFilled))
 							.catch(onRejected => reject(onRejected));
 					} else {
@@ -59,14 +67,16 @@ export class JoinerService {
 	}
 
 	cancelJoining(userName: string): Promise<void> {
-		// console.log('JoinerService.remove ' + userName + ' from joining page ' + this.followedJoinerId);
+		if (JoinerService.VERBOSE) {
+			console.log('JoinerService.cancelJoining(' + userName + '); this.followedJoinerId =' + this.followedJoinerId);
+		}
 		return new Promise((resolve, reject) => {
 			if (this.followedJoinerId == null) {
 				console.log('cannot cancel joining when not following a joiner');
 				reject();
 			} else {
 				this.joinerDao
-					.readJoinerById(this.followedJoinerId)
+					.read(this.followedJoinerId)
 					.then(joiner => {
 						if (joiner == null) {
 							reject(joiner);
@@ -89,7 +99,7 @@ export class JoinerService {
 								candidatesNames: joinersList
 							};
 							this.joinerDao
-								.updateJoinerById(this.followedJoinerId, modification)
+								.update(this.followedJoinerId, modification)
 								.then(onFullFilled => resolve(onFullFilled))
 								.catch(onRejected => reject(onRejected));
 						}
@@ -100,22 +110,27 @@ export class JoinerService {
 	}
 
 	deleteJoiner(): Promise<void> {
-		console.log('JoinerService.deleteJoiner ' + this.followedJoinerId);
+		if (JoinerService.VERBOSE) {
+			console.log('JoinerService.deleteJoiner(); this.followedJoinerId = ' + this.followedJoinerId);
+		}
 		return new Promise((resolve, reject) => {
 			if (this.followedJoinerId == null) {
 				console.log('followed joiner id is null');
 				reject();
 			}
 			this.joinerDao
-				.deleteById(this.followedJoinerId)
+				.delete(this.followedJoinerId)
 				.then(onFullFilled => resolve(onFullFilled))
 				.catch(onRejected => reject(onRejected));
 		});
 	}
 
 	setChosenPlayer(chosenPlayersPseudo: string): Promise<void> {
+		if (JoinerService.VERBOSE) {
+			console.log('JoinerService.setChosenPlayer(' + chosenPlayersPseudo + ')');
+		}
 		return this.joinerDao
-			.readJoinerById(this.followedJoinerId)
+			.read(this.followedJoinerId)
 			.then(joiner => {
 				const candidatesNames: string[] = joiner.candidatesNames;
 				const chosenPlayerIndex = candidatesNames.indexOf(chosenPlayersPseudo);
@@ -128,7 +143,7 @@ export class JoinerService {
 						candidatesNames.push(oldChosenPlayer);
 						// so he don't just disappear
 					}
-					this.joinerDao.updateJoinerById(this.followedJoinerId, {
+					this.joinerDao.update(this.followedJoinerId, {
 						partStatus: 1,
 						candidatesNames: candidatesNames,
 						chosenPlayer: chosenPlayersPseudo
@@ -138,9 +153,11 @@ export class JoinerService {
 	}
 
 	proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
-		console.log('proposeConfig : ' + maximalMoveDuration + ' : ' + firstPlayer);
-		console.log(' on : ' + this.followedJoinerId);
-		return this.joinerDao.updateJoinerById(this.followedJoinerId, {
+		if (JoinerService.VERBOSE) {
+			console.log('JoinerService.proposeConfig(' + maximalMoveDuration + ', ' + firstPlayer + ', ' + totalPartDuration + ')');
+			console.log('this.followedJoinerId: ' + this.followedJoinerId);
+		}
+		return this.joinerDao.update(this.followedJoinerId, {
 			partStatus: 2,
 			// timeoutMinimalDuration: timeout,
 			maximalMoveDuration: maximalMoveDuration,
@@ -155,12 +172,17 @@ export class JoinerService {
 		}
 		// console.log('JoinerService :: let s accept config from ' + this.followedJoinerId);
 		return this.joinerDao
-			.updateJoinerById(this.followedJoinerId, {partStatus: 3});
+			.update(this.followedJoinerId, {partStatus: 3});
 	}
 
 	stopObserving() {
+		if (JoinerService.VERBOSE) {
+			console.log('JoinerService.stopObserving(); // this.followedJoinerId = ' + this.followedJoinerId);
+		}
 		if (this.followedJoinerId == null) {
-			console.log('!!!we already stop watching doc');
+			if (JoinerService.VERBOSE) { // TODO: make an exception for this
+				console.log('!!!we already stop watching doc');
+			}
 		} else {
 			this.followedJoinerId = null;
 			this.followedJoinerSub.unsubscribe();
@@ -171,15 +193,24 @@ export class JoinerService {
 	// DELEGATE
 
 	readJoinerById(partId: string): Promise<IJoiner> {
-		return this.joinerDao.readJoinerById(partId);
+		if (JoinerService.VERBOSE) {
+			console.log('JoinerService.readJoinerById(' + partId + ')');
+		}
+		return this.joinerDao.read(partId);
 	}
 
-	set(id: string, joiner: IJoiner): Promise<void> {
-		return this.joinerDao.set(id, joiner);
+	set(partId: string, joiner: IJoiner): Promise<void> {
+		if (JoinerService.VERBOSE) {
+			console.log('JoinerService.set(' + partId + ', ' + JSON.stringify(joiner) + ')');
+		}
+		return this.joinerDao.set(partId, joiner);
 	}
 
-	updateJoinerById(id: string, update: PIJoiner): Promise<void> {
-		return this.joinerDao.updateJoinerById(id, update);
+	updateJoinerById(partId: string, update: PIJoiner): Promise<void> {
+		if (JoinerService.VERBOSE) {
+			console.log('JoinerService.updateJoinerById(' + partId + ', ' + JSON.stringify(update) + ')');
+		}
+		return this.joinerDao.update(partId, update);
 	}
 
 }

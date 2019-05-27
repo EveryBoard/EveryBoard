@@ -55,7 +55,7 @@ export abstract class Aborted_AbstractGameComponent implements OnInit {
 	}
 
 	initOnlineGame() {
-		console.log('OnlineGame.ngOnInit');
+		// console.log('OnlineGame.ngOnInit');
 		this.players = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
 		this.turn = -1; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
 		this.gameStarted = false;

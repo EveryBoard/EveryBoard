@@ -9,19 +9,29 @@ import {IMessage} from '../domain/imessage';
 })
 export class ChatService {
 
+	static VERBOSE = false;
+
 	private followedChatId: string;
 	private followedChatObs: Observable<IChatId>;
 	private followedChatSub: Subscription;
 
 	constructor(private chatDao: ChatDAO) {}
 
+	static isForbiddenMessage(message: string): boolean {
+		return (message === ''); // TODO: améliorer ?
+	}
+
 	sendMessage(userName: string, turn: number, message: string) {
 		if (this.userForbid(this.followedChatId, userName)) {
-			console.log('you\'re not allow to sent message here');
+			if (ChatService.VERBOSE) {
+				console.log('you\'re not allow to sent message here');
+			}
 			return;
 		}
-		if (this.forbiddenMessage(message)) {
-			console.log('HOW DARE YOU SAY THAT !');
+		if (ChatService.isForbiddenMessage(message)) {
+			if (ChatService.VERBOSE) {
+				console.log('HOW DARE YOU SAY THAT !');
+			}
 			return;
 		}
 		this.chatDao
@@ -53,23 +63,20 @@ export class ChatService {
 		return false; // TODO: implémenter le blocage de chat
 	}
 
-	forbiddenMessage(message: string) {
-		if (message === '') {
-			return true;
-		}
-		return false;
-	}
-
 	startObserving(chatId: string, callback: (iChat: IChatId) => void) {
 		if (this.followedChatId == null) {
-			console.log('[start watching chat ' + chatId);
+			if (ChatService.VERBOSE) {
+				console.log('[start watching chat ' + chatId);
+			}
 			this.followedChatId = chatId;
 			this.followedChatObs = this.chatDao.getChatObsById(chatId);
 			this.followedChatSub = this.followedChatObs
 				.subscribe(onFullFilled => callback(onFullFilled));
-		} else if (chatId === this.followedChatId) {
+		} else if (chatId === this.followedChatId) { // Should not append, show a bug
+			// TODO: make an exception of this
 			console.log('!!!already observing this chat (' + chatId + ')');
-		} else {
+		} else { // Should not append either
+			// TODO: make an exception of this as well
 			alert('!!!we were already observing ' + this.followedChatId + ' then you ask to watch' + chatId + 'you are gross (no I\'m bugged)');
 			this.stopObserving();
 			this.startObserving(chatId, callback);
@@ -77,8 +84,8 @@ export class ChatService {
 	}
 
 	stopObserving() {
-		if (this.followedChatId == null) {
-			console.log('!!!we already stop watching doc');
+		if (this.followedChatId == null) { // Should not append, is a bug
+			console.log('!!!we already stop watching doc'); // TODO: make an exception of this
 		} else {
 			console.log('stopped watching chat ' + this.followedChatId + ']');
 			this.followedChatId = null;
@@ -88,7 +95,9 @@ export class ChatService {
 	}
 
 	deleteChat(chatId: string): Promise<void> {
-		console.log('ChatService.deleteChat ' + chatId);
+		if (ChatService.VERBOSE) {
+			console.log('ChatService.deleteChat ' + chatId);
+		}
 		return new Promise((resolve, reject) => {
 			if (chatId == null) {
 				console.log('followed chat id is null');

@@ -18,6 +18,8 @@ import {MGPRequest} from '../domain/request';
 })
 export class GameService {
 
+	static VERBOSE = true;
+
 	private followedPartId: string;
 	private followedPartObs: Observable<ICurrentPartId>;
 	private followedPartSub: Subscription;
@@ -32,7 +34,9 @@ export class GameService {
 	// on Server Component
 
 	protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
-		console.log('GameService.createPart for ' + creatorName + ' of type ' + typeGame);
+		if (GameService.VERBOSE) {
+			console.log('GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer);
+		}
 		const newPart: ICurrentPart = {
 			listMoves: [],
 			playerZero: creatorName,
@@ -48,6 +52,9 @@ export class GameService {
 	}
 
 	protected createJoiner(creatorName: string, joinerId: string): Promise<void> {
+		if (GameService.VERBOSE) {
+			console.log('GameService.createJoiner(' + creatorName + ', ' + joinerId + ')');
+		}
 		const newJoiner: IJoiner = {
 			candidatesNames: [],
 			creator: creatorName,
@@ -60,6 +67,9 @@ export class GameService {
 	}
 
 	protected createChat(chatId: string): Promise<void> {
+		if (GameService.VERBOSE) {
+			console.log('GameService.createChat(' + chatId + ')');
+		}
 		const newChat: IChat = {
 			status: 'not implemented',
 			messages: []
@@ -68,7 +78,9 @@ export class GameService {
 	}
 
 	createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
-		console.log('GameService.createGame for ' + creatorName + ' of type ' + typeGame);
+		if (GameService.VERBOSE) {
+			console.log('GameService.createGame(' + creatorName + ', ' + typeGame + ')');
+		}
 		return new Promise((resolve, reject) => {
 			this.createPart(creatorName, typeGame, chosenPlayer)
 				.then(docId => {
@@ -100,17 +112,26 @@ export class GameService {
 
 	getActivesPartsObs() {
 		// TODO: désabonnements de sûreté aux autres abonnements activesParts
+		if (GameService.VERBOSE) {
+			console.log('GameService.getActivesPartsObs()');
+		}
 		this.activesPartsService.startObserving();
 		return this.activesPartsService.activesPartsObs;
 	}
 
 	unSubFromActivesPartsObs() {
+		if (GameService.VERBOSE) {
+			console.log('GameService.unSubFromActivesPartsObs()');
+		}
 		this.activesPartsService.stopObserving();
 	}
 
 	// on Part Creation Component
 
 	private startGameWithConfig(joiner: IJoiner): Promise<void> {
+		if (GameService.VERBOSE) {
+			console.log('GameService.startGameWithConfig' + JSON.stringify(joiner));
+		}
 		let firstPlayer = joiner.creator;
 		let secondPlayer = joiner.chosenPlayer;
 		if (joiner.firstPlayer === '2' && (Math.random() < 0.5)) {
@@ -132,7 +153,9 @@ export class GameService {
 	}
 
 	deletePart(partId: string): Promise<string> {
-		console.log('JoinerService.deletePart ' + partId);
+		if (GameService.VERBOSE) {
+			console.log('GameService.deletePart(' + partId + ')');
+		}
 		return new Promise((resolve, reject) => {
 			if (partId == null) {
 				console.log('followed part id is null');
@@ -146,6 +169,9 @@ export class GameService {
 	}
 
 	acceptConfig(joiner: IJoiner): Promise<void> {
+		if (GameService.VERBOSE) {
+			console.log('GameService.acceptConfig(' + JSON.stringify(joiner) + ')');
+		}
 		return new Promise((resolve, reject) => {
 			if (this.followedPartId == null) {
 				console.log('!!! pas de partie en cours d\'observation, comment accepter la config ', joiner , '??');
@@ -154,6 +180,7 @@ export class GameService {
 			this.joinerService
 				.acceptConfig()
 				.then(onConfigAccepted => {
+					console.log('config accepted !');
 					this.startGameWithConfig(joiner)
 						.then(onSignalSent => resolve(onSignalSent))
 						.catch(onRejected => reject(onRejected));
@@ -170,17 +197,26 @@ export class GameService {
 
 	startObserving(partId: string, callback: (iPart: ICurrentPartId) => void) {
 		if (this.followedPartId == null) {
-			console.log('[start watching part ' + partId);
+			if (GameService.VERBOSE) {
+				console.log('[start watching part ' + partId);
+			}
 			this.followedPartId = partId;
 			this.followedPartObs = this.partDao.getPartObsById(partId);
 			this.followedPartSub = this.followedPartObs
 				.subscribe(onFullFilled => callback(onFullFilled));
 		} else if (partId === this.followedPartId) {
-			console.log('!!! already observing this part (' + partId + ')');
+			if (GameService.VERBOSE) {
+				console.log('!!! already observing this part (' + partId + ')');
+			}
 		} else if (partId == null) {
-			console.log('!!! we are observing ' + this.followedPartId + ' then you ask to watch nothing...');
+			if (GameService.VERBOSE) {
+				console.log('!!! we are observing ' + this.followedPartId + ' then you ask to watch nothing...');
+			}
 		} else {
-			alert('!!! we were already observing ' + this.followedPartId + ' then you ask to watch ' + partId + ' you are gross (no I\'m bugged)');
+			if (GameService.VERBOSE) {
+				console.log('!!! we were already observing ' + this.followedPartId);
+				console.log(' then you ask to watch ' + partId + ' you are gross (no I\'m bugged)');
+			}
 			this.stopObserving();
 			this.startObserving(partId, callback);
 		}
@@ -306,10 +342,17 @@ export class GameService {
 	}
 
 	stopObservingPart() {
+		if (GameService.VERBOSE) {
+			console.log('GameService.stopObservingPart();');
+		}
 		if (this.followedPartId == null) {
-			console.log('no part to stop observing');
+			if (GameService.VERBOSE) {
+				console.log('no part to stop observing');
+			}
 		} else {
-			console.log('we stop observing ' + this.followedPartId + ']');
+			if (GameService.VERBOSE) {
+				console.log('we stop observing ' + this.followedPartId + ']');
+			}
 			// this.joinerService.stopObserving();
 			this.followedPartId = null;
 			this.followedPartObs = null;
@@ -317,10 +360,15 @@ export class GameService {
 	}
 
 	stopObserving() {
+		if (GameService.VERBOSE) {
+			console.log('GameService.stopObserving();');
+		}
 		if (this.followedPartId == null) {
 			console.log('!!!we already stop watching doc');
 		} else {
-			console.log('stopped watching joiner ' + this.followedPartId + ']');
+			if (GameService.VERBOSE) {
+				console.log('stopped watching joiner ' + this.followedPartId + ']');
+			}
 			this.followedPartId = null;
 			this.followedPartSub.unsubscribe();
 			this.followedPartObs = null;

@@ -14,8 +14,7 @@ export abstract class OfflineGame implements OnInit {
 	board: Array<Array<number>>;
 	turn = 0;
 
-	protected constructor() {
-	}
+	protected constructor() {}
 
 	ngOnInit() {
 		// totally adaptable to other Rules

@@ -9,9 +9,14 @@ import {Injectable} from '@angular/core';
 })
 export class PartDAO {
 
+	static VERBOSE = true;
+
 	constructor(private afs: AngularFirestore) {}
 
 	getPartObsById(partId: string): Observable<ICurrentPartId> {
+		if (PartDAO.VERBOSE) {
+			console.log('getPartObsById(' + partId + ')');
+		}
 		return this.afs.doc('parties/' + partId).snapshotChanges()
 			.pipe(map(actions => {
 				return {
@@ -22,6 +27,9 @@ export class PartDAO {
 	}
 
 	observeActivesParts(callback: (parts: ICurrentPartId[]) => void): () => void {
+		if (PartDAO.VERBOSE) {
+			console.log('observeActivesParts');
+		}
 		// the callback will be called on the list of all actives activesParts
 		return this.afs
 			.collection('parties').ref
@@ -41,8 +49,9 @@ export class PartDAO {
 
 	createPart(newPart: ICurrentPart): Promise<string> {
 		// returns the id of the created part
-		console.log('PartDAO.createPart : ');
-		console.log(JSON.stringify(newPart));
+		if (PartDAO.VERBOSE) {
+			console.log('PartDAO.createPart : ' + JSON.stringify(newPart));
+		}
 		return new Promise((resolve, reject) => {
 			this.afs.collection('parties')
 				.add(newPart)
@@ -58,6 +67,9 @@ export class PartDAO {
 	}
 
 	readPartById(partId: string): Promise<ICurrentPart> {
+		if (PartDAO.VERBOSE) {
+			console.log('readPartById(' + partId + ')');
+		}
 		return new Promise((resolve, reject) => {
 			this.afs
 				.doc('parties/' + partId).ref.get()
@@ -67,12 +79,19 @@ export class PartDAO {
 	}
 
 	updatePartById(partId: string, modification: PICurrentPart): Promise<void> {
+		if (PartDAO.VERBOSE) {
+			console.log('PartDAO.updated ' + partId);
+			console.log('now it is: ' + JSON.stringify(modification));
+		}
 		return this.afs
 			.doc('parties/' + partId).ref
 			.update(modification);
 	}
 
 	deletePartById(partId: string): Promise<void> {
+		if (PartDAO.VERBOSE) {
+			console.log('deletePartById(' + partId + ')');
+		}
 		return this.afs.doc('parties/' + partId).ref.delete();
 	}
 

@@ -23,6 +23,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	 * they need common data so mother calculate/retrieve then share them with her child
 	 */
 
+	static VERBOSE = true;
+
 	@Input() partId: string;
 	@Input() userName: string;
 
@@ -60,7 +62,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		console.log('PartCreationComponent.ngOnInit');
+		// console.log('PartCreationComponent.ngOnInit');
 		if (this.userName === '') { // TODO: ces vérifications doivent être faite par le composant mère, et une seule fois ??
 			console.log('PartCreationComponent we did not receive userName error');
 			this._route.navigate(['/server']);
@@ -94,6 +96,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
+		console.log('part-creation-component destroying');
 		if (this.userSub && this.userSub.unsubscribe) {
 			this.userSub.unsubscribe();
 		}
@@ -104,16 +107,22 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 			this.joinerService.stopObserving();
 		} else {
 			if (this.userIsCreator) {
-				console.log('you leave, creator');
+				if (PartCreationComponent.VERBOSE) {
+					console.log('you leave, creator');
+				}
 				this.cancelGameCreation().then(onFullFilled =>
 					this.joinerService.stopObserving());
 			} else {
-				console.log('vous quittez le channel ' + this.userName);
+				if (PartCreationComponent.VERBOSE) {
+					console.log('vous quittez le channel ' + this.userName);
+				}
 				this.joinerService
 					.cancelJoining(this.userName)
 					.then(onFullFilled => {
 						this.joinerService.stopObserving();
-						console.log('you left the channel, joiner');
+						if (PartCreationComponent.VERBOSE) {
+							console.log('you left the channel, joiner');
+						}
 					})
 					.catch(onRejected => {
 						console.log('cancelJoining failed');
@@ -125,14 +134,20 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
 	private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
 		if (this.isGameCanceled(iJoinerId)) {
-			console.log('LAST UPDATE : the game is cancelled');
+			if (PartCreationComponent.VERBOSE) {
+				console.log('LAST UPDATE : the game is cancelled');
+			}
 			return this.onGameCancelled();
 		}
 		if (this.isGameStarted(iJoinerId)) {
-			console.log('the game has started');
+			if (PartCreationComponent.VERBOSE) {
+				console.log('the game has started');
+			}
 			return this.onGameStarted();
 		}
-		console.log('joiner updated');
+		if (PartCreationComponent.VERBOSE) {
+			console.log('joiner updated');
+		}
 		// here game is nor cancelled nor started, no reason to redirect anything
 		this.updateJoiner(iJoinerId);
 	}
@@ -150,10 +165,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	}
 
 	private onGameStarted() {
-		console.log('partCreationOnGameStarted called');
+		if (PartCreationComponent.VERBOSE) {
+			console.log('PartCreation.onGameStarted called');
+		}
 		this.gameStartNotification.emit();
 		this.gameStarted = true;
-		console.log('partCreationOnGameStarted finished');
+		if (PartCreationComponent.VERBOSE) {
+			console.log('PartCreation.onGameStarted finished');
+		}
 	}
 
 	private updateJoiner(iJoinerId: IJoinerId) {
@@ -178,15 +197,21 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 			this.gameService
 				.deletePart(this.partId)
 				.then(then => {
-					console.log('part suppressed');
+					if (PartCreationComponent.VERBOSE) {
+						console.log('part suppressed');
+					}
 					this.joinerService
 						.deleteJoiner()
 						.then(onFullFilled => {
-							console.log('joiner and part suppressed');
+							if (PartCreationComponent.VERBOSE) {
+								console.log('joiner and part suppressed');
+							}
 							this.chatService
 								.deleteChat(this.partId)
 								.then(onSuccess => {
-									console.log('joiner, part, and chat suppressed');
+									if (PartCreationComponent.VERBOSE) {
+										console.log('joiner, part, and chat suppressed');
+									}
 									resolve(onSuccess);
 								})
 								.catch(onRejected => {
@@ -211,7 +236,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	}
 
 	setChosenPlayer(pseudo: string): Promise<void> {
-		console.log('set chosen player to ' + JSON.stringify(pseudo));
+		if (PartCreationComponent.VERBOSE) {
+			console.log('set chosen player to ' + JSON.stringify(pseudo));
+		}
 		return this.joinerService.setChosenPlayer(pseudo);
 	}
 

@@ -212,7 +212,7 @@ export class AwaleRules extends Rules {
 		let direction = -1 ; // by defaut, capture from right to left
 		let limite = -1;
 		if (player === 0) {
-			/* if turn==0 capture is on the bottom line
+			/* if turn == 0 capture is on the bottom line
 		     * means capture goes from left to right ( + 1)
 	    	 * so one ending condition of the loop is reaching index 6
 	    	 */

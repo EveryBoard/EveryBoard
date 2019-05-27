@@ -9,10 +9,15 @@ import {map} from 'rxjs/operators';
 })
 export class JoinerDAO {
 
+	static VERBOSE = true;
+
 	constructor(private afs: AngularFirestore) {
 	}
 
-	getJoinerObsById(id: string): Observable<IJoinerId> {
+	getObservable(id: string): Observable<IJoinerId> {
+		if (JoinerDAO.VERBOSE) {
+			console.log('JoinerDAO.getObservable(' + id + ')');
+		}
 		return this.afs.doc('joiners/' + id).snapshotChanges()
 			.pipe(map(actions => {
 				return {
@@ -23,6 +28,9 @@ export class JoinerDAO {
 	}
 
 	set(id: string, joiner: IJoiner): Promise<void> {
+		if (JoinerDAO.VERBOSE) {
+			console.log('JoinerDAO.set(' + id + ', ' + JSON.stringify(joiner) + ')');
+		}
 		return this.afs
 			.collection('joiners')
 			.doc(id).set(joiner);
@@ -30,7 +38,10 @@ export class JoinerDAO {
 
 	// Simple CRUD
 
-	createJoiner(newJoiner: IJoiner): Promise<string> {
+	create(newJoiner: IJoiner): Promise<string> {
+		if (JoinerDAO.VERBOSE) {
+			console.log('JoinerDAO.create(' + JSON.stringify(newJoiner) + ')');
+		}
 		// returns the id of the created joiners
 		return new Promise((resolve, reject) => {
 			this.afs.collection('joiners')
@@ -40,7 +51,10 @@ export class JoinerDAO {
 		});
 	}
 
-	readJoinerById(joinerId: string): Promise<IJoiner> {
+	read(joinerId: string): Promise<IJoiner> {
+		if (JoinerDAO.VERBOSE) {
+			console.log('JoinerDAO.read(' + joinerId + ')');
+		}
 		return new Promise((resolve, reject) => {
 			this.afs
 				.doc('joiners/' + joinerId).ref.get()
@@ -49,13 +63,19 @@ export class JoinerDAO {
 		});
 	}
 
-	updateJoinerById(joinerId: string, modification: PIJoiner): Promise<void> {
+	update(joinerId: string, modification: PIJoiner): Promise<void> {
+		if (JoinerDAO.VERBOSE) {
+			console.log('JoinerDAO.update(' + joinerId + ', ' + JSON.stringify(modification) + ')');
+		}
 		return this.afs
 			.doc('joiners/' + joinerId).ref
 			.update(modification);
 	}
 
-	deleteById(joinerId: string): Promise<void> {
+	delete(joinerId: string): Promise<void> {
+		if (JoinerDAO.VERBOSE) {
+			console.log('JoinerDAO.delete(' + joinerId + ');');
+		}
 		return this.afs.doc('joiners/' + joinerId).ref.delete();
 	}
 

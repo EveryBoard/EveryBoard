@@ -16,6 +16,9 @@ import {MGPRequest} from '../../domain/request';
 import {CountDownComponent} from '../normal-component/count-down/count-down.component';
 
 export abstract class OnlineGame implements OnInit, OnDestroy {
+
+	static VERBOSE = true;
+
 	rules: Rules; // moved to: AbstractGameComponent
 	@ViewChild('chronoZeroGlobal') chronoZeroGlobal: CountDownComponent; // moved to: GameWrapper
 	@ViewChild('chronoOneGlobal') chronoOneGlobal: CountDownComponent; // moved to: GameWrapper
@@ -72,7 +75,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	}
 
 	ngOnInit() {
-		console.log('OnlineGame.ngOnInit');
+		if (OnlineGame.VERBOSE) {
+			console.log('OnlineGame.ngOnInit');
+		}
 		this.players = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
 		this.scores = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
 		this.turn = -1; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
@@ -91,15 +96,20 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	} // moved to: GameWrapper
 
 	protected startGame() {
-		if (this.gameStarted === true) {
-			console.log('!!!OnlineGame.startGame next line is useless)');
-		} else {
-			console.log('OnlineGame.startGame next line is usefull sparadra)');
+		if (OnlineGame.VERBOSE) {
+			if (this.gameStarted === true) {
+				console.log('!!!OnlineGame.startGame next line is useless)');
+			} else {
+				console.log('OnlineGame.startGame next line is usefull sparadra)');
+			}
 		}
 		this.gameStarted = true;
 
-		// should be some kind of session-scope
+		this.launchGame();
 
+	} // moved to: GameWrapper
+
+	protected launchGame() {
 		this.rules.setInitialBoard();
 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
@@ -108,7 +118,7 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			.then(iJoiner => {
 				this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
 				this.totalPartDuration = iJoiner.totalPartDuration * 1000;
-				console.log('About to start games chronos');
+				console.log('Starting game chrono called once');
 				this.startGameChronos(this.totalPartDuration, this.totalPartDuration, 0);
 				// TODO: recharger une page dont les deux joueurs étaient partis
 				this.gameService.startObserving(this.partId, iPart => {
@@ -119,13 +129,15 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 				console.log('there was a problem trying to get iJoiner timeout because : ');
 				console.log(JSON.stringify(onRejected));
 			});
-	} // moved to: GameWrapper
+	}
 
 	protected spotDifferenceBetweenUpdateAndCurrentData(update: ICurrentPart): PICurrentPart {
 		const difference: PICurrentPart = {};
 		if (update == null || this.currentPart == null) {
-			console.log('update : ' + JSON.stringify(update));
-			console.log('current: ' + JSON.stringify(this.currentPart));
+			if (OnlineGame.VERBOSE) {
+				console.log('update : ' + JSON.stringify(update));
+				console.log('current: ' + JSON.stringify(this.currentPart));
+			}
 			return {};
 		}
 		if (update.typeGame !== this.currentPart.typeGame) {
@@ -138,6 +150,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			difference.turn = update.turn;
 		}
 		if (update.playerOne !== this.currentPart.playerOne) {
+			if (OnlineGame.VERBOSE) {
+				console.log('playerOne changed from "' + this.currentPart.playerOne + '" to "' + update.playerOne + '"');
+			}
 			difference.playerOne = update.playerOne;
 		}
 		if (update.beginning !== this.currentPart.beginning) {
@@ -157,10 +172,15 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
 		const part: ICurrentPart = updatedICurrentPart.part;
-		console.log('part updated: ' + JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(part)));
+		if (OnlineGame.VERBOSE) {
+			console.log('part updated !');
+			console.log(JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(part)));
+		}
 		this.currentPart = part;
 		if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra
-			console.log('part update : let\'s set players datas');
+			if (OnlineGame.VERBOSE) {
+				console.log('part update : let\'s set players datas');
+			}
 			this.setPlayersDatas(part);
 		}
 		if (part.request != null) {
@@ -171,7 +191,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			this.endGame = true;
 			this.stopCountdowns();
 			if (part.result === 0) { // match nul
-				console.log('match nul means winner = ' + part.winner);
+				if (OnlineGame.VERBOSE) {
+					console.log('match nul means winner = ' + part.winner);
+				}
 				this.winner = null;
 			} else { // victory
 				this.winner = part.winner;
@@ -183,8 +205,14 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		const nbPlayedMoves = listMoves.length;
 		let currentPartTurn;
 		let updateIsMove = false;
-		// console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : ' + listMoves);
-		console.log('update before : ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+		if (OnlineGame.VERBOSE) {
+			// console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : ' + listMoves);
+			// console.log('update before : ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+			console.log('Before = part.turn = ' + part.turn);
+			console.log('Before = this.turn = ' + this.turn);
+			console.log('Before = this...gamePartSlice.turn = ' + this.rules.node.gamePartSlice.turn);
+			console.log('Before = nbPlayedMoves = ' + nbPlayedMoves);
+		}
 		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.rules.node.gamePartSlice.turn;
 			const choosedMove = this.decodeMove(listMoves[currentPartTurn]);
@@ -206,9 +234,16 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 		}
 		this.updateBoard();
-		console.log('update make turns be : ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+		if (OnlineGame.VERBOSE) {
+			console.log('After = part.turn = ' + part.turn);
+			console.log('After = this.turn = ' + this.turn);
+			console.log('After = this...gamePartSlice.turn = ' + this.rules.node.gamePartSlice.turn);
+			console.log('After = nbPlayedMoves = ' + nbPlayedMoves);
+		}
 		if ((!this.endGame) && updateIsMove) {
-			console.log('cdc::new move + ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+			if (OnlineGame.VERBOSE) {
+				console.log('cdc::new move + ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+			}
 			const firstPlayedTurn = 0; // TODO: cette endroit pourrait être appellé à un mouvement qui n'est pas le 0
 			// (reprise de partie après double perte de connection...)
 			if (this.turn === (firstPlayedTurn + 1)) {
@@ -218,7 +253,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			}
 		}
 		if (!updateIsMove) {
-			console.log('cette update n\'est pas un mouvement ! ');
+			if (OnlineGame.VERBOSE) {
+				console.log('cette update n\'est pas un mouvement ! ');
+			}
 		}
 	} // moved to: GameWrapper
 
@@ -227,19 +264,25 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 			case 6: // 0 propose un rematch
 				this.rematchProposed = true;
 				if (this.observerRole === 1) {
-					console.log('ton adversaire te propose une revanche, 1');
+					if (OnlineGame.VERBOSE) {
+						console.log('ton adversaire te propose une revanche, 1');
+					}
 					this.opponentProposedRematch = true;
 				}
 				break;
 			case 7: // 1 propose un rematch
 				this.rematchProposed = true;
 				if (this.observerRole === 0) {
-					console.log('ton adversaire te propose une revanche, 0');
+					if (OnlineGame.VERBOSE) {
+						console.log('ton adversaire te propose une revanche, 0');
+					}
 					this.opponentProposedRematch = true;
 				}
 				break;
 			case 8: // rematch accepted
-				console.log('Rematch accepted !');
+				if (OnlineGame.VERBOSE) {
+					console.log('Rematch accepted !');
+				}
 				this._route
 					.navigate(['/' + request.typeGame + '/' + request.partId])
 					.then(onSuccess => {
@@ -256,13 +299,17 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 
 	private startGameChronos(durationZero: number, durationOne: number, player: 0 | 1) {
 		if (player === 0) {
-			console.log('og:cdc:: first turn of 0');
+			if (OnlineGame.VERBOSE) {
+				console.log('og:cdc:: first turn of 0');
+			}
 			this.chronoZeroGlobal.start(durationZero);
 			this.chronoZeroLocal.start(this.maximalMoveDuration);
 			this.chronoOneGlobal.pause(); // TODO : remove more intelligently
 			this.chronoOneLocal.stop(); // that means with ifPreviousMoveHasBeenDone
 		} else {
-			console.log('og:cdc:: first turn of 1');
+			if (OnlineGame.VERBOSE) {
+				console.log('og:cdc:: first turn of 1');
+			}
 			this.chronoOneGlobal.start(durationOne);
 			this.chronoOneLocal.start(this.maximalMoveDuration);
 			this.chronoZeroGlobal.pause();
@@ -271,7 +318,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	} // moved to: GameWrapper
 
 	private startCountdownFor(player: 0 | 1) {
-		console.log('og:cdc:: startCountdownFor ' + player );
+		if (OnlineGame.VERBOSE) {
+			console.log('og:cdc:: startCountdownFor ' + player);
+		}
 		if (player === 0) {
 			this.chronoZeroGlobal.resume();
 			this.chronoZeroLocal.start(this.maximalMoveDuration);
@@ -286,7 +335,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	} // moved to: GameWrapper
 
 	private stopCountdowns() {
-		console.log('cdc::stop count downs');
+		if (OnlineGame.VERBOSE) {
+			console.log('cdc::stop count downs');
+		}
 		this.chronoZeroGlobal.stop();
 		this.chronoZeroLocal.stop();
 		this.chronoOneGlobal.stop();
@@ -294,7 +345,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	} // moved to: GameWrapper
 
 	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
-		// console.log('OnlineGame set player\'s data!');
+		if (OnlineGame.VERBOSE) {
+			console.log('OnlineGame.setPlayersDatas(' + JSON.stringify(updatedICurrentPart) + ')');
+		}
 		this.players = [
 			updatedICurrentPart.playerZero,
 			updatedICurrentPart.playerOne];
@@ -323,7 +376,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	} // moved to: GameWrapper
 
 	protected didOpponentRunOutOfTime(): boolean {
-		console.log('lastMoveTime of your opponent : ' + this.opponent.user.lastMoveTime);
+		if (OnlineGame.VERBOSE) {
+			console.log('lastMoveTime of your opponent : ' + this.opponent.user.lastMoveTime);
+		}
 		return Math.max(this.opponent.user.lastMoveTime, this.gameBeginningTime)
 			+ (this.maximalMoveDuration * 1000)
 			< Date.now();
@@ -384,6 +439,9 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	} // moved to: GameWrapper
 
 	updateDBBoard(move: Move) {
+		if (OnlineGame.VERBOSE) {
+			console.log('let\' upade db board');
+		}
 		const encodedMove: number = this.encodeMove(move);
 		this.gameService
 			.updateDBBoard(encodedMove, this.partId)
@@ -436,4 +494,5 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 	abstract decodeMove(encodedMove: number): Move; // moved to: AbstractGameComponent
 
 	abstract encodeMove(move: Move): number; // moved to: AbstractGameComponent
+
 }

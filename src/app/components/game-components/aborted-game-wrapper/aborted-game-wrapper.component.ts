@@ -92,7 +92,7 @@
 // 		this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 //
 // 		this.joinerService
-// 			.readJoinerById(this.partId)
+// 			.read(this.partId)
 // 			.then(iJoiner => {
 // 				this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
 // 				this.totalPartDuration = iJoiner.totalPartDuration * 1000;

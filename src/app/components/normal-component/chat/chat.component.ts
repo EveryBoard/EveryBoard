@@ -10,6 +10,8 @@ import {UserService} from '../../../services/UserService';
 })
 export class ChatComponent implements OnInit, OnDestroy {
 
+	static VERBOSE = false;
+
 	@Input() chatId: string;
 	@Input() turn: number;
 	userName: string;
@@ -20,7 +22,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 	constructor(private chatService: ChatService, private userService: UserService) {}
 
 	ngOnInit() {
-		console.log('chat component initialisation');
+		if (ChatComponent.VERBOSE) {
+			console.log('chat component initialisation');
+		}
 		this.userService.userNameObs.subscribe(username => {
 			this.userName = username;
 			this.loadChatContent();
@@ -29,27 +33,37 @@ export class ChatComponent implements OnInit, OnDestroy {
 
 	loadChatContent() {
 		if (this.chatId == null || this.chatId === '') {
-			console.log('No chat to join mentionned');
+			if (ChatComponent.VERBOSE) {
+				console.log('No chat to join mentionned');
+			}
 		} else if (this.userName == null || this.userName === '') {
-			console.log('Only logged users can access the chat');
+			if (ChatComponent.VERBOSE) {
+				console.log('Only logged users can access the chat');
+			}
 			const msg: IMessage = {sender: 'fake', content: 'bonjour', postedTime: Date.now(), lastTurnThen: null};
 			this.chat = [msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg, msg];
 		} else {
-			console.log(this.userName + ' logged');
+			if (ChatComponent.VERBOSE) {
+				console.log(this.userName + ' logged');
+			}
 			this.chatService.startObserving(this.chatId, chat => this.chat = chat.chat.messages);
 		}
 	}
 
 	sendMessage() {
 		if (this.userName === '') {
-			console.log('je t\'envois un toast car t\'es pas connecté donc tu te tait!');
+			if (ChatComponent.VERBOSE) {
+				console.log('je t\'envoie un toast car t\'es pas connecté donc tu te tait!');
+			}
 		}
 		this.chatService.sendMessage(this.userName, this.turn, this.userMessage);
 		this.userMessage = '';
 	}
 
 	ngOnDestroy() {
-		console.log('chat component destroyed');
+		// if (ChatComponent.VERBOSE) {
+		// 	console.log('chat component destroyed');
+		// }
 		this.chatService.stopObserving();
 	}
 

@@ -7,10 +7,8 @@ import {Component, OnInit} from '@angular/core';
 })
 export class TablutOfflineComponent implements OnInit {
 
-	constructor() {
-	}
+	constructor() {}
 
-	ngOnInit() {
-	}
+	ngOnInit() {}
 
 }
