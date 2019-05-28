@@ -26,8 +26,8 @@ export class QuartoOldComponent extends OnlineGame {
 	imagesLocation = 'assets/images/'; // en prod
 	// imagesLocation = 'src/assets/images/'; // en dev
 
-	choosenX = -1; // the piece clicked by the user
-	choosenY = -1;
+	chosenX = -1; // the piece clicked by the user
+	chosenY = -1;
 	lastX: number; // the last move made by the opponent
 	lastY: number;
 	pieceInHand = 0; // the piece that the current user must place on the board
@@ -95,13 +95,13 @@ export class QuartoOldComponent extends OnlineGame {
 				return this.suggestMove(new QuartoMove(x, y, QuartoEnum.UNOCCUPIED));
 			}
 			if (this.pieceToGive !== -1) {
-				// the user has already choosen his piece before his coord
+				// the user has already chosen his piece before his coord
 				return this.suggestMove(new QuartoMove(x, y, this.pieceToGive));
 			}
-			return true; // the user has just choosen his coord
+			return true; // the user has just chosen his coord
 		}
 		console.log('NOT a legal place to put the piece because ' + +x + ', ' + y + ' : ' + this.board[y][x]);
-		// the user choosed an occupied place of the board, so an illegal move, so we cancel all
+		// the user chose an occupied place of the board, so an illegal move, so we cancel all
 		this.cancelMove();
 		return false;
 	}
@@ -121,14 +121,14 @@ export class QuartoOldComponent extends OnlineGame {
 		const givenPiece: number = Number(event.srcElement.id.substring(1));
 		if (this.isRemaining(givenPiece)) {
 			this.pieceToGive = givenPiece;
-			if (this.choosenX !== -1) {
-				// the user has choosen the coord before the piece
-				const choosenMove = new QuartoMove(this.choosenX, this.choosenY, this.pieceToGive);
-				return this.suggestMove(choosenMove);
+			if (this.chosenX !== -1) {
+				// the user has chosen the coord before the piece
+				const chosenMove = new QuartoMove(this.chosenX, this.chosenY, this.pieceToGive);
+				return this.suggestMove(chosenMove);
 			}
-			return true; // the user has just choosen his piece
+			return true; // the user has just chosen his piece
 		}
-		// the user choosed an empty piece, let's cancel this
+		// the user chose an empty piece, let's cancel this
 		this.cancelMove();
 		return false;
 	}
@@ -139,15 +139,15 @@ export class QuartoOldComponent extends OnlineGame {
 	}
 
 	cancelMove() {
-		// called when the user do a wrong move, then, we unselect his pieceToGive and/or the choosen coord
-		this.choosenX = -1;
-		this.choosenY = -1;
+		// called when the user do a wrong move, then, we unselect his pieceToGive and/or the chosen coord
+		this.chosenX = -1;
+		this.chosenY = -1;
 		this.pieceToGive = -1;
 	}
 
 	showPieceInHandOnBoard(x: number, y: number) {
-		this.choosenX = x;
-		this.choosenY = y;
+		this.chosenX = x;
+		this.chosenY = y;
 	}
 
 	isRemaining(pawn: number) {
@@ -156,14 +156,14 @@ export class QuartoOldComponent extends OnlineGame {
 
 	// creating method for OnlineQuarto
 
-	suggestMove(choosedMove: QuartoMove): boolean {
-		if (this.rules.isLegal(choosedMove)) {
+	suggestMove(chosenMove: QuartoMove): boolean {
+		if (this.rules.isLegal(chosenMove)) {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
-			this.choosenX = -1;
-			this.choosenY = -1;
-			this.updateDBBoard(choosedMove);
+			this.chosenX = -1;
+			this.chosenY = -1;
+			this.updateDBBoard(chosenMove);
 			/* if (this.rules.node.isEndGame()) {
 				if (this.rules.node.getOwnValue() === 0) {
 					this.notifyDraw();

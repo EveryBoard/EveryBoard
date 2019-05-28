@@ -213,14 +213,14 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
          */
 		const x: number = move.coord.x;
 		const y: number = move.coord.y;
-		const choosenPiece: number = move.piece;
+		const chosenPiece: number = move.piece;
 		const board: number[][] = quartoPartSlice.getCopiedBoard();
 		const pieceInHand: number = quartoPartSlice.pieceInHand;
-		if (choosenPiece < 0) {
+		if (chosenPiece < 0) {
 			// nombre trop bas, ce n'est pas une pièce
 			return QuartoRules.INVALID_MOVE;
 		}
-		if (choosenPiece > 16) {
+		if (chosenPiece > 16) {
 			if (QuartoRules.VERBOSE) { console.log(); }
 			// nombre trop grand, ce n'est pas une pièce
 			return QuartoRules.INVALID_MOVE;
@@ -229,18 +229,18 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
 			// on ne joue pas sur une case occupée
 			return QuartoRules.INVALID_MOVE;
 		}
-		if (choosenPiece === 16) {
+		if (chosenPiece === 16) {
 			if (quartoPartSlice.turn === 15) {
 				// on doit donner une pièce ! sauf au dernier tour
 				return QuartoRules.VALID_MOVE;
 			}
 			return QuartoRules.INVALID_MOVE;
 		}
-		if (!QuartoPartSlice.isPlacable(choosenPiece, board)) {
+		if (!QuartoPartSlice.isPlacable(chosenPiece, board)) {
 			// la piece est déjà sur le plateau
 			return QuartoRules.INVALID_MOVE;
 		}
-		if (pieceInHand === choosenPiece) {
+		if (pieceInHand === chosenPiece) {
 			// la pièce donnée est la même que celle en main, c'est illégal
 			return QuartoRules.INVALID_MOVE;
 		}

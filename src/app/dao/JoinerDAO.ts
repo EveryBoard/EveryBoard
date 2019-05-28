@@ -9,7 +9,7 @@ import {map} from 'rxjs/operators';
 })
 export class JoinerDAO {
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	constructor(private afs: AngularFirestore) {
 	}

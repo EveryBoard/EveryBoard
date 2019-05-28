@@ -9,7 +9,7 @@ import {Injectable} from '@angular/core';
 })
 export class PartDAO {
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	constructor(private afs: AngularFirestore) {}
 

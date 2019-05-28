@@ -1,17 +1,20 @@
-import {Component, OnInit} from '@angular/core';
-import {AbstractGameComponent} from '../AbstractGameComponent';
+import {Component} from '@angular/core';
+import {OnlineGame} from '../OnlineGame';
 import {MoveCoordToCoordAndCapture} from '../../../jscaip/MoveCoordToCoordAndCapture';
 import {Coord} from '../../../jscaip/Coord';
-import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
+import {ActivatedRoute, Router} from '@angular/router';
+import {UserService} from '../../../services/UserService';
+import {JoinerService} from '../../../services/JoinerService';
 import {TablutRules} from '../../../games/tablut/TablutRules';
+import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
+import {GameService} from '../../../services/GameService';
 
 @Component({
-	selector: 'app-tablut-new',
-	templateUrl: './tablut.component.html'
+	selector: 'app-tablut',
+	templateUrl: './tablut-old.component.html',
+	styleUrls: ['../onlineGame.css']
 })
-export class TablutComponent extends AbstractGameComponent {
-
-	static VERBOSE = false;
+export class TablutOldComponent extends OnlineGame {
 
 	rules = new TablutRules();
 
@@ -27,12 +30,17 @@ export class TablutComponent extends AbstractGameComponent {
 	chosenX = -1;
 	chosenY = -1;
 
+	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
+	}
+
 	updateBoard() {
 		const tablutPartSlice = this.rules.node.gamePartSlice as TablutPartSlice;
 		const move = this.rules.node.getMove() as MoveCoordToCoordAndCapture;
 		this.board = tablutPartSlice.getCopiedBoard();
-		// this.turn = tablutPartSlice.turn;
-		// this.currentPlayer = this.players[tablutPartSlice.turn % 2];
+		this.turn = tablutPartSlice.turn;
+		this.currentPlayer = this.players[tablutPartSlice.turn % 2];
 
 		if (move != null) {
 			this.movingX = move.coord.x;
@@ -44,18 +52,35 @@ export class TablutComponent extends AbstractGameComponent {
 		this.cancelMove();
 	}
 
-	onClick(event: MouseEvent) {
-		if (TablutComponent.VERBOSE) {
-			console.log('onClick');
-		}
-		let success: boolean;
-		if (this.chosenX === -1) {
-			success = this.choosePiece(event);
+	suggestMove(chosenMove: MoveCoordToCoordAndCapture): boolean {
+		let result: boolean;
+		if (this.rules.isLegal(chosenMove)) {
+			console.log('Et javascript estime que votre mouvement est légal');
+			// player make a correct move
+			// let's confirm on java-server-side that the move is legal
+			this.updateDBBoard(chosenMove);
+			/*if (this.rules.node.isEndGame()) {
+				if (this.rules.node.getOwnValue() === 0) {
+					this.notifyDraw();
+				} else {
+					this.notifyVictory();
+				}
+			}*/ // OLDLY
+			result = true;
 		} else {
-			success = this.chooseDestination(event);
-		}
-		if (!success) {
+			console.log('Mais c\'est un mouvement illegal');
+			result = false;
 			this.cancelMove();
+		}
+		return result;
+	}
+
+	onClick(event: MouseEvent) {
+		console.log('onClick');
+		if (this.chosenX === -1) {
+			this.choosePiece(event);
+		} else {
+			this.chooseDestination(event);
 		}
 	}
 
@@ -63,66 +88,57 @@ export class TablutComponent extends AbstractGameComponent {
 		const x: number = Number(event.srcElement.id.substring(2, 3));
 		const y: number = Number(event.srcElement.id.substring(1, 2));
 
-		if (TablutComponent.VERBOSE) {
-			console.log('chooseDestination');
+		console.log('chooseDestination');
+		if (!this.isPlayerTurn()) {
+			console.log('ce n\'est pas ton tour!');
+			return false;
 		}
 		if (this.rules.node.isEndGame()) {
-			if (TablutComponent.VERBOSE) {
-				console.log('la partie est finie');
-			}
+			console.log('la partie est finie');
 			return false;
 		} // TODO : refactor ça avec chooseCoord
 		if (this.chosenX === -1) {
-			if (TablutComponent.VERBOSE) {
-				console.log('choisis une pièce d\'abord');
-			}
+			console.log('choisis une pièce d\'abord');
 			return false;
 		} // TODO : vérifier au moins que la case n'est pas occupée
-		if (TablutComponent.VERBOSE) {
-			console.log('piece choisie, partie en cours, c\'est ton tour');
-		}
+		console.log('piece choisie, partie en cours, c\'est ton tour');
 		const chosenPiece: Coord = new Coord(this.chosenX, this.chosenY);
 		const chosenDestination: Coord = new Coord(x, y);
-		return this.chooseMove(new MoveCoordToCoordAndCapture(chosenPiece, chosenDestination));
+		return this.suggestMove(new MoveCoordToCoordAndCapture(chosenPiece, chosenDestination));
 	}
 
 	choosePiece(event: MouseEvent): boolean {
 		const x: number = Number(event.srcElement.id.substring(2, 3));
 		const y: number = Number(event.srcElement.id.substring(1, 2));
 
-		if (TablutComponent.VERBOSE) {
-			console.log('choosePiece');
+		console.log('choosePiece');
+		if (!this.isPlayerTurn()) {
+			console.log('ce n\'est pas ton tour!');
+			return false;
 		}
-		// if (!this.isPlayerTurn()) {
-		// 	console.log('ce n\'est pas ton tour!');
-		// 	return false;
-		// }
-		// console.log('c\'est ton tour');
+		console.log('c\'est ton tour');
 		if (this.rules.node.isEndGame()) {
-			if (TablutComponent.VERBOSE) {
-				console.log('la partie est finie');
-			}
+			console.log('la partie est finie');
 			return false;
 		}
 		this.hideLastMove(); // now the user tried to choose something
 		// so I guess he don't need to see what's the last move of the opponent
 
-		if (!this.pieceBelongToCurrentPlayer(x, y)) {
-			if (TablutComponent.VERBOSE) {
-				console.log('not a piece of the current player');
-			}
-			return false;
-		}
-
-		this.showSelectedPiece(x, y);
-		if (TablutComponent.VERBOSE) {
+		if (this.pieceBelongToPlayer(x, y)) {
+			this.showSelectedPiece(x, y);
 			console.log('selected piece = (' + x + ', ' + y + ')');
+			return true;
 		}
-		return true;
+		this.cancelMove();
+		console.log('no selected piece');
+		return false;
 	}
 
-	pieceBelongToCurrentPlayer(x: number, y: number): number { // TODO: see that verification is done and refactor this shit
-		const player = this.rules.node.gamePartSlice.turn % 2 === 0 ? 0 : 1;
+	pieceBelongToPlayer(x: number, y: number) {
+		if (this.observerRole > 1) {
+			throw new Error('pieceBelongToPlayer cannot be called by an observer');
+		}
+		const player = this.observerRole === 0 ? 0 : 1;
 		const invaderStart = (this.rules.node.gamePartSlice as TablutPartSlice).invaderStart;
 		const coord: Coord = new Coord(x, y);
 		return TablutRules.getRelativeOwner(player, invaderStart, coord, this.board);
@@ -147,6 +163,8 @@ export class TablutComponent extends AbstractGameComponent {
 	showSelectedPiece(x: number, y: number) {
 		this.chosenX = x;
 		this.chosenY = y;
+		// TODO : enlever le précédent s'il y en
+		// TODO : placer virtuellement la pieceInHand sur le board
 	}
 
 	decodeMove(encodedMove: number): MoveCoordToCoordAndCapture {

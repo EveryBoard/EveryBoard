@@ -52,12 +52,12 @@ export class ReversiComponent extends OnlineGame {
 
 		this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
 		// we stop showing him the last move
-		const choosedMove = new MoveCoord(x, y);
-		if (this.rules.isLegal(choosedMove)) {
+		const chosenMove = new MoveCoord(x, y);
+		if (this.rules.isLegal(chosenMove)) {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
-			this.updateDBBoard(choosedMove);
+			this.updateDBBoard(chosenMove);
 			/* if (this.rules.node.isEndGame()) {
 				if (this.rules.node.getOwnValue() === 0) {
 					this.notifyDraw();

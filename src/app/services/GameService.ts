@@ -18,7 +18,7 @@ import {MGPRequest} from '../domain/request';
 })
 export class GameService {
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	private followedPartId: string;
 	private followedPartObs: Observable<ICurrentPartId>;

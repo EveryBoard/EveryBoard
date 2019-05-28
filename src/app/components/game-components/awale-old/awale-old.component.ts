@@ -1,14 +1,23 @@
 import {Component} from '@angular/core';
-import {AbstractGameComponent} from '../AbstractGameComponent';
-import {AwaleRules} from '../../../games/awale/AwaleRules';
+import {ActivatedRoute, Router} from '@angular/router';
+
+import {OnlineGame} from '../OnlineGame';
+
 import {MoveCoord} from '../../../jscaip/MoveCoord';
+
+import {AwaleRules} from '../../../games/awale/AwaleRules';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 
+import {UserService} from '../../../services/UserService';
+import {JoinerService} from '../../../services/JoinerService';
+import {GameService} from '../../../services/GameService';
+
 @Component({
-	selector: 'app-awale-new-component',
-	templateUrl: './awale.component.html'
+	selector: 'app-awale',
+	templateUrl: './awale-old.component.html',
+	styleUrls: ['../onlineGame.css']
 })
-export class AwaleComponent extends AbstractGameComponent {
+export class AwaleOldComponent extends OnlineGame {
 
 	rules = new AwaleRules();
 
@@ -20,10 +29,19 @@ export class AwaleComponent extends AbstractGameComponent {
 	lastX = -1;
 	lastY = -1;
 
+	constructor(_route: Router, actRoute: ActivatedRoute, userService: UserService,
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
+	}
+
 	onClick(x: number, y: number): boolean {
 		if (this.rules.node.isEndGame()) {
 			console.log('Malheureusement la partie est finie');
 			// todo : option de clonage revision commentage
+			return false;
+		}
+		if (!this.isPlayerTurn()) {
+			console.log('Mais c\'est pas ton tour !'); // todo : réactive notification
 			return false;
 		}
 		console.log('ça tente bien c\'est votre tour');
@@ -38,7 +56,14 @@ export class AwaleComponent extends AbstractGameComponent {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
-			this.chooseMove(chosenMove);
+			this.updateDBBoard(chosenMove);
+			/*if (this.rules.node.isEndGame()) {
+				if (this.rules.node.getOwnValue() === 0) {
+					this.notifyDraw();
+				} else {
+					this.notifyVictory();
+				}
+			}*/ // OLDLY
 		} else {
 			console.log('Mais c\'est un mouvement illegal');
 		}
@@ -70,8 +95,8 @@ export class AwaleComponent extends AbstractGameComponent {
 		} else {
 			this.board = awalePartSlice.getCopiedBoard().reverse();
 		}
-		// this.turn = awalePartSlice.turn;
-		// this.currentPlayer = this.players[awalePartSlice.turn % 2];
+		this.turn = awalePartSlice.turn;
+		this.currentPlayer = this.players[awalePartSlice.turn % 2];
 
 		this.scores = awalePartSlice.getCapturedCopy();
 		if (awaleMove != null) {

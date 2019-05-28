@@ -11,7 +11,47 @@
 	<div id="game" class="flex-container"
 		 *ngIf="gameStarted === true">
 
-		<ng-template appGameIncluder></ng-template>
+		<div id="board" class="flex-container circled col-sm-9">
+			<table *ngIf="observerRole!=1">
+				<tr style="margin:0px; padding:0px;"
+					*ngFor="let line of board; index as y;">
+					<td *ngFor="let case of line; index as x;"
+						style="position:relative;"
+						(click)="onClick(x, 1-y)">
+						<img width="50" heigh="50"
+							 id="{{ 't'+y+x }}"
+							 alt=":{{ case }}:"
+							 [src]="imagesLocation + 'circled_numbers/' + case + '.svg'"/>
+						<img *ngIf="lastX === x && lastY === (1-y)"
+							 width="50" heigh="50"
+							 id="{{ 'u'+y+x }}"
+							 alt=":{{ case }}:"
+							 [src]="imagesLocation + 'highlight.svg'"
+							 style="position:absolute; top:0; left:0;"/>
+					</td>
+				</tr>
+			</table>
+
+			<table *ngIf="observerRole==1">
+				<tr style="margin:0px; padding:0px;"
+					*ngFor="let line of board; index as y;">
+					<td *ngFor="let case of line; index as x;"
+						style="position:relative;"
+						(click)="onClick(5-x, y);">
+						<img width="50" heigh="50"
+							 id="{{ 'v'+y+x }}"
+							 alt=":{{ case }}:"
+							 [src]="imagesLocation + 'circled_numbers/' + case + '.svg'"/>
+						<img *ngIf="lastX === (5-x) && lastY === y"
+							 width="50" heigh="50"
+							 id="{{ 'w'+y+x }}"
+							 alt=":{{ case }}:"
+							 [src]="imagesLocation + 'highlight.svg'"
+							 style="position:absolute; top:0; left:0;"/>
+					</td>
+				</tr>
+			</table>
+		</div>
 
 		<div id="info" class="circled col-sm-3">
 			<div *ngIf="players" class="inforow">
@@ -88,8 +128,7 @@
 	</div>
 
 	<div id="chat" class="circled" style="height: 40%; max-height: 40%; float: bottom;">
-		<app-chat [userName]="userName"
-				  [chatId]="partId"
+		<app-chat [chatId]="partId"
 				  [turn]="turn"></app-chat>
 	</div>
 

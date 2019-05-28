@@ -1,23 +1,22 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-
-import {OnlineGame} from '../OnlineGame';
-import {Move} from '../../../jscaip/Move';
-
-import {MoveX} from '../../../jscaip/MoveX';
 import {P4PartSlice} from '../../../games/p4/P4PartSlice';
+import {MoveX} from '../../../jscaip/MoveX';
 import {P4Rules} from '../../../games/p4/P4Rules';
-
+import {ActivatedRoute, Router} from '@angular/router';
+import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
-import {UserService} from '../../../services/UserService';
+import {Move} from '../../../jscaip/Move';
+import {AbstractGameComponent} from '../AbstractGameComponent';
 
 @Component({
-	selector: 'app-p4',
+	selector: 'app-p4-new',
 	templateUrl: './p4.component.html',
-	styleUrls: ['../onlineGame.css']
+	styleUrls: []
 })
-export class P4Component extends OnlineGame {
+export class P4Component extends AbstractGameComponent {
+
+	/*************************** Common Fields **************************/
 
 	rules = new P4Rules();
 
@@ -27,10 +26,20 @@ export class P4Component extends OnlineGame {
 
 	lastX: number;
 
-	constructor(_route: Router, actRoute: ActivatedRoute,
-				userService: UserService,
-				joinerService: JoinerService, partService: GameService) {
-		super(_route, actRoute, userService, joinerService, partService);
+	onClick(x: number) {
+		console.log('click');
+		const chosenMove = MoveX.get(x);
+		this.chooseMove(chosenMove);
+	}
+
+	updateBoard() {
+		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
+		const lastMove: MoveX = this.rules.node.getMove() as MoveX;
+
+		this.board = p4PartSlice.getCopiedBoard().reverse();
+		if (lastMove !== null) {
+			this.lastX = lastMove.x;
+		}
 	}
 
 	decodeMove(encodedMove: number): Move {
@@ -39,49 +48,6 @@ export class P4Component extends OnlineGame {
 
 	encodeMove(move: MoveX): number {
 		return move.x;
-	}
-
-	updateBoard(): void {
-		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
-		const lastMove: MoveX = this.rules.node.getMove() as MoveX;
-
-		this.board = p4PartSlice.getCopiedBoard().reverse();
-		this.turn = p4PartSlice.turn;
-		this.currentPlayer = this.players[p4PartSlice.turn % 2];
-
-		if (lastMove !== null) {
-			this.lastX = lastMove.x;
-		}
-	}
-
-	onClick(x: number): boolean {
-		if (this.rules.node.isEndGame()) {
-			console.log('Malheureusement la partie est finie');
-			// todo : option de clonage revision commentage
-			return false;
-		}
-		if (!this.isPlayerTurn()) {
-			console.log('Mais c\'est pas ton tour !');
-			return false;
-		}
-
-		// player's turn
-		const choosedMove = MoveX.get(x);
-		if (this.rules.isLegal(choosedMove)) {
-			console.log('Et javascript estime que votre mouvement est légal');
-			// player make a correct move
-			// let's confirm on java-server-side that the move is legal
-			this.updateDBBoard(choosedMove);
-			/* if (this.rules.node.isEndGame()) {
-				if (this.rules.node.getOwnValue() === 0) {
-					this.notifyDraw();
-				} else {
-					this.notifyVictory();
-				}
-			} */ // OLDLY
-		} else {
-			console.log('Mais c\'est un mouvement illegal');
-		}
 	}
 
 }

@@ -199,7 +199,7 @@ export class TablutRules extends Rules {
 			nbInvaders += (right === this.PLAYER ? 1 : 0);
 			if (nbInvaders === 2 && this.THREE_INVADER_AND_A_BORDER_CAN_CAPTURE_KING) { // 2
 				// king captured by 3 invaders against 1 border
-				if (this.VERBOSE || localVerbose) {
+				if (TablutRules.VERBOSE || localVerbose) {
 					console.log('king captured by 3 invaders against 1 border'); }
 				return kingCoord;
 			} else if (nbInvaders === 1) {
@@ -207,7 +207,7 @@ export class TablutRules extends Rules {
 					this.isEmptyThrone(rightCoord, board)) {
 					if (this.CAPTURE_KING_AGAINST_THRONE_RULES) { //////////////////////// 3
 						// king captured by 1 border, 1 throne, 2 invaders
-						if (this.VERBOSE || localVerbose) {
+						if (TablutRules.VERBOSE || localVerbose) {
 							console.log('king captured by 3 invaders against 1 border'); }
 						return kingCoord;
 					}
@@ -224,24 +224,24 @@ export class TablutRules extends Rules {
 				return null;
 			} // here king is capturable by this empty throne
 			if (this.NORMAL_CAPTURE_WORK_ON_THE_KING) { ////////////////////////////////// 7
-				if (this.VERBOSE || localVerbose) {
+				if (TablutRules.VERBOSE || localVerbose) {
 					console.log('king captured by 1 invader and 1 throne'); }
 				return kingCoord; // king captured by 1 invader and 1 throne
 			}
 			if (left === this.PLAYER && right === this.PLAYER) {
-				if (this.VERBOSE || localVerbose) {
+				if (TablutRules.VERBOSE || localVerbose) {
 					console.log('king captured by 3 invaders + 1 throne'); }
 				return kingCoord; // king captured by 3 invaders + 1 throne
 			}
 		}
 		if (back === this.PLAYER) {
 			if (this.NORMAL_CAPTURE_WORK_ON_THE_KING) {
-				if (this.VERBOSE || localVerbose) {
+				if (TablutRules.VERBOSE || localVerbose) {
 					console.log('king captured by two invaders'); }
 				return kingCoord; // king captured by two invaders
 			}
 			if (left === this.PLAYER && right === this.PLAYER) {
-				if (this.VERBOSE || localVerbose) {
+				if (TablutRules.VERBOSE || localVerbose) {
 					console.log('king captured by 4 invaders'); }
 				return kingCoord; // king captured by 4 invaders
 			}
@@ -452,7 +452,9 @@ export class TablutRules extends Rules {
 
 	static getInvaderVictoryValue(n: MNode<TablutRules>): number {
 		const tablutPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
-		console.log('invader victory !');
+		if (TablutRules.VERBOSE) {
+			console.log('invader victory !');
+		}
 		if (tablutPartSlice.invaderStart) {
 			return Number.MIN_SAFE_INTEGER;
 		}

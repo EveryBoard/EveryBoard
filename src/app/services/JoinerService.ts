@@ -8,7 +8,7 @@ import {JoinerDAO} from '../dao/JoinerDAO';
 })
 export class JoinerService {
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	private followedJoinerId: string;
 	private followedJoinerObs: Observable<IJoinerId>;

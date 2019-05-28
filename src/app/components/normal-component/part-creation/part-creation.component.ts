@@ -23,7 +23,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	 * they need common data so mother calculate/retrieve then share them with her child
 	 */
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	@Input() partId: string;
 	@Input() userName: string;
@@ -96,7 +96,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		console.log('part-creation-component destroying');
+		if (PartCreationComponent.VERBOSE) {
+			console.log('part-creation-component destroying');
+		}
 		if (this.userSub && this.userSub.unsubscribe) {
 			this.userSub.unsubscribe();
 		}

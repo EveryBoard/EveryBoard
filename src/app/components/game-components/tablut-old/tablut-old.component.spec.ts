@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { AbortedGameWrapperComponent } from './aborted-game-wrapper.component';
+import { TablutOldComponent } from './tablut-old.component';
 
-describe('AbortedGameWrapperComponent', () => {
-  let component: AbortedGameWrapperComponent;
-  let fixture: ComponentFixture<AbortedGameWrapperComponent>;
+describe('TablutOldComponent', () => {
+  let component: TablutOldComponent;
+  let fixture: ComponentFixture<TablutOldComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ AbortedGameWrapperComponent ]
+      declarations: [ TablutOldComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(AbortedGameWrapperComponent);
+    fixture = TestBed.createComponent(TablutOldComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

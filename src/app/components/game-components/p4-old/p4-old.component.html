@@ -1,62 +1,35 @@
-<!--
 <div class="container-fluid"
 	 style="height: 88%; max-height: 88%">
 
-	<div id="game" class="flex-container">
+	<app-part-creation id="partCreation"
+					   *ngIf="gameStarted === false"
+					   [partId]="partId"
+					   [userName]="userName"
+					   (gameStartNotification)="startGame()">
+	</app-part-creation>
+
+	<div id="game" class="flex-container"
+		 *ngIf="gameStarted === true">
 
 		<div id="board" class="flex-container circled col-sm-9">
-
-			<div id="gameboard">
-				<table (click)="chooseCoord($event);">
-					<tr *ngFor="let line of board; index as y;">
-						<td *ngFor="let case of line; index as x;"
-							style="position:relative;">
-							<img *ngIf="(lastX===x && lastY===y) || (chosenX===x && chosenY===y)"
-								 width="50" height="50"
-								 id="{{'t'+y+x}}"
-								 alt="highlighted"
-								 [src]="imagesLocation+'squared_highlight.svg'"
-								 style="position:absolute; top:0; left:0;"/>
-							<img width="50" height="50"
-								 id="{{'u'+y+x}}"
-								 alt=":{{ case }}:"
-								 [src]='imagesLocation+"quarto/"+[case]+".svg"'/>
-							<img *ngIf="(chosenX===x && chosenY===y)"
-								 width="50" height="50"
-								 id="{{'v'+y+x}}"
-								 alt="piece in hand that you just put on the board"
-								 [src]="imagesLocation+'quarto/'+pieceInHand+'.svg'"
-								 style="position:absolute; top:0; left:0;"/>
-						</td>
-					</tr>
-				</table>
-				Pièce en main :
-				<img *ngIf="chosenX === -1" width="50" height="50"
-					 alt=":{{ pieceInHand }}:"
-					 [src]='imagesLocation+"quarto/"+pieceInHand+".svg"'/>
-			</div>
-
-			<div id="piece">
-				<table (click)="choosePiece($event);">
-					<tr *ngFor="let line of board; index as y;">
-						<td *ngFor="let case of line; index as x;"
-							style="position:relative;">
-							<img *ngIf="isRemaining((4*y)+x)"
-								 width="50" height="50"
-								 id="{{'p'+((4*y)+x)}}"
-								 alt=":{{ ((4*y)+x) }}:"
-								 [src]='imagesLocation+"quarto/"+((4*y)+x)+".svg"'/>
-							<img *ngIf="((4*y)+x) === pieceToGive"
-								 width="50" height="50"
-								 id="{{'q'+((4*y)+x)}}"
-								 alt="highlighted"
-								 [src]="imagesLocation+'squared_highlight.svg'"
-								 style="position:absolute; top:0; left:0;"/>
-						</td>
-					</tr>
-				</table>
-			</div>
-
+			<table>
+				<tr *ngFor="let line of board; index as y;">
+					<td *ngFor="let case of line; index as x;"
+						style="position:relative;"
+						(click)="onClick(x);">
+						<img width="50" height="50"
+							 id="{{'t'+y+x}}"
+							 alt=":{{ case }}:"
+							 [src]='imagesLocation+imagesNames[case]'/>
+						<img *ngIf="lastX===x"
+							 width="50" height="50"
+							 id="{{'u'+y+x}}"
+							 alt="highlighted"
+							 [src]="imagesLocation+'highlight.svg'"
+							 style="position:absolute; top:0; left:0;"/>
+					</td>
+				</tr>
+			</table>
 		</div>
 
 		<div id="info" class="circled col-sm-3">
@@ -104,8 +77,8 @@
 					Passer son tour
 				</button>
 			</div>
-			&lt;!&ndash;<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
-			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> &ndash;&gt;
+			<!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
+			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> -->
 			<div *ngIf="endGame && (observerRole < 2)" class="inforow">
 				<button *ngIf="!rematchProposed"
 						(click)="proposeRematch()">
@@ -134,10 +107,8 @@
 	</div>
 
 	<div id="chat" class="circled" style="height: 40%; max-height: 40%; float: bottom;">
-		<app-chat [userName]="userName"
-				  [chatId]="partId"
+		<app-chat [chatId]="partId"
 				  [turn]="turn"></app-chat>
 	</div>
 
 </div>
--->

@@ -8,6 +8,7 @@ export abstract class AbstractGameComponent {
 
 	canPass: boolean;
 	chooseMove: (move: Move) => boolean;
+	observerRole: number;
 	/* all game rules should be able to call the game-wrapper
 	 * the aim is that the game-wrapper will take care of manage what follow
 	 * ie:  - if it's online, he'll tell the game-component when the remote opponent has played
@@ -25,10 +26,5 @@ export abstract class AbstractGameComponent {
 	abstract decodeMove(encodedMove: number): Move;
 
 	abstract encodeMove(move: Move): number;
-
-	unherited() {
-		// there is a common behavior to all of them
-		console.log('all faithfull child do this!');
-	}
 
 }

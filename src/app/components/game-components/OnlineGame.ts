@@ -17,7 +17,7 @@ import {CountDownComponent} from '../normal-component/count-down/count-down.comp
 
 export abstract class OnlineGame implements OnInit, OnDestroy {
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	rules: Rules; // moved to: AbstractGameComponent
 	@ViewChild('chronoZeroGlobal') chronoZeroGlobal: CountDownComponent; // moved to: GameWrapper
@@ -215,13 +215,13 @@ export abstract class OnlineGame implements OnInit, OnDestroy {
 		}
 		while (this.rules.node.gamePartSlice.turn < nbPlayedMoves) {
 			currentPartTurn = this.rules.node.gamePartSlice.turn;
-			const choosedMove = this.decodeMove(listMoves[currentPartTurn]);
+			const chosenMove = this.decodeMove(listMoves[currentPartTurn]);
 			// console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
-			// 	+ listMoves + ' choosed move : ' + choosedMove);
-			const correctDBMove: boolean = this.rules.choose(choosedMove);
+			// 	+ listMoves + ' chosen move : ' + chosenMove);
+			const correctDBMove: boolean = this.rules.choose(chosenMove);
 			updateIsMove = true;
 			if (!correctDBMove) {
-				console.log('!!!!!!we received an incorrect db move !' + choosedMove + ' and ' + listMoves);
+				console.log('!!!!!!we received an incorrect db move !' + chosenMove + ' and ' + listMoves);
 			}
 			// NEWLY :
 			if (this.rules.node.isEndGame()) {

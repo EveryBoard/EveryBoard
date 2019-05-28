@@ -84,24 +84,28 @@ export class MNode<R extends Rules> {
        * because it's how we encode the boardValue if there's a victory
        */
 		if (score === Number.MAX_SAFE_INTEGER) {
-			console.log('VICTORY');
+			if (MNode.VERBOSE) {
+				console.log('VICTORY');
+			}
 			return SCORE.VICTORY;
 		}
 		if (score === Number.MIN_SAFE_INTEGER) {
-			console.log('VICTORY');
+			if (MNode.VERBOSE) {
+				console.log('VICTORY');
+			}
 			return SCORE.VICTORY;
 		}
 		if (score === Number.MIN_SAFE_INTEGER + 1) {
 			if (MNode.VERBOSE) {
 				console.log('PRE_VICTORY_MIN');
-				return SCORE.PRE_VICTORY;
 			}
+			return SCORE.PRE_VICTORY;
 		}
 		if (score === Number.MAX_SAFE_INTEGER - 1) {
 			if (MNode.VERBOSE) {
 				console.log('PRE_VICTORY_MAX');
-				return SCORE.PRE_VICTORY;
 			}
+			return SCORE.PRE_VICTORY;
 		}
 		return SCORE.DEFAULT;
 	}
@@ -294,38 +298,38 @@ export class MNode<R extends Rules> {
        * g. l'ajouter à this.childs
        * h. ne rien changer à sa depth avant que la Node ne soit calculée
        */
-		const localVerbose = false;
+		const LOCAL_VERBOSE = false;
 		const moves: {
 			key: Move;
 			value: GamePartSlice;
 		}[] = MNode.ruler.getListMoves(this);
 		this.childs = new Array<MNode<R>>();
-		if (MNode.VERBOSE || localVerbose) {
+		if (MNode.VERBOSE || LOCAL_VERBOSE) {
 			console.log('createChilds received listMoves from ruler');
 			console.log(moves);
 		}
 		for (const entry of moves) {
-			if (MNode.VERBOSE || localVerbose) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('in the loop');
 				console.log(entry);
 			}
 			const move: Move = entry.key;
 			const board: GamePartSlice = entry.value;
-			if (MNode.VERBOSE || localVerbose) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('move and board retrieved from the entry');
 			}
 			const child: MNode<R> = new MNode<R>(this, move, board);
-			if (MNode.VERBOSE || localVerbose) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('child created');
 				console.log(child);
 			}
 			this.childs.push(child);
 		}
-		if (MNode.VERBOSE || localVerbose) {
+		if (MNode.VERBOSE || LOCAL_VERBOSE) {
 			console.log('out of the loop');
 		}
 		if (this.isEndGame()) {
-			if (MNode.VERBOSE || localVerbose) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('Node.createChilds has found a endGame');
 			}
 		}
@@ -492,41 +496,41 @@ export class MNode<R extends Rules> {
    } */
 
 	isEndGame(): boolean {
-		const localVerbose = true;
+		const LOCAL_VERBOSE = false;
 
 		const scoreStatus: SCORE = MNode.getScoreStatus(this.ownValue);
-		if (MNode.VERBOSE || localVerbose) {
+		if (MNode.VERBOSE || LOCAL_VERBOSE) {
 			console.log('\nscoreStatus === ' + scoreStatus + '; ');
 		}
 
 		if (scoreStatus === SCORE.VICTORY) {
-			if (MNode.VERBOSE || localVerbose) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('MNode.isEndGame by victory');
 			}
 			return true;
 		}
 
 		if (this.childs === null) {
-			if (MNode.VERBOSE || localVerbose) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('uncalculated childs : [calculating childs...]');
 			}
 			this.createChilds();
 		}
 
-		if (MNode.VERBOSE || localVerbose) {
+		if (MNode.VERBOSE || LOCAL_VERBOSE) {
 			if (this.childs) {
 				console.log(this.childs.length + ' childs; ');
 			}
 		}
 
 		if (this.childs && this.childs.length === 0) {
-			if (MNode.VERBOSE || localVerbose) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('MNode.isEndGame by  by no-child after calculation');
 			}
 			return true;
 		}
 
-		if (MNode.VERBOSE || localVerbose) {
+		if (MNode.VERBOSE || LOCAL_VERBOSE) {
 			console.log('MNode.isEndGame : no (childs and normal score)');
 		}
 
