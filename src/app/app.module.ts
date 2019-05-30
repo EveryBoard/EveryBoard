@@ -35,20 +35,21 @@ import {QuartoOldComponent} from './components/game-components/quarto_old/quarto
 import {P4OldComponent} from './components/game-components/p4-old/p4-old.component';
 import {AwaleOldComponent} from './components/game-components/awale-old/awale-old.component';
 import {TablutOldComponent} from './components/game-components/tablut-old/tablut-old.component';
-import {QuartoOfflineComponent} from './components/offline-components/quarto-offline/quarto-offline.component';
 import {TablutOfflineComponent} from './components/offline-components/tablut-offline/tablut-offline.component';
 import {PartCreationComponent} from './components/normal-component/part-creation/part-creation.component';
 import {ChatComponent} from './components/normal-component/chat/chat.component';
 import {ChatService} from './services/ChatService';
-import {ReversiComponent} from './components/game-components/reversi/reversi.component';
+import {ReversiOldComponent} from './components/game-components/reversi-old/reversi-old.component';
 import {OldCountDownComponent} from './components/normal-component/old-count-down/old-count-down.component';
 import {CountDownComponent} from './components/normal-component/count-down/count-down.component';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {P4Component} from './components/game-components/p4/p4.component';
-import {GameWrapperComponent} from './components/game-components/game-wrapper/game-wrapper.component';
+import {OnlineGameWrapperComponent} from './components/game-components/online-game-wrapper/online-game-wrapper.component';
 import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
 import { TablutComponent } from './components/game-components/tablut/tablut.component';
 import { AwaleComponent } from './components/game-components/awale/awale.component';
+import { ReversiComponent } from './components/game-components/reversi/reversi.component';
+import { LocalGameWrapperComponent } from './components/game-components/local-game-wrapper/local-game-wrapper.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -60,15 +61,15 @@ const routes: Route [] = [
 
 	{path: 'P4Offline',			component: P4OfflineComponent},
 	{path: 'AwaleOffline',		component: AwaleOfflineComponent},
-	{path: 'QuartoOffline',		component: QuartoOfflineComponent},
 
 	{path: 'QuartoOld/:id',		component: QuartoOldComponent},
 	{path: 'Awale/:id',			component: AwaleOldComponent},
 	{path: 'Tablut/:id',		component: TablutOldComponent},
 	{path: 'P4/:id',			component: P4OldComponent},
-	{path: 'Reversi/:id',		component: ReversiComponent},
+	{path: 'Reversi/:id',		component: ReversiOldComponent},
 
-	{path: 'play/:compo/:id',	component: GameWrapperComponent},
+	{path: 'play/:compo/:id',	component: OnlineGameWrapperComponent},
+	{path: 'local/:compo',		component: LocalGameWrapperComponent},
 	{path: '', redirectTo: 'server', pathMatch: 'full'},
 	{path: '**', 				component: ServerPageComponent}
 ];
@@ -87,29 +88,35 @@ const routes: Route [] = [
 		CreateAccountComponent,
 		PartCreationComponent,
 
-		QuartoComponent,
-
-		P4OldComponent,
 		AwaleOldComponent,
+		P4OldComponent,
+		QuartoOldComponent,
+		ReversiOldComponent,
 		TablutOldComponent,
 
-		QuartoOldComponent,
+		OldCountDownComponent,
+
 		AwaleOfflineComponent,
 		P4OfflineComponent,
-		QuartoOfflineComponent,
 		TablutOfflineComponent,
-		ReversiComponent,
 
-		OldCountDownComponent,
 		CountDownComponent,
-		P4Component,
-		GameWrapperComponent,
+		OnlineGameWrapperComponent,
 		GameIncluderComponent,
-		TablutComponent,
+		LocalGameWrapperComponent,
+
 		AwaleComponent,
+		P4Component,
+		QuartoComponent,
+		ReversiComponent,
+		TablutComponent,
 	],
 	entryComponents: [
-		P4Component, QuartoComponent, TablutComponent
+		AwaleComponent,
+		P4Component,
+		QuartoComponent,
+		TablutComponent,
+		ReversiComponent
 	],
 	imports: [
 		BrowserModule,

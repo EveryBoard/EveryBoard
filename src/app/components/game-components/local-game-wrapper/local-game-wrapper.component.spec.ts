@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { GameWrapperComponent } from './game-wrapper.component';
+import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 
-describe('GameWrapperComponent', () => {
-  let component: GameWrapperComponent;
-  let fixture: ComponentFixture<GameWrapperComponent>;
+describe('LocalGameWrapperComponent', () => {
+  let component: LocalGameWrapperComponent;
+  let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ GameWrapperComponent ]
+      declarations: [ LocalGameWrapperComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(GameWrapperComponent);
+    fixture = TestBed.createComponent(LocalGameWrapperComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

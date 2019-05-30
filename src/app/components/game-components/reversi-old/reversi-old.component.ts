@@ -1,18 +1,19 @@
-import {Component, OnInit} from '@angular/core';
-import {AbstractGameComponent} from '../AbstractGameComponent';
-import {ReversiRules} from '../../../games/reversi/ReversiRules';
+import {Component} from '@angular/core';
+import {OnlineGame} from '../OnlineGame';
 import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
-import {ReversiPartSlice} from '../../../games/reversi/ReversiPartSlice';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
+import {ReversiRules} from '../../../games/reversi/ReversiRules';
+import {ReversiPartSlice} from '../../../games/reversi/ReversiPartSlice';
 
 @Component({
 	selector: 'app-reversi',
-	templateUrl: './reversi.component.html'
+	templateUrl: './reversi-old.component.html',
+	styleUrls: ['../onlineGame.css']
 })
-export class ReversiComponent extends AbstractGameComponent {
+export class ReversiOldComponent extends OnlineGame {
 
 	rules = new ReversiRules();
 
@@ -22,6 +23,12 @@ export class ReversiComponent extends AbstractGameComponent {
 	lastX = -1;
 	lastY = -1;
 	canPass = false;
+
+	constructor(_route: Router, actRoute: ActivatedRoute,
+				userService: UserService,
+				joinerService: JoinerService, partService: GameService) {
+		super(_route, actRoute, userService, joinerService, partService);
+	}
 
 	onClick(x: number, y: number): boolean {
 		const reversiPartSlice = this.rules.node.gamePartSlice as ReversiPartSlice;
@@ -34,6 +41,12 @@ export class ReversiComponent extends AbstractGameComponent {
 			// todo : option de clonage revision commentage
 			return false;
 		}
+		if (!this.isPlayerTurn()) {
+			console.log('Mais c\'est pas ton tour !'); // todo : réactive notification
+			return false;
+		}
+		console.log('ça tente bien c\'est votre tour');
+		// player's turn
 
 		console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
 
@@ -44,7 +57,14 @@ export class ReversiComponent extends AbstractGameComponent {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
-			this.chooseMove(chosenMove);
+			this.updateDBBoard(chosenMove);
+			/* if (this.rules.node.isEndGame()) {
+				if (this.rules.node.getOwnValue() === 0) {
+					this.notifyDraw();
+				} else {
+					this.notifyVictory();
+				}
+			}*/ // OLDLY
 		} else {
 			console.log('Mais c\'est un mouvement illegal');
 		}
@@ -75,6 +95,8 @@ export class ReversiComponent extends AbstractGameComponent {
 		const moveCoord: MoveCoord = this.rules.node.getMove() as MoveCoord;
 
 		this.board = reversiPartSlice.getCopiedBoard();
+		this.turn = reversiPartSlice.turn;
+		this.currentPlayer = this.players[reversiPartSlice.turn % 2];
 
 		if (moveCoord != null) {
 			this.lastX = moveCoord.coord.x;
@@ -82,7 +104,7 @@ export class ReversiComponent extends AbstractGameComponent {
 		}
 		console.log('f9 choices : ' + JSON.stringify(ReversiRules.getListMoves(reversiPartSlice)));
 		console.log('f9 board value : ' + this.rules.node.getOwnValue());
-		if (ReversiRules.playerCanOnlyPass(reversiPartSlice)) { // && (!this.endGame)
+		if (ReversiRules.playerCanOnlyPass(reversiPartSlice) && (!this.endGame)) {
 			console.log('f9 l\'utilisateur ne peut que passer son tour!');
 			this.canPass = true;
 		} else {

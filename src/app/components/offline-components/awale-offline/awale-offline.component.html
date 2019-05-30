@@ -1,12 +1,12 @@
-<div style="align:center">
+<div>
 	<table (click)="choose($event);">
-		<tr style="margin:0px; padding:0px;"
+		<tr style="margin:0; padding:0;"
 			*ngFor="let line of board; trackBy: trackByLine; index as y;">
-			<td *ngFor="let case of line; trackBy: trackByCase; index as x; ">
-				<img width="100" heigh="100"
+			<td *ngFor="let caseContent of line; trackBy: trackByCase; index as x; ">
+				<img width="100"
 					 id="{{'t'+y.toString()+x}}"
-					 alt=":{{ case }}:"
-					 src="{{ imagesLocation + case + '.svg'}}"/>
+					 alt=":{{ caseContent }}:"
+					 src="{{ imagesLocation + caseContent + '.svg'}}"/>
 			</td>
 		</tr>
 	</table>

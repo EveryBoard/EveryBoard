@@ -113,9 +113,10 @@ export class UserService {
 		this.userDao.updateUserById(id, {
 			lastActionTime: Date.now(),
 			status: -2 // TODO calculate what that must be
-		}); // TODO addPart .then
-		this.changeUser(pseudo, id, code);
-		this._route.navigate(['/server']);
+		}).then(onfullfilled => {
+			this.changeUser(pseudo, id, code);
+			this._route.navigate(['/server']);
+		});
 	}
 
 	// Delegate

@@ -12,7 +12,7 @@ export class AwaleComponent extends AbstractGameComponent {
 
 	rules = new AwaleRules();
 
-	scores: number[] = [0, 0];
+	// scores: number[] = [0, 0];
 
 	imagesLocation = 'assets/images/'; // en prod
 	// imagesLocation = 'src/assets/images/'; // en dev
@@ -21,12 +21,12 @@ export class AwaleComponent extends AbstractGameComponent {
 	lastY = -1;
 
 	onClick(x: number, y: number): boolean {
+		console.log('Observeur role : ' + this.observerRole);
 		if (this.rules.node.isEndGame()) {
 			console.log('Malheureusement la partie est finie');
 			// todo : option de clonage revision commentage
 			return false;
 		}
-		console.log('ça tente bien c\'est votre tour');
 		// player's turn
 
 		console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
@@ -58,7 +58,6 @@ export class AwaleComponent extends AbstractGameComponent {
 	}
 
 	updateBoard(): void {
-		console.log('updateBoard');
 		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
 		const awaleMove: MoveCoord = this.rules.node.getMove() as MoveCoord;
 
@@ -70,10 +69,8 @@ export class AwaleComponent extends AbstractGameComponent {
 		} else {
 			this.board = awalePartSlice.getCopiedBoard().reverse();
 		}
-		// this.turn = awalePartSlice.turn;
-		// this.currentPlayer = this.players[awalePartSlice.turn % 2];
 
-		this.scores = awalePartSlice.getCapturedCopy();
+		// this.scores = awalePartSlice.getCapturedCopy(); // TODO: vérifier que le score s'affiche bien
 		if (awaleMove != null) {
 			this.lastX = awaleMove.coord.x;
 			this.lastY = awaleMove.coord.y;

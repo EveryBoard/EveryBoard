@@ -68,7 +68,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 	}
 
 	playLocally() {
-		this._route.navigate([this.selectedGame + 'Offline']);
+		// this._route.navigate([this.selectedGame + 'Offline']); // OLDLY
+		this._route.navigate(['local/' + this.selectedGame]);
 	}
 
 	createGame() {
