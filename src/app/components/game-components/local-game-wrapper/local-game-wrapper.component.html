@@ -1,5 +1,5 @@
 <div class="container-fluid"
-	 style="height: 88%; max-height: 88%">
+	 style="height: 100%; max-height: 100%">
 
 	<div id="game" class="flex-container">
 
@@ -8,8 +8,8 @@
 		</div>
 
 		<div id="info" class="circled col-sm-3">
-			<div style="text-align:center" *ngIf="componentInstance">
-				Tour : {{ componentInstance.rules.node.gamePartSlice.turn }} <br/>
+			<div style="text-align:center" *ngIf="compo">
+				Tour : {{ compo.rules.node.gamePartSlice.turn }} <br/>
 				Joueur 0 : <button (click)="switchPlayerOne()">{{ this.players[0] === 'bot' ? 'Robot' : 'Humain' }}</button><br/>
 				Joueur 1 : <button (click)="switchPlayerTwo()">{{ this.players[1] === 'bot' ? 'Robot' : 'Humain' }}</button>
 			</div>

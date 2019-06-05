@@ -42,8 +42,8 @@ export class GameService {
 			playerZero: creatorName,
 			playerOne: chosenPlayer,
 			result: 5, // todo : constantiser ça, bordel
-			scorePlayerZero: 'pas implémenté',
-			scorePlayerOne: 'pas implémenté',
+			scorePlayerZero: null,
+			scorePlayerOne: null,
 			turn: -1,
 			typeGame: typeGame,
 			winner: ''
@@ -322,7 +322,7 @@ export class GameService {
 		});
 	}
 
-	updateDBBoard(encodedMove: number, partId: string): Promise<void> {
+	updateDBBoard(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number, partId: string): Promise<void> {
 		return this.partDao.readPartById(partId)
 			.then(part => {
 				const turn: number = part.turn + 1;
@@ -332,6 +332,8 @@ export class GameService {
 					.updatePartById(partId, {
 						'listMoves': listMoves,
 						'turn': turn,
+						'scorePlayerZero': scorePlayerZero,
+						'scorePlayerOne': scorePlayerOne,
 						request: null
 					})
 					.catch(onRejected => {

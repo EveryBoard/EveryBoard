@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import {MoveCoordToCoordAndCapture} from '../../../jscaip/MoveCoordToCoordAndCapture';
 import {Coord} from '../../../jscaip/Coord';
@@ -83,7 +83,8 @@ export class TablutComponent extends AbstractGameComponent {
 		}
 		const chosenPiece: Coord = new Coord(this.chosenX, this.chosenY);
 		const chosenDestination: Coord = new Coord(x, y);
-		return this.chooseMove(new MoveCoordToCoordAndCapture(chosenPiece, chosenDestination));
+		const move = new MoveCoordToCoordAndCapture(chosenPiece, chosenDestination);
+		return this.chooseMove(move, null, null);
 	}
 
 	choosePiece(event: MouseEvent): boolean {

@@ -47,7 +47,11 @@ export class ChatService {
 				messages.push(newMessage);
 				this.chatDao
 					.updateChatById(this.followedChatId, {messages: messages})
-					.then(onFullFilled => console.log('message envoyé'))
+					.then(onFullFilled => {
+						if (ChatService.VERBOSE) {
+							console.log('message envoyé');
+						}
+					})
 					.catch(onRejected => {
 						console.log('envoi du message échoué parceque : ');
 						console.log(JSON.stringify(onRejected));

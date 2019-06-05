@@ -61,9 +61,9 @@ export class ChatComponent implements OnInit, OnDestroy {
 	}
 
 	ngOnDestroy() {
-		// if (ChatComponent.VERBOSE) {
-		// 	console.log('chat component destroyed');
-		// }
+		if (ChatComponent.VERBOSE) {
+			console.log('chat component destroyed');
+		}
 		this.chatService.stopObserving();
 	}
 

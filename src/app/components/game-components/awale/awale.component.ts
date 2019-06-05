@@ -12,7 +12,7 @@ export class AwaleComponent extends AbstractGameComponent {
 
 	rules = new AwaleRules();
 
-	// scores: number[] = [0, 0];
+	scores: number[] = [0, 0];
 
 	imagesLocation = 'assets/images/'; // en prod
 	// imagesLocation = 'src/assets/images/'; // en dev
@@ -38,7 +38,7 @@ export class AwaleComponent extends AbstractGameComponent {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
-			this.chooseMove(chosenMove);
+			this.chooseMove(chosenMove, this.scores[0], this.scores[1]);
 		} else {
 			console.log('Mais c\'est un mouvement illegal');
 		}
@@ -59,6 +59,7 @@ export class AwaleComponent extends AbstractGameComponent {
 
 	updateBoard(): void {
 		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+		this.scores = awalePartSlice.captured;
 		const awaleMove: MoveCoord = this.rules.node.getMove() as MoveCoord;
 
 		if (this.observerRole === 1) {

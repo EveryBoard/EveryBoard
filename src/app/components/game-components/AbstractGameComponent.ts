@@ -7,7 +7,7 @@ export abstract class AbstractGameComponent {
 	board: Array<Array<number>>;
 
 	canPass: boolean;
-	chooseMove: (move: Move) => boolean;
+	chooseMove: (move: Move, scorePlayerZero: number, scorePlayerOne: number) => boolean;
 	observerRole: number;
 	/* all game rules should be able to call the game-wrapper
 	 * the aim is that the game-wrapper will take care of manage what follow

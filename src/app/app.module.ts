@@ -26,47 +26,26 @@ import {LoginComponent} from './components/normal-component/login-page/login.com
 import {ServerPageComponent} from './components/normal-component/server-page/server-page.component';
 import {StatisticPageComponent} from './components/normal-component/statistic-page/statistic-page.component';
 
-import {P4OfflineComponent} from './components/offline-components/p4-offline/p4-offline.component';
-import {AwaleOfflineComponent} from './components/offline-components/awale-offline/awale-offline.component';
-
 import {firebaseConfig} from './firebaseConfig';
 
-import {QuartoOldComponent} from './components/game-components/quarto_old/quarto-old.component';
-import {P4OldComponent} from './components/game-components/p4-old/p4-old.component';
-import {AwaleOldComponent} from './components/game-components/awale-old/awale-old.component';
-import {TablutOldComponent} from './components/game-components/tablut-old/tablut-old.component';
-import {TablutOfflineComponent} from './components/offline-components/tablut-offline/tablut-offline.component';
 import {PartCreationComponent} from './components/normal-component/part-creation/part-creation.component';
 import {ChatComponent} from './components/normal-component/chat/chat.component';
 import {ChatService} from './services/ChatService';
-import {ReversiOldComponent} from './components/game-components/reversi-old/reversi-old.component';
-import {OldCountDownComponent} from './components/normal-component/old-count-down/old-count-down.component';
 import {CountDownComponent} from './components/normal-component/count-down/count-down.component';
-import {QuartoComponent} from './components/game-components/quarto/quarto.component';
-import {P4Component} from './components/game-components/p4/p4.component';
 import {OnlineGameWrapperComponent} from './components/game-components/online-game-wrapper/online-game-wrapper.component';
-import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
-import { TablutComponent } from './components/game-components/tablut/tablut.component';
-import { AwaleComponent } from './components/game-components/awale/awale.component';
-import { ReversiComponent } from './components/game-components/reversi/reversi.component';
-import { LocalGameWrapperComponent } from './components/game-components/local-game-wrapper/local-game-wrapper.component';
+import {LocalGameWrapperComponent} from './components/game-components/local-game-wrapper/local-game-wrapper.component';
+import {GameIncluderComponent} from './components/game-components/game-includer/game-includer.component';
+import {AwaleComponent} from './components/game-components/awale/awale.component';
+import {P4Component} from './components/game-components/p4/p4.component';
+import {QuartoComponent} from './components/game-components/quarto/quarto.component';
+import {ReversiComponent} from './components/game-components/reversi/reversi.component';
+import {TablutComponent} from './components/game-components/tablut/tablut.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
 	{path: 'server',			component: ServerPageComponent},
 	{path: 'statistic',			component: StatisticPageComponent},
 	{path: 'createAccount',		component: CreateAccountComponent},
-
-	{path: 'Quarto/:id',		component: QuartoComponent},
-
-	{path: 'P4Offline',			component: P4OfflineComponent},
-	{path: 'AwaleOffline',		component: AwaleOfflineComponent},
-
-	{path: 'QuartoOld/:id',		component: QuartoOldComponent},
-	{path: 'Awale/:id',			component: AwaleOldComponent},
-	{path: 'Tablut/:id',		component: TablutOldComponent},
-	{path: 'P4/:id',			component: P4OldComponent},
-	{path: 'Reversi/:id',		component: ReversiOldComponent},
 
 	{path: 'play/:compo/:id',	component: OnlineGameWrapperComponent},
 	{path: 'local/:compo',		component: LocalGameWrapperComponent},
@@ -87,18 +66,6 @@ const routes: Route [] = [
 		StatisticPageComponent,
 		CreateAccountComponent,
 		PartCreationComponent,
-
-		AwaleOldComponent,
-		P4OldComponent,
-		QuartoOldComponent,
-		ReversiOldComponent,
-		TablutOldComponent,
-
-		OldCountDownComponent,
-
-		AwaleOfflineComponent,
-		P4OfflineComponent,
-		TablutOfflineComponent,
 
 		CountDownComponent,
 		OnlineGameWrapperComponent,

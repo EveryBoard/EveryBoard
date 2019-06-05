@@ -83,7 +83,7 @@ export abstract class GameWrapper {
 		this.canPass = this.componentInstance.canPass;
 	}
 
-	receiveChildData = (move: Move): boolean => {
+	receiveChildData = (move: Move, scorePlayerZero: number, scorePlayerOne: number): boolean => {
 		if (!this.componentInstance.rules.isLegal(move)) {
 			if (GameWrapper.VERBOSE) {
 				console.log('move illegal');
@@ -92,7 +92,7 @@ export abstract class GameWrapper {
 		}
 		if (!this.isPlayerTurn()) {
 			if (GameWrapper.VERBOSE) {
-				console.log('not your turn');
+				console.log('not your turn'); // todo : réactive notification
 			}
 			return false;
 		}
@@ -105,10 +105,10 @@ export abstract class GameWrapper {
 		if (GameWrapper.VERBOSE) {
 			console.log('board about to update');
 		}
-		this.onValidUserMove(move);
+		this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
 	}
 
-	abstract onValidUserMove(move: Move);
+	abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number);
 
 	isPlayerTurn() {
 		const indexPlayer = this.componentInstance.rules.node.gamePartSlice.turn % 2;

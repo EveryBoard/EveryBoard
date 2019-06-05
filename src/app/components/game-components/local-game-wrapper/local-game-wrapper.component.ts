@@ -69,4 +69,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 		this.proposeAIToPlay();
 	}
 
+	get compo() {
+		return this.componentInstance;
+	}
 }

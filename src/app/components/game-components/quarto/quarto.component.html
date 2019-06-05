@@ -1,24 +1,25 @@
 <div id="gameboard">
-	<table (click)="chooseCoord($event);">
+	<table>
 		<tr *ngFor="let line of board; index as y;">
-			<td *ngFor="let case of line; index as x;"
-				style="position:relative;">
+			<td *ngFor="let caseContent of line; index as x;"
+				style="position:relative;"
+				(click)="chooseCoord(x, y);">
 				<img *ngIf="(lastX===x && lastY===y) || (chosenX===x && chosenY===y)"
 					 width="50" height="50"
-					 id="{{'t'+y+x}}"
 					 alt="highlighted"
 					 [src]="imagesLocation+'squared_highlight.svg'"
 					 style="position:absolute; top:0; left:0;"/>
+<!--				id="{{'t'+y+x}}"-->
 				<img width="50" height="50"
-					 id="{{'u'+y+x}}"
-					 alt=":{{ case }}:"
-					 [src]='imagesLocation+"quarto/"+[case]+".svg"'/>
+					 alt=":{{ caseContent }}:"
+					 [src]='imagesLocation+"quarto/"+[caseContent]+".svg"'/>
+<!--				id="{{'u'+y+x}}"-->
 				<img *ngIf="(chosenX===x && chosenY===y)"
 					 width="50" height="50"
-					 id="{{'v'+y+x}}"
 					 alt="piece in hand that you just put on the board"
 					 [src]="imagesLocation+'quarto/'+pieceInHand+'.svg'"
 					 style="position:absolute; top:0; left:0;"/>
+<!--				id="{{'v'+y+x}}" TODO: supprimer si ça marche -->
 			</td>
 		</tr>
 	</table>
@@ -29,21 +30,22 @@
 </div>
 
 <div id="piece">
-	<table (click)="choosePiece($event);">
+	<table>
 		<tr *ngFor="let line of board; index as y;">
-			<td *ngFor="let case of line; index as x;"
-				style="position:relative;">
+			<td *ngFor="let caseContent of line; index as x;"
+				style="position:relative;"
+				(click)="choosePiece((4*y)+x);">
 				<img *ngIf="isRemaining((4*y)+x)"
 					 width="50" height="50"
-					 id="{{'p'+((4*y)+x)}}"
 					 alt=":{{ ((4*y)+x) }}:"
 					 [src]='imagesLocation+"quarto/"+((4*y)+x)+".svg"'/>
+<!--				id="{{'p'+((4*y)+x)}}"-->
 				<img *ngIf="((4*y)+x) === pieceToGive"
 					 width="50" height="50"
-					 id="{{'q'+((4*y)+x)}}"
 					 alt="highlighted"
 					 [src]="imagesLocation+'squared_highlight.svg'"
 					 style="position:absolute; top:0; left:0;"/>
+<!--				id="{{'q'+((4*y)+x)}}"-->
 			</td>
 		</tr>
 	</table>

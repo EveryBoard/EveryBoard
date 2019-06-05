@@ -1,16 +1,11 @@
 import {
 	Component,
-	ComponentFactory,
 	ComponentFactoryResolver,
-	ComponentRef, OnDestroy,
+	OnDestroy,
 	OnInit,
-	Type,
 	ViewChild
 } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
-import {QuartoComponent} from '../quarto/quarto.component';
-import {AbstractGameComponent} from '../AbstractGameComponent';
-import {P4Component} from '../p4/p4.component';
 import {Move} from '../../../jscaip/Move';
 import {GameService} from '../../../services/GameService';
 import {ICurrentPart, ICurrentPartId, PICurrentPart} from '../../../domain/icurrentpart';
@@ -20,12 +15,6 @@ import {IUserId} from '../../../domain/iuser';
 import {Subscription} from 'rxjs';
 import {JoinerService} from '../../../services/JoinerService';
 import {MGPRequest} from '../../../domain/request';
-import {GameIncluderComponent} from '../game-includer/game-includer.component';
-import {TablutOldComponent} from '../tablut-old/tablut-old.component';
-import {TablutComponent} from '../tablut/tablut.component';
-import {AwaleOldComponent} from '../awale-old/awale-old.component';
-import {AwaleComponent} from '../awale/awale.component';
-import {ReversiComponent} from '../reversi/reversi.component';
 import {GameWrapper} from '../GameWrapper';
 
 @Component({
@@ -37,10 +26,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
 	static VERBOSE = false;
 
-	// // component loading OLDLY
-	// @ViewChild(GameIncluderComponent) gameCompo: GameIncluderComponent; OLDLY
-	// private componentInstance: AbstractGameComponent; OLDLY TODO: remove
-
 	// GameWrapping's Template
 	@ViewChild('chronoZeroGlobal') chronoZeroGlobal: CountDownComponent;
 	@ViewChild('chronoOneGlobal') chronoOneGlobal: CountDownComponent;
@@ -50,8 +35,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 	// link between GameWrapping's template and remote opponent
 	currentPart: ICurrentPart;
 	currentPartId: string;
-	// players: string[];
-	// userName = this.userService.getCurrentUser();
 	gameStarted = false;
 	endGame = false;
 	opponent: IUserId = null;
@@ -251,6 +234,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 
 		}
 		this.componentInstance.updateBoard();
+		this.currentPlayer = this.players[this.componentInstance.rules.node.gamePartSlice.turn % 2];
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			console.log('After = part.turn = ' + part.turn);
 			console.log('After = this.turn = ' + 'is abandonned');
@@ -372,17 +356,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		}
 	}
 
-	onValidUserMove(move: Move) {
-		this.updateDBBoard(move);
+	onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number) {
+		this.updateDBBoard(move, scorePlayerZero, scorePlayerOne);
 	}
 
-	updateDBBoard(move: Move) {
+	updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number) {
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			console.log('let\'s update db board');
 		}
 		const encodedMove: number = this.componentInstance.encodeMove(move);
 		this.gameService
-			.updateDBBoard(encodedMove, this.currentPartId)
+			.updateDBBoard(encodedMove, scorePlayerZero, scorePlayerOne, this.currentPartId)
 			.then(onFullFilled => {
 				this.userService.updateUserActivity(true);
 			});
@@ -407,7 +391,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 	}
 
 	pass() {
-		alert('TODO, Should not be there, call the coder ! Must be overrid');
+		alert('Should not be there, call the coder ! Must be overrid'); // TODO: implement
 	}
 
 	acceptRematch() {

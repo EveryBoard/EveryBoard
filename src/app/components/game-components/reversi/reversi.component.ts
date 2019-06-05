@@ -31,7 +31,6 @@ export class ReversiComponent extends AbstractGameComponent {
 		console.log('f9 0 board value : ' + this.rules.node.getOwnValue());
 		if (this.rules.node.isEndGame()) {
 			console.log('Malheureusement la partie est finie');
-			// todo : option de clonage revision commentage
 			return false;
 		}
 
@@ -44,7 +43,7 @@ export class ReversiComponent extends AbstractGameComponent {
 			console.log('Et javascript estime que votre mouvement est légal');
 			// player make a correct move
 			// let's confirm on java-server-side that the move is legal
-			this.chooseMove(chosenMove);
+			this.chooseMove(chosenMove, null, null); // TODO: encode score
 		} else {
 			console.log('Mais c\'est un mouvement illegal');
 		}

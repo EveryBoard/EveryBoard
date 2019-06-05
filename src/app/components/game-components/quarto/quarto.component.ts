@@ -51,7 +51,7 @@ export class QuartoComponent extends AbstractGameComponent {
 
 	// creating method for Quarto
 
-	chooseCoord(event: MouseEvent): boolean { // TODO: passer X et Y en argument de fonction, pas le mouse event
+	chooseCoord(x: number, y: number): boolean { // TODO: passer X et Y en argument de fonction, pas le mouse event
 		console.log('choose coord');
 		// called when the user click on the quarto board
 		if (this.rules.node.isEndGame()) {
@@ -61,8 +61,8 @@ export class QuartoComponent extends AbstractGameComponent {
 		this.hideLastMove(); // now the user tried to choose something
 		// so I guess he don't need to see what's the last move of the opponent
 
-		const x: number = Number(event.srcElement.id.substring(2, 3));
-		const y: number = Number(event.srcElement.id.substring(1, 2));
+		// const x: number = Number(event.srcElement.id.substring(2, 3));
+		// const y: number = Number(event.srcElement.id.substring(1, 2)); OLDLY, WORKED
 
 		if (this.board[y][x] === QuartoEnum.UNOCCUPIED) {
 			console.log('legal place to put the piece because ' + x + ', ' + y + ' : ' + this.board[y][x]);
@@ -85,7 +85,7 @@ export class QuartoComponent extends AbstractGameComponent {
 		return false;
 	}
 
-	choosePiece(event: MouseEvent): boolean { // TODO: passer X et Y en argument de fonction, pas le mouse event
+	choosePiece(givenPiece: number): boolean {
 		if (this.rules.node.isEndGame()) {
 			console.log('la partie est finie');
 			return false;
@@ -93,7 +93,7 @@ export class QuartoComponent extends AbstractGameComponent {
 		this.hideLastMove(); // now the user tried to choose something
 		// so I guess he don't need to see what's the last move of the opponent
 
-		const givenPiece: number = Number(event.srcElement.id.substring(1));
+		// const givenPiece: number = Number(event.srcElement.id.substring(1)); OLDLY, TODO: delete if work
 		if (this.isRemaining(givenPiece)) {
 			this.pieceToGive = givenPiece;
 			if (this.chosenX !== -1) {
@@ -138,7 +138,7 @@ export class QuartoComponent extends AbstractGameComponent {
 			// let's confirm on java-server-side that the move is legal
 			this.chosenX = -1;
 			this.chosenY = -1;
-			this.chooseMove(chosenMove);
+			this.chooseMove(chosenMove, null, null);
 			return true;
 		} else {
 			console.log('Mais c\'est un mouvement illegal');

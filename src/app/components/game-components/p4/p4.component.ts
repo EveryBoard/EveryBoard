@@ -29,7 +29,7 @@ export class P4Component extends AbstractGameComponent {
 	onClick(x: number) {
 		console.log('click');
 		const chosenMove = MoveX.get(x);
-		this.chooseMove(chosenMove);
+		this.chooseMove(chosenMove, null, null);
 	}
 
 	updateBoard() {
