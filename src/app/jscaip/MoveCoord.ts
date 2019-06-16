@@ -1,7 +1,7 @@
 import {Move} from './Move';
 import {Coord} from './Coord';
 
-export class MoveCoord extends Move {
+export class MoveCoord extends Move { // TODO: Immutable & Pool
 
 	readonly coord: Coord;
 

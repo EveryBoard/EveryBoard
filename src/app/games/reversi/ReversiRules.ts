@@ -6,6 +6,9 @@ import {Coord} from '../../jscaip/Coord';
 import {DIRECTION, DIRECTIONS} from '../../jscaip/DIRECTION';
 
 export class ReversiRules extends Rules {
+
+	static VERBOSE = true;
+
 	static readonly pass: MoveCoord = new MoveCoord(-1, 1);
 	static readonly passNumber: number = -1;
 
@@ -59,19 +62,19 @@ export class ReversiRules extends Rules {
 		return []; // we found the end of the board before we found 	the newt pawn like 'searchedPawn'
 	}
 
-	static getCoordsBetween(direction: DIRECTION, first: Coord, end: Coord): Coord[] { // TODO: incorporer la GamePartSlice comme util?
-		/* expected that both 'first' and 'sandwicher' are in range
-		 * expected that 'sandwicher' is after 'first' in 'direction' 's direction
-		 * return all the direction between 'first' and 'sandwicher', sandwicher excluded
-		 * return an empty list if both coords are neighboors
-		 */
-		const coords: Coord[] = [];
-		while (!first.equals(end)) {
-			coords.push(first);
-			first = first.getNext(direction);
-		}
-		return coords;
-	}
+	// static getCoordsBetween(direction: DIRECTION, first: Coord, end: Coord): Coord[] { // TODO: incorporer la GamePartSlice comme util?
+	// 	/* expected that both 'first' and 'sandwicher' are in range
+	// 	 * expected that 'sandwicher' is after 'first' in 'direction' 's direction
+	// 	 * return all the direction between 'first' and 'sandwicher', sandwicher excluded
+	// 	 * return an empty list if both coords are neighboors
+	// 	 */
+	// 	const coords: Coord[] = [];
+	// 	while (!first.equals(end)) {
+	// 		coords.push(first);
+	// 		first = first.getNext(direction);
+	// 	}
+	// 	return coords;
+	// }
 
 	static isGameEnded(reversiPartSlice: ReversiPartSlice): boolean {
 		return this.playerCanOnlyPass(reversiPartSlice)
@@ -192,19 +195,15 @@ export class ReversiRules extends Rules {
 		const board: number[][] = reversiPartSlice.getCopiedBoard();
 		if (move.equals(ReversiRules.pass)) { // if the player pass
 			// let's check that pass is a legal move right now
-			if (ReversiRules.playerCanOnlyPass(reversiPartSlice)) {
-				// if he had no choice but to pass, then passing is legal !
-				return true;
-			} // else, passing was illegal
-			return false;
+			// if he had no choice but to pass, then passing is legal !
+			// else, passing was illegal
+			return ReversiRules.playerCanOnlyPass(reversiPartSlice);
 		}
 		if (board[move.coord.y][move.coord.x] !== ReversiPartSlice.UNOCCUPIED) {
 			return false;
 		}
 		const switcheds = ReversiRules.getAllSwitcheds(move, turn, board);
-		if (switcheds.length === 0) {
-			return false;
-		}
+		return (switcheds.length === 0);
 	}
 
 	getBoardValue(n: MNode<ReversiRules>): number {
@@ -235,7 +234,7 @@ export class ReversiRules extends Rules {
 		return diff;
 	}
 
-	getListMoves(n: MNode<ReversiRules>): { key: MoveCoord; value: ReversiPartSlice }[] {
+	getListMoves(n: MNode<ReversiRules>): {key: MoveCoord; value: ReversiPartSlice }[] {
 		return ReversiRules.getListMoves(n.gamePartSlice as ReversiPartSlice);
 	}
 
