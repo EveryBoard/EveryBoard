@@ -44,24 +44,22 @@ export class TablutComponent extends AbstractGameComponent {
 		this.cancelMove();
 	}
 
-	onClick(event: MouseEvent) {
+	onClick(x: number, y: number) {
 		if (TablutComponent.VERBOSE) {
 			console.log('onClick');
 		}
 		let success: boolean;
 		if (this.chosenX === -1) {
-			success = this.choosePiece(event);
+			success = this.choosePiece(x, y);
 		} else {
-			success = this.chooseDestination(event);
+			success = this.chooseDestination(x, y);
 		}
 		if (!success) {
 			this.cancelMove();
 		}
 	}
 
-	chooseDestination(event: MouseEvent): boolean {
-		const x: number = Number(event.srcElement.id.substring(2, 3));
-		const y: number = Number(event.srcElement.id.substring(1, 2));
+	chooseDestination(x: number, y: number): boolean {
 
 		if (TablutComponent.VERBOSE) {
 			console.log('chooseDestination');
@@ -87,9 +85,7 @@ export class TablutComponent extends AbstractGameComponent {
 		return this.chooseMove(move, null, null);
 	}
 
-	choosePiece(event: MouseEvent): boolean {
-		const x: number = Number(event.srcElement.id.substring(2, 3));
-		const y: number = Number(event.srcElement.id.substring(1, 2));
+	choosePiece(x, y): boolean {
 
 		if (TablutComponent.VERBOSE) {
 			console.log('choosePiece');

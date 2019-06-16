@@ -1,7 +1,8 @@
-<table (click)="onClick($event);">
+<table>
 	<tr *ngFor="let line of board; index as y;">
 		<td *ngFor="let caseContent of line; index as x;"
-			style="position:relative;">
+			style="position:relative;"
+			(click)="onClick(x, y);">
 			<img
 				*ngIf="(arrivingX===x && arrivingY===y) || (chosenX===x && chosenY===y) || (movingX===x && movingY===y)"
 				width="50" height="50"
