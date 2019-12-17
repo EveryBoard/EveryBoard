@@ -2,7 +2,7 @@ import {MNode} from './MNode';
 import {Move} from './Move';
 import {GamePartSlice} from './GamePartSlice';
 
-export abstract class Rules {
+export abstract class Rules { // TODO: génériser
 
 	public node: MNode<Rules>; // TODO vÃ©rifier si il ne faut pas le rendre static
 	/* The data that represent the status of the game at the current moment, including:
@@ -37,5 +37,4 @@ export abstract class Rules {
 	abstract setInitialBoard(): void;
 	/* set the initial board
      */
-
 }

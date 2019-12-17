@@ -1,20 +1,20 @@
 import {MoveCoord} from './MoveCoord';
 
-export class MoveCoordAndCapture extends MoveCoord {
+export class MoveCoordAndCapture<C> extends MoveCoord {
 	/* is a MoveXY with added captures results
 	 * the captures result help to retrieve in reverse order
 	 * if XY cannot help you to reconstruct the part
 	 */
 
-	protected readonly capture: number[] ;
+	protected readonly capture: C[] ;
 
-	constructor(x: number, y: number, capture: number[]) {
+	constructor(x: number, y: number, capture: C[]) {
 		super(x, y);
 		this.capture = capture;
 	}
 
-	getCapture(): number[] {
-		return this.capture;
+	getCapture(): C[] {
+		return this.capture; // TODO: rende réellement unmuttable
 	}
 
 	equals(obj: any): boolean {

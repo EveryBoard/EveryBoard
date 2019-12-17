@@ -77,5 +77,4 @@ export class GamePartSlice {
 	public getCopiedBoard(): number[][] {
 		return GamePartSlice.copyBiArray(this.board);
 	}
-
 }

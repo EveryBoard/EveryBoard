@@ -61,8 +61,8 @@ export class QuartoComponent extends AbstractGameComponent {
 		this.hideLastMove(); // now the user tried to choose something
 		// so I guess he don't need to see what's the last move of the opponent
 
-		// const x: number = Number(event.srcElement.id.substring(2, 3));
-		// const y: number = Number(event.srcElement.id.substring(1, 2)); OLDLY, WORKED
+		// TODO: REMOVE const x: number = Number(event.srcElement.id.substring(2, 3));
+		// TODO: REMOVE const y: number = Number(event.srcElement.id.substring(1, 2));
 
 		if (this.board[y][x] === QuartoEnum.UNOCCUPIED) {
 			console.log('legal place to put the piece because ' + x + ', ' + y + ' : ' + this.board[y][x]);
@@ -93,7 +93,7 @@ export class QuartoComponent extends AbstractGameComponent {
 		this.hideLastMove(); // now the user tried to choose something
 		// so I guess he don't need to see what's the last move of the opponent
 
-		// const givenPiece: number = Number(event.srcElement.id.substring(1)); OLDLY, TODO: delete if work
+		// TODO: REMOVE const givenPiece: number = Number(event.srcElement.id.substring(1));
 		if (this.isRemaining(givenPiece)) {
 			this.pieceToGive = givenPiece;
 			if (this.chosenX !== -1) {
@@ -145,5 +145,4 @@ export class QuartoComponent extends AbstractGameComponent {
 			return false;
 		}
 	}
-
 }
