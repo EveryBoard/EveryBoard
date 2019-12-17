@@ -17,5 +17,4 @@ export class AwalePartSlice extends GamePartSlice {
 	getCapturedCopy(): number[] {
 		return [this.captured[0], this.captured[1]];
 	}
-
 }

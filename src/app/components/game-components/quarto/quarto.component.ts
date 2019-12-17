@@ -66,7 +66,7 @@ export class QuartoComponent extends OnlineGame {
 		this.pieceToGive = -1;
 	}
 
-	chooseCoord(event: MouseEvent): boolean {
+	chooseCoord(x: number, y: number): boolean {
 		console.log('choose coord');
 		// called when the user click on the quarto board
 		if (!this.isPlayerTurn()) {
@@ -80,8 +80,8 @@ export class QuartoComponent extends OnlineGame {
 		this.hideLastMove(); // now the user tried to choose something
 		// so I guess he don't need to see what's the last move of the opponent
 
-		const x: number = Number(event.srcElement.id.substring(2, 3));
-		const y: number = Number(event.srcElement.id.substring(1, 2));
+		// TODO: REMOVE const x: number = Number(event.srcElement.id.substring(2, 3));
+		// TODO: REMOVE const y: number = Number(event.srcElement.id.substring(1, 2));
 
 		if (this.board[y][x] === QuartoEnum.UNOCCUPIED) {
 			console.log('legal place to put the piece because ' + x + ', ' + y + ' : ' + this.board[y][x]);
@@ -104,7 +104,7 @@ export class QuartoComponent extends OnlineGame {
 		return false;
 	}
 
-	choosePiece(event: MouseEvent): boolean {
+	choosePiece(givenPiece: number): boolean {
 		if (!this.isPlayerTurn()) {
 			console.log('ce n\'est pas ton tour!');
 			return false;
@@ -116,7 +116,7 @@ export class QuartoComponent extends OnlineGame {
 		this.hideLastMove(); // now the user tried to choose something
 		// so I guess he don't need to see what's the last move of the opponent
 
-		const givenPiece: number = Number(event.srcElement.id.substring(1));
+		// TODO: REMOVE const givenPiece: number = Number(event.srcElement.id.substring(1));
 		if (this.isRemaining(givenPiece)) {
 			this.pieceToGive = givenPiece;
 			if (this.choosenX !== -1) {

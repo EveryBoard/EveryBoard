@@ -2,7 +2,7 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule} from '@angular/core';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-// import {HttpModule} from '@angular/http';
+import {HttpModule} from '@angular/http';
 import {RouterModule, Route} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from '../material-modules';
@@ -40,6 +40,7 @@ import { ChatComponent } from './components/normal-component/chat/chat.component
 import {ChatService} from './services/ChatService';
 import { ReversiComponent } from './components/game-components/reversi/reversi.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
+import { GoComponent } from './components/game-components/go/go.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -83,6 +84,7 @@ const routes: Route [] = [
 		TablutOfflineComponent,
 		ReversiComponent,
 		CountDownComponent,
+		GoComponent,
 	],
 	imports: [
 		BrowserModule,

@@ -14,9 +14,10 @@
 		<div id="board" class="flex-container circled col-sm-9">
 
 			<div id="gameboard">
-				<table (click)="chooseCoord($event);">
+				<table>
 					<tr *ngFor="let line of board; index as y;">
 						<td *ngFor="let case of line; index as x;"
+                            (click)="chooseCoord(x, y);"
 							style="position:relative;">
 							<img *ngIf="(lastX===x && lastY===y) || (choosenX===x && choosenY===y)"
 								 width="50" height="50"
@@ -44,9 +45,10 @@
 			</div>
 
 			<div id="piece">
-				<table (click)="choosePiece($event);">
+				<table>
 					<tr *ngFor="let line of board; index as y;">
 						<td *ngFor="let case of line; index as x;"
+                            (click)="choosePiece((4*y)+x);"
 							style="position:relative;">
 							<img *ngIf="isRemaining((4*y)+x)"
 								 width="50" height="50"
