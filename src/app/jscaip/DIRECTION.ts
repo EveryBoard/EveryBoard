@@ -25,6 +25,9 @@ export namespace DIRECTION {
 		const index: number = DIRECTIONS.indexOf(dir);
 		return DIRECTIONS[(index + 4) % 8];
 	}
+    export function toString(dir: DIRECTION): string {
+        return "DIRECTION(" + dir.x + ", " + dir.y + ")";
+    }
 }
 
 /* export let DIRECTION = {

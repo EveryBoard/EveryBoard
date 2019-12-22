@@ -1,44 +1,50 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
-import { Coord } from 'src/app/jscaip/Coord';
+import {Coord} from 'src/app/jscaip/Coord';
 
 export enum Pawn {
-    BLACK = 0, WHITE, EMPTY
+    BLACK = 0, 
+    WHITE,
+    EMPTY,
+    DEAD_BLACK,
+    DEAD_WHITE
+}
+
+export enum Phase {
+    PLAYING  = "G",
+    PASSED   = "P",
+    COUNTING = "C"
 }
 
 export class GoPartSlice extends GamePartSlice {
 
-    protected board: Pawn[][];
+    protected readonly board: Pawn[][];
 
-    private koCoord: Coord;
+    private readonly koCoord: Coord;
 
-    private captured: number[];
+    private readonly captured: number[];
 
-    public constructor(board: Pawn[][], captured: number[], turn: number, koCoord: Coord) {
+    private readonly phase: Phase;
+
+    public constructor(board: Pawn[][], captured: number[], turn: number, koCoord: Coord, phase: Phase) {
         super(board, turn);
         this.captured = captured;
         this.koCoord = koCoord;
+        this.phase = phase;
     }
 
     public getKoCoordCopy(): Coord {
-        return this.koCoord.getCopy();
+        return this.koCoord ? this.koCoord.getCopy() : null;
     }
 
     public getCapturedCopy(): number[] {
         return [this.captured[0], this.captured[1]];
     }
 
-    public getCopy(): GoPartSlice {
-        let koCoordCopy: Coord = this.koCoord.getCopy();
-        let capturedCopy: number[] = GamePartSlice.copyArray(this.captured);
-        let boardCopy: Pawn[][] = this.getCopiedBoard();
-        return new GoPartSlice(boardCopy, capturedCopy, this.turn, koCoordCopy);
-    }
-
     public static getStartingBoard(): Pawn[][] {
         return GamePartSlice.createBiArray(GoPartSlice.WIDTH, GoPartSlice.HEIGHT, Pawn.EMPTY);
     }
 
-    public static readonly WIDTH: number = 19;
+    public static readonly WIDTH: number = 5;
 
-    public static readonly HEIGHT: number = 19;
+    public static readonly HEIGHT: number = 5;
 }

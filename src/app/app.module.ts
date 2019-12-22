@@ -40,7 +40,7 @@ import {P4Component} from './components/game-components/p4/p4.component';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {ReversiComponent} from './components/game-components/reversi/reversi.component';
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
-import { GoComponent } from './components/game-components/go/go.component';
+import {GoComponent} from './components/game-components/go/go.component';
 
 const routes: Route [] = [
 	{path: 'login',				component: LoginComponent},
@@ -78,6 +78,7 @@ const routes: Route [] = [
 		QuartoComponent,
 		ReversiComponent,
 		TablutComponent,
+        GoComponent
 	],
 	entryComponents: [
 		AwaleComponent,
@@ -85,8 +86,9 @@ const routes: Route [] = [
 		QuartoComponent,
 		TablutComponent,
 		ReversiComponent,
-		// CountDownComponent, TODO: figure out if needed
 		GoComponent,
+
+		CountDownComponent, // TODO: figure out if needed
 	],
 	imports: [
 		BrowserModule,

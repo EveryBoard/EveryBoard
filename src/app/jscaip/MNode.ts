@@ -136,6 +136,7 @@ export class MNode<R extends Rules> {
 			console.log(mother);
 
 			console.log('and with board');
+            console.log(board);
 		}
 	}
 

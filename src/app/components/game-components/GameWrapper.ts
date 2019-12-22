@@ -9,6 +9,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {GameIncluderComponent} from './game-includer/game-includer.component';
 import {Move} from '../../jscaip/Move';
 import {UserService} from '../../services/UserService';
+import {GoComponent} from './go/go.component';
 
 export abstract class GameWrapper {
 
@@ -48,6 +49,8 @@ export abstract class GameWrapper {
 				return ReversiComponent;
 			case 'Tablut':
 				return TablutComponent;
+            case 'Go':
+                return GoComponent;
 			default:
 				this.router.navigate(['/error']);
 				return null;
