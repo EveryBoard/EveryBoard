@@ -136,13 +136,13 @@ export class GoRules extends Rules {
         return groupDatas; 
     }
 
-    getListMoves(node: MNode<GoRules>): {key: Move, value: GamePartSlice}[] {
+    getListMoves(node: MNode<GoRules>): {key: Move, value: GoPartSlice}[] {
         const localVerbose = false;
         if (GoRules.VERBOSE || localVerbose) {
             console.log('getListMoves');
         }
 
-        const choices: {key: Move, value: GamePartSlice}[] = [];
+        const choices: {key: Move, value: GoPartSlice}[] = [];
 
         const currentPartSlice: GoPartSlice = node.gamePartSlice as GoPartSlice; // TODO : voir si il faut pas la supprimer
 
