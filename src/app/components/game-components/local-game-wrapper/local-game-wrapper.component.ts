@@ -16,7 +16,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 	static VERBOSE = false;
 
 	aiDepth = 3;
-	botTimeOut = 500; // this.aiDepth * 500;
+	botTimeOut = 2000; // this.aiDepth * 500;
 
 	constructor(componentFactoryResolver: ComponentFactoryResolver,
 				actRoute: ActivatedRoute,
