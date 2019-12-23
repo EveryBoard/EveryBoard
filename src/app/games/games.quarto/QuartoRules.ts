@@ -295,7 +295,7 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
 	setInitialBoard() {
 		if (this.node == null) {
 			this.node = MNode.getFirstNode(
-				new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA),
+				new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA), // TODO: make generic
 				this);
 		} else {
 			this.node = this.node.getInitialNode();
