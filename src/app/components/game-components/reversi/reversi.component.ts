@@ -14,7 +14,7 @@ import {MoveCoord} from '../../../jscaip/MoveCoord';
 })
 export class ReversiComponent extends AbstractGameComponent {
 
-	static VERBOSE = false;
+	static VERBOSE = true;
 
 	rules = new ReversiRules();
 
@@ -28,15 +28,10 @@ export class ReversiComponent extends AbstractGameComponent {
 	onClick(x: number, y: number): boolean {
 		const reversiPartSlice = this.rules.node.gamePartSlice as ReversiPartSlice;
 		if (ReversiComponent.VERBOSE) {
-			console.log('f9 0 nb choices : ' + ReversiRules.getListMoves(reversiPartSlice).length);
-		}
-		if (ReversiComponent.VERBOSE) {
-			console.log('f9 0 choices static : ' + JSON.stringify(ReversiRules.getListMoves(reversiPartSlice)));
-		}
-		if (ReversiComponent.VERBOSE) {
-			console.log('f9 0 choices nonono : ' + JSON.stringify(this.rules.getListMoves(this.rules.node)));
-		}
-		if (ReversiComponent.VERBOSE) {
+			console.log('ReversiRules.getListMoves(reversiPartSlice): ');
+			console.log(ReversiRules.getListMoves(reversiPartSlice));
+			console.log('this.rules.getListMoves(this.rules.node): ');
+            console.log(this.rules.getListMoves(this.rules.node));
 			console.log('f9 0 board value : ' + this.rules.node.getOwnValue());
 		}
 		if (this.rules.node.isEndGame()) {

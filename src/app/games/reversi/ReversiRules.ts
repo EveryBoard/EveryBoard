@@ -7,7 +7,7 @@ import {DIRECTION, DIRECTIONS} from '../../jscaip/DIRECTION';
 
 export class ReversiRules extends Rules {
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	static readonly pass: MoveCoord = new MoveCoord(-1, 1);
 	static readonly passNumber: number = -1;
@@ -200,10 +200,16 @@ export class ReversiRules extends Rules {
 			return ReversiRules.playerCanOnlyPass(reversiPartSlice);
 		}
 		if (board[move.coord.y][move.coord.x] !== ReversiPartSlice.UNOCCUPIED) {
+            if (ReversiRules.VERBOSE) {
+                console.log("ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée");
+            }
 			return false;
 		}
 		const switcheds = ReversiRules.getAllSwitcheds(move, turn, board);
-		return (switcheds.length === 0);
+        if (ReversiRules.VERBOSE) {
+            console.log("ReversiRules.isLegal: "+ switcheds.length + " element(s) switched");
+        }
+		return (switcheds.length !== 0);
 	}
 
 	getBoardValue(n: MNode<ReversiRules>): number {

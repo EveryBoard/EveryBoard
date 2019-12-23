@@ -7,13 +7,18 @@
             <img width="20"
                  id="{{ 't'+y+'_'+x }}"
                  alt=":{{ caseContent }}:"
-                 [src]="imagesLocation + 'reversi/' + caseContent + '.svg'"/>
+                 [src]="imagesLocation + 'go/' + caseContent + '.svg'"/>
             <img *ngIf="lastX === x && lastY === y"
                  width="20"
                  id="{{ 'u'+y+'_'+x }}"
                  alt=":{{ caseContent }}:"
                  [src]="imagesLocation + 'highlight.svg'"
-                 style="position:absolute; top:0; left:0;"/>
+                 style="position:absolute; top:0; left:0;" />
+             <img *ngIf="koX === x && koY === y"
+                  width="20"
+                  alt="ko"
+                  [src]="imagesLocation + 'go/ko.svg'"
+                  style="position:absolute; top:0; left:0;" />
         </td>
     </tr>
 </table>

@@ -7,6 +7,7 @@ import {GameService} from '../../../services/GameService';
 import {MoveCoord} from '../../../jscaip/MoveCoord';
 import { GoRules } from 'src/app/games/go/GoRules';
 import { GoPartSlice } from 'src/app/games/go/GoPartSlice';
+import { Coord } from 'src/app/jscaip/Coord';
 
 @Component({
     selector: 'app-go',
@@ -21,9 +22,17 @@ export class GoComponent extends AbstractGameComponent {
     imagesLocation = 'assets/images/'; // en prod
     // imagesLocation = 'src/assets/images/'; // en dev
 
+    koX = -1;
+    koY = -1;
+
     lastX = -1;
     lastY = -1;
     canPass = false;
+
+    constructor() {
+        super();
+        this.canPass = true;
+    }
 
     onClick(x: number, y: number): boolean {
         console.log("salut " + x + "-" + y);
@@ -77,12 +86,20 @@ export class GoComponent extends AbstractGameComponent {
         }
         const goPartSlice: GoPartSlice = this.rules.node.gamePartSlice as GoPartSlice;
         const moveCoord: MoveCoord = this.rules.node.getMove() as MoveCoord;
+        const koCoord: Coord = goPartSlice.getKoCoordCopy();
 
         this.board = goPartSlice.getCopiedBoard();
 
         if (moveCoord != null) {
             this.lastX = moveCoord.coord.x;
             this.lastY = moveCoord.coord.y;
+        }
+        if (koCoord != null) {
+            this.koX = koCoord.x;
+            this.koY = koCoord.y;
+        } else {
+            this.koX = -1;
+            this.koY = -1;
         }
     }
 
