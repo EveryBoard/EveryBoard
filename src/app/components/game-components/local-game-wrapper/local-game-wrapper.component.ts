@@ -9,7 +9,6 @@ import {JoinerService} from '../../../services/JoinerService';
 @Component({
 	selector: 'app-local-game-wrapper',
 	templateUrl: './local-game-wrapper.component.html',
-	styleUrls: ['./local-game-wrapper.component.css']
 })
 export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 
