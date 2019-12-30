@@ -13,9 +13,12 @@
 				Joueur 0 : <button (click)="switchPlayerOne()">{{ this.players[0] === 'bot' ? 'Robot' : 'Humain' }}</button><br/>
 				Joueur 1 : <button (click)="switchPlayerTwo()">{{ this.players[1] === 'bot' ? 'Robot' : 'Humain' }}</button>
 			</div>
-
+            <div *ngIf="!endGame" class="inforow">
+                <button *ngIf="compo.canPass"
+                        (click)="compo.pass()" mat-stroked-button>
+                    Passer son tour
+                </button>
+            </div>
 		</div>
-
-	</div>
-
+    </div>
 </div>

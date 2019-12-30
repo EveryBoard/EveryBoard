@@ -35,75 +35,80 @@ import {CountDownComponent} from './components/normal-component/count-down/count
 import {OnlineGameWrapperComponent} from './components/game-components/online-game-wrapper/online-game-wrapper.component';
 import {LocalGameWrapperComponent} from './components/game-components/local-game-wrapper/local-game-wrapper.component';
 import {GameIncluderComponent} from './components/game-components/game-includer/game-includer.component';
+
 import {AwaleComponent} from './components/game-components/awale/awale.component';
 import {P4Component} from './components/game-components/p4/p4.component';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {ReversiComponent} from './components/game-components/reversi/reversi.component';
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
 import {GoComponent} from './components/game-components/go/go.component';
+import {EncapsuleComponent} from './components/game-components/encapsule/encapsule.component';
 
 const routes: Route [] = [
-	{path: 'login',				component: LoginComponent},
-	{path: 'server',			component: ServerPageComponent},
-	{path: 'statistic',			component: StatisticPageComponent},
-	{path: 'createAccount',		component: CreateAccountComponent},
+    {path: 'login',             component: LoginComponent},
+    {path: 'server',            component: ServerPageComponent},
+    {path: 'statistic',         component: StatisticPageComponent},
+    {path: 'createAccount',     component: CreateAccountComponent},
 
-	{path: 'play/:compo/:id',	component: OnlineGameWrapperComponent},
-	{path: 'local/:compo',		component: LocalGameWrapperComponent},
-	{path: '', redirectTo: 'server', pathMatch: 'full'},
-	{path: '**', 				component: ServerPageComponent}
+    {path: 'play/:compo/:id',   component: OnlineGameWrapperComponent},
+    {path: 'local/:compo',      component: LocalGameWrapperComponent},
+    {path: '', redirectTo: 'server', pathMatch: 'full'},
+    {path: '**',                component: ServerPageComponent}
 ];
 
 @NgModule({
-	declarations: [
-		GameIncluderDirective,
+    declarations: [
+        GameIncluderDirective,
 
-		AppComponent, // TODO voir à supprimer ? est-ce utile ?
-		HeaderComponent,
-		FooterComponent,
-		LoginComponent,
-		ServerPageComponent,
-		ChatComponent,
-		StatisticPageComponent,
-		CreateAccountComponent,
-		PartCreationComponent,
+        AppComponent, // TODO voir à supprimer ? est-ce utile ?
+        HeaderComponent,
+        FooterComponent,
+        LoginComponent,
+        ServerPageComponent,
+        ChatComponent,
+        StatisticPageComponent,
+        CreateAccountComponent,
+        PartCreationComponent,
 
-		CountDownComponent,
-		OnlineGameWrapperComponent,
-		GameIncluderComponent,
-		LocalGameWrapperComponent,
+        CountDownComponent,
+        OnlineGameWrapperComponent,
+        GameIncluderComponent,
+        LocalGameWrapperComponent,
 
-		AwaleComponent,
-		P4Component,
-		QuartoComponent,
-		ReversiComponent,
-		TablutComponent,
-        GoComponent
-	],
-	entryComponents: [
-		AwaleComponent,
-		P4Component,
-		QuartoComponent,
-		TablutComponent,
-		ReversiComponent,
-		GoComponent,
+        AwaleComponent,
+        P4Component,
+        QuartoComponent,
+        ReversiComponent,
+        TablutComponent,
+        GoComponent,
+        EncapsuleComponent
+    ],
+    entryComponents: [
+        AwaleComponent,
+        P4Component,
+        QuartoComponent,
+        TablutComponent,
+        ReversiComponent,
+        GoComponent,
+        EncapsuleComponent,
 
-		CountDownComponent, // TODO: figure out if needed
-	],
-	imports: [
-		BrowserModule,
-		HttpClientModule,
-		HttpModule,
-		RouterModule.forRoot(routes, {useHash: true}),
-		ReactiveFormsModule,
-		FormsModule,
-		AngularFireModule.initializeApp(firebaseConfig),
-		AngularFirestoreModule,
-		BrowserAnimationsModule,
-		MaterialModule
-	],
-	providers: [AuthenticationService, GameService, JoinerService, UserService, ChatService],
-	bootstrap: [AppComponent]
+        CountDownComponent, // TODO: figure out if needed
+    ],
+    imports: [
+        BrowserModule,
+        HttpClientModule,
+        HttpModule,
+        RouterModule.forRoot(routes, {useHash: true}),
+        ReactiveFormsModule,
+        FormsModule,
+        AngularFireModule.initializeApp(firebaseConfig),
+        AngularFirestoreModule,
+        BrowserAnimationsModule,
+        MaterialModule
+    ],
+    providers: [AuthenticationService, GameService, JoinerService, UserService, ChatService],
+    bootstrap: [AppComponent]
 })
 export class AppModule {
+
 }

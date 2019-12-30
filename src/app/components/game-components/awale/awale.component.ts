@@ -1,81 +1,80 @@
 import {Component} from '@angular/core';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import {AwaleRules} from '../../../games/awale/AwaleRules';
-import {MoveCoord} from '../../../jscaip/MoveCoord';
+import {AwaleMove} from 'src/app/games/awale/AwaleMove';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 
 @Component({
-	selector: 'app-awale-new-component',
-	templateUrl: './awale.component.html'
+    selector: 'app-awale-new-component',
+    templateUrl: './awale.component.html'
 })
 export class AwaleComponent extends AbstractGameComponent {
 
-	rules = new AwaleRules();
+    rules = new AwaleRules();
 
-	scores: number[] = [0, 0];
+    scores: number[] = [0, 0];
 
-	imagesLocation = 'assets/images/'; // en prod
-	// imagesLocation = 'src/assets/images/'; // en dev
+    imagesLocation = 'assets/images/'; // en prod
+    // imagesLocation = 'src/assets/images/'; // en dev
 
-	lastX = -1;
-	lastY = -1;
+    lastX = -1;
+    lastY = -1;
 
-	onClick(x: number, y: number): boolean {
-		console.log('Observeur role : ' + this.observerRole);
-		if (this.rules.node.isEndGame()) {
-			console.log('Malheureusement la partie est finie');
-			// todo : option de clonage revision commentage
-			return false;
-		}
-		// player's turn
+    constructor() {
+        super();
+        this.showScore = true;
+    }
 
-		console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
+    onClick(x: number, y: number): boolean {
+        console.log('Observeur role : ' + this.observerRole);
+        if (this.rules.node.isEndGame()) {
+            console.log('Malheureusement la partie est finie');
+            // todo : option de clonage revision commentage
+            return false;
+        }
+        // player's turn
 
-		this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
-		// we stop showing him the last move
-		const chosenMove = new MoveCoord(x, y);
-		if (this.rules.isLegal(chosenMove)) {
-			console.log('Et javascript estime que votre mouvement est légal');
-			// player make a correct move
-			// let's confirm on java-server-side that the move is legal
-			this.chooseMove(chosenMove, this.scores[0], this.scores[1]);
-		} else {
-			console.log('Mais c\'est un mouvement illegal');
-		}
-	}
+        console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
 
-	decodeMove(encodedMove: number): MoveCoord {
-		const x = encodedMove % 6;
-		const y = (encodedMove - x) / 6;
-		return new MoveCoord(x, y);
-	}
+        this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
+        // we stop showing him the last move
+        const chosenMove: AwaleMove = new AwaleMove(x, y, []);
+        if (this.rules.isLegal(chosenMove)) {
+            console.log('Et javascript estime que votre mouvement est légal');
+            // player make a correct move
+            // let's confirm on java-server-side that the move is legal
+            this.chooseMove(chosenMove, this.scores[0], this.scores[1]);
+        } else {
+            console.log('Mais c\'est un mouvement illegal');
+        }
+    }
 
-	encodeMove(move: MoveCoord): number {
-		// An awalé move goes on x from o to 5
-		// and y from 0 to 1
-		// encoded as y*6 + x
-		return (move.coord.y * 6) + move.coord.x;
-	}
+    decodeMove(encodedMove: number): AwaleMove {
+        return AwaleMove.decode(encodedMove);
+    }
 
-	updateBoard(): void {
-		const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
-		this.scores = awalePartSlice.captured;
-		const awaleMove: MoveCoord = this.rules.node.getMove() as MoveCoord;
+    encodeMove(move: AwaleMove): number {
+        return move.encode();
+    }
 
-		if (this.observerRole === 1) {
-			const orientedBoard: number[][] = [];
-			awalePartSlice.getCopiedBoard().forEach(
-				line => orientedBoard.push(line.reverse()));
-			this.board = orientedBoard;
-		} else {
-			this.board = awalePartSlice.getCopiedBoard().reverse();
-		}
+    updateBoard(): void {
+        const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+        this.scores = awalePartSlice.captured;
+        const awaleMove: AwaleMove = this.rules.node.getMove() as AwaleMove;
 
-		// this.scores = awalePartSlice.getCapturedCopy(); // TODO: vérifier que le score s'affiche bien
-		if (awaleMove != null) {
-			this.lastX = awaleMove.coord.x;
-			this.lastY = awaleMove.coord.y;
-		}
-	}
+        if (this.observerRole === 1) {
+            const orientedBoard: number[][] = [];
+            awalePartSlice.getCopiedBoard().forEach(
+                line => orientedBoard.push(line.reverse()));
+            this.board = orientedBoard;
+        } else {
+            this.board = awalePartSlice.getCopiedBoard().reverse();
+        }
 
+        // this.scores = awalePartSlice.getCapturedCopy(); // TODO: vérifier que le score s'affiche bien
+        if (awaleMove != null) {
+            this.lastX = awaleMove.coord.x;
+            this.lastY = awaleMove.coord.y;
+        }
+    }
 }

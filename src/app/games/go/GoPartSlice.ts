@@ -15,7 +15,7 @@ export enum Phase {
     COUNTING = "C"
 }
 
-export class GoPartSlice extends GamePartSlice<Pawn> {
+export class GoPartSlice extends GamePartSlice {
 
     protected readonly board: Pawn[][];
 
@@ -23,7 +23,7 @@ export class GoPartSlice extends GamePartSlice<Pawn> {
 
     private readonly captured: number[];
 
-    private readonly phase: Phase;
+    public readonly phase: Phase;
 
     public constructor(board: Pawn[][], captured: number[], turn: number, koCoord: Coord, phase: Phase) {
         super(board, turn);
@@ -48,7 +48,7 @@ export class GoPartSlice extends GamePartSlice<Pawn> {
         return GamePartSlice.copyBiArray(this.board);
     }
 
-    public static readonly WIDTH: number = 5;
+    public static readonly WIDTH: number = 6;
 
-    public static readonly HEIGHT: number = 5;
+    public static readonly HEIGHT: number = 6;
 }

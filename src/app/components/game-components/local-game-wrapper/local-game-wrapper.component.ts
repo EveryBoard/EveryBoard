@@ -5,6 +5,7 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {GameService} from '../../../services/GameService';
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 
 @Component({
 	selector: 'app-local-game-wrapper',
@@ -15,7 +16,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 	static VERBOSE = false;
 
 	aiDepth = 3;
-	botTimeOut = 2000; // this.aiDepth * 500;
+
+	botTimeOut = 500; // this.aiDepth * 500;
 
 	constructor(componentFactoryResolver: ComponentFactoryResolver,
 				actRoute: ActivatedRoute,
@@ -68,7 +70,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 		this.proposeAIToPlay();
 	}
 
-	get compo() {
+    get compo(): AbstractGameComponent {
 		return this.componentInstance;
 	}
 }

@@ -26,10 +26,10 @@ export class QuartoComponent extends AbstractGameComponent {
 
 	updateBoard() {
 		console.log('update online board');
-		const quartoPartSlice = this.rules.node.gamePartSlice as QuartoPartSlice;
+		const slice = this.rules.node.gamePartSlice as QuartoPartSlice;
 		const move: QuartoMove = this.rules.node.getMove() as QuartoMove;
-		this.board = quartoPartSlice.getCopiedBoard();
-		this.pieceInHand = quartoPartSlice.pieceInHand;
+		this.board = slice.getCopiedBoard();
+		this.pieceInHand = slice.pieceInHand;
 
 		if (move != null) {
 			this.lastX = move.coord.x;
@@ -41,12 +41,12 @@ export class QuartoComponent extends AbstractGameComponent {
 
 	/********************************** For Online Game **********************************/
 
-	decodeMove(encodedMove: number): Move {
+	decodeMove(encodedMove: number): QuartoMove {
 		return QuartoMove.decode(encodedMove);
 	}
 
 	encodeMove(move: QuartoMove): number {
-		return QuartoMove.encode(move);
+		return move.encode();
 	}
 
 	// creating method for Quarto

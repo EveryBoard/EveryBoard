@@ -1,0 +1,41 @@
+<div id="gameboard">
+    <table>
+        <tr *ngFor="let line of mappedBoard; index as y;">
+            <td *ngFor="let caseContent of line; index as x;"
+                style="position:relative;"
+                (click)="onBoardClick(x, y);">
+                <img *ngIf="isHighlightedCoord(x, y);"
+                     width="50" height="50"
+                     alt="highlighted"
+                     [src]="imagesLocation+'squared_highlight.svg'"
+                     style="position:absolute; top:0; left:0;"/>
+                <img width="50" height="50"
+                     alt=":{{ caseContent }}:"
+                     [src]='imagesLocation+"encapsule/NONE.svg"'/>
+                <img *ngFor="let piece of caseContent"
+                     width="50" height="50"
+                     alt=":{{ piece }}:"
+                     style="position:absolute; top:0; left:0;"
+                     [src]='imagesLocation+"encapsule/"+piece+".svg"'/>
+            </td>
+        </tr>
+    </table>
+</div>
+{{ "chosenCoord: " + chosenCoord}} <br/>
+{{ "chosenPiece: " + chosenPiece}} <br/>
+{{ "isVictory: " + isVictory()}} <br/>
+<div id="piece">
+    <table>
+        <tr *ngFor="let piece of remainingPieces;"
+            (click)="onPieceClick(piece);">
+            <img width="50" height="50"
+                 alt=":{{ piece }}:"
+                 [src]='imagesLocation+"encapsule/"+piece+".svg"'/>
+            <img *ngIf="piece === chosenPiece"
+                 width="50" height="50"
+                 alt="highlighted"
+                 [src]="imagesLocation+'quarto/'+'squared_highlight.svg'"
+                 style="position:absolute; top:0; left:0;"/>
+        </tr>
+    </table>
+</div>

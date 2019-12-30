@@ -20,7 +20,13 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
 	activesParts: ICurrentPartId[];
 	activesUsers: IUserId[];
-	readonly gameNameList: String[] = ['P4', 'Awale', 'Quarto', 'Tablut', 'Reversi', 'Go'];
+	readonly gameNameList: String[] = ['Awale',
+                                       'Encapsule',
+                                       'Go',
+                                       'P4',
+                                       'Quarto',
+                                       'Reversi',
+                                       'Tablut'];
 	selectedGame: string;
 	userName: string;
 
@@ -118,5 +124,4 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 			this.userService.unSubFromActivesUsersObs();
 		}
 	}
-
 }

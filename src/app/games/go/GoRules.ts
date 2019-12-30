@@ -1,26 +1,21 @@
 import {Rules} from '../../jscaip/Rules';
 import {MNode} from '../../jscaip/MNode';
 import {Move} from '../../jscaip/Move';
-import {MoveCoord} from '../../jscaip/MoveCoord';
 import {Coord} from '../../jscaip/Coord';
-import {MoveCoordAndCapture} from '../../jscaip/MoveCoordAndCapture';
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {GoPartSlice, Pawn, Phase} from './GoPartSlice';
 import {DIRECTION, ORTHOGONALES} from 'src/app/jscaip/DIRECTION';
+import {GoMove} from './GoMove';
 
 export class GoRules extends Rules {
 
     static VERBOSE: boolean = false;
 
-    static readonly pass: MoveCoordAndCapture<Coord> = new MoveCoordAndCapture<Coord>(-1, 1, []);
-
-    static readonly passNumber: number = -1;
-
-    isLegal(move: MoveCoord): boolean {
+    isLegal(move: GoMove): boolean {
         return GoRules.isLegal(move, this.node.gamePartSlice as GoPartSlice).legal;
     }
 
-    public static isLegal(move: MoveCoord, goPartSlice: GoPartSlice): LegalityStatus {
+    public static isLegal(move: GoMove, goPartSlice: GoPartSlice): LegalityStatus {
         const LOCAL_VERBOSE: boolean = false;
         //if (GoRules.VERBOSE || LOCAL_VERBOSE) console.log("isLegal(" + move + ", " + goPartSlice.getCopiedBoard() + ");");
         let boardCopy: Pawn[][] = goPartSlice.getCopiedBoard();
@@ -54,19 +49,19 @@ export class GoRules extends Rules {
         }
     }
 
-    private static isPass(move: MoveCoord): boolean {
-        return move.equals(GoRules.pass);
+    private static isPass(move: GoMove): boolean {
+        return move.equals(GoMove.pass);
     }
 
-    private static isOccupied(move: MoveCoord, board: Pawn[][]): boolean {
+    private static isOccupied(move: GoMove, board: Pawn[][]): boolean {
         return board[move.coord.y][move.coord.x] !== Pawn.EMPTY;
     }
 
-    public static isKo(move: MoveCoord, partSlice: GoPartSlice): boolean {
+    public static isKo(move: GoMove, partSlice: GoPartSlice): boolean {
         return move.coord.equals(partSlice.getKoCoordCopy());
     }
 
-    public static getCaptureState(move: MoveCoord, goPartSlice: GoPartSlice): CaptureState {
+    public static getCaptureState(move: GoMove, goPartSlice: GoPartSlice): CaptureState {
         const LOCAL_VERBOSE: boolean = false;
         if (GoRules.VERBOSE || LOCAL_VERBOSE) console.log("getCaptureState("+move+", " + goPartSlice.getCopiedBoard() + ")");
         let captureState: CaptureState = new CaptureState();
@@ -115,7 +110,9 @@ export class GoRules extends Rules {
         let emptyCoords: Coord[] = [];
         let blackCoords: Coord[] = [];
         let whiteCoords: Coord[] = [];
-        let groupDatas: GroupDatas = {color, emptyCoords, blackCoords, whiteCoords};
+        let deadWhiteCoords: Coord[] = [];
+        let deadBlackCoords: Coord[] = [];
+        let groupDatas: GroupDatas = {color, emptyCoords, blackCoords, whiteCoords, deadWhiteCoords, deadBlackCoords};
         return GoRules._getGroupDatas(coord, board, groupDatas);
     }
 
@@ -146,14 +143,14 @@ export class GoRules extends Rules {
 
         const currentPartSlice: GoPartSlice = node.gamePartSlice as GoPartSlice; // TODO : voir si il faut pas la supprimer
 
-        let newResultlessMove: MoveCoord;
+        let newResultlessMove: GoMove;
         
         for (let y = 0; y<GoPartSlice.HEIGHT; y++) {
             for (let x = 0; x<GoPartSlice.WIDTH; x++) {
-                newResultlessMove = new MoveCoord(x, y);
+                newResultlessMove = new GoMove(x, y, []);
                 let legality: LegalityStatus = GoRules.isLegal(newResultlessMove, currentPartSlice);
                 if (legality.legal) {
-                    let result: {resultMove: MoveCoordAndCapture<Coord>, newPartSlice: GoPartSlice} =
+                    let result: {resultMove: GoMove, newPartSlice: GoPartSlice} =
                         GoRules.applyLegalMove(currentPartSlice, newResultlessMove, legality.capturedCoords);
                     choices.push({key: result.resultMove, value: result.newPartSlice});
                 }
@@ -162,7 +159,7 @@ export class GoRules extends Rules {
         return choices;
     }
 
-    private static applyLegalMove(currentPartSlice: GoPartSlice, legalMove: MoveCoord, capturedCoords: Coord[]): {resultMove: MoveCoordAndCapture<Coord>, newPartSlice: GoPartSlice} {
+    private static applyLegalMove(currentPartSlice: GoPartSlice, legalMove: GoMove, capturedCoords: Coord[]): {resultMove: GoMove, newPartSlice: GoPartSlice} {
         if (GoRules.isPass(legalMove)) {
             return GoRules.applyPass(currentPartSlice);
         } else {
@@ -170,16 +167,24 @@ export class GoRules extends Rules {
         }
     }
 
-    private static applyPass(currentPartSlice: GoPartSlice): {resultMove: MoveCoordAndCapture<Coord>, newPartSlice: GoPartSlice} {
-        const resultMove: MoveCoordAndCapture<Coord> = GoRules.pass;
+    private static applyPass(currentPartSlice: GoPartSlice): {resultMove: GoMove, newPartSlice: GoPartSlice} {
+        const resultMove: GoMove = GoMove.pass;
         const oldBoard = currentPartSlice.getCopiedBoard();
         const oldCaptured = currentPartSlice.getCapturedCopy();
         const oldTurn = currentPartSlice.turn;
-        const newPartSlice: GoPartSlice = new GoPartSlice(oldBoard, oldCaptured, oldTurn + 1, null, Phase.PASSED);
+        let newPhase: Phase;
+        if (currentPartSlice.phase === Phase.PASSED) {
+            newPhase = Phase.COUNTING;
+        } else if (currentPartSlice.phase === Phase.PLAYING) {
+            newPhase = Phase.PASSED;
+        } else {
+            throw new Error("Cannot pass in counting phase!");
+        }
+        const newPartSlice: GoPartSlice = new GoPartSlice(oldBoard, oldCaptured, oldTurn + 1, null, newPhase);
         return {resultMove, newPartSlice};
     }
 
-    private static applyNormalLegalMove(currentPartSlice: GoPartSlice, legalMove: MoveCoord, capturedCoords: Coord[]): {resultMove: MoveCoordAndCapture<Coord>, newPartSlice: GoPartSlice} {
+    private static applyNormalLegalMove(currentPartSlice: GoPartSlice, legalMove: GoMove, capturedCoords: Coord[]): {resultMove: GoMove, newPartSlice: GoPartSlice} {
         const x: number = legalMove.coord.x;
         const y: number = legalMove.coord.y;
 
@@ -191,7 +196,7 @@ export class GoRules extends Rules {
         for (let capturedCoord of capturedCoords) {
             newBoard[capturedCoord.y][capturedCoord.x] = Pawn.EMPTY;
         }
-        let resultMove: MoveCoordAndCapture<Coord> = new MoveCoordAndCapture<Coord>(x, y, capturedCoords);
+        let resultMove: GoMove = new GoMove(x, y, capturedCoords);
         let newKoCoord: Coord = GoRules.getNewKo(resultMove, newBoard);
         let newCaptured: number[] = currentPartSlice.getCapturedCopy();
         newCaptured[currentTurn % 2] += capturedCoords.length;
@@ -207,10 +212,12 @@ export class GoRules extends Rules {
         }
         const goPartSlice: GoPartSlice = n.gamePartSlice as GoPartSlice;
         const captured: number[] = goPartSlice.getCapturedCopy();
-        return captured[1] - captured[0];
+        // return captured[1] - captured[0];
+        const goScore: number[] = GoRules.countBoardScore(goPartSlice);
+        return goScore[1] - goScore[0];
     }
 
-    choose(resultlessMove: MoveCoord): boolean {
+    choose(resultlessMove: GoMove): boolean {
         const LOCAL_VERBOSE: boolean = true;
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             const choix: MNode<GoRules> = this.node.getSonByMove(resultlessMove); // let's not doing if twice
@@ -234,15 +241,15 @@ export class GoRules extends Rules {
             return false;
         }
 
-        let result: {resultMove: MoveCoordAndCapture<Coord>, newPartSlice: GoPartSlice} =
+        let result: {resultMove: GoMove, newPartSlice: GoPartSlice} =
             GoRules.applyLegalMove(currentPartSlice, resultlessMove, legality.capturedCoords);        
         const son: MNode<GoRules> = new MNode(this.node, result.resultMove, result.newPartSlice);
         this.node = son;
         return true;
     }
 
-    public static getNewKo(moveAndResult: MoveCoordAndCapture<Coord>, newBoard: Pawn[][]): Coord {
-        const captures: Coord[] = moveAndResult.getCapture();
+    public static getNewKo(moveAndResult: GoMove, newBoard: Pawn[][]): Coord {
+        const captures: Coord[] = moveAndResult.getCapturesCopy();
         if (captures.length === 1) {
             const captured: Coord = captures[0];
             let capturer: GroupDatas = GoRules.getGroupDatas(moveAndResult.coord, newBoard);
@@ -258,12 +265,103 @@ export class GoRules extends Rules {
         }
     }
 
-    public setInitialBoard() {
+    public setInitialBoard() { // TODO: make generic and unherited
         if (this.node == null) {
             this.node = MNode.getFirstNode(new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING), this);
         } else {
             this.node = this.node.getInitialNode();
         }
+    }
+
+    public static countBoardScore(slice: GoPartSlice): number[] {
+        const deadlessSlice: GoPartSlice = GoRules.switchDeadToScore(slice);
+        const captured: number[] = deadlessSlice.getCapturedCopy();
+        let emptyZones: GroupDatas[] = [];
+        let whiteScore: number = captured[1];
+        let blackScore: number = captured[0];
+        
+        let board: Pawn[][] = deadlessSlice.getCopiedBoard();
+        
+        let coord: Coord;
+        let group: GroupDatas;
+        let currentCase: Pawn;
+        for (let y: number = 0; y < GoPartSlice.WIDTH; y++) {
+            for (let x: number = 0; x < GoPartSlice.HEIGHT; x++) {
+                coord = new Coord(x, y);
+                currentCase = board[y][x];
+                if (currentCase === Pawn.EMPTY) {
+                    if (!emptyZones.some(group => GroupDatas.countains(group, coord))) {
+                        group = GoRules.getGroupDatas(coord, board);
+                    }
+                }
+            }
+        }
+        for (let emptyZone of emptyZones) {
+            if (emptyZone.blackCoords.length === 0) {
+                // white territory
+                whiteScore += emptyZone.emptyCoords.length;
+            } else if (emptyZone.whiteCoords.length === 0) {
+                blackScore += emptyZone.emptyCoords.length;
+            }
+        }
+        return [blackScore, whiteScore];
+    }
+
+    private static switchDeadToScore(slice: GoPartSlice): GoPartSlice {
+        const captured: number[] = slice.getCapturedCopy();
+        let whiteScore: number = captured[1];
+        let blackScore: number = captured[0];
+        let coord: Coord;
+        let currentCase: Pawn;
+        let newBoard: Pawn[][] = slice.getCopiedBoard();
+        for (let y: number = 0; y < GoPartSlice.WIDTH; y++) {
+            for (let x: number = 0; x < GoPartSlice.HEIGHT; x++) {
+                coord = new Coord(x, y);
+                currentCase = newBoard[y][x];
+                if (currentCase === Pawn.DEAD_BLACK) {
+                    whiteScore++;
+                    newBoard[y][x] = Pawn.EMPTY;
+                } else if (currentCase === Pawn.DEAD_WHITE) {
+                    blackScore++;
+                    newBoard[y][x] = Pawn.EMPTY;
+                }
+            }
+        }
+        const newCaptured: number[] = [blackScore, whiteScore];
+        const newTurn: number = slice.turn;
+        return new GoPartSlice(newBoard, newCaptured, newTurn, null, Phase.COUNTING);
+    }
+
+    private static switchAliveness(slice: GoPartSlice, groupCoord: Coord): GoPartSlice {
+        let switchedBoard: Pawn[][] = slice.getCopiedBoard();
+        let switchedPiece: Pawn = slice.getBoardByXY(groupCoord.x, groupCoord.y);
+        if (switchedPiece === Pawn.EMPTY) {
+            throw new Error("Can't switch emptyness aliveness");
+        }
+        let group: GroupDatas = GoRules.getGroupDatas(groupCoord, slice.getCopiedBoard());
+        let capturedCopy: number[] = slice.getCapturedCopy();
+        if (group.color === Pawn.DEAD_BLACK) {
+            capturedCopy[1] -= group.deadBlackCoords.length;
+            for (let deadBlackCoord of group.deadBlackCoords) {
+                switchedBoard[deadBlackCoord.y][deadBlackCoord.x] = Pawn.BLACK;
+            }
+        } else if (group.color === Pawn.DEAD_WHITE) {
+            capturedCopy[0] -= group.deadWhiteCoords.length;
+            for (let deadWhiteCoord of group.deadWhiteCoords) {
+                switchedBoard[deadWhiteCoord.y][deadWhiteCoord.x] = Pawn.WHITE;
+            }
+        } else if (group.color === Pawn.WHITE) {
+            capturedCopy[0] += group.whiteCoords.length;
+            for (let whiteCoord of group.whiteCoords) {
+                switchedBoard[whiteCoord.y][whiteCoord.x] = Pawn.DEAD_WHITE;
+            }
+        } else if (group.color === Pawn.BLACK) {
+            capturedCopy[1] += group.blackCoords.length;
+            for (let blackCoord of group.blackCoords) {
+                switchedBoard[blackCoord.y][blackCoord.x] = Pawn.DEAD_BLACK;
+            }
+        }
+        return new GoPartSlice(switchedBoard, capturedCopy, slice.turn, slice.getKoCoordCopy(), Phase.COUNTING);
     }
 }
 
@@ -293,18 +391,30 @@ class GroupDatas {
 
     public whiteCoords: Coord[];
 
+    public deadBlackCoords: Coord[];
+
+    public deadWhiteCoords: Coord[];
+
     public static getCoordsOfGroup(group: GroupDatas): Coord[] {
         if (group.color === Pawn.BLACK) {
             return group.blackCoords;
         } else if (group.color === Pawn.WHITE) {
             return group.whiteCoords;
+        } else if (group.color === Pawn.DEAD_BLACK) {
+            return group.deadBlackCoords;
+        } else if (group.color === Pawn.DEAD_WHITE) {
+            return group.deadWhiteCoords;
         } else {
             return group.emptyCoords;
         }
     }
 
     public static countains(group: GroupDatas, coord: Coord) {
-        let allCoord: Coord[] = group.blackCoords.concat(group.whiteCoords.concat(group.emptyCoords));
+        let allCoord: Coord[] = group.blackCoords
+                        .concat(group.whiteCoords
+                        .concat(group.emptyCoords
+                        .concat(group.deadBlackCoords
+                        .concat(group.deadWhiteCoords))));
         return allCoord.some(c => c.equals(coord));
     }
 
@@ -316,8 +426,14 @@ class GroupDatas {
             group.blackCoords.push(coord);
         } else if (color === Pawn.WHITE) {
             group.whiteCoords.push(coord);
-        } else {
+        } else if (color === Pawn.DEAD_BLACK) {
+            group.deadBlackCoords.push(coord);
+        } else if (color === Pawn.DEAD_WHITE) {
+            group.deadWhiteCoords.push(coord);
+        } else if (color === Pawn.EMPTY){
             group.emptyCoords.push(coord);
+        } else {
+            throw new Error("Cette couleur de pion de Go n'existe pas");
         }
         return group;
     }

@@ -1,20 +1,21 @@
 import {MoveCoord} from './MoveCoord';
+import { GamePartSlice } from './GamePartSlice';
 
-export class MoveCoordAndCapture<C> extends MoveCoord {
+export abstract class MoveCoordAndCapture<C> extends MoveCoord {
 	/* is a MoveXY with added captures results
 	 * the captures result help to retrieve in reverse order
 	 * if XY cannot help you to reconstruct the part
 	 */
 
-	protected readonly capture: C[] ;
+	protected readonly captures: C[] ;
 
-	constructor(x: number, y: number, capture: C[]) {
+	constructor(x: number, y: number, captures: C[]) {
 		super(x, y);
-		this.capture = capture;
+		this.captures = captures;
 	}
 
-	getCapture(): C[] {
-		return this.capture; // TODO: rende réellement unmuttable
+	getCapturesCopy(): C[] {
+		 return this.captures.map(x => Object.assign({}, x));
 	}
 
 	equals(obj: any): boolean {
@@ -36,15 +37,15 @@ export class MoveCoordAndCapture<C> extends MoveCoord {
 				return false;
 			}
 		}
-		if (this.capture === null) {
-			if (obj.capture !== null) {
+		if (this.captures === null) {
+			if (obj.captures !== null) {
 				return false;
 			}
 		} else {
-			if (this.capture[0] !== obj.capture[0]) {
+			if (this.captures[0] !== obj.captures[0]) {
 				return false;
 			}
-			if (this.capture[1] !== obj.capture[1]) {
+			if (this.captures[1] !== obj.captures[1]) {
 				return false;
 			}
 		}

@@ -4,10 +4,10 @@ import {ActivatedRoute, Router} from '@angular/router';
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
-import {MoveCoord} from '../../../jscaip/MoveCoord';
-import { GoRules } from 'src/app/games/go/GoRules';
-import { GoPartSlice } from 'src/app/games/go/GoPartSlice';
-import { Coord } from 'src/app/jscaip/Coord';
+import {GoMove} from 'src/app/games/go/GoMove';
+import {GoRules} from 'src/app/games/go/GoRules';
+import {GoPartSlice, Phase} from 'src/app/games/go/GoPartSlice';
+import {Coord} from 'src/app/jscaip/Coord';
 
 @Component({
     selector: 'app-go',
@@ -32,6 +32,7 @@ export class GoComponent extends AbstractGameComponent {
     constructor() {
         super();
         this.canPass = true;
+        this.showScore = true;
     }
 
     onClick(x: number, y: number): boolean {
@@ -46,7 +47,7 @@ export class GoComponent extends AbstractGameComponent {
 
         this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
-        const chosenMove = new MoveCoord(x, y);
+        const chosenMove = new GoMove(x, y, []); // TODO: check validity of "[]"
         if (this.rules.isLegal(chosenMove)) {
             if (GoComponent.VERBOSE) {
                 console.log('Et javascript estime que votre mouvement est légal');
@@ -61,38 +62,28 @@ export class GoComponent extends AbstractGameComponent {
         }
     }
 
-    decodeMove(encodedMove: number): MoveCoord {
-        if (encodedMove === GoRules.passNumber) {
-            return GoRules.pass;
-        }
-        const x = encodedMove % 19; // TODO: vérifier ici le cas où ce sera pas un plateau de taille standard 19x19
-        const y = (encodedMove - x) / 19;
-        return new MoveCoord(x, y);
+    decodeMove(encodedMove: number): GoMove {
+        return GoMove.decode(encodedMove);
     }
 
-    encodeMove(move: MoveCoord): number {
-        // A go move goes on x from o to 18
-        // and y from 0 to 18
-        // encoded as y*18 + x
-        if (move.equals(GoRules.pass)) {
-            return GoRules.passNumber;
-        }
-        return (move.coord.y * 19) + move.coord.x;
+    encodeMove(move: GoMove): number {
+        return move.encode();
     }
 
     updateBoard(): void {
         if (GoComponent.VERBOSE) {
             console.log('updateBoard');
         }
-        const goPartSlice: GoPartSlice = this.rules.node.gamePartSlice as GoPartSlice;
-        const moveCoord: MoveCoord = this.rules.node.getMove() as MoveCoord;
-        const koCoord: Coord = goPartSlice.getKoCoordCopy();
+        const slice: GoPartSlice = this.rules.node.gamePartSlice as GoPartSlice;
+        const move: GoMove = this.rules.node.getMove() as GoMove;
+        const koCoord: Coord = slice.getKoCoordCopy();
+        const phase: Phase = slice.phase;
 
-        this.board = goPartSlice.getCopiedBoard();
+        this.board = slice.getCopiedBoard();
 
-        if (moveCoord != null) {
-            this.lastX = moveCoord.coord.x;
-            this.lastY = moveCoord.coord.y;
+        if (move != null) {
+            this.lastX = move.coord.x;
+            this.lastY = move.coord.y;
         }
         if (koCoord != null) {
             this.koX = koCoord.x;
@@ -101,9 +92,10 @@ export class GoComponent extends AbstractGameComponent {
             this.koX = -1;
             this.koY = -1;
         }
+        this.canPass = phase !== Phase.COUNTING;
     }
 
     pass() {
-        this.onClick(GoRules.pass.coord.x, GoRules.pass.coord.y);
+        this.onClick(GoMove.pass.coord.x, GoMove.pass.coord.y);
     }
 }

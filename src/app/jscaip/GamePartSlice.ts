@@ -68,7 +68,7 @@ export class GamePartSlice {
 		return this.board[y][x];
 	}
 
-	public getBoardByCoord(c: Coord): number {
+	public getBoardAt(c: Coord): number {
 		return this.board[c.y][c.x];
 	}
 

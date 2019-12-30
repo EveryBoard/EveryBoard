@@ -463,7 +463,5 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
 			}
 		}
 		return score;
-
 	}
-
 }
