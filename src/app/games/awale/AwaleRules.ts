@@ -4,6 +4,7 @@ import {Move} from '../../jscaip/Move';
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {AwalePartSlice} from './AwalePartSlice';
 import { AwaleMove } from './AwaleMove';
+import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
 export class AwaleRules extends Rules {
 
@@ -228,13 +229,13 @@ export class AwaleRules extends Rules {
         return captured;
     }
 
-    getListMoves(n: MNode<AwaleRules>): {key: Move, value: GamePartSlice}[] {
+    getListMoves(n: MNode<AwaleRules>): MGPMap<AwaleMove, AwalePartSlice> {
         const localVerbose = false ;
         if (AwaleRules.VERBOSE || localVerbose) {
             console.log('getListMoves');
         }
 
-        const choices: {key: Move, value: GamePartSlice}[] = [];
+        const choices: MGPMap<AwaleMove, AwalePartSlice> = new MGPMap<AwaleMove, AwalePartSlice>();
         const turn: number = n.gamePartSlice.turn;
         const player: number = turn % 2;
         let move: AwaleMove;
@@ -262,14 +263,14 @@ export class AwaleRules extends Rules {
                     capturedCopy[(player + 1) % 2] += moveResult[(player + 1) % 2];
 
                     partSlice = new AwalePartSlice(boardArray, turn + 1, capturedCopy);
-                    choices.push({key: move, value: partSlice});
+                    choices.put(move, partSlice);
                 }
             }
             x++;
         } while (x < 6);
 
         if (AwaleRules.VERBOSE || localVerbose) {
-            console.log(n + ' has ' + choices.length + ' choices');
+            console.log(n + ' has ' + choices.size() + ' choices');
         }
         return choices;
     }

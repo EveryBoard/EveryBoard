@@ -24,7 +24,7 @@ export abstract class MoveCoord extends Move { // TODO: Immutable & Pool
     }
     */
 
-    equals(obj: any): boolean {
+    public equals(obj: any): boolean {
         if (this === obj) {
             return true;
         }
@@ -46,7 +46,7 @@ export abstract class MoveCoord extends Move { // TODO: Immutable & Pool
         return true;
     }
 
-    toString() {
+    public toString() {
         return 'MoveCoord [coord = ' + this.coord.toString() + ']';
     }
 }

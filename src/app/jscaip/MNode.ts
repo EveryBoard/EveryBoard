@@ -2,6 +2,7 @@ import {Move} from './Move';
 import {SCORE} from './SCORE';
 import {Rules} from './Rules';
 import {GamePartSlice} from './GamePartSlice';
+import { MGPMap } from '../collectionlib/MGPMap';
 
 export class MNode<R extends Rules> {
 	// TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
@@ -117,26 +118,24 @@ export class MNode<R extends Rules> {
 
 	// instance methods:
 
-	constructor(
-		mother: MNode<R> | null,
-		move: Move | null,
-		board: GamePartSlice
-	) {
+	constructor(mother: MNode<R> | null, move: Move | null, board: GamePartSlice) {
 		/* Initialisation condition:
        * mother: null for initial board
        * board: should already be a clone
        */
+       const LOCAL_VERBOSE: boolean = true;
 		this.mother = mother;
 		this.move = move;
 		this.gamePartSlice = board;
-		this.ownValue = this.mother ? MNode.ruler.getBoardValue(this) : 0;
+        this.ownValue = this.mother == null ? 0 : MNode.ruler.getBoardValue(this);
 		this.hopedValue = this.ownValue;
-		if (MNode.VERBOSE) {
-			console.log('MNode<R> in phase of creation with mom : ');
-			console.log(mother);
+		if (MNode.VERBOSE || LOCAL_VERBOSE) {
+            console.log("new node ("+this.gamePartSlice.turn+")"); // = "+this.gamePartSlice.toString() + " == " + this.ownValue);
+			//console.log('MNode<R> in phase of creation with slice : ' + this.gamePartSlice.toString() + " = " + this.ownValue);
+//          console.log(mother);
 
-			console.log('and with board');
-            console.log(board);
+//          console.log('and with board');
+//            console.log(board);
 		}
 	}
 
@@ -167,55 +166,57 @@ export class MNode<R extends Rules> {
 	}
 
 	findBestMoveAndSetDepth(readingDepth: number): MNode<R> {
+        console.log("findBestMoveAndSetDepth("+readingDepth+") = "+this.gamePartSlice.toString() + " => " + this.ownValue);
 		this.depth = readingDepth;
 		return this.findBestMove();
 	}
 
 	private findBestMove(): MNode<R> {
+        const LOCAL_VERBOSE: boolean = false;
 		if (this.isLeaf()) {
-			if (MNode.VERBOSE) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('isLeaf (' + this.myToString());
 			}
 			return this; // rules - leaf or calculation - leaf
 		} else {
 			// here it's not a calculation - leaf and not yet proven to be a rules - leaf
-			if (MNode.VERBOSE) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('Not A Leaf');
 			}
 
 			if (this.childs === null) {
 				// if the Node has no child yet
-				if (MNode.VERBOSE) {
+				if (MNode.VERBOSE || LOCAL_VERBOSE) {
 					console.log('has No Child Yet');
 				}
 				this.createChilds();
-				if (MNode.VERBOSE) {
+				if (MNode.VERBOSE || LOCAL_VERBOSE) {
 					console.log('Childs created');
 				}
 				// here it's not a calculation - leaf but now we can check if it's a rule - leaf
 				if (this.childs && (<any>this.childs).length === 0) { // TODO correct
 					// here this.depth !== 0 and this.hasAlreadyChild()
 					// so this is the last condition needed to see if it's a leaf - by - rules
-					if (MNode.VERBOSE) {
+					if (MNode.VERBOSE || LOCAL_VERBOSE) {
 						console.log('is A Leaf By Rules');
 					}
 					return this; // rules - leaf
 				}
-				if (MNode.VERBOSE) {
+				if (MNode.VERBOSE || LOCAL_VERBOSE) {
 					console.log('has Child NOW');
 				}
 			} else {
-				if (MNode.VERBOSE) {
+				if (MNode.VERBOSE || LOCAL_VERBOSE) {
 					console.log('Has already Childs');
 				}
 			}
 			// here it's not a calculation - leaf nor a rules - leaf
 			this.calculateChildsValue();
-			if (MNode.VERBOSE) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('has Calculate Childs Value');
 			}
 			this.setBestChild();
-			if (MNode.VERBOSE) {
+			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('has set best child');
 			}
 
@@ -299,17 +300,15 @@ export class MNode<R extends Rules> {
        * g. l'ajouter à this.childs
        * h. ne rien changer à sa depth avant que la Node ne soit calculée
        */
+       if (this.childs != null) throw new Error("multiple node childs calculation error");
 		const LOCAL_VERBOSE = false;
-		const moves: {
-			key: Move;
-			value: GamePartSlice;
-		}[] = MNode.ruler.getListMoves(this);
+		const moves: MGPMap<Move, GamePartSlice> = MNode.ruler.getListMoves(this);
 		this.childs = new Array<MNode<R>>();
 		if (MNode.VERBOSE || LOCAL_VERBOSE) {
 			console.log('createChilds received listMoves from ruler');
 			console.log(moves);
 		}
-		for (const entry of moves) {
+		for (const entry of moves.map) {
 			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('in the loop');
 				console.log(entry);
@@ -470,26 +469,16 @@ export class MNode<R extends Rules> {
 		return this.hopedValue;
 	}
 
-	myToString(): String {
-		return (
-			this +
-			' [mother = ' +
-			this.mother +
-			', board = ' +
-			this.gamePartSlice +
-			', childs = ' +
-			this.childs +
-			', bestChild = ' +
-			this.bestChildIndex +
-			', ownValue = ' +
-			this.ownValue +
-			', hopedValue = ' +
-			this.hopedValue +
-			', depth = ' +
-			this.depth +
-			']'
-		);
-	}
+    myToString(): String {
+        return this +
+            ' [mother = ' + this.mother +
+            ', board = ' + this.gamePartSlice +
+            ', childs = ' + this.childs +
+            ', bestChild = ' + this.bestChildIndex +
+            ', ownValue = ' + this.ownValue +
+            ', hopedValue = ' + this.hopedValue +
+            ', depth = ' + this.depth + ']';
+    }
 
 	/* public boolean isEndGame() { // version without prints
     if (getScoreStatus(this.ownValue) === SCORE.VICTORY) return true;

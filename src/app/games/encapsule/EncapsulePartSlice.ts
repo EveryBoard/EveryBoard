@@ -1,5 +1,5 @@
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
-import { EncapsulePiece } from "./EncapsulePiece";
+import { EncapsulePiece, Size, Player, EncapsuleMapper } from "./EncapsuleEnums";
 
 export class EncapsulePartSlice extends GamePartSlice {
 
@@ -19,12 +19,17 @@ export class EncapsulePartSlice extends GamePartSlice {
     static getStartingSlice(): EncapsulePartSlice {
         const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
         const emptyNumber: number = emptyCase.encode();
-        let startingBoard: number[][] = GamePartSlice.createBiArray(3, 3, emptyNumber);
+        //let startingBoard: number[][] = GamePartSlice.createBiArray(3, 3, emptyNumber);
         /*const startingBoard: number[][] = [
             [0*9+0*3+0*1, 0*9+0*3+1*1, 0*9+1*3+0*1],
             [0*9+1*3+1*1, 1*9+0*3+0*1, 1*9+0*3+1*1],
             [1*9+1*3+0*1, 1*9+1*3+1*1, 2*9+2*3+2*1]
         ];*/
+        const startingBoard: number[][] = [
+            [0*9+2*3+2*1, 2*9+2*3+2*1, 2*9+2*3+2*1],
+            [2*9+2*3+2*1, 0*9+2*3+2*1, 2*9+2*3+2*1],
+            [2*9+2*3+2*1, 2*9+2*3+2*1, 2*9+2*3+2*1]
+        ];
         let initialPieces: EncapsulePiece[] = [
                EncapsulePiece.BIG_BLACK,    EncapsulePiece.BIG_BLACK,    EncapsulePiece.BIG_WHITE,    EncapsulePiece.BIG_WHITE,
             EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
@@ -33,21 +38,21 @@ export class EncapsulePartSlice extends GamePartSlice {
     }
 
     static pieceBelongToCurrentPlayer(piece: EncapsulePiece, turn: number): boolean {
-        const pieceOwner: Player = EncapsuleCase.toPlayer(piece);
+        const pieceOwner: Player = EncapsuleMapper.toPlayer(piece);
         if (pieceOwner === Player.BLACK) return turn%2 === 0;
         if (pieceOwner === Player.WHITE) return turn%2 === 1;
-        throw new Error("NONE belong to neither BLACK nor WHITE");
+        return false;
     }
 
     public pieceBelongToCurrentPlayer(piece: EncapsulePiece): boolean {
         return EncapsulePartSlice.pieceBelongToCurrentPlayer(piece, this.turn);
     }
 
-    public isGivable(piece: EncapsulePiece): boolean {
+    public isDropable(piece: EncapsulePiece): boolean {
         if (!this.pieceBelongToCurrentPlayer(piece)) {
             return false;
         }
-        return this.remainingPieces.some(piece => piece === piece);
+        return this.remainingPieces.some(p => p === piece);
     }
 
     public toCase(): EncapsuleCase[][] {
@@ -61,12 +66,6 @@ export class EncapsulePartSlice extends GamePartSlice {
     public getPlayerRemainingPieces(player: Player): EncapsulePiece[] {
         return this.remainingPieces.filter(piece => this.pieceBelongToCurrentPlayer(piece));
     }
-}
-
-export enum Player {
-    BLACK = 0,
-    WHITE = 1,
-    NONE = 2,
 }
 
 export class EncapsuleCase {
@@ -88,74 +87,18 @@ export class EncapsuleCase {
         this.big = big;
     }
 
-    static toPlayer(piece: EncapsulePiece): Player {
-        if (piece === EncapsulePiece.BIG_BLACK ||
-            piece === EncapsulePiece.MEDIUM_BLACK ||
-            piece === EncapsulePiece.SMALL_BLACK) {
-            return Player.BLACK;
-        } else if (piece === EncapsulePiece.BIG_WHITE ||
-                   piece === EncapsulePiece.MEDIUM_WHITE ||
-                   piece === EncapsulePiece.SMALL_WHITE) {
-            return Player.WHITE;
-        } else if (piece === EncapsulePiece.NONE) {
-            return Player.NONE;
-        } else {
-            throw new Error("Unknown piece: " + piece);
-        }
+    public toString(): string {
+        const pieceNames: String[] = this.toOrderedPieceNames();
+        return "("+pieceNames[0] + ", " + pieceNames[1] + ", " + pieceNames[2] + ")";
     }
 
     public toOrderedPieceNames(): String[] {
-        const smallPiece: EncapsulePiece = EncapsuleCase.toPiece(Size.SMALL, this.small);
-        const mediumPiece: EncapsulePiece = EncapsuleCase.toPiece(Size.MEDIUM, this.medium);
-        const bigPiece: EncapsulePiece = EncapsuleCase.toPiece(Size.BIG, this.big);
-        return [EncapsuleCase.getNameFromPiece(smallPiece),
-                EncapsuleCase.getNameFromPiece(mediumPiece),
-                EncapsuleCase.getNameFromPiece(bigPiece)];
-    }
-
-    static getNameFromPiece(piece: EncapsulePiece): String {
-        switch (piece) {
-            case EncapsulePiece.BIG_BLACK: return "BIG_BLACK";
-            case EncapsulePiece.BIG_WHITE: return "BIG_WHITE";
-            case EncapsulePiece.MEDIUM_BLACK: return "MEDIUM_BLACK";
-            case EncapsulePiece.MEDIUM_WHITE: return "MEDIUM_WHITE";
-            case EncapsulePiece.SMALL_BLACK: return "SMALL_BLACK";
-            case EncapsulePiece.SMALL_WHITE: return "SMALL_WHITE";
-            case EncapsulePiece.NONE: return "NONE";
-            default: throw new Error("Unknown EncapsulePiece: " + piece);
-        }
-    }
-
-    static getPieceFromName(pieceName: String): EncapsulePiece {
-        switch (pieceName) {
-            case "BIG_BLACK": return EncapsulePiece.BIG_BLACK;
-            case "BIG_WHITE": return EncapsulePiece.BIG_WHITE;
-            case "MEDIUM_BLACK": return EncapsulePiece.MEDIUM_BLACK;
-            case "MEDIUM_WHITE": return EncapsulePiece.MEDIUM_WHITE;
-            case "SMALL_BLACK": return EncapsulePiece.SMALL_BLACK;
-            case "SMALL_WHITE": return EncapsulePiece.SMALL_WHITE;
-            case "NONE": return EncapsulePiece.NONE;
-            default: throw new Error("Unknown EncapsulePiece: " + pieceName);
-        }
-    }
-
-    static toSize(piece: EncapsulePiece): Size {
-        if (piece === EncapsulePiece.BIG_BLACK    || piece === EncapsulePiece.BIG_WHITE) return Size.BIG;
-        if (piece === EncapsulePiece.MEDIUM_BLACK || piece === EncapsulePiece.MEDIUM_WHITE) return Size.MEDIUM;
-        if (piece === EncapsulePiece.SMALL_BLACK  || piece === EncapsulePiece.SMALL_WHITE) return Size.SMALL;
-        if (piece === EncapsulePiece.NONE) return Size.NONE;
-        throw new Error("Unknown piece: " + piece);
-    }
-
-    static toPiece(size: Size, player: Player): EncapsulePiece {
-        if (player === Player.BLACK && size === Size.BIG) return EncapsulePiece.BIG_BLACK;
-        if (player === Player.BLACK && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_BLACK;
-        if (player === Player.BLACK && size === Size.SMALL) return EncapsulePiece.SMALL_BLACK;
-        if (player === Player.WHITE && size === Size.BIG) return EncapsulePiece.BIG_WHITE;
-        if (player === Player.WHITE && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_WHITE;
-        if (player === Player.WHITE && size === Size.SMALL) return EncapsulePiece.SMALL_WHITE;
-        if (player === Player.NONE) return EncapsulePiece.NONE;
-        throw new Error("Unknown combinaison (" + size + ", " + player + ")");
+        const smallPiece: EncapsulePiece = EncapsuleMapper.toValidPiece(Size.SMALL, this.small);
+        const mediumPiece: EncapsulePiece = EncapsuleMapper.toValidPiece(Size.MEDIUM, this.medium);
+        const bigPiece: EncapsulePiece = EncapsuleMapper.toValidPiece(Size.BIG, this.big);
+        return [EncapsuleMapper.getNameFromPiece(smallPiece),
+                EncapsuleMapper.getNameFromPiece(mediumPiece),
+                EncapsuleMapper.getNameFromPiece(bigPiece)];
     }
 
     public getBiggest(): EncapsulePiece {
@@ -170,11 +113,11 @@ export class EncapsuleCase {
 
     public tryToSuperposePiece(piece: EncapsulePiece): {success: boolean; result: EncapsuleCase} {
         const FAILURE: {success: boolean; result: EncapsuleCase} = {success: false, result: null};
-        let biggestPresent: Size = EncapsuleCase.toSize(this.getBiggest());
+        let biggestPresent: Size = EncapsuleMapper.toSize(this.getBiggest());
         if (piece === EncapsulePiece.NONE) {
             throw new Error("Cannot move NONE on a case");
         }
-        let pieceSize: Size = EncapsuleCase.toSize(piece);
+        let pieceSize: Size = EncapsuleMapper.toSize(piece);
         if (pieceSize > biggestPresent) {
             return {success: true, result: this.put(piece)};
         } else {
@@ -187,7 +130,7 @@ export class EncapsuleCase {
         if (removedPiece === EncapsulePiece.NONE) {
             throw new Error("Cannot removed piece from empty case");
         }
-        let removedSize: Size = EncapsuleCase.toSize(removedPiece);
+        let removedSize: Size = EncapsuleMapper.toSize(removedPiece);
         let removedCase: EncapsuleCase;
         if (removedSize === Size.BIG) {
             removedCase = new EncapsuleCase(this.small, this.medium, Player.NONE);
@@ -202,8 +145,9 @@ export class EncapsuleCase {
     }
 
     public put(piece: EncapsulePiece): EncapsuleCase {
-        let pieceSize: Size = EncapsuleCase.toSize(piece);
-        let piecePlayer: Player = EncapsuleCase.toPlayer(piece);
+        if (piece === EncapsulePiece.NONE) throw new Error("Cannot put NONE on case");
+        let pieceSize: Size = EncapsuleMapper.toSize(piece);
+        let piecePlayer: Player = EncapsuleMapper.toPlayer(piece);
         if (pieceSize === Size.BIG) {
             return new EncapsuleCase(this.small, this.medium, piecePlayer);
         }
@@ -222,6 +166,9 @@ export class EncapsuleCase {
     }
 
     static decode(encapsuleCase: number): EncapsuleCase {
+        if (encapsuleCase%1 !== 0) throw new Error("EncapsuleCase must be encoded as integer: " + encapsuleCase);
+        if (encapsuleCase < 0) throw new Error("To small representation for EncapsuleCase: " + encapsuleCase);
+        if (encapsuleCase > 26) throw new Error("To big representation for EncapsuleCase: " + encapsuleCase);
         const small: Player = encapsuleCase%3;
         encapsuleCase -= small;
         encapsuleCase/=3;
@@ -234,14 +181,7 @@ export class EncapsuleCase {
 
     public belongToCurrentPlayer(currentPlayer: Player): boolean {
         const biggest: EncapsulePiece = this.getBiggest();
-        const owner: Player = EncapsuleCase.toPlayer(biggest);
+        const owner: Player = EncapsuleMapper.toPlayer(biggest);
         return owner === currentPlayer;
     }
-}
-
-export enum Size {
-    NONE = 0,
-    SMALL = 1,
-    MEDIUM = 2,
-    BIG = 3
 }

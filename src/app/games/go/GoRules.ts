@@ -6,6 +6,7 @@ import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {GoPartSlice, Pawn, Phase} from './GoPartSlice';
 import {DIRECTION, ORTHOGONALES} from 'src/app/jscaip/DIRECTION';
 import {GoMove} from './GoMove';
+import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
 export class GoRules extends Rules {
 
@@ -133,13 +134,13 @@ export class GoRules extends Rules {
         return groupDatas; 
     }
 
-    getListMoves(node: MNode<GoRules>): {key: Move, value: GoPartSlice}[] {
+    getListMoves(node: MNode<GoRules>): MGPMap<GoMove, GoPartSlice> {
         const localVerbose = false;
         if (GoRules.VERBOSE || localVerbose) {
             console.log('getListMoves');
         }
 
-        const choices: {key: Move, value: GoPartSlice}[] = [];
+        const choices: MGPMap<GoMove, GoPartSlice> = new MGPMap<GoMove, GoPartSlice>();
 
         const currentPartSlice: GoPartSlice = node.gamePartSlice as GoPartSlice; // TODO : voir si il faut pas la supprimer
 
@@ -152,7 +153,7 @@ export class GoRules extends Rules {
                 if (legality.legal) {
                     let result: {resultMove: GoMove, newPartSlice: GoPartSlice} =
                         GoRules.applyLegalMove(currentPartSlice, newResultlessMove, legality.capturedCoords);
-                    choices.push({key: result.resultMove, value: result.newPartSlice});
+                    choices.put(result.resultMove, result.newPartSlice);
                 }
             }
         }

@@ -21,7 +21,7 @@
         </tr>
     </table>
 </div>
-{{ "chosenCoord: " + chosenCoord}} <br/>
+{{ chosenCoord == null ? "null" : caseBoard[chosenCoord.y][chosenCoord.x] }} <br/>
 {{ "chosenPiece: " + chosenPiece}} <br/>
 {{ "isVictory: " + isVictory()}} <br/>
 <div id="piece">

@@ -1,6 +1,6 @@
 import { Move } from "src/app/jscaip/Move";
 import { Coord } from "src/app/jscaip/Coord";
-import { EncapsulePiece } from "./EncapsulePiece";
+import { EncapsulePiece, EncapsuleMapper } from "./EncapsuleEnums";
 import { EncapsuleCase } from "./EncapsulePartSlice";
 
 export class EncapsuleMove extends Move {
@@ -70,15 +70,15 @@ export class EncapsuleMove extends Move {
 
     private constructor(startingCoord: Coord, landingCoord: Coord, piece: EncapsulePiece) {
         super();
-        if (landingCoord == null) throw new Error("Landing Coord cannot be null");
-        if (startingCoord == null && piece == null) throw new Error("One of startingCoord and piece must be null");
-        if (startingCoord != null && piece != null) throw new Error("One of startingCoord and piece must be initialised");
         this.startingCoord = startingCoord;
         this.landingCoord = landingCoord;
         this.piece = piece;
     }
 
     static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
+        if (startingCoord == null) throw new Error("Starting coord cannot be null");
+        if (landingCoord == null) throw new Error("Landing coord cannot be null");
+        if (startingCoord.equals(landingCoord)) throw new Error("Starting coord and landing coord must be separate coords");
         return new EncapsuleMove(startingCoord, landingCoord, null);
     }
 
@@ -107,8 +107,10 @@ export class EncapsuleMove extends Move {
         if (this.startingCoord == null && other.startingCoord != null) {
             return false;
         } else {
-            if (!this.startingCoord.equals(other.startingCoord)) {
-                return false;
+            if (this.startingCoord != null) {
+                if (!this.startingCoord.equals(other.startingCoord)) {
+                    return false;
+                }
             }
         }
         if (this.piece !== other.piece) {
@@ -117,9 +119,9 @@ export class EncapsuleMove extends Move {
         return true;
     }
 
-    public toString(): string {
+    public toString(): String {
         if (this.isDropping()) {
-            return "EncapsuleMove(" + EncapsuleCase.getNameFromPiece(this.piece) + " -> " + this.landingCoord + ")";
+            return "EncapsuleMove(" + EncapsuleMapper.getNameFromPiece(this.piece) + " -> " + this.landingCoord + ")";
         } else {
             return "EncapsuleMove(" + this.startingCoord + "->" + this.landingCoord + ")";
         }

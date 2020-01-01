@@ -4,6 +4,7 @@ import {Coord} from '../../jscaip/Coord';
 import {MNode} from '../../jscaip/MNode';
 import {TablutPartSlice} from './TablutPartSlice';
 import { TablutMove } from './TablutMove';
+import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
 export class TablutRules extends Rules {
     static VERBOSE = false;
@@ -517,13 +518,13 @@ export class TablutRules extends Rules {
 
     // instance methods :
 
-    getListMoves(n: MNode<TablutRules>): { key: TablutMove, value: TablutPartSlice }[] {
+    getListMoves(n: MNode<TablutRules>): MGPMap<TablutMove, TablutPartSlice> {
         const localVerbose = false;
         if (TablutRules.VERBOSE || localVerbose) {
             console.log('get list move available to ');
             console.log(n);
         }
-        const listCombinaison: {key: TablutMove, value: TablutPartSlice}[] = [];
+        const listCombinaison: MGPMap<TablutMove, TablutPartSlice> = new MGPMap<TablutMove, TablutPartSlice>();
 
         const currentPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
 
@@ -546,7 +547,7 @@ export class TablutRules extends Rules {
             moveResult = TablutRules.tryMove(currentPlayer, invaderStart, newMove, currentBoard).success;
             if (moveResult === TablutRules.SUCCESS) {
                 newPartSlice = new TablutPartSlice(currentBoard, nextTurn, currentPartSlice.invaderStart);
-                listCombinaison.push({key: newMove, value: newPartSlice});
+                listCombinaison.put(newMove, newPartSlice);
             } else if (TablutRules.VERBOSE || localVerbose) {
                 console.log('how is it that I receive a moveResult == to '
                     + moveResult + ' with ' + newMove + ' at turn ' + currentTurn + ' of player ' + currentPlayer);

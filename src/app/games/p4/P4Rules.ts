@@ -5,6 +5,7 @@ import {MoveX} from '../../jscaip/MoveX';
 import {SCORE} from '../../jscaip/SCORE';
 import {MNode} from '../../jscaip/MNode';
 import {P4PartSlice} from './P4PartSlice';
+import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
 export class P4Rules extends Rules {
 	// statics fields:
@@ -417,8 +418,7 @@ export class P4Rules extends Rules {
 
 	// static delegates
 
-	static _getListMoves(n: MNode<P4Rules>):
-		{ key: MoveX; value: P4PartSlice }[] {
+	static _getListMoves(n: MNode<P4Rules>): MGPMap<MoveX, P4PartSlice> {
 		if (P4Rules.VERBOSE) {
 			console.log('P4Rules._getListMoves appellé sur ');
 			P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
@@ -426,7 +426,7 @@ export class P4Rules extends Rules {
 		// ne doit être appellé que si cette partie n'est pas une partie finie
 		const originalPartSlice: P4PartSlice = n.gamePartSlice;
 		const originalBoard: number[][] = originalPartSlice.getCopiedBoard();
-		const retour: { key: MoveX; value: P4PartSlice }[] = [];
+		const retour: MGPMap<MoveX, P4PartSlice> = new MGPMap<MoveX, P4PartSlice>();
 		const turn: number = originalPartSlice.turn;
 		let y: number;
 		let move: MoveX;
@@ -445,7 +445,7 @@ export class P4Rules extends Rules {
 
 				const newPartSlice = new P4PartSlice(newBoard, turn + 1);
 
-				retour.push({key: move, value: newPartSlice});
+				retour.put(move, newPartSlice);
 			}
 			x++;
 		}
@@ -524,7 +524,7 @@ export class P4Rules extends Rules {
 		}
 	}
 
-	getListMoves(n: MNode<P4Rules>): { key: MoveX; value: P4PartSlice }[] {
+	getListMoves(n: MNode<P4Rules>): MGPMap<MoveX, P4PartSlice> {
 		return P4Rules._getListMoves(n);
 	}
 

@@ -1,6 +1,10 @@
 import {Coord} from './Coord';
 
-export class GamePartSlice {
+export abstract class GamePartSlice {
+
+    public toString(): String {
+        return "(t:"+this.turn+") = " + JSON.stringify(this.board);
+    }
 
 	protected readonly board: number[][];
 

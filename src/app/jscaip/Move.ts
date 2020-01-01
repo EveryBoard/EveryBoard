@@ -1,6 +1,8 @@
-export abstract class Move {
+import { Comparable } from "src/app/collectionlib/MGPMap";
 
-    public abstract toString(): string;
+export abstract class Move implements Comparable {
+
+    public abstract toString(): String;
 
     public abstract equals(o: any): boolean;
 

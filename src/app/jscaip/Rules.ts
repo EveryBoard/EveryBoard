@@ -1,6 +1,7 @@
 import {MNode} from './MNode';
 import {Move} from './Move';
 import {GamePartSlice} from './GamePartSlice';
+import { MGPMap } from '../collectionlib/MGPMap';
 
 export abstract class Rules { // TODO: génériser
 
@@ -12,7 +13,7 @@ export abstract class Rules { // TODO: génériser
      *   the remaining pawn that you can put on the board
      */
 
-	abstract getListMoves<R extends Rules>(n: MNode<R>): { key: Move, value: GamePartSlice }[] ;
+	abstract getListMoves<R extends Rules>(n: MNode<R>): MGPMap<Move, GamePartSlice> ;
 	/* has to be implemented for each rule so that the AI can choose amongst theses informations
      * this function could give an incomplete set of data if some of them are redondant
      * or also if some of them are too bad to be interesting to count, as a matter of performance

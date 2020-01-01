@@ -5,6 +5,7 @@ import {ReversiPartSlice} from './ReversiPartSlice';
 import {Coord} from '../../jscaip/Coord';
 import {DIRECTION, DIRECTIONS} from '../../jscaip/DIRECTION';
 import { ReversiMove } from './ReversiMove';
+import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
 export class ReversiRules extends Rules {
 
@@ -80,9 +81,9 @@ export class ReversiRules extends Rules {
     }
 
     static playerCanOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
-        const currentPlayerChoices: { key: MoveCoord; value: ReversiPartSlice }[] = this.getListMoves(reversiPartSlice);
+        const currentPlayerChoices: MGPMap<MoveCoord, ReversiPartSlice> = this.getListMoves(reversiPartSlice);
         // if the current player cannot start, then the part is ended
-        return (currentPlayerChoices.length === 1) && currentPlayerChoices[0].key.equals(ReversiMove.pass);
+        return (currentPlayerChoices.size() === 1) && currentPlayerChoices[0].key.equals(ReversiMove.pass);
     }
 
     static nextPlayerCantOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
@@ -92,8 +93,8 @@ export class ReversiRules extends Rules {
         return this.playerCanOnlyPass(nextPartSlice);
     }
 
-    static getListMoves(reversiPartSlice: ReversiPartSlice): {'key': MoveCoord, 'value': ReversiPartSlice }[] {
-        const listMoves: { 'key': MoveCoord, 'value': ReversiPartSlice }[] = [];
+    static getListMoves(reversiPartSlice: ReversiPartSlice): MGPMap<MoveCoord, ReversiPartSlice> {
+        const listMoves: MGPMap<MoveCoord, ReversiPartSlice> = new MGPMap<MoveCoord, ReversiPartSlice>();
 
         let moveAppliedPartSlice: ReversiPartSlice;
 
@@ -124,18 +125,18 @@ export class ReversiRules extends Rules {
                             }
                             nextBoard[y][x] = player;
                             moveAppliedPartSlice = new ReversiPartSlice(nextBoard, nextTurn);
-                            listMoves.push({'key': move, 'value': moveAppliedPartSlice});
+                            listMoves.put(move, moveAppliedPartSlice);
                         }
                     }
                 }
             }
         }
-        if (listMoves.length === 0) {
+        if (listMoves.size() === 0) {
             // when the user cannot start, his only move is to pass, which he cannot do otherwise
             // board unchanged, only the turn changed "pass"
             // console.log('f91 The user can do nothing but pass at turn ' + (nextTurn - 1));
             moveAppliedPartSlice = new ReversiPartSlice(reversiPartSlice.getCopiedBoard(), nextTurn);
-            listMoves.push({'key': ReversiMove.pass, 'value': moveAppliedPartSlice});
+            listMoves.put(ReversiMove.pass, moveAppliedPartSlice);
         }
         return listMoves;
     }
@@ -238,7 +239,7 @@ export class ReversiRules extends Rules {
         return diff;
     }
 
-    getListMoves(n: MNode<ReversiRules>): {key: MoveCoord; value: ReversiPartSlice }[] {
+    getListMoves(n: MNode<ReversiRules>): MGPMap<MoveCoord, ReversiPartSlice> {
         return ReversiRules.getListMoves(n.gamePartSlice as ReversiPartSlice);
     }
 
