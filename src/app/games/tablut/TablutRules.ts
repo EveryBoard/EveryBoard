@@ -6,7 +6,7 @@ import {TablutPartSlice} from './TablutPartSlice';
 import { TablutMove } from './TablutMove';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
-export class TablutRules extends Rules {
+export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
 
     static VERBOSE = false;
 
@@ -451,8 +451,8 @@ export class TablutRules extends Rules {
         return null;
     }
 
-    static getInvaderVictoryValue(n: MNode<TablutRules>): number {
-        const tablutPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
+    static getInvaderVictoryValue(n: MNode<TablutRules, TablutMove, TablutPartSlice>): number {
+        const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
         if (TablutRules.VERBOSE) {
             console.log('invader victory !');
         }
@@ -462,9 +462,9 @@ export class TablutRules extends Rules {
         return Number.MAX_SAFE_INTEGER;
     }
 
-    static getDefenderVictoryValue(n: MNode<TablutRules>): number {
+    static getDefenderVictoryValue(n: MNode<TablutRules, TablutMove, TablutPartSlice>): number {
         console.log('defender victory !');
-        const tablutPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
+        const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
         if (tablutPartSlice.invaderStart) {
             return Number.MAX_SAFE_INTEGER;
         }
@@ -518,7 +518,7 @@ export class TablutRules extends Rules {
 
     // instance methods :
 
-    public getListMoves(n: MNode<TablutRules>): MGPMap<TablutMove, TablutPartSlice> {
+    public getListMoves(n: MNode<TablutRules, TablutMove, TablutPartSlice>): MGPMap<TablutMove, TablutPartSlice> {
         const localVerbose = false;
         if (TablutRules.VERBOSE || localVerbose) {
             console.log('get list move available to ');
@@ -526,7 +526,7 @@ export class TablutRules extends Rules {
         }
         const listCombinaison: MGPMap<TablutMove, TablutPartSlice> = new MGPMap<TablutMove, TablutPartSlice>();
 
-        const currentPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
+        const currentPartSlice: TablutPartSlice = n.gamePartSlice;
 
         const currentTurn: number = currentPartSlice.turn;
         let currentBoard: number[][] = currentPartSlice.getCopiedBoard();
@@ -556,9 +556,9 @@ export class TablutRules extends Rules {
         return listCombinaison;
     }
 
-    public getListMovesPeared(n: MNode<TablutRules>): { key: TablutMove, value: TablutPartSlice }[] {
+    public getListMovesPeared(n: MNode<TablutRules, TablutMove, TablutPartSlice>): { key: TablutMove, value: TablutPartSlice }[] {
         // TODO: pear this method, make it smarter
-        const currentPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
+        const currentPartSlice: TablutPartSlice = n.gamePartSlice;
         const currentBoard: number[][] = currentPartSlice.getCopiedBoard();
         const currentTurn: number = currentPartSlice.turn;
         const invaderStart: boolean = currentPartSlice.invaderStart;
@@ -586,13 +586,13 @@ export class TablutRules extends Rules {
         return null;
     }
 
-    public getBoardValue(n: MNode<TablutRules>): number {
+    public getBoardValue(n: MNode<TablutRules, TablutMove, TablutPartSlice>): number {
 
         // 1. is the king escaped ?
         // 2. is the king captured ?
         // 3. is one player immobilised ?
         // 4. let's just for now just count the pawns
-        const tablutPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
+        const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
         const board: number[][] = tablutPartSlice.getCopiedBoard();
         const invaderStart: boolean = tablutPartSlice.invaderStart;
 
@@ -622,7 +622,7 @@ export class TablutRules extends Rules {
 
     public choose(move: TablutMove): boolean {
         // recherche
-        let son: MNode<TablutRules>;
+        let son: MNode<TablutRules, TablutMove, TablutPartSlice>;
         /* if (this.node.hasMoves()) { // if calculation has already been done by the AI
             console.log(this.node.myToString() + ' at turn ' + this.node.gamePartSlice.turn + ' has ' + this.node.countDescendants() + ' moves');
             son = this.node.getSonByMove(move); // let's not doing if twice
@@ -635,7 +635,7 @@ export class TablutRules extends Rules {
         } */
 
         // copies
-        const partSlice = this.node.gamePartSlice as TablutPartSlice;
+        const partSlice = this.node.gamePartSlice;
         const board: number[][] = partSlice.getCopiedBoard();
         const turn: number = partSlice.turn;
         const invaderStart: boolean = partSlice.invaderStart;
@@ -650,7 +650,7 @@ export class TablutRules extends Rules {
             return false;
         }
         const newPartSlice = new TablutPartSlice(board, turn + 1, invaderStart);
-        son = new MNode<TablutRules>(this.node, move, newPartSlice);
+        son = new MNode<TablutRules, TablutMove, TablutPartSlice>(this.node, move, newPartSlice);
         this.node.keepOnlyChoosenChild(son);
         this.node = son;
         return true;
@@ -658,7 +658,7 @@ export class TablutRules extends Rules {
 
     public isLegal(move: TablutMove): boolean {
         // copies
-        const partSlice: TablutPartSlice = this.node.gamePartSlice as TablutPartSlice;
+        const partSlice: TablutPartSlice = this.node.gamePartSlice;
         const board: number[][] = partSlice.getCopiedBoard();
         const turn: number = partSlice.turn;
         const invaderStart: boolean = partSlice.invaderStart;

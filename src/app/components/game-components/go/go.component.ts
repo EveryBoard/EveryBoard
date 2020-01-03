@@ -13,7 +13,7 @@ import {Coord} from 'src/app/jscaip/Coord';
     selector: 'app-go',
     templateUrl: './go.component.html'
 })
-export class GoComponent extends AbstractGameComponent {
+export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice> {
 
     static VERBOSE = true;
 
@@ -37,7 +37,7 @@ export class GoComponent extends AbstractGameComponent {
 
     onClick(x: number, y: number): boolean {
         console.log("salut " + x + "-" + y);
-        const goPartSlice = this.rules.node.gamePartSlice as GoPartSlice;
+        const goPartSlice = this.rules.node.gamePartSlice;
         if (this.rules.node.isEndGame()) {
             if (GoComponent.VERBOSE) {
                 console.log('Malheureusement la partie est finie');
@@ -74,8 +74,8 @@ export class GoComponent extends AbstractGameComponent {
         if (GoComponent.VERBOSE) {
             console.log('updateBoard');
         }
-        const slice: GoPartSlice = this.rules.node.gamePartSlice as GoPartSlice;
-        const move: GoMove = this.rules.node.move as GoMove;
+        const slice: GoPartSlice = this.rules.node.gamePartSlice;
+        const move: GoMove = this.rules.node.move;
         const koCoord: Coord = slice.getKoCoordCopy();
         const phase: Phase = slice.phase;
 

@@ -11,7 +11,7 @@ import {Coord} from 'src/app/jscaip/Coord';
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html'
 })
-export class EncapsuleComponent extends AbstractGameComponent {
+export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, EncapsulePartSlice> {
 
     rules = new EncapsuleRules();
 
@@ -37,13 +37,13 @@ export class EncapsuleComponent extends AbstractGameComponent {
     }
 
     isVictory(): boolean {
-        return EncapsuleRules.isVictory(this.rules.node.gamePartSlice as EncapsulePartSlice); 
+        return EncapsuleRules.isVictory(this.rules.node.gamePartSlice); 
     }
 
     updateBoard() {
         console.log('update online board');
-        const slice: EncapsulePartSlice = this.rules.node.gamePartSlice as EncapsulePartSlice;
-        const move: EncapsuleMove = this.rules.node.move as EncapsuleMove;
+        const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
+        const move: EncapsuleMove = this.rules.node.move;
         this.cancelMove();
         this.caseBoard = this.mapNumberBoard(slice.getCopiedBoard());
         this.mappedBoard = this.mapCaseBoard(this.caseBoard);
@@ -125,7 +125,7 @@ export class EncapsuleComponent extends AbstractGameComponent {
         this.hideLastMove();
         const piece: EncapsulePiece = this.getEncapsulePieceFromName(pieceString);
         console.log("click on piece :" + piece);
-        const slice: EncapsulePartSlice = this.rules.node.gamePartSlice as EncapsulePartSlice; 
+        const slice: EncapsulePartSlice = this.rules.node.gamePartSlice; 
         if (!slice.isDropable(piece) ||
             (piece === this.chosenPiece)) {
             this.cancelMove();
@@ -143,7 +143,7 @@ export class EncapsuleComponent extends AbstractGameComponent {
     }
 
     isDropable(piece: number) {
-        const slice: EncapsulePartSlice = this.rules.node.gamePartSlice as EncapsulePartSlice;
+        const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         return slice.isDropable(piece);
     }
 

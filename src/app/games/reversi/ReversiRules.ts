@@ -1,5 +1,4 @@
 import {Rules} from '../../jscaip/Rules';
-import {MoveCoord} from '../../jscaip/MoveCoord';
 import {MNode} from '../../jscaip/MNode';
 import {ReversiPartSlice} from './ReversiPartSlice';
 import {Coord} from '../../jscaip/Coord';
@@ -7,11 +6,11 @@ import {DIRECTION, DIRECTIONS} from '../../jscaip/DIRECTION';
 import { ReversiMove } from './ReversiMove';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
-export class ReversiRules extends Rules {
+export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice> {
 
     static VERBOSE = false;
 
-    static getAllSwitcheds(move: MoveCoord, turn: number, board: number[][]): Coord[] {
+    static getAllSwitcheds(move: ReversiMove, turn: number, board: number[][]): Coord[] {
         // try the move, do it if legal, and return the switched pieces
         const switcheds: Coord[] = [];
         let player: number = ReversiPartSlice.PLAYER_ZERO;
@@ -81,9 +80,9 @@ export class ReversiRules extends Rules {
     }
 
     static playerCanOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
-        const currentPlayerChoices: MGPMap<MoveCoord, ReversiPartSlice> = this.getListMoves(reversiPartSlice);
+        const currentPlayerChoices: MGPMap<ReversiMove, ReversiPartSlice> = this.getListMoves(reversiPartSlice);
         // if the current player cannot start, then the part is ended
-        return (currentPlayerChoices.size() === 1) && currentPlayerChoices[0].key.equals(ReversiMove.pass);
+        return (currentPlayerChoices.size() === 1) && currentPlayerChoices.get(0).key.equals(ReversiMove.pass);
     }
 
     static nextPlayerCantOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
@@ -93,8 +92,8 @@ export class ReversiRules extends Rules {
         return this.playerCanOnlyPass(nextPartSlice);
     }
 
-    static getListMoves(reversiPartSlice: ReversiPartSlice): MGPMap<MoveCoord, ReversiPartSlice> {
-        const listMoves: MGPMap<MoveCoord, ReversiPartSlice> = new MGPMap<MoveCoord, ReversiPartSlice>();
+    static getListMoves(reversiPartSlice: ReversiPartSlice): MGPMap<ReversiMove, ReversiPartSlice> {
+        const listMoves: MGPMap<ReversiMove, ReversiPartSlice> = new MGPMap<ReversiMove, ReversiPartSlice>();
 
         let moveAppliedPartSlice: ReversiPartSlice;
 
@@ -141,8 +140,8 @@ export class ReversiRules extends Rules {
         return listMoves;
     }
 
-    choose(move: MoveCoord): boolean {
-        let choix: MNode<ReversiRules>;
+    public choose(move: ReversiMove): boolean {
+        let choix: MNode<ReversiRules, ReversiMove, ReversiPartSlice>;
         /*if (this.node.hasMoves()) { // if calculation has already been done by the AI
             choix = this.node.getSonByMove(move); // let's not doing if twice
             if (choix != null) {
@@ -150,7 +149,7 @@ export class ReversiRules extends Rules {
                 return true;
             }
         }*/
-        const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice as ReversiPartSlice;
+        const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice;
         const turn: number = this.node.gamePartSlice.turn;
         const player: number = turn % 2;
         const board: number[][] = reversiPartSlice.getCopiedBoard();
@@ -187,9 +186,9 @@ export class ReversiRules extends Rules {
         return true;
     }
 
-    isLegal(move: MoveCoord): boolean {
+    public isLegal(move: ReversiMove): boolean {
         // TODO : refactor with choose
-        const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice as ReversiPartSlice;
+        const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice;
         const turn: number = this.node.gamePartSlice.turn;
         const board: number[][] = reversiPartSlice.getCopiedBoard();
         if (move.equals(ReversiMove.pass)) { // if the player pass
@@ -211,8 +210,8 @@ export class ReversiRules extends Rules {
         return (switcheds.length !== 0);
     }
 
-    getBoardValue(n: MNode<ReversiRules>): number {
-        const reversiPartSlice: ReversiPartSlice = n.gamePartSlice as ReversiPartSlice;
+    public getBoardValue(n: MNode<ReversiRules, ReversiMove, ReversiPartSlice>): number {
+        const reversiPartSlice: ReversiPartSlice = n.gamePartSlice;
         const board: number[][] = n.gamePartSlice.getCopiedBoard();
         let player0Count = 0;
         let player1Count = 0;
@@ -239,11 +238,11 @@ export class ReversiRules extends Rules {
         return diff;
     }
 
-    getListMoves(n: MNode<ReversiRules>): MGPMap<MoveCoord, ReversiPartSlice> {
-        return ReversiRules.getListMoves(n.gamePartSlice as ReversiPartSlice);
+    public getListMoves(n: MNode<ReversiRules, ReversiMove, ReversiPartSlice>): MGPMap<ReversiMove, ReversiPartSlice> {
+        return ReversiRules.getListMoves(n.gamePartSlice);
     }
 
-    setInitialBoard(): void {
+    public setInitialBoard(): void {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
                 new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),

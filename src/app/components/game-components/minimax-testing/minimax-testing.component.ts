@@ -15,7 +15,7 @@ import { Coord } from 'src/app/jscaip/Coord';
     templateUrl: './minimax-testing.component.html',
     styleUrls: []
 })
-export class MinimaxTestingComponent extends AbstractGameComponent {
+export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove, MinimaxTestingPartSlice> {
 
     /*************************** Common Fields **************************/
 
@@ -38,7 +38,7 @@ export class MinimaxTestingComponent extends AbstractGameComponent {
     }
 
     updateBoard() {
-        const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice as MinimaxTestingPartSlice;
+        const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard()
         this.coord = slice.location;
     }

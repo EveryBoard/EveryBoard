@@ -5,7 +5,7 @@ import { MinimaxTestingPartSlice } from "./MinimaxTestingPartSlice";
 import { MinimaxTestingMove } from "./MinimaxTestingMove";
 import { Coord } from "src/app/jscaip/Coord";
 
-export class MinimaxTestingRules extends Rules {
+export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingPartSlice> {
 
     constructor(initialBoard: number[][]) {
         super();
@@ -27,7 +27,7 @@ export class MinimaxTestingRules extends Rules {
     }
 
     public isLegal(move: MinimaxTestingMove): boolean {
-        const slice: MinimaxTestingPartSlice = this.node.gamePartSlice as MinimaxTestingPartSlice;
+        const slice: MinimaxTestingPartSlice = this.node.gamePartSlice;
         const coord: Coord = slice.location;
         const board: number[][] = slice.getCopiedBoard();
         if (coord.x + 1 === board[0].length && move.right === true) {
@@ -44,8 +44,8 @@ export class MinimaxTestingRules extends Rules {
             return false;
         }
 
-        const newPartSlice: MinimaxTestingPartSlice = MinimaxTestingRules.applyLegalMove(this.node.gamePartSlice as MinimaxTestingPartSlice, move);
-        const son: MNode<MinimaxTestingRules> = new MNode(this.node, move, newPartSlice);
+        const newPartSlice: MinimaxTestingPartSlice = MinimaxTestingRules.applyLegalMove(this.node.gamePartSlice, move);
+        const son: MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice> = new MNode(this.node, move, newPartSlice);
         this.node = son;
         return true;
     }
@@ -57,14 +57,14 @@ export class MinimaxTestingRules extends Rules {
         return new MinimaxTestingPartSlice(slice.turn + 1, newLocation);
     }
 
-    public getBoardValue(n: MNode<MinimaxTestingRules>): number {
-        const slice: MinimaxTestingPartSlice = n.gamePartSlice as MinimaxTestingPartSlice;
+    public getBoardValue(n: MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice>): number {
+        const slice: MinimaxTestingPartSlice = n.gamePartSlice;
         return slice.getBoardAt(slice.location);
     }
 
-    public getListMoves(n: MNode<MinimaxTestingRules>): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {
+    public getListMoves(n: MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice>): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {
         const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> = new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();
-        const slice: MinimaxTestingPartSlice = n.gamePartSlice as MinimaxTestingPartSlice;
+        const slice: MinimaxTestingPartSlice = n.gamePartSlice;
         if (slice.location.x < 3) {
             const rightMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
             const rightSlice: MinimaxTestingPartSlice = MinimaxTestingRules.applyLegalMove(slice, rightMove);

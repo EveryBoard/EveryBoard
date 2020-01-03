@@ -6,7 +6,7 @@ import {AwalePartSlice} from './AwalePartSlice';
 import { AwaleMove } from './AwaleMove';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
-export class AwaleRules extends Rules {
+export class AwaleRules extends Rules<AwaleMove, AwalePartSlice> {
 
     static VERBOSE = false;
 
@@ -229,7 +229,7 @@ export class AwaleRules extends Rules {
         return captured;
     }
 
-    getListMoves(n: MNode<AwaleRules>): MGPMap<AwaleMove, AwalePartSlice> {
+    getListMoves(n: MNode<AwaleRules, AwaleMove, AwalePartSlice>): MGPMap<AwaleMove, AwalePartSlice> {
         const localVerbose = false ;
         if (AwaleRules.VERBOSE || localVerbose) {
             console.log('getListMoves');
@@ -257,7 +257,7 @@ export class AwaleRules extends Rules {
                 // if (AwaleRules.VERBOSE || localVerbose) Console.log('legality is ' + moveResult);
                 if (moveResult[0] > -1) {
                     // if the move is legal, we addPart it to the listMoves
-                    awalePartSlice = n.gamePartSlice as AwalePartSlice;
+                    awalePartSlice = n.gamePartSlice;
                     const capturedCopy: number[] = awalePartSlice.getCapturedCopy();
                     capturedCopy[player] += moveResult[player];
                     capturedCopy[(player + 1) % 2] += moveResult[(player + 1) % 2];
@@ -275,7 +275,7 @@ export class AwaleRules extends Rules {
         return choices;
     }
 
-    getBoardValue(n: MNode<AwaleRules>): number {
+    getBoardValue(n: MNode<AwaleRules, AwaleMove, AwalePartSlice>): number {
         const localVerbose = false;
 
         if (AwaleRules.VERBOSE || localVerbose) {
@@ -284,7 +284,7 @@ export class AwaleRules extends Rules {
 
         const player: number = n.gamePartSlice.turn % 2;
         const ennemy = (player + 1) % 2;
-        const awalePartSlice: AwalePartSlice = n.gamePartSlice as AwalePartSlice;
+        const awalePartSlice: AwalePartSlice = n.gamePartSlice;
         const captured: number[] = awalePartSlice.captured;
         const c1 = captured[1];
         const c0 = captured[0];
@@ -306,7 +306,7 @@ export class AwaleRules extends Rules {
 
     choose(resultlessMove: AwaleMove): boolean {
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
-            const choix: MNode<AwaleRules> = this.node.getSonByMove(resultlessMove); // let's not doing if twice
+            const choix: MNode<AwaleRules, AwaleMove, AwalePartSlice> = this.node.getSonByMove(resultlessMove); // let's not doing if twice
             if (choix != null) {
                 this.node = choix; // qui devient le plateau actuel
                 return true;
@@ -330,14 +330,14 @@ export class AwaleRules extends Rules {
         }
 
         const moveAndResult = new AwaleMove(x, y, moveResult);
-        const awalePartSlice: AwalePartSlice = this.node.gamePartSlice as AwalePartSlice;
+        const awalePartSlice: AwalePartSlice = this.node.gamePartSlice;
         const captured: number[] = awalePartSlice.getCapturedCopy();
 
         captured[player] += moveResult[player];
         captured[ennemy] += moveResult[ennemy];
 
         const newPartSlice: AwalePartSlice = new AwalePartSlice(board, turn + 1, captured);
-        const son: MNode<AwaleRules> = new MNode(this.node, moveAndResult, newPartSlice);
+        const son: MNode<AwaleRules, AwaleMove, AwalePartSlice> = new MNode(this.node, moveAndResult, newPartSlice);
         this.node = son;
         return true;
     }

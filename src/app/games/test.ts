@@ -12,12 +12,12 @@ export abstract class Regle<M extends Mouvement, P extends Plateau> {
 
     public noeud: Noeud<Regle<M, P>, M, P>;
 
-    public abstract donneMouvement(plateau: P): Array<{m: M, p: P}> ;
+    public abstract donneMouvement(noeud: Noeud<Regle<M, P>, M, P>): Array<{m: M, p: P}> ;
 }
 
 export class Noeud<R extends Regle<M, P>, M extends Mouvement, P extends Plateau> {
 
-    public reglementeur: R;
+    public static reglementeur: Regle<Mouvement, Plateau>;
 }
 
 export class JeuMouvement extends Mouvement {

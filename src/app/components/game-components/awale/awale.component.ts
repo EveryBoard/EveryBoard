@@ -8,7 +8,7 @@ import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
     selector: 'app-awale-new-component',
     templateUrl: './awale.component.html'
 })
-export class AwaleComponent extends AbstractGameComponent {
+export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice> {
 
     rules = new AwaleRules();
 
@@ -58,9 +58,9 @@ export class AwaleComponent extends AbstractGameComponent {
     }
 
     updateBoard(): void {
-        const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
+        const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice;
         this.scores = awalePartSlice.captured;
-        const awaleMove: AwaleMove = this.rules.node.move as AwaleMove;
+        const awaleMove: AwaleMove = this.rules.node.move;
 
         if (this.observerRole === 1) {
             const orientedBoard: number[][] = [];

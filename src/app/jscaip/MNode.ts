@@ -4,7 +4,7 @@ import {Rules} from './Rules';
 import {GamePartSlice} from './GamePartSlice';
 import { MGPMap } from '../collectionlib/MGPMap';
 
-export class MNode<R extends Rules> {
+export class MNode<R extends Rules<M, S>, M extends Move, S extends GamePartSlice> {
 	// TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
 	// TODO: choose ONE commenting langage, for fuck's sake.
 	// TODO: check for the proper use of LinkedList to optimise the stuff
@@ -15,7 +15,7 @@ export class MNode<R extends Rules> {
 
 	static VERBOSE = false;
 
-	public static ruler: Rules;
+	public static ruler: Rules<Move, GamePartSlice>;
 	/* Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de règles
     */
 
@@ -28,7 +28,7 @@ export class MNode<R extends Rules> {
 
 	// instance fields:
 
-	private readonly mother: MNode<R> | null;
+	private readonly mother: MNode<R, M, S> | null;
 	/* the node from which we got on this Node
     * null si: plateau initial
     *: plateau récupéré sans historique
@@ -36,11 +36,11 @@ export class MNode<R extends Rules> {
     * une Node sinon
     */
 
-	public readonly move: Move | null;
+	public readonly move: M | null;
 
-	readonly gamePartSlice: GamePartSlice;
+	readonly gamePartSlice: S;
 
-	private childs: (MNode<R>[]) | null = null;
+	private childs: (MNode<R, M, S>[]) | null = null;
 	/* null si: on as pas encore crée les potentiels enfant de cette Node
     * et donc naturellement si c'est une feuille (depth = 0)
     *
@@ -49,7 +49,7 @@ export class MNode<R extends Rules> {
     * une ArrayList de toutes les Nodes qu'on peut obtenir depuis celles ci sinon.
     */
 
-	private bestChildNode: MNode<R> | null = null;
+	private bestChildNode: MNode<R, M, S> | null = null;
 
 	private bestChildIndex = -1;
 	/* - 1 si: c'est pas calculé
@@ -113,14 +113,14 @@ export class MNode<R extends Rules> {
 		return SCORE.DEFAULT;
 	}
 
-	static getFirstNode(initialBoard: GamePartSlice, gameRuler: Rules) {
-		MNode.ruler = gameRuler; // pour toutes les node, gameRuler sera le référent
-		return new MNode(null, null, initialBoard);
-	}
+    static getFirstNode<R extends Rules<M, S>, M extends Move, S extends GamePartSlice>(initialBoard: S, gameRuler: R) {
+        MNode.ruler = gameRuler; // pour toutes les node, gameRuler sera le r�f�rent
+        return new MNode(null, null, initialBoard);
+    }
 
 	// instance methods:
 
-	constructor(mother: MNode<R> | null, move: Move | null, slice: GamePartSlice) {
+	constructor(mother: MNode<R, M, S> | null, move: M | null, slice: S) {
 		/* Initialisation condition:
        * mother: null for initial board
        * board: should already be a clone
@@ -167,13 +167,13 @@ export class MNode<R extends Rules> {
 		return mother + ' ' + fertility + ' ' + calculated;
 	}
 
-    public findBestMoveAndSetDepth(readingDepth: number): MNode<R> {
+    public findBestMoveAndSetDepth(readingDepth: number): MNode<R, M, S> {
         if (MNode.VERBOSE) console.log("findBestMoveAndSetDepth(" + readingDepth + ") = " + this.gamePartSlice.toString() + " => " + this.ownValue);
         this.depth = readingDepth;
         return this.findBestMove();
     }
 
-	public findBestMove(): MNode<R> {
+	public findBestMove(): MNode<R, M, S> {
         const LOCAL_VERBOSE: boolean = false;
 		if (this.isLeaf()) {
 			if (MNode.VERBOSE || LOCAL_VERBOSE) {
@@ -304,22 +304,23 @@ export class MNode<R extends Rules> {
          */
         if (this.childs != null) throw new Error("multiple node childs calculation error");
 		const LOCAL_VERBOSE = false;
-		const moves: MGPMap<Move, GamePartSlice> = MNode.ruler.getListMoves(this);
-		this.childs = new Array<MNode<R>>();
+		const moves: MGPMap<M, S> = MNode.ruler.getListMoves(this) as MGPMap<M, S>;
+		this.childs = new Array<MNode<R, M, S>>();
 		if (MNode.VERBOSE || LOCAL_VERBOSE) {
 			console.log('createChilds received listMoves from ruler');
 			console.log(moves);
 		}
-		for (const entry of moves.map) {
+        for (let i=0; i<moves.size(); i++) {
+            const entry = moves.get(i);
 			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('in the loop');
 				console.log(entry);
 			}
-			const move: Move = entry.key;
-			const slice: GamePartSlice = entry.value;
+			const move: M = entry.key;
+			const slice: S = entry.value;
 			if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('move and board retrieved from the entry');
 
-			const child: MNode<R> = new MNode<R>(this, move, slice);
+			const child: MNode<R, M, S> = new MNode<R, M, S>(this, move, slice);
 			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('child created');
 				console.log(child);
@@ -347,18 +348,18 @@ export class MNode<R extends Rules> {
 		}
 	}
 
-	private setBestChild(): MNode<R> | null {
+	private setBestChild(): MNode<R, M, S> | null {
 		/* return the the best child in the child list
        * use condition: childs is not empty
        */
 		if (this.gamePartSlice.turn % 2 === 0) {
-			return <MNode<R>>this.setMinChild();
+			return <MNode<R, M, S>>this.setMinChild();
 		} else {
 			return this.setMaxChild();
 		}
 	}
 
-	private setMinChild(): MNode<R> | null {
+	private setMinChild(): MNode<R, M, S> | null {
 		/* return the 'minimal' child
        * set the index of the best child in this.bestChild
        * and set its value
@@ -369,7 +370,7 @@ export class MNode<R extends Rules> {
 			return null;
 		}
 		let minValue: number = Number.MAX_SAFE_INTEGER;
-		let minNode: MNode<R> = this.childs[0];
+		let minNode: MNode<R, M, S> = this.childs[0];
 
 		for (const child of this.childs) {
 			if (child.hopedValue && child.hopedValue < minValue) {
@@ -385,7 +386,7 @@ export class MNode<R extends Rules> {
 		return minNode;
 	}
 
-	private setMaxChild(): MNode<R> | null {
+	private setMaxChild(): MNode<R, M, S> | null {
 		/* return the 'maximal' child
        * set the index of the best child in this.bestChild
        * and set its value
@@ -397,7 +398,7 @@ export class MNode<R extends Rules> {
 			return null;
 		}
 		let maxValue: number = Number.MIN_SAFE_INTEGER;
-		let maxNode: MNode<R> = this.childs[0];
+		let maxNode: MNode<R, M, S> = this.childs[0];
 
 		for (const child of this.childs) {
 			if (child.hopedValue && child.hopedValue > maxValue) {
@@ -423,7 +424,7 @@ export class MNode<R extends Rules> {
 		}
 	}
 
-	getSonByMove(move: Move): MNode<R> | null {
+	getSonByMove(move: M): MNode<R, M, S> | null {
 		/* int index = this.moves.indexOf(moveX);
 		if (index === - 1) return null;
 		return this.childs.get(index);
@@ -439,7 +440,7 @@ export class MNode<R extends Rules> {
 		return null;
 	}
 
-	getMother(): MNode<R> | null {
+	getMother(): MNode<R, M, S> | null {
 		return this.mother;
 	}
 
@@ -447,8 +448,8 @@ export class MNode<R extends Rules> {
 		return this.ownValue;
 	}
 
-	getInitialNode(): MNode<R> {
-		let allmightyMom: MNode<R> = this;
+	getInitialNode(): MNode<R, M, S> {
+		let allmightyMom: MNode<R, M, S> = this;
 		while (allmightyMom.mother !== null) {
 			allmightyMom = allmightyMom.mother;
 		}
@@ -526,8 +527,8 @@ export class MNode<R extends Rules> {
 		return nbDescendants;
 	}
 
-	keepOnlyChoosenChild(choix: MNode<R>) {
-		this.childs = new Array<MNode<R>>();
+	keepOnlyChoosenChild(choix: MNode<R, M, S>) {
+		this.childs = new Array<MNode<R, M, S>>();
 		this.childs.push(choix);
 	}
 

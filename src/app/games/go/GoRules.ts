@@ -1,19 +1,17 @@
 import {Rules} from '../../jscaip/Rules';
 import {MNode} from '../../jscaip/MNode';
-import {Move} from '../../jscaip/Move';
 import {Coord} from '../../jscaip/Coord';
-import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {GoPartSlice, Pawn, Phase} from './GoPartSlice';
 import {DIRECTION, ORTHOGONALES} from 'src/app/jscaip/DIRECTION';
 import {GoMove} from './GoMove';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
-export class GoRules extends Rules {
+export class GoRules extends Rules<GoMove, GoPartSlice> {
 
     static VERBOSE: boolean = false;
 
     isLegal(move: GoMove): boolean {
-        return GoRules.isLegal(move, this.node.gamePartSlice as GoPartSlice).legal;
+        return GoRules.isLegal(move, this.node.gamePartSlice).legal;
     }
 
     public static isLegal(move: GoMove, goPartSlice: GoPartSlice): LegalityStatus {
@@ -134,7 +132,7 @@ export class GoRules extends Rules {
         return groupDatas; 
     }
 
-    public getListMoves(node: MNode<GoRules>): MGPMap<GoMove, GoPartSlice> {
+    public getListMoves(node: MNode<GoRules, GoMove, GoPartSlice>): MGPMap<GoMove, GoPartSlice> {
         const localVerbose = false;
         if (GoRules.VERBOSE || localVerbose) {
             console.log('getListMoves');
@@ -142,7 +140,7 @@ export class GoRules extends Rules {
 
         const choices: MGPMap<GoMove, GoPartSlice> = new MGPMap<GoMove, GoPartSlice>();
 
-        const currentPartSlice: GoPartSlice = node.gamePartSlice as GoPartSlice; // TODO : voir si il faut pas la supprimer
+        const currentPartSlice: GoPartSlice = node.gamePartSlice; // TODO : voir si il faut pas la supprimer
 
         let newResultlessMove: GoMove;
         
@@ -205,13 +203,13 @@ export class GoRules extends Rules {
         return {resultMove, newPartSlice};
     }
 
-    public getBoardValue(n: MNode<GoRules>): number {
+    public getBoardValue(n: MNode<GoRules, GoMove, GoPartSlice>): number {
         const localVerbose = false;
 
         if (GoRules.VERBOSE || localVerbose) {
             console.log('GBV..');
         }
-        const goPartSlice: GoPartSlice = n.gamePartSlice as GoPartSlice;
+        const goPartSlice: GoPartSlice = n.gamePartSlice;
         const captured: number[] = goPartSlice.getCapturedCopy();
         // return captured[1] - captured[0];
         const goScore: number[] = GoRules.countBoardScore(goPartSlice);
@@ -221,13 +219,13 @@ export class GoRules extends Rules {
     public choose(resultlessMove: GoMove): boolean {
         const LOCAL_VERBOSE: boolean = true;
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
-            const choix: MNode<GoRules> = this.node.getSonByMove(resultlessMove); // let's not doing if twice
+            const choix: MNode<GoRules, GoMove, GoPartSlice> = this.node.getSonByMove(resultlessMove); // let's not doing if twice
             if (choix != null) {
                 this.node = choix; // qui devient le plateau actuel
                 return true;
             } // TODO: vérifier que le else ne signifie pas que ça doit retourner false
         }
-        const currentPartSlice: GoPartSlice = this.node.gamePartSlice as GoPartSlice;
+        const currentPartSlice: GoPartSlice = this.node.gamePartSlice;
         const turn: number = currentPartSlice.turn;
         const player: number = turn % 2;
         const ennemy: number = (turn + 1) % 2;
@@ -244,7 +242,7 @@ export class GoRules extends Rules {
 
         let result: {resultMove: GoMove, newPartSlice: GoPartSlice} =
             GoRules.applyLegalMove(currentPartSlice, resultlessMove, legality.capturedCoords);        
-        const son: MNode<GoRules> = new MNode(this.node, result.resultMove, result.newPartSlice);
+        const son: MNode<GoRules, GoMove, GoPartSlice> = new MNode(this.node, result.resultMove, result.newPartSlice);
         this.node = son;
         return true;
     }

@@ -22,7 +22,7 @@ describe('MinimaxTestingRules', () => {
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_1);
         let bestMove: MinimaxTestingMove;
         for (let i = 1; i<5; i++) {
-            bestMove = part.node.findBestMoveAndSetDepth(1).move as MinimaxTestingMove;
+            bestMove = part.node.findBestMoveAndSetDepth(1).move;
             part.choose(bestMove);
             expect(part.getBoardValue(part.node)).toEqual(i);
         }
@@ -33,7 +33,7 @@ describe('MinimaxTestingRules', () => {
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
         let bestMove: MinimaxTestingMove;
         for (let i=1; i<=3; i++) {
-            bestMove = part.node.findBestMoveAndSetDepth(1).move as MinimaxTestingMove;
+            bestMove = part.node.findBestMoveAndSetDepth(1).move;
             part.choose(bestMove);
             expect(MNode.NB_NODE_CREATED).toEqual(1 + (2*i));
         }
@@ -42,7 +42,6 @@ describe('MinimaxTestingRules', () => {
     it('IA(depth=2) should create exactly 6 child', () => {
         MNode.NB_NODE_CREATED = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
-        let bestMove: MinimaxTestingMove;
         part.node.findBestMoveAndSetDepth(2);
         expect(part.node.countDescendants()).toEqual(6);
         expect(MNode.NB_NODE_CREATED).toEqual(7);
@@ -51,7 +50,6 @@ describe('MinimaxTestingRules', () => {
     it('IA(depth=3) should create exactly 14 child', () => {
         MNode.NB_NODE_CREATED = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
-        let bestMove: MinimaxTestingMove;
         part.node.findBestMoveAndSetDepth(3);
         expect(part.node.countDescendants()).toEqual(14);
         expect(MNode.NB_NODE_CREATED).toEqual(15);
@@ -60,7 +58,6 @@ describe('MinimaxTestingRules', () => {
     it('IA(depth=4) should create exactly 28 child', () => {
         MNode.NB_NODE_CREATED = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
-        let bestMove: MinimaxTestingMove;
         part.node.findBestMoveAndSetDepth(4);
         expect(part.node.countDescendants()).toEqual(28);
         expect(MNode.NB_NODE_CREATED).toEqual(29);
@@ -69,7 +66,6 @@ describe('MinimaxTestingRules', () => {
     it('IA(depth=5) should create exactly 48 child', () => {
         MNode.NB_NODE_CREATED = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
-        let bestMove: MinimaxTestingMove;
         part.node.findBestMoveAndSetDepth(5);
         expect(part.node.countDescendants()).toEqual(48);
         expect(MNode.NB_NODE_CREATED).toEqual(49);
@@ -78,7 +74,6 @@ describe('MinimaxTestingRules', () => {
     it('IA(depth=6) should create exactly 68 child', () => {
         MNode.NB_NODE_CREATED = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
-        let bestMove: MinimaxTestingMove;
         part.node.findBestMoveAndSetDepth(6);
         expect(part.node.countDescendants()).toEqual(68);// 2, 6, 14, 28, 48, 68
         expect(MNode.NB_NODE_CREATED).toEqual(69);
@@ -87,7 +82,6 @@ describe('MinimaxTestingRules', () => {
     it('IA(depth=7) cannot go further than the end game', () => {
         MNode.NB_NODE_CREATED = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
-        let bestMove: MinimaxTestingMove;
         part.node.findBestMoveAndSetDepth(7);
         expect(part.node.countDescendants()).toEqual(68);// 2, 6, 14, 28, 48, 68
         expect(MNode.NB_NODE_CREATED).toEqual(69);

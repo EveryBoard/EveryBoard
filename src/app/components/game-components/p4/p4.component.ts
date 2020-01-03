@@ -14,7 +14,7 @@ import {AbstractGameComponent} from '../AbstractGameComponent';
 	templateUrl: './p4.component.html',
 	styleUrls: []
 })
-export class P4Component extends AbstractGameComponent {
+export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice> {
 
 	/*************************** Common Fields **************************/
 
@@ -34,7 +34,7 @@ export class P4Component extends AbstractGameComponent {
 
 	updateBoard() {
 		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
-		const lastMove: MoveX = this.rules.node.move as MoveX;
+		const lastMove: MoveX = this.rules.node.move;
 
 		this.board = p4PartSlice.getCopiedBoard().reverse();
 		if (lastMove !== null) {

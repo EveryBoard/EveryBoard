@@ -6,71 +6,72 @@ import {GameService} from '../../../services/GameService';
 import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import { AbstractGameComponent } from '../AbstractGameComponent';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 
 @Component({
-	selector: 'app-local-game-wrapper',
-	templateUrl: './local-game-wrapper.component.html',
+    selector: 'app-local-game-wrapper',
+    templateUrl: './local-game-wrapper.component.html',
 })
 export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 
-	static VERBOSE = false;
+    static VERBOSE = false;
 
-	aiDepth = 1;
+    aiDepth = 1;
 
-	botTimeOut = 500; // this.aiDepth * 500;
+    botTimeOut = 500; // this.aiDepth * 500;
 
-	constructor(componentFactoryResolver: ComponentFactoryResolver,
-				actRoute: ActivatedRoute,
-				router: Router,
-				userService: UserService) {
-		super(componentFactoryResolver, actRoute, router, userService);
-	}
+    constructor(componentFactoryResolver: ComponentFactoryResolver,
+                actRoute: ActivatedRoute,
+                router: Router,
+                userService: UserService) {
+        super(componentFactoryResolver, actRoute, router, userService);
+    }
 
-	ngOnInit() {
-		this.players = [this.userService.getCurrentUser(), this.userService.getCurrentUser()];
-		this.afterGameComponentViewProbablyInit();
-	}
+    ngOnInit() {
+        this.players = [this.userService.getCurrentUser(), this.userService.getCurrentUser()];
+        this.afterGameComponentViewProbablyInit();
+    }
 
-	onValidUserMove(move: Move): void {
-		if (LocalGameWrapperComponent.VERBOSE) {
-			console.log('LocalGameWrapperComponent.onValidUserMove');
-		}
-		this.componentInstance.rules.choose(move);
-		this.componentInstance.updateBoard();
-		this.proposeAIToPlay();
-	}
+    onValidUserMove(move: Move): void {
+        if (LocalGameWrapperComponent.VERBOSE) {
+            console.log('LocalGameWrapperComponent.onValidUserMove');
+        }
+        this.componentInstance.rules.choose(move);
+        this.componentInstance.updateBoard();
+        this.proposeAIToPlay();
+    }
 
-	proposeAIToPlay() {
-		// check if ai's turn has come, if so, make her start after a delay
-		const turn = this.componentInstance.rules.node.gamePartSlice.turn % 2;
-		if (this.players[turn] === 'bot') {
-			// bot's turn
-			setTimeout(() => {
-				// called only when it's AI's Turn
-				if (!this.componentInstance.rules.node.isEndGame()) {
-					const aiMove: Move = this.componentInstance.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
-					this.componentInstance.rules.choose(aiMove);
-					this.componentInstance.updateBoard();
-					this.proposeAIToPlay();
-				}
-			}, this.botTimeOut);
-		}
-	}
+    proposeAIToPlay() {
+        // check if ai's turn has come, if so, make her start after a delay
+        const turn = this.componentInstance.rules.node.gamePartSlice.turn % 2;
+        if (this.players[turn] === 'bot') {
+            // bot's turn
+            setTimeout(() => {
+                // called only when it's AI's Turn
+                if (!this.componentInstance.rules.node.isEndGame()) {
+                    const aiMove: Move = this.componentInstance.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
+                    this.componentInstance.rules.choose(aiMove);
+                    this.componentInstance.updateBoard();
+                    this.proposeAIToPlay();
+                }
+            }, this.botTimeOut);
+        }
+    }
 
-	switchPlayerOne() { // totally adaptable to other Rules
-		this.switchPlayer(0);
-	}
+    switchPlayerOne() { // totally adaptable to other Rules
+        this.switchPlayer(0);
+    }
 
-	switchPlayerTwo() { // totally adaptable to other Rules
-		this.switchPlayer(1);
-	}
+    switchPlayerTwo() { // totally adaptable to other Rules
+        this.switchPlayer(1);
+    }
 
-	switchPlayer(n: 0|1) {
-		this.players[n] = this.players[n] === 'bot' ? this.userService.getCurrentUser() : 'bot';
-		this.proposeAIToPlay();
-	}
+    switchPlayer(n: 0|1) {
+        this.players[n] = this.players[n] === 'bot' ? this.userService.getCurrentUser() : 'bot';
+        this.proposeAIToPlay();
+    }
 
-    get compo(): AbstractGameComponent {
-		return this.componentInstance;
-	}
+    get compo(): AbstractGameComponent<Move, GamePartSlice> {
+        return this.componentInstance;
+    }
 }

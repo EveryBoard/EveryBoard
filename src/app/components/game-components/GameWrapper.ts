@@ -13,6 +13,7 @@ import {AwaleComponent} from './awale/awale.component';
 import {GoComponent} from './go/go.component';
 import { EncapsuleComponent } from './encapsule/encapsule.component';
 import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 
 export abstract class GameWrapper {
 
@@ -20,7 +21,7 @@ export abstract class GameWrapper {
 
     // component loading
     @ViewChild(GameIncluderComponent) gameCompo: GameIncluderComponent;
-    protected componentInstance: AbstractGameComponent;
+    protected componentInstance: AbstractGameComponent<Move, GamePartSlice>;
 
     players: string[];
 
@@ -39,7 +40,7 @@ export abstract class GameWrapper {
         }
     }
 
-    getMatchingComponent(compoString: string): Type<AbstractGameComponent> { // TODO figure out the difference with Type<any>
+    getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice>> { // TODO figure out the difference with Type<any>
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.getMatchingComponent');
         }
@@ -88,7 +89,7 @@ export abstract class GameWrapper {
         const component = this.getMatchingComponent(compoString);
         const componentFactory: ComponentFactory<any> = this.componentFactoryResolver.resolveComponentFactory(component);
         const componentRef: ComponentRef<any> = this.gameCompo.viewContainerRef.createComponent(componentFactory);
-        this.componentInstance = <AbstractGameComponent>componentRef.instance;
+        this.componentInstance = <AbstractGameComponent<Move, GamePartSlice>>componentRef.instance;
         this.componentInstance.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
         this.componentInstance.observerRole = this.observerRole; // TODO: fix, tell "undefined"

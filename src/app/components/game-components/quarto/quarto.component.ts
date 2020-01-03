@@ -10,7 +10,7 @@ import {AbstractGameComponent} from '../AbstractGameComponent';
 	selector: 'app-quarto',
 	templateUrl: './quarto.component.html'
 })
-export class QuartoComponent extends AbstractGameComponent {
+export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
 
 	rules = new QuartoRules();
 
@@ -26,8 +26,8 @@ export class QuartoComponent extends AbstractGameComponent {
 
 	updateBoard() {
 		console.log('update online board');
-		const slice = this.rules.node.gamePartSlice as QuartoPartSlice;
-		const move: QuartoMove = this.rules.node.move as QuartoMove;
+		const slice = this.rules.node.gamePartSlice;
+		const move: QuartoMove = this.rules.node.move;
 		this.board = slice.getCopiedBoard();
 		this.pieceInHand = slice.pieceInHand;
 

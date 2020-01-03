@@ -9,7 +9,7 @@ import {TablutRules} from '../../../games/tablut/TablutRules';
     selector: 'app-tablut-new',
     templateUrl: './tablut.component.html'
 })
-export class TablutComponent extends AbstractGameComponent {
+export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice> {
 
     static VERBOSE = false;
 
@@ -28,8 +28,8 @@ export class TablutComponent extends AbstractGameComponent {
     chosenY = -1;
 
     updateBoard() {
-        const slice: TablutPartSlice = this.rules.node.gamePartSlice as TablutPartSlice;
-        const move: TablutMove = this.rules.node.move as TablutMove;
+        const slice: TablutPartSlice = this.rules.node.gamePartSlice;
+        const move: TablutMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
         // this.turn = tablutPartSlice.turn;
         // this.currentPlayer = this.players[tablutPartSlice.turn % 2];
@@ -120,7 +120,7 @@ export class TablutComponent extends AbstractGameComponent {
 
     pieceBelongToCurrentPlayer(x: number, y: number): number { // TODO: see that verification is done and refactor this shit
         const player = this.rules.node.gamePartSlice.turn % 2 === 0 ? 0 : 1;
-        const invaderStart = (this.rules.node.gamePartSlice as TablutPartSlice).invaderStart;
+        const invaderStart = this.rules.node.gamePartSlice.invaderStart;
         const coord: Coord = new Coord(x, y);
         return TablutRules.getRelativeOwner(player, invaderStart, coord, this.board);
     }

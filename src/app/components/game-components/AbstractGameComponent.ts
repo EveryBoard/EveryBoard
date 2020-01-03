@@ -1,9 +1,10 @@
 import {Move} from '../../jscaip/Move';
 import {Rules} from '../../jscaip/Rules';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 
-export abstract class AbstractGameComponent {
+export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice> {
 
-	rules: Rules;
+	rules: Rules<M, S>;
 
 	board: Array<Array<number>>;
 

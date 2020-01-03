@@ -7,7 +7,11 @@ export interface Comparable {
 
 export class MGPMap<K extends Comparable, V> {
 
-    public map: {key: K, value: V}[] = [];
+    private map: {key: K, value: V}[] = [];
+
+    get(index: number) {
+        return this.map[index];
+    }
 
     put(key: K, value: V) {
         if (key == null) throw new Error("Key cannot be null");

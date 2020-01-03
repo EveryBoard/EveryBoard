@@ -12,7 +12,7 @@ import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
     selector: 'app-reversi',
     templateUrl: './reversi.component.html'
 })
-export class ReversiComponent extends AbstractGameComponent {
+export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice> {
 
     static VERBOSE = true;
 
@@ -26,7 +26,7 @@ export class ReversiComponent extends AbstractGameComponent {
     canPass = false;
 
     onClick(x: number, y: number): boolean {
-        const reversiPartSlice = this.rules.node.gamePartSlice as ReversiPartSlice;
+        const reversiPartSlice = this.rules.node.gamePartSlice;
         if (ReversiComponent.VERBOSE) {
             console.log('ReversiRules.getListMoves(reversiPartSlice): ');
             console.log(ReversiRules.getListMoves(reversiPartSlice));
@@ -74,8 +74,8 @@ export class ReversiComponent extends AbstractGameComponent {
         if (ReversiComponent.VERBOSE) {
             console.log('updateBoard');
         }
-        const reversiPartSlice: ReversiPartSlice = this.rules.node.gamePartSlice as ReversiPartSlice;
-        const moveCoord: ReversiMove = this.rules.node.move as ReversiMove;
+        const reversiPartSlice: ReversiPartSlice = this.rules.node.gamePartSlice;
+        const moveCoord: ReversiMove = this.rules.node.move;
 
         this.board = reversiPartSlice.getCopiedBoard();
 

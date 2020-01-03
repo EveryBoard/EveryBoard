@@ -9,7 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 import { Sets } from 'src/app/collectionlib/Sets';
 
-export class EncapsuleRules extends Rules {
+export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice> {
 
     static readonly LINES: Coord[][] = [
         [ new Coord(0, 0), new Coord(0, 1), new Coord(0, 2)],
@@ -33,7 +33,7 @@ export class EncapsuleRules extends Rules {
     }
 
     isLegal(move: EncapsuleMove): boolean {
-        return EncapsuleRules.isLegal(this.node.gamePartSlice as EncapsulePartSlice, move).legal;
+        return EncapsuleRules.isLegal(this.node.gamePartSlice, move).legal;
     }
 
     static isLegal(slice: EncapsulePartSlice, move: EncapsuleMove): LegalityStatus {
@@ -78,13 +78,13 @@ export class EncapsuleRules extends Rules {
 
     choose(move: EncapsuleMove): boolean {
         console.log("choose");
-        let slice: EncapsulePartSlice = this.node.gamePartSlice as EncapsulePartSlice;
+        let slice: EncapsulePartSlice = this.node.gamePartSlice;
         let legality: LegalityStatus = EncapsuleRules.isLegal(slice, move);
         if (!legality.legal) {
             return false;
         }
         const newPartSlice: EncapsulePartSlice = EncapsuleRules.applyLegalMove(slice, move, legality);
-        const choice: MNode<EncapsuleRules> = new MNode<EncapsuleRules>(this.node, move, newPartSlice);
+        const choice: MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice> = new MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice>(this.node, move, newPartSlice);
         this.node = choice;
         return true;
     }
@@ -112,8 +112,8 @@ export class EncapsuleRules extends Rules {
         return new EncapsulePartSlice(newBoard, newTurn, newRemainingPiece);
     }
 
-    getBoardValue(n: MNode<EncapsuleRules>): number {
-        let slice: EncapsulePartSlice = n.gamePartSlice as EncapsulePartSlice;
+    getBoardValue(n: MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice>): number {
+        let slice: EncapsulePartSlice = n.gamePartSlice;
         let boardValue: number;
         if (EncapsuleRules.isVictory(slice)) {
             console.log("this would be a victory");
@@ -151,9 +151,9 @@ export class EncapsuleRules extends Rules {
         return (owner[0] === owner[1]) && (owner[1] === owner[2]);
     }
 
-    getListMoves<R extends Rules>(n: MNode<R>): MGPMap<EncapsuleMove, EncapsulePartSlice> {
+    getListMoves(n: MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice>): MGPMap<EncapsuleMove, EncapsulePartSlice> {
         const result: MGPMap<EncapsuleMove, EncapsulePartSlice> = new MGPMap<EncapsuleMove, EncapsulePartSlice>();
-        const slice: EncapsulePartSlice = n.gamePartSlice as EncapsulePartSlice;
+        const slice: EncapsulePartSlice = n.gamePartSlice;
         if (EncapsuleRules.isVictory(slice)) {
             return result;
         }

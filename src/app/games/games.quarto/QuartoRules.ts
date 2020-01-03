@@ -1,7 +1,5 @@
 import {Rules} from '../../jscaip/Rules';
-import {Move} from '../../jscaip/Move';
 import {MNode} from '../../jscaip/MNode';
-import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {QuartoPartSlice} from './QuartoPartSlice';
 import {QuartoMove} from './QuartoMove';
 import {QuartoEnum} from './QuartoEnum';
@@ -171,10 +169,12 @@ class Critere {
 
 }
 
-export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefined et null comme valeur de move !!
+export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> { // TODO majeur bug : bloquer les undefined et null comme valeur de move !!
+
     static VERBOSE = false;
 
-    private static readonly INVALID_MOVE = -1;
+    private static readonly INVALID_MOVE = -1; // TODO: mettre en commun avec Legality
+
     private static readonly VALID_MOVE = 1;
 
     static readonly lines: number[][] = [
@@ -193,7 +193,7 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
     // c (x, y) est la coordonnées de la première case
     // d (x, y) est la direction de la ligne en question
 
-    public node: MNode<QuartoRules>;
+    public node: MNode<QuartoRules, QuartoMove, QuartoPartSlice>;
     // enum boolean {TRUE, FALSE, NULL}
 
     private static isOccupied(qcase: number): boolean {
@@ -258,9 +258,8 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
         );
     }
 
-    choose(move: Move): boolean {
-        const quartoMove: QuartoMove = move as QuartoMove;
-        console.log('choosing ' + quartoMove);
+    public choose(move: QuartoMove): boolean {
+        console.log('choosing ' + move);
         // if (this.node.hasMoves()) { // if calculation has already been done by the AI
         //  Node choix = this.node.getSonByMove(move);// let's not doing if twice
         //  if (choix !== null) {
@@ -268,32 +267,31 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
         //      return true;
         //  }
         // }
-        const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice as QuartoPartSlice;
+        const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice;
         const turn: number = quartoPartSlice.turn;
         const player: number = turn % 2;
 
         const board: number[][] = this.node.gamePartSlice.getCopiedBoard();
-        const moveResult: number = QuartoRules.isLegal(quartoMove, quartoPartSlice);
+        const moveResult: number = QuartoRules.isLegal(move, quartoPartSlice);
         if (moveResult === QuartoRules.INVALID_MOVE) {
             return false;
         }
-        const y: number = quartoMove.coord.y;
-        const x: number = quartoMove.coord.x;
-        const piece: number = quartoMove.piece;
+        const y: number = move.coord.y;
+        const x: number = move.coord.x;
+        const piece: number = move.piece;
         board[y][x] = quartoPartSlice.pieceInHand;
         const partSlice: QuartoPartSlice = new QuartoPartSlice(board, turn + 1, piece);
-        const son: MNode<QuartoRules> = new MNode(this.node, move, partSlice);
+        const son: MNode<QuartoRules, QuartoMove, QuartoPartSlice> = new MNode(this.node, move, partSlice);
         this.node = son;
         return true;
     }
 
-    isLegal(move: Move): boolean {
-        const quartoMove = move as QuartoMove;
-        const quartoPartSlice = this.node.gamePartSlice as QuartoPartSlice;
-        return QuartoRules.isLegal(quartoMove, quartoPartSlice) === QuartoRules.VALID_MOVE;
+    public isLegal(move: QuartoMove): boolean {
+        const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice;
+        return QuartoRules.isLegal(move, quartoPartSlice) === QuartoRules.VALID_MOVE;
     }
 
-    setInitialBoard() {
+    public setInitialBoard() {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
                 new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA), // TODO: make generic
@@ -303,10 +301,10 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
         }
     }
 
-    getListMoves(n: MNode<QuartoRules>): MGPMap<Move, QuartoPartSlice> {
-        const listMoves: MGPMap<Move, QuartoPartSlice> = new MGPMap<Move, QuartoPartSlice>();
+    getListMoves(n: MNode<QuartoRules, QuartoMove, QuartoPartSlice>): MGPMap<QuartoMove, QuartoPartSlice> {
+        const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = new MGPMap<QuartoMove, QuartoPartSlice>();
 
-        const partSlice: QuartoPartSlice = n.gamePartSlice as QuartoPartSlice;
+        const partSlice: QuartoPartSlice = n.gamePartSlice;
         let moveAppliedPartSlice: QuartoPartSlice;
 
         const board: number[][] = partSlice.getCopiedBoard();
@@ -315,7 +313,6 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
 
         let nextBoard: number[][];
         const nextTurn: number = partSlice.turn + 1;
-
 
         for (let y = 0; y < 4; y++) {
             for (let x = 0; x < 4; x++) {
@@ -336,15 +333,12 @@ export class QuartoRules extends Rules { // TODO majeur bug : bloquer les undefi
                 }
             }
         }
-        if (listMoves.size() === 0) {
-            console.log('WTF BORDAILE');
-        }
         // console.log(node + ' has ' + listMoves.size() + ' sons ');
         return listMoves;
     }
 
-    getBoardValue(node: MNode<QuartoRules>): number {
-        const quartoSlice: QuartoPartSlice = node.gamePartSlice as QuartoPartSlice;
+    getBoardValue(node: MNode<QuartoRules, QuartoMove, QuartoPartSlice>): number {
+        const quartoSlice: QuartoPartSlice = node.gamePartSlice;
         const board: number[][] = quartoSlice.getCopiedBoard();
         // console.log('Node : ' + node);
         // console.log('board : ' + Arrays.toString(board[0]) + Arrays.toString(board[1]) + Arrays.toString(board[2])
