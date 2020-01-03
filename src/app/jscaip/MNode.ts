@@ -9,7 +9,9 @@ export class MNode<R extends Rules> {
 	// TODO: choose ONE commenting langage, for fuck's sake.
 	// TODO: check for the proper use of LinkedList to optimise the stuff
 
-	// static fields
+    // static fields
+
+    static NB_NODE_CREATED = 0;
 
 	static VERBOSE = false;
 
@@ -34,7 +36,7 @@ export class MNode<R extends Rules> {
     * une Node sinon
     */
 
-	private readonly move: Move | null;
+	public readonly move: Move | null;
 
 	readonly gamePartSlice: GamePartSlice;
 
@@ -118,25 +120,25 @@ export class MNode<R extends Rules> {
 
 	// instance methods:
 
-	constructor(mother: MNode<R> | null, move: Move | null, board: GamePartSlice) {
+	constructor(mother: MNode<R> | null, move: Move | null, slice: GamePartSlice) {
 		/* Initialisation condition:
        * mother: null for initial board
        * board: should already be a clone
        */
-       const LOCAL_VERBOSE: boolean = true;
-		this.mother = mother;
-		this.move = move;
-		this.gamePartSlice = board;
+        const LOCAL_VERBOSE: boolean = true;
+        this.mother = mother;
+        this.move = move;
+        this.gamePartSlice = slice;
         this.ownValue = this.mother == null ? 0 : MNode.ruler.getBoardValue(this);
-		this.hopedValue = this.ownValue;
-		if (MNode.VERBOSE || LOCAL_VERBOSE) {
-            console.log("new node ("+this.gamePartSlice.turn+")"); // = "+this.gamePartSlice.toString() + " == " + this.ownValue);
-			//console.log('MNode<R> in phase of creation with slice : ' + this.gamePartSlice.toString() + " = " + this.ownValue);
-//          console.log(mother);
-
-//          console.log('and with board');
-//            console.log(board);
-		}
+        this.hopedValue = this.ownValue;
+        if (MNode.VERBOSE || LOCAL_VERBOSE) {
+            console.log("new node (" + MNode.NB_NODE_CREATED+") :: "+
+                                       (this.move == null ? "null" : this.move.toString()) + " + " +
+                                       this.gamePartSlice.toString() + " == " +
+                                       this.ownValue);
+            console.log(mother);
+        }
+        MNode.NB_NODE_CREATED += 1;
 	}
 
 	getNodeStatus(): String {
@@ -165,13 +167,13 @@ export class MNode<R extends Rules> {
 		return mother + ' ' + fertility + ' ' + calculated;
 	}
 
-	findBestMoveAndSetDepth(readingDepth: number): MNode<R> {
-        console.log("findBestMoveAndSetDepth("+readingDepth+") = "+this.gamePartSlice.toString() + " => " + this.ownValue);
-		this.depth = readingDepth;
-		return this.findBestMove();
-	}
+    public findBestMoveAndSetDepth(readingDepth: number): MNode<R> {
+        if (MNode.VERBOSE) console.log("findBestMoveAndSetDepth(" + readingDepth + ") = " + this.gamePartSlice.toString() + " => " + this.ownValue);
+        this.depth = readingDepth;
+        return this.findBestMove();
+    }
 
-	private findBestMove(): MNode<R> {
+	public findBestMove(): MNode<R> {
         const LOCAL_VERBOSE: boolean = false;
 		if (this.isLeaf()) {
 			if (MNode.VERBOSE || LOCAL_VERBOSE) {
@@ -280,27 +282,27 @@ export class MNode<R extends Rules> {
     if (this.isEndGame()) System.out.println('Node.createChilds has found a endGame');
    } */
 
-	createChilds() {
-		/* Conditions obtenues avant de lancer:
-       * 1. this.childs === null
-       *
-       * Chose nécessaire:
-       * Demander à l'instance de Rules de calculer (pour this) tout les mouvement légaux
-       * (avec ceux ci, doit - on avoir une liste de Node contenant en eux .move
-       *
-       * 1. Getter le dico < MoveX, Board > provenant du IRules
-       *
-       * 2. Pour chacun d'entre eux
-       * a. setter sa mother à this // via constructeur
-       * b. setter sa childs à null // AUTOMATIQUE
-       * c. setter sa bestChild à null // AUTOMATIQUE
-       * d. moveX est donc reçu de la classe Rules // via constructeur
-       * e. board est aussi reçu de la classe Rules // via constructeur
-       * f. setter sa value à null // AUTOMATIQUE
-       * g. l'ajouter à this.childs
-       * h. ne rien changer à sa depth avant que la Node ne soit calculée
-       */
-       if (this.childs != null) throw new Error("multiple node childs calculation error");
+    public createChilds() {
+        /* Conditions obtenues avant de lancer:
+         * 1. this.childs === null
+         *
+         * Chose n�cessaire:
+         * Demander � l'instance de Rules de calculer (pour this) tout les mouvement l�gaux
+         * (avec ceux ci, doit - on avoir une liste de Node contenant en eux .move
+         *
+         * 1. Getter le dico < MoveX, Board > provenant du IRules
+         *
+         * 2. Pour chacun d'entre eux
+         * a. setter sa mother à this // via constructeur
+         * b. setter sa childs à null // AUTOMATIQUE
+         * c. setter sa bestChild à null // AUTOMATIQUE
+         * d. moveX est donc reçu de la classe Rules // via constructeur
+         * e. board est aussi reçu de la classe Rules // via constructeur
+         * f. setter sa value à null // AUTOMATIQUE
+         * g. l'ajouter à this.childs
+         * h. ne rien changer à sa depth avant que la Node ne soit calculée
+         */
+        if (this.childs != null) throw new Error("multiple node childs calculation error");
 		const LOCAL_VERBOSE = false;
 		const moves: MGPMap<Move, GamePartSlice> = MNode.ruler.getListMoves(this);
 		this.childs = new Array<MNode<R>>();
@@ -314,25 +316,21 @@ export class MNode<R extends Rules> {
 				console.log(entry);
 			}
 			const move: Move = entry.key;
-			const board: GamePartSlice = entry.value;
-			if (MNode.VERBOSE || LOCAL_VERBOSE) {
-				console.log('move and board retrieved from the entry');
-			}
-			const child: MNode<R> = new MNode<R>(this, move, board);
+			const slice: GamePartSlice = entry.value;
+			if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('move and board retrieved from the entry');
+
+			const child: MNode<R> = new MNode<R>(this, move, slice);
 			if (MNode.VERBOSE || LOCAL_VERBOSE) {
 				console.log('child created');
 				console.log(child);
 			}
 			this.childs.push(child);
 		}
-		if (MNode.VERBOSE || LOCAL_VERBOSE) {
-			console.log('out of the loop');
-		}
-		if (this.isEndGame()) {
-			if (MNode.VERBOSE || LOCAL_VERBOSE) {
-				console.log('Node.createChilds has found a endGame');
-			}
-		}
+
+        if (MNode.VERBOSE || LOCAL_VERBOSE) {
+            console.log('out of the loop');
+            if (this.isEndGame()) console.log('Node.createChilds has found a endGame');
+        }
 	}
 
 	private calculateChildsValue() {
@@ -445,10 +443,6 @@ export class MNode<R extends Rules> {
 		return this.mother;
 	}
 
-	getMove(): Move | null {
-		return this.move;
-	}
-
 	getOwnValue(): number {
 		return this.ownValue;
 	}
@@ -485,47 +479,32 @@ export class MNode<R extends Rules> {
     return ((this.childs !== null) && (this.childs.isEmpty()));
    } */
 
-	isEndGame(): boolean {
-		const LOCAL_VERBOSE = false;
+    public isEndGame(): boolean {
+        const LOCAL_VERBOSE = false;
 
-		const scoreStatus: SCORE = MNode.getScoreStatus(this.ownValue);
-		if (MNode.VERBOSE || LOCAL_VERBOSE) {
-			console.log('\nscoreStatus === ' + scoreStatus + '; ');
-		}
+        const scoreStatus: SCORE = MNode.getScoreStatus(this.ownValue);
+        if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('\nscoreStatus === ' + scoreStatus + '; ');
 
-		if (scoreStatus === SCORE.VICTORY) {
-			if (MNode.VERBOSE || LOCAL_VERBOSE) {
-				console.log('MNode.isEndGame by victory');
-			}
-			return true;
-		}
+        if (scoreStatus === SCORE.VICTORY) {
+            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('MNode.isEndGame by victory');
+            return true;
+        }
 
-		if (this.childs === null) {
-			if (MNode.VERBOSE || LOCAL_VERBOSE) {
-				console.log('uncalculated childs : [calculating childs...]');
-			}
-			this.createChilds();
-		}
+        if (this.childs === null) {
+            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('uncalculated childs : [calculating childs...]');
+            this.createChilds();
+        }
 
-		if (MNode.VERBOSE || LOCAL_VERBOSE) {
-			if (this.childs) {
-				console.log(this.childs.length + ' childs; ');
-			}
-		}
+        // CHILDS ARE CREATED NOW if ((MNode.VERBOSE || LOCAL_VERBOSE) && this.childs) console.log(this.childs.length + ' childs; ');
 
-		if (this.childs && this.childs.length === 0) {
-			if (MNode.VERBOSE || LOCAL_VERBOSE) {
-				console.log('MNode.isEndGame by  by no-child after calculation');
-			}
-			return true;
-		}
+        if (this.childs.length === 0) {
+            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('MNode.isEndGame by  by no-child after calculation');
+            return true;
+        }
 
-		if (MNode.VERBOSE || LOCAL_VERBOSE) {
-			console.log('MNode.isEndGame : no (childs and normal score)');
-		}
-
-		return false;
-	}
+        if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('MNode.isEndGame : no (childs and normal score)');
+        return false;
+    }
 
 	hasMoves(): boolean {
 		return this.childs !== null;

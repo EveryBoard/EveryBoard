@@ -75,7 +75,7 @@ export class GoComponent extends AbstractGameComponent {
             console.log('updateBoard');
         }
         const slice: GoPartSlice = this.rules.node.gamePartSlice as GoPartSlice;
-        const move: GoMove = this.rules.node.getMove() as GoMove;
+        const move: GoMove = this.rules.node.move as GoMove;
         const koCoord: Coord = slice.getKoCoordCopy();
         const phase: Phase = slice.phase;
 

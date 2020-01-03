@@ -13,5 +13,4 @@ export class GameIncluderComponent implements OnInit {
 	ngOnInit() {
 		// console.log('Game Includer Initialised');
 	}
-
 }

@@ -134,7 +134,7 @@ export class GoRules extends Rules {
         return groupDatas; 
     }
 
-    getListMoves(node: MNode<GoRules>): MGPMap<GoMove, GoPartSlice> {
+    public getListMoves(node: MNode<GoRules>): MGPMap<GoMove, GoPartSlice> {
         const localVerbose = false;
         if (GoRules.VERBOSE || localVerbose) {
             console.log('getListMoves');
@@ -205,7 +205,7 @@ export class GoRules extends Rules {
         return {resultMove, newPartSlice};
     }
 
-    getBoardValue(n: MNode<GoRules>): number {
+    public getBoardValue(n: MNode<GoRules>): number {
         const localVerbose = false;
 
         if (GoRules.VERBOSE || localVerbose) {
@@ -218,7 +218,7 @@ export class GoRules extends Rules {
         return goScore[1] - goScore[0];
     }
 
-    choose(resultlessMove: GoMove): boolean {
+    public choose(resultlessMove: GoMove): boolean {
         const LOCAL_VERBOSE: boolean = true;
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             const choix: MNode<GoRules> = this.node.getSonByMove(resultlessMove); // let's not doing if twice

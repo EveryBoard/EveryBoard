@@ -12,6 +12,7 @@ import {P4Component} from './p4/p4.component';
 import {AwaleComponent} from './awale/awale.component';
 import {GoComponent} from './go/go.component';
 import { EncapsuleComponent } from './encapsule/encapsule.component';
+import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
 
 export abstract class GameWrapper {
 
@@ -45,6 +46,12 @@ export abstract class GameWrapper {
         switch (compoString) {
             case 'Awale':
                 return AwaleComponent;
+            case 'Encapsule':
+                return EncapsuleComponent;
+            case 'Go':
+                return GoComponent;
+            case 'MinimaxTesting':
+                return MinimaxTestingComponent;
             case 'P4':
                 return P4Component;
             case 'Quarto':
@@ -53,10 +60,6 @@ export abstract class GameWrapper {
                 return ReversiComponent;
             case 'Tablut':
                 return TablutComponent;
-            case 'Go':
-                return GoComponent;
-            case 'Encapsule':
-                return EncapsuleComponent;
             default:
                 this.router.navigate(['/error']);
                 return null;

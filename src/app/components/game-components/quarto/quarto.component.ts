@@ -27,7 +27,7 @@ export class QuartoComponent extends AbstractGameComponent {
 	updateBoard() {
 		console.log('update online board');
 		const slice = this.rules.node.gamePartSlice as QuartoPartSlice;
-		const move: QuartoMove = this.rules.node.getMove() as QuartoMove;
+		const move: QuartoMove = this.rules.node.move as QuartoMove;
 		this.board = slice.getCopiedBoard();
 		this.pieceInHand = slice.pieceInHand;
 

@@ -19,17 +19,17 @@ export class EncapsulePartSlice extends GamePartSlice {
     static getStartingSlice(): EncapsulePartSlice {
         const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
         const emptyNumber: number = emptyCase.encode();
-        //let startingBoard: number[][] = GamePartSlice.createBiArray(3, 3, emptyNumber);
+        let startingBoard: number[][] = GamePartSlice.createBiArray(3, 3, emptyNumber);
         /*const startingBoard: number[][] = [
             [0*9+0*3+0*1, 0*9+0*3+1*1, 0*9+1*3+0*1],
             [0*9+1*3+1*1, 1*9+0*3+0*1, 1*9+0*3+1*1],
             [1*9+1*3+0*1, 1*9+1*3+1*1, 2*9+2*3+2*1]
-        ];*/
+        ];
         const startingBoard: number[][] = [
             [0*9+2*3+2*1, 2*9+2*3+2*1, 2*9+2*3+2*1],
             [2*9+2*3+2*1, 0*9+2*3+2*1, 2*9+2*3+2*1],
             [2*9+2*3+2*1, 2*9+2*3+2*1, 2*9+2*3+2*1]
-        ];
+        ];*/
         let initialPieces: EncapsulePiece[] = [
                EncapsulePiece.BIG_BLACK,    EncapsulePiece.BIG_BLACK,    EncapsulePiece.BIG_WHITE,    EncapsulePiece.BIG_WHITE,
             EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,

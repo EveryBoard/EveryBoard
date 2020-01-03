@@ -43,7 +43,7 @@ export class EncapsuleComponent extends AbstractGameComponent {
     updateBoard() {
         console.log('update online board');
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice as EncapsulePartSlice;
-        const move: EncapsuleMove = this.rules.node.getMove() as EncapsuleMove;
+        const move: EncapsuleMove = this.rules.node.move as EncapsuleMove;
         this.cancelMove();
         this.caseBoard = this.mapNumberBoard(slice.getCopiedBoard());
         this.mappedBoard = this.mapCaseBoard(this.caseBoard);

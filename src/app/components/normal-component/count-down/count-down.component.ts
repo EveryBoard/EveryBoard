@@ -89,13 +89,13 @@ export class CountDownComponent implements OnInit, OnDestroy {
 		}
 		this.startTime = Date.now();
 		this.isPaused = false;
-		this.timeoutHandleGlobal = setTimeout(() => {
+		this.timeoutHandleGlobal = window.setTimeout(() => {
 			if (CountDownComponent.VERBOSE) {
 				console.log('cdc::' + this.debugName + '::end reached');
 			}
 			this.onEndReached();
 		}, this.remainingTime);
-		this.timeoutHandleSec = setTimeout(() => {
+		this.timeoutHandleSec = window.setTimeout(() => {
 			this.updateShownTime();
 		}, 1000);
 	}
@@ -116,7 +116,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
 		this.remainingTime -= (now - this.startTime);
 		this.startTime = now;
 		if (!this.isPaused) {
-			this.timeoutHandleSec = setTimeout(() => this.updateShownTime(), 1000);
+			this.timeoutHandleSec = window.setTimeout(() => this.updateShownTime(), 1000);
 		}
 	}
 

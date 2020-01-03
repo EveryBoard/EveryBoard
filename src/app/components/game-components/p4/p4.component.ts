@@ -34,7 +34,7 @@ export class P4Component extends AbstractGameComponent {
 
 	updateBoard() {
 		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
-		const lastMove: MoveX = this.rules.node.getMove() as MoveX;
+		const lastMove: MoveX = this.rules.node.move as MoveX;
 
 		this.board = p4PartSlice.getCopiedBoard().reverse();
 		if (lastMove !== null) {

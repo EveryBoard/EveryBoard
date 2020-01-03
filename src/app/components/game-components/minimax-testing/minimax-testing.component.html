@@ -1,0 +1,9 @@
+<table>
+    <tr *ngFor="let line of board; index as y;">
+        <td *ngFor="let currentCase of line; index as x;">
+            {{ currentCase }}
+        </td>
+    </tr>
+    <div (click)="chooseRight"> goRight </div>
+    <div (click)="chooseDown"> goDown </div>
+</table>

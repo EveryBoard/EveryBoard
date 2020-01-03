@@ -75,7 +75,7 @@ export class ReversiComponent extends AbstractGameComponent {
             console.log('updateBoard');
         }
         const reversiPartSlice: ReversiPartSlice = this.rules.node.gamePartSlice as ReversiPartSlice;
-        const moveCoord: ReversiMove = this.rules.node.getMove() as ReversiMove;
+        const moveCoord: ReversiMove = this.rules.node.move as ReversiMove;
 
         this.board = reversiPartSlice.getCopiedBoard();
 

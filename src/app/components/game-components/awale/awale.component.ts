@@ -60,7 +60,7 @@ export class AwaleComponent extends AbstractGameComponent {
     updateBoard(): void {
         const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice as AwalePartSlice;
         this.scores = awalePartSlice.captured;
-        const awaleMove: AwaleMove = this.rules.node.getMove() as AwaleMove;
+        const awaleMove: AwaleMove = this.rules.node.move as AwaleMove;
 
         if (this.observerRole === 1) {
             const orientedBoard: number[][] = [];

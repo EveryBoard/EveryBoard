@@ -7,10 +7,10 @@ import { TablutMove } from './TablutMove';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 
 export class TablutRules extends Rules {
+
     static VERBOSE = false;
 
     // statics fields :
-
 
     static CASTLE_IS_LEFT_FOR_GOOD = false;
     // once the king leave the castle he cannot re-station there
@@ -518,7 +518,7 @@ export class TablutRules extends Rules {
 
     // instance methods :
 
-    getListMoves(n: MNode<TablutRules>): MGPMap<TablutMove, TablutPartSlice> {
+    public getListMoves(n: MNode<TablutRules>): MGPMap<TablutMove, TablutPartSlice> {
         const localVerbose = false;
         if (TablutRules.VERBOSE || localVerbose) {
             console.log('get list move available to ');
@@ -556,7 +556,7 @@ export class TablutRules extends Rules {
         return listCombinaison;
     }
 
-    getListMovesPeared(n: MNode<TablutRules>): { key: TablutMove, value: TablutPartSlice }[] {
+    public getListMovesPeared(n: MNode<TablutRules>): { key: TablutMove, value: TablutPartSlice }[] {
         // TODO: pear this method, make it smarter
         const currentPartSlice: TablutPartSlice = n.gamePartSlice as TablutPartSlice;
         const currentBoard: number[][] = currentPartSlice.getCopiedBoard();
@@ -586,7 +586,7 @@ export class TablutRules extends Rules {
         return null;
     }
 
-    getBoardValue(n: MNode<TablutRules>): number {
+    public getBoardValue(n: MNode<TablutRules>): number {
 
         // 1. is the king escaped ?
         // 2. is the king captured ?
@@ -620,7 +620,7 @@ export class TablutRules extends Rules {
         return scoreZero - scoreOne; // TODO : countInvader vs Defenders
     }
 
-    choose(move: TablutMove): boolean {
+    public choose(move: TablutMove): boolean {
         // recherche
         let son: MNode<TablutRules>;
         /* if (this.node.hasMoves()) { // if calculation has already been done by the AI
@@ -656,7 +656,7 @@ export class TablutRules extends Rules {
         return true;
     }
 
-    isLegal(move: TablutMove): boolean {
+    public isLegal(move: TablutMove): boolean {
         // copies
         const partSlice: TablutPartSlice = this.node.gamePartSlice as TablutPartSlice;
         const board: number[][] = partSlice.getCopiedBoard();
@@ -668,7 +668,7 @@ export class TablutRules extends Rules {
         return TablutRules.tryMove(player, invaderStart, move, board).success === TablutRules.SUCCESS;
     }
 
-    setInitialBoard() {
+    public setInitialBoard() {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
                 new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true), // TODO: rendre ça configurable

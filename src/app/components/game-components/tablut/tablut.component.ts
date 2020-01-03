@@ -29,7 +29,7 @@ export class TablutComponent extends AbstractGameComponent {
 
     updateBoard() {
         const slice: TablutPartSlice = this.rules.node.gamePartSlice as TablutPartSlice;
-        const move: TablutMove = this.rules.node.getMove() as TablutMove;
+        const move: TablutMove = this.rules.node.move as TablutMove;
         this.board = slice.getCopiedBoard();
         // this.turn = tablutPartSlice.turn;
         // this.currentPlayer = this.players[tablutPartSlice.turn % 2];

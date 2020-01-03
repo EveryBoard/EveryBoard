@@ -1,3 +1,4 @@
+/*
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
@@ -23,3 +24,4 @@ describe('LocalGameWrapperComponent', () => {
     expect(component).toBeTruthy();
   });
 });
+*/

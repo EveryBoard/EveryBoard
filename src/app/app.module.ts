@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
+import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {HttpModule} from '@angular/http';
@@ -28,21 +28,22 @@ import {StatisticPageComponent} from './components/normal-component/statistic-pa
 
 import {firebaseConfig} from './firebaseConfig';
 
+import {ChatService} from './services/ChatService';
 import {PartCreationComponent} from './components/normal-component/part-creation/part-creation.component';
 import {ChatComponent} from './components/normal-component/chat/chat.component';
-import {ChatService} from './services/ChatService';
 import {CountDownComponent} from './components/normal-component/count-down/count-down.component';
 import {OnlineGameWrapperComponent} from './components/game-components/online-game-wrapper/online-game-wrapper.component';
 import {LocalGameWrapperComponent} from './components/game-components/local-game-wrapper/local-game-wrapper.component';
 import {GameIncluderComponent} from './components/game-components/game-includer/game-includer.component';
 
 import {AwaleComponent} from './components/game-components/awale/awale.component';
+import {EncapsuleComponent} from './components/game-components/encapsule/encapsule.component';
+import {GoComponent} from './components/game-components/go/go.component';
 import {P4Component} from './components/game-components/p4/p4.component';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {ReversiComponent} from './components/game-components/reversi/reversi.component';
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
-import {GoComponent} from './components/game-components/go/go.component';
-import {EncapsuleComponent} from './components/game-components/encapsule/encapsule.component';
+import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
 
 const routes: Route [] = [
     {path: 'login',             component: LoginComponent},
@@ -60,7 +61,7 @@ const routes: Route [] = [
     declarations: [
         GameIncluderDirective,
 
-        AppComponent, // TODO voir à supprimer ? est-ce utile ?
+        AppComponent,
         HeaderComponent,
         FooterComponent,
         LoginComponent,
@@ -76,21 +77,23 @@ const routes: Route [] = [
         LocalGameWrapperComponent,
 
         AwaleComponent,
+        EncapsuleComponent,
+        GoComponent,
+        MinimaxTestingComponent,
         P4Component,
         QuartoComponent,
         ReversiComponent,
         TablutComponent,
-        GoComponent,
-        EncapsuleComponent
     ],
     entryComponents: [
         AwaleComponent,
+        EncapsuleComponent,
+        GoComponent,
+        MinimaxTestingComponent,
         P4Component,
         QuartoComponent,
-        TablutComponent,
         ReversiComponent,
-        GoComponent,
-        EncapsuleComponent,
+        TablutComponent,
 
         CountDownComponent, // TODO: figure out if needed
     ],

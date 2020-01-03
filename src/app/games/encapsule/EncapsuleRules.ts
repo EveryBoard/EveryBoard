@@ -113,19 +113,18 @@ export class EncapsuleRules extends Rules {
     }
 
     getBoardValue(n: MNode<EncapsuleRules>): number {
-        let slice: EncapsulePartSlice = 
-            this.node.gamePartSlice as EncapsulePartSlice;
+        let slice: EncapsulePartSlice = n.gamePartSlice as EncapsulePartSlice;
         let boardValue: number;
         if (EncapsuleRules.isVictory(slice)) {
             console.log("this would be a victory");
             console.log(slice);
-            boardValue = this.node.gamePartSlice.turn%2 === 0 ?
-                Number.MIN_SAFE_INTEGER :
-                Number.MAX_SAFE_INTEGER;
+            boardValue = slice.turn%2 === 0 ?
+                Number.MAX_SAFE_INTEGER :
+                Number.MIN_SAFE_INTEGER;
         } else {
             boardValue = 0;
         }
-        // console.log("getBoardValue of " + n.gamePartSlice.turn + " + " + n.getMove() + " = " + boardValue);
+        console.log("getBoardValue of " + n.gamePartSlice.toString() + " + " + n.move + " = " + boardValue);
         return boardValue;
     }
 
@@ -154,7 +153,7 @@ export class EncapsuleRules extends Rules {
 
     getListMoves<R extends Rules>(n: MNode<R>): MGPMap<EncapsuleMove, EncapsulePartSlice> {
         const result: MGPMap<EncapsuleMove, EncapsulePartSlice> = new MGPMap<EncapsuleMove, EncapsulePartSlice>();
-        const slice: EncapsulePartSlice = this.node.gamePartSlice as EncapsulePartSlice;
+        const slice: EncapsulePartSlice = n.gamePartSlice as EncapsulePartSlice;
         if (EncapsuleRules.isVictory(slice)) {
             return result;
         }

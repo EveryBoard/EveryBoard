@@ -3,7 +3,7 @@ import {async, ComponentFixture, TestBed} from '@angular/core/testing';
 import {P4Rules} from './P4Rules';
 import {MoveX} from '../../jscaip/MoveX';
 
-fdescribe('P4Rules', () => {
+describe('P4Rules', () => {
 
 	it('should be created', () => {
 		expect(new P4Rules()).toBeTruthy();
@@ -63,5 +63,4 @@ fdescribe('P4Rules', () => {
 		part.choose(MoveX.get(1)); // start over another pawn and don't win
 		expect(part.getBoardValue(part.node)).toBeLessThan(Number.MAX_SAFE_INTEGER);
 	});
-
 });

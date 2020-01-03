@@ -15,7 +15,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 
 	static VERBOSE = false;
 
-	aiDepth = 3;
+	aiDepth = 1;
 
 	botTimeOut = 500; // this.aiDepth * 500;
 
@@ -48,7 +48,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 			setTimeout(() => {
 				// called only when it's AI's Turn
 				if (!this.componentInstance.rules.node.isEndGame()) {
-					const aiMove: Move = this.componentInstance.rules.node.findBestMoveAndSetDepth(this.aiDepth).getMove();
+					const aiMove: Move = this.componentInstance.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
 					this.componentInstance.rules.choose(aiMove);
 					this.componentInstance.updateBoard();
 					this.proposeAIToPlay();
