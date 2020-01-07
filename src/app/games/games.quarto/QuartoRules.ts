@@ -266,34 +266,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         );
     }
 
-    public OLD_choose(move: QuartoMove): boolean {
-        console.log('choosing ' + move);
-        // if (this.node.hasMoves()) { // if calculation has already been done by the AI
-        //  Node choix = this.node.getSonByMove(move);// let's not doing if twice
-        //  if (choix !== null) {
-        //      this.node = choix; // qui devient le plateau actuel
-        //      return true;
-        //  }
-        // }
-        const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice;
-        const turn: number = quartoPartSlice.turn;
-        const player: number = turn % 2;
-
-        const board: number[][] = this.node.gamePartSlice.getCopiedBoard();
-        const moveResult: number = QuartoRules.isLegal(move, quartoPartSlice);
-        if (moveResult === QuartoRules.INVALID_MOVE) {
-            return false;
-        }
-        const y: number = move.coord.y;
-        const x: number = move.coord.x;
-        const piece: number = move.piece;
-        board[y][x] = quartoPartSlice.pieceInHand;
-        const partSlice: QuartoPartSlice = new QuartoPartSlice(board, turn + 1, piece);
-        const son: MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus> = new MNode(this.node, move, partSlice);
-        this.node = son;
-        return true;
-    }
-
     public isLegal(move: QuartoMove): LegalityStatus {
         const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice;
         return {legal: QuartoRules.isLegal(move, quartoPartSlice) === QuartoRules.VALID_MOVE};

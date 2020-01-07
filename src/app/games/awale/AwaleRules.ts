@@ -324,40 +324,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         return c1 - c0;
     }
 
-    OLD_choose(move: AwaleMove): boolean {
-        if (this.node.hasMoves()) { // if calculation has already been done by the AI
-            const choix: MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> = this.node.getSonByMove(move); // let's not doing if twice
-            if (choix != null) {
-                this.node = choix; // qui devient le plateau actuel
-                return true;
-            }
-        }
-        const turn: number = this.node.gamePartSlice.turn;
-        const player = turn % 2;
-        const ennemy = (turn + 1) % 2;
-        const x: number = move.coord.x;
-        const y: number = move.coord.y;
-        if (AwaleRules.VERBOSE) {
-            console.log('choose(' + move.toString() + ') -> ' + ' at turn ' + turn);
-        }
-        const board: number[][] = this.node.gamePartSlice.getCopiedBoard();
-        const legality: AwaleLegalityStatus = this.isLegal(move, this.node.gamePartSlice);
-        if (legality.legal === false) {
-            return false;
-        }
-
-        const awalePartSlice: AwalePartSlice = this.node.gamePartSlice;
-        const captured: number[] = awalePartSlice.getCapturedCopy();
-
-        captured[player] += legality.captured[player];
-        captured[ennemy] += legality.captured[ennemy];
-
-        const newPartSlice: AwalePartSlice = new AwalePartSlice(board, turn + 1, captured);
-        const son: MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> = new MNode(this.node, move, newPartSlice);
-        this.node = son;
-        return true;
-    }
-
     public setInitialBoard() {
         if (this.node == null) {
             this.node = MNode.getFirstNode(

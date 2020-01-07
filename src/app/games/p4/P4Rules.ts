@@ -473,38 +473,6 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
 	// Overrides:
 
-    public OLD_choose(move: MoveX): boolean {
-		if (P4Rules.VERBOSE) {
-			console.log('P4Rules.choose called');
-		}
-		if (!this.node) {
-			return false;
-		}
-		const x: number = move.x;
-		const y = P4Rules.getLowestUnoccupiedCase(
-			this.node.gamePartSlice.getCopiedBoard(),
-			x
-		);
-		if (y > 5) {
-			return false;
-		}
-
-		const partSlice: P4PartSlice = this.node.gamePartSlice;
-		const board: number[][] = partSlice.getCopiedBoard();
-		const turn: number = partSlice.turn;
-
-		board[y][x] = (turn % 2 === 0) ? P4Rules.PAWN_O : P4Rules.PAWN_X;
-
-		const newPartSlice: P4PartSlice = new P4PartSlice(board, turn + 1);
-		const choix: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> = new MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>(
-			this.node,
-			move,
-			newPartSlice
-		);
-		this.node = choix;
-		return true;
-	}
-
     public isLegal(move: MoveX): LegalityStatus {
         const ILLEGAL: LegalityStatus = {legal: false};
         if (move.x < 0 || move.x > 6) return ILLEGAL;

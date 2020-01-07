@@ -148,52 +148,6 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         return listMoves;
     }
 
-    public OLD_choose(move: ReversiMove): boolean {
-        let choix: MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus>;
-        /*if (this.node.hasMoves()) { // if calculation has already been done by the AI
-            choix = this.node.getSonByMove(move); // let's not doing if twice
-            if (choix != null) {
-                this.node = choix; // qui devient le plateau actuel
-                return true;
-            }
-        }*/
-        const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice;
-        const turn: number = this.node.gamePartSlice.turn;
-        const player: number = turn % 2;
-        const board: number[][] = reversiPartSlice.getCopiedBoard();
-        if (move.equals(ReversiMove.pass)) { // if the player pass
-            // let's check that pass is a legal move right now
-            if (ReversiRules.playerCanOnlyPass(reversiPartSlice)) {
-                // if he had no choice but to pass, then passing is legal !
-                const sameBoardDifferentTurn: ReversiPartSlice =
-                    new ReversiPartSlice(board, turn + 1);
-                choix = new MNode(this.node, move, sameBoardDifferentTurn);
-                this.node = choix;
-                return true;
-            } // else, passing was illegal
-            return false;
-        }
-        const switcheds = ReversiRules.getAllSwitcheds(move, turn, board);
-        if (board[move.coord.y][move.coord.x] !== ReversiPartSlice.UNOCCUPIED) {
-            return false;
-        }
-        if (switcheds.length === 0) {
-            return false;
-        } // else :
-        // console.log(switcheds.length + ' retournés');
-        for (const switched of switcheds) {
-            if (player === board[switched.y][switched.x]) {
-                alert(switched + 'was already switched!');
-            }
-            board[switched.y][switched.x] = player;
-        }
-        board[move.coord.y][move.coord.x] = player;
-        const newPartSlice: ReversiPartSlice = new ReversiPartSlice(board, turn + 1);
-        choix = new MNode(this.node, move, newPartSlice);
-        this.node = choix;
-        return true;
-    }
-
     public isLegal(move: ReversiMove): ReversiLegalityStatus {
         const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice;
         const turn: number = this.node.gamePartSlice.turn;

@@ -215,37 +215,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         return goScore[1] - goScore[0];
     }
 
-    public OLD_choose(resultlessMove: GoMove): boolean {
-        const LOCAL_VERBOSE: boolean = true;
-        if (this.node.hasMoves()) { // if calculation has already been done by the AI
-            const choix: MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> = this.node.getSonByMove(resultlessMove); // let's not doing if twice
-            if (choix != null) {
-                this.node = choix; // qui devient le plateau actuel
-                return true;
-            } // TODO: vérifier que le else ne signifie pas que ça doit retourner false
-        }
-        const currentPartSlice: GoPartSlice = this.node.gamePartSlice;
-        const turn: number = currentPartSlice.turn;
-        const player: number = turn % 2;
-        const ennemy: number = (turn + 1) % 2;
-        const x: number = resultlessMove.coord.x;
-        const y: number = resultlessMove.coord.y;
-        if (GoRules.VERBOSE || LOCAL_VERBOSE) {
-            console.log('choose(' + resultlessMove.toString() + ') -> ' + ' at turn ' + turn);
-        }
-        const newBoard: Pawn[][] = currentPartSlice.getCopiedBoard(); // TODO: mettre code en commun avec isLegal et getListMoves
-        const legality: GoLegalityStatus = this.isLegal(resultlessMove, currentPartSlice);
-        if (legality.legal === false) {
-            return false;
-        }
-
-        let result: {resultingMove: GoMove, resultingSlice: GoPartSlice} =
-            this.applyLegalMove(resultlessMove, currentPartSlice, legality);
-        const son: MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> = new MNode(this.node, result.resultingMove, result.resultingSlice);
-        this.node = son;
-        return true;
-    }
-
     public static getNewKo(moveAndResult: GoMove, newBoard: Pawn[][]): Coord {
         const captures: Coord[] = moveAndResult.getCapturesCopy();
         if (captures.length === 1) {

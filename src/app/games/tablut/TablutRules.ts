@@ -652,42 +652,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return scoreZero - scoreOne; // TODO : countInvader vs Defenders
     }
 
-    public OLD_choose(move: TablutMove): boolean {
-        // recherche
-        let son: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>;
-        /* if (this.node.hasMoves()) { // if calculation has already been done by the AI
-            console.log(this.node.myToString() + ' at turn ' + this.node.gamePartSlice.turn + ' has ' + this.node.countDescendants() + ' moves');
-            son = this.node.getSonByMove(move); // let's not doing if twice
-            if (son !== null) {
-                console.log('recalculation spared!');
-                this.node.keepOnlyChoosenChild(son);
-                this.node = son; // qui devient le plateau actuel
-                return true;
-            }
-        } */
-
-        // copies
-        const partSlice = this.node.gamePartSlice;
-        const board: number[][] = partSlice.getCopiedBoard();
-        const turn: number = partSlice.turn;
-        const invaderStart: boolean = partSlice.invaderStart;
-
-        // test
-        const player: 0|1 = turn % 2 === 0 ? 0 : 1;
-        const attemptResult: number = TablutRules.tryMove(player, invaderStart, move, board).success;
-        if (TablutRules.VERBOSE) {
-            console.log('attemptResult for tablut rules choosing '
-                + move + ' : ' + attemptResult + ' at turn : ' + turn + ' of player ' + player); }
-        if (attemptResult !== TablutRules.SUCCESS) {
-            return false;
-        }
-        const newPartSlice = new TablutPartSlice(board, turn + 1, invaderStart);
-        son = new MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>(this.node, move, newPartSlice);
-        this.node.keepOnlyChoosenChild(son);
-        this.node = son;
-        return true;
-    }
-
     public isLegal(move: TablutMove): LegalityStatus {
         // copies
         const partSlice: TablutPartSlice = this.node.gamePartSlice;
