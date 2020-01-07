@@ -39,15 +39,21 @@ describe('MinimaxTestingRules', () => {
         }
     });
 
-    it('IA(depth=2) should create exactly 6 child', () => {
+    it('IA(depth=2) should create not recalculate already created node', () => {
         MNode.NB_NODE_CREATED = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
-        part.node.findBestMoveAndSetDepth(2);
-        expect(part.node.countDescendants()).toEqual(6);
-        expect(MNode.NB_NODE_CREATED).toEqual(7);
+        let boardValue: number;
+        let bestMove: MinimaxTestingMove;
+        for (let i = 0; i<6; i++) {
+            bestMove = part.node.findBestMoveAndSetDepth(2).move;
+            boardValue = part.getBoardValue(part.node);
+            part.choose(bestMove);
+            expect(MNode.NB_NODE_CREATED).toEqual(boardValue);
+            MNode.NB_NODE_CREATED = 0;
+        }
     });
 
-    it('IA(depth=3) should create exactly 14 child', () => {
+    it('IA(depth=3) should create exactly 14 descendant', () => {
         MNode.NB_NODE_CREATED = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
         part.node.findBestMoveAndSetDepth(3);
@@ -55,12 +61,16 @@ describe('MinimaxTestingRules', () => {
         expect(MNode.NB_NODE_CREATED).toEqual(15);
     });
 
-    it('IA(depth=4) should create exactly 28 child', () => {
+    it('IA(depth=4) should create exactly 28 descendant and calculate the same amount of time their value', () => {
         MNode.NB_NODE_CREATED = 0;
+        MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT = 0;
+        MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
         part.node.findBestMoveAndSetDepth(4);
         expect(part.node.countDescendants()).toEqual(28);
         expect(MNode.NB_NODE_CREATED).toEqual(29);
+        expect(MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT).toEqual(MNode.NB_NODE_CREATED - 1);
+        expect(MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT).toEqual(MNode.NB_NODE_CREATED - 14);
     });
 
     it('IA(depth=5) should create exactly 48 child', () => {

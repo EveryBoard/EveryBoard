@@ -356,21 +356,22 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		}
 	}
 
-	onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number) {
-		this.updateDBBoard(move, scorePlayerZero, scorePlayerOne);
-	}
+    public onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): boolean {
+        this.updateDBBoard(move, scorePlayerZero, scorePlayerOne);
+        return true;
+    }
 
-	updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number) {
-		if (OnlineGameWrapperComponent.VERBOSE) {
-			console.log('let\'s update db board');
-		}
-		const encodedMove: number = this.componentInstance.encodeMove(move);
-		this.gameService
-			.updateDBBoard(encodedMove, scorePlayerZero, scorePlayerOne, this.currentPartId)
-			.then(onFullFilled => {
-				this.userService.updateUserActivity(true);
-			});
-	}
+    public updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number) {
+        if (OnlineGameWrapperComponent.VERBOSE) {
+            console.log('let\'s update db board');
+        }
+        const encodedMove: number = this.componentInstance.encodeMove(move);
+        this.gameService
+            .updateDBBoard(encodedMove, scorePlayerZero, scorePlayerOne, this.currentPartId)
+            .then(onFullFilled => {
+                this.userService.updateUserActivity(true);
+            });
+    }
 
 	resign() {
 		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];

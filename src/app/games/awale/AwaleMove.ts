@@ -1,11 +1,12 @@
-import { MoveCoordAndCapture } from "src/app/jscaip/MoveCoordAndCapture";
+import { Comparable } from "src/app/collectionlib/MGPMap";
+import { MoveCoord } from "src/app/jscaip/MoveCoord";
 
-export class AwaleMove extends MoveCoordAndCapture<number> {
+export class AwaleMove extends MoveCoord {
 
     static decode(encodedMove: number): AwaleMove {
         const x = encodedMove % 6;
         const y = (encodedMove - x) / 6;
-        return new AwaleMove(x, y, []); // TODO: check capture necessity
+        return new AwaleMove(x, y);
     }
 
     public decode(encodedMove: number): AwaleMove {

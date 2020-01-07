@@ -13,7 +13,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     showScore: boolean;
 
-	chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => boolean;
+    chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => boolean;
 
 	observerRole: number;
 	/* all game rules should be able to call the game-wrapper

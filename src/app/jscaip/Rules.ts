@@ -25,7 +25,24 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
      * so that the AI can know what is best, according to you algorithm in there
      */
 
-    public readonly choose = (move: M) => {
+    public readonly choose = (move: M): boolean => {
+        /* used by the rules to update board
+         * return true if the move was legal, and the node updated
+         * return false otherwise
+         */
+        if (this.node.hasMoves()) { // if calculation has already been done by the AI
+            console.log("node has move!");
+            let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing if twice
+            if (choix === null) {
+                console.log("but " + move.toString() + " is not legal");
+                return false;
+            } else {
+                console.log("and we choose it without recalculating it!");
+                this.node = choix; // qui devient le plateau actuel
+                return true;
+            }
+        }
+        console.log("We'll have to calculate ourself");
         const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
         if (!status.legal) {
             return false;
@@ -37,12 +54,6 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
     };
 
     public abstract applyLegalMove(move: M, slice: S, status: L): {resultingMove: M, resultingSlice: S};
-
-    // public abstract old_Choose(move: M): boolean;
-    /* used by the rules to update board
-     * return true if the move was legal, and the node updated
-     * return false otherwise
-     */
 
     public abstract isLegal(move: M, slice: S): L;
     /* return a legality status about the move, allowing to return already calculated info

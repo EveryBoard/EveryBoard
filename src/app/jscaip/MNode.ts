@@ -123,7 +123,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
                                        (this.move == null ? "null" : this.move.toString()) + " + " +
                                        this.gamePartSlice.toString() + " == " +
                                        this.ownValue);
-            console.log(mother);
+            // console.log(mother);
         }
         MNode.NB_NODE_CREATED += 1;
 	}
@@ -330,21 +330,17 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
 		}
 	}
 
-	public getSonByMove(move: M): MNode<R, M, S, L> | null {
-		/* int index = this.moves.indexOf(moveX);
-		if (index === - 1) return null;
-		return this.childs.get(index);
-		*/ // old version
-		if (!this.childs) {
-			return null;
-		}
-		for (const node of this.childs) {
-			if (node.move && node.move.equals(move)) {
-				return node;
-			}
-		}
-		return null;
-	}
+    public getSonByMove(move: M): MNode<R, M, S, L> | null {
+        if (this.childs == null) {
+            throw new Error("Cannot get son of uncalculated node");
+        }
+        for (const node of this.childs) {
+            if (node.move && node.move.equals(move)) {
+                return node;
+            }
+        }
+        return null;
+    }
 
 	public getInitialNode(): MNode<R, M, S, L> {
 		let allmightyMom: MNode<R, M, S, L> = this;

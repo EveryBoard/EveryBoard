@@ -8,6 +8,10 @@ import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 
 export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {
 
+    public static GET_BOARD_VALUE_CALL_COUNT: number = 0;
+
+    public static GET_LIST_MOVES_CALL_COUNT: number = 0;
+
     public applyLegalMove(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice, status: LegalityStatus): { resultingMove: MinimaxTestingMove; resultingSlice: MinimaxTestingPartSlice; } {
         const newX: number = slice.location.x + (move.right === true ? 1 : 0);
         const newY: number = slice.location.y + (move.right === false ? 1 : 0);
@@ -52,11 +56,13 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
     }
 
     public getBoardValue(node: MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus>): number {
+        MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT++;
         const slice: MinimaxTestingPartSlice = node.gamePartSlice;
         return slice.getBoardAt(slice.location);
     }
 
     public getListMoves(n: MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus>): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {
+        MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT++;
         const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> = new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();
         const slice: MinimaxTestingPartSlice = n.gamePartSlice;
         const LEGAL: LegalityStatus = {legal: true};

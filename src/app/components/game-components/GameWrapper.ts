@@ -99,37 +99,37 @@ export abstract class GameWrapper {
     }
 
     receiveChildData = (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): boolean => {
-        if (!this.componentInstance.rules.isLegal(move, slice)) {
-            if (GameWrapper.VERBOSE) {
-                console.log('move illegal');
-            }
-            return false;
-        }
         if (!this.isPlayerTurn()) {
             if (GameWrapper.VERBOSE) {
-                console.log('not your turn'); // todo : réactive notification
+                console.log('GameWrapper.receiveChildData says: not your turn'); // todo : réactive notification
             }
             return false;
         }
+        if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData about to ask node if endGame");
         if (this.componentInstance.rules.node.isEndGame()) {
             if (GameWrapper.VERBOSE) {
-                console.log('part is finished');
+                console.log('GameWrapper.receiveChildData says: part is finished');
+            }
+            return false;
+        }
+        if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData says: about to call Rules.isLegal");
+        if (!this.componentInstance.rules.isLegal(move, slice)) {
+            if (GameWrapper.VERBOSE) {
+                console.log('GameWrapper.receiveChildData says: move illegal');
             }
             return false;
         }
         if (GameWrapper.VERBOSE) {
-            console.log('board about to update');
+            console.log('GameWrapper.receiveChildData says: board about to update');
         }
         this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
+        return true;
     }
 
     abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number);
 
-    isPlayerTurn() {
+    public isPlayerTurn() {
         const indexPlayer = this.componentInstance.rules.node.gamePartSlice.turn % 2;
-        if (GameWrapper.VERBOSE) {
-            console.log(this.players[this.componentInstance.rules.node.gamePartSlice.turn % 2] + ' : ' + this.userName);
-        }
         return this.players[indexPlayer] === this.userName;
     }
 }

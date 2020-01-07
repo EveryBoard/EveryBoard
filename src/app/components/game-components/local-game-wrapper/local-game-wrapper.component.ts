@@ -33,7 +33,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
         this.afterGameComponentViewProbablyInit();
     }
 
-    onValidUserMove(move: Move): void {
+    onValidUserMove(move: Move) {
         if (LocalGameWrapperComponent.VERBOSE) {
             console.log('LocalGameWrapperComponent.onValidUserMove');
         }

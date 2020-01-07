@@ -26,28 +26,18 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         this.showScore = true;
     }
 
-    onClick(x: number, y: number): boolean {
-        console.log('Observeur role : ' + this.observerRole);
-        if (this.rules.node.isEndGame()) {
-            console.log('Malheureusement la partie est finie');
-            // todo : option de clonage revision commentage
-            return false;
-        }
-        // player's turn
-
+    public onClick(x: number, y: number) {
+        // todo : option de clonage revision commentage
         console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
 
-        this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
+        this.lastX = -1;
+        this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
-        const chosenMove: AwaleMove = new AwaleMove(x, y, []);
-        if (this.rules.isLegal(chosenMove, this.rules.node.gamePartSlice)) {
-            console.log('Et javascript estime que votre mouvement est légal');
-            // player make a correct move
-            // let's confirm on java-server-side that the move is legal
-            this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
-        } else {
-            console.log('Mais c\'est un mouvement illegal');
-        }
+        const chosenMove: AwaleMove = new AwaleMove(x, y);
+        // let's confirm on java-server-side that the move is legal
+        console.log("awale component about to call chooseMove");
+        const result: boolean = this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
+        console.log("and chooseMove says : " + result);
     }
 
     decodeMove(encodedMove: number): AwaleMove {
