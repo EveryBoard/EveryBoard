@@ -15,7 +15,7 @@ import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStat
 })
 export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
-    static VERBOSE = true;
+    static VERBOSE = false;
 
     rules = new ReversiRules();
 

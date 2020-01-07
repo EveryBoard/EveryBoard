@@ -284,22 +284,22 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     public getListMoves(n: MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>): MGPMap<QuartoMove, QuartoPartSlice> {
         const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = new MGPMap<QuartoMove, QuartoPartSlice>();
 
-        const partSlice: QuartoPartSlice = n.gamePartSlice;
+        const slice: QuartoPartSlice = n.gamePartSlice;
         let moveAppliedPartSlice: QuartoPartSlice;
 
-        const board: number[][] = partSlice.getCopiedBoard();
-        const pawns: Array<QuartoEnum> = partSlice.getRemainingPawns();
-        const inHand: number = partSlice.pieceInHand;
+        const board: number[][] = slice.getCopiedBoard();
+        const pawns: Array<QuartoEnum> = slice.getRemainingPawns();
+        const inHand: number = slice.pieceInHand;
 
         let nextBoard: number[][];
-        const nextTurn: number = partSlice.turn + 1;
+        const nextTurn: number = slice.turn + 1;
 
         for (let y = 0; y < 4; y++) {
             for (let x = 0; x < 4; x++) {
                 if (board[y][x] === QuartoEnum.UNOCCUPIED) {
                     // Pour chaque cases vides
                     for (const remainingPiece of pawns) { // piece est la pièce qu'on va donner
-                        nextBoard = partSlice.getCopiedBoard();
+                        nextBoard = slice.getCopiedBoard();
                         nextBoard[y][x] = inHand; // on place la pièce qu'on a en main en (x, y)
 
                         const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthèse du mouvement listé

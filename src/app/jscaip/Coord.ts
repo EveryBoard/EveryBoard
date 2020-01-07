@@ -103,19 +103,12 @@ export class Coord {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
     }
 
-    public equals(obj: Coord): boolean {
-        if (this === obj) {
-            return true;
-        }
-        if (obj === null) {
-            return false;
-        }
-        if (obj.x !== this.x) {
-            return false;
-        }
-        if (this.y !== obj.y) {
-            return false;
-        }
+    public equals(obj: any): boolean {
+        if (this === obj) return true;
+        if (obj === null) return false;
+        if (!(obj instanceof Coord)) return false;
+        if (obj.x !== this.x) return false;
+        if (this.y !== obj.y) return false;
         return true;
     }
 

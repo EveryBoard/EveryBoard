@@ -17,7 +17,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 
     static VERBOSE = false;
 
-    aiDepth = 2; // TODO: make that a choice of user
+    aiDepth = 5; // TODO: make that a choice of user
 
     botTimeOut = 500; // this.aiDepth * 500;
 

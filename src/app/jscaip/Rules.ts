@@ -31,22 +31,17 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          * return false otherwise
          */
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
-            console.log("node has move!");
             let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing if twice
             if (choix === null) {
-                console.log("but " + move.toString() + " is not legal");
                 return false;
             } else {
-                console.log("and we choose it without recalculating it!");
                 this.node = choix; // qui devient le plateau actuel
                 return true;
             }
         }
-        console.log("We'll have to calculate ourself");
         const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
-        if (!status.legal) {
-            return false;
-        }
+        if (!status.legal) return false;
+
         const result: {resultingMove: Move, resultingSlice: GamePartSlice} = MNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
         const son: MNode<Rules<M, S, L>, M, S, L> = new MNode(this.node, result.resultingMove as M, result.resultingSlice as S);
         this.node = son;

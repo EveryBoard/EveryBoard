@@ -42,7 +42,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
     }
 
     updateBoard() {
-        console.log('update online board');
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         const move: EncapsuleMove = this.rules.node.move;
         this.cancelMove();
@@ -87,15 +86,12 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
                coord.equals(this.chosenCoord);
     }
 
-    onBoardClick(x: number, y: number) {
+    public onBoardClick(x: number, y: number) {
         this.hideLastMove();
         const clickedCoord: Coord = new Coord(x, y);
-        console.log("click on coord "+clickedCoord);
         if (this.chosenCoord == null) {
-            console.log("there was no chosen coord");
             this.chosenCoord = clickedCoord;
             if (this.chosenPiece != null) {
-                console.log("let's choose Drop!");
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
                 this.suggestMove(chosenMove);
@@ -104,7 +100,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             if (this.chosenCoord.equals(clickedCoord)) {
                 this.cancelMove();
             } else {
-                console.log("there was a chosen coord, let's choose move!");
                 const chosenMove: EncapsuleMove = 
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
                 return this.suggestMove(chosenMove);
@@ -125,41 +120,29 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
     public onPieceClick(pieceString: String) {
         this.hideLastMove();
         const piece: EncapsulePiece = this.getEncapsulePieceFromName(pieceString);
-        console.log("click on piece :" + piece);
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice; 
-        if (!slice.isDropable(piece) ||
-            (piece === this.chosenPiece)) {
+        if (!slice.isDropable(piece) || (piece === this.chosenPiece)) {
             this.cancelMove();
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
         } else {
-            console.log("let's choose aspira-Drop!");
             const chosenMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, this.chosenCoord);
             this.suggestMove(chosenMove);
         }
     }
 
-    getEncapsulePieceFromName(pieceName: String): EncapsulePiece {
+    public getEncapsulePieceFromName(pieceName: String): EncapsulePiece {
         return EncapsuleMapper.getPieceFromName(pieceName);
     }
 
-    isDropable(piece: number) {
+    public isDropable(piece: number) {
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         return slice.isDropable(piece);
     }
 
     // creating method for OnlineQuarto
 
-    suggestMove(chosenMove: EncapsuleMove) {
-        console.log("try move");
-        if (this.rules.isLegal(chosenMove, this.rules.node.gamePartSlice)) {
-            console.log('Et javascript estime que votre mouvement est légal');
-            // player make a correct move
-            // let's confirm on java-server-side that the move is legal
-            this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
-        } else {
-            console.log('Mais c\'est un mouvement illegal');
-            this.cancelMove();
-        }
+    private suggestMove(chosenMove: EncapsuleMove) {
+        this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
 }

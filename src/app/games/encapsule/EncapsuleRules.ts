@@ -23,7 +23,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         [ new Coord(0, 2), new Coord(1, 1), new Coord(2, 0)]
     ];
 
-    setInitialBoard(): void {
+    public setInitialBoard(): void {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
                 EncapsulePartSlice.getStartingSlice(),
@@ -101,15 +101,12 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         let slice: EncapsulePartSlice = n.gamePartSlice;
         let boardValue: number;
         if (EncapsuleRules.isVictory(slice)) {
-            console.log("this would be a victory");
-            console.log(slice);
             boardValue = slice.turn%2 === 0 ?
                 Number.MAX_SAFE_INTEGER :
                 Number.MIN_SAFE_INTEGER;
         } else {
             boardValue = 0;
         }
-        console.log("getBoardValue of " + n.gamePartSlice.toString() + " + " + n.move + " = " + boardValue);
         return boardValue;
     }
 
@@ -125,7 +122,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                                           board[line[2].y][line[2].x]];
             victory = EncapsuleRules.isVictoriousLine(cases);
         }
-        if (victory) console.log("victory at " + slice.turn + " on : " + JSON.stringify(slice.getCopiedBoard()));
         return victory;
     }
 
