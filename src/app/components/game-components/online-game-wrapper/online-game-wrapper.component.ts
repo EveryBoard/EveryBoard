@@ -225,7 +225,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 			}
 			// NEWLY :
 			if (this.componentInstance.rules.node.isEndGame()) {
-				if (this.componentInstance.rules.node.getOwnValue() === 0) {
+				if (this.componentInstance.rules.node.ownValue === 0) {
 					this.notifyDraw();
 				} else {
 					this.notifyVictory();
@@ -276,10 +276,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		// const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
 		// Previous line is wrong, assume that last player who notice the victory is the victorious, wrong as fuck
 		let victoriousPlayer = this.players[0]; // by default
-		if (![Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER].includes(this.componentInstance.rules.node.getOwnValue())) {
+		if (![Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER].includes(this.componentInstance.rules.node.ownValue)) {
 			alert('how the fuck did you notice victory?');
 		}
-		if (this.componentInstance.rules.node.getOwnValue() === Number.MAX_SAFE_INTEGER) {
+		if (this.componentInstance.rules.node.ownValue === Number.MAX_SAFE_INTEGER) {
 			victoriousPlayer = this.players[1];
 		}
 		this.endGame = true;

@@ -7,6 +7,7 @@ import {UserService} from '../../../services/UserService';
 import {JoinerService} from '../../../services/JoinerService';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -16,7 +17,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 
     static VERBOSE = false;
 
-    aiDepth = 1;
+    aiDepth = 2; // TODO: make that a choice of user
 
     botTimeOut = 500; // this.aiDepth * 500;
 
@@ -71,7 +72,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
         this.proposeAIToPlay();
     }
 
-    get compo(): AbstractGameComponent<Move, GamePartSlice> {
+    get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
         return this.componentInstance;
     }
 }

@@ -3,12 +3,13 @@ import {AbstractGameComponent} from '../AbstractGameComponent';
 import {AwaleRules} from '../../../games/awale/AwaleRules';
 import {AwaleMove} from 'src/app/games/awale/AwaleMove';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
+import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 
 @Component({
     selector: 'app-awale-new-component',
     templateUrl: './awale.component.html'
 })
-export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice> {
+export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
     rules = new AwaleRules();
 
@@ -39,11 +40,11 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = new AwaleMove(x, y, []);
-        if (this.rules.isLegal(chosenMove)) {
+        if (this.rules.isLegal(chosenMove, this.rules.node.gamePartSlice)) {
             console.log('Et javascript estime que votre mouvement est légal');
             // player make a correct move
             // let's confirm on java-server-side that the move is legal
-            this.chooseMove(chosenMove, this.scores[0], this.scores[1]);
+            this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
         } else {
             console.log('Mais c\'est un mouvement illegal');
         }

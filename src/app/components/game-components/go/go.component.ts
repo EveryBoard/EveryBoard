@@ -8,16 +8,19 @@ import {GoMove} from 'src/app/games/go/GoMove';
 import {GoRules} from 'src/app/games/go/GoRules';
 import {GoPartSlice, Phase} from 'src/app/games/go/GoPartSlice';
 import {Coord} from 'src/app/jscaip/Coord';
+import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html'
 })
-export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice> {
+export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
 
     static VERBOSE = true;
 
-    rules = new GoRules();
+    scores: number[] = [0, 0];
+
+    public rules = new GoRules();
 
     imagesLocation = 'assets/images/'; // en prod
     // imagesLocation = 'src/assets/images/'; // en dev
@@ -47,14 +50,16 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice> {
 
         this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
-        const chosenMove = new GoMove(x, y, []); // TODO: check validity of "[]"
-        if (this.rules.isLegal(chosenMove)) {
+        const resultlessMove: GoMove = new GoMove(x, y, []); // TODO: check validity of "[]"
+        const legality: GoLegalityStatus = this.rules.isLegal(resultlessMove, this.rules.node.gamePartSlice); 
+        if (legality.legal) {
             if (GoComponent.VERBOSE) {
                 console.log('Et javascript estime que votre mouvement est légal');
             }
             // player make a correct move
             // let's confirm on java-server-side that the move is legal
-            this.chooseMove(chosenMove, null, null); // TODO: encode score
+            this.scores[this.rules.node.gamePartSlice.turn%2] += legality.capturedCoords.length;
+            this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]); // TODO: encode score
         } else {
             if (GoComponent.VERBOSE) {
                 console.log('Mais c\'est un mouvement illegal');
@@ -76,7 +81,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice> {
         }
         const slice: GoPartSlice = this.rules.node.gamePartSlice;
         const move: GoMove = this.rules.node.move;
-        const koCoord: Coord = slice.getKoCoordCopy();
+        const koCoord: Coord = slice.koCoord;
         const phase: Phase = slice.phase;
 
         this.board = slice.getCopiedBoard();

@@ -1,5 +1,6 @@
 import {MoveCoord} from './MoveCoord';
 import {Coord} from './Coord';
+import { GamePartSlice } from './GamePartSlice';
 
 export abstract class MoveCoordToCoordAndCapture extends MoveCoord {
 
@@ -11,12 +12,15 @@ export abstract class MoveCoordToCoordAndCapture extends MoveCoord {
 
     constructor(start: Coord, end: Coord, captures: Coord[]) {
         super(start.x, start.y);
+        if (end == null) throw new Error("End cannot be null");
+        if (captures == null) throw new Error("Captures cannot be null");
+        captures.forEach(c => { if (c == null) throw new Error("A coord of captures cannot be null");});
         this.end = end;
         this.captures = captures;
     }
 
-    getCapturesCopy(i: number): Coord { // TODO: homogeneous copy-getters-name
-        return this.captures[i];
+    getCapturesCopy(): Coord[] {
+        return GamePartSlice.copyCoordArray(this.captures);
     }
 
     toString() {

@@ -5,12 +5,13 @@ import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
 import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
 import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
 import {AbstractGameComponent} from '../AbstractGameComponent';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
 	selector: 'app-quarto',
 	templateUrl: './quarto.component.html'
 })
-export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
+export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice, LegalityStatus> {
 
 	rules = new QuartoRules();
 
@@ -51,7 +52,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
 	// creating method for Quarto
 
-	chooseCoord(x: number, y: number): boolean { // TODO: passer X et Y en argument de fonction, pas le mouse event
+	chooseCoord(x: number, y: number): boolean {
 		console.log('choose coord');
 		// called when the user click on the quarto board
 		if (this.rules.node.isEndGame()) {
@@ -60,9 +61,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 		}
 		this.hideLastMove(); // now the user tried to choose something
 		// so I guess he don't need to see what's the last move of the opponent
-
-		// TODO: REMOVE const x: number = Number(event.srcElement.id.substring(2, 3));
-		// TODO: REMOVE const y: number = Number(event.srcElement.id.substring(1, 2));
 
 		if (this.board[y][x] === QuartoEnum.UNOCCUPIED) {
 			console.log('legal place to put the piece because ' + x + ', ' + y + ' : ' + this.board[y][x]);
@@ -93,7 +91,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 		this.hideLastMove(); // now the user tried to choose something
 		// so I guess he don't need to see what's the last move of the opponent
 
-		// TODO: REMOVE const givenPiece: number = Number(event.srcElement.id.substring(1));
 		if (this.isRemaining(givenPiece)) {
 			this.pieceToGive = givenPiece;
 			if (this.chosenX !== -1) {
@@ -138,7 +135,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 			// let's confirm on java-server-side that the move is legal
 			this.chosenX = -1;
 			this.chosenY = -1;
-			this.chooseMove(chosenMove, null, null);
+			this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
 			return true;
 		} else {
 			console.log('Mais c\'est un mouvement illegal');

@@ -19,7 +19,7 @@ export class GoPartSlice extends GamePartSlice {
 
     protected readonly board: Pawn[][];
 
-    private readonly koCoord: Coord;
+    public readonly koCoord: Coord | null;
 
     private readonly captured: number[];
 
@@ -27,13 +27,11 @@ export class GoPartSlice extends GamePartSlice {
 
     public constructor(board: Pawn[][], captured: number[], turn: number, koCoord: Coord, phase: Phase) {
         super(board, turn);
+        if (captured == null) throw new Error("Captured cannot be null");
+        if (phase == null) throw new Error("Phase cannot be null");
         this.captured = captured;
         this.koCoord = koCoord;
         this.phase = phase;
-    }
-
-    public getKoCoordCopy(): Coord {
-        return this.koCoord ? this.koCoord.getCopy() : null;
     }
 
     public getCapturedCopy(): number[] {

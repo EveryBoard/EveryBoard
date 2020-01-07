@@ -7,12 +7,13 @@ import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
 import {ReversiPartSlice} from '../../../games/reversi/ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
+import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
 
 @Component({
     selector: 'app-reversi',
     templateUrl: './reversi.component.html'
 })
-export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice> {
+export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
     static VERBOSE = true;
 
@@ -32,7 +33,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
             console.log(ReversiRules.getListMoves(reversiPartSlice));
             console.log('this.rules.getListMoves(this.rules.node): ');
             console.log(this.rules.getListMoves(this.rules.node));
-            console.log('f9 0 board value : ' + this.rules.node.getOwnValue());
+            console.log('f9 0 board value : ' + this.rules.node.ownValue);
         }
         if (this.rules.node.isEndGame()) {
             if (ReversiComponent.VERBOSE) {
@@ -54,7 +55,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
             }
             // player make a correct move
             // let's confirm on java-server-side that the move is legal
-            this.chooseMove(chosenMove, null, null); // TODO: encode score
+            this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null); // TODO: encode score
         } else {
             if (ReversiComponent.VERBOSE) {
                 console.log('Mais c\'est un mouvement illegal');
@@ -87,7 +88,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
             console.log('f9 choices : ' + JSON.stringify(ReversiRules.getListMoves(reversiPartSlice)));
         }
         if (ReversiComponent.VERBOSE) {
-            console.log('f9 board value : ' + this.rules.node.getOwnValue());
+            console.log('f9 board value : ' + this.rules.node.ownValue);
         }
         if (ReversiRules.playerCanOnlyPass(reversiPartSlice)) { // && (!this.endGame)
             if (ReversiComponent.VERBOSE) {

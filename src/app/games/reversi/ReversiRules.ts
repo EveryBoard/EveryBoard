@@ -5,8 +5,30 @@ import {Coord} from '../../jscaip/Coord';
 import {DIRECTION, DIRECTIONS} from '../../jscaip/DIRECTION';
 import { ReversiMove } from './ReversiMove';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 
-export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice> {
+export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
+
+    public applyLegalMove(move: ReversiMove, slice: ReversiPartSlice, status: ReversiLegalityStatus): { resultingMove: ReversiMove; resultingSlice: ReversiPartSlice; } {
+        const turn: number = slice.turn;
+        const player: number = turn % 2;
+        const board: number[][] = slice.getCopiedBoard();
+        if (move.equals(ReversiMove.pass)) { // if the player pass
+            // let's check that pass is a legal move right now
+            if (ReversiRules.playerCanOnlyPass(slice)) {
+                // if he had no choice but to pass, then passing is legal !
+                const sameBoardDifferentTurn: ReversiPartSlice =
+                    new ReversiPartSlice(board, turn + 1);
+                return {resultingMove: move, resultingSlice: sameBoardDifferentTurn};
+            }
+        }
+        for (const s of status.switched) {
+            board[s.y][s.x] = player;
+        }
+        board[move.coord.y][move.coord.x] = player;
+        const resultingSlice: ReversiPartSlice = new ReversiPartSlice(board, turn + 1);
+        return {resultingMove: move, resultingSlice};
+    }
 
     static VERBOSE = false;
 
@@ -59,20 +81,6 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice> {
         }
         return []; // we found the end of the board before we found     the newt pawn like 'searchedPawn'
     }
-
-    // static getCoordsBetween(direction: DIRECTION, first: Coord, end: Coord): Coord[] { // TODO: incorporer la GamePartSlice comme util?
-    //  /* expected that both 'first' and 'sandwicher' are in range
-    //   * expected that 'sandwicher' is after 'first' in 'direction' 's direction
-    //   * return all the direction between 'first' and 'sandwicher', sandwicher excluded
-    //   * return an empty list if both coords are neighboors
-    //   */
-    //  const coords: Coord[] = [];
-    //  while (!first.equals(end)) {
-    //      coords.push(first);
-    //      first = first.getNext(direction);
-    //  }
-    //  return coords;
-    // }
 
     static isGameEnded(reversiPartSlice: ReversiPartSlice): boolean {
         return this.playerCanOnlyPass(reversiPartSlice)
@@ -140,8 +148,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice> {
         return listMoves;
     }
 
-    public choose(move: ReversiMove): boolean {
-        let choix: MNode<ReversiRules, ReversiMove, ReversiPartSlice>;
+    public OLD_choose(move: ReversiMove): boolean {
+        let choix: MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus>;
         /*if (this.node.hasMoves()) { // if calculation has already been done by the AI
             choix = this.node.getSonByMove(move); // let's not doing if twice
             if (choix != null) {
@@ -186,8 +194,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice> {
         return true;
     }
 
-    public isLegal(move: ReversiMove): boolean {
-        // TODO : refactor with choose
+    public isLegal(move: ReversiMove): ReversiLegalityStatus {
         const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice;
         const turn: number = this.node.gamePartSlice.turn;
         const board: number[][] = reversiPartSlice.getCopiedBoard();
@@ -195,22 +202,18 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice> {
             // let's check that pass is a legal move right now
             // if he had no choice but to pass, then passing is legal !
             // else, passing was illegal
-            return ReversiRules.playerCanOnlyPass(reversiPartSlice);
+            return {legal: ReversiRules.playerCanOnlyPass(reversiPartSlice), switched: null};
         }
         if (board[move.coord.y][move.coord.x] !== ReversiPartSlice.UNOCCUPIED) {
-            if (ReversiRules.VERBOSE) {
-                console.log("ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée");
-            }
-            return false;
+            if (ReversiRules.VERBOSE) console.log("ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée");
+            return {legal: false, switched: null};
         }
-        const switcheds = ReversiRules.getAllSwitcheds(move, turn, board);
-        if (ReversiRules.VERBOSE) {
-            console.log("ReversiRules.isLegal: "+ switcheds.length + " element(s) switched");
-        }
-        return (switcheds.length !== 0);
+        const switched = ReversiRules.getAllSwitcheds(move, turn, board);
+        if (ReversiRules.VERBOSE) console.log("ReversiRules.isLegal: "+ switched.length + " element(s) switched");
+        return {legal: (switched.length !== 0), switched};
     }
 
-    public getBoardValue(n: MNode<ReversiRules, ReversiMove, ReversiPartSlice>): number {
+    public getBoardValue(n: MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus>): number {
         const reversiPartSlice: ReversiPartSlice = n.gamePartSlice;
         const board: number[][] = n.gamePartSlice.getCopiedBoard();
         let player0Count = 0;
@@ -238,7 +241,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice> {
         return diff;
     }
 
-    public getListMoves(n: MNode<ReversiRules, ReversiMove, ReversiPartSlice>): MGPMap<ReversiMove, ReversiPartSlice> {
+    public getListMoves(n: MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus>): MGPMap<ReversiMove, ReversiPartSlice> {
         return ReversiRules.getListMoves(n.gamePartSlice);
     }
 
@@ -252,4 +255,4 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice> {
             this.node = this.node.getInitialNode();
         }
     }
-}
+l}

@@ -8,13 +8,14 @@ import {JoinerService} from '../../../services/JoinerService';
 import {GameService} from '../../../services/GameService';
 import {Move} from '../../../jscaip/Move';
 import {AbstractGameComponent} from '../AbstractGameComponent';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
 	selector: 'app-p4-new',
 	templateUrl: './p4.component.html',
 	styleUrls: []
 })
-export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice> {
+export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, LegalityStatus> {
 
 	/*************************** Common Fields **************************/
 
@@ -29,7 +30,7 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice> {
 	onClick(x: number) {
 		console.log('click');
 		const chosenMove = MoveX.get(x);
-		this.chooseMove(chosenMove, null, null);
+		this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
 	}
 
 	updateBoard() {

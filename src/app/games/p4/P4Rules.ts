@@ -6,31 +6,35 @@ import {SCORE} from '../../jscaip/SCORE';
 import {MNode} from '../../jscaip/MNode';
 import {P4PartSlice} from './P4PartSlice';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
-export class P4Rules extends Rules<MoveX, P4PartSlice> {
+export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
+
+    public applyLegalMove(move: MoveX, slice: P4PartSlice, status: LegalityStatus): { resultingMove: MoveX; resultingSlice: P4PartSlice; } {
+        const x: number = move.x;
+        const board: number[][] = slice.getCopiedBoard();
+        const y = P4Rules.getLowestUnoccupiedCase(board, x);
+
+        const turn: number = slice.turn;
+
+        board[y][x] = (turn % 2 === 0) ? P4Rules.PAWN_O : P4Rules.PAWN_X;
+
+        const resultingSlice: P4PartSlice = new P4PartSlice(board, turn+1);
+        return {resultingMove: move, resultingSlice};
+    }
+
 	// statics fields:
 
 	static VERBOSE = false;
 
-	/* static readonly DIRECTIONS: XY[] = [
-		DIRECTIONS[0],
-		DIRECTIONS[1],
-		DIRECTIONS[2],
-		DIRECTIONS[3],
-		DIRECTIONS[4],
-		DIRECTIONS[5],
-		DIRECTIONS[6],
-		DIRECTIONS[7]
-	]; */
-
 	static readonly UNOCCUPIED: number = 0;
 	static readonly PAWN_O: number = 1;
-	static readonly PAWN_X: number = 2;
+	static readonly PAWN_X: number = 2; // TODO: use common class
 
 	// statics methods:
 
-	static getBoardValueShortened(n: MNode<P4Rules, MoveX, P4PartSlice>): number {
-		// let mother: MNode<P4Rules, MoveX, P4PartSlice> = < MNode<P4Rules, MoveX, P4PartSlice> > n.getMother(); // is not null, otherwise this method should not have been called
+	static getBoardValueShortened(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
+		// let mother: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> = < MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> > n.getMother(); // is not null, otherwise this method should not have been called
 		// let previousBoardValue: number = mother.getOwnValue(); // is not null either logically
 		// let move: MoveCoord = < MoveCoord > n.getMove();
 		// let x: number = move.coord.x;
@@ -38,14 +42,14 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 		// 1. for each direction where there is an ennemy block
 		//  a. for the 1 to 3 ennemy block in a row
 		if (P4Rules.VERBOSE) {
-			console.log('getBoardValueShortened appellÃ©e');
+			console.log('getBoardValueShortened appellée');
 		}
 		return 0; // TODO
 	}
 
-	static getBoardValueFromScratch(n: MNode<P4Rules, MoveX, P4PartSlice>): number {
+	static getBoardValueFromScratch(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
 		if (P4Rules.VERBOSE) {
-			console.log('getBoardValueFromScratch appellÃ©e');
+			console.log('getBoardValueFromScratch appellée');
 			P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
 		}
 		const p4Board: P4PartSlice = n.gamePartSlice;
@@ -59,14 +63,14 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 			// pour chaque colonne
 			y = 0; // on commence en bas
 			while (y !== 6 && currentBoard[y][x] !== P4Rules.UNOCCUPIED) {
-				// tant qu'on a pas atteint le haut ni une case inoccupÃ©e
+				// tant qu'on a pas atteint le haut ni une case inoccupée
 
 				tmpScore = P4Rules.getCaseScore(currentBoard, new Coord(x, y));
 				if (MNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
-					// si on trouve un [prÃ©]victoire
-					// System.out.println(node + ':: victoire ou prÃ© - victoire(' + tmpScore + ') en (' + x + ', ' + y + ')');
+					// si on trouve un [pré]victoire
+					// System.out.println(node + ':: victoire ou pré - victoire(' + tmpScore + ') en (' + x + ', ' + y + ')');
 					return tmpScore; // on la retourne
-					// TODO vÃ©rifier que PRE_VICTORY n'Ã©crase pas les VICTORY dans ce cas ci
+					// TODO vérifier que PRE_VICTORY n'écrase pas les VICTORY dans ce cas ci
 				}
 				score += tmpScore;
 				y++; // et on remonte
@@ -95,9 +99,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 		// OLDDLY return 0; // shouldn't append
 	}
 
-	static getHalfLineScore(board: number[][], i: Coord, dir: DIRECTION,
-							ennemi: number, allie: number): number[] {
-		/* Anciennement nommÃ© 'countLine'
+	static getHalfLineScore(board: number[][], i: Coord, dir: DIRECTION, ennemi: number, allie: number): number[] {
+		/* Anciennement nommé 'countLine'
        *
        * pour une case i(iX, iY) contenant un pion 'allie' (dont les ennemis sont naturellement 'ennemi'
        * on parcours le plateau Ã  partir de i dans la direction d(dX, dY)
@@ -105,8 +108,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
        */
 
 		let c: number; // current case
-		let freeSpaces = 0; // le nombre de case libres alignÃ©es
-		let allies = 0; // le nombre de case alliÃ©es alignÃ©es
+		let freeSpaces = 0; // le nombre de case libres alignées
+		let allies = 0; // le nombre de case alliées alignées
 		let allAlliesAreSideBySide = true;
 		let co: Coord = new Coord(i.x + dir.x, i.y + dir.y);
 		while (co.isInRange(7, 6) && freeSpaces !== 3) {
@@ -118,9 +121,9 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 			if (c === allie && allAlliesAreSideBySide) {
 				allies++;
 			} else {
-				allAlliesAreSideBySide = false; // on arrÃªte de compter les alliÃ©es sur cette ligne
+				allAlliesAreSideBySide = false; // on arrête de compter les alliées sur cette ligne
 			}
-			// dÃ¨s que l'un d'entre eux n'est plus collÃ©
+			// dÃ¨s que l'un d'entre eux n'est plus collé
 			freeSpaces++;
 			// co = new Coord(co.x + dir.x, co.y + dir.y);
 			co = co.getNext(dir);
@@ -137,13 +140,13 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 
 	static getCaseScore(board: number[][], c: Coord): number {
 		if (P4Rules.VERBOSE) {
-			console.log('getCaseScore(board, ' + c.x + ', ' + c.y + ') appellÃ©e');
+			console.log('getCaseScore(board, ' + c.x + ', ' + c.y + ') appellée');
 			P4Rules.debugPrintBiArray(board);
 		}
 		if (board[c.y][c.x] === P4Rules.UNOCCUPIED) {
 			throw new Error('cannot call getCaseScore on empty case');
 		}
-		// anciennement nommÃ© countPossibility
+		// anciennement nommé countPossibility
 		let score = 0; // final result, count the theoretical victorys possibility
 		let lineDist = 0;
 		let lineAllies = 0;
@@ -198,11 +201,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 		return 0;
 	}
 
-	static getLineScore(
-		line: number[],
-		playable: boolean[],
-		playableVictory: number[][]
-	): number {
+	static getLineScore(line: number[], playable: boolean[], playableVictory: number[][]): number {
 		// x + 0. count Victory
 		// if victory return MAX/MIN: this must be the final result
 		// x + 1. count monoVictory
@@ -216,11 +215,11 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 		return 0;
 	}
 
-	static getBoardValueByLine(n: MNode<P4Rules, MoveX, P4PartSlice>): number {
+	static getBoardValueByLine(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
 		const partSlice: P4PartSlice = n.gamePartSlice;
 		const board: number[][] = partSlice.getCopiedBoard();
 		// calcul par ligne
-		// ix, iy = i(x, y): i(init) est la coord dÃ©but de la ligne Ã  compter
+		// ix, iy = i(x, y): i(init) est la coord début de la ligne Ã  compter
 		// dx, dy = d(x, y): d(direction) est le vecteur donnant la direction de la ligne
 		let score = 0;
 		let scoreStatut: SCORE;
@@ -261,7 +260,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 		];
 		/* les diagonales descendantes ont pour indice (x - y) des cases qui passent par elles
        * x allant de 0 et 6 et y de 0 Ã  5: x - y va de - 5 Ã  6
-       * nous ne pouvons accepter un indice nÃ©gatif, nous rajoutons donc 5 Ã  x - y
+       * nous ne pouvons accepter un indice négatif, nous rajoutons donc 5 Ã  x - y
        * seules les 6 diagonales montantes de - 2( + 5 = 3) Ã  3( + 5 = 8) sont de longueur 4 ou plus
        * seules elles peuvent donc contenir un puissance 4
        */
@@ -326,8 +325,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 
 	static getScoreColonne_A_TESTER(board: number[][], x: number): number {
 		let nInALine = 1;
-		const upperFound = false; // il n'y aura dans une rangÃ©e qu'une seule case jouable
-		let aligner: number = board[0][x]; // toujours occupÃ© si on appelle cette rangÃ©e
+		const upperFound = false; // il n'y aura dans une rangée qu'une seule case jouable
+		let aligner: number = board[0][x]; // toujours occupé si on appelle cette rangée
 		const line: number[] = [
 			aligner,
 			P4Rules.UNOCCUPIED,
@@ -344,10 +343,10 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 			c = board[y][x];
 			line[y] = c;
 			if (c === aligner) {
-				// si cette case est du mÃªme genre que la prÃ©cÃ©dente
-				nInALine++; // il en a donc une de plus d'alignÃ©e
+				// si cette case est du même genre que la précédente
+				nInALine++; // il en a donc une de plus d'alignée
 			} else {
-				// cette case est diffÃ©rente de la prÃ©cÃ©dente
+				// cette case est différente de la précédente
 				if (nInALine === 4) {
 					if (P4Rules.VERBOSE) {
 						console.log('there is some kind of victory here 2');
@@ -414,12 +413,12 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 
 	// static delegates
 
-	static _getListMoves(n: MNode<P4Rules, MoveX, P4PartSlice>): MGPMap<MoveX, P4PartSlice> {
+	static getListMoves(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): MGPMap<MoveX, P4PartSlice> {
 		if (P4Rules.VERBOSE) {
-			console.log('P4Rules._getListMoves appellÃ© sur ');
+			console.log('P4Rules._getListMoves appellé sur ');
 			P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
 		}
-		// ne doit Ãªtre appellÃ© que si cette partie n'est pas une partie finie
+		// ne doit être appellé que si cette partie n'est pas une partie finie
 		const originalPartSlice: P4PartSlice = n.gamePartSlice;
 		const originalBoard: number[][] = originalPartSlice.getCopiedBoard();
 		const retour: MGPMap<MoveX, P4PartSlice> = new MGPMap<MoveX, P4PartSlice>();
@@ -448,7 +447,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 		return retour;
 	}
 
-	static _getBoardValue(n: MNode<P4Rules, MoveX, P4PartSlice>): number {
+	static getBoardValue(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
 		/* if (n.getMother() == null) {
           return P4Rules.getBoardValueFromScratch(n);
         } else {
@@ -473,7 +472,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 	}
 
 	// Overrides:
-	choose(move: MoveX): boolean {
+
+    public OLD_choose(move: MoveX): boolean {
 		if (P4Rules.VERBOSE) {
 			console.log('P4Rules.choose called');
 		}
@@ -496,7 +496,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 		board[y][x] = (turn % 2 === 0) ? P4Rules.PAWN_O : P4Rules.PAWN_X;
 
 		const newPartSlice: P4PartSlice = new P4PartSlice(board, turn + 1);
-		const choix: MNode<P4Rules, MoveX, P4PartSlice> = new MNode<P4Rules, MoveX, P4PartSlice>(
+		const choix: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> = new MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>(
 			this.node,
 			move,
 			newPartSlice
@@ -505,11 +505,14 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 		return true;
 	}
 
-	isLegal(move: MoveX): boolean {
-		return this.node.gamePartSlice.getBoardByXY(move.x, 5) === P4Rules.UNOCCUPIED;
+    public isLegal(move: MoveX): LegalityStatus {
+        const ILLEGAL: LegalityStatus = {legal: false};
+        if (move.x < 0 || move.x > 6) return ILLEGAL;
+        if (this.node.gamePartSlice.getBoardByXY(move.x, 5) !== P4Rules.UNOCCUPIED) return ILLEGAL;
+        return {legal: true};
 	}
 
-	setInitialBoard(): void {
+    public setInitialBoard(): void {
 		if (this.node == null) {
 			this.node = MNode.getFirstNode(
 				new P4PartSlice(P4PartSlice.getStartingBoard(), 0),
@@ -520,15 +523,15 @@ export class P4Rules extends Rules<MoveX, P4PartSlice> {
 		}
 	}
 
-	getListMoves(n: MNode<P4Rules, MoveX, P4PartSlice>): MGPMap<MoveX, P4PartSlice> {
-		return P4Rules._getListMoves(n);
-	}
+    public getListMoves(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): MGPMap<MoveX, P4PartSlice> {
+        return P4Rules.getListMoves(n);
+    }
 
-	getBoardValue(n: MNode<P4Rules, MoveX, P4PartSlice>): number {
-		if (P4Rules.VERBOSE) {
-			console.log('P4Rules instance methods getBoardValue called');
-			P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
-		}
-		return P4Rules._getBoardValue(n);
-	}
+    public getBoardValue(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
+        if (P4Rules.VERBOSE) {
+            console.log('P4Rules instance methods getBoardValue called');
+            P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
+        }
+        return P4Rules.getBoardValue(n);
+    }
 }

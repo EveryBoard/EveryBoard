@@ -8,11 +8,19 @@
 		</div>
 
 		<div id="info" class="circled col-sm-3">
-			<div style="text-align:center" *ngIf="compo">
-				Tour : {{ compo.rules.node.gamePartSlice.turn }} <br/>
-				Joueur 0 : <button (click)="switchPlayerOne()">{{ this.players[0] === 'bot' ? 'Robot' : 'Humain' }}</button><br/>
-				Joueur 1 : <button (click)="switchPlayerTwo()">{{ this.players[1] === 'bot' ? 'Robot' : 'Humain' }}</button>
-			</div>
+            <div style="text-align:center">
+                Tour : {{ compo.rules.node.gamePartSlice.turn }} <br/>
+            </div>
+            <div class="inforow" style="float: left">
+                {{ players[0] == "" ? "Humain" : players[0] }} 0 <br/>
+                <button (click)="switchPlayerOne()">{{ players[0] === 'bot' ? 'Robot' : 'Humain' }}</button> <br/>
+                <ng-container *ngIf="compo.showScore"> {{ compo.scores[0] }} pts </ng-container>
+            </div>
+            <div class="inforow" style="float: right">
+                {{ players[1] == "" ? "Humain" : players[1] }} 1 <br/>
+                <button (click)="switchPlayerTwo()">{{ players[1] === 'bot' ? 'Robot' : 'Humain' }}</button> <br/>
+                <ng-container *ngIf="compo.showScore"> {{ compo.scores[1] }} pts </ng-container>
+            </div>
             <div *ngIf="!endGame" class="inforow">
                 <button *ngIf="compo.canPass"
                         (click)="compo.pass()" mat-stroked-button>

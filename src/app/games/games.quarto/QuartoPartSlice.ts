@@ -19,7 +19,7 @@ export class QuartoPartSlice extends GamePartSlice {
 
 	static getFullPawnsList(): Array<QuartoEnum> {
 		const all: QuartoEnum[] = QuartoEnum.values();
-		const filtered: Array<QuartoEnum> = new Array<QuartoEnum>(16);
+		const filtered: Array<QuartoEnum> = new Array<QuartoEnum>();
 		for (const q of all) {
 			if (q !== QuartoEnum.UNOCCUPIED) {
 				filtered.push(q);

@@ -5,8 +5,41 @@ import {MNode} from '../../jscaip/MNode';
 import {TablutPartSlice} from './TablutPartSlice';
 import { TablutMove } from './TablutMove';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
-export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
+export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStatus> {
+
+    public applyLegalMove(move: TablutMove, slice: TablutPartSlice, status: LegalityStatus): { resultingMove: TablutMove; resultingSlice: TablutPartSlice; } {
+        // copies
+        const board: number[][] = slice.getCopiedBoard();
+        const turn: number = slice.turn;
+        const invaderStart: boolean = slice.invaderStart;
+
+        // test
+        const player: 0|1 = turn % 2 === 0 ? 0 : 1;
+        const attemptResult: number = TablutRules.tryMove(player, invaderStart, move, board).success;
+        const depart: Coord = move.coord;
+        const arrival: Coord = move.end;
+        board[arrival.y][arrival.x] = board[depart.y][depart.x]; // dédoublement
+        board[depart.y][depart.x] = TablutPartSlice.UNOCCUPIED; // suppression du précédent
+        const captureds: Coord[] = [];
+        let captured: Coord;
+        for (const d of ORTHOGONALES) {
+            if (TablutRules.VERBOSE) {
+                console.log('tryCapture from tryMove(' + move + ') with direction (' + d.x + ', ' + d.y + ')');
+            }
+            captured = TablutRules.tryCapture(player, invaderStart, move.end, d, board);
+            if (captured != null) {
+                captureds.push(captured);
+                // if (!this.isKing(board[captured.y][captured.x])) {
+                    board[captured.y][captured.x] = TablutPartSlice.UNOCCUPIED; // do capture, unless if king
+                // }
+            }
+        }
+        let resultingMove: TablutMove = new TablutMove(move.coord, move.end, captureds);
+        const resultingSlice: TablutPartSlice = new TablutPartSlice(board, turn + 1, invaderStart);
+        return {resultingSlice, resultingMove};
+    }
 
     static VERBOSE = false;
 
@@ -43,7 +76,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
     // statics methods :
 
     private static tryMove(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): {success: number, resultingMove: TablutMove} {
-        // TODO: shouldn't all Rules have a "tryMove" who modify the move and partSlice parameter and return an integer status
         const errorValue: number = this.getMoveValidity(player, invaderStart, move, board);
         if (errorValue !== this.SUCCESS) {
             return {success: errorValue, resultingMove: null};
@@ -73,7 +105,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
     }
 
     private static getMoveValidity(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): number {
-        if (!move.coord.isInRange(this.WIDTH, this.WIDTH)) { // TODO: implÃ©ment height so he leave me be
+        if (!move.coord.isInRange(this.WIDTH, this.WIDTH)) { // TODO: implément height so he leave me be
             return this.NOT_IN_RANGE_ERROR;
         }
         if (!move.end.isInRange(this.WIDTH, this.WIDTH)) {
@@ -324,7 +356,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
         const fin = this.WIDTH - 1;
         if (c.x === 0) {
             return (c.y === 0) || (c.y === fin);
-        } else if (c.x === fin) { // TODO: c'est Ã  TablutPartSlice d'avoir largeur ! pas aux rÃ¨gles
+        } else if (c.x === fin) { // TODO: c'est à TablutPartSlice d'avoir largeur ! pas aux règles
             return (c.y === 0) || (c.y === fin);
         }
         return false;
@@ -431,7 +463,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
                 foundDestination = foundDestination.getNext(dir);
                 endFound =
                     !foundDestination.isInRange(this.WIDTH, this.WIDTH) ||
-                    this.getAbsoluteOwner(foundDestination, invaderStart, board) !== -1; // TODO: clean : -1 un peu Ã©cris en dur, berk?
+                    this.getAbsoluteOwner(foundDestination, invaderStart, board) !== -1; // TODO: clean : -1 un peu écris en dur, berk?
                 if (!endFound) {
                     destinations.push(foundDestination);
                 }
@@ -451,7 +483,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
         return null;
     }
 
-    static getInvaderVictoryValue(n: MNode<TablutRules, TablutMove, TablutPartSlice>): number {
+    static getInvaderVictoryValue(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): number {
         const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
         if (TablutRules.VERBOSE) {
             console.log('invader victory !');
@@ -462,7 +494,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
         return Number.MAX_SAFE_INTEGER;
     }
 
-    static getDefenderVictoryValue(n: MNode<TablutRules, TablutMove, TablutPartSlice>): number {
+    static getDefenderVictoryValue(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): number {
         console.log('defender victory !');
         const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
         if (tablutPartSlice.invaderStart) {
@@ -518,7 +550,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
 
     // instance methods :
 
-    public getListMoves(n: MNode<TablutRules, TablutMove, TablutPartSlice>): MGPMap<TablutMove, TablutPartSlice> {
+    public getListMoves(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): MGPMap<TablutMove, TablutPartSlice> {
         const localVerbose = false;
         if (TablutRules.VERBOSE || localVerbose) {
             console.log('get list move available to ');
@@ -556,7 +588,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
         return listCombinaison;
     }
 
-    public getListMovesPeared(n: MNode<TablutRules, TablutMove, TablutPartSlice>): { key: TablutMove, value: TablutPartSlice }[] {
+    public getListMovesPeared(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): { key: TablutMove, value: TablutPartSlice }[] {
         // TODO: pear this method, make it smarter
         const currentPartSlice: TablutPartSlice = n.gamePartSlice;
         const currentBoard: number[][] = currentPartSlice.getCopiedBoard();
@@ -574,7 +606,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
                     // pour l'envahisseur :
                     //     if the king is capturable : the only choice is the capturing
                     //     if the king is close to escape:  the only choice are the blocking one
-                    // pour les dÃ©fenseurs :
+                    // pour les défenseurs :
                     //     if the king can win : the only choice is the winning
                     //     if king threatened : the only choice is to save him
                     //         a: by escape
@@ -586,7 +618,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
         return null;
     }
 
-    public getBoardValue(n: MNode<TablutRules, TablutMove, TablutPartSlice>): number {
+    public getBoardValue(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): number {
 
         // 1. is the king escaped ?
         // 2. is the king captured ?
@@ -620,9 +652,9 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
         return scoreZero - scoreOne; // TODO : countInvader vs Defenders
     }
 
-    public choose(move: TablutMove): boolean {
+    public OLD_choose(move: TablutMove): boolean {
         // recherche
-        let son: MNode<TablutRules, TablutMove, TablutPartSlice>;
+        let son: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>;
         /* if (this.node.hasMoves()) { // if calculation has already been done by the AI
             console.log(this.node.myToString() + ' at turn ' + this.node.gamePartSlice.turn + ' has ' + this.node.countDescendants() + ' moves');
             son = this.node.getSonByMove(move); // let's not doing if twice
@@ -650,13 +682,13 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
             return false;
         }
         const newPartSlice = new TablutPartSlice(board, turn + 1, invaderStart);
-        son = new MNode<TablutRules, TablutMove, TablutPartSlice>(this.node, move, newPartSlice);
+        son = new MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>(this.node, move, newPartSlice);
         this.node.keepOnlyChoosenChild(son);
         this.node = son;
         return true;
     }
 
-    public isLegal(move: TablutMove): boolean {
+    public isLegal(move: TablutMove): LegalityStatus {
         // copies
         const partSlice: TablutPartSlice = this.node.gamePartSlice;
         const board: number[][] = partSlice.getCopiedBoard();
@@ -665,13 +697,13 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice> {
 
         // test
         const player: 0|1 = turn % 2 === 0 ? 0 : 1;
-        return TablutRules.tryMove(player, invaderStart, move, board).success === TablutRules.SUCCESS;
+        return {legal: TablutRules.tryMove(player, invaderStart, move, board).success === TablutRules.SUCCESS };
     }
 
     public setInitialBoard() {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
-                new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true), // TODO: rendre Ã§a configurable
+                new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true), // TODO: rendre ça configurable
                 this
             );
         } else {

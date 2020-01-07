@@ -6,12 +6,13 @@ import {EncapsulePartSlice, EncapsuleCase} from 'src/app/games/encapsule/Encapsu
 import {EncapsuleMove} from 'src/app/games/encapsule/EncapsuleMove';
 import {EncapsulePiece, EncapsuleMapper} from 'src/app/games/encapsule/EncapsuleEnums';
 import {Coord} from 'src/app/jscaip/Coord';
+import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
 
 @Component({
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html'
 })
-export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, EncapsulePartSlice> {
+export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
     rules = new EncapsuleRules();
 
@@ -151,11 +152,11 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
 
     suggestMove(chosenMove: EncapsuleMove) {
         console.log("try move");
-        if (this.rules.isLegal(chosenMove)) {
+        if (this.rules.isLegal(chosenMove, this.rules.node.gamePartSlice)) {
             console.log('Et javascript estime que votre mouvement est légal');
             // player make a correct move
             // let's confirm on java-server-side that the move is legal
-            this.chooseMove(chosenMove, null, null);
+            this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
         } else {
             console.log('Mais c\'est un mouvement illegal');
             this.cancelMove();

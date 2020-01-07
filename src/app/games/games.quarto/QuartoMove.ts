@@ -9,6 +9,7 @@ export class QuartoMove extends MoveCoord {
          * piece is the quarto piece you give
          */
         super(x, y);
+        if (piece == null) throw new Error("Piece cannot be null");
         this.piece = piece;
 
     }

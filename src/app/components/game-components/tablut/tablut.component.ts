@@ -4,12 +4,13 @@ import {Coord} from '../../../jscaip/Coord';
 import {TablutMove} from 'src/app/games/tablut/TablutMove';
 import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
 import {TablutRules} from '../../../games/tablut/TablutRules';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
     selector: 'app-tablut-new',
     templateUrl: './tablut.component.html'
 })
-export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice> {
+export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, LegalityStatus> {
 
     static VERBOSE = false;
 
@@ -82,7 +83,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const chosenPiece: Coord = new Coord(this.chosenX, this.chosenY);
         const chosenDestination: Coord = new Coord(x, y);
         const move: TablutMove = new TablutMove(chosenPiece, chosenDestination, []); // TODO: check "[]"
-        return this.chooseMove(move, null, null);
+        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
 
     choosePiece(x, y): boolean {

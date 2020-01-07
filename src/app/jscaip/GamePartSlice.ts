@@ -68,6 +68,16 @@ export abstract class GamePartSlice {
         return retour;
     }
 
+    public static copyCoordArray(array: Coord[]): Coord[] {
+        const retour: Array<Coord> = new Array<Coord>();
+        let x = 0;
+        while (x < array.length) {
+            retour[x] = array[x];
+            x++;
+        }
+        return retour;
+    }
+
     // Getters
 
     public getBoardByXY(x: number, y: number): number {

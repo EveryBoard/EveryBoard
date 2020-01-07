@@ -1,10 +1,11 @@
 import {Move} from '../../jscaip/Move';
 import {Rules} from '../../jscaip/Rules';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
-export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice> {
+export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 
-	rules: Rules<M, S>;
+	rules: Rules<M, S, L>;
 
 	board: Array<Array<number>>;
 
@@ -12,7 +13,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     showScore: boolean;
 
-	chooseMove: (move: Move, scorePlayerZero: number, scorePlayerOne: number) => boolean;
+	chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => boolean;
 
 	observerRole: number;
 	/* all game rules should be able to call the game-wrapper

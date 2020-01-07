@@ -3,26 +3,12 @@ import {Coord} from './Coord';
 
 export abstract class MoveCoord extends Move { // TODO: Immutable & Pool
 
-    readonly coord: Coord;
-
-    /* public MoveCoord(short x, short y) {
-     this.coord = new Coord(x, y);
-    } */ // TODO vérifier si il est nécessaire
+    public readonly coord: Coord;
 
     constructor(x: number, y: number) {
         super();
         this.coord = new Coord(x, y);
     }
-
-    /*
-    @Override
-    public int hashCode() {
-     final int prime = 31;
-     int result = 1;
-     result = prime * result + ((coord === null) ? 0: coord.hashCode());
-     return result;
-    }
-    */
 
     public equals(obj: any): boolean {
         if (this === obj) {
