@@ -30,6 +30,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
+        const LOCAL_VERBOSE = true;
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing if twice
             if (choix === null) {

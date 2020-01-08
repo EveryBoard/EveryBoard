@@ -20,7 +20,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
     }
 
     public isLegal(move: GoMove, slice: GoPartSlice): GoLegalityStatus {
-        const LOCAL_VERBOSE: boolean = true;
+        const LOCAL_VERBOSE: boolean = false;
         const ILLEGAL: GoLegalityStatus = {legal: false, capturedCoords: null};
 
         let boardCopy: Pawn[][] = slice.getCopiedBoard();
@@ -123,7 +123,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
     }
 
     private static _getGroupDatas(coord: Coord, board: Pawn[][], groupDatas: GroupDatas): GroupDatas {
-        if (GoRules.VERBOSE) console.log(groupDatas);
+        // if (GoRules.VERBOSE) console.log(groupDatas);
         let color: number = board[coord.y][coord.x];
         groupDatas = GroupDatas.addPawn(groupDatas, coord, color);
         if (color === groupDatas.color) {
@@ -141,9 +141,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
     public getListMoves(node: MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus>): MGPMap<GoMove, GoPartSlice> {
         const localVerbose = false;
-        if (GoRules.VERBOSE || localVerbose) {
-            console.log('getListMoves');
-        }
+        if (GoRules.VERBOSE || localVerbose) console.log('getListMoves');
 
         const choices: MGPMap<GoMove, GoPartSlice> = new MGPMap<GoMove, GoPartSlice>();
 
@@ -230,20 +228,12 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             const capturer: Coord = move.coord;
             let capturerInfo: GroupDatas = GoRules.getGroupDatas(capturer, newBoard);
             let capturerFreedom: Coord[] = capturerInfo.emptyCoords;
-            if (capturerFreedom.length === 1) {
-                if (capturerFreedom[0].equals(captured)) {
-                    console.log();
-                    return captured;
-                } else {
-                    console.log("getNewKo("+move.toString()+"): none because capturer freedoms is not the captured coord");
-                    return null;
-                }
+            if (capturerFreedom.length === 1 && capturerFreedom[0].equals(captured)) {
+                return captured;
             } else {
-                console.log("getNewKo("+move.toString()+"): none because capturer has mutliples freedoms");
                 return null;
             }
         } else {
-            console.log("getNewKo("+move.toString()+"): none because multiple-capture-move")
             return null;
         }
     }
@@ -346,6 +336,10 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             }
         }
         return new GoPartSlice(switchedBoard, capturedCopy, slice.turn, slice.koCoord.getCopy(), Phase.COUNTING);
+    }
+
+    private static switchNonCapturingGroupToDead(slice: GoPartSlice): GoPartSlice {
+        throw new Error("unimplemented shit");
     }
 }
 

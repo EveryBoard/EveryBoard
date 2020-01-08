@@ -15,9 +15,9 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 })
 export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 
-    static VERBOSE = true;
+    static VERBOSE = false;
 
-    aiDepth = 1; // TODO: make that a choice of user
+    aiDepth = 2; // TODO: make that a choice of user
 
     botTimeOut = 500; // this.aiDepth * 500;
 
@@ -29,7 +29,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
     }
 
     ngOnInit() {
-        this.players = [this.userService.getCurrentUser(), this.userService.getCurrentUser()];
+        const currentUser: string = this.userService.getCurrentUser();
+        this.players = [currentUser, currentUser];
         this.afterGameComponentViewProbablyInit();
     }
 

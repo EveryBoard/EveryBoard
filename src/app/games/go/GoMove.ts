@@ -19,12 +19,7 @@ export class GoMove extends MoveCoordAndCapture<Coord> {
     public equals(o: any): boolean {
         if (this === o) return true;
         if (o == null) return false;
-        if (!(o instanceof GoMove)) return false;
         if (!this.coord.equals(o.coord)) return false;
-        if (this.captures.length !== o.captures.length) return false;
-        for (let i = 0; i < this.captures.length; i++) {
-            if (!this.captures[i].equals(o.captures[i])) return false;
-        }
         return true;
     }
 

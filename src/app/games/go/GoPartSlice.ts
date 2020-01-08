@@ -46,7 +46,7 @@ export class GoPartSlice extends GamePartSlice {
         return GamePartSlice.copyBiArray(this.board);
     }
 
-    public static readonly WIDTH: number = 6;
+    public static readonly WIDTH: number = 5;
 
-    public static readonly HEIGHT: number = 6;
+    public static readonly HEIGHT: number = 5;
 }

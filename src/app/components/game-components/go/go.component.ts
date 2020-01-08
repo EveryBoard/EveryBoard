@@ -16,7 +16,7 @@ import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 })
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
 
-    static VERBOSE = true;
+    static VERBOSE = false;
 
     scores: number[] = [0, 0];
 
@@ -43,7 +43,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y, []); // TODO: check validity of "[]"
-        this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]); // TODO: encode score
+        const result: boolean = this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]); // TODO: encode score
+        console.log("this.chooseMove said : " + result);
     }
 
     decodeMove(encodedMove: number): GoMove {
@@ -54,8 +55,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         return move.encode();
     }
 
-    updateBoard(): void {
-        if (GoComponent.VERBOSE) {
+    public updateBoard(): void {
+        if (GoComponent.VERBOSE || true) {
             console.log('updateBoard');
         }
         const slice: GoPartSlice = this.rules.node.gamePartSlice;

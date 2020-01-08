@@ -15,7 +15,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
 
     static NB_NODE_CREATED = 0;
 
-	static VERBOSE = true;
+	static VERBOSE = false;
 
 	static ruler: Rules<Move, GamePartSlice, LegalityStatus>;
 	/* Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de règles
@@ -269,19 +269,18 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
 
 	private setMinChild(): MNode<R, M, S, L> | null {
 		/* return the 'minimal' child
-       * set the index of the best child in this.bestChild
-       * and set its value
+       * update the best hoped value
        * ( best for player 0 ! )
        * use condition: childs is not empty
        */
-		if (!this.childs) {
+		if (this.childs == null) {
 			return null;
 		}
 		let minValue: number = Number.MAX_SAFE_INTEGER;
 		let minNode: MNode<R, M, S, L> = this.childs[0];
 
 		for (const child of this.childs) {
-			if (child.hopedValue && child.hopedValue < minValue) {
+			if (child.hopedValue < minValue || (child.hopedValue === minValue && Math.random() < 0.5)) {
 				minNode = child;
 				minValue = minNode.hopedValue;
 				if (minValue === Number.MIN_SAFE_INTEGER) {
@@ -308,7 +307,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
 		let maxNode: MNode<R, M, S, L> = this.childs[0];
 
 		for (const child of this.childs) {
-			if (child.hopedValue && child.hopedValue > maxValue) {
+			if (child.hopedValue > maxValue || (child.hopedValue === maxValue && Math.random() < 0.5)) {
 				maxNode = child;
 				maxValue = maxNode.hopedValue;
 				if (maxValue === Number.MAX_SAFE_INTEGER) {
