@@ -15,7 +15,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
 
     static NB_NODE_CREATED = 0;
 
-	static VERBOSE = false;
+	static VERBOSE = true;
 
 	static ruler: Rules<Move, GamePartSlice, LegalityStatus>;
 	/* Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de règles

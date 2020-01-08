@@ -16,6 +16,22 @@ export class GoMove extends MoveCoordAndCapture<Coord> {
         return new GoMove(x, y, []); // check useless []
     }
 
+    public equals(o: any): boolean {
+        if (this === o) return true;
+        if (o == null) return false;
+        if (!(o instanceof GoMove)) return false;
+        if (!this.coord.equals(o.coord)) return false;
+        if (this.captures.length !== o.captures.length) return false;
+        for (let i = 0; i < this.captures.length; i++) {
+            if (!this.captures[i].equals(o.captures[i])) return false;
+        }
+        return true;
+    }
+
+    public toString(): String {
+        return "GoMove(" + this.coord.x + ", " + this.coord.y + ", [" + this.captures.length + " captures])";
+    }
+
     public decode(encodedMove: number): GoMove {
         return GoMove.decode(encodedMove);
     }

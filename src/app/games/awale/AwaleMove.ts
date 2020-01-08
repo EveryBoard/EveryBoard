@@ -1,7 +1,18 @@
-import { Comparable } from "src/app/collectionlib/MGPMap";
 import { MoveCoord } from "src/app/jscaip/MoveCoord";
 
 export class AwaleMove extends MoveCoord {
+
+    public equals(o: any): boolean {
+        if (o === this) return true;
+        if (!(o instanceof AwaleMove)) return false;
+        const other: AwaleMove = o as AwaleMove;
+        if (!other.coord.equals(this.coord)) return false;
+        return true;
+    }
+
+    public toString(): String {
+        return "AwaleMove(" + this.coord.x + ", " + this.coord.y + ")";
+    }
 
     static decode(encodedMove: number): AwaleMove {
         const x = encodedMove % 6;

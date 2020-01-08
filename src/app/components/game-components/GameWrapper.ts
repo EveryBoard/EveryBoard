@@ -19,7 +19,7 @@ import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.compo
 
 export abstract class GameWrapper {
 
-    static VERBOSE = false;
+    static VERBOSE = true;
 
     // component loading
     @ViewChild(GameIncluderComponent) gameCompo: GameIncluderComponent;

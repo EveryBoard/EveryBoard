@@ -15,9 +15,9 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 })
 export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
 
-    static VERBOSE = false;
+    static VERBOSE = true;
 
-    aiDepth = 5; // TODO: make that a choice of user
+    aiDepth = 1; // TODO: make that a choice of user
 
     botTimeOut = 500; // this.aiDepth * 500;
 

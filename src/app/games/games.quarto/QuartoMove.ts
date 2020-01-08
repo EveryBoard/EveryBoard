@@ -42,22 +42,19 @@ export class QuartoMove extends MoveCoord {
         return QuartoMove.decode(xyp);
     }
 
-    toString(): string {
-        return 'QuartoMove{' +
-            'piece=' + this.piece +
-            ' at (' + this.coord.x +
-            ', ' + this.coord.y +
-            ')}';
+    public toString(): String {
+        return 'QuartoMove{' + 'piece=' + this.piece
+                             + ' at (' + this.coord.x
+                             + ', ' + this.coord.y +
+                ')}';
     }
 
-    equals(o: any): boolean {
-        if (!(o instanceof QuartoMove)) {
-            return false;
-        }
-        if (!super.equals(o)) {
-            return false;
-        }
+    public equals(o: any): boolean {
+        if (this === o) return true;
+        if (!(o instanceof QuartoMove)) return false;
         const other: QuartoMove = o as QuartoMove;
-        return this.piece === other.piece;
+        if (!other.coord.equals(this.coord)) return false;
+        if (this.piece !== other.piece) return false;
+        return true;
     }
 }

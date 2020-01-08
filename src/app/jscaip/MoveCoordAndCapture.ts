@@ -18,21 +18,4 @@ export abstract class MoveCoordAndCapture<C extends Comparable> extends MoveCoor
     public getCapturesCopy(): C[] {
          return this.captures.map(x => Object.assign({}, x));
     }
-
-    public equals(obj: any): boolean {
-        if (this === obj) return true;
-        if (obj == null) return false;
-        if (!(obj instanceof MoveCoordAndCapture)) return false;
-        if (!this.coord.equals(obj.coord)) return false;
-        if (this.captures.length !== obj.captures.length) return false;
-        for (let i = 0; i < this.captures.length; i++) {
-            if (!this.captures[i].equals(obj.captures[i])) return false;
-        }
-        return true;
-    }
-
-    /*public String toString() {
-        return "MoveXYC [capture=" + Arrays.toString(capture) + ", y=" + y + ", x=" + x + "]";
-        }
-        */
 }

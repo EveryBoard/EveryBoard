@@ -106,7 +106,7 @@ export class Coord {
     public equals(obj: any): boolean {
         if (this === obj) return true;
         if (obj === null) return false;
-        if (!(obj instanceof Coord)) return false;
+        // if (!(obj instanceof Coord)) return false;
         if (obj.x !== this.x) return false;
         if (this.y !== obj.y) return false;
         return true;

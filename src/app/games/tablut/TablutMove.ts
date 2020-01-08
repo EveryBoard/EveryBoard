@@ -3,6 +3,18 @@ import { Coord } from "src/app/jscaip/Coord";
 
 export class TablutMove extends MoveCoordToCoordAndCapture {
 
+    public equals(o: any): boolean {
+        if (o === this) return true;
+        if (!(o instanceof TablutMove)) return false;
+        const other: TablutMove = o as TablutMove;
+        if (!other.coord.equals(this.coord)) return false;
+        if (!other.end.equals(this.end)) return false;
+        return true; // TODO: figure out what to do with captures
+    }
+    public toString(): String {
+        return "TablutMove(" + this.coord + "->" + this.end + ")";
+    }
+
     public decode(encodedMove: number): TablutMove {
         return TablutMove.decode(encodedMove);
     }

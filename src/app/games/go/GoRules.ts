@@ -11,8 +11,16 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
     static VERBOSE: boolean = false;
 
+    constructor() {
+        super();
+        this.node = MNode.getFirstNode(
+            new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING),
+            this
+        );
+    }
+
     public isLegal(move: GoMove, slice: GoPartSlice): GoLegalityStatus {
-        const LOCAL_VERBOSE: boolean = false;
+        const LOCAL_VERBOSE: boolean = true;
         const ILLEGAL: GoLegalityStatus = {legal: false, capturedCoords: null};
 
         let boardCopy: Pawn[][] = slice.getCopiedBoard();
@@ -54,8 +62,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         return board[move.coord.y][move.coord.x] !== Pawn.EMPTY;
     }
 
-    public static isKo(move: GoMove, partSlice: GoPartSlice): boolean {
-        return move.coord.equals(partSlice.koCoord);
+    public static isKo(move: GoMove, slice: GoPartSlice): boolean {
+        return move.coord.equals(slice.koCoord);
     }
 
     public static getCaptureState(move: GoMove, goPartSlice: GoPartSlice): CaptureState {
@@ -215,19 +223,27 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         return goScore[1] - goScore[0];
     }
 
-    public static getNewKo(moveAndResult: GoMove, newBoard: Pawn[][]): Coord {
-        const captures: Coord[] = moveAndResult.getCapturesCopy();
+    public static getNewKo(move: GoMove, newBoard: Pawn[][]): Coord {
+        const captures: Coord[] = move.getCapturesCopy();
         if (captures.length === 1) {
             const captured: Coord = captures[0];
-            const capturer: Coord = moveAndResult.coord;
+            const capturer: Coord = move.coord;
             let capturerInfo: GroupDatas = GoRules.getGroupDatas(capturer, newBoard);
             let capturerFreedom: Coord[] = capturerInfo.emptyCoords;
-            if (capturerFreedom.length === 1 && capturerFreedom[0].equals(captured)) {
-                return captured;
+            if (capturerFreedom.length === 1) {
+                if (capturerFreedom[0].equals(captured)) {
+                    console.log();
+                    return captured;
+                } else {
+                    console.log("getNewKo("+move.toString()+"): none because capturer freedoms is not the captured coord");
+                    return null;
+                }
             } else {
+                console.log("getNewKo("+move.toString()+"): none because capturer has mutliples freedoms");
                 return null;
             }
         } else {
+            console.log("getNewKo("+move.toString()+"): none because multiple-capture-move")
             return null;
         }
     }

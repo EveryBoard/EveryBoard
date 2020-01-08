@@ -38,33 +38,12 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.showScore = true;
     }
 
-    onClick(x: number, y: number): boolean {
+    onClick(x: number, y: number) {
         console.log("salut " + x + "-" + y);
-        const goPartSlice = this.rules.node.gamePartSlice;
-        if (this.rules.node.isEndGame()) {
-            if (GoComponent.VERBOSE) {
-                console.log('Malheureusement la partie est finie');
-            }
-            return false;
-        }
-
         this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y, []); // TODO: check validity of "[]"
-        const legality: GoLegalityStatus = this.rules.isLegal(resultlessMove, this.rules.node.gamePartSlice); 
-        if (legality.legal) {
-            if (GoComponent.VERBOSE) {
-                console.log('Et javascript estime que votre mouvement est légal');
-            }
-            // player make a correct move
-            // let's confirm on java-server-side that the move is legal
-            this.scores[this.rules.node.gamePartSlice.turn%2] += legality.capturedCoords.length;
-            this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]); // TODO: encode score
-        } else {
-            if (GoComponent.VERBOSE) {
-                console.log('Mais c\'est un mouvement illegal');
-            }
-        }
+        this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]); // TODO: encode score
     }
 
     decodeMove(encodedMove: number): GoMove {
