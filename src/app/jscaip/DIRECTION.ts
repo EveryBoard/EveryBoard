@@ -4,6 +4,57 @@ export type ORTHOGONALE =
 	{x:  0; y:  1} | // DOWN
 	{x: -1, y:  0};  // LEFT
 
+export class Orthogonale {
+
+    public static readonly UP: Orthogonale = new Orthogonale(0, -1);
+
+    public static readonly RIGHT: Orthogonale = new Orthogonale(1, 0);
+
+    public static readonly DOWN: Orthogonale = new Orthogonale(0, 1);
+
+    public static readonly LEFT: Orthogonale = new Orthogonale(-1, 0);
+
+    private constructor(public readonly x: number, public readonly y: number) {}
+}
+
+export class Direction {
+
+    public static readonly UP: Direction = new Direction(0, -1);
+
+    public static readonly UP_RIGHT: Direction = new Direction(1, -1);
+
+    public static readonly RIGHT: Direction = new Direction(1, 0);
+
+    public static readonly DOWN_RIGHT: Direction = new Direction(1, 1);
+
+    public static readonly DOWN: Direction = new Direction(0, 1);
+
+    public static readonly DOWN_LEFT: Direction = new Direction(-1, 1);
+
+    public static readonly LEFT: Direction = new Direction(-1, 0);
+
+    public static readonly UP_LEFT: Direction = new Direction(-1, -1);
+
+    public static getOpposite(d: Direction): Direction {
+        switch (d) {
+            case Direction.UP: return Direction.DOWN;
+            case Direction.UP_RIGHT: return Direction.DOWN_LEFT;
+            case Direction.RIGHT: return Direction.LEFT;
+            case Direction.DOWN_RIGHT: return Direction.UP_LEFT;
+            case Direction.DOWN: return Direction.UP;
+            case Direction.DOWN_LEFT: return Direction.UP_RIGHT;
+            case Direction.LEFT: return Direction.RIGHT;
+            case Direction.UP_LEFT: return Direction.DOWN_RIGHT;
+        }
+    }
+
+    public static equals(first: Direction, second: Direction): boolean {
+        return (first.x === second.x) && (first.y === second.y);
+    }
+
+    private constructor(public readonly x: number, public readonly y: number) {}
+}
+
 export type DIRECTION =
 	{x:  0, y: -1} | // UP
 	{x:  1, y: -1} | // UPRIGHT

@@ -4,7 +4,7 @@ import {UserDAO} from '../dao/UserDAO';
 import {IUser, IUserId} from '../domain/iuser';
 import {Router} from '@angular/router';
 import {ActivesUsersService} from './ActivesUsersService';
-import {current} from 'codelyzer/util/syntaxKind';
+// import {current} from 'codelyzer/util/syntaxKind';
 
 @Injectable({
 	providedIn: 'root'

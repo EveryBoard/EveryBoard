@@ -1,4 +1,5 @@
 import {Coord} from './Coord';
+import { Player } from './Player';
 
 export abstract class GamePartSlice {
 
@@ -92,5 +93,9 @@ export abstract class GamePartSlice {
 
     public getCopiedBoard(): number[][] {
         return GamePartSlice.copyBiArray(this.board);
+    }
+
+    public getCurrentPlayer(): Player {
+        return this.turn === 0 ? Player.ZERO : Player.ONE;
     }
 }

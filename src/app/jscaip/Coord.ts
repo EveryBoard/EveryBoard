@@ -1,4 +1,4 @@
-import {DIR_ARRAY, DIRECTION, ORTH_ARRAY, ORTHOGONALE} from './DIRECTION';
+import {DIR_ARRAY, ORTH_ARRAY, ORTHOGONALE, Direction} from './DIRECTION';
 
 export class Coord {
 
@@ -26,16 +26,16 @@ export class Coord {
         this.y = y;
     }
 
-    public getNext(dir: DIRECTION): Coord {
+    public getNext(dir: Direction): Coord {
         // return the next coord in the direction 'dir'
         return new Coord(this.x + dir.x, this.y + dir.y);
     }
 
-    public getPrevious(dir: DIRECTION): Coord {
+    public getPrevious(dir: Direction): Coord {
         return new Coord(this.x - dir.x, this.y - dir.y);
     }
 
-    public getLeft(dir: DIRECTION): Coord {
+    public getLeft(dir: Direction): Coord {
         // looking in the direction "dir", we just go one step left
         // since the directions in DIRECTIONS are sorted in horlogic order,
         // we just need to take the one before the previous (-2/8 = -90°)
@@ -55,7 +55,7 @@ export class Coord {
         return new Coord(newX, newY);
     }
 
-    public getRight(dir: DIRECTION): Coord {
+    public getRight(dir: Direction): Coord {
         // looking in the direction "dir", we just go one step right
         // see getLeft's logic, it's the opposite
         const newX = this.x + -dir.y;
@@ -87,7 +87,7 @@ export class Coord {
         return true;
     }
 
-    public getDirectionToward(c: Coord): DIRECTION {
+    public getDirectionToward(c: Coord): Direction {
         const dx: number = Coord.getBinarised(c.x - this.x) + 1;
         const dy: number = Coord.getBinarised(c.y - this.y) + 1;
         return DIR_ARRAY[dy][dx];

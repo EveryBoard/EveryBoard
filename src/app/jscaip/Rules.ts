@@ -8,10 +8,10 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
 
     public node: MNode<Rules<M, S, L>, M, S, L>; // TODO: check that this should not made static
     /* The data that represent the status of the game at the current moment, including:
-     *   the board
-     *   the turn
-     *   the extra data that might be score of each player
-     *   the remaining pawn that you can put on the board
+     * the board
+     * the turn
+     * the extra data that might be score of each player
+     * the remaining pawn that you can put on the board...
      */
 
     public abstract getListMoves(node: MNode<Rules<M, S, L>, M, S, L>): MGPMap<M, S> ;
