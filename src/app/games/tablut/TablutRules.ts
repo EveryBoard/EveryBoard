@@ -1,4 +1,4 @@
-import {DIRECTION, ORTHOGONALE, ORTHOGONALES} from '../../jscaip/DIRECTION';
+import {DIRECTION, ORTHOGONALE, ORTHOGONALES, Direction} from '../../jscaip/DIRECTION';
 import {Rules} from '../../jscaip/Rules';
 import {Coord} from '../../jscaip/Coord';
 import {MNode} from '../../jscaip/MNode';
@@ -20,8 +20,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const attemptResult: number = TablutRules.tryMove(player, invaderStart, move, board).success;
         const depart: Coord = move.coord;
         const arrival: Coord = move.end;
-        board[arrival.y][arrival.x] = board[depart.y][depart.x]; // dédoublement
-        board[depart.y][depart.x] = TablutPartSlice.UNOCCUPIED; // suppression du précédent
+        board[arrival.y][arrival.x] = board[depart.y][depart.x]; // dï¿½doublement
+        board[depart.y][depart.x] = TablutPartSlice.UNOCCUPIED; // suppression du prï¿½cï¿½dent
         const captureds: Coord[] = [];
         let captured: Coord;
         for (const d of ORTHOGONALES) {
@@ -84,8 +84,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         // move is legal here
         const depart: Coord = move.coord;
         const arrival: Coord = move.end;
-        board[arrival.y][arrival.x] = board[depart.y][depart.x]; // dédoublement
-        board[depart.y][depart.x] = TablutPartSlice.UNOCCUPIED; // suppression du précédent
+        board[arrival.y][arrival.x] = board[depart.y][depart.x]; // dï¿½doublement
+        board[depart.y][depart.x] = TablutPartSlice.UNOCCUPIED; // suppression du prï¿½cï¿½dent
         const captureds: Coord[] = [];
         let captured: Coord;
         for (const d of ORTHOGONALES) {
@@ -105,7 +105,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
     }
 
     private static getMoveValidity(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): number {
-        if (!move.coord.isInRange(this.WIDTH, this.WIDTH)) { // TODO: implément height so he leave me be
+        if (!move.coord.isInRange(this.WIDTH, this.WIDTH)) { // TODO: implï¿½ment height so he leave me be
             return this.NOT_IN_RANGE_ERROR;
         }
         if (!move.end.isInRange(this.WIDTH, this.WIDTH)) {
@@ -133,12 +133,12 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             }
         }
 
-        const dir: DIRECTION = move.coord.getDirectionToward(move.end);
+        const dir: Direction = move.coord.getDirectionToward(move.end);
         if (dir == null) {
             return this.IMMOBILE_MOVE_ERROR;
         }
 
-        if (!DIRECTION.isOrthogonal(dir)) {
+        if (!Direction.isOrthogonal(dir)) {
             return this.NOT_ORTHOGONAL_ERROR;
         }
         const dist: number = move.coord.getOrthogonalDistance(move.end);
@@ -356,7 +356,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const fin = this.WIDTH - 1;
         if (c.x === 0) {
             return (c.y === 0) || (c.y === fin);
-        } else if (c.x === fin) { // TODO: c'est à TablutPartSlice d'avoir largeur ! pas aux règles
+        } else if (c.x === fin) { // TODO: c'est ï¿½ TablutPartSlice d'avoir largeur ! pas aux rï¿½gles
             return (c.y === 0) || (c.y === fin);
         }
         return false;
@@ -463,7 +463,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                 foundDestination = foundDestination.getNext(dir);
                 endFound =
                     !foundDestination.isInRange(this.WIDTH, this.WIDTH) ||
-                    this.getAbsoluteOwner(foundDestination, invaderStart, board) !== -1; // TODO: clean : -1 un peu écris en dur, berk?
+                    this.getAbsoluteOwner(foundDestination, invaderStart, board) !== -1; // TODO: clean : -1 un peu ï¿½cris en dur, berk?
                 if (!endFound) {
                     destinations.push(foundDestination);
                 }
@@ -606,7 +606,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                     // pour l'envahisseur :
                     //     if the king is capturable : the only choice is the capturing
                     //     if the king is close to escape:  the only choice are the blocking one
-                    // pour les défenseurs :
+                    // pour les dï¿½fenseurs :
                     //     if the king can win : the only choice is the winning
                     //     if king threatened : the only choice is to save him
                     //         a: by escape
@@ -667,7 +667,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
     public setInitialBoard() {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
-                new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true), // TODO: rendre ça configurable
+                new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true), // TODO: rendre ï¿½a configurable
                 this
             );
         } else {

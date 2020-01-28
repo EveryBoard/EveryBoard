@@ -1,7 +1,6 @@
 import {Injectable} from '@angular/core';
-import {AngularFirestore} from 'angularfire2/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 import {IUser, IUserId, PIUser} from '../domain/iuser';
-import {IJoiner} from '../domain/ijoiner';
 
 @Injectable({
 	providedIn: 'root'

@@ -1,5 +1,5 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
-import {P4Rules} from './P4Rules';
+import { Player } from 'src/app/jscaip/Player';
 
 export class P4PartSlice extends GamePartSlice {
 	// constructors :
@@ -18,7 +18,7 @@ export class P4PartSlice extends GamePartSlice {
 	// statics :
 
 	static getStartingBoard(): number[][] {
-		const board: number[][] = GamePartSlice.createBiArray(7, 6, P4Rules.UNOCCUPIED);
+		const board: number[][] = GamePartSlice.createBiArray(7, 6, Player.NONE.value);
 		return board;
 	}
 

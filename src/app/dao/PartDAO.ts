@@ -1,7 +1,7 @@
 import {map} from 'rxjs/operators';
 import {ICurrentPart, ICurrentPartId, PICurrentPart} from '../domain/icurrentpart';
 import {Observable} from 'rxjs';
-import {AngularFirestore} from 'angularfire2/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 import {Injectable} from '@angular/core';
 
 @Injectable({

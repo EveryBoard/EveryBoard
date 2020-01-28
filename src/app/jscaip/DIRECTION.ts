@@ -50,7 +50,11 @@ export class Direction {
 
     public static equals(first: Direction, second: Direction): boolean {
         return (first.x === second.x) && (first.y === second.y);
-    }
+	}
+	
+	public static isOrthogonal(d: Direction): boolean {
+		return (d.x === 0) || (d.y === 0);
+	}
 
     private constructor(public readonly x: number, public readonly y: number) {}
 }
@@ -69,7 +73,7 @@ export namespace DIRECTION {
 	export function equals(first: DIRECTION, second: DIRECTION): boolean {
 		return (first.x === second.x) && (first.y === second.y);
 	}
-	export function isOrthogonal(d: DIRECTION) {
+	export function _isOrthogonal(d: DIRECTION) {
 		return (d.x === 0) || (d.y === 0);
 	}
 	export function getOpposite(dir: DIRECTION): DIRECTION {

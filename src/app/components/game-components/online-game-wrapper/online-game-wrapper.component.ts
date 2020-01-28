@@ -27,10 +27,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 	static VERBOSE = false;
 
 	// GameWrapping's Template
-	@ViewChild('chronoZeroGlobal') chronoZeroGlobal: CountDownComponent;
-	@ViewChild('chronoOneGlobal') chronoOneGlobal: CountDownComponent;
-	@ViewChild('chronoZeroLocal') chronoZeroLocal: CountDownComponent;
-	@ViewChild('chronoOneLocal') chronoOneLocal: CountDownComponent;
+	@ViewChild('chronoZeroGlobal', {static: true}) chronoZeroGlobal: CountDownComponent;
+	@ViewChild('chronoOneGlobal', {static: true}) chronoOneGlobal: CountDownComponent;
+	@ViewChild('chronoZeroLocal', {static: true}) chronoZeroLocal: CountDownComponent;
+	@ViewChild('chronoOneLocal', {static: true}) chronoOneLocal: CountDownComponent;
 
 	// link between GameWrapping's template and remote opponent
 	currentPart: ICurrentPart;

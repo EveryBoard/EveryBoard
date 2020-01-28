@@ -22,7 +22,7 @@ export abstract class GameWrapper {
     static VERBOSE = false;
 
     // component loading
-    @ViewChild(GameIncluderComponent) gameCompo: GameIncluderComponent;
+    @ViewChild(GameIncluderComponent, {static: true}) gameCompo: GameIncluderComponent;
     protected componentInstance: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
 
     userName: string = this.userService.getCurrentUser();

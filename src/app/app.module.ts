@@ -2,13 +2,12 @@ import {BrowserModule} from '@angular/platform-browser';
 import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
-import {HttpModule} from '@angular/http';
 import {RouterModule, Route} from '@angular/router';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from '../material-modules';
 
-import {AngularFireModule} from 'angularfire2';
-import {AngularFirestoreModule} from 'angularfire2/firestore';
+import {AngularFireModule} from '@angular/fire';
+import {AngularFirestoreModule} from '@angular/fire/firestore';
 
 import {GameIncluderDirective} from './directives/game-includer.directive';
 
@@ -100,7 +99,7 @@ const routes: Route [] = [
     imports: [
         BrowserModule,
         HttpClientModule,
-        HttpModule,
+        //HttpModule,
         RouterModule.forRoot(routes, {useHash: true}),
         ReactiveFormsModule,
         FormsModule,

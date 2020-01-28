@@ -1,7 +1,7 @@
 import {Observable} from 'rxjs';
 import {IJoiner, IJoinerId, PIJoiner} from '../domain/ijoiner';
 import {Injectable} from '@angular/core';
-import {AngularFirestore} from 'angularfire2/firestore';
+import {AngularFirestore} from '@angular/fire/firestore';
 import {map} from 'rxjs/operators';
 
 @Injectable({
