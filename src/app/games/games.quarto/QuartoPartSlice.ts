@@ -11,12 +11,10 @@ export class QuartoPartSlice extends GamePartSlice {
 		super(b, turn);
 		this.pieceInHand = pieceInHand;
 	}
-
 	static getStartingBoard(): number[][] {
 		const board: number[][] = GamePartSlice.createBiArray(4, 4, QuartoEnum.UNOCCUPIED);
 		return board;
 	}
-
 	static getFullPawnsList(): Array<QuartoEnum> {
 		const all: QuartoEnum[] = QuartoEnum.values();
 		const filtered: Array<QuartoEnum> = new Array<QuartoEnum>();
@@ -27,15 +25,13 @@ export class QuartoPartSlice extends GamePartSlice {
 		}
 		return filtered;
 	}
-
-	static isGivable(pawn: number, board: number[][], pieceInHand: number): boolean {
+	static isGivable(pawn: number, board: ReadonlyArray<ReadonlyArray<number>>, pieceInHand: number): boolean {
 		if (pawn === pieceInHand) {
 			return false;
 		}
 		return QuartoPartSlice.isPlacable(pawn, board);
 	}
-
-	static isPlacable(pawn: number, board: number[][]): boolean {
+	static isPlacable(pawn: number, board: ReadonlyArray<ReadonlyArray<number>>): boolean {
 		// return true if the pawn is not already placed on the board
 		let found = false;
 		let indexY = 0;
@@ -50,7 +46,6 @@ export class QuartoPartSlice extends GamePartSlice {
 		}
 		return !found;
 	}
-
 	public getRemainingPawns(): Array<QuartoEnum> {
 		// return the pawn that are nor on the board nor the one that you have in your hand
 		// (hence, the one that your about to put on the board)
@@ -63,5 +58,4 @@ export class QuartoPartSlice extends GamePartSlice {
 		}
 		return remainingPawns;
 	}
-
 }

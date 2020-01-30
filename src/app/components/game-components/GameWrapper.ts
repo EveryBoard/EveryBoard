@@ -19,19 +19,21 @@ import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.compo
 
 export abstract class GameWrapper {
 
-    static VERBOSE = false;
+    public static VERBOSE = false;
 
     // component loading
-    @ViewChild(GameIncluderComponent, {static: true}) gameCompo: GameIncluderComponent;
+    @ViewChild(GameIncluderComponent, {static: true})
+    public gameCompo: GameIncluderComponent;
+    
     protected componentInstance: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
 
-    userName: string = this.userService.getCurrentUser();
+    public userName: string = this.userService.getCurrentUser();
 
-    players: string[] = [this.userName, this.userName];
+    public players: string[] = [this.userName, this.userName];
 
-    observerRole: number;
+    public observerRole: number;
 
-    canPass: boolean;
+    public canPass: boolean;
 
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
@@ -41,8 +43,7 @@ export abstract class GameWrapper {
             console.log('GameWrapper.constructed');
         }
     }
-
-    getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> { // TODO figure out the difference with Type<any>
+    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> { // TODO figure out the difference with Type<any>
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.getMatchingComponent');
         }
@@ -68,7 +69,6 @@ export abstract class GameWrapper {
                 return null;
         }
     }
-
     protected afterGameComponentViewProbablyInit() {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.afterGameComponentViewProbablyInit');
@@ -79,9 +79,7 @@ export abstract class GameWrapper {
 
         this.componentInstance.rules.setInitialBoard();
         this.componentInstance.board = this.componentInstance.rules.node.gamePartSlice.getCopiedBoard();
-
     }
-
     protected loadGameComponent() {
         if (GameWrapper.VERBOSE) {
             console.log('Loading now game component');
@@ -97,8 +95,7 @@ export abstract class GameWrapper {
         this.componentInstance.observerRole = this.observerRole; // TODO: fix, tell "undefined"
         this.canPass = this.componentInstance.canPass;
     }
-
-    receiveChildData = (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): boolean => {
+    public receiveChildData = (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): boolean => {
         if (!this.isPlayerTurn()) {
             if (GameWrapper.VERBOSE) {
                 console.log('GameWrapper.receiveChildData says: not your turn'); // todo : réactive notification
@@ -125,8 +122,7 @@ export abstract class GameWrapper {
         this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
         return true;
     }
-
-    abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number);
+    public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): void;
 
     public isPlayerTurn() {
         const indexPlayer = this.componentInstance.rules.node.gamePartSlice.turn % 2;

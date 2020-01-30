@@ -1,4 +1,6 @@
-export enum EncapsulePiece {
+import { Player } from "src/app/jscaip/Player";
+
+export enum EncapsulePiece { // TODO: make static class
     SMALL_BLACK = 0,
     SMALL_WHITE = 1,
     MEDIUM_BLACK = 2,
@@ -7,20 +9,12 @@ export enum EncapsulePiece {
     BIG_WHITE = 5,
     NONE = 6
 }
-
 export enum Size {
     NONE = 0,
     SMALL = 1,
     MEDIUM = 2,
     BIG = 3,
 }
-
-export enum Player {
-    BLACK = 0,
-    WHITE = 1,
-    NONE = 2,
-}
-
 export class EncapsuleMapper {
 
     static toPieceNameFromSizeAndPlayer(size: Size, player: Player): String {
@@ -29,12 +23,12 @@ export class EncapsuleMapper {
     }
 
     static toPiece(size: Size, player: Player): EncapsulePiece {
-        if (player === Player.BLACK && size === Size.BIG) return EncapsulePiece.BIG_BLACK;
-        if (player === Player.BLACK && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_BLACK;
-        if (player === Player.BLACK && size === Size.SMALL) return EncapsulePiece.SMALL_BLACK;
-        if (player === Player.WHITE && size === Size.BIG) return EncapsulePiece.BIG_WHITE;
-        if (player === Player.WHITE && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_WHITE;
-        if (player === Player.WHITE && size === Size.SMALL) return EncapsulePiece.SMALL_WHITE;
+        if (player === Player.ZERO && size === Size.BIG) return EncapsulePiece.BIG_BLACK;
+        if (player === Player.ZERO && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_BLACK;
+        if (player === Player.ZERO && size === Size.SMALL) return EncapsulePiece.SMALL_BLACK;
+        if (player === Player.ONE && size === Size.BIG) return EncapsulePiece.BIG_WHITE;
+        if (player === Player.ONE && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_WHITE;
+        if (player === Player.ONE && size === Size.SMALL) return EncapsulePiece.SMALL_WHITE;
         if (player === Player.NONE  && size === Size.NONE) return EncapsulePiece.NONE;
         throw new Error("Unknown combinaison (" + size + ", " + player + ")");
     }
@@ -56,11 +50,11 @@ export class EncapsuleMapper {
         if (piece === EncapsulePiece.BIG_BLACK    ||
             piece === EncapsulePiece.MEDIUM_BLACK ||
             piece === EncapsulePiece.SMALL_BLACK) {
-            return Player.BLACK;
+            return Player.ZERO;
         } else if (piece === EncapsulePiece.BIG_WHITE    ||
                    piece === EncapsulePiece.MEDIUM_WHITE ||
                    piece === EncapsulePiece.SMALL_WHITE) {
-            return Player.WHITE;
+            return Player.ONE;
         } else if (piece === EncapsulePiece.NONE) {
             return Player.NONE;
         } else {

@@ -5,9 +5,13 @@ export class TablutPartSlice extends GamePartSlice {
 	// statics fields :
 
 	public static readonly UNOCCUPIED = 0;
+
 	public static readonly PLAYER_ZERO_KING = 1;
+
 	public static readonly PLAYER_ONE_KING = 2;
+
 	public static readonly INVADERS = 3;
+
 	public static readonly DEFENDERS = 4;
 
 	public invaderStart: boolean;

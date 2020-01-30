@@ -5,32 +5,26 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 
-	rules: Rules<M, S, L>;
+	public rules: Rules<M, S, L>;
 
-	board: Array<Array<number>>;
+	public board: Array<Array<number>>;
 
-	canPass: boolean;
+	public canPass: boolean;
 
-    showScore: boolean;
+    public showScore: boolean;
 
-    chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => boolean;
+    public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => boolean;
 
-	observerRole: number;
+	public observerRole: number;
 	/* all game rules should be able to call the game-wrapper
 	 * the aim is that the game-wrapper will take care of manage what follow
 	 * ie:  - if it's online, he'll tell the game-component when the remote opponent has played
 	 * 		- if it's offline, he'll tell the game-component what the bot have done
 	 */
 
-	// abstract applyExternalMove(move: Move); TODO: delete since it seem's useless
-	/* Allow game-wrapper to inject a move from the AI or the remote opponent to the Game Component
-	 * Reminder: the Game Component don't know who's playing
-	 * Game Component focus on translating user-interactions to Moves, and Moves to visible Board
-	 */
+	public abstract updateBoard(): void;
 
-	abstract updateBoard(): void;
+	public abstract decodeMove(encodedMove: number): Move;
 
-	abstract decodeMove(encodedMove: number): Move;
-
-	abstract encodeMove(move: Move): number;
+	public abstract encodeMove(move: Move): number;
 }

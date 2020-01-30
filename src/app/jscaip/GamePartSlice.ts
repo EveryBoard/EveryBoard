@@ -7,7 +7,7 @@ export abstract class GamePartSlice {
         return "(t:"+this.turn+") = " + JSON.stringify(this.board);
     }
 
-    protected readonly board: number[][];
+    public readonly board: ReadonlyArray<ReadonlyArray<number>>;
 
     public readonly turn: number;
 
@@ -49,7 +49,7 @@ export abstract class GamePartSlice {
         return retour;
     }
 
-    public static copyBiArray(biArray: number[][]): number[][] {
+    public static copyBiArray(biArray: ReadonlyArray<ReadonlyArray<number>>): number[][] {
         const retour: Array<Array<number>> = new Array<Array<number>>();
         let y = 0;
         while (y < biArray.length) {
@@ -59,7 +59,7 @@ export abstract class GamePartSlice {
         return retour;
     }
 
-    public static copyArray(array: number[]): number[] {
+    public static copyArray(array: ReadonlyArray<number>): number[] {
         const retour: Array<number> = new Array<number>();
         let x = 0;
         while (x < array.length) {

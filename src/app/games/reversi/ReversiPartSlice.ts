@@ -1,32 +1,29 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {Coord} from '../../jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 
 export class ReversiPartSlice extends GamePartSlice {
-    static readonly PLAYER_ZERO = 0;
-    static readonly PLAYER_ONE = 1;
-    static readonly UNOCCUPIED = 2;
-    static readonly BOARD_WIDTH = 8;
-    static readonly BOARD_HEIGHT = 8; // default
 
-    protected readonly board: number[][];
+    public static readonly BOARD_WIDTH = 8;
 
-    readonly turn: number;
+    public static readonly BOARD_HEIGHT = 8; // default
 
-    static getStartingBoard(): number[][] {
-        const board: number[][] = GamePartSlice.createBiArray(8, 8, this.UNOCCUPIED);
-        board[3][3] = this.PLAYER_ZERO;
-        board[4][4] = this.PLAYER_ZERO;
-        board[3][4] = this.PLAYER_ONE;
-        board[4][3] = this.PLAYER_ONE;
-        /*board[0][0] = this.PLAYER_ZERO;
-        board[0][1] = this.PLAYER_ONE;
-        board[7][0] = this.PLAYER_ZERO;
-        board[7][1] = this.PLAYER_ONE;*/ // to test "must pass"
+    public readonly turn: number;
+
+    public static getStartingBoard(): number[][] {
+        const board: number[][] = GamePartSlice.createBiArray(8, 8, Player.NONE.value);
+        board[3][3] = Player.ZERO.value;
+        board[4][4] = Player.ZERO.value;
+        board[3][4] = Player.ONE.value;
+        board[4][3] = Player.ONE.value;
+        /*board[0][0] = Player.ZERO.value;
+        board[0][1] = Player.ONE.value;
+        board[7][0] = Player.ZERO.value;
+        board[7][1] = Player.ONE.value;*/ // to test "must pass"
 
         return board;
     }
-
-    static getNeighbooringPawnLike(board: number[][], searchedValue: number, cx: number, cy: number): Coord[] {
+    public static getNeighbooringPawnLike(board: number[][], searchedValue: number, cx: number, cy: number): Coord[] {
         let c: Coord;
         const result: Coord[] = [];
         for (let ny = -1; ny < 2; ny++) {

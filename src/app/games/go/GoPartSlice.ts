@@ -17,8 +17,6 @@ export enum Phase {
 
 export class GoPartSlice extends GamePartSlice {
 
-    protected readonly board: Pawn[][];
-
     public readonly koCoord: Coord | null;
 
     private readonly captured: number[];
