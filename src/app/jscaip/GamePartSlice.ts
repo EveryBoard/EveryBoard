@@ -6,7 +6,6 @@ export abstract class GamePartSlice {
     public toString(): String {
         return "(t:"+this.turn+") = " + JSON.stringify(this.board);
     }
-
     public readonly board: ReadonlyArray<ReadonlyArray<number>>;
 
     public readonly turn: number;
@@ -33,7 +32,6 @@ export abstract class GamePartSlice {
             y--;
         }
     }
-
     public static createBiArray(width: number, height: number, initValue: number): number[][] {
         const retour: Array<Array<number>> = new Array<Array<number>>();
         let y = height - 1;
@@ -48,7 +46,6 @@ export abstract class GamePartSlice {
         }
         return retour;
     }
-
     public static copyBiArray(biArray: ReadonlyArray<ReadonlyArray<number>>): number[][] {
         const retour: Array<Array<number>> = new Array<Array<number>>();
         let y = 0;
@@ -58,7 +55,6 @@ export abstract class GamePartSlice {
         }
         return retour;
     }
-
     public static copyArray(array: ReadonlyArray<number>): number[] {
         const retour: Array<number> = new Array<number>();
         let x = 0;
@@ -68,7 +64,6 @@ export abstract class GamePartSlice {
         }
         return retour;
     }
-
     public static copyCoordArray(array: Coord[]): Coord[] {
         const retour: Array<Coord> = new Array<Coord>();
         let x = 0;
@@ -84,7 +79,6 @@ export abstract class GamePartSlice {
     public getBoardByXY(x: number, y: number): number {
         return this.board[y][x];
     }
-
     public getBoardAt(c: Coord): number {
         return this.board[c.y][c.x];
     }
@@ -94,8 +88,7 @@ export abstract class GamePartSlice {
     public getCopiedBoard(): number[][] {
         return GamePartSlice.copyBiArray(this.board);
     }
-
     public getCurrentPlayer(): Player {
-        return this.turn === 0 ? Player.ZERO : Player.ONE;
+        return this.turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
 }

@@ -1,9 +1,4 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from '../../../services/UserService';
-import {JoinerService} from '../../../services/JoinerService';
-import {GameService} from '../../../services/GameService';
-import {Move} from '../../../jscaip/Move';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import { MinimaxTestingRules } from 'src/app/games/minimax-testing/MinimaxTestingRules';
 import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTestingPartSlice';
@@ -20,35 +15,31 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
 
     /*************************** Common Fields **************************/
 
-    rules = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
+    public rules = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
 
-    imagesLocation = 'assets/images/';
+    public imagesLocation = 'assets/images/';
 
-    coord: Coord;
+    public coord: Coord;
 
-    chooseRight() {
+    public chooseRight() {
         console.log('chooseRight');
         const chosenMove = MinimaxTestingMove.RIGHT;
         this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
-
-    chooseDown() {
+    public chooseDown() {
         console.log('chooseDown');
         const chosenMove = MinimaxTestingMove.DOWN;
         this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
-
-    updateBoard() {
+    public updateBoard() {
         const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard()
         this.coord = slice.location;
     }
-
-    decodeMove(encodedMove: number): MinimaxTestingMove {
+    public decodeMove(encodedMove: number): MinimaxTestingMove {
         return MinimaxTestingMove.decode(encodedMove);
     }
-
-    encodeMove(move: MinimaxTestingMove): number {
+    public encodeMove(move: MinimaxTestingMove): number {
         return move.encode();
     }
 }

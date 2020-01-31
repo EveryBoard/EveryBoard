@@ -1,5 +1,3 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {P4Rules} from './P4Rules';
 import {MoveX} from '../../jscaip/MoveX';
 
@@ -9,7 +7,12 @@ describe('P4Rules', () => {
 		expect(new P4Rules()).toBeTruthy();
 	});
 
-	it('should be an end game', () => {
+    it('Empty board should be worth 0 (true neutral)', () => {
+        const part = new P4Rules();
+        expect(part.getBoardValue(part.node)).toEqual(0);
+	});
+
+    it('First player should win vertically', () => {
 		const part = new P4Rules();
 		part.choose(MoveX.get(3));
 		part.choose(MoveX.get(2));
@@ -21,20 +24,20 @@ describe('P4Rules', () => {
 		expect(part.getBoardValue(part.node)).toEqual(Number.MIN_SAFE_INTEGER);
 	});
 
-	it('should be an end game', () => {
+	it('Second player should win vertically', () => {
 		const part = new P4Rules();
-		part.choose(MoveX.get(6));
-		part.choose(MoveX.get(2));
+		part.choose(MoveX.get(0));
 		part.choose(MoveX.get(3));
 		part.choose(MoveX.get(2));
 		part.choose(MoveX.get(3));
 		part.choose(MoveX.get(2));
 		part.choose(MoveX.get(3));
 		part.choose(MoveX.get(2));
+		part.choose(MoveX.get(3));
 		expect(part.getBoardValue(part.node)).toEqual(Number.MAX_SAFE_INTEGER);
 	});
 
-	it('should be an end game', () => {
+	it('Should be an unfinished game', () => {
 		const part = new P4Rules();
 		part.choose(MoveX.get(3));
 		part.choose(MoveX.get(3));
@@ -49,7 +52,7 @@ describe('P4Rules', () => {
 		expect(part.getBoardValue(part.node)).toBeLessThan(Number.MAX_SAFE_INTEGER);
 	});
 
-	it('should be an end game', () => {
+	it('Should be an unfinished game', () => {
 		const part = new P4Rules();
 		part.choose(MoveX.get(3));
 		part.choose(MoveX.get(3));

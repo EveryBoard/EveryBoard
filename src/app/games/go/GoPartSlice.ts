@@ -19,7 +19,7 @@ export class GoPartSlice extends GamePartSlice {
 
     public readonly koCoord: Coord | null;
 
-    private readonly captured: number[];
+    public readonly captured: ReadonlyArray<number>;
 
     public readonly phase: Phase;
 
@@ -31,19 +31,15 @@ export class GoPartSlice extends GamePartSlice {
         this.koCoord = koCoord;
         this.phase = phase;
     }
-
     public getCapturedCopy(): number[] {
         return [this.captured[0], this.captured[1]];
     }
-
     public static getStartingBoard(): Pawn[][] {
         return GamePartSlice.createBiArray(GoPartSlice.WIDTH, GoPartSlice.HEIGHT, Pawn.EMPTY);
     }
-
     public getCopiedBoard(): Pawn[][] {
         return GamePartSlice.copyBiArray(this.board);
     }
-
     public static readonly WIDTH: number = 5;
 
     public static readonly HEIGHT: number = 5;

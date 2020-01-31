@@ -2,10 +2,6 @@ import {Component} from '@angular/core';
 import {P4PartSlice} from '../../../games/p4/P4PartSlice';
 import {MoveX} from '../../../jscaip/MoveX';
 import {P4Rules} from '../../../games/p4/P4Rules';
-import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from '../../../services/UserService';
-import {JoinerService} from '../../../services/JoinerService';
-import {GameService} from '../../../services/GameService';
 import {Move} from '../../../jscaip/Move';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -19,11 +15,11 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
 
 	/*************************** Common Fields **************************/
 
-	rules = new P4Rules();
+	public rules = new P4Rules();
 
-	imagesLocation = 'assets/images/';
+	public imagesLocation = 'assets/images/'; // TODO: make en commun to all
 
-	imagesNames: string[] = ['empty_circle.svg', 'yellow_circle.svg.png', 'brown_circle.svg.png'];
+	imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg', ];
 
 	lastX: number;
 

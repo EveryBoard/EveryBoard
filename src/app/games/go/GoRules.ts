@@ -2,7 +2,7 @@ import {Rules} from '../../jscaip/Rules';
 import {MNode} from '../../jscaip/MNode';
 import {Coord} from '../../jscaip/Coord';
 import {GoPartSlice, Pawn, Phase} from './GoPartSlice';
-import {DIRECTION, ORTHOGONALES} from 'src/app/jscaip/DIRECTION';
+import {Direction, Orthogonale} from 'src/app/jscaip/DIRECTION';
 import {GoMove} from './GoMove';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 import { GoLegalityStatus } from './GoLegalityStatus';
@@ -71,14 +71,14 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         if (GoRules.VERBOSE || LOCAL_VERBOSE) console.log("getCaptureState("+move+", " + goPartSlice.getCopiedBoard() + ")");
         let captureState: CaptureState = new CaptureState();
         let capturedInDirection: Coord[];
-        for (let direction of ORTHOGONALES) {
+        for (let direction of Orthogonale.ORTHOGONALES) {
             capturedInDirection = GoRules.getCapturedInDirection(move.coord, direction, goPartSlice);
             captureState.capturedCoords = captureState.capturedCoords.concat(capturedInDirection);
         }
         return captureState;
     }
 
-    public static getCapturedInDirection(coord: Coord, direction: DIRECTION, slice: GoPartSlice): Coord[] {
+    public static getCapturedInDirection(coord: Coord, direction: Direction, slice: GoPartSlice): Coord[] {
         const LOCAL_VERBOSE: boolean = false;
         let copiedBoard: number[][] = slice.getCopiedBoard();
         if (GoRules.VERBOSE || LOCAL_VERBOSE) console.log(coord + " tested in " + direction.x+","+direction.y+ " for "+copiedBoard);
@@ -86,7 +86,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         if (neightbooringCoord.isInRange(GoPartSlice.WIDTH, GoPartSlice.HEIGHT)) {
             let ennemi: Pawn = slice.turn%2 === 0 ? Pawn.WHITE : Pawn.BLACK;
             if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === ennemi) {
-                if (GoRules.VERBOSE || LOCAL_VERBOSE) console.log("un groupe pourrait être capturé");
+                if (GoRules.VERBOSE || LOCAL_VERBOSE) console.log("un groupe pourrait ï¿½tre capturï¿½");
                 let neightbooringGroup: GroupDatas = GoRules.getGroupDatas(neightbooringCoord, copiedBoard);
                 let koCoord: Coord = slice.koCoord;
                 if (GoRules.isCapturableGroup(neightbooringGroup, koCoord)) {
@@ -127,7 +127,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         let color: number = board[coord.y][coord.x];
         groupDatas = GroupDatas.addPawn(groupDatas, coord, color);
         if (color === groupDatas.color) {
-            for (let direction of ORTHOGONALES) {
+            for (let direction of Orthogonale.ORTHOGONALES) {
                 let nextCoord: Coord = coord.getNext(direction);
                 if (nextCoord.isInRange(GoPartSlice.WIDTH, GoPartSlice.HEIGHT)) {
                     if (!GroupDatas.countains(groupDatas, nextCoord)) {
@@ -391,7 +391,7 @@ class GroupDatas {
 
     public static addPawn(group: GroupDatas, coord: Coord, color: Pawn): GroupDatas {
         if (GroupDatas.countains(group, coord)) {
-            throw new Error("Ce groupe contient déjà " + coord);
+            throw new Error("Ce groupe contient dï¿½jï¿½ " + coord);
         }
         if (color === Pawn.BLACK) {
             group.blackCoords.push(coord);

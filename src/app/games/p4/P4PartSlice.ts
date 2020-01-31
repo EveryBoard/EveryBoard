@@ -2,11 +2,6 @@ import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import { Player } from 'src/app/jscaip/Player';
 
 export class P4PartSlice extends GamePartSlice {
-	// constructors :
-
-	// constructor() {
-	// super(getStartingBoard(), 0);
-	// }
 
 	constructor(b: number[][], turn: number) {
 		if (b == null) {
@@ -17,9 +12,8 @@ export class P4PartSlice extends GamePartSlice {
 
 	// statics :
 
-	static getStartingBoard(): number[][] {
+	public static getStartingBoard(): number[][] {
 		const board: number[][] = GamePartSlice.createBiArray(7, 6, Player.NONE.value);
 		return board;
 	}
-
 }

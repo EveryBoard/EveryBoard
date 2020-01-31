@@ -50,7 +50,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
     updateBoard(): void {
         const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice;
-        this.scores = awalePartSlice.captured;
+        this.scores = awalePartSlice.getCapturedCopy();
         const awaleMove: AwaleMove = this.rules.node.move;
 
         if (this.observerRole === 1) {

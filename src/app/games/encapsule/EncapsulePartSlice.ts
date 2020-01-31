@@ -4,20 +4,17 @@ import { Player } from "src/app/jscaip/Player";
 
 export class EncapsulePartSlice extends GamePartSlice {
 
-    readonly turn: number;
-
-    private readonly remainingPieces: EncapsulePiece[];
+    private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;
 
     constructor(board: number[][], turn: number, remainingPieces: EncapsulePiece[]) {
         super(board, turn);
+        if (remainingPieces == null) throw new Error("RemainingPieces cannot be null");
         this.remainingPieces = remainingPieces;
     }
-
     public getRemainingPiecesCopy(): EncapsulePiece[] {
         return GamePartSlice.copyArray(this.remainingPieces);
     }
-
-    static getStartingSlice(): EncapsulePartSlice {
+    public static getStartingSlice(): EncapsulePartSlice {
         const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
         const emptyNumber: number = emptyCase.encode();
         let startingBoard: number[][] = GamePartSlice.createBiArray(3, 3, emptyNumber);
@@ -37,33 +34,27 @@ export class EncapsulePartSlice extends GamePartSlice {
              EncapsulePiece.SMALL_BLACK,  EncapsulePiece.SMALL_BLACK,  EncapsulePiece.SMALL_WHITE,  EncapsulePiece.SMALL_WHITE];
         return new EncapsulePartSlice(startingBoard, 0, initialPieces);
     }
-
-    static pieceBelongToCurrentPlayer(piece: EncapsulePiece, turn: number): boolean {
+    public static pieceBelongToCurrentPlayer(piece: EncapsulePiece, turn: number): boolean {
         const pieceOwner: Player = EncapsuleMapper.toPlayer(piece);
         if (pieceOwner === Player.ZERO) return turn%2 === 0;
         if (pieceOwner === Player.ONE) return turn%2 === 1;
         return false;
     }
-
     public pieceBelongToCurrentPlayer(piece: EncapsulePiece): boolean {
         return EncapsulePartSlice.pieceBelongToCurrentPlayer(piece, this.turn);
     }
-
     public isDropable(piece: EncapsulePiece): boolean {
         if (!this.pieceBelongToCurrentPlayer(piece)) {
             return false;
         }
         return this.remainingPieces.some(p => p === piece);
     }
-
     public toCase(): EncapsuleCase[][] {
         return this.board.map(line => line.map(n => EncapsuleCase.decode(n))); // TODO: check no one do that twice
     }
-
-    static toNumberBoard(board: EncapsuleCase[][]): number[][] {
+    public static toNumberBoard(board: EncapsuleCase[][]): number[][] {
         return board.map(line => line.map(c => c.encode()));
     }
-
     public getPlayerRemainingPieces(player: Player): EncapsulePiece[] {
         return this.remainingPieces.filter(piece => this.pieceBelongToCurrentPlayer(piece));
     }
@@ -157,7 +148,7 @@ export class EncapsuleCase {
                this.medium.value*3 +
                this.big.value*9;
     }
-    static decode(encapsuleCase: number): EncapsuleCase {
+    public static decode(encapsuleCase: number): EncapsuleCase {
         if (encapsuleCase%1 !== 0) throw new Error("EncapsuleCase must be encoded as integer: " + encapsuleCase);
         if (encapsuleCase < 0) throw new Error("To small representation for EncapsuleCase: " + encapsuleCase);
         if (encapsuleCase > 26) throw new Error("To big representation for EncapsuleCase: " + encapsuleCase);

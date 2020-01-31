@@ -1,14 +1,13 @@
 import { Rules } from '../../jscaip/Rules';
 import { MNode } from 'src/app/jscaip/MNode';
-import { Move } from 'src/app/jscaip/Move';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { EncapsulePartSlice, EncapsuleCase } from './EncapsulePartSlice';
 import { EncapsuleMove } from './EncapsuleMove';
-import { EncapsulePiece, Player, EncapsuleMapper } from './EncapsuleEnums';
+import { EncapsulePiece, EncapsuleMapper } from './EncapsuleEnums';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 import { Sets } from 'src/app/collectionlib/Sets';
 import { EncapsuleLegalityStatus } from './EncapsuleLegalityStatus';
+import { Player } from 'src/app/jscaip/Player';
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
@@ -138,9 +137,8 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (EncapsuleRules.isVictory(slice)) {
             return moves;
         }
-        const newTurn: number = slice.turn + 1;
         const newBoard: EncapsuleCase[][] = slice.toCase();
-        const currentPlayer: Player = slice.turn % 2;
+        const currentPlayer: Player = slice.getCurrentPlayer();
         const puttablePieces: EncapsulePiece[] = Sets.toNumberSet(slice.getPlayerRemainingPieces(currentPlayer));
         for (let y=0; y<3; y++) {
             for (let x=0; x<3; x++) {

@@ -22,7 +22,7 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         };
     }
 
-    constructor(initialBoard: number[][]) {
+    constructor(initialBoard: ReadonlyArray<ReadonlyArray<number>>) {
         super();
         MinimaxTestingPartSlice.initialBoard = initialBoard;
         this.node = MNode.getFirstNode(

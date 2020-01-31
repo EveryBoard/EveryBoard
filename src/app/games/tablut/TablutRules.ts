@@ -1,4 +1,4 @@
-import {DIRECTION, ORTHOGONALE, ORTHOGONALES, Direction} from '../../jscaip/DIRECTION';
+import {Orthogonale, Direction} from '../../jscaip/DIRECTION';
 import {Rules} from '../../jscaip/Rules';
 import {Coord} from '../../jscaip/Coord';
 import {MNode} from '../../jscaip/MNode';
@@ -24,7 +24,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         board[depart.y][depart.x] = TablutPartSlice.UNOCCUPIED; // suppression du pr�c�dent
         const captureds: Coord[] = [];
         let captured: Coord;
-        for (const d of ORTHOGONALES) {
+        for (const d of Orthogonale.ORTHOGONALES) {
             if (TablutRules.VERBOSE) {
                 console.log('tryCapture from tryMove(' + move + ') with direction (' + d.x + ', ' + d.y + ')');
             }
@@ -88,7 +88,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         board[depart.y][depart.x] = TablutPartSlice.UNOCCUPIED; // suppression du pr�c�dent
         const captureds: Coord[] = [];
         let captured: Coord;
-        for (const d of ORTHOGONALES) {
+        for (const d of Orthogonale.ORTHOGONALES) {
             if (TablutRules.VERBOSE) {
                 console.log('tryCapture from tryMove(' + move + ') with direction (' + d.x + ', ' + d.y + ')');
             }
@@ -134,7 +134,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
 
         const dir: Direction = move.coord.getDirectionToward(move.end);
-        if (dir == null) {
+        if (move.coord.equals(move.end)) {
             return this.IMMOBILE_MOVE_ERROR;
         }
 
@@ -152,7 +152,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return this.SUCCESS;
     }
 
-    private static tryCapture(player: 0|1, invaderStart: boolean, landingPawn: Coord, d: ORTHOGONALE, board: number[][]): Coord {
+    private static tryCapture(player: 0|1, invaderStart: boolean, landingPawn: Coord, d: Orthogonale, board: number[][]): Coord {
         const localVerbose = false;
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
@@ -180,7 +180,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return (piece === TablutPartSlice.PLAYER_ZERO_KING) || (piece === TablutPartSlice.PLAYER_ONE_KING);
     }
 
-    private static captureKing(player: 0|1, invaderStart: boolean, landingPiece: Coord, d: ORTHOGONALE, board: number[][]): Coord {
+    private static captureKing(player: 0|1, invaderStart: boolean, landingPiece: Coord, d: Orthogonale, board: number[][]): Coord {
         /* the king is the next coord after c (in direction d)
          * the landingPiece partipate in the capture
          *
@@ -282,7 +282,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return null;
     }
 
-    private static capturePawn(player: 0|1, invaderStart: boolean, c: Coord, d: ORTHOGONALE, board: number[][]): Coord {
+    private static capturePawn(player: 0|1, invaderStart: boolean, c: Coord, d: Orthogonale, board: number[][]): Coord {
         /* the pawn is the next coord after c (in direction d)
          * c partipate in the capture
          *
@@ -455,7 +455,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const destinations: Coord[] = [];
         let endFound: boolean;
         let foundDestination: Coord;
-        for (const dir of ORTHOGONALES) {
+        for (const dir of Orthogonale.ORTHOGONALES) {
             // we look for empty existing destinations in each direction as far as we can
             foundDestination = depart;
             endFound = false;

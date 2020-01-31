@@ -2,19 +2,16 @@ import {GamePartSlice} from '../../jscaip/GamePartSlice';
 
 export class AwalePartSlice extends GamePartSlice {
 
-	captured = [0, 0];
-
-	constructor(b: number[][], turn: number, captured: number[]) {
+	constructor(b: number[][], turn: number, public captured: ReadonlyArray<number>) {
 		super(b, turn);
-		this.captured = captured;
+		if (captured == null) throw new Error("Captured cannot be null");
+		if (captured.length !== 2) throw new Error("Captured must be of length 2");
 	}
-
-	static getStartingBoard(): number[][] {
+	public static getStartingBoard(): number[][] {
 		const board: number[][] = GamePartSlice.createBiArray(6, 2, 4);
 		return board;
 	}
-
-	getCapturedCopy(): number[] {
+	public getCapturedCopy(): number[] {
 		return [this.captured[0], this.captured[1]];
 	}
 }

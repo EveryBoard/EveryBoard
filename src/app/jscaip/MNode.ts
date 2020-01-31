@@ -6,34 +6,34 @@ import { MGPMap } from '../collectionlib/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
 
 export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
-	// TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
-	// TODO: choose ONE commenting langage, for fuck's sake.
-	// TODO: check for the proper use of LinkedList to optimise the stuff
-    // TODO: quand l'IA a tout ses choix à égalité de bestHopedValue, elle doit départager par moyenne
+    // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
+    // TODO: choose ONE commenting langage, for fuck's sake.
+    // TODO: check for the proper use of LinkedList to optimise the stuff
+    // TODO: quand l'IA a tout ses choix ï¿½ ï¿½galitï¿½ de bestHopedValue, elle doit dï¿½partager par moyenne
 
     // static fields
 
-    static NB_NODE_CREATED = 0;
+    public static NB_NODE_CREATED = 0;
 
-	static VERBOSE = false;
+    public static VERBOSE = false;
 
-	static ruler: Rules<Move, GamePartSlice, LegalityStatus>;
-	/* Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de règles
+    public static ruler: Rules<Move, GamePartSlice, LegalityStatus>;
+    /* Permet d'obtenir les donnï¿½es propre au jeu et non au minimax, ruler restera l'unique instance d'un set de rï¿½gles
     */
 
-	/* Exemples d'états théorique d'un Node (cours)
-    * Feuille - stérile: n'as pas d'enfant après un calcul
+    /* Exemples d'ï¿½tats thï¿½orique d'un Node (cours)
+    * Feuille - stï¿½rile: n'as pas d'enfant aprï¿½s un calcul
     * Feuille - bourgeon: n'as pas d'enfant avant un calcul
     * Une branche
-    * Le tronc (la mère)
+    * Le tronc (la mï¿½re)
     */
 
-	// instance fields:
+    // instance fields:
 
     public readonly mother: MNode<R, M, S, L> | null;
-	/* the node from which we got on this Node
+    /* the node from which we got on this Node
     * null si: plateau initial
-    *: plateau récupéré sans historique
+    *: plateau rï¿½cupï¿½rï¿½ sans historique
     *
     * une Node sinon
     */
@@ -45,7 +45,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
     public readonly ownValue: number;
 
     private childs: (MNode<R, M, S, L>[]) | null = null;
-	/* null si: on as pas encore crée les potentiels enfant de cette Node
+    /* null si: on as pas encore crï¿½e les potentiels enfant de cette Node
     * et donc naturellement si c'est une feuille (depth = 0)
     *
     * une ArrayList vide si: c'est une fin de partie (et donc une feuille)
@@ -54,12 +54,12 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
     */
 
     private hopedValue: number | null = null;
-	/* if it's a leaf: its own board value
+    /* if it's a leaf: its own board value
     * else: the board value of this node best descendant
     */
 
-	private depth = -1;
-	/* allow us to locate the place/status of the node in the decision tree
+    private depth = -1;
+    /* allow us to locate the place/status of the node in the decision tree
     * if depth === - 1:
     * recently created Node
     * if depth === 0:
@@ -68,16 +68,15 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
     * just calculated Node
     */
 
-	// statics methods:
+    // statics methods:
 
-    static mod(turn: number): number {
+    public static mod(turn: number): number {
         /* return - 1 if it's player 0's turn
          * return + 1 if it's player 1's turn
          */
         return (turn % 2) * 2 - 1;
     }
-
-    static getScoreStatus(score: number): SCORE {
+    public static getScoreStatus(score: number): SCORE {
         /* the score status is VICTORY if the score is minValue or MaxValue,
          * because it's how we encode the boardValue if there's a victory
          */
@@ -99,13 +98,11 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         }
         return SCORE.DEFAULT;
     }
-
-    static getFirstNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> (initialBoard: S, gameRuler: R) {
-        MNode.ruler = gameRuler; // pour toutes les node, gameRuler sera le référent
+    public static getFirstNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> (initialBoard: S, gameRuler: R) {
+        MNode.ruler = gameRuler; // pour toutes les node, gameRuler sera le rï¿½fï¿½rent
         return new MNode(null, null, initialBoard);
     }
-
-	// instance methods:
+    // instance methods:
 
     constructor(mother: MNode<R, M, S, L> | null, move: M | null, slice: S) {
         /* Initialisation condition:
@@ -126,37 +123,34 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
             // console.log(mother);
         }
         MNode.NB_NODE_CREATED += 1;
-	}
+    }
+    public getNodeStatus(): String {
+        const mother: String = this.mother === null ? 'mother' : 'node';
 
-	public getNodeStatus(): String {
-		const mother: String = this.mother === null ? 'mother' : 'node';
+        let fertility: String;
+        if (this.childs === null) {
+            fertility = 'no - child - yet';
+        } else if (this.childs.length === 0) {
+            fertility = 'sterile';
+        } else {
+            fertility = 'have - child';
+        }
 
-		let fertility: String;
-		if (this.childs === null) {
-			fertility = 'no - child - yet';
-		} else if (this.childs.length === 0) {
-			fertility = 'sterile';
-		} else {
-			fertility = 'have - child';
-		}
+        let calculated: String;
+        if (this.hopedValue === null) {
+            calculated = 'uncalculated';
+        }
+        if (this.hopedValue !== null) {
+            calculated = 'calculation - done';
+        }
 
-		let calculated: String;
-		if (this.hopedValue === null) {
-			calculated = 'uncalculated';
-		}
-		if (this.hopedValue !== null) {
-			calculated = 'calculation - done';
-		}
-
-		return mother + ' ' + fertility + ' ' + calculated;
-	}
-
+        return mother + ' ' + fertility + ' ' + calculated;
+    }
     public findBestMoveAndSetDepth(readingDepth: number): MNode<R, M, S, L> {
         if (MNode.VERBOSE) console.log("findBestMoveAndSetDepth(" + readingDepth + ") = " + this.gamePartSlice.toString() + " => " + this.ownValue);
         this.depth = readingDepth;
         return this.findBestMove();
     }
-
     public findBestMove(): MNode<R, M, S, L> {
         const LOCAL_VERBOSE: boolean = false;
         if (this.isLeaf()) {
@@ -189,146 +183,139 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('has Calculate Childs Value');
         return this.setBestChild();
     }
-
     public createChilds() {
         /* Conditions obtenues avant de lancer:
          * 1. this.childs === null
          *
-         * Chose nécessaire:
-         * Demander à l'instance de Rules de calculer (pour this) tout les mouvement légaux
+         * Chose nï¿½cessaire:
+         * Demander ï¿½ l'instance de Rules de calculer (pour this) tout les mouvement lï¿½gaux
          * (avec ceux ci, doit - on avoir une liste de Node contenant en eux .move
          *
          * 1. Getter le dico < MoveX, Board > provenant du IRules
          *
          * 2. Pour chacun d'entre eux
-         * a. setter sa mother à  this // via constructeur
-         * b. setter sa childs à  null // AUTOMATIQUE
-         * c. setter sa bestChild à  null // AUTOMATIQUE
-         * d. moveX est donc reçu de la classe Rules // via constructeur
-         * e. board est aussi reçu de la classe Rules // via constructeur
-         * f. setter sa value à null // AUTOMATIQUE
-         * g. l'ajouter à this.childs
-         * h. ne rien changer à sa depth avant que la Node ne soit calculé
+         * a. setter sa mother ï¿½ this // via constructeur
+         * b. setter sa childs ï¿½ null // AUTOMATIQUE
+         * c. setter sa bestChild ï¿½ null // AUTOMATIQUE
+         * d. moveX est donc reï¿½u de la classe Rules // via constructeur
+         * e. board est aussi reï¿½u de la classe Rules // via constructeur
+         * f. setter sa value ï¿½ null // AUTOMATIQUE
+         * g. l'ajouter ï¿½ this.childs
+         * h. ne rien changer ï¿½ sa depth avant que la Node ne soit calculï¿½
          */
         if (this.childs != null) throw new Error("multiple node childs calculation error");
-		const LOCAL_VERBOSE = false;
-		const moves: MGPMap<M, S> = MNode.ruler.getListMoves(this) as MGPMap<M, S>;
-		this.childs = new Array<MNode<R, M, S, L>>();
-		if (MNode.VERBOSE || LOCAL_VERBOSE) {
-			console.log('createChilds received listMoves from ruler');
-			console.log(moves);
-		}
+        const LOCAL_VERBOSE = false;
+        const moves: MGPMap<M, S> = MNode.ruler.getListMoves(this) as MGPMap<M, S>;
+        this.childs = new Array<MNode<R, M, S, L>>();
+        if (MNode.VERBOSE || LOCAL_VERBOSE) {
+            console.log('createChilds received listMoves from ruler');
+            console.log(moves);
+        }
         for (let i=0; i<moves.size(); i++) {
             const entry = moves.get(i);
-			if (MNode.VERBOSE || LOCAL_VERBOSE) {
-				console.log('in the loop');
-				console.log(entry);
-			}
-			const move: M = entry.key;
-			const slice: S = entry.value;
-			if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('move and board retrieved from the entry');
+            if (MNode.VERBOSE || LOCAL_VERBOSE) {
+                console.log('in the loop');
+                console.log(entry);
+            }
+            const move: M = entry.key;
+            const slice: S = entry.value;
+            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('move and board retrieved from the entry');
 
-			const child: MNode<R, M, S, L> = new MNode<R, M, S, L>(this, move, slice);
-			if (MNode.VERBOSE || LOCAL_VERBOSE) {
-				console.log('child created');
-				console.log(child);
-			}
-			this.childs.push(child);
-		}
+            const child: MNode<R, M, S, L> = new MNode<R, M, S, L>(this, move, slice);
+            if (MNode.VERBOSE || LOCAL_VERBOSE) {
+                console.log('child created');
+                console.log(child);
+            }
+            this.childs.push(child);
+        }
 
         if (MNode.VERBOSE || LOCAL_VERBOSE) {
             console.log('out of the loop');
             if (this.isEndGame()) console.log('Node.createChilds has found a endGame');
         }
-	}
-
+    }
     private calculateChildsValue() {
         /* Condition d'appel
-         * - les enfants sont déjÃ  crées
-         * - ils ne sont pas forcément calculé, mais si on l'appel c'est que le calcul n'est plus valable
+         * - les enfants sont dï¿½jÃ  crï¿½es
+         * - ils ne sont pas forcï¿½ment calculï¿½, mais si on l'appel c'est que le calcul n'est plus valable
          * - la Node n'est pas une feuille
          */
         if (this.childs == null) {
             throw new Error("theses childs should have been calculated");
-		}
-		for (const child of this.childs) {
-			child.findBestMoveAndSetDepth(this.depth - 1);
-		}
-	}
+        }
+        for (const child of this.childs) {
+            child.findBestMoveAndSetDepth(this.depth - 1);
+        }
+    }
+    private setBestChild(): MNode<R, M, S, L> | null {
+        /* return the the best child in the child list
+         * use condition: childs is not empty
+         */
+        if (this.gamePartSlice.turn % 2 === 0) {
+            return this.setMinChild();
+        } else {
+            return this.setMaxChild();
+        }
+    }
+    private setMinChild(): MNode<R, M, S, L> | null {
+        /* return the 'minimal' child
+         * update the best hoped value
+         * ( best for player 0 ! )
+         * use condition: childs is not empty
+         */
+        if (this.childs == null) {
+            return null;
+        }
+        let minValue: number = Number.MAX_SAFE_INTEGER;
+        let minNode: MNode<R, M, S, L> = this.childs[0];
 
-	private setBestChild(): MNode<R, M, S, L> | null {
-		/* return the the best child in the child list
-       * use condition: childs is not empty
-       */
-		if (this.gamePartSlice.turn % 2 === 0) {
-			return this.setMinChild();
-		} else {
-			return this.setMaxChild();
-		}
-	}
+        for (const child of this.childs) {
+            if (child.hopedValue < minValue || (child.hopedValue === minValue && Math.random() < 0.5)) {
+                minNode = child;
+                minValue = minNode.hopedValue;
+                if (minValue === Number.MIN_SAFE_INTEGER) {
+                    break;
+                } // TODO: poirer iï¿½i, si j'ai trouvï¿½ une victoire je peux supprimer les enfants et ma hopedValue ne changera plus !!!
+            }
+        }
+        this.hopedValue = minValue;
+        return minNode;
+    }
+    private setMaxChild(): MNode<R, M, S, L> | null {
+        /* return the 'maximal' child
+         * set the index of the best child in this.bestChild
+         * and set its value
+         * ( best fort player 1 ! )
+         * use condition: childs is not empty
+         */
 
-	private setMinChild(): MNode<R, M, S, L> | null {
-		/* return the 'minimal' child
-       * update the best hoped value
-       * ( best for player 0 ! )
-       * use condition: childs is not empty
-       */
-		if (this.childs == null) {
-			return null;
-		}
-		let minValue: number = Number.MAX_SAFE_INTEGER;
-		let minNode: MNode<R, M, S, L> = this.childs[0];
+        if (!this.childs) {
+            return null;
+        }
+        let maxValue: number = Number.MIN_SAFE_INTEGER;
+        let maxNode: MNode<R, M, S, L> = this.childs[0];
 
-		for (const child of this.childs) {
-			if (child.hopedValue < minValue || (child.hopedValue === minValue && Math.random() < 0.5)) {
-				minNode = child;
-				minValue = minNode.hopedValue;
-				if (minValue === Number.MIN_SAFE_INTEGER) {
-					break;
-				} // TODO: poirer içi, si j'ai trouvé une victoire je peux supprimer les enfants et ma hopedValue ne changera plus !!!
-			}
-		}
-		this.hopedValue = minValue;
-		return minNode;
-	}
-
-	private setMaxChild(): MNode<R, M, S, L> | null {
-		/* return the 'maximal' child
-       * set the index of the best child in this.bestChild
-       * and set its value
-       * ( best fort player 1 ! )
-       * use condition: childs is not empty
-       */
-
-		if (!this.childs) {
-			return null;
-		}
-		let maxValue: number = Number.MIN_SAFE_INTEGER;
-		let maxNode: MNode<R, M, S, L> = this.childs[0];
-
-		for (const child of this.childs) {
-			if (child.hopedValue > maxValue || (child.hopedValue === maxValue && Math.random() < 0.5)) {
-				maxNode = child;
-				maxValue = maxNode.hopedValue;
-				if (maxValue === Number.MAX_SAFE_INTEGER) {
-					break;
-				}
-			}
-		}
-		this.hopedValue = maxValue;
-		return maxNode;
-	}
-
-	public isLeaf(): boolean {
-		if (this.depth === 0) {
-			// we've reach the end of calculation here, so it's a leaf - by calculation limit
-			return true;
-		} else {
-			// it's a leaf - by rules
-			return this.isEndGame();
-		}
-	}
-
+        for (const child of this.childs) {
+            if (child.hopedValue > maxValue || (child.hopedValue === maxValue && Math.random() < 0.5)) {
+                maxNode = child;
+                maxValue = maxNode.hopedValue;
+                if (maxValue === Number.MAX_SAFE_INTEGER) {
+                    break;
+                }
+            }
+        }
+        this.hopedValue = maxValue;
+        return maxNode;
+    }
+    public isLeaf(): boolean {
+        if (this.depth === 0) {
+            // we've reach the end of calculation here, so it's a leaf - by calculation limit
+            return true;
+        } else {
+            // it's a leaf - by rules
+            return this.isEndGame();
+        }
+    }
     public getSonByMove(move: M): MNode<R, M, S, L> | null {
         if (this.childs == null) {
             throw new Error("Cannot get son of uncalculated node");
@@ -340,19 +327,16 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         }
         return null;
     }
-
-	public getInitialNode(): MNode<R, M, S, L> {
-		let allmightyMom: MNode<R, M, S, L> = this;
-		while (allmightyMom.mother !== null) {
-			allmightyMom = allmightyMom.mother;
-		}
-		return allmightyMom;
-	}
-
-	public getHopedValue(): number | null {
-		return this.hopedValue;
-	}
-
+    public getInitialNode(): MNode<R, M, S, L> {
+        let allmightyMom: MNode<R, M, S, L> = this;
+        while (allmightyMom.mother !== null) {
+            allmightyMom = allmightyMom.mother;
+        }
+        return allmightyMom;
+    }
+    public getHopedValue(): number | null {
+        return this.hopedValue;
+    }
     public myToString(): String {
         return this +
             ' [mother = ' + this.mother +
@@ -362,12 +346,6 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
             ', hopedValue = ' + this.hopedValue +
             ', depth = ' + this.depth + ']';
     }
-
-	/* public boolean isEndGame() { // version without prints
-    if (getScoreStatus(this.ownValue) === SCORE.VICTORY) return true;
-    return ((this.childs !== null) && (this.childs.isEmpty()));
-   } */
-
     public isEndGame(): boolean {
         const LOCAL_VERBOSE = false;
 
@@ -394,29 +372,25 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('MNode.isEndGame : no (childs and normal score)');
         return false;
     }
-
-	public hasMoves(): boolean {
-		return this.childs !== null;
-	}
-
-	// débug
-
-	public countDescendants(): number {
-		if (this.childs === null) {
-			return 0;
-		}
-		let nbDescendants: number = this.childs.length;
-		if (nbDescendants === 0) {
-			return 0;
-		}
-		for (const son of this.childs) {
-			nbDescendants += son.countDescendants();
-		}
-		return nbDescendants;
-	}
-
-	public keepOnlyChoosenChild(choix: MNode<R, M, S, L>) {
-		this.childs = new Array<MNode<R, M, S, L>>();
-		this.childs.push(choix);
-	}
+    public hasMoves(): boolean {
+        return this.childs !== null;
+    }
+    // dÃ©bug
+    public countDescendants(): number {
+        if (this.childs === null) {
+            return 0;
+        }
+        let nbDescendants: number = this.childs.length;
+        if (nbDescendants === 0) {
+            return 0;
+        }
+        for (const son of this.childs) {
+            nbDescendants += son.countDescendants();
+        }
+        return nbDescendants;
+    }
+    public keepOnlyChoosenChild(choix: MNode<R, M, S, L>) {
+        this.childs = new Array<MNode<R, M, S, L>>();
+        this.childs.push(choix);
+    }
 }

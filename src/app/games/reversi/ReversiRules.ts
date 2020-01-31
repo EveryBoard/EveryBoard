@@ -2,7 +2,7 @@ import {Rules} from '../../jscaip/Rules';
 import {MNode} from '../../jscaip/MNode';
 import {ReversiPartSlice} from './ReversiPartSlice';
 import {Coord} from '../../jscaip/Coord';
-import {DIRECTION, DIRECTIONS} from '../../jscaip/DIRECTION';
+import {Direction} from '../../jscaip/DIRECTION';
 import { ReversiMove } from './ReversiMove';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 import { ReversiLegalityStatus } from './ReversiLegalityStatus';
@@ -42,7 +42,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             ennemy = Player.ZERO.value;
         }
         // console.log(player + ' essaye de capturer');
-        for (const direction of DIRECTIONS) {
+        for (const direction of Direction.DIRECTIONS) {
             const firstCase: Coord = move.coord.getNext(direction);
             if (firstCase.isInRange(ReversiPartSlice.BOARD_WIDTH, ReversiPartSlice.BOARD_HEIGHT)) {
                 if (board[firstCase.y][firstCase.x] === ennemy) {
@@ -57,7 +57,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         // console.log(move + ' : switched : ' + switcheds);
         return switcheds;
     }
-    public static getSandwicheds(capturer: number, direction: DIRECTION, start: Coord, board: number[][]): Coord[] {
+    public static getSandwicheds(capturer: number, direction: Direction, start: Coord, board: number[][]): Coord[] {
         /* expected that 'start' is in range, and is captured
          * if we don't reach another capturer, returns []
          * else : return all the coord between start and the first 'capturer' found (exluded)
