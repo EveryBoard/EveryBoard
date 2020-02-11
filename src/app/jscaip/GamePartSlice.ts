@@ -18,7 +18,6 @@ export abstract class GamePartSlice {
         this.board = board;
         this.turn = turn;
     }
-
     // Statics:
 
     public static setAllValueTo(board: number[][], value: number) {
@@ -73,7 +72,6 @@ export abstract class GamePartSlice {
         }
         return retour;
     }
-
     // Getters
 
     public getBoardByXY(x: number, y: number): number {
@@ -82,7 +80,6 @@ export abstract class GamePartSlice {
     public getBoardAt(c: Coord): number {
         return this.board[c.y][c.x];
     }
-
     // Methods:
 
     public getCopiedBoard(): number[][] {

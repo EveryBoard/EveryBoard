@@ -1,4 +1,4 @@
-import {Component, ComponentFactoryResolver, OnInit} from '@angular/core';
+import {Component, ComponentFactoryResolver, OnInit, AfterViewChecked, AfterContentInit, AfterViewInit, AfterContentChecked} from '@angular/core';
 import {GameWrapper} from '../GameWrapper';
 import {Move} from '../../../jscaip/Move';
 import {ActivatedRoute, Router} from '@angular/router';
@@ -11,9 +11,9 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
 })
-export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
+export class LocalGameWrapperComponent extends GameWrapper {
 
-    static VERBOSE = false;
+    static VERBOSE = true;
 
     aiDepth = 2; // TODO: make that a choice of user
 
@@ -25,13 +25,13 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
                 userService: UserService) {
         super(componentFactoryResolver, actRoute, router, userService);
     }
-
-    ngOnInit() {
+    ngAfterContentInit() { // OLDLY ngOnInit
         const currentUser: string = this.userService.getCurrentUser();
         this.players = [currentUser, currentUser];
+        console.log("localGameWrapper.ngAfterContentInit");
+        console.log({compo: this.gameCompo});
         this.afterGameComponentViewProbablyInit();
     }
-
     onValidUserMove(move: Move) {
         if (LocalGameWrapperComponent.VERBOSE) {
             console.log('LocalGameWrapperComponent.onValidUserMove');
@@ -40,7 +40,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
         this.componentInstance.updateBoard();
         this.proposeAIToPlay();
     }
-
     proposeAIToPlay() {
         // check if ai's turn has come, if so, make her start after a delay
         const turn = this.componentInstance.rules.node.gamePartSlice.turn % 2;
@@ -57,20 +56,16 @@ export class LocalGameWrapperComponent extends GameWrapper implements OnInit {
             }, this.botTimeOut);
         }
     }
-
     switchPlayerOne() { // totally adaptable to other Rules
         this.switchPlayer(0);
     }
-
     switchPlayerTwo() { // totally adaptable to other Rules
         this.switchPlayer(1);
     }
-
     switchPlayer(n: 0|1) {
         this.players[n] = this.players[n] === 'bot' ? this.userService.getCurrentUser() : 'bot';
         this.proposeAIToPlay();
     }
-
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
         return this.componentInstance;
     }

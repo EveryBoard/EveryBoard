@@ -8,10 +8,10 @@ export class ReversiPartSlice extends GamePartSlice {
 
     public static readonly BOARD_HEIGHT = 8; // default
 
-    public readonly turn: number;
-
     public static getStartingBoard(): number[][] {
-        const board: number[][] = GamePartSlice.createBiArray(8, 8, Player.NONE.value);
+        const board: number[][] = GamePartSlice.createBiArray(ReversiPartSlice.BOARD_WIDTH,
+                                                              ReversiPartSlice.BOARD_HEIGHT,
+                                                              Player.NONE.value);
         board[3][3] = Player.ZERO.value;
         board[4][4] = Player.ZERO.value;
         board[3][4] = Player.ONE.value;

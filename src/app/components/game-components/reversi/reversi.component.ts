@@ -1,10 +1,6 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import {ReversiRules} from '../../../games/reversi/ReversiRules';
-import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from '../../../services/UserService';
-import {JoinerService} from '../../../services/JoinerService';
-import {GameService} from '../../../services/GameService';
 import {ReversiPartSlice} from '../../../games/reversi/ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
@@ -17,7 +13,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
     static VERBOSE = false;
 
-    rules = new ReversiRules();
+    public rules = new ReversiRules();
 
     imagesLocation = 'assets/images/'; // en prod
     // imagesLocation = 'src/assets/images/'; // en dev
@@ -62,15 +58,12 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
             }
         }
     }
-
     decodeMove(encodedMove: number): ReversiMove {
         return ReversiMove.decode(encodedMove);
     }
-
     encodeMove(move: ReversiMove): number {
         return move.encode();
     }
-
     updateBoard(): void {
         if (ReversiComponent.VERBOSE) {
             console.log('updateBoard');

@@ -1,0 +1,17 @@
+<div id="gameboard">
+    <table>
+        <tr *ngFor="let line of board; index as y">
+            <td *ngFor="let c of line; index as x"
+                style="position:relative"
+                (click)="onBoardClick(x, y)">
+                <img *ngIf="isHighlightedCoord(x, y)"
+                     width="50" height="50"
+                     alt="highlighted"
+                     style="position:absolute; top:0; left:0;"
+                     [src]="imageLocation+'squared_highlight.svg'">
+                <img width="50" height="50"
+                     [src]="imagesLocation+'siam/'+imagesNames[c]+'.svg'">
+            </td>
+        </tr>
+    </table>
+</div>

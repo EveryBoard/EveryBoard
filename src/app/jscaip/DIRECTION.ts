@@ -54,7 +54,13 @@ export class Direction {
         }
     }
     public static equals(first: Direction, second: Direction): boolean {
-        return (first.x === second.x) && (first.y === second.y);
+        if (first == null) {
+            if (second == null) return true;
+            else return false;
+        } else {
+            if (second == null) return false;
+            return (first.x === second.x) && (first.y === second.y);
+        }
     }
     public static isOrthogonal(d: Direction): boolean {
         return (d.x === 0) || (d.y === 0);

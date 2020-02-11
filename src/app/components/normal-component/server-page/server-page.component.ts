@@ -27,6 +27,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                                        'P4',
                                        'Quarto',
                                        'Reversi',
+                                       'Siam',
                                        'Tablut'];
 	selectedGame: string;
 	userName: string;

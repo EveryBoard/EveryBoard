@@ -43,6 +43,7 @@ import {QuartoComponent} from './components/game-components/quarto/quarto.compon
 import {ReversiComponent} from './components/game-components/reversi/reversi.component';
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
 import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
+import { SiamComponent } from './components/game-components/siam/siam.component';
 
 const routes: Route [] = [
     {path: 'login',             component: LoginComponent},
@@ -82,6 +83,7 @@ const routes: Route [] = [
         P4Component,
         QuartoComponent,
         ReversiComponent,
+        SiamComponent,
         TablutComponent,
     ],
     entryComponents: [
@@ -92,6 +94,7 @@ const routes: Route [] = [
         P4Component,
         QuartoComponent,
         ReversiComponent,
+        SiamComponent,
         TablutComponent,
 
         CountDownComponent, // TODO: figure out if needed

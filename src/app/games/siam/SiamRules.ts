@@ -64,14 +64,16 @@ export class SiamRules extends _SiamRules {
         throw new Error("Cannot get insertedPiece of a coord inside the board");
     }
     public isLegalForwarding(move: SiamMove, slice: SiamPartSlice, firstPiece: number): SiamLegalityStatus {
+        console.log("isLegalForwarding with:");
+        console.log({move, slice, firstPiece});
         let resultingBoard: number[][] = slice.getCopiedBoard();
-        let currentCoord: Coord = move.coord;
         let currentPiece: number = firstPiece;
         if (!SiamPiece.belongTo(currentPiece, slice.getCurrentPlayer())) {
             return SiamRules.ILLEGAL;
         }
-        let previousPiece: number = SiamPiece.EMPTY.value;
         const pushingDir: Direction = SiamPiece.getNullableDirection(currentPiece);
+        let currentCoord: Coord = move.coord.getNext(pushingDir);
+        let previousPiece: number = SiamPiece.EMPTY.value;
         let currentDirection: Direction = pushingDir;
         const resistingDir: Direction = Direction.getOpposite(pushingDir);
         let lineFullyMoved : boolean;
@@ -82,9 +84,10 @@ export class SiamRules extends _SiamRules {
                 pushing++;
             else if (Direction.equals(resistingDir, currentDirection)) 
                 resisting++;
+            console.log({currentCoord, pushingDir});
             resultingBoard[currentCoord.y][currentCoord.x] = previousPiece;
-            previousPiece = currentPiece;
             currentCoord = currentCoord.getNext(pushingDir);
+            previousPiece = currentPiece;
             currentPiece = slice.getBoardAt(currentCoord);
             currentDirection = SiamPiece.getNullableDirection(currentPiece);
             lineFullyMoved = !currentCoord.isInRange(5, 5) || currentPiece === SiamPiece.EMPTY.value;

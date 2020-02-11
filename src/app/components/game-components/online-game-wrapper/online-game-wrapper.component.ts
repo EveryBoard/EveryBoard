@@ -1,10 +1,4 @@
-import {
-	Component,
-	ComponentFactoryResolver,
-	OnDestroy,
-	OnInit,
-	ViewChild
-} from '@angular/core';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, AfterViewInit, AfterViewChecked, AfterContentChecked, AfterContentInit } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Move} from '../../../jscaip/Move';
 import {GameService} from '../../../services/GameService';
@@ -22,15 +16,28 @@ import {GameWrapper} from '../GameWrapper';
 	templateUrl: './online-game-wrapper.component.html',
     styleUrls: ['./online-game-wrapper.component.css']
 })
-export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, OnDestroy {
+export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked, AfterContentChecked, AfterContentInit {
+    ngAfterContentInit(): void {
+        console.log({afterContentInit: this.gameCompo});
+    }
+    ngAfterViewInit(): void {
+        console.log({afterViewInit: this.gameCompo});
+    }
+    ngAfterViewChecked(): void {
+        console.log({afterViewChecked: this.gameCompo});
+    }
+    ngAfterContentChecked(): void {
+        console.log({afterContentChecked: this.gameCompo});
+    } // OnInit {
+
 
 	static VERBOSE = false;
 
 	// GameWrapping's Template
-	@ViewChild('chronoZeroGlobal', {static: true}) chronoZeroGlobal: CountDownComponent;
-	@ViewChild('chronoOneGlobal', {static: true}) chronoOneGlobal: CountDownComponent;
-	@ViewChild('chronoZeroLocal', {static: true}) chronoZeroLocal: CountDownComponent;
-	@ViewChild('chronoOneLocal', {static: true}) chronoOneLocal: CountDownComponent;
+	@ViewChild('chronoZeroGlobal', {static: false}) chronoZeroGlobal: CountDownComponent;
+	@ViewChild('chronoOneGlobal', {static: false}) chronoOneGlobal: CountDownComponent;
+	@ViewChild('chronoZeroLocal', {static: false}) chronoZeroLocal: CountDownComponent;
+	@ViewChild('chronoOneLocal', {static: false}) chronoOneLocal: CountDownComponent;
 
 	// link between GameWrapping's template and remote opponent
 	currentPart: ICurrentPart;

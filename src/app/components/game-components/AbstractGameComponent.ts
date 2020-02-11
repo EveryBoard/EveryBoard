@@ -7,11 +7,14 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
 	public rules: Rules<M, S, L>;
 
-	public board: Array<Array<number>>;
+	public board: ReadonlyArray<ReadonlyArray<number>>;
 
 	public canPass: boolean;
 
     public showScore: boolean;
+
+    public imagesLocation = 'assets/images/'; // en prod';
+    // imagesLocation = 'src/assets/images/'; // en dev
 
     public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => boolean;
 

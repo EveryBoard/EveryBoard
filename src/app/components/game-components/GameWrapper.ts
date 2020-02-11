@@ -1,4 +1,4 @@
-import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild} from '@angular/core';
+import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild, AfterContentInit} from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractGameComponent} from './AbstractGameComponent';
 import {GameIncluderComponent} from './game-includer/game-includer.component';
@@ -16,13 +16,14 @@ import {AwaleComponent} from './awale/awale.component';
 import {GoComponent} from './go/go.component';
 import { EncapsuleComponent } from './encapsule/encapsule.component';
 import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
+import { SiamComponent } from './siam/siam.component';
 
 export abstract class GameWrapper {
-
-    public static VERBOSE = false;
+ 
+    public static VERBOSE = true;
 
     // component loading
-    @ViewChild(GameIncluderComponent, {static: true})
+    @ViewChild(GameIncluderComponent, {static: false})
     public gameCompo: GameIncluderComponent;
     
     protected componentInstance: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
@@ -41,7 +42,12 @@ export abstract class GameWrapper {
                 protected userService: UserService) {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.constructed');
+            console.log({compo: this.gameCompo});
         }
+    }
+    ngOnInit() {
+        console.log("GameWrapper.ngOnInit");
+        console.log({compo: this.gameCompo});
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> { // TODO figure out the difference with Type<any>
         if (GameWrapper.VERBOSE) {
@@ -64,9 +70,11 @@ export abstract class GameWrapper {
                 return ReversiComponent;
             case 'Tablut':
                 return TablutComponent;
+            case 'Siam':
+                return SiamComponent;
             default:
                 this.router.navigate(['/error']);
-                return null;
+                throw new Error("Unknown Games are unwrappable");
         }
     }
     protected afterGameComponentViewProbablyInit() {
@@ -85,10 +93,13 @@ export abstract class GameWrapper {
             console.log('Loading now game component');
             console.log('gameCompo: ', this.gameCompo);
         }
-        const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
-        const component = this.getMatchingComponent(compoString);
-        const componentFactory: ComponentFactory<any> = this.componentFactoryResolver.resolveComponentFactory(component);
-        const componentRef: ComponentRef<any> = this.gameCompo.viewContainerRef.createComponent(componentFactory);
+        const compoString: string = this.actRoute.snapshot.paramMap.get('compo'); // TODO subscribe to query param
+        const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
+            = this.getMatchingComponent(compoString);
+        const componentFactory: ComponentFactory<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
+            = this.componentFactoryResolver.resolveComponentFactory(component);
+        const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
+            = this.gameCompo.viewContainerRef.createComponent(componentFactory);
         this.componentInstance = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance;
         this.componentInstance.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
