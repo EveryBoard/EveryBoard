@@ -20,7 +20,7 @@ import { SiamComponent } from './siam/siam.component';
 
 export abstract class GameWrapper {
  
-    public static VERBOSE = true;
+    public static VERBOSE = false;
 
     // component loading
     @ViewChild(GameIncluderComponent, {static: false})
@@ -45,7 +45,7 @@ export abstract class GameWrapper {
             console.log({compo: this.gameCompo});
         }
     }
-    ngOnInit() {
+    public ngOnInit() {
         console.log("GameWrapper.ngOnInit");
         console.log({compo: this.gameCompo});
     }

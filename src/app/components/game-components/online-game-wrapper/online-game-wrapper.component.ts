@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, AfterViewInit, AfterViewChecked, AfterContentChecked, AfterContentInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {Move} from '../../../jscaip/Move';
 import {GameService} from '../../../services/GameService';
@@ -16,22 +16,9 @@ import {GameWrapper} from '../GameWrapper';
 	templateUrl: './online-game-wrapper.component.html',
     styleUrls: ['./online-game-wrapper.component.css']
 })
-export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, OnDestroy, AfterViewInit, AfterViewChecked, AfterContentChecked, AfterContentInit {
-    ngAfterContentInit(): void {
-        console.log({afterContentInit: this.gameCompo});
-    }
-    ngAfterViewInit(): void {
-        console.log({afterViewInit: this.gameCompo});
-    }
-    ngAfterViewChecked(): void {
-        console.log({afterViewChecked: this.gameCompo});
-    }
-    ngAfterContentChecked(): void {
-        console.log({afterContentChecked: this.gameCompo});
-    } // OnInit {
+export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, OnDestroy {
 
-
-	static VERBOSE = false;
+    static VERBOSE = false;
 
 	// GameWrapping's Template
 	@ViewChild('chronoZeroGlobal', {static: false}) chronoZeroGlobal: CountDownComponent;
@@ -68,8 +55,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 				private route: Router) {
 		super(componentFactoryResolver, actRoute, router, userService);
 	}
-
-	ngOnInit() {
+	public ngOnInit() {
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			console.log('le component est initialisé');
 		}
@@ -77,8 +63,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		this.userSub = this.userService.userNameObs
 			.subscribe(userName => this.userName = userName);
 	}
-
-	resetGameDatas() {
+	public resetGameDatas() {
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			console.log('OnlineGame.resetGameDatas');
 		}
@@ -95,7 +80,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		this.userSub = this.userService.userNameObs
 			.subscribe(userName => this.userName = userName);
 	}
-
 	protected startGame() {
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			if (this.gameStarted === true) {
@@ -117,7 +101,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		this.readJoiner(); // NEWLY
 
 	}
-
 	protected readJoiner() {
 		this.joinerService
 			.readJoinerById(this.currentPartId)
@@ -138,7 +121,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 				console.log(onRejected);
 			});
 	}
-
 	protected spotDifferenceBetweenUpdateAndCurrentData(update: ICurrentPart): PICurrentPart {
 		const difference: PICurrentPart = {};
 		if (update == null || this.currentPart == null) {
@@ -174,7 +156,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		}
 		return difference;
 	}
-
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
 		const part: ICurrentPart = updatedICurrentPart.part;
 		if (OnlineGameWrapperComponent.VERBOSE) {
@@ -266,20 +247,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 			}
 		}
 	}
-
-	notifyDraw() {
+	public notifyDraw() {
 		this.endGame = true;
 		this.gameService.notifyDraw(this.currentPartId);
 	}
-
-	notifyTimeoutVictory(victoriousPlayer: string) {
+	public notifyTimeoutVictory(victoriousPlayer: string) {
 		// const victoriousPlayer = this.userName;
 		this.endGame = true;
 		this.currentPart.winner = victoriousPlayer; // oldly in this.winner var
 		this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer);
 	}
-
-	notifyVictory() {
+	public notifyVictory() {
 		// const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
 		// Previous line is wrong, assume that last player who notice the victory is the victorious, wrong as fuck
 		let victoriousPlayer = this.players[0]; // by default
@@ -293,7 +271,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		this.currentPart.winner = victoriousPlayer; // oldly in this.winner var
 		this.gameService.notifyVictory(this.currentPartId, victoriousPlayer);
 	}
-
 	protected onRequest(request: MGPRequest) {
 		switch (request.code) {
 			case 6: // 0 propose un rematch
@@ -331,8 +308,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 				break;
 		}
 	}
-
-	setPlayersDatas(updatedICurrentPart: ICurrentPart) {
+	public setPlayersDatas(updatedICurrentPart: ICurrentPart) {
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			console.log('GameWrapper.setPlayersDatas(' + JSON.stringify(updatedICurrentPart) + ')');
 		}
@@ -362,12 +338,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 					});
 		}
 	}
-
     public onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): boolean {
         this.updateDBBoard(move, scorePlayerZero, scorePlayerOne);
         return true;
     }
-
     public updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number) {
         if (OnlineGameWrapperComponent.VERBOSE) {
             console.log('let\'s update db board');
@@ -379,13 +353,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.userService.updateUserActivity(true);
             });
     }
-
-	resign() {
+	public resign() {
 		const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
 		this.gameService.resign(this.currentPartId, victoriousPlayer);
 	}
-
-	reachedOutOfTime(player: 0 | 1) {
+	public reachedOutOfTime(player: 0 | 1) {
 		if (player === this.observerRole) {
 			// the player has run out of time, he'll notify his own defeat by time
 			this.notifyTimeoutVictory(this.opponent.user.pseudo);
@@ -397,12 +369,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 			}
 		}
 	}
-
-	pass() {
+	public pass() {
 		alert('Should not be there, call the coder ! Must be overrid'); // TODO: implement
 	}
-
-	acceptRematch() {
+	public acceptRematch() {
 		if (this.observerRole === 0 || this.observerRole === 1) {
 			const currentPartId: ICurrentPartId = {
 				id: this.currentPartId,
@@ -413,13 +383,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 			});
 		}
 	}
-
-	proposeRematch() {
+	public proposeRematch() {
 		if (this.observerRole === 0 || this.observerRole === 1) {
 			this.gameService.proposeRematch(this.currentPartId, this.observerRole);
 		}
 	}
-
 	private startGameChronos(durationZero: number, durationOne: number, player: 0 | 1) {
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			console.log('og:cdc:: first turn of ' + player);
@@ -436,7 +404,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 			this.chronoZeroLocal.stop();
 		}
 	}
-
 	private startCountdownFor(player: 0 | 1) {
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			console.log('og:cdc:: startCountdownFor ' + player);
@@ -453,7 +420,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 			this.chronoOneLocal.start(this.maximalMoveDuration);
 		}
 	}
-
 	private stopCountdowns() {
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			console.log('cdc::stop count downs');
@@ -463,8 +429,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		this.chronoOneGlobal.stop();
 		this.chronoOneLocal.stop();
 	}
-
-	ngOnDestroy() {
+	public ngOnDestroy() {
 		if (this.userSub && this.userSub.unsubscribe) {
 			this.userSub.unsubscribe();
 		}
@@ -480,5 +445,4 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		}
 		// console.log('OnlineGame.onDestroy');
 	}
-
 }
