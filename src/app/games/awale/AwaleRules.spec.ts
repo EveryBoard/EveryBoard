@@ -1,7 +1,4 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {AwaleRules} from './AwaleRules';
-import { MNode } from 'src/app/jscaip/MNode';
 
 describe('AwaleRules', () => {
 

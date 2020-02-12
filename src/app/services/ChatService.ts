@@ -15,13 +15,12 @@ export class ChatService {
 	private followedChatObs: Observable<IChatId>;
 	private followedChatSub: Subscription;
 
-	constructor(private chatDao: ChatDAO) {}
-
-	static isForbiddenMessage(message: string): boolean {
+    public static isForbiddenMessage(message: string): boolean {
 		return (message === ''); // TODO: améliorer ?
 	}
+	constructor(private chatDao: ChatDAO) {}
 
-	sendMessage(userName: string, turn: number, message: string) {
+	public sendMessage(userName: string, turn: number, message: string) {
 		if (this.userForbid(this.followedChatId, userName)) {
 			if (ChatService.VERBOSE) {
 				console.log('you\'re not allow to sent message here');
@@ -35,7 +34,7 @@ export class ChatService {
 			return;
 		}
 		this.chatDao
-			.readChatById(this.followedChatId)
+			.read(this.followedChatId)
 			.then( iChat => {
 				const messages: IMessage[] = iChat.messages;
 				const newMessage: IMessage = {
@@ -46,7 +45,7 @@ export class ChatService {
 				};
 				messages.push(newMessage);
 				this.chatDao
-					.updateChatById(this.followedChatId, {messages: messages})
+					.update(this.followedChatId, {messages: messages})
 					.then(onFullFilled => {
 						if (ChatService.VERBOSE) {
 							console.log('message envoyé');
@@ -62,12 +61,10 @@ export class ChatService {
 				console.log(JSON.stringify(onRejected));
 			});
 	}
-
-	userForbid(chatId: string, userName: string): boolean {
+	public userForbid(chatId: string, userName: string): boolean {
 		return false; // TODO: implémenter le blocage de chat
 	}
-
-	startObserving(chatId: string, callback: (iChat: IChatId) => void) {
+	public startObserving(chatId: string, callback: (iChat: IChatId) => void) {
 		if (this.followedChatId == null) {
 			if (ChatService.VERBOSE) {
 				console.log('[start watching chat ' + chatId);
@@ -86,8 +83,7 @@ export class ChatService {
 			this.startObserving(chatId, callback);
 		}
 	}
-
-	stopObserving() {
+	public stopObserving() {
 		if (this.followedChatId == null) { // Should not append, is a bug
 			console.log('!!!we already stop watching doc'); // TODO: make an exception of this
 		} else {
@@ -97,8 +93,7 @@ export class ChatService {
 			this.followedChatObs = null;
 		}
 	}
-
-	deleteChat(chatId: string): Promise<void> {
+	public deleteChat(chatId: string): Promise<void> {
 		if (ChatService.VERBOSE) {
 			console.log('ChatService.deleteChat ' + chatId);
 		}
@@ -108,16 +103,14 @@ export class ChatService {
 				reject();
 			}
 			this.chatDao
-				.deleteById(chatId)
+				.delete(chatId)
 				.then(onFullFilled => resolve())
 				.catch(onRejected => reject(onRejected));
 		});
 	}
-
 	// delegate
 
-	set(id: string, chat: IChat) {
+	public set(id: string, chat: IChat) {
 		return this.chatDao.set(id, chat);
 	}
-
 }

@@ -7,7 +7,6 @@ import {ICurrentPart, ICurrentPartId} from '../domain/icurrentpart';
 import {IJoiner} from '../domain/ijoiner';
 
 import {JoinerService} from './JoinerService';
-import {Router} from '@angular/router';
 import {ActivesPartsService} from './ActivesPartsService';
 import {ChatService} from './ChatService';
 import {IChat} from '../domain/ichat';
@@ -18,22 +17,20 @@ import {MGPRequest} from '../domain/request';
 })
 export class GameService {
 
-	static VERBOSE = false;
+	public static VERBOSE = false;
 
 	private followedPartId: string;
 	private followedPartObs: Observable<ICurrentPartId>;
 	private followedPartSub: Subscription;
 
-	constructor(private route: Router,
-				private partDao: PartDAO,
+	constructor(private partDao: PartDAO,
 				private activesPartsService: ActivesPartsService,
 				private joinerService: JoinerService,
 				private chatService: ChatService) {
 	}
-
 	// on Server Component
 
-	protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
+	protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<String> {
 		if (GameService.VERBOSE) {
 			console.log('GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer);
 		}
@@ -48,9 +45,8 @@ export class GameService {
 			typeGame: typeGame,
 			winner: ''
 		};
-		return this.partDao.createPart(newPart);
+		return this.partDao.create(newPart);
 	}
-
 	protected createJoiner(creatorName: string, joinerId: string): Promise<void> {
 		if (GameService.VERBOSE) {
 			console.log('GameService.createJoiner(' + creatorName + ', ' + joinerId + ')');
@@ -65,7 +61,6 @@ export class GameService {
 		};
 		return this.joinerService.set(joinerId, newJoiner);
 	}
-
 	protected createChat(chatId: string): Promise<void> {
 		if (GameService.VERBOSE) {
 			console.log('GameService.createChat(' + chatId + ')');
@@ -76,14 +71,13 @@ export class GameService {
 		};
 		return this.chatService.set(chatId, newChat);
 	}
-
-	createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
+	public createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
 		if (GameService.VERBOSE) {
 			console.log('GameService.createGame(' + creatorName + ', ' + typeGame + ')');
 		}
 		return new Promise((resolve, reject) => {
 			this.createPart(creatorName, typeGame, chosenPlayer)
-				.then(docId => {
+				.then((docId: string) => {
 					this.createJoiner(creatorName, docId)
 						.then(onFullFilled => {
 							this.createChat(docId)
@@ -109,8 +103,7 @@ export class GameService {
 				});
 		});
 	}
-
-	getActivesPartsObs() {
+	public getActivesPartsObs() {
 		// TODO: désabonnements de sûreté aux autres abonnements activesParts
 		if (GameService.VERBOSE) {
 			console.log('GameService.getActivesPartsObs()');
@@ -118,14 +111,12 @@ export class GameService {
 		this.activesPartsService.startObserving();
 		return this.activesPartsService.activesPartsObs;
 	}
-
-	unSubFromActivesPartsObs() {
+    public unSubFromActivesPartsObs() {
 		if (GameService.VERBOSE) {
 			console.log('GameService.unSubFromActivesPartsObs()');
 		}
 		this.activesPartsService.stopObserving();
 	}
-
 	// on Part Creation Component
 
 	private startGameWithConfig(joiner: IJoiner): Promise<void> {
@@ -149,10 +140,9 @@ export class GameService {
 			turn: 0,
 			beginning: Date.now()
 		};
-		return this.partDao.updatePartById(this.followedPartId, modification);
+		return this.partDao.update(this.followedPartId, modification);
 	}
-
-	deletePart(partId: string): Promise<string> {
+	public deletePart(partId: string): Promise<string> {
 		if (GameService.VERBOSE) {
 			console.log('GameService.deletePart(' + partId + ')');
 		}
@@ -162,13 +152,12 @@ export class GameService {
 				reject();
 			}
 			this.partDao
-				.deletePartById(partId)
+				.delete(partId)
 				.then(onFullFilled => resolve(partId))
 				.catch(onRejected => reject(onRejected));
 		});
 	}
-
-	acceptConfig(joiner: IJoiner): Promise<void> {
+	public acceptConfig(joiner: IJoiner): Promise<void> {
 		if (GameService.VERBOSE) {
 			console.log('GameService.acceptConfig(' + JSON.stringify(joiner) + ')');
 		}
@@ -192,10 +181,9 @@ export class GameService {
 				});
 		});
 	}
-
 	// on OnlineGame Component
 
-	startObserving(partId: string, callback: (iPart: ICurrentPartId) => void) {
+	public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void) {
 		if (this.followedPartId == null) {
 			if (GameService.VERBOSE) {
 				console.log('[start watching part ' + partId);
@@ -221,44 +209,38 @@ export class GameService {
 			this.startObserving(partId, callback);
 		}
 	}
-
-	resign(partId: string, winner: string): Promise<void> {
-		return this.partDao.updatePartById(partId, {
+	public resign(partId: string, winner: string): Promise<void> {
+		return this.partDao.update(partId, {
 			winner: winner,
 			result: 1,
 			request: null
 		}); // resign
 	}
-
-	notifyDraw(partId: string): Promise<void> {
-		return this.partDao.updatePartById(partId, {
+	public notifyDraw(partId: string): Promise<void> {
+		return this.partDao.update(partId, {
 			result: 0,
 			request: null
 		}); // DRAW CONSTANT
 	}
-
-	notifyTimeout(partId: string, winner: string): Promise<void> {
-		return this.partDao.updatePartById(partId, {
+	public notifyTimeout(partId: string, winner: string): Promise<void> {
+		return this.partDao.update(partId, {
 			winner: winner,
 			result: 4,
 			request: null
 		});
 	}
-
-	notifyVictory(partId: string, winner: string): Promise<void> {
-		return this.partDao.updatePartById(partId, {
+	public notifyVictory(partId: string, winner: string): Promise<void> {
+		return this.partDao.update(partId, {
 			'winner': winner,
 			'result': 3,
 			request: null
 		});
 	}
-
-	proposeRematch(partId: string, oberserverRole: 0 | 1): Promise<void> {
+	public proposeRematch(partId: string, oberserverRole: 0 | 1): Promise<void> {
 		const req: MGPRequest = {code: 6 + oberserverRole};
-		return this.partDao.updatePartById(partId, {request: req});
+		return this.partDao.update(partId, {request: req});
 	}
-
-	acceptRematch(part: ICurrentPartId, callback: (iPart: ICurrentPartId) => void): Promise<void> { // TODO: supprimer l'callback
+	public acceptRematch(part: ICurrentPartId, callback: (iPart: ICurrentPartId) => void): Promise<void> { // TODO: supprimer l'callback
 		return new Promise((resolve, reject) => {
 			this.joinerService
 				.readJoinerById(part.id)
@@ -294,7 +276,7 @@ export class GameService {
 								.updateJoinerById(rematchId, newJoiner)
 								.then(onFullFilled => {
 									this.partDao
-										.updatePartById(part.id, {request: req})
+										.update(part.id, {request: req})
 										.then(onAccepted => resolve())
 										.catch(onRejected => {
 											console.log('updating part failed, rematch cannot be created because ');
@@ -321,15 +303,14 @@ export class GameService {
 				});
 		});
 	}
-
-	updateDBBoard(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number, partId: string): Promise<void> {
-		return this.partDao.readPartById(partId)
+	public async updateDBBoard(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number, partId: string): Promise<void> {
+		return this.partDao.read(partId)
 			.then(part => {
 				const turn: number = part.turn + 1;
 				const listMoves: number[] = part.listMoves;
 				listMoves[listMoves.length] = encodedMove;
 				this.partDao
-					.updatePartById(partId, {
+					.update(partId, {
 						'listMoves': listMoves,
 						'turn': turn,
 						'scorePlayerZero': scorePlayerZero,
@@ -342,8 +323,7 @@ export class GameService {
 			})
 			.catch(error => console.log(error));
 	}
-
-	stopObservingPart() {
+	public stopObservingPart() {
 		if (GameService.VERBOSE) {
 			console.log('GameService.stopObservingPart();');
 		}
@@ -360,8 +340,7 @@ export class GameService {
 			this.followedPartObs = null;
 		}
 	}
-
-	stopObserving() {
+	public stopObserving() {
 		if (GameService.VERBOSE) {
 			console.log('GameService.stopObserving();');
 		}
@@ -376,5 +355,4 @@ export class GameService {
 			this.followedPartObs = null;
 		}
 	}
-
 }

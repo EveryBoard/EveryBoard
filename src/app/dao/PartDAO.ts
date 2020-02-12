@@ -1,19 +1,17 @@
-import {map} from 'rxjs/operators';
-import {ICurrentPart, ICurrentPartId, PICurrentPart} from '../domain/icurrentpart';
-import {Observable} from 'rxjs';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {Injectable} from '@angular/core';
+import { FirebaseFirestoreDAO } from "./FirebaseFirestoreDAO";
+import { ICurrentPart, PICurrentPart, ICurrentPartId } from "../domain/icurrentpart";
+import { AngularFirestore } from "@angular/fire/firestore";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
-@Injectable({
-	providedIn : 'root'
-})
-export class PartDAO {
+export class PartDAO extends FirebaseFirestoreDAO<ICurrentPart, PICurrentPart> {
 
 	static VERBOSE = false;
 
-	constructor(private afs: AngularFirestore) {}
-
-	getPartObsById(partId: string): Observable<ICurrentPartId> {
+	constructor(protected afs: AngularFirestore) {
+        super("/parties", afs);
+    }
+	public getPartObsById(partId: string): Observable<ICurrentPartId> {
 		if (PartDAO.VERBOSE) {
 			console.log('getPartObsById(' + partId + ')');
 		}
@@ -25,8 +23,7 @@ export class PartDAO {
 				};
 			}));
 	}
-
-	observeActivesParts(callback: (parts: ICurrentPartId[]) => void): () => void {
+	public observeActivesParts(callback: (parts: ICurrentPartId[]) => void): () => void {
 		if (PartDAO.VERBOSE) {
 			console.log('observeActivesParts');
 		}
@@ -44,55 +41,4 @@ export class PartDAO {
 				callback(partIds);
 			});
 	}
-
-	// Simple CRUD
-
-	createPart(newPart: ICurrentPart): Promise<string> {
-		// returns the id of the created part
-		if (PartDAO.VERBOSE) {
-			console.log('PartDAO.createPart : ' + JSON.stringify(newPart));
-		}
-		return new Promise((resolve, reject) => {
-			this.afs.collection('parties')
-				.add(newPart)
-				.then(docRef => resolve(docRef.id))
-				.catch(onRejected => {
-					console.log('PartDAO.createPart with arg:');
-					console.log(JSON.stringify(newPart));
-					console.log('failed because :');
-					console.log(onRejected);
-					reject(onRejected);
-				});
-		});
-	}
-
-	readPartById(partId: string): Promise<ICurrentPart> {
-		if (PartDAO.VERBOSE) {
-			console.log('readPartById(' + partId + ')');
-		}
-		return new Promise((resolve, reject) => {
-			this.afs
-				.doc('parties/' + partId).ref.get()
-				.then(documentSnapshot => resolve(documentSnapshot.data() as ICurrentPart))
-				.catch(onRejected => reject(onRejected));
-		});
-	}
-
-	updatePartById(partId: string, modification: PICurrentPart): Promise<void> {
-		if (PartDAO.VERBOSE) {
-			console.log('PartDAO.updated ' + partId);
-			console.log('now it is: ' + JSON.stringify(modification));
-		}
-		return this.afs
-			.doc('parties/' + partId).ref
-			.update(modification);
-	}
-
-	deletePartById(partId: string): Promise<void> {
-		if (PartDAO.VERBOSE) {
-			console.log('deletePartById(' + partId + ')');
-		}
-		return this.afs.doc('parties/' + partId).ref.delete();
-	}
-
 }

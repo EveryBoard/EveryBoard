@@ -41,16 +41,16 @@ export class SiamPiece {
     }
     public static belongTo(value: number, player: Player): boolean {
         if (player === Player.ZERO) {
-            return (0 < value && value < 5);
+            return (1 <= value && value <= 4);
         }
         if (player === Player.ONE) {
-            return (4 < value && value < 9);
+            return (5 <= value && value <= 8);
         }
         throw new Error("Player.NONE do not own piece");
     }
     public static getOwner(value: number): Player {
-        if (0 < value && value < 5) return Player.ZERO;
-        if (4 < value && value < 9) return Player.ONE;
+        if (1 <= value && value <= 4) return Player.ZERO;
+        if (5 <= value && value <= 8) return Player.ONE;
         return Player.NONE;
     }
     public static getNullableDirection(value: number): Orthogonale {
@@ -115,4 +115,20 @@ export class SiamPiece {
         throw new Error("Cannot rotate in 'FORWARD' direction");
     }
     private constructor(public readonly value: number) {}
+
+    public toString(): String {
+        switch (this.value) {
+            case 0: return "EMPTY";
+            case 1: return "WHITE_UP";
+            case 2: return "WHITE_RIGHT";
+            case 3: return "WHITE_DOWN";
+            case 4: return "WHITE_LEFT";
+            case 5: return "BLACK_UP";
+            case 6: return "BLACK_RIGHT";
+            case 7: return "BLACK_DOWN";
+            case 8: return "BLACK_LEFT";
+            case 9: return "MOUNTAIN";
+            default: throw new Error("Unknown value for SiamPiece");
+        }
+    }
 }

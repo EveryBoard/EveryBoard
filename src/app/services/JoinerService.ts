@@ -14,10 +14,9 @@ export class JoinerService {
 	private followedJoinerObs: Observable<IJoinerId>;
 	private followedJoinerSub: Subscription;
 
-	constructor(private joinerDao: JoinerDAO) {
-	}
+	constructor(private joinerDao: JoinerDAO) {}
 
-	startObserving(joinerId: string, callback: (iJoiner: IJoinerId) => void) {
+	public startObserving(joinerId: string, callback: (iJoiner: IJoinerId) => void) {
 		if (this.followedJoinerId == null) {
 			if (JoinerService.VERBOSE) {
 				console.log('[start watching joiner ' + joinerId);
@@ -37,8 +36,7 @@ export class JoinerService {
 			this.startObserving(joinerId, callback);
 		}
 	}
-
-	joinGame(partId: string, userName: string): Promise<void> {
+	public joinGame(partId: string, userName: string): Promise<void> {
 		if (JoinerService.VERBOSE) {
 			console.log('JoinerService.joinGame(' + partId + ', ' + userName + ')');
 		}
@@ -65,8 +63,7 @@ export class JoinerService {
 				.catch(onRejected => reject(onRejected));
 		});
 	}
-
-	cancelJoining(userName: string): Promise<void> {
+	public cancelJoining(userName: string): Promise<void> {
 		if (JoinerService.VERBOSE) {
 			console.log('JoinerService.cancelJoining(' + userName + '); this.followedJoinerId =' + this.followedJoinerId);
 		}
@@ -108,8 +105,7 @@ export class JoinerService {
 			}
 		});
 	}
-
-	deleteJoiner(): Promise<void> {
+	public deleteJoiner(): Promise<void> {
 		if (JoinerService.VERBOSE) {
 			console.log('JoinerService.deleteJoiner(); this.followedJoinerId = ' + this.followedJoinerId);
 		}
@@ -124,8 +120,7 @@ export class JoinerService {
 				.catch(onRejected => reject(onRejected));
 		});
 	}
-
-	setChosenPlayer(chosenPlayersPseudo: string): Promise<void> {
+	public async setChosenPlayer(chosenPlayersPseudo: string): Promise<void> {
 		if (JoinerService.VERBOSE) {
 			console.log('JoinerService.setChosenPlayer(' + chosenPlayersPseudo + ')');
 		}
@@ -151,8 +146,7 @@ export class JoinerService {
 				}
 			});
 	}
-
-	proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
+	public proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
 		if (JoinerService.VERBOSE) {
 			console.log('JoinerService.proposeConfig(' + maximalMoveDuration + ', ' + firstPlayer + ', ' + totalPartDuration + ')');
 			console.log('this.followedJoinerId: ' + this.followedJoinerId);
@@ -165,8 +159,7 @@ export class JoinerService {
 			firstPlayer: firstPlayer
 		});
 	}
-
-	acceptConfig(): Promise<void> {
+	public acceptConfig(): Promise<void> {
 		if (this.followedJoinerId == null) {
 			console.log('BUG GOING TO HAPPEND cause acceptConfig when no observing Joiner !!');
 		}
@@ -174,8 +167,7 @@ export class JoinerService {
 		return this.joinerDao
 			.update(this.followedJoinerId, {partStatus: 3});
 	}
-
-	stopObserving() {
+	public stopObserving() {
 		if (JoinerService.VERBOSE) {
 			console.log('JoinerService.stopObserving(); // this.followedJoinerId = ' + this.followedJoinerId);
 		}
@@ -189,28 +181,24 @@ export class JoinerService {
 			this.followedJoinerObs = null;
 		}
 	}
-
 	// DELEGATE
 
-	readJoinerById(partId: string): Promise<IJoiner> {
+	public readJoinerById(partId: string): Promise<IJoiner> {
 		if (JoinerService.VERBOSE) {
 			console.log('JoinerService.readJoinerById(' + partId + ')');
 		}
 		return this.joinerDao.read(partId);
 	}
-
-	set(partId: string, joiner: IJoiner): Promise<void> {
+	public set(partId: string, joiner: IJoiner): Promise<void> {
 		if (JoinerService.VERBOSE) {
 			console.log('JoinerService.set(' + partId + ', ' + JSON.stringify(joiner) + ')');
 		}
 		return this.joinerDao.set(partId, joiner);
 	}
-
-	updateJoinerById(partId: string, update: PIJoiner): Promise<void> {
+	public updateJoinerById(partId: string, update: PIJoiner): Promise<void> {
 		if (JoinerService.VERBOSE) {
 			console.log('JoinerService.updateJoinerById(' + partId + ', ' + JSON.stringify(update) + ')');
 		}
 		return this.joinerDao.update(partId, update);
 	}
-
 }

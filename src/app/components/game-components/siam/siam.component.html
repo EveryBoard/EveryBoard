@@ -1,6 +1,12 @@
 <div id="gameboard">
     <table>
+        <tr>
+            <td> coin </td>
+            <td *ngFor="let i of [0,1,2,3,4]">COUCOUB{{i}}TE</td>
+            <td> coin </td>
+        </tr>
         <tr *ngFor="let line of board; index as y">
+            <td> zbleu </td>
             <td *ngFor="let c of line; index as x"
                 style="position:relative"
                 (click)="onBoardClick(x, y)">
@@ -12,6 +18,13 @@
                 <img width="50" height="50"
                      [src]="imagesLocation+'siam/'+imagesNames[c]+'.svg'">
             </td>
+            <td> zbleu </td>
+        </tr>
+        <tr>
+            <td> coin </td>
+            <td *ngFor="let i of [0,1,2,3,4]">COUCOUBITE</td>
+            <td> coin </td>
         </tr>
     </table>
+
 </div>

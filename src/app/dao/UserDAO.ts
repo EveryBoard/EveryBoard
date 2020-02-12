@@ -1,14 +1,17 @@
 import {Injectable} from '@angular/core';
 import {AngularFirestore} from '@angular/fire/firestore';
 import {IUser, IUserId, PIUser} from '../domain/iuser';
+import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 
 @Injectable({
 	providedIn: 'root'
 })
-export class UserDAO {
-	constructor(private afs: AngularFirestore) {}
+export class UserDAO extends FirebaseFirestoreDAO<IUser, PIUser> {
 
-	observeUserByPseudo(pseudo: string, callback: (user: IUserId) => void): () => void {
+	constructor(protected afs: AngularFirestore) {
+        super("/users", afs);
+    }
+	public observeUserByPseudo(pseudo: string, onUserUpdate: (user: IUserId) => void): () => void {
 		// the callback will be called on the foundUser
 		return this.afs.collection('joueurs').ref
 			.where('pseudo', '==', pseudo)
@@ -16,30 +19,28 @@ export class UserDAO {
 			.onSnapshot(querySnapshot => {
 				let userFound: IUserId;
 				querySnapshot.forEach(doc => {
-					const data = doc.data() as IUser;
+					const user: IUser = doc.data() as IUser;
 					const id = doc.id;
-					userFound = {id: id, user: data};
+					userFound = {id, user};
 				});
-				callback(userFound);
+				onUserUpdate(userFound);
 			});
 	}
-
-	observeActivesUsers(timeOutedTimestamp: number, callback: (users: IUserId[]) => void): () => void {
+	public observeActivesUsers(timeOutedTimestamp: number, callback: (users: IUserId[]) => void): () => void {
 		return this.afs
 			.collection('joueurs').ref
 			.where('lastActionTime', '>=', timeOutedTimestamp)
 			.onSnapshot(querySnapshot => {
 				const activeUserIds: IUserId[] = [];
 				querySnapshot.forEach(doc => {
-					const data = doc.data() as IUser;
+					const user: IUser = doc.data() as IUser;
 					const id = doc.id;
-					activeUserIds.push({id: id, user: data});
+					activeUserIds.push({id, user});
 				});
 				callback(activeUserIds);
 			});
 	}
-
-	updateUserDocActivity(userDocId: string, activityIsAMove: boolean): Promise<void> {
+	public updateUserDocActivity(userDocId: string, activityIsAMove: boolean): Promise<void> {
 		// update the user with pseudo to notifify that he's been doing something
 		const now = Date.now();
 		const moveUpdate: PIUser = {
@@ -56,24 +57,4 @@ export class UserDAO {
 			.doc('joueurs/' + userDocId)
 			.update(update);
 	}
-
-	// Simple CRUD
-
-	createUser(newUser: IUser): Promise<string> {
-		// returns the id of the created part
-		return new Promise((resolve, reject) => {
-			this.afs
-				.collection('joueurs')
-				.add(newUser)
-				.then(docRef => resolve(docRef.id))
-				.catch(onRejected => reject(onRejected));
-		});
-	}
-
-	updateUserById(id: string, modification: PIUser): Promise<void> {
-		return this.afs
-			.doc('joueurs/' + id)
-			.update(modification);
-	}
-
 }

@@ -1,6 +1,6 @@
-import {MNode} from './MNode';
-import {Move} from './Move';
-import {GamePartSlice} from './GamePartSlice';
+import { MNode } from './MNode';
+import { Move } from './Move';
+import { GamePartSlice } from './GamePartSlice';
 import { MGPMap } from '../collectionlib/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
 

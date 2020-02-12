@@ -78,6 +78,21 @@ export class Coord {
         }
         return true;
     }
+    public isNotInRange(sizeX: number, sizeY: number): boolean {
+        if (this.x < 0) {
+            return true;
+        }
+        if (this.y < 0) {
+            return true;
+        }
+        if (this.x >= sizeX) {
+            return true;
+        }
+        if (this.y >= sizeY) {
+            return true;
+        }
+        return false;
+    }
     public getDirectionToward(c: Coord): Direction {
         const dx: number = Coord.getBinarised(c.x - this.x) + 1;
         const dy: number = Coord.getBinarised(c.y - this.y) + 1;

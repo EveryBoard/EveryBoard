@@ -18,14 +18,12 @@ export class ActivesPartsService {
 
 	constructor(private partDao: PartDAO) {}
 
-	startObserving() {
+    public startObserving() {
 		this.unsubscribe = this.partDao
 			.observeActivesParts(activesParts =>
 				this.activesPartsBS.next(activesParts));
 	}
-
-	stopObserving() {
+	public stopObserving() {
 		this.unsubscribe();
 	}
-
 }

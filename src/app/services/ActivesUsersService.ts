@@ -16,7 +16,7 @@ export class ActivesUsersService {
 
 	constructor(private userDao: UserDAO) {}
 
-	startObserving() {
+	public startObserving() {
 		const refreshingPresenceTimeout: number = this.refreshingPresenceTimeout;
 		const timeOutedTimestamp: number = Date.now() - refreshingPresenceTimeout;
 		this.unsubscribe = this.userDao.observeActivesUsers(
@@ -26,9 +26,7 @@ export class ActivesUsersService {
 				this.activesUsersBS.next(activeUserIds); // TODO: vérifier fonctionnement du filtre
 			});
 	}
-
-	stopObserving() {
+	public stopObserving() {
 		this.unsubscribe();
 	}
-
 }

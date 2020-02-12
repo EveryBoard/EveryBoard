@@ -15,8 +15,17 @@ abstract class _SiamNode extends MNode<_SiamRules, SiamMove, SiamPartSlice, Siam
 
 export class SiamRules extends _SiamRules {
 
+    public static VERBOSE: boolean = false;
+
     private static readonly ILLEGAL: SiamLegalityStatus = {legal: false, resultingBoard: null};
 
+    constructor() {
+        super();
+        this.node = MNode.getFirstNode(
+            new SiamPartSlice(SiamPartSlice.getStartingBoard(), 0),
+            this
+        );
+    }
     public setInitialBoard(): void {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
@@ -28,18 +37,26 @@ export class SiamRules extends _SiamRules {
         }
     }
     public isLegal(move: SiamMove, slice: SiamPartSlice): SiamLegalityStatus {
+        if (SiamRules.VERBOSE) {
+            console.log("SiamRules.isLegal");
+            console.log(move.toString());
+            console.log(slice.board)
+        }
         if (SiamMove.isForward(move)) {
             let movingPiece: number;
             if (SiamMove.isInsertion(move)) {
+                if (SiamRules.VERBOSE) console.log("Move is insertion");
                 let insertionInfo: {insertedPiece: number, legal: boolean} =
                     this.isLegalInsertion(move.coord, slice);
                 if (insertionInfo.legal === false) return SiamRules.ILLEGAL;
                 movingPiece = insertionInfo.insertedPiece;
             } else {
+                if (SiamRules.VERBOSE) console.log("Move is forward");
                 movingPiece = slice.getBoardAt(move.coord);
             }
             return this.isLegalForwarding(move, slice, movingPiece);
         } else {
+            if (SiamRules.VERBOSE) console.log("Move is rotation");
             return this.isLegalRotation(move, slice);
         }
     }
@@ -64,44 +81,51 @@ export class SiamRules extends _SiamRules {
         throw new Error("Cannot get insertedPiece of a coord inside the board");
     }
     public isLegalForwarding(move: SiamMove, slice: SiamPartSlice, firstPiece: number): SiamLegalityStatus {
-        console.log("isLegalForwarding with:");
-        console.log({move, slice, firstPiece});
-        let resultingBoard: number[][] = slice.getCopiedBoard();
-        let currentPiece: number = firstPiece;
-        if (!SiamPiece.belongTo(currentPiece, slice.getCurrentPlayer())) {
+        if (SiamRules.VERBOSE) console.log("isLegalForwarding with:");
+        if (SiamRules.VERBOSE) console.log({move: move.toString(), board: slice.board, firstPiece: SiamPiece.decode(firstPiece).toString()});
+        let movingPiece: number = firstPiece;
+        if (!SiamPiece.belongTo(firstPiece, slice.getCurrentPlayer())) {
+            if (SiamRules.VERBOSE) console.log("Piece dont belong to current player");
             return SiamRules.ILLEGAL;
         }
-        const pushingDir: Direction = SiamPiece.getNullableDirection(currentPiece);
-        let currentCoord: Coord = move.coord.getNext(pushingDir);
-        let previousPiece: number = SiamPiece.EMPTY.value;
-        let currentDirection: Direction = pushingDir;
-        const resistingDir: Direction = Direction.getOpposite(pushingDir);
+        const pushingDir: Orthogonale = SiamPiece.getDirection(movingPiece);
+        let landingCoord: Coord = move.coord.getNext(pushingDir);
+        let currentDirection: Orthogonale = pushingDir;
+        const resistingDir: Orthogonale = Orthogonale.getOpposite(pushingDir);
         let lineFullyMoved : boolean;
         let resisting: number = 0;
         let pushing: number = 0;
+        let resultingBoard: number[][] = slice.getCopiedBoard();
         do {
             if (Direction.equals(pushingDir, currentDirection)) 
                 pushing++;
             else if (Direction.equals(resistingDir, currentDirection)) 
                 resisting++;
-            console.log({currentCoord, pushingDir});
-            resultingBoard[currentCoord.y][currentCoord.x] = previousPiece;
-            currentCoord = currentCoord.getNext(pushingDir);
-            previousPiece = currentPiece;
-            currentPiece = slice.getBoardAt(currentCoord);
-            currentDirection = SiamPiece.getNullableDirection(currentPiece);
-            lineFullyMoved = !currentCoord.isInRange(5, 5) || currentPiece === SiamPiece.EMPTY.value;
+            if (SiamRules.VERBOSE) console.log({pushing, resisting, movingPiece});
+            const tmpPiece: number = resultingBoard[landingCoord.y][landingCoord.x];
+            resultingBoard[landingCoord.y][landingCoord.x] = movingPiece;
+            movingPiece = tmpPiece;
+            landingCoord = landingCoord.getNext(pushingDir);
+            currentDirection = SiamPiece.getNullableDirection(movingPiece);
+            lineFullyMoved = landingCoord.isNotInRange(5, 5) || movingPiece === SiamPiece.EMPTY.value;
         } while (!lineFullyMoved);
         if (pushing > resisting) {
+            if (SiamRules.VERBOSE) console.log("This move is a legal push: "+resultingBoard);
             return {legal: true, resultingBoard};
         } else {
             return SiamRules.ILLEGAL;
         }
     }
     public isLegalRotation(rotation: SiamMove, slice: SiamPartSlice): SiamLegalityStatus {
+        if (SiamRules.VERBOSE) {
+            console.log("isLegalRotation");
+            console.log(rotation.toString());
+            console.log(slice.board);
+        }
         let c: Coord = rotation.coord;
         let currentPiece: number = slice.getBoardAt(c);
         if (!SiamPiece.belongTo(currentPiece, slice.getCurrentPlayer())) {
+            if (SiamRules.VERBOSE) console.log("Piece dont belong to current player");
             return {legal: false, resultingBoard: null};
         } else {
             let resultingBoard: number[][] = slice.getCopiedBoard();
@@ -120,8 +144,8 @@ export class SiamRules extends _SiamRules {
         // 1. victories
         const victory: number = this.getVictory(node);
         if (victory != null) return victory;
-        // 2. pre-victories
-        throw new Error("Method not implemented.");
+        // 2. TODO: pre-victories
+        return 0;
     }
     public getVictory(node: _SiamNode): number | null {
         if (this.countMountains(node.gamePartSlice) === 2) {

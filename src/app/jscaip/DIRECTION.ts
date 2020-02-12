@@ -1,4 +1,5 @@
 import { Dir } from "@angular/cdk/bidi";
+import { MatExpansionPanelDescription } from "@angular/material";
 
 /*export type _ORTHOGONALE =
     {x:  0; y: -1} | // UP
@@ -19,6 +20,16 @@ export class Orthogonale {
     public static readonly ORTHOGONALES = [Orthogonale.UP, Orthogonale.RIGHT, Orthogonale.DOWN, Orthogonale.LEFT];
 
     private constructor(public readonly x: number, public readonly y: number) {}
+
+    public static getOpposite(o: Orthogonale): Orthogonale {
+        switch (o) {
+            case Orthogonale.UP: return Orthogonale.DOWN;
+            case Orthogonale.RIGHT: return Orthogonale.LEFT;
+            case Orthogonale.DOWN: return Orthogonale.UP;
+            case Orthogonale.LEFT: return Orthogonale.RIGHT;
+            default: throw new Error("Unknown orthogonale: "+o.toString());
+        }
+    }
 }
 export class Direction {
 
@@ -51,6 +62,7 @@ export class Direction {
             case Direction.DOWN_LEFT: return Direction.UP_RIGHT;
             case Direction.LEFT: return Direction.RIGHT;
             case Direction.UP_LEFT: return Direction.DOWN_RIGHT;
+            default: throw new Error("Unknown direction: "+d.toString());
         }
     }
     public static equals(first: Direction, second: Direction): boolean {
