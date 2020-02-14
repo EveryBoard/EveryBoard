@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {IUserId} from '../domain/iuser';
-import {UserDAO} from '../dao/UserDAO';
+import {JoueursDAO} from '../dao/UserDAO';
 
 @Injectable({
 	providedIn: 'root'
@@ -14,7 +14,7 @@ export class ActivesUsersService {
 
 	private unsubscribe: () => void;
 
-	constructor(private userDao: UserDAO) {}
+	constructor(private userDao: JoueursDAO) {}
 
 	public startObserving() {
 		const refreshingPresenceTimeout: number = this.refreshingPresenceTimeout;

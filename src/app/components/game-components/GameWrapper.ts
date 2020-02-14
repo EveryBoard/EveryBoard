@@ -1,4 +1,4 @@
-import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild} from '@angular/core';
+import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractGameComponent} from './AbstractGameComponent';
 import {GameIncluderComponent} from './game-includer/game-includer.component';
@@ -20,12 +20,12 @@ import { SiamComponent } from './siam/siam.component';
 
 export abstract class GameWrapper {
  
-    public static VERBOSE = false;
+    public static VERBOSE = true;
 
     // component loading
     @ViewChild(GameIncluderComponent, {static: false})
     public gameCompo: GameIncluderComponent;
-    
+
     protected componentInstance: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
 
     public userName: string = this.userService.getCurrentUser();
@@ -41,17 +41,12 @@ export abstract class GameWrapper {
                 protected router: Router,
                 protected userService: UserService) {
         if (GameWrapper.VERBOSE) {
-            console.log('GameWrapper.constructed');
-            console.log({compo: this.gameCompo});
+            console.log('GameWrapper.constructed: ' + (this.gameCompo!=null));
         }
-    }
-    public ngOnInit() {
-        console.log("GameWrapper.ngOnInit");
-        console.log({compo: this.gameCompo});
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> { // TODO figure out the difference with Type<any>
         if (GameWrapper.VERBOSE) {
-            console.log('GameWrapper.getMatchingComponent');
+            console.log('GameWrapper.getMatchingComponent: '+(this.gameCompo!=null));
         }
         switch (compoString) {
             case 'Awale':
@@ -89,10 +84,8 @@ export abstract class GameWrapper {
         this.componentInstance.board = this.componentInstance.rules.node.gamePartSlice.getCopiedBoard();
     }
     protected loadGameComponent() {
-        if (GameWrapper.VERBOSE) {
-            console.log('Loading now game component');
-            console.log('gameCompo: ', this.gameCompo);
-        }
+        if (GameWrapper.VERBOSE) console.log('GameWrapper.loadGameComponent: '+(this.gameCompo!=null));
+
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo'); // TODO subscribe to query param
         const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
             = this.getMatchingComponent(compoString);

@@ -3,13 +3,17 @@ import { ICurrentPart, PICurrentPart, ICurrentPartId } from "../domain/icurrentp
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { Injectable } from "@angular/core";
 
+@Injectable({
+	providedIn: 'root'
+})
 export class PartDAO extends FirebaseFirestoreDAO<ICurrentPart, PICurrentPart> {
 
 	static VERBOSE = false;
 
 	constructor(protected afs: AngularFirestore) {
-        super("/parties", afs);
+        super("parties", afs);
     }
 	public getPartObsById(partId: string): Observable<ICurrentPartId> {
 		if (PartDAO.VERBOSE) {

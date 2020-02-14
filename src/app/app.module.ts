@@ -1,5 +1,5 @@
 import {BrowserModule} from '@angular/platform-browser';
-import {NgModule, CUSTOM_ELEMENTS_SCHEMA} from '@angular/core';
+import {NgModule} from '@angular/core';
 import {ReactiveFormsModule, FormsModule} from '@angular/forms';
 import {HttpClientModule} from '@angular/common/http';
 import {RouterModule, Route} from '@angular/router';
@@ -7,10 +7,11 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {MaterialModule} from '../material-modules';
 
 import {AngularFireModule} from '@angular/fire';
-import {AngularFirestoreModule} from '@angular/fire/firestore';
+import {AngularFirestoreModule, AngularFirestore} from '@angular/fire/firestore';
 
 import {GameIncluderDirective} from './directives/game-includer.directive';
 
+import {ChatService} from './services/ChatService';
 import {UserService} from './services/UserService';
 import {AuthenticationService} from './services/AuthenticationService';
 import {GameService} from './services/GameService';
@@ -27,7 +28,6 @@ import {StatisticPageComponent} from './components/normal-component/statistic-pa
 
 import {firebaseConfig} from './firebaseConfig';
 
-import {ChatService} from './services/ChatService';
 import {PartCreationComponent} from './components/normal-component/part-creation/part-creation.component';
 import {ChatComponent} from './components/normal-component/chat/chat.component';
 import {CountDownComponent} from './components/normal-component/count-down/count-down.component';
@@ -44,6 +44,7 @@ import {ReversiComponent} from './components/game-components/reversi/reversi.com
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
 import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
+import { PartDAO } from './dao/PartDAO';
 
 const routes: Route [] = [
     {path: 'login',             component: LoginComponent},
@@ -102,7 +103,6 @@ const routes: Route [] = [
     imports: [
         BrowserModule,
         HttpClientModule,
-        //HttpModule,
         RouterModule.forRoot(routes, {useHash: true}),
         ReactiveFormsModule,
         FormsModule,
@@ -111,9 +111,7 @@ const routes: Route [] = [
         BrowserAnimationsModule,
         MaterialModule
     ],
-    providers: [AuthenticationService, GameService, JoinerService, UserService, ChatService],
+    providers: [AuthenticationService, GameService, JoinerService, UserService, ChatService, PartDAO, AngularFirestore],
     bootstrap: [AppComponent]
 })
-export class AppModule {
-
-}
+export class AppModule { }

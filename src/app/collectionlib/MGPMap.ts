@@ -12,13 +12,11 @@ export class MGPMap<K extends Comparable, V> {
     public get(index: number) {
         return this.map[index];
     }
-
     public putAll(m: MGPMap<K, V>) {
         for (let entry of m.map) {
             this.put(entry.key, entry.value);
         }
     }
-
     public put(key: K, value: V) {
         if (key == null) throw new Error("Key cannot be null");
         if (value == null) throw new Error("Value cannot be null");
@@ -28,11 +26,9 @@ export class MGPMap<K extends Comparable, V> {
             this.map.push({key, value});
         }
     }
-
     public containsKey(key: K): boolean {
         return this.map.some(entry => entry.key.equals(key));
     }
-
     public size(): number {
         return this.map.length;
     }

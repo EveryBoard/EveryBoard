@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, AfterContentInit } from '@angular/core';
+import { Component, ComponentFactoryResolver, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { GameWrapper } from '../GameWrapper';
 import { Move } from '../../../jscaip/Move';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -10,27 +10,30 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 @Component({
     selector: 'app-local-game-wrapper',
     templateUrl: './local-game-wrapper.component.html',
+    changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class LocalGameWrapperComponent extends GameWrapper implements AfterContentInit {
+export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public static VERBOSE = false;
+    public VERBOSE = true;
 
     public aiDepth: number = 2; // TODO: make that a choice of user
 
     public botTimeOut: number = 500; // this.aiDepth * 500;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
+                private cdr: ChangeDetectorRef,
                 actRoute: ActivatedRoute,
                 router: Router,
                 userService: UserService) {
         super(componentFactoryResolver, actRoute, router, userService);
+        if (this.VERBOSE) console.log("LocalGameWrapper Constructed: "+(this.gameCompo!=null));
     }
-    public ngAfterContentInit() {
+    public ngAfterViewInit() {
         const currentUser: string = this.userService.getCurrentUser();
         this.players = [currentUser, currentUser];
-        console.log("localGameWrapper.ngAfterContentInit");
-        console.log({compo: this.gameCompo});
+        if (this.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameCompo!=null));
         this.afterGameComponentViewProbablyInit();
+        this.cdr.detectChanges();
     }
     public onValidUserMove(move: Move) {
         if (LocalGameWrapperComponent.VERBOSE) {
@@ -51,6 +54,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterConte
                     const aiMove: Move = this.componentInstance.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
                     this.componentInstance.rules.choose(aiMove);
                     this.componentInstance.updateBoard();
+                    this.cdr.detectChanges();
                     this.proposeAIToPlay();
                 }
             }, this.botTimeOut);

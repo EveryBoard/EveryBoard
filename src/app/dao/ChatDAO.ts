@@ -3,7 +3,11 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { FirebaseFirestoreDAO } from "./FirebaseFirestoreDAO";
+import { Injectable } from "@angular/core";
 
+@Injectable({
+	providedIn: 'root'
+})
 export class ChatDAO extends FirebaseFirestoreDAO<IChat, PIChat> {
 
 	constructor(protected afs: AngularFirestore) {

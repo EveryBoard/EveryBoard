@@ -3,7 +3,11 @@ import { IJoiner, PIJoiner, IJoinerId } from "../domain/ijoiner";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
+import { Injectable } from "@angular/core";
 
+@Injectable({
+	providedIn: 'root'
+})
 export class JoinerDAO extends FirebaseFirestoreDAO<IJoiner, PIJoiner> {
 
 	static VERBOSE = false;

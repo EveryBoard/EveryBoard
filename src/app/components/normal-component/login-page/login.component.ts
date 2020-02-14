@@ -1,9 +1,8 @@
-import {AfterViewInit, Component, OnInit, ViewChild} from '@angular/core';
+import { Component } from '@angular/core';
 import {Router} from '@angular/router';
 
 import {UserService} from '../../../services/UserService';
 import {User} from '../../../domain/iuser';
-import {CountDownComponent} from '../count-down/count-down.component';
 
 @Component({
 	selector: 'app-login',
@@ -15,26 +14,14 @@ export class LoginComponent {
 	user = new User('', '', '', null, null, null, null);
 	errorMessage: string;
 
-	/* @ViewChild('chrono') chrono: CountDownComponent;
-	reachedOutOfTime() { alert('time over dude'); }
-	pause() {
-		this.chrono.pause();
-	}
-	resume() {
-		this.chrono.resume();
-	}
-	ngAfterViewInit() {
-		this.chrono.start(15 * 1000);
-	} */
-
-	constructor(private _route: Router,
+	constructor(private router: Router,
 				private userService: UserService) {}
 
 	connectAsGuest() {
 		const guestName: string = this.getUnusedGuestName();
 		// this.userService.changeUser(guestName, '');
 		// for now guest don't have document in the db notifying their presence or absence
-		this._route.navigate(['/server']);
+		this.router.navigate(['/server']);
 	}
 
 	logAsMember() {
@@ -70,5 +57,4 @@ export class LoginComponent {
 		const guestName: string = 'guest' + (index.toString());
 		return guestName;
 	}
-
 }

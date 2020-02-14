@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {UserDAO} from '../dao/UserDAO';
+import {JoueursDAO} from '../dao/UserDAO';
 import {IUser, IUserId} from '../domain/iuser';
 import {Router} from '@angular/router';
 import {ActivesUsersService} from './ActivesUsersService';
@@ -18,21 +18,18 @@ export class UserService {
 
 	private unsubscribe: () => void;
 
-	constructor(private _route: Router,
+	constructor(private router: Router,
 				private activesUsersService: ActivesUsersService,
-				private userDao: UserDAO) {
+				private userDao: JoueursDAO) {
 	}
-
 	getCurrentUser(): string {
 		return this.userName.getValue();
 	}
-
 	private changeUser(username: string, userDocId: string, password: string) {
 		sessionStorage.setItem('currentUser', JSON.stringify({user: username, pw: password}));
 		this.userName.next(username);
 		this.userDocId.next(userDocId);
 	}
-
 	// on all pages (header then)
 
 	updateUserActivity(activityIsAMove: boolean) {
@@ -42,7 +39,6 @@ export class UserService {
 		}
 		this.userDao.updateUserDocActivity(currentUserDocId, activityIsAMove);
 	}
-
 	// On Server Component
 
 	getActivesUsersObs(): Observable<IUserId[]> {
@@ -50,11 +46,9 @@ export class UserService {
 		this.activesUsersService.startObserving();
 		return this.activesUsersService.activesUsersObs;
 	}
-
 	unSubFromActivesUsersObs() {
 		this.activesUsersService.stopObserving();
 	}
-
 	// autres
 
 	private getUserNameBS(): BehaviorSubject<string> {
@@ -65,7 +59,6 @@ export class UserService {
 		}
 		return new BehaviorSubject<string>('');
 	}
-
 	logAsHalfMember(pseudo: string, code: string) {
 		/* si on trouve l'utilisateur
 			 *	  -> si le code match
@@ -81,12 +74,10 @@ export class UserService {
 			}
 		});
 	}
-
 	private onNewUser(pseudo: string, code: string) {
 		this.unsubscribe();
 		this.createHalfMemberThenLog(pseudo, code);
 	}
-
 	private createHalfMemberThenLog(pseudo: string, code: string) {
 		const newUser: IUser = {
 			code: code,
@@ -96,10 +87,9 @@ export class UserService {
 			lastActionTime: Date.now(),
 			status: -1
 		};
-		this.userDao.createUser(newUser)
-			.then(userId => this.logValidHalfMember(pseudo, code, userId));
+		this.userDao.create(newUser)
+			.then((userId: string) => this.logValidHalfMember(pseudo, code, userId));
 	}
-
 	private onFoundUser(pseudo: string, code: string, foundUser: IUserId) {
 		this.unsubscribe();
 		if (code === foundUser.user.code) {
@@ -108,22 +98,19 @@ export class UserService {
 			console.log('code incorrect !'); // TODO : rendre ça visible de l'user
 		}
 	}
-
 	private logValidHalfMember(pseudo: string, code: string, id: string) {
-		this.userDao.updateUserById(id, {
+		this.userDao.update(id, {
 			lastActionTime: Date.now(),
 			status: -2 // TODO calculate what that must be
 		}).then(onfullfilled => {
 			this.changeUser(pseudo, id, code);
-			this._route.navigate(['/server']);
+			this.router.navigate(['/server']);
 		});
 	}
-
 	// Delegate
 
 	REFACTOR_observeUserByPseudo(pseudo: string, callback: (user: IUserId) => void): () => void {
 		// the callback will be called on the foundUser
 		return this.userDao.observeUserByPseudo(pseudo, callback);
 	}
-
 }

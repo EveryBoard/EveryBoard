@@ -6,10 +6,10 @@ import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 @Injectable({
 	providedIn: 'root'
 })
-export class UserDAO extends FirebaseFirestoreDAO<IUser, PIUser> {
+export class JoueursDAO extends FirebaseFirestoreDAO<IUser, PIUser> {
 
 	constructor(protected afs: AngularFirestore) {
-        super("/users", afs);
+        super("joueurs", afs);
     }
 	public observeUserByPseudo(pseudo: string, onUserUpdate: (user: IUserId) => void): () => void {
 		// the callback will be called on the foundUser
