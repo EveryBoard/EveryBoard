@@ -30,18 +30,25 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
-        const LOCAL_VERBOSE = true;
+        const LOCAL_VERBOSE = false;
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
+            if (LOCAL_VERBOSE) console.log("current node has moves");
             let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing if twice
             if (choix === null) {
+                if (LOCAL_VERBOSE) console.log("but this proposed move is not found in the list, so it's illegal");
                 return false;
             } else {
+                if (LOCAL_VERBOSE) console.log("and this proposed move is found in the list, so it is legal");
                 this.node = choix; // qui devient le plateau actuel
                 return true;
             }
         }
+        if (LOCAL_VERBOSE) console.log("current node has no moves, let's verify ourselves");
         const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
-        if (!status.legal) return false;
+        if (!status.legal) {
+            if (LOCAL_VERBOSE) console.log("Move is illegal");
+            return false;
+        }
 
         const result: {resultingMove: Move, resultingSlice: GamePartSlice} = MNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
         const son: MNode<Rules<M, S, L>, M, S, L> = new MNode(this.node, result.resultingMove as M, result.resultingSlice as S);

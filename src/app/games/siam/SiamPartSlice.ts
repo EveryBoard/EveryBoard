@@ -3,6 +3,13 @@ import { SiamPiece } from "./SiamPiece";
 
 export class SiamPartSlice extends GamePartSlice {
 
+    public constructor(board: number[][], turn: number) {
+        if (board == null) {
+			board = SiamPartSlice.getStartingBoard();
+		}
+        super(board, turn);
+    }
+
     public static getStartingBoard(): number[][] {
         let board: number[][] = GamePartSlice.createBiArray(5, 5, SiamPiece.EMPTY.value);
         /*board[0][0] = SiamPiece.WHITE_UP.value;

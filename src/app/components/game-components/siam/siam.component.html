@@ -1,12 +1,21 @@
+{{ rules.node.ownValue }}
 <div id="gameboard">
     <table>
         <tr>
             <td> coin </td>
-            <td *ngFor="let i of [0,1,2,3,4]">COUCOUB{{i}}TE</td>
+            <td *ngFor="let x of [0,1,2,3,4]">
+                <img width="50" height="50"
+                     (click)="insertAt(x, -1)"
+                     [src]="imagesLocation+'siam/INSERT_DOWN.svg'">
+            </td>
             <td> coin </td>
         </tr>
         <tr *ngFor="let line of board; index as y">
-            <td> zbleu </td>
+            <td>
+                <img width="50" height="50"
+                     (click)="insertAt(-1, y)"
+                     [src]="imagesLocation+'siam/INSERT_RIGHT.svg'">
+            </td>
             <td *ngFor="let c of line; index as x"
                 style="position:relative"
                 (click)="onBoardClick(x, y)">
@@ -14,17 +23,29 @@
                      width="50" height="50"
                      alt="highlighted"
                      style="position:absolute; top:0; left:0;"
-                     [src]="imageLocation+'squared_highlight.svg'">
+                     [src]="imagesLocation+'squared_highlight.svg'">
                 <img width="50" height="50"
                      [src]="imagesLocation+'siam/'+imagesNames[c]+'.svg'">
             </td>
-            <td> zbleu </td>
+            <td>
+                <img width="50" height="50"
+                     (click)="insertAt(5, y)"
+                     [src]="imagesLocation+'siam/INSERT_LEFT.svg'">
+            </td>
         </tr>
         <tr>
             <td> coin </td>
-            <td *ngFor="let i of [0,1,2,3,4]">COUCOUBITE</td>
+            <td *ngFor="let x of [0,1,2,3,4]">
+                <img width="50" height="50"
+                     (click)="insertAt(x, 5)"
+                     [src]="imagesLocation+'siam/INSERT_UP.svg'">
+            </td>
             <td> coin </td>
         </tr>
     </table>
-
+    <ul *ngIf="chosenCoord">
+        <li (click)="onMoveNatureSelection(1)">Turn Anti Clockwise</li>
+        <li (click)="onMoveNatureSelection(2)">Forward</li>
+        <li (click)="onMoveNatureSelection(0)">Turn Clockwise</li>
+    </ul>
 </div>

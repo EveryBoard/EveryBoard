@@ -14,7 +14,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 })
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public VERBOSE = true;
+    public VERBOSE = false;
 
     public aiDepth: number = 2; // TODO: make that a choice of user
 

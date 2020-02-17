@@ -20,7 +20,7 @@ import { SiamComponent } from './siam/siam.component';
 
 export abstract class GameWrapper {
  
-    public static VERBOSE = true;
+    public static VERBOSE = false;
 
     // component loading
     @ViewChild(GameIncluderComponent, {static: false})

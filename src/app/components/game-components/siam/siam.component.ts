@@ -27,6 +27,8 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         const slice: SiamPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.board;
         this.lastMove = this.rules.node.move;
+        this.chosenCoord = null;
+        this.chosenMoveNature = null;
     }
     public decodeMove(encodedMove: number): SiamMove {
         return SiamMove.decode(encodedMove);
@@ -47,6 +49,15 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             this.chosenMoveNature = null;
         } else {
             this.chosenCoord = new Coord(x, y);
+            this.tryMove();
+        }
+    }
+    public insertAt(x: number, y: number) {
+        if (this.chosenCoord) {
+            this.chosenCoord = null;
+        } else {
+            this.chosenCoord = new Coord(x, y);
+            this.chosenMoveNature = SiamMoveNature.FORWARD.value;
             this.tryMove();
         }
     }
