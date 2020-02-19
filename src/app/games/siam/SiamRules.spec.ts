@@ -117,12 +117,12 @@ describe('SiamRules', () => {
     });
     it('Player 1 pushing player 0 pushing mountain should be a victory for player 0', () => {
         const rules: SiamRules = new SiamRules();
-        rules.choose(new SiamMove(4, -1, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
+         rules.choose(new SiamMove(4, -1, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
+         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
-        rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
-        rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
-        expect(rules.node.ownValue).toEqual(Number.MAX_SAFE_INTEGER, "Player 1 should have won (max score)");
+         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
+        expect(rules.node.ownValue).toEqual(Number.MIN_SAFE_INTEGER, "Player 0 should have won (min score)");
     });
 });

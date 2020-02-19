@@ -2,17 +2,16 @@
 	<form class="example-form">
 
 		<!-- Messages -->
-		<div style="height: 75%; overflow: auto">
+		<div style="height: 90%; overflow: auto">
 			<mat-list *ngIf="chat">
 				<p *ngFor="let msg of chat">
-					[{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] {{ msg.sender }} : {{ msg.content }}
+					[{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>{{ msg.sender }} :</b> {{ msg.content }}
 				</p>
 			</mat-list>
 		</div>
 
 		<!-- Text Input -->
 		<mat-form-field class="full-width"
-						style="max-height: 25%;"
 						align="start"
 						*ngIf="userName!=''">
 			<input matInput
@@ -29,6 +28,5 @@
 				{{message.value.length}} / 128
 			</mat-hint>
 		</mat-form-field>
-
 	</form>
 </div>

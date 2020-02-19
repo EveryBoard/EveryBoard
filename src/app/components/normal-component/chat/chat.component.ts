@@ -10,7 +10,7 @@ import {UserService} from '../../../services/UserService';
 })
 export class ChatComponent implements OnInit, OnDestroy {
 
-	static VERBOSE = false;
+	static VERBOSE = true;
 
 	@Input() chatId: string;
 	@Input() turn: number;

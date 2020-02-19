@@ -100,7 +100,7 @@ export class SiamRules extends _SiamRules {
         if (move.coord.isInRange(5, 5)) {
             resultingBoard[move.coord.y][move.coord.x] = SiamPiece.EMPTY.value;
         }
-        do {
+        while(landingCoord.isInRange(5, 5) || movingPiece !== SiamPiece.EMPTY.value) {
             if (Direction.equals(pushingDir, currentDirection)) 
                 pushing++;
             else if (Direction.equals(resistingDir, currentDirection)) 
@@ -112,8 +112,7 @@ export class SiamRules extends _SiamRules {
             movingPiece = tmpPiece;
             landingCoord = landingCoord.getNext(pushingDir);
             currentDirection = SiamPiece.getNullableDirection(movingPiece);
-            lineFullyMoved = landingCoord.isNotInRange(5, 5) || movingPiece === SiamPiece.EMPTY.value;
-        } while (!lineFullyMoved);
+        }
         if (pushing > resisting && nbMountains < 2) {
             if (SiamRules.VERBOSE) console.log("This move is a legal push: "+resultingBoard);
             return {legal: true, resultingBoard};
@@ -147,17 +146,16 @@ export class SiamRules extends _SiamRules {
     }
     public getBoardValue(node: _SiamNode): number {
         // 1. victories
-        const victory: number = this.getVictory(node);
-        if (victory == null) return 0;
+        const winner: Player = this.getWinner(node);
+        if (winner == Player.NONE) return 0;
         // 2. TODO: pre-victories
-        return victory;
+        return winner == Player.ZERO ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
     }
-    public getVictory(node: _SiamNode): number | null {
+    public getWinner(node: _SiamNode): Player {
         if (this.countMountains(node.gamePartSlice) === 2) {
-            const pusher: Player = this.getPusher(node, node.move);
-            return pusher === Player.ZERO ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
+            return this.getPusher(node, node.move);
         } else {
-            return null;
+            return Player.NONE;
         }
     }
     public countMountains(slice: SiamPartSlice): number {
@@ -185,8 +183,11 @@ export class SiamRules extends _SiamRules {
         }
         const pushingDirection: Orthogonale = SiamPiece.getDirection(moveStarterPiece);
         const pusherCoord: Coord = this.getPusherCoord(pushingDirection, moveStarterCoord);
-        console.log(moveStarterCoord.toString() + " pushed all the way to " + pusherCoord.toString());
-        return SiamPiece.getOwner(node.gamePartSlice.getBoardAt(pusherCoord));
+        const winner: Player = SiamPiece.getOwner(node.gamePartSlice.getBoardAt(pusherCoord));
+        console.log(moveStarterCoord.toString() + " belong to " + node.mother.gamePartSlice.getCurrentPlayer().value + ", "
+                  + pusherCoord.toString() + " belong to " + SiamPiece.getOwner(node.gamePartSlice.getBoardAt(pusherCoord)).value + ", "
+                  + winner.value + " win");
+        return winner;
     }
     public getPusherCoord(pushingDirection: Orthogonale, pusher: Coord): Coord {
         let pushed: Coord = pusher.getNext(pushingDirection);

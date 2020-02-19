@@ -1,32 +1,14 @@
 #actualGame {
-	background-color: #F0F0F0;
-	max-height: 48%;
-	height: 48%;
-	overflow-y: auto;
-	float: top;
-	margin-bottom: 1%;
-}
-#chat {
-	background-color: #D0D0D0;
-	max-height: 48%;
-	height: 48%;
-	overflow-y: auto;
-	float: bottom;
+    background-color: #F0F0F0;
 }
 #gameCreator {
 	background-color: #D0D0D0;
-	max-height: 29%;
-	height: 29%;
-	overflow-y: auto;
-	float: top;
-	margin-bottom: 2%;
+}
+#chat {
+    background-color: #D0D0D0;
 }
 #onlineUser {
-	background-color: #F0F0F0;
-	max-height: 68%;
-	height: 68%;
-	overflow-y: auto;
-	float: bottom;
+    background-color: #F0F0F0;
 }
 .table-hover tbody tr:hover td {
 }

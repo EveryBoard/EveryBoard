@@ -1,74 +1,59 @@
-<div style="height: 88%;"
-	 class="container-fluid">
-
-	<div class="col-sm-9" style="height: 100%">
-
-		<div id="actualGame" class="circled">
-			<p>List of actual games</p>
-			<table class="table table-hover">
-				<thead>
-				<tr>
-					<th scope="col">Game Name</th>
-					<th scope="col">Player 0</th>
-					<th scope="col">Player 1</th>
-					<th scope="col">Turn</th>
-				</tr>
-				</thead>
-				<tbody>
-				<tr *ngFor="let part of activesParts"
-					(click)="joinGame(part.id, part.part.typeGame)">
-					<td>{{ part.part.typeGame }}</td>
-					<td>{{ part.part.playerZero }}</td>
-					<td>{{ part.part.playerOne }}</td>
-					<td>{{ part.part.turn }}</td>
-				</tr>
-				</tbody>
-			</table>
-		</div>
-
-		<div id="chat" class="circled">
-			<app-chat chatId="server"
-					  turn="null"></app-chat>
-		</div>
-
-	</div>
-
-	<div class="col-sm-3" style="height: 100%">
-
-		<div id="gameCreator" class="circled form-group">
-			<label for="gameType">Créer un jeu</label>
-			<select id="gameType"
-					class="form-control"
-					[(ngModel)]='selectedGame'>
-				<option *ngFor="let gameName of gameNameList"
-						value={{gameName}}
-						class="form-control">
-					{{ gameName }}
-				</option>
-			</select>
-			<br/>
-			<input type="button"
-				   value="online game"
-				   [disabled]="!selectedGame"
-				   (click)="createGame()"
-				   class="btn btn-primary btn-block">
-			<br/>
-			<input type="button"
-				   [disabled]="!selectedGame"
-				   value="local game"
-				   (click)="playLocally()"
-				   class="btn btn-primary btn-block">
-		</div>
-
-		<div id="onlineUser" class="circled">
-			<p> Online user's : </p>
-			<ul>
-				<li *ngFor="let user of activesUsers">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
-					date:'HH:mm:ss':'+0100'}}
-				</li>
-			</ul>
-		</div>
-
-	</div>
-
+<div style="height: 88%; max-height: 88%;">
+    <mat-tab-group style="max-height: 100%; height: 100%;">
+        <mat-tab label="Current Games">
+            <div id="actualGame" class="circled">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">Game Name</th>
+                            <th scope="col">Player 0</th>
+                            <th scope="col">Player 1</th>
+                            <th scope="col">Turn</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let part of activesParts" (click)="joinGame(part.id, part.part.typeGame)">
+                            <td>{{ part.part.typeGame }}</td>
+                            <td>{{ part.part.playerZero }}</td>
+                            <td>{{ part.part.playerOne }}</td>
+                            <td>{{ part.part.turn }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </mat-tab>
+        <mat-tab label="Chat" style="height: 100%; max-height: 100%;">
+            <div class="col-sm-9" style="height: 100%; max-height: 100%;">
+                <div id="chat" class="circled">
+                    <app-chat chatId="server" turn="null"></app-chat>
+                </div>
+            </div>
+            <div class="col-sm-3" style="height: 100%; max-height: 100%;">
+                <div id="onlineUser" class="circled">
+                    <p> Online user's : </p>
+                    <ul>
+                        <li *ngFor="let user of activesUsers">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
+			    		date:'HH:mm:ss':'+0100'}}
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </mat-tab>
+        <mat-tab label="Create New Game">
+            <div id="gameCreator" class="circled form-group">
+                <label for="gameType">Créer un jeu</label>
+                <select id="gameType" class="form-control" [(ngModel)]='selectedGame'>
+                    <option *ngFor="let gameName of gameNameList" value={{gameName}} class="form-control">
+                        {{ gameName }}
+                    </option>
+                </select>
+                <br />
+                <input type="button" value="online game" [disabled]="!selectedGame" (click)="createGame()"
+                    class="btn btn-primary btn-block">
+                <br />
+                <input type="button" [disabled]="!selectedGame" value="local game" (click)="playLocally()"
+                    class="btn btn-primary btn-block">
+            </div>
+        </mat-tab>
+    </mat-tab-group>
 </div>
