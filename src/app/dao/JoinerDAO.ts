@@ -13,7 +13,7 @@ export class JoinerDAO extends FirebaseFirestoreDAO<IJoiner, PIJoiner> {
 	static VERBOSE = false;
 
 	constructor(protected afs: AngularFirestore) {
-        super("/joiners", afs);
+        super("joiners", afs);
     }
 	public getObservable(id: string): Observable<IJoinerId> {
 		if (JoinerDAO.VERBOSE) {

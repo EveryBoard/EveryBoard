@@ -245,11 +245,11 @@ export class GameService {
 			this.joinerService
 				.readJoinerById(part.id)
 				.then(iJoiner => {
-					this.createGame(iJoiner.creator, part.part.typeGame, iJoiner.chosenPlayer)
+					this.createGame(iJoiner.creator, part.doc.typeGame, iJoiner.chosenPlayer)
 						.then(rematchId => {
 							let firstPlayer: string = iJoiner.firstPlayer;
 							if (firstPlayer === '2') {
-								if (part.part.playerZero === iJoiner.creator) {
+								if (part.doc.playerZero === iJoiner.creator) {
 									// the creator started the previous game thank to hazard
 									firstPlayer = '1'; // so he won't start this one
 								} else {
@@ -270,7 +270,7 @@ export class GameService {
 							const req: MGPRequest = {
 								code: 8,
 								partId: rematchId,
-								typeGame: part.part.typeGame
+								typeGame: part.doc.typeGame
 							};
 							this.joinerService
 								.updateJoinerById(rematchId, newJoiner)

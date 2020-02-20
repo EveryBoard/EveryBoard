@@ -11,7 +11,7 @@ import { Injectable } from "@angular/core";
 export class ChatDAO extends FirebaseFirestoreDAO<IChat, PIChat> {
 
 	constructor(protected afs: AngularFirestore) {
-        super("/chats", afs);
+        super("chats", afs);
     }
 	public getChatObsById(id: string): Observable<IChatId> {
 		return this.afs.doc('chats/' + id).snapshotChanges()

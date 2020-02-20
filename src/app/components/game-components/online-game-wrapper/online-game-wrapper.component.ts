@@ -157,7 +157,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		return difference;
 	}
 	protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
-		const part: ICurrentPart = updatedICurrentPart.part;
+		const part: ICurrentPart = updatedICurrentPart.doc;
 		if (OnlineGameWrapperComponent.VERBOSE) {
 			console.log('part updated !');
 			console.log(JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(part)));
@@ -376,7 +376,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
 		if (this.observerRole === 0 || this.observerRole === 1) {
 			const currentPartId: ICurrentPartId = {
 				id: this.currentPartId,
-				part: this.currentPart
+				doc: this.currentPart
 			};
 			this.gameService.acceptRematch(currentPartId, iPart => {
 				this.onCurrentPartUpdate(iPart);

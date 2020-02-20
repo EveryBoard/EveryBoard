@@ -106,8 +106,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 		let playerZero: string;
 		let playerOne: string;
 		while (	(i < this.activesParts.length) && (!found)) {
-			playerZero = this.activesParts[i].part.playerZero;
-			playerOne = this.activesParts[i++].part.playerOne;
+			playerZero = this.activesParts[i].doc.playerZero;
+			playerOne = this.activesParts[i++].doc.playerOne;
 			found = (this.userName === playerZero) || (this.userName === playerOne);
 		}
 		return !found;

@@ -1,9 +1,5 @@
-import {Component, OnInit} from '@angular/core';
+import {Component} from '@angular/core';
 import {AbstractGameComponent} from '../AbstractGameComponent';
-import {ActivatedRoute, Router} from '@angular/router';
-import {UserService} from '../../../services/UserService';
-import {JoinerService} from '../../../services/JoinerService';
-import {GameService} from '../../../services/GameService';
 import {GoMove} from 'src/app/games/go/GoMove';
 import {GoRules} from 'src/app/games/go/GoRules';
 import {GoPartSlice, Phase} from 'src/app/games/go/GoPartSlice';
@@ -16,21 +12,21 @@ import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 })
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
 
-    static VERBOSE = false;
+    public static VERBOSE = false;
 
-    scores: number[] = [0, 0];
+    public scores: number[] = [0, 0];
 
     public rules = new GoRules();
 
-    imagesLocation = 'assets/images/'; // en prod
+    public imagesLocation = 'assets/images/'; // en prod
     // imagesLocation = 'src/assets/images/'; // en dev
 
-    koX = -1;
-    koY = -1;
+    public koX = -1;
+    public koY = -1;
 
-    lastX = -1;
-    lastY = -1;
-    canPass = false;
+    public lastX = -1;
+    public lastY = -1;
+    public canPass = false;
 
     constructor() {
         super();
@@ -38,7 +34,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.showScore = true;
     }
 
-    onClick(x: number, y: number) {
+    public onClick(x: number, y: number) {
         console.log("salut " + x + "-" + y);
         this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
@@ -46,15 +42,12 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         const result: boolean = this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]); // TODO: encode score
         console.log("this.chooseMove said : " + result);
     }
-
-    decodeMove(encodedMove: number): GoMove {
+    public decodeMove(encodedMove: number): GoMove {
         return GoMove.decode(encodedMove);
     }
-
-    encodeMove(move: GoMove): number {
+    public encodeMove(move: GoMove): number {
         return move.encode();
     }
-
     public updateBoard(): void {
         if (GoComponent.VERBOSE || true) {
             console.log('updateBoard');
@@ -65,6 +58,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         const phase: Phase = slice.phase;
 
         this.board = slice.getCopiedBoard();
+        this.scores = slice.getCapturedCopy();
 
         if (move != null) {
             this.lastX = move.coord.x;
@@ -79,8 +73,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         }
         this.canPass = phase !== Phase.COUNTING;
     }
-
-    pass() {
+    public pass() {
         this.onClick(GoMove.pass.coord.x, GoMove.pass.coord.y);
     }
 }

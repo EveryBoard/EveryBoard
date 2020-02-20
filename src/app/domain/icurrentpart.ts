@@ -43,7 +43,7 @@ export interface ICurrentPart {
 
 export interface ICurrentPartId {
 	id: string;
-	part: ICurrentPart;
+	doc: ICurrentPart;
 }
 
 export interface PICurrentPart {

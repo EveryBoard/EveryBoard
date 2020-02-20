@@ -2,7 +2,7 @@
 	<form class="example-form">
 
 		<!-- Messages -->
-		<div style="height: 90%; overflow: auto">
+		<div style="max-height: 90%; overflow: auto">
 			<mat-list *ngIf="chat">
 				<p *ngFor="let msg of chat">
 					[{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>{{ msg.sender }} :</b> {{ msg.content }}
@@ -12,11 +12,11 @@
 
 		<!-- Text Input -->
 		<mat-form-field class="full-width"
-						align="start"
+                        align="start"
 						*ngIf="userName!=''">
 			<input matInput
 				   #message
-				   maxlength="128"
+                   maxlength="128"
 				   placeholder="Envoyez un message!"
 				   [(ngModel)]="userMessage"
 				   [ngModelOptions]="{standalone: true}">

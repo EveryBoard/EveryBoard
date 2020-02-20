@@ -12,11 +12,11 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let part of activesParts" (click)="joinGame(part.id, part.part.typeGame)">
-                            <td>{{ part.part.typeGame }}</td>
-                            <td>{{ part.part.playerZero }}</td>
-                            <td>{{ part.part.playerOne }}</td>
-                            <td>{{ part.part.turn }}</td>
+                        <tr *ngFor="let part of activesParts" (click)="joinGame(part.id, part.doc.typeGame)">
+                            <td>{{ part.doc.typeGame }}</td>
+                            <td>{{ part.doc.playerZero }}</td>
+                            <td>{{ part.doc.playerOne }}</td>
+                            <td>{{ part.doc.turn }}</td>
                         </tr>
                     </tbody>
                 </table>
