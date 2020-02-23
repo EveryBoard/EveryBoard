@@ -1,0 +1,15 @@
+<div class="container">
+    <form [formGroup]="inscriptionForm" class="form-signin">
+        <h2 class="form-signin-heading">Inscrit toi</h2>
+        <label for="emailId" class="sr-only">Adresse mail</label>
+        <input class="form-control" formControlName="email" name='email' placeholder="Email" type="text" required />
+
+        <label for="passwordId" class="sr-only">Password</label>
+        <input id="passwordId" class="form-control" formControlName="password" name="code" placeholder="Password"
+            type="password" />
+
+        <button id="loginButton" type="submit" class="btn btn-lg btn-primary btn-block"
+            (click)="tryRegister(inscriptionForm.value)"> Recevoir un e-mail de confirmation </button>
+        <span style="color:red"> {{ errorMessage }}</span><br />
+    </form>
+</div>

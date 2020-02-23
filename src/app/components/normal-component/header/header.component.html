@@ -1,51 +1,18 @@
 <div style="height: 10%;">
-	<nav class="navbar navbar-expand navbar-light bg-light">
-		<a class="navbar-brand" (click)="backToServer()"> Welcome to Pantheon's Game </a>
-		<ul class="nav nav-pills">
-			<li>
-				<a class="nav-link" [routerLink]="['/server']"> Voir les parties en cours </a>
-			</li>
-			<li *ngIf="userName !== ''">
-				<a class="nav-link">{{ userName }} </a>
-			</li>
-			<li *ngIf="userName === ''">
-				<a class="nav-link" [routerLink]="['/login']">Connecte toi!</a>
-			</li>
-		</ul>
-	</nav>
+    <nav class="navbar navbar-expand navbar-light bg-light">
+        <a class="navbar-brand" (click)="backToServer()"> Welcome to Pantheon's Game </a>
+        <ul class="nav nav-pills">
+            <li>
+                <a class="nav-link" [routerLink]="['/server']"> Voir les parties en cours </a>
+            </li>
+            <li *ngIf="userName else connect">
+                <a class="nav-link" (click)="logout()">{{ userName }} (se déconnecter) </a>
+            </li>
+            <ng-template #connect>
+                <li>
+                    <a class="nav-link" [routerLink]="['/login']">Connecte toi!</a>
+                </li>
+            </ng-template>
+        </ul>
+    </nav>
 </div>
-<!-- TEST <div>
-	<div class="inforow">
-		<app-count-down style="float: left"
-						(outOfTimeAction)="reachedOutOfTime(0)"
-						[duration]="100"
-						[(paused)]="!isPlayerZeroTurn"
-						[autoRefill]="false"
-						[initialDuration]="100">
-		</app-count-down>
-		<app-count-down style="float: right"
-						(outOfTimeAction)="reachedOutOfTime(1)"
-						[duration]="100"
-						[autoRefill]="false"
-						[(paused)]="!isPlayerOneTurn"
-						[initialDuration]="100">
-		</app-count-down>
-	</div>
-	<div class="inforow">
-		<app-count-down style="float: left"
-						(outOfTimeAction)="reachedOutOfTime(0)"
-						[duration]="20"
-						[(paused)]="!isPlayerZeroTurn"
-						[autoRefill]="true"
-						[initialDuration]="20">
-		</app-count-down>
-		<app-count-down style="float: right"
-						(outOfTimeAction)="reachedOutOfTime(1)"
-						[duration]="20"
-						[autoRefill]="true"
-						[(paused)]="!isPlayerOneTurn"
-						[initialDuration]="20">
-		</app-count-down>
-	</div>
-	<button (click)="move()">MOVE</button>
-</div> -->

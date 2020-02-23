@@ -1,42 +1,32 @@
 <div class="container">
-	<form class="form-signin">
-		<h2 class="form-signin-heading">Connecte toi</h2>
-		<label for="pseudoId" class="sr-only">Pseudo</label>
-		<input id="pseudoId"
-			   class="form-control"
-			   [(ngModel)]='user.pseudo'
-			   name='pseudo'
-			   placeholder="Pseudo"
-			   type="text" />
+    <form [formGroup]="loginForm"
+          class="form-signin">
+        <h2 class="form-signin-heading">Connecte toi</h2>
+        <label for="emailId" class="sr-only">Pseudo</label>
+        <input class="form-control"
+               formControlName="email"
+               name='email'
+               placeholder="Email"
+               type="text" 
+               required />
 
-		<label for="passwordId" class="sr-only">Password</label>
-		<input id="passwordId"
-			   class="form-control"
-			   [(ngModel)]='user.code'
-			   name="code"
-			   placeholder="Password"
-			   type="password" />
+        <label for="passwordId" class="sr-only">Password</label>
+        <input id="passwordId"
+               class="form-control"
+               formControlName="password"
+               name="code"
+               placeholder="Password"
+               type="password" />
 
-		<label for="halfMemberButton" class="sr-only"> Exemple : jean, password:jaja (non crypté) </label>
-		<button id="halfMemberButton"
-				type="submit"
-				class="btn btn-lg btn-primary btn-block"
-				(click)="logAsHalfMember()" > Connection/Inscription </button>
-
-		<!-- <button type="submit"
-                disabled
-                (click)="logAsMember()"> Log as Member</button>
-        Pas encore prêt
-        <br/> -->
-		<span style="color:red"> {{ errorMessage }}</span><br/>
-		<!-- <a href="./createAccount">Not member yet ? Create an account</a> -->
-	</form>
-
+        <button id="loginButton"
+                type="submit"
+                class="btn btn-lg btn-primary btn-block"
+                (click)="loginWithEmail(loginForm.value)" > Connection </button>
+        <button id="googleButton"
+                type="submit"
+                (click)="loginWithGoogle()"
+                class="btn btn-lg btn-primary btn-block">Se connecter avec Google</button>
+        <a class="nav-link" [routerLink]="['/inscription']">Pas encore inscrit? Crée un compte.</a><br/>
+        <span style="color:red"> {{ errorMessage }}</span><br/>
+    </form>
 </div>
-
-<!--
-<app-count-down #chrono
-				style="float: left"
-				(outOfTimeAction)="reachedOutOfTime()"></app-count-down>
-<button (click)="chrono.isPaused===true ? resume() : pause()">{{ chrono.isPaused ? 'resume' : 'pause' }}</button>
--->

@@ -1,12 +1,3 @@
-import { Dir } from "@angular/cdk/bidi";
-import { MatExpansionPanelDescription } from "@angular/material";
-
-/*export type _ORTHOGONALE =
-    {x:  0; y: -1} | // UP
-    {x:  1; y:  0} | // RIGHT
-    {x:  0; y:  1} | // DOWN
-    {x: -1, y:  0};  // LEFT
-*/
 export class Orthogonale {
 
     public static readonly UP: Orthogonale = new Orthogonale(0, -1);

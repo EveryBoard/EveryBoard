@@ -9,6 +9,8 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStatus> {
 
+    public static VERBOSE: boolean = false;
+
     public applyLegalMove(move: TablutMove, slice: TablutPartSlice, status: LegalityStatus): { resultingMove: TablutMove; resultingSlice: TablutPartSlice; } {
         // copies
         const board: number[][] = slice.getCopiedBoard();
@@ -40,8 +42,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const resultingSlice: TablutPartSlice = new TablutPartSlice(board, turn + 1, invaderStart);
         return {resultingSlice, resultingMove};
     }
-    static VERBOSE = false;
-
     // statics fields :
 
     static CASTLE_IS_LEFT_FOR_GOOD = false;
@@ -548,7 +548,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const listMoves: TablutMove[] =
             TablutRules.getPlayerListMoves(currentPlayer, invaderStart, currentBoard);
         if (TablutRules.VERBOSE || localVerbose) {
-            console.log('liste des mouvements : ' + listMoves);
+            console.log({listMoves});
         }
         const nextTurn: number = currentTurn + 1;
 

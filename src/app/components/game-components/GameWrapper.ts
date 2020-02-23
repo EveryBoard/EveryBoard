@@ -17,6 +17,7 @@ import {GoComponent} from './go/go.component';
 import { EncapsuleComponent } from './encapsule/encapsule.component';
 import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
 import { SiamComponent } from './siam/siam.component';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 export abstract class GameWrapper {
  
@@ -28,7 +29,7 @@ export abstract class GameWrapper {
 
     protected componentInstance: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
 
-    public userName: string = this.userService.getCurrentUser();
+    public userName: string = this.authenticationService.getAuthenticatedUser().pseudo;
 
     public players: string[] = [this.userName, this.userName];
 
@@ -39,7 +40,8 @@ export abstract class GameWrapper {
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
                 protected router: Router,
-                protected userService: UserService) {
+                protected userService: UserService,
+                protected authenticationService: AuthenticationService) {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.constructed: ' + (this.gameCompo!=null));
         }

@@ -6,6 +6,7 @@ import { UserService } from '../../../services/UserService';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -14,7 +15,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 })
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public VERBOSE = false;
+    public VERBOSE = true;
 
     public aiDepth: number = 2; // TODO: make that a choice of user
 
@@ -24,12 +25,13 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 private cdr: ChangeDetectorRef,
                 actRoute: ActivatedRoute,
                 router: Router,
-                userService: UserService) {
-        super(componentFactoryResolver, actRoute, router, userService);
+                userService: UserService,
+                authenticationService: AuthenticationService) {
+        super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         if (this.VERBOSE) console.log("LocalGameWrapper Constructed: "+(this.gameCompo!=null));
     }
     public ngAfterViewInit() {
-        const currentUser: string = this.userService.getCurrentUser();
+        const currentUser: string = this.authenticationService.getAuthenticatedUser().pseudo;
         this.players = [currentUser, currentUser];
         if (this.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameCompo!=null));
         this.afterGameComponentViewProbablyInit();
@@ -67,7 +69,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.switchPlayer(1);
     }
     public switchPlayer(n: 0|1) {
-        this.players[n] = this.players[n] === 'bot' ? this.userService.getCurrentUser() : 'bot';
+        this.players[n] = this.players[n] === 'bot' ? this.authenticationService.getAuthenticatedUser().pseudo : 'bot';
         this.proposeAIToPlay();
     }
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {

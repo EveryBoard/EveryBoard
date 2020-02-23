@@ -7,44 +7,38 @@ import {AbstractGameComponent} from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
-	selector: 'app-p4-new',
-	templateUrl: './p4.component.html',
-	styleUrls: []
+    selector: 'app-p4-new',
+    templateUrl: './p4.component.html',
+    styleUrls: []
 })
 export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, LegalityStatus> {
 
-	/*************************** Common Fields **************************/
+    /*************************** Common Fields **************************/
 
-	public rules = new P4Rules();
+    public rules = new P4Rules();
 
-	public imagesLocation = 'assets/images/'; // TODO: make en commun to all
+    public imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg', ];
 
-	imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg', ];
+    public lastX: number;
 
-	lastX: number;
+    public onClick(x: number) {
+        console.log('click');
+        const chosenMove = MoveX.get(x);
+        this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+    }
+    public updateBoard() {
+        const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
+        const lastMove: MoveX = this.rules.node.move;
 
-	onClick(x: number) {
-		console.log('click');
-		const chosenMove = MoveX.get(x);
-		this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
-	}
-
-	updateBoard() {
-		const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
-		const lastMove: MoveX = this.rules.node.move;
-
-		this.board = p4PartSlice.getCopiedBoard().reverse();
-		if (lastMove !== null) {
-			this.lastX = lastMove.x;
-		}
-	}
-
-	decodeMove(encodedMove: number): Move {
-		return MoveX.get(encodedMove);
-	}
-
-	encodeMove(move: MoveX): number {
-		return move.x;
-	}
-
+        this.board = p4PartSlice.getCopiedBoard().reverse();
+        if (lastMove !== null) {
+            this.lastX = lastMove.x;
+        }
+    }
+    public decodeMove(encodedMove: number): Move {
+        return MoveX.get(encodedMove);
+    }
+    public encodeMove(move: MoveX): number {
+        return move.x;
+    }
 }

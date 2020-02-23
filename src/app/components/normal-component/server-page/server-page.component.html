@@ -30,10 +30,12 @@
             </div>
             <div class="col-sm-3" style="height: 100%; max-height: 100%;">
                 <div id="onlineUser" class="circled">
+                    <br/>
                     <p> Online user's : </p>
                     <ul>
-                        <li *ngFor="let user of activesUsers">{{ user.user.pseudo }} : {{ user.user.lastActionTime |
-			    		date:'HH:mm:ss':'+0100'}}
+                        <li *ngFor="let user of activesUsers">
+                            {{ user.doc.pseudo }} : 
+                            {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
                         </li>
                     </ul>
                 </div>

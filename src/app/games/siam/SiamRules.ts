@@ -93,14 +93,13 @@ export class SiamRules extends _SiamRules {
         let currentDirection: Orthogonale = pushingDir;
         const resistingDir: Orthogonale = Orthogonale.getOpposite(pushingDir);
         let nbMountains: number = 0;
-        let lineFullyMoved : boolean;
         let resisting: number = 0;
         let pushing: number = 0;
         let resultingBoard: number[][] = slice.getCopiedBoard();
         if (move.coord.isInRange(5, 5)) {
             resultingBoard[move.coord.y][move.coord.x] = SiamPiece.EMPTY.value;
         }
-        while(landingCoord.isInRange(5, 5) || movingPiece !== SiamPiece.EMPTY.value) {
+        while(landingCoord.isInRange(5, 5) && movingPiece !== SiamPiece.EMPTY.value) {
             if (Direction.equals(pushingDir, currentDirection)) 
                 pushing++;
             else if (Direction.equals(resistingDir, currentDirection)) 
@@ -184,9 +183,9 @@ export class SiamRules extends _SiamRules {
         const pushingDirection: Orthogonale = SiamPiece.getDirection(moveStarterPiece);
         const pusherCoord: Coord = this.getPusherCoord(pushingDirection, moveStarterCoord);
         const winner: Player = SiamPiece.getOwner(node.gamePartSlice.getBoardAt(pusherCoord));
-        console.log(moveStarterCoord.toString() + " belong to " + node.mother.gamePartSlice.getCurrentPlayer().value + ", "
-                  + pusherCoord.toString() + " belong to " + SiamPiece.getOwner(node.gamePartSlice.getBoardAt(pusherCoord)).value + ", "
-                  + winner.value + " win");
+        if (SiamRules.VERBOSE) console.log(moveStarterCoord.toString() + " belong to " + node.mother.gamePartSlice.getCurrentPlayer().value + ", "
+                                         + pusherCoord.toString() + " belong to " + SiamPiece.getOwner(node.gamePartSlice.getBoardAt(pusherCoord)).value + ", "
+                                         + winner.value + " win");
         return winner;
     }
     public getPusherCoord(pushingDirection: Orthogonale, pusher: Coord): Coord {
@@ -230,7 +229,7 @@ export class SiamRules extends _SiamRules {
                 }
             }
         }
-        if (SiamRules.VERBOSE) console.log(JSON.stringify(moves.get(0).value.turn));
+        if (SiamRules.VERBOSE) console.log({getListMovesResult: moves});
         return moves;
     }
     public getInsertions(node: _SiamNode): MGPMap<SiamMove, SiamPartSlice> {

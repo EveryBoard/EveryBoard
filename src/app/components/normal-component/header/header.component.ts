@@ -1,68 +1,33 @@
-import {Component, OnInit} from '@angular/core';
-import {UserService} from '../../../services/UserService';
+import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
-import {ActivesUsersService} from '../../../services/ActivesUsersService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { IJoueurId, IJoueur } from 'src/app/domain/iuser';
+import { Subscription } from 'rxjs';
 
 @Component({
-	selector: 'app-header',
-	templateUrl: './header.component.html'
+    selector: 'app-header',
+    templateUrl: './header.component.html'
 })
-export class HeaderComponent implements OnInit {
+export class HeaderComponent implements OnInit, OnDestroy {
 
-	userName: string;
-	turn = 0;
-	isPlayerZeroTurn = false;
-	isPlayerOneTurn = false;
+    public userName: string;
 
-	constructor(private _route: Router,
-				private userService: UserService,
-				private activesUsersService: ActivesUsersService) {
-	}
+    private joueurSub: Subscription;
 
-	ngOnInit() {
-		this.userService.userNameObs.subscribe(message => {
-			this.userName = message;
-			if (message !== '') {
-				this.startUserPresenceNotification();
-			}
-		});
-		this.startCountdownFor(0);
-	}
-
-	startUserPresenceNotification() {
-		setTimeout(() => {
-			this.userService.updateUserActivity(false);
-			this.startUserPresenceNotification();
-		}, this.activesUsersService.refreshingPresenceTimeout);
-	}
-
-	backToServer() {
-		this._route.navigate(['/server']);
-	}
-
-	private startCountdownFor(player: 0|1) {
-		if (player === 0) {
-			this.turn = 1;
-			this.isPlayerZeroTurn = false;
-			this.isPlayerOneTurn = true;
-		} else {
-			this.turn = 0;
-			this.isPlayerZeroTurn = true;
-			this.isPlayerOneTurn = false;
-		}
-	}
-
-	reachedOutOfTime(player: 0|1) {
-		alert(player + ' won');
-		this.stopCountdowns();
-	}
-
-	private stopCountdowns() {
-		this.isPlayerZeroTurn = false;
-		this.isPlayerOneTurn = false;
-	}
-
-	move() {
-		this.startCountdownFor(this.turn === 0 ? 0 : 1);
-	}
+    constructor(private router: Router,
+                private authenticationService: AuthenticationService) {
+    }
+    public ngOnInit() {
+        this.joueurSub = this.authenticationService.joueurObs.subscribe(joueur => {if (joueur) this.userName = joueur.pseudo; else this.userName = null;});
+    }
+    public backToServer() {
+        this.router.navigate(['/server']);
+    }
+    public async logout() {
+        await this.authenticationService.disconnect();
+        this.router.navigate(['/login']);
+    }
+    public ngOnDestroy() {
+        this.joueurSub.unsubscribe();
+    }
 }

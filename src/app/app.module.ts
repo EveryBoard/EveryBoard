@@ -19,12 +19,9 @@ import {JoinerService} from './services/JoinerService';
 
 import {AppComponent} from './app.component';
 
-import {CreateAccountComponent} from './components/normal-component/create-account/create-account.component';
-import {FooterComponent} from './components/normal-component/footer/footer.component';
 import {HeaderComponent} from './components/normal-component/header/header.component';
 import {LoginComponent} from './components/normal-component/login-page/login.component';
 import {ServerPageComponent} from './components/normal-component/server-page/server-page.component';
-import {StatisticPageComponent} from './components/normal-component/statistic-page/statistic-page.component';
 
 import {firebaseConfig} from './firebaseConfig';
 
@@ -45,17 +42,21 @@ import {TablutComponent} from './components/game-components/tablut/tablut.compon
 import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
 import { PartDAO } from './dao/PartDAO';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
+import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
+import { EmailVerified } from './guard/EmailVerified';
 
 const routes: Route [] = [
-    {path: 'login',             component: LoginComponent},
-    {path: 'server',            component: ServerPageComponent},
-    {path: 'statistic',         component: StatisticPageComponent},
-    {path: 'createAccount',     component: CreateAccountComponent},
+    {path: 'login',               component: LoginComponent},
+    {path: 'server',              component: ServerPageComponent},
+    {path: 'inscription',         component: InscriptionComponent},
+    {path: 'confirm-inscription', component: ConfirmInscriptionComponent},
 
-    {path: 'play/:compo/:id',   component: OnlineGameWrapperComponent},
-    {path: 'local/:compo',      component: LocalGameWrapperComponent},
+    {path: 'play/:compo/:id',     component: OnlineGameWrapperComponent, canActivate: [EmailVerified]},
+    {path: 'local/:compo',        component: LocalGameWrapperComponent},
     {path: '', redirectTo: 'server', pathMatch: 'full'},
-    {path: '**',                component: ServerPageComponent}
+    {path: '**',                  component: ServerPageComponent}
 ];
 
 @NgModule({
@@ -64,13 +65,11 @@ const routes: Route [] = [
 
         AppComponent,
         HeaderComponent,
-        FooterComponent,
         LoginComponent,
         ServerPageComponent,
         ChatComponent,
-        StatisticPageComponent,
-        CreateAccountComponent,
         PartCreationComponent,
+        InscriptionComponent,
 
         CountDownComponent,
         OnlineGameWrapperComponent,
@@ -86,6 +85,7 @@ const routes: Route [] = [
         ReversiComponent,
         SiamComponent,
         TablutComponent,
+        ConfirmInscriptionComponent,
     ],
     entryComponents: [
         AwaleComponent,
@@ -111,7 +111,7 @@ const routes: Route [] = [
         BrowserAnimationsModule,
         MaterialModule
     ],
-    providers: [AuthenticationService, GameService, JoinerService, UserService, ChatService, PartDAO, AngularFirestore],
+    providers: [AuthenticationService, GameService, JoinerService, UserService, ChatService, PartDAO, AngularFirestore, AngularFireAuth],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

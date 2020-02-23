@@ -12,12 +12,12 @@
                 Tour : {{ compo.rules.node.gamePartSlice.turn }} <br/>
             </div>
             <div class="inforow" style="float: left">
-                {{ players[0] == "" ? "Humain" : players[0] }} 0 <br/>
+                {{ players[0] ? players[0] : "Humain" }} 0 <br/>
                 <button (click)="switchPlayerOne()">{{ players[0] === 'bot' ? 'Robot' : 'Humain' }}</button> <br/>
                 <ng-container *ngIf="compo.showScore"> {{ compo.scores[0] }} pts </ng-container>
             </div>
             <div class="inforow" style="float: right">
-                {{ players[1] == "" ? "Humain" : players[1] }} 1 <br/>
+                {{ players[1] ? players[1] : "Humain" }} 1 <br/>
                 <button (click)="switchPlayerTwo()">{{ players[1] === 'bot' ? 'Robot' : 'Humain' }}</button> <br/>
                 <ng-container *ngIf="compo.showScore"> {{ compo.scores[1] }} pts </ng-container>
             </div>

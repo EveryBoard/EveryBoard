@@ -8,15 +8,9 @@ export class Coord {
 
     public static getBinarised(n: number): -1 | 0 | 1 {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
-        if (n < 0) {
-            return -1;
-        }
-        if (n === 0) {
-            return 0;
-        }
-        if (n > 0) {
-            return 1;
-        }
+        if (n < 0) return -1;
+        if (n === 0) return 0;
+        if (n > 0) return 1;
     }
     constructor(x: number, y: number) {
         if (x == null) throw new Error("X cannot be null");
@@ -94,8 +88,8 @@ export class Coord {
         return false;
     }
     public getDirectionToward(c: Coord): Direction {
-        const dx: number = Coord.getBinarised(c.x - this.x) + 1;
-        const dy: number = Coord.getBinarised(c.y - this.y) + 1;
+        const dx: number = Coord.getBinarised(c.x - this.x);
+        const dy: number = Coord.getBinarised(c.y - this.y);
         return Direction.of(dx, dy);
     }
     public _getOrthogonalDirectionToward(c: Coord): Orthogonale {

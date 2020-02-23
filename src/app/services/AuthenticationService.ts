@@ -1,46 +1,110 @@
-import {Injectable} from '@angular/core';
-import {HttpClient} from '@angular/common/http';
-import {map} from 'rxjs/operators';
-// import {JwtHelperService} from '@auth0/angular-jwt';
-import {Observable} from 'rxjs';
+import { AngularFireAuth } from '@angular/fire/auth';
+import * as firebase from 'firebase';
+import { Injectable, OnDestroy } from '@angular/core';
+import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
+import { PIJoueur } from '../domain/iuser';
+import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
-@Injectable({
-	providedIn: 'root'
-})
-export class AuthenticationService {
+@Injectable()
+export class AuthenticationService implements OnDestroy {
 
-	constructor(private http: HttpClient) {
-	}
+    public static VERBOSE: boolean = false;
 
-	url_authentication = 'http://localhost:8082/martiastrid/api/token/generate-token';
+    private joueurSub: Subscription;
 
-	login(username: string, password: string): Observable<void> {
-		return this.http.post<any>(this.url_authentication, {username: username, password: password})
-			.pipe(map((res: any) => {
-				// login successful if there's a jwt token in the response
-				if (res && res.token) {
-					sessionStorage.setItem('currentUser', JSON.stringify({
-						token: res.token
-					}));
-				}
-			}));
-	}
+    private authSub: Subscription;
 
-	logout() {
-		// remove user from local storage to log user out
-		sessionStorage.removeItem('currentUser');
-	}
+    private joueurBS: BehaviorSubject<{pseudo: string, verified: boolean}> = 
+        new BehaviorSubject<{pseudo: string, verified: boolean}>({pseudo: null, verified: null});
 
-	isLoggedIn(): boolean {
-		return !!(sessionStorage.getItem('currentUser'));
-	}
+    public joueurObs: Observable<{pseudo: string, verified: boolean}> = this.joueurBS.asObservable();;
 
-	/* getJwtSubjet(): string {
-		const stored = sessionStorage.getItem('currentUser');
-		if (stored) {
-			const helper = new JwtHelperService();
-			return helper.decodeToken(JSON.parse(stored).token).sub;
-		}
-		return null;
-	} */
+    constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
+        if (AuthenticationService.VERBOSE) console.log("1 authService subscribe to Obs<User>");
+        this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
+            if (this.joueurSub != null) {
+                this.joueurSub.unsubscribe();
+                this.joueurSub = null;
+            }
+            if (user == null) { // user logged out
+                if (AuthenticationService.VERBOSE) console.log("2.B: Obs<User> Sends null, logged out");
+                this.joueurBS.next({pseudo: null, verified: null});
+            } else { // user logged in
+                if (AuthenticationService.VERBOSE) console.log("2.A: Obs<User> Sends " + user.displayName + ", logged in");
+                this.updatePresence();
+                let pseudo: string = (user.displayName == "" || user.displayName == null) ? user.email : user.displayName;
+                let verified: boolean = user.emailVerified;
+                this.joueurBS.next({pseudo, verified});
+            }
+        });
+    }
+    public async doEmailLogin(email: string, password: string): Promise<firebase.auth.UserCredential> {
+        const userCredential: firebase.auth.UserCredential = 
+            await firebase.auth().signInWithEmailAndPassword(email, password);
+        await this.updateUserDataAndGoToServer(userCredential.user);
+        return userCredential;
+    }
+    public async doGoogleLogin(): Promise<firebase.auth.UserCredential> {
+        let provider = new firebase.auth.GoogleAuthProvider();
+        provider.addScope('profile');
+        provider.addScope('email');
+        const userCredential: firebase.auth.UserCredential = 
+            await this.afAuth.auth.signInWithPopup(provider)
+        await this.updateUserDataAndGoToServer(userCredential.user);
+        return userCredential;
+    }
+    public async doRegister(value: {email: string, password: string}): Promise<firebase.auth.UserCredential> {
+        const userCredential: firebase.auth.UserCredential = await firebase.auth().createUserWithEmailAndPassword(value.email, value.password)
+        await this.updateUserDataAndGoToServer(userCredential.user);
+        return userCredential;
+    }
+    private async updateUserDataAndGoToServer({uid, email, displayName, emailVerified}: firebase.User): Promise<void> {
+        // Sets user data to firestore on login
+        const userRef: AngularFirestoreDocument<PIJoueur> = this.afs.doc(`joueurs/${uid}`);
+
+        const data: PIJoueur = { 
+            email,
+            displayName,
+            pseudo: displayName || email,
+            emailVerified
+        }; 
+
+        return userRef.set(data, { merge: true })
+    }
+    public async disconnect(): Promise<void> {
+        let uid: string = firebase.auth().currentUser.uid;
+        const isOfflineForDatabase = {
+            state: 'offline',
+            last_changed: firebase.database.ServerValue.TIMESTAMP,
+        };
+        await firebase.database().ref('/status/' + uid).set(isOfflineForDatabase);
+        return this.afAuth.auth.signOut();
+    }
+    public getAuthenticatedUser(): {pseudo: string, verified: boolean} {
+        return this.joueurBS.getValue();
+    }
+    private updatePresence() {
+        let uid: string = firebase.auth().currentUser.uid;
+        let userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
+        firebase.database().ref('.info/connected').on('value', function(snapshot) {
+            if (snapshot.val() == false) {
+                return;
+            };
+            const isOfflineForDatabase = {
+                state: 'offline',
+                last_changed: firebase.database.ServerValue.TIMESTAMP,
+            };
+            const isOnlineForDatabase = {
+                state: 'online',
+                last_changed: firebase.database.ServerValue.TIMESTAMP,
+            };
+            userStatusDatabaseRef.onDisconnect().set(isOfflineForDatabase).then(function() {
+                userStatusDatabaseRef.set(isOnlineForDatabase);
+            });
+        });
+    }
+    public ngOnDestroy() {
+        if (this.authSub) this.authSub.unsubscribe();
+        if (this.joueurSub) this.joueurSub.unsubscribe();
+    }
 }
