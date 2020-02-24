@@ -18,7 +18,6 @@ export abstract class MoveCoordToCoordAndCapture extends MoveCoord {
         captures.forEach(c => { if (c == null) throw new Error("A coord of captures cannot be null");});
         this.captures = captures;
     }
-
     public getCapturesCopy(): Coord[] {
         return GamePartSlice.copyCoordArray(this.captures);
     }

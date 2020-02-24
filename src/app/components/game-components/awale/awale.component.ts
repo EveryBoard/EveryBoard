@@ -11,44 +11,42 @@ import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
-    rules = new AwaleRules();
+    public static VERBOSE: boolean = false;
 
-    scores: number[] = [0, 0];
+    public rules = new AwaleRules();
 
-    imagesLocation = 'assets/images/'; // en prod
+    public scores: number[] = [0, 0];
+
+    public imagesLocation = 'assets/images/'; // en prod
     // imagesLocation = 'src/assets/images/'; // en dev
 
-    lastX = -1;
-    lastY = -1;
+    public lastX = -1;
+    public lastY = -1;
 
     constructor() {
         super();
         this.showScore = true;
     }
-
     public onClick(x: number, y: number) {
         // todo : option de clonage revision commentage
-        console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
+        if (AwaleComponent.VERBOSE) console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
 
         this.lastX = -1;
         this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = new AwaleMove(x, y);
         // let's confirm on java-server-side that the move is legal
-        console.log("awale component about to call chooseMove");
+        if (AwaleComponent.VERBOSE) console.log("awale component about to call chooseMove");
         const result: boolean = this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
-        console.log("and chooseMove says : " + result);
+        if (AwaleComponent.VERBOSE) console.log("and chooseMove says : " + result);
     }
-
-    decodeMove(encodedMove: number): AwaleMove {
+    public decodeMove(encodedMove: number): AwaleMove {
         return AwaleMove.decode(encodedMove);
     }
-
-    encodeMove(move: AwaleMove): number {
+    public encodeMove(move: AwaleMove): number {
         return move.encode();
     }
-
-    updateBoard(): void {
+    public updateBoard(): void {
         const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice;
         this.scores = awalePartSlice.getCapturedCopy();
         const awaleMove: AwaleMove = this.rules.node.move;

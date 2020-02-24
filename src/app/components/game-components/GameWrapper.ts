@@ -132,6 +132,7 @@ export abstract class GameWrapper {
 
     public isPlayerTurn() {
         const indexPlayer = this.componentInstance.rules.node.gamePartSlice.turn % 2;
+        if (GameWrapper.VERBOSE) console.log("It is player "+ indexPlayer+ "'s turn ('"+this.players[indexPlayer]+"') and you are "+this.userName)
         return this.players[indexPlayer] === this.userName;
     }
 }

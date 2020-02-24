@@ -62,10 +62,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             console.log('le component est initialisé');
         }
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
-        /*this.userSub = this.userService.userNameObs
-            .subscribe(userName => this.userName = userName);*/
         this.userSub = this.authenticationService.joueurObs
-            .subscribe(userName => this.userName = userName.pseudo);
+            .subscribe(user => this.userName = user.pseudo);
     }
     public resetGameDatas() {
         if (OnlineGameWrapperComponent.VERBOSE) {
@@ -81,8 +79,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.rematchProposed = null;
         this.opponentProposedRematch = null;
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
-        this.userSub = this.authenticationService.joueurObs
-            .subscribe(joueur => this.userName = joueur.pseudo);
     }
     protected startGame() {
         if (OnlineGameWrapperComponent.VERBOSE) {
@@ -256,23 +252,22 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameService.notifyDraw(this.currentPartId);
     }
     public notifyTimeoutVictory(victoriousPlayer: string) {
-        // const victoriousPlayer = this.userName;
         this.endGame = true;
         this.currentPart.winner = victoriousPlayer; // oldly in this.winner var
         this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer);
     }
     public notifyVictory() {
-        // const victoriousPlayer = this.players[(this.rules.node.gamePartSlice.turn + 1) % 2];
         // Previous line is wrong, assume that last player who notice the victory is the victorious, wrong as fuck
-        let victoriousPlayer = this.players[0]; // by default
-        if (![Number.MAX_SAFE_INTEGER, Number.MIN_SAFE_INTEGER].includes(this.componentInstance.rules.node.ownValue)) {
-            alert('how the fuck did you notice victory?');
-        }
+        let victoriousPlayer: string;
         if (this.componentInstance.rules.node.ownValue === Number.MAX_SAFE_INTEGER) {
             victoriousPlayer = this.players[1];
+        } else if (this.componentInstance.rules.node.ownValue === Number.MIN_SAFE_INTEGER) {
+            victoriousPlayer = this.players[0];
+        } else {
+            throw new Error('How the fuck did you notice victory?');
         }
         this.endGame = true;
-        this.currentPart.winner = victoriousPlayer; // oldly in this.winner var
+        this.currentPart.winner = victoriousPlayer;
         this.gameService.notifyVictory(this.currentPartId, victoriousPlayer);
     }
     protected onRequest(request: MGPRequest) {
@@ -350,8 +345,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameService.updateDBBoard(encodedMove, scorePlayerZero, scorePlayerOne, this.currentPartId);
     }
     public resign() {
-        const victoriousPlayer = this.players[(this.observerRole + 1) % 2];
-        this.gameService.resign(this.currentPartId, victoriousPlayer);
+        const victoriousOpponent = this.players[(this.observerRole + 1) % 2];
+        this.gameService.resign(this.currentPartId, victoriousOpponent);
     }
     public reachedOutOfTime(player: 0 | 1) {
         if (player === this.observerRole) {

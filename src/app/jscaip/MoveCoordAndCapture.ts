@@ -1,5 +1,4 @@
 import {MoveCoord} from './MoveCoord';
-import { GamePartSlice } from './GamePartSlice';
 import { Comparable } from '../collectionlib/MGPMap';
 
 export abstract class MoveCoordAndCapture<C extends Comparable> extends MoveCoord {

@@ -44,7 +44,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         this.userNameSub = this.authenticationService.joueurObs
-                .subscribe(joueur => {if (joueur) this.userName = joueur.pseudo; else this.userName = null;});
+                .subscribe(joueur => {console.log(joueur); if (joueur) this.userName = joueur.pseudo; else this.userName = null;});
         this.activesPartsSub = this.gameService
             .getActivesPartsObs()
             .subscribe(

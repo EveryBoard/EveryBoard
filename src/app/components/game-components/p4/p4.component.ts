@@ -15,6 +15,8 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
 
     /*************************** Common Fields **************************/
 
+    public static VERBOSE: boolean = false;
+
     public rules = new P4Rules();
 
     public imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg', ];
@@ -22,9 +24,9 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
     public lastX: number;
 
     public onClick(x: number) {
-        console.log('click');
         const chosenMove = MoveX.get(x);
-        this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        const legal: boolean = this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        if (P4Component.VERBOSE) console.log("Move " + chosenMove.toString() + " was " + (legal ? 'legal' : 'illegal'));
     }
     public updateBoard() {
         const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;

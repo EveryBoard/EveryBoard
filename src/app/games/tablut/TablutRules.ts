@@ -627,7 +627,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const oneMult = invaderStart ? 2 : 1; // so they're twice less valuable
         const scoreZero = nbPlayerZeroPawns * zeroMult;
         const scoreOne = nbPlayerOnePawns * oneMult;
-        return scoreZero - scoreOne; // TODO : countInvader vs Defenders
+        console.log("Score of board at turn "+n.gamePartSlice.turn + " = " + scoreZero + " to " + scoreOne);
+        return scoreOne - scoreZero; // TODO : countInvader vs Defenders
     }
     public isLegal(move: TablutMove): LegalityStatus {
         // copies

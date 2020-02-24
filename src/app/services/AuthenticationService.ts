@@ -1,7 +1,7 @@
 import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, of, BehaviorSubject, Subscription } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { PIJoueur } from '../domain/iuser';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
@@ -32,7 +32,7 @@ export class AuthenticationService implements OnDestroy {
             } else { // user logged in
                 if (AuthenticationService.VERBOSE) console.log("2.A: Obs<User> Sends " + user.displayName + ", logged in");
                 this.updatePresence();
-                let pseudo: string = (user.displayName == "" || user.displayName == null) ? user.email : user.displayName;
+                let pseudo: string = (user.displayName === "" || user.displayName == null) ? user.email : user.displayName;
                 let verified: boolean = user.emailVerified;
                 this.joueurBS.next({pseudo, verified});
             }

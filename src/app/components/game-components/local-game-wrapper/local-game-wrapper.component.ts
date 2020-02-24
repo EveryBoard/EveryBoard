@@ -15,7 +15,7 @@ import { AuthenticationService } from 'src/app/services/AuthenticationService';
 })
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public VERBOSE = true;
+    public VERBOSE = false;
 
     public aiDepth: number = 2; // TODO: make that a choice of user
 
@@ -31,8 +31,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (this.VERBOSE) console.log("LocalGameWrapper Constructed: "+(this.gameCompo!=null));
     }
     public ngAfterViewInit() {
-        const currentUser: string = this.authenticationService.getAuthenticatedUser().pseudo;
-        this.players = [currentUser, currentUser];
+        this.authenticationService.joueurObs.subscribe(user => {
+            this.userName = user.pseudo;
+            if (this.players[0] !== "bot") this.players[0] = user.pseudo;
+            if (this.players[1] !== "bot") this.players[1] = user.pseudo;
+        });
         if (this.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameCompo!=null));
         this.afterGameComponentViewProbablyInit();
         this.cdr.detectChanges();
@@ -69,7 +72,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.switchPlayer(1);
     }
     public switchPlayer(n: 0|1) {
+        if (LocalGameWrapperComponent.VERBOSE) console.log("before switching: " + this.players);
         this.players[n] = this.players[n] === 'bot' ? this.authenticationService.getAuthenticatedUser().pseudo : 'bot';
+        if (LocalGameWrapperComponent.VERBOSE) console.log("after switching: " + this.players);
         this.proposeAIToPlay();
     }
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {

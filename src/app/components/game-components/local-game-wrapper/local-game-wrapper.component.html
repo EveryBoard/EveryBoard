@@ -1,24 +1,24 @@
 <div class="container-fluid"
-	 style="height: 100%; max-height: 100%">
+     style="height: 100%; max-height: 100%">
 
-	<div id="game" class="flex-container">
+    <div id="game" class="flex-container">
 
-		<div id="board" class="flex-container circled col-sm-9">
-			<app-game-includer></app-game-includer>
-		</div>
+        <div id="board" class="flex-container circled col-sm-9">
+            <app-game-includer></app-game-includer>
+        </div>
 
-		<div *ngIf="compo" id="info" class="circled col-sm-3">
+        <div *ngIf="compo" id="info" class="circled col-sm-3">
             <div style="text-align:center">
                 Tour : {{ compo.rules.node.gamePartSlice.turn }} <br/>
             </div>
             <div class="inforow" style="float: left">
                 {{ players[0] ? players[0] : "Humain" }} 0 <br/>
-                <button (click)="switchPlayerOne()">{{ players[0] === 'bot' ? 'Robot' : 'Humain' }}</button> <br/>
+                <button (click)="switchPlayerOne()">{{ players[0] === 'bot' ? 'Humain' : ('Robot lvl ' + aiDepth) }}</button> <br/>
                 <ng-container *ngIf="compo.showScore"> {{ compo.scores[0] }} pts </ng-container>
             </div>
             <div class="inforow" style="float: right">
                 {{ players[1] ? players[1] : "Humain" }} 1 <br/>
-                <button (click)="switchPlayerTwo()">{{ players[1] === 'bot' ? 'Robot' : 'Humain' }}</button> <br/>
+                <button (click)="switchPlayerTwo()">{{ players[1] === 'bot' ? 'Humain' : ('Robot lvl ' + aiDepth) }}</button> <br/>
                 <ng-container *ngIf="compo.showScore"> {{ compo.scores[1] }} pts </ng-container>
             </div>
             <div *ngIf="!endGame" class="inforow">
@@ -27,6 +27,6 @@
                     Passer son tour
                 </button>
             </div>
-		</div>
+        </div>
     </div>
 </div>
