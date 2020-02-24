@@ -47,6 +47,7 @@ export class ActivesPartsService {
 		this.unsubscribe = this.partDao.observeActivesParts(partObserver);
 	}
 	public stopObserving() {
+        this.activesPartsBS.next([]);
 		this.unsubscribe();
 	}
 }
