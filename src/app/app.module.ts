@@ -46,6 +46,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
 import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
 import { EmailVerified } from './guard/EmailVerified';
+import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 
 const routes: Route [] = [
     {path: 'login',               component: LoginComponent},
@@ -86,6 +87,7 @@ const routes: Route [] = [
         SiamComponent,
         TablutComponent,
         ConfirmInscriptionComponent,
+        SaharaComponent,
     ],
     entryComponents: [
         AwaleComponent,
@@ -95,6 +97,7 @@ const routes: Route [] = [
         P4Component,
         QuartoComponent,
         ReversiComponent,
+        SaharaComponent,
         SiamComponent,
         TablutComponent,
 

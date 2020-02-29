@@ -1,5 +1,4 @@
 import { Rules } from "src/app/jscaip/Rules";
-import { Move } from "src/app/jscaip/Move";
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MNode } from "src/app/jscaip/MNode";
@@ -10,11 +9,38 @@ import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
 
 export class SaharaMove extends MoveCoordToCoord {
 
+    public static decode(encodedMove: number): SaharaMove {
+        const ey: number = encodedMove%6;
+        encodedMove -= ey;
+        encodedMove /= 6;
+        const ex: number = encodedMove%11;
+        encodedMove -= ex;
+        encodedMove /=11;
+        const sy: number = encodedMove%6;
+        encodedMove -= sy;
+        encodedMove /= 6;
+        const sx: number = encodedMove;
+        return new SaharaMove(new Coord(sx, sy), new Coord(ex, ey));
+    }
+    public static checkDistanceAndLocation(start: Coord, end: Coord) {
+        const dx: number = Math.abs(start.x - end.x);
+        const dy: number = Math.abs(start.y - end.y);
+        const distance: number = dx+dy;
+        if (distance > 2) throw new Error("Maximal distance for SaharaMove is 2, got " + distance);
+        if (distance === 1) {
+            const fakeNeighboors: Coord = TriangularCheckerBoard.getFakeNeighboors(start);
+            if (end.equals(fakeNeighboors)) throw new Error(start.toString() + " and " + end.toString() + " are not neighboors");
+        } else {
+            if ((start.x + start.y)%2 === 0) throw new Error("Can only bounce twice when started on a white triangle");
+            if (start.x === start.y) throw new Error(start.toString() + " and " + end.toString() + " have no intermediary neighboors");
+        }
+    }
     constructor(start: Coord, end: Coord) {
-        if (!start.isInRange(SaharaPartSlice.HEIGHT, SaharaPartSlice.WIDTH))
-            throw new Error("Move must start inside the board");
-        if (!end.isInRange(SaharaPartSlice.HEIGHT, SaharaPartSlice.WIDTH))
-            throw new Error("Move must end inside the board");
+        if (!start.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT))
+            throw new Error("Move must start inside the board not at "+start.toString());
+        if (!end.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT))
+            throw new Error("Move must end inside the board not at "+start.toString());
+        SaharaMove.checkDistanceAndLocation(start, end); 
         super(start, end);
     }
     public equals(o: any): boolean {
@@ -29,16 +55,20 @@ export class SaharaMove extends MoveCoordToCoord {
         return "SaharaMove(" + this.coord + "->" + this.end + ")";
     }
     public encode(): number {
-        throw new Error("Method not implemented.");
+        const ey: number = this.end.y;
+        const ex: number = this.end.x;
+        const sy: number = this.coord.y;
+        const sx: number = this.coord.x;
+        return (6*11*6*sx) + (11*6*sy) + (6*ex) + ey;
     }
-    public decode(encodedMove: number): Move {
-        throw new Error("Method not implemented.");
+    public decode(encodedMove: number): SaharaMove {
+        return SaharaMove.decode(encodedMove);
     }
 }
 export enum SaharaPawn {
-    EMPTY = Player.NONE.value,
     BLACK = Player.ZERO.value,
     WHITE = Player.ONE.value,
+    EMPTY = Player.NONE.value,
     NONE = 3
 }
 export class SaharaPartSlice extends GamePartSlice {
@@ -77,10 +107,16 @@ export class TriangularCheckerBoard {
         }
         return neighboors;
     }
+    public static getFakeNeighboors(c: Coord): Coord {
+        if ((c.x + c.y)%2 ===1) return new Coord(c.x, c.y + 1); // DOWN
+        return new Coord(c.x, c.y - 1); // UP
+    }
 }
 export class SaharaNode extends MNode<Rules<SaharaMove, SaharaPartSlice, LegalityStatus>, SaharaMove, SaharaPartSlice, LegalityStatus> {
 }
 export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStatus> {
+
+    public static VERBOSE: boolean = true;
 
     constructor() {
         super();
@@ -101,7 +137,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
                 const newMove: SaharaMove = new SaharaMove(start, neighboor);
                 board[neighboor.y][neighboor.x] = board[start.y][start.x];
                 board[start.y][start.x] = SaharaPawn.EMPTY;
-                const newSlice: SaharaPartSlice = new SaharaPartSlice(board, newTurn);
+                const newBoard: SaharaPawn[][] = GamePartSlice.copyBiArray(board);
+                const newSlice: SaharaPartSlice = new SaharaPartSlice(newBoard, newTurn);
                 moves.put(newMove, newSlice);
 
                 const upwardTriangle: boolean = (neighboor.y + neighboor.x)%2 === 0;
@@ -112,16 +149,17 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
                             const farMove: SaharaMove = new SaharaMove(start, farNeighboor);
                             board[farNeighboor.y][farNeighboor.x] = board[neighboor.y][neighboor.x];
                             board[neighboor.y][neighboor.x] = SaharaPawn.EMPTY;
-                            const farSlice: SaharaPartSlice = new SaharaPartSlice(board, newTurn);
+                            const farBoard: SaharaPawn[][] = GamePartSlice.copyBiArray(board);
+                            const farSlice: SaharaPartSlice = new SaharaPartSlice(farBoard, newTurn);
                             moves.put(farMove, farSlice);
 
                             board[neighboor.y][neighboor.x] = board[farNeighboor.y][farNeighboor.x]
                             board[farNeighboor.y][farNeighboor.x] = SaharaPawn.EMPTY;
                         }
                     }
-                    board[start.y][start.x] = board[start.y][start.x];
-                    board[neighboor.y][neighboor.x] = SaharaPawn.EMPTY;
                 }
+                board[start.y][start.x] = board[neighboor.y][neighboor.x];
+                board[neighboor.y][neighboor.x] = SaharaPawn.EMPTY;
             }
         }
         return moves;
@@ -151,13 +189,13 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         const board: SaharaPawn[][] = node.gamePartSlice.getCopiedBoard();
         const zeroFreedoms: number[] = this.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = this.getBoardValuesFor(board, Player.ONE);
-        if (zeroFreedoms[0] === 0) return Number.MIN_SAFE_INTEGER;
-        if (oneFreedoms[0] === 0) return Number.MAX_SAFE_INTEGER;
+        if (zeroFreedoms[0] === 0) return Number.MAX_SAFE_INTEGER;
+        if (oneFreedoms[0] === 0) return Number.MIN_SAFE_INTEGER;
         let i: number = 0;
         while (i<6 && zeroFreedoms[i]===oneFreedoms[i]) {
             i++;
         }
-        return zeroFreedoms[i%6] - oneFreedoms[i%6];
+        return oneFreedoms[i%6] - zeroFreedoms[i%6];
     }
     public getBoardValuesFor(board: SaharaPawn[][], player: Player): number[] {
         const playersPiece: Coord[] = this.getStartingCoords(board, player);
@@ -168,12 +206,25 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         return playerFreedoms.sort((a: number, b: number) => a-b);
     }
     public applyLegalMove(move: SaharaMove, slice: SaharaPartSlice, status: LegalityStatus): { resultingMove: SaharaMove; resultingSlice: SaharaPartSlice; } {
-        throw new Error("Method not implemented.");
+        if (SaharaRules.VERBOSE) console.log('Legal move ' + move.toString() + ' applied');
+        let board: SaharaPawn[][] = slice.getCopiedBoard();
+        board[move.end.y][move.end.x] = board[move.coord.y][move.coord.x];
+        board[move.coord.y][move.coord.x] = SaharaPawn.EMPTY;
+        const resultingSlice: SaharaPartSlice = new SaharaPartSlice(board, slice.turn + 1);
+        return {resultingMove: move, resultingSlice};
     }
     public isLegal(move: SaharaMove, slice: SaharaPartSlice): LegalityStatus {
-        // if (move.coord do not belong to player) return {legal: false};
-        // if (move.end is not empty) return {legal: false};
-        return null;
+        const movedPawn: SaharaPawn = slice.getBoardAt(move.coord);
+        if (movedPawn !== slice.getCurrentPlayer().value) {
+            if (SaharaRules.VERBOSE) console.log("This move is illegal because it is not the current player's turn");
+            return {legal: false};
+        }
+        const landingCase: SaharaPawn = slice.getBoardAt(move.end);
+        if (landingCase !== SaharaPawn.EMPTY) {
+            if (SaharaRules.VERBOSE) console.log("This move is illegal because the landing case is not empty");
+            return {legal: false};
+        }
+        return {legal: true};
     }
     public setInitialBoard(): void {
         if (this.node == null) {

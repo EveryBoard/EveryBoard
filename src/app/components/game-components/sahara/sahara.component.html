@@ -1,0 +1,22 @@
+<table>
+	<tr *ngFor="let line of board; index as y;">
+		<td *ngFor="let caseContent of line; index as x;"
+			style="position:relative;"
+			(click)="onClick(x, y);">
+            <img *ngIf="(lastCoord.x===x && lastCoord.y===y) || (chosenCoord.x===x && chosenCoord.y===y)"
+				 width="50" height="50"
+				 id="{{'t'+y+x}}"
+				 alt="highlighted"
+				 [src]="imagesLocation+'highlight.svg'"
+                 style="position:absolute; top:0; left:0;"/>
+			<img *ngIf="caseContent !== 3"
+				 width="50" height="50"
+				 id="{{'u'+y+x}}"
+				 alt=":{{ caseContent }}:"
+				 [src]="imagesLocation+'sahara/'+imagesNames[(x+y)%2][caseContent]+'.svg'"/>
+		</td>
+	</tr>
+</table>
+<br/>{{ TMP_VALUZ[0] }}
+<br/> {{ TMP_VALUZ[1] }}
+<br/> {{ TMP_VALUZ[2] }}

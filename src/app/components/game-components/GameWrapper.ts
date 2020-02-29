@@ -18,6 +18,7 @@ import { EncapsuleComponent } from './encapsule/encapsule.component';
 import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
 import { SiamComponent } from './siam/siam.component';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { SaharaComponent } from './sahara/sahara.component';
 
 export abstract class GameWrapper {
  
@@ -65,10 +66,12 @@ export abstract class GameWrapper {
                 return QuartoComponent;
             case 'Reversi':
                 return ReversiComponent;
-            case 'Tablut':
-                return TablutComponent;
+            case 'Sahara':
+                return SaharaComponent;
             case 'Siam':
                 return SiamComponent;
+            case 'Tablut':
+                return TablutComponent;
             default:
                 this.router.navigate(['/error']);
                 throw new Error("Unknown Games are unwrappable");
@@ -125,10 +128,11 @@ export abstract class GameWrapper {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.receiveChildData says: board about to update');
         }
-        this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
-        return true;
+        const validMoveResult: boolean = this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
+        if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData says: valid move result = " + validMoveResult);
+        return validMoveResult;
     }
-    public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): void;
+    public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): boolean;
 
     public isPlayerTurn() {
         const indexPlayer = this.componentInstance.rules.node.gamePartSlice.turn % 2;

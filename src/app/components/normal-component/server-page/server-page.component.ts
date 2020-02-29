@@ -19,22 +19,29 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     static VERBOSE = false;
 
-    activesParts: ICurrentPartId[];
-    activesUsers: IJoueurId[];
-    readonly gameNameList: String[] = ['Awale',
-                                       'Encapsule',
-                                       'Go',
-                                       'MinimaxTesting',
-                                       'P4',
-                                       'Quarto',
-                                       'Reversi',
-                                       'Siam',
-                                       'Tablut'];
-    selectedGame: string;
-    userName: string;
+    public activesParts: ICurrentPartId[];
+
+    public activesUsers: IJoueurId[];
+
+    readonly gameNameList: String[] = ['Awale',          // 1
+                                       'Encapsule',      // 2
+                                       'Go',             // 3
+                                       'MinimaxTesting', // neh.
+                                       'P4',             // 4
+                                       'Quarto',         // 5
+                                       'Reversi',        // 6
+                                       'Sahara',         // 7
+                                       'Siam',           // 8
+                                       'Tablut'];        // 9
+    
+    public selectedGame: string;
+    
+    public userName: string;
 
     private userNameSub: Subscription;
+
     private activesPartsSub: Subscription;
+
     private activesUsersSub: Subscription;
 
     constructor(private router: Router,
@@ -49,7 +56,6 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             .getActivesPartsObs()
             .subscribe(
                 activesParts => this.activesParts = activesParts);
-
         this.activesUsersSub = this.userService
             .getActivesUsersObs()
             .subscribe(

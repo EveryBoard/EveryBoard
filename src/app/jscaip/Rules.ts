@@ -31,6 +31,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          * return false otherwise
          */
         const LOCAL_VERBOSE = false;
+        if (LOCAL_VERBOSE) console.log(move.toString() + " was proposed");
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             if (LOCAL_VERBOSE) console.log("current node has moves");
             let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing if twice

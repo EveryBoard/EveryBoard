@@ -17,7 +17,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     public VERBOSE = false;
 
-    public aiDepth: number = 2; // TODO: make that a choice of user
+    public aiDepth: number = 3; // TODO: make that a choice of user
 
     public botTimeOut: number = 500; // this.aiDepth * 500;
 
@@ -40,13 +40,16 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.afterGameComponentViewProbablyInit();
         this.cdr.detectChanges();
     }
-    public onValidUserMove(move: Move) {
+    public onValidUserMove(move: Move): boolean {
         if (LocalGameWrapperComponent.VERBOSE) {
             console.log('LocalGameWrapperComponent.onValidUserMove');
         }
-        this.componentInstance.rules.choose(move);
-        this.componentInstance.updateBoard();
-        this.proposeAIToPlay();
+        const isLegal: boolean = this.componentInstance.rules.choose(move);
+        if (isLegal) {
+            this.componentInstance.updateBoard();
+            this.proposeAIToPlay();
+        }
+        return isLegal;
     }
     public proposeAIToPlay() {
         // check if ai's turn has come, if so, make her start after a delay
@@ -57,10 +60,13 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 // called only when it's AI's Turn
                 if (!this.componentInstance.rules.node.isEndGame()) {
                     const aiMove: Move = this.componentInstance.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
-                    this.componentInstance.rules.choose(aiMove);
-                    this.componentInstance.updateBoard();
-                    this.cdr.detectChanges();
-                    this.proposeAIToPlay();
+                    if (this.componentInstance.rules.choose(aiMove)) {  // TODO: remove since useless
+                        this.componentInstance.updateBoard();
+                        this.cdr.detectChanges();
+                        this.proposeAIToPlay();
+                    } else {
+                        throw new Error("AI choosed illegal move");
+                    }
                 }
             }, this.botTimeOut);
         }

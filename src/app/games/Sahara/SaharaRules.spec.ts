@@ -1,5 +1,5 @@
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
-import { SaharaRules, SaharaMove, SaharaPartSlice, TriangularCheckerBoard } from './SaharaRules';
+import { SaharaRules, SaharaMove, SaharaPartSlice, TriangularCheckerBoard, SaharaPawn } from './SaharaRules';
 import { Coord } from 'src/app/jscaip/Coord';
 
 describe('SaharaRules', () => {
@@ -29,5 +29,14 @@ describe('SaharaRules', () => {
                 expect(TriangularCheckerBoard.getNeighboors(new Coord(x, y)).length).toBe(3);
             }
         }
+    });
+    it('Shortest victory simulation', () => {
+        const rules: SaharaRules = new SaharaRules();
+        expect(rules.choose(new SaharaMove(new Coord(0, 3), new Coord(1, 4)))).toBeTruthy("First move should be legal");
+        expect(rules.node.gamePartSlice.getBoardAt(new Coord(1, 4))).toBe(SaharaPawn.BLACK, 'Just moved black piece should be in her landing spot');
+        expect(rules.node.gamePartSlice.getBoardAt(new Coord(0, 3))).toBe(SaharaPawn.EMPTY, 'Just moved black piece should have left her initial spot');
+        expect(rules.choose(new SaharaMove(new Coord(3, 0), new Coord(4, 0)))).toBeTruthy("Second move should be legal");
+        expect(rules.choose(new SaharaMove(new Coord(1, 4), new Coord(2, 4)))).toBeTruthy("First move should be legal");
+        expect(rules.node.ownValue).toBe(Number.MIN_SAFE_INTEGER, "Should be victory");
     });
 });

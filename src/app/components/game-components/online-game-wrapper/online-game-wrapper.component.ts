@@ -189,7 +189,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         // this.turn = part.turn;
 
         const nbPlayedMoves = listMoves.length;
-        let currentPartTurn;
+        let currentPartTurn: number;
         let updateIsMove = false;
         if (OnlineGameWrapperComponent.VERBOSE) {
             // console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : ' + listMoves);
@@ -197,27 +197,22 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             // console.log('update before : turn = ' + part.turn + ', ' + this.componentInstance.rules.node.
             //         gamePartSlice.turn + '==' + nbPlayedMoves);
             console.log('Before = part.turn = ' + part.turn);
-            console.log('Before = this.turn = ' + 'is abandonned');
             console.log('Before = this...gamePartSlice.turn = ' + this.componentInstance.rules.node.gamePartSlice.turn);
             console.log('Before = nbPlayedMoves = ' + nbPlayedMoves);
         }
         while (this.componentInstance.rules.node.gamePartSlice.turn < nbPlayedMoves) {
             currentPartTurn = this.componentInstance.rules.node.gamePartSlice.turn;
             const chosenMove = this.componentInstance.decodeMove(listMoves[currentPartTurn]);
-            // console.log('local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : '
-            //     + listMoves + ' chosen move : ' + chosenMove);
             const correctDBMove: boolean = this.componentInstance.rules.choose(chosenMove);
             updateIsMove = true;
             if (!correctDBMove) {
-                console.log('!!!!!!we received an incorrect db move !' + chosenMove + ' and ' + listMoves);
+                throw new Error('We received an incorrect db move !' + chosenMove + ' and ' + listMoves);
             }
             // NEWLY :
             if (this.componentInstance.rules.node.isEndGame()) {
                 if (this.componentInstance.rules.node.ownValue === 0) {
                     this.notifyDraw();
-                } else {
-                    this.notifyVictory();
-                }
+                } else this.notifyVictory();0
             }
 
         }
@@ -225,7 +220,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.currentPlayer = this.players[this.componentInstance.rules.node.gamePartSlice.turn % 2];
         if (OnlineGameWrapperComponent.VERBOSE) {
             console.log('After = part.turn = ' + part.turn);
-            console.log('After = this.turn = ' + 'is abandonned');
             console.log('After = this...gamePartSlice.turn = ' + this.componentInstance.rules.node.gamePartSlice.turn);
             console.log('After = nbPlayedMoves = ' + nbPlayedMoves);
         }

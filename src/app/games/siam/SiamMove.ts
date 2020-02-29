@@ -31,7 +31,7 @@ export class SiamMove extends MoveCoord {
         encodedMove -= y;
         encodedMove/= 5;
         const x: number = encodedMove%5;
-        encodedMove -= y;
+        encodedMove -= x;
         encodedMove/= 5;
         const nature: number = encodedMove;
         return new SiamMove(x, y, SiamMoveNature.decode(nature))
