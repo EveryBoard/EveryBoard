@@ -116,7 +116,7 @@ export class SaharaNode extends MNode<Rules<SaharaMove, SaharaPartSlice, Legalit
 }
 export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStatus> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     constructor() {
         super();

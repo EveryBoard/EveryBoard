@@ -4,6 +4,7 @@ import {ReversiRules} from '../../../games/reversi/ReversiRules';
 import {ReversiPartSlice} from '../../../games/reversi/ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
+import { Coord } from 'src/app/jscaip/Coord';
 
 @Component({
     selector: 'app-reversi',
@@ -11,20 +12,17 @@ import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStat
 })
 export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
-    static VERBOSE = false;
+    public VERBOSE: boolean = false;
 
     public rules = new ReversiRules();
 
-    imagesLocation = 'assets/images/'; // en prod
-    // imagesLocation = 'src/assets/images/'; // en dev
+    public lastMove: Coord = new Coord(-1, -1);
 
-    lastX = -1;
-    lastY = -1;
-    canPass = false;
+    public canPass = false;
 
-    onClick(x: number, y: number): boolean {
+    public onClick(x: number, y: number): boolean {
         const reversiPartSlice = this.rules.node.gamePartSlice;
-        if (ReversiComponent.VERBOSE) {
+        if (this.VERBOSE) {
             console.log('ReversiRules.getListMoves(reversiPartSlice): ');
             console.log(ReversiRules.getListMoves(reversiPartSlice));
             console.log('this.rules.getListMoves(this.rules.node): ');
@@ -32,40 +30,40 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
             console.log('f9 0 board value : ' + this.rules.node.ownValue);
         }
         if (this.rules.node.isEndGame()) {
-            if (ReversiComponent.VERBOSE) {
+            if (this.VERBOSE) {
                 console.log('Malheureusement la partie est finie');
             }
             return false;
         }
 
-        if (ReversiComponent.VERBOSE) {
+        if (this.VERBOSE) {
             console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
         }
 
-        this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
+        this.lastMove = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove = new ReversiMove(x, y);
         if (this.rules.isLegal(chosenMove)) {
-            if (ReversiComponent.VERBOSE) {
+            if (this.VERBOSE) {
                 console.log('Et javascript estime que votre mouvement est légal');
             }
             // player make a correct move
             // let's confirm on java-server-side that the move is legal
             this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null); // TODO: encode score
         } else {
-            if (ReversiComponent.VERBOSE) {
+            if (this.VERBOSE) {
                 console.log('Mais c\'est un mouvement illegal');
             }
         }
     }
-    decodeMove(encodedMove: number): ReversiMove {
+    public decodeMove(encodedMove: number): ReversiMove {
         return ReversiMove.decode(encodedMove);
     }
-    encodeMove(move: ReversiMove): number {
+    public encodeMove(move: ReversiMove): number {
         return move.encode();
     }
-    updateBoard(): void {
-        if (ReversiComponent.VERBOSE) {
+    public updateBoard(): void {
+        if (this.VERBOSE) {
             console.log('updateBoard');
         }
         const reversiPartSlice: ReversiPartSlice = this.rules.node.gamePartSlice;
@@ -74,29 +72,25 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.board = reversiPartSlice.getCopiedBoard();
 
         if (moveCoord != null) {
-            this.lastX = moveCoord.coord.x;
-            this.lastY = moveCoord.coord.y;
+            this.lastMove = moveCoord.coord;
         }
-        if (ReversiComponent.VERBOSE) {
+        if (this.VERBOSE) {
             console.log('f9 choices : ' + JSON.stringify(ReversiRules.getListMoves(reversiPartSlice)));
-        }
-        if (ReversiComponent.VERBOSE) {
             console.log('f9 board value : ' + this.rules.node.ownValue);
         }
         if (ReversiRules.playerCanOnlyPass(reversiPartSlice)) { // && (!this.endGame)
-            if (ReversiComponent.VERBOSE) {
+            if (this.VERBOSE) {
                 console.log('f9 l\'utilisateur ne peut que passer son tour!');
             }
             this.canPass = true;
         } else {
-            if (ReversiComponent.VERBOSE) {
+            if (this.VERBOSE) {
                 console.log('f9 they pretend that you have choices, is it true');
             }
             this.canPass = false;
         }
     }
-
-    pass() {
+    public pass() {
         this.onClick(ReversiMove.pass.coord.x, ReversiMove.pass.coord.y);
     }
 }

@@ -88,4 +88,7 @@ export abstract class GamePartSlice {
     public getCurrentPlayer(): Player {
         return this.turn % 2 === 0 ? Player.ZERO : Player.ONE;
     }
+    public getCurrentEnnemy(): Player {
+        return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;
+    }
 }

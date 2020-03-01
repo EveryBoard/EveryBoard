@@ -8,7 +8,7 @@
 				 id="{{ 't'+y+x }}"
 				 alt=":{{ caseContent }}:"
 				 [src]="imagesLocation + 'reversi/' + caseContent + '.svg'"/>
-			<img *ngIf="lastX === x && lastY === y"
+			<img *ngIf="lastMove.x === x && lastMove.y === y"
 				 width="50"
 				 id="{{ 'u'+y+x }}"
 				 alt=":{{ caseContent }}:"

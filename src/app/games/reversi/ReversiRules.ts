@@ -8,8 +8,19 @@ import { MGPMap } from 'src/app/collectionlib/MGPMap';
 import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 
+class ReversiNode extends MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> { }
+
 export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
+    public static VERBOSE = false;
+
+    constructor() {
+        super();
+        this.node = MNode.getFirstNode(
+            new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
+            this
+        );
+    }
     public applyLegalMove(move: ReversiMove, slice: ReversiPartSlice, status: ReversiLegalityStatus): { resultingMove: ReversiMove; resultingSlice: ReversiPartSlice; } {
         const turn: number = slice.turn;
         const player: number = turn % 2;
@@ -30,8 +41,6 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         const resultingSlice: ReversiPartSlice = new ReversiPartSlice(board, turn + 1);
         return {resultingMove: move, resultingSlice};
     }
-    public static VERBOSE = false;
-
     public static getAllSwitcheds(move: ReversiMove, turn: number, board: number[][]): Coord[] {
         // try the move, do it if legal, and return the switched pieces
         const switcheds: Coord[] = [];
@@ -103,11 +112,11 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         const nextTurn: number = slice.turn + 1;
 
         const player: number = slice.getCurrentPlayer().value;
-        const ennemy: number = (nextTurn % 2 === 0) ? Player.ZERO.value : Player.ONE.value;
+        const ennemy: number = slice.getCurrentEnnemy().value;
 
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
-                if (slice.board[y][x] === Player.ONE.value) {
+                if (slice.board[y][x] === Player.NONE.value) {
                     // For each empty cases
                     nextBoard = slice.getCopiedBoard();
                     const ennemyNeighboors = ReversiPartSlice.getNeighbooringPawnLike(nextBoard, ennemy, x, y);
@@ -154,11 +163,11 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             if (ReversiRules.VERBOSE) console.log("ReversiRules.isLegal: non, on ne peux pas jouer sur une case occup�e");
             return {legal: false, switched: null};
         }
-        const switched = ReversiRules.getAllSwitcheds(move, turn, board);
+        const switched: Coord[] = ReversiRules.getAllSwitcheds(move, turn, board);
         if (ReversiRules.VERBOSE) console.log("ReversiRules.isLegal: "+ switched.length + " element(s) switched");
         return {legal: (switched.length !== 0), switched};
     }
-    public getBoardValue(n: MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus>): number {
+    public getBoardValue(n: ReversiNode): number {
         const reversiPartSlice: ReversiPartSlice = n.gamePartSlice;
         const board: number[][] = n.gamePartSlice.getCopiedBoard();
         let player0Count = 0;
@@ -185,7 +194,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         }
         return diff;
     }
-    public getListMoves(n: MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus>): MGPMap<ReversiMove, ReversiPartSlice> {
+    public getListMoves(n: ReversiNode): MGPMap<ReversiMove, ReversiPartSlice> {
         return ReversiRules.getListMoves(n.gamePartSlice);
     }
     public setInitialBoard(): void {
