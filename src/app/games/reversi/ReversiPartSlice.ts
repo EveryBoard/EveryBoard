@@ -38,4 +38,16 @@ export class ReversiPartSlice extends GamePartSlice {
         }
         return result;
     }
+    public countScore(): number[] {
+        let scores: number[] = [0, 0];
+        for (let y = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
+            for (let x = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
+                const caseOwner: number = this.board[y][x];
+                if (caseOwner !== Player.NONE.value) {
+                    scores[caseOwner] += 1;
+                }
+            }
+        }
+		return scores;
+	}
 }

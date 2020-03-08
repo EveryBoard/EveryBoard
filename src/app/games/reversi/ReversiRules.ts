@@ -174,11 +174,14 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         let player1Count = 0;
         for (let y = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
             for (let x = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
+                const verticalBorder: boolean = (x === 0) || (x === ReversiPartSlice.BOARD_WIDTH - 1);
+                const horizontalBorder: boolean = (y === 0) || (y === ReversiPartSlice.BOARD_HEIGHT - 1);
+                const locationValue: number = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
                 if (board[y][x] === Player.ZERO.value) {
-                    player0Count++;
+                    player0Count += locationValue;
                 }
                 if (board[y][x] === Player.ONE.value) {
-                    player1Count++;
+                    player1Count += locationValue;
                 }
             }
         }

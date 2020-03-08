@@ -19,6 +19,7 @@ import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.compo
 import { SiamComponent } from './siam/siam.component';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { SaharaComponent } from './sahara/sahara.component';
+import { fakeAsync } from '@angular/core/testing';
 
 export abstract class GameWrapper {
  
@@ -37,6 +38,8 @@ export abstract class GameWrapper {
     public observerRole: number;
 
     public canPass: boolean;
+
+    public endGame: boolean = false;
 
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
@@ -128,9 +131,16 @@ export abstract class GameWrapper {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.receiveChildData says: board about to update');
         }
-        const validMoveResult: boolean = this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
-        if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData says: valid move result = " + validMoveResult);
-        return validMoveResult;
+        const validMoveResult: boolean = this.componentInstance.rules.isLegal(move, slice).legal;
+        if (!validMoveResult) {
+            if (GameWrapper.VERBOSE) {
+                console.log('GameWrapper.receiveChildData says: move is illegal, not going to transmit that');
+            }
+            return false;
+        }
+        const legalMoveSubmissionResult: boolean = this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
+        if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData says: valid move result = " + legalMoveSubmissionResult);
+        return legalMoveSubmissionResult;
     }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): boolean;
 

@@ -32,7 +32,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     currentPart: ICurrentPart;
     currentPartId: string;
     gameStarted = false;
-    endGame = false;
     opponent: IJoueurId = null;
     currentPlayer: string;
 

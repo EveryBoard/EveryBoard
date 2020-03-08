@@ -1,6 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg"
-	 width="500px" height="500px"
-	 viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
-	<polyline points="0, 500, 250, 0, 500, 500, 0, 500"
-			  style="fill:#FFEE00; stroke:black"/>
-</svg>

@@ -448,11 +448,11 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     }
     // Overrides:
 
-    public isLegal(move: MoveX): LegalityStatus {
+    public isLegal(move: MoveX, slice: P4PartSlice): LegalityStatus {
         const ILLEGAL: LegalityStatus = {legal: false};
-        if (P4Rules.VERBOSE) console.log("Is " + move.toString() + " legal on ", this.node.gamePartSlice.board);
+        if (P4Rules.VERBOSE) console.log("Is " + move.toString() + " legal on ", slice.board);
         if (move.x < 0 || move.x > 6) return ILLEGAL;
-        if (this.node.gamePartSlice.getBoardByXY(move.x, 5) !== Player.NONE.value) return ILLEGAL;
+        if (slice.getBoardByXY(move.x, 5) !== Player.NONE.value) return ILLEGAL;
         return {legal: true};
     }
     public setInitialBoard(): void {
