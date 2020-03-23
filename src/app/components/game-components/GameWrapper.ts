@@ -50,7 +50,7 @@ export abstract class GameWrapper {
             console.log('GameWrapper.constructed: ' + (this.gameCompo!=null));
         }
     }
-    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> { // TODO figure out the difference with Type<any>
+    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.getMatchingComponent: '+(this.gameCompo!=null));
         }
@@ -94,7 +94,7 @@ export abstract class GameWrapper {
     protected loadGameComponent() {
         if (GameWrapper.VERBOSE) console.log('GameWrapper.loadGameComponent: '+(this.gameCompo!=null));
 
-        const compoString: string = this.actRoute.snapshot.paramMap.get('compo'); // TODO subscribe to query param
+        const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
         const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
             = this.getMatchingComponent(compoString);
         const componentFactory: ComponentFactory<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
@@ -104,13 +104,13 @@ export abstract class GameWrapper {
         this.componentInstance = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance;
         this.componentInstance.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
-        this.componentInstance.observerRole = this.observerRole; // TODO: fix, tell "undefined"
+        this.componentInstance.observerRole = this.observerRole;
         this.canPass = this.componentInstance.canPass;
     }
     public receiveChildData = (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): boolean => {
         if (!this.isPlayerTurn()) {
             if (GameWrapper.VERBOSE) {
-                console.log('GameWrapper.receiveChildData says: not your turn'); // todo : réactive notification
+                console.log('GameWrapper.receiveChildData says: not your turn');
             }
             return false;
         }

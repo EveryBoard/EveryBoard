@@ -1,7 +1,7 @@
-import { MoveCoordToCoordAndCapture } from "src/app/jscaip/MoveCoordToCoordAndCapture";
 import { Coord } from "src/app/jscaip/Coord";
+import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
 
-export class TablutMove extends MoveCoordToCoordAndCapture {
+export class TablutMove extends MoveCoordToCoord {
 
     public equals(o: any): boolean {
         if (o === this) return true;
@@ -9,16 +9,14 @@ export class TablutMove extends MoveCoordToCoordAndCapture {
         const other: TablutMove = o as TablutMove;
         if (!other.coord.equals(this.coord)) return false;
         if (!other.end.equals(this.end)) return false;
-        return true; // TODO: figure out what to do with captures
+        return true;
     }
     public toString(): String {
         return "TablutMove(" + this.coord + "->" + this.end + ")";
     }
-
     public decode(encodedMove: number): TablutMove {
         return TablutMove.decode(encodedMove);
     }
-
     static decode(encodedMove: number): TablutMove {
         // encoded as such : dx; dy; ax; ay
         const ay = encodedMove % 16;
@@ -33,14 +31,12 @@ export class TablutMove extends MoveCoordToCoordAndCapture {
         encodedMove -= encodedMove % 1;
         const dx = encodedMove % 16;
         const depart: Coord = new Coord(dx, dy);
-        return new TablutMove(depart, arrive, []); // TODO: check that there is no need to encode capture
+        return new TablutMove(depart, arrive);
     }
-
     public encode(): number {
         // encoded as (binarywise) A(x, y) -> B(X, Y)
         // all value are between 0 and 8, so encoded on four bits
         // dxdx dydy axax ayay
-        // TODO: verify that there is no need to send the capture 
         const dx: number = this.coord.x;
         const dy: number = this.coord.y;
         const ax: number = this.end.x;

@@ -1,9 +1,10 @@
 import { MoveCoordAndCapture } from "src/app/jscaip/MoveCoordAndCapture";
 import { Coord } from "src/app/jscaip/Coord";
+import { MoveCoord } from "src/app/jscaip/MoveCoord";
 
-export class GoMove extends MoveCoordAndCapture<Coord> {
+export class GoMove extends MoveCoord {
 
-    static readonly pass: GoMove = new GoMove(-1, 1, []);
+    static readonly pass: GoMove = new GoMove(-1, 1);
 
     static readonly passNumber: number = -1;
 
@@ -11,9 +12,9 @@ export class GoMove extends MoveCoordAndCapture<Coord> {
         if (encodedMove === GoMove.passNumber) {
             return GoMove.pass;
         }
-        const x = encodedMove % 19; // TODO: vérifier ici le cas où ce sera pas un plateau de taille standard 19x19
+        const x = encodedMove % 19;
         const y = (encodedMove - x) / 19;
-        return new GoMove(x, y, []); // check useless []
+        return new GoMove(x, y);
     }
 
     public equals(o: any): boolean {
@@ -24,7 +25,7 @@ export class GoMove extends MoveCoordAndCapture<Coord> {
     }
 
     public toString(): String {
-        return "GoMove(" + this.coord.x + ", " + this.coord.y + ", [" + this.captures.length + " captures])";
+        return "GoMove(" + this.coord.x + ", " + this.coord.y + ")";
     }
 
     public decode(encodedMove: number): GoMove {

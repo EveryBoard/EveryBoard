@@ -28,7 +28,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         this.showScore = true;
     }
     public onClick(x: number, y: number) {
-        // todo : option de clonage revision commentage
+        // TODO : option de clonage revision commentage
         if (AwaleComponent.VERBOSE) console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
 
         this.lastX = -1;
@@ -60,7 +60,6 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
             this.board = awalePartSlice.getCopiedBoard().reverse();
         }
 
-        // this.scores = awalePartSlice.getCapturedCopy(); // TODO: vérifier que le score s'affiche bien
         if (awaleMove != null) {
             this.lastX = awaleMove.coord.x;
             this.lastY = awaleMove.coord.y;

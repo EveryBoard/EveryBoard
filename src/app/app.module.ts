@@ -101,7 +101,7 @@ const routes: Route [] = [
         SiamComponent,
         TablutComponent,
 
-        CountDownComponent, // TODO: figure out if needed
+        CountDownComponent,
     ],
     imports: [
         BrowserModule,

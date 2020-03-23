@@ -17,7 +17,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     public VERBOSE = false;
 
-    public aiDepth: number = 5; // TODO: make that a choice of user
+    public aiDepth: number = 5;
 
     public botTimeOut: number = 500; // this.aiDepth * 500;
 

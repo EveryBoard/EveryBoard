@@ -15,24 +15,24 @@ describe('GoRules', () => {
 
     it('simple capture should be legal', () => {
         const part = new GoRules();
-        expect(part.choose(new GoMove(0, 1, []))).toEqual(true);
-        expect(part.choose(new GoMove(0, 0, []))).toEqual(true);
-        expect(part.choose(new GoMove(1, 1, []))).toEqual(true);
+        expect(part.choose(new GoMove(0, 1))).toEqual(true);
+        expect(part.choose(new GoMove(0, 0))).toEqual(true);
+        expect(part.choose(new GoMove(1, 1))).toEqual(true);
     });
 
     it('superposition shoud be illegal', () => {
         const part = new GoRules();
-        expect(part.choose(new GoMove(0, 1, []))).toEqual(true);
-        expect(part.choose(new GoMove(0, 1, []))).toEqual(false);
+        expect(part.choose(new GoMove(0, 1))).toEqual(true);
+        expect(part.choose(new GoMove(0, 1))).toEqual(false);
     });
 
     it('ko shoud be illegal', () => {
         const part = new GoRules();
-        expect(part.choose(new GoMove(2, 0, []))).toEqual(true);
-        expect(part.choose(new GoMove(1, 0, []))).toEqual(true);
-        expect(part.choose(new GoMove(1, 1, []))).toEqual(true);
-        expect(part.choose(new GoMove(0, 1, []))).toEqual(true);
-        expect(part.choose(new GoMove(0, 0, []))).toEqual(true); // Capture creating ko
-        expect(part.choose(new GoMove(1, 0, []))).toEqual(false); // the illegal ko move
+        expect(part.choose(new GoMove(2, 0))).toEqual(true);
+        expect(part.choose(new GoMove(1, 0))).toEqual(true);
+        expect(part.choose(new GoMove(1, 1))).toEqual(true);
+        expect(part.choose(new GoMove(0, 1))).toEqual(true);
+        expect(part.choose(new GoMove(0, 0))).toEqual(true); // Capture creating ko
+        expect(part.choose(new GoMove(1, 0))).toEqual(false); // the illegal ko move
     });
 });

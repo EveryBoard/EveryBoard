@@ -34,11 +34,11 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             if (captured != null) {
                 captureds.push(captured);
                 // if (!this.isKing(board[captured.y][captured.x])) {
-                    board[captured.y][captured.x] = TablutPartSlice.UNOCCUPIED; // do capture, unless if king
+                board[captured.y][captured.x] = TablutPartSlice.UNOCCUPIED; // do capture, unless if king
                 // }
             }
         }
-        let resultingMove: TablutMove = new TablutMove(move.coord, move.end, captureds);
+        let resultingMove: TablutMove = new TablutMove(move.coord, move.end);
         const resultingSlice: TablutPartSlice = new TablutPartSlice(board, turn + 1, invaderStart);
         return {resultingSlice, resultingMove};
     }
@@ -99,7 +99,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                 // }
             }
         }
-        let newMove: TablutMove = new TablutMove(move.coord, move.end, captureds);
+        let newMove: TablutMove = new TablutMove(move.coord, move.end);
         return {success: this.SUCCESS, resultingMove: newMove};
     }
     private static getMoveValidity(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): number {
@@ -522,7 +522,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         for (const pawn of listPawns) {
             pawnDestinations = this.getPossibleDestinations(invaderStart, pawn, board);
             for (const destination of pawnDestinations) {
-                newMove = new TablutMove(pawn, destination, []); // TODO: verify correctness of []
+                newMove = new TablutMove(pawn, destination);
                 listMoves.push(newMove);
             }
         }

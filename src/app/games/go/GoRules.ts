@@ -151,7 +151,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         
         for (let y = 0; y<GoPartSlice.HEIGHT; y++) {
             for (let x = 0; x<GoPartSlice.WIDTH; x++) {
-                newResultlessMove = new GoMove(x, y, []);
+                newResultlessMove = new GoMove(x, y);
                 let legality: GoLegalityStatus = this.isLegal(newResultlessMove, currentSlice);
                 if (legality.legal) {
                     let result: {resultingMove: GoMove, resultingSlice: GoPartSlice} =
@@ -201,8 +201,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         for (let capturedCoord of capturedCoords) {
             newBoard[capturedCoord.y][capturedCoord.x] = Pawn.EMPTY;
         }
-        let resultingMove: GoMove = new GoMove(x, y, capturedCoords);
-        let newKoCoord: Coord = GoRules.getNewKo(resultingMove, newBoard);
+        let resultingMove: GoMove = new GoMove(x, y);
+        let newKoCoord: Coord = GoRules.getNewKo(resultingMove, newBoard, capturedCoords);
         let newCaptured: number[] = currentPartSlice.getCapturedCopy();
         newCaptured[currentTurn % 2] += capturedCoords.length;
         let resultingSlice: GoPartSlice = new GoPartSlice(newBoard, newCaptured, newTurn, newKoCoord, Phase.PLAYING);
@@ -221,8 +221,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         return goScore[1] - goScore[0];
     }
 
-    public static getNewKo(move: GoMove, newBoard: Pawn[][]): Coord {
-        const captures: Coord[] = move.getCapturesCopy();
+    public static getNewKo(move: GoMove, newBoard: Pawn[][], captures: Coord[]): Coord {
         if (captures.length === 1) {
             const captured: Coord = captures[0];
             const capturer: Coord = move.coord;

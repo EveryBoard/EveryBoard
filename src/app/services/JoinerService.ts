@@ -36,11 +36,26 @@ export class JoinerService {
             this.startObserving(joinerId, callback);
         }
     }
-    public joinGame(partId: string, userName: string): Promise<void> {
+    public async joinGame(partId: string, userName: string): Promise<void> {
         if (JoinerService.VERBOSE) {
             console.log('JoinerService.joinGame(' + partId + ', ' + userName + ')');
         }
-        return new Promise((resolve, reject) => { // TODO: async/await
+        const joiner: IJoiner = await this.joinerDao.read(partId);
+        if (!joiner) {
+            throw new Error("No Joiner Received from DAO");
+        }
+        const joinerList: string[] = joiner.candidatesNames;
+        if (!joinerList.includes(userName) &&
+            (userName !== joiner.creator)) {
+            joinerList[joinerList.length] = userName;
+            this.joinerDao.update(partId, {candidatesNames: joinerList});
+        }
+    }
+    public _joinGame(partId: string, userName: string): Promise<void> {
+        if (JoinerService.VERBOSE) {
+            console.log('JoinerService.joinGame(' + partId + ', ' + userName + ')');
+        }
+        return new Promise((resolve, reject) => {
             this.joinerDao
                 .read(partId)
                 .then(joiner => {

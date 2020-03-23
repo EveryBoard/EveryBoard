@@ -38,8 +38,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         console.log("salut " + x + "-" + y);
         this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
-        const resultlessMove: GoMove = new GoMove(x, y, []); // TODO: check validity of "[]"
-        const result: boolean = this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]); // TODO: encode score
+        const resultlessMove: GoMove = new GoMove(x, y);
+        const result: boolean = this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
         console.log("this.chooseMove said : " + result);
     }
     public decodeMove(encodedMove: number): GoMove {
