@@ -1,12 +1,14 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
-import { SaharaMove, SaharaPartSlice, SaharaRules } from 'src/app/games/Sahara/SaharaRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
+import { SaharaMove } from 'src/app/games/Sahara/SaharaMove';
+import { SaharaPartSlice } from 'src/app/games/Sahara/SaharaPartSlice';
+import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 
 @Component({
-  selector: 'app-sahara',
-  templateUrl: './sahara.component.html'
+    selector: 'app-sahara',
+    templateUrl: './sahara.component.html'
 })
 export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPartSlice, LegalityStatus> {
 

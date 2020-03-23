@@ -1,9 +1,8 @@
 import {Component} from '@angular/core';
-import {Move} from '../../../jscaip/Move';
-import {QuartoMove} from '../../../games/games.quarto/QuartoMove';
-import {QuartoPartSlice} from '../../../games/games.quarto/QuartoPartSlice';
-import {QuartoRules} from '../../../games/games.quarto/QuartoRules';
-import {QuartoEnum} from '../../../games/games.quarto/QuartoEnum';
+import {QuartoMove} from '../../../games/quarto/QuartoMove';
+import {QuartoPartSlice} from '../../../games/quarto/QuartoPartSlice';
+import {QuartoRules} from '../../../games/quarto/QuartoRules';
+import {QuartoEnum} from '../../../games/quarto/QuartoEnum';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';

@@ -1,9 +1,8 @@
 import { TablutRules } from "./TablutRules";
 import { TablutMove } from "./TablutMove";
 import { Coord } from "src/app/jscaip/Coord";
-import { Direction, Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { TablutPartSlice } from "./TablutPartSlice";
-import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 
 describe('TablutRules', () => {
 

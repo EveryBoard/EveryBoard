@@ -1,6 +1,10 @@
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
-import { SaharaRules, SaharaMove, SaharaPartSlice,  } from './SaharaRules';
+import { SaharaRules } from './SaharaRules';
+import { SaharaMove } from './SaharaMove';
+import { SaharaPartSlice } from './SaharaPartSlice';
+
 describe('SaharaMoves', () => {
+
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
         const rules: SaharaRules = new SaharaRules();
         expect(rules).toBeTruthy();

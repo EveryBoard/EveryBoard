@@ -1,6 +1,10 @@
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
-import { SaharaRules, SaharaMove, SaharaPartSlice, TriangularCheckerBoard, SaharaPawn } from './SaharaRules';
 import { Coord } from 'src/app/jscaip/Coord';
+import { SaharaRules } from './SaharaRules';
+import { SaharaMove } from './SaharaMove';
+import { SaharaPartSlice } from './SaharaPartSlice';
+import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerboard';
+import { SaharaPawn } from './SaharaPawn';
 
 describe('SaharaRules', () => {
 
