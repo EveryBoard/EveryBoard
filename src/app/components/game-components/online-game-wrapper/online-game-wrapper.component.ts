@@ -1,17 +1,20 @@
-import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {Move} from '../../../jscaip/Move';
-import {GameService} from '../../../services/GameService';
-import {ICurrentPart, ICurrentPartId, PICurrentPart} from '../../../domain/icurrentpart';
-import {UserService} from '../../../services/UserService';
-import {CountDownComponent} from '../../normal-component/count-down/count-down.component';
-import {IJoueurId, IJoueur} from '../../../domain/iuser';
-import {Subscription} from 'rxjs';
-import {JoinerService} from '../../../services/JoinerService';
-import {MGPRequest} from '../../../domain/request';
-import {GameWrapper} from '../GameWrapper';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+
+import { Subscription } from 'rxjs';
+
+import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
+import { GameService } from 'src/app/services/GameService';
+import { UserService } from 'src/app/services/UserService';
+import { JoinerService } from 'src/app/services/JoinerService';
+
+import { Move } from '../../../jscaip/Move';
+import { ICurrentPart, ICurrentPartId, PICurrentPart } from '../../../domain/icurrentpart';
+import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
+import { IJoueurId, IJoueur } from '../../../domain/iuser';
+import { MGPRequest } from '../../../domain/request';
+import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 @Component({
     selector: 'app-game-wrapper',
@@ -50,18 +53,19 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 router: Router,
-                private gameService: GameService,
                 userService: UserService,
-                private joinerService: JoinerService,
-                authenticationService: AuthenticationService) {
-        super(componentFactoryResolver, actRoute, router, userService, authenticationService);
+                authenticationService: AuthenticationService,
+                viewContainerRef: ViewContainerRef,
+                private gameService: GameService,
+                private joinerService: JoinerService) {
+        super(componentFactoryResolver, actRoute, router, userService, authenticationService, viewContainerRef);
     }
     public ngOnInit() {
         if (OnlineGameWrapperComponent.VERBOSE) {
             console.log('le component est initialisé');
         }
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
-        this.userSub = this.authenticationService.joueurObs
+        this.userSub = this.authenticationService.getJoueurObs()
             .subscribe(user => this.userName = user.pseudo);
     }
     public resetGameDatas() {
@@ -94,7 +98,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameStarted = true;
         setTimeout(() => {
             // the small waiting is there to make sur that the chronos are charged
-            this.afterGameComponentViewProbablyInit();
+            this.afterGameComponentViewInit();
         }, 1);
 
         this.readJoiner(); // NEWLY
@@ -428,6 +432,5 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             }
             this.gameService.stopObservingPart();
         }
-        // console.log('OnlineGame.onDestroy');
     }
 }

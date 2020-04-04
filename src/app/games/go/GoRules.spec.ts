@@ -1,38 +1,35 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {GoRules} from './GoRules';
-import {MoveX} from '../../jscaip/MoveX';
-import { GoPartSlice } from './GoPartSlice';
 import { GoMove } from './GoMove';
-import { MNode } from 'src/app/jscaip/MNode';
-import { Coord } from 'src/app/jscaip/Coord';
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 describe('GoRules', () => {
 
+    let rules: GoRules;
+
+    beforeAll(() => {
+        GoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
+    beforeEach(() => {
+        rules = new GoRules();
+    });
     it('should be created', () => {
-        expect(new GoRules()).toBeTruthy();
+        expect(rules).toBeTruthy();
     });
-
     it('simple capture should be legal', () => {
-        const part = new GoRules();
-        expect(part.choose(new GoMove(0, 1))).toEqual(true);
-        expect(part.choose(new GoMove(0, 0))).toEqual(true);
-        expect(part.choose(new GoMove(1, 1))).toEqual(true);
+        expect(rules.choose(new GoMove(0, 1))).toEqual(true);
+        expect(rules.choose(new GoMove(0, 0))).toEqual(true);
+        expect(rules.choose(new GoMove(1, 1))).toEqual(true);
     });
-
     it('superposition shoud be illegal', () => {
-        const part = new GoRules();
-        expect(part.choose(new GoMove(0, 1))).toEqual(true);
-        expect(part.choose(new GoMove(0, 1))).toEqual(false);
+        expect(rules.choose(new GoMove(0, 1))).toEqual(true);
+        expect(rules.choose(new GoMove(0, 1))).toEqual(false);
     });
-
     it('ko shoud be illegal', () => {
-        const part = new GoRules();
-        expect(part.choose(new GoMove(2, 0))).toEqual(true);
-        expect(part.choose(new GoMove(1, 0))).toEqual(true);
-        expect(part.choose(new GoMove(1, 1))).toEqual(true);
-        expect(part.choose(new GoMove(0, 1))).toEqual(true);
-        expect(part.choose(new GoMove(0, 0))).toEqual(true); // Capture creating ko
-        expect(part.choose(new GoMove(1, 0))).toEqual(false); // the illegal ko move
+        expect(rules.choose(new GoMove(2, 0))).toEqual(true);
+        expect(rules.choose(new GoMove(1, 0))).toEqual(true);
+        expect(rules.choose(new GoMove(1, 1))).toEqual(true);
+        expect(rules.choose(new GoMove(0, 1))).toEqual(true);
+        expect(rules.choose(new GoMove(0, 0))).toEqual(true); // Capture creating ko
+        expect(rules.choose(new GoMove(1, 0))).toEqual(false); // the illegal ko move
     });
 });

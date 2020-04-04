@@ -8,7 +8,7 @@ import {IJoiner} from '../domain/ijoiner';
 
 import {JoinerService} from './JoinerService';
 import {ActivesPartsService} from './ActivesPartsService';
-import {ChatService} from './ChatService';
+import {ChatService} from './chat-service/ChatService';
 import {IChat} from '../domain/ichat';
 import {MGPRequest} from '../domain/request';
 
@@ -27,6 +27,7 @@ export class GameService {
                 private activesPartsService: ActivesPartsService,
                 private joinerService: JoinerService,
                 private chatService: ChatService) {
+        console.log("NO GAME_SERVICE IN TEST PLIZE");
     }
     // on Server Component
 

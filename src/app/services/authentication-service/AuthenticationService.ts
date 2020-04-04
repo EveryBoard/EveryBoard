@@ -2,7 +2,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 import * as firebase from 'firebase';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { PIJoueur } from '../domain/iuser';
+import { PIJoueur } from '../../domain/iuser';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 
 @Injectable()
@@ -17,9 +17,10 @@ export class AuthenticationService implements OnDestroy {
     private joueurBS: BehaviorSubject<{pseudo: string, verified: boolean}> = 
         new BehaviorSubject<{pseudo: string, verified: boolean}>({pseudo: null, verified: null});
 
-    public joueurObs: Observable<{pseudo: string, verified: boolean}> = this.joueurBS.asObservable();;
+    private joueurObs: Observable<{pseudo: string, verified: boolean}> = this.joueurBS.asObservable();;
 
     constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
+        console.log("NO AUTH_SERVICE IN TEST PLIZE");
         if (AuthenticationService.VERBOSE) console.log("1 authService subscribe to Obs<User>");
         this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
             if (this.joueurSub != null) {
@@ -106,5 +107,19 @@ export class AuthenticationService implements OnDestroy {
     public ngOnDestroy() {
         if (this.authSub) this.authSub.unsubscribe();
         if (this.joueurSub) this.joueurSub.unsubscribe();
+    }
+    public getJoueurObs(): Observable<{pseudo: string, verified: boolean}> {
+        return this.joueurObs;
+    }
+    public sendEmailVerification() {
+        const user: firebase.User = firebase.auth().currentUser;
+        if (!user) {
+            throw new Error("Unlogged users can't send email verification");
+        }
+        if (user.emailVerified === true) {
+            throw new Error("Verified users shouldn't ask twice email verification");
+        } else {
+            return user.sendEmailVerification();
+        }
     }
 }

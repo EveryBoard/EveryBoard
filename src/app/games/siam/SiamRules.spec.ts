@@ -3,22 +3,28 @@ import { SiamMove, SiamMoveNature } from './SiamMove';
 import { SiamPiece } from './SiamPiece';
 import { MGPMap } from 'src/app/collectionlib/MGPMap';
 import { SiamPartSlice } from './SiamPartSlice';
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 describe('SiamRules', () => {
 
+    let rules: SiamRules;
+
+    beforeAll(() => {
+        SiamRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
+    beforeEach(() => {
+        rules = new SiamRules();
+    });
     it('SiamRules should be created', () => {
-        const rules: SiamRules = new SiamRules();
         expect(rules).toBeTruthy();
         expect(rules.node.gamePartSlice.turn).toBe(0, "Game should start a turn 0");
     });
     it('SiamRules should provide 20 first turn childs at turn 0', () => {
-        const rules: SiamRules = new SiamRules();
         const firstTurnMoves: MGPMap<SiamMove, SiamPartSlice> = rules.getListMoves(rules.node);
         expect(firstTurnMoves.size()).toEqual(20);
         expect(firstTurnMoves.get(0).value.turn).toEqual(1);
     });
     it('Insertion should work', () => {
-        const rules: SiamRules = new SiamRules();
         const moveIsLegal: boolean = rules.choose(new SiamMove(-1, 4, SiamMoveNature.FORWARD));
         expect(moveIsLegal).toBeTruthy("Simple insertion at first turn should be legal");
         const foundPiece: SiamPiece = SiamPiece.decode(rules.node.gamePartSlice.board[4][0]);
@@ -26,7 +32,6 @@ describe('SiamRules', () => {
         expect(rules.node.gamePartSlice.turn).toBe(1, "After one legal move, turn should be 1");
     });
     it('Simple forwarding should work', () => {
-        const rules: SiamRules = new SiamRules();
         rules.choose(new SiamMove(-1, 4, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(4, 5, SiamMoveNature.FORWARD));
         const moveIsLegal: boolean = rules.choose(new SiamMove(0, 4, SiamMoveNature.FORWARD));
@@ -37,10 +42,8 @@ describe('SiamRules', () => {
         expect(newPieceLocation === SiamPiece.WHITE_RIGHT).toBeTruthy("Lower left corner should be unoccupied after move, not " + previousPieceLocation.toString());
     });
     it('Side pushing should work', () => {
-        const rules: SiamRules = new SiamRules();
         rules.choose(new SiamMove(-1, 4, SiamMoveNature.FORWARD));
         const moveIsLegal = rules.choose(new SiamMove(0, 5, SiamMoveNature.FORWARD));
-        SiamRules.VERBOSE = true;
         expect(moveIsLegal).toBeTruthy("Side pushing should work");
         const foundPiece: SiamPiece = SiamPiece.decode(rules.node.gamePartSlice.board[4][0]);
         const pushedPiece: SiamPiece = SiamPiece.decode(rules.node.gamePartSlice.board[3][0]);
@@ -48,7 +51,6 @@ describe('SiamRules', () => {
         expect(foundPiece === SiamPiece.BLACK_UP).toBeTruthy("Lower left corner should now be occupied by a black piece going up, not "+foundPiece.toString());
     });
     it('Rotation should work', () => {
-        const rules: SiamRules = new SiamRules();
         rules.choose(new SiamMove(-1, 4, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(0, 5, SiamMoveNature.FORWARD));
         const moveIsLegal: boolean = rules.choose(new SiamMove(0, 3, SiamMoveNature.CLOCKWISE));
@@ -59,7 +61,6 @@ describe('SiamRules', () => {
         expect(cornerPiece === SiamPiece.BLACK_UP).toBeTruthy("Lower left corner should now be occupied by a black piece going up, not "+cornerPiece.toString());
     });
     it('One vs one push should not work', () => {
-        const rules: SiamRules = new SiamRules();
         rules.choose(new SiamMove(-1, 4, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(0, 5, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(0, 3, SiamMoveNature.CLOCKWISE));
@@ -71,7 +72,6 @@ describe('SiamRules', () => {
         expect(cornerPiece === SiamPiece.BLACK_UP).toBeTruthy("Piece trying to push there should have been black_up, instead found: "+cornerPiece.toString());
     });
     it('Two vs one push should work', () => {
-        const rules: SiamRules = new SiamRules();
         rules.choose(new SiamMove(-1, 4, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(0, 5, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(0, 3, SiamMoveNature.CLOCKWISE));
@@ -85,7 +85,6 @@ describe('SiamRules', () => {
         expect(pushingPiece === SiamPiece.BLACK_UP).toBeTruthy("Pushing piece should have been BLACK_UP, instead found: "+pushingPiece.toString());
     });
     it('6 insertion should be impossible', () => {
-        const rules: SiamRules = new SiamRules();
         rules.choose(new SiamMove(-1, 4, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(4, 5, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(-1, 3, SiamMoveNature.FORWARD));
@@ -100,14 +99,12 @@ describe('SiamRules', () => {
         expect(moveIsLegal).toBeFalsy("6th insertion should be illegal");
     });
     it('Pushing several mountains should be illegal', () => {
-        const rules: SiamRules = new SiamRules();
         rules.choose(new SiamMove(-1, 2, SiamMoveNature.FORWARD));
         const moveIsLegal: boolean = rules.choose(new SiamMove(-1, 2, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(-1, 2, SiamMoveNature.FORWARD));
         expect(moveIsLegal).toBeFalsy();
     });
     it('Player 0 pushing player 0 pushing mountain should be a victory for player 0', () => {
-        const rules: SiamRules = new SiamRules();
         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
@@ -116,13 +113,12 @@ describe('SiamRules', () => {
         expect(rules.node.ownValue).toEqual(Number.MIN_SAFE_INTEGER, "Player 0 should have won (min score)");
     });
     it('Player 1 pushing player 0 pushing mountain should be a victory for player 0', () => {
-        const rules: SiamRules = new SiamRules();
         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
-         rules.choose(new SiamMove(4, -1, SiamMoveNature.FORWARD));
+        rules.choose(new SiamMove(4, -1, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
-         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
-         rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
+        rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
+        rules.choose(new SiamMove(2, -1, SiamMoveNature.FORWARD));
         expect(rules.node.ownValue).toEqual(Number.MIN_SAFE_INTEGER, "Player 0 should have won (min score)");
     });
 });

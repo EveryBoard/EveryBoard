@@ -17,8 +17,9 @@ export class ActivesPartsService {
 
 	private unsubscribe: () => void;
 
-	constructor(private partDao: PartDAO) {}
-
+	constructor(private partDao: PartDAO) {
+        console.log("NO ACTIVE_PART_SERVICE IN TEST PLIZE");
+    }
     public startObserving() {
         const partObserver: FirebaseCollectionObserver<ICurrentPart> = new FirebaseCollectionObserver();
         partObserver.onDocumentModified = (modifiedParts: ICurrentPartId[]) => {

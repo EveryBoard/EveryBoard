@@ -14,8 +14,9 @@ export class JoinerService {
     private followedJoinerObs: Observable<IJoinerId>;
     private followedJoinerSub: Subscription;
 
-    constructor(private joinerDao: JoinerDAO) {}
-
+    constructor(private joinerDao: JoinerDAO) {
+        console.log("NO JOINER_SERVICE IN TEST PLIZE");
+    }
     public startObserving(joinerId: string, callback: (iJoiner: IJoinerId) => void) {
         if (this.followedJoinerId == null) {
             if (JoinerService.VERBOSE) {

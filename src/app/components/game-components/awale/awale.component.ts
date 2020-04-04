@@ -4,6 +4,7 @@ import {AwaleRules} from '../../../games/awale/AwaleRules';
 import {AwaleMove} from 'src/app/games/awale/AwaleMove';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
+import { Coord } from 'src/app/jscaip/Coord';
 
 @Component({
     selector: 'app-awale-new-component',
@@ -11,17 +12,13 @@ import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
-    public static VERBOSE: boolean = false;
-
     public rules = new AwaleRules();
 
     public scores: number[] = [0, 0];
 
-    public imagesLocation = 'assets/images/'; // en prod
-    // imagesLocation = 'src/assets/images/'; // en dev
+    public imagesLocation = 'assets/images/';
 
-    public lastX = -1;
-    public lastY = -1;
+    public last: Coord = new Coord(-1, -1);
 
     constructor() {
         super();
@@ -29,16 +26,13 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
     }
     public onClick(x: number, y: number) {
         // TODO : option de clonage revision commentage
-        if (AwaleComponent.VERBOSE) console.log('vous tentez un mouvement en (' + x + ', ' + y + ')');
 
-        this.lastX = -1;
-        this.lastY = -1; // now the user stop try to do a move
+        this.last  = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = new AwaleMove(x, y);
         // let's confirm on java-server-side that the move is legal
-        if (AwaleComponent.VERBOSE) console.log("awale component about to call chooseMove");
         const result: boolean = this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
-        if (AwaleComponent.VERBOSE) console.log("and chooseMove says : " + result);
+        return result;
     }
     public decodeMove(encodedMove: number): AwaleMove {
         return AwaleMove.decode(encodedMove);
@@ -61,8 +55,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         }
 
         if (awaleMove != null) {
-            this.lastX = awaleMove.coord.x;
-            this.lastY = awaleMove.coord.y;
+            this.last = awaleMove.coord;
         }
     }
 }

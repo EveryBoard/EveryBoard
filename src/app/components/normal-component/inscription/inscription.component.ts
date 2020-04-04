@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { FormGroup, FormControl } from '@angular/forms';
 import { Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
 
 @Component({
     selector: 'app-inscription',

@@ -2,9 +2,13 @@ import { TablutRules } from "./TablutRules";
 import { TablutMove } from "./TablutMove";
 import { MGPMap } from "src/app/collectionlib/MGPMap";
 import { TablutPartSlice } from "./TablutPartSlice";
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
 
 describe('TablutMove', () => {
 
+    beforeAll(() => {
+        TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
     it('TablutMove.encode and TablutMove.decode should be reversible', () => {
         const rules: TablutRules = new TablutRules();
         const firstTurnMoves: MGPMap<TablutMove, TablutPartSlice> = rules.getListMoves(rules.node);

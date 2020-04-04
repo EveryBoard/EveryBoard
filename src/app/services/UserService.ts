@@ -23,6 +23,7 @@ export class UserService {
     constructor(private router: Router,
                 private activesUsersService: ActivesUsersService,
                 private userDao: JoueursDAO) {
+        console.log("NO USER_SERVICE IN TEST PLIZE");
     }
     /* getCurrentUser(): string {
         return this.userName.getValue();
@@ -43,12 +44,12 @@ export class UserService {
     }*/
     // On Server Component
 
-    getActivesUsersObs(): Observable<IJoueurId[]> {
+    public getActivesUsersObs(): Observable<IJoueurId[]> {
         // TODO: désabonnements aux autres services user
         this.activesUsersService.startObserving();
         return this.activesUsersService.activesUsersObs;
     }
-    unSubFromActivesUsersObs() {
+    public unSubFromActivesUsersObs() {
         this.activesUsersService.stopObserving();
     }
     // autres
@@ -113,7 +114,7 @@ export class UserService {
     }
     // Delegate
     */
-    REFACTOR_observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
+    public REFACTOR_observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
         // the callback will be called on the foundUser
         return this.userDao.observeUserByPseudo(pseudo, callback);
     }

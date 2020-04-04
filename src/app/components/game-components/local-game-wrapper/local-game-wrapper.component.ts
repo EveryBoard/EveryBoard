@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
 import { GameWrapper } from '../GameWrapper';
 import { Move } from '../../../jscaip/Move';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -6,7 +6,7 @@ import { UserService } from '../../../services/UserService';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -22,23 +22,26 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     public botTimeOut: number = 500; // this.aiDepth * 500;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
-                private cdr: ChangeDetectorRef,
                 actRoute: ActivatedRoute,
                 router: Router,
                 userService: UserService,
-                authenticationService: AuthenticationService) {
-        super(componentFactoryResolver, actRoute, router, userService, authenticationService);
+                authenticationService: AuthenticationService,
+                viewContainerRef: ViewContainerRef,
+                private cdr: ChangeDetectorRef) {
+        super(componentFactoryResolver, actRoute, router, userService, authenticationService, viewContainerRef);
         if (this.VERBOSE) console.log("LocalGameWrapper Constructed: "+(this.gameCompo!=null));
     }
     public ngAfterViewInit() {
-        this.authenticationService.joueurObs.subscribe(user => {
-            this.userName = user.pseudo;
-            if (this.players[0] !== "bot") this.players[0] = user.pseudo;
-            if (this.players[1] !== "bot") this.players[1] = user.pseudo;
-        });
-        if (this.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameCompo!=null));
-        this.afterGameComponentViewProbablyInit();
-        this.cdr.detectChanges();
+        setTimeout(() => {
+            this.authenticationService.getJoueurObs().subscribe(user => {
+                this.userName = user.pseudo;
+                if (this.players[0] !== "bot") this.players[0] = user.pseudo;
+                if (this.players[1] !== "bot") this.players[1] = user.pseudo;
+            });
+            if (this.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameCompo!=null));
+            this.afterGameComponentViewInit();
+            this.cdr.detectChanges();
+        }, 1);
     }
     public onValidUserMove(move: Move): boolean {
         if (LocalGameWrapperComponent.VERBOSE) {

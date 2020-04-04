@@ -1,26 +1,24 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import * as firebase from 'firebase/app';
+import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
 
 @Component({
     selector: 'app-confirm-inscription',
     templateUrl: './confirm-inscription.component.html'
 })
-export class ConfirmInscriptionComponent {
+export class ConfirmInscriptionComponent implements OnInit {
 
-    constructor() {
-        this.sendVerification();
-    }
-    private sendVerification() {
-        const user: firebase.User = firebase.auth().currentUser;
+    constructor(private authService: AuthenticationService) {}
+
+    public ngOnInit() {
+        const user: { pseudo: string; verified: boolean } = this.authService.getAuthenticatedUser();
         if (!user) {
-            window.alert("Mais il est même pas connecté c'con là");
-            throw new Error("paydaaaaay");
+            throw new Error("Unlogged users can't access this component");
         }
-        if (user.emailVerified === true) {
-            console.log("Bah, vous êtes déjà vérifié monsieur");
+        if (user.verified === true) {
+            throw new Error("Verified users shouldn't access this component");
         } else {
-            window.alert();
-            return user.sendEmailVerification();
+            return this.authService.sendEmailVerification();
         }
     }
 }

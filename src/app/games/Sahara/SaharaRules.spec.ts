@@ -5,11 +5,19 @@ import { SaharaMove } from './SaharaMove';
 import { SaharaPartSlice } from './SaharaPartSlice';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerboard';
 import { SaharaPawn } from './SaharaPawn';
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 describe('SaharaRules', () => {
 
+    let rules: SaharaRules;
+
+    beforeAll(() => {
+        SaharaRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
+    beforeEach(() => {
+        rules = new SaharaRules();
+    });
     it('SaharaRules should be created', () => {
-        const rules: SaharaRules = new SaharaRules();
         expect(rules).toBeTruthy();
         expect(rules.node.gamePartSlice.turn).toBe(0, "Game should start a turn 0");
         const moves: MGPMap<SaharaMove, SaharaPartSlice> = rules.getListMoves(rules.node);
@@ -35,7 +43,6 @@ describe('SaharaRules', () => {
         }
     });
     it('Shortest victory simulation', () => {
-        const rules: SaharaRules = new SaharaRules();
         expect(rules.choose(new SaharaMove(new Coord(0, 3), new Coord(1, 4)))).toBeTruthy("First move should be legal");
         expect(rules.node.gamePartSlice.getBoardAt(new Coord(1, 4))).toBe(SaharaPawn.BLACK, 'Just moved black piece should be in her landing spot');
         expect(rules.node.gamePartSlice.getBoardAt(new Coord(0, 3))).toBe(SaharaPawn.EMPTY, 'Just moved black piece should have left her initial spot');

@@ -1,6 +1,6 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
 import { IJoueurId, IJoueur } from 'src/app/domain/iuser';
 import { Subscription } from 'rxjs';
 
@@ -18,7 +18,11 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 private authenticationService: AuthenticationService) {
     }
     public ngOnInit() {
-        this.joueurSub = this.authenticationService.joueurObs.subscribe(joueur => {if (joueur) this.userName = joueur.pseudo; else this.userName = null;});
+        this.joueurSub = this.authenticationService.getJoueurObs()
+            .subscribe(joueur => {
+                if (joueur) this.userName = joueur.pseudo;
+                else this.userName = null;
+            });
     }
     public backToServer() {
         this.router.navigate(['/server']);

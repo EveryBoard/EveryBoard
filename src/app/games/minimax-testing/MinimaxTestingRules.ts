@@ -21,7 +21,6 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
             resultingMove: move
         };
     }
-
     constructor(initialBoard: ReadonlyArray<ReadonlyArray<number>>) {
         super();
         MinimaxTestingPartSlice.initialBoard = initialBoard;
@@ -30,7 +29,6 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
             this
         );
     }
-
     public setInitialBoard() {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
@@ -40,7 +38,6 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
             this.node = this.node.getInitialNode();
         }
     }
-
     public isLegal(move: MinimaxTestingMove): LegalityStatus {
         const ILLEGAL: LegalityStatus = {legal: false};
         const slice: MinimaxTestingPartSlice = this.node.gamePartSlice;
@@ -54,13 +51,11 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         }
         return {legal: true};
     }
-
     public getBoardValue(node: MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus>): number {
         MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT++;
         const slice: MinimaxTestingPartSlice = node.gamePartSlice;
         return slice.getBoardAt(slice.location);
     }
-
     public getListMoves(n: MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus>): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {
         MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT++;
         const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> = new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();

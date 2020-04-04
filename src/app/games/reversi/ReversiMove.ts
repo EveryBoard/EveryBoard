@@ -6,7 +6,7 @@ export class ReversiMove extends MoveCoord {
 
     static readonly passNumber: number = -1;
 
-    static decode(encodedMove: number): ReversiMove {
+    public static decode(encodedMove: number): ReversiMove {
         if (encodedMove === ReversiMove.passNumber) {
             return ReversiMove.pass;
         }
@@ -14,23 +14,19 @@ export class ReversiMove extends MoveCoord {
         const y = (encodedMove - x) / 8;
         return new ReversiMove(x, y);
     }
-
     public equals(o: any): boolean {
         if (o === this) return true;
         if (!(o instanceof ReversiMove)) return false;
         const other: ReversiMove = o as ReversiMove;
-        if (!other.coord.equals(this.coord)) return false;
-        return true;
+        return other.coord.equals(this.coord);
     }
     public toString(): String {
         return "ReversiMove(" + this.coord.x + ", " + this.coord.y + ")";
     }
-
     public decode(encodedMove: number): ReversiMove {
         return ReversiMove.decode(encodedMove);
     }
-
     public encode(): number {
-        throw new Error("Method not implemented.");
+        return (this.coord.y*8) + this.coord.x;
     }
 }

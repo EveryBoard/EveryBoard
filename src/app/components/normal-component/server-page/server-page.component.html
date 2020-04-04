@@ -45,16 +45,24 @@
             <div id="gameCreator" class="circled form-group">
                 <label for="gameType">Créer un jeu</label>
                 <select id="gameType" class="form-control" [(ngModel)]='selectedGame'>
-                    <option *ngFor="let gameName of gameNameList" value={{gameName}} class="form-control">
+                    <option *ngFor="let gameName of gameNameList"
+                            value={{gameName}}
+                            class="form-control">
                         {{ gameName }}
                     </option>
                 </select>
                 <br />
-                <input type="button" value="online game" [disabled]="!selectedGame" (click)="createGame()"
-                    class="btn btn-primary btn-block">
+                <input type="button" 
+                       value="online game"
+                       [disabled]="!selectedGame"
+                       (click)="createGame()"
+                       class="btn btn-primary btn-block">
                 <br />
-                <input type="button" [disabled]="!selectedGame" value="local game" (click)="playLocally()"
-                    class="btn btn-primary btn-block">
+                <input type="button"
+                       [disabled]="!selectedGame"
+                       value="local game"
+                       (click)="playLocally()"
+                       class="btn btn-primary btn-block">
             </div>
         </mat-tab>
     </mat-tab-group>

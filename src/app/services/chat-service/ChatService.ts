@@ -1,8 +1,8 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {IChat, IChatId} from '../domain/ichat';
-import {ChatDAO} from '../dao/ChatDAO';
-import {IMessage} from '../domain/imessage';
+import {IChat, IChatId} from '../../domain/ichat';
+import {ChatDAO} from '../../dao/ChatDAO';
+import {IMessage} from '../../domain/imessage';
 
 @Injectable({
     providedIn: 'root'
@@ -20,7 +20,9 @@ export class ChatService implements OnDestroy {
     public static isForbiddenMessage(message: string): boolean {
         return (message === ''); // TODO: améliorer ?
     }
-    constructor(private chatDao: ChatDAO) {}
+    constructor(private chatDao: ChatDAO) {
+        console.log("NO CHAT_SERVICE IN TEST PLIZE");
+    }
 
     public sendMessage(userName: string, lastTurnThen: number, content: string) {
         if (this.userForbid(this.followedChatId, userName)) {

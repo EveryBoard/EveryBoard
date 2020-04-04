@@ -49,7 +49,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         return move.encode();
     }
     public updateBoard(): void {
-        if (GoComponent.VERBOSE || true) {
+        if (GoComponent.VERBOSE) {
             console.log('updateBoard');
         }
         const slice: GoPartSlice = this.rules.node.gamePartSlice;

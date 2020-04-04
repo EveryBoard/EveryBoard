@@ -17,8 +17,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public showScore: boolean;
 
-    public imagesLocation = 'assets/images/'; // en prod';
-    // imagesLocation = 'src/assets/images/'; // en dev
+    public imagesLocation = 'assets/images/';
 
     public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => boolean;
 

@@ -11,9 +11,9 @@ import {AngularFirestoreModule, AngularFirestore} from '@angular/fire/firestore'
 
 import {GameIncluderDirective} from './directives/game-includer.directive';
 
-import {ChatService} from './services/ChatService';
+import {ChatService} from './services/chat-service/ChatService';
 import {UserService} from './services/UserService';
-import {AuthenticationService} from './services/AuthenticationService';
+import {AuthenticationService} from './services/authentication-service/AuthenticationService';
 import {GameService} from './services/GameService';
 import {JoinerService} from './services/JoinerService';
 
@@ -48,9 +48,11 @@ import { ConfirmInscriptionComponent } from './components/normal-component/confi
 import { EmailVerified } from './guard/EmailVerified';
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 
+export const INCLUDE_VERBOSE_LINE_IN_TEST = false;
+
 const routes: Route [] = [
     {path: 'login',               component: LoginComponent},
-    {path: 'server',              component: ServerPageComponent},
+    {path: 'server',              component: ServerPageComponent, canActivate: [EmailVerified]},
     {path: 'inscription',         component: InscriptionComponent},
     {path: 'confirm-inscription', component: ConfirmInscriptionComponent},
 
@@ -62,7 +64,7 @@ const routes: Route [] = [
 
 @NgModule({
     declarations: [
-        GameIncluderDirective,
+        GameIncluderDirective, // TODO: check use
 
         AppComponent,
         HeaderComponent,
@@ -112,9 +114,18 @@ const routes: Route [] = [
         AngularFireModule.initializeApp(firebaseConfig),
         AngularFirestoreModule,
         BrowserAnimationsModule,
-        MaterialModule
+        MaterialModule,
     ],
-    providers: [AuthenticationService, GameService, JoinerService, UserService, ChatService, PartDAO, AngularFirestore, AngularFireAuth],
+    providers: [
+        AuthenticationService,
+        GameService,
+        JoinerService,
+        UserService,
+        ChatService,
+        PartDAO,
+        AngularFirestore,
+        AngularFireAuth
+    ],
     bootstrap: [AppComponent]
 })
 export class AppModule { }

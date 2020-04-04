@@ -1,4 +1,4 @@
-import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
+import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractGameComponent} from './AbstractGameComponent';
 import {GameIncluderComponent} from './game-includer/game-includer.component';
@@ -17,9 +17,8 @@ import {GoComponent} from './go/go.component';
 import { EncapsuleComponent } from './encapsule/encapsule.component';
 import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
 import { SiamComponent } from './siam/siam.component';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
 import { SaharaComponent } from './sahara/sahara.component';
-import { fakeAsync } from '@angular/core/testing';
 
 export abstract class GameWrapper {
  
@@ -45,7 +44,8 @@ export abstract class GameWrapper {
                 protected actRoute: ActivatedRoute,
                 protected router: Router,
                 protected userService: UserService,
-                protected authenticationService: AuthenticationService) {
+                protected authenticationService: AuthenticationService,
+                protected viewContainerRef: ViewContainerRef) {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.constructed: ' + (this.gameCompo!=null));
         }
@@ -76,11 +76,10 @@ export abstract class GameWrapper {
             case 'Tablut':
                 return TablutComponent;
             default:
-                this.router.navigate(['/error']);
                 throw new Error("Unknown Games are unwrappable");
         }
     }
-    protected afterGameComponentViewProbablyInit() {
+    protected afterGameComponentViewInit() {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.afterGameComponentViewProbablyInit');
         }
@@ -100,8 +99,8 @@ export abstract class GameWrapper {
         const componentFactory: ComponentFactory<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
             = this.componentFactoryResolver.resolveComponentFactory(component);
         const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
-            = this.gameCompo.viewContainerRef.createComponent(componentFactory);
-        this.componentInstance = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance;
+            = this.viewContainerRef.createComponent(componentFactory);
+        this.componentInstance = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance; // Shortent by T<S = Truc>
         this.componentInstance.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
         this.componentInstance.observerRole = this.observerRole;

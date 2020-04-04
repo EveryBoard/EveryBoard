@@ -9,7 +9,7 @@ import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 })
 export class ActivesUsersService {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     private activesUsersBS = new BehaviorSubject<IJoueurId[]>([]);
 
@@ -17,8 +17,9 @@ export class ActivesUsersService {
 
     private unsubscribe: () => void;
 
-    constructor(private joueursDAO: JoueursDAO) {}
-
+    constructor(private joueursDAO: JoueursDAO) {
+        console.log("NO ACTIVE_USERS_SERVICE IN TEST PLIZE");
+    }
     public startObserving() {
         if (ActivesUsersService.VERBOSE) console.log("ActivesUsersService.startObservingActivesUsers");
         const joueursObserver: FirebaseCollectionObserver<IJoueur> = new FirebaseCollectionObserver();

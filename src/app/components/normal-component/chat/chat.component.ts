@@ -1,8 +1,7 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core';
-import {ChatService} from '../../../services/ChatService';
-import {IMessage} from '../../../domain/imessage';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
-import { IJoueurId, IJoueur } from 'src/app/domain/iuser';
+import { Component, Input, OnInit } from '@angular/core';
+import { ChatService } from '../../../services/chat-service/ChatService';
+import { IMessage } from '../../../domain/imessage';
+import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
 
 @Component({
     selector: 'app-chat',
@@ -26,7 +25,7 @@ export class ChatComponent implements OnInit {
         if (ChatComponent.VERBOSE) {
             console.log('chat component initialisation');
         }
-        this.authenticationService.joueurObs
+        this.authenticationService.getJoueurObs()
             .subscribe(joueur => {
                 if (joueur) {
                     if (ChatComponent.VERBOSE) console.log(joueur + " just connected");

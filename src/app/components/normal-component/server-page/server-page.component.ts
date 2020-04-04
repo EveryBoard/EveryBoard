@@ -6,9 +6,9 @@ import {Subscription} from 'rxjs';
 import { IJoueurId } from '../../../domain/iuser';
 import {ICurrentPartId} from '../../../domain/icurrentpart';
 
-import {UserService} from '../../../services/UserService';
-import {GameService} from '../../../services/GameService';
-import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { UserService } from '../../../services/UserService';
+import { GameService } from '../../../services/GameService';
+import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
 
 @Component({
     selector: 'app-server-page',
@@ -47,19 +47,19 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     constructor(private router: Router,
                 private userService: UserService,
                 private gameService: GameService,
-                private authenticationService: AuthenticationService) {}
+                private authenticationService: AuthenticationService) {
 
+    }
     public ngOnInit() {
-        this.userNameSub = this.authenticationService.joueurObs
-                .subscribe(joueur => {console.log(joueur); if (joueur) this.userName = joueur.pseudo; else this.userName = null;});
-        this.activesPartsSub = this.gameService
-            .getActivesPartsObs()
-            .subscribe(
-                activesParts => this.activesParts = activesParts);
-        this.activesUsersSub = this.userService
-            .getActivesUsersObs()
-            .subscribe(
-                activesUsers => this.activesUsers = activesUsers);
+        this.userNameSub = this.authenticationService.getJoueurObs()
+            .subscribe(joueur => {
+                if (joueur) this.userName = joueur.pseudo;
+                else this.userName = null;
+             });
+        this.activesPartsSub = this.gameService.getActivesPartsObs()
+            .subscribe(activesParts => this.activesParts = activesParts);
+        this.activesUsersSub = this.userService.getActivesUsersObs()
+            .subscribe(activesUsers => this.activesUsers = activesUsers);
     }
     public joinGame(partId: string, typeGame: string) {
         if (this.userLogged()) {
@@ -74,7 +74,6 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         return (this.userName != null) && (this.userName !== '');
     }
     public playLocally() {
-        // this._route.navigate([this.selectedGame + 'Offline']); // OLDLY
         this.router.navigate(['local/' + this.selectedGame]);
     }
     public createGame() {
@@ -82,8 +81,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             this.gameService
                 .createGame(this.userName, this.selectedGame, '') // create Part and Joiner
                 .then(createdDocId => {
-                    this.router.navigate(['/play/' + this.selectedGame, createdDocId]); // NEW
-                    // this._route.navigate([this.selectedGame, createdDocId]); // OLD
+                    this.router.navigate(['/play/' + this.selectedGame, createdDocId]);
                 })
                 .catch(onRejected => {
                     console.log('gameService Failed to create a game: ');
@@ -98,10 +96,10 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             return false;
         }
         let i = 0;
-        let found = false; // todo : faire en stream pour le sexe
+        let found = false;
         let playerZero: string;
         let playerOne: string;
-        while (    (i < this.activesParts.length) && (!found)) {
+        while ((i < this.activesParts.length) && (!found)) {
             playerZero = this.activesParts[i].doc.playerZero;
             playerOne = this.activesParts[i++].doc.playerOne;
             found = (this.userName === playerZero) || (this.userName === playerOne);
