@@ -34,7 +34,7 @@
                     <p> Online user's : </p>
                     <ul>
                         <li *ngFor="let user of activesUsers">
-                            {{ user.doc.pseudo }} : 
+                            {{ user.doc.pseudo }} :
                             {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
                         </li>
                     </ul>
@@ -52,7 +52,7 @@
                     </option>
                 </select>
                 <br />
-                <input type="button" 
+                <input type="button"
                        value="online game"
                        [disabled]="!selectedGame"
                        (click)="createGame()"

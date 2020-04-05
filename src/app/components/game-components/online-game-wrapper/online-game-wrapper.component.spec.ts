@@ -32,7 +32,7 @@ describe('OnlineGameWrapperComponent', () => {
 
     beforeEach(async(() => {
         TestBed.configureTestingModule({
-            imports: [ 
+            imports: [
                 RouterTestingModule,
             ],
             declarations: [ OnlineGameWrapperComponent ],

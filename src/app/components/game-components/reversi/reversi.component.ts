@@ -19,7 +19,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
     public canPass = false;
 
     public scores: number[] = [0, 0];
-    
+
     constructor() {
         super();
         this.showScore = true;
@@ -28,7 +28,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.lastMove = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove = new ReversiMove(x, y);
-        
+
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
     }
     public decodeMove(encodedMove: number): ReversiMove {

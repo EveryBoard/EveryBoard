@@ -2,7 +2,7 @@ import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {Coord} from 'src/app/jscaip/Coord';
 
 export enum Pawn {
-    BLACK = 0, 
+    BLACK = 0,
     WHITE,
     EMPTY,
     DEAD_BLACK,

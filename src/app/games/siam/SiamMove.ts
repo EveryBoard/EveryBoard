@@ -58,7 +58,7 @@ export class SiamMove extends MoveCoord {
         return move.coord.x === -1 ||
                move.coord.x ===  5 ||
                move.coord.y === -1 ||
-               move.coord.y ===  5; 
+               move.coord.y ===  5;
     }
 }
 

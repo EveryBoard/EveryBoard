@@ -90,7 +90,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                 let neightbooringGroup: GroupDatas = GoRules.getGroupDatas(neightbooringCoord, copiedBoard);
                 let koCoord: Coord = slice.koCoord;
                 if (GoRules.isCapturableGroup(neightbooringGroup, koCoord)) {
-                    if (GoRules.VERBOSE || LOCAL_VERBOSE) { 
+                    if (GoRules.VERBOSE || LOCAL_VERBOSE) {
                         console.log(neightbooringGroup);
                         console.log("is capturable")
                         console.log(GroupDatas.getCoordsOfGroup(neightbooringGroup));
@@ -136,7 +136,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                 }
             }
         }
-        return groupDatas; 
+        return groupDatas;
     }
 
     public getListMoves(node: MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus>): MGPMap<GoMove, GoPartSlice> {
@@ -148,7 +148,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const currentSlice: GoPartSlice = node.gamePartSlice;
 
         let newResultlessMove: GoMove;
-        
+
         for (let y = 0; y<GoPartSlice.HEIGHT; y++) {
             for (let x = 0; x<GoPartSlice.WIDTH; x++) {
                 newResultlessMove = new GoMove(x, y);

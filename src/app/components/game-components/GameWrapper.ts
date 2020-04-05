@@ -21,7 +21,7 @@ import { AuthenticationService } from 'src/app/services/authentication-service/A
 import { SaharaComponent } from './sahara/sahara.component';
 
 export abstract class GameWrapper {
- 
+
     public static VERBOSE = false;
 
     // component loading

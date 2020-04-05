@@ -31,7 +31,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
         const x: number = move.coord.x;
         const y: number = move.coord.y;
-        
+
         const awalePartSlice: AwalePartSlice = this.node.gamePartSlice;
         const captured: number[] = awalePartSlice.getCapturedCopy();
 
@@ -107,7 +107,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             if (captured[player] > 0) {
                 // if the distribution would capture all seeds
                 if (AwaleRules.VERBOSE) {
-                    console.log('\nisLegal(' + move.toString() + ', ' + turn + ', ' + AwaleRules.printInLine(resultingBoard) + ')' + 
+                    console.log('\nisLegal(' + move.toString() + ', ' + turn + ', ' + AwaleRules.printInLine(resultingBoard) + ')' +
                                 ': mouvement légal mais capture annulée pour cause de sécheresse');
                 }
                 // the move is legal but the capture is forbidden and cancelled
@@ -118,7 +118,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         if (AwaleRules.isStarving(player, resultingBoard) && !AwaleRules.canDistribute(ennemi, resultingBoard)) {
             // if the player distributed his last seeds and the opponent could not give him seeds
             if (AwaleRules.VERBOSE) {
-                console.log('\nisLegal(' + move.toString() + ', ' + turn + ', ' + AwaleRules.printInLine(resultingBoard) + ')' + 
+                console.log('\nisLegal(' + move.toString() + ', ' + turn + ', ' + AwaleRules.printInLine(resultingBoard) + ')' +
                             ': You just gave you last seed on the opponent could not give it back to you');
             }
             captured[ennemi] += AwaleRules.mansoon(ennemi, resultingBoard);

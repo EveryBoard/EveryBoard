@@ -42,7 +42,7 @@ export class LoginComponent {
     private redirect = () => {
         this.router.navigate(["/server"]);
     }
-    /* 
+    /*
     DEACTIVATED_logAsHalfMember() {
         if (this.formValid()) {
             /* si on trouve l'utilisateur

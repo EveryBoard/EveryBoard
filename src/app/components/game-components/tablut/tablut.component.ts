@@ -24,7 +24,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public arriving: Coord = new Coord(-1, -1);  // coord of the piece who arrived
 
-    public chosen: Coord = new Coord(-1, -1); 
+    public chosen: Coord = new Coord(-1, -1);
 
     public updateBoard() {
         const slice: TablutPartSlice = this.rules.node.gamePartSlice;

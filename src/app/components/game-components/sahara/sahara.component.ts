@@ -22,7 +22,7 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
 
     public chosenCoord: Coord = new Coord(-2, -2);
 
-    public imagesNames: string[][] = [[ "upward_black_pyramid",   "upward_white_pyramid",   "upward_black"], 
+    public imagesNames: string[][] = [[ "upward_black_pyramid",   "upward_white_pyramid",   "upward_black"],
                                      ["downward_black_pyramid", "downward_white_pyramid", "downward_white"]];
 
     public highlightNames: string[] = ["upward_highlight.svg", "downward_highlight.svg"];
@@ -55,14 +55,14 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
         const DOWN_CENTER: string = (zx+25) + ', ' + (zy+50);
         const CENTER: string      = (zx+25) + ', ' + (zy+25);
         return UP_LEFT     + ',' +
-               DOWN_CENTER + ',' + 
+               DOWN_CENTER + ',' +
                CENTER      + ',' +
                UP_LEFT     + ',' +
                CENTER      + ',' +
                UP_RIGHT    + ',' +
                UP_LEFT     + ',' +
                UP_RIGHT    + ',' +
-               DOWN_CENTER + ',' + 
+               DOWN_CENTER + ',' +
                CENTER      + ',' +
                UP_RIGHT;
     }
@@ -74,14 +74,14 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
         const UP_CENTER: string  = (zx+25) + ', ' + (zy-50);
         const CENTER: string     = (zx+25) + ', ' + (zy-25);
         return DOWN_LEFT  + ',' +
-               UP_CENTER  + ',' + 
+               UP_CENTER  + ',' +
                CENTER     + ',' +
                DOWN_LEFT  + ',' +
                CENTER     + ',' +
                DOWN_RIGHT + ',' +
                DOWN_LEFT  + ',' +
                DOWN_RIGHT + ',' +
-               UP_CENTER  + ',' + 
+               UP_CENTER  + ',' +
                CENTER     + ',' +
                DOWN_RIGHT;
     }
@@ -102,7 +102,7 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
             this.chosenCoord = new Coord(-2, -2);
         }
         else this.chosenCoord = clickedCoord;
-    }                                   
+    }
     public updateBoard(): void {
         this.chosenCoord = new Coord(-2, -2);
         if (this.rules.node.gamePartSlice.turn > 0) {

@@ -6,7 +6,7 @@ export abstract class FirebaseFirestoreDAO<T, PT> {
     public static VERBOSE: boolean = true;
 
     // T is a full element
-    
+
     // PT is a partially full element
 
     // Simple CRUDS
@@ -32,7 +32,7 @@ export abstract class FirebaseFirestoreDAO<T, PT> {
     }
     // Collection Observer
 
-    public observingWhere(field: string, 
+    public observingWhere(field: string,
                           condition: firebase.firestore.WhereFilterOp,
                           value: any,
                           callback: FirebaseCollectionObserver<T>): () => void {
@@ -47,7 +47,7 @@ export abstract class FirebaseFirestoreDAO<T, PT> {
                 const modifiedDocs: {doc: T, id: string}[] = [];
                 const deletedDocs:  {doc: T, id: string}[] = [];
                 snapshot.docChanges().forEach(change => {
-                    const doc: {doc: T, id: string} = { 
+                    const doc: {doc: T, id: string} = {
                         id: change.doc.id,
                         doc: change.doc.data() as T
                 };

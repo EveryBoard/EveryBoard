@@ -85,6 +85,6 @@ export class EncapsuleMapper {
 
     static toValidPiece(size: Size, player: Player): EncapsulePiece {
         if (size === Size.NONE || player === Player.NONE) return EncapsulePiece.NONE;
-        return EncapsuleMapper.toPiece(size, player); 
+        return EncapsuleMapper.toPiece(size, player);
     }
 }

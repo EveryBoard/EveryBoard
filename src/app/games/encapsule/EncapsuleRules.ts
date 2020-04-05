@@ -67,7 +67,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (superpositionResult.success === true) {
             return {legal: true, newLandingCase: superpositionResult.result};
         }
-        if (LOCAL_VERBOSE) 
+        if (LOCAL_VERBOSE)
             console.log("move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
         return FAILURE;
     }

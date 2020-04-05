@@ -12,7 +12,7 @@ export class AuthenticationService implements OnDestroy {
 
     private authSub: Subscription;
 
-    private joueurBS: BehaviorSubject<{pseudo: string, verified: boolean}> = 
+    private joueurBS: BehaviorSubject<{pseudo: string, verified: boolean}> =
         new BehaviorSubject<{pseudo: string, verified: boolean}>({pseudo: null, verified: null});
 
     private joueurObs: Observable<{pseudo: string, verified: boolean}> = this.joueurBS.asObservable();;
@@ -33,7 +33,7 @@ export class AuthenticationService implements OnDestroy {
         });
     }
     public async doEmailLogin(email: string, password: string): Promise<firebase.auth.UserCredential> {
-        const userCredential: firebase.auth.UserCredential = 
+        const userCredential: firebase.auth.UserCredential =
             await firebase.auth().signInWithEmailAndPassword(email, password);
         await this.updateUserDataAndGoToServer(userCredential.user);
         return userCredential;
@@ -42,7 +42,7 @@ export class AuthenticationService implements OnDestroy {
         let provider = new firebase.auth.GoogleAuthProvider();
         provider.addScope('profile');
         provider.addScope('email');
-        const userCredential: firebase.auth.UserCredential = 
+        const userCredential: firebase.auth.UserCredential =
             await this.afAuth.auth.signInWithPopup(provider)
         await this.updateUserDataAndGoToServer(userCredential.user);
         return userCredential;
@@ -56,12 +56,12 @@ export class AuthenticationService implements OnDestroy {
         // Sets user data to firestore on login
         const userRef: AngularFirestoreDocument<PIJoueur> = this.afs.doc(`joueurs/${uid}`);
 
-        const data: PIJoueur = { 
+        const data: PIJoueur = {
             email,
             displayName,
             pseudo: displayName || email,
             emailVerified
-        }; 
+        };
 
         return userRef.set(data, { merge: true })
     }

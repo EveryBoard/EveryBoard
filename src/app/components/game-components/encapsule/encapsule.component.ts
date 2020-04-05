@@ -14,34 +14,29 @@ import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegali
 })
 export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
-    rules = new EncapsuleRules();
+    public rules = new EncapsuleRules();
 
-    mappedBoard: String[][][];
+    public mappedBoard: String[][][];
 
-    caseBoard: EncapsuleCase[][];
+    public caseBoard: EncapsuleCase[][];
 
-    imagesLocation = 'assets/images/'; // en prod
-    // imagesLocation = 'src/assets/images/'; // en dev
+    public lastLandingCoord: Coord;
 
-    lastLandingCoord: Coord;
+    public lastStartingCoord: Coord;
 
-    lastStartingCoord: Coord;
+    public chosenCoord: Coord;
 
-    chosenCoord: Coord;
+    public chosenPiece: EncapsulePiece;
 
-    chosenPiece: EncapsulePiece;
+    public remainingPieces: String[];
 
-    remainingPieces: String[];
-
-    ngOnInit() {
+    public ngOnInit() {
         this.updateBoard();
     }
-
-    isVictory(): boolean {
-        return EncapsuleRules.isVictory(this.rules.node.gamePartSlice); 
+    public isVictory(): boolean {
+        return EncapsuleRules.isVictory(this.rules.node.gamePartSlice);
     }
-
-    updateBoard() {
+    public updateBoard() {
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         const move: EncapsuleMove = this.rules.node.move;
         this.cancelMove();
@@ -54,38 +49,32 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             this.lastStartingCoord = move.startingCoord;
         }
     }
-
     public mapNumberBoard(board: number[][]): EncapsuleCase[][] {
-        return board.map(numberLine => 
-                numberLine.map(numberCase => 
+        return board.map(numberLine =>
+                numberLine.map(numberCase =>
                         EncapsuleCase.decode(numberCase)));
     }
-
     public mapCaseBoard(board: EncapsuleCase[][]): String[][][] {
-        return board.map(caseLine => 
-                caseLine.map(currentCase => 
+        return board.map(caseLine =>
+                caseLine.map(currentCase =>
                         currentCase.toOrderedPieceNames()));
     }
-
     /********************************** For Online Game **********************************/
 
-    decodeMove(encodedMove: number): Move {
+    public decodeMove(encodedMove: number): Move {
         return EncapsuleMove.decode(encodedMove);
     }
-
-    encodeMove(move: EncapsuleMove): number {
+    public encodeMove(move: EncapsuleMove): number {
         return move.encode();
     }
-
     // creating method for Encapsule
 
-    isHighlightedCoord(x: number, y: number): boolean {
+    public isHighlightedCoord(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
         return coord.equals(this.lastLandingCoord) ||
                coord.equals(this.lastStartingCoord) ||
                coord.equals(this.chosenCoord);
     }
-
     public onBoardClick(x: number, y: number) {
         this.hideLastMove();
         const clickedCoord: Coord = new Coord(x, y);
@@ -100,27 +89,24 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             if (this.chosenCoord.equals(clickedCoord)) {
                 this.cancelMove();
             } else {
-                const chosenMove: EncapsuleMove = 
+                const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
                 return this.suggestMove(chosenMove);
             }
         }
     }
-
     private hideLastMove() {
         this.lastLandingCoord = null;
         this.lastStartingCoord = null;
     }
-
     private cancelMove() {
         this.chosenCoord = null;
         this.chosenPiece = null;
     }
-
     public onPieceClick(pieceString: String) {
         this.hideLastMove();
         const piece: EncapsulePiece = this.getEncapsulePieceFromName(pieceString);
-        const slice: EncapsulePartSlice = this.rules.node.gamePartSlice; 
+        const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (!slice.isDropable(piece) || (piece === this.chosenPiece)) {
             this.cancelMove();
         } else if (this.chosenCoord == null) {
@@ -130,16 +116,13 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             this.suggestMove(chosenMove);
         }
     }
-
     public getEncapsulePieceFromName(pieceName: String): EncapsulePiece {
         return EncapsuleMapper.getPieceFromName(pieceName);
     }
-
     public isDropable(piece: number) {
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         return slice.isDropable(piece);
     }
-
     // creating method for OnlineQuarto
 
     private suggestMove(chosenMove: EncapsuleMove) {

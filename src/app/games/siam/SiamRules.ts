@@ -100,9 +100,9 @@ export class SiamRules extends _SiamRules {
             resultingBoard[move.coord.y][move.coord.x] = SiamPiece.EMPTY.value;
         }
         while(landingCoord.isInRange(5, 5) && movingPiece !== SiamPiece.EMPTY.value) {
-            if (Direction.equals(pushingDir, currentDirection)) 
+            if (Direction.equals(pushingDir, currentDirection))
                 pushing++;
-            else if (Direction.equals(resistingDir, currentDirection)) 
+            else if (Direction.equals(resistingDir, currentDirection))
                 resisting++;
             if (SiamRules.VERBOSE) console.log({pushing, resisting, movingPiece});
             const tmpPiece: number = resultingBoard[landingCoord.y][landingCoord.x];

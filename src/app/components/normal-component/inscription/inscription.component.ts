@@ -19,7 +19,7 @@ export class InscriptionComponent {
     });
     public tryRegister(value: {email: string, pseudo: string, password: string}) {
         this.authService.doRegister(value)
-            .then(res => this.router.navigate(['/server']), 
+            .then(res => this.router.navigate(['/server']),
                   err => this.errorMessage = err.message);
     }
 }

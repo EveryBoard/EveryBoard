@@ -33,9 +33,9 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                                        'Sahara',         // 7
                                        'Siam',           // 8
                                        'Tablut'];        // 9
-    
+
     public selectedGame: string;
-    
+
     public userName: string;
 
     private userNameSub: Subscription;

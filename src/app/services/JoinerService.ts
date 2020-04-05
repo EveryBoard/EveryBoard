@@ -142,8 +142,8 @@ export class JoinerService {
         let joiner: IJoiner = await this.joinerDao.read(this.followedJoinerId);
         const candidatesNames: string[] = joiner.candidatesNames;
         const chosenPlayerIndex = candidatesNames.indexOf(chosenPlayerPseudo);
-        if (chosenPlayerIndex < 0 ) throw new Error("Chosen player is not in the chat"); 
-        
+        if (chosenPlayerIndex < 0 ) throw new Error("Chosen player is not in the chat");
+
         // if user is still present, take him off the candidate list
         candidatesNames.splice(chosenPlayerIndex, 1);
         const oldChosenPlayer: string = joiner.chosenPlayer;

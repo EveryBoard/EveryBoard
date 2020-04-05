@@ -11,9 +11,9 @@ import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
     providedIn: 'root'
 })
 export class UserService {
-    
+
     // private userName = this.getUserNameBS();
-    
+
     private userDocId = new BehaviorSubject<string>('');
 
     // userNameObs = this.userName.asObservable();
@@ -53,7 +53,7 @@ export class UserService {
     }
     // autres
 
-    /* 
+    /*
     private getUserNameBS(): BehaviorSubject<string> {
         const currentUser: {'user': string; 'pw': string} = JSON.parse(sessionStorage.getItem('currentUser'));
         if (currentUser != null) {

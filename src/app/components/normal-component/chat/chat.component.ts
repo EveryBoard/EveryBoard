@@ -39,7 +39,7 @@ export class ChatComponent implements OnInit {
     }
     public loadChatContent() {
         if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
-        
+
         if (ChatComponent.VERBOSE) {
             console.log('User \'' + this.userName + '\' logged, loading chat content');
         }

@@ -36,7 +36,7 @@ export class SaharaMove extends MoveCoordToCoord {
             throw new Error("Move must start inside the board not at "+start.toString());
         if (!end.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT))
             throw new Error("Move must end inside the board not at "+start.toString());
-        SaharaMove.checkDistanceAndLocation(start, end); 
+        SaharaMove.checkDistanceAndLocation(start, end);
         super(start, end);
     }
     public equals(o: any): boolean {

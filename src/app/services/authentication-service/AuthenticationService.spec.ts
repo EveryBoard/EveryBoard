@@ -12,9 +12,9 @@ const afs = {
 
 };
 describe('AuthenticationService', () => {
-    
+
     let service: AuthenticationService;
-    
+
     beforeEach(() => {
         service = new AuthenticationService(afAuth as AngularFireAuth, afs as AngularFirestore);
     });

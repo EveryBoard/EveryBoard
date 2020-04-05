@@ -25,6 +25,6 @@ describe('AwaleComponent', () => {
         expect(component.onClick(0, 0)).toBeTruthy();
     });
     it('should delegate encoding and decoding to move', () => {
-        
+        // TODO
     });
 });

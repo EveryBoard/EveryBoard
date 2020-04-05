@@ -21,7 +21,7 @@ const authenticationServiceStub = {
     getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true}),
 };
 describe('ServerPageComponent', () => {
- 
+
     let component: ServerPageComponent;
 
     let fixture: ComponentFixture<ServerPageComponent>;
