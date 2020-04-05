@@ -23,7 +23,6 @@ export class UserService {
     constructor(private router: Router,
                 private activesUsersService: ActivesUsersService,
                 private userDao: JoueursDAO) {
-        console.log("NO USER_SERVICE IN TEST PLIZE");
     }
     /* getCurrentUser(): string {
         return this.userName.getValue();

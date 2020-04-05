@@ -21,9 +21,7 @@ export class ChatService implements OnDestroy {
         return (message === ''); // TODO: améliorer ?
     }
     constructor(private chatDao: ChatDAO) {
-        console.log("NO CHAT_SERVICE IN TEST PLIZE");
     }
-
     public sendMessage(userName: string, lastTurnThen: number, content: string) {
         if (this.userForbid(this.followedChatId, userName)) {
             if (ChatService.VERBOSE) {

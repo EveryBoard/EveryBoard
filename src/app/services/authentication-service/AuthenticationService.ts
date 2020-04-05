@@ -10,8 +10,6 @@ export class AuthenticationService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    private joueurSub: Subscription;
-
     private authSub: Subscription;
 
     private joueurBS: BehaviorSubject<{pseudo: string, verified: boolean}> = 
@@ -20,13 +18,8 @@ export class AuthenticationService implements OnDestroy {
     private joueurObs: Observable<{pseudo: string, verified: boolean}> = this.joueurBS.asObservable();;
 
     constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
-        console.log("NO AUTH_SERVICE IN TEST PLIZE");
         if (AuthenticationService.VERBOSE) console.log("1 authService subscribe to Obs<User>");
         this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
-            if (this.joueurSub != null) {
-                this.joueurSub.unsubscribe();
-                this.joueurSub = null;
-            }
             if (user == null) { // user logged out
                 if (AuthenticationService.VERBOSE) console.log("2.B: Obs<User> Sends null, logged out");
                 this.joueurBS.next({pseudo: null, verified: null});
@@ -106,7 +99,6 @@ export class AuthenticationService implements OnDestroy {
     }
     public ngOnDestroy() {
         if (this.authSub) this.authSub.unsubscribe();
-        if (this.joueurSub) this.joueurSub.unsubscribe();
     }
     public getJoueurObs(): Observable<{pseudo: string, verified: boolean}> {
         return this.joueurObs;

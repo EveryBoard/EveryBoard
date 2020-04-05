@@ -27,7 +27,6 @@ export class GameService {
                 private activesPartsService: ActivesPartsService,
                 private joinerService: JoinerService,
                 private chatService: ChatService) {
-        console.log("NO GAME_SERVICE IN TEST PLIZE");
     }
     // on Server Component
 

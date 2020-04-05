@@ -18,7 +18,6 @@ export class ActivesUsersService {
     private unsubscribe: () => void;
 
     constructor(private joueursDAO: JoueursDAO) {
-        console.log("NO ACTIVE_USERS_SERVICE IN TEST PLIZE");
     }
     public startObserving() {
         if (ActivesUsersService.VERBOSE) console.log("ActivesUsersService.startObservingActivesUsers");
