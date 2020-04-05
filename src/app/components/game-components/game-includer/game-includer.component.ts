@@ -1,8 +1,8 @@
 import {Component, ViewContainerRef } from '@angular/core';
 
 @Component({
-	selector: 'app-game-includer',
-	templateUrl: './game-includer.component.html'
+    selector: 'app-game-includer',
+    templateUrl: './game-includer.component.html'
 })
 export class GameIncluderComponent {
 

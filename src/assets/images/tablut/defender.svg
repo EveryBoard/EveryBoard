@@ -1,29 +1,29 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-	 width="500px" height="500px"
-	 viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
-	<circle id="e1_circle"
-			cx="250" cy="250"
-			style="fill:#ffb31a;stroke:black;stroke-width:40px;"
-			r="230"/>
+     width="500px" height="500px"
+     viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+    <circle id="e1_circle"
+            cx="250" cy="250"
+            style="fill:#ffb31a;stroke:black;stroke-width:40px;"
+            r="230"/>
 
-	<line x1="250" y1="20"
-		  x2="250" y2="480"
-		  stroke-width="40px"
-		  stroke="black" />
+    <line x1="250" y1="20"
+          x2="250" y2="480"
+          stroke-width="40px"
+          stroke="black" />
 
-	<line x1="20" y1="250"
-		  x2="480" y2="250"
-		  stroke-width="40px"
-		  stroke="black" />
+    <line x1="20" y1="250"
+          x2="480" y2="250"
+          stroke-width="40px"
+          stroke="black" />
 
-	<line x1="75" y1="75"
-		  x2="425" y2="425"
-		  stroke-width="40px"
-		  stroke="black" />
+    <line x1="75" y1="75"
+          x2="425" y2="425"
+          stroke-width="40px"
+          stroke="black" />
 
-	<line x1="425" y1="75"
-		  x2="75" y2="425"
-		  stroke-width="40px"
-		  stroke="black" />
+    <line x1="425" y1="75"
+          x2="75" y2="425"
+          stroke-width="40px"
+          stroke="black" />
 
 </svg>

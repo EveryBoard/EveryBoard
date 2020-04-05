@@ -6,20 +6,20 @@ import { FirebaseFirestoreDAO } from "./FirebaseFirestoreDAO";
 import { Injectable } from "@angular/core";
 
 @Injectable({
-	providedIn: 'root'
+    providedIn: 'root'
 })
 export class ChatDAO extends FirebaseFirestoreDAO<IChat, PIChat> {
 
-	constructor(protected afs: AngularFirestore) {
+    constructor(protected afs: AngularFirestore) {
         super("chats", afs);
     }
-	public getChatObsById(id: string): Observable<IChatId> {
-		return this.afs.doc('chats/' + id).snapshotChanges()
-			.pipe(map(actions => {
-				return {
-					chat: actions.payload.data() as IChat,
-					id: id
-				};
-			}));
-	}
+    public getChatObsById(id: string): Observable<IChatId> {
+        return this.afs.doc('chats/' + id).snapshotChanges()
+            .pipe(map(actions => {
+                return {
+                    chat: actions.payload.data() as IChat,
+                    id: id
+                };
+            }));
+    }
 }

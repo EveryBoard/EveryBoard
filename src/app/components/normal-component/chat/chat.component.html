@@ -1,32 +1,32 @@
 <div style="height: 100%; overflow: hidden">
-	<form class="example-form">
+    <form class="example-form">
 
-		<!-- Messages -->
-		<div style="max-height: 90%; overflow: auto">
-			<mat-list *ngIf="chat">
-				<p *ngFor="let msg of chat">
-					[{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>{{ msg.sender }} :</b> {{ msg.content }}
-				</p>
-			</mat-list>
-		</div>
+        <!-- Messages -->
+        <div style="max-height: 90%; overflow: auto">
+            <mat-list *ngIf="chat">
+                <p *ngFor="let msg of chat">
+                    [{{ msg.postedTime | date:'HH:mm:ss':'+0100' }}] <b>{{ msg.sender }} :</b> {{ msg.content }}
+                </p>
+            </mat-list>
+        </div>
 
-		<!-- Text Input -->
-		<mat-form-field class="full-width"
+        <!-- Text Input -->
+        <mat-form-field class="full-width"
                         align="start"
-						*ngIf="userName!=''">
-			<input matInput
-				   #message
+                        *ngIf="userName!=''">
+            <input matInput
+                   #message
                    maxlength="128"
-				   placeholder="Envoyez un message!"
-				   [(ngModel)]="userMessage"
-				   [ngModelOptions]="{standalone: true}">
-			<mat-icon matSuffix (click)="sendMessage()">send</mat-icon>
-			<mat-hint align="start">
-				<strong>Soyez courtois lol</strong>
-			</mat-hint>
-			<mat-hint align="end">
-				{{message.value.length}} / 128
-			</mat-hint>
-		</mat-form-field>
-	</form>
+                   placeholder="Envoyez un message!"
+                   [(ngModel)]="userMessage"
+                   [ngModelOptions]="{standalone: true}">
+            <mat-icon matSuffix (click)="sendMessage()">send</mat-icon>
+            <mat-hint align="start">
+                <strong>Soyez courtois lol</strong>
+            </mat-hint>
+            <mat-hint align="end">
+                {{message.value.length}} / 128
+            </mat-hint>
+        </mat-form-field>
+    </form>
 </div>

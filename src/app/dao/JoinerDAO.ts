@@ -6,25 +6,25 @@ import { map } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 
 @Injectable({
-	providedIn: 'root'
+    providedIn: 'root'
 })
 export class JoinerDAO extends FirebaseFirestoreDAO<IJoiner, PIJoiner> {
 
-	static VERBOSE = false;
+    static VERBOSE = false;
 
-	constructor(protected afs: AngularFirestore) {
+    constructor(protected afs: AngularFirestore) {
         super("joiners", afs);
     }
-	public getObservable(id: string): Observable<IJoinerId> {
-		if (JoinerDAO.VERBOSE) {
-			console.log('JoinerDAO.getObservable(' + id + ')');
-		}
-		return this.afs.doc('joiners/' + id).snapshotChanges()
-			.pipe(map(actions => {
-				return {
-					joiner: actions.payload.data() as IJoiner,
-					id: id
-				};
-			}));
-	}
+    public getObservable(id: string): Observable<IJoinerId> {
+        if (JoinerDAO.VERBOSE) {
+            console.log('JoinerDAO.getObservable(' + id + ')');
+        }
+        return this.afs.doc('joiners/' + id).snapshotChanges()
+            .pipe(map(actions => {
+                return {
+                    joiner: actions.payload.data() as IJoiner,
+                    id: id
+                };
+            }));
+    }
 }

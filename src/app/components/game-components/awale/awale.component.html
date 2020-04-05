@@ -1,39 +1,39 @@
 <table *ngIf="observerRole!=1">
-	<tr style="margin:0; padding:0;"
-		*ngFor="let line of board; index as y;">
-		<td *ngFor="let caseContent of line; index as x;"
-			style="position:relative;"
-			(click)="onClick(x, 1-y)">
-			<img width="50"
-				 id="{{ 't'+y+x }}"
-				 alt=":{{ caseContent }}:"
-				 [src]="imagesLocation + 'circled_numbers/' + caseContent + '.svg'"/>
-			<img *ngIf="lastX === x && lastY === (1-y)"
-				 width="50"
-				 id="{{ 'u'+y+x }}"
-				 alt=":{{ caseContent }}:"
-				 [src]="imagesLocation + 'highlight.svg'"
-				 style="position:absolute; top:0; left:0;"/>
-		</td>
-	</tr>
+    <tr style="margin:0; padding:0;"
+        *ngFor="let line of board; index as y;">
+        <td *ngFor="let caseContent of line; index as x;"
+            style="position:relative;"
+            (click)="onClick(x, 1-y)">
+            <img width="50"
+                 id="{{ 't'+y+x }}"
+                 alt=":{{ caseContent }}:"
+                 [src]="imagesLocation + 'circled_numbers/' + caseContent + '.svg'"/>
+            <img *ngIf="lastX === x && lastY === (1-y)"
+                 width="50"
+                 id="{{ 'u'+y+x }}"
+                 alt=":{{ caseContent }}:"
+                 [src]="imagesLocation + 'highlight.svg'"
+                 style="position:absolute; top:0; left:0;"/>
+        </td>
+    </tr>
 </table>
 
 <table *ngIf="observerRole==1">
-	<tr style="margin:0; padding:0;"
-		*ngFor="let line of board; index as y;">
-		<td *ngFor="let caseContent of line; index as x;"
-			style="position:relative;"
-			(click)="onClick(5-x, y);">
-			<img width="50"
-				 id="{{ 'v'+y+x }}"
-				 alt=":{{ caseContent }}:"
-				 [src]="imagesLocation + 'circled_numbers/' + caseContent + '.svg'"/>
-			<img *ngIf="lastX === (5-x) && lastY === y"
-				 width="50"
-				 id="{{ 'w'+y+x }}"
-				 alt=":{{ caseContent }}:"
-				 [src]="imagesLocation + 'highlight.svg'"
-				 style="position:absolute; top:0; left:0;"/>
-		</td>
-	</tr>
+    <tr style="margin:0; padding:0;"
+        *ngFor="let line of board; index as y;">
+        <td *ngFor="let caseContent of line; index as x;"
+            style="position:relative;"
+            (click)="onClick(5-x, y);">
+            <img width="50"
+                 id="{{ 'v'+y+x }}"
+                 alt=":{{ caseContent }}:"
+                 [src]="imagesLocation + 'circled_numbers/' + caseContent + '.svg'"/>
+            <img *ngIf="lastX === (5-x) && lastY === y"
+                 width="50"
+                 id="{{ 'w'+y+x }}"
+                 alt=":{{ caseContent }}:"
+                 [src]="imagesLocation + 'highlight.svg'"
+                 style="position:absolute; top:0; left:0;"/>
+        </td>
+    </tr>
 </table>

@@ -1,47 +1,47 @@
 <div id="gameboard">
-	<table>
-		<tr *ngFor="let line of board; index as y;">
-			<td *ngFor="let caseContent of line; index as x;"
-				style="position:relative;"
-				(click)="chooseCoord(x, y);">
-				<img *ngIf="(lastMove.x===x && lastMove.y===y) || (chosen.x===x && chosen.y===y)"
-					 width="50" height="50"
-					 alt="highlighted"
-					 [src]="imagesLocation+'squared_highlight.svg'"
-					 style="position:absolute; top:0; left:0;"/>
-				<img width="50" height="50"
-					 alt=":{{ caseContent }}:"
-					 [src]='imagesLocation+"quarto/"+[caseContent]+".svg"'/>
-				<img *ngIf="(chosen.x===x && chosen.y===y)"
-					 width="50" height="50"
-					 alt="piece in hand that you just put on the board"
-					 [src]="imagesLocation+'quarto/'+pieceInHand+'.svg'"
-					 style="position:absolute; top:0; left:0;"/>
-			</td>
-		</tr>
-	</table>
-	Pièce en main :
-	<img *ngIf="chosen.x === -1" width="50" height="50"
-		 alt=":{{ pieceInHand }}:"
-		 [src]='imagesLocation+"quarto/"+pieceInHand+".svg"'/>
+    <table>
+        <tr *ngFor="let line of board; index as y;">
+            <td *ngFor="let caseContent of line; index as x;"
+                style="position:relative;"
+                (click)="chooseCoord(x, y);">
+                <img *ngIf="(lastMove.x===x && lastMove.y===y) || (chosen.x===x && chosen.y===y)"
+                     width="50" height="50"
+                     alt="highlighted"
+                     [src]="imagesLocation+'squared_highlight.svg'"
+                     style="position:absolute; top:0; left:0;"/>
+                <img width="50" height="50"
+                     alt=":{{ caseContent }}:"
+                     [src]='imagesLocation+"quarto/"+[caseContent]+".svg"'/>
+                <img *ngIf="(chosen.x===x && chosen.y===y)"
+                     width="50" height="50"
+                     alt="piece in hand that you just put on the board"
+                     [src]="imagesLocation+'quarto/'+pieceInHand+'.svg'"
+                     style="position:absolute; top:0; left:0;"/>
+            </td>
+        </tr>
+    </table>
+    Pièce en main :
+    <img *ngIf="chosen.x === -1" width="50" height="50"
+         alt=":{{ pieceInHand }}:"
+         [src]='imagesLocation+"quarto/"+pieceInHand+".svg"'/>
 </div>
 
 <div id="piece">
-	<table>
-		<tr *ngFor="let line of board; index as y;">
-			<td *ngFor="let caseContent of line; index as x;"
-				style="position:relative;"
-				(click)="choosePiece((4*y)+x);">
-				<img *ngIf="isRemaining((4*y)+x)"
-					 width="50" height="50"
-					 alt=":{{ ((4*y)+x) }}:"
-					 [src]='imagesLocation+"quarto/"+((4*y)+x)+".svg"'/>
-				<img *ngIf="((4*y)+x) === pieceToGive"
-					 width="50" height="50"
-					 alt="highlighted"
-					 [src]="imagesLocation+'squared_highlight.svg'"
-					 style="position:absolute; top:0; left:0;"/>
-			</td>
-		</tr>
-	</table>
+    <table>
+        <tr *ngFor="let line of board; index as y;">
+            <td *ngFor="let caseContent of line; index as x;"
+                style="position:relative;"
+                (click)="choosePiece((4*y)+x);">
+                <img *ngIf="isRemaining((4*y)+x)"
+                     width="50" height="50"
+                     alt=":{{ ((4*y)+x) }}:"
+                     [src]='imagesLocation+"quarto/"+((4*y)+x)+".svg"'/>
+                <img *ngIf="((4*y)+x) === pieceToGive"
+                     width="50" height="50"
+                     alt="highlighted"
+                     [src]="imagesLocation+'squared_highlight.svg'"
+                     style="position:absolute; top:0; left:0;"/>
+            </td>
+        </tr>
+    </table>
 </div>

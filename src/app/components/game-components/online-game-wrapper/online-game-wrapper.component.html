@@ -1,97 +1,97 @@
 <div class="container-fluid"
-	 style="height: 88%; max-height: 88%">
+     style="height: 88%; max-height: 88%">
 
-	<app-part-creation id="partCreation"
-					   *ngIf="gameStarted === false"
-					   [partId]="currentPartId"
-					   [userName]="userName"
-					   (gameStartNotification)="startGame()">
-	</app-part-creation>
+    <app-part-creation id="partCreation"
+                       *ngIf="gameStarted === false"
+                       [partId]="currentPartId"
+                       [userName]="userName"
+                       (gameStartNotification)="startGame()">
+    </app-part-creation>
 
-	<div id="game" class="flex-container"
-		 *ngIf="gameStarted === true">
-		<div id="board" class="flex-container circled col-sm-9">
-			<app-game-includer></app-game-includer>
-		</div>
+    <div id="game" class="flex-container"
+         *ngIf="gameStarted === true">
+        <div id="board" class="flex-container circled col-sm-9">
+            <app-game-includer></app-game-includer>
+        </div>
 
-		<div id="info" class="circled col-sm-3">
-			 <!--*ngIf="currentPart">-->
-			<div *ngIf="players" class="inforow">
-				<h4 style="float: left"> {{ players[0] }} </h4>
-				<h4 style="float: right"> {{ players[1] }} </h4>
-			</div>
-			<div class="inforow">
-				<app-count-down #chronoZeroGlobal
-								style="float: left"
-								debugName="chrono Zero Global"
-								(outOfTimeAction)="reachedOutOfTime(0)">
-				</app-count-down>
-				<app-count-down #chronoOneGlobal
-								style="float: right"
-								debugName="chrono One Global"
-								(outOfTimeAction)="reachedOutOfTime(1)">
-				</app-count-down>
-			</div>
-			<div class="inforow">
-				<app-count-down #chronoZeroLocal
-								style="float: left"
-								debugName="chrono Zero Local"
-								(outOfTimeAction)="reachedOutOfTime(0)">
-				</app-count-down>
-				<app-count-down #chronoOneLocal
-								style="float: right"
-								debugName="chrono One Local"
-								(outOfTimeAction)="reachedOutOfTime(1)">
-				</app-count-down>
-			</div>
-			<div class="inforow" *ngIf="currentPart">
-				<h4 style="float: left"> {{ currentPart.scorePlayerZero }} pts </h4>
-				<h4 style="float: right"> {{ currentPart.scorePlayerOne }} pts </h4>
-			</div>
-			<div *ngIf="!endGame && currentPart" class="inforow">
-				<h4> {{ currentPart.turn }}ème tour : c'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
-			</div>
-			<div class="inforow" *ngIf="!endGame && opponent && observerRole <2">
-				<button mat-stroked-button (click)="resign()"> Abandonner </button>
-			</div>
-			<div *ngIf="!endGame && (observerRole < 2)" class="inforow">
-				<button *ngIf="canPass && (currentPlayer===userName)"
-						(click)="pass()" mat-stroked-button>
-					Passer son tour
-				</button>
-			</div>
-			<!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
-			<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> -->
-			<div *ngIf="endGame && (observerRole < 2)" class="inforow">
-				<button *ngIf="!rematchProposed"
-						(click)="proposeRematch()">
-					Proposer un rematch
-				</button>
-				<button *ngIf="rematchProposed && opponentProposedRematch===true"
-						(click)="acceptRematch()">
-					Accepter le rematch
-				</button>
-			</div>
-			<div class="inforow" *ngIf="endGame">
-				<div *ngIf="currentPart.winner != null else noWinner">
-					<h3 *ngIf="(currentPart.winner === userName)"> Vous avez gagné </h3>
-					<h3 *ngIf="(currentPart.winner !== userName) && (observerRole < 2)"> Vous avez perdu </h3>
-					<h3 *ngIf="(currentPart.winner !== userName) && (observerRole >= 2)"> Victoire de {{ currentPart.winner }} </h3>
-				</div>
-				<ng-template #noWinner>
-					<h3> Match nul </h3>
-				</ng-template>
-			</div>
-			<div *ngIf="endGame" class="inforow">
-				<button mat-stroked-button routerLink="server">Retour au serveur</button>
-			</div>
-		</div>
+        <div id="info" class="circled col-sm-3">
+             <!--*ngIf="currentPart">-->
+            <div *ngIf="players" class="inforow">
+                <h4 style="float: left"> {{ players[0] }} </h4>
+                <h4 style="float: right"> {{ players[1] }} </h4>
+            </div>
+            <div class="inforow">
+                <app-count-down #chronoZeroGlobal
+                                style="float: left"
+                                debugName="chrono Zero Global"
+                                (outOfTimeAction)="reachedOutOfTime(0)">
+                </app-count-down>
+                <app-count-down #chronoOneGlobal
+                                style="float: right"
+                                debugName="chrono One Global"
+                                (outOfTimeAction)="reachedOutOfTime(1)">
+                </app-count-down>
+            </div>
+            <div class="inforow">
+                <app-count-down #chronoZeroLocal
+                                style="float: left"
+                                debugName="chrono Zero Local"
+                                (outOfTimeAction)="reachedOutOfTime(0)">
+                </app-count-down>
+                <app-count-down #chronoOneLocal
+                                style="float: right"
+                                debugName="chrono One Local"
+                                (outOfTimeAction)="reachedOutOfTime(1)">
+                </app-count-down>
+            </div>
+            <div class="inforow" *ngIf="currentPart">
+                <h4 style="float: left"> {{ currentPart.scorePlayerZero }} pts </h4>
+                <h4 style="float: right"> {{ currentPart.scorePlayerOne }} pts </h4>
+            </div>
+            <div *ngIf="!endGame && currentPart" class="inforow">
+                <h4> {{ currentPart.turn }}ème tour : c'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
+            </div>
+            <div class="inforow" *ngIf="!endGame && opponent && observerRole <2">
+                <button mat-stroked-button (click)="resign()"> Abandonner </button>
+            </div>
+            <div *ngIf="!endGame && (observerRole < 2)" class="inforow">
+                <button *ngIf="canPass && (currentPlayer===userName)"
+                        (click)="pass()" mat-stroked-button>
+                    Passer son tour
+                </button>
+            </div>
+            <!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
+            <div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> -->
+            <div *ngIf="endGame && (observerRole < 2)" class="inforow">
+                <button *ngIf="!rematchProposed"
+                        (click)="proposeRematch()">
+                    Proposer un rematch
+                </button>
+                <button *ngIf="rematchProposed && opponentProposedRematch===true"
+                        (click)="acceptRematch()">
+                    Accepter le rematch
+                </button>
+            </div>
+            <div class="inforow" *ngIf="endGame">
+                <div *ngIf="currentPart.winner != null else noWinner">
+                    <h3 *ngIf="(currentPart.winner === userName)"> Vous avez gagné </h3>
+                    <h3 *ngIf="(currentPart.winner !== userName) && (observerRole < 2)"> Vous avez perdu </h3>
+                    <h3 *ngIf="(currentPart.winner !== userName) && (observerRole >= 2)"> Victoire de {{ currentPart.winner }} </h3>
+                </div>
+                <ng-template #noWinner>
+                    <h3> Match nul </h3>
+                </ng-template>
+            </div>
+            <div *ngIf="endGame" class="inforow">
+                <button mat-stroked-button routerLink="server">Retour au serveur</button>
+            </div>
+        </div>
 
-	</div>
+    </div>
 
-	<div id="chat" class="circled" style="height: 40%; max-height: 40%; float: bottom;">
-		<app-chat [chatId]="currentPartId"
-				  [turn]="currentPart?.turn"></app-chat>
-	</div>
+    <div id="chat" class="circled" style="height: 40%; max-height: 40%; float: bottom;">
+        <app-chat [chatId]="currentPartId"
+                  [turn]="currentPart?.turn"></app-chat>
+    </div>
 
 </div>

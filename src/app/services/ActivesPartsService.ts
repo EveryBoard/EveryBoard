@@ -5,19 +5,19 @@ import {ICurrentPartId, ICurrentPart} from '../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 
 @Injectable({
-	providedIn: 'root'
+    providedIn: 'root'
 })
 export class ActivesPartsService {
-	/* Actives Parts service
-	 * this service is used by the Server Component
-	 */
-	private activesPartsBS = new BehaviorSubject<ICurrentPartId[]>([]);
+    /* Actives Parts service
+     * this service is used by the Server Component
+     */
+    private activesPartsBS = new BehaviorSubject<ICurrentPartId[]>([]);
 
-	activesPartsObs = this.activesPartsBS.asObservable();
+    activesPartsObs = this.activesPartsBS.asObservable();
 
-	private unsubscribe: () => void;
+    private unsubscribe: () => void;
 
-	constructor(private partDao: PartDAO) {
+    constructor(private partDao: PartDAO) {
     }
     public startObserving() {
         const partObserver: FirebaseCollectionObserver<ICurrentPart> = new FirebaseCollectionObserver();
@@ -44,10 +44,10 @@ export class ActivesPartsService {
             }
             this.activesPartsBS.next(result);
         };
-		this.unsubscribe = this.partDao.observeActivesParts(partObserver);
-	}
-	public stopObserving() {
+        this.unsubscribe = this.partDao.observeActivesParts(partObserver);
+    }
+    public stopObserving() {
         this.activesPartsBS.next([]);
-		this.unsubscribe();
-	}
+        this.unsubscribe();
+    }
 }

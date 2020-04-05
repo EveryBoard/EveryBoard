@@ -1,18 +1,18 @@
 <table>
-	<tr *ngFor="let line of board; index as y;">
-		<td *ngFor="let currentCase of line; index as x;"
-			style="position:relative;"
-			(click)="onClick(x);">
-			<img width="50" height="50"
-				 id="{{'t'+y+x}}"
-				 alt=":{{ currentCase }}:"
-				 [src]='imagesLocation+imagesNames[currentCase]'/>
-			<img *ngIf="lastX===x"
-				 width="50" height="50"
-				 id="{{'u'+y+x}}"
-				 alt="highlighted"
-				 [src]="imagesLocation+'highlight.svg'"
-				 style="position:absolute; top:0; left:0;"/>
-		</td>
-	</tr>
+    <tr *ngFor="let line of board; index as y;">
+        <td *ngFor="let currentCase of line; index as x;"
+            style="position:relative;"
+            (click)="onClick(x);">
+            <img width="50" height="50"
+                 id="{{'t'+y+x}}"
+                 alt=":{{ currentCase }}:"
+                 [src]='imagesLocation+imagesNames[currentCase]'/>
+            <img *ngIf="lastX===x"
+                 width="50" height="50"
+                 id="{{'u'+y+x}}"
+                 alt="highlighted"
+                 [src]="imagesLocation+'highlight.svg'"
+                 style="position:absolute; top:0; left:0;"/>
+        </td>
+    </tr>
 </table>

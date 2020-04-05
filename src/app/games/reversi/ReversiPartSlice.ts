@@ -48,6 +48,6 @@ export class ReversiPartSlice extends GamePartSlice {
                 }
             }
         }
-		return scores;
-	}
+        return scores;
+    }
 }

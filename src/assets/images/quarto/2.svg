@@ -1,8 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-	 width="500px" height="500px"
-	 viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
-	<circle cx="250" cy="250" r="140"
-			style="fill:#ffc34d;stroke:black;stroke-width:40px;"
-			/>
+     width="500px" height="500px"
+     viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+    <circle cx="250" cy="250" r="140"
+            style="fill:#ffc34d;stroke:black;stroke-width:40px;"
+            />
 </svg>
 <!--TODO make those dynamically designed, not manually-->

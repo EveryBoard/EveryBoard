@@ -5,8 +5,8 @@ export class SiamPartSlice extends GamePartSlice {
 
     public constructor(board: number[][], turn: number) {
         if (board == null) {
-			board = SiamPartSlice.getStartingBoard();
-		}
+            board = SiamPartSlice.getStartingBoard();
+        }
         super(board, turn);
     }
 
