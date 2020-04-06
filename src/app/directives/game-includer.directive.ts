@@ -4,6 +4,7 @@ import {Directive, ViewContainerRef} from '@angular/core';
     selector: '[appGameIncluder]',
 })
 export class GameIncluderDirective {
+
     constructor(public viewContainerRef: ViewContainerRef) {
     }
 }

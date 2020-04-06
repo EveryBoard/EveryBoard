@@ -18,7 +18,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             this
         );
     }
-
     public isLegal(move: GoMove, slice: GoPartSlice): GoLegalityStatus {
         const LOCAL_VERBOSE: boolean = false;
         const ILLEGAL: GoLegalityStatus = {legal: false, capturedCoords: null};
@@ -53,19 +52,15 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             }
         }
     }
-
     private static isPass(move: GoMove): boolean {
         return move.equals(GoMove.pass);
     }
-
     private static isOccupied(move: GoMove, board: Pawn[][]): boolean {
         return board[move.coord.y][move.coord.x] !== Pawn.EMPTY;
     }
-
     public static isKo(move: GoMove, slice: GoPartSlice): boolean {
         return move.coord.equals(slice.koCoord);
     }
-
     public static getCaptureState(move: GoMove, goPartSlice: GoPartSlice): CaptureState {
         const LOCAL_VERBOSE: boolean = false;
         if (GoRules.VERBOSE || LOCAL_VERBOSE) console.log("getCaptureState("+move+", " + goPartSlice.getCopiedBoard() + ")");
@@ -77,7 +72,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return captureState;
     }
-
     public static getCapturedInDirection(coord: Coord, direction: Direction, slice: GoPartSlice): Coord[] {
         const LOCAL_VERBOSE: boolean = false;
         let copiedBoard: number[][] = slice.getCopiedBoard();
@@ -101,7 +95,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return [];
     }
-
     public static isCapturableGroup(groupDatas: GroupDatas, koCoord: Coord): boolean {
         if (groupDatas.color !== Pawn.EMPTY && groupDatas.emptyCoords.length === 1) {
             return !groupDatas.emptyCoords[0].equals(koCoord); // Ko Rules Block Capture
@@ -109,7 +102,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             return false;
         }
     }
-
     public static getGroupDatas(coord: Coord, board: Pawn[][]): GroupDatas {
         if (GoRules.VERBOSE) console.log("getGroupDatas("+coord+", "+board+")");
         let color: number = board[coord.y][coord.x];
@@ -121,7 +113,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         let groupDatas: GroupDatas = {color, emptyCoords, blackCoords, whiteCoords, deadWhiteCoords, deadBlackCoords};
         return GoRules._getGroupDatas(coord, board, groupDatas);
     }
-
     private static _getGroupDatas(coord: Coord, board: Pawn[][], groupDatas: GroupDatas): GroupDatas {
         // if (GoRules.VERBOSE) console.log(groupDatas);
         let color: number = board[coord.y][coord.x];
@@ -138,7 +129,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return groupDatas;
     }
-
     public getListMoves(node: MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus>): MGPMap<GoMove, GoPartSlice> {
         const localVerbose = false;
         if (GoRules.VERBOSE || localVerbose) console.log('getListMoves');
@@ -162,7 +152,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return choices;
     }
-
     public applyLegalMove(legalMove: GoMove, currentPartSlice: GoPartSlice, status: GoLegalityStatus): {resultingMove: GoMove, resultingSlice: GoPartSlice} {
         if (GoRules.isPass(legalMove)) {
             return GoRules.applyPass(currentPartSlice);
@@ -170,7 +159,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             return GoRules.applyNormalLegalMove(currentPartSlice, legalMove, status);
         }
     }
-
     private static applyPass(currentPartSlice: GoPartSlice): {resultingMove: GoMove, resultingSlice: GoPartSlice} {
         const resultingMove: GoMove = GoMove.pass;
         const oldBoard = currentPartSlice.getCopiedBoard();
@@ -187,7 +175,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const resultingSlice: GoPartSlice = new GoPartSlice(oldBoard, oldCaptured, oldTurn + 1, null, newPhase);
         return {resultingMove, resultingSlice};
     }
-
     private static applyNormalLegalMove(currentPartSlice: GoPartSlice, legalMove: GoMove, status: GoLegalityStatus): {resultingMove: GoMove, resultingSlice: GoPartSlice} {
         const x: number = legalMove.coord.x;
         const y: number = legalMove.coord.y;
@@ -208,7 +195,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         let resultingSlice: GoPartSlice = new GoPartSlice(newBoard, newCaptured, newTurn, newKoCoord, Phase.PLAYING);
         return {resultingMove, resultingSlice};
     }
-
     public getBoardValue(n: MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus>): number {
         const localVerbose = false;
 
@@ -220,7 +206,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const goScore: number[] = this.countBoardScore(goPartSlice);
         return goScore[1] - goScore[0];
     }
-
     public static getNewKo(move: GoMove, newBoard: Pawn[][], captures: Coord[]): Coord {
         if (captures.length === 1) {
             const captured: Coord = captures[0];
@@ -236,7 +221,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             return null;
         }
     }
-
     public setInitialBoard() { // TODO: make generic and unherited
         if (this.node == null) {
             this.node = MNode.getFirstNode(new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING), this);
@@ -244,7 +228,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             this.node = this.node.getInitialNode();
         }
     }
-
     public countBoardScore(slice: GoPartSlice): number[] {
         const deadlessSlice: GoPartSlice = GoRules.switchDeadToScore(slice);
         const captured: number[] = deadlessSlice.getCapturedCopy();
@@ -279,7 +262,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return [blackScore, whiteScore];
     }
-
     private static switchDeadToScore(slice: GoPartSlice): GoPartSlice {
         const captured: number[] = slice.getCapturedCopy();
         let whiteScore: number = captured[1];
@@ -304,7 +286,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const newTurn: number = slice.turn;
         return new GoPartSlice(newBoard, newCaptured, newTurn, null, Phase.COUNTING);
     }
-
     private static switchAliveness(slice: GoPartSlice, groupCoord: Coord): GoPartSlice {
         let switchedBoard: Pawn[][] = slice.getCopiedBoard();
         let switchedPiece: Pawn = slice.getBoardByXY(groupCoord.x, groupCoord.y);
@@ -336,7 +317,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return new GoPartSlice(switchedBoard, capturedCopy, slice.turn, slice.koCoord.getCopy(), Phase.COUNTING);
     }
-
     private static switchNonCapturingGroupToDead(slice: GoPartSlice): GoPartSlice {
         throw new Error("unimplemented shit");
     }
@@ -378,7 +358,6 @@ class GroupDatas {
             return group.emptyCoords;
         }
     }
-
     public static countains(group: GroupDatas, coord: Coord) {
         let allCoord: Coord[] = group.blackCoords
                         .concat(group.whiteCoords
@@ -387,7 +366,6 @@ class GroupDatas {
                         .concat(group.deadWhiteCoords))));
         return allCoord.some(c => c.equals(coord));
     }
-
     public static addPawn(group: GroupDatas, coord: Coord, color: Pawn): GroupDatas {
         if (GroupDatas.countains(group, coord)) {
             throw new Error("Ce groupe contient d�j� " + coord);

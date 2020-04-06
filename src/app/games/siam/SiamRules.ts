@@ -183,9 +183,10 @@ export class SiamRules extends _SiamRules {
         const pushingDirection: Orthogonale = SiamPiece.getDirection(moveStarterPiece);
         const pusherCoord: Coord = this.getPusherCoord(pushingDirection, moveStarterCoord);
         const winner: Player = SiamPiece.getOwner(node.gamePartSlice.getBoardAt(pusherCoord));
-        if (SiamRules.VERBOSE) console.log(moveStarterCoord.toString() + " belong to " + node.mother.gamePartSlice.getCurrentPlayer().value + ", "
-                                         + pusherCoord.toString() + " belong to " + SiamPiece.getOwner(node.gamePartSlice.getBoardAt(pusherCoord)).value + ", "
-                                         + winner.value + " win");
+        if (SiamRules.VERBOSE)
+            console.log(moveStarterCoord.toString() + " belong to " + node.mother.gamePartSlice.getCurrentPlayer().value + ", "
+                      + pusherCoord.toString() + " belong to " + winner.value + ", "
+                      + winner.value + " win");
         return winner;
     }
     public getPusherCoord(pushingDirection: Orthogonale, pusher: Coord): Coord {
@@ -202,7 +203,7 @@ export class SiamRules extends _SiamRules {
         const currentPlayer: Player = node.gamePartSlice.getCurrentPlayer();
         let c: number;
         let legality: SiamLegalityStatus;
-        // all insertion  0 to 20
+        // all insertion 0 to 20
         moves.putAll(this.getInsertions(node));
         for (let y=0; y<5; y++) {
             for (let x=0; x<5; x++) {

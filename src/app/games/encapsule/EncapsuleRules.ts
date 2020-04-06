@@ -21,7 +21,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         [ new Coord(0, 0), new Coord(1, 1), new Coord(2, 2)],
         [ new Coord(0, 2), new Coord(1, 1), new Coord(2, 0)]
     ];
-
     public setInitialBoard(): void {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
@@ -31,7 +30,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             this.node = this.node.getInitialNode();
         }
     }
-
     public isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
         const LOCAL_VERBOSE: boolean = false;
         const FAILURE: EncapsuleLegalityStatus = {legal: false, newLandingCase: null};
@@ -71,7 +69,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             console.log("move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
         return FAILURE;
     }
-
     public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus): { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; } {
         let newBoard: EncapsulePiece[][] = slice.getCopiedBoard();
         let newLandingCase: EncapsuleCase = legality.newLandingCase;
@@ -91,11 +88,9 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             newBoard[move.startingCoord.y][move.startingCoord.x] = removalResult.removedCase.encode();
             movingPiece = removalResult.removedPiece;
         }
-        //newBoard[move.landingCoord.y][move.landingCoord.x] = newLandingCase.put(movingPiece).encode();
         const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newBoard, newTurn, newRemainingPiece);
         return {resultingSlice, resultingMove: move};
     }
-
     public getBoardValue(n: MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus>): number {
         let slice: EncapsulePartSlice = n.gamePartSlice;
         let boardValue: number;
@@ -108,7 +103,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         }
         return boardValue;
     }
-
     static isVictory(slice: EncapsulePartSlice): boolean {
         let board: EncapsuleCase[][] = slice.toCase();
         let victory: boolean = false;
@@ -123,14 +117,12 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         }
         return victory;
     }
-
     static isVictoriousLine(cases: EncapsuleCase[]): boolean {
         let pieces: EncapsulePiece[] = cases.map(c => c.getBiggest());
         let owner: Player[] = pieces.map(piece => EncapsuleMapper.toPlayer(piece));
         if (owner[0] === Player.NONE) return false;
         return (owner[0] === owner[1]) && (owner[1] === owner[2]);
     }
-
     public getListMoves(n: MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus>): MGPMap<EncapsuleMove, EncapsulePartSlice> {
         const moves: MGPMap<EncapsuleMove, EncapsulePartSlice> = new MGPMap<EncapsuleMove, EncapsulePartSlice>();
         const slice: EncapsulePartSlice = n.gamePartSlice;

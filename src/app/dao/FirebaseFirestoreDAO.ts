@@ -45,7 +45,7 @@ export abstract class FirebaseFirestoreDAO<T, PT> {
             .onSnapshot(snapshot => {
                 const createdDocs: {doc: T, id: string}[] = [];
                 const modifiedDocs: {doc: T, id: string}[] = [];
-                const deletedDocs:  {doc: T, id: string}[] = [];
+                const deletedDocs: {doc: T, id: string}[] = [];
                 snapshot.docChanges().forEach(change => {
                     const doc: {doc: T, id: string} = {
                         id: change.doc.id,

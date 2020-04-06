@@ -3,14 +3,14 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from
 import { AuthenticationService } from '../services/authentication-service/AuthenticationService';
 
 @Injectable({
-  providedIn: 'root'
+    providedIn: 'root'
 })
 export class EmailVerified implements CanActivate {
 
     public static VERBOSE: boolean = true;
 
-    constructor(private authService: AuthenticationService, private router : Router) {}
-
+    constructor(private authService: AuthenticationService, private router : Router) {
+    }
     public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
         const user: {pseudo: string, verified: boolean} = this.authService.getAuthenticatedUser();
         if (user == null) {

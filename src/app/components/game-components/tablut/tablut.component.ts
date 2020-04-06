@@ -14,15 +14,15 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     static VERBOSE = false;
 
-    rules = new TablutRules();
+    public rules = new TablutRules();
 
-    imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
+    public imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
 
-    UNOCCUPIED = 0;
+    public UNOCCUPIED = 0; // TODO: CONSTANTIFY
 
     public moving: Coord = new Coord(-1, -1); // coord of the piece who left
 
-    public arriving: Coord = new Coord(-1, -1);  // coord of the piece who arrived
+    public arriving: Coord = new Coord(-1, -1); // coord of the piece who arrived
 
     public chosen: Coord = new Coord(-1, -1);
 

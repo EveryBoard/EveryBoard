@@ -1,5 +1,4 @@
 import { MoveCoord } from "src/app/jscaip/MoveCoord";
-import { Comparable } from "src/app/collectionlib/MGPMap";
 
 export class SiamMove extends MoveCoord {
 
@@ -53,12 +52,11 @@ export class SiamMove extends MoveCoord {
     public static isForward(move: SiamMove): boolean {
         return move.nature.value === 2;
     }
-
     public static isInsertion(move: SiamMove): boolean {
         return move.coord.x === -1 ||
-               move.coord.x ===  5 ||
+               move.coord.x === +5 ||
                move.coord.y === -1 ||
-               move.coord.y ===  5;
+               move.coord.y === +5;
     }
 }
 
@@ -78,9 +76,8 @@ export class SiamMoveNature {
             default: throw new Error("Unknown value for SiamMoveNature");
         };
     }
-
-    private constructor(public readonly value: number) {}
-
+    private constructor(public readonly value: number) {
+    }
     public toString(): String {
         switch (this.value) {
             case 0: return "CLOCKWISE";

@@ -22,8 +22,8 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
 
     public chosenCoord: Coord = new Coord(-2, -2);
 
-    public imagesNames: string[][] = [[ "upward_black_pyramid",   "upward_white_pyramid",   "upward_black"],
-                                     ["downward_black_pyramid", "downward_white_pyramid", "downward_white"]];
+    public imagesNames: string[][] = [[ "upward_black_pyramid",  "upward_white_pyramid",   "upward_black"],
+                                      ["downward_black_pyramid", "downward_white_pyramid", "downward_white"]];
 
     public highlightNames: string[] = ["upward_highlight.svg", "downward_highlight.svg"];
 

@@ -1,6 +1,5 @@
 import {Rules} from '../../jscaip/Rules';
 import {MNode} from '../../jscaip/MNode';
-import {Move} from '../../jscaip/Move';
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {AwalePartSlice} from './AwalePartSlice';
 import { AwaleMove } from './AwaleMove';
@@ -22,7 +21,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             this
         );
     }
-
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): { resultingMove: AwaleMove; resultingSlice: AwalePartSlice; } {
         if (AwaleRules.VERBOSE) console.log("applyLegalMove");
         const turn: number = slice.turn;
@@ -41,7 +39,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         const resultingSlice: AwalePartSlice = new AwalePartSlice(status.resultingBoard, turn + 1, captured);
         return {resultingSlice, resultingMove: move};
     }
-
     private static mansoon(mansooningPlayer: number, board: number[][]): number {
         /* capture all the seeds of the mansooning player
          * return the sum of all captured seeds
@@ -49,7 +46,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
          */
         console.log('mansoon');
         let sum = 0;
-        let x = 0;
+        let x: number = 0;
         do {
             sum += board[mansooningPlayer][x];
             board[mansooningPlayer][x] = 0;
@@ -57,7 +54,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (x < 6);
         return sum;
     }
-
     public isLegal(move: AwaleMove, slice: AwalePartSlice): AwaleLegalityStatus {
         /* modify the move to addPart the capture
          * modify the board to get the after-move result
@@ -127,11 +123,10 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         if (AwaleRules.VERBOSE) console.log("isLegal: true");
         return {legal: true, captured, resultingBoard};
     }
-
     private static printInLine(board: number[][]): string {
-        let retour = '';
-        let y = 0;
-        let x;
+        let retour: string = '';
+        let y: number = 0;
+        let x: number;
         do {
             x = 0;
             do {
@@ -141,14 +136,12 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (y < 2);
         return retour;
     }
-
     private static doesDistribute(x: number, y: number, board: number[][]): boolean {
         if (y === 0) { // distribution from left to right
             return board[y][x] > (5 - x);
         }
         return board[y][x] > x; // distribution from right to left
     }
-
     private static canDistribute(player: number, board: number[][]): boolean {
         let x = 0;
         do {
@@ -158,7 +151,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (x < 6);
         return false;
     }
-
     private static isStarving(player: number, board: number[][]): boolean {
         const localVerbose = false;
         const MUTE = true;
@@ -176,16 +168,15 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         if (!MUTE && (AwaleRules.VERBOSE || localVerbose)) console.log('starving');
         return true;
     }
-
     private static distribute(x: number, y: number, board: number[][]): number[] {
         // just apply's the move on the board (the distribution part)
         // does not make the capture nor verify the legality of the move
         // return (x, y) of the last case the move got down
         const MUTE = true;
         if (!MUTE && AwaleRules.VERBOSE) {
-            console.log('distribute(' + x + ', ' + y + ', ' +  AwaleRules.printInLine(board) + ')=');
+            console.log('distribute(' + x + ', ' + y + ', ' + AwaleRules.printInLine(board) + ')=');
         }
-        let ix, iy;
+        let ix: number, iy: number;
         ix = x;
         iy = y; // iy et ix sont les cases initiales
         // à retenir pour appliquer la règle de la jachère en cas de tour complet
@@ -217,7 +208,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         return [x, y] ;
     }
-
     private static capture(x: number, y: number, player: number, board: number[][]): number {
         /* only called if y and player are not equal
          * if the condition are make to make an capture into the ennemi's side are met
@@ -238,7 +228,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
              * means capture goes from left to right ( + 1)
              * so one ending condition of the loop is reaching index 6
              */
-            direction =  + 1;
+            direction = +1;
             limite = 6;
         }
 
@@ -249,7 +239,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while ((x !== limite) && (((target = board[y][x]) === 2) || (target === 3)));
         return captured;
     }
-
     public getListMoves(n: MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus>): MGPMap<AwaleMove, AwalePartSlice> {
         AwaleRules.GET_LIST_MOVES_CALL_COUNT++;
         const localVerbose = false ;
@@ -293,7 +282,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         return choices;
     }
-
     public getBoardValue(n: MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus>): number {
         AwaleRules.GET_BOARD_VALUE_CALL_COUNT++;
         const localVerbose = false;
@@ -323,7 +311,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         return c1 - c0;
     }
-
     public setInitialBoard() {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
