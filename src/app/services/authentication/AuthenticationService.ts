@@ -77,6 +77,13 @@ export class AuthenticationService implements OnDestroy {
     public getAuthenticatedUser(): {pseudo: string, verified: boolean} {
         return this.joueurBS.getValue();
     }
+    public isUserLogged(): boolean {
+        const joueur: { pseudo: string; verified: boolean; } = this.joueurBS.getValue();
+        if (joueur == null) return false;
+        if (joueur.pseudo == null) return false;
+        if (joueur.pseudo == '') return false;
+        return true;
+    }
     private updatePresence() {
         let uid: string = firebase.auth().currentUser.uid;
         let userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);

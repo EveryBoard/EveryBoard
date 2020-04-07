@@ -52,46 +52,34 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public ngOnInit() {
         this.userNameSub = this.authenticationService.getJoueurObs()
             .subscribe(joueur => {
-                if (joueur) this.userName = joueur.pseudo;
-                else this.userName = null;
-             });
+                if (joueur == null) this.userName = null;
+                else this.userName = joueur.pseudo;
+            });
         this.activesPartsSub = this.gameService.getActivesPartsObs()
             .subscribe(activesParts => this.activesParts = activesParts);
         this.activesUsersSub = this.userService.getActivesUsersObs()
             .subscribe(activesUsers => this.activesUsers = activesUsers);
     }
     public joinGame(partId: string, typeGame: string) {
-        if (this.userLogged()) {
-            this.router.navigate(['/play/' + typeGame, partId]);
-        } else {
-            if (ServerPageComponent.VERBOSE) {
-                console.log('vous devez vous connecter pour rejoindre??'); // TODO: redirect vers la connection, doit il ??
-            }
-        }
+        this.router.navigate(['/play/' + typeGame, partId]);
     }
-    public userLogged(): boolean {
-        return (this.userName != null) && (this.userName !== '');
+    public isUserLogged(): boolean {
+        return this.authenticationService.isUserLogged();
     }
     public playLocally() {
         this.router.navigate(['local/' + this.selectedGame]);
     }
-    public createGame() {
+    public async createGame() {
         if (this.canCreateGame()) {
-            this.gameService
-                .createGame(this.userName, this.selectedGame, '') // create Part and Joiner
-                .then(createdDocId => {
-                    this.router.navigate(['/play/' + this.selectedGame, createdDocId]);
-                })
-                .catch(onRejected => {
-                    console.log('gameService Failed to create a game: ');
-                    console.log(JSON.stringify(onRejected));
-                });
+            const gameId: string = await this.gameService.createGame(this.userName, this.selectedGame, '');
+            // create Part and Joiner
+            this.router.navigate(['/play/' + this.selectedGame, gameId]);
         } else {
             console.log('vous devez vous connecter pour créer une partie'); // TODO: redirect vers la connection
         }
     }
     public canCreateGame(): boolean {
-        if (!this.userLogged()) {
+        if (!this.isUserLogged()) {
             return false;
         }
         let i = 0;

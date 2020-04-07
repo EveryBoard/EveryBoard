@@ -17,8 +17,6 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
 
     public rules = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
 
-    public imagesLocation = 'assets/images/';
-
     public coord: Coord;
 
     public chooseRight() {

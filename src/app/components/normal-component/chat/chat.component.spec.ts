@@ -11,7 +11,7 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IChatId } from 'src/app/domain/ichat';
 
 const chatServiceStub = {
-    startObserving: (cId: string, cb: (IChatId: IChatId) => void) => {
+    startObserving: (cId: string, cb: (iChatId: IChatId) => void) => {
         return;
     },
 };

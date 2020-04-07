@@ -20,6 +20,9 @@ describe('AuthenticationService', () => {
     it('should create', async(() => {
         expect(service).toBeTruthy();
     }));
+    it('user should be considered not logged at start', () => {
+        expect(service.isUserLogged()).toBeFalsy();
+    });
     afterAll(async(() => {
         service.ngOnDestroy();
     }));
