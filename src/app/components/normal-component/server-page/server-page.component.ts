@@ -6,9 +6,9 @@ import {Subscription} from 'rxjs';
 import { IJoueurId } from '../../../domain/iuser';
 import {ICurrentPartId} from '../../../domain/icurrentpart';
 
-import { UserService } from '../../../services/UserService';
-import { GameService } from '../../../services/GameService';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
+import { UserService } from '../../../services/user/UserService';
+import { GameService } from '../../../services/game/GameService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 
 @Component({
     selector: 'app-server-page',

@@ -5,14 +5,14 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { of } from 'rxjs';
 
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
-import { GameService } from 'src/app/services/GameService';
-import { UserService } from 'src/app/services/UserService';
-import { JoinerService } from 'src/app/services/JoinerService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { GameService } from 'src/app/services/game/GameService';
+import { UserService } from 'src/app/services/user/UserService';
+import { JoinerService } from 'src/app/services/joiner/JoinerService';
 
 const gameServiceStub = {
     getActivesPartsObs: () => of([]),
-    stopObservingPart: () => { return; }
+    stopObserving: () => { return; }
 };
 const userServiceStub = {
     getActivesUsersObs: () => of([]),

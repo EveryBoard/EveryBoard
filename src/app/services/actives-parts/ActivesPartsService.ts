@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {PartDAO} from '../dao/PartDAO';
-import {ICurrentPartId, ICurrentPart} from '../domain/icurrentpart';
-import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
+import {PartDAO} from '../../dao/PartDAO';
+import {ICurrentPartId, ICurrentPart} from '../../domain/icurrentpart';
+import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
 
 @Injectable({
     providedIn: 'root'

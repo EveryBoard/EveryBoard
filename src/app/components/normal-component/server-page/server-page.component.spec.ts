@@ -4,10 +4,10 @@ import { ServerPageComponent } from './server-page.component';
 
 import { AppModule } from 'src/app/app.module';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { of } from 'rxjs';
-import { UserService } from 'src/app/services/UserService';
-import { GameService } from 'src/app/services/GameService';
+import { UserService } from 'src/app/services/user/UserService';
+import { GameService } from 'src/app/services/game/GameService';
 
 const userServiceStub = {
     getActivesUsersObs: () => of([]),

@@ -5,9 +5,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatStepperModule, MatRadioModule, MatSliderModule } from '@angular/material';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { GameService } from 'src/app/services/GameService';
-import { JoinerService } from 'src/app/services/JoinerService';
-import { ChatService } from 'src/app/services/chat-service/ChatService';
+import { GameService } from 'src/app/services/game/GameService';
+import { JoinerService } from 'src/app/services/joiner/JoinerService';
+import { ChatService } from 'src/app/services/chat/ChatService';
 import { IJoinerId } from 'src/app/domain/ijoiner';
 
 const gameServiceStub = {

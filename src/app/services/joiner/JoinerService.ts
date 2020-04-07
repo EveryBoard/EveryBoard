@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
-import {IJoiner, IJoinerId, PIJoiner} from '../domain/ijoiner';
-import {JoinerDAO} from '../dao/JoinerDAO';
+import {IJoiner, IJoinerId, PIJoiner} from '../../domain/ijoiner';
+import {JoinerDAO} from '../../dao/JoinerDAO';
 
 @Injectable({
     providedIn: 'root'
@@ -25,15 +25,8 @@ export class JoinerService {
             this.followedJoinerObs = this.joinerDao.getObservable(joinerId);
             this.followedJoinerSub = this.followedJoinerObs
                 .subscribe(onFullFilled => callback(onFullFilled));
-        } else if (joinerId === this.followedJoinerId) {
-            if (JoinerService.VERBOSE) {
-                console.log('!!!already observing this joiner (' + joinerId + ')');
-            }
         } else {
-            alert('!!!we were already observing ' + this.followedJoinerId
-                + ' then you ask to watch ' + joinerId + ' you are gross (no I\'m bugged)');
-            this.stopObserving();
-            this.startObserving(joinerId, callback);
+            throw new Error("JoinerService.startObserving should not be called while already observing a joiner");
         }
     }
     public async joinGame(partId: string, userName: string): Promise<void> {
@@ -48,35 +41,11 @@ export class JoinerService {
         if (!joinerList.includes(userName) &&
             (userName !== joiner.creator)) {
             joinerList[joinerList.length] = userName;
-            this.joinerDao.update(partId, {candidatesNames: joinerList});
+            return this.joinerDao.update(partId, {candidatesNames: joinerList});
+        } else {
+            // the user was already in the lobby/joining Part
+            return;
         }
-    }
-    public _joinGame(partId: string, userName: string): Promise<void> {
-        if (JoinerService.VERBOSE) {
-            console.log('JoinerService.joinGame(' + partId + ', ' + userName + ')');
-        }
-        return new Promise((resolve, reject) => {
-            this.joinerDao
-                .read(partId)
-                .then(joiner => {
-                    if (!joiner) {
-                        reject(joiner);
-                    }
-                    const joinerList: string[] = joiner.candidatesNames;
-                    if (!joinerList.includes(userName) &&
-                        (userName !== joiner.creator)) {
-                        joinerList[joinerList.length] = userName;
-                        this.joinerDao
-                            .update(partId, {candidatesNames: joinerList})
-                            .then(onFullFilled => resolve(onFullFilled))
-                            .catch(onRejected => reject(onRejected));
-                    } else {
-                        // the user was already in the lobby/joining Part
-                        resolve();
-                    }
-                })
-                .catch(onRejected => reject(onRejected));
-        });
     }
     public cancelJoining(userName: string): Promise<void> {
         if (JoinerService.VERBOSE) {

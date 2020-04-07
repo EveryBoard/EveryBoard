@@ -3,9 +3,9 @@ import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {IJoiner, IJoinerId} from '../../../domain/ijoiner';
 import {Subscription} from 'rxjs';
 import {Router} from '@angular/router';
-import {GameService} from '../../../services/GameService';
-import {JoinerService} from '../../../services/JoinerService';
-import {ChatService} from '../../../services/chat-service/ChatService';
+import {GameService} from '../../../services/game/GameService';
+import {JoinerService} from '../../../services/joiner/JoinerService';
+import {ChatService} from '../../../services/chat/ChatService';
 
 @Component({
     selector: 'app-part-creation',

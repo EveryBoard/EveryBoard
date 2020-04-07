@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfirmInscriptionComponent } from './confirm-inscription.component';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 
 const authenticationServiceStub = {
     getAuthenticatedUser: () => { return { pseudo: 'Pseudo', verified: false}; },

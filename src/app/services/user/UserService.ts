@@ -1,11 +1,10 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
-import {JoueursDAO} from '../dao/UserDAO';
-import {IJoueur, IJoueurId} from '../domain/iuser';
+import {JoueursDAO} from '../../dao/JoueursDAO';
+import {IJoueur, IJoueurId} from '../../domain/iuser';
 import {Router} from '@angular/router';
-import {ActivesUsersService} from './ActivesUsersService';
-import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
-// import {current} from 'codelyzer/util/syntaxKind';
+import {ActivesUsersService} from '../actives-users/ActivesUsersService';
+import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
 
 @Injectable({
     providedIn: 'root'

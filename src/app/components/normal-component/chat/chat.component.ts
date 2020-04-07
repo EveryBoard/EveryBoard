@@ -1,14 +1,14 @@
-import { Component, Input, OnInit } from '@angular/core';
-import { ChatService } from '../../../services/chat-service/ChatService';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ChatService } from '../../../services/chat/ChatService';
 import { IMessage } from '../../../domain/imessage';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
     styleUrls: ['./chat.component.css']
 })
-export class ChatComponent implements OnInit {
+export class ChatComponent implements OnInit, OnDestroy {
 
     static VERBOSE = false;
 
@@ -19,8 +19,8 @@ export class ChatComponent implements OnInit {
     chat: IMessage[];
     userMessage: string;
 
-    constructor(private chatService: ChatService, private authenticationService: AuthenticationService) {}
-
+    constructor(private chatService: ChatService, private authenticationService: AuthenticationService) {
+    }
     public ngOnInit() {
         if (ChatComponent.VERBOSE) {
             console.log('chat component initialisation');
@@ -57,5 +57,8 @@ export class ChatComponent implements OnInit {
         }
         this.chatService.sendMessage(this.userName, this.turn, this.userMessage);
         this.userMessage = '';
+    }
+    public ngOnDestroy() {
+        this.chatService.stopObserving();
     }
 }

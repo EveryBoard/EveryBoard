@@ -4,8 +4,8 @@ import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
-import { UserService } from 'src/app/services/UserService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { UserService } from 'src/app/services/user/UserService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule } from 'src/app/app.module';
 

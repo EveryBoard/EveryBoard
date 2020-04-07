@@ -2,7 +2,7 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { InscriptionComponent } from './inscription.component';
 import { ReactiveFormsModule } from '@angular/forms';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 

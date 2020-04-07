@@ -11,11 +11,11 @@ import {AngularFirestoreModule, AngularFirestore} from '@angular/fire/firestore'
 
 import {GameIncluderDirective} from './directives/game-includer.directive';
 
-import {ChatService} from './services/chat-service/ChatService';
-import {UserService} from './services/UserService';
-import {AuthenticationService} from './services/authentication-service/AuthenticationService';
-import {GameService} from './services/GameService';
-import {JoinerService} from './services/JoinerService';
+import {ChatService} from './services/chat/ChatService';
+import {UserService} from './services/user/UserService';
+import {AuthenticationService} from './services/authentication/AuthenticationService';
+import {GameService} from './services/game/GameService';
+import {JoinerService} from './services/joiner/JoinerService';
 
 import {AppComponent} from './app.component';
 

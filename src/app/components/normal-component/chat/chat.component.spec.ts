@@ -4,8 +4,8 @@ import { FormsModule } from '@angular/forms';
 import { ChatComponent } from './chat.component';
 
 import { of } from 'rxjs';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
-import { ChatService } from 'src/app/services/chat-service/ChatService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { ChatService } from 'src/app/services/chat/ChatService';
 import { MatListModule, MatIconModule, MatInputModule } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IChatId } from 'src/app/domain/ichat';

@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {AngularFirestore} from '@angular/fire/firestore';
-import {IJoueur, PIJoueur} from '../domain/iuser';
+import { Injectable } from '@angular/core';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { IJoueur, PIJoueur } from '../domain/iuser';
 import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 

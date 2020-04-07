@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { async } from '@angular/core/testing';
 
 import { AuthenticationService } from './AuthenticationService';
 import { AngularFireAuth } from '@angular/fire/auth';
@@ -9,7 +9,6 @@ const afAuth = {
     authState: of(null),
 };
 const afs = {
-
 };
 describe('AuthenticationService', () => {
 

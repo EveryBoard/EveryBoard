@@ -3,10 +3,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
-import { GameService } from 'src/app/services/GameService';
-import { UserService } from 'src/app/services/UserService';
-import { JoinerService } from 'src/app/services/JoinerService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { GameService } from 'src/app/services/game/GameService';
+import { UserService } from 'src/app/services/user/UserService';
+import { JoinerService } from 'src/app/services/joiner/JoinerService';
 
 import { Move } from '../../../jscaip/Move';
 import { ICurrentPart, ICurrentPartId, PICurrentPart } from '../../../domain/icurrentpart';
@@ -430,7 +430,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             if (this.opponentSubscription) {
                 this.opponentSubscription();
             }
-            this.gameService.stopObservingPart();
+            this.gameService.stopObserving();
         }
     }
 }

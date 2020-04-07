@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import * as firebase from 'firebase/app';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 
 @Component({
     selector: 'app-confirm-inscription',

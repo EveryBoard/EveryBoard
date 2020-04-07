@@ -2,7 +2,7 @@ import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChil
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractGameComponent} from './AbstractGameComponent';
 import {GameIncluderComponent} from './game-includer/game-includer.component';
-import {UserService} from '../../services/UserService';
+import {UserService} from '../../services/user/UserService';
 
 import {Move} from '../../jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
@@ -17,7 +17,7 @@ import {GoComponent} from './go/go.component';
 import { EncapsuleComponent } from './encapsule/encapsule.component';
 import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
 import { SiamComponent } from './siam/siam.component';
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { SaharaComponent } from './sahara/sahara.component';
 
 export abstract class GameWrapper {

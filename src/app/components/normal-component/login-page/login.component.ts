@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import {Router} from '@angular/router';
 
-import { AuthenticationService } from 'src/app/services/authentication-service/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { FormGroup, FormControl } from '@angular/forms';
 
 @Component({
@@ -30,14 +30,16 @@ export class LoginComponent {
     }
 */
     public loginWithEmail(value: {email: string, password: string}) {
-        this.authenticationService.doEmailLogin(value.email, value.password)
-                        .then(this.redirect)
-                    .catch(err => this.errorMessage = err.message);
+        this.authenticationService
+            .doEmailLogin(value.email, value.password)
+            .then(this.redirect)
+            .catch(err => this.errorMessage = err.message);
     }
     public loginWithGoogle() {
-        this.authenticationService.doGoogleLogin()
-                        .then(this.redirect)
-                        .catch(err => this.errorMessage = err.message);
+        this.authenticationService
+            .doGoogleLogin()
+            .then(this.redirect)
+            .catch(err => this.errorMessage = err.message);
     }
     private redirect = () => {
         this.router.navigate(["/server"]);
