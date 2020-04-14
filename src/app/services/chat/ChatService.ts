@@ -84,14 +84,17 @@ export class ChatService implements OnDestroy {
         }
     }
     public stopObserving() {
-        if (this.followedChatId == null) { // Should not append, is a bug
-            console.log('!!!we already stop watching doc'); // TODO: make an exception of this
-        } else {
-            console.log('stopped watching chat ' + this.followedChatId + ']');
-            this.followedChatId = null;
-        }
-        if (this.followedChatSub) this.followedChatSub.unsubscribe();
+        if (!this.isObserving()) {
+            throw new Error('ChatService.stopObserving should not be called if not observing');
+        } 
+        console.log('stopped watching chat ' + this.followedChatId + ']');
+        this.followedChatId = null;
+        if (this.followedChatSub)
+            this.followedChatSub.unsubscribe();
         this.followedChatObs = null;
+    }
+    public isObserving(): boolean {
+        return this.followedChatId != null
     }
     public async deleteChat(chatId: string): Promise<void> {
         if (ChatService.VERBOSE) {
@@ -108,6 +111,7 @@ export class ChatService implements OnDestroy {
         return this.chatDao.set(id, chat);
     }
     public ngOnDestroy() {
-        this.stopObserving();
+        if (this.isObserving())
+            this.stopObserving();
     }
 }

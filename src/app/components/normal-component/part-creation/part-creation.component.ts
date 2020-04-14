@@ -58,19 +58,22 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 private chatService: ChatService,
                 private formBuilder: FormBuilder) {
     }
-    public ngOnInit() {
-        // console.log('PartCreationComponent.ngOnInit');
+    public async ngOnInit() {
+        this.checkEntry();
+        this.createForms();
+        await this.joinerService.joinGame(this.partId, this.userName);
+        this.joinerService.startObserving(this.partId, iJoiner =>
+            this.onCurrentJoinerUpdate(iJoiner));
+    }
+    private checkEntry() {
         if (this.userName === '') { // TODO: ces vérifications doivent être faite par le composant mère, et une seule fois ??
-            console.log('PartCreationComponent we did not receive userName error');
-            this.router.navigate(['/server']);
-            return;
+            throw new Error('PartCreationComponent should not be created with an empty userName');
         }
         if (this.partId === '') {
-            console.log('PartCreationComponent we did not receive partId error');
-            this.router.navigate(['/server']);
-            return;
+            throw new Error('PartCreationComponent should not be created with an empty partId');
         }
-        // console.log('PartCreationComponent ngOnInit correctly starting (' + this.userName + ', ' + this.partId + ')');
+    }
+    private createForms() {
         this.opponentFormGroup = this.formBuilder.group({
             chosenOpponent: ['', Validators.required]
         });
@@ -79,55 +82,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             maximalMoveDuration: [10, Validators.required],
             totalPartDuration: [60, Validators.required]
         });
-        this.joinerService
-            .joinGame(this.partId, this.userName)
-            .then(onFullFilled =>
-                this.joinerService.startObserving(this.partId, iJoiner =>
-                    this.onCurrentJoinerUpdate(iJoiner)))
-            .catch(onRejected => {
-                console.log('!!!PartCreationComponent joining game FAILED because : ');
-                console.log(onRejected);
-                this.router.navigate(['/server']);
-            });
-        // console.log('PartCreation Component Initialized!');
-    }
-    public ngOnDestroy() {
-        if (PartCreationComponent.VERBOSE) {
-            console.log('part-creation-component destroying');
-        }
-        if (this.userSub && this.userSub.unsubscribe) {
-            this.userSub.unsubscribe();
-        }
-        if (this.partSub && this.partSub.unsubscribe) {
-            this.partSub.unsubscribe();
-        }
-        if (this.gameStarted) {
-            this.joinerService.stopObserving();
-        } else {
-            if (this.userIsCreator) {
-                if (PartCreationComponent.VERBOSE) {
-                    console.log('you leave, creator');
-                }
-                this.cancelGameCreation().then(onFullFilled =>
-                    this.joinerService.stopObserving());
-            } else {
-                if (PartCreationComponent.VERBOSE) {
-                    console.log('vous quittez le channel ' + this.userName);
-                }
-                this.joinerService
-                    .cancelJoining(this.userName)
-                    .then(onFullFilled => {
-                        this.joinerService.stopObserving();
-                        if (PartCreationComponent.VERBOSE) {
-                            console.log('you left the channel, joiner');
-                        }
-                    })
-                    .catch(onRejected => {
-                        console.log('cancelJoining failed');
-                        console.log(onRejected);
-                    });
-            }
-        }
     }
     private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
         if (this.isGameCanceled(iJoinerId)) {
@@ -152,6 +106,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return (iJoinerId == null) || (iJoinerId.joiner == null);
     }
     private onGameCancelled() {
+        // TODO: inform that the game has been cancelled
         this.router.navigate(['/server']);
     }
     private isGameStarted(iJoinerId: IJoinerId): boolean {
@@ -182,55 +137,34 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         this.currentJoiner = iJoinerId.joiner;
     }
-    private cancelGameCreation(): Promise<void> {
+    private async cancelGameCreation(): Promise<void> {
         // callable only by the creator
-        return new Promise((resolve, reject) => {
-            this.gameService
-                .deletePart(this.partId)
-                .then(then => {
-                    if (PartCreationComponent.VERBOSE) {
-                        console.log('part suppressed');
-                    }
-                    this.joinerService
-                        .deleteJoiner()
-                        .then(onFullFilled => {
-                            if (PartCreationComponent.VERBOSE) {
-                                console.log('joiner and part suppressed');
-                            }
-                            this.chatService
-                                .deleteChat(this.partId)
-                                .then(onSuccess => {
-                                    if (PartCreationComponent.VERBOSE) {
-                                        console.log('joiner, part, and chat suppressed');
-                                    }
-                                    resolve(onSuccess);
-                                })
-                                .catch(onRejected => {
-                                    console.log('chat could not be cancelled');
-                                    reject(onRejected);
-                                });
-                        })
-                        .catch(onRejected => {
-                            console.log('joiner could not be cancelled');
-                            reject(onRejected);
-                        });
-                })
-                .catch(fail => {
-                    console.log('delete part failed');
-                    reject(fail);
-                });
-        });
+        await this.gameService.deletePart(this.partId)
+        if (PartCreationComponent.VERBOSE) {
+            console.log('part suppressed');
+        }
+        await this.joinerService.deleteJoiner();
+        if (PartCreationComponent.VERBOSE) {
+            console.log('joiner and part suppressed');
+        }
+        await this.chatService.deleteChat(this.partId);
+        if (PartCreationComponent.VERBOSE) {
+            console.log('joiner, part, and chat suppressed');
+        }
     }
-    cancelAndLeave() {
+    public cancelAndLeave() {
         this.router.navigate(['/server']);
     }
-    setChosenPlayer(pseudo: string): Promise<void> {
+    public unselectChosenPlayer() {
+        this.joinerService.unselectChosenPlayer();
+    }
+    public setChosenPlayer(pseudo: string): Promise<void> {
         if (PartCreationComponent.VERBOSE) {
             console.log('set chosen player to ' + JSON.stringify(pseudo));
         }
         return this.joinerService.setChosenPlayer(pseudo);
     }
-    proposeConfig(): Promise<void> {
+    public proposeConfig(): Promise<void> {
         // called by the creator
 
         // send the proposal to opponent
@@ -240,7 +174,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const totalPartDuration: number = this.configFormGroup.get('totalPartDuration').value;
         return this.joinerService.proposeConfig(maxMoveDur, firstPlayer, totalPartDuration);
     }
-    acceptConfig(): Promise<void> {
+    public acceptConfig(): Promise<void> {
         // called by the joiner
 
         // trigger the beginning redirection that will be called on every subscribed user
@@ -248,5 +182,36 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         // console.log('let\'s accept config of ' + this.partId);
         // console.log('GameService observing : ');
         return this.gameService.acceptConfig(this.currentJoiner);
+    }
+    public async ngOnDestroy() {
+        if (PartCreationComponent.VERBOSE) {
+            console.log('part-creation-component destroying');
+        }
+        if (this.userSub && this.userSub.unsubscribe) {
+            this.userSub.unsubscribe();
+        }
+        if (this.partSub && this.partSub.unsubscribe) {
+            this.partSub.unsubscribe();
+        }
+        if (this.gameStarted) {
+            this.joinerService.stopObserving();
+        } else {
+            if (this.userIsCreator) {
+                if (PartCreationComponent.VERBOSE) {
+                    console.log('you leave, creator');
+                }
+                await this.cancelGameCreation();
+                this.joinerService.stopObserving();
+            } else {
+                if (PartCreationComponent.VERBOSE) {
+                    console.log('vous quittez le channel ' + this.userName);
+                }
+                await this.joinerService.cancelJoining(this.userName);
+                this.joinerService.stopObserving();
+                if (PartCreationComponent.VERBOSE) {
+                    console.log('you left the channel, joiner');
+                }
+            }
+        }
     }
 }

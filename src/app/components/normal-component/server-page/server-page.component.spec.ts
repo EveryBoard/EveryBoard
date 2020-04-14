@@ -9,7 +9,6 @@ import { of, Observable } from 'rxjs';
 import { UserService } from 'src/app/services/user/UserService';
 import { GameService } from 'src/app/services/game/GameService';
 import { ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { Component } from '@angular/core';
 import { ChatService } from 'src/app/services/chat/ChatService';
 import { IChatId } from 'src/app/domain/ichat';
 
@@ -34,9 +33,8 @@ class AuthenticationServiceMock {
     }
 };
 const chatServiceStub = {
-    startObserving: (cId: string, cb: (iChatId: IChatId) => void) => {
-        return;
-    },
+    startObserving: (cId: string, cb: (iChatId: IChatId) => void) => {},
+    stopObserving: () => {},
 };
 describe('ServerPageComponent', () => {
 
@@ -72,7 +70,7 @@ describe('ServerPageComponent', () => {
     });
     it('should create', async(() => {
         expect(component).toBeTruthy();
-        const ngOnInit = spyOn(component, "ngOnInit");
+        const ngOnInit = spyOn(component, "ngOnInit").and.callThrough();;
         expect(ngOnInit).not.toHaveBeenCalled();
         
         fixture.detectChanges();

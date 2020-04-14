@@ -22,13 +22,13 @@ import { SaharaComponent } from './sahara/sahara.component';
 
 export abstract class GameWrapper {
 
-    public static VERBOSE = false;
+    public static VERBOSE = true;
 
     // component loading
     @ViewChild(GameIncluderComponent, {static: false})
-    public gameCompo: GameIncluderComponent;
+    public gameIncluder: GameIncluderComponent;
 
-    protected componentInstance: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
+    public gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
 
     public userName: string = this.authenticationService.getAuthenticatedUser().pseudo;
 
@@ -47,12 +47,12 @@ export abstract class GameWrapper {
                 protected authenticationService: AuthenticationService,
                 protected viewContainerRef: ViewContainerRef) {
         if (GameWrapper.VERBOSE) {
-            console.log('GameWrapper.constructed: ' + (this.gameCompo!=null));
+            console.log('GameWrapper.constructed: ' + (this.gameIncluder!=null));
         }
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
         if (GameWrapper.VERBOSE) {
-            console.log('GameWrapper.getMatchingComponent: '+(this.gameCompo!=null));
+            console.log('GameWrapper.getMatchingComponent: '+(this.gameIncluder!=null));
         }
         switch (compoString) {
             case 'Awale':
@@ -79,19 +79,19 @@ export abstract class GameWrapper {
                 throw new Error("Unknown Games are unwrappable");
         }
     }
-    protected afterGameComponentViewInit() {
+    protected afterGameIncluderViewInit() {
         if (GameWrapper.VERBOSE) {
-            console.log('GameWrapper.afterGameComponentViewProbablyInit');
+            console.log('GameWrapper.afterGameIncluderViewInit');
         }
-        this.loadGameComponent();
+        this.createGameComponent();
         // this.resetGameDatas();
         // should be some kind of session-scope
 
-        this.componentInstance.rules.setInitialBoard();
-        this.componentInstance.board = this.componentInstance.rules.node.gamePartSlice.getCopiedBoard();
+        this.gameComponent.rules.setInitialBoard();
+        this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
     }
-    protected loadGameComponent() {
-        if (GameWrapper.VERBOSE) console.log('GameWrapper.loadGameComponent: '+(this.gameCompo!=null));
+    protected createGameComponent() {
+        if (GameWrapper.VERBOSE) console.log('GameWrapper.loadGameComponent: '+(this.gameIncluder!=null));
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
         const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
@@ -100,11 +100,11 @@ export abstract class GameWrapper {
             = this.componentFactoryResolver.resolveComponentFactory(component);
         const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
             = this.viewContainerRef.createComponent(componentFactory);
-        this.componentInstance = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance; // Shortent by T<S = Truc>
-        this.componentInstance.chooseMove = this.receiveChildData; // so that when the game component do a move
+        this.gameComponent = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance; // Shortent by T<S = Truc>
+        this.gameComponent.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
-        this.componentInstance.observerRole = this.observerRole;
-        this.canPass = this.componentInstance.canPass;
+        this.gameComponent.observerRole = this.observerRole;
+        this.canPass = this.gameComponent.canPass;
     }
     public receiveChildData = (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): boolean => {
         if (!this.isPlayerTurn()) {
@@ -114,14 +114,14 @@ export abstract class GameWrapper {
             return false;
         }
         if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData about to ask node if endGame");
-        if (this.componentInstance.rules.node.isEndGame()) {
+        if (this.gameComponent.rules.node.isEndGame()) {
             if (GameWrapper.VERBOSE) {
                 console.log('GameWrapper.receiveChildData says: part is finished');
             }
             return false;
         }
         if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData says: about to call Rules.isLegal");
-        if (!this.componentInstance.rules.isLegal(move, slice)) {
+        if (!this.gameComponent.rules.isLegal(move, slice)) {
             if (GameWrapper.VERBOSE) {
                 console.log('GameWrapper.receiveChildData says: move illegal');
             }
@@ -130,7 +130,7 @@ export abstract class GameWrapper {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.receiveChildData says: board about to update');
         }
-        const validMoveResult: boolean = this.componentInstance.rules.isLegal(move, slice).legal;
+        const validMoveResult: boolean = this.gameComponent.rules.isLegal(move, slice).legal;
         if (!validMoveResult) {
             if (GameWrapper.VERBOSE) {
                 console.log('GameWrapper.receiveChildData says: move is illegal, not going to transmit that');
@@ -144,7 +144,7 @@ export abstract class GameWrapper {
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): boolean;
 
     public isPlayerTurn() {
-        const indexPlayer = this.componentInstance.rules.node.gamePartSlice.turn % 2;
+        const indexPlayer = this.gameComponent.rules.node.gamePartSlice.turn % 2;
         if (GameWrapper.VERBOSE) console.log("It is player "+ indexPlayer+ "'s turn ('"+this.players[indexPlayer]+"') and you are "+this.userName)
         return this.players[indexPlayer] === this.userName;
     }

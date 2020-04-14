@@ -26,11 +26,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public start(duration: number) {
         // duration is in ms
         if (this.isStarted) {
-            // it's a restart
-            if (CountDownComponent.VERBOSE) {
-                console.log('!!!cdc::' + this.debugName + '::start:: WHAT THE FUCK THE TIMEOUT WHERE ALREADY STARTED DUUUUDE');
-            }
-            return;
+            throw new Error("CountDownComponent.start should not be called while already started");
         }
         if (CountDownComponent.VERBOSE) {
             console.log('cdc::' + this.debugName + '::start ' + (duration / 1000) + ' s');

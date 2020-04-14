@@ -38,13 +38,11 @@ export class JoinerService {
             throw new Error("No Joiner Received from DAO");
         }
         const joinerList: string[] = joiner.candidatesNames;
-        if (!joinerList.includes(userName) &&
-            (userName !== joiner.creator)) {
+        if (joinerList.includes(userName)) {
+            throw new Error("JoinerService.joinGame was called by a user already in the game");
+        } else if (userName !== joiner.creator) {
             joinerList[joinerList.length] = userName;
             return this.joinerDao.update(partId, {candidatesNames: joinerList});
-        } else {
-            // the user was already in the lobby/joining Part
-            return;
         }
     }
     public cancelJoining(userName: string): Promise<void> {
@@ -126,6 +124,9 @@ export class JoinerService {
             candidatesNames,
             chosenPlayer: chosenPlayerPseudo
         });
+    }
+    public unselectChosenPlayer() {
+        throw new Error("JoinerService.unselectChosenPlayer: TODO");
     }
     public proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
         if (JoinerService.VERBOSE) {

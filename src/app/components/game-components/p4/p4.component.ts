@@ -8,8 +8,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
     selector: 'app-p4-new',
-    templateUrl: './p4.component.html',
-    styleUrls: []
+    templateUrl: './p4.component.html'
 })
 export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, LegalityStatus> {
 

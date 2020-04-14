@@ -29,7 +29,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 viewContainerRef: ViewContainerRef,
                 private cdr: ChangeDetectorRef) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService, viewContainerRef);
-        if (this.VERBOSE) console.log("LocalGameWrapper Constructed: "+(this.gameCompo!=null));
+        if (this.VERBOSE) console.log("LocalGameWrapper Constructed: "+(this.gameComponent!=null));
     }
     public ngAfterViewInit() {
         setTimeout(() => {
@@ -38,8 +38,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 if (this.players[0] !== "bot") this.players[0] = user.pseudo;
                 if (this.players[1] !== "bot") this.players[1] = user.pseudo;
             });
-            if (this.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameCompo!=null));
-            this.afterGameComponentViewInit();
+            if (this.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
+            this.afterGameIncluderViewInit();
             this.cdr.detectChanges();
         }, 1);
     }
@@ -47,24 +47,24 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (LocalGameWrapperComponent.VERBOSE) {
             console.log('LocalGameWrapperComponent.onValidUserMove');
         }
-        const isLegal: boolean = this.componentInstance.rules.choose(move);
+        const isLegal: boolean = this.gameComponent.rules.choose(move);
         if (isLegal) {
-            this.componentInstance.updateBoard();
+            this.gameComponent.updateBoard();
             this.proposeAIToPlay();
         }
         return isLegal;
     }
     public proposeAIToPlay() {
         // check if ai's turn has come, if so, make her start after a delay
-        const turn = this.componentInstance.rules.node.gamePartSlice.turn % 2;
+        const turn = this.gameComponent.rules.node.gamePartSlice.turn % 2;
         if (this.players[turn] === 'bot') {
             // bot's turn
             setTimeout(() => {
                 // called only when it's AI's Turn
-                if (!this.componentInstance.rules.node.isEndGame()) {
-                    const aiMove: Move = this.componentInstance.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
-                    if (this.componentInstance.rules.choose(aiMove)) {  // TODO: remove since useless
-                        this.componentInstance.updateBoard();
+                if (!this.gameComponent.rules.node.isEndGame()) {
+                    const aiMove: Move = this.gameComponent.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
+                    if (this.gameComponent.rules.choose(aiMove)) {  // TODO: remove since useless
+                        this.gameComponent.updateBoard();
                         this.cdr.detectChanges();
                         this.proposeAIToPlay();
                     } else {
@@ -87,6 +87,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.proposeAIToPlay();
     }
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
-        return this.componentInstance;
+        return this.gameComponent;
     }
 }

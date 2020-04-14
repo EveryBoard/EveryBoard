@@ -26,7 +26,7 @@
                                 matStepperNext>
                             Jouer contre {{ opponentFormGroup.get('chosenOpponent').value }}
                         </button>
-                        <button (click)="setChosenPlayer('')"
+                        <button (click)="unselectChosenPlayer()"
                                 mat-button>
                             Annuler
                         </button>
@@ -50,9 +50,7 @@
                         <mat-slider
                             class="example-margin"
                             formControlName="maximalMoveDuration"
-                            [max]="300"
-                            [min]="10"
-                            [step]="10"
+                            [min]="10" [max]="300" [step]="10"
                             [thumbLabel]="true"
                             required>
                         </mat-slider>
@@ -61,15 +59,13 @@
                         <mat-slider
                             class="example-margin"
                             formControlName="totalPartDuration"
-                            [max]="3600"
-                            [min]="60"
-                            [step]="30"
+                            [min]="60" [max]="3600" [step]="30"
                             [thumbLabel]="true"
                             required>
                         </mat-slider>
                     </div>
                     <div>
-                        <!-- <button mat-button matStepperPrevious (click)="setChosenPlayer('')"> Changer d'adversaire
+                        <!-- <button mat-button matStepperPrevious (click)="unselectChosenPlayer()"> Changer d'adversaire
                         </button>-->
                         <button mat-button matStepperNext (click)="proposeConfig()"> Proposer config</button>
                     </div>
@@ -133,11 +129,4 @@
             </li>
         </ul>
     </div>
-
 </div>
-
-
-<!-- Copyright 2018 Google Inc. All Rights Reserved.
-    Use of this source code is governed by an MIT-style license that
-    can be found in the LICENSE file at http://angular.io/license -->
-

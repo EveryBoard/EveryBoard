@@ -1,7 +1,8 @@
 <div class="container-fluid"
      style="height: 88%; max-height: 88%">
 
-    <app-part-creation id="partCreation"
+    <app-part-creation #partCreation
+                       id="partCreation"
                        *ngIf="gameStarted === false"
                        [partId]="currentPartId"
                        [userName]="userName"

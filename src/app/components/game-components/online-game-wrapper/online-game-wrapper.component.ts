@@ -15,6 +15,8 @@ import { IJoueurId, IJoueur } from '../../../domain/iuser';
 import { MGPRequest } from '../../../domain/request';
 import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
+import { IJoiner } from 'src/app/domain/ijoiner';
+import { PartCreationComponent } from '../../normal-component/part-creation/part-creation.component';
 
 @Component({
     selector: 'app-game-wrapper',
@@ -23,7 +25,9 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 })
 export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, OnDestroy {
 
-    static VERBOSE = false;
+    public static VERBOSE = false;
+
+    @ViewChild('partCreation', {static: false}) partCreation: PartCreationComponent;
 
     // GameWrapping's Template
     @ViewChild('chronoZeroGlobal', {static: false}) chronoZeroGlobal: CountDownComponent;
@@ -98,31 +102,23 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameStarted = true;
         setTimeout(() => {
             // the small waiting is there to make sur that the chronos are charged
-            this.afterGameComponentViewInit();
+            this.afterGameIncluderViewInit();
         }, 1);
 
         this.readJoiner(); // NEWLY
-
     }
-    protected readJoiner() {
-        this.joinerService
-            .readJoinerById(this.currentPartId)
-            .then(iJoiner => {
-                this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
-                this.totalPartDuration = iJoiner.totalPartDuration * 1000;
-                if (OnlineGameWrapperComponent.VERBOSE) {
-                    console.log('Starting game chrono called once');
-                }
-                this.startGameChronos(this.totalPartDuration, this.totalPartDuration, 0);
-                // TODO: recharger une page dont les deux joueurs étaient partis
-                this.gameService.startObserving(this.currentPartId, iPart => {
-                    this.onCurrentPartUpdate(iPart);
-                });
-            })
-            .catch(onRejected => {
-                console.log('there was a problem trying to get iJoiner timeout because : ');
-                console.log(onRejected);
-            });
+    protected async readJoiner(): Promise<void> {
+        const iJoiner: IJoiner = await this.joinerService.readJoinerById(this.currentPartId);
+        this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
+        this.totalPartDuration = iJoiner.totalPartDuration * 1000;
+        if (OnlineGameWrapperComponent.VERBOSE) {
+            console.log('Starting game chrono called once');
+        }
+        this.startGameChronos(this.totalPartDuration, this.totalPartDuration, 0);
+        // TODO: recharger une page dont les deux joueurs étaient partis
+        this.gameService.startObserving(this.currentPartId, iPart => {
+            this.onCurrentPartUpdate(iPart);
+        });
     }
     protected spotDifferenceBetweenUpdateAndCurrentData(update: ICurrentPart): PICurrentPart {
         const difference: PICurrentPart = {};
@@ -195,40 +191,36 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         let currentPartTurn: number;
         let updateIsMove = false;
         if (OnlineGameWrapperComponent.VERBOSE) {
-            // console.log('FIRST : local rules turn : ' + this.rules.node.gamePartSlice.turn + ' list moves : ' + listMoves);
-            // console.log('update before : ' + this.turn + '==' + part.turn + ', ' + this.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
-            // console.log('update before : turn = ' + part.turn + ', ' + this.componentInstance.rules.node.
-            //         gamePartSlice.turn + '==' + nbPlayedMoves);
             console.log('Before = part.turn = ' + part.turn);
-            console.log('Before = this...gamePartSlice.turn = ' + this.componentInstance.rules.node.gamePartSlice.turn);
+            console.log('Before = this...gamePartSlice.turn = ' + this.gameComponent.rules.node.gamePartSlice.turn);
             console.log('Before = nbPlayedMoves = ' + nbPlayedMoves);
         }
-        while (this.componentInstance.rules.node.gamePartSlice.turn < nbPlayedMoves) {
-            currentPartTurn = this.componentInstance.rules.node.gamePartSlice.turn;
-            const chosenMove = this.componentInstance.decodeMove(listMoves[currentPartTurn]);
-            const correctDBMove: boolean = this.componentInstance.rules.choose(chosenMove);
+        while (this.gameComponent.rules.node.gamePartSlice.turn < nbPlayedMoves) {
+            currentPartTurn = this.gameComponent.rules.node.gamePartSlice.turn;
+            const chosenMove = this.gameComponent.decodeMove(listMoves[currentPartTurn]);
+            const correctDBMove: boolean = this.gameComponent.rules.choose(chosenMove);
             updateIsMove = true;
             if (!correctDBMove) {
                 throw new Error('We received an incorrect db move !' + chosenMove + ' and ' + listMoves);
             }
             // NEWLY :
-            if (this.componentInstance.rules.node.isEndGame()) {
-                if (this.componentInstance.rules.node.ownValue === 0) {
+            if (this.gameComponent.rules.node.isEndGame()) {
+                if (this.gameComponent.rules.node.ownValue === 0) {
                     this.notifyDraw();
                 } else this.notifyVictory();0
             }
 
         }
-        this.componentInstance.updateBoard();
-        this.currentPlayer = this.players[this.componentInstance.rules.node.gamePartSlice.turn % 2];
+        this.gameComponent.updateBoard();
+        this.currentPlayer = this.players[this.gameComponent.rules.node.gamePartSlice.turn % 2];
         if (OnlineGameWrapperComponent.VERBOSE) {
             console.log('After = part.turn = ' + part.turn);
-            console.log('After = this...gamePartSlice.turn = ' + this.componentInstance.rules.node.gamePartSlice.turn);
+            console.log('After = this...gamePartSlice.turn = ' + this.gameComponent.rules.node.gamePartSlice.turn);
             console.log('After = nbPlayedMoves = ' + nbPlayedMoves);
         }
         if ((!this.endGame) && updateIsMove) {
             if (OnlineGameWrapperComponent.VERBOSE) {
-                console.log('cdc::new move turn:' + part.turn + ', ' + this.componentInstance.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
+                console.log('cdc::new move turn:' + part.turn + ', ' + this.gameComponent.rules.node.gamePartSlice.turn + '==' + nbPlayedMoves);
             }
             const firstPlayedTurn = 0; // TODO: cette endroit pourrait être appellé à un mouvement qui n'est pas le 0
             // (reprise de partie après double perte de connection...)
@@ -256,9 +248,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     public notifyVictory() {
         // Previous line is wrong, assume that last player who notice the victory is the victorious, wrong as fuck
         let victoriousPlayer: string;
-        if (this.componentInstance.rules.node.ownValue === Number.MAX_SAFE_INTEGER) {
+        if (this.gameComponent.rules.node.ownValue === Number.MAX_SAFE_INTEGER) {
             victoriousPlayer = this.players[1];
-        } else if (this.componentInstance.rules.node.ownValue === Number.MIN_SAFE_INTEGER) {
+        } else if (this.gameComponent.rules.node.ownValue === Number.MIN_SAFE_INTEGER) {
             victoriousPlayer = this.players[0];
         } else {
             throw new Error('How the fuck did you notice victory?');
@@ -338,7 +330,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         if (OnlineGameWrapperComponent.VERBOSE) {
             console.log('let\'s update db board');
         }
-        const encodedMove: number = this.componentInstance.encodeMove(move);
+        const encodedMove: number = this.gameComponent.encodeMove(move);
         this.gameService.updateDBBoard(encodedMove, scorePlayerZero, scorePlayerOne, this.currentPartId);
     }
     public resign() {

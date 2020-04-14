@@ -11,9 +11,8 @@ import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IChatId } from 'src/app/domain/ichat';
 
 const chatServiceStub = {
-    startObserving: (cId: string, cb: (iChatId: IChatId) => void) => {
-        return;
-    },
+    startObserving: (cId: string, cb: (iChatId: IChatId) => void) => {},
+    stopObserving: () => {},
 };
 const authenticationServiceStub = {
     getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true}),
@@ -46,5 +45,8 @@ describe('ChatComponent', () => {
     }));
     it('should create', async(() => {
         expect(component).toBeTruthy();
+    }));
+    afterAll(async(() => {
+        component.ngOnDestroy();
     }));
 });
