@@ -8,14 +8,19 @@ import {MaterialModule} from '../material-modules';
 
 import {AngularFireModule} from '@angular/fire';
 import {AngularFirestoreModule, AngularFirestore} from '@angular/fire/firestore';
+import { AngularFireAuth } from '@angular/fire/auth';
 
 import {GameIncluderDirective} from './directives/game-includer.directive';
+
+import { PartDAO } from './dao/PartDAO';
 
 import {ChatService} from './services/chat/ChatService';
 import {UserService} from './services/user/UserService';
 import {AuthenticationService} from './services/authentication/AuthenticationService';
 import {GameService} from './services/game/GameService';
 import {JoinerService} from './services/joiner/JoinerService';
+
+import { EmailVerified } from './guard/EmailVerified';
 
 import {AppComponent} from './app.component';
 
@@ -41,18 +46,15 @@ import {ReversiComponent} from './components/game-components/reversi/reversi.com
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
 import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
-import { PartDAO } from './dao/PartDAO';
-import { AngularFireAuth } from '@angular/fire/auth';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
 import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
-import { EmailVerified } from './guard/EmailVerified';
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 
 export const INCLUDE_VERBOSE_LINE_IN_TEST = false;
 
 const routes: Route [] = [
     {path: 'login',               component: LoginComponent},
-    {path: 'server',              component: ServerPageComponent, canActivate: [EmailVerified]},
+    {path: 'server',              component: ServerPageComponent},
     {path: 'inscription',         component: InscriptionComponent},
     {path: 'confirm-inscription', component: ConfirmInscriptionComponent},
 

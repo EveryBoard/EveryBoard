@@ -4,11 +4,13 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { PIJoueur } from '../../domain/iuser';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
+import { environment } from 'src/environments/environment';
 
 @Injectable()
 export class AuthenticationService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
+    public static IN_TESTING: boolean = false;
 
     private authSub: Subscription;
 
@@ -18,6 +20,8 @@ export class AuthenticationService implements OnDestroy {
     private joueurObs: Observable<{pseudo: string, verified: boolean}> = this.joueurBS.asObservable();;
 
     constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
+        if (environment.test && !AuthenticationService.IN_TESTING) throw new Error("NO AUTH SERVICE IN TEST");
+        
         if (AuthenticationService.VERBOSE) console.log("1 authService subscribe to Obs<User>");
         this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
             if (user == null) { // user logged out
@@ -82,6 +86,8 @@ export class AuthenticationService implements OnDestroy {
         if (joueur == null) return false;
         if (joueur.pseudo == null) return false;
         if (joueur.pseudo == '') return false;
+        if (joueur.pseudo == 'undefined') return false;
+        if (joueur.pseudo == 'null') return false;
         return true;
     }
     private updatePresence() {

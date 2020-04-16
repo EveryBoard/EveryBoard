@@ -26,6 +26,9 @@ describe('GameService', () => {
 
     let service: GameService;
 
+    beforeAll(() => {
+        GameService.IN_TESTING = true;
+    });
     beforeEach(() => {
         service = new GameService(partDaoStub as PartDAO,
                                   activesPartsServiceStub as ActivesPartsService,
@@ -53,5 +56,8 @@ describe('GameService', () => {
         const deleteSpy: jasmine.Spy = spyOn(partDaoStub, "delete");
         service.deletePart("partId");
         expect(deleteSpy).toHaveBeenCalled();
+    });
+    afterAll(() => {
+        GameService.IN_TESTING = false;
     });
 });

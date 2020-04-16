@@ -2,19 +2,22 @@ import {Injectable} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {IJoiner, IJoinerId, PIJoiner} from '../../domain/ijoiner';
 import {JoinerDAO} from '../../dao/JoinerDAO';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class JoinerService {
 
-    static VERBOSE = false;
+    public static VERBOSE: boolean = false;
+    public static IN_TESTING: boolean = false;
 
     private followedJoinerId: string;
     private followedJoinerObs: Observable<IJoinerId>;
     private followedJoinerSub: Subscription;
 
     constructor(private joinerDao: JoinerDAO) {
+        if (environment.test && !JoinerService.IN_TESTING) throw new Error("NO JOINER SERVICE IN TEST");
     }
     public startObserving(joinerId: string, callback: (iJoiner: IJoinerId) => void) {
         if (this.followedJoinerId == null) {

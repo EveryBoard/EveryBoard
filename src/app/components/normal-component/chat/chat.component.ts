@@ -10,7 +10,7 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 })
 export class ChatComponent implements OnInit, OnDestroy {
 
-    static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     @Input() chatId: string;
     @Input() turn: number;
@@ -27,8 +27,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
         this.authenticationService.getJoueurObs()
             .subscribe(joueur => {
-                if (joueur) {
-                    if (ChatComponent.VERBOSE) console.log(joueur + " just connected");
+                if (this.isConnectedUser(joueur)) {
+                    if (ChatComponent.VERBOSE) console.log(JSON.stringify(joueur) + " just connected");
                     this.userName = joueur.pseudo;
                     this.loadChatContent();
                 } else {
@@ -36,6 +36,12 @@ export class ChatComponent implements OnInit, OnDestroy {
                     this.showDisconnectedChat();
                 }
             });
+    }
+    public isConnectedUser(joueur: { pseudo: string; verified: boolean;}): boolean {
+        return joueur && joueur.pseudo &&
+               joueur.pseudo != '' &&
+               joueur.pseudo != 'null' &&
+               joueur.pseudo != 'undefined';
     }
     public loadChatContent() {
         if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
@@ -59,6 +65,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.userMessage = '';
     }
     public ngOnDestroy() {
-        this.chatService.stopObserving();
+        if (this.chatService.isObserving())
+            this.chatService.stopObserving();
     }
 }

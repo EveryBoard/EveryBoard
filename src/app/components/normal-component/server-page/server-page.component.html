@@ -1,7 +1,7 @@
-<div style="height: 88%; max-height: 88%;">
-    <mat-tab-group style="max-height: 100%; height: 100%;">
-        <mat-tab label="Current Games">
-            <div id="actualGame" class="circled">
+<div id="root" style="height: 88%; max-height: 88%;">
+    <mat-tab-group id="group" style="max-height: 100%; height: 100%;">
+        <mat-tab id ="currentGamesTab" label="Current Games">
+            <div id="actualGames" class="circled">
                 <table class="table table-hover">
                     <thead>
                         <tr>
@@ -22,8 +22,11 @@
                 </table>
             </div>
         </mat-tab>
-        <mat-tab label="Chat" style="height: 100%; max-height: 100%;">
-            <div class="col-sm-9" style="height: 100%; max-height: 100%;">
+        <mat-tab id="chatTab"
+                 label="Chat"
+                 style="height: 100%; max-height: 100%;">
+            <div id="chatContainerDiv" class="col-sm-9"
+                 style="height: 100%; max-height: 100%;">
                 <div id="chat" class="circled">
                     <app-chat chatId="server" turn="null"></app-chat>
                 </div>
@@ -41,7 +44,8 @@
                 </div>
             </div>
         </mat-tab>
-        <mat-tab label="Create New Game">
+        <mat-tab id="createGameTab"
+                 label="Create New Game">
             <div id="gameCreator" class="circled form-group">
                 <label for="gameType">Créer un jeu</label>
                 <select id="gameType" class="form-control" [(ngModel)]='selectedGame'>
@@ -58,7 +62,8 @@
                        (click)="createGame()"
                        class="btn btn-primary btn-block">
                 <br />
-                <input type="button"
+                <input id="playLocally"
+                       type="button"
                        [disabled]="!selectedGame"
                        value="local game"
                        (click)="playLocally()"

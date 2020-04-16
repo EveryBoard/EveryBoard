@@ -1,12 +1,14 @@
-import { Component, ComponentFactoryResolver, AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
-import { GameWrapper } from '../GameWrapper';
-import { Move } from '../../../jscaip/Move';
+import { Component, ComponentFactoryResolver, AfterViewInit,
+         ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UserService } from '../../../services/user/UserService';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { GameWrapper } from 'src/app/components/game-components/GameWrapper';
+import { Move } from 'src/app/jscaip/Move';
+import { UserService } from 'src/app/services/user/UserService';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 
 @Component({
     selector: 'app-local-game-wrapper',

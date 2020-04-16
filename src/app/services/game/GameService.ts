@@ -11,13 +11,15 @@ import {ActivesPartsService} from '../actives-parts/ActivesPartsService';
 import {ChatService} from '../chat/ChatService';
 import {IChat} from '../../domain/ichat';
 import {MGPRequest} from '../../domain/request';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class GameService {
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
+    public static IN_TESTING: boolean = false;
 
     private followedPartId: string;
     private followedPartObs: Observable<ICurrentPartId>;
@@ -27,6 +29,7 @@ export class GameService {
                 private activesPartsService: ActivesPartsService,
                 private joinerService: JoinerService,
                 private chatService: ChatService) {
+        if (environment.test && !GameService.IN_TESTING) throw new Error("NO GAME SERVICE IN TEST");
     }
     // on Server Component
 

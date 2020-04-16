@@ -107,6 +107,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private onGameCancelled() {
         // TODO: inform that the game has been cancelled
+        console.log("GAME CANCELLED");
         this.router.navigate(['/server']);
     }
     private isGameStarted(iJoinerId: IJoinerId): boolean {
@@ -153,6 +154,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     public cancelAndLeave() {
+        console.log("I CANCEL AND LEAVE");
         this.router.navigate(['/server']);
     }
     public unselectChosenPlayer() {

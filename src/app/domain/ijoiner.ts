@@ -1,7 +1,7 @@
 export interface IJoiner {
-    candidatesNames: string[];
+    candidatesNames: string[]; // TODO: give default empty value
     creator: string;
-    chosenPlayer: string;
+    chosenPlayer: string; // TODO: make optional
     firstPlayer: string;
     /* 0: the creator
      * 1: the chosenPlayer

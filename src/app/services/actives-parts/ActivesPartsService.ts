@@ -3,6 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {PartDAO} from '../../dao/PartDAO';
 import {ICurrentPartId, ICurrentPart} from '../../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -11,6 +12,9 @@ export class ActivesPartsService {
     /* Actives Parts service
      * this service is used by the Server Component
      */
+
+    public static IN_TESTING: boolean = false;
+
     private activesPartsBS = new BehaviorSubject<ICurrentPartId[]>([]);
 
     activesPartsObs = this.activesPartsBS.asObservable();
@@ -18,6 +22,7 @@ export class ActivesPartsService {
     private unsubscribe: () => void;
 
     constructor(private partDao: PartDAO) {
+        if (environment.test && !ActivesPartsService.IN_TESTING) throw new Error("NO ACTIVE_PART SERVICE IN TEST");
     }
     public startObserving() {
         const partObserver: FirebaseCollectionObserver<ICurrentPart> = new FirebaseCollectionObserver();

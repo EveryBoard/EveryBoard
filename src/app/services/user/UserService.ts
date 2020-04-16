@@ -5,11 +5,14 @@ import {IJoueur, IJoueurId} from '../../domain/iuser';
 import {Router} from '@angular/router';
 import {ActivesUsersService} from '../actives-users/ActivesUsersService';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class UserService {
+
+    public static IN_TESTING: boolean = false;
 
     // private userName = this.getUserNameBS();
 
@@ -22,6 +25,7 @@ export class UserService {
     constructor(private router: Router,
                 private activesUsersService: ActivesUsersService,
                 private userDao: JoueursDAO) {
+        if (environment.test && !UserService.IN_TESTING) throw new Error("NO USER SERVICE IN TEST");
     }
     /* getCurrentUser(): string {
         return this.userName.getValue();

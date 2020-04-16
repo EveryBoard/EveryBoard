@@ -5,16 +5,18 @@ import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { FirebaseCollectionObserver } from "./FirebaseCollectionObserver";
+import { environment } from "src/environments/environment";
 
 @Injectable({
     providedIn: 'root'
 })
 export class PartDAO extends FirebaseFirestoreDAO<ICurrentPart, PICurrentPart> {
 
-    static VERBOSE = false;
+    public static VERBOSE = false;
 
     constructor(protected afs: AngularFirestore) {
         super("parties", afs);
+        if (environment.test) throw new Error("NO PART DAO IN TEST");
     }
     public getPartObsById(partId: string): Observable<ICurrentPartId> {
         if (PartDAO.VERBOSE) {

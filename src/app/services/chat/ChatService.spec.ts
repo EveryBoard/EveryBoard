@@ -8,6 +8,9 @@ describe('ChatService', () => {
 
     let service: ChatService;
 
+    beforeAll(() => {
+        ChatService.IN_TESTING = true;
+    });
     beforeEach(() => {
         service = new ChatService(chatDaoStub as ChatDAO);
     });
@@ -16,5 +19,6 @@ describe('ChatService', () => {
     }));
     afterAll(async(() => {
         service.ngOnDestroy();
+        ChatService.IN_TESTING = false;
     }));
 });

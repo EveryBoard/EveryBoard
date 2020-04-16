@@ -14,6 +14,9 @@ describe('AuthenticationService', () => {
 
     let service: AuthenticationService;
 
+    beforeAll(() => {
+        AuthenticationService.IN_TESTING = true;
+    });
     beforeEach(() => {
         service = new AuthenticationService(afAuth as AngularFireAuth, afs as AngularFirestore);
     });
@@ -25,5 +28,6 @@ describe('AuthenticationService', () => {
     });
     afterAll(async(() => {
         service.ngOnDestroy();
+        AuthenticationService.IN_TESTING = false;
     }));
 });

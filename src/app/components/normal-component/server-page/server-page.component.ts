@@ -44,7 +44,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     private activesUsersSub: Subscription;
 
-    constructor(private router: Router,
+    constructor(public router: Router,
                 private userService: UserService,
                 private gameService: GameService,
                 private authenticationService: AuthenticationService) {

@@ -3,13 +3,15 @@ import {Observable, Subscription} from 'rxjs';
 import {IChat, IChatId} from '../../domain/ichat';
 import {ChatDAO} from '../../dao/ChatDAO';
 import {IMessage} from '../../domain/imessage';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
 })
 export class ChatService implements OnDestroy {
 
-    static VERBOSE = false;
+    public static VERBOSE: boolean = false;
+    public static IN_TESTING: boolean = false;
 
     private followedChatId: string;
 
@@ -21,6 +23,7 @@ export class ChatService implements OnDestroy {
         return (message === ''); // TODO: améliorer ?
     }
     constructor(private chatDao: ChatDAO) {
+        if (environment.test && !ChatService.IN_TESTING) throw new Error("NO CHAT SERVICE IN TEST");
     }
     public sendMessage(userName: string, lastTurnThen: number, content: string) {
         if (this.userForbid(this.followedChatId, userName)) {
@@ -64,7 +67,10 @@ export class ChatService implements OnDestroy {
             });
     }
     public userForbid(chatId: string, userName: string): boolean {
-        return false; // TODO: implémenter le blocage de chat
+        return userName == null ||
+               userName === '' ||
+               userName === 'null' ||
+               userName === 'undefined'; // TODO: implémenter le blocage de chat
     }
     public startObserving(chatId: string, callback: (iChat: IChatId) => void) {
         if (this.followedChatId == null) {

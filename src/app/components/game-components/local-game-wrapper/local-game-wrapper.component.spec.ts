@@ -43,14 +43,11 @@ describe('LocalGameWrapperComponent', () => {
                 { provide: UserService, useValue: userServiceStub },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
-        })
-            .compileComponents();
-    }));
-    beforeEach(() => {
+        }).compileComponents();
         fixture = TestBed.createComponent(LocalGameWrapperComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
-    });
+    }));
     it('should create', () => {
         expect(component).toBeTruthy();
     });

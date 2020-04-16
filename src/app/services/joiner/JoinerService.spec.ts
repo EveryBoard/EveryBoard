@@ -40,6 +40,7 @@ describe('JoinerService', () => {
 
     beforeAll(() => {
         JoinerService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        JoinerService.IN_TESTING = true;
     });
     beforeEach(() => {
         service = new JoinerService(joinerDaoStub as JoinerDAO);
@@ -75,5 +76,8 @@ describe('JoinerService', () => {
         const update: jasmine.Spy = spyOn(joinerDaoStub, "update");
         service.updateJoinerById("partId", fakeJoinerId.joiner);
         expect(update).toHaveBeenCalled();
+    });
+    afterAll(() => {
+        JoinerService.IN_TESTING = false;
     });
 });

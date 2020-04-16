@@ -3,6 +3,7 @@ import {BehaviorSubject} from 'rxjs';
 import {IJoueurId, IJoueur} from '../../domain/iuser';
 import {JoueursDAO} from '../../dao/JoueursDAO';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
+import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -10,6 +11,7 @@ import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver
 export class ActivesUsersService {
 
     public static VERBOSE: boolean = false;
+    public static IN_TESTING: boolean = false;
 
     private activesUsersBS = new BehaviorSubject<IJoueurId[]>([]);
 
@@ -18,6 +20,7 @@ export class ActivesUsersService {
     private unsubscribe: () => void;
 
     constructor(private joueursDAO: JoueursDAO) {
+        if (environment.test && !ActivesUsersService.IN_TESTING) throw new Error("NO ACTIVE_USER SERVICE IN TEST");
     }
     public startObserving() {
         if (ActivesUsersService.VERBOSE) console.log("ActivesUsersService.startObservingActivesUsers");

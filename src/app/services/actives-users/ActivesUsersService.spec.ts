@@ -9,10 +9,16 @@ describe('ActivesUsersService', () => {
 
     let service: ActivesUsersService;
 
+    beforeAll(() => {
+        ActivesUsersService.IN_TESTING = true;
+    });
     beforeEach(() => {
         service = new ActivesUsersService(joueursDAOStub as JoueursDAO);
     });
     it('should create', async(() => {
         expect(service).toBeTruthy();
     }));
+    afterAll(() => {
+        ActivesUsersService.IN_TESTING = false;
+    });
 });
