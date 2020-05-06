@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -22,8 +22,8 @@ const userServiceStub = {
     getActivesUsersObs: () => of([]),
 };
 const authenticationServiceStub = {
-    getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true}),
-    getAuthenticatedUser: () => { return { pseudo: 'Pseudo', verified: true}; },
+    getJoueurObs: () => of({ pseudo: null, verified: null}),
+    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
 };
 describe('LocalGameWrapperComponent', () => {
 
@@ -46,9 +46,26 @@ describe('LocalGameWrapperComponent', () => {
         }).compileComponents();
         fixture = TestBed.createComponent(LocalGameWrapperComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     }));
-    it('should create', () => {
+    it('should create', async(() => {
         expect(component).toBeTruthy();
-    });
+        const ngAfterViewInit = spyOn(component, "ngAfterViewInit").and.callThrough();
+        expect(ngAfterViewInit).not.toHaveBeenCalled();
+
+        fixture.detectChanges();
+
+        expect(ngAfterViewInit).toHaveBeenCalledTimes(1);
+    }));
+    it('should have game included after view init', fakeAsync(() => {
+        const compiled = fixture.debugElement.nativeElement;
+        const gameIncluderComponent = compiled.querySelector("app-game-includer");
+        expect(gameIncluderComponent).toBeTruthy("app-game-includer tag should be present at start");
+        expect(component.gameComponent).toBeUndefined("gameComponent should not be loaded before the timeout int afterViewInit resolve");
+
+        fixture.detectChanges();
+        tick(1);
+
+        expect(component.gameIncluder).toBeTruthy("gameIncluder should exist after view init");
+        expect(component.gameComponent).toBeTruthy("gameComponent should be present once component view is initialised");
+    }));
 });

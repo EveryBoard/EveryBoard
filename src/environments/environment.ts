@@ -4,7 +4,7 @@
 
 export const environment = {
     production: false,
-    test: true,
+    test: false,
 	root: 'gaviall/pantheonsgame/'
 };
 

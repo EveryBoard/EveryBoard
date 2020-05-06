@@ -22,7 +22,7 @@ import { SaharaComponent } from './sahara/sahara.component';
 
 export abstract class GameWrapper {
 
-    public static VERBOSE = false;
+    public static VERBOSE = true;
 
     // component loading
     @ViewChild(GameIncluderComponent, {static: false})

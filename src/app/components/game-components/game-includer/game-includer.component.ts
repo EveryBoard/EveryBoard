@@ -7,5 +7,6 @@ import {Component, ViewContainerRef } from '@angular/core';
 export class GameIncluderComponent {
 
     constructor(public viewContainerRef: ViewContainerRef) {
+        console.log("GameIncluderComponent construct");
     }
 }

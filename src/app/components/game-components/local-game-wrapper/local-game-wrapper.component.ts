@@ -17,7 +17,7 @@ import { AbstractGameComponent } from '../AbstractGameComponent';
 })
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public VERBOSE = false;
+    public VERBOSE = true;
 
     public aiDepth: number = 5;
 
