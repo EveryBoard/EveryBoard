@@ -59,10 +59,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 router: Router,
                 userService: UserService,
                 authenticationService: AuthenticationService,
-                viewContainerRef: ViewContainerRef,
+                ///////viewContainerRef: ViewContainerRef,
                 private gameService: GameService,
                 private joinerService: JoinerService) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
+        //super(componentFactoryResolver, actRoute, router, userService, authenticationService, viewContainerRef);
     }
     public ngOnInit() {
         if (OnlineGameWrapperComponent.VERBOSE) {

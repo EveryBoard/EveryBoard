@@ -28,9 +28,10 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 router: Router,
                 userService: UserService,
                 authenticationService: AuthenticationService,
-                viewContainerRef: ViewContainerRef,
+                //// viewContainerRef: ViewContainerRef,
                 private cdr: ChangeDetectorRef) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
+        //super(componentFactoryResolver, actRoute, router, userService, authenticationService, viewContainerRef);
         if (this.VERBOSE) console.log("LocalGameWrapper Constructed: "+(this.gameComponent!=null));
     }
     public ngAfterViewInit() {

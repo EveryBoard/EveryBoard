@@ -8,6 +8,7 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { UserService } from 'src/app/services/user/UserService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule } from 'src/app/app.module';
+import { By } from '@angular/platform-browser';
 
 const activatedRouteStub = {
     snapshot: {
@@ -45,7 +46,7 @@ describe('LocalGameWrapperComponent', () => {
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(LocalGameWrapperComponent);
-        component = fixture.componentInstance;
+        component = fixture.debugElement.componentInstance;
     }));
     it('should create', async(() => {
         expect(component).toBeTruthy();
@@ -58,14 +59,18 @@ describe('LocalGameWrapperComponent', () => {
     }));
     it('should have game included after view init', fakeAsync(() => {
         const compiled = fixture.debugElement.nativeElement;
-        const gameIncluderComponent = compiled.querySelector("app-game-includer");
-        expect(gameIncluderComponent).toBeTruthy("app-game-includer tag should be present at start");
+        const gameIncluderTag = compiled.querySelector("app-game-includer");
+        let quartoTag = compiled.querySelector("app-quarto");
+        expect(gameIncluderTag).toBeTruthy("app-game-includer tag should be present at start");
+        expect(quartoTag).toBeFalsy("app-quarto tag should be absent at start");
         expect(component.gameComponent).toBeUndefined("gameComponent should not be loaded before the timeout int afterViewInit resolve");
 
         fixture.detectChanges();
         tick(1);
 
+        quartoTag = compiled.querySelector("app-quarto");
         expect(component.gameIncluder).toBeTruthy("gameIncluder should exist after view init");
-        expect(component.gameComponent).toBeTruthy("gameComponent should be present once component view is initialised");
+        expect(quartoTag).toBeTruthy("app-quarto tag should be present after view init");
+        expect(component.gameComponent).toBeTruthy("gameComponent should be present once component view init");
     }));
 });

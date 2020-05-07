@@ -45,7 +45,7 @@ export abstract class GameWrapper {
                 protected router: Router,
                 protected userService: UserService,
                 protected authenticationService: AuthenticationService,
-                // protected viewContainerRef: ViewContainerRef
+                /////////////////////////// protected viewContainerRef: ViewContainerRef
                 ) {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.constructed: ' + (this.gameIncluder!=null));
@@ -101,6 +101,7 @@ export abstract class GameWrapper {
             = this.componentFactoryResolver.resolveComponentFactory(component);
         const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
             = this.gameIncluder.viewContainerRef.createComponent(componentFactory);
+        //      = this.viewContainerRef.createComponent(componentFactory);
         this.gameComponent = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance; // Shortent by T<S = Truc>
         this.gameComponent.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
