@@ -45,7 +45,6 @@ export abstract class GameWrapper {
                 protected router: Router,
                 protected userService: UserService,
                 protected authenticationService: AuthenticationService,
-                /////////////////////////// protected viewContainerRef: ViewContainerRef
                 ) {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.constructed: ' + (this.gameIncluder!=null));

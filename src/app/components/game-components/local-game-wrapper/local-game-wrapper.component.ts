@@ -19,6 +19,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     public VERBOSE = true;
 
+    public playerZeroValue: string = "0";
+    public playerOneValue: string = "0";
     public aiDepth: number = 5;
 
     public botTimeOut: number = 500; // this.aiDepth * 500;
@@ -28,23 +30,25 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 router: Router,
                 userService: UserService,
                 authenticationService: AuthenticationService,
-                //// viewContainerRef: ViewContainerRef,
                 private cdr: ChangeDetectorRef) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
-        //super(componentFactoryResolver, actRoute, router, userService, authenticationService, viewContainerRef);
         if (this.VERBOSE) console.log("LocalGameWrapper Constructed: "+(this.gameComponent!=null));
     }
     public ngAfterViewInit() {
         setTimeout(() => {
             this.authenticationService.getJoueurObs().subscribe(user => {
                 this.userName = user.pseudo;
-                if (this.players[0] !== "bot") this.players[0] = user.pseudo;
-                if (this.players[1] !== "bot") this.players[1] = user.pseudo;
+                if (this.isAI(this.players[0])) this.players[0] = user.pseudo;
+                if (this.isAI(this.players[1])) this.players[1] = user.pseudo;
             });
             if (this.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
             this.afterGameIncluderViewInit();
             this.cdr.detectChanges();
         }, 1);
+    }
+    private isAI(player: string): boolean {
+        if (player == null) return false;
+        return player.substr(0, 3) === "bot"
     }
     public onValidUserMove(move: Move): boolean {
         if (LocalGameWrapperComponent.VERBOSE) {
@@ -59,8 +63,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public proposeAIToPlay() {
         // check if ai's turn has come, if so, make her start after a delay
-        const turn = this.gameComponent.rules.node.gamePartSlice.turn % 2;
-        if (this.players[turn] === 'bot') {
+        if (this.isAITurn()) {
             // bot's turn
             setTimeout(() => {
                 // called only when it's AI's Turn
@@ -77,16 +80,25 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             }, this.botTimeOut);
         }
     }
+    private isAITurn(): boolean {
+        const turn = this.gameComponent.rules.node.gamePartSlice.turn % 2;
+        const currentPlayer: string = this.players[turn];
+        return this.isAI(currentPlayer);
+    }
     public switchPlayerOne() { // totally adaptable to other Rules
-        this.switchPlayer(0);
+        this.switchPlayer(0, this.playerZeroValue);
     }
     public switchPlayerTwo() { // totally adaptable to other Rules
-        this.switchPlayer(1);
+        this.switchPlayer(1, this.playerOneValue);
     }
-    public switchPlayer(n: 0|1) {
-        if (LocalGameWrapperComponent.VERBOSE) console.log("before switching: " + this.players);
-        this.players[n] = this.players[n] === 'bot' ? this.authenticationService.getAuthenticatedUser().pseudo : 'bot';
-        if (LocalGameWrapperComponent.VERBOSE) console.log("after switching: " + this.players);
+    public switchPlayer(n: 0|1, value: string) {
+        const numberValue: number = Number.parseInt(value);
+        if (numberValue === 0) {
+            this.players[n] = this.authenticationService.getAuthenticatedUser().pseudo;
+        } else {
+            this.players[n] = 'bot level '+ value;
+            this.aiDepth = numberValue;
+        }
         this.proposeAIToPlay();
     }
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
