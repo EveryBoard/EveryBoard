@@ -6,7 +6,10 @@ import {Component, ViewContainerRef } from '@angular/core';
 })
 export class GameIncluderComponent {
 
+    public static VERBOSE: boolean = false;
+
     constructor(public viewContainerRef: ViewContainerRef) {
-        console.log("GameIncluderComponent construct");
+        if (GameIncluderComponent.VERBOSE) 
+            console.log("GameIncluderComponent construct");
     }
 }

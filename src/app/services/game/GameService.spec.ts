@@ -9,7 +9,9 @@ import { of } from 'rxjs';
 import { ICurrentPartId } from 'src/app/domain/icurrentpart';
 
 const partDaoStub = {
+
     getPartObsById: (partId: string) => of<ICurrentPartId>(null),
+
     delete: (partId: string) => {
         return new Promise<void>((resolve) => {
             resolve();

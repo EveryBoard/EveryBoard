@@ -1,8 +1,7 @@
 <div class="container-fluid"
      style="height: 88%; max-height: 88%">
 
-    <app-part-creation #partCreation
-                       id="partCreation"
+    <app-part-creation id="partCreation"
                        *ngIf="gameStarted === false"
                        [partId]="currentPartId"
                        [userName]="userName"
@@ -90,7 +89,8 @@
 
     </div>
 
-    <div id="chat" class="circled" style="height: 40%; max-height: 40%; float: bottom;">
+    <div id="chat" class="circled"
+         style="height: 40%; max-height: 40%; float: bottom;">
         <app-chat [chatId]="currentPartId"
                   [turn]="currentPart?.turn"></app-chat>
     </div>

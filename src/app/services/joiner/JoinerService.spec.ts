@@ -17,7 +17,9 @@ const fakeJoinerId: IJoinerId = {
     },
 };
 const joinerDaoStub = {
+
     getObservable: (joinerId: string) => of<IJoinerId>(fakeJoinerId),
+
     read: (id: string) => {
         return new Promise<IJoiner>((resolve) => {
             resolve(fakeJoinerId.joiner);

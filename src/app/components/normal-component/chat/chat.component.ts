@@ -19,11 +19,15 @@ export class ChatComponent implements OnInit, OnDestroy {
     chat: IMessage[];
     userMessage: string;
 
-    constructor(private chatService: ChatService, private authenticationService: AuthenticationService) {
+    constructor(private chatService: ChatService,
+                private authenticationService: AuthenticationService) {
+        if (ChatComponent.VERBOSE) {
+            console.log("ChatComponent constructor");
+        }
     }
     public ngOnInit() {
         if (ChatComponent.VERBOSE) {
-            console.log('chat component initialisation');
+            console.log('ChatComponent ngOnInit');
         }
         this.authenticationService.getJoueurObs()
             .subscribe(joueur => {

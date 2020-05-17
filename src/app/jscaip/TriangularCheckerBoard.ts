@@ -16,7 +16,7 @@ export class TriangularCheckerBoard {
         return neighboors;
     }
     public static getFakeNeighboors(c: Coord): Coord {
-        if ((c.x + c.y)%2 ===1) return new Coord(c.x, c.y + 1); // DOWN
+        if ((c.x + c.y)%2 === 1) return new Coord(c.x, c.y + 1); // DOWN
         return new Coord(c.x, c.y - 1); // UP
     }
 }

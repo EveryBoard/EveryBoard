@@ -7,7 +7,7 @@ import {AbstractGameComponent} from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
-    selector: 'app-p4-new',
+    selector: 'app-p4',
     templateUrl: './p4.component.html'
 })
 export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, LegalityStatus> {

@@ -18,10 +18,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
 
     constructor() {
         super();
-        this.node = MNode.getFirstNode(
-            new SaharaPartSlice(SaharaPartSlice.getStartingBoard(), 0),
-            this
-        );
+        this.setInitialBoard();
     }
     public getListMoves(node: SaharaNode): MGPMap<SaharaMove, SaharaPartSlice> {
         const moves: MGPMap<SaharaMove, SaharaPartSlice> = new MGPMap<SaharaMove, SaharaPartSlice>();

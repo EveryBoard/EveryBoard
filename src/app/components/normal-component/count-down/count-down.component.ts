@@ -20,7 +20,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
 
     public ngOnInit() {
         if (CountDownComponent.VERBOSE) {
-            console.log('chrono::ngOnInit');
+            console.log('CountDownComponent ngOnInit (' + this.debugName + ')');
         }
     }
     public start(duration: number) {

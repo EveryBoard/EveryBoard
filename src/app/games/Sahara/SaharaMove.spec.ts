@@ -2,6 +2,7 @@ import { MGPMap } from 'src/app/collectionlib/MGPMap';
 import { SaharaRules } from './SaharaRules';
 import { SaharaMove } from './SaharaMove';
 import { SaharaPartSlice } from './SaharaPartSlice';
+import { Coord } from 'src/app/jscaip/Coord';
 
 describe('SaharaMoves', () => {
 
@@ -9,11 +10,59 @@ describe('SaharaMoves', () => {
         const rules: SaharaRules = new SaharaRules();
         expect(rules).toBeTruthy();
         const moves: MGPMap<SaharaMove, SaharaPartSlice> = rules.getListMoves(rules.node);
+        expect(moves.size()).toEqual(12);
         for (let i=0; i<moves.size(); i++) {
             const initialMove: SaharaMove = moves.get(i).key;
             const encodedMove: number = initialMove.encode();
             const decodedMove: SaharaMove = SaharaMove.decode(encodedMove);
             expect(decodedMove).toEqual(initialMove, initialMove.toString() + " should be correctly translated");
         }
+    });
+    it('Method decode should delegate to static method decode', () => {
+        const move: SaharaMove = new SaharaMove(new Coord(1, 1), new Coord(2, 1));
+        const staticDecode: jasmine.Spy = spyOn(SaharaMove, "decode").and.callThrough();
+
+        const decodedMove: SaharaMove = move.decode(move.encode());
+
+        expect(staticDecode).toHaveBeenCalledTimes(1);
+        expect(decodedMove.equals(move)).toBeTruthy();
+        expect(move.equals(move)).toBeTruthy();
+        expect(move.equals(5)).toBeFalsy();
+    });
+    it('Should throw error when starting coord is outside the board', () => {
+        const start: Coord = new Coord(-1, 0);
+        const end: Coord = new Coord(0, 0);
+        const expectedError: string = "Move must start inside the board not at "+ start.toString()
+        expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
+    });
+    it('Should throw error when move end outside the board', () => {
+        const start: Coord = new Coord(0, 0);
+        const end: Coord = new Coord(-1, 0);
+        const expectedError: string = "Move must end inside the board not at "+ end.toString();
+        expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
+    });
+    it('Should throw error when start and end are too far away', () => {
+        const start: Coord = new Coord(0, 0);
+        const end: Coord = new Coord(0, 3);
+        const expectedError: string = "Maximal distance for SaharaMove is 2, got 3";
+        expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
+    });
+    it('Should throw error when distance is 1 but start and end arent neighboors', () => {
+        const start: Coord = new Coord(0, 1);
+        const end: Coord = new Coord(0, 2);
+        const expectedError: string = start.toString() + " and " + end.toString() + " are not neighboors";
+        expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
+    });
+    it('Should throw error when trying to bounce on white triangle', () => {
+        const start: Coord = new Coord(0, 0);
+        const end: Coord = new Coord(2, 0);
+        const expectedError: string = "Can only bounce twice when started on a white triangle";
+        expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
+    });
+    it('Should throw error when distance is 2 but common neighboors is the fake neighboors', () => {
+        const start: Coord = new Coord(1, 0);
+        const end: Coord = new Coord(1, 2);
+        const expectedError: string = start.toString() + " and " + end.toString() + " have no intermediary neighboors";
+        expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
     });
 });

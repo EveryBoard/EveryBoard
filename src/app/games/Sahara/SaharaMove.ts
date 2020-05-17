@@ -28,16 +28,16 @@ export class SaharaMove extends MoveCoordToCoord {
             if (end.equals(fakeNeighboors)) throw new Error(start.toString() + " and " + end.toString() + " are not neighboors");
         } else {
             if ((start.x + start.y)%2 === 0) throw new Error("Can only bounce twice when started on a white triangle");
-            if (start.x === start.y) throw new Error(start.toString() + " and " + end.toString() + " have no intermediary neighboors");
+            if (start.x === end.x) throw new Error(start.toString() + " and " + end.toString() + " have no intermediary neighboors");
         }
     }
     constructor(start: Coord, end: Coord) {
+        super(start, end);
         if (!start.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT))
             throw new Error("Move must start inside the board not at "+start.toString());
         if (!end.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT))
-            throw new Error("Move must end inside the board not at "+start.toString());
+            throw new Error("Move must end inside the board not at "+end.toString());
         SaharaMove.checkDistanceAndLocation(start, end);
-        super(start, end);
     }
     public equals(o: any): boolean {
         if (o === this) return true;

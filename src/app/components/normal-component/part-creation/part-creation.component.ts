@@ -57,8 +57,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 private joinerService: JoinerService,
                 private chatService: ChatService,
                 private formBuilder: FormBuilder) {
+        if (PartCreationComponent.VERBOSE) {
+            console.log("PartCreationComponent constructed");
+        }
     }
     public async ngOnInit() {
+        if (PartCreationComponent.VERBOSE) {
+            console.log("PartCreationComponent ngOnInit");
+        }
         this.checkEntry();
         this.createForms();
         await this.joinerService.joinGame(this.partId, this.userName);

@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
+import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
@@ -11,12 +11,12 @@ import { JoinerService } from 'src/app/services/joiner/JoinerService';
 import { Move } from '../../../jscaip/Move';
 import { ICurrentPart, ICurrentPartId, PICurrentPart } from '../../../domain/icurrentpart';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
+import { PartCreationComponent } from '../../normal-component/part-creation/part-creation.component';
 import { IJoueurId, IJoueur } from '../../../domain/iuser';
 import { MGPRequest } from '../../../domain/request';
 import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { IJoiner } from 'src/app/domain/ijoiner';
-import { PartCreationComponent } from '../../normal-component/part-creation/part-creation.component';
 
 @Component({
     selector: 'app-game-wrapper',
@@ -38,7 +38,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     // link between GameWrapping's template and remote opponent
     currentPart: ICurrentPart;
     currentPartId: string;
-    gameStarted = false;
+    public gameStarted: boolean = false;
     opponent: IJoueurId = null;
     currentPlayer: string;
 
@@ -59,17 +59,21 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 router: Router,
                 userService: UserService,
                 authenticationService: AuthenticationService,
-                ///////viewContainerRef: ViewContainerRef,
                 private gameService: GameService,
-                private joinerService: JoinerService) {
+                private joinerService: JoinerService) { ///////////// TODO: see readJoiner
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
-        //super(componentFactoryResolver, actRoute, router, userService, authenticationService, viewContainerRef);
+        if (OnlineGameWrapperComponent.VERBOSE) {
+            console.log("OnlineGameWrapperComponent constructed");
+        }
     }
     public ngOnInit() {
         if (OnlineGameWrapperComponent.VERBOSE) {
-            console.log('le component est initialisé');
+            console.log('OnlineGameWrapperComponent ngOnInit');
         }
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
+        if (OnlineGameWrapperComponent.VERBOSE) {
+            console.log('current part id: ' + this.currentPartId);
+        }
         this.userSub = this.authenticationService.getJoueurObs()
             .subscribe(user => this.userName = user.pseudo);
     }
@@ -88,28 +92,25 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.opponentProposedRematch = null;
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
     }
-    protected startGame() {
+    public startGame() {
+        if (this.gameStarted === true) {
+            throw new Error("Should not start already started game");
+        }
         if (OnlineGameWrapperComponent.VERBOSE) {
-            if (this.gameStarted === true) {
-                if (OnlineGameWrapperComponent.VERBOSE) {
-                    console.log('!!!GameWrapper.startGame next line is NOT usefull)');
-                }
-            } else {
-                if (OnlineGameWrapperComponent.VERBOSE) {
-                    console.log('GameWrapper.startGame next line is USEFULL sparadra)');
-                }
-            }
+            console.log('OnlineGameWrapperComponent startGame');
         }
         this.gameStarted = true;
         setTimeout(() => {
             // the small waiting is there to make sur that the chronos are charged
             this.afterGameIncluderViewInit();
+            this.readJoiner(); // NEWLY
         }, 1);
 
-        this.readJoiner(); // NEWLY
+        // this.readJoiner(); // oldly
     }
     protected async readJoiner(): Promise<void> {
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(this.currentPartId);
+        // TODO: make those data sent by partCreationComponent who already know this
         this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
         this.totalPartDuration = iJoiner.totalPartDuration * 1000;
         if (OnlineGameWrapperComponent.VERBOSE) {
@@ -130,33 +131,37 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             }
             return {};
         }
-        if (update.typeGame        !== this.currentPart.typeGame) {
+        if (update.typeGame !== this.currentPart.typeGame) {
             difference.typeGame = update.typeGame;
         }
-        if (update.playerZero    !== this.currentPart.playerZero) {
+        if (update.playerZero !== this.currentPart.playerZero) {
             difference.playerZero = update.playerZero;
         }
-        if (update.turn            !== this.currentPart.turn) {
+        if (update.turn !== this.currentPart.turn) {
             difference.turn = update.turn;
         }
-        if (update.playerOne    !== this.currentPart.playerOne) {
+        if (update.playerOne !== this.currentPart.playerOne) {
             difference.playerOne = update.playerOne;
         }
-        if (update.beginning    !== this.currentPart.beginning) {
+        if (update.beginning !== this.currentPart.beginning) {
             difference.beginning = update.beginning;
         }
-        if (update.result        !== this.currentPart.result) {
+        if (update.result !== this.currentPart.result) {
             difference.result = update.result;
         }
-        if (update.listMoves    !== this.currentPart.listMoves) {
+        if (update.listMoves !== this.currentPart.listMoves) {
             difference.listMoves = update.listMoves;
         }
-        if (update.request        !== this.currentPart.request) {
+        if (update.request !== this.currentPart.request) {
             difference.request = update.request;
         }
         return difference;
     }
     protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
+        if (OnlineGameWrapperComponent.VERBOSE) {
+            console.log("OnlineGameWrapperComponent onCurrentPartUpdate of:");
+            console.log(JSON.stringify(updatedICurrentPart));
+        }
         const part: ICurrentPart = updatedICurrentPart.doc;
         if (OnlineGameWrapperComponent.VERBOSE) {
             console.log('part updated !');
@@ -208,7 +213,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
             if (this.gameComponent.rules.node.isEndGame()) {
                 if (this.gameComponent.rules.node.ownValue === 0) {
                     this.notifyDraw();
-                } else this.notifyVictory();0
+                } else this.notifyVictory();
             }
 
         }

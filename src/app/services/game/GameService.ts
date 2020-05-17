@@ -19,10 +19,13 @@ import { environment } from 'src/environments/environment';
 export class GameService {
 
     public static VERBOSE: boolean = false;
+
     public static IN_TESTING: boolean = false;
 
     private followedPartId: string;
+
     private followedPartObs: Observable<ICurrentPartId>;
+
     private followedPartSub: Subscription;
 
     constructor(private partDao: PartDAO,

@@ -17,7 +17,7 @@ import { AbstractGameComponent } from '../AbstractGameComponent';
 })
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public VERBOSE = true;
+    public VERBOSE = false;
 
     public playerZeroValue: string = "0";
     public playerOneValue: string = "0";

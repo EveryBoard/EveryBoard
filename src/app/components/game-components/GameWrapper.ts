@@ -22,7 +22,7 @@ import { SaharaComponent } from './sahara/sahara.component';
 
 export abstract class GameWrapper {
 
-    public static VERBOSE = true;
+    public static VERBOSE = false;
 
     // component loading
     @ViewChild(GameIncluderComponent, {static: false})
@@ -91,7 +91,7 @@ export abstract class GameWrapper {
         this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
     }
     protected createGameComponent() {
-        if (GameWrapper.VERBOSE) console.log('GameWrapper.loadGameComponent: '+(this.gameIncluder!=null));
+        if (GameWrapper.VERBOSE) console.log('GameWrapper.createGameComponent: '+(this.gameIncluder!=null));
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
         const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
@@ -100,7 +100,6 @@ export abstract class GameWrapper {
             = this.componentFactoryResolver.resolveComponentFactory(component);
         const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
             = this.gameIncluder.viewContainerRef.createComponent(componentFactory);
-        //      = this.viewContainerRef.createComponent(componentFactory);
         this.gameComponent = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance; // Shortent by T<S = Truc>
         this.gameComponent.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
