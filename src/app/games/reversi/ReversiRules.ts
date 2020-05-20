@@ -12,7 +12,7 @@ class ReversiNode extends MNode<ReversiRules, ReversiMove, ReversiPartSlice, Rev
 
 export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     constructor() {
         super();

@@ -12,7 +12,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 })
 export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, LegalityStatus> {
 
-    static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public rules = new TablutRules();
 

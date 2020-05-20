@@ -30,7 +30,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
-        const LOCAL_VERBOSE = false;
+        const LOCAL_VERBOSE: boolean = false;
         if (LOCAL_VERBOSE) console.log(move.toString() + " was proposed");
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             if (LOCAL_VERBOSE) console.log("current node has moves");

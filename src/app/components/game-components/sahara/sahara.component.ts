@@ -12,7 +12,7 @@ import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 })
 export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPartSlice, LegalityStatus> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public rules: SaharaRules = new SaharaRules();
 

@@ -6,7 +6,7 @@ import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angula
 })
 export class CountDownComponent implements OnInit, OnDestroy {
 
-    static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     @Input() debugName: string;
     remainingTime: number;

@@ -9,23 +9,22 @@ export class AwaleMove extends MoveCoord {
         if (!other.coord.equals(this.coord)) return false;
         return true;
     }
-
     public toString(): String {
         return "AwaleMove(" + this.coord.x + ", " + this.coord.y + ")";
     }
-
-    static decode(encodedMove: number): AwaleMove {
+    public static decode(encodedMove: number): AwaleMove {
         const x = encodedMove % 6;
         const y = (encodedMove - x) / 6;
         return new AwaleMove(x, y);
     }
-
+    public static encode(move: AwaleMove): number {
+        return move.encode();
+    }
     public decode(encodedMove: number): AwaleMove {
         return AwaleMove.decode(encodedMove);
     }
-
     public encode(): number {
-        // An awalé move goes on x from o to 5
+        // An awalï¿½ move goes on x from o to 5
         // and y from 0 to 1
         // encoded as y*6 + x
         return (this.coord.y * 6) + this.coord.x;

@@ -11,7 +11,7 @@ import { environment } from "src/environments/environment";
 })
 export class JoinerDAO extends FirebaseFirestoreDAO<IJoiner, PIJoiner> {
 
-    static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     constructor(protected afs: AngularFirestore) {
         super("joiners", afs);

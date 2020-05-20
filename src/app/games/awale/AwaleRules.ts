@@ -12,7 +12,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
     public static GET_LIST_MOVES_CALL_COUNT: number = 0;
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     constructor() {
         super();
@@ -152,20 +152,20 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         return false;
     }
     private static isStarving(player: number, board: number[][]): boolean {
-        const localVerbose = false;
+        const LOCAL_VERBOSE: boolean = false;
         const MUTE = true;
 
-        if (!MUTE && (AwaleRules.VERBOSE || localVerbose)) {
+        if (!MUTE && (AwaleRules.VERBOSE || LOCAL_VERBOSE)) {
             console.log('isStarving(' + player + ', ' + AwaleRules.printInLine(board) + ')=');
         }
         let i = 0;
         do {
             if (board[player][i++] > 0) {
-                if (!MUTE && (AwaleRules.VERBOSE || localVerbose)) console.log('not starving');
+                if (!MUTE && (AwaleRules.VERBOSE || LOCAL_VERBOSE)) console.log('not starving');
                 return false; // found some food there, so not starving
             }
         } while (i < 6);
-        if (!MUTE && (AwaleRules.VERBOSE || localVerbose)) console.log('starving');
+        if (!MUTE && (AwaleRules.VERBOSE || LOCAL_VERBOSE)) console.log('starving');
         return true;
     }
     private static distribute(x: number, y: number, board: number[][]): number[] {
@@ -241,8 +241,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     }
     public getListMoves(n: MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus>): MGPMap<AwaleMove, AwalePartSlice> {
         AwaleRules.GET_LIST_MOVES_CALL_COUNT++;
-        const localVerbose = false ;
-        if (AwaleRules.VERBOSE || localVerbose) console.log('getListMoves');
+        const LOCAL_VERBOSE: boolean = false ;
+        if (AwaleRules.VERBOSE || LOCAL_VERBOSE) console.log('getListMoves');
 
         const choices: MGPMap<AwaleMove, AwalePartSlice> = new MGPMap<AwaleMove, AwalePartSlice>();
         const oldSlice: AwalePartSlice = n.gamePartSlice;
@@ -254,15 +254,15 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         do {
             // for each house that might be playable
 
-            // if (AwaleRules.VERBOSE || localVerbose) Console.log('trying to find one awale move-partSlice');
+            // if (AwaleRules.VERBOSE || LOCAL_VERBOSE) Console.log('trying to find one awale move-partSlice');
             if (n.gamePartSlice.getBoardByXY(x, player) !== 0) {
                 // if the house is not empty
 
-                // if (AwaleRules.VERBOSE || localVerbose) Console.log('non empty case at (' + x + ', ' + player + ')');
+                // if (AwaleRules.VERBOSE || LOCAL_VERBOSE) Console.log('non empty case at (' + x + ', ' + player + ')');
                 newMove = new AwaleMove(x, player);
                 const legality: AwaleLegalityStatus = this.isLegal(newMove, oldSlice); // see if the move is legal
 
-                // if (AwaleRules.VERBOSE || localVerbose) Console.log('legality is ' + moveResult);
+                // if (AwaleRules.VERBOSE || LOCAL_VERBOSE) Console.log('legality is ' + moveResult);
                 if (legality.legal) {
                     // if the move is legal, we addPart it to the listMoves
                     const capturedCopy: number[] = oldSlice.getCapturedCopy();
@@ -277,16 +277,16 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             x++;
         } while (x < 6);
 
-        if (AwaleRules.VERBOSE || localVerbose) {
+        if (AwaleRules.VERBOSE || LOCAL_VERBOSE) {
             console.log(n + ' has ' + choices.size() + ' choices');
         }
         return choices;
     }
     public getBoardValue(n: MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus>): number {
         AwaleRules.GET_BOARD_VALUE_CALL_COUNT++;
-        const localVerbose = false;
+        const LOCAL_VERBOSE: boolean = false;
 
-        if (AwaleRules.VERBOSE || localVerbose) {
+        if (AwaleRules.VERBOSE || LOCAL_VERBOSE) {
             console.log('GBV..');
         }
 

@@ -3,7 +3,7 @@ import { FirebaseCollectionObserver } from "./FirebaseCollectionObserver";
 
 export abstract class FirebaseFirestoreDAO<T, PT> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     // T is a full element
 

@@ -22,7 +22,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      * they need common data so mother calculate/retrieve then share them with her child
      */
 
-    static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     @Input() partId: string;
     @Input() userName: string;

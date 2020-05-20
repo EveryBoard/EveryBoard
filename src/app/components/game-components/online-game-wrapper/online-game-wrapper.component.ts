@@ -25,7 +25,7 @@ import { IJoiner } from 'src/app/domain/ijoiner';
 })
 export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, OnDestroy {
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     @ViewChild('partCreation', {static: false}) partCreation: PartCreationComponent;
 

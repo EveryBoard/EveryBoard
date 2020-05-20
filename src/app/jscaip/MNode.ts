@@ -15,7 +15,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
 
     public static NB_NODE_CREATED = 0;
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public static ruler: Rules<Move, GamePartSlice, LegalityStatus>;
     /* Permet d'obtenir les donn�es propre au jeu et non au minimax, ruler restera l'unique instance d'un set de r�gles
@@ -204,7 +204,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
          * h. ne rien changer � sa depth avant que la Node ne soit calcul�
          */
         if (this.childs != null) throw new Error("multiple node childs calculation error");
-        const LOCAL_VERBOSE = false;
+        const LOCAL_VERBOSE: boolean = false;
         const moves: MGPMap<M, S> = MNode.ruler.getListMoves(this) as MGPMap<M, S>;
         this.childs = new Array<MNode<R, M, S, L>>();
         if (MNode.VERBOSE || LOCAL_VERBOSE) {
@@ -347,7 +347,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
             ', depth = ' + this.depth + ']';
     }
     public isEndGame(): boolean {
-        const LOCAL_VERBOSE = false;
+        const LOCAL_VERBOSE: boolean = false;
 
         const scoreStatus: SCORE = MNode.getScoreStatus(this.ownValue);
         if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('\nscoreStatus === ' + scoreStatus + '; ');

@@ -149,7 +149,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return this.SUCCESS;
     }
     private static tryCapture(player: 0|1, invaderStart: boolean, landingPawn: Coord, d: Orthogonale, board: number[][]): Coord {
-        const localVerbose = false;
+        const LOCAL_VERBOSE: boolean = false;
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
          * return the captured coord, or null if no capture possible
@@ -199,7 +199,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
          * - 3 invaders 1 border
          * - 4 invaders
          */
-        const localVerbose = false;
+        const LOCAL_VERBOSE: boolean = false;
         const kingCoord: Coord = landingPiece.getNext(d);
 
         const {
@@ -213,7 +213,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             nbInvaders += (right === this.PLAYER ? 1 : 0);
             if (nbInvaders === 2 && this.THREE_INVADER_AND_A_BORDER_CAN_CAPTURE_KING) { // 2
                 // king captured by 3 invaders against 1 border
-                if (TablutRules.VERBOSE || localVerbose) {
+                if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                     console.log('king captured by 3 invaders against 1 border'); }
                 return kingCoord;
             } else if (nbInvaders === 1) {
@@ -221,7 +221,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                     this.isEmptyThrone(rightCoord, board)) {
                     if (this.CAPTURE_KING_AGAINST_THRONE_RULES) { //////////////////////// 3
                         // king captured by 1 border, 1 throne, 2 invaders
-                        if (TablutRules.VERBOSE || localVerbose) {
+                        if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                             console.log('king captured by 3 invaders against 1 border'); }
                         return kingCoord;
                     }
@@ -238,24 +238,24 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                 return null;
             } // here king is capturable by this empty throne
             if (this.NORMAL_CAPTURE_WORK_ON_THE_KING) { ////////////////////////////////// 7
-                if (TablutRules.VERBOSE || localVerbose) {
+                if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                     console.log('king captured by 1 invader and 1 throne'); }
                 return kingCoord; // king captured by 1 invader and 1 throne
             }
             if (left === this.PLAYER && right === this.PLAYER) {
-                if (TablutRules.VERBOSE || localVerbose) {
+                if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                     console.log('king captured by 3 invaders + 1 throne'); }
                 return kingCoord; // king captured by 3 invaders + 1 throne
             }
         }
         if (back === this.PLAYER) {
             if (this.NORMAL_CAPTURE_WORK_ON_THE_KING) {
-                if (TablutRules.VERBOSE || localVerbose) {
+                if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                     console.log('king captured by two invaders'); }
                 return kingCoord; // king captured by two invaders
             }
             if (left === this.PLAYER && right === this.PLAYER) {
-                if (TablutRules.VERBOSE || localVerbose) {
+                if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                     console.log('king captured by 4 invaders'); }
                 return kingCoord; // king captured by 4 invaders
             }
@@ -294,13 +294,13 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
          * - 2 ennemies
          * - 1 ennemies 1 empty-throne
          */
-        const localVerbose = false;
+        const LOCAL_VERBOSE: boolean = false;
 
         const threatenedPieceCoord: Coord = c.getNext(d);
 
         const backCoord: Coord = threatenedPieceCoord.getNext(d); // the piece that just move is always considered in front
         if (!backCoord.isInRange(this.WIDTH, this.WIDTH)) {
-            if (TablutRules.VERBOSE || localVerbose) {
+            if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                 console.log('cannot capture a pawn against a wall; ' + threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c
                     + ' coming from this direction (' + d.x + ', ' + d.y + ')');
             }
@@ -310,7 +310,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const back: number = this.getRelativeOwner(player, invaderStart, backCoord, board);
         if (back === this.NONE) {
             if (!this.isThrone(backCoord)) {
-                if (TablutRules.VERBOSE || localVerbose) {
+                if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                     console.log('cannot capture a pawn without an ally; ' + threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c
                         + ' coming from this direction (' + d.x + ', ' + d.y + ')');
                     console.log('cannot capture a pawn without an ally behind');
@@ -318,7 +318,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                 return null;
             } // here, back is an empty throne
             if (this.CAPTURE_PAWN_AGAINST_THRONE_RULES) {
-                if (TablutRules.VERBOSE || localVerbose) {
+                if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                     console.log('pawn captured by 1 ennemy and 1 throne; ' + threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c
                         + ' coming from this direction (' + d.x + ', ' + d.y + ')');
                 }
@@ -326,14 +326,14 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             }
         }
         if (back === this.PLAYER) {
-            if (TablutRules.VERBOSE || localVerbose) {
+            if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                 console.log('pawn captured by 2 ennemies; ' + threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c
                     + ' coming from this direction (' + d.x + ', ' + d.y + ')');
             }
             return threatenedPieceCoord; // pawn captured by two ennemies
         }
-        if (TablutRules.VERBOSE || localVerbose) {
-            if (TablutRules.VERBOSE || localVerbose) {
+        if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
+            if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                 console.log('no captures; ' + threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c
                     + ' coming from this direction (' + d.x + ', ' + d.y + ')');
             }
@@ -521,12 +521,11 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
     public static getPlayerListMoves(player: 0|1, invaderStart: boolean, board: number[][]): TablutMove[] {
         // player : 0 for the current player
         //          1 for his ennemy
-        const localVerbose = false;
+        const LOCAL_VERBOSE: boolean = false;
         const listMoves: TablutMove[] = [];
         const listPawns: Coord[] = this.getPlayerListPawns(player, invaderStart, board);
-        if (localVerbose) {
-            console.log('liste des pions ' + listPawns);
-        }
+        if (LOCAL_VERBOSE) console.log('liste des pions ' + listPawns);
+
         let pawnDestinations: Coord[];
         let newMove: TablutMove;
         for (const pawn of listPawns) {
@@ -551,8 +550,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return TablutRules.applyLegalMove(move, slice, status);
     }
     public getListMoves(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): MGPMap<TablutMove, TablutPartSlice> {
-        const localVerbose = false;
-        if (TablutRules.VERBOSE || localVerbose) {
+        const LOCAL_VERBOSE: boolean = false;
+        if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
             console.log('get list move available to ');
             console.log(n);
         }
@@ -567,7 +566,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
 
         const listMoves: TablutMove[] =
             TablutRules.getPlayerListMoves(currentPlayer, invaderStart, currentBoard);
-        if (TablutRules.VERBOSE || localVerbose) {
+        if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
             console.log({listMoves});
         }
         const nextTurn: number = currentTurn + 1;
@@ -580,7 +579,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             if (moveResult === TablutRules.SUCCESS) {
                 newPartSlice = new TablutPartSlice(currentBoard, nextTurn, currentPartSlice.invaderStart);
                 listCombinaison.put(newMove, newPartSlice);
-            } else if (TablutRules.VERBOSE || localVerbose) {
+            } else if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                 console.log('how is it that I receive a moveResult == to '
                     + moveResult + ' with ' + newMove + ' at turn ' + currentTurn + ' of player ' + currentPlayer);
             }

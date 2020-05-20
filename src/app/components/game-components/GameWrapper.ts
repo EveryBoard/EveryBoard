@@ -22,7 +22,7 @@ import { SaharaComponent } from './sahara/sahara.component';
 
 export abstract class GameWrapper {
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     // component loading
     @ViewChild(GameIncluderComponent, {static: false})
@@ -121,7 +121,8 @@ export abstract class GameWrapper {
             return false;
         }
         if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData says: about to call Rules.isLegal");
-        if (!this.gameComponent.rules.isLegal(move, slice)) {
+        const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
+        if (!legality) {
             if (GameWrapper.VERBOSE) {
                 console.log('GameWrapper.receiveChildData says: move illegal');
             }
@@ -130,7 +131,7 @@ export abstract class GameWrapper {
         if (GameWrapper.VERBOSE) {
             console.log('GameWrapper.receiveChildData says: board about to update');
         }
-        const validMoveResult: boolean = this.gameComponent.rules.isLegal(move, slice).legal;
+        const validMoveResult: boolean = legality.legal;
         if (!validMoveResult) {
             if (GameWrapper.VERBOSE) {
                 console.log('GameWrapper.receiveChildData says: move is illegal, not going to transmit that');

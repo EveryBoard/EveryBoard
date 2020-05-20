@@ -25,7 +25,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     }
     // statics fields:
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     // statics methods:
 

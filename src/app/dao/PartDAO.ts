@@ -12,7 +12,7 @@ import { environment } from "src/environments/environment";
 })
 export class PartDAO extends FirebaseFirestoreDAO<ICurrentPart, PICurrentPart> {
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     constructor(protected afs: AngularFirestore) {
         super("parties", afs);

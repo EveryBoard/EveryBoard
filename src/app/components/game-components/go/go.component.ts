@@ -12,14 +12,11 @@ import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 })
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public scores: number[] = [0, 0];
 
     public rules = new GoRules();
-
-    public imagesLocation = 'assets/images/'; // en prod
-    // imagesLocation = 'src/assets/images/'; // en dev
 
     public koX = -1;
     public koY = -1;
@@ -34,13 +31,14 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.showScore = true;
     }
 
-    public onClick(x: number, y: number) {
-        console.log("salut " + x + "-" + y);
+    public onClick(x: number, y: number): boolean {
+        if (GoComponent.VERBOSE) console.log("salut " + x + "-" + y);
         this.lastX = -1; this.lastY = -1; // now the user stop try to do a move
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
         const result: boolean = this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
-        console.log("this.chooseMove said : " + result);
+        if (GoComponent.VERBOSE) console.log("this.chooseMove said : " + result);
+        return result;
     }
     public decodeMove(encodedMove: number): GoMove {
         return GoMove.decode(encodedMove);
@@ -73,7 +71,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         }
         this.canPass = phase !== Phase.COUNTING;
     }
-    public pass() {
-        this.onClick(GoMove.pass.coord.x, GoMove.pass.coord.y);
+    public pass(): boolean {
+        return this.onClick(GoMove.pass.coord.x, GoMove.pass.coord.y);
     }
 }

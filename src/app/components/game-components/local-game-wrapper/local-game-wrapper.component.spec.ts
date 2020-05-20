@@ -8,7 +8,6 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { UserService } from 'src/app/services/user/UserService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule } from 'src/app/app.module';
-import { By } from '@angular/platform-browser';
 
 const activatedRouteStub = {
     snapshot: {

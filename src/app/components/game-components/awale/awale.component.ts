@@ -38,7 +38,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         return AwaleMove.decode(encodedMove);
     }
     public encodeMove(move: AwaleMove): number {
-        return move.encode();
+        return AwaleMove.encode(move);
     }
     public updateBoard(): void {
         const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice;

@@ -7,7 +7,7 @@ import { AuthenticationService } from '../services/authentication/Authentication
 })
 export class EmailVerified implements CanActivate {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     constructor(private authService: AuthenticationService, private router : Router) {
     }

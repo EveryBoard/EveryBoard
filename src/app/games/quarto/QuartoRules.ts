@@ -9,8 +9,8 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 class CaseSensible {
 
     criteres: Critere[];
-    // listes des critères qu'il faut remplir dans cette case pour gagner
-    // si la pièce en main match un de ces critères, c'est une pré-victoire
+    // listes des critï¿½res qu'il faut remplir dans cette case pour gagner
+    // si la piï¿½ce en main match un de ces critï¿½res, c'est une prï¿½-victoire
     x: number;
     y: number;
 
@@ -24,16 +24,16 @@ class CaseSensible {
     }
 
     addCritere(c: Critere): boolean {
-        // rajoute le critère au cas oÃ¹ plusieurs lignes contiennent cette case sensible (de 1 Ã  3)
+        // rajoute le critï¿½re au cas oÃ¹ plusieurs lignes contiennent cette case sensible (de 1 Ã  3)
         // sans doublons
-        // return true si le critère a été ajouté
+        // return true si le critï¿½re a ï¿½tï¿½ ajoutï¿½
         const i: number = this.indexOf(c);
         if (i > 0) {
-            // pas ajouté, compté en double
+            // pas ajoutï¿½, comptï¿½ en double
             return false;
         }
         if (i === 3) {
-            throw new Error('CECI EST IMPOSSIBLE, on a rajouté trop d\'éléments dans cette CaseSensible'); // TODO enlever ce débug
+            throw new Error('CECI EST IMPOSSIBLE, on a rajoutï¿½ trop d\'ï¿½lï¿½ments dans cette CaseSensible'); // TODO enlever ce dï¿½bug
         }
         this.criteres[-i - 1] = c;
         return true;
@@ -41,7 +41,7 @@ class CaseSensible {
 
     indexOf(c: Critere): number {
         // TODO Critere.contains
-        // voit si ce critère est déjÃ  contenu dans la liste
+        // voit si ce critï¿½re est dï¿½jÃ  contenu dans la liste
         // retourne l'index de c si il le trouve
         // retourne l'index de l'endroit ou on pourrait le mettre si il n'est pas dedans
         let i: number;
@@ -59,15 +59,15 @@ class CaseSensible {
 }
 
 class Critere {
-    /* Un critère est une liste sous-critères Boolean, donc trois valeurs possibles, True, False, Null
-     * False veut dire qu'il faut avoir une valeur spécifique (Grand, par exemple), True son opposé (Petit)
-     * Null veut dire que ce critère a déjÃ  été 'neutralisé'/'pacifié' (si une ligne contient un Grand et un Petit pion, par exemple)
+    /* Un critï¿½re est une liste sous-critï¿½res Boolean, donc trois valeurs possibles, True, False, Null
+     * False veut dire qu'il faut avoir une valeur spï¿½cifique (Grand, par exemple), True son opposï¿½ (Petit)
+     * Null veut dire que ce critï¿½re a dï¿½jÃ  ï¿½tï¿½ 'neutralisï¿½'/'pacifiï¿½' (si une ligne contient un Grand et un Petit pion, par exemple)
      */
 
     readonly subCritere: boolean[] = [null, null, null, null];
 
     constructor(bCase: number) {
-        // un critère est initialisé avec une case, il en prend la valeur
+        // un critï¿½re est initialisï¿½ avec une case, il en prend la valeur
         this.subCritere[0] = ((bCase & 8) === 8) ? true : false;
         this.subCritere[1] = ((bCase & 4) === 4) ? true : false;
         this.subCritere[2] = ((bCase & 2) === 2) ? true : false;
@@ -76,8 +76,8 @@ class Critere {
 
     setSubCrit(index: number, value: boolean): boolean {
         this.subCritere[index] = value;
-        return true; // TODO vérifier si j'ai un intérÃªt Ã  garder ceci
-        // pour l'instant Ã§a me permet de pouvoir vérifier si il n'y a pas écrasement ou donnée
+        return true; // TODO vï¿½rifier si j'ai un intï¿½rÃªt Ã  garder ceci
+        // pour l'instant Ã§a me permet de pouvoir vï¿½rifier si il n'y a pas ï¿½crasement ou donnï¿½e
         // mais je crois que c'est impossible vu l'usage que je compte en faire
     }
 
@@ -107,12 +107,12 @@ class Critere {
         let nonNull = 4;
         do {
             if (this.subCritere[i] !== c.subCritere[i]) {
-                // si la case représentée par C et cette case ci sont différentes
-                // sur leurs i'ième critère respectifs, alors il n'y a pas de critère en commun (NULL)
+                // si la case reprï¿½sentï¿½e par C et cette case ci sont diffï¿½rentes
+                // sur leurs i'iï¿½me critï¿½re respectifs, alors il n'y a pas de critï¿½re en commun (NULL)
                 this.subCritere[i] = null;
             }
             if (this.subCritere[i] == null) {
-                // si après ceci le i'ième critère de cette représentation est NULL, alors il perd un critère
+                // si aprï¿½s ceci le i'iï¿½me critï¿½re de cette reprï¿½sentation est NULL, alors il perd un critï¿½re
                 nonNull--;
             }
             i++;
@@ -179,7 +179,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         return {resultingSlice, resultingMove: move};
     } // TODO majeur bug : bloquer les undefined et null comme valeur de move !!
 
-    static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     private static readonly INVALID_MOVE = -1; // TODO: mettre en commun avec Legality
 
@@ -198,7 +198,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
 
         [0, 0, 1, 1], // les diagonales
         [0, 3, 1, -1]]; // {cx, cy, dx, dy}
-    // c (x, y) est la coordonnées de la première case
+    // c (x, y) est la coordonnï¿½es de la premiï¿½re case
     // d (x, y) est la direction de la ligne en question
 
     public node: MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>;
@@ -226,31 +226,31 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         const board: number[][] = quartoPartSlice.getCopiedBoard();
         const pieceInHand: number = quartoPartSlice.pieceInHand;
         if (chosenPiece < 0) {
-            // nombre trop bas, ce n'est pas une pièce
+            // nombre trop bas, ce n'est pas une piï¿½ce
             return QuartoRules.INVALID_MOVE;
         }
         if (chosenPiece > 16) {
             if (QuartoRules.VERBOSE) { console.log(); }
-            // nombre trop grand, ce n'est pas une pièce
+            // nombre trop grand, ce n'est pas une piï¿½ce
             return QuartoRules.INVALID_MOVE;
         }
         if (QuartoRules.isOccupied(board[y][x])) {
-            // on ne joue pas sur une case occupée
+            // on ne joue pas sur une case occupï¿½e
             return QuartoRules.INVALID_MOVE;
         }
         if (chosenPiece === 16) {
             if (quartoPartSlice.turn === 15) {
-                // on doit donner une pièce ! sauf au dernier tour
+                // on doit donner une piï¿½ce ! sauf au dernier tour
                 return QuartoRules.VALID_MOVE;
             }
             return QuartoRules.INVALID_MOVE;
         }
         if (!QuartoPartSlice.isPlacable(chosenPiece, board)) {
-            // la piece est déjÃ  sur le plateau
+            // la piece est dï¿½jÃ  sur le plateau
             return QuartoRules.INVALID_MOVE;
         }
         if (pieceInHand === chosenPiece) {
-            // la pièce donnée est la mÃªme que celle en main, c'est illégal
+            // la piï¿½ce donnï¿½e est la mÃªme que celle en main, c'est illï¿½gal
             return QuartoRules.INVALID_MOVE;
         }
         return QuartoRules.VALID_MOVE;
@@ -298,11 +298,11 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
             for (let x = 0; x < 4; x++) {
                 if (board[y][x] === QuartoEnum.UNOCCUPIED) {
                     // Pour chaque cases vides
-                    for (const remainingPiece of pawns) { // piece est la pièce qu'on va donner
+                    for (const remainingPiece of pawns) { // piece est la piï¿½ce qu'on va donner
                         nextBoard = slice.getCopiedBoard();
-                        nextBoard[y][x] = inHand; // on place la pièce qu'on a en main en (x, y)
+                        nextBoard[y][x] = inHand; // on place la piï¿½ce qu'on a en main en (x, y)
 
-                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthèse du mouvement listé
+                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthï¿½se du mouvement listï¿½
                         moveAppliedPartSlice = new QuartoPartSlice(nextBoard, nextTurn, remainingPiece); // plateau obtenu
 
                         listMoves.put(move, moveAppliedPartSlice);
@@ -327,8 +327,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         let nbCasesSensibles = 0;
         let cs: CaseSensible;
         let commonCrit: Critere;
-        let score = 0; // valeur par défaut
-        let preVictory = false; // nous permet d'éviter des vérifications inutiles
+        let score = 0; // valeur par dï¿½faut
+        let preVictory = false; // nous permet d'ï¿½viter des vï¿½rifications inutiles
 
         // console.log('testons le plateau');
         for (const line of QuartoRules.lines) {
@@ -338,11 +338,11 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
             dx = line[2];
             dy = line[3];
             nbCasesVides = 0;
-            commonCrit = null; // null jusqu'Ã  avoir trouvé une case, après celle ci deviendra le critère
+            commonCrit = null; // null jusqu'Ã  avoir trouvï¿½ une case, aprï¿½s celle ci deviendra le critï¿½re
             if (preVictory) {
-                // si on a trouvé une pré-victoire
-                // la seule chose susceptible de changer le résultat total est une victoire
-                let i = 0; // index de la case testée
+                // si on a trouvï¿½ une prï¿½-victoire
+                // la seule chose susceptible de changer le rï¿½sultat total est une victoire
+                let i = 0; // index de la case testï¿½e
                 c = board[cy][cx];
                 commonCrit = new Critere(c);
                 while (QuartoRules.isOccupied(c) && !commonCrit.isAllNull() && (i < 3)) {
@@ -358,24 +358,24 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                     return (quartoSlice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
                 }
             } else {
-                // on cherche pour une victoire, pré victoire, ou un score normal
-                cs = null; // la première case vide
+                // on cherche pour une victoire, prï¿½ victoire, ou un score normal
+                cs = null; // la premiï¿½re case vide
 
                 for (let i = 0; i < 4; i++, cy += dy, cx += dx) {
                     c = board[cy][cx];
                     // on analyse toute la ligne
                     if (c === QuartoEnum.UNOCCUPIED) {
-                        // si la case C est inoccupée
+                        // si la case C est inoccupï¿½e
                         nbCasesVides++;
                         if (cs == null) {
                             cs = new CaseSensible(cx, cy);
                         }
                     } else {
-                        // si la case est occupée
+                        // si la case est occupï¿½e
                         // console.log('Node : ' + node);
                         // console.log('board : ' + Arrays.toString(board[0]) + Arrays.toString(board[1]) + Arrays.toString(board[2])
                         // + Arrays.toString(board[3]));
-                        // console.log('case occupée en ' + cx + ', ' + cy + ' qui contient ' + c);
+                        // console.log('case occupï¿½e en ' + cx + ', ' + cy + ' qui contient ' + c);
                         if (commonCrit == null) {
                             if (QuartoRules.VERBOSE) {
                                 console.log('setcase vide en (' + cx + ', ' + cy + ') = ' + c);
@@ -401,13 +401,13 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                 }
 
 
-                // on a maintenant traité l'entierté de la ligne
+                // on a maintenant traitï¿½ l'entiertï¿½ de la ligne
                 // on en fait le bilan
                 // if (!commonCrit.isAllNull()) { OLD
                 if ((commonCrit !== null) && (!commonCrit.isAllNull())) {
                     // NEW
-                    // Cette ligne n'est pas nulle et elle a un critère en commun entre toutes ses pièces
-                    // console.log('Cette ligne n'est pas nulle et elle a un critère en commun entre toutes ses pièces');
+                    // Cette ligne n'est pas nulle et elle a un critï¿½re en commun entre toutes ses piï¿½ces
+                    // console.log('Cette ligne n'est pas nulle et elle a un critï¿½re en commun entre toutes ses piï¿½ces');
                     if (nbCasesVides === 0) {
                         if (QuartoRules.VERBOSE) {
                             console.log('Victoire! ' + commonCrit.toString() + ' at line' + QuartoRules.printArray(line));
@@ -418,11 +418,11 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         }
                         return (quartoSlice.turn % 2 === 0) ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER; // max or min
                     } else if (nbCasesVides === 1) {
-                        // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouvé et assigné
+                        // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouvï¿½ et assignï¿½
                         // est dans ce cas bel et bien une case sensible
                         if (commonCrit.matchInt(quartoSlice.pieceInHand)) {
                             if (QuartoRules.VERBOSE) {
-                                console.log('Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
+                                console.log('Prï¿½-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
                             }
                             preVictory = true;
                             score = (quartoSlice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;

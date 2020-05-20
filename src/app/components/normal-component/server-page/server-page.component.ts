@@ -17,7 +17,7 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 })
 export class ServerPageComponent implements OnInit, OnDestroy {
 
-    static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public activesParts: ICurrentPartId[];
 

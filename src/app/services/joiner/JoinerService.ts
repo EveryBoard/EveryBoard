@@ -48,62 +48,45 @@ export class JoinerService {
             return this.joinerDao.update(partId, {candidatesNames: joinerList});
         }
     }
-    public cancelJoining(userName: string): Promise<void> {
+    public async cancelJoining(userName: string): Promise<void> {
         if (JoinerService.VERBOSE) {
             console.log('JoinerService.cancelJoining(' + userName + '); this.followedJoinerId =' + this.followedJoinerId);
         }
-        return new Promise((resolve, reject) => {
-            if (this.followedJoinerId == null) {
-                console.log('cannot cancel joining when not following a joiner');
-                reject();
-            } else {
-                this.joinerDao
-                    .read(this.followedJoinerId)
-                    .then(joiner => {
-                        if (joiner == null) {
-                            reject(joiner);
-                        } else {
-                            const joinersList: string[] = joiner.candidatesNames;
-                            const indexLeaver = joinersList.indexOf(userName);
-                            let chosenPlayer = joiner.chosenPlayer;
-                            let partStatus = joiner.partStatus;
-                            if (indexLeaver >= 0) {
-                                joinersList.splice(indexLeaver, 1);
-                            }
-                            if (joiner.chosenPlayer === userName) {
-                                // if the chosenPlayer leave, we're back to partStatus 0 (waiting for a chosenPlayer)
-                                chosenPlayer = '';
-                                partStatus = 0;
-                            }
-                            const modification: PIJoiner = {
-                                chosenPlayer: chosenPlayer,
-                                partStatus: partStatus,
-                                candidatesNames: joinersList
-                            };
-                            this.joinerDao
-                                .update(this.followedJoinerId, modification)
-                                .then(onFullFilled => resolve(onFullFilled))
-                                .catch(onRejected => reject(onRejected));
-                        }
-                    })
-                    .catch(onRejected => reject(onRejected));
+        if (this.followedJoinerId == null) {
+            throw new Error('cannot cancel joining when not following a joiner');
+        }
+        const joiner: IJoiner = await this.joinerDao.read(this.followedJoinerId);
+        if (joiner == null) {
+            throw new Error('DAO Did not found a joiner with id ' + this.followedJoinerId);
+        } else {
+            const joinersList: string[] = joiner.candidatesNames;
+            const indexLeaver = joinersList.indexOf(userName);
+            let chosenPlayer = joiner.chosenPlayer;
+            let partStatus = joiner.partStatus;
+            if (indexLeaver >= 0) {
+                joinersList.splice(indexLeaver, 1);
             }
-        });
+            if (joiner.chosenPlayer === userName) {
+                // if the chosenPlayer leave, we're back to partStatus 0 (waiting for a chosenPlayer)
+                chosenPlayer = '';
+                partStatus = 0;
+            }
+            const modification: PIJoiner = {
+                chosenPlayer: chosenPlayer,
+                partStatus: partStatus,
+                candidatesNames: joinersList
+            };
+            await this.joinerDao.update(this.followedJoinerId, modification);
+        }
     }
-    public deleteJoiner(): Promise<void> {
+    public async deleteJoiner(): Promise<void> {
         if (JoinerService.VERBOSE) {
             console.log('JoinerService.deleteJoiner(); this.followedJoinerId = ' + this.followedJoinerId);
         }
-        return new Promise((resolve, reject) => {
-            if (this.followedJoinerId == null) {
-                console.log('followed joiner id is null');
-                reject();
-            }
-            this.joinerDao
-                .delete(this.followedJoinerId)
-                .then(onFullFilled => resolve(onFullFilled))
-                .catch(onRejected => reject(onRejected));
-        });
+        if (this.followedJoinerId == null) {
+            throw new Error('followed joiner id is null');
+        }
+        return this.joinerDao.delete(this.followedJoinerId);
     }
     public async setChosenPlayer(chosenPlayerPseudo: string): Promise<void> {
         if (JoinerService.VERBOSE) {
