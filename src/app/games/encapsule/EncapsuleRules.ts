@@ -22,7 +22,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         [ new Coord(0, 2), new Coord(1, 1), new Coord(2, 0)]
     ];
     constructor() {
-        super();
+        super(false);
         this.node = MNode.getFirstNode(
             EncapsulePartSlice.getStartingSlice(),
             this);

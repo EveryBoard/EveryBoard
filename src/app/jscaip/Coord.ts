@@ -108,6 +108,15 @@ export class Coord {
         if (this.y !== obj.y) return false;
         return true;
     }
+    public compareTo(c: Coord): number {
+        if (c.x === this.x) {
+            if (c.y === this.y) {
+                return 0;
+            }
+            return c.y < this.y ? -1 : 1;
+        }
+        return c.x < this.x ? -1 : 1;
+    }
     public toString(): string {
         return '(' + this.x + ', ' + this.y + ')';
     }

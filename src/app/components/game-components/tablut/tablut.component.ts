@@ -18,7 +18,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
 
-    public UNOCCUPIED = 0; // TODO: CONSTANTIFY
+    public UNOCCUPIED = TablutPartSlice.UNOCCUPIED;
 
     public moving: Coord = new Coord(-1, -1); // coord of the piece who left
 

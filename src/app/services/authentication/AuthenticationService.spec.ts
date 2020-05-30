@@ -4,6 +4,7 @@ import { AuthenticationService } from './AuthenticationService';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { of } from 'rxjs';
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 const afAuth = {
     authState: of(null),
@@ -16,6 +17,7 @@ describe('AuthenticationService', () => {
 
     beforeAll(() => {
         AuthenticationService.IN_TESTING = true;
+        AuthenticationService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
     });
     beforeEach(() => {
         service = new AuthenticationService(afAuth as AngularFireAuth, afs as AngularFirestore);

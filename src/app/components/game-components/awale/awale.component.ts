@@ -16,8 +16,6 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
     public scores: number[] = [0, 0];
 
-    public imagesLocation = 'assets/images/';
-
     public last: Coord = new Coord(-1, -1);
 
     constructor() {

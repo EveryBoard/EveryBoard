@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { UserService } from 'src/app/services/user/UserService';
 import { ActivatedRoute } from '@angular/router';
-import { AppModule } from 'src/app/app.module';
+import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 const activatedRouteStub = {
     snapshot: {
@@ -31,6 +31,9 @@ describe('LocalGameWrapperComponent', () => {
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
+    beforeAll(() => {
+        LocalGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [

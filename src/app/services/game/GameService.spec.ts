@@ -7,6 +7,7 @@ import { JoinerService } from '../joiner/JoinerService';
 import { ChatService } from '../chat/ChatService';
 import { of } from 'rxjs';
 import { ICurrentPartId } from 'src/app/domain/icurrentpart';
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 const partDaoStub = {
 
@@ -30,6 +31,7 @@ describe('GameService', () => {
 
     beforeAll(() => {
         GameService.IN_TESTING = true;
+        GameService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
     });
     beforeEach(() => {
         service = new GameService(partDaoStub as PartDAO,

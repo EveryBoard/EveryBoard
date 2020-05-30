@@ -259,7 +259,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     // Overrides :
 
     constructor() {
-        super();
+        super(false);
         this.node = MNode.getFirstNode(
             new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA),
             this

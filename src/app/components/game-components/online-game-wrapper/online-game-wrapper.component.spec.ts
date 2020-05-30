@@ -8,7 +8,7 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { GameService } from 'src/app/services/game/GameService';
 import { UserService } from 'src/app/services/user/UserService';
 import { JoinerService } from 'src/app/services/joiner/JoinerService';
-import { AppModule } from 'src/app/app.module';
+import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { ActivatedRoute } from '@angular/router';
 import { IChatId } from 'src/app/domain/ichat';
 import { ChatService } from 'src/app/services/chat/ChatService';
@@ -101,6 +101,9 @@ describe('OnlineGameWrapperComponent', () => {
 
     let component: OnlineGameWrapperComponent;
 
+    beforeAll(() => {
+        OnlineGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
     beforeEach(async(async () => {
         await TestBed.configureTestingModule({
             imports: [

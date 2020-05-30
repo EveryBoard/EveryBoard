@@ -32,4 +32,9 @@ export class MGPMap<K extends Comparable, V> {
     public size(): number {
         return this.map.length;
     }
+    public listKeys(): K[] {
+        return this.map.map((entry: {key: K, value: V}) => {
+            return entry.key
+        });
+    }
 }

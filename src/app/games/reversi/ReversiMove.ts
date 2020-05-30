@@ -2,7 +2,7 @@ import { MoveCoord } from "src/app/jscaip/MoveCoord";
 
 export class ReversiMove extends MoveCoord {
 
-    static readonly pass: ReversiMove = new ReversiMove(-1, 1);
+    static readonly pass: ReversiMove = new ReversiMove(-1, 1); // TODO: make correctly encodable, with same rules
 
     static readonly passNumber: number = -1;
 

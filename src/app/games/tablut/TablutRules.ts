@@ -538,7 +538,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return listMoves;
     }
     constructor() {
-        super();
+        super(false);
         this.node = MNode.getFirstNode(
             new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true),
             this

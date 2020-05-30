@@ -15,7 +15,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     public static VERBOSE: boolean = false;
 
     constructor() {
-        super();
+        super(false);
         this.node = MNode.getFirstNode(
             new AwalePartSlice(AwalePartSlice.getStartingBoard(), 0, [0, 0]),
             this

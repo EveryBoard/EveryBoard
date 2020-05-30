@@ -2,7 +2,6 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ServerPageComponent } from './server-page.component';
 
-import { AppModule } from 'src/app/app.module';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { of, Observable } from 'rxjs';
@@ -11,13 +10,12 @@ import { GameService } from 'src/app/services/game/GameService';
 import { ICurrentPartId } from 'src/app/domain/icurrentpart';
 import { ChatService } from 'src/app/services/chat/ChatService';
 import { IChatId } from 'src/app/domain/ichat';
-import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { By } from '@angular/platform-browser';
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatTabsModule } from '@angular/material';
-import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
-import { componentFactoryName } from '@angular/compiler';
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 const userServiceStub = {
     getActivesUsersObs: () => of([]),
@@ -72,6 +70,9 @@ describe('ServerPageComponent', () => {
 
     let fixture: ComponentFixture<ServerPageComponent>;
 
+    beforeAll(() => {
+        ServerPageComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [

@@ -2,6 +2,6 @@
      width="500px" height="500px"
      viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
     <circle cx="250" cy="250" r="245"
-            style="fill:#fffff;stroke:black;stroke-width:10px;"
+            style="fill:#ffffff; stroke:black; stroke-width:10px;"
     />
 </svg>

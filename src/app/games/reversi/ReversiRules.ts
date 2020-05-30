@@ -15,7 +15,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
     public static VERBOSE: boolean = false;
 
     constructor() {
-        super();
+        super(false);
         this.node = MNode.getFirstNode(
             new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
             this

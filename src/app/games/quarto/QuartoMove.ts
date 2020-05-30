@@ -13,7 +13,6 @@ export class QuartoMove extends MoveCoord {
         this.piece = piece;
 
     }
-
     public encode(): number {
         /* x va de 0 à 3
          * y va de 0 à 3
@@ -24,8 +23,7 @@ export class QuartoMove extends MoveCoord {
         const p: number = this.piece;
         return (x * 128) + (y * 32) + p;
     }
-
-    static decode(encodedMove: number): QuartoMove {
+    public static decode(encodedMove: number): QuartoMove {
         // traduit en UN entier le pion choisis, encodé sous la forme binaire
         // xx yy ppppp
         const piece: number = encodedMove % 32; // résultat de 0 à 16
@@ -37,18 +35,15 @@ export class QuartoMove extends MoveCoord {
         const x: number = encodedMove;
         return new QuartoMove(x, y, piece);
     }
-
     public decode(xyp: number): QuartoMove {
         return QuartoMove.decode(xyp);
     }
-
     public toString(): String {
         return 'QuartoMove{' + 'piece=' + this.piece
                              + ' at (' + this.coord.x
                              + ', ' + this.coord.y +
                 ')}';
     }
-
     public equals(o: any): boolean {
         if (this === o) return true;
         if (!(o instanceof QuartoMove)) return false;

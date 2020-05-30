@@ -7,8 +7,10 @@ import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { UserService } from 'src/app/services/user/UserService';
 import { ActivatedRoute } from '@angular/router';
-import { AppModule } from 'src/app/app.module';
+import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { GoRules } from 'src/app/games/go/GoRules';
+import { GameWrapper } from '../GameWrapper';
 
 const activatedRouteStub = {
     snapshot: {
@@ -34,6 +36,9 @@ describe('GoComponent', () => {
 
     let gameComponent: GoComponent;
 
+    beforeAll(() => {
+        GoComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -57,7 +62,13 @@ describe('GoComponent', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("GoComponent should be created");
     });
-    it('should allow to pass as well ', () => {
-        expect(gameComponent.pass()).toBeTruthy();
+    it('should allow to pass twice, then use "pass" as the method to "accept"', () => {
+        expect(gameComponent.pass()).toBeTruthy(0); // Passed
+        expect(gameComponent.pass()).toBeTruthy(1); // Counting
+        expect(gameComponent.pass()).toBeTruthy(2); // Accept
+
+        expect(gameComponent.pass()).toBeTruthy(3); // Finished
+
+        expect(gameComponent.pass()).toBeFalsy(4);
     });
 });

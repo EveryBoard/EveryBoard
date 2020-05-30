@@ -50,7 +50,7 @@ import { InscriptionComponent } from './components/normal-component/inscription/
 import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 
-export const INCLUDE_VERBOSE_LINE_IN_TEST = true;
+export const INCLUDE_VERBOSE_LINE_IN_TEST = false;
 
 const routes: Route [] = [
     {path: 'login',               component: LoginComponent},

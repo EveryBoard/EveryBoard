@@ -1,31 +1,34 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {Coord} from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 
 export enum Pawn { // TODO: delete class, replace by GoPiece
-    BLACK = 0,
-    WHITE,
-    EMPTY,
-    DEAD_BLACK,
-    DEAD_WHITE
+    BLACK = Player.ZERO.value,
+    WHITE = Player.ONE.value,
+    EMPTY = Player.NONE.value,
+    DEAD_BLACK = 3,
+    DEAD_WHITE = 4
 }
 export class GoPiece {
 
-    public static pieceBelongTo(piece: Pawn, owner: number): boolean {
-        if (owner === 0) {
+    public static pieceBelongTo(piece: Pawn, owner: Player): boolean {
+        if (owner.value === Player.ZERO.value) {
             return piece === Pawn.BLACK ||
                    piece === Pawn.DEAD_BLACK;
         }
-        if (owner === 1) {
-            return piece === Pawn.BLACK ||
-                   piece === Pawn.DEAD_BLACK;
+        if (owner.value === Player.ONE.value) {
+            return piece === Pawn.WHITE ||
+                   piece === Pawn.DEAD_WHITE;
         }
         throw new Error("Owner must be 0 or 1, got " + owner);
     }
 }
 export enum Phase {
-    PLAYING  = "G",
-    PASSED   = "P",
-    COUNTING = "C"
+    PLAYING  = "PLAYING",
+    PASSED   = "PASSED",
+    COUNTING = "COUNTING",
+    ACCEPT   = "ACCEPT",
+    FINISHED = "FINISHED"
 }
 
 export class GoPartSlice extends GamePartSlice {

@@ -17,7 +17,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
     public static VERBOSE: boolean = false;
 
     constructor() {
-        super();
+        super(false);
         this.setInitialBoard();
     }
     public getListMoves(node: SaharaNode): MGPMap<SaharaMove, SaharaPartSlice> {

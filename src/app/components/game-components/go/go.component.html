@@ -1,26 +1,53 @@
-<table>
-    <tr style="margin:0; padding:0;"
-        *ngFor="let line of board; index as y;">
-        <td *ngFor="let caseContent of line; index as x;"
-            style="position:relative;"
-            (click)="onClick(x, y)">
-            <img width="20"
-                 id="{{ 't'+y+'_'+x }}"
-                 alt=":{{ caseContent }}:"
-                 [src]="imagesLocation + 'go/' + caseContent + '.svg'"/>
-            <img *ngIf="lastX === x && lastY === y"
-                 width="20"
-                 id="{{ 'u'+y+'_'+x }}"
-                 alt=":{{ caseContent }}:"
-                 [src]="imagesLocation + 'highlight.svg'"
-                 style="position:absolute; top:0; left:0;" />
-             <img *ngIf="koX === x && koY === y"
-                  width="20"
-                  alt="ko"
-                  [src]="imagesLocation + 'go/ko.svg'"
-                  style="position:absolute; top:0; left:0;" />
-        </td>
-    </tr>
-</table>
-{{ rules.countBoardScore(rules.node.gamePartSlice) }}<br/>
-{{ rules.node.gamePartSlice.toString() }}<br/>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="500px" height="500px"
+     viewBox="0 0 500 500"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of board; index as y;">
+        <g *ngFor="let caseContent of line; index as x;">
+            <g *ngIf="caseIsFull(x, y) else empty">
+                <circle *ngIf="getCaseColor(x, y) === 'black' else white"
+                        [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
+                        stroke="black"
+                        style="fill:darkgrey; stroke-width: 5px;"
+                        (click)="onClick(x, y);"/>
+                <ng-template #white>
+                    <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
+                            stroke="black"
+                            style="fill:white; stroke-width: 5px;"
+                            (click)="onClick(x, y);" />
+                </ng-template>
+                <circle *ngIf="isLastCase(x, y)"
+                        [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
+                        stroke="yellow"
+                        style="fill: none; stroke-width: 5px;" />
+                <line *ngIf="isDead(x, y)"
+                      (click)="onClick(x, y);"
+                      [attr.x1]="50*x"      [attr.y1]="50*y"
+                      [attr.x2]="50 + 50*x" [attr.y2]="50 + 50*y"
+                      style="stroke: red; stroke-width: 5px;"/>
+            </g>
+            <ng-template #empty>
+                <rect width="50" height="50"
+                      [attr.x]="50*x" [attr.y]="50*y"
+                      fill="white"
+                      (click)="onClick(x, y);"/>
+                <line [attr.x1]="50*x" [attr.y1]="25 + 50*y"
+                      [attr.x2]="50 + 50*x" [attr.y2]="25 + 50*y"
+                      style="fill:#ffffff; stroke:black; stroke-width: 5px;"
+                      (click)="onClick(x, y);"/>
+                <line [attr.x1]="25 + 50*x" [attr.y1]="50*y"
+                      [attr.x2]="25 + 50*x" [attr.y2]="50 + 50*y"
+                      style="fill:#ffffff; stroke:black; stroke-width: 5px;" 
+                      (click)="onClick(x, y);"/>
+                <rect *ngIf="isKo(x, y);"
+                      width="30" height="30"
+                      [attr.x]="10 + 50*x" [attr.y]="10 + 50*y"
+                      style="fill:none; stroke:red; stroke-width: 5px;" />
+            </ng-template>
+        </g>
+    </g>
+</svg>
+<br/>
+{{ rules.countBoardScore(rules.node.gamePartSlice) }} <br/>
+{{ "last: (" + last.x + ", " + last.y +")" }} <br/>
+{{ rules.node.gamePartSlice.phase }}

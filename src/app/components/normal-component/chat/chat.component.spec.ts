@@ -9,6 +9,7 @@ import { ChatService } from 'src/app/services/chat/ChatService';
 import { MatListModule, MatIconModule, MatInputModule } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { IChatId } from 'src/app/domain/ichat';
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 class ChatServiceMock {
 
@@ -48,6 +49,9 @@ describe('ChatComponent', () => {
 
     let authenticationService: AuthenticationService;
 
+    beforeAll(() => {
+        ChatComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             imports: [

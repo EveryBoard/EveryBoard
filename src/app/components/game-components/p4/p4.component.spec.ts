@@ -1,6 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { P4Component } from './p4.component';
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 describe('P4Component', () => {
 
@@ -8,6 +9,9 @@ describe('P4Component', () => {
 
     let fixture: ComponentFixture<P4Component>;
 
+    beforeAll(() => {
+        P4Component.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+    });
     beforeEach(async(() => {
         TestBed.configureTestingModule({
             declarations: [P4Component]

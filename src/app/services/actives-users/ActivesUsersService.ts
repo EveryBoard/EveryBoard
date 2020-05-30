@@ -11,6 +11,7 @@ import { environment } from 'src/environments/environment';
 export class ActivesUsersService {
 
     public static VERBOSE: boolean = false;
+
     public static IN_TESTING: boolean = false;
 
     private activesUsersBS = new BehaviorSubject<IJoueurId[]>([]);

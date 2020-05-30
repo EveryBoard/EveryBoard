@@ -20,7 +20,7 @@ export class SiamRules extends _SiamRules {
     private static readonly ILLEGAL: SiamLegalityStatus = {legal: false, resultingBoard: null};
 
     constructor() {
-        super();
+        super(false);
         this.node = MNode.getFirstNode(
             new SiamPartSlice(SiamPartSlice.getStartingBoard(), 0),
             this
