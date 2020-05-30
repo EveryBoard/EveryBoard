@@ -369,7 +369,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
     }
     private static getAbsoluteOwner(c: Coord, invaderStart: boolean, board: ReadonlyArray<ReadonlyArray<number>>): -1 | 0 | 1 {
         const case_c: number = board[c.y][c.x];
-        let owner: -1 | 0 | 1;
+        let owner: -1 | 0 | 1; // TODO replace by Player class
         switch (case_c) {
             case TablutPartSlice.PLAYER_ZERO_KING:
                 owner = 0;

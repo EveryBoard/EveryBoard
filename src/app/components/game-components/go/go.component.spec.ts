@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { GoComponent } from './go.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
@@ -9,8 +9,6 @@ import { UserService } from 'src/app/services/user/UserService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
-import { GoRules } from 'src/app/games/go/GoRules';
-import { GameWrapper } from '../GameWrapper';
 
 const activatedRouteStub = {
     snapshot: {

@@ -38,9 +38,9 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
         this.cancelMove();
     }
-    public onClick(x: number, y: number) {
+    public onClick(x: number, y: number): boolean {
         if (TablutComponent.VERBOSE) {
-            console.log('onClick');
+            console.log("TablutComponent.onClick(" + x + ", " + y + ")");
         }
         let success: boolean;
         if (this.chosen.x === -1) {
@@ -51,9 +51,10 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         if (!success) {
             this.cancelMove();
         }
+        return success;
     }
     private chooseDestination(x: number, y: number): boolean {
-        if (TablutComponent.VERBOSE) console.log('chooseDestination');
+        if (TablutComponent.VERBOSE) console.log('TablutComponent.chooseDestination');
 
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
@@ -62,11 +63,13 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     }
     public choosePiece(x: number, y: number): boolean {
 
-        if (TablutComponent.VERBOSE) console.log('choosePiece');
+        if (TablutComponent.VERBOSE) console.log('TablutComponent.choosePiece');
 
         if (this.rules.node.isEndGame()) {
             if (TablutComponent.VERBOSE) console.log('la partie est finie');
             return false;
+        } else { // TODO: action double non ?
+            if (TablutComponent.VERBOSE) console.log('la partie est en court');
         }
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
