@@ -10,7 +10,7 @@ describe('CountDownComponent', () => {
     let fixture: ComponentFixture<CountDownComponent>;
 
     beforeAll(() => {
-        CountDownComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        CountDownComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || CountDownComponent.VERBOSE;
     });
     beforeEach(async(() => {
         TestBed.configureTestingModule({

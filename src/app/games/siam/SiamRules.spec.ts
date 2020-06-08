@@ -10,7 +10,7 @@ describe('SiamRules', () => {
     let rules: SiamRules;
 
     beforeAll(() => {
-        SiamRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        SiamRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SiamRules.VERBOSE;
     });
     beforeEach(() => {
         rules = new SiamRules();

@@ -7,7 +7,7 @@ import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
 describe('TablutMove', () => {
 
     beforeAll(() => {
-        TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || TablutRules.VERBOSE;
     });
     it('TablutMove.encode and TablutMove.decode should be reversible', () => {
         const rules: TablutRules = new TablutRules();

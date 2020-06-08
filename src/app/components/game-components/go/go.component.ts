@@ -69,7 +69,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     }
     public pass(): boolean {
         const phase: Phase = this.rules.node.gamePartSlice.phase;
-        if (phase === Phase.PLAYING || phase === Phase.PASSED) 
+        if (phase === Phase.PLAYING || phase === Phase.PASSED)
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
         if (phase === Phase.COUNTING || phase === Phase.ACCEPT)
             return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);

@@ -10,7 +10,7 @@ describe('GoRules', () => {
     let rules: GoRules;
 
     beforeAll(() => {
-        GoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        GoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GoRules.VERBOSE;
     });
     beforeEach(() => {
         rules = new GoRules();
@@ -166,9 +166,9 @@ describe('GoRules', () => {
         expect(rules.choose(new GoMove(4, 4))).toBeTruthy(10); // incision inside ennemy territory
         expect(rules.choose(new GoMove(4, 1))).toBeTruthy(11); // creating a personnal territory to be considered alive
         expect(rules.choose(GoMove.PASS)).toBeTruthy(12);     expect(rules.choose(GoMove.PASS)).toBeTruthy(13);
-        
+
         const listMoves: MGPMap<GoMove, GoPartSlice> = rules.getListMoves(rules.node);
-    
+
         expect(listMoves.size()).toEqual(1, "there should only be one stone to put as dead");
         expect(listMoves.get(0).key).toEqual(new GoMove(4, 4));
     });

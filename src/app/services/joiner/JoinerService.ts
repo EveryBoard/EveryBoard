@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {IJoiner, IJoinerId, PIJoiner} from '../../domain/ijoiner';
-import {JoinerDAO} from '../../dao/JoinerDAO';
+import {JoinerDAO} from '../../dao/joiner/JoinerDAO';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

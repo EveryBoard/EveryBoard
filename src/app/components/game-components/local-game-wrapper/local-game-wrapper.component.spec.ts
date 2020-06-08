@@ -32,7 +32,7 @@ describe('LocalGameWrapperComponent', () => {
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
     beforeAll(() => {
-        LocalGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        LocalGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || LocalGameWrapperComponent.VERBOSE;
     });
     beforeEach(async(() => {
         TestBed.configureTestingModule({

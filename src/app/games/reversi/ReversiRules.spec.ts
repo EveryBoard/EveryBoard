@@ -9,7 +9,7 @@ describe('ReversiRules', () => {
     let rules: ReversiRules;
 
     beforeAll(() => {
-        ReversiRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        ReversiRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ReversiRules.VERBOSE;
     });
     beforeEach(() => {
         rules = new ReversiRules();

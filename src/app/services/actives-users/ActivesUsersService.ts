@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
 import {IJoueurId, IJoueur} from '../../domain/iuser';
-import {JoueursDAO} from '../../dao/JoueursDAO';
+import {JoueursDAO} from '../../dao/joueurs/JoueursDAO';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
 import { environment } from 'src/environments/environment';
 

@@ -10,7 +10,7 @@ describe('TablutRules', () => {
     let rules: TablutRules;
 
     beforeAll(() => {
-        TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || TablutRules.VERBOSE;
     });
     beforeEach(() => {
         rules = new TablutRules();

@@ -10,7 +10,7 @@ describe('P4Component', () => {
     let fixture: ComponentFixture<P4Component>;
 
     beforeAll(() => {
-        P4Component.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        P4Component.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || P4Component.VERBOSE;
     });
     beforeEach(async(() => {
         TestBed.configureTestingModule({

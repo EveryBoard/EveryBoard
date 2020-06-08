@@ -35,7 +35,7 @@ describe('GoComponent', () => {
     let gameComponent: GoComponent;
 
     beforeAll(() => {
-        GoComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        GoComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GoComponent.VERBOSE;
     });
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({

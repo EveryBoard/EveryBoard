@@ -1,7 +1,7 @@
 import {Injectable, OnDestroy} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {IChat, IChatId} from '../../domain/ichat';
-import {ChatDAO} from '../../dao/ChatDAO';
+import {ChatDAO} from '../../dao/chat/ChatDAO';
 import {IMessage} from '../../domain/imessage';
 import { environment } from 'src/environments/environment';
 
@@ -25,7 +25,7 @@ export class ChatService implements OnDestroy {
     constructor(private chatDao: ChatDAO) {
         if (environment.test && !ChatService.IN_TESTING) throw new Error("NO CHAT SERVICE IN TEST");
     }
-    public sendMessage(userName: string, lastTurnThen: number, content: string) {
+    public async sendMessage(userName: string, lastTurnThen: number, content: string) {
         if (this.userForbid(this.followedChatId, userName)) {
             if (ChatService.VERBOSE) {
                 console.log('you\'re not allow to sent message here');
@@ -38,33 +38,19 @@ export class ChatService implements OnDestroy {
             }
             return;
         }
-        this.chatDao
-            .read(this.followedChatId)
-            .then( iChat => {
-                const messages: IMessage[] = iChat.messages;
-                const newMessage: IMessage = {
-                    content,
-                    sender: userName,
-                    postedTime: Date.now(), // timeStamp of the publication time
-                    lastTurnThen // number of the turn when this was write
-                };
-                messages.push(newMessage);
-                this.chatDao
-                    .update(this.followedChatId, { messages })
-                    .then(onFullFilled => {
-                        if (ChatService.VERBOSE) {
-                            console.log('message envoyé');
-                        }
-                    })
-                    .catch(onRejected => {
-                        console.log('envoi du message échoué parceque : ');
-                        console.log(JSON.stringify(onRejected));
-                    });
-            })
-            .catch(onRejected => {
-                console.log('could not read chat ' + this.followedChatId + ' because');
-                console.log(JSON.stringify(onRejected));
-            });
+        const iChat: IChat = await this.chatDao.read(this.followedChatId);
+        const messages: IMessage[] = iChat.messages;
+        const newMessage: IMessage = {
+            content,
+            sender: userName,
+            postedTime: Date.now(), // timeStamp of the publication time
+            lastTurnThen // number of the turn when this was write
+        };
+        messages.push(newMessage);
+        await this.chatDao.update(this.followedChatId, { messages })
+        if (ChatService.VERBOSE) {
+            console.log('message envoyé');
+        }
     }
     public userForbid(chatId: string, userName: string): boolean {
         return userName == null ||
@@ -92,7 +78,7 @@ export class ChatService implements OnDestroy {
     public stopObserving() {
         if (!this.isObserving()) {
             throw new Error('ChatService.stopObserving should not be called if not observing');
-        } 
+        }
         console.log('stopped watching chat ' + this.followedChatId + ']');
         this.followedChatId = null;
         if (this.followedChatSub)

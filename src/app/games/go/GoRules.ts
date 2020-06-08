@@ -130,7 +130,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                 let koCoord: Coord = slice.koCoord;
                 if (GoRules.isCapturableGroup(neightbooringGroup, koCoord)) {
                     if (GoRules.VERBOSE || LOCAL_VERBOSE) {
-                        console.log({ neightbooringGroupCoord: GroupDatas.getCoordsOfGroup(neightbooringGroup), 
+                        console.log({ neightbooringGroupCoord: GroupDatas.getCoordsOfGroup(neightbooringGroup),
                                       message: "is capturable" });
                     }
                     return GroupDatas.getCoordsOfGroup(neightbooringGroup);
@@ -408,7 +408,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             let capturersInfo: GroupDatas = GoRules.getGroupDatas(capturerCoord, newBoard);
             let capturersFreedoms: Coord[] = capturersInfo.emptyCoords;
             let capturersGroup: Coord[] = GoPiece.pieceBelongTo(capturer, Player.ZERO) ? capturersInfo.blackCoords : capturersInfo.whiteCoords;
-            if (capturersFreedoms.length === 1 && 
+            if (capturersFreedoms.length === 1 &&
                 capturersFreedoms[0].equals(captured) &&
                 capturersGroup.length === 1) {
                 return captured;

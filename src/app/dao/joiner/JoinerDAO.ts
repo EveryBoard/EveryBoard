@@ -1,5 +1,5 @@
-import { FirebaseFirestoreDAO } from "./FirebaseFirestoreDAO";
-import { IJoiner, PIJoiner, IJoinerId } from "../domain/ijoiner";
+import { FirebaseFirestoreDAO } from "../FirebaseFirestoreDAO";
+import { IJoiner, PIJoiner, IJoinerId } from "../../domain/ijoiner";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";

@@ -1,7 +1,7 @@
 import { async } from '@angular/core/testing';
 
 import { GameService } from './GameService';
-import { PartDAO } from 'src/app/dao/PartDAO';
+import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { ActivesPartsService } from '../actives-parts/ActivesPartsService';
 import { JoinerService } from '../joiner/JoinerService';
 import { ChatService } from '../chat/ChatService';
@@ -31,7 +31,7 @@ describe('GameService', () => {
 
     beforeAll(() => {
         GameService.IN_TESTING = true;
-        GameService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        GameService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GameService.VERBOSE;
     });
     beforeEach(() => {
         service = new GameService(partDaoStub as PartDAO,

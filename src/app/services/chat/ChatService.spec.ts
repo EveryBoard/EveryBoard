@@ -1,6 +1,6 @@
 import { async } from '@angular/core/testing';
 import { ChatService } from './ChatService';
-import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 const chatDaoStub = {
@@ -11,7 +11,7 @@ describe('ChatService', () => {
 
     beforeAll(() => {
         ChatService.IN_TESTING = true;
-        ChatService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        ChatService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ChatService.VERBOSE;
     });
     beforeEach(() => {
         service = new ChatService(chatDaoStub as ChatDAO);

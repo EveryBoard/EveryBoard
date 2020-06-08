@@ -35,7 +35,7 @@ describe('TablutComponent', () => {
     let gameComponent: TablutComponent;
 
     beforeAll(() => {
-        TablutComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        TablutComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || TablutComponent.VERBOSE;
     });
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({

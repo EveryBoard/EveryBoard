@@ -9,7 +9,7 @@ export class GameIncluderComponent {
     public static VERBOSE: boolean = false;
 
     constructor(public viewContainerRef: ViewContainerRef) {
-        if (GameIncluderComponent.VERBOSE) 
+        if (GameIncluderComponent.VERBOSE)
             console.log("GameIncluderComponent construct");
     }
 }

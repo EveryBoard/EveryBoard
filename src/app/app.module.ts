@@ -12,7 +12,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 import {GameIncluderDirective} from './directives/game-includer.directive';
 
-import { PartDAO } from './dao/PartDAO';
+import { PartDAO } from './dao/part/PartDAO';
 
 import {ChatService} from './services/chat/ChatService';
 import {UserService} from './services/user/UserService';
@@ -51,6 +51,7 @@ import { ConfirmInscriptionComponent } from './components/normal-component/confi
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 
 export const INCLUDE_VERBOSE_LINE_IN_TEST = true;
+// scp -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
 const routes: Route [] = [
     {path: 'login',               component: LoginComponent},

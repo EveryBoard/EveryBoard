@@ -21,7 +21,7 @@ export class AuthenticationService implements OnDestroy {
 
     constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
         if (environment.test && !AuthenticationService.IN_TESTING) throw new Error("NO AUTH SERVICE IN TEST");
-        
+
         if (AuthenticationService.VERBOSE) console.log("1 authService subscribe to Obs<User>");
         this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
             if (user == null) { // user logged out

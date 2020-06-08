@@ -6,16 +6,16 @@ describe('AwaleRules', () => {
 
     let rules: AwaleRules;
 
+    let previousGenerationsSizes: number[] = [0, 1, null, null, null, null];
+
     beforeAll(() => {
-        AwaleRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        AwaleRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || AwaleRules.VERBOSE;
     });
     beforeEach(() => {
         rules = new AwaleRules();
         AwaleRules.GET_BOARD_VALUE_CALL_COUNT = 0;
         AwaleRules.GET_LIST_MOVES_CALL_COUNT = 0;
     });
-    let previousGenerationsSizes: number[] = [0, 1, null, null, null, null];
-
     it('should be created', () => {
         expect(rules).toBeTruthy();
         expect(rules.choose(new AwaleMove(0, 0))).toBeTruthy();

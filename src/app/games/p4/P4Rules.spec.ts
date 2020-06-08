@@ -7,7 +7,7 @@ describe('P4Rules', () => {
     let rules: P4Rules;
 
     beforeAll(() => {
-        P4Rules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        P4Rules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || P4Rules.VERBOSE;
     });
     beforeEach(() => {
         rules = new P4Rules();

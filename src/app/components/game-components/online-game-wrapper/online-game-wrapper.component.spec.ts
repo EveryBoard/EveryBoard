@@ -84,7 +84,7 @@ class ChatServiceMock {
     }
 };
 describe('OnlineGameWrapperComponent', () => {
-    
+
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0
@@ -102,7 +102,7 @@ describe('OnlineGameWrapperComponent', () => {
     let component: OnlineGameWrapperComponent;
 
     beforeAll(() => {
-        OnlineGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        OnlineGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || OnlineGameWrapperComponent.VERBOSE;
     });
     beforeEach(async(async () => {
         await TestBed.configureTestingModule({

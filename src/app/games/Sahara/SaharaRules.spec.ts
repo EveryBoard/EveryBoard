@@ -12,7 +12,7 @@ describe('SaharaRules', () => {
     let rules: SaharaRules;
 
     beforeAll(() => {
-        SaharaRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        SaharaRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SaharaRules.VERBOSE;
     });
     beforeEach(() => {
         rules = new SaharaRules();

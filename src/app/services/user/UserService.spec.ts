@@ -2,7 +2,7 @@ import { async } from '@angular/core/testing';
 
 import { UserService } from './UserService';
 import { ActivesUsersService } from '../actives-users/ActivesUsersService';
-import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { Router } from '@angular/router';
 
 const routerStub = {

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BehaviorSubject} from 'rxjs';
-import {PartDAO} from '../../dao/PartDAO';
+import {PartDAO} from '../../dao/part/PartDAO';
 import {ICurrentPartId, ICurrentPart} from '../../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
 import { environment } from 'src/environments/environment';

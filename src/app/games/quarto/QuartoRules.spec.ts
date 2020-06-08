@@ -8,7 +8,7 @@ describe('QuartoRules', () => {
     let rules: QuartoRules;
 
     beforeAll(() => {
-        QuartoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        QuartoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || QuartoRules.VERBOSE;
     });
     beforeEach(() => {
         rules = new QuartoRules();

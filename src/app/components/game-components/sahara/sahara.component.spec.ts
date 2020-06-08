@@ -10,7 +10,7 @@ describe('SaharaComponent', () => {
     let fixture: ComponentFixture<SaharaComponent>;
 
     beforeAll(() => {
-        SaharaComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        SaharaComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SaharaComponent.VERBOSE;
     });
     beforeEach(async(() => {
         TestBed.configureTestingModule({

@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { IJoueur, PIJoueur } from '../domain/iuser';
-import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
-import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
+import { IJoueur, PIJoueur } from '../../domain/iuser';
+import { FirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
+import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { environment } from 'src/environments/environment';
 
 @Injectable({

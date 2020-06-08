@@ -17,7 +17,7 @@ describe('AuthenticationService', () => {
 
     beforeAll(() => {
         AuthenticationService.IN_TESTING = true;
-        AuthenticationService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        AuthenticationService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || AuthenticationService.VERBOSE;
     });
     beforeEach(() => {
         service = new AuthenticationService(afAuth as AngularFireAuth, afs as AngularFirestore);

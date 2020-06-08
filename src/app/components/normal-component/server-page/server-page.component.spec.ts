@@ -22,7 +22,7 @@ const userServiceStub = {
     unSubFromActivesUsersObs: () => {},
 };
 class GameServiceMock {
-    getActivesPartsObs(): Observable<ICurrentPartId[]> { 
+    getActivesPartsObs(): Observable<ICurrentPartId[]> {
         return of([]);
     }
     unSubFromActivesPartsObs() {
@@ -71,7 +71,7 @@ describe('ServerPageComponent', () => {
     let fixture: ComponentFixture<ServerPageComponent>;
 
     beforeAll(() => {
-        ServerPageComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        ServerPageComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ServerPageComponent.VERBOSE;
     });
     beforeEach(async(() => {
         TestBed.configureTestingModule({
@@ -109,9 +109,9 @@ describe('ServerPageComponent', () => {
         expect(component).toBeTruthy();
         const ngOnInit = spyOn(component, "ngOnInit").and.callThrough();;
         expect(ngOnInit).not.toHaveBeenCalled();
-        
+
         fixture.detectChanges();
-        
+
         expect(ngOnInit).toHaveBeenCalledTimes(1);
     }));
     it('should subscribe to three observable on init', async(() => {
@@ -124,7 +124,7 @@ describe('ServerPageComponent', () => {
         expect(joueurObsSpy).not.toHaveBeenCalled();
         expect(activePartsObsSpy).not.toHaveBeenCalled();
         expect(activesUsersObsSpy).not.toHaveBeenCalled();
-        
+
         component.ngOnInit();
 
         expect(component.userName).toBe("Pseudo");
@@ -165,7 +165,7 @@ describe('ServerPageComponent', () => {
             }
         }]));
         component.ngOnInit();
-        
+
         expect(component.canCreateGame()).toBeFalsy();
     }));
     it('should be legal for unlogged user to create local game', async(async () => {

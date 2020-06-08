@@ -1,7 +1,7 @@
 import { async } from '@angular/core/testing';
 
 import { JoinerService } from './JoinerService';
-import { JoinerDAO } from 'src/app/dao/JoinerDAO';
+import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { IJoinerId, IJoiner, PIJoiner } from 'src/app/domain/ijoiner';
 import { of } from 'rxjs';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
@@ -41,7 +41,7 @@ describe('JoinerService', () => {
     let service: JoinerService;
 
     beforeAll(() => {
-        JoinerService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        JoinerService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || JoinerService.VERBOSE;
         JoinerService.IN_TESTING = true;
     });
     beforeEach(() => {

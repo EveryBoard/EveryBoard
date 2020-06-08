@@ -50,7 +50,7 @@ describe('ChatComponent', () => {
     let authenticationService: AuthenticationService;
 
     beforeAll(() => {
-        ChatComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST;
+        ChatComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ChatComponent.VERBOSE;
     });
     beforeEach(async(() => {
         TestBed.configureTestingModule({

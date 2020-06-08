@@ -1,7 +1,7 @@
 import { async } from '@angular/core/testing';
 
 import { ActivesPartsService } from './ActivesPartsService';
-import { PartDAO } from 'src/app/dao/PartDAO';
+import { PartDAO } from 'src/app/dao/part/PartDAO';
 
 const partDAOStub = {
 };
