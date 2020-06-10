@@ -3,8 +3,10 @@ import {MNode} from '../../jscaip/MNode';
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {AwalePartSlice} from './AwalePartSlice';
 import { AwaleMove } from './AwaleMove';
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { AwaleLegalityStatus } from './AwaleLegalityStatus';
+
+abstract class AwaleNode extends MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
 export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
@@ -239,7 +241,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while ((x !== limite) && (((target = board[y][x]) === 2) || (target === 3)));
         return captured;
     }
-    public getListMoves(n: MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus>): MGPMap<AwaleMove, AwalePartSlice> {
+    public getListMoves(n: AwaleNode): MGPMap<AwaleMove, AwalePartSlice> {
         AwaleRules.GET_LIST_MOVES_CALL_COUNT++;
         const LOCAL_VERBOSE: boolean = false ;
         if (AwaleRules.VERBOSE || LOCAL_VERBOSE) console.log('getListMoves');
@@ -271,7 +273,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
                     newMove = new AwaleMove(x, player);
 
                     newSlice = new AwalePartSlice(legality.resultingBoard, turn + 1, capturedCopy);
-                    choices.put(newMove, newSlice);
+                    choices.set(newMove, newSlice);
                 }
             }
             x++;
@@ -282,7 +284,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         return choices;
     }
-    public getBoardValue(n: MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus>): number {
+    public getBoardValue(n: AwaleNode): number {
         AwaleRules.GET_BOARD_VALUE_CALL_COUNT++;
         const LOCAL_VERBOSE: boolean = false;
 

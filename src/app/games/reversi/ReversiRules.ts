@@ -4,11 +4,11 @@ import {ReversiPartSlice} from './ReversiPartSlice';
 import {Coord} from '../../jscaip/Coord';
 import {Direction} from '../../jscaip/DIRECTION';
 import { ReversiMove } from './ReversiMove';
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 
-class ReversiNode extends MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> { }
+abstract class ReversiNode extends MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
 
 export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
@@ -96,7 +96,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
     public static playerCanOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
         const currentPlayerChoices: MGPMap<ReversiMove, ReversiPartSlice> = this.getListMoves(reversiPartSlice);
         // if the current player cannot start, then the part is ended
-        return (currentPlayerChoices.size() === 1) && currentPlayerChoices.get(0).key.equals(ReversiMove.pass);
+        return (currentPlayerChoices.size() === 1) &&
+               currentPlayerChoices.getByIndex(0).key.equals(ReversiMove.pass);
     }
     public static nextPlayerCantOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
         const nextBoard: number[][] = reversiPartSlice.getCopiedBoard();
@@ -134,7 +135,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
                             }
                             nextBoard[y][x] = player;
                             moveAppliedPartSlice = new ReversiPartSlice(nextBoard, nextTurn);
-                            listMoves.put(move, moveAppliedPartSlice);
+                            listMoves.set(move, moveAppliedPartSlice);
                         }
                     }
                 }
@@ -145,7 +146,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             // board unchanged, only the turn changed "pass"
             // console.log('f91 The user can do nothing but pass at turn ' + (nextTurn - 1));
             moveAppliedPartSlice = new ReversiPartSlice(slice.getCopiedBoard(), nextTurn);
-            listMoves.put(ReversiMove.pass, moveAppliedPartSlice);
+            listMoves.set(ReversiMove.pass, moveAppliedPartSlice);
         }
         return listMoves;
     }

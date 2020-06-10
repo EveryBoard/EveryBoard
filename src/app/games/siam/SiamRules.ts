@@ -7,11 +7,11 @@ import { Player } from "src/app/jscaip/Player";
 import { Coord } from "src/app/jscaip/Coord";
 import { Orthogonale, Direction } from "src/app/jscaip/DIRECTION";
 import { SiamLegalityStatus } from "./SiamLegalityStatus";
-import { MGPMap } from "src/app/collectionlib/MGPMap";
+import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 
 abstract class _SiamRules extends Rules<SiamMove, SiamPartSlice, SiamLegalityStatus> {}
 
-abstract class _SiamNode extends MNode<_SiamRules, SiamMove, SiamPartSlice, SiamLegalityStatus> {}
+abstract class SiamNode extends MNode<_SiamRules, SiamMove, SiamPartSlice, SiamLegalityStatus> {}
 
 export class SiamRules extends _SiamRules {
 
@@ -143,14 +143,14 @@ export class SiamRules extends _SiamRules {
         const resultingSlice: SiamPartSlice = new SiamPartSlice(newBoard, newTurn);
         return {resultingMove, resultingSlice};
     }
-    public getBoardValue(node: _SiamNode): number {
+    public getBoardValue(node: SiamNode): number {
         // 1. victories
         const winner: Player = this.getWinner(node);
         if (winner == Player.NONE) return 0;
         // 2. TODO: pre-victories
         return winner == Player.ZERO ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
     }
-    public getWinner(node: _SiamNode): Player {
+    public getWinner(node: SiamNode): Player {
         if (this.countMountains(node.gamePartSlice) === 2) {
             return this.getPusher(node, node.move);
         } else {
@@ -169,7 +169,7 @@ export class SiamRules extends _SiamRules {
         }
         return nbMountains;
     }
-    public getPusher(node: _SiamNode, finishingMove: SiamMove): Player {
+    public getPusher(node: SiamNode, finishingMove: SiamMove): Player {
         // here we will call the piece that started the move "moveStarter", obviously
         // and the piece that was the closest to the falling mountain: the pusher
         const moveStarterCoord: Coord = finishingMove.coord;
@@ -197,7 +197,7 @@ export class SiamRules extends _SiamRules {
         }
         return pusher;
     }
-    public getListMoves(node: _SiamNode): MGPMap<SiamMove, SiamPartSlice> {
+    public getListMoves(node: SiamNode): MGPMap<SiamMove, SiamPartSlice> {
         const moves: MGPMap<SiamMove, SiamPartSlice> = new MGPMap<SiamMove, SiamPartSlice>();
         const turn: number = node.gamePartSlice.turn;
         const currentPlayer: Player = node.gamePartSlice.getCurrentPlayer();
@@ -213,19 +213,19 @@ export class SiamRules extends _SiamRules {
                     const antiClockwiseMove: SiamMove = new SiamMove(x, y, SiamMoveNature.ANTI_CLOCKWISE);
                     antiClockwiseBoard[y][x] = SiamPiece.rotate(c, SiamMoveNature.ANTI_CLOCKWISE);
                     const antiClockwiseSlice: SiamPartSlice = new SiamPartSlice(antiClockwiseBoard, turn + 1);
-                    moves.put(antiClockwiseMove, antiClockwiseSlice);
+                    moves.set(antiClockwiseMove, antiClockwiseSlice);
 
                     const clockwiseBoard: number[][] = node.gamePartSlice.getCopiedBoard();
                     const clockwiseMove: SiamMove = new SiamMove(x, y, SiamMoveNature.CLOCKWISE);
                     clockwiseBoard[y][x] = SiamPiece.rotate(c, SiamMoveNature.CLOCKWISE);
                     const clockwiseSlice: SiamPartSlice = new SiamPartSlice(clockwiseBoard, turn + 1);
-                    moves.put(clockwiseMove, clockwiseSlice);
+                    moves.set(clockwiseMove, clockwiseSlice);
 
                     const forwardMove: SiamMove = new SiamMove(x, y, SiamMoveNature.FORWARD);
                     legality = this.isLegalForwarding(forwardMove, node.gamePartSlice, c);
                     if (legality.legal) {
                         const forwardSlice: SiamPartSlice = new SiamPartSlice(legality.resultingBoard, turn + 1);
-                        moves.put(forwardMove, forwardSlice);
+                        moves.set(forwardMove, forwardSlice);
                     }
                 }
             }
@@ -233,7 +233,7 @@ export class SiamRules extends _SiamRules {
         if (SiamRules.VERBOSE) console.log({getListMovesResult: moves});
         return moves;
     }
-    public getInsertions(node: _SiamNode): MGPMap<SiamMove, SiamPartSlice> {
+    public getInsertions(node: SiamNode): MGPMap<SiamMove, SiamPartSlice> {
         const insertions: MGPMap<SiamMove, SiamPartSlice> = new MGPMap<SiamMove, SiamPartSlice>();
         let currentPlayer: Player = node.gamePartSlice.getCurrentPlayer();
         let newTurn = node.gamePartSlice.turn + 1;
@@ -245,7 +245,7 @@ export class SiamRules extends _SiamRules {
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
             if (legality.legal) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
-                insertions.put(newMove, newSlice);
+                insertions.set(newMove, newSlice);
             }
 
             newMove = new SiamMove(5, y, SiamMoveNature.FORWARD);
@@ -253,7 +253,7 @@ export class SiamRules extends _SiamRules {
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
             if (legality.legal) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
-                insertions.put(newMove, newSlice);
+                insertions.set(newMove, newSlice);
             }
         }
         for (let x=0; x<5; x++) {
@@ -262,7 +262,7 @@ export class SiamRules extends _SiamRules {
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
             if (legality.legal) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
-                insertions.put(newMove, newSlice);
+                insertions.set(newMove, newSlice);
             }
 
             newMove = new SiamMove(x, 5, SiamMoveNature.FORWARD);
@@ -270,7 +270,7 @@ export class SiamRules extends _SiamRules {
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
             if (legality.legal) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
-                insertions.put(newMove, newSlice);
+                insertions.set(newMove, newSlice);
             }
         }
         return insertions;

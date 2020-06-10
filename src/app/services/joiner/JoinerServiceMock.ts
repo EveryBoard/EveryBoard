@@ -2,7 +2,7 @@ import { IJoinerId } from "src/app/domain/ijoiner";
 
 export class JoinerServiceMock {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public static JOINERS = {
         JOINER_INITIAL: {

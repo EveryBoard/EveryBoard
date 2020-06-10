@@ -23,7 +23,7 @@ const chatServiceStub = {
 
     deleteChat: (chatId: string) => of(),
 };
-fdescribe('PartCreationComponent Direct', () => {
+describe('PartCreationComponent Direct', () => {
 
     let component: PartCreationComponent;
 
@@ -32,7 +32,7 @@ fdescribe('PartCreationComponent Direct', () => {
     let joinerService: JoinerService;
 
     beforeAll(() => {
-        PartCreationComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || PartCreationComponent.VERBOSE || true;
+        PartCreationComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || PartCreationComponent.VERBOSE;
     });
     beforeEach(async(() => {
         TestBed.configureTestingModule({

@@ -4,10 +4,12 @@ import { EncapsulePartSlice, EncapsuleCase } from './EncapsulePartSlice';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece, EncapsuleMapper } from './EncapsuleEnums';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
-import { Sets } from 'src/app/collectionlib/Sets';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
+import { Sets } from 'src/app/collectionlib/sets/Sets';
 import { EncapsuleLegalityStatus } from './EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+
+abstract class EncapsuleNode extends MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
@@ -97,7 +99,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newBoard, newTurn, newRemainingPiece);
         return {resultingSlice, resultingMove: move};
     }
-    public getBoardValue(n: MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus>): number {
+    public getBoardValue(n: EncapsuleNode): number {
         let slice: EncapsulePartSlice = n.gamePartSlice;
         let boardValue: number;
         if (EncapsuleRules.isVictory(slice)) {
@@ -109,7 +111,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         }
         return boardValue;
     }
-    static isVictory(slice: EncapsulePartSlice): boolean {
+    public static isVictory(slice: EncapsulePartSlice): boolean {
         let board: EncapsuleCase[][] = slice.toCase();
         let victory: boolean = false;
         let i: number = 0;
@@ -123,13 +125,13 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         }
         return victory;
     }
-    static isVictoriousLine(cases: EncapsuleCase[]): boolean {
+    public static isVictoriousLine(cases: EncapsuleCase[]): boolean {
         let pieces: EncapsulePiece[] = cases.map(c => c.getBiggest());
         let owner: Player[] = pieces.map(piece => EncapsuleMapper.toPlayer(piece));
         if (owner[0] === Player.NONE) return false;
         return (owner[0] === owner[1]) && (owner[1] === owner[2]);
     }
-    public getListMoves(n: MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus>): MGPMap<EncapsuleMove, EncapsulePartSlice> {
+    public getListMoves(n: EncapsuleNode): MGPMap<EncapsuleMove, EncapsulePartSlice> {
         const moves: MGPMap<EncapsuleMove, EncapsulePartSlice> = new MGPMap<EncapsuleMove, EncapsulePartSlice>();
         const slice: EncapsulePartSlice = n.gamePartSlice;
         if (EncapsuleRules.isVictory(slice)) {
@@ -148,7 +150,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                     let status: EncapsuleLegalityStatus = this.isLegal(newMove, slice);
                     if (status.legal) {
                         const result = this.applyLegalMove(newMove, slice, status);
-                        moves.put(result.resultingMove, result.resultingSlice);
+                        moves.set(result.resultingMove, result.resultingSlice);
                     }
                 }
                 if (newBoard[y][x].belongToCurrentPlayer(currentPlayer)) {
@@ -160,7 +162,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                                 let status: EncapsuleLegalityStatus = this.isLegal(newMove, slice);
                                 if (status.legal) {
                                     const result = this.applyLegalMove(newMove, slice, status);
-                                    moves.put(result.resultingMove, result.resultingSlice);
+                                    moves.set(result.resultingMove, result.resultingSlice);
                                 }
                             }
                         }

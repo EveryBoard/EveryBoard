@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
+import {BehaviorSubject, Observable} from 'rxjs';
 import {PartDAO} from '../../dao/part/PartDAO';
 import {ICurrentPartId, ICurrentPart} from '../../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
@@ -15,9 +15,9 @@ export class ActivesPartsService {
 
     public static IN_TESTING: boolean = false;
 
-    private activesPartsBS = new BehaviorSubject<ICurrentPartId[]>([]);
+    private activesPartsBS: BehaviorSubject<ICurrentPartId[]> = new BehaviorSubject<ICurrentPartId[]>([]);
 
-    activesPartsObs = this.activesPartsBS.asObservable();
+    public activesPartsObs: Observable<ICurrentPartId[]> = this.activesPartsBS.asObservable();
 
     private unsubscribe: () => void;
 

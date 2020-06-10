@@ -1,4 +1,4 @@
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaRules } from './SaharaRules';
 import { SaharaMove } from './SaharaMove';

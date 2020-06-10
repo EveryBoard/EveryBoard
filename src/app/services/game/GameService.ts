@@ -83,10 +83,10 @@ export class GameService {
         await this.createChat(gameId); // TODO asynchronous
         return gameId;
     }
-    public getActivesPartsObs() {
+    public getActivesPartsObs(): Observable<ICurrentPartId[]> {
         // TODO: désabonnements de sûreté aux autres abonnements activesParts
         if (GameService.VERBOSE) {
-            console.log('GameService.getActivesPartsObs()');
+            console.log('GameService.getActivesPartsObs');
         }
         this.activesPartsService.startObserving();
         return this.activesPartsService.activesPartsObs;

@@ -1,7 +1,7 @@
 import { MNode } from './MNode';
 import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
-import { MGPMap } from '../collectionlib/MGPMap';
+import { MGPMap } from '../collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {

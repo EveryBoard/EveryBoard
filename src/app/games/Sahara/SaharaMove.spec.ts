@@ -1,4 +1,4 @@
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { SaharaRules } from './SaharaRules';
 import { SaharaMove } from './SaharaMove';
 import { SaharaPartSlice } from './SaharaPartSlice';
@@ -12,7 +12,7 @@ describe('SaharaMoves', () => {
         const moves: MGPMap<SaharaMove, SaharaPartSlice> = rules.getListMoves(rules.node);
         expect(moves.size()).toEqual(12);
         for (let i=0; i<moves.size(); i++) {
-            const initialMove: SaharaMove = moves.get(i).key;
+            const initialMove: SaharaMove = moves.getByIndex(i).key;
             const encodedMove: number = initialMove.encode();
             const decodedMove: SaharaMove = SaharaMove.decode(encodedMove);
             expect(decodedMove).toEqual(initialMove, initialMove.toString() + " should be correctly translated");

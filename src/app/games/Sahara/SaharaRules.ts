@@ -2,7 +2,7 @@ import { Rules } from "src/app/jscaip/Rules";
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MNode } from "src/app/jscaip/MNode";
-import { MGPMap } from "src/app/collectionlib/MGPMap";
+import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { Player } from "src/app/jscaip/Player";
 import { Coord } from "src/app/jscaip/Coord";
 import { SaharaMove } from "./SaharaMove";
@@ -10,8 +10,8 @@ import { SaharaPawn } from "./SaharaPawn";
 import { SaharaPartSlice } from "./SaharaPartSlice";
 import { TriangularCheckerBoard } from "src/app/jscaip/TriangularCheckerboard";
 
-class SaharaNode extends MNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {
-}
+abstract class SaharaNode extends MNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
+
 export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStatus> {
 
     public static VERBOSE: boolean = false;
@@ -34,7 +34,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
                 board[start.y][start.x] = SaharaPawn.EMPTY;
                 const newBoard: SaharaPawn[][] = GamePartSlice.copyBiArray(board);
                 const newSlice: SaharaPartSlice = new SaharaPartSlice(newBoard, newTurn);
-                moves.put(newMove, newSlice);
+                moves.set(newMove, newSlice);
 
                 const upwardTriangle: boolean = (neighboor.y + neighboor.x)%2 === 0;
                 if (upwardTriangle) {
@@ -46,7 +46,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
                             board[neighboor.y][neighboor.x] = SaharaPawn.EMPTY;
                             const farBoard: SaharaPawn[][] = GamePartSlice.copyBiArray(board);
                             const farSlice: SaharaPartSlice = new SaharaPartSlice(farBoard, newTurn);
-                            moves.put(farMove, farSlice);
+                            moves.set(farMove, farSlice);
 
                             board[neighboor.y][neighboor.x] = board[farNeighboor.y][farNeighboor.x]
                             board[farNeighboor.y][farNeighboor.x] = SaharaPawn.EMPTY;

@@ -4,8 +4,10 @@ import {Coord} from '../../jscaip/Coord';
 import {MNode} from '../../jscaip/MNode';
 import {TablutPartSlice} from './TablutPartSlice';
 import { TablutMove } from './TablutMove';
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+
+abstract class TablutNode extends MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus> {}
 
 export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStatus> {
 
@@ -478,7 +480,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
         return null;
     }
-    public static getInvaderVictoryValue(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): number {
+    public static getInvaderVictoryValue(n: TablutNode): number {
         const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
         if (TablutRules.VERBOSE) {
             console.log('invader victory !');
@@ -488,7 +490,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
         return Number.MAX_SAFE_INTEGER;
     }
-    public static getDefenderVictoryValue(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): number {
+    public static getDefenderVictoryValue(n: TablutNode): number {
         console.log('defender victory !');
         const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
         if (tablutPartSlice.invaderStart) {
@@ -549,7 +551,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
     public applyLegalMove(move: TablutMove, slice: TablutPartSlice, status: LegalityStatus): { resultingMove: TablutMove; resultingSlice: TablutPartSlice; } {
         return TablutRules.applyLegalMove(move, slice, status);
     }
-    public getListMoves(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): MGPMap<TablutMove, TablutPartSlice> {
+    public getListMoves(n: TablutNode): MGPMap<TablutMove, TablutPartSlice> {
         const LOCAL_VERBOSE: boolean = false;
         if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
             console.log('get list move available to ');
@@ -578,7 +580,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             moveResult = TablutRules.tryMove(currentPlayer, invaderStart, newMove, currentBoard).success;
             if (moveResult === TablutRules.SUCCESS) {
                 newPartSlice = new TablutPartSlice(currentBoard, nextTurn, currentPartSlice.invaderStart);
-                listCombinaison.put(newMove, newPartSlice);
+                listCombinaison.set(newMove, newPartSlice);
             } else if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
                 console.log('how is it that I receive a moveResult == to '
                     + moveResult + ' with ' + newMove + ' at turn ' + currentTurn + ' of player ' + currentPlayer);
@@ -586,7 +588,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
         return listCombinaison;
     }
-    public getListMovesPeared(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): { key: TablutMove, value: TablutPartSlice }[] {
+    public getListMovesPeared(n: TablutNode): { key: TablutMove, value: TablutPartSlice }[] {
         // TODO: pear this method, make it smarter
         const currentPartSlice: TablutPartSlice = n.gamePartSlice;
         const currentBoard: number[][] = currentPartSlice.getCopiedBoard();
@@ -615,7 +617,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
         return null;
     }
-    public getBoardValue(n: MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus>): number {
+    public getBoardValue(n: TablutNode): number {
 
         // 1. is the king escaped ?
         // 2. is the king captured ?

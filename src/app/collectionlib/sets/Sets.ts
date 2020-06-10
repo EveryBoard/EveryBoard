@@ -1,8 +1,8 @@
-import { Comparable } from "./MGPMap";
+import { Comparable } from "../Comparable";
 
 export class Sets {
 
-    static toNumberSet(list: number[]): number[] {
+    public static toNumberSet(list: number[]): number[] {
         const result: number[] = [];
         list.forEach(o => {
             if (!result.some(el => el === o)) {
@@ -11,8 +11,7 @@ export class Sets {
         });
         return result;
     }
-
-    static toSet<O extends Comparable>(list: O[]): O[] {
+    public static toSet<O extends Comparable>(list: O[]): O[] {
         const result: O[] = [];
         list.forEach(o => {
             if (!result.some(el => el.equals(o))) {

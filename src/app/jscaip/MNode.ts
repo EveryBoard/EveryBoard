@@ -2,7 +2,7 @@ import {Move} from './Move';
 import {SCORE} from './SCORE';
 import {Rules} from './Rules';
 import {GamePartSlice} from './GamePartSlice';
-import { MGPMap } from '../collectionlib/MGPMap';
+import { MGPMap } from '../collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
 
 export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
@@ -212,7 +212,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
             console.log(moves);
         }
         for (let i=0; i<moves.size(); i++) {
-            const entry = moves.get(i);
+            const entry = moves.getByIndex(i);
             if (MNode.VERBOSE || LOCAL_VERBOSE) {
                 console.log('in the loop');
                 console.log(entry);

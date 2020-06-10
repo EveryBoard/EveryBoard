@@ -1,4 +1,4 @@
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { ReversiRules } from './ReversiRules';
 import { ReversiMove } from './ReversiMove';
 import { ReversiPartSlice } from './ReversiPartSlice';

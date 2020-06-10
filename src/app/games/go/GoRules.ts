@@ -4,12 +4,11 @@ import {Coord} from '../../jscaip/Coord';
 import {GoPartSlice, Pawn, Phase, GoPiece} from './GoPartSlice';
 import {Direction, Orthogonale} from 'src/app/jscaip/DIRECTION';
 import {GoMove} from './GoMove';
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { GoLegalityStatus } from './GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
-import { count } from 'rxjs/operators';
 
-class GoNode extends MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
+abstract class GoNode extends MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
 
 export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
@@ -177,14 +176,14 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         if (currentSlice.phase === Phase.PLAYING ||
             currentSlice.phase === Phase.PASSED) {
 
-            playingMoves.put(GoMove.PASS, GoRules.applyPass(currentSlice).resultingSlice);
+            playingMoves.set(GoMove.PASS, GoRules.applyPass(currentSlice).resultingSlice);
             return playingMoves;
         } else if (currentSlice.phase === Phase.COUNTING ||
                    currentSlice.phase === Phase.ACCEPT) {
             if (GoRules.VERBOSE || LOCAL_VERBOSE) console.log('GoRules.getListMoves in counting phase');
             const markingMoves: MGPMap<GoMove, GoPartSlice> = this.getCountingMovesList(currentSlice);
             if (markingMoves.size() === 0) {
-                markingMoves.put(GoMove.ACCEPT, GoRules.applyAccept(currentSlice).resultingSlice);
+                markingMoves.set(GoMove.ACCEPT, GoRules.applyAccept(currentSlice).resultingSlice);
             }
             return markingMoves;
         } else {
@@ -229,7 +228,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                 // console.log(actualContent + " should be " + correctContent);
                 const move: GoMove = new GoMove(coord.x, coord.y);
                 const resultingSlice: GoPartSlice = GoRules.applyDeadMarkingMove(move, currentSlice).resultingSlice;
-                choices.put(move, resultingSlice);
+                choices.set(move, resultingSlice);
                 return choices;
             }
         }
@@ -287,7 +286,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                     if (legality.legal) {
                         let result: {resultingMove: GoMove, resultingSlice: GoPartSlice} =
                             GoRules.applyLegalMove(newMove, currentSlice, legality);
-                        choices.put(result.resultingMove, result.resultingSlice);
+                        choices.set(result.resultingMove, result.resultingSlice);
                     }
                 }
             }

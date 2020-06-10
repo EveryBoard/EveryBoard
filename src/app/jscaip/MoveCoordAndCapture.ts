@@ -1,5 +1,5 @@
 import {MoveCoord} from './MoveCoord';
-import { Comparable } from '../collectionlib/MGPMap';
+import { Comparable } from '../collectionlib/Comparable';
 
 export abstract class MoveCoordAndCapture<C extends Comparable> extends MoveCoord {
     /* is a MoveXY with added captures results

@@ -3,7 +3,7 @@ import {MNode} from '../../jscaip/MNode';
 import {QuartoPartSlice} from './QuartoPartSlice';
 import {QuartoMove} from './QuartoMove';
 import {QuartoEnum} from './QuartoEnum';
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 class CaseSensible {
@@ -305,7 +305,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synth�se du mouvement list�
                         moveAppliedPartSlice = new QuartoPartSlice(nextBoard, nextTurn, remainingPiece); // plateau obtenu
 
-                        listMoves.put(move, moveAppliedPartSlice);
+                        listMoves.set(move, moveAppliedPartSlice);
                     }
                 }
             }

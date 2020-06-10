@@ -3,7 +3,7 @@ import { GoMove } from './GoMove';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Phase, GoPartSlice, Pawn } from './GoPartSlice';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 
 describe('GoRules', () => {
 
@@ -170,6 +170,6 @@ describe('GoRules', () => {
         const listMoves: MGPMap<GoMove, GoPartSlice> = rules.getListMoves(rules.node);
 
         expect(listMoves.size()).toEqual(1, "there should only be one stone to put as dead");
-        expect(listMoves.get(0).key).toEqual(new GoMove(4, 4));
+        expect(listMoves.getByIndex(0).key).toEqual(new GoMove(4, 4));
     });
 });

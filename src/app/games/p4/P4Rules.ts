@@ -5,9 +5,11 @@ import {MoveX} from '../../jscaip/MoveX';
 import {SCORE} from '../../jscaip/SCORE';
 import {MNode} from '../../jscaip/MNode';
 import {P4PartSlice} from './P4PartSlice';
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+
+abstract class P4Node extends MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> {}
 
 export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
@@ -29,7 +31,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
     // statics methods:
 
-    public static getBoardValueShortened(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
+    public static getBoardValueShortened(n: P4Node): number {
         // let mother: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> = < MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> > n.getMother(); // is not null, otherwise this method should not have been called
         // let previousBoardValue: number = mother.getOwnValue(); // is not null either logically
         // let move: MoveCoord = < MoveCoord > n.getMove();
@@ -42,7 +44,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         }
         return 0; // TODO
     }
-    public static getBoardValueFromScratch(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
+    public static getBoardValueFromScratch(n: P4Node): number {
         if (P4Rules.VERBOSE) {
             console.log('getBoardValueFromScratch appell�e');
             P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
@@ -202,7 +204,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         // TODO: implement
         return 0;
     }
-    public static getBoardValueByLine(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
+    public static getBoardValueByLine(n: P4Node): number {
         const partSlice: P4PartSlice = n.gamePartSlice;
         const board: number[][] = partSlice.getCopiedBoard();
         // calcul par ligne
@@ -393,7 +395,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     }
     // static delegates
 
-    public static getListMoves(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): MGPMap<MoveX, P4PartSlice> {
+    public static getListMoves(n: P4Node): MGPMap<MoveX, P4PartSlice> {
         if (P4Rules.VERBOSE) {
             console.log('P4Rules._getListMoves appell� sur ');
             P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
@@ -418,13 +420,13 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
                 const newPartSlice = new P4PartSlice(newBoard, turn + 1);
 
-                retour.put(move, newPartSlice);
+                retour.set(move, newPartSlice);
             }
             x++;
         }
         return retour;
     }
-    public static getBoardValue(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
+    public static getBoardValue(n: P4Node): number {
         /* if (n.getMother() == null) {
           return P4Rules.getBoardValueFromScratch(n);
         } else {
@@ -465,10 +467,10 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             this.node = this.node.getInitialNode();
         }
     }
-    public getListMoves(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): MGPMap<MoveX, P4PartSlice> {
+    public getListMoves(n: P4Node): MGPMap<MoveX, P4PartSlice> {
         return P4Rules.getListMoves(n);
     }
-    public getBoardValue(n: MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>): number {
+    public getBoardValue(n: P4Node): number {
         if (P4Rules.VERBOSE) {
             console.log('P4Rules instance methods getBoardValue called');
             P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());

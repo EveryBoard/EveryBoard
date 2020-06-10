@@ -1,4 +1,4 @@
-import { Comparable } from "src/app/collectionlib/MGPMap";
+import { Comparable } from "src/app/collectionlib/Comparable";
 
 export abstract class Move implements Comparable {
 

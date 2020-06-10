@@ -1,10 +1,12 @@
 import { Rules } from "src/app/jscaip/Rules";
 import { MNode } from "src/app/jscaip/MNode";
-import { MGPMap } from "src/app/collectionlib/MGPMap";
+import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MinimaxTestingPartSlice } from "./MinimaxTestingPartSlice";
 import { MinimaxTestingMove } from "./MinimaxTestingMove";
 import { Coord } from "src/app/jscaip/Coord";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
+
+abstract class MinimaxTestingNode extends MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {}
 
 export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {
 
@@ -51,12 +53,12 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         }
         return {legal: true};
     }
-    public getBoardValue(node: MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus>): number {
+    public getBoardValue(node: MinimaxTestingNode): number {
         MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT++;
         const slice: MinimaxTestingPartSlice = node.gamePartSlice;
         return slice.getBoardAt(slice.location);
     }
-    public getListMoves(n: MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus>): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {
+    public getListMoves(n: MinimaxTestingNode): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {
         MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT++;
         const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> = new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();
         const slice: MinimaxTestingPartSlice = n.gamePartSlice;
@@ -64,12 +66,12 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         if (slice.location.x < 3) {
             const rightMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
             const rightSlice: MinimaxTestingPartSlice = this.applyLegalMove(rightMove, slice, LEGAL).resultingSlice;
-            result.put(rightMove, rightSlice);
+            result.set(rightMove, rightSlice);
         }
         if (slice.location.y < 3) {
             const downMove: MinimaxTestingMove = MinimaxTestingMove.DOWN;
             const downSlice: MinimaxTestingPartSlice = this.applyLegalMove(downMove, slice, LEGAL).resultingSlice;
-            result.put(downMove, downSlice);
+            result.set(downMove, downSlice);
         }
         return result;
     }

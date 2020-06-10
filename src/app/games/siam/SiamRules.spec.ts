@@ -1,7 +1,7 @@
 import { SiamRules } from './SiamRules';
 import { SiamMove, SiamMoveNature } from './SiamMove';
 import { SiamPiece } from './SiamPiece';
-import { MGPMap } from 'src/app/collectionlib/MGPMap';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { SiamPartSlice } from './SiamPartSlice';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
@@ -22,7 +22,7 @@ describe('SiamRules', () => {
     it('SiamRules should provide 20 first turn childs at turn 0', () => {
         const firstTurnMoves: MGPMap<SiamMove, SiamPartSlice> = rules.getListMoves(rules.node);
         expect(firstTurnMoves.size()).toEqual(20);
-        expect(firstTurnMoves.get(0).value.turn).toEqual(1);
+        expect(firstTurnMoves.getByIndex(0).value.turn).toEqual(1);
     });
     it('Insertion should work', () => {
         const moveIsLegal: boolean = rules.choose(new SiamMove(-1, 4, SiamMoveNature.FORWARD));
