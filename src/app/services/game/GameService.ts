@@ -11,7 +11,6 @@ import {ActivesPartsService} from '../actives-parts/ActivesPartsService';
 import {ChatService} from '../chat/ChatService';
 import {IChat} from '../../domain/ichat';
 import {MGPRequest} from '../../domain/request';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -19,8 +18,6 @@ import { environment } from 'src/environments/environment';
 export class GameService {
 
     public static VERBOSE: boolean = false;
-
-    public static IN_TESTING: boolean = false;
 
     private followedPartId: string;
 
@@ -32,7 +29,7 @@ export class GameService {
                 private activesPartsService: ActivesPartsService,
                 private joinerService: JoinerService,
                 private chatService: ChatService) {
-        if (environment.test && !GameService.IN_TESTING) throw new Error("NO GAME SERVICE IN TEST");
+        if (GameService.VERBOSE) console.log("GameService.constructor");
     }
     // on Server Component
 
@@ -50,20 +47,6 @@ export class GameService {
         };
         return this.partDao.create(newPart);
     }
-    protected createJoiner(creatorName: string, joinerId: string): Promise<void> {
-        if (GameService.VERBOSE) {
-            console.log('GameService.createJoiner(' + creatorName + ', ' + joinerId + ')');
-        }
-        const newJoiner: IJoiner = {
-            candidatesNames: [],
-            creator: creatorName,
-            chosenPlayer: '',
-            // abandonned feature timeoutMinimalDuration: 60,
-            firstPlayer: '0', // par défaut: le créateur
-            partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
-        };
-        return this.joinerService.set(joinerId, newJoiner);
-    }
     protected createChat(chatId: string): Promise<void> {
         if (GameService.VERBOSE) {
             console.log('GameService.createChat(' + chatId + ')');
@@ -79,7 +62,7 @@ export class GameService {
             console.log('GameService.createGame(' + creatorName + ', ' + typeGame + ')');
         }
         const gameId: string = await this.createPart(creatorName, typeGame, chosenPlayer) as string;
-        await this.createJoiner(creatorName, gameId);
+        await this.joinerService.createInitialJoiner(creatorName, gameId);
         await this.createChat(gameId); // TODO asynchronous
         return gameId;
     }
@@ -129,7 +112,7 @@ export class GameService {
         if (partId == null) {
             throw new Error("Can't delete id for partId = null");
         }
-        return await this.partDao.delete(partId);
+        return this.partDao.delete(partId);
     }
     public async acceptConfig(joiner: IJoiner): Promise<void> {
         if (GameService.VERBOSE) {

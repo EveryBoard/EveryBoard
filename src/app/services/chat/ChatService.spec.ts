@@ -10,7 +10,6 @@ describe('ChatService', () => {
     let service: ChatService;
 
     beforeAll(() => {
-        ChatService.IN_TESTING = true;
         ChatService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ChatService.VERBOSE;
     });
     beforeEach(() => {
@@ -21,6 +20,5 @@ describe('ChatService', () => {
     }));
     afterAll(async(() => {
         service.ngOnDestroy();
-        ChatService.IN_TESTING = false;
     }));
 });

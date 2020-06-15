@@ -40,10 +40,19 @@ describe('MGPMap', () => {
 
         expect(map.get(new MGPStr("first"))).toEqual(MGPOptional.of(0));
     });
-    it('Replace should when value not found', () => {
+    it('Replace should throw when value not found', () => {
         const map: MGPMap<MGPStr, Number> = new MGPMap();
         map.set(new MGPStr("first"), 1);
 
         expect( () => map.replace(new MGPStr("firstZUUU"), 0)).toThrow();
+    });
+    it('Delete should delete element', () => {
+        const map: MGPMap<MGPStr, Number> = new MGPMap();
+        map.set(new MGPStr("first"), 0);
+        map.set(new MGPStr("second"), 1);
+        map.set(new MGPStr("third"), 2);
+        map.delete(new MGPStr("first"));
+
+        expect(map.get(new MGPStr("first"))).toEqual(MGPOptional.empty());
     });
 });

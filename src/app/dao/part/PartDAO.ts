@@ -1,4 +1,4 @@
-import { FirebaseFirestoreDAO } from "../FirebaseFirestoreDAO";
+import { FirebaseFirestoreDAO } from "../firebasefirestoredao/FirebaseFirestoreDAO";
 import { ICurrentPart, PICurrentPart, ICurrentPartId } from "../../domain/icurrentpart";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Observable } from "rxjs";
@@ -17,6 +17,7 @@ export class PartDAO extends FirebaseFirestoreDAO<ICurrentPart, PICurrentPart> {
     constructor(protected afs: AngularFirestore) {
         super("parties", afs);
         if (environment.test) throw new Error("NO PART DAO IN TEST");
+        if(PartDAO.VERBOSE) console.log("PartDAO.constructor");
     }
     public getPartObsById(partId: string): Observable<ICurrentPartId> {
         if (PartDAO.VERBOSE) {

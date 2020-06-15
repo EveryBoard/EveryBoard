@@ -2,24 +2,34 @@ import {Injectable} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {IJoiner, IJoinerId, PIJoiner} from '../../domain/ijoiner';
 import {JoinerDAO} from '../../dao/joiner/JoinerDAO';
-import { environment } from 'src/environments/environment';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks';
 
 @Injectable({
     providedIn: 'root'
 })
 export class JoinerService {
 
-    public static VERBOSE: boolean = false;
-    public static IN_TESTING: boolean = false;
+    public static VERBOSE: boolean = true;
+
+    public static readonly EMPTY_JOINER: IJoiner = {
+        creator: null,
+        candidatesNames: [],
+        chosenPlayer: '',
+        // abandonned feature timeoutMinimalDuration: 60,
+        firstPlayer: '0', // par défaut: le créateur
+        partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
+    };
 
     private observedJoinerId: string;
     private observedJoinerObs: Observable<IJoinerId>;
     private observedJoinerSub: Subscription;
 
     constructor(private joinerDao: JoinerDAO) {
-        if (environment.test && !JoinerService.IN_TESTING) throw new Error("NO JOINER SERVICE IN TEST");
+        if (JoinerService.VERBOSE) console.log("JoinerService.constructor");
     }
     public startObserving(joinerId: string, callback: (iJoiner: IJoinerId) => void) {
+        if (JoinerService.VERBOSE) console.log("JoinerService.startObserving " + joinerId);
+
         if (this.observedJoinerId == null) {
             if (JoinerService.VERBOSE) {
                 console.log('[start observing joiner ' + joinerId);
@@ -32,6 +42,16 @@ export class JoinerService {
             throw new Error("JoinerService.startObserving should not be called while already observing a joiner");
         }
     }
+    public async createInitialJoiner(creatorName: string, joinerId: string): Promise<void> {
+        if (JoinerService.VERBOSE) {
+            console.log('JoinerService.createInitialJoiner(' + creatorName + ', ' + joinerId + ')');
+        }
+        const newJoiner: IJoiner = {
+            ...JoinerService.EMPTY_JOINER,
+            creator: creatorName,
+        };
+        return this.set(joinerId, newJoiner);
+    }
     public async joinGame(partId: string, userName: string): Promise<void> {
         if (JoinerService.VERBOSE) {
             console.log('JoinerService.joinGame(' + partId + ', ' + userName + ')');
@@ -41,8 +61,10 @@ export class JoinerService {
             throw new Error("No Joiner Received from DAO");
         }
         const joinerList: string[] = joiner.candidatesNames;
-        if (userName === joiner.creator || joinerList.includes(userName)) {
+        if (joinerList.includes(userName)) {
             throw new Error("JoinerService.joinGame was called by a user already in the game");
+        } else if (userName === joiner.creator) {
+            return Promise.resolve();
         } else {
             joinerList[joinerList.length] = userName;
             return this.joinerDao.update(partId, {candidatesNames: joinerList});
@@ -63,15 +85,14 @@ export class JoinerService {
             const indexLeaver: number = joinersList.indexOf(userName);
             let chosenPlayer: string = joiner.chosenPlayer;
             let partStatus: number = joiner.partStatus;
-            if (indexLeaver >= 0) { // candidate including chosenPlayer
-                joinersList.splice(indexLeaver, 1);
-            } else {
-                throw new Error("someone that was not candidate just left the chat");
-            }
-            if (joiner.chosenPlayer === userName) {
+            if (chosenPlayer === userName) {
                 // if the chosenPlayer leave, we're back to partStatus 0 (waiting for a chosenPlayer)
                 chosenPlayer = '';
                 partStatus = 0;
+            } else if(indexLeaver >= 0) { // candidate including chosenPlayer
+                joinersList.splice(indexLeaver, 1);
+            } else {
+                throw new Error("someone that was nor candidate nor chosenPlayer just left the chat: " + userName);
             }
             const modification: PIJoiner = {
                 chosenPlayer: chosenPlayer,
@@ -97,7 +118,7 @@ export class JoinerService {
         let joiner: IJoiner = await this.joinerDao.read(this.observedJoinerId);
         const candidatesNames: string[] = joiner.candidatesNames;
         const chosenPlayerIndex = candidatesNames.indexOf(chosenPlayerPseudo);
-        if (chosenPlayerIndex < 0 ) throw new Error("Chosen player is not in the chat");
+        if (chosenPlayerIndex < 0 ) throw new Error("Cannot choose player, " + chosenPlayerPseudo + " is not in the room");
 
         // if user is still present, take him off the candidate list
         candidatesNames.splice(chosenPlayerIndex, 1);
@@ -126,7 +147,7 @@ export class JoinerService {
             // timeoutMinimalDuration: timeout,
             maximalMoveDuration: maximalMoveDuration,
             totalPartDuration: totalPartDuration,
-            firstPlayer: firstPlayer
+            firstPlayer: firstPlayer,
         });
     }
     public acceptConfig(): Promise<void> {

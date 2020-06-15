@@ -1,5 +1,5 @@
 import { AngularFirestore, DocumentReference, CollectionReference } from "@angular/fire/firestore";
-import { FirebaseCollectionObserver } from "./FirebaseCollectionObserver";
+import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
 
 export abstract class FirebaseFirestoreDAO<T, PT> {
 

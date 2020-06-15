@@ -1,11 +1,12 @@
-import { async, inject } from '@angular/core/testing';
+import { async } from '@angular/core/testing';
 
 import { JoinerService } from './JoinerService';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { IJoinerId } from 'src/app/domain/ijoiner';
+import { IJoinerId, IJoiner } from 'src/app/domain/ijoiner';
 import { of } from 'rxjs';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { JoinerDAOMock, fakeJoinerId } from 'src/app/dao/joiner/JoinerDAOMock';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks';
 
 describe('JoinerService', () => {
 
@@ -15,7 +16,6 @@ describe('JoinerService', () => {
 
     beforeAll(() => {
         JoinerService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || JoinerService.VERBOSE;
-        JoinerService.IN_TESTING = true;
     });
     beforeEach(() => {
         dao = new JoinerDAOMock();
@@ -64,18 +64,17 @@ describe('JoinerService', () => {
             expect(error.message).toEqual("JoinerService.joinGame was called by a user already in the game");
         }
     }));
-    it('joinGame should throw when called by the creator', async(async() => {
+    it('joinGame should not update joiner when called by the creator', async(async() => {
         dao.set(fakeJoinerId.id, fakeJoinerId.joiner);
-        let threw: boolean = false;
+        const updateSpy: jasmine.Spy = spyOn(dao, "update").and.callThrough();
+        expect(updateSpy).not.toHaveBeenCalled();
 
-        try {
-            await service.joinGame(fakeJoinerId.id, fakeJoinerId.joiner.creator);
-        } catch (error) {
-            expect(error.message).toEqual("JoinerService.joinGame was called by a user already in the game");
-            threw = true;
-        } finally {
-            expect(threw).toBeTruthy();
-        }
+        await service.joinGame(fakeJoinerId.id, fakeJoinerId.joiner.creator);
+
+        const resultingJoiner: IJoiner = await dao.read(fakeJoinerId.id);
+
+        expect(updateSpy).not.toHaveBeenCalled();
+        expect(resultingJoiner).toEqual(fakeJoinerId.joiner);
     }));
     it('joinGame should be delegated to JoinerDAO', async(async() => {
         dao.set(fakeJoinerId.id, fakeJoinerId.joiner);
@@ -108,23 +107,31 @@ describe('JoinerService', () => {
 
         expect(update).toHaveBeenCalled();
     }));
-    it('cancelJoining should throw when called by someone who is not a candidate', async(async() => {
+    it('cancelJoining should start as new when chosenPlayer leaves', async(async() => {
+        dao.set("joinerId", JoinerMocks.JOINER_WITH_CHOSEN_PLAYER.copy());
+        let currentIJoiner: IJoiner;
+        service.startObserving("joinerId", (newJoinerReceived: IJoinerId) => {
+            currentIJoiner = newJoinerReceived.joiner;
+        });
+        await service.cancelJoining("firstCandidate");
+        expect(currentIJoiner).toEqual(JoinerMocks.JOINER_INITIAL.copy(), "Should be as new");
+    }));
+    it('cancelJoining should throw when called by someone who is nor candidate nor chosenPlayer', async(async() => {
         dao.set(fakeJoinerId.id, fakeJoinerId.joiner);
         service.startObserving(fakeJoinerId.id, (iJoiner: IJoinerId) => {});
         service.joinGame(fakeJoinerId.id, "whoever");
 
         let threw: boolean = false;
+        let errorMessage: string;
 
         try {
             await service.cancelJoining("who is that");
         } catch (error) {
-            expect(error.message).toEqual("someone that was not candidate just left the chat");
+            errorMessage = error.message;
             threw = true;
         } finally {
+            expect(errorMessage).toEqual('someone that was nor candidate nor chosenPlayer just left the chat: who is that');
             expect(threw).toBeTruthy();
         }
     }));
-    afterAll(() => {
-        JoinerService.IN_TESTING = false;
-    });
 });

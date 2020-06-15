@@ -30,7 +30,6 @@ describe('GameService', () => {
     let service: GameService;
 
     beforeAll(() => {
-        GameService.IN_TESTING = true;
         GameService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GameService.VERBOSE;
     });
     beforeEach(() => {
@@ -60,8 +59,5 @@ describe('GameService', () => {
         const deleteSpy: jasmine.Spy = spyOn(partDaoStub, "delete");
         service.deletePart("partId");
         expect(deleteSpy).toHaveBeenCalled();
-    });
-    afterAll(() => {
-        GameService.IN_TESTING = false;
     });
 });

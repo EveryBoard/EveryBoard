@@ -7,37 +7,39 @@
             <mat-step [stepControl]="opponentFormGroup" editable="false">
                 <ng-template matStepLabel>Selection d'un adversaire</ng-template>
 
-                <div *ngIf="currentJoiner.candidatesNames.length === 0"> Attendez qu'un utilisateur vous rejoigne!</div>
+                <div *ngIf="currentJoiner.candidatesNames.length === 0 else chooseCandidate">
+                    Attendez qu'un utilisateur vous rejoigne!
+                </div>
+                <ng-template #chooseCandidate>
+                    <form id="chooseCandidate" [formGroup]="opponentFormGroup">
+                        <mat-radio-group class="example-radio-group"
+                                         formControlName="chosenOpponent"
+                                         required>
+                            <mat-radio-button class="example-radio-button"
+                                              *ngFor="let joinerName of currentJoiner.candidatesNames"
+                                              [value]="joinerName">
+                                {{joinerName}}
+                            </mat-radio-button>
+                       </mat-radio-group>
+                        <div *ngIf="opponentFormGroup.get('chosenOpponent').value !== ''">
+                            <button (click)="setChosenPlayer(opponentFormGroup.get('chosenOpponent').value)"
+                                    mat-button
+                                    matStepperNext>
+                                Jouer contre {{ opponentFormGroup.get('chosenOpponent').value }}
+                            </button>
+                            <button (click)="unselectChosenPlayer()"
+                                    mat-button>
+                                Annuler
+                            </button>
+                        </div>
 
-                <form *ngIf="currentJoiner.candidatesNames.length > 0"
-                      [formGroup]="opponentFormGroup">
-                    <mat-radio-group class="example-radio-group"
-                                     formControlName="chosenOpponent"
-                                     required>
-                        <mat-radio-button class="example-radio-button"
-                                          *ngFor="let joinerName of currentJoiner.candidatesNames"
-                                          [value]="joinerName">
-                            {{joinerName}}
-                        </mat-radio-button>
-                    </mat-radio-group>
-                    <div *ngIf="opponentFormGroup.get('chosenOpponent').value !== ''">
-                        <button (click)="setChosenPlayer(opponentFormGroup.get('chosenOpponent').value)"
-                                mat-button
-                                matStepperNext>
-                            Jouer contre {{ opponentFormGroup.get('chosenOpponent').value }}
-                        </button>
-                        <button (click)="unselectChosenPlayer()"
-                                mat-button>
-                            Annuler
-                        </button>
-                    </div>
-
-                </form>
+                    </form>
+                </ng-template>
 
             </mat-step>
 
             <mat-step [stepControl]="configFormGroup" editable="false">
-                <form [formGroup]="configFormGroup">
+                <form id="proposeConfig" [formGroup]="configFormGroup">
                     <ng-template matStepLabel>Configurez la partie</ng-template>
 
                     <mat-radio-group class="example-radio-group" formControlName="firstPlayer" required>
@@ -91,7 +93,7 @@
                 <h4 *ngIf="!proposalSent">
                     {{ currentJoiner.creator }} est en train de se décider
                 </h4>
-                <div *ngIf="proposalSent">
+                <div id="acceptConfig" *ngIf="proposalSent">
                     <h4 *ngIf="currentJoiner.firstPlayer === '0'">
                         {{ currentJoiner.creator }} propose que tu commence
                     </h4>

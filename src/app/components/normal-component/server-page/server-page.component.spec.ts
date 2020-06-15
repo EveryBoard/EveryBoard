@@ -18,18 +18,21 @@ import { Router } from '@angular/router';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 const userServiceStub = {
+
     getActivesUsersObs: () => of([]),
+
     unSubFromActivesUsersObs: () => {},
 };
 class GameServiceMock {
-    getActivesPartsObs(): Observable<ICurrentPartId[]> {
+
+    public getActivesPartsObs(): Observable<ICurrentPartId[]> {
         return of([]);
     }
-    unSubFromActivesPartsObs() {
+    public unSubFromActivesPartsObs() {
         return;
     }
-    createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
-        return;
+    public async createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
+        return "on s'en bat les steeeaaaak!";
     }
 };
 class AuthenticationServiceMock {
@@ -88,11 +91,11 @@ describe('ServerPageComponent', () => {
                 CUSTOM_ELEMENTS_SCHEMA,
             ],
             providers: [
-                { provide: UserService, useValue: userServiceStub },
-                { provide: GameService, useClass: GameServiceMock },
+                { provide: UserService,           useValue: userServiceStub },
+                { provide: GameService,           useClass: GameServiceMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-                { provide: ChatService, useValue: chatServiceStub },
-                { provide: Router, useClass: RouterMock}
+                { provide: ChatService,           useValue: chatServiceStub },
+                { provide: Router,                useClass: RouterMock},
             ]
         }).compileComponents();
         fixture = TestBed.createComponent(ServerPageComponent);

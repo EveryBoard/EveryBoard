@@ -1,54 +1,13 @@
 import { IJoinerId } from "src/app/domain/ijoiner";
+import { JoinerDAO } from "src/app/dao/joiner/JoinerDAO";
 
 export class JoinerServiceMock {
 
     public static VERBOSE: boolean = false;
 
-    public static JOINERS = {
-        JOINER_INITIAL: {
-            id: 'joinerId',
-            joiner: {
-                candidatesNames: [],
-                creator: 'creator',
-                chosenPlayer: '', // TODO: Make optional
-                firstPlayer: '0', // TODO: Make optional AND enum
-                partStatus: 0
-            }
-        },
-        JOINER_WITH_FIRST_CANDIDATE: {
-            id: 'joinerId',
-            joiner: {
-                candidatesNames: ['firstCandidate'],
-                creator: 'creator',
-                chosenPlayer: '', // TODO: Make optional
-                firstPlayer: '0', // TODO: Make optional AND enum
-                partStatus: 0
-            }
-        },
-        JOINER_WITH_SECOND_CANDIDATE: {
-            id: 'joinerId',
-            joiner: {
-                candidatesNames: ['firstCandidate', 'secondCandidate'],
-                creator: 'creator',
-                chosenPlayer: '', // TODO: Make optional
-                firstPlayer: '0', // TODO: Make optional AND enum
-                partStatus: 0
-            }
-        },
-        JOINER_WITH_CHOSEN_PLAYER: {
-            id: 'joinerId',
-            joiner: {
-                candidatesNames: ['firstCandidate', 'secondCandidate'],
-                creator: 'creator',
-                chosenPlayer: 'firstCandidate', // TODO: Make optional
-                firstPlayer: '0', // TODO: Make optional AND enum
-                partStatus: 1
-            }
-        }
-    };
     public static emittedsJoiner: IJoinerId[];
 
-    public constructor() {
+    public constructor(private joinerDAO: JoinerDAO) {
         if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.constructor");
     }
     public joinGame(): Promise<void> {

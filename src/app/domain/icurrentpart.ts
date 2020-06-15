@@ -40,7 +40,55 @@ export interface ICurrentPart {
      * 8: rematch accepté
      */
 }
+export class Part {
 
+    public constructor(
+        private readonly typeGame: string,
+        private readonly playerZero: string,
+        private readonly turn: number,
+        private readonly listMoves: number[],
+        private readonly result: number,
+        private readonly playerOne?: string,
+
+        private readonly beginning?: number,
+        private readonly lastMove?: number,
+        private readonly typePart?: number|string,
+        private readonly winner?: string,
+        private readonly scorePlayerZero?: number|string, // TODO : implémenter ça
+        private readonly scorePlayerOne?: number|string, // TODO : implémenter ça aussi en même temps
+
+        private readonly historic?: string,
+        private readonly request?: MGPRequest
+    ) {
+        if (typeGame == null) throw new Error("typeGame can't be null");
+        if (playerZero == null) throw new Error("playerZero can't be null");
+        if (turn == null) throw new Error("turn can't be null");
+        if (listMoves == null) throw new Error("listMoves can't be null");
+        for (let move of listMoves)
+            if (move == null)
+                throw new Error("No element in listMoves can be null");
+        if (result == null) throw new Error("result can't be null");
+    }
+    public copy(): ICurrentPart {
+        const copied: ICurrentPart = {
+            typeGame: this.typeGame,
+            playerZero: this.playerZero,
+            turn: this.turn,
+            listMoves: this.listMoves.map((move: number) => move),
+            result: this.result
+        }
+        if (this.playerOne != null) copied.playerOne = this.playerOne;
+        if (this.beginning != null) copied.beginning = this.beginning;
+        if (this.lastMove != null) copied.lastMove = this.lastMove;
+        if (this.typePart != null) copied.typePart = this.typePart;
+        if (this.winner != null) copied.winner = this.winner;
+        if (this.scorePlayerZero != null) copied.scorePlayerZero = this.scorePlayerZero;
+        if (this.scorePlayerOne != null) copied.scorePlayerOne = this.scorePlayerOne;
+        if (this.historic != null) copied.historic = this.historic;
+        if (this.request != null) copied.request = this.request; // TODO deepcopy
+        return copied;
+    }
+}
 export interface ICurrentPartId {
     id: string;
     doc: ICurrentPart;

@@ -11,7 +11,6 @@ import { environment } from 'src/environments/environment';
 export class ChatService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
-    public static IN_TESTING: boolean = false;
 
     private followedChatId: string;
 
@@ -23,7 +22,7 @@ export class ChatService implements OnDestroy {
         return (message === ''); // TODO: améliorer ?
     }
     constructor(private chatDao: ChatDAO) {
-        if (environment.test && !ChatService.IN_TESTING) throw new Error("NO CHAT SERVICE IN TEST");
+        if (ChatService.VERBOSE) console.log("ChatService.constructor");
     }
     public async sendMessage(userName: string, lastTurnThen: number, content: string) {
         if (this.userForbid(this.followedChatId, userName)) {

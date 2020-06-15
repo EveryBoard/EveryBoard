@@ -25,7 +25,7 @@ import { IJoiner } from 'src/app/domain/ijoiner';
 })
 export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     @ViewChild('partCreation', {static: false}) partCreation: PartCreationComponent;
 
@@ -67,13 +67,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         }
     }
     public ngOnInit() {
-        if (OnlineGameWrapperComponent.VERBOSE) {
-            console.log('OnlineGameWrapperComponent ngOnInit');
-        }
+        if (OnlineGameWrapperComponent.VERBOSE) console.log('OnlineGameWrapperComponent.ngOnInit');
+
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
-        if (OnlineGameWrapperComponent.VERBOSE) {
-            console.log('current part id: ' + this.currentPartId);
-        }
         this.userSub = this.authenticationService.getJoueurObs()
             .subscribe(user => this.userName = user.pseudo);
     }
@@ -93,11 +89,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
     }
     public startGame() {
+        if (OnlineGameWrapperComponent.VERBOSE) console.log('OnlineGameWrapperComponent.startGame');
+
         if (this.gameStarted === true) {
             throw new Error("Should not start already started game");
-        }
-        if (OnlineGameWrapperComponent.VERBOSE) {
-            console.log('OnlineGameWrapperComponent startGame');
         }
         this.gameStarted = true;
         setTimeout(() => {
@@ -160,12 +155,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
         if (OnlineGameWrapperComponent.VERBOSE) {
             console.log("OnlineGameWrapperComponent onCurrentPartUpdate of:");
-            console.log(JSON.stringify(updatedICurrentPart));
+            console.log({ updatedICurrentPart });
         }
         const part: ICurrentPart = updatedICurrentPart.doc;
         if (OnlineGameWrapperComponent.VERBOSE) {
             console.log('part updated !');
-            console.log(JSON.stringify(this.spotDifferenceBetweenUpdateAndCurrentData(part)));
+            console.log({ difference: this.spotDifferenceBetweenUpdateAndCurrentData(part)});
         }
         this.currentPart = part;
         if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra

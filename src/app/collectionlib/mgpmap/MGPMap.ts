@@ -45,6 +45,8 @@ export class MGPMap<K extends Comparable, V> {
         return this.map.map((entry: {key: K, value: V}) => entry.key);
     }
     public replace(key: K, newValue: V): V {
+        if (key == null) throw new Error("Key null has no mapped value");
+        if (newValue == null) throw new Error("Cannot replace value by null, use delete instead");
         for (let i: number = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
             if (entry.key.equals(key)) {
@@ -63,5 +65,19 @@ export class MGPMap<K extends Comparable, V> {
         } else {
             this.map.push({key, value: firstValue});
         }
+    }
+    public delete(key: K): V {
+        if (key == null) throw new Error("Key null has no mapped value");
+        for (let i: number = 0; i < this.map.length; i++) {
+            const entry: {key: K, value: V} = this.map[i];
+            if (entry.key.equals(key)) {
+                const oldValue: V = this.map[i].value;
+                const beforeDeleted: {key: K, value: V}[] = this.map.slice(0, i);
+                const afterDeleted: {key: K, value: V}[] = this.map.slice(i + 1);
+                this.map = beforeDeleted.concat(afterDeleted);
+                return oldValue;
+            }
+        }
+        throw new Error("No Value to delete for key "+ key.toString());
     }
 }
