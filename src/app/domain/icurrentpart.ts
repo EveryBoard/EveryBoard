@@ -1,6 +1,7 @@
 import {MGPRequest} from './request';
 
 export interface ICurrentPart {
+
     typeGame: string;
     playerZero: string; // id
     turn: number; // -1 before it begin, 0 initial floor
@@ -90,10 +91,11 @@ export class Part {
     }
 }
 export interface ICurrentPartId {
+
     id: string;
+
     doc: ICurrentPart;
 }
-
 export interface PICurrentPart {
     typeGame?: string;
     playerZero?: string;

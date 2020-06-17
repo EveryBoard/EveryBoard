@@ -10,6 +10,6 @@ export class GameIncluderComponent {
 
     constructor(public viewContainerRef: ViewContainerRef) {
         if (GameIncluderComponent.VERBOSE)
-            console.log("GameIncluderComponent construct");
+            console.log("GameIncluderComponent constructor");
     }
 }

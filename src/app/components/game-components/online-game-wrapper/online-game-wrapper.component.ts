@@ -25,7 +25,7 @@ import { IJoiner } from 'src/app/domain/ijoiner';
 })
 export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @ViewChild('partCreation', {static: false}) partCreation: PartCreationComponent;
 
@@ -88,22 +88,24 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.opponentProposedRematch = null;
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
     }
-    public startGame() {
+    public startGame(iJoiner: IJoiner) {
         if (OnlineGameWrapperComponent.VERBOSE) console.log('OnlineGameWrapperComponent.startGame');
+
+        if (iJoiner == null) throw new Error("Cannot start Game of empty joiner doc");
 
         if (this.gameStarted === true) {
             throw new Error("Should not start already started game");
         }
         this.gameStarted = true;
         setTimeout(() => {
-            // the small waiting is there to make sur that the chronos are charged
+            // the small waiting is there to make sur that the chronos are charged by view
             this.afterGameIncluderViewInit();
-            this.readJoiner(); // NEWLY
+            this.startPart(); // NEWLY
         }, 1);
-
-        // this.readJoiner(); // oldly
     }
-    protected async readJoiner(): Promise<void> {
+    protected async startPart(): Promise<void> {
+        if (OnlineGameWrapperComponent.VERBOSE) console.log("OnlineGameWrapperComponent.startPart");
+
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(this.currentPartId);
         // TODO: make those data sent by partCreationComponent who already know this
         this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
@@ -116,6 +118,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameService.startObserving(this.currentPartId, iPart => {
             this.onCurrentPartUpdate(iPart);
         });
+        return Promise.resolve();
     }
     protected spotDifferenceBetweenUpdateAndCurrentData(update: ICurrentPart): PICurrentPart {
         const difference: PICurrentPart = {};
@@ -154,8 +157,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
     }
     protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
         if (OnlineGameWrapperComponent.VERBOSE) {
-            console.log("OnlineGameWrapperComponent onCurrentPartUpdate of:");
-            console.log({ updatedICurrentPart });
+            console.log("OnlineGameWrapperComponent.onCurrentPartUpdate:");
+            console.log({ before: this.currentPart, then: updatedICurrentPart });
         }
         const part: ICurrentPart = updatedICurrentPart.doc;
         if (OnlineGameWrapperComponent.VERBOSE) {
@@ -289,7 +292,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                     .then(onSuccess => {
                         this.ngOnDestroy();
                         this.resetGameDatas();
-                        this.startGame();
+                        this.startGame(null);
                     });
                 break;
             default:
@@ -320,7 +323,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 this.opponent = foundUser[0];
             };
             this.opponentSubscription =
-                this.userService.REFACTOR_observeUserByPseudo(opponentName, callback); // TODO: REFACTOR???
+                this.userService.observeUserByPseudo(opponentName, callback); // TODO: CHECK IF USEFULL OR NOT WITH NEW WAY TO DETECT DISCONNECTION
         }
     }
     public onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): boolean {
@@ -339,6 +342,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
         this.gameService.resign(this.currentPartId, victoriousOpponent);
     }
     public reachedOutOfTime(player: 0 | 1) {
+        if (OnlineGameWrapperComponent.VERBOSE) console.log("OnlineGameWrapperComponent.reachedOutOfTime(" + player + ")");
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
             this.notifyTimeoutVictory(this.opponent.doc.pseudo);
@@ -360,9 +364,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, O
                 id: this.currentPartId,
                 doc: this.currentPart
             };
-            this.gameService.acceptRematch(currentPartId, iPart => {
-                this.onCurrentPartUpdate(iPart);
-            });
+            this.gameService.acceptRematch(currentPartId);
         }
     }
     public proposeRematch() {

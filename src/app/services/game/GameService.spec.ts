@@ -11,7 +11,7 @@ import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 const partDaoStub = {
 
-    getPartObsById: (partId: string) => of<ICurrentPartId>(null),
+    getObsById: (partId: string) => of<ICurrentPartId>(null),
 
     delete: (partId: string) => {
         return new Promise<void>((resolve) => {
@@ -33,7 +33,7 @@ describe('GameService', () => {
         GameService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GameService.VERBOSE;
     });
     beforeEach(() => {
-        service = new GameService(partDaoStub as PartDAO,
+        service = new GameService(partDaoStub as unknown as PartDAO,
                                   activesPartsServiceStub as ActivesPartsService,
                                   joinerServiceStub as JoinerService,
                                   chatServiceStub as ChatService);
@@ -45,7 +45,7 @@ describe('GameService', () => {
         const myCallback: (iPart: ICurrentPartId) => void = (iPart: ICurrentPartId) => {
             expect(iPart.id).toBe("partId");
         };
-        const mySpy: jasmine.Spy = spyOn(partDaoStub, "getPartObsById").and.returnValue(of({id: "partId", doc: null}));
+        const mySpy: jasmine.Spy = spyOn(partDaoStub, "getObsById").and.returnValue(of({id: "partId", doc: null}));
         service.startObserving("partId", myCallback);
         expect(mySpy).toHaveBeenCalled();
     }));

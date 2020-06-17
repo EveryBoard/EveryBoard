@@ -5,7 +5,7 @@
                        *ngIf="gameStarted === false"
                        [partId]="currentPartId"
                        [userName]="userName"
-                       (gameStartNotification)="startGame()">
+                       (gameStartNotification)="startGame($event)">
     </app-part-creation>
 
     <div id="game" class="flex-container"

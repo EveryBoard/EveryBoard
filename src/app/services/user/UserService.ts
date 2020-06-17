@@ -116,7 +116,7 @@ export class UserService {
     }
     // Delegate
     */
-    public REFACTOR_observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
+    public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
         // the callback will be called on the foundUser
         return this.userDao.observeUserByPseudo(pseudo, callback);
     }

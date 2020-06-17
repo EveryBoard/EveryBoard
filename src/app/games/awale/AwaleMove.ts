@@ -24,7 +24,7 @@ export class AwaleMove extends MoveCoord {
         return AwaleMove.decode(encodedMove);
     }
     public encode(): number {
-        // An awal� move goes on x from o to 5
+        // An awalé move goes on x from o to 5
         // and y from 0 to 1
         // encoded as y*6 + x
         return (this.coord.y * 6) + this.coord.x;

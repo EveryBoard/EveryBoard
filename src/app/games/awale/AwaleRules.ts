@@ -94,8 +94,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         // of the last stone
         const landingCamp: number = lastCase[1];
         if (landingCamp === player) {
-            if (AwaleRules.VERBOSE) console.log('isLegal: mouvement l�gal termin�e dans son propre camps');
-            // on termine la distribution dans son propre camp, rien d'autre à v�rifier
+            if (AwaleRules.VERBOSE) console.log('isLegal: mouvement légal terminée dans son propre camps');
+            // on termine la distribution dans son propre camp, rien d'autre à vérifier
             return {legal: true, captured: [0, 0], resultingBoard};
         }
         // on as donc terminé la distribution dans le camps adverse, capture est de mise

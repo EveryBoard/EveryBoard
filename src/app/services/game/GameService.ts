@@ -82,9 +82,9 @@ export class GameService {
     }
     // on Part Creation Component
 
-    private startGameWithConfig(joiner: IJoiner): Promise<void> {
+    private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
         if (GameService.VERBOSE) {
-            console.log('GameService.startGameWithConfig' + JSON.stringify(joiner));
+            console.log('GameService.startGameWithConfig(' + partId + ", " + JSON.stringify(joiner));
         }
         let firstPlayer = joiner.creator;
         let secondPlayer = joiner.chosenPlayer;
@@ -103,7 +103,7 @@ export class GameService {
             turn: 0,
             beginning: Date.now()
         };
-        return this.partDao.update(this.followedPartId, modification);
+        return this.partDao.update(partId, modification);
     }
     public async deletePart(partId: string): Promise<void> {
         if (GameService.VERBOSE) {
@@ -114,16 +114,12 @@ export class GameService {
         }
         return this.partDao.delete(partId);
     }
-    public async acceptConfig(joiner: IJoiner): Promise<void> {
+    public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {
         if (GameService.VERBOSE) {
-            console.log('GameService.acceptConfig(' + JSON.stringify(joiner) + ')');
+            console.log('GameService.acceptConfig(' + partId + ", " + JSON.stringify(joiner) + ') + tmp partStatus: ' + joiner.partStatus);
         }
-        if (this.followedPartId == null) {
-            throw new Error("Can't accept config when no game is observed");
-        } // OLDLY, seem's to allow bug anyway, let's try to suppress it
         await this.joinerService.acceptConfig();
-        console.log('config accepted !');
-        return this.startGameWithConfig(joiner);
+        return this.startGameWithConfig(partId, joiner);
     }
     // on OnlineGame Component
 
@@ -133,7 +129,7 @@ export class GameService {
                 console.log('[start watching part ' + partId);
             }
             this.followedPartId = partId;
-            this.followedPartObs = this.partDao.getPartObsById(partId);
+            this.followedPartObs = this.partDao.getObsById(partId);
             this.followedPartSub = this.followedPartObs
                 .subscribe(onFullFilled => callback(onFullFilled));
         } else {
@@ -161,9 +157,10 @@ export class GameService {
         });
     }
     public notifyVictory(partId: string, winner: string): Promise<void> {
+        if (GameService.VERBOSE) console.log("GameService.notifyVictory(" + partId + ", " + winner + ")");
         return this.partDao.update(partId, {
-            'winner': winner,
-            'result': 3,
+            winner,
+            result: 3,
             request: null
         });
     }
@@ -171,7 +168,9 @@ export class GameService {
         const req: MGPRequest = {code: 6 + oberserverRole};
         return this.partDao.update(partId, {request: req});
     }
-    public async acceptRematch(part: ICurrentPartId, callback: (iPart: ICurrentPartId) => void): Promise<void> { // TODO: supprimer l'callback
+    public async acceptRematch(part: ICurrentPartId): Promise<void> {
+        if (GameService.VERBOSE) console.log("GameService.acceptRematch(" + JSON.stringify(part) + ")");
+
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
         const rematchId: string = await this.createGame(iJoiner.creator, part.doc.typeGame, iJoiner.chosenPlayer);
         let firstPlayer: string = iJoiner.firstPlayer;

@@ -1,4 +1,5 @@
 export interface IJoiner {
+
     candidatesNames: string[]; // TODO: give default empty value
     creator: string;
     chosenPlayer: string; // TODO: make optional
@@ -76,11 +77,13 @@ export class Joiner {
     }
 }
 export interface IJoinerId {
-    id: string;
-    joiner: IJoiner;
-}
 
+    id: string;
+
+    doc: IJoiner;
+}
 export interface PIJoiner {
+
     candidatesNames?: string[];
     creator?: string;
     chosenPlayer?: string;

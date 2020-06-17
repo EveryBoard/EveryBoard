@@ -3,8 +3,11 @@ import { MGPStr } from "src/app/collectionlib/mgpstr/MGPStr";
 import { ObservableSubject } from "src/app/collectionlib/ObservableSubject";
 import { Observable, BehaviorSubject } from "rxjs";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
+import { IFirebaseFirestoreDAO } from "./FirebaseFirestoreDAO";
+import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
+import { AngularFirestore } from "@angular/fire/firestore";
 
-export abstract class FirebaseFirestoreDAOMock<T, PT> {
+export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
     
     public static VERBOSE: boolean = false;
 
@@ -34,8 +37,8 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> {
         }
         this.resetStaticDB();
     }
-    public getObservable(id: string): Observable<{id: string, doc: T}> {
-        if (this.VERBOSE) console.log(this.collectionName + ".getObservable(" + id + ")");
+    public getObsById(id: string): Observable<{id: string, doc: T}> {
+        if (this.VERBOSE) console.log(this.collectionName + ".getObsById(" + id + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -44,6 +47,11 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> {
         } else {
             throw new Error("No joiner of id " + id + " to observe"); // TODO: check that observing unexisting doc throws
         }
+    }
+    public async create(newElement: T): Promise<String> {
+        const elemName: string = this.collectionName + this.getStaticDB().size();
+        await this.set(elemName, newElement);
+        return elemName;
     }
     public async read(id: string): Promise<T> {
         if (this.VERBOSE) console.log(this.collectionName + ".read(" + id + ")");
@@ -97,5 +105,13 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> {
         } else {
             throw new Error("Cannot delete element " + id + " absent from " + this.collectionName);
         }
+    }
+    public observingWhere(
+        field: string,
+        condition: firebase.firestore.WhereFilterOp,
+        value: any,
+        callback: FirebaseCollectionObserver<T>): () => void
+    {
+        throw new Error("Not Implemented yet it seem's hard");
     }
 }

@@ -40,13 +40,13 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         // 1. for each direction where there is an ennemy block
         //  a. for the 1 to 3 ennemy block in a row
         if (P4Rules.VERBOSE) {
-            console.log('getBoardValueShortened appell�e');
+            console.log('getBoardValueShortened appellée');
         }
         return 0; // TODO
     }
     public static getBoardValueFromScratch(n: P4Node): number {
         if (P4Rules.VERBOSE) {
-            console.log('getBoardValueFromScratch appell�e');
+            console.log('getBoardValueFromScratch appellée');
             P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
         }
         const p4Board: P4PartSlice = n.gamePartSlice;
@@ -60,14 +60,14 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             // pour chaque colonne
             y = 0; // on commence en bas
             while (y !== 6 && currentBoard[y][x] !== Player.NONE.value) {
-                // tant qu'on a pas atteint le haut ni une case inoccup�e
+                // tant qu'on a pas atteint le haut ni une case inoccupée
 
                 tmpScore = P4Rules.getCaseScore(currentBoard, new Coord(x, y));
                 if (MNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
-                    // si on trouve un [pr�]victoire
-                    // System.out.println(node + ':: victoire ou pr� - victoire(' + tmpScore + ') en (' + x + ', ' + y + ')');
+                    // si on trouve un [pré]victoire
+                    // System.out.println(node + ':: victoire ou pré - victoire(' + tmpScore + ') en (' + x + ', ' + y + ')');
                     return tmpScore; // on la retourne
-                    // TODO v�rifier que PRE_VICTORY n'�crase pas les VICTORY dans ce cas ci
+                    // TODO vérifier que PRE_VICTORY n'écrase pas les VICTORY dans ce cas ci
                 }
                 score += tmpScore;
                 y++; // et on remonte
@@ -94,7 +94,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         // OLDDLY return 0; // shouldn't append
     }
     public static getHalfLineScore(board: number[][], i: Coord, dir: Direction, ennemi: number, allie: number): number[] {
-        /* Anciennement nomm� 'countLine'
+        /* Anciennement nommé 'countLine'
        *
        * pour une case i(iX, iY) contenant un pion 'allie' (dont les ennemis sont naturellement 'ennemi'
        * on parcours le plateau à partir de i dans la direction d(dX, dY)
@@ -102,8 +102,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
        */
 
         let c: number; // current case
-        let freeSpaces = 0; // le nombre de case libres align�es
-        let allies = 0; // le nombre de case alli�es align�es
+        let freeSpaces = 0; // le nombre de case libres alignées
+        let allies = 0; // le nombre de case alliées alignées
         let allAlliesAreSideBySide = true;
         let co: Coord = new Coord(i.x + dir.x, i.y + dir.y);
         while (co.isInRange(7, 6) && freeSpaces !== 3) {
@@ -115,9 +115,9 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             if (c === allie && allAlliesAreSideBySide) {
                 allies++;
             } else {
-                allAlliesAreSideBySide = false; // on arr�te de compter les alli�es sur cette ligne
+                allAlliesAreSideBySide = false; // on arrête de compter les alliées sur cette ligne
             }
-            // dès que l'un d'entre eux n'est plus coll�
+            // dès que l'un d'entre eux n'est plus collé
             freeSpaces++;
             // co = new Coord(co.x + dir.x, co.y + dir.y);
             co = co.getNext(dir);
@@ -132,13 +132,13 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     }
     public static getCaseScore(board: number[][], c: Coord): number {
         if (P4Rules.VERBOSE) {
-            console.log('getCaseScore(board, ' + c.x + ', ' + c.y + ') appell�e');
+            console.log('getCaseScore(board, ' + c.x + ', ' + c.y + ') appellée');
             P4Rules.debugPrintBiArray(board);
         }
         if (board[c.y][c.x] === Player.NONE.value) {
             throw new Error('cannot call getCaseScore on empty case');
         }
-        // anciennement nomm� countPossibility
+        // anciennement nommé countPossibility
         let score = 0; // final result, count the theoretical victorys possibility
         let lineDist = 0;
         let lineAllies = 0;
@@ -208,7 +208,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         const partSlice: P4PartSlice = n.gamePartSlice;
         const board: number[][] = partSlice.getCopiedBoard();
         // calcul par ligne
-        // ix, iy = i(x, y): i(init) est la coord d�but de la ligne à compter
+        // ix, iy = i(x, y): i(init) est la coord début de la ligne à compter
         // dx, dy = d(x, y): d(direction) est le vecteur donnant la direction de la ligne
         let score = 0;
         let scoreStatut: SCORE;
@@ -249,7 +249,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         ];
         /* les diagonales descendantes ont pour indice (x - y) des cases qui passent par elles
        * x allant de 0 et 6 et y de 0 à 5: x - y va de - 5 à 6
-       * nous ne pouvons accepter un indice n�gatif, nous rajoutons donc 5 à x - y
+       * nous ne pouvons accepter un indice négatif, nous rajoutons donc 5 à x - y
        * seules les 6 diagonales montantes de - 2( + 5 = 3) à 3( + 5 = 8) sont de longueur 4 ou plus
        * seules elles peuvent donc contenir un puissance 4
        */
@@ -313,8 +313,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     }
     public static getScoreColonne_A_TESTER(board: number[][], x: number): number {
         let nInALine = 1;
-        const upperFound = false; // il n'y aura dans une rang�e qu'une seule case jouable
-        let aligner: number = board[0][x]; // toujours occup� si on appelle cette rang�e
+        const upperFound = false; // il n'y aura dans une rangée qu'une seule case jouable
+        let aligner: number = board[0][x]; // toujours occupé si on appelle cette rangée
         const line: number[] = [
             aligner,
             Player.NONE.value,
@@ -331,10 +331,10 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             c = board[y][x];
             line[y] = c;
             if (c === aligner) {
-                // si cette case est du m�me genre que la pr�c�dente
-                nInALine++; // il en a donc une de plus d'align�e
+                // si cette case est du même genre que la précédente
+                nInALine++; // il en a donc une de plus d'alignée
             } else {
-                // cette case est diff�rente de la pr�c�dente
+                // cette case est différente de la précédente
                 if (nInALine === 4) {
                     if (P4Rules.VERBOSE) {
                         console.log('there is some kind of victory here 2');
@@ -397,10 +397,10 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
     public static getListMoves(n: P4Node): MGPMap<MoveX, P4PartSlice> {
         if (P4Rules.VERBOSE) {
-            console.log('P4Rules._getListMoves appell� sur ');
+            console.log('P4Rules._getListMoves appellé sur ');
             P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
         }
-        // ne doit �tre appell� que si cette partie n'est pas une partie finie
+        // ne doit être appellé que si cette partie n'est pas une partie finie
         const originalPartSlice: P4PartSlice = n.gamePartSlice;
         const originalBoard: number[][] = originalPartSlice.getCopiedBoard();
         const retour: MGPMap<MoveX, P4PartSlice> = new MGPMap<MoveX, P4PartSlice>();

@@ -22,12 +22,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      * they need common data so mother calculate/retrieve then share them with her child
      */
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @Input() partId: string;
     @Input() userName: string;
 
-    @Output() gameStartNotification = new EventEmitter<void>();
+    @Output("gameStartNotification") gameStartNotification: EventEmitter<IJoiner> = new EventEmitter<IJoiner>();
     public gameStarted = false; // notify that the game has started, a thing evaluated with the joiner doc game status
 
     public currentJoiner: IJoiner = null;
@@ -114,7 +114,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             if (PartCreationComponent.VERBOSE) {
                 console.log('PartCreationComponent.onCurrentJoinerUpdate: the game has started');
             }
-            return this.onGameStarted();
+            this.onGameStarted(iJoinerId);
         }
         if (PartCreationComponent.VERBOSE) {
             console.log('PartCreationComponent.onCurrentJoinerUpdate: normal joiner update');
@@ -123,42 +123,42 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.updateJoiner(iJoinerId);
     }
     private isGameCanceled(iJoinerId: IJoinerId): boolean {
-        return (iJoinerId == null) || (iJoinerId.joiner == null);
+        return (iJoinerId == null) || (iJoinerId.doc == null);
     }
     private onGameCancelled() {
         // TODO: inform that the game has been cancelled
-        console.log("GAME CANCELLED");
+        if (PartCreationComponent.VERBOSE) console.log("PartCreationComponent.onGameCancelled");
         this.router.navigate(['/server']);
     }
     private isGameStarted(iJoinerId: IJoinerId): boolean {
-        return iJoinerId && iJoinerId.joiner && (iJoinerId.joiner.partStatus === 3);
+        return iJoinerId && iJoinerId.doc && (iJoinerId.doc.partStatus === 3);
     }
-    private onGameStarted() {
+    private onGameStarted(iJoinerId: IJoinerId) {
         if (PartCreationComponent.VERBOSE) {
-            console.log('PartCreation.onGameStarted called');
+            console.log('PartCreationComponent.onGameStarted(' + JSON.stringify(iJoinerId) + ')');
         }
-        this.gameStartNotification.emit();
+        this.gameStartNotification.emit(iJoinerId.doc);
         this.gameStarted = true;
         if (PartCreationComponent.VERBOSE) {
-            console.log('PartCreation.onGameStarted finished');
+            console.log('PartCreationComponent.onGameStarted finished');
         }
     }
     private updateJoiner(iJoinerId: IJoinerId) {
         if (PartCreationComponent.VERBOSE) console.log("PartCreationComponent.updateJoiner");
             
         // Update the form depending on which state we're on now
-        this.userIsCreator = (this.userName === iJoinerId.joiner.creator);
-        this.userIsChosenPlayer = (this.userName === iJoinerId.joiner.chosenPlayer);
-        this.proposalSent = iJoinerId.joiner.partStatus > 1;
+        this.userIsCreator = (this.userName === iJoinerId.doc.creator);
+        this.userIsChosenPlayer = (this.userName === iJoinerId.doc.chosenPlayer);
+        this.proposalSent = iJoinerId.doc.partStatus > 1;
         if (this.userIsCreator) {
-            this.proposingDisabled = (iJoinerId.joiner.partStatus !== 1);
+            this.proposingDisabled = (iJoinerId.doc.partStatus !== 1);
         } else {
             // this.timeout = iJoinerId.joiner.timeoutMinimalDuration;
-            this.maximalMoveDuration = iJoinerId.joiner.maximalMoveDuration;
-            this.firstPlayer = iJoinerId.joiner.firstPlayer;
-            this.acceptingDisabled = (iJoinerId.joiner.partStatus !== 2);
+            this.maximalMoveDuration = iJoinerId.doc.maximalMoveDuration;
+            this.firstPlayer = iJoinerId.doc.firstPlayer;
+            this.acceptingDisabled = (iJoinerId.doc.partStatus !== 2);
         }
-        this.currentJoiner = iJoinerId.joiner;
+        this.currentJoiner = iJoinerId.doc;
     }
     private async cancelGameCreation(): Promise<void> {
         // callable only by the creator
@@ -198,16 +198,17 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.joinerService.proposeConfig(maxMoveDur, firstPlayer, totalPartDuration);
     }
     public acceptConfig(): Promise<void> {
+        if (PartCreationComponent.VERBOSE) console.log("PartCreationComponent.acceptConfig");
         // called by the joiner
 
         // trigger the beginning redirection that will be called on every subscribed user
         // status become 3 (game started)
         // console.log('let\'s accept config of ' + this.partId);
         // console.log('GameService observing : ');
-        return this.gameService.acceptConfig(this.currentJoiner);
+        return this.gameService.acceptConfig(this.partId, this.currentJoiner);
     }
     public async ngOnDestroy(): Promise<void> {
-        if (PartCreationComponent.VERBOSE || true) console.log('PartCreationComponent.ngOnDestroy');
+        if (PartCreationComponent.VERBOSE) console.log('PartCreationComponent.ngOnDestroy');
 
         if (this.userSub && this.userSub.unsubscribe) {
             this.userSub.unsubscribe();

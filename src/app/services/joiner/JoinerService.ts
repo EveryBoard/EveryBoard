@@ -2,14 +2,13 @@ import {Injectable} from '@angular/core';
 import {Observable, Subscription} from 'rxjs';
 import {IJoiner, IJoinerId, PIJoiner} from '../../domain/ijoiner';
 import {JoinerDAO} from '../../dao/joiner/JoinerDAO';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks';
 
 @Injectable({
     providedIn: 'root'
 })
 export class JoinerService {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public static readonly EMPTY_JOINER: IJoiner = {
         creator: null,
@@ -27,7 +26,7 @@ export class JoinerService {
     constructor(private joinerDao: JoinerDAO) {
         if (JoinerService.VERBOSE) console.log("JoinerService.constructor");
     }
-    public startObserving(joinerId: string, callback: (iJoiner: IJoinerId) => void) {
+    public startObserving(joinerId: string, callback: (iJoinerId: IJoinerId) => void) {
         if (JoinerService.VERBOSE) console.log("JoinerService.startObserving " + joinerId);
 
         if (this.observedJoinerId == null) {
@@ -35,7 +34,7 @@ export class JoinerService {
                 console.log('[start observing joiner ' + joinerId);
             }
             this.observedJoinerId = joinerId;
-            this.observedJoinerObs = this.joinerDao.getObservable(joinerId);
+            this.observedJoinerObs = this.joinerDao.getObsById(joinerId);
             this.observedJoinerSub = this.observedJoinerObs
                 .subscribe(onFullFilled => callback(onFullFilled));
         } else {
@@ -151,12 +150,13 @@ export class JoinerService {
         });
     }
     public acceptConfig(): Promise<void> {
+        if (JoinerService.VERBOSE) console.log("JoinerService.acceptConfig");
+
         if (this.observedJoinerId == null) {
-            console.log('BUG GOING TO HAPPEND cause acceptConfig when no observing Joiner !!');
+            throw new Error('Can\'t acceptConfig when no joiner doc observed !!');
         }
         // console.log('JoinerService :: let s accept config from ' + this.followedJoinerId);
-        return this.joinerDao
-            .update(this.observedJoinerId, {partStatus: 3});
+        return this.joinerDao.update(this.observedJoinerId, {partStatus: 3});
     }
     public stopObserving() {
         if (JoinerService.VERBOSE) {

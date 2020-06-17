@@ -18,16 +18,4 @@ export class JoinerDAO extends FirebaseFirestoreDAO<IJoiner, PIJoiner> {
         if (environment.test) throw new Error("NO JOINER DAO IN TEST");
         if (JoinerDAO.VERBOSE) console.log("JoinerDAO.constructor");
     }
-    public getObservable(id: string): Observable<IJoinerId> {
-        if (JoinerDAO.VERBOSE) {
-            console.log('JoinerDAO.getObservable(' + id + ')');
-        }
-        return this.afs.doc('joiners/' + id).snapshotChanges()
-            .pipe(map(actions => {
-                return {
-                    joiner: actions.payload.data() as IJoiner,
-                    id: id
-                };
-            }));
-    }
 }

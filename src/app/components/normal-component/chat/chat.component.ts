@@ -53,7 +53,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (ChatComponent.VERBOSE) {
             console.log('User \'' + this.userName + '\' logged, loading chat content');
         }
-        this.chatService.startObserving(this.chatId, chat => this.chat = chat.chat.messages);
+        this.chatService.startObserving(this.chatId, chat => this.chat = chat.doc.messages);
     }
     public showDisconnectedChat() {
         const msg: IMessage = {sender: 'fake', content: 'vous devez être connecté pour voir le chat...', postedTime: Date.now(), lastTurnThen: null};

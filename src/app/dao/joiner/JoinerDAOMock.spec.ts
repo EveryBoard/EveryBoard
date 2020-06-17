@@ -17,47 +17,47 @@ describe("JoinerDAOMock", () => {
         lastJoiner = null;
     });
     it("Total update should update", async(async() => {
-        await joinerDaoMock.set("joinerId", JoinerMocks.JOINER_INITIAL.copy());
+        await joinerDaoMock.set("joinerId", JoinerMocks.INITIAL.copy());
 
         expect(lastJoiner).toBeNull();
         expect(callCount).toBe(0);
 
-        joinerDaoMock.getObservable("joinerId").subscribe((iJoinerId: IJoinerId) => {
+        joinerDaoMock.getObsById("joinerId").subscribe((iJoinerId: IJoinerId) => {
             callCount ++;
-            lastJoiner = iJoinerId.joiner;
+            lastJoiner = iJoinerId.doc;
             if (callCount > 2) {
                 expect(false).toBeTruthy("Should not have been called more than twice");
             }
         });
         
         expect(callCount).toEqual(1);
-        expect(lastJoiner).toEqual(JoinerMocks.JOINER_INITIAL.copy());
+        expect(lastJoiner).toEqual(JoinerMocks.INITIAL.copy());
 
-        await joinerDaoMock.update("joinerId", JoinerMocks.JOINER_WITH_FIRST_CANDIDATE.copy());
+        await joinerDaoMock.update("joinerId", JoinerMocks.WITH_FIRST_CANDIDATE.copy());
 
         expect(callCount).toEqual(2);
-        expect(lastJoiner).toEqual(JoinerMocks.JOINER_WITH_FIRST_CANDIDATE.copy());
+        expect(lastJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
     }));
     it("Partial update should update", async(async() => {
-        await joinerDaoMock.set("joinerId", JoinerMocks.JOINER_INITIAL.copy());
+        await joinerDaoMock.set("joinerId", JoinerMocks.INITIAL.copy());
 
         expect(callCount).toEqual(0);
         expect(lastJoiner).toBeNull();
 
-        joinerDaoMock.getObservable("joinerId").subscribe((iJoinerId: IJoinerId) => {
+        joinerDaoMock.getObsById("joinerId").subscribe((iJoinerId: IJoinerId) => {
             callCount ++;
             if (callCount > 2) {
                 expect(false).toBeTruthy("Should not have been called more than twice");
             }
-            lastJoiner = iJoinerId.joiner;
+            lastJoiner = iJoinerId.doc;
         });
 
         expect(callCount).toEqual(1);
-        expect(lastJoiner).toEqual(JoinerMocks.JOINER_INITIAL.copy());
+        expect(lastJoiner).toEqual(JoinerMocks.INITIAL.copy());
 
         await joinerDaoMock.update("joinerId", { candidatesNames: ["firstCandidate"] });
 
         expect(callCount).toEqual(2);
-        expect(lastJoiner).toEqual(JoinerMocks.JOINER_WITH_FIRST_CANDIDATE.copy());
+        expect(lastJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
     }));
 });

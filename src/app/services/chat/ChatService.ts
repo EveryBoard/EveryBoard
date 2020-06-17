@@ -63,7 +63,7 @@ export class ChatService implements OnDestroy {
                 console.log('[start watching chat ' + chatId);
             }
             this.followedChatId = chatId;
-            this.followedChatObs = this.chatDao.getChatObsById(chatId);
+            this.followedChatObs = this.chatDao.getObsById(chatId);
             this.followedChatSub = this.followedChatObs
                 .subscribe(onFullFilled => callback(onFullFilled));
         } else if (chatId === this.followedChatId) {
