@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {AbstractGameComponent} from '../AbstractGameComponent';
-import {GoMove} from 'src/app/games/go/GoMove';
-import {GoRules} from 'src/app/games/go/GoRules';
+import {GoMove} from 'src/app/games/go/gomove/GoMove';
+import {GoRules} from 'src/app/games/go/gorules/GoRules';
 import {GoPartSlice, Phase, GoPiece, Pawn} from 'src/app/games/go/GoPartSlice';
 import {Coord} from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';

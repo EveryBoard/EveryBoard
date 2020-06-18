@@ -1,4 +1,4 @@
-import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild, ViewContainerRef } from '@angular/core';
+import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractGameComponent} from './AbstractGameComponent';
 import {GameIncluderComponent} from './game-includer/game-includer.component';

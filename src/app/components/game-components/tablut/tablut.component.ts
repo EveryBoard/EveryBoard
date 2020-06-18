@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import {Coord} from '../../../jscaip/Coord';
-import {TablutMove} from 'src/app/games/tablut/TablutMove';
+import {TablutMove} from 'src/app/games/tablut/tablutmove/TablutMove';
 import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
-import {TablutRules} from '../../../games/tablut/TablutRules';
+import {TablutRules} from '../../../games/tablut/tablutrules/TablutRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({

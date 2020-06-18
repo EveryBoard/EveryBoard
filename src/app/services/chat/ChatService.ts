@@ -3,7 +3,6 @@ import {Observable, Subscription} from 'rxjs';
 import {IChat, IChatId} from '../../domain/ichat';
 import {ChatDAO} from '../../dao/chat/ChatDAO';
 import {IMessage} from '../../domain/imessage';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -58,6 +57,8 @@ export class ChatService implements OnDestroy {
                userName === 'undefined'; // TODO: implémenter le blocage de chat
     }
     public startObserving(chatId: string, callback: (iChat: IChatId) => void) {
+        if (ChatService.VERBOSE) console.log("ChatService.startObserving " + chatId);
+
         if (this.followedChatId == null) {
             if (ChatService.VERBOSE) {
                 console.log('[start watching chat ' + chatId);

@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { AwaleComponent } from './awale.component';
-import { AwaleMove } from 'src/app/games/awale/AwaleMove';
+import { AwaleMove } from 'src/app/games/awale/awalemove/AwaleMove';
 
 describe('AwaleComponent', () => {
 

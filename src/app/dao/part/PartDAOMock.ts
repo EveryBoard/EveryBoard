@@ -3,6 +3,7 @@ import { FirebaseFirestoreDAOMock } from "../firebasefirestoredao/FirebaseFirest
 import { MGPStr } from "src/app/collectionlib/mgpstr/MGPStr";
 import { ObservableSubject } from "src/app/collectionlib/ObservableSubject";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
+import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
 
 interface PartOS extends ObservableSubject<ICurrentPartId> {}
 
@@ -21,5 +22,8 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<ICurrentPart, PICurren
     }
     public resetStaticDB() {
         PartDAOMock.partDB = new MGPMap();
+    }
+    public observeActivesParts(callback: FirebaseCollectionObserver<ICurrentPart>): () => void {
+        return () => {}; // TODO, observingWhere should be coded!
     }
 }

@@ -8,19 +8,10 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { ChatService } from 'src/app/services/chat/ChatService';
 import { MatListModule, MatIconModule, MatInputModule } from '@angular/material';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
-import { IChatId } from 'src/app/domain/ichat';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 
-class ChatServiceMock {
-
-    public startObserving(cId: string, cb: (iChatId: IChatId) => void) {
-    };
-    public stopObserving() {
-    };
-    public isObserving(): boolean {
-        return;
-    }
-};
 class AuthenticationServiceMock {
 
     public static CURRENT_USER: {pseudo: string, verified: boolean} = null;
@@ -47,8 +38,6 @@ describe('ChatComponent', () => {
 
     let chatService: ChatService;
 
-    let authenticationService: AuthenticationService;
-
     beforeAll(() => {
         ChatComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ChatComponent.VERBOSE;
     });
@@ -60,7 +49,7 @@ describe('ChatComponent', () => {
             ],
             declarations: [ ChatComponent ],
             providers: [
-                { provide: ChatService,           useClass: ChatServiceMock },
+                { provide: ChatDAO,               useClass: ChatDAOMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
             ]
         })
@@ -71,7 +60,6 @@ describe('ChatComponent', () => {
         component = fixture.componentInstance;
         component.chatId = "fauxChat";
         chatService = TestBed.get(ChatService);
-        authenticationService = TestBed.get(AuthenticationService);
 
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null};
         AuthenticationServiceMock.IS_USER_LOGGED = null;

@@ -16,13 +16,9 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks';
 import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks';
+import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 
-class ChatServiceMock {
-
-    public async deleteChat(chatId: string): Promise<void> {
-        return Promise.resolve();
-    }
-};
 class RouterMock {
     public async navigate(to: string[]): Promise<boolean> {
         return Promise.resolve(true);
@@ -33,8 +29,6 @@ describe('PartCreationComponent with fixture:', () => {
     let fixture: ComponentFixture<PartCreationComponent>;
 
     let component: PartCreationComponent;
-
-    let partDAOMock: PartDAOMock;
 
     let joinerDAOMock: JoinerDAOMock;
 
@@ -53,15 +47,17 @@ describe('PartCreationComponent with fixture:', () => {
             providers: [
                 { provide: PartDAO,     useClass: PartDAOMock },
                 { provide: JoinerDAO,   useClass: JoinerDAOMock },
-                { provide: ChatService, useClass: ChatServiceMock },
+                { provide: ChatDAO,     useClass: ChatDAOMock },
                 { provide: Router,      useClass: RouterMock },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(PartCreationComponent);
-        partDAOMock = TestBed.get(PartDAO);
+        let partDAOMock: PartDAOMock = TestBed.get(PartDAO);
+        let chatDAOMock: ChatDAOMock = TestBed.get(ChatDAO);
         joinerDAOMock = TestBed.get(JoinerDAO);
         component = fixture.componentInstance;
         component.partId = "joinerId";
+        await chatDAOMock.set("joinerId", { messages: [], status: "I don't have a clue TODO" });
         await partDAOMock.set("joinerId", PartMocks.INITIAL.copy());
     }));
     it('(0) Player arrival on component should call joinGame and startObserving', async(async() => {

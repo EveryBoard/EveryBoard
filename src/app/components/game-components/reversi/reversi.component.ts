@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
-import { ReversiRules } from '../../../games/reversi/ReversiRules';
+import { ReversiRules } from '../../../games/reversi/reversirules/ReversiRules';
 import { ReversiPartSlice } from '../../../games/reversi/ReversiPartSlice';
-import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
+import { ReversiMove } from 'src/app/games/reversi/reversimove/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 

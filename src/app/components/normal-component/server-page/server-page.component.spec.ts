@@ -16,25 +16,15 @@ import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { PartDAO } from 'src/app/dao/part/PartDAO';
+import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
+import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
+import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
+import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 
-const userServiceStub = {
-
-    getActivesUsersObs: () => of([]),
-
-    unSubFromActivesUsersObs: () => {},
-};
-class GameServiceMock {
-
-    public getActivesPartsObs(): Observable<ICurrentPartId[]> {
-        return of([]);
-    }
-    public unSubFromActivesPartsObs() {
-        return;
-    }
-    public async createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
-        return "on s'en bat les steeeaaaak!";
-    }
-};
 class AuthenticationServiceMock {
 
     public static CURRENT_USER: {pseudo: string, verified: boolean} = null;
@@ -53,11 +43,8 @@ class AuthenticationServiceMock {
             return AuthenticationServiceMock.IS_USER_LOGGED;
     }
 };
-const chatServiceStub = {
-    startObserving: (cId: string, cb: (iChatId: IChatId) => void) => {},
-    stopObserving: () => {},
-};
 class RouterMock {
+
     public async navigate(to: string[]): Promise<boolean> {
         return true;
     };
@@ -91,10 +78,13 @@ describe('ServerPageComponent', () => {
                 CUSTOM_ELEMENTS_SCHEMA,
             ],
             providers: [
-                { provide: UserService,           useValue: userServiceStub },
-                { provide: GameService,           useClass: GameServiceMock },
+                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                
+                { provide: PartDAO,               useClass: PartDAOMock },
+                { provide: JoinerDAO,             useClass: JoinerDAOMock },
+                { provide: ChatDAO,               useClass: ChatDAOMock },
+
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-                { provide: ChatService,           useValue: chatServiceStub },
                 { provide: Router,                useClass: RouterMock},
             ]
         }).compileComponents();

@@ -1,5 +1,5 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
-         ChangeDetectionStrategy, ChangeDetectorRef, ViewContainerRef } from '@angular/core';
+         ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
@@ -48,7 +48,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     private isAI(player: string): boolean {
         if (player == null) return false;
-        return player.substr(0, 3) === "bot"
+        return player.substr(0, 3) === "bot";
     }
     public onValidUserMove(move: Move): boolean {
         if (LocalGameWrapperComponent.VERBOSE) {

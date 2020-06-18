@@ -2,23 +2,16 @@ import { async } from '@angular/core/testing';
 
 import { ActivesPartsService } from './ActivesPartsService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
+import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
 
-const partDAOStub = {
-};
 describe('ActivesPartsService', () => {
 
     let service: ActivesPartsService;
 
-    beforeAll(() => {
-        ActivesPartsService.IN_TESTING = true;
-    });
     beforeEach(() => {
-        service = new ActivesPartsService(partDAOStub as PartDAO);
+        service = new ActivesPartsService(new PartDAOMock() as unknown as PartDAO);
     });
     it('should create', async(() => {
         expect(service).toBeTruthy();
     }));
-    afterAll(() => {
-        ActivesPartsService.IN_TESTING = false;
-    });
 });

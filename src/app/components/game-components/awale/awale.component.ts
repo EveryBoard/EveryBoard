@@ -1,7 +1,7 @@
 import {Component} from '@angular/core';
 import {AbstractGameComponent} from '../AbstractGameComponent';
-import {AwaleRules} from '../../../games/awale/AwaleRules';
-import {AwaleMove} from 'src/app/games/awale/AwaleMove';
+import {AwaleRules} from '../../../games/awale/awalerules/AwaleRules';
+import {AwaleMove} from 'src/app/games/awale/awalemove/AwaleMove';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';

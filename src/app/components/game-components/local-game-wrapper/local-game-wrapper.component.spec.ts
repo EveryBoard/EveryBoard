@@ -8,6 +8,8 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { UserService } from 'src/app/services/user/UserService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 
 const activatedRouteStub = {
     snapshot: {
@@ -18,9 +20,6 @@ const activatedRouteStub = {
         },
     },
 }
-const userServiceStub = {
-    getActivesUsersObs: () => of([]),
-};
 const authenticationServiceStub = {
     getJoueurObs: () => of({ pseudo: null, verified: null}),
     getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
@@ -43,7 +42,7 @@ describe('LocalGameWrapperComponent', () => {
             schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
             providers: [
                 { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: UserService, useValue: userServiceStub },
+                { provide: JoueursDAO,            useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();

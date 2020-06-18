@@ -1,6 +1,6 @@
 import { Player } from "src/app/jscaip/Player";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
-import { SiamMoveNature } from "./SiamMove";
+import { SiamMoveNature } from "./siammove/SiamMove";
 
 export class SiamPiece {
 

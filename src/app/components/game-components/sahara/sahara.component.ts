@@ -2,9 +2,9 @@ import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
-import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
+import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
-import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
+import { SaharaRules } from 'src/app/games/sahara/sahararules/SaharaRules';
 
 @Component({
     selector: 'app-sahara',

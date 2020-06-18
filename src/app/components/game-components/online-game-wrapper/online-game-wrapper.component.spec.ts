@@ -3,13 +3,12 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
-import { of, Observable } from 'rxjs';
+import { of } from 'rxjs';
 
 import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { UserService } from 'src/app/services/user/UserService';
 import { JoinerService } from 'src/app/services/joiner/JoinerService';
 import { ChatService } from 'src/app/services/chat/ChatService';
 
@@ -17,13 +16,15 @@ import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
 
 import { IChatId } from 'src/app/domain/ichat';
-import { IJoueurId, IJoueur } from 'src/app/domain/iuser';
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
 import { PartMocks } from 'src/app/domain/PartMocks';
-import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
+import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 
 const activatedRouteStub = {
     snapshot: {
@@ -35,22 +36,6 @@ const activatedRouteStub = {
         },
     },
 }
-class UserServiceMock {
-
-    public getActivesUsersObs(): Observable<IJoueurId[]> {
-        return of([]);
-    }
-    public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
-        const iJoueurId: IJoueurId = { 
-            id: "firstCandidate",
-            doc: {
-                pseudo: "firstCandidate",
-            }
-        }
-        callback.onDocumentCreated([iJoueurId]);
-        return () => {};
-    }
-};
 class AuthenticationServiceMock {
 
     public static USER: {pseudo: string, verified: boolean};
@@ -68,20 +53,8 @@ class AuthenticationServiceMock {
         };
     }
 };
-class ChatServiceMock {
-
-    public startObserving(cId: string, cb: (iChatId: IChatId) => void) {
-    };
-    public stopObserving() {
-    };
-    public isObserving(): boolean {
-        return;
-    }
-    public async deleteChat(chatId: string): Promise<void> {
-        return;
-    }
-};
 class RouterMock {
+
     public async navigate(to: string[]): Promise<boolean> {
         return Promise.resolve(true);
     };
@@ -106,18 +79,18 @@ describe('OnlineGameWrapperComponent', () => {
 
     let joinerService: JoinerService;
 
-    let partDAOMock: PartDAOMock;
-
-    let joinerDAOMock: JoinerDAOMock;
-
     let prepareComponent: (initialJoiner: IJoiner) => Promise<void> = async(initialJoiner: IJoiner) => {
         fixture = TestBed.createComponent(OnlineGameWrapperComponent);
-        partDAOMock = TestBed.get(PartDAO);
-        joinerDAOMock = TestBed.get(JoinerDAO);
+        let partDAOMock: PartDAOMock = TestBed.get(PartDAO);
+        let joinerDAOMock: JoinerDAOMock = TestBed.get(JoinerDAO);
+        let chatDAOMock: ChatDAOMock = TestBed.get(ChatDAO);
+        console.log("joiner Service get");
         joinerService = TestBed.get(JoinerService);
+        console.log("joiner Service received");
         component = fixture.debugElement.componentInstance;
         await joinerDAOMock.set("joinerId", initialJoiner);
         await partDAOMock.set("joinerId", PartMocks.INITIAL.copy());
+        await chatDAOMock.set("joinerId", { messages: [], status: "I don't have a clue" });
         return Promise.resolve();
     }
     beforeAll(() => {
@@ -131,18 +104,18 @@ describe('OnlineGameWrapperComponent', () => {
             schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
             providers: [
                 { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: UserService,           useClass: UserServiceMock },
                 { provide: JoinerDAO,             useClass: JoinerDAOMock },
                 { provide: PartDAO,               useClass: PartDAOMock },
+                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ChatDAO,               useClass: ChatDAOMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-                { provide: ChatService,           useClass: ChatServiceMock },
                 { provide: Router,                useClass: RouterMock },
             ],
         }).compileComponents();
     }));
-    it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(() => {
+    it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
-        prepareComponent(JoinerMocks.INITIAL.copy());
+        await prepareComponent(JoinerMocks.INITIAL.copy());
         const ngOnInitSpy: jasmine.Spy = spyOn(component, 'ngOnInit').and.callThrough();
         const joinGame: jasmine.Spy = spyOn(joinerService, 'joinGame').and.callThrough();
         const startObserving: jasmine.Spy = spyOn(joinerService, 'startObserving').and.callThrough();
@@ -173,9 +146,9 @@ describe('OnlineGameWrapperComponent', () => {
         tick(1);
         tick(component.maximalMoveDuration);
     }));
-    it('Some tags are needed before initialisation', fakeAsync(() => {
+    it('Some tags are needed before initialisation', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
-        prepareComponent(JoinerMocks.INITIAL.copy());
+        await prepareComponent(JoinerMocks.INITIAL.copy());
         expect(component).toBeTruthy();
         const compiled = fixture.debugElement.nativeElement;
         const partCreationTag = compiled.querySelector("app-part-creation");
@@ -192,9 +165,9 @@ describe('OnlineGameWrapperComponent', () => {
         fixture.detectChanges();
         tick(1);
     }));
-    it('Some ids are needed before initialisation', fakeAsync(() => {
+    it('Some ids are needed before initialisation', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
-        prepareComponent(JoinerMocks.INITIAL.copy());
+        await prepareComponent(JoinerMocks.INITIAL.copy());
         const partCreationId = fixture.debugElement.query(By.css('#partCreation'));
         const gameId = fixture.debugElement.query(By.css('#game'));
         const chatId = fixture.debugElement.query(By.css('#chat'));
@@ -207,9 +180,9 @@ describe('OnlineGameWrapperComponent', () => {
         fixture.detectChanges();
         tick(1);
     }));
-    it('Initialisation should make appear PartCreationComponent', fakeAsync(() => {
+    it('Initialisation should make appear PartCreationComponent', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
-        prepareComponent(JoinerMocks.INITIAL.copy());
+        await prepareComponent(JoinerMocks.INITIAL.copy());
         let partCreationId = fixture.debugElement.query(By.css('#partCreation'));
         expect(partCreationId).toBeFalsy("partCreation id should be absent before ngOnInit");
 
@@ -239,9 +212,9 @@ describe('OnlineGameWrapperComponent', () => {
         tick(1);
         tick(component.maximalMoveDuration);
     }));
-    it('StartGame should replace PartCreationComponent by GameIncluderComponent for chosenPlayer', fakeAsync(() => {
+    it('StartGame should replace PartCreationComponent by GameIncluderComponent for chosenPlayer', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "chosenPlayer", verified: true };
-        prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
+        await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();
         tick();
         

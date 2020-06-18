@@ -45,7 +45,8 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         if (optionalOS.isPresent()) {
             return optionalOS.get().observable;
         } else {
-            throw new Error("No joiner of id " + id + " to observe"); // TODO: check that observing unexisting doc throws
+            throw new Error("No doc of id " + id + " to observe in " + this.collectionName);
+            // TODO: check that observing unexisting doc throws
         }
     }
     public async create(newElement: T): Promise<String> {

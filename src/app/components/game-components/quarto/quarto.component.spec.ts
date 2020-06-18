@@ -1,25 +1,71 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
-
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { QuartoComponent } from './quarto.component';
 
+import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { RouterTestingModule } from '@angular/router/testing';
+import { of } from 'rxjs';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { ActivatedRoute } from '@angular/router';
+import { AppModule } from 'src/app/app.module';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { QuartoRules } from 'src/app/games/quarto/quartorules/QuartoRules';
+import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
+import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
+
+const activatedRouteStub = {
+    snapshot: {
+        paramMap: {
+            get: (str: String) => {
+                return "Quarto"
+            },
+        },
+    },
+}
+const authenticationServiceStub = {
+
+    getJoueurObs: () => of({ pseudo: null, verified: null}),
+
+    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
+};
 describe('QuartoComponent', () => {
 
-    let component: QuartoComponent;
+    let wrapper: LocalGameWrapperComponent;
 
-    let fixture: ComponentFixture<QuartoComponent>;
+    let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
-    beforeEach(async(() => {
+    let gameComponent: QuartoComponent;
+
+    beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
-            declarations: [QuartoComponent]
-        })
-            .compileComponents();
-    }));
-    beforeEach(() => {
-        fixture = TestBed.createComponent(QuartoComponent);
-        component = fixture.componentInstance;
+            imports: [
+                RouterTestingModule,
+                AppModule,
+            ],
+            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            providers: [
+                { provide: ActivatedRoute,        useValue: activatedRouteStub },
+                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: AuthenticationService, useValue: authenticationServiceStub },
+            ],
+        }).compileComponents();
+        fixture = TestBed.createComponent(LocalGameWrapperComponent);
+        wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
-    });
+        tick(1);
+        gameComponent = wrapper.gameComponent as QuartoComponent;
+    }));
     it('should create', () => {
-        expect(component).toBeTruthy();
+        expect(wrapper).toBeTruthy("Wrapper should be created");
+        expect(gameComponent).toBeTruthy("QuartoComponent should be created");
+    });
+    it('should accept simple move', () => {
+        const rules: QuartoRules = new QuartoRules();
+        const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = rules.getListMoves(rules.node);
+        const currentMove: QuartoMove = listMoves.getByIndex(0).key;
+        expect(gameComponent.chooseCoord(currentMove.coord.x, currentMove.coord.y)).toBeTruthy(0);
+        expect(gameComponent.choosePiece(currentMove.piece)).toBeTruthy(1);
     });
 });

@@ -10,8 +10,6 @@ import {AngularFireModule} from '@angular/fire';
 import {AngularFirestoreModule, AngularFirestore} from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 
-import {GameIncluderDirective} from './directives/game-includer.directive';
-
 import { PartDAO } from './dao/part/PartDAO';
 
 import {ChatService} from './services/chat/ChatService';
@@ -20,7 +18,7 @@ import {AuthenticationService} from './services/authentication/AuthenticationSer
 import {GameService} from './services/game/GameService';
 import {JoinerService} from './services/joiner/JoinerService';
 
-import { EmailVerified } from './guard/EmailVerified';
+import { EmailVerified } from './guard/emailverified/EmailVerified';
 
 import {AppComponent} from './app.component';
 
@@ -50,7 +48,7 @@ import { InscriptionComponent } from './components/normal-component/inscription/
 import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 
-export const INCLUDE_VERBOSE_LINE_IN_TEST = true;
+export const INCLUDE_VERBOSE_LINE_IN_TEST = false;
 // scp -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
 const routes: Route [] = [
@@ -67,8 +65,6 @@ const routes: Route [] = [
 
 @NgModule({
     declarations: [
-        GameIncluderDirective, // TODO: check use
-
         AppComponent,
         HeaderComponent,
         LoginComponent,

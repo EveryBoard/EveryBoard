@@ -1,9 +1,9 @@
 import {Component} from '@angular/core';
 import {Move} from '../../../jscaip/Move';
 import {AbstractGameComponent} from '../AbstractGameComponent';
-import {EncapsuleRules} from 'src/app/games/encapsule/EncapsuleRules';
+import {EncapsuleRules} from 'src/app/games/encapsule/encapsulerules/EncapsuleRules';
 import {EncapsulePartSlice, EncapsuleCase} from 'src/app/games/encapsule/EncapsulePartSlice';
-import {EncapsuleMove} from 'src/app/games/encapsule/EncapsuleMove';
+import {EncapsuleMove} from 'src/app/games/encapsule/encapsulemove/EncapsuleMove';
 import {EncapsulePiece, EncapsuleMapper} from 'src/app/games/encapsule/EncapsuleEnums';
 import {Coord} from 'src/app/jscaip/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';

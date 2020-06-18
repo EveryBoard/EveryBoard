@@ -13,8 +13,6 @@ export class ActivesPartsService {
      * this service is used by the Server Component
      */
 
-    public static IN_TESTING: boolean = false;
-
     private activesPartsBS: BehaviorSubject<ICurrentPartId[]> = new BehaviorSubject<ICurrentPartId[]>([]);
 
     public activesPartsObs: Observable<ICurrentPartId[]> = this.activesPartsBS.asObservable();
@@ -22,7 +20,6 @@ export class ActivesPartsService {
     private unsubscribe: () => void;
 
     constructor(private partDao: PartDAO) {
-        if (environment.test && !ActivesPartsService.IN_TESTING) throw new Error("NO ACTIVE_PART SERVICE IN TEST");
     }
     public startObserving() {
         const partObserver: FirebaseCollectionObserver<ICurrentPart> = new FirebaseCollectionObserver();

@@ -12,8 +12,6 @@ import { environment } from 'src/environments/environment';
 })
 export class UserService {
 
-    public static IN_TESTING: boolean = false;
-
     // private userName = this.getUserNameBS();
 
     private userDocId = new BehaviorSubject<string>('');
@@ -24,8 +22,7 @@ export class UserService {
 
     constructor(private router: Router,
                 private activesUsersService: ActivesUsersService,
-                private userDao: JoueursDAO) {
-        if (environment.test && !UserService.IN_TESTING) throw new Error("NO USER SERVICE IN TEST");
+                private joueursDao: JoueursDAO) {
     }
     /* getCurrentUser(): string {
         return this.userName.getValue();
@@ -118,6 +115,6 @@ export class UserService {
     */
     public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
         // the callback will be called on the foundUser
-        return this.userDao.observeUserByPseudo(pseudo, callback);
+        return this.joueursDao.observeUserByPseudo(pseudo, callback);
     }
 }

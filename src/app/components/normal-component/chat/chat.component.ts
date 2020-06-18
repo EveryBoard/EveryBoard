@@ -27,8 +27,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     public ngOnInit() {
         if (ChatComponent.VERBOSE) {
-            console.log('ChatComponent ngOnInit');
+            console.log('ChatComponent.ngOnInit');
         }
+
+        if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
+
         this.authenticationService.getJoueurObs()
             .subscribe(joueur => {
                 if (this.isConnectedUser(joueur)) {
@@ -48,8 +51,6 @@ export class ChatComponent implements OnInit, OnDestroy {
                joueur.pseudo != 'undefined';
     }
     public loadChatContent() {
-        if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
-
         if (ChatComponent.VERBOSE) {
             console.log('User \'' + this.userName + '\' logged, loading chat content');
         }

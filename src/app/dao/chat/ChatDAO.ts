@@ -18,13 +18,4 @@ export class ChatDAO extends FirebaseFirestoreDAO<IChat, PIChat> {
         if (environment.test) throw new Error("NO CHAT DAO IN TEST");
         if (ChatDAO.VERBOSE) console.log("ChatDAO.constructor");
     }
-    public TODO_DELETEgetObsById(id: string): Observable<IChatId> {
-        return this.afs.doc('chats/' + id).snapshotChanges()
-            .pipe(map(actions => {
-                return {
-                    doc: actions.payload.data() as IChat,
-                    id
-                };
-            }));
-    }
 }

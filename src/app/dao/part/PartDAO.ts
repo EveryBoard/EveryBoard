@@ -19,18 +19,6 @@ export class PartDAO extends FirebaseFirestoreDAO<ICurrentPart, PICurrentPart> {
         if (environment.test) throw new Error("NO PART DAO IN TEST");
         if(PartDAO.VERBOSE) console.log("PartDAO.constructor");
     }
-    public TODO_DELETEgetObsById(partId: string): Observable<ICurrentPartId> {
-        if (PartDAO.VERBOSE) {
-            console.log('getObsById(' + partId + ')');
-        }
-        return this.afs.doc('parties/' + partId).snapshotChanges()
-            .pipe(map(actions => {
-                return {
-                    doc: actions.payload.data() as ICurrentPart,
-                    id: partId
-                };
-            }));
-    }
     public observeActivesParts(callback: FirebaseCollectionObserver<ICurrentPart>): () => void {
         return this.observingWhere("result", "==", 5, callback);
     }

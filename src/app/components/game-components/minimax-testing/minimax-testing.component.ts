@@ -1,8 +1,8 @@
 import {Component} from '@angular/core';
 import {AbstractGameComponent} from '../AbstractGameComponent';
-import { MinimaxTestingRules } from 'src/app/games/minimax-testing/MinimaxTestingRules';
+import { MinimaxTestingRules } from 'src/app/games/minimax-testing/minimaxtestingrules/MinimaxTestingRules';
 import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTestingPartSlice';
-import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTestingMove';
+import { MinimaxTestingMove } from 'src/app/games/minimax-testing/minimaxtestingmove/MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
