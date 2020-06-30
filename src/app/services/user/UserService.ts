@@ -5,7 +5,6 @@ import {IJoueur, IJoueurId} from '../../domain/iuser';
 import {Router} from '@angular/router';
 import {ActivesUsersService} from '../actives-users/ActivesUsersService';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'

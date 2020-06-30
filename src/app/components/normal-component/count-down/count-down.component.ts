@@ -25,11 +25,11 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     public start(duration: number) {
         // duration is in ms
-        if (this.isStarted) {
-            throw new Error("CountDownComponent.start should not be called while already started");
-        }
         if (CountDownComponent.VERBOSE) {
-            console.log('CountDownComponent.start ' + this.debugName + '::start ' + (duration / 1000) + ' s');
+            console.log("CountDownComponent." + this.debugName + ".start(" + (duration/1000) + "s);");
+        }
+        if (this.isStarted) {
+            throw new Error("CountDownComponent.start should not be called while already started (" + this.debugName + ")");
         }
         this.isStarted = true;
         this.remainingTime = duration;
@@ -41,29 +41,26 @@ export class CountDownComponent implements OnInit, OnDestroy {
         }
         if (this.isPaused) {
             if (CountDownComponent.VERBOSE) {
-                console.log('!!!cdc::' + this.debugName + '::pause:: it is already paused');
+                console.log("CountDownComponent." + this.debugName + ".pause: it is already paused");
             }
             return;
         }
         if (!this.isStarted) {
             if (CountDownComponent.VERBOSE) {
-                console.log('!!!cdc::' + this.debugName + '::pause:: it is not started yet');
+                console.log("CountDownComponent." + this.debugName + ".pause: it is not started yet");
             }
             return;
         }
-        if (CountDownComponent.VERBOSE) {
-            console.log('cdc::' + this.debugName + '::pause');
-        }
         const started: boolean = this.clearTimeouts();
         if (!started) {
-            throw new Error("Cannot pause unstarted CountDown");
+            throw new Error("Cannot pause unstarted CountDown (" + this.debugName + ")");
         }
         this.isPaused = true;
         this.updateShownTime();
     }
     public stop() {
         if (CountDownComponent.VERBOSE) {
-            console.log('CountDownComponent.' + this.debugName + 'stop');
+            console.log('CountDownComponent.' + this.debugName + '.stop');
         }
         this.pause();
         this.isStarted = false;
@@ -78,15 +75,9 @@ export class CountDownComponent implements OnInit, OnDestroy {
             }
             return;
         }
-        if (CountDownComponent.VERBOSE) {
-            console.log('cdc::' + this.debugName + '::resume for ' + this.remainingTime);
-        }
         this.startTime = Date.now();
         this.isPaused = false;
         this.timeoutHandleGlobal = window.setTimeout(() => {
-            if (CountDownComponent.VERBOSE) {
-                console.log('cdc::' + this.debugName + '::end reached');
-            }
             this.onEndReached();
         }, this.remainingTime);
         this.timeoutHandleSec = window.setTimeout(() => {

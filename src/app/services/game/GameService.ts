@@ -11,6 +11,7 @@ import {ActivesPartsService} from '../actives-parts/ActivesPartsService';
 import {ChatService} from '../chat/ChatService';
 import {IChat} from '../../domain/ichat';
 import {MGPRequest} from '../../domain/request';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 
 @Injectable({
     providedIn: 'root'
@@ -202,16 +203,20 @@ export class GameService {
         return this.partDao.update(part.id, {request: req});
     }
     public async updateDBBoard(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number, partId: string): Promise<void> {
-        const part: ICurrentPart = await this.partDao.read(partId);
+        if (GameService.VERBOSE) console.log("GameService.updateDBBoard(" + encodedMove + ", " + scorePlayerZero + ", " + scorePlayerOne + ", " + partId + ")");
+
+        const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
-        const listMoves: number[] = part.listMoves;
+        const listMoves: number[] = GamePartSlice.copyArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
-        return this.partDao.update(partId, {
+        await this.partDao.update(partId, {
             listMoves,
             turn,
             scorePlayerZero,
             scorePlayerOne,
         });
+        if (GameService.VERBOSE) console.log("GameService.updateDBBoard: over");
+        return Promise.resolve();
     }
     public stopObserving() {
         if (GameService.VERBOSE) {

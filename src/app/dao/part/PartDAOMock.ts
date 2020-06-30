@@ -15,7 +15,7 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<ICurrentPart, PICurren
 
     public constructor() {
         super("PartDAOMock", PartDAOMock.VERBOSE);
-        if (this.VERBOSE) console.log("PartDAOMock.constructor");
+        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log("PartDAOMock.constructor");
     }
     public getStaticDB(): MGPMap<MGPStr, PartOS> {
         return PartDAOMock.partDB;

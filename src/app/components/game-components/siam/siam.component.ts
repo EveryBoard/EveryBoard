@@ -60,7 +60,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             return true;
         }
     }
-    public insertAt(x: number, y: number): boolean {
+    public async insertAt(x: number, y: number): Promise<boolean> {
         if (SiamComponent.VERBOSE) console.log("SiamComponent.insertAt(" + x + ", " + y + ")");
 
         if (this.chosenCoord) {
@@ -72,18 +72,18 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             return this.tryMove();
         }
     }
-    public onMoveNatureSelection(nature: number): boolean {
+    public async onMoveNatureSelection(nature: number): Promise<boolean> {
         if (SiamComponent.VERBOSE) console.log("SiamComponent.onMoveNatureSelection(" + nature + ")");
         this.chosenMoveNature = nature;
         return this.tryMove();
     }
-    public tryMove(): boolean {
+    public async tryMove(): Promise<boolean> {
         if (this.chosenCoord != null && this.chosenMoveNature != null) {
             const nature: SiamMoveNature = SiamMoveNature.decode(this.chosenMoveNature);
             const move: SiamMove = new SiamMove(this.chosenCoord.x, this.chosenCoord.y, nature);
             this.chosenCoord = null;
             this.chosenMoveNature = null;
-            const legal: boolean = this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+            const legal: boolean = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
             if (SiamComponent.VERBOSE) console.log("SiamComponent.tryMove: " + legal);
             return legal;
         } else {

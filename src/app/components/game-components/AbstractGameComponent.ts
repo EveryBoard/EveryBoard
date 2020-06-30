@@ -19,7 +19,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public imagesLocation = 'assets/images/';
 
-    public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => boolean;
+    public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => Promise<boolean>;
 
     public observerRole: number;
     /* all game rules should be able to call the game-wrapper

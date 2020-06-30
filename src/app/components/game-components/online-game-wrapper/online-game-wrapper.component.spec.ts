@@ -10,12 +10,10 @@ import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { JoinerService } from 'src/app/services/joiner/JoinerService';
-import { ChatService } from 'src/app/services/chat/ChatService';
 
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
 
-import { IChatId } from 'src/app/domain/ichat';
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
@@ -84,9 +82,7 @@ describe('OnlineGameWrapperComponent', () => {
         let partDAOMock: PartDAOMock = TestBed.get(PartDAO);
         let joinerDAOMock: JoinerDAOMock = TestBed.get(JoinerDAO);
         let chatDAOMock: ChatDAOMock = TestBed.get(ChatDAO);
-        console.log("joiner Service get");
         joinerService = TestBed.get(JoinerService);
-        console.log("joiner Service received");
         component = fixture.debugElement.componentInstance;
         await joinerDAOMock.set("joinerId", initialJoiner);
         await partDAOMock.set("joinerId", PartMocks.INITIAL.copy());

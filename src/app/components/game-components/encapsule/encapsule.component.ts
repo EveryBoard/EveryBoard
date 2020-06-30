@@ -7,6 +7,7 @@ import {EncapsuleMove} from 'src/app/games/encapsule/encapsulemove/EncapsuleMove
 import {EncapsulePiece, EncapsuleMapper} from 'src/app/games/encapsule/EncapsuleEnums';
 import {Coord} from 'src/app/jscaip/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
+import { Player } from 'src/app/jscaip/Player';
 
 @Component({
     selector: 'app-encapsule',
@@ -28,7 +29,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
 
     public chosenPiece: EncapsulePiece;
 
-    public remainingPieces: String[];
+    public remainingPieces: String[][] = [];
 
     public ngOnInit() {
         this.updateBoard();
@@ -42,7 +43,9 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         this.cancelMove();
         this.caseBoard = this.mapNumberBoard(slice.getCopiedBoard());
         this.mappedBoard = this.mapCaseBoard(this.caseBoard);
-        this.remainingPieces = slice.getRemainingPiecesCopy().map(piece => EncapsuleMapper.getNameFromPiece(piece));
+        const pieceNames: String[] = slice.getRemainingPiecesCopy().map(piece => EncapsuleMapper.getNameFromPiece(piece));
+        this.remainingPieces[0] = pieceNames.filter(piece => EncapsuleMapper.toPlayerFromName(piece) === Player.ZERO);
+        this.remainingPieces[1] = pieceNames.filter(piece => EncapsuleMapper.toPlayerFromName(piece) === Player.ONE);
 
         if (move != null) {
             this.lastLandingCoord = move.landingCoord;

@@ -32,7 +32,7 @@ export abstract class GameWrapper {
 
     public userName: string = this.authenticationService.getAuthenticatedUser().pseudo;
 
-    public players: string[] = [this.userName, this.userName];
+    public players: string[] = [null, null];
 
     public observerRole: number;
 
@@ -106,47 +106,30 @@ export abstract class GameWrapper {
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
     }
-    public receiveChildData = (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): boolean => {
+    public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean> => {
+        const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
-            if (GameWrapper.VERBOSE) {
-                console.log('GameWrapper.receiveChildData says: not your turn');
-            }
+            if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log('GameWrapper.receiveChildData says: not your turn');
             return false;
         }
-        if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData about to ask node if endGame");
         if (this.gameComponent.rules.node.isEndGame()) {
-            if (GameWrapper.VERBOSE) {
-                console.log('GameWrapper.receiveChildData says: part is finished');
-            }
+            if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log('GameWrapper.receiveChildData says: part is finished');
             return false;
         }
-        if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData says: about to call Rules.isLegal");
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
-        if (!legality) {
-            if (GameWrapper.VERBOSE) {
-                console.log('GameWrapper.receiveChildData says: move illegal');
-            }
+        if (legality.legal === false) {
+            if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log('GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
             return false;
         }
-        if (GameWrapper.VERBOSE) {
-            console.log('GameWrapper.receiveChildData says: board about to update');
-        }
-        const validMoveResult: boolean = legality.legal;
-        if (!validMoveResult) {
-            if (GameWrapper.VERBOSE) {
-                console.log('GameWrapper.receiveChildData says: move is illegal, not going to transmit that');
-            }
-            return false;
-        }
-        const legalMoveSubmissionResult: boolean = this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
-        if (GameWrapper.VERBOSE) console.log("GameWrapper.receiveChildData says: valid move result = " + legalMoveSubmissionResult);
+        const legalMoveSubmissionResult: boolean = await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
+        if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log("GameWrapper.receiveChildData says: valid move result = " + legalMoveSubmissionResult);
         return legalMoveSubmissionResult;
     }
-    public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): boolean;
+    public abstract async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean>;
 
     public isPlayerTurn() {
         const indexPlayer = this.gameComponent.rules.node.gamePartSlice.turn % 2;
-        if (GameWrapper.VERBOSE) console.log("It is player "+ indexPlayer+ "'s turn ('"+this.players[indexPlayer]+"') and you are "+this.userName)
+        if (GameWrapper.VERBOSE) console.log("It is player "+ indexPlayer+ "'s turn ("+this.players[indexPlayer]+") and you are "+this.userName)
         return this.players[indexPlayer] === this.userName;
     }
 }

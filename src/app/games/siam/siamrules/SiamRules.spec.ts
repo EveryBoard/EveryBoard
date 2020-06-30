@@ -79,7 +79,6 @@ describe('SiamRules', () => {
         expect(rules.choose(new SiamMove(0, 3, SiamMoveNature.CLOCKWISE))).toBeTruthy(2);
         expect(rules.choose(new SiamMove(4, 5, SiamMoveNature.FORWARD))).toBeTruthy(3);
         
-        console.clear();
         const moveIsLegal: boolean = rules.choose(new SiamMove(0, 3, SiamMoveNature.FORWARD));
         
         expect(moveIsLegal).toBeFalsy("One vs one push should be illegal, even if one of the involved isat the border");

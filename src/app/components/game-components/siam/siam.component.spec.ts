@@ -58,7 +58,7 @@ describe('SiamComponent', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("SiamComponent should be created");
     });
-    it('should accept simple part', () => {
+    it('should accept simple part', async() => {
         const listMoves: SiamMove[] = [
             new SiamMove(-1, 4, SiamMoveNature.FORWARD), 
             new SiamMove(0, 5, SiamMoveNature.FORWARD),
@@ -67,12 +67,11 @@ describe('SiamComponent', () => {
 
         let legal: boolean;
         for (let move of listMoves) {
-            console.log("let's try move " + move.toString());
             if (move.isInsertion()) {
-                legal = gameComponent.insertAt(move.coord.x, move.coord.y);
+                legal = await gameComponent.insertAt(move.coord.x, move.coord.y);
             } else {
-                legal = gameComponent.onBoardClick(move.coord.x, move.coord.y) && 
-                        gameComponent.onMoveNatureSelection(move.nature.value);
+                legal = await gameComponent.onBoardClick(move.coord.x, move.coord.y) && 
+                        await gameComponent.onMoveNatureSelection(move.nature.value);
             }
             expect(legal).toBeTruthy(move);
             if (!legal) break;

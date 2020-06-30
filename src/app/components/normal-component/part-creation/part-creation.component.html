@@ -43,10 +43,9 @@
                     <ng-template matStepLabel>Configurez la partie</ng-template>
 
                     <mat-radio-group class="example-radio-group" formControlName="firstPlayer" required>
-                        <mat-radio-button class="example-radio-button" value="0"> Toi</mat-radio-button>
-                        <mat-radio-button class="example-radio-button" value="1"> {{ currentJoiner.chosenPlayer }}
-                        </mat-radio-button>
-                        <mat-radio-button class="example-radio-button" value="2"> Au Hasard</mat-radio-button>
+                        <mat-radio-button class="example-radio-button" value="0"> Vous commencez </mat-radio-button>
+                        <mat-radio-button class="example-radio-button" value="1"> {{ currentJoiner.chosenPlayer }} commence </mat-radio-button>
+                        <mat-radio-button class="example-radio-button" value="2"> Premier jours au hasard </mat-radio-button>
                     </mat-radio-group>
                     <div> Durée maximum d'un tour :
                         <mat-slider
@@ -91,7 +90,7 @@
 
             <div id="whoPlaysFirst">
                 <h4 *ngIf="!proposalSent">
-                    {{ currentJoiner.creator }} est en train de se décider
+                    {{ currentJoiner.creator }} est en train de choisir la configuration de la partie
                 </h4>
                 <div id="acceptConfig" *ngIf="proposalSent">
                     <h4 *ngIf="currentJoiner.firstPlayer === '0'">

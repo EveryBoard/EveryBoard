@@ -25,7 +25,7 @@ export class QuartoMove extends MoveCoord {
     }
     public static decode(encodedMove: number): QuartoMove {
         // traduit en UN entier le pion choisis, encodé sous la forme binaire
-        // xx yy ppppp
+        // xx yy pppp p
         const piece: number = encodedMove % 32; // résultat de 0 à 16
         encodedMove -= piece;
         encodedMove /= 32;

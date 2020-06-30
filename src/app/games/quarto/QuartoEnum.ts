@@ -14,6 +14,7 @@ export namespace QuartoEnum {
             QuartoEnum.AABA,
             QuartoEnum.AABB,
             QuartoEnum.ABAA,
+            QuartoEnum.ABAB,
             QuartoEnum.ABBA,
             QuartoEnum.ABBB,
             QuartoEnum.BAAA,

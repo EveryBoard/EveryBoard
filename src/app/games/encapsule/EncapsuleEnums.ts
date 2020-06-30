@@ -58,6 +58,10 @@ export class EncapsuleMapper {
             throw new Error("Unknown piece: " + piece);
         }
     }
+    static toPlayerFromName(pieceName: String): Player {
+        const piece: EncapsulePiece = EncapsuleMapper.getPieceFromName(pieceName);
+        return EncapsuleMapper.toPlayer(piece);
+    }
     static getPieceFromName(pieceName: String): EncapsulePiece {
         switch (pieceName) {
             case "BIG_BLACK":    return EncapsulePiece.BIG_BLACK;

@@ -60,13 +60,13 @@ describe('GoComponent', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("GoComponent should be created");
     });
-    it('should allow to pass twice, then use "pass" as the method to "accept"', () => {
-        expect(gameComponent.pass()).toBeTruthy(0); // Passed
-        expect(gameComponent.pass()).toBeTruthy(1); // Counting
-        expect(gameComponent.pass()).toBeTruthy(2); // Accept
+    it('should allow to pass twice, then use "pass" as the method to "accept"', async() => {
+        expect(await gameComponent.pass()).toBeTruthy(0); // Passed
+        expect(await gameComponent.pass()).toBeTruthy(1); // Counting
+        expect(await gameComponent.pass()).toBeTruthy(2); // Accept
 
-        expect(gameComponent.pass()).toBeTruthy(3); // Finished
+        expect(await gameComponent.pass()).toBeTruthy(3); // Finished
 
-        expect(gameComponent.pass()).toBeFalsy(4);
+        expect(await gameComponent.pass()).toBeFalsy(4);
     });
 });

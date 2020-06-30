@@ -79,7 +79,8 @@ export class ChatService implements OnDestroy {
         if (!this.isObserving()) {
             throw new Error('ChatService.stopObserving should not be called if not observing');
         }
-        console.log('stopped watching chat ' + this.followedChatId + ']');
+        if (ChatService.VERBOSE) 
+            console.log('stopped watching chat ' + this.followedChatId + ']');
         this.followedChatId = null;
         if (this.followedChatSub)
             this.followedChatSub.unsubscribe();

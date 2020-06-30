@@ -17,7 +17,7 @@ import { AbstractGameComponent } from '../AbstractGameComponent';
 })
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public VERBOSE: boolean = false;
+    public static VERBOSE: boolean = false;
 
     public playerZeroValue: string = "0";
     public playerOneValue: string = "0";
@@ -32,16 +32,16 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 authenticationService: AuthenticationService,
                 private cdr: ChangeDetectorRef) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
-        if (this.VERBOSE) console.log("LocalGameWrapper Constructed: "+(this.gameComponent!=null));
+        if (LocalGameWrapperComponent.VERBOSE) console.log("LocalGameWrapper.constructor");
     }
     public ngAfterViewInit() {
         setTimeout(() => {
             this.authenticationService.getJoueurObs().subscribe(user => {
                 this.userName = user.pseudo;
-                if (this.isAI(this.players[0])) this.players[0] = user.pseudo;
-                if (this.isAI(this.players[1])) this.players[1] = user.pseudo;
+                if (this.isAI(this.players[0]) === false) this.players[0] = user.pseudo;
+                if (this.isAI(this.players[1]) === false) this.players[1] = user.pseudo;
             });
-            if (this.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
+            if (LocalGameWrapperComponent.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
             this.afterGameIncluderViewInit();
             this.cdr.detectChanges();
         }, 1);
@@ -50,7 +50,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (player == null) return false;
         return player.substr(0, 3) === "bot";
     }
-    public onValidUserMove(move: Move): boolean {
+    public async onValidUserMove(move: Move): Promise<boolean> {
         if (LocalGameWrapperComponent.VERBOSE) {
             console.log('LocalGameWrapperComponent.onValidUserMove');
         }

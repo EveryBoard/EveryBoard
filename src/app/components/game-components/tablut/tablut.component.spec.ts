@@ -62,9 +62,9 @@ describe('TablutComponent', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("TablutComponent should be created");
     });
-    it('Should enable same action as rules', () => {
-        const isOccupied: boolean = gameComponent.onClick(4, 1);
-        const isLegal: boolean = gameComponent.onClick(0, 1);
+    it('Should enable same action as rules', async() => {
+        const isOccupied: boolean = await gameComponent.onClick(4, 1);
+        const isLegal: boolean = await gameComponent.onClick(0, 1);
         expect(isOccupied).toBeTruthy('Should be legal to click on player');
         expect(isLegal).toBeTruthy('Simple first move from invader should be legal');
     });

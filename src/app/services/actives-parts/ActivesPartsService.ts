@@ -3,7 +3,6 @@ import {BehaviorSubject, Observable} from 'rxjs';
 import {PartDAO} from '../../dao/part/PartDAO';
 import {ICurrentPartId, ICurrentPart} from '../../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
-import { environment } from 'src/environments/environment';
 
 @Injectable({
     providedIn: 'root'
@@ -49,6 +48,7 @@ export class ActivesPartsService {
         this.unsubscribe = this.partDao.observeActivesParts(partObserver);
     }
     public stopObserving() {
+        if (this.unsubscribe == null) throw new Error("Canno't stop observing actives part when you have not started observing");
         this.activesPartsBS.next([]);
         this.unsubscribe();
     }

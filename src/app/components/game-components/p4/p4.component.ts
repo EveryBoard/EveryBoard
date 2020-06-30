@@ -22,9 +22,9 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
 
     public lastX: number;
 
-    public onClick(x: number): boolean {
+    public async onClick(x: number): Promise<boolean> {
         const chosenMove = MoveX.get(x);
-        const legal: boolean = this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        const legal: boolean = await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
         if (P4Component.VERBOSE) console.log("Move " + chosenMove.toString() + " was " + (legal ? 'legal' : 'illegal'));
         return legal;
     }

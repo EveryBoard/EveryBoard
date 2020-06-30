@@ -21,4 +21,12 @@ describe('QuartoRules', () => {
         const isLegal: boolean = rules.choose(move);
         expect(isLegal).toBeTruthy();
     });
+    it('Test: Should allow simple move from db', () => {
+        const movesFromDB: number[] = [ 107, 166, 69 ];
+        for (let encodedMove of movesFromDB) {
+            const move: QuartoMove = QuartoMove.decode(encodedMove);
+            const isLegal: boolean = rules.choose(move);
+            expect(isLegal).toBeTruthy(move.toString() + " was an illegal move");
+        }
+    });
 });

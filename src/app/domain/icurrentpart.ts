@@ -1,4 +1,5 @@
 import {MGPRequest} from './request';
+import { GamePartSlice } from '../jscaip/GamePartSlice';
 
 export interface ICurrentPart {
 
@@ -88,6 +89,23 @@ export class Part {
         if (this.historic != null) copied.historic = this.historic;
         if (this.request != null) copied.request = this.request; // TODO deepcopy
         return copied;
+    }
+    public static of(original: ICurrentPart): Part {
+        return new Part(
+            original.typeGame,
+            original.playerZero,
+            original.turn,
+            GamePartSlice.copyArray(original.listMoves),
+            original.result,
+            original.playerOne,
+            original.beginning,
+            original.lastMove,
+            original.typePart,
+            original.winner,
+            original.scorePlayerZero,
+            original.scorePlayerOne,
+            original.historic,
+            original.request);
     }
 }
 export interface ICurrentPartId {

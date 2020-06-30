@@ -5,7 +5,6 @@ import { Observable, BehaviorSubject } from "rxjs";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { IFirebaseFirestoreDAO } from "./FirebaseFirestoreDAO";
 import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
-import { AngularFirestore } from "@angular/fire/firestore";
 
 export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
     
@@ -29,7 +28,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
     public abstract resetStaticDB(): void;
 
     public reset() {
-        if (this.VERBOSE) {
+        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) {
             const removed: string = this.getStaticDB() ? 
                 this.getStaticDB().size() + " removed" :
                 "not initialised yet";
@@ -38,7 +37,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         this.resetStaticDB();
     }
     public getObsById(id: string): Observable<{id: string, doc: T}> {
-        if (this.VERBOSE) console.log(this.collectionName + ".getObsById(" + id + ")");
+        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".getObsById(" + id + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -55,7 +54,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         return elemName;
     }
     public async read(id: string): Promise<T> {
-        if (this.VERBOSE) console.log(this.collectionName + ".read(" + id + ")");
+        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".read(" + id + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -66,7 +65,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         }
     }
     public async set(id: string, doc: T): Promise<void> {
-        if (this.VERBOSE) console.log(this.collectionName + ".set(" + id + ", " + JSON.stringify(doc) + ")");
+        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".set(" + id + ", " + JSON.stringify(doc) + ")");
 
         const key: MGPStr = new MGPStr(id);
         let optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -81,7 +80,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         return Promise.resolve();
     }
     public async update(id: string, update: PT): Promise<void> {
-        if (this.VERBOSE) console.log(this.collectionName + ".update(" + id + ", " + JSON.stringify(update) + ")");
+        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".update(" + id + ", " + JSON.stringify(update) + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -96,7 +95,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         }
     }
     public async delete(id: string): Promise<void> {
-        if (this.VERBOSE) console.log(this.collectionName + ".delete(" + id + ")");
+        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".delete(" + id + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -113,6 +112,6 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         value: any,
         callback: FirebaseCollectionObserver<T>): () => void
     {
-        throw new Error("Not Implemented yet it seem's hard");
+        throw new Error("FirebaseFirestoreDAOMock.observingWhere Not Implemented yet and it seem's hard");
     }
 }

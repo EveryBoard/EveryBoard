@@ -24,12 +24,12 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         super();
         this.showScore = true;
     }
-    public onClick(x: number, y: number): boolean {
+    public async onClick(x: number, y: number): Promise<boolean> {
         this.lastMove = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove = new ReversiMove(x, y);
 
-        return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
+        return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
     }
     public decodeMove(encodedMove: number): ReversiMove {
         return ReversiMove.decode(encodedMove);

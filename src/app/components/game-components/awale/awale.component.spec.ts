@@ -18,7 +18,7 @@ describe('AwaleComponent', () => {
     beforeEach(() => {
         fixture = TestBed.createComponent(AwaleComponent);
         component = fixture.componentInstance;
-        component.chooseMove = (m, s, spz, spo) => { return true; }
+        component.chooseMove = (m, s, spz, spo) => { return Promise.resolve(true); }
         fixture.detectChanges();
     });
     it('should create', () => {

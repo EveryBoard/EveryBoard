@@ -63,8 +63,8 @@ describe('QuartoComponent', () => {
     });
     it('should accept simple move', () => {
         const rules: QuartoRules = new QuartoRules();
-        const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = rules.getListMoves(rules.node);
-        const currentMove: QuartoMove = listMoves.getByIndex(0).key;
+        const listMoves: QuartoMove[] = rules.getListMoves(rules.node).listKeys();
+        const currentMove: QuartoMove = listMoves[0];
         expect(gameComponent.chooseCoord(currentMove.coord.x, currentMove.coord.y)).toBeTruthy(0);
         expect(gameComponent.choosePiece(currentMove.piece)).toBeTruthy(1);
     });

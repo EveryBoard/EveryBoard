@@ -10,6 +10,7 @@ import { environment } from 'src/environments/environment';
 export class AuthenticationService implements OnDestroy {
 
     public static VERBOSE: boolean = false;
+
     public static IN_TESTING: boolean = false;
 
     private authSub: Subscription;

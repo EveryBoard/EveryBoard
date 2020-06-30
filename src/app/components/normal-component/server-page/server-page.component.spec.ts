@@ -7,9 +7,6 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { of, Observable } from 'rxjs';
 import { UserService } from 'src/app/services/user/UserService';
 import { GameService } from 'src/app/services/game/GameService';
-import { ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { ChatService } from 'src/app/services/chat/ChatService';
-import { IChatId } from 'src/app/domain/ichat';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatTabsModule } from '@angular/material';
 import { FormsModule } from '@angular/forms';
@@ -56,7 +53,6 @@ describe('ServerPageComponent', () => {
     let authenticationService: AuthenticationService;
     let gameService: GameService;
     let userService: UserService;
-    let router: Router;
 
     let fixture: ComponentFixture<ServerPageComponent>;
 
@@ -93,7 +89,6 @@ describe('ServerPageComponent', () => {
         authenticationService = TestBed.get(AuthenticationService);
         gameService = TestBed.get(GameService);
         userService = TestBed.get(UserService);
-        router = TestBed.get(Router);
 
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null};
         AuthenticationServiceMock.IS_USER_LOGGED = null;
@@ -145,7 +140,7 @@ describe('ServerPageComponent', () => {
 
         expect(component.canCreateGame()).toBeFalsy();
     }));
-    it('should be illegal to create game for a player already in game', async(() => {
+    it('should be illegal to create game for a player already in game', async(() => { // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true};
         AuthenticationServiceMock.IS_USER_LOGGED = true;
         const currentPartSpy = spyOn(gameService, "getActivesPartsObs").and.returnValue(of([{
@@ -172,7 +167,8 @@ describe('ServerPageComponent', () => {
 
         expect(routerNavigateSpy).toHaveBeenCalledWith(['local/undefined'])
     }));
-    afterAll(async(() => {
-        component.ngOnDestroy();
+    afterAll(async(async() => {
+        fixture.destroy();
+        await fixture.whenStable();
     }));
 });

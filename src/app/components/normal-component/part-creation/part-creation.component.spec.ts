@@ -8,7 +8,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/joiner/JoinerService';
-import { ChatService } from 'src/app/services/chat/ChatService';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
@@ -18,6 +17,8 @@ import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { MGPStr } from 'src/app/collectionlib/mgpstr/MGPStr';
+import { ICurrentPart, Part } from 'src/app/domain/icurrentpart';
 
 class RouterMock {
     public async navigate(to: string[]): Promise<boolean> {
@@ -31,6 +32,8 @@ describe('PartCreationComponent with fixture:', () => {
     let component: PartCreationComponent;
 
     let joinerDAOMock: JoinerDAOMock;
+
+    let partDAOMock: PartDAOMock;
 
     beforeAll(() => {
         PartCreationComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || PartCreationComponent.VERBOSE;
@@ -52,8 +55,8 @@ describe('PartCreationComponent with fixture:', () => {
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(PartCreationComponent);
-        let partDAOMock: PartDAOMock = TestBed.get(PartDAO);
         let chatDAOMock: ChatDAOMock = TestBed.get(ChatDAO);
+        partDAOMock = TestBed.get(PartDAO);
         joinerDAOMock = TestBed.get(JoinerDAO);
         component = fixture.componentInstance;
         component.partId = "joinerId";
@@ -137,6 +140,7 @@ describe('PartCreationComponent with fixture:', () => {
         await fixture.whenStable();
         await joinerDAOMock.update("joinerId",
                                    { partStatus: 1, candidatesNames : [], chosenPlayer: "firstCandidate"});
+        // TODO: replace by real actor action (chooseCandidate)
         await fixture.whenStable();
         fixture.detectChanges();
 
@@ -145,7 +149,7 @@ describe('PartCreationComponent with fixture:', () => {
 
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_PROPOSED_CONFIG.copy());
     }));
-    it('(10) Config acceptation by joiner should change joiner doc', async(async() => {
+    it('(10) Config acceptation by joiner should change joiner doc and part doc', async(async() => {
         component.userName = "firstCandidate";
         await joinerDAOMock.set("joinerId", JoinerMocks.INITIAL.copy());
         fixture.detectChanges(); // joiner arrival
@@ -166,6 +170,10 @@ describe('PartCreationComponent with fixture:', () => {
         
         expect(output).toHaveBeenCalledWith(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
+        const currentPart: ICurrentPart = partDAOMock.getStaticDB().get(new MGPStr("joinerId")).get().subject.value.doc;
+        let expectedPart: ICurrentPart = PartMocks.STARTING.copy();
+        expectedPart.beginning = currentPart.beginning;
+        expect(currentPart).toEqual(expectedPart);
     }));
     afterEach(fakeAsync(async() => {
         fixture.destroy();

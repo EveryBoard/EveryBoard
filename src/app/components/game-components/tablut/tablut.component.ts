@@ -38,7 +38,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
         this.cancelMove();
     }
-    public onClick(x: number, y: number): boolean {
+    public async onClick(x: number, y: number): Promise<boolean> {
         if (TablutComponent.VERBOSE) {
             console.log("TablutComponent.onClick(" + x + ", " + y + ")");
         }
@@ -46,14 +46,14 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         if (this.chosen.x === -1) {
             success = this.choosePiece(x, y);
         } else {
-            success = this.chooseDestination(x, y);
+            success = await this.chooseDestination(x, y);
         }
         if (!success) {
             this.cancelMove();
         }
         return success;
     }
-    private chooseDestination(x: number, y: number): boolean {
+    private async chooseDestination(x: number, y: number): Promise<boolean> {
         if (TablutComponent.VERBOSE) console.log('TablutComponent.chooseDestination');
 
         const chosenPiece: Coord = this.chosen;

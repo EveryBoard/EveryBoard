@@ -1,4 +1,4 @@
-<div id="gameboard">
+<div id="gameboard" style="float: left">
     <table>
         <tr *ngFor="let line of board; index as y;">
             <td *ngFor="let caseContent of line; index as x;"
@@ -25,8 +25,7 @@
          alt=":{{ pieceInHand }}:"
          [src]='imagesLocation+"quarto/"+pieceInHand+".svg"'/>
 </div>
-
-<div id="piece">
+<div id="piece" style="float: right">
     <table>
         <tr *ngFor="let line of board; index as y;">
             <td *ngFor="let caseContent of line; index as x;"

@@ -2,6 +2,7 @@ import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ChatService } from '../../../services/chat/ChatService';
 import { IMessage } from '../../../domain/imessage';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { IChatId } from 'src/app/domain/ichat';
 
 @Component({
     selector: 'app-chat',
@@ -12,12 +13,16 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     public static VERBOSE: boolean = false;
 
-    @Input() chatId: string;
-    @Input() turn: number;
-    userName: string;
+    @Input() public chatId: string;
+    @Input() public turn: number;
+    public userName: string;
 
-    chat: IMessage[];
-    userMessage: string;
+    public chat: IMessage[];
+    public userMessage: string;
+    public readMessages: number = 0;
+    public unreadMessages: number = 0;
+
+    public visible: boolean = true;
 
     constructor(private chatService: ChatService,
                 private authenticationService: AuthenticationService) {
@@ -54,7 +59,17 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (ChatComponent.VERBOSE) {
             console.log('User \'' + this.userName + '\' logged, loading chat content');
         }
-        this.chatService.startObserving(this.chatId, chat => this.chat = chat.doc.messages);
+        this.chatService.startObserving(this.chatId, this.updateMessages);
+    }
+    public updateMessages = (iChatId: IChatId) => {
+        this.chat = iChatId.doc.messages;
+        const nbMessages: number = this.chat.length;
+        if (this.visible === false) {
+            this.unreadMessages = nbMessages - this.readMessages;
+        } else {
+            this.readMessages = nbMessages;
+            this.unreadMessages = 0;
+        } 
     }
     public showDisconnectedChat() {
         const msg: IMessage = {sender: 'fake', content: 'vous devez être connecté pour voir le chat...', postedTime: Date.now(), lastTurnThen: null};
@@ -72,5 +87,14 @@ export class ChatComponent implements OnInit, OnDestroy {
     public ngOnDestroy() {
         if (this.chatService.isObserving())
             this.chatService.stopObserving();
+    }
+    public switchChatVisibility() {
+        if (this.visible === true) {
+            this.visible = false;
+        } else {
+            this.visible = true;
+            this.unreadMessages = 0;
+            this.readMessages = this.chat.length;
+        }
     }
 }

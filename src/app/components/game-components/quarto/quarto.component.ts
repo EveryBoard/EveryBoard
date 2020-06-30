@@ -23,6 +23,9 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public pieceToGive: number = -1; // the piece that the user want to give to the opponent
 
+    public constructor() {
+        super();
+    }
     public updateBoard() {
         const slice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;
@@ -107,6 +110,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             this.chosen = new Coord(-1, -1);
             return true;
         } else {
+            this.cancelMove();
             return false;
         }
     }

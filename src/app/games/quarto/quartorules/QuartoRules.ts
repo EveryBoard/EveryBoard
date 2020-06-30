@@ -207,15 +207,13 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     private static isOccupied(qcase: number): boolean {
         return (qcase !== QuartoEnum.UNOCCUPIED);
     }
-
-    static printArray(array: number[]) {
+    public static printArray(array: number[]) {
         console.log('[');
         for (const i of array) {
             console.log(i + ' ');
         }
         console.log(']');
     }
-
     private static isLegal(move: QuartoMove, quartoPartSlice: QuartoPartSlice): number {
         /* pieceInHand is the one to be placed
          * move.piece is the one gave to the next players
@@ -262,15 +260,14 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         super(false);
         this.node = MNode.getFirstNode(
             new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA),
+            // TODO: move in PartSlice.getStartingSlice
             this
         );
     }
-
     public isLegal(move: QuartoMove): LegalityStatus {
         const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice;
         return {legal: QuartoRules.isLegal(move, quartoPartSlice) === QuartoRules.VALID_MOVE};
     }
-
     public setInitialBoard() {
         if (this.node == null) {
             this.node = MNode.getFirstNode(
@@ -280,7 +277,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
             this.node = this.node.getInitialNode();
         }
     }
-
     public getListMoves(n: MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>): MGPMap<QuartoMove, QuartoPartSlice> {
         const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = new MGPMap<QuartoMove, QuartoPartSlice>();
 
@@ -298,11 +294,11 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
             for (let x = 0; x < 4; x++) {
                 if (board[y][x] === QuartoEnum.UNOCCUPIED) {
                     // Pour chaque cases vides
-                    for (const remainingPiece of pawns) { // piece est la pi�ce qu'on va donner
-                        nextBoard = slice.getCopiedBoard();
-                        nextBoard[y][x] = inHand; // on place la pi�ce qu'on a en main en (x, y)
+                    for (const remainingPiece of pawns) { // piece est la pièce qu'on va donner
+                        nextBoard = slice.getCopiedBoard(); // TODO: put higher to optimise
+                        nextBoard[y][x] = inHand; // on place la pièce qu'on a en main en (x, y)
 
-                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synth�se du mouvement list�
+                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthèse du mouvement listé
                         moveAppliedPartSlice = new QuartoPartSlice(nextBoard, nextTurn, remainingPiece); // plateau obtenu
 
                         listMoves.set(move, moveAppliedPartSlice);

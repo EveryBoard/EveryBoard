@@ -1,7 +1,7 @@
 <div class="container-fluid"
      style="height: 88%; max-height: 88%">
 
-    <app-part-creation id="partCreation"
+    <app-part-creation id="partCreation" #partCreation
                        *ngIf="gameStarted === false"
                        [partId]="currentPartId"
                        [userName]="userName"
@@ -9,8 +9,10 @@
     </app-part-creation>
 
     <div id="game" class="flex-container"
-         *ngIf="gameStarted === true">
-        <div id="board" class="flex-container circled col-sm-9">
+         *ngIf="gameStarted === true"
+         [ngStyle] = "{ 'height': getGameHeight(), 'max-height': '100%' }">
+
+         <div id="board" class="flex-container circled col-sm-9">
             <app-game-includer></app-game-includer>
         </div>
 
@@ -90,8 +92,10 @@
     </div>
 
     <div id="chat" class="circled"
-         style="height: 40%; max-height: 40%; float: bottom;">
-        <app-chat [chatId]="currentPartId"
+         [ngStyle] = "{ 'height': getChatHeight(), 'max-height': '40%', 'float': 'bottom' }"
+         >
+        <app-chat #chatComponent
+                  [chatId]="currentPartId"
                   [turn]="currentPart?.turn"></app-chat>
     </div>
 

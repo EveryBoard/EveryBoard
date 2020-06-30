@@ -21,21 +21,20 @@
         </tr>
     </table>
 </div>
-{{ chosenCoord == null ? "null" : caseBoard[chosenCoord.y][chosenCoord.x] }} <br/>
-{{ "chosenPiece: " + chosenPiece}} <br/>
-{{ "isVictory: " + isVictory()}} <br/>
 <div id="piece">
     <table>
-        <tr *ngFor="let piece of remainingPieces;"
-            (click)="onPieceClick(piece);">
-            <img width="50" height="50"
-                 alt=":{{ piece }}:"
-                 [src]='imagesLocation+"encapsule/"+piece+".svg"'/>
-            <img *ngIf="piece === chosenPiece"
-                 width="50" height="50"
-                 alt="highlighted"
-                 [src]="imagesLocation+'quarto/'+'squared_highlight.svg'"
-                 style="position:absolute; top:0; left:0;"/>
+        <tr *ngFor="let pieces of remainingPieces;">
+            <td *ngFor="let piece of pieces"
+                (click)="onPieceClick(piece);">
+                <img width="50" height="50"
+                     alt=":{{ piece }}:"
+                     [src]='imagesLocation+"encapsule/"+piece+".svg"'/>
+                <img *ngIf="piece === chosenPiece"
+                     width="50" height="50"
+                     alt="highlighted"
+                     [src]="imagesLocation+'quarto/'+'squared_highlight.svg'"
+                     style="position:absolute; top:0; left:0;"/>
+            </td>
         </tr>
     </table>
 </div>

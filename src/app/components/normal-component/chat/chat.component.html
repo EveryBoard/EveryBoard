@@ -1,6 +1,12 @@
 <div style="height: 100%; overflow: hidden">
-    <form class="example-form">
 
+    <button id="switchChatVisibilityButton"
+            mat-button
+            (click)="switchChatVisibility()"> 
+            {{ visible ? "Hide chat" : "Show chat" }} ({{ this.unreadMessages }} new messages)
+    </button>
+
+    <form id="chatForm" *ngIf="visible" class="example-form" >
         <!-- Messages -->
         <div style="max-height: 90%; overflow: auto">
             <mat-list *ngIf="chat">

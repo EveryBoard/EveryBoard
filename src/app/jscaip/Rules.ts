@@ -34,9 +34,9 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          */
         const LOCAL_VERBOSE: boolean = false;
         if (LOCAL_VERBOSE) console.log("Rules.choose: " + move.toString() + " was proposed");
-        if (!this.peared && this.node.hasMoves()) { // if calculation has already been done by the AI
+        if ((this.peared === false) && this.node.hasMoves()) { // if calculation has already been done by the AI
             if (LOCAL_VERBOSE) console.log("Rules.choose: current node has moves");
-            let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing if twice
+            let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing it twice
             if (choix === null) {
                 if (LOCAL_VERBOSE) console.log("Rules.choose: but this proposed move is not found in the list, so it's illegal");
                 return false;
