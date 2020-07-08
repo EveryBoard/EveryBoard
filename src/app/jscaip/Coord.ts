@@ -1,6 +1,7 @@
 import {Orthogonale, Direction} from './DIRECTION';
+import { Comparable } from '../collectionlib/Comparable';
 
-export class Coord {
+export class Coord implements Comparable {
 
     public readonly x: number;
 
@@ -103,9 +104,9 @@ export class Coord {
     public equals(obj: any): boolean {
         if (this === obj) return true;
         if (obj === null || obj === undefined) return false;
-        // if (!(obj instanceof Coord)) return false;
+        if (!(obj instanceof Coord)) return false;
         if (obj.x !== this.x) return false;
-        if (this.y !== obj.y) return false;
+        if (obj.y !== this.y) return false;
         return true;
     }
     public compareTo(c: Coord): number {

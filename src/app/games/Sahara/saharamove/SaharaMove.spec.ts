@@ -44,7 +44,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when start and end are too far away', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(0, 3);
-        const expectedError: string = "Maximal distance for SaharaMove is 2, got 3";
+        const expectedError: string = "Maximal |x| + |y| distance for SaharaMove is 2, got 3";
         expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
     });
     it('Should throw error when distance is 1 but start and end arent neighboors', () => {

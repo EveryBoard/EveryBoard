@@ -85,19 +85,20 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
                CENTER     + ',' +
                DOWN_RIGHT;
     }
-    public onClick(x: number, y: number) {
+    public async onClick(x: number, y: number) {
         const clickedCoord: Coord = new Coord(x, y);
         if (SaharaComponent.VERBOSE) console.log("Clicked on "+clickedCoord.toString());
         if (-1 < this.chosenCoord.x) {
             try {
                 const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
-                if (this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null)) {
+                const moveResult: boolean = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
+                if (moveResult === true) {
                     if (SaharaComponent.VERBOSE) console.log("Move is legal");
                 } else {
                     if (SaharaComponent.VERBOSE) console.log("Move is illegal");
                 }
             } catch (error) {
-                if (SaharaComponent.VERBOSE) console.log(error.message);
+                if (SaharaComponent.VERBOSE) console.log("That move can't be legal because: " + error.message);
             }
             this.chosenCoord = new Coord(-2, -2);
         }
