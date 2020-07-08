@@ -50,7 +50,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (player == null) return false;
         return player.substr(0, 3) === "bot";
     }
-    public async onValidUserMove(move: Move): Promise<boolean> {
+    public async onValidUserMove(move: Move): Promise<void> {
         if (LocalGameWrapperComponent.VERBOSE) {
             console.log('LocalGameWrapperComponent.onValidUserMove');
         }
@@ -58,8 +58,10 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (isLegal) {
             this.gameComponent.updateBoard();
             this.proposeAIToPlay();
+        } else {
+            throw new Error("LocalGameWrapperComponent.onValidUserMove encountered a non valid move");
         }
-        return isLegal;
+        return Promise.resolve();
     }
     public proposeAIToPlay() {
         // check if ai's turn has come, if so, make her start after a delay

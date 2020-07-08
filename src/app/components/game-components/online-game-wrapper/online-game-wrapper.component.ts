@@ -352,10 +352,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                 this.userService.observeUserByPseudo(opponentName, callback); // TODO: CHECK IF USEFULL OR NOT WITH NEW WAY TO DETECT DISCONNECTION
         }
     }
-    public async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean> {
+    public async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
         if (OnlineGameWrapperComponent.VERBOSE) console.log("OnlineGameWrapperComponent.onValidUserMove");
-        await this.updateDBBoard(move, scorePlayerZero, scorePlayerOne);
-        return true;
+        return this.updateDBBoard(move, scorePlayerZero, scorePlayerOne);
     }
     public async updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
         if (OnlineGameWrapperComponent.VERBOSE) {

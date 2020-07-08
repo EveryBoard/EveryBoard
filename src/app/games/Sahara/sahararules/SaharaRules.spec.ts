@@ -50,4 +50,7 @@ describe('SaharaRules', () => {
         expect(rules.choose(new SaharaMove(new Coord(1, 4), new Coord(2, 4)))).toBeTruthy("First move should be legal");
         expect(rules.node.ownValue).toBe(Number.MIN_SAFE_INTEGER, "Should be victory");
     });
+    it('Bouncing on occupied case should be illegal', () => {
+        expect(rules.choose(new SaharaMove(new Coord(7, 0), new Coord(8, 1)))).toBeFalsy();
+    });
 });

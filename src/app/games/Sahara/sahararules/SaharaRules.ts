@@ -9,6 +9,7 @@ import { SaharaMove } from "../saharamove/SaharaMove";
 import { SaharaPawn } from "../SaharaPawn";
 import { SaharaPartSlice } from "../SaharaPartSlice";
 import { TriangularCheckerBoard } from "src/app/jscaip/TriangularCheckerboard";
+import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
 abstract class SaharaNode extends MNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
 
@@ -119,7 +120,16 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
             if (SaharaRules.VERBOSE) console.log("This move is illegal because the landing case is not empty");
             return {legal: false};
         }
-        return {legal: true};
+        const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
+        if (commonNeighboor.isPresent()) {
+            if (slice.getBoardAt(commonNeighboor.get()) === SaharaPawn.EMPTY) {
+                return {legal: true};    
+            } else {
+                return {legal: false};
+            }
+        } else {
+            return {legal: true};    
+        }
     }
     public setInitialBoard(): void {
         if (this.node == null) {

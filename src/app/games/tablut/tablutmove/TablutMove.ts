@@ -1,23 +1,12 @@
 import { Coord } from "src/app/jscaip/Coord";
 import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
+import { TablutRules } from "../tablutrules/TablutRules";
+import { TablutRulesConfig } from "../tablutrules/TablutRulesConfig";
+import { Direction } from "src/app/jscaip/DIRECTION";
 
 export class TablutMove extends MoveCoordToCoord {
 
-    public equals(o: any): boolean {
-        if (o === this) return true;
-        if (!(o instanceof TablutMove)) return false;
-        const other: TablutMove = o as TablutMove;
-        if (!other.coord.equals(this.coord)) return false;
-        if (!other.end.equals(this.end)) return false;
-        return true;
-    }
-    public toString(): String {
-        return "TablutMove(" + this.coord + "->" + this.end + ")";
-    }
-    public decode(encodedMove: number): TablutMove {
-        return TablutMove.decode(encodedMove);
-    }
-    static decode(encodedMove: number): TablutMove {
+    public static decode(encodedMove: number): TablutMove {
         // encoded as such : dx; dy; ax; ay
         const ay = encodedMove % 16;
         encodedMove = encodedMove / 16;
@@ -32,6 +21,33 @@ export class TablutMove extends MoveCoordToCoord {
         const dx = encodedMove % 16;
         const depart: Coord = new Coord(dx, dy);
         return new TablutMove(depart, arrive);
+    }
+    public constructor(start: Coord, end: Coord) {
+        super(start, end);
+        if (!start.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) { // TODO: put that somewhere it does not say "mutual import"
+            throw new Error("Starting coord of TablutMove must be on the board, not at " + start.toString());
+        }
+        if (!end.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) { // TODO: put that somewhere it does not say "mutual import"
+            throw new Error("Starting coord of TablutMove must be on the board, not at " + end.toString());
+        }
+        const dir: Direction = start.getDirectionToward(end);
+        if (Direction.isDiagonal(dir)) {
+            throw new Error("TablutMove cannot be diagonal");
+        }
+    }
+    public equals(o: any): boolean {
+        if (o === this) return true;
+        if (!(o instanceof TablutMove)) return false;
+        const other: TablutMove = o as TablutMove;
+        if (!other.coord.equals(this.coord)) return false;
+        if (!other.end.equals(this.end)) return false;
+        return true;
+    }
+    public toString(): String {
+        return "TablutMove(" + this.coord + "->" + this.end + ")";
+    }
+    public decode(encodedMove: number): TablutMove {
+        return TablutMove.decode(encodedMove);
     }
     public encode(): number {
         // encoded as (binarywise) A(x, y) -> B(X, Y)

@@ -121,11 +121,11 @@ export abstract class GameWrapper {
             if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log('GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
             return false;
         }
-        const legalMoveSubmissionResult: boolean = await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
-        if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log("GameWrapper.receiveChildData says: valid move result = " + legalMoveSubmissionResult);
-        return legalMoveSubmissionResult;
+        await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
+        if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log("GameWrapper.receiveChildData says: valid move legal");
+        return true;
     }
-    public abstract async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean>;
+    public abstract async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     public isPlayerTurn() {
         const indexPlayer = this.gameComponent.rules.node.gamePartSlice.turn % 2;

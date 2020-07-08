@@ -5,6 +5,7 @@ import {TablutMove} from 'src/app/games/tablut/tablutmove/TablutMove';
 import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
 import {TablutRules} from '../../../games/tablut/tablutrules/TablutRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { TablutCase } from 'src/app/games/tablut/tablutrules/TablutCase';
 
 @Component({
     selector: 'app-tablut-new',
@@ -18,7 +19,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
 
-    public UNOCCUPIED = TablutPartSlice.UNOCCUPIED;
+    public UNOCCUPIED: number = TablutCase.UNOCCUPIED.value;
 
     public moving: Coord = new Coord(-1, -1); // coord of the piece who left
 

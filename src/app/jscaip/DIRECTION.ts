@@ -68,6 +68,9 @@ export class Direction {
     public static isOrthogonal(d: Direction): boolean {
         return (d.x === 0) || (d.y === 0);
     }
+    public static isDiagonal(d: Direction): boolean {
+        return (d.x !== 0) && (d.y !== 0);
+    }
     public static of(x: number, y: number): Direction {
         if (x === -1) {
             if (y === -1) return Direction.UP_LEFT;
