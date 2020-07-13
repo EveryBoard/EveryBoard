@@ -12,19 +12,18 @@ export class MinimaxTestingMove extends Move {
         super();
         this.right = right;
     }
-
-    static decode(encodedMove: number): MinimaxTestingMove {
+    public static decode(encodedMove: number): MinimaxTestingMove {
         return encodedMove == 0 ? MinimaxTestingMove.RIGHT : MinimaxTestingMove.DOWN;
     }
-
+    public static encode(move: MinimaxTestingMove): number {
+        return move.encode();
+    }
     public decode(encodedMove: number): MinimaxTestingMove {
         return MinimaxTestingMove.decode(encodedMove);
     }
-
     public encode(): number {
         return this.right ? 0 : 1;
     }
-
     public equals(obj: any): boolean {
         if (this === obj) {
             return true;
@@ -37,7 +36,6 @@ export class MinimaxTestingMove extends Move {
         }
         return this.right === obj.right;
     }
-
     public toString(): String {
         return this.right ? "Move RIGHT" : "Move DOWN";
     }

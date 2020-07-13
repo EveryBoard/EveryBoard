@@ -15,4 +15,13 @@ describe('MinimaxTestingMove', () => {
             expect(decodedMove).toEqual(move);
         }
     });
+    
+    it('Method decode should delegate to static method decode', () => {
+        const testMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
+        spyOn(MinimaxTestingMove, "decode").and.callThrough();
+
+        testMove.decode(testMove.encode());
+
+        expect(MinimaxTestingMove.decode).toHaveBeenCalledTimes(1);
+    });
 });

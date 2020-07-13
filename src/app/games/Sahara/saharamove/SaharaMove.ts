@@ -5,6 +5,9 @@ import { TriangularCheckerBoard } from "src/app/jscaip/TriangularCheckerboard";
 
 export class SaharaMove extends MoveCoordToCoord {
 
+    public static encode(move: SaharaMove): number {
+        return move.encode();
+    }
     public static decode(encodedMove: number): SaharaMove {
         const ey: number = encodedMove%6;
         encodedMove -= ey;

@@ -19,15 +19,13 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
 
     public coord: Coord;
 
-    public chooseRight() {
-        console.log('chooseRight');
+    public chooseRight(): Promise<boolean> {
         const chosenMove = MinimaxTestingMove.RIGHT;
-        this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
-    public chooseDown() {
-        console.log('chooseDown');
+    public chooseDown(): Promise<boolean> {
         const chosenMove = MinimaxTestingMove.DOWN;
-        this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
     public updateBoard() {
         const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice;
@@ -38,6 +36,6 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
         return MinimaxTestingMove.decode(encodedMove);
     }
     public encodeMove(move: MinimaxTestingMove): number {
-        return move.encode();
+        return MinimaxTestingMove.encode(move);
     }
 }

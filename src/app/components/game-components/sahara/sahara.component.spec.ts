@@ -10,6 +10,8 @@ import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
+import { Coord } from 'src/app/jscaip/Coord';
 
 const activatedRouteStub = {
     snapshot: {
@@ -58,6 +60,24 @@ describe('SaharaComponent', () => {
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
-        expect(gameComponent).toBeTruthy("GoComponent should be created");
+        expect(gameComponent).toBeTruthy("SaharaComponent should be created");
+    });
+    it('should delegate decoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(SaharaMove, "decode").and.callThrough();
+        gameComponent.decodeMove(1);
+        expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
+    it('should delegate encoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(SaharaMove, "encode").and.callThrough();
+        gameComponent.encodeMove(new SaharaMove(new Coord(1, 1), new Coord(2, 1)));
+        expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
+    it('Should play correctly shortest victory', () => {
+        expect(gameComponent.onClick(0, 3)).toBeTruthy();
+        expect(gameComponent.onClick(1, 4)).toBeTruthy("First move should be legal");
+        expect(gameComponent.onClick(3, 0)).toBeTruthy();
+        expect(gameComponent.onClick(4, 0)).toBeTruthy("Second move should be legal");
+        expect(gameComponent.onClick(1, 4)).toBeTruthy();
+        expect(gameComponent.onClick(2, 4)).toBeTruthy("Third move should be legal");
     });
 });

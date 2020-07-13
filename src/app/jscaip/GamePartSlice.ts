@@ -1,5 +1,6 @@
 import {Coord} from './Coord';
 import { Player } from './Player';
+import { Comparable } from '../collectionlib/Comparable';
 
 export abstract class GamePartSlice {
 
@@ -54,7 +55,16 @@ export abstract class GamePartSlice {
         }
         return retour;
     }
-    public static copyArray(array: ReadonlyArray<number>): number[] {
+    public static copyImmutableArray<I>(array: ReadonlyArray<I>): I[] {
+        const retour: Array<I> = new Array<I>();
+        let x = 0;
+        while (x < array.length) {
+            retour[x] = array[x];
+            x++;
+        }
+        return retour;
+    }
+    public static copyArray(array: ReadonlyArray<number>): number[] { // TODO: REMOVE FOR copyImmutableArray
         const retour: Array<number> = new Array<number>();
         let x = 0;
         while (x < array.length) {
@@ -63,7 +73,7 @@ export abstract class GamePartSlice {
         }
         return retour;
     }
-    public static copyCoordArray(array: Coord[]): Coord[] {
+    public static copyCoordArray(array: Coord[]): Coord[] { //  TODO: Check that one immutability  && REMOVE FOR copyImmutableArray
         const retour: Array<Coord> = new Array<Coord>();
         let x = 0;
         while (x < array.length) {

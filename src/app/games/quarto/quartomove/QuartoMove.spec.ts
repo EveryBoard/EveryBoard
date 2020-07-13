@@ -15,4 +15,12 @@ describe('QuartoMove', () => {
             expect(decodedMove).toEqual(move);
         }
     });
+    it('Method decode should delegate to static method decode', () => {
+        const testMove: QuartoMove = new QuartoMove(1, 1, 1);
+        spyOn(QuartoMove, "decode").and.callThrough();
+
+        testMove.decode(testMove.encode());
+
+        expect(QuartoMove.decode).toHaveBeenCalledTimes(1);
+    });
 });

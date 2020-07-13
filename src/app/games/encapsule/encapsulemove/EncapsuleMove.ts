@@ -1,11 +1,11 @@
 import { Move } from "src/app/jscaip/Move";
 import { Coord } from "src/app/jscaip/Coord";
 import { EncapsulePiece, EncapsuleMapper } from "../EncapsuleEnums";
-import { EncapsuleCase } from "../EncapsulePartSlice";
+import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
 export class EncapsuleMove extends Move {
 
-    static decode(encodedMove: number): EncapsuleMove {
+    public static decode(encodedMove: number): EncapsuleMove {
         const d: number = encodedMove%2;
         encodedMove -= d;
         encodedMove = encodedMove/2;
@@ -17,7 +17,7 @@ export class EncapsuleMove extends Move {
         encodedMove = encodedMove/3;
         const landingCoord: Coord = new Coord(lx, ly);
         if (d === 0) { // drop
-            const piece: EncapsulePiece = encodedMove;
+            const piece: EncapsulePiece = EncapsulePiece.of(encodedMove);
             return EncapsuleMove.fromDrop(piece, landingCoord)
         } else {
             const sy: number = encodedMove%3;
@@ -28,11 +28,12 @@ export class EncapsuleMove extends Move {
             return EncapsuleMove.fromMove(startingCoord, landingCoord);
         }
     }
-
+    public static encode(move: EncapsuleMove): number {
+        return move.encode();
+    }
     public decode(encodedMove: number): EncapsuleMove {
         return EncapsuleMove.decode(encodedMove);
     }
-
     public encode(): number {
         /* d: 0|1
          *     - 0: c'est un drop
@@ -52,45 +53,34 @@ export class EncapsuleMove extends Move {
         const ly: number = this.landingCoord.y;
         if (this.isDropping()) {
             const d: number = 0;
-            const piece: number = this.piece;
+            const piece: number = this.piece.get().value;
             return (piece*18) + (lx*6) + (ly*2) + d;
         } else {
             const d: number = 1;
-            const sy: number = this.startingCoord.y;
-            const sx: number = this.startingCoord.x;
+            const sy: number = this.startingCoord.get().y;
+            const sx: number = this.startingCoord.get().x;
             return (sx*54) + (sy*18) + (lx*6) + (ly*2) + d;
         }
     }
-
-    public readonly startingCoord: Coord | null;
-
-    public readonly landingCoord: Coord;
-
-    public readonly piece: null | EncapsulePiece;
-
-    private constructor(startingCoord: Coord, landingCoord: Coord, piece: EncapsulePiece) {
+    private constructor(public readonly startingCoord: MGPOptional<Coord>,
+                        public readonly landingCoord: Coord,
+                        public readonly piece: MGPOptional<EncapsulePiece>) {
         super();
-        this.startingCoord = startingCoord;
-        this.landingCoord = landingCoord;
-        this.piece = piece;
+        if (startingCoord == null) throw new Error("Starting Coord's optional can't be null");
+        if (landingCoord == null) throw new Error("Landing Coord can't be null");
+        if (piece == null) throw new Error("Piece's optional can't be null");
     }
-
-    static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
-        if (startingCoord == null) throw new Error("Starting coord cannot be null");
-        if (landingCoord == null) throw new Error("Landing coord cannot be null");
+    public static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
         if (startingCoord.equals(landingCoord)) throw new Error("Starting coord and landing coord must be separate coords");
-        return new EncapsuleMove(startingCoord, landingCoord, null);
+        return new EncapsuleMove(MGPOptional.of(startingCoord), landingCoord, MGPOptional.empty());
     }
-
-    static fromDrop(piece: EncapsulePiece, landingCoord: Coord): EncapsuleMove {
-        return new EncapsuleMove(null, landingCoord, piece);
+    public static fromDrop(piece: EncapsulePiece, landingCoord: Coord): EncapsuleMove {
+        return new EncapsuleMove(MGPOptional.empty(), landingCoord, MGPOptional.of(piece));
     }
-
-    isDropping() {
-        return this.startingCoord === null;
+    public isDropping() {
+        return this.startingCoord.isAbsent();
     }
-
-    public equals(o: any) {
+    public equals(o: any): boolean {
         if (this === o) {
             return true;
         }
@@ -118,12 +108,11 @@ export class EncapsuleMove extends Move {
         }
         return true;
     }
-
     public toString(): String {
         if (this.isDropping()) {
-            return "EncapsuleMove(" + EncapsuleMapper.getNameFromPiece(this.piece) + " -> " + this.landingCoord + ")";
+            return "EncapsuleMove(" + EncapsuleMapper.getNameFromPiece(this.piece.get()) + " -> " + this.landingCoord + ")";
         } else {
-            return "EncapsuleMove(" + this.startingCoord + "->" + this.landingCoord + ")";
+            return "EncapsuleMove(" + this.startingCoord.get() + "->" + this.landingCoord + ")";
         }
     }
 }

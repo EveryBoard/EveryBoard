@@ -8,6 +8,7 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { Sets } from 'src/app/collectionlib/sets/Sets';
 import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 abstract class EncapsuleNode extends MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
 
@@ -23,6 +24,26 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         [ new Coord(0, 0), new Coord(1, 1), new Coord(2, 2)],
         [ new Coord(0, 2), new Coord(1, 1), new Coord(2, 0)]
     ];
+    public static isVictory(slice: EncapsulePartSlice): boolean {
+        let board: EncapsuleCase[][] = slice.toCase();
+        let victory: boolean = false;
+        let i: number = 0;
+        let line: Coord[];
+        while (!victory && i<8) {
+            line = EncapsuleRules.LINES[i++];
+            let cases: EncapsuleCase[] = [board[line[0].y][line[0].x],
+                                          board[line[1].y][line[1].x],
+                                          board[line[2].y][line[2].x]];
+            victory = EncapsuleRules.isVictoriousLine(cases);
+        }
+        return victory;
+    }
+    public static isVictoriousLine(cases: EncapsuleCase[]): boolean {
+        let pieces: EncapsulePiece[] = cases.map(c => c.getBiggest());
+        let owner: Player[] = pieces.map(piece => EncapsuleMapper.toPlayer(piece));
+        if (owner[0] === Player.NONE) return false;
+        return (owner[0] === owner[1]) && (owner[1] === owner[2]);
+    }
     constructor() {
         super(false);
         this.node = MNode.getFirstNode(
@@ -39,19 +60,20 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         }
     }
     public isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
-        const LOCAL_VERBOSE: boolean = false;
+        const LOCAL_VERBOSE: boolean = true;
         const FAILURE: EncapsuleLegalityStatus = {legal: false, newLandingCase: null};
         let boardCopy: number[][] = slice.getCopiedBoard();
         if (LOCAL_VERBOSE) console.log(move.toString());
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
-            movingPiece = move.piece;
+            movingPiece = move.piece.get();
             if (!slice.isDropable(movingPiece)) {
                 if (LOCAL_VERBOSE) console.log("move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
                 return FAILURE;
             }
         } else {
-            const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[move.startingCoord.y][move.startingCoord.x]);
+            const startingCoord: Coord = move.startingCoord.get();
+            const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
             if (LOCAL_VERBOSE) {
                 console.log("at " + move.startingCoord);
@@ -78,25 +100,32 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         return FAILURE;
     }
     public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus): { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; } {
-        let newBoard: EncapsulePiece[][] = slice.getCopiedBoard();
+
+        let numberBoard: number[][] = slice.getCopiedBoard(); // TODO: make board EncapsulePiece[][] and no longer number[][] ??
+        let mapper: (n: number) => EncapsulePiece = EncapsulePiece.of;
+        let newBoard: EncapsulePiece[][] = ArrayUtils.mapImmutableBiArray(numberBoard, mapper);
+
         let newLandingCase: EncapsuleCase = legality.newLandingCase;
         let newRemainingPiece: EncapsulePiece[] = slice.getRemainingPiecesCopy();
         let newTurn: number = slice.turn + 1;
-        newBoard[move.landingCoord.y][move.landingCoord.x] = newLandingCase.encode();
+        newBoard[move.landingCoord.y][move.landingCoord.x] = EncapsulePiece.of(newLandingCase.encode());
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
-            movingPiece = move.piece;
+            movingPiece = move.piece.get();
             let indexBiggest: number = newRemainingPiece.indexOf(movingPiece);
             newRemainingPiece = newRemainingPiece.slice(0, indexBiggest).concat(newRemainingPiece.slice(indexBiggest + 1));
         } else {
-            let oldStartingNumber: number = newBoard[move.startingCoord.y][move.startingCoord.x];
+            const startingCoord: Coord = move.startingCoord.get();
+            let oldStartingNumber: number = newBoard[startingCoord.y][startingCoord.x].value;
             let oldStartingCase: EncapsuleCase = EncapsuleCase.decode(oldStartingNumber);
             let removalResult: {removedCase: EncapsuleCase, removedPiece: EncapsulePiece} =
                 oldStartingCase.removeBiggest();
-            newBoard[move.startingCoord.y][move.startingCoord.x] = removalResult.removedCase.encode();
+            newBoard[startingCoord.y][startingCoord.x] = EncapsulePiece.of(removalResult.removedCase.encode());
             movingPiece = removalResult.removedPiece;
         }
-        const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newBoard, newTurn, newRemainingPiece);
+        let demapper: (p: EncapsulePiece) => number = (p: EncapsulePiece) => p.getValue();
+        let newNumberBoard: number[][] = ArrayUtils.mapImmutableBiArray(newBoard, demapper);
+        const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newNumberBoard, newTurn, newRemainingPiece);
         return {resultingSlice, resultingMove: move};
     }
     public getBoardValue(n: EncapsuleNode): number {
@@ -111,26 +140,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         }
         return boardValue;
     }
-    public static isVictory(slice: EncapsulePartSlice): boolean {
-        let board: EncapsuleCase[][] = slice.toCase();
-        let victory: boolean = false;
-        let i: number = 0;
-        let line: Coord[];
-        while (!victory && i<8) {
-            line = EncapsuleRules.LINES[i++];
-            let cases: EncapsuleCase[] = [board[line[0].y][line[0].x],
-                                          board[line[1].y][line[1].x],
-                                          board[line[2].y][line[2].x]];
-            victory = EncapsuleRules.isVictoriousLine(cases);
-        }
-        return victory;
-    }
-    public static isVictoriousLine(cases: EncapsuleCase[]): boolean {
-        let pieces: EncapsulePiece[] = cases.map(c => c.getBiggest());
-        let owner: Player[] = pieces.map(piece => EncapsuleMapper.toPlayer(piece));
-        if (owner[0] === Player.NONE) return false;
-        return (owner[0] === owner[1]) && (owner[1] === owner[2]);
-    }
     public getListMoves(n: EncapsuleNode): MGPMap<EncapsuleMove, EncapsulePartSlice> {
         const moves: MGPMap<EncapsuleMove, EncapsulePartSlice> = new MGPMap<EncapsuleMove, EncapsulePartSlice>();
         const slice: EncapsulePartSlice = n.gamePartSlice;
@@ -139,12 +148,11 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         }
         const newBoard: EncapsuleCase[][] = slice.toCase();
         const currentPlayer: Player = slice.getCurrentPlayer();
-        const puttablePieces: EncapsulePiece[] = Sets.toNumberSet(slice.getPlayerRemainingPieces(currentPlayer));
+        const puttablePieces: EncapsulePiece[] = Sets.toImmutableSet(slice.getPlayerRemainingPieces(currentPlayer));
         for (let y=0; y<3; y++) {
             for (let x=0; x<3; x++) {
                 let coord: Coord = new Coord(x, y);
                 // each drop
-                let currentCase: EncapsuleCase = newBoard[y][x];
                 for (let piece of puttablePieces) {
                     const newMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
                     let status: EncapsuleLegalityStatus = this.isLegal(newMove, slice);

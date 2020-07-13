@@ -1,10 +1,10 @@
 export class MGPOptional<T> {
 
-    public static of(value: any): MGPOptional<any> {
+    public static of<T>(value: any): MGPOptional<T> {
         if (value == null) throw new Error("Optional cannot be create with empty value, use MGPOptional.empty instead");
         return new MGPOptional(value);
     }
-    public static empty(): MGPOptional<any> {
+    public static empty<T>(): MGPOptional<T> {
         return new MGPOptional(null);
     }
     private constructor(private readonly value: T) {}
@@ -12,11 +12,31 @@ export class MGPOptional<T> {
     public isPresent(): boolean {
         return this.value != null;
     }
+    public isAbsent(): boolean {
+        return this.value == null;
+    }
     public get(): T {
         if (this.isPresent()) {
             return this.value;
         } else {
             throw new Error("Value is absent");
+        }
+    }
+    public getOrNull(): T{
+        return this.value;
+    }
+    public equals(t: MGPOptional<T>) {
+        if (this.isAbsent()) {
+            return t.isAbsent();
+        }
+        if (t.isAbsent()) return false;
+        const value: T = this.value;
+        if (value.hasOwnProperty("equals")) {
+            let comparableValue: {equals: (o: any) => boolean } =
+                value as unknown as {equals: (o: any) => boolean };
+            return comparableValue.equals(t.value);
+        } else {
+            return value === this.value;
         }
     }
 }

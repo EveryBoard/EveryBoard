@@ -15,4 +15,12 @@ describe('ReversiMove', () => {
             expect(decodedMove).toEqual(move);
         }
     });
+    it('Method decode should delegate to static method decode', () => {
+        const testMove: ReversiMove = new ReversiMove(1, 1);
+        spyOn(ReversiMove, "decode").and.callThrough();
+
+        testMove.decode(testMove.encode());
+
+        expect(ReversiMove.decode).toHaveBeenCalledTimes(1);
+    });
 });

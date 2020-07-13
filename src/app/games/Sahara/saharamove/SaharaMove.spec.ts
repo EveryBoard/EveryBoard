@@ -19,15 +19,12 @@ describe('SaharaMoves', () => {
         }
     });
     it('Method decode should delegate to static method decode', () => {
-        const move: SaharaMove = new SaharaMove(new Coord(1, 1), new Coord(2, 1));
-        const staticDecode: jasmine.Spy = spyOn(SaharaMove, "decode").and.callThrough();
+        const testMove: SaharaMove = new SaharaMove(new Coord(1, 1), new Coord(2, 1));
+        spyOn(SaharaMove, "decode").and.callThrough();
 
-        const decodedMove: SaharaMove = move.decode(move.encode());
+        testMove.decode(testMove.encode());
 
-        expect(staticDecode).toHaveBeenCalledTimes(1);
-        expect(decodedMove.equals(move)).toBeTruthy();
-        expect(move.equals(move)).toBeTruthy();
-        expect(move.equals(5)).toBeFalsy();
+        expect(SaharaMove.decode).toHaveBeenCalledTimes(1);
     });
     it('Should throw error when starting coord is outside the board', () => {
         const start: Coord = new Coord(-1, 0);

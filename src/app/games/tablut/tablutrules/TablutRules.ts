@@ -57,7 +57,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const resultingSlice: TablutPartSlice = new TablutPartSlice(resultingBoard, turn + 1, invaderStart);
         return {resultingSlice, resultingMove: move};
     }
-    private static tryMove(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): {success: number, resultingBoard: number[][]} {
+    public static tryMove(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): {success: number, resultingBoard: number[][]} {
         if (TablutRules.VERBOSE) console.log( { call_context: "TablutRules.tryMove", player, invaderStart, move, board });
         const errorValue: number = this.getMoveValidity(player, invaderStart, move, board);
         if (errorValue !== this.SUCCESS) {
@@ -188,12 +188,12 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                     if (this.CAPTURE_KING_AGAINST_THRONE_RULES) { //////////////////////// 3
                         // king captured by 1 border, 1 throne, 2 invaders
                         if (TablutRules.VERBOSE || LOCAL_VERBOSE) {
-                            console.log('king captured by 3 invaders against 1 border'); }
+                            console.log('king captured by 2 invaders against 1 corner and 1 border'); }
                         return kingCoord;
                     }
                 }
             }
-            // those were the only two way to capture against the borde
+            // those were the only two way to capture against the border
             return null;
         }
         if (back === this.NONE) { //////////////////////////////////////////////////////// 4
@@ -448,24 +448,22 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
         return MGPOptional.empty();
     }
-    public static getInvaderVictoryValue(n: TablutNode): number {
-        const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
+    public static getInvaderVictoryValue(invaderStart: boolean): number {
         if (TablutRules.VERBOSE) {
             console.log('TablutRules.getInvaderVictoryValue');
         }
-        if (tablutPartSlice.invaderStart) {
+        if (invaderStart) {
             return Number.MIN_SAFE_INTEGER;
         } else {
             return Number.MAX_SAFE_INTEGER;
         }
     }
-    public static getDefenderVictoryValue(n: TablutNode): number {
-        console.log('defender victory !');
-        const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
-        if (tablutPartSlice.invaderStart) {
+    public static getDefenderVictoryValue(invaderStart: boolean): number {
+        if (invaderStart) {
             return Number.MAX_SAFE_INTEGER;
+        } else {
+            return Number.MIN_SAFE_INTEGER;
         }
-        return Number.MIN_SAFE_INTEGER;
     }
     public static isPlayerImmobilised(player: 0|1, invaderStart: boolean, board: number[][]) {
         return this.getPlayerListMoves(
@@ -507,6 +505,32 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             }
         }
         return listMoves;
+    }
+    public static getBoardValue(board: number[][], invaderStart: boolean): number {
+        
+        const optionalKingCoord: MGPOptional<Coord> = TablutRules.getKingCoord(board);
+        if (!optionalKingCoord.isPresent()) { // the king is dead, long live the king
+            return TablutRules.getInvaderVictoryValue(invaderStart);
+        }
+        const kingCoord: Coord = optionalKingCoord.get();
+        if (TablutRules.isExternalThrone(kingCoord)) {
+            // king reached one corner !
+            console.log('king reached the corner ' + kingCoord);
+            return TablutRules.getDefenderVictoryValue(invaderStart);
+        }
+        if (TablutRules.isPlayerImmobilised(0, invaderStart, board)) {
+            return Number.MIN_SAFE_INTEGER;
+        }
+        if (TablutRules.isPlayerImmobilised(1, invaderStart, board)) {
+            return Number.MAX_SAFE_INTEGER;
+        }
+        const nbPlayerZeroPawns = TablutRules.getPlayerListPawns(0, invaderStart, board).length;
+        const nbPlayerOnePawns = TablutRules.getPlayerListPawns(1, invaderStart, board).length;
+        const zeroMult = invaderStart ? 1 : 2; // invaders pawn are twice as numerous
+        const oneMult = invaderStart ? 2 : 1; // so they're twice less valuable
+        const scoreZero = nbPlayerZeroPawns * zeroMult;
+        const scoreOne = nbPlayerOnePawns * oneMult;
+        return scoreOne - scoreZero; // TODO : countInvader vs Defenders
     }
     constructor() {
         super(false);
@@ -596,29 +620,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const board: number[][] = tablutPartSlice.getCopiedBoard();
         const invaderStart: boolean = tablutPartSlice.invaderStart;
 
-        const optionalKingCoord: MGPOptional<Coord> = TablutRules.getKingCoord(board);
-        if (!optionalKingCoord.isPresent()) { // the king is dead, long live the king
-            return TablutRules.getInvaderVictoryValue(n);
-        }
-        const kingCoord: Coord = optionalKingCoord.get();
-        if (TablutRules.isExternalThrone(kingCoord)) {
-            // king reached one corner !
-            console.log('king reached the corner ' + kingCoord);
-            return TablutRules.getDefenderVictoryValue(n);
-        }
-        if (TablutRules.isPlayerImmobilised(0, invaderStart, board)) {
-            return Number.MIN_SAFE_INTEGER;
-        }
-        if (TablutRules.isPlayerImmobilised(1, invaderStart, board)) {
-            return Number.MAX_SAFE_INTEGER;
-        }
-        const nbPlayerZeroPawns = TablutRules.getPlayerListPawns(0, invaderStart, board).length;
-        const nbPlayerOnePawns = TablutRules.getPlayerListPawns(1, invaderStart, board).length;
-        const zeroMult = invaderStart ? 1 : 2; // invaders pawn are twice as numerous
-        const oneMult = invaderStart ? 2 : 1; // so they're twice less valuable
-        const scoreZero = nbPlayerZeroPawns * zeroMult;
-        const scoreOne = nbPlayerOnePawns * oneMult;
-        return scoreOne - scoreZero; // TODO : countInvader vs Defenders
+        return TablutRules.getBoardValue(board, invaderStart);
     }
     public isLegal(move: TablutMove): LegalityStatus {
         // copies

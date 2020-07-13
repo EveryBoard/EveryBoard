@@ -26,4 +26,10 @@ describe('TablutMove', () => {
     it("TablutMove must throw if created non-orthogonally", () => {
         expect(() => new TablutMove(new Coord(0, 0), new Coord(1, 1))).toThrowError("TablutMove cannot be diagonal");
     });
+    it("Should delegate decoding to static method", () => {
+        const testMove: TablutMove = new TablutMove(new Coord(1, 1), new Coord(2, 1));
+        spyOn(TablutMove, "decode").and.callThrough();
+        testMove.decode(testMove.encode());
+        expect(TablutMove.decode).toHaveBeenCalledTimes(1);
+    });
 });

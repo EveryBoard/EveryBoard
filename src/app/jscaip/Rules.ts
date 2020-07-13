@@ -68,7 +68,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
      * don't do any modification to the board
      */
 
-    public abstract setInitialBoard(): void;
+    public abstract setInitialBoard(): void;  // TODO: make generic and unherited
     /* set the initial board
      */
 }

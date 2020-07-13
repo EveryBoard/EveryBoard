@@ -75,7 +75,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         } else {
             const subject: BehaviorSubject<{id: string, doc: T}> = new BehaviorSubject<{id: string, doc: T}>(tid)
             const observable: Observable<{id: string, doc: T}> = subject.asObservable();
-            this.getStaticDB().put(key, { observable, subject });
+            this.getStaticDB().put(key, new ObservableSubject(subject, observable));
         }
         return Promise.resolve();
     }

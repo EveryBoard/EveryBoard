@@ -9,6 +9,10 @@ import { TablutCase } from "./TablutCase";
 describe('TablutRules', () => {
 
     let rules: TablutRules;
+    const _: number = TablutCase.UNOCCUPIED.value;
+    const x: number = TablutCase.INVADERS.value;
+    const i: number = TablutCase.DEFENDERS.value;
+    const A: number = TablutCase.PLAYER_ONE_KING.value;
 
     beforeAll(() => {
         TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || TablutRules.VERBOSE;
@@ -58,9 +62,7 @@ describe('TablutRules', () => {
         expect(rules.choose(new TablutMove(new Coord(3, 4), new Coord(3, 7)))).toBeTruthy(3); // leaving a exit for the king
         expect(rules.choose(new TablutMove(new Coord(0, 5), new Coord(0, 6)))).toBeTruthy(4); // "pass"
         expect(rules.choose(new TablutMove(new Coord(4, 4), new Coord(2, 4)))).toBeTruthy(5); // emptying the throne
-        console.log("ABOUT");
         expect(rules.choose(new TablutMove(new Coord(0, 6), new Coord(0, 7)))).toBeTruthy(6); // "pass"
-        console.log("FINICHÉ");
         expect(rules.choose(new TablutMove(new Coord(2, 4), new Coord(2, 6)))).toBeTruthy(7);
         // the king leaving the coord that will allow him to capture later
         expect(rules.choose(new TablutMove(new Coord(1, 4), new Coord(4, 4))))
@@ -68,5 +70,112 @@ describe('TablutRules', () => {
         expect(rules.choose(new TablutMove(new Coord(1, 4), new Coord(3, 4)))).toBeTruthy(8); // going right against the empty throne
         expect(rules.choose(new TablutMove(new Coord(2, 6), new Coord(2, 4)))).toBeTruthy(9); // King capture against empty throne
         expect(rules.node.gamePartSlice.getBoardByXY(3, 4)).toEqual(TablutCase.UNOCCUPIED.value, "Location should be unoccupied");
+    });
+    it('Capturing king should require four invader and lead to victory', () => {
+        const winningMove: TablutMove = new TablutMove(new Coord(2, 0), new Coord(3, 0));
+        const board: number[][] = [
+            [_, _, x, _, _, _, _, _, _ ],
+            [_, _, x, A, x, _, _, _, _ ],
+            [_, _, _, x, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ]
+        ];
+        const moveResult: { success: number; resultingBoard: number[][] } = 
+            TablutRules.tryMove(0, true, winningMove, board);
+        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).toBe(Number.MIN_SAFE_INTEGER);
+    });
+    it('Capturing king should require three invader and an edge lead to victory', () => {
+        const winningMove: TablutMove = new TablutMove(new Coord(2, 1), new Coord(3, 1));
+        const board: number[][] = [
+            [_, _, x, A, x, _, _, _, _ ],
+            [_, _, x, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ]
+        ];
+        const moveResult: { success: number; resultingBoard: number[][] } = 
+            TablutRules.tryMove(0, true, winningMove, board);
+        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).toBe(Number.MIN_SAFE_INTEGER);
+    });
+    it('Capturing king with two soldier, one throne, and one edge should not work', () => {
+        const winningMove: TablutMove = new TablutMove(new Coord(2, 1), new Coord(1, 1));
+        const board: number[][] = [
+            [_, A, x, _, _, _, _, _, _ ],
+            [_, _, x, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ]
+        ];
+        const moveResult: { success: number; resultingBoard: number[][] } = 
+            TablutRules.tryMove(0, true, winningMove, board);
+        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
+    });
+    it('Capturing king against a throne should not work', () => {
+        const winningMove: TablutMove = new TablutMove(new Coord(2, 2), new Coord(4, 2));
+        const board: number[][] = [
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, x, _, _, _, _, _, _ ],
+            [_, _, _, _, A, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ]
+        ];
+        const moveResult: { success: number; resultingBoard: number[][] } = 
+            TablutRules.tryMove(0, true, winningMove, board);
+        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
+    });
+    it('Capturing king against a throne with 3 soldier should not work', () => {
+        const winningMove: TablutMove = new TablutMove(new Coord(2, 2), new Coord(4, 2));
+        const board: number[][] = [
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, x, _, _, _, _, _, _ ],
+            [_, _, _, x, A, x, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ]
+        ];
+        const moveResult: { success: number; resultingBoard: number[][] } = 
+            TablutRules.tryMove(0, true, winningMove, board);
+        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
+    });
+    it('King should be authorised to come back on the throne', () => {
+        const move: TablutMove = new TablutMove(new Coord(4, 3), new Coord(4, 4));
+        const board: number[][] = [
+            [_, _, x, _, _, _, _, _, _ ],
+            [_, _, x, _, x, _, _, _, _ ],
+            [_, _, _, x, _, _, _, _, _ ],
+            [_, _, _, _, A, _, _, _, _ ],
+            [_, _, _, i, _, i, _, _, _ ],
+            [_, _, _, _, i, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ],
+            [_, _, _, _, _, _, _, _, _ ]
+        ];
+        const moveResult: { success: number; resultingBoard: number[][] } = 
+            TablutRules.tryMove(1, false, move, board);
+        expect(moveResult.success).toBe(TablutRules.SUCCESS);
     });
 });

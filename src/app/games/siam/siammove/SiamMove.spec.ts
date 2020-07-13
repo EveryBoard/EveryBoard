@@ -1,6 +1,6 @@
 import { SiamRules } from "../siamrules/SiamRules";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
-import { SiamMove } from "./SiamMove";
+import { SiamMove, SiamMoveNature } from "./SiamMove";
 import { SiamPartSlice } from "../SiamPartSlice";
 
 describe('SiamMove', () => {
@@ -14,5 +14,11 @@ describe('SiamMove', () => {
             const decodedMove: SiamMove = SiamMove.decode(encodedMove);
             expect(decodedMove).toEqual(move);
         }
+    });
+    it("Should delegate decoding to static method", () => {
+        const testMove: SiamMove = new SiamMove(-1, 0, SiamMoveNature.FORWARD);
+        spyOn(SiamMove, "decode").and.callThrough();
+        testMove.decode(testMove.encode());
+        expect(SiamMove.decode).toHaveBeenCalledTimes(1);
     });
 });

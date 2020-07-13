@@ -117,6 +117,6 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
         return SaharaMove.decode(encodedMove);
     }
     public encodeMove(move: SaharaMove): number {
-        return move.encode();
+        return SaharaMove.encode(move);
     }
 }

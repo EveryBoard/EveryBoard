@@ -12,7 +12,7 @@ export class EncapsulePartSlice extends GamePartSlice {
         this.remainingPieces = remainingPieces;
     }
     public getRemainingPiecesCopy(): EncapsulePiece[] {
-        return GamePartSlice.copyArray(this.remainingPieces);
+        return GamePartSlice.copyImmutableArray(this.remainingPieces);
     }
     public static getStartingSlice(): EncapsulePartSlice {
         const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);

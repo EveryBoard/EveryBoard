@@ -418,7 +418,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             return null;
         }
     }
-    public setInitialBoard() { // TODO: make generic and unherited
+    public setInitialBoard() {
         if (this.node == null) {
             this.node = MNode.getFirstNode(new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING), this);
         } else {
