@@ -101,14 +101,14 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
     }
     public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus): { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; } {
 
-        let numberBoard: number[][] = slice.getCopiedBoard(); // TODO: make board EncapsulePiece[][] and no longer number[][] ??
-        let mapper: (n: number) => EncapsulePiece = EncapsulePiece.of;
-        let newBoard: EncapsulePiece[][] = ArrayUtils.mapImmutableBiArray(numberBoard, mapper);
+        let numberBoard: number[][] = slice.getCopiedBoard(); // TODO: make board EncapsuleCase[][] and no longer number[][] ??
+        let mapper: (n: number) => EncapsuleCase = EncapsuleCase.decode;
+        let newBoard: EncapsuleCase[][] = ArrayUtils.mapImmutableBiArray(numberBoard, mapper);
 
         let newLandingCase: EncapsuleCase = legality.newLandingCase;
         let newRemainingPiece: EncapsulePiece[] = slice.getRemainingPiecesCopy();
         let newTurn: number = slice.turn + 1;
-        newBoard[move.landingCoord.y][move.landingCoord.x] = EncapsulePiece.of(newLandingCase.encode());
+        newBoard[move.landingCoord.y][move.landingCoord.x] = EncapsuleCase.decode(newLandingCase.encode());
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
@@ -116,14 +116,14 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             newRemainingPiece = newRemainingPiece.slice(0, indexBiggest).concat(newRemainingPiece.slice(indexBiggest + 1));
         } else {
             const startingCoord: Coord = move.startingCoord.get();
-            let oldStartingNumber: number = newBoard[startingCoord.y][startingCoord.x].value;
+            let oldStartingNumber: number = newBoard[startingCoord.y][startingCoord.x].encode();
             let oldStartingCase: EncapsuleCase = EncapsuleCase.decode(oldStartingNumber);
             let removalResult: {removedCase: EncapsuleCase, removedPiece: EncapsulePiece} =
                 oldStartingCase.removeBiggest();
-            newBoard[startingCoord.y][startingCoord.x] = EncapsulePiece.of(removalResult.removedCase.encode());
+            newBoard[startingCoord.y][startingCoord.x] = EncapsuleCase.decode(removalResult.removedCase.encode());
             movingPiece = removalResult.removedPiece;
         }
-        let demapper: (p: EncapsulePiece) => number = (p: EncapsulePiece) => p.getValue();
+        let demapper: (p: EncapsuleCase) => number = (p: EncapsuleCase) => p.encode();
         let newNumberBoard: number[][] = ArrayUtils.mapImmutableBiArray(newBoard, demapper);
         const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newNumberBoard, newTurn, newRemainingPiece);
         return {resultingSlice, resultingMove: move};

@@ -24,7 +24,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
 
     public lastLandingCoord: Coord;
 
-    public lastStartingCoord: MGPOptional<Coord>;
+    public lastStartingCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public chosenCoord: Coord;
 

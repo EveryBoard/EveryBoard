@@ -6,7 +6,7 @@ import { Coord } from "src/app/jscaip/Coord";
 
 describe('EncapsuleMove', () => {
 
-    fit('EncapsuleMove.encode and EncapsuleMove.decode should be reversible', () => {
+    it('EncapsuleMove.encode and EncapsuleMove.decode should be reversible', () => {
         const rules: EncapsuleRules = new EncapsuleRules();
         const firstTurnMoves: MGPMap<EncapsuleMove, EncapsulePartSlice> = rules.getListMoves(rules.node);
         for (let i = 0; i < firstTurnMoves.size(); i++) {
