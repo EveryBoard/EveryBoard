@@ -105,7 +105,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
     }
     private hideLastMove() {
         this.lastLandingCoord = null;
-        this.lastStartingCoord = null;
+        this.lastStartingCoord = MGPOptional.empty();
     }
     private cancelMove() {
         this.chosenCoord = null;
