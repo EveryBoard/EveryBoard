@@ -12,9 +12,9 @@ export class EncapsulePiece implements Comparable {
     public static readonly MEDIUM_WHITE: EncapsulePiece = new EncapsulePiece(3);
 
     public static readonly BIG_BLACK: EncapsulePiece = new EncapsulePiece(4);
- 
+
     public static readonly BIG_WHITE: EncapsulePiece = new EncapsulePiece(5);
- 
+
     public static readonly NONE: EncapsulePiece = new EncapsulePiece(6);
 
     public static of(value: number): EncapsulePiece {

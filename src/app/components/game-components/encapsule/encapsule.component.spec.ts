@@ -74,9 +74,20 @@ describe('EncapsuleComponent', () => {
         gameComponent.encodeMove(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2)));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
-    it('Should play correctly shortest victory', () => {
-        const smallBlack: String = EncapsuleMapper.getNameFromPiece(EncapsulePiece.SMALL_BLACK);
-        expect(gameComponent.onPieceClick(smallBlack)).toBeTruthy(0);
-        expect(gameComponent.onBoardClick(1, 1)).toBeTruthy("First move should be legal");
+    it('Should play correctly shortest victory', async() => {
+        const SMALL_BLACK: String = EncapsuleMapper.getNameFromPiece(EncapsulePiece.SMALL_BLACK);
+        const MEDIUM_WHITE: String = EncapsuleMapper.getNameFromPiece(EncapsulePiece.MEDIUM_WHITE);
+        const SMALL_WHITE: String = EncapsuleMapper.getNameFromPiece(EncapsulePiece.SMALL_WHITE);
+        const MEDIUM_BLACK: String = EncapsuleMapper.getNameFromPiece(EncapsulePiece.MEDIUM_BLACK);
+        expect(await gameComponent.onPieceClick(SMALL_BLACK)).toBeTruthy(0);
+        expect(await gameComponent.onBoardClick(0, 0)).toBeTruthy(0.5);
+        expect(await gameComponent.onPieceClick(MEDIUM_WHITE)).toBeTruthy(1);
+        expect(await gameComponent.onBoardClick(1, 0)).toBeTruthy(1.5);
+        expect(await gameComponent.onPieceClick(SMALL_BLACK)).toBeTruthy(2);
+        expect(await gameComponent.onBoardClick(1, 1)).toBeTruthy(2.5);
+        expect(await gameComponent.onPieceClick(SMALL_WHITE)).toBeTruthy(3);
+        expect(await gameComponent.onBoardClick(0, 1)).toBeTruthy(3.5);
+        expect(await gameComponent.onPieceClick(MEDIUM_BLACK)).toBeTruthy(4);
+        expect(await gameComponent.onBoardClick(2, 2)).toBeTruthy(4.5);
     });
 });

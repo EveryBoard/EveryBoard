@@ -2,6 +2,7 @@ import { Move } from "src/app/jscaip/Move";
 import { Coord } from "src/app/jscaip/Coord";
 import { EncapsulePiece, EncapsuleMapper } from "../EncapsuleEnums";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
+import { Comparable_Equals } from "src/app/collectionlib/Comparable";
 
 export class EncapsuleMove extends Move {
 
@@ -94,16 +95,10 @@ export class EncapsuleMove extends Move {
         if (!other.landingCoord.equals(this.landingCoord)) {
             return false;
         }
-        if (this.startingCoord == null && other.startingCoord != null) {
+        if (!this.startingCoord.equals(other.startingCoord, Comparable_Equals)) {
             return false;
-        } else {
-            if (this.startingCoord != null) {
-                if (!this.startingCoord.equals(other.startingCoord)) {
-                    return false;
-                }
-            }
         }
-        if (this.piece !== other.piece) {
+        if (!this.piece.equals(other.piece, Comparable_Equals)) {
             return false;
         }
         return true;

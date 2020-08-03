@@ -25,18 +25,13 @@ export class MGPOptional<T> {
     public getOrNull(): T{
         return this.value;
     }
-    public equals(t: MGPOptional<T>) {
+    public equals(t: MGPOptional<T>, comparator: (a: T, b: T) => boolean) {
         if (this.isAbsent()) {
             return t.isAbsent();
         }
-        if (t.isAbsent()) return false;
-        const value: T = this.value;
-        if (value.hasOwnProperty("equals")) {
-            let comparableValue: {equals: (o: any) => boolean } =
-                value as unknown as {equals: (o: any) => boolean };
-            return comparableValue.equals(t.value);
-        } else {
-            return value === this.value;
+        if (t.isAbsent()) {
+            return false;
         }
+        return comparator(this.value, t.value);
     }
 }

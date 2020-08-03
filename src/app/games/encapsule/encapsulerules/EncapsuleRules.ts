@@ -60,7 +60,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         }
     }
     public isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
-        const LOCAL_VERBOSE: boolean = true;
+        const LOCAL_VERBOSE: boolean = false;
         const FAILURE: EncapsuleLegalityStatus = {legal: false, newLandingCase: null};
         let boardCopy: number[][] = slice.getCopiedBoard();
         if (LOCAL_VERBOSE) console.log(move.toString());
@@ -84,10 +84,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             if (!EncapsulePartSlice.pieceBelongToCurrentPlayer(movingPiece, slice.turn)) {
                 return FAILURE;
             }
-        }
-        if (movingPiece == EncapsulePiece.NONE) {
-            if (LOCAL_VERBOSE) console.log("move illegal because: no selected piece!");
-            return FAILURE;
         }
         let landingNumber: number = boardCopy[move.landingCoord.y][move.landingCoord.x];
         let landingCase: EncapsuleCase = EncapsuleCase.decode(landingNumber);

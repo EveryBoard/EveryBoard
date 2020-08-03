@@ -61,7 +61,7 @@ export class MGPMap<K extends Comparable, V> {
         if (key == null) throw new Error("Key cannot be null");
         if (firstValue == null) throw new Error("Value cannot be null");
         if (this.containsKey(key)) {
-            throw new Error("Key " + key.toString() + " aldready exist in Map");
+            throw new Error("Key " + key.toString() + " already exist in Map");
         } else {
             this.map.push({key, value: firstValue});
         }
