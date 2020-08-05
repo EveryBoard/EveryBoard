@@ -4,11 +4,6 @@
             <td *ngFor="let caseContent of line; index as x;"
                 style="position:relative;"
                 (click)="onBoardClick(x, y);">
-                <img *ngIf="isHighlightedCoord(x, y);"
-                     width="50" height="50"
-                     alt="highlighted"
-                     [src]="imagesLocation+'squared_highlight.svg'"
-                     style="position:absolute; top:0; left:0;"/>
                 <img width="50" height="50"
                      alt=":{{ caseContent }}:"
                      [src]='imagesLocation+"encapsule/NONE.svg"'/>
@@ -17,6 +12,11 @@
                      alt=":{{ piece }}:"
                      style="position:absolute; top:0; left:0;"
                      [src]='imagesLocation+"encapsule/"+piece+".svg"'/>
+                <img *ngIf="isHighlightedCoord(x, y);"
+                     width="50" height="50"
+                     alt="highlighted"
+                     [src]="imagesLocation+'squared_highlight.svg'"
+                     style="position:absolute; top:0; left:0;"/>
             </td>
         </tr>
     </table>
@@ -25,14 +25,15 @@
     <table>
         <tr *ngFor="let pieces of remainingPieces;">
             <td *ngFor="let piece of pieces"
-                (click)="onPieceClick(piece);">
+                (click)="onPieceClick(piece);"
+                style="position:relative">
                 <img width="50" height="50"
                      alt=":{{ piece }}:"
                      [src]='imagesLocation+"encapsule/"+piece+".svg"'/>
-                <img *ngIf="piece === chosenPiece"
+                <img *ngIf="isSelectedPiece(piece)"
                      width="50" height="50"
                      alt="highlighted"
-                     [src]="imagesLocation+'quarto/'+'squared_highlight.svg'"
+                     [src]="imagesLocation+'squared_highlight.svg'"
                      style="position:absolute; top:0; left:0;"/>
             </td>
         </tr>

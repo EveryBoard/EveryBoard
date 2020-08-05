@@ -80,6 +80,13 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
                coord.equals(lastStartingCoord) ||
                coord.equals(this.chosenCoord);
     }
+    public isSelectedPiece(pieceName: string): boolean {
+        if (this.chosenPiece === null) {
+            return false;
+        }
+        const chosenPieceName: String = EncapsuleMapper.getNameFromPiece(this.chosenPiece);
+        return chosenPieceName === pieceName;
+    }
     public async onBoardClick(x: number, y: number): Promise<boolean> {
         this.hideLastMove();
         const clickedCoord: Coord = new Coord(x, y);

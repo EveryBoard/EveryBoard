@@ -68,4 +68,16 @@ describe('TablutComponent', () => {
         expect(isOccupied).toBeTruthy('Should be legal to click on player');
         expect(isLegal).toBeTruthy('Simple first move from invader should be legal');
     });
+    it('Diagonal move attempt should not throw', async() => {
+        expect(await gameComponent.onClick(3, 0)).toBeTruthy(0.5);
+        let threw: boolean = false;
+        try {
+            let diagonalMoveIsLegal: boolean = await gameComponent.onClick(4, 1);
+            expect(diagonalMoveIsLegal).toBeFalsy("Move should be considered legal");
+        } catch (error) {
+            threw = true;
+        } finally {
+            expect(threw).toBeFalsy("Function threw");
+        }
+    });
 });

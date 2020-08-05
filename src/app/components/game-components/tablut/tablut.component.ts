@@ -59,8 +59,13 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        const move: TablutMove = new TablutMove(chosenPiece, chosenDestination);
-        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        try {
+            const move: TablutMove = new TablutMove(chosenPiece, chosenDestination);
+            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        } catch (error) {
+            this.cancelMove();
+            return false;
+        }
     }
     public choosePiece(x: number, y: number): boolean {
 
