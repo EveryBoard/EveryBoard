@@ -1,5 +1,6 @@
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
+import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 export class MinimaxTestingPartSlice extends GamePartSlice {
 
@@ -8,7 +9,7 @@ export class MinimaxTestingPartSlice extends GamePartSlice {
     public readonly location: Coord;
 
     public constructor(turn: number, location: Coord) {
-        super(GamePartSlice.copyBiArray(MinimaxTestingPartSlice.initialBoard), turn);
+        super(ArrayUtils.copyBiArray(MinimaxTestingPartSlice.initialBoard), turn);
         if (location == null) throw new Error("location cannot be null");
         this.location = location;
     }

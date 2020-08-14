@@ -1,5 +1,6 @@
 import {MGPRequest} from './request';
 import { GamePartSlice } from '../jscaip/GamePartSlice';
+import { ArrayUtils } from '../collectionlib/arrayutils/ArrayUtils';
 
 export interface ICurrentPart {
 
@@ -95,7 +96,7 @@ export class Part {
             original.typeGame,
             original.playerZero,
             original.turn,
-            GamePartSlice.copyArray(original.listMoves),
+            ArrayUtils.copyArray(original.listMoves),
             original.result,
             original.playerOne,
             original.beginning,

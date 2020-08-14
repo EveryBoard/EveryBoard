@@ -3,7 +3,7 @@ import {AbstractGameComponent} from '../AbstractGameComponent';
 import { MinimaxTestingRules } from 'src/app/games/minimax-testing/minimaxtestingrules/MinimaxTestingRules';
 import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTestingPartSlice';
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/minimaxtestingmove/MinimaxTestingMove';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
@@ -17,7 +17,7 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
 
     public rules = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
 
-    public coord: Coord;
+    public coord: Coord = new Coord(-1, -1);
 
     public chooseRight(): Promise<boolean> {
         const chosenMove = MinimaxTestingMove.RIGHT;

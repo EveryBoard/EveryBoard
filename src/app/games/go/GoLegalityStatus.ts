@@ -1,4 +1,4 @@
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 
 export class GoLegalityStatus implements LegalityStatus {

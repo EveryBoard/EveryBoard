@@ -6,7 +6,7 @@ import { LegalityStatus } from './LegalityStatus';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 
-    public constructor(public readonly peared: boolean) {}
+    public constructor(public readonly pruned: boolean) {}
 
     public node: MNode<Rules<M, S, L>, M, S, L>; // TODO: check that this should not made static
     /* The data that represent the status of the game at the current moment, including:
@@ -34,7 +34,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          */
         const LOCAL_VERBOSE: boolean = false;
         if (LOCAL_VERBOSE) console.log("Rules.choose: " + move.toString() + " was proposed");
-        if ((this.peared === false) && this.node.hasMoves()) { // if calculation has already been done by the AI
+        if ((this.pruned === false) && this.node.hasMoves()) { // if calculation has already been done by the AI
             if (LOCAL_VERBOSE) console.log("Rules.choose: current node has moves");
             let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing it twice
             if (choix === null) {
@@ -46,7 +46,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
                 return true;
             }
         }
-        if (LOCAL_VERBOSE) console.log("Rules.choose: current node has no moves or is peared, let's verify ourselves");
+        if (LOCAL_VERBOSE) console.log("Rules.choose: current node has no moves or is pruned, let's verify ourselves");
         const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
         if (!status.legal) {
             if (LOCAL_VERBOSE) console.log("Rules.choose: Move is illegal");

@@ -2,7 +2,7 @@ import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { EncapsuleRules } from "../encapsulerules/EncapsuleRules";
 import { EncapsuleMove } from "./EncapsuleMove";
 import { EncapsulePartSlice } from "../EncapsulePartSlice";
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
 import { EncapsulePiece } from "../EncapsuleEnums";
 
 describe('EncapsuleMove', () => {

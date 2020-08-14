@@ -1,6 +1,6 @@
 import {Orthogonale, Direction} from '../../../jscaip/DIRECTION';
 import {Rules} from '../../../jscaip/Rules';
-import {Coord} from '../../../jscaip/Coord';
+import {Coord} from '../../../jscaip/coord/Coord';
 import {MNode} from '../../../jscaip/MNode';
 import {TablutPartSlice} from '../TablutPartSlice';
 import { TablutMove } from '../tablutmove/TablutMove';
@@ -507,7 +507,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return listMoves;
     }
     public static getBoardValue(board: number[][], invaderStart: boolean): number {
-        
+
         const optionalKingCoord: MGPOptional<Coord> = TablutRules.getKingCoord(board);
         if (!optionalKingCoord.isPresent()) { // the king is dead, long live the king
             return TablutRules.getInvaderVictoryValue(invaderStart);
@@ -581,7 +581,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
         return listCombinaison;
     }
-    public getListMovesPeared(n: TablutNode): { key: TablutMove, value: TablutPartSlice }[] {
+    public getListMovesPruned(n: TablutNode): { key: TablutMove, value: TablutPartSlice }[] {
         // TODO: pear this method, make it smarter
         const currentPartSlice: TablutPartSlice = n.gamePartSlice;
         const currentBoard: number[][] = currentPartSlice.getCopiedBoard();

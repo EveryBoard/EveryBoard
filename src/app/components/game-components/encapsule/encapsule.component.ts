@@ -5,7 +5,7 @@ import {EncapsuleRules} from 'src/app/games/encapsule/encapsulerules/EncapsuleRu
 import {EncapsulePartSlice, EncapsuleCase} from 'src/app/games/encapsule/EncapsulePartSlice';
 import {EncapsuleMove} from 'src/app/games/encapsule/encapsulemove/EncapsuleMove';
 import {EncapsulePiece, EncapsuleMapper} from 'src/app/games/encapsule/EncapsuleEnums';
-import {Coord} from 'src/app/jscaip/Coord';
+import {Coord} from 'src/app/jscaip/coord/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
@@ -143,6 +143,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
     // creating method for OnlineQuarto
 
     private suggestMove(chosenMove: EncapsuleMove): Promise<boolean> {
+        this.cancelMove();
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
 }

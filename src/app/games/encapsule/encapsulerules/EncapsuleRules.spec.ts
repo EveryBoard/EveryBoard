@@ -1,7 +1,7 @@
 import { EncapsuleRules } from "./EncapsuleRules";
 import { EncapsuleMove } from "../encapsulemove/EncapsuleMove";
 import { EncapsulePiece } from "../EncapsuleEnums";
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
 
 describe('EncapsuleRules', () => {
 

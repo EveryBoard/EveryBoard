@@ -1,6 +1,7 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
-import {Coord} from '../../jscaip/Coord';
+import {Coord} from '../../jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class ReversiPartSlice extends GamePartSlice {
 
@@ -9,7 +10,7 @@ export class ReversiPartSlice extends GamePartSlice {
     public static readonly BOARD_HEIGHT = 8; // default
 
     public static getStartingBoard(): number[][] {
-        const board: number[][] = GamePartSlice.createBiArray(ReversiPartSlice.BOARD_WIDTH,
+        const board: number[][] = ArrayUtils.createBiArray(ReversiPartSlice.BOARD_WIDTH,
                                                               ReversiPartSlice.BOARD_HEIGHT,
                                                               Player.NONE.value);
         board[3][3] = Player.ZERO.value;
@@ -19,7 +20,7 @@ export class ReversiPartSlice extends GamePartSlice {
         /*board[0][0] = Player.ZERO.value;
         board[0][1] = Player.ONE.value;
         board[7][0] = Player.ZERO.value;
-        board[7][1] = Player.ONE.value;*/ // to test "must pass"
+        board[7][1] = Player.ONE.value;*/ // TODO to test "must pass"
 
         return board;
     }

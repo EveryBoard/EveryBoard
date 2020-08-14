@@ -1,5 +1,5 @@
 import {MoveCoord} from './MoveCoord';
-import {Coord} from './Coord';
+import {Coord} from './coord/Coord';
 import { GamePartSlice } from './GamePartSlice';
 
 export abstract class MoveCoordToCoordAndCapture extends MoveCoord {

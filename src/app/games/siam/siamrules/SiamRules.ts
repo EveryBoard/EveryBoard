@@ -4,7 +4,7 @@ import { SiamPartSlice } from "../SiamPartSlice";
 import { MNode } from "src/app/jscaip/MNode";
 import { SiamPiece } from "../SiamPiece";
 import { Player } from "src/app/jscaip/Player";
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonale, Direction } from "src/app/jscaip/DIRECTION";
 import { SiamLegalityStatus } from "../SiamLegalityStatus";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";

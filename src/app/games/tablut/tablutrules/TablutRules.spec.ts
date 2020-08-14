@@ -1,6 +1,6 @@
 import { TablutRules } from "./TablutRules";
 import { TablutMove } from "../tablutmove/TablutMove";
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { TablutPartSlice } from "../TablutPartSlice";
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
@@ -84,7 +84,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } = 
+        const moveResult: { success: number; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
         expect(moveResult.success).toBe(TablutRules.SUCCESS);
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).toBe(Number.MIN_SAFE_INTEGER);
@@ -102,7 +102,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } = 
+        const moveResult: { success: number; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
         expect(moveResult.success).toBe(TablutRules.SUCCESS);
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).toBe(Number.MIN_SAFE_INTEGER);
@@ -120,7 +120,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } = 
+        const moveResult: { success: number; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
         expect(moveResult.success).toBe(TablutRules.SUCCESS);
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
@@ -138,7 +138,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } = 
+        const moveResult: { success: number; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
         expect(moveResult.success).toBe(TablutRules.SUCCESS);
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
@@ -156,7 +156,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } = 
+        const moveResult: { success: number; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
         expect(moveResult.success).toBe(TablutRules.SUCCESS);
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
@@ -174,7 +174,7 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } = 
+        const moveResult: { success: number; resultingBoard: number[][] } =
             TablutRules.tryMove(1, false, move, board);
         expect(moveResult.success).toBe(TablutRules.SUCCESS);
     });

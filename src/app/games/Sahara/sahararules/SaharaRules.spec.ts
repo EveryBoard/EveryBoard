@@ -1,9 +1,9 @@
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SaharaRules } from './SaharaRules';
 import { SaharaMove } from '../saharamove/SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
-import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerboard';
+import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { SaharaPawn } from '../SaharaPawn';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 

@@ -1,6 +1,7 @@
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { EncapsulePiece, Size, EncapsuleMapper } from "./EncapsuleEnums";
 import { Player } from "src/app/jscaip/Player";
+import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 export class EncapsulePartSlice extends GamePartSlice {
 
@@ -12,12 +13,12 @@ export class EncapsulePartSlice extends GamePartSlice {
         this.remainingPieces = remainingPieces;
     }
     public getRemainingPiecesCopy(): EncapsulePiece[] {
-        return GamePartSlice.copyImmutableArray(this.remainingPieces);
+        return ArrayUtils.copyImmutableArray(this.remainingPieces);
     }
     public static getStartingSlice(): EncapsulePartSlice {
         const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
         const emptyNumber: number = emptyCase.encode();
-        let startingBoard: number[][] = GamePartSlice.createBiArray(3, 3, emptyNumber);
+        let startingBoard: number[][] = ArrayUtils.createBiArray(3, 3, emptyNumber);
         let initialPieces: EncapsulePiece[] = [
                EncapsulePiece.BIG_BLACK,    EncapsulePiece.BIG_BLACK,    EncapsulePiece.BIG_WHITE,    EncapsulePiece.BIG_WHITE,
             EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,

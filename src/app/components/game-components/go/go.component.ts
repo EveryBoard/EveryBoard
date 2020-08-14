@@ -1,9 +1,9 @@
-import {Component} from '@angular/core';
-import {AbstractGameComponent} from '../AbstractGameComponent';
-import {GoMove} from 'src/app/games/go/gomove/GoMove';
-import {GoRules} from 'src/app/games/go/gorules/GoRules';
-import {GoPartSlice, Phase, GoPiece, Pawn} from 'src/app/games/go/GoPartSlice';
-import {Coord} from 'src/app/jscaip/Coord';
+import { Component } from '@angular/core';
+import { AbstractGameComponent } from '../AbstractGameComponent';
+import { GoMove } from 'src/app/games/go/gomove/GoMove';
+import { GoRules, GroupDatas } from 'src/app/games/go/gorules/GoRules';
+import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 
@@ -18,6 +18,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     public scores: number[] = [0, 0];
 
     public rules = new GoRules();
+
+    public boardInfo: GroupDatas;
 
     public ko: Coord = new Coord(-1, -1);
 
@@ -55,6 +57,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         const phase: Phase = slice.phase;
 
         this.board = slice.getCopiedBoard();
+        // this.boardInfo = GoRules.getGroupDatas()
         this.scores = slice.getCapturedCopy();
 
         if (move != null) {
@@ -77,7 +80,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
             return false;
     }
     public getCaseColor(x: number, y: number): string {
-        const piece: Pawn = this.rules.node.gamePartSlice.getBoardByXY(x, y);
+        const piece: number = this.rules.node.gamePartSlice.getBoardByXY(x, y);
         if (GoPiece.pieceBelongTo(piece, Player.ZERO)) {
             return "black";
         }
@@ -87,8 +90,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         throw new Error("Empty case has no color");
     }
     public caseIsFull(x: number, y: number): boolean {
-        const piece: Pawn = this.rules.node.gamePartSlice.getBoardByXY(x, y);
-        return piece !== Pawn.EMPTY;
+        const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
+        return piece !== GoPiece.EMPTY;
     }
     public isLastCase(x: number, y: number): boolean {
         return x === this.last.x && y === this.last.y;
@@ -97,7 +100,13 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         return x === this.ko.x && y === this.ko.y;
     }
     public isDead(x: number, y: number): boolean {
-        const piece: Pawn = this.rules.node.gamePartSlice.getBoardByXY(x, y);
-        return piece === Pawn.DEAD_BLACK || piece === Pawn.DEAD_WHITE;
+        const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
+        return piece === GoPiece.DEAD_BLACK || piece === GoPiece.DEAD_WHITE;
+    }
+    public isTerritory(x: number, y: number): boolean {
+        if (this.rules.node.gamePartSlice.phase !== Phase.COUNTING) {
+            return false;
+        }
+
     }
 }

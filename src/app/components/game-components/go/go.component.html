@@ -43,6 +43,9 @@
                       width="30" height="30"
                       [attr.x]="10 + 50*x" [attr.y]="10 + 50*y"
                       style="fill:none; stroke:red; stroke-width: 5px;" />
+                <circle *ngIf="isTerritory(x, y)"
+                        [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
+                        stroke="yellow" fill="yellow"
             </ng-template>
         </g>
     </g>

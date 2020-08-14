@@ -4,7 +4,7 @@ import {AwaleRules} from '../../../games/awale/awalerules/AwaleRules';
 import {AwaleMove} from 'src/app/games/awale/awalemove/AwaleMove';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
 @Component({
     selector: 'app-awale-new-component',

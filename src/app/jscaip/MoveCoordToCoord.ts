@@ -1,5 +1,5 @@
 import {MoveCoord} from './MoveCoord';
-import {Coord} from './Coord';
+import {Coord} from './coord/Coord';
 
 export abstract class MoveCoordToCoord extends MoveCoord {
 

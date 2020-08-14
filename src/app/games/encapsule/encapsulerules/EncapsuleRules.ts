@@ -3,7 +3,7 @@ import { MNode } from 'src/app/jscaip/MNode';
 import { EncapsulePartSlice, EncapsuleCase } from '../EncapsulePartSlice';
 import { EncapsuleMove } from '../encapsulemove/EncapsuleMove';
 import { EncapsulePiece, EncapsuleMapper } from '../EncapsuleEnums';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { Sets } from 'src/app/collectionlib/sets/Sets';
 import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
@@ -99,7 +99,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
 
         let numberBoard: number[][] = slice.getCopiedBoard(); // TODO: make board EncapsuleCase[][] and no longer number[][] ??
         let mapper: (n: number) => EncapsuleCase = EncapsuleCase.decode;
-        let newBoard: EncapsuleCase[][] = ArrayUtils.mapImmutableBiArray(numberBoard, mapper);
+        let newBoard: EncapsuleCase[][] = ArrayUtils.mapBiArray<number, EncapsuleCase>(numberBoard, mapper);
 
         let newLandingCase: EncapsuleCase = legality.newLandingCase;
         let newRemainingPiece: EncapsulePiece[] = slice.getRemainingPiecesCopy();
@@ -120,7 +120,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             movingPiece = removalResult.removedPiece;
         }
         let demapper: (p: EncapsuleCase) => number = (p: EncapsuleCase) => p.encode();
-        let newNumberBoard: number[][] = ArrayUtils.mapImmutableBiArray(newBoard, demapper);
+        let newNumberBoard: number[][] = ArrayUtils.mapBiArray<EncapsuleCase, number>(newBoard, demapper);
         const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newNumberBoard, newTurn, newRemainingPiece);
         return {resultingSlice, resultingMove: move};
     }

@@ -4,7 +4,7 @@ import { SiamMove, SiamMoveNature } from 'src/app/games/siam/siammove/SiamMove';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
 import { SiamRules } from 'src/app/games/siam/siamrules/SiamRules';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 
 @Component({

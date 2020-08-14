@@ -1,5 +1,5 @@
-import {Orthogonale, Direction} from './DIRECTION';
-import { Comparable } from '../collectionlib/Comparable';
+import {Orthogonale, Direction} from '../DIRECTION';
+import { Comparable } from '../../collectionlib/Comparable';
 
 export class Coord implements Comparable {
 
@@ -110,13 +110,13 @@ export class Coord implements Comparable {
         return true;
     }
     public compareTo(c: Coord): number {
-        if (c.x === this.x) {
-            if (c.y === this.y) {
+        if (c.y === this.y) {
+            if (c.x === this.x) {
                 return 0;
             }
-            return c.y < this.y ? -1 : 1;
+            return this.x < c.x ? -1 : 1;
         }
-        return c.x < this.x ? -1 : 1;
+        return this.y < c.y ? -1 : 1;
     }
     public toString(): string {
         return '(' + this.x + ', ' + this.y + ')';

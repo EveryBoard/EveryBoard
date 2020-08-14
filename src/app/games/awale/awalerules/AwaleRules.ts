@@ -5,6 +5,7 @@ import {AwalePartSlice} from '../AwalePartSlice';
 import { AwaleMove } from '../awalemove/AwaleMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 abstract class AwaleNode extends MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
@@ -99,7 +100,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             return {legal: true, captured: [0, 0], resultingBoard};
         }
         // on as donc terminé la distribution dans le camps adverse, capture est de mise
-        const boardBeforeCapture: number[][] = GamePartSlice.copyBiArray(resultingBoard);
+        const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
         captured[player] = AwaleRules.capture(lastCase[0], ennemi, player, resultingBoard);
         if (AwaleRules.isStarving(ennemi, resultingBoard)) {
             if (captured[player] > 0) {

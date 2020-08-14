@@ -1,10 +1,12 @@
 <table>
     <tr *ngFor="let line of board; index as y;">
         <td *ngFor="let currentCase of line; index as x;">
+            <ng-container *ngIf="coord.x === x && coord.y === y">(</ng-container>
             {{ currentCase }}
+            <ng-container *ngIf="coord.x === x && coord.y === y">)</ng-container>
         </td>
     </tr>
-    <div (click)="chooseRight"> goRight </div>
-    <div (click)="chooseDown"> goDown </div>
+    <div (click)="chooseRight()"> goRight </div>
+    <div (click)="chooseDown()"> goDown </div>
     <div> {{ coord }} </div>
 </table>

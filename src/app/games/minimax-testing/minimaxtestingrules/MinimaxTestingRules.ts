@@ -3,7 +3,7 @@ import { MNode } from "src/app/jscaip/MNode";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MinimaxTestingPartSlice } from "../MinimaxTestingPartSlice";
 import { MinimaxTestingMove } from "../minimaxtestingmove/MinimaxTestingMove";
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 
 abstract class MinimaxTestingNode extends MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {}

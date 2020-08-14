@@ -12,6 +12,7 @@ import {ChatService} from '../chat/ChatService';
 import {IChat} from '../../domain/ichat';
 import {MGPRequest} from '../../domain/request';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 @Injectable({
     providedIn: 'root'
@@ -207,7 +208,7 @@ export class GameService {
 
         const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
-        const listMoves: number[] = GamePartSlice.copyArray(part.listMoves);
+        const listMoves: number[] = ArrayUtils.copyArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
         await this.partDao.update(partId, {
             listMoves,

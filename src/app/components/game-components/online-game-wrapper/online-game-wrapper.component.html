@@ -58,7 +58,7 @@
             </div>
             <div *ngIf="!endGame && (observerRole < 2)" class="inforow">
                 <button *ngIf="canPass && (currentPlayer===userName)"
-                        (click)="pass()" mat-stroked-button>
+                        (click)="gameComponent.pass()" mat-stroked-button>
                     Passer son tour
                 </button>
             </div>

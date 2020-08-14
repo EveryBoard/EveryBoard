@@ -5,7 +5,7 @@ import {QuartoRules} from '../../../games/quarto/quartorules/QuartoRules';
 import {QuartoEnum} from '../../../games/quarto/QuartoEnum';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
 @Component({
     selector: 'app-quarto',

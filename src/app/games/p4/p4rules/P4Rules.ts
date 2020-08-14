@@ -1,5 +1,5 @@
 import {Direction} from '../../../jscaip/DIRECTION';
-import {Coord} from '../../../jscaip/Coord';
+import {Coord} from '../../../jscaip/coord/Coord';
 import {Rules} from '../../../jscaip/Rules';
 import {MoveX} from '../../../jscaip/MoveX';
 import {SCORE} from '../../../jscaip/SCORE';

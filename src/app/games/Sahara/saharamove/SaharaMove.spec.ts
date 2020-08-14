@@ -2,7 +2,7 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { SaharaRules } from '../sahararules/SaharaRules';
 import { SaharaMove } from './SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
 describe('SaharaMoves', () => {
 

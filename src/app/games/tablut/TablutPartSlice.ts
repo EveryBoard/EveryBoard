@@ -1,5 +1,6 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import { TablutCase } from './tablutrules/TablutCase';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class TablutPartSlice extends GamePartSlice {
 
@@ -10,7 +11,7 @@ export class TablutPartSlice extends GamePartSlice {
     // statics methods :
 
     public static getStartingBoard(invaderStart: boolean): number[][] {
-        const board: number[][] = GamePartSlice.createBiArray(9, 9, TablutCase.UNOCCUPIED.value);
+        const board: number[][] = ArrayUtils.createBiArray(9, 9, TablutCase.UNOCCUPIED.value);
 
         const PLAYER_ONE_KING: number = TablutCase.PLAYER_ONE_KING.value;
         const PLAYER_ZERO_KING: number = TablutCase.PLAYER_ZERO_KING.value;

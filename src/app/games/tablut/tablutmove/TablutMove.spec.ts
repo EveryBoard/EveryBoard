@@ -3,7 +3,7 @@ import { TablutMove } from "./TablutMove";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { TablutPartSlice } from "../TablutPartSlice";
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
 
 describe('TablutMove', () => {
 

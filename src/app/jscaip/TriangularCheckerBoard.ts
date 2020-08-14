@@ -1,4 +1,4 @@
-import { Coord } from "./Coord";
+import { Coord } from "./coord/Coord";
 import { MGPOptional } from "../collectionlib/mgpoptional/MGPOptional";
 
 export class TriangularCheckerBoard {

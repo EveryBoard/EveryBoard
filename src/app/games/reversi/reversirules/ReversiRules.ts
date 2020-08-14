@@ -1,7 +1,7 @@
 import {Rules} from '../../../jscaip/Rules';
 import {MNode} from '../../../jscaip/MNode';
 import {ReversiPartSlice} from '../ReversiPartSlice';
-import {Coord} from '../../../jscaip/Coord';
+import {Coord} from '../../../jscaip/coord/Coord';
 import {Direction} from '../../../jscaip/DIRECTION';
 import { ReversiMove } from '../reversimove/ReversiMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';

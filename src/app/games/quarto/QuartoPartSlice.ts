@@ -1,5 +1,6 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {QuartoEnum} from './QuartoEnum';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class QuartoPartSlice extends GamePartSlice {
 
@@ -12,8 +13,7 @@ export class QuartoPartSlice extends GamePartSlice {
         this.pieceInHand = pieceInHand;
     }
     public static getStartingBoard(): number[][] {
-        const board: number[][] = GamePartSlice.createBiArray(4, 4, QuartoEnum.UNOCCUPIED);
-        return board;
+        return ArrayUtils.createBiArray(4, 4, QuartoEnum.UNOCCUPIED);
     }
     public static getFullPawnsList(): Array<QuartoEnum> {
         const all: QuartoEnum[] = QuartoEnum.values();

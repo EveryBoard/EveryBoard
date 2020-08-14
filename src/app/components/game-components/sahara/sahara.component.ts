@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaRules } from 'src/app/games/sahara/sahararules/SaharaRules';

@@ -4,7 +4,7 @@ import { ReversiRules } from '../../../games/reversi/reversirules/ReversiRules';
 import { ReversiPartSlice } from '../../../games/reversi/ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/reversimove/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
-import { Coord } from 'src/app/jscaip/Coord';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
 @Component({
     selector: 'app-reversi',

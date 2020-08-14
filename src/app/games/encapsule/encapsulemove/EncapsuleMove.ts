@@ -1,5 +1,5 @@
 import { Move } from "src/app/jscaip/Move";
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
 import { EncapsulePiece, EncapsuleMapper } from "../EncapsuleEnums";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { Comparable_Equals } from "src/app/collectionlib/Comparable";

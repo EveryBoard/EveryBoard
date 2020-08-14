@@ -1,9 +1,9 @@
 import { GoRules } from './GoRules';
 import { GoMove } from '../gomove/GoMove';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
-import { Phase, GoPartSlice, Pawn } from '../GoPartSlice';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { Phase, GoPartSlice, GoPiece } from '../GoPartSlice';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 describe('GoRules', () => {
 
@@ -54,12 +54,12 @@ describe('GoRules', () => {
         expect(rules.choose(GoMove.PASS)).toBeTruthy(2); // Counting
         const sliceBefore: GoPartSlice = rules.node.gamePartSlice;
         expect(sliceBefore.phase).toBe(Phase.COUNTING, "Phase should have been switched to 'COUNTING'");
-        expect(sliceBefore.getBoardByXY(1, 1)).toBe(Pawn.BLACK);
+        expect(sliceBefore.getBoardByXY(1, 1)).toBe(GoPiece.BLACK.value);
 
         expect(rules.choose(new GoMove(1, 1))).toBeTruthy(3);
 
         const sliceAfter: GoPartSlice = rules.node.gamePartSlice;
-        expect(sliceAfter.getBoardByXY(1, 1)).toBe(Pawn.DEAD_BLACK, "Black piece should have been marked as dead");
+        expect(sliceAfter.getBoardByXY(1, 1)).toBe(GoPiece.DEAD_BLACK.value, "Black piece should have been marked as dead");
     });
     it('Phase.PASSED + GoMove/play = Phase.PLAYING', () => {
         expect(rules.choose(GoMove.PASS)).toBeTruthy(0);
@@ -102,13 +102,13 @@ describe('GoRules', () => {
         expect(rules.choose(GoMove.PASS)).toBeTruthy(1);
         expect(rules.choose(GoMove.PASS)).toBeTruthy(2);
         expect(rules.choose(new GoMove(0, 0))).toBeTruthy(3);
-        expect(rules.node.gamePartSlice.getBoardByXY(0, 0)).toBe(Pawn.DEAD_BLACK, "Pawn should have been marked as dead");
+        expect(rules.node.gamePartSlice.getBoardByXY(0, 0)).toBe(GoPiece.DEAD_BLACK.value, "Pawn should have been marked as dead");
         expect(rules.choose(GoMove.ACCEPT)).toBeTruthy(4);
         expect(rules.node.gamePartSlice.phase).toBe(Phase.ACCEPT);
 
         expect(rules.choose(new GoMove(1, 1))).toBeTruthy(5);
 
-        expect(rules.node.gamePartSlice.getBoardByXY(0, 0)).toBe(Pawn.BLACK, "Pawn should have become alive again");
+        expect(rules.node.gamePartSlice.getBoardByXY(0, 0)).toBe(GoPiece.BLACK.value, "Pawn should have become alive again");
         expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, 'Phase should have been switched to PLAYING');
     });
     it('Phase.ACCEPT + GoMove/markAsDead = Phase.COUNTING', () => {
@@ -143,18 +143,18 @@ describe('GoRules', () => {
         expect(rules.countBoardScore(rules.node.gamePartSlice)).toEqual([10, 5], "Board score should be 10 against 5");
     });
     it('SwitchDeadToScore should be a simple counting method', () => {
-        const board: Pawn[][] = GamePartSlice.createBiArray(5, 5, Pawn.EMPTY);
-        board[0][0] = Pawn.DEAD_BLACK;
-        board[1][1] = Pawn.DEAD_BLACK;
-        board[2][2] = Pawn.DEAD_WHITE;
+        const board: GoPiece[][] = ArrayUtils.createBiArray(5, 5, GoPiece.EMPTY);
+        board[0][0] = GoPiece.DEAD_BLACK;
+        board[1][1] = GoPiece.DEAD_BLACK;
+        board[2][2] = GoPiece.DEAD_WHITE;
         const captured: number[] = [6, 1];
         const sliceWithDead: GoPartSlice = new GoPartSlice(board, captured, 0, null, Phase.PLAYING);
 
         const expectedScore: number[] = [7, 3];
         const scorifiedSlice: GoPartSlice = GoRules.switchDeadToScore(sliceWithDead);
-        expect(scorifiedSlice.getBoardByXY(0, 0)).toBe(Pawn.EMPTY);
-        expect(scorifiedSlice.getBoardByXY(1, 1)).toBe(Pawn.EMPTY);
-        expect(scorifiedSlice.getBoardByXY(2, 2)).toBe(Pawn.EMPTY);
+        expect(scorifiedSlice.getBoardByXY(0, 0)).toBe(GoPiece.EMPTY.value);
+        expect(scorifiedSlice.getBoardByXY(1, 1)).toBe(GoPiece.EMPTY.value);
+        expect(scorifiedSlice.getBoardByXY(2, 2)).toBe(GoPiece.EMPTY.value);
         expect(scorifiedSlice.captured).toEqual(expectedScore, "Score should be 7 vs 3")
     });
     it('In count mode, AI should put as dead non capturing stones', () => {

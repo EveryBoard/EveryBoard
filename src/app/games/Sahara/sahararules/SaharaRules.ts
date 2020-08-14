@@ -4,12 +4,13 @@ import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MNode } from "src/app/jscaip/MNode";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { Player } from "src/app/jscaip/Player";
-import { Coord } from "src/app/jscaip/Coord";
+import { Coord } from "src/app/jscaip/coord/Coord";
 import { SaharaMove } from "../saharamove/SaharaMove";
 import { SaharaPawn } from "../SaharaPawn";
 import { SaharaPartSlice } from "../SaharaPartSlice";
-import { TriangularCheckerBoard } from "src/app/jscaip/TriangularCheckerboard";
+import { TriangularCheckerBoard } from "src/app/jscaip/TriangularCheckerBoard";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
+import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 abstract class SaharaNode extends MNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
 
@@ -33,7 +34,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
                 const newMove: SaharaMove = new SaharaMove(start, neighboor);
                 board[neighboor.y][neighboor.x] = board[start.y][start.x];
                 board[start.y][start.x] = SaharaPawn.EMPTY;
-                const newBoard: SaharaPawn[][] = GamePartSlice.copyBiArray(board);
+                const newBoard: SaharaPawn[][] = ArrayUtils.copyBiArray(board);
                 const newSlice: SaharaPartSlice = new SaharaPartSlice(newBoard, newTurn);
                 moves.set(newMove, newSlice);
 
@@ -45,7 +46,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
                             const farMove: SaharaMove = new SaharaMove(start, farNeighboor);
                             board[farNeighboor.y][farNeighboor.x] = board[neighboor.y][neighboor.x];
                             board[neighboor.y][neighboor.x] = SaharaPawn.EMPTY;
-                            const farBoard: SaharaPawn[][] = GamePartSlice.copyBiArray(board);
+                            const farBoard: SaharaPawn[][] = ArrayUtils.copyBiArray(board);
                             const farSlice: SaharaPartSlice = new SaharaPartSlice(farBoard, newTurn);
                             moves.set(farMove, farSlice);
 
@@ -123,12 +124,12 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
         if (commonNeighboor.isPresent()) {
             if (slice.getBoardAt(commonNeighboor.get()) === SaharaPawn.EMPTY) {
-                return {legal: true};    
+                return {legal: true};
             } else {
                 return {legal: false};
             }
         } else {
-            return {legal: true};    
+            return {legal: true};
         }
     }
     public setInitialBoard(): void {

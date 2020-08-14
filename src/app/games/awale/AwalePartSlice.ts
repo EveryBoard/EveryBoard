@@ -1,4 +1,5 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class AwalePartSlice extends GamePartSlice {
 
@@ -8,7 +9,7 @@ export class AwalePartSlice extends GamePartSlice {
         if (captured.length !== 2) throw new Error("Captured must be of length 2");
     }
     public static getStartingBoard(): number[][] {
-        const board: number[][] = GamePartSlice.createBiArray(6, 2, 4);
+        const board: number[][] = ArrayUtils.createBiArray(6, 2, 4);
         return board;
     }
     public getCapturedCopy(): number[] {

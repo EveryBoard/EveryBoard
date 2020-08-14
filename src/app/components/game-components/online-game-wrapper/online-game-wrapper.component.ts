@@ -380,10 +380,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             }
         }
     }
-    public pass() {
-        alert("Should not be there, call the coder ! Must be overrid");
-        throw new Error("Method 'pass' must be overridden if used");
-    }
     public acceptRematch() {
         if (this.observerRole === 0 || this.observerRole === 1) {
             const currentPartId: ICurrentPartId = {
