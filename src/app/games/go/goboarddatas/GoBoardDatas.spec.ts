@@ -23,7 +23,7 @@ describe('GoBoardDatas', () => {
         expect(groupInfos.coords.length).toBe(GoPartSlice.WIDTH * GoPartSlice.HEIGHT);
         expect(groupInfos.neighboorsEP.length).toBe(0);
     });
-    fit('should create three neighboor group', () => {
+    it('should create three neighboor group', () => {
         const board: GoPiece[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],

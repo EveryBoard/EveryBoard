@@ -10,8 +10,8 @@ import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 
 const activatedRouteStub = {
     snapshot: {
