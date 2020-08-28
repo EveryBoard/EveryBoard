@@ -1,11 +1,12 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { GoMove } from 'src/app/games/go/gomove/GoMove';
-import { GoRules, GroupDatas } from 'src/app/games/go/gorules/GoRules';
+import { GoRules } from 'src/app/games/go/gorules/GoRules';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+import { GroupDatas } from 'src/app/games/go/groupdatas/GroupDatas';
 
 @Component({
     selector: 'app-go',
@@ -91,7 +92,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     }
     public caseIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
-        return piece !== GoPiece.EMPTY;
+        return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
     }
     public isLastCase(x: number, y: number): boolean {
         return x === this.last.x && y === this.last.y;
@@ -104,9 +105,10 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         return piece === GoPiece.DEAD_BLACK || piece === GoPiece.DEAD_WHITE;
     }
     public isTerritory(x: number, y: number): boolean {
-        if (this.rules.node.gamePartSlice.phase !== Phase.COUNTING) {
-            return false;
-        }
-
+        const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
+        return piece === GoPiece.WHITE_TERRITORY || piece === GoPiece.BLACK_TERRITORY;
+    }
+    public territorialize(slice: GoPartSlice): GoPartSlice {
+        return GoRules.markTerritoryAndCount(slice);
     }
 }

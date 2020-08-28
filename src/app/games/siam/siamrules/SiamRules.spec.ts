@@ -64,9 +64,9 @@ describe('SiamRules', () => {
         expect(rules.choose(new SiamMove(-1, 4, SiamMoveNature.FORWARD))).toBeTruthy(0);
         expect(rules.choose(new SiamMove(0, 5, SiamMoveNature.FORWARD))).toBeTruthy(1);
         expect(rules.choose(new SiamMove(0, 3, SiamMoveNature.CLOCKWISE))).toBeTruthy(2);
-        
+
         const moveIsLegal: boolean = rules.choose(new SiamMove(0, 4, SiamMoveNature.FORWARD));
-        
+
         expect(moveIsLegal).toBeFalsy("One vs one push should be illegal");
         const cornerPiece: SiamPiece = SiamPiece.decode(rules.node.gamePartSlice.board[4][0]);
         const rotedPiece: SiamPiece = SiamPiece.decode(rules.node.gamePartSlice.board[3][0]);
@@ -78,9 +78,9 @@ describe('SiamRules', () => {
         expect(rules.choose(new SiamMove(0, 5, SiamMoveNature.FORWARD))).toBeTruthy(1);
         expect(rules.choose(new SiamMove(0, 3, SiamMoveNature.CLOCKWISE))).toBeTruthy(2);
         expect(rules.choose(new SiamMove(4, 5, SiamMoveNature.FORWARD))).toBeTruthy(3);
-        
+
         const moveIsLegal: boolean = rules.choose(new SiamMove(0, 3, SiamMoveNature.FORWARD));
-        
+
         expect(moveIsLegal).toBeFalsy("One vs one push should be illegal, even if one of the involved isat the border");
         const cornerPiece: SiamPiece = SiamPiece.decode(rules.node.gamePartSlice.board[4][0]);
         const rotedPiece: SiamPiece = SiamPiece.decode(rules.node.gamePartSlice.board[3][0]);

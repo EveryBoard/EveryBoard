@@ -94,8 +94,8 @@ export class JoinerService {
                 throw new Error("someone that was nor candidate nor chosenPlayer just left the chat: " + userName);
             }
             const modification: PIJoiner = {
-                chosenPlayer: chosenPlayer,
-                partStatus: partStatus,
+                chosenPlayer,
+                partStatus,
                 candidatesNames: joinersList
             };
             await this.joinerDao.update(this.observedJoinerId, modification);

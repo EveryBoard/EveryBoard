@@ -25,7 +25,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     /* all game rules should be able to call the game-wrapper
      * the aim is that the game-wrapper will take care of manage what follow
      * ie:  - if it's online, he'll tell the game-component when the remote opponent has played
-     *         - if it's offline, he'll tell the game-component what the bot have done
+     *      - if it's offline, he'll tell the game-component what the bot have done
      */
 
     public abstract updateBoard(): void;

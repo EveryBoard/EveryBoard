@@ -20,6 +20,8 @@
                         <mat-option value="3"> IA LEVEL 3 </mat-option>
                         <mat-option value="4"> IA LEVEL 4 </mat-option>
                         <mat-option value="5"> IA LEVEL 5 </mat-option>
+                        <mat-option value="6"> IA LEVEL 6 </mat-option>
+                        <mat-option value="7"> IA LEVEL 7 </mat-option>
                     </mat-select>
                 </mat-form-field><br/>
                 <ng-container *ngIf="compo.showScore"> {{ compo.scores[0] }} pts </ng-container>
@@ -33,6 +35,8 @@
                         <mat-option value="3"> IA LEVEL 3 </mat-option>
                         <mat-option value="4"> IA LEVEL 4 </mat-option>
                         <mat-option value="5"> IA LEVEL 5 </mat-option>
+                        <mat-option value="6"> IA LEVEL 6 </mat-option>
+                        <mat-option value="7"> IA LEVEL 7 </mat-option>
                     </mat-select>
                 </mat-form-field><br/>
                 <ng-container *ngIf="compo.showScore"> {{ compo.scores[1] }} pts </ng-container>
@@ -47,12 +51,21 @@
                 <button (click)="switchPlayerTwo()">{{ players[1] === 'bot' ? 'Humain' : ('Robot lvl ' + aiDepth) }}</button> <br/>
                 <ng-container *ngIf="compo.showScore"> {{ compo.scores[1] }} pts </ng-container>
             </div> -->
-            <div *ngIf="!endGame" class="inforow">
+            <div *ngIf="endGame else pass" class="inforow">
+                <div *ngIf="winner else drawn"
+                     class="inforow">
+                    {{ winner }} as gagné
+                </div>
+                <ng-template #draw>
+                    Match nul
+                </ng-template>
+            </div>
+            <ng-template #pass>
                 <button *ngIf="compo.canPass"
                         (click)="compo.pass()" mat-stroked-button>
                     Passer son tour
                 </button>
-            </div>
+            </ng-template>
         </div>
     </div>
 </div>

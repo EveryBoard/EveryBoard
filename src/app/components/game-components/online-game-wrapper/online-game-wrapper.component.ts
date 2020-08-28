@@ -199,7 +199,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             if (correctDBMove === false) {
                 throw new Error('We received an incorrect db move: ' + chosenMove + ' in ' + listMoves + ' at turn ' + currentPartTurn);
             }
-            // NEWLY :
             if (this.gameComponent.rules.node.isEndGame()) {
                 if (this.gameComponent.rules.node.ownValue === 0) {
                     this.notifyDraw();

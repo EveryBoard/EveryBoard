@@ -7,7 +7,7 @@ import { IFirebaseFirestoreDAO } from "./FirebaseFirestoreDAO";
 import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
 
 export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
-    
+
     public static VERBOSE: boolean = false;
 
     // T is a full element
@@ -29,7 +29,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
 
     public reset() {
         if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) {
-            const removed: string = this.getStaticDB() ? 
+            const removed: string = this.getStaticDB() ?
                 this.getStaticDB().size() + " removed" :
                 "not initialised yet";
             console.log(this.collectionName + ".reset, " + removed);

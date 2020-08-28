@@ -44,17 +44,14 @@ describe('GoBoardDatas', () => {
 
         const emptyGroupInfos: GroupInfos = datas.groups[0];
         expect(emptyGroupInfos.coords.length).toBe(22);
-        expect(emptyGroupInfos.neighboorsEP[0]).toEqual(new Coord(2, 3));
-        expect(emptyGroupInfos.neighboorsEP[1]).toEqual(new Coord(2, 2));
+        expect(emptyGroupInfos.neighboorsEP).toEqual([new Coord(2, 3), new Coord(2, 2)]);
 
         const whiteGroupInfos: GroupInfos = datas.groups[1];
         expect(whiteGroupInfos.coords.length).toBe(2, "White group is composed of two stones");
-        console.log("neighboors of white: "+ JSON.stringify(whiteGroupInfos.neighboorsEP));
-        expect(whiteGroupInfos.neighboorsEP[0]).toEqual(new Coord(0, 0));
-        /*expect(whiteGroupInfos.neighboorsEP[1]).toEqual(new Coord(2, 3));
+        expect(whiteGroupInfos.neighboorsEP).toEqual([new Coord(2, 1), new Coord(2, 3)]);
 
-      /*  const blackGroupInfos: GroupInfos = datas.groups[2];
+        const blackGroupInfos: GroupInfos = datas.groups[2];
         expect(blackGroupInfos.coords.length).toBe(1, "Black group is composed of two stones");
-        expect(blackGroupInfos.neighboorsEP).toBe([new Coord(0, 0), new Coord(2, 2)]);
-    */});
+        expect(blackGroupInfos.neighboorsEP).toEqual([new Coord(1, 3), new Coord(2, 2)]);
+    });
 });

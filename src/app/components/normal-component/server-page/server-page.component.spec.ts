@@ -75,7 +75,6 @@ describe('ServerPageComponent', () => {
             ],
             providers: [
                 { provide: JoueursDAO,            useClass: JoueursDAOMock },
-                
                 { provide: PartDAO,               useClass: PartDAOMock },
                 { provide: JoinerDAO,             useClass: JoinerDAOMock },
                 { provide: ChatDAO,               useClass: ChatDAOMock },

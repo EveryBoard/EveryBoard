@@ -69,7 +69,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         } else {
             this.readMessages = nbMessages;
             this.unreadMessages = 0;
-        } 
+        }
     }
     public showDisconnectedChat() {
         const msg: IMessage = {sender: 'fake', content: 'vous devez être connecté pour voir le chat...', postedTime: Date.now(), lastTurnThen: null};

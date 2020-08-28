@@ -66,7 +66,7 @@ export abstract class FirebaseFirestoreDAO<T, PT> implements IFirebaseFirestoreD
     public observingWhere(field: string,
                           condition: firebase.firestore.WhereFilterOp,
                           value: any,
-                          callback: FirebaseCollectionObserver<T>): () => void 
+                          callback: FirebaseCollectionObserver<T>): () => void
     {
         let collection: CollectionReference | firebase.firestore.Query<firebase.firestore.DocumentData> =
             this.afs.collection(this.collectionName).ref;

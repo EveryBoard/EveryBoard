@@ -1,7 +1,7 @@
 import { Joiner } from "./ijoiner"
 
 export class JoinerMocks {
-    
+
     public static readonly INITIAL: Joiner = new Joiner([], 'creator', '', '0', 0);
 
     public static readonly WITH_FIRST_CANDIDATE: Joiner = new Joiner(['firstCandidate'], 'creator', '', '0', 0);

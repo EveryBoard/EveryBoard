@@ -121,7 +121,7 @@ describe('OnlineGameWrapperComponent', () => {
 
         fixture.detectChanges();
         tick(1);
-        
+
         expect(ngOnInitSpy).toHaveBeenCalledTimes(1);
         expect(joinGame).toHaveBeenCalledTimes(1);
         expect(startObserving).toHaveBeenCalledTimes(1);
@@ -193,9 +193,9 @@ describe('OnlineGameWrapperComponent', () => {
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();
         tick();
-        
+
         fixture.detectChanges();
-        
+
         const partCreationId = fixture.debugElement.query(By.css('#partCreation'));
         const gameId = fixture.debugElement.query(By.css('#game'));
         const compiled = fixture.debugElement.nativeElement;
@@ -213,7 +213,7 @@ describe('OnlineGameWrapperComponent', () => {
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();
         tick();
-        
+
         fixture.detectChanges();
 
         const partCreationId = fixture.debugElement.query(By.css('#partCreation'));
@@ -233,7 +233,7 @@ describe('OnlineGameWrapperComponent', () => {
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();
         tick();
-        
+
         fixture.detectChanges();
         expect(fixture.debugElement.nativeElement.querySelector("app-p4")).toBeNull("p4Tag id should be absent before startGame's async method has complete");
 

@@ -29,7 +29,7 @@ describe("JoinerDAOMock", () => {
                 expect(false).toBeTruthy("Should not have been called more than twice");
             }
         });
-        
+
         expect(callCount).toEqual(1);
         expect(lastJoiner).toEqual(JoinerMocks.INITIAL.copy());
 

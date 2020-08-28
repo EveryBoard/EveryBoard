@@ -60,7 +60,7 @@ describe('SiamComponent', () => {
     });
     it('should accept simple part', async() => {
         const listMoves: SiamMove[] = [
-            new SiamMove(-1, 4, SiamMoveNature.FORWARD), 
+            new SiamMove(-1, 4, SiamMoveNature.FORWARD),
             new SiamMove(0, 5, SiamMoveNature.FORWARD),
             new SiamMove(0, 3, SiamMoveNature.CLOCKWISE)
         ];
@@ -70,7 +70,7 @@ describe('SiamComponent', () => {
             if (move.isInsertion()) {
                 legal = await gameComponent.insertAt(move.coord.x, move.coord.y);
             } else {
-                legal = await gameComponent.onBoardClick(move.coord.x, move.coord.y) && 
+                legal = gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
                         await gameComponent.onMoveNatureSelection(move.nature.value);
             }
             expect(legal).toBeTruthy(move);

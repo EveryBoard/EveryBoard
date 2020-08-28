@@ -14,7 +14,7 @@ describe('GoMove', () => {
             const decodedMove: GoMove = GoMove.decode(encodedMove);
             expect(decodedMove).toEqual(move);
         }
-    });   
+    });
     it('Method decode should delegate to static method decode', () => {
         const testMove: GoMove = new GoMove(1, 1);
         spyOn(GoMove, "decode").and.callThrough();

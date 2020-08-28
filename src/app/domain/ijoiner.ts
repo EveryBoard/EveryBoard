@@ -72,7 +72,7 @@ export class Joiner {
         if (this.maximalMoveDuration != null) copied.maximalMoveDuration = this.maximalMoveDuration;
         if (this.totalPartDuration != null) copied.totalPartDuration = this.totalPartDuration;
         if (this.gameType != null) copied.gameType = this.gameType;
-        
+
         return copied;
     }
 }

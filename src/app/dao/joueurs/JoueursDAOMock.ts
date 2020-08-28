@@ -24,7 +24,7 @@ export class JoueursDAOMock extends FirebaseFirestoreDAOMock<IJoueur, PIJoueur> 
         JoueursDAOMock.joueursDB = new MGPMap();
     }
     public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
-        const iJoueurId: IJoueurId = { 
+        const iJoueurId: IJoueurId = {
             id: "firstCandidate",
             doc: {
                 pseudo: "firstCandidate",

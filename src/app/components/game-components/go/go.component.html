@@ -5,17 +5,11 @@
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let caseContent of line; index as x;">
             <g *ngIf="caseIsFull(x, y) else empty">
-                <circle *ngIf="getCaseColor(x, y) === 'black' else white"
-                        [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
+                <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
                         stroke="black"
-                        style="fill:darkgrey; stroke-width: 5px;"
+                        [attr.fill]="getCaseColor(x, y) === 'black' ? 'darkgrey' : 'white'"
+                        stroke-width="5px"
                         (click)="onClick(x, y);"/>
-                <ng-template #white>
-                    <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
-                            stroke="black"
-                            style="fill:white; stroke-width: 5px;"
-                            (click)="onClick(x, y);" />
-                </ng-template>
                 <circle *ngIf="isLastCase(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
                         stroke="yellow"
@@ -45,12 +39,14 @@
                       style="fill:none; stroke:red; stroke-width: 5px;" />
                 <circle *ngIf="isTerritory(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
-                        stroke="yellow" fill="yellow"
+                        [attr.r]="10"
+                        [attr.fill]="caseContent === 6 ? 'darkgrey' : 'black'"
+                        (click)="onClick(x, y);" />
             </ng-template>
         </g>
     </g>
 </svg>
 <br/>
-{{ rules.countBoardScore(rules.node.gamePartSlice) }} <br/>
+{{ territorialize(rules.node.gamePartSlice).getCapturedCopy() }} <br/>
 {{ "last: (" + last.x + ", " + last.y +")" }} <br/>
 {{ rules.node.gamePartSlice.phase }}

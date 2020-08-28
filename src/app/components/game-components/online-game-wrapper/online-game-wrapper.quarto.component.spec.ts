@@ -173,7 +173,7 @@ describe('OnlineGameWrapperComponent of Quarto', () => {
         expect(component.currentPart.copy().turn).toEqual(1);
         await partDAO.update("joinerId", { listMoves: [107, 166], turn: 2 });
         fixture.detectChanges();
-        
+
         expect(component.currentPart.copy().turn).toEqual(2);
         expect(component.currentPart.copy().listMoves).toEqual([107, 166]);
         slice = component.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
@@ -195,7 +195,6 @@ describe('OnlineGameWrapperComponent of Quarto', () => {
         const chosenMove: QuartoMove = new QuartoMove(0, 3, 11);
         const legalFirst: boolean = await component.gameComponent.chooseMove(chosenMove, slice, null, null);
         expect(legalFirst).toBeTruthy("First movement should be legal");
-        
 
         expect(component.currentPart.copy().listMoves).toEqual([107]);
         const expectedUpdate = {

@@ -15,16 +15,20 @@ export class GoPiece {
 
     public static DEAD_WHITE: GoPiece = new GoPiece(4);
 
+    public static BLACK_TERRITORY: GoPiece = new GoPiece(5);
+
+    public static WHITE_TERRITORY: GoPiece = new GoPiece(6);
+
     private constructor(readonly value: number) {}
 
     public static pieceBelongTo(piece: number, owner: Player): boolean {
         if (owner === Player.ZERO) {
-            return piece === GoPiece.BLACK.value || // TODO: GoPiece-ify
-                   piece === GoPiece.DEAD_BLACK.value;// TODO: GoPiece-ify
+            return piece === GoPiece.BLACK.value ||
+                   piece === GoPiece.DEAD_BLACK.value;
         }
         if (owner === Player.ONE) {
-            return piece === GoPiece.WHITE.value ||// TODO: GoPiece-ify
-                   piece === GoPiece.DEAD_WHITE.value;// TODO: GoPiece-ify
+            return piece === GoPiece.WHITE.value ||
+                   piece === GoPiece.DEAD_WHITE.value;
         }
         throw new Error("Owner must be 0 or 1, got " + owner);
     }
@@ -40,9 +44,31 @@ export class GoPiece {
                 return GoPiece.DEAD_BLACK;
             case 4:
                 return GoPiece.DEAD_WHITE;
+            case 5:
+                return GoPiece.BLACK_TERRITORY;
+            case 6:
+                return GoPiece.WHITE_TERRITORY;
             default:
                 throw new Error("Unknwon GoPiece.value " + value);
         }
+    }
+    public isOccupied(): boolean {
+        return [GoPiece.BLACK, GoPiece.WHITE, GoPiece.DEAD_BLACK, GoPiece.DEAD_WHITE].includes(this);
+    }
+    public isEmpty(): boolean {
+        return [GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY, GoPiece.EMPTY].includes(this);
+    }
+    public isDead(): boolean {
+        return [GoPiece.DEAD_BLACK, GoPiece.DEAD_WHITE].includes(this);
+    }
+    public getAliveOpposite(): GoPiece {
+        if (this === GoPiece.DEAD_BLACK) return GoPiece.WHITE;
+        if (this === GoPiece.DEAD_WHITE) return GoPiece.BLACK;
+        else throw new Error("Only dead piece have an alive opposite");
+    }
+    public nonTerritory(): GoPiece {
+        if (this.isEmpty()) return GoPiece.EMPTY;
+        else return this;
     }
 }
 export enum Phase {
@@ -91,6 +117,23 @@ export class GoPartSlice extends GamePartSlice {
     }
     public getCopiedBoardGoPiece(): GoPiece[][] {
         return GoPartSlice.mapNumberBoard(this.board);
+    }
+    public copy(): GoPartSlice {
+        return new GoPartSlice(this.getCopiedBoardGoPiece(),
+                               this.getCapturedCopy(),
+                               this.turn,
+                               this.koCoord,
+                               this.phase);
+    }
+    public toString(): string {
+        let result: string = ""
+        for (let lines of this.board) {
+            for (let piece of lines) {
+                result += piece + " "
+            }
+            result += "\n"
+        }
+        return result;
     }
     public static readonly WIDTH: number = 5;
 

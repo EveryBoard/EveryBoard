@@ -22,8 +22,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     public playerZeroValue: string = "0";
     public playerOneValue: string = "0";
     public aiDepth: number = 5;
+    public winner: string;
 
-    public botTimeOut: number = 500; // this.aiDepth * 500;
+    public botTimeOut: number = 1; // this.aiDepth * 500;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
@@ -54,14 +55,21 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (LocalGameWrapperComponent.VERBOSE) {
             console.log('LocalGameWrapperComponent.onValidUserMove');
         }
-        const isLegal: boolean = this.gameComponent.rules.choose(move);
-        if (isLegal) {
-            this.gameComponent.updateBoard();
-            this.proposeAIToPlay();
-        } else {
-            throw new Error("LocalGameWrapperComponent.onValidUserMove encountered a non valid move");
-        }
+        this.gameComponent.rules.choose(move);
+        this.updateBoard();
+        this.proposeAIToPlay();
         return Promise.resolve();
+    }
+    public updateBoard() {
+        this.gameComponent.updateBoard();
+        if (this.gameComponent.rules.node.isEndGame()) {
+            this.endGame = true;
+            const boardValue: number = this.gameComponent.rules.node.ownValue;
+            if (boardValue !== 0) {
+                const intWinner: number = boardValue < 0 ? 1 : 2;
+                this.winner = "Joueur " + intWinner + "(" + this.players[intWinner - 1] + ")"
+            }
+        }
     }
     public proposeAIToPlay() {
         // check if ai's turn has come, if so, make her start after a delay
@@ -72,7 +80,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 if (!this.gameComponent.rules.node.isEndGame()) {
                     const aiMove: Move = this.gameComponent.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
                     if (this.gameComponent.rules.choose(aiMove)) {  // TODO: remove since useless
-                        this.gameComponent.updateBoard();
+                        this.updateBoard();
                         this.cdr.detectChanges();
                         this.proposeAIToPlay();
                     } else {

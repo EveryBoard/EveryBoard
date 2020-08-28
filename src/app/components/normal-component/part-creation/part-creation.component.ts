@@ -145,7 +145,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private updateJoiner(iJoinerId: IJoinerId) {
         if (PartCreationComponent.VERBOSE) console.log("PartCreationComponent.updateJoiner");
-            
+
         // Update the form depending on which state we're on now
         this.userIsCreator = (this.userName === iJoinerId.doc.creator);
         this.userIsChosenPlayer = (this.userName === iJoinerId.doc.chosenPlayer);
@@ -172,7 +172,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         await this.chatService.deleteChat(this.partId);
         if (PartCreationComponent.VERBOSE) console.log('PartCreationComponent.cancelGameCreation: game and joiner and chat deleted');
-        
+
         return Promise.resolve();
     }
     public cancelAndLeave() {

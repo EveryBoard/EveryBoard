@@ -56,7 +56,7 @@ describe('ChatComponent', () => {
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
             ]
         }).compileComponents();
-        
+
         fixture = TestBed.createComponent(ChatComponent);
         component = fixture.componentInstance;
         component.chatId = "fauxChat";
@@ -96,7 +96,7 @@ describe('ChatComponent', () => {
 
         component.switchChatVisibility();
         fixture.detectChanges();
-       
+
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         chat = fixture.debugElement.query(By.css('#chatForm'));
         expect(switchButton.nativeElement.innerText).toEqual("Show chat (0 new messages)");
@@ -109,7 +109,7 @@ describe('ChatComponent', () => {
         fixture.detectChanges();
         component.switchChatVisibility();
         fixture.detectChanges();
-       
+
         let switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         let chat = fixture.debugElement.query(By.css('#chatForm'));
         expect(switchButton.nativeElement.innerText).toEqual("Show chat (0 new messages)");
@@ -117,7 +117,7 @@ describe('ChatComponent', () => {
 
         component.switchChatVisibility();
         fixture.detectChanges();
-       
+
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         chat = fixture.debugElement.query(By.css('#chatForm'));
         expect(switchButton.nativeElement.innerText).toEqual("Hide chat (0 new messages)");
@@ -133,7 +133,7 @@ describe('ChatComponent', () => {
         let switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         expect(switchButton.nativeElement.innerText).toEqual("Show chat (0 new messages)");
 
-        chatDAO.update("fauxChat", { messages : [ { 
+        chatDAO.update("fauxChat", { messages : [ {
             sender: "roger",
             content: "Saluuuut",
             lastTurnThen: 0,

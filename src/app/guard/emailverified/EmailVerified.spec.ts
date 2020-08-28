@@ -20,7 +20,7 @@ describe('EmailVerified', () => {
     beforeEach(() => {
         authService = {} as AuthenticationService;
         router = new RouterMock() as Router;
-        guard = new EmailVerified(authService, router);        
+        guard = new EmailVerified(authService, router);
     });
     it('should create', async(() => {
         expect(guard).toBeTruthy();

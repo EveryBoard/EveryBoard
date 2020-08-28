@@ -39,7 +39,9 @@
             </mat-step>
 
             <mat-step [stepControl]="configFormGroup" editable="false">
-                <form id="proposeConfig" [formGroup]="configFormGroup">
+                <form id="proposeConfig"
+                      *ngIf="currentJoiner.chosenPlayer"
+                      [formGroup]="configFormGroup">
                     <ng-template matStepLabel>Configurez la partie</ng-template>
 
                     <mat-radio-group class="example-radio-group" formControlName="firstPlayer" required>
@@ -125,8 +127,13 @@
     <div id="joiners" class="circled col-sm-2" style="height: 100%; max-height: 100%">
         <h4> Joueurs présents : </h4>
         <ul>
-            <li *ngFor="let joinerName of currentJoiner.candidatesNames">
-                <p> {{ joinerName }}</p>
+            <li *ngIf="currentJoiner.chosenPlayer"
+                id="selected_{{currentJoiner.chosenPlayer}}">
+                <p><b> {{ currentJoiner.chosenPlayer }} </b></p>
+            </li>
+            <li *ngFor="let joinerName of currentJoiner.candidatesNames"
+                id="presenceOf_{{joinerName}}">
+                <p> {{ joinerName }} </p>
             </li>
         </ul>
     </div>
