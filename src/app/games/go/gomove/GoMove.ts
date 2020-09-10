@@ -18,6 +18,12 @@ export class GoMove extends MoveCoord {
         const y = (encodedMove - x) / 19;
         return new GoMove(x, y);
     }
+    public static encode(move: GoMove): number {
+        // A go move goes on x from o to 18
+        // and y from 0 to 18
+        // encoded as y*18 + x
+        return (move.coord.y * 19) + move.coord.x;
+    }
     public equals(o: any): boolean {
         if (this === o) return true;
         if (o == null) return false;
@@ -31,9 +37,6 @@ export class GoMove extends MoveCoord {
         return GoMove.decode(encodedMove);
     }
     public encode(): number {
-        // A go move goes on x from o to 18
-        // and y from 0 to 18
-        // encoded as y*18 + x
-        return (this.coord.y * 19) + this.coord.x;
+        return GoMove.encode(this);
     }
 }

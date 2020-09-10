@@ -6,6 +6,9 @@ export class ReversiMove extends MoveCoord {
 
     public static readonly passNumber: number = -1; // TODO: make correctly encodable, with same rules, and CONST_ARE_CAPSLOCKED
 
+    public static encode(move: ReversiMove): number {
+        return (move.coord.y*8) + move.coord.x;
+    }
     public static decode(encodedMove: number): ReversiMove {
         if (encodedMove === ReversiMove.passNumber) {
             return ReversiMove.pass;
@@ -23,10 +26,10 @@ export class ReversiMove extends MoveCoord {
     public toString(): String {
         return "ReversiMove(" + this.coord.x + ", " + this.coord.y + ")";
     }
+    public encode(): number {
+        return ReversiMove.encode(this);
+    }
     public decode(encodedMove: number): ReversiMove {
         return ReversiMove.decode(encodedMove);
-    }
-    public encode(): number {
-        return (this.coord.y*8) + this.coord.x;
     }
 }

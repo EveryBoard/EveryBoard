@@ -10,15 +10,39 @@ export class Orthogonale {
 
     public static readonly ORTHOGONALES = [Orthogonale.UP, Orthogonale.RIGHT, Orthogonale.DOWN, Orthogonale.LEFT];
 
+    public static fromInt(int: number): Orthogonale {
+        switch (int) {
+            case 1: return Orthogonale.UP;
+            case 2: return Orthogonale.RIGHT;
+            case 3: return Orthogonale.DOWN;
+            case 4: return Orthogonale.LEFT;
+            default: throw new Error("No Orthogonale matching " + int);
+        }
+    }
     private constructor(public readonly x: number, public readonly y: number) {}
 
-    public static getOpposite(o: Orthogonale): Orthogonale {
-        switch (o) {
-            case Orthogonale.UP: return Orthogonale.DOWN;
+    public getOpposite(): Orthogonale {
+        switch (this) {
+            case Orthogonale.UP:    return Orthogonale.DOWN;
             case Orthogonale.RIGHT: return Orthogonale.LEFT;
-            case Orthogonale.DOWN: return Orthogonale.UP;
-            case Orthogonale.LEFT: return Orthogonale.RIGHT;
-            default: throw new Error("Unknown orthogonale: "+o.toString());
+            case Orthogonale.DOWN:  return Orthogonale.UP;
+            case Orthogonale.LEFT:  return Orthogonale.RIGHT;
+        }
+    }
+    public toString(): string {
+        switch (this) {
+            case Orthogonale.UP:    return "UP";
+            case Orthogonale.RIGHT: return "RIGHT";
+            case Orthogonale.DOWN:  return "DOWN";
+            case Orthogonale.LEFT:  return "LEFT";
+        }
+    }
+    public toInt(): number {
+        switch (this) {
+            case Orthogonale.UP:    return 1;
+            case Orthogonale.RIGHT: return 2;
+            case Orthogonale.DOWN:  return 3;
+            case Orthogonale.LEFT:  return 4;
         }
     }
 }
@@ -43,8 +67,8 @@ export class Direction {
     public static readonly DIRECTIONS: ReadonlyArray<Direction> = [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT,
                                                                    Direction.DOWN, Direction.DOWN_LEFT, Direction.LEFT, Direction.UP_LEFT];
 
-    public static getOpposite(d: Direction): Direction {
-        switch (d) {
+    public getOpposite(): Direction {
+        switch (this) {
             case Direction.UP: return Direction.DOWN;
             case Direction.UP_RIGHT: return Direction.DOWN_LEFT;
             case Direction.RIGHT: return Direction.LEFT;
@@ -53,7 +77,7 @@ export class Direction {
             case Direction.DOWN_LEFT: return Direction.UP_RIGHT;
             case Direction.LEFT: return Direction.RIGHT;
             case Direction.UP_LEFT: return Direction.DOWN_RIGHT;
-            default: throw new Error("Unknown direction: "+d.toString());
+            default: throw new Error("Unknown direction: " + this.toString());
         }
     }
     public static equals(first: Direction, second: Direction): boolean {

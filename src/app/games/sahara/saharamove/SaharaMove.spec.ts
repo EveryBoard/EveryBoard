@@ -18,7 +18,7 @@ describe('SaharaMoves', () => {
             expect(decodedMove).toEqual(initialMove, initialMove.toString() + " should be correctly translated");
         }
     });
-    it('Method decode should delegate to static method decode', () => {
+    it('should delegate to static method decode', () => {
         const testMove: SaharaMove = new SaharaMove(new Coord(1, 1), new Coord(2, 1));
         spyOn(SaharaMove, "decode").and.callThrough();
 

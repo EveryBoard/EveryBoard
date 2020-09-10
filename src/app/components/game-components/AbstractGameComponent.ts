@@ -19,6 +19,11 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public imagesLocation = 'assets/images/';
 
+    public static display(verbose: boolean, message: string) {
+        if (verbose) {
+            console.log(message);
+        }
+    }
     public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => Promise<boolean>;
 
     public observerRole: number;

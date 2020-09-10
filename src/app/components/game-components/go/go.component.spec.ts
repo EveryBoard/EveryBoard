@@ -11,6 +11,7 @@ import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrap
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { GoPiece } from 'src/app/games/go/GoPartSlice';
+import { GoMove } from 'src/app/games/go/gomove/GoMove';
 
 const activatedRouteStub = {
     snapshot: {
@@ -69,5 +70,15 @@ describe('GoComponent', () => {
         expect(await gameComponent.pass()).toBeTruthy(3); // Finished
 
         expect(await gameComponent.pass()).toBeFalsy(4);
+    });
+    it('should delegate decoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(GoMove, "decode").and.callThrough();
+        gameComponent.decodeMove(5);
+        expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
+    it('should delegate encoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(GoMove, "encode").and.callThrough();
+        gameComponent.encodeMove(new GoMove(1, 1));
+        expect(moveSpy).toHaveBeenCalledTimes(1);
     });
 });

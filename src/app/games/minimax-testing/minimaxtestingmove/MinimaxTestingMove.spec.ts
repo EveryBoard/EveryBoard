@@ -16,7 +16,7 @@ describe('MinimaxTestingMove', () => {
         }
     });
 
-    it('Method decode should delegate to static method decode', () => {
+    it('should delegate to static method decode', () => {
         const testMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
         spyOn(MinimaxTestingMove, "decode").and.callThrough();
 

@@ -22,7 +22,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
      * or also if some of them are too bad to be interesting to count, as a matter of performance
      */
 
-    public abstract getBoardValue(node: MNode<Rules<M, S, L>, M, S, L>): number;
+    public abstract getBoardValue(move: M, slice: S): number;
     /* used to give a comparable data type linked to the gameSlicePart of the moment
      * so that the AI can know what is best, according to you algorithm in there
      */
@@ -56,7 +56,12 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
         }
 
         const result: {resultingMove: Move, resultingSlice: GamePartSlice} = MNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
-        const son: MNode<Rules<M, S, L>, M, S, L> = new MNode(this.node, result.resultingMove as M, result.resultingSlice as S);
+        const boardValue: number = MNode.ruler.getBoardValue(result.resultingMove, result.resultingSlice);
+        const son: MNode<Rules<M, S, L>, M, S, L> = new MNode(
+            this.node,
+            result.resultingMove as M,
+            result.resultingSlice as S,
+            boardValue);
         this.node = son;
         return true;
     };

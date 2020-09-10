@@ -67,4 +67,14 @@ describe('ReversiComponent', () => {
         const currentMove: ReversiMove = listMoves.getByIndex(0).key;
         expect(gameComponent.onClick(currentMove.coord.x, currentMove.coord.y)).toBeTruthy(0);
     });
+    it('should delegate decoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(ReversiMove, "decode").and.callThrough();
+        gameComponent.decodeMove(5);
+        expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
+    it('should delegate encoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(ReversiMove, "encode").and.callThrough();
+        gameComponent.encodeMove(new ReversiMove(1, 1));
+        expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
 });

@@ -285,7 +285,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         return choices;
     }
-    public getBoardValue(n: AwaleNode): number {
+    public getBoardValue(move: AwaleMove, slice: AwalePartSlice): number {
         AwaleRules.GET_BOARD_VALUE_CALL_COUNT++;
         const LOCAL_VERBOSE: boolean = false;
 
@@ -293,13 +293,12 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             console.log('GBV..');
         }
 
-        const player: number = n.gamePartSlice.turn % 2;
+        const player: number = slice.turn % 2;
         const ennemy = (player + 1) % 2;
-        const awalePartSlice: AwalePartSlice = n.gamePartSlice;
-        const captured: number[] = awalePartSlice.getCapturedCopy();
+        const captured: number[] = slice.getCapturedCopy();
         const c1 = captured[1];
         const c0 = captured[0];
-        const board: number[][] = n.gamePartSlice.getCopiedBoard();
+        const board: number[][] = slice.getCopiedBoard();
         if (AwaleRules.isStarving(player, board)) { // TODO tester de l'enlever
             if (!AwaleRules.canDistribute(ennemy, board)) {
                 return (c0 > c1) ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;

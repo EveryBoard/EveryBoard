@@ -2,25 +2,14 @@ import {MoveCoord} from '../../../jscaip/MoveCoord';
 
 export class QuartoMove extends MoveCoord {
 
-    readonly piece: number;
-
-    constructor(x: number, y: number, piece: number) {
-        /* (x, y) is the coord where you put the 'inHand' quarto piece
-         * piece is the quarto piece you give
-         */
-        super(x, y);
-        if (piece == null) throw new Error("Piece cannot be null");
-        this.piece = piece;
-
-    }
-    public encode(): number {
+    public static encode(move: QuartoMove): number {
         /* x va de 0 à 3
          * y va de 0 à 3
          * p va de 0 à 16 compris, 16 pour le dernier tour
          */
-        const x: number = this.coord.x;
-        const y: number = this.coord.y;
-        const p: number = this.piece;
+        const x: number = move.coord.x;
+        const y: number = move.coord.y;
+        const p: number = move.piece;
         return (x * 128) + (y * 32) + p;
     }
     public static decode(encodedMove: number): QuartoMove {
@@ -34,6 +23,18 @@ export class QuartoMove extends MoveCoord {
         encodedMove /= 4;
         const x: number = encodedMove;
         return new QuartoMove(x, y, piece);
+    }
+    constructor(x: number, y: number, public readonly piece: number) {
+        /* (x, y) is the coord where you put the 'inHand' quarto piece
+         * piece is the quarto piece you give
+         */
+        super(x, y);
+        if (piece == null) throw new Error("Piece cannot be null");
+        this.piece = piece;
+
+    }
+    public encode(): number {
+        return QuartoMove.encode(this);
     }
     public decode(xyp: number): QuartoMove {
         return QuartoMove.decode(xyp);

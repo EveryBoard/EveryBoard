@@ -18,8 +18,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
     public static VERBOSE: boolean = false;
 
     public static ruler: Rules<Move, GamePartSlice, LegalityStatus>;
-    /* Permet d'obtenir les donn�es propre au jeu et non au minimax, ruler restera l'unique instance d'un set de r�gles
-    */
+    // Permet d'obtenir les donn�es propre au jeu et non au minimax, ruler restera l'unique instance d'un set de r�gles
 
     /* Exemples d'�tats th�orique d'un Node (cours)
     * Feuille - st�rile: n'as pas d'enfant apr�s un calcul
@@ -58,14 +57,12 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
     * else: the board value of this node best descendant
     */
 
-    private depth = -1;
+    private depth = 0;
     /* allow us to locate the place/status of the node in the decision tree
-    * if depth === - 1:
-    * recently created Node
     * if depth === 0:
-    * leaf Node (by end of lecture)
-    * if this.depth === this.mother.depth - 1:
-    * just calculated Node
+    *     recently created Node or leaf Node (by end of lecture)
+    * else if this.depth === this.mother.depth - 1:
+    *     just calculated Node
     */
 
     // statics methods:
@@ -100,11 +97,11 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
     }
     public static getFirstNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> (initialBoard: S, gameRuler: R) {
         MNode.ruler = gameRuler; // pour toutes les node, gameRuler sera le r�f�rent
-        return new MNode(null, null, initialBoard);
+        return new MNode(null, null, initialBoard, 0);
     }
     // instance methods:
 
-    constructor(mother: MNode<R, M, S, L> | null, move: M | null, slice: S) {
+    constructor(mother: MNode<R, M, S, L> | null, move: M | null, slice: S, boardValue: number) {
         /* Initialisation condition:
          * mother: null for initial board
          * board: should already be a clone
@@ -113,14 +110,11 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         this.mother = mother;
         this.move = move;
         this.gamePartSlice = slice;
-        this.ownValue = this.mother == null ? 0 : MNode.ruler.getBoardValue(this);
+        // this.ownValue = this.mother == null ? 0 : MNode.ruler.getBoardValue(this.move, this.gamePartSlice);
+        this.ownValue = boardValue;
         this.hopedValue = this.ownValue;
         if (MNode.VERBOSE || LOCAL_VERBOSE) {
-            console.log("new node (" + MNode.NB_NODE_CREATED+") :: "+
-                                       (this.move == null ? "null" : this.move.toString()) + " + " +
-                                       this.gamePartSlice.toString() + " == " +
-                                       this.ownValue);
-            // console.log(mother);
+            console.log({ createdNode: this });
         }
         MNode.NB_NODE_CREATED += 1;
     }
@@ -187,21 +181,23 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         /* Conditions obtenues avant de lancer:
          * 1. this.childs === null
          *
-         * Chose n�cessaire:
-         * Demander � l'instance de Rules de calculer (pour this) tout les mouvement l�gaux
+         * Chose nécessaire:
+         * Demander à l'instance de Rules de calculer (pour this) tout les mouvement l�gaux
          * (avec ceux ci, doit - on avoir une liste de Node contenant en eux .move
          *
          * 1. Getter le dico < MoveX, Board > provenant du IRules
-         *
-         * 2. Pour chacun d'entre eux
-         * a. setter sa mother � this // via constructeur
-         * b. setter sa childs � null // AUTOMATIQUE
-         * c. setter sa bestChild � null // AUTOMATIQUE
-         * d. moveX est donc re�u de la classe Rules // via constructeur
-         * e. board est aussi re�u de la classe Rules // via constructeur
-         * f. setter sa value � null // AUTOMATIQUE
-         * g. l'ajouter � this.childs
-         * h. ne rien changer � sa depth avant que la Node ne soit calcul�
+         * Si il n'y a pas de mouvement liant à la victoire du joueur courant:
+         *     2. Pour chacun d'entre eux
+         *     a. setter sa mother à this // via constructeur
+         *     b. setter sa childs à null // AUTOMATIQUE
+         *     c. setter sa bestChild à null // AUTOMATIQUE
+         *     d. moveX est donc reçu de la classe Rules // via constructeur
+         *     e. board est aussi reçu de la classe Rules // via constructeur
+         *     f. setter sa value à null // AUTOMATIQUE
+         *     g. l'ajouter à this.childs
+         *     h. ne rien changer à sa depth avant que la Node ne soit calculé
+         * Si il y a un mouvement menant à la victoire du joueur courant:
+         *     faire les étape 2a à 2h uniquement pour ce noeud là
          */
         if (this.childs != null) throw new Error("multiple node childs calculation error");
         const LOCAL_VERBOSE: boolean = false;
@@ -211,28 +207,60 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
             console.log('createChilds received listMoves from ruler');
             console.log(moves);
         }
-        for (let i=0; i<moves.size(); i++) {
-            const entry = moves.getByIndex(i);
-            if (MNode.VERBOSE || LOCAL_VERBOSE) {
-                console.log('in the loop');
-                console.log(entry);
-            }
-            const move: M = entry.key;
-            const slice: S = entry.value;
-            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('move and board retrieved from the entry');
+        const winningMoveInfo: { winningMoveIndex: number, boardValues: number[] } =
+            this.getWinningMoveIndex(moves, this.gamePartSlice.turn);
+        if (winningMoveInfo.winningMoveIndex === -1) {
+            for (let i=0; i<moves.size(); i++) {
+                const entry = moves.getByIndex(i);
+                if (MNode.VERBOSE || LOCAL_VERBOSE) {
+                    console.log('in the loop');
+                    console.log(entry);
+                }
+                const move: M = entry.key;
+                const slice: S = entry.value;
+                if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('move and board retrieved from the entry');
 
-            const child: MNode<R, M, S, L> = new MNode<R, M, S, L>(this, move, slice);
-            if (MNode.VERBOSE || LOCAL_VERBOSE) {
-                console.log('child created');
-                console.log(child);
+                const boardValue: number = winningMoveInfo.boardValues[i];
+                const child: MNode<R, M, S, L> = new MNode<R, M, S, L>(this, move, slice, boardValue);
+                if (MNode.VERBOSE || LOCAL_VERBOSE) {
+                    console.log('child created');
+                    console.log(child);
+                }
+                this.childs.push(child);
             }
-            this.childs.push(child);
+        } else {
+            const winningMove: { key: M, value: S } = moves.getByIndex(winningMoveInfo.winningMoveIndex);
+            const boardValue: number = winningMoveInfo.boardValues[winningMoveInfo.winningMoveIndex];
+            this.createOnlyWinningChild(winningMove, boardValue);
         }
-
         if (MNode.VERBOSE || LOCAL_VERBOSE) {
             console.log('out of the loop');
             if (this.isEndGame()) console.log('Node.createChilds has found a endGame');
         }
+    }
+    private getWinningMoveIndex(moves: MGPMap<M, S>, turn: number): { winningMoveIndex: number, boardValues: number[] } {
+        const winningValue: number = turn % 2 === 0 ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
+        let hasWinningMove: boolean = false;
+        const boardValues: number[] = [];
+        let i: number = 0;
+        while (i < moves.size() && !hasWinningMove) {
+            const move: M = moves.getByIndex(i).key
+            const slice: S = moves.getByIndex(i).value;
+            const sliceValue: number = MNode.ruler.getBoardValue(move, slice);
+            boardValues[i] = sliceValue;
+            hasWinningMove = winningValue === sliceValue;
+            i++;
+        }
+        const winningMoveIndex = hasWinningMove ? i - 1 : -1;
+        return { winningMoveIndex, boardValues };
+    }
+    private createOnlyWinningChild(move: { key: M, value: S }, winningValue: number) {
+        const winningChild: MNode<R, M, S, L> = new MNode<R, M, S, L>(
+            this,
+            move.key,
+            move.value,
+            winningValue);
+        this.childs.push(winningChild);
     }
     private calculateChildsValue() {
         /* Condition d'appel

@@ -124,8 +124,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newNumberBoard, newTurn, newRemainingPiece);
         return {resultingSlice, resultingMove: move};
     }
-    public getBoardValue(n: EncapsuleNode): number {
-        let slice: EncapsulePartSlice = n.gamePartSlice;
+    public getBoardValue(move: EncapsuleMove, slice: EncapsulePartSlice): number {
         let boardValue: number;
         if (EncapsuleRules.isVictory(slice)) {
             boardValue = slice.turn%2 === 0 ?

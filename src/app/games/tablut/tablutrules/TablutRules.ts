@@ -610,15 +610,14 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
         return null;
     }
-    public getBoardValue(n: TablutNode): number {
+    public getBoardValue(move: TablutMove, slice: TablutPartSlice): number {
 
         // 1. is the king escaped ?
         // 2. is the king captured ?
         // 3. is one player immobilised ?
         // 4. let's just for now just count the pawns
-        const tablutPartSlice: TablutPartSlice = n.gamePartSlice;
-        const board: number[][] = tablutPartSlice.getCopiedBoard();
-        const invaderStart: boolean = tablutPartSlice.invaderStart;
+        const board: number[][] = slice.getCopiedBoard();
+        const invaderStart: boolean = slice.invaderStart;
 
         return TablutRules.getBoardValue(board, invaderStart);
     }

@@ -17,7 +17,7 @@ describe('EncapsuleMove', () => {
             expect(decodedMove).toEqual(move);
         }
     });
-    it('Method decode should delegate to static method decode', () => {
+    it('should delegate to static method decode', () => {
         const testMove: EncapsuleMove = EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2));
         spyOn(EncapsuleMove, "decode").and.callThrough();
 

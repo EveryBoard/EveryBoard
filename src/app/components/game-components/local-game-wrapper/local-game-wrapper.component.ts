@@ -24,7 +24,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     public aiDepth: number = 5;
     public winner: string;
 
-    public botTimeOut: number = 1; // this.aiDepth * 500;
+    public botTimeOut: number = 1000; // this.aiDepth * 500;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,

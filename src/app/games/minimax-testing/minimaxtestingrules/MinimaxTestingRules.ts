@@ -53,9 +53,8 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         }
         return {legal: true};
     }
-    public getBoardValue(node: MinimaxTestingNode): number {
+    public getBoardValue(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice): number {
         MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT++;
-        const slice: MinimaxTestingPartSlice = node.gamePartSlice;
         return slice.getBoardAt(slice.location);
     }
     public getListMoves(n: MinimaxTestingNode): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {

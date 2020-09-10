@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, async } from '@angular/core/testing';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -10,7 +10,8 @@ import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrap
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { SiamComponent } from './siam.component';
-import { SiamMove, SiamMoveNature } from 'src/app/games/siam/siammove/SiamMove';
+import { SiamMove } from 'src/app/games/siam/siammove/SiamMove';
+import { Orthogonale } from 'src/app/jscaip/DIRECTION';
 
 const activatedRouteStub = {
     snapshot: {
@@ -35,6 +36,17 @@ describe('SiamComponent', () => {
 
     let gameComponent: SiamComponent;
 
+    let doMove: (move: SiamMove) => Promise<boolean> = async(move: SiamMove) => {
+        if (move.isInsertion()) {
+            return await gameComponent.insertAt(move.coord.x, move.coord.y) &&
+                   await gameComponent.chooseOrientation(move.landingOrientation.toInt());
+        } else {
+            const moveDirection: number = move.moveDirection === null ? 0 : move.moveDirection.toInt();
+            return gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
+                   gameComponent.chooseDirection(moveDirection) &&
+                   await gameComponent.chooseOrientation(move.landingOrientation.toInt());
+        }
+    }
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -60,24 +72,51 @@ describe('SiamComponent', () => {
     });
     it('should accept simple part', async() => {
         const listMoves: SiamMove[] = [
-            new SiamMove(-1, 4, SiamMoveNature.FORWARD),
-            new SiamMove(0, 5, SiamMoveNature.FORWARD),
-            new SiamMove(0, 3, SiamMoveNature.CLOCKWISE)
+            new SiamMove(-1, 4, Orthogonale.RIGHT, Orthogonale.RIGHT),
+            new SiamMove(0, 5, Orthogonale.UP, Orthogonale.UP),
+            new SiamMove(0, 3, null, Orthogonale.DOWN),
+            new SiamMove(0, 4, Orthogonale.RIGHT, Orthogonale.LEFT),
         ];
 
         let legal: boolean;
         for (let move of listMoves) {
-            if (move.isInsertion()) {
-                legal = await gameComponent.insertAt(move.coord.x, move.coord.y);
-            } else {
-                legal = gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
-                        await gameComponent.onMoveNatureSelection(move.nature.value);
-            }
+            legal = await doMove(move);
             expect(legal).toBeTruthy(move);
             if (!legal) break;
         };
     });
-    it('should accept insertion at first turn', () => {
-        expect(gameComponent.insertAt(2, 5)).toBeTruthy();
+    it('should accept insertion at first turn', async() => {
+        expect(await gameComponent.insertAt(2, 5)).toBeTruthy();
+    });
+    it('should cancel move when trying to select direction or orientation before piece, or trying to move empty case', () => {
+        spyOn(gameComponent, "cancelMove").and.callThrough();
+        expect(gameComponent.chooseDirection(0)).toBeFalsy("Should not allow to choose direction before choosing piece");
+        expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
+        expect(gameComponent.onBoardClick(0, 0)).toBeFalsy("Should not allow to move empty case");
+        expect(gameComponent.cancelMove).toHaveBeenCalledTimes(2);
+    });
+    it('should cancel move when calling tryMove without direction or choosen coord', async() => {
+        spyOn(gameComponent, "cancelMove").and.callThrough();
+        expect(await gameComponent.chooseOrientation(1)).toBeFalsy("Should not allow to choose orientation before choosing piece");
+        expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
+        expect(await gameComponent.tryMove()).toBeFalsy("Should not call tryMove before setting everything");
+        expect(gameComponent.cancelMove).toHaveBeenCalledTimes(2);
+    });
+    it('should cancel move when trying to insert while having selected a piece', async() => {
+        await doMove(new SiamMove(-1, 4, Orthogonale.RIGHT, Orthogonale.RIGHT));
+        gameComponent.onBoardClick(0, 4);
+        spyOn(gameComponent, "cancelMove").and.callThrough();
+        expect(await gameComponent.insertAt(-1, 2)).toBeFalsy();
+        expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
+    });
+    it('should delegate decoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(SiamMove, "decode").and.callThrough();
+        gameComponent.decodeMove(269);
+        expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
+    it('should delegate encoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(SiamMove, "encode").and.callThrough();
+        gameComponent.encodeMove(new SiamMove(2, 2, null, Orthogonale.UP));
+        expect(moveSpy).toHaveBeenCalledTimes(1);
     });
 });

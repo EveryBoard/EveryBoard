@@ -82,8 +82,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         }
         return neighboors;
     }
-    public getBoardValue(node: SaharaNode): number {
-        const board: SaharaPawn[][] = node.gamePartSlice.getCopiedBoard();
+    public getBoardValue(move: SaharaMove, slice: SaharaPartSlice): number {
+        const board: SaharaPawn[][] = slice.getCopiedBoard();
         const zeroFreedoms: number[] = this.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = this.getBoardValuesFor(board, Player.ONE);
         if (zeroFreedoms[0] === 0) return Number.MAX_SAFE_INTEGER;

@@ -1,6 +1,5 @@
 import { Player } from "src/app/jscaip/Player";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
-import { SiamMoveNature } from "./siammove/SiamMove";
 
 export class SiamPiece {
 
@@ -69,7 +68,7 @@ export class SiamPiece {
     }
     public static getDirection(value: number): Orthogonale {
         const direction: Orthogonale = SiamPiece.getNullableDirection(value);
-        if (direction == null) throw new Error("Direction cannot be null");
+        if (direction == null) throw new Error("Piece " + value + " has no direction");
         return direction;
     }
     public static of(orientation: Orthogonale, player: Player): SiamPiece {
@@ -86,36 +85,11 @@ export class SiamPiece {
         }
         throw new Error("Player None don't have any pieces");
     }
-    public static rotate(piece: number, rotation: SiamMoveNature): number {
-        if (rotation.value === SiamMoveNature.ANTI_CLOCKWISE.value) {
-            switch (piece) {
-                case 1: return 4;
-                case 2: return 1;
-                case 3: return 2;
-                case 4: return 3;
-                case 5: return 8;
-                case 6: return 5;
-                case 7: return 6;
-                case 8: return 7;
-                default: throw new Error("Unknown value for SiamPiece");
-            }
-        } else if (rotation.value === SiamMoveNature.CLOCKWISE.value) {
-            switch (piece) {
-                case 1: return 2;
-                case 2: return 3;
-                case 3: return 4;
-                case 4: return 1;
-                case 5: return 6;
-                case 6: return 7;
-                case 7: return 8;
-                case 8: return 5;
-                default: throw new Error("Unknown value for SiamPiece");
-            }
-        }
-        throw new Error("Cannot rotate in 'FORWARD' direction");
-    }
     private constructor(public readonly value: number) {}
 
+    public getDirection(): Orthogonale {
+        return SiamPiece.getDirection(this.value);
+    }
     public toString(): String {
         switch (this.value) {
             case 0: return "EMPTY";

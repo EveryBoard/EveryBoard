@@ -5,13 +5,16 @@ import { MNode } from 'src/app/jscaip/MNode';
 
 describe('MinimaxTestingRules', () => {
 
+    beforeEach(() => {
+        MNode.NB_NODE_CREATED = 0;
+    });
     it('should be created', () => {
         expect(new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_1)).toBeTruthy();
     });
     it('should be a victory of second player', () => {
-        const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_1);
-        part.choose(MinimaxTestingMove.RIGHT);
-        expect(part.getBoardValue(part.node)).toEqual(Number.MAX_SAFE_INTEGER);
+        const part: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_1);
+        expect(part.choose(MinimaxTestingMove.RIGHT)).toBeTruthy('Move should be legal');
+        expect(part.getBoardValue(part.node.move, part.node.gamePartSlice)).toEqual(Number.MAX_SAFE_INTEGER);
     });
     it('IA should avoid loosing 4 move in a row', () => {
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_1);
@@ -19,17 +22,24 @@ describe('MinimaxTestingRules', () => {
         for (let i = 1; i<5; i++) {
             bestMove = part.node.findBestMoveAndSetDepth(1).move;
             part.choose(bestMove);
-            expect(part.getBoardValue(part.node)).toEqual(i);
+            expect(part.getBoardValue(part.node.move, part.node.gamePartSlice)).toEqual(i);
         }
     });
+    it('IA should not create sister-node to winning-node', () => {
+        const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_1);
+        let bestMove: MinimaxTestingMove = part.node.findBestMoveAndSetDepth(5).move;
+        expect(bestMove).toEqual(MinimaxTestingMove.DOWN);
+        expect(part.node.getHopedValue()).toEqual(Number.MIN_SAFE_INTEGER);
+        expect(MNode.NB_NODE_CREATED).toEqual(10);
+    });
     it('IA(depth=1) should create exactly 2 child at each turn before reaching the border', () => {
-        MNode.NB_NODE_CREATED = 0;
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
         let bestMove: MinimaxTestingMove;
         for (let i=1; i<=3; i++) {
+            MNode.NB_NODE_CREATED = 0;
             bestMove = part.node.findBestMoveAndSetDepth(1).move;
             part.choose(bestMove);
-            expect(MNode.NB_NODE_CREATED).toEqual(1 + (2*i));
+            expect(MNode.NB_NODE_CREATED).toEqual(2);
         }
     });
     it('IA(depth=2) should create not recalculate already created node', () => {
@@ -39,7 +49,7 @@ describe('MinimaxTestingRules', () => {
         let bestMove: MinimaxTestingMove;
         for (let i = 0; i<6; i++) {
             bestMove = part.node.findBestMoveAndSetDepth(2).move;
-            boardValue = part.getBoardValue(part.node);
+            boardValue = part.getBoardValue(part.node.move, part.node.gamePartSlice);
             part.choose(bestMove);
             expect(MNode.NB_NODE_CREATED).toEqual(boardValue);
             MNode.NB_NODE_CREATED = 0;
@@ -59,8 +69,8 @@ describe('MinimaxTestingRules', () => {
         const part = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
         part.node.findBestMoveAndSetDepth(4);
         expect(part.node.countDescendants()).toEqual(28);
-        expect(MNode.NB_NODE_CREATED).toEqual(29);
-        expect(MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT).toEqual(MNode.NB_NODE_CREATED - 1);
+        expect(MNode.NB_NODE_CREATED).toEqual(29, "Only 29 nodes should have been created");
+        expect(MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT).toEqual(MNode.NB_NODE_CREATED - 1, "Only 28 nodes should had their own value calculated");
         expect(MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT).toEqual(MNode.NB_NODE_CREATED - 14);
     });
     it('IA(depth=5) should create exactly 48 child', () => {

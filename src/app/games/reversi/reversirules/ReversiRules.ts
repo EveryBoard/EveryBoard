@@ -168,9 +168,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         if (ReversiRules.VERBOSE) console.log("ReversiRules.isLegal: "+ switched.length + " element(s) switched");
         return {legal: (switched.length !== 0), switched};
     }
-    public getBoardValue(n: ReversiNode): number {
-        const reversiPartSlice: ReversiPartSlice = n.gamePartSlice;
-        const board: number[][] = n.gamePartSlice.getCopiedBoard();
+    public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): number {
+        const board: number[][] = slice.getCopiedBoard();
         let player0Count = 0;
         let player1Count = 0;
         for (let y = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
@@ -187,7 +186,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             }
         }
         const diff: number = player1Count - player0Count;
-        if (ReversiRules.isGameEnded(reversiPartSlice)) {
+        if (ReversiRules.isGameEnded(slice)) {
             if (diff < 0) { // player 0 won
                 return Number.MIN_SAFE_INTEGER;
             }

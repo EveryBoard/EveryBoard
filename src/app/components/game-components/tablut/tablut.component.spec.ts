@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { TablutComponent } from './tablut.component';
 import { INCLUDE_VERBOSE_LINE_IN_TEST, AppModule } from 'src/app/app.module';
@@ -6,11 +6,12 @@ import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrap
 import { RouterTestingModule } from '@angular/router/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { UserService } from 'src/app/services/user/UserService';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { of } from 'rxjs';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { TablutMove } from 'src/app/games/tablut/tablutmove/TablutMove';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
 const activatedRouteStub = {
     snapshot: {
@@ -79,5 +80,15 @@ describe('TablutComponent', () => {
         } finally {
             expect(threw).toBeFalsy("Function threw");
         }
+    });
+    it('should delegate decoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(TablutMove, "decode").and.callThrough();
+        gameComponent.decodeMove(1);
+        expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
+    it('should delegate encoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(TablutMove, "encode").and.callThrough();
+        gameComponent.encodeMove(new TablutMove(new Coord(1, 1), new Coord(2, 1)));
+        expect(moveSpy).toHaveBeenCalledTimes(1);
     });
 });

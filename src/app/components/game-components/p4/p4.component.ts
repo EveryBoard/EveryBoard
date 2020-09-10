@@ -38,9 +38,9 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
         }
     }
     public decodeMove(encodedMove: number): Move {
-        return MoveX.get(encodedMove);
+        return MoveX.decode(encodedMove);
     }
     public encodeMove(move: MoveX): number {
-        return move.x;
+        return MoveX.encode(move);
     }
 }

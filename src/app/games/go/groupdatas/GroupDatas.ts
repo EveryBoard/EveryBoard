@@ -74,12 +74,8 @@ export class GroupDatas {
             this.deadWhiteCoords = GroupDatas.insertAsEntryPoint(this.deadWhiteCoords, coord);
         } else if (color === GoPiece.EMPTY ||
                    color === GoPiece.BLACK_TERRITORY ||
-                   color === GoPiece.WHITE_TERRITORY){
+                   color === GoPiece.WHITE_TERRITORY) {
             this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
-        // } else if (color === GoPiece.BLACK_TERRITORY) { // TODO: decide if it's needed
-        //     this.blackTerritoryCoords = GroupDatas.insertAsEntryPoint(this.blackTerritoryCoords, coord);
-        // } else if (color === GoPiece.WHITE_TERRITORY) {
-        //    this.whiteTerritoryCoords = GroupDatas.insertAsEntryPoint(this.whiteTerritoryCoords, coord);
         } else {
             throw new Error("Cette couleur de pion de Go n'existe pas: " + color.value);
         }

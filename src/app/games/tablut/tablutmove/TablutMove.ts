@@ -6,6 +6,16 @@ import { Direction } from "src/app/jscaip/DIRECTION";
 
 export class TablutMove extends MoveCoordToCoord {
 
+    public static encode(move: TablutMove): number {
+        // encoded as (binarywise) A(x, y) -> B(X, Y)
+        // all value are between 0 and 8, so encoded on four bits
+        // dxdx dydy axax ayay
+        const dx: number = move.coord.x;
+        const dy: number = move.coord.y;
+        const ax: number = move.end.x;
+        const ay: number = move.end.y;
+        return (dx * 4096) + (dy * 256) + (ax * 16) + ay;
+    }
     public static decode(encodedMove: number): TablutMove {
         // encoded as such : dx; dy; ax; ay
         const ay = encodedMove % 16;
@@ -46,17 +56,10 @@ export class TablutMove extends MoveCoordToCoord {
     public toString(): String {
         return "TablutMove(" + this.coord + "->" + this.end + ")";
     }
+    public encode(): number {
+        return TablutMove.encode(this);
+    }
     public decode(encodedMove: number): TablutMove {
         return TablutMove.decode(encodedMove);
-    }
-    public encode(): number {
-        // encoded as (binarywise) A(x, y) -> B(X, Y)
-        // all value are between 0 and 8, so encoded on four bits
-        // dxdx dydy axax ayay
-        const dx: number = this.coord.x;
-        const dy: number = this.coord.y;
-        const ax: number = this.end.x;
-        const ay: number = this.end.y;
-        return (dx * 4096) + (dy * 256) + (ax * 16) + ay;
     }
 }

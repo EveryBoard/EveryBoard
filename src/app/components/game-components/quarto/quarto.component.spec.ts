@@ -68,4 +68,14 @@ describe('QuartoComponent', () => {
         expect(gameComponent.chooseCoord(currentMove.coord.x, currentMove.coord.y)).toBeTruthy(0);
         expect(gameComponent.choosePiece(currentMove.piece)).toBeTruthy(1);
     });
+    it('should delegate decoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(QuartoMove, "decode").and.callThrough();
+        gameComponent.decodeMove(5);
+        expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
+    it('should delegate encoding to move', () => {
+        const moveSpy: jasmine.Spy = spyOn(QuartoMove, "encode").and.callThrough();
+        gameComponent.encodeMove(new QuartoMove(2, 2, 2));
+        expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
 });

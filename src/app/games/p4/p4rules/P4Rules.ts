@@ -44,13 +44,12 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         }
         return 0; // TODO
     }
-    public static getBoardValueFromScratch(n: P4Node): number {
+    public static getBoardValueFromScratch(slice: P4PartSlice): number {
         if (P4Rules.VERBOSE) {
             console.log('getBoardValueFromScratch appellée');
-            P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
+            P4Rules.debugPrintBiArray(slice.getCopiedBoard());
         }
-        const p4Board: P4PartSlice = n.gamePartSlice;
-        const currentBoard: number[][] = p4Board.getCopiedBoard();
+        const currentBoard: number[][] = slice.getCopiedBoard();
         let score = 0;
         let tmpScore = 0;
         let y: number;
@@ -426,7 +425,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         }
         return retour;
     }
-    public static getBoardValue(n: P4Node): number {
+    public static getBoardValue(slice: P4PartSlice): number {
         /* if (n.getMother() == null) {
           return P4Rules.getBoardValueFromScratch(n);
         } else {
@@ -435,9 +434,9 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         */
         if (P4Rules.VERBOSE) {
             console.log('P4Rules._getBoardValue called');
-            P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
+            P4Rules.debugPrintBiArray(slice.getCopiedBoard());
         }
-        return P4Rules.getBoardValueFromScratch(n);
+        return P4Rules.getBoardValueFromScratch(slice);
     }
     // instance methods
 
@@ -470,11 +469,11 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     public getListMoves(n: P4Node): MGPMap<MoveX, P4PartSlice> {
         return P4Rules.getListMoves(n);
     }
-    public getBoardValue(n: P4Node): number {
+    public getBoardValue(move: MoveX, slice: P4PartSlice): number {
         if (P4Rules.VERBOSE) {
             console.log('P4Rules instance methods getBoardValue called');
-            P4Rules.debugPrintBiArray(n.gamePartSlice.getCopiedBoard());
+            P4Rules.debugPrintBiArray(slice.getCopiedBoard());
         }
-        return P4Rules.getBoardValue(n);
+        return P4Rules.getBoardValue(slice);
     }
 }

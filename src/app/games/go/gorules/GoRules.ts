@@ -377,12 +377,12 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         resultingSlice = GoRules.markTerritoryAndCount(resultingSlice);
         return { resultingMove: legalMove, resultingSlice };
     }
-    public getBoardValue(n: GoNode): number {
+    public getBoardValue(move: GoMove, slice: GoPartSlice): number {
         const LOCAL_VERBOSE: boolean = false;
 
         if (GoRules.VERBOSE || LOCAL_VERBOSE) console.log('GoRules.getBoardValue');
 
-        const goPartSlice: GoPartSlice = GoRules.markTerritoryAndCount(n.gamePartSlice);
+        const goPartSlice: GoPartSlice = GoRules.markTerritoryAndCount(slice);
 
         const goScore: number[] = goPartSlice.getCapturedCopy();
         // TODO: add counted territory here
