@@ -27,6 +27,9 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
 
     public highlightNames: string[] = ["upward_highlight.svg", "downward_highlight.svg"];
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     public getCoordinate(x: number, y: number) : string {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
         else return this.getUpwardCoordinate(x, y);
@@ -87,18 +90,18 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
     }
     public async onClick(x: number, y: number) {
         const clickedCoord: Coord = new Coord(x, y);
-        if (SaharaComponent.VERBOSE) console.log("Clicked on "+clickedCoord.toString());
+        SaharaComponent.display(SaharaComponent.VERBOSE, "Clicked on "+clickedCoord.toString());
         if (-1 < this.chosenCoord.x) {
             try {
                 const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
                 const moveResult: boolean = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
                 if (moveResult === true) {
-                    if (SaharaComponent.VERBOSE) console.log("Move is legal");
+                    SaharaComponent.display(SaharaComponent.VERBOSE, "Move is legal");
                 } else {
-                    if (SaharaComponent.VERBOSE) console.log("Move is illegal");
+                    SaharaComponent.display(SaharaComponent.VERBOSE, "Move is illegal");
                 }
             } catch (error) {
-                if (SaharaComponent.VERBOSE) console.log("That move can't be legal because: " + error.message);
+                SaharaComponent.display(SaharaComponent.VERBOSE, "That move can't be legal because: " + error.message);
             }
             this.chosenCoord = new Coord(-2, -2);
         }

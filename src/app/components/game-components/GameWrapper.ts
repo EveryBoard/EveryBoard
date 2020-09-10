@@ -40,20 +40,20 @@ export abstract class GameWrapper {
 
     public endGame: boolean = false;
 
+    public static display(verbose: boolean, message: string) {
+        if (verbose) console.log(message);
+    }
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
                 protected router: Router,
                 protected userService: UserService,
                 protected authenticationService: AuthenticationService,
                 ) {
-        if (GameWrapper.VERBOSE) {
-            console.log('GameWrapper.constructed: ' + (this.gameIncluder!=null));
-        }
+        GameWrapper.display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
-        if (GameWrapper.VERBOSE) {
-            console.log('GameWrapper.getMatchingComponent: '+(this.gameIncluder!=null));
-        }
+        GameWrapper.display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent: '+(this.gameIncluder!=null));
+
         switch (compoString) {
             case 'Awale':
                 return AwaleComponent;
@@ -80,9 +80,8 @@ export abstract class GameWrapper {
         }
     }
     protected afterGameIncluderViewInit() {
-        if (GameWrapper.VERBOSE) {
-            console.log('GameWrapper.afterGameIncluderViewInit');
-        }
+        GameWrapper.display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
+
         this.createGameComponent();
         // this.resetGameDatas();
         // should be some kind of session-scope
@@ -91,7 +90,7 @@ export abstract class GameWrapper {
         this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
     }
     protected createGameComponent() {
-        if (GameWrapper.VERBOSE) console.log('GameWrapper.createGameComponent: '+(this.gameIncluder!=null));
+        GameWrapper.display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent: '+(this.gameIncluder!=null));
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
         const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
@@ -109,27 +108,27 @@ export abstract class GameWrapper {
     public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean> => {
         const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
-            if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log('GameWrapper.receiveChildData says: not your turn');
+            GameWrapper.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
             return false;
         }
         if (this.gameComponent.rules.node.isEndGame()) {
-            if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log('GameWrapper.receiveChildData says: part is finished');
+            GameWrapper.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: part is finished');
             return false;
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal === false) {
-            if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log('GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
+            GameWrapper.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
             return false;
         }
         await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
-        if (GameWrapper.VERBOSE || LOCAL_VERBOSE) console.log("GameWrapper.receiveChildData says: valid move legal");
+        GameWrapper.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
         return true;
     }
     public abstract async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     public isPlayerTurn() {
         const indexPlayer = this.gameComponent.rules.node.gamePartSlice.turn % 2;
-        if (GameWrapper.VERBOSE) console.log("It is player "+ indexPlayer+ "'s turn ("+this.players[indexPlayer]+") and you are "+this.userName)
+        GameWrapper.display(GameWrapper.VERBOSE, "It is player " + indexPlayer + "'s turn (" + this.players[indexPlayer] + ") and you are " + this.userName)
         return this.players[indexPlayer] === this.userName;
     }
 }

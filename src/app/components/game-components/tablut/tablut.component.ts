@@ -27,6 +27,9 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public chosen: Coord = new Coord(-1, -1);
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     public updateBoard() {
         const slice: TablutPartSlice = this.rules.node.gamePartSlice;
         const move: TablutMove = this.rules.node.move;
@@ -40,9 +43,8 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         this.cancelMove();
     }
     public async onClick(x: number, y: number): Promise<boolean> {
-        if (TablutComponent.VERBOSE) {
-            console.log("TablutComponent.onClick(" + x + ", " + y + ")");
-        }
+        TablutComponent.display(TablutComponent.VERBOSE, "TablutComponent.onClick(" + x + ", " + y + ")");
+
         let success: boolean;
         if (this.chosen.x === -1) {
             success = this.choosePiece(x, y);
@@ -55,7 +57,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         return success;
     }
     private async chooseDestination(x: number, y: number): Promise<boolean> {
-        if (TablutComponent.VERBOSE) console.log('TablutComponent.chooseDestination');
+        TablutComponent.display(TablutComponent.VERBOSE, 'TablutComponent.chooseDestination');
 
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
@@ -69,24 +71,24 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     }
     public choosePiece(x: number, y: number): boolean {
 
-        if (TablutComponent.VERBOSE) console.log('TablutComponent.choosePiece');
+        TablutComponent.display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
         if (this.rules.node.isEndGame()) {
-            if (TablutComponent.VERBOSE) console.log('la partie est finie');
+            TablutComponent.display(TablutComponent.VERBOSE, 'la partie est finie');
             return false;
         } else { // TODO: action double non ?
-            if (TablutComponent.VERBOSE) console.log('la partie est en court');
+            TablutComponent.display(TablutComponent.VERBOSE, 'la partie est en court');
         }
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
-            if (TablutComponent.VERBOSE) console.log('not a piece of the current player');
+            TablutComponent.display(TablutComponent.VERBOSE, 'not a piece of the current player');
             return false;
         }
 
         this.showSelectedPiece(x, y);
-        if (TablutComponent.VERBOSE) console.log('selected piece = (' + x + ', ' + y + ')');
+        TablutComponent.display(TablutComponent.VERBOSE, 'selected piece = (' + x + ', ' + y + ')');
         return true;
     }
     public pieceBelongToCurrentPlayer(x: number, y: number): number { // TODO: see that verification is done and refactor this shit

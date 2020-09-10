@@ -24,27 +24,26 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     public visible: boolean = true;
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     constructor(private chatService: ChatService,
                 private authenticationService: AuthenticationService) {
-        if (ChatComponent.VERBOSE) {
-            console.log("ChatComponent constructor");
-        }
+        ChatComponent.display(ChatComponent.VERBOSE, "ChatComponent constructor");
     }
     public ngOnInit() {
-        if (ChatComponent.VERBOSE) {
-            console.log('ChatComponent.ngOnInit');
-        }
+        ChatComponent.display(ChatComponent.VERBOSE, 'ChatComponent.ngOnInit');
 
         if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
 
         this.authenticationService.getJoueurObs()
             .subscribe(joueur => {
                 if (this.isConnectedUser(joueur)) {
-                    if (ChatComponent.VERBOSE) console.log(JSON.stringify(joueur) + " just connected");
+                    ChatComponent.display(ChatComponent.VERBOSE, JSON.stringify(joueur) + " just connected");
                     this.userName = joueur.pseudo;
                     this.loadChatContent();
                 } else {
-                    if (ChatComponent.VERBOSE) console.log("No User Logged");
+                    ChatComponent.display(ChatComponent.VERBOSE, "No User Logged");
                     this.showDisconnectedChat();
                 }
             });
@@ -56,9 +55,8 @@ export class ChatComponent implements OnInit, OnDestroy {
                joueur.pseudo != 'undefined';
     }
     public loadChatContent() {
-        if (ChatComponent.VERBOSE) {
-            console.log('User \'' + this.userName + '\' logged, loading chat content');
-        }
+        ChatComponent.display(ChatComponent.VERBOSE, 'User \'' + this.userName + '\' logged, loading chat content');
+
         this.chatService.startObserving(this.chatId, this.updateMessages);
     }
     public updateMessages = (iChatId: IChatId) => {
@@ -77,9 +75,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     public sendMessage() {
         if (this.userName === '') {
-            if (ChatComponent.VERBOSE) {
-                console.log('je t\'envoie un toast car t\'es pas connecté donc tu te tait!');
-            }
+            ChatComponent.display(ChatComponent.VERBOSE, 'je t\'envoie un toast car t\'es pas connecté donc tu te tait!');
         }
         this.chatService.sendMessage(this.userName, this.turn, this.userMessage);
         this.userMessage = '';

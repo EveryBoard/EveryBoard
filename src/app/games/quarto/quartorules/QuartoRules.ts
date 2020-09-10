@@ -22,7 +22,6 @@ class CaseSensible {
         this.x = x;
         this.y = y;
     }
-
     addCritere(c: Critere): boolean {
         // rajoute le crit�re au cas où plusieurs lignes contiennent cette case sensible (de 1 à 3)
         // sans doublons
@@ -38,7 +37,6 @@ class CaseSensible {
         this.criteres[-i - 1] = c;
         return true;
     }
-
     indexOf(c: Critere): number {
         // TODO Critere.contains
         // voit si ce crit�re est d�jà contenu dans la liste
@@ -55,7 +53,6 @@ class CaseSensible {
         }
         return 4; // n'est pas contenu et il n'y as plus de place
     }
-
 }
 
 class Critere {
@@ -73,14 +70,12 @@ class Critere {
         this.subCritere[2] = ((bCase & 2) === 2) ? true : false;
         this.subCritere[3] = ((bCase & 1) === 1) ? true : false;
     }
-
     setSubCrit(index: number, value: boolean): boolean {
         this.subCritere[index] = value;
         return true; // TODO v�rifier si j'ai un int�rêt à garder ceci
         // pour l'instant ça me permet de pouvoir v�rifier si il n'y a pas �crasement ou donn�e
         // mais je crois que c'est impossible vu l'usage que je compte en faire
     }
-
     equals(o: any): boolean {
         if (!(o instanceof Critere)) {
             return false;
@@ -97,7 +92,6 @@ class Critere {
 
         return true;
     }
-
     mergeWith(c: Critere): boolean {
         // merge avec l'autre critere
         // ce qu'ils signifie qu'on prendra ce qu'ils ont en commun
@@ -120,16 +114,13 @@ class Critere {
 
         return (nonNull > 0);
     }
-
     mergeWithNumber(ic: number): boolean {
         const c: Critere = new Critere(ic);
         return this.mergeWith(c);
     }
-
     mergeWithQE(qe: QuartoEnum): boolean {
         return this.mergeWithNumber(qe);
     }
-
     isAllNull(): boolean {
         let i = 0;
         do {
@@ -140,7 +131,6 @@ class Critere {
         } while (i < 4);
         return true;
     }
-
     match(c: Critere): boolean {
         // return true if there is at least one sub-critere in common between the two
         let i = 0;
@@ -152,22 +142,18 @@ class Critere {
         } while (i < 4);
         return false;
     }
-
     matchQE(qe: QuartoEnum): boolean {
         return this.match(new Critere(qe));
     }
-
     matchInt(c: number): boolean {
         return this.match(new Critere(c));
     }
-
     toString(): string {
         return 'Critere{' + QuartoRules.printArray(
             this.subCritere.map( b => {
                 return (b === true) ? 1 : 0 ;
             })) + '}';
     }
-
 }
 abstract class QuartoNode extends MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus> {}
 
@@ -205,15 +191,18 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     public node: MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>;
     // enum boolean {TRUE, FALSE, NULL}
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     private static isOccupied(qcase: number): boolean {
         return (qcase !== QuartoEnum.UNOCCUPIED);
     }
-    public static printArray(array: number[]) {
-        console.log('[');
+    public static printArray(array: number[]): string {
+        let result: string = '[';
         for (const i of array) {
-            console.log(i + ' ');
+            result += i + ' ';
         }
-        console.log(']');
+        return result + ']';
     }
     private static isLegal(move: QuartoMove, quartoPartSlice: QuartoPartSlice): number {
         /* pieceInHand is the one to be placed
@@ -225,21 +214,20 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         const board: number[][] = quartoPartSlice.getCopiedBoard();
         const pieceInHand: number = quartoPartSlice.pieceInHand;
         if (chosenPiece < 0) {
-            // nombre trop bas, ce n'est pas une pi�ce
+            // nombre trop bas, ce n'est pas une pièce
             return QuartoRules.INVALID_MOVE;
         }
         if (chosenPiece > 16) {
-            if (QuartoRules.VERBOSE) { console.log(); }
-            // nombre trop grand, ce n'est pas une pi�ce
+            // nombre trop grand, ce n'est pas une pièce
             return QuartoRules.INVALID_MOVE;
         }
         if (QuartoRules.isOccupied(board[y][x])) {
-            // on ne joue pas sur une case occup�e
+            // on ne joue pas sur une case occupée
             return QuartoRules.INVALID_MOVE;
         }
         if (chosenPiece === 16) {
             if (quartoPartSlice.turn === 15) {
-                // on doit donner une pi�ce ! sauf au dernier tour
+                // on doit donner une pièce ! sauf au dernier tour
                 return QuartoRules.VALID_MOVE;
             }
             return QuartoRules.INVALID_MOVE;
@@ -365,46 +353,30 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         // si la case est occupée
                         if (commonCrit == null) {
                             commonCrit = new Critere(c);
-                            if (QuartoRules.VERBOSE) {
-                                console.log('setcase vide en (' + cx + ', ' + cy + ') = ' + c);
-                                console.log(' = ' + commonCrit.toString() + '\n');
-                            }
+                            QuartoRules.display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c
+                                                                     + ' = ' + commonCrit.toString() + '\n');
                         } else {
                             commonCrit.mergeWithNumber(c);
-                            if (QuartoRules.VERBOSE) {
-                                console.log('merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString());
-                                console.log(' = ' + commonCrit.toString() + '\n');
-                            }
+                            QuartoRules.display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');
                         }
                     }
                 }
-                if (QuartoRules.VERBOSE) {
-                    console.log(' ' + line[0] + line[1] + line[2] + line[3] +
-                        'contient ' + nbCasesVides + ' case vides au tour ' + slice.turn);
-                }
+                QuartoRules.display(QuartoRules.VERBOSE, ' ' + line[0] + line[1] + line[2] + line[3] +
+                                                         'contient ' + nbCasesVides + ' case vides au tour ' + slice.turn);
 
-
-                // on a maintenant trait� l'entiert� de la ligne
+                // on a maintenant traité l'entierté de la ligne
                 // on en fait le bilan
                 if ((commonCrit !== null) && (!commonCrit.isAllNull())) {
                     // NEW
                     // Cette ligne n'est pas nulle et elle a un crit�re en commun entre toutes ses pi�ces
                     if (nbCasesVides === 0) {
-                        if (QuartoRules.VERBOSE) {
-                            console.log('Victoire! ' + commonCrit.toString() + ' at line' + QuartoRules.printArray(line));
-                            console.log(QuartoRules.printArray(board[0]));
-                            console.log(QuartoRules.printArray(board[1]));
-                            console.log(QuartoRules.printArray(board[2]));
-                            console.log(QuartoRules.printArray(board[3]));
-                        }
                         return (slice.turn % 2 === 0) ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER; // max or min
                     } else if (nbCasesVides === 1) {
                         // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouv� et assign�
                         // est dans ce cas bel et bien une case sensible
                         if (commonCrit.matchInt(slice.pieceInHand)) {
-                            if (QuartoRules.VERBOSE) {
-                                console.log('Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
-                            }
+                            QuartoRules.display(QuartoRules.VERBOSE, 'Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
+
                             preVictory = true;
                             score = (slice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;
                         }

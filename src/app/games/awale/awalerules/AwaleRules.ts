@@ -17,6 +17,9 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
     public static VERBOSE: boolean = false;
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     constructor() {
         super(false);
         this.node = MNode.getFirstNode(
@@ -25,7 +28,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         );
     }
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): { resultingMove: AwaleMove; resultingSlice: AwalePartSlice; } {
-        if (AwaleRules.VERBOSE) console.log("applyLegalMove");
+        AwaleRules.display(AwaleRules.VERBOSE, "applyLegalMove");
         const turn: number = slice.turn;
         const player = turn % 2;
         const ennemy = (turn + 1) % 2;
@@ -75,18 +78,15 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         const ennemi: number = (turn + 1) % 2;
 
         if (y !== player) {
-            if (AwaleRules.VERBOSE) console.log('isLegal: on ne distribue pas la maison des autres!!');
             return ILLEGAL; // on ne distribue que ses maisons
         }
         const x: number = move.coord.x;
         if (resultingBoard[y][x] === 0) {
-            if (AwaleRules.VERBOSE) console.log('isLegal: on ne distribue pas un de ses maisons vides!!');
             return ILLEGAL; // on ne distribue pas une case vide
         }
 
         if (!AwaleRules.doesDistribute(x, y, resultingBoard) && AwaleRules.isStarving(ennemi, resultingBoard) ) {
             // you can distribute but you don't, illegal move
-            if (AwaleRules.VERBOSE) console.log('isLegal: you can distribute but you don\'t, illegal move');
             return ILLEGAL;
         }
         // arrived here you can distribute this house
@@ -95,7 +95,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         // of the last stone
         const landingCamp: number = lastCase[1];
         if (landingCamp === player) {
-            if (AwaleRules.VERBOSE) console.log('isLegal: mouvement légal terminée dans son propre camps');
             // on termine la distribution dans son propre camp, rien d'autre à vérifier
             return {legal: true, captured: [0, 0], resultingBoard};
         }
@@ -105,10 +104,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         if (AwaleRules.isStarving(ennemi, resultingBoard)) {
             if (captured[player] > 0) {
                 // if the distribution would capture all seeds
-                if (AwaleRules.VERBOSE) {
-                    console.log('\nisLegal(' + move.toString() + ', ' + turn + ', ' + AwaleRules.printInLine(resultingBoard) + ')' +
-                                ': mouvement légal mais capture annulée pour cause de sécheresse');
-                }
                 // the move is legal but the capture is forbidden and cancelled
                 resultingBoard = boardBeforeCapture; // undo the capturing
                 captured = [0, 0];
@@ -116,14 +111,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         if (AwaleRules.isStarving(player, resultingBoard) && !AwaleRules.canDistribute(ennemi, resultingBoard)) {
             // if the player distributed his last seeds and the opponent could not give him seeds
-            if (AwaleRules.VERBOSE) {
-                console.log('\nisLegal(' + move.toString() + ', ' + turn + ', ' + AwaleRules.printInLine(resultingBoard) + ')' +
-                            ': You just gave you last seed on the opponent could not give it back to you');
-            }
             captured[ennemi] += AwaleRules.mansoon(ennemi, resultingBoard);
         }
-
-        if (AwaleRules.VERBOSE) console.log("isLegal: true");
         return {legal: true, captured, resultingBoard};
     }
     private static printInLine(board: number[][]): string {
@@ -155,30 +144,19 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         return false;
     }
     private static isStarving(player: number, board: number[][]): boolean {
-        const LOCAL_VERBOSE: boolean = false;
-        const MUTE = true;
-
-        if (!MUTE && (AwaleRules.VERBOSE || LOCAL_VERBOSE)) {
-            console.log('isStarving(' + player + ', ' + AwaleRules.printInLine(board) + ')=');
-        }
         let i = 0;
         do {
             if (board[player][i++] > 0) {
-                if (!MUTE && (AwaleRules.VERBOSE || LOCAL_VERBOSE)) console.log('not starving');
                 return false; // found some food there, so not starving
             }
         } while (i < 6);
-        if (!MUTE && (AwaleRules.VERBOSE || LOCAL_VERBOSE)) console.log('starving');
         return true;
     }
     private static distribute(x: number, y: number, board: number[][]): number[] {
         // just apply's the move on the board (the distribution part)
         // does not make the capture nor verify the legality of the move
         // return (x, y) of the last case the move got down
-        const MUTE = true;
-        if (!MUTE && AwaleRules.VERBOSE) {
-            console.log('distribute(' + x + ', ' + y + ', ' + AwaleRules.printInLine(board) + ')=');
-        }
+
         let ix: number, iy: number;
         ix = x;
         iy = y; // iy et ix sont les cases initiales
@@ -206,10 +184,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
                 inHand--; // on dépose dans cette case une pierre qu'on a en main
             }
         }
-        if (!MUTE && AwaleRules.VERBOSE) {
-            console.log('(' + x + ', ' + y + ')');
-        }
-        return [x, y] ;
+
+        return [x, y]; // TODO: return a Coord
     }
     private static capture(x: number, y: number, player: number, board: number[][]): number {
         /* only called if y and player are not equal
@@ -244,8 +220,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     }
     public getListMoves(n: AwaleNode): MGPMap<AwaleMove, AwalePartSlice> {
         AwaleRules.GET_LIST_MOVES_CALL_COUNT++;
-        const LOCAL_VERBOSE: boolean = false ;
-        if (AwaleRules.VERBOSE || LOCAL_VERBOSE) console.log('getListMoves');
 
         const choices: MGPMap<AwaleMove, AwalePartSlice> = new MGPMap<AwaleMove, AwalePartSlice>();
         const oldSlice: AwalePartSlice = n.gamePartSlice;
@@ -257,15 +231,12 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         do {
             // for each house that might be playable
 
-            // if (AwaleRules.VERBOSE || LOCAL_VERBOSE) Console.log('trying to find one awale move-partSlice');
             if (n.gamePartSlice.getBoardByXY(x, player) !== 0) {
                 // if the house is not empty
 
-                // if (AwaleRules.VERBOSE || LOCAL_VERBOSE) Console.log('non empty case at (' + x + ', ' + player + ')');
                 newMove = new AwaleMove(x, player);
                 const legality: AwaleLegalityStatus = this.isLegal(newMove, oldSlice); // see if the move is legal
 
-                // if (AwaleRules.VERBOSE || LOCAL_VERBOSE) Console.log('legality is ' + moveResult);
                 if (legality.legal) {
                     // if the move is legal, we addPart it to the listMoves
                     const capturedCopy: number[] = oldSlice.getCapturedCopy();
@@ -279,19 +250,10 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             }
             x++;
         } while (x < 6);
-
-        if (AwaleRules.VERBOSE || LOCAL_VERBOSE) {
-            console.log(n + ' has ' + choices.size() + ' choices');
-        }
         return choices;
     }
     public getBoardValue(move: AwaleMove, slice: AwalePartSlice): number {
         AwaleRules.GET_BOARD_VALUE_CALL_COUNT++;
-        const LOCAL_VERBOSE: boolean = false;
-
-        if (AwaleRules.VERBOSE || LOCAL_VERBOSE) {
-            console.log('GBV..');
-        }
 
         const player: number = slice.turn % 2;
         const ennemy = (player + 1) % 2;

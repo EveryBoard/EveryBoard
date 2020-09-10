@@ -27,18 +27,20 @@ export class GameService {
 
     private followedPartSub: Subscription;
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     constructor(private partDao: PartDAO,
                 private activesPartsService: ActivesPartsService,
                 private joinerService: JoinerService,
                 private chatService: ChatService) {
-        if (GameService.VERBOSE) console.log("GameService.constructor");
+        GameService.display(GameService.VERBOSE, "GameService.constructor");
     }
     // on Server Component
 
     protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<String> {
-        if (GameService.VERBOSE) {
-            console.log('GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer);
-        }
+        GameService.display(GameService.VERBOSE, 'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer);
+
         const newPart: ICurrentPart = {
             listMoves: [],
             playerZero: creatorName,
@@ -50,9 +52,8 @@ export class GameService {
         return this.partDao.create(newPart);
     }
     protected createChat(chatId: string): Promise<void> {
-        if (GameService.VERBOSE) {
-            console.log('GameService.createChat(' + chatId + ')');
-        }
+        GameService.display(GameService.VERBOSE, 'GameService.createChat(' + chatId + ')');
+
         const newChat: IChat = {
             status: 'not implemented',
             messages: []
@@ -60,9 +61,8 @@ export class GameService {
         return this.chatService.set(chatId, newChat);
     }
     public async createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
-        if (GameService.VERBOSE) {
-            console.log('GameService.createGame(' + creatorName + ', ' + typeGame + ')');
-        }
+        GameService.display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
+
         const gameId: string = await this.createPart(creatorName, typeGame, chosenPlayer) as string;
         await this.joinerService.createInitialJoiner(creatorName, gameId);
         await this.createChat(gameId); // TODO asynchronous
@@ -70,24 +70,21 @@ export class GameService {
     }
     public getActivesPartsObs(): Observable<ICurrentPartId[]> {
         // TODO: désabonnements de sûreté aux autres abonnements activesParts
-        if (GameService.VERBOSE) {
-            console.log('GameService.getActivesPartsObs');
-        }
+        GameService.display(GameService.VERBOSE, 'GameService.getActivesPartsObs');
+
         this.activesPartsService.startObserving();
         return this.activesPartsService.activesPartsObs;
     }
     public unSubFromActivesPartsObs() {
-        if (GameService.VERBOSE) {
-            console.log('GameService.unSubFromActivesPartsObs()');
-        }
+        GameService.display(GameService.VERBOSE, 'GameService.unSubFromActivesPartsObs()');
+
         this.activesPartsService.stopObserving();
     }
     // on Part Creation Component
 
     private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
-        if (GameService.VERBOSE) {
-            console.log('GameService.startGameWithConfig(' + partId + ", " + JSON.stringify(joiner));
-        }
+        GameService.display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ", " + JSON.stringify(joiner));
+
         let firstPlayer = joiner.creator;
         let secondPlayer = joiner.chosenPlayer;
         if (joiner.firstPlayer === '2' && (Math.random() < 0.5)) {
@@ -108,18 +105,16 @@ export class GameService {
         return this.partDao.update(partId, modification);
     }
     public async deletePart(partId: string): Promise<void> {
-        if (GameService.VERBOSE) {
-            console.log('GameService.deletePart(' + partId + ')');
-        }
+        GameService.display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
+
         if (partId == null) {
             throw new Error("Can't delete id for partId = null");
         }
         return this.partDao.delete(partId);
     }
     public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {
-        if (GameService.VERBOSE) {
-            console.log('GameService.acceptConfig(' + partId + ", " + JSON.stringify(joiner) + ') + tmp partStatus: ' + joiner.partStatus);
-        }
+        GameService.display(GameService.VERBOSE, 'GameService.acceptConfig(' + partId + ", " + JSON.stringify(joiner) + ') + tmp partStatus: ' + joiner.partStatus);
+
         await this.joinerService.acceptConfig();
         return this.startGameWithConfig(partId, joiner);
     }
@@ -127,9 +122,8 @@ export class GameService {
 
     public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void) {
         if (this.followedPartId == null) {
-            if (GameService.VERBOSE) {
-                console.log('[start watching part ' + partId);
-            }
+            GameService.display(GameService.VERBOSE, '[start watching part ' + partId);
+
             this.followedPartId = partId;
             this.followedPartObs = this.partDao.getObsById(partId);
             this.followedPartSub = this.followedPartObs
@@ -159,7 +153,7 @@ export class GameService {
         });
     }
     public notifyVictory(partId: string, winner: string): Promise<void> {
-        if (GameService.VERBOSE) console.log("GameService.notifyVictory(" + partId + ", " + winner + ")");
+        GameService.display(GameService.VERBOSE, "GameService.notifyVictory(" + partId + ", " + winner + ")");
         return this.partDao.update(partId, {
             winner,
             result: 3,
@@ -171,7 +165,7 @@ export class GameService {
         return this.partDao.update(partId, {request: req});
     }
     public async acceptRematch(part: ICurrentPartId): Promise<void> {
-        if (GameService.VERBOSE) console.log("GameService.acceptRematch(" + JSON.stringify(part) + ")");
+        GameService.display(GameService.VERBOSE, "GameService.acceptRematch(" + JSON.stringify(part) + ")");
 
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
         const rematchId: string = await this.createGame(iJoiner.creator, part.doc.typeGame, iJoiner.chosenPlayer);
@@ -204,7 +198,7 @@ export class GameService {
         return this.partDao.update(part.id, {request: req});
     }
     public async updateDBBoard(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number, partId: string): Promise<void> {
-        if (GameService.VERBOSE) console.log("GameService.updateDBBoard(" + encodedMove + ", " + scorePlayerZero + ", " + scorePlayerOne + ", " + partId + ")");
+        GameService.display(GameService.VERBOSE, "GameService.updateDBBoard(" + encodedMove + ", " + scorePlayerZero + ", " + scorePlayerOne + ", " + partId + ")");
 
         const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
@@ -216,19 +210,17 @@ export class GameService {
             scorePlayerZero,
             scorePlayerOne,
         });
-        if (GameService.VERBOSE) console.log("GameService.updateDBBoard: over");
+        GameService.display(GameService.VERBOSE, "GameService.updateDBBoard: over");
         return Promise.resolve();
     }
     public stopObserving() {
-        if (GameService.VERBOSE) {
-            console.log('GameService.stopObserving();');
-        }
+        GameService.display(GameService.VERBOSE, 'GameService.stopObserving();');
+
         if (this.followedPartId == null) {
-            console.log('!!!we already stop watching doc');
+            console.log('!!!we already stop watching doc'); // TODO: Remove or make an alert
         } else {
-            if (GameService.VERBOSE) {
-                console.log('stopped watching joiner ' + this.followedPartId + ']');
-            }
+            GameService.display(GameService.VERBOSE, 'stopped watching joiner ' + this.followedPartId + ']');
+
             this.followedPartId = null;
             this.followedPartSub.unsubscribe();
             this.followedPartObs = null;

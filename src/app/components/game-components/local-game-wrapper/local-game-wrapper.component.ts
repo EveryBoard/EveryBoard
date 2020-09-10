@@ -26,6 +26,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     public botTimeOut: number = 1000; // this.aiDepth * 500;
 
+    public static display(verbose: boolean, message: string) {
+        if (verbose) console.log(message);
+    }
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 router: Router,
@@ -33,7 +36,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 authenticationService: AuthenticationService,
                 private cdr: ChangeDetectorRef) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
-        if (LocalGameWrapperComponent.VERBOSE) console.log("LocalGameWrapper.constructor");
+        LocalGameWrapperComponent.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper.constructor");
     }
     public ngAfterViewInit() {
         setTimeout(() => {
@@ -42,7 +45,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 if (this.isAI(this.players[0]) === false) this.players[0] = user.pseudo;
                 if (this.isAI(this.players[1]) === false) this.players[1] = user.pseudo;
             });
-            if (LocalGameWrapperComponent.VERBOSE) console.log("LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
+            LocalGameWrapperComponent.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
             this.afterGameIncluderViewInit();
             this.cdr.detectChanges();
         }, 1);
@@ -52,9 +55,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return player.substr(0, 3) === "bot";
     }
     public async onValidUserMove(move: Move): Promise<void> {
-        if (LocalGameWrapperComponent.VERBOSE) {
-            console.log('LocalGameWrapperComponent.onValidUserMove');
-        }
+        LocalGameWrapperComponent.display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onValidUserMove');
+
         this.gameComponent.rules.choose(move);
         this.updateBoard();
         this.proposeAIToPlay();

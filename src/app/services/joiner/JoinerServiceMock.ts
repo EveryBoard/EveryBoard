@@ -1,5 +1,6 @@
 import { IJoinerId } from "src/app/domain/ijoiner";
 import { JoinerDAO } from "src/app/dao/joiner/JoinerDAO";
+import { JoinerService } from "./JoinerService";
 
 export class JoinerServiceMock {
 
@@ -7,21 +8,24 @@ export class JoinerServiceMock {
 
     public static emittedsJoiner: IJoinerId[];
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     public constructor(private joinerDAO: JoinerDAO) {
-        if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.constructor");
+        JoinerServiceMock.display(JoinerServiceMock.VERBOSE, "JoinerServiceMock.constructor");
     }
     public joinGame(): Promise<void> {
-        if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.joinGame");
+        JoinerServiceMock.display(JoinerServiceMock.VERBOSE, "JoinerServiceMock.joinGame");
         return new Promise(resolve => { resolve(); });
     }
     public stopObserving() {
-        if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.stopObserving");
+        JoinerServiceMock.display(JoinerServiceMock.VERBOSE, "JoinerServiceMock.stopObserving");
         // this.emittedsJoiner = [];
         // TODO stop all timeout
         return;
     }
     public startObserving(jId: string, callback: (iJ: IJoinerId) => void) {
-        if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.startObserving");
+        JoinerServiceMock.display(JoinerServiceMock.VERBOSE, "JoinerServiceMock.startObserving");
         let i: number = 0;
         while (i<JoinerServiceMock.emittedsJoiner.length) {
             setTimeout(
@@ -33,11 +37,11 @@ export class JoinerServiceMock {
         }
     }
     public async cancelJoining(): Promise<void> {
-        if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.cancelJoining");
+        JoinerServiceMock.display(JoinerServiceMock.VERBOSE, "JoinerServiceMock.cancelJoining");
         return new Promise(resolve => { resolve(); }); // DO REAL MOCK
     }
     public readJoinerById(partId: string) {
-        if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.readJoinerById");
+        JoinerServiceMock.display(JoinerServiceMock.VERBOSE, "JoinerServiceMock.readJoinerById");
         return new Promise(resolve => {
             resolve({candidatesNames: ["uniqueCandidate"],
                 creator: "creator",
@@ -51,15 +55,15 @@ export class JoinerServiceMock {
         });
     }
     public async setChosenPlayer(pseudo: string): Promise<void> {
-        if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.setChosenPlayer");
+        JoinerServiceMock.display(JoinerServiceMock.VERBOSE, "JoinerServiceMock.setChosenPlayer");
         return new Promise(resolve => { resolve(); }); // DO REAL MOCK
     }
     public async deleteJoiner(): Promise<void> {
-        if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.deleteJoiner");
+        JoinerServiceMock.display(JoinerServiceMock.VERBOSE, "JoinerServiceMock.deleteJoiner");
         return new Promise(resolve => { resolve(); }); // DO REAL MOCK
     }
     public async proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
-        if (JoinerServiceMock.VERBOSE) console.log("JoinerServiceMock.proposeConfig");
+        JoinerServiceMock.display(JoinerServiceMock.VERBOSE, "JoinerServiceMock.proposeConfig");
         return new Promise(resolve => { resolve(); }); // DO REAL MOCK
     }
 };

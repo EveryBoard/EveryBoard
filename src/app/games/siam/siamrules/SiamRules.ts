@@ -19,6 +19,9 @@ export class SiamRules extends _SiamRules {
 
     private static readonly ILLEGAL: SiamLegalityStatus = {legal: false, resultingBoard: null};
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     constructor() {
         super(true); // TODO: ALL RULES ARE NOW PEARED
         this.node = MNode.getFirstNode(
@@ -37,26 +40,23 @@ export class SiamRules extends _SiamRules {
         }
     }
     public isLegal(move: SiamMove, slice: SiamPartSlice): SiamLegalityStatus {
-        if (SiamRules.VERBOSE) {
-            console.log("SiamRules.isLegal");
-            console.log(move.toString());
-            console.log(slice.board)
-        }
+        SiamRules.display(SiamRules.VERBOSE, { SiamRules_isLegal: { move, slice }});
+
         if (move.isForward()) {
             let movingPiece: number;
             if (SiamMove.isInsertion(move)) {
-                if (SiamRules.VERBOSE) console.log("Move is insertion");
+                SiamRules.display(SiamRules.VERBOSE, "Move is insertion");
                 let insertionInfo: {insertedPiece: number, legal: boolean} =
                     this.isLegalInsertion(move.coord, slice);
                 if (insertionInfo.legal === false) return SiamRules.ILLEGAL;
                 movingPiece = insertionInfo.insertedPiece;
             } else {
-                if (SiamRules.VERBOSE) console.log("Move is forward");
+                SiamRules.display(SiamRules.VERBOSE, "Move is forward");
                 movingPiece = slice.getBoardAt(move.coord);
             }
             return this.isLegalForwarding(move, slice, movingPiece);
         } else {
-            if (SiamRules.VERBOSE) console.log("Move is rotation");
+            SiamRules.display(SiamRules.VERBOSE, "Move is rotation");
             return this.isLegalRotation(move, slice);
         }
     }
@@ -81,10 +81,10 @@ export class SiamRules extends _SiamRules {
         throw new Error("Cannot get insertedPiece of a coord inside the board");
     }
     public isLegalForwarding(move: SiamMove, slice: SiamPartSlice, firstPiece: number): SiamLegalityStatus {
-        if (SiamRules.VERBOSE)
-            console.log({ isLegalForwarding: {move, slice, firstPiece: SiamPiece.decode(firstPiece)}});
+        SiamRules.display(SiamRules.VERBOSE, { isLegalForwarding: {move, slice, firstPiece }});
+
         if (SiamPiece.belongTo(firstPiece, slice.getCurrentEnnemy())) {
-            if (SiamRules.VERBOSE) console.log("Piece dont belong to current player");
+            SiamRules.display(SiamRules.VERBOSE, "Piece dont belong to current player");
             return SiamRules.ILLEGAL;
         }
         let movingPiece: number = SiamPiece.of(move.landingOrientation, slice.getCurrentPlayer()).value;
@@ -111,7 +111,7 @@ export class SiamRules extends _SiamRules {
                 totalForce++;
             else if (Direction.equals(resistingDir, currentDirection))
                 totalForce--;
-            if (SiamRules.VERBOSE) console.log({totalForce, movingPiece, landingCoord});
+                SiamRules.display(SiamRules.VERBOSE, {totalForce, movingPiece, landingCoord});
             const tmpPiece: number = resultingBoard[landingCoord.y][landingCoord.x];
             if (tmpPiece === SiamPiece.MOUNTAIN.value) totalForce -= 0.9;
             resultingBoard[landingCoord.y][landingCoord.x] = movingPiece;
@@ -123,7 +123,7 @@ export class SiamRules extends _SiamRules {
                               totalForce > 0;
         }
         if (landingCoord.isNotInRange(5, 5)) {
-            if (SiamRules.VERBOSE) console.log("This movement would push " + movingPiece + " outside the board");
+            SiamRules.display(SiamRules.VERBOSE, "This movement would push " + movingPiece + " outside the board");
 
             if (Direction.equals(pushingDir, currentDirection))
                 totalForce++;
@@ -131,11 +131,11 @@ export class SiamRules extends _SiamRules {
                 totalForce--;
         }
         if (totalForce <= 0) {
-            if (SiamRules.VERBOSE) console.log("This move is an illegal push: " + resultingBoard);
+            SiamRules.display(SiamRules.VERBOSE, "This move is an illegal push: " + resultingBoard);
             return SiamRules.ILLEGAL;
         }
 
-        if (SiamRules.VERBOSE) console.log("This move is a legal push: "+resultingBoard);
+        SiamRules.display(SiamRules.VERBOSE, "This move is a legal push: "+resultingBoard);
         return {legal: true, resultingBoard};
     }
     public static isStraight(piece: number, move: SiamMove): boolean {
@@ -145,13 +145,13 @@ export class SiamRules extends _SiamRules {
                 pieceDirection === move.landingOrientation);
     }
     public isLegalRotation(rotation: SiamMove, slice: SiamPartSlice): SiamLegalityStatus {
-        if (SiamRules.VERBOSE) console.log({ isLegalRotation: { rotation, slice }});
+        SiamRules.display(SiamRules.VERBOSE, { isLegalRotation: { rotation, slice }});
 
         let c: Coord = rotation.coord;
         let currentPiece: number = slice.getBoardAt(c);
         let currentPlayer: Player = slice.getCurrentPlayer();
         if (!SiamPiece.belongTo(currentPiece, currentPlayer)) {
-            if (SiamRules.VERBOSE) console.log("Piece dont belong to current player");
+            SiamRules.display(SiamRules.VERBOSE, "Piece dont belong to current player");
             return {legal: false, resultingBoard: null};
         } else {
             if (SiamPiece.getDirection(currentPiece) === rotation.landingOrientation) {
@@ -228,10 +228,8 @@ export class SiamRules extends _SiamRules {
         const pushingDirection: Orthogonale = SiamPiece.getDirection(moveStarterPiece);
         const pusherCoord: Coord = this.getPusherCoord(slice, pushingDirection, moveStarterCoord);
         const winner: Player = SiamPiece.getOwner(slice.getBoardAt(pusherCoord));
-        if (SiamRules.VERBOSE)
-            console.log(moveStarterCoord.toString() + " belong to " + slice.getCurrentEnnemy().value + ", "
-                      + pusherCoord.toString() + " belong to " + winner.value + ", "
-                      + winner.value + " win");
+        SiamRules.display(SiamRules.VERBOSE, moveStarterCoord.toString() + " belong to " + slice.getCurrentEnnemy().value + ", "
+                        + pusherCoord.toString() + " belong to " + winner.value + ", " + winner.value + " win");
         return winner;
     }
     public getPusherCoord(slice: SiamPartSlice, pushingDirection: Orthogonale, pusher: Coord): Coord {
@@ -342,7 +340,7 @@ export class SiamRules extends _SiamRules {
                 }
             }
         }
-        if (SiamRules.VERBOSE) console.log({getListMovesResult: moves});
+        SiamRules.display(SiamRules.VERBOSE, {getListMovesResult: moves});
         return moves;
     }
     public getPushingInsertions(node: SiamNode): MGPMap<SiamMove, SiamPartSlice> {

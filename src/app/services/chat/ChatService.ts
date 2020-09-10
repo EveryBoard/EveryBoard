@@ -17,23 +17,24 @@ export class ChatService implements OnDestroy {
 
     private followedChatSub: Subscription;
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     public static isForbiddenMessage(message: string): boolean {
         return (message === ''); // TODO: améliorer ?
     }
     constructor(private chatDao: ChatDAO) {
-        if (ChatService.VERBOSE) console.log("ChatService.constructor");
+        ChatService.display(ChatService.VERBOSE, "ChatService.constructor");
     }
     public async sendMessage(userName: string, lastTurnThen: number, content: string) {
         if (this.userForbid(this.followedChatId, userName)) {
-            if (ChatService.VERBOSE) {
-                console.log('you\'re not allow to sent message here');
-            }
+            ChatService.display(ChatService.VERBOSE, 'you\'re not allow to sent message here');
+
             return;
         }
         if (ChatService.isForbiddenMessage(content)) {
-            if (ChatService.VERBOSE) {
-                console.log('HOW DARE YOU SAY THAT !');
-            }
+            ChatService.display(ChatService.VERBOSE, 'HOW DARE YOU SAY THAT !');
+
             return;
         }
         const iChat: IChat = await this.chatDao.read(this.followedChatId);
@@ -46,9 +47,7 @@ export class ChatService implements OnDestroy {
         };
         messages.push(newMessage);
         await this.chatDao.update(this.followedChatId, { messages })
-        if (ChatService.VERBOSE) {
-            console.log('message envoyé');
-        }
+        ChatService.display(ChatService.VERBOSE, 'message envoyé');
     }
     public userForbid(chatId: string, userName: string): boolean {
         return userName == null ||
@@ -57,12 +56,11 @@ export class ChatService implements OnDestroy {
                userName === 'undefined'; // TODO: implémenter le blocage de chat
     }
     public startObserving(chatId: string, callback: (iChat: IChatId) => void) {
-        if (ChatService.VERBOSE) console.log("ChatService.startObserving " + chatId);
+        ChatService.display(ChatService.VERBOSE, "ChatService.startObserving " + chatId);
 
         if (this.followedChatId == null) {
-            if (ChatService.VERBOSE) {
-                console.log('[start watching chat ' + chatId);
-            }
+            ChatService.display(ChatService.VERBOSE, '[start watching chat ' + chatId);
+
             this.followedChatId = chatId;
             this.followedChatObs = this.chatDao.getObsById(chatId);
             this.followedChatSub = this.followedChatObs
@@ -79,8 +77,7 @@ export class ChatService implements OnDestroy {
         if (!this.isObserving()) {
             throw new Error('ChatService.stopObserving should not be called if not observing');
         }
-        if (ChatService.VERBOSE)
-            console.log('stopped watching chat ' + this.followedChatId + ']');
+        ChatService.display(ChatService.VERBOSE, 'stopped watching chat ' + this.followedChatId + ']');
         this.followedChatId = null;
         if (this.followedChatSub)
             this.followedChatSub.unsubscribe();
@@ -90,9 +87,8 @@ export class ChatService implements OnDestroy {
         return this.followedChatId != null
     }
     public async deleteChat(chatId: string): Promise<void> {
-        if (ChatService.VERBOSE) {
-            console.log('ChatService.deleteChat ' + chatId);
-        }
+        ChatService.display(ChatService.VERBOSE, 'ChatService.deleteChat ' + chatId);
+
         if (chatId == null) {
             throw new Error('Cannot delete chat of null id');
         }

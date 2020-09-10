@@ -28,18 +28,20 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public canPass: boolean;
 
+    public static display(verbose: boolean, message: string) {
+        if (verbose) console.log(message);
+    }
     constructor() {
         super();
         this.canPass = true;
         this.showScore = true;
     }
     public async onClick(x: number, y: number): Promise<boolean> {
-        if (GoComponent.VERBOSE) console.log("salut " + x + "-" + y);
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
         const result: boolean = await this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
-        if (GoComponent.VERBOSE) console.log("GoComponent.onClick: AbstractGameComponent.chooseMove said : " + result);
+        GoComponent.display(GoComponent.VERBOSE, "GoComponent.onClick: AbstractGameComponent.chooseMove said : " + result);
         return result;
     }
     public decodeMove(encodedMove: number): GoMove {
@@ -49,9 +51,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         return move.encode();
     }
     public updateBoard(): void {
-        if (GoComponent.VERBOSE) {
-            console.log('updateBoard');
-        }
+        GoComponent.display(GoComponent.VERBOSE, 'updateBoard');
+
         const slice: GoPartSlice = this.rules.node.gamePartSlice;
         const move: GoMove = this.rules.node.move;
         const koCoord: Coord = slice.koCoord;

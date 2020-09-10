@@ -13,6 +13,9 @@ abstract class P4Node extends MNode<P4Rules, MoveX, P4PartSlice, LegalityStatus>
 
 export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     public applyLegalMove(move: MoveX, slice: P4PartSlice, status: LegalityStatus): { resultingMove: MoveX; resultingSlice: P4PartSlice; } {
         const x: number = move.x;
         const board: number[][] = slice.getCopiedBoard();
@@ -39,9 +42,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         // let y: number = move.coord.y;
         // 1. for each direction where there is an ennemy block
         //  a. for the 1 to 3 ennemy block in a row
-        if (P4Rules.VERBOSE) {
-            console.log('getBoardValueShortened appellée');
-        }
+        P4Rules.display(P4Rules.VERBOSE, 'getBoardValueShortened appellée');
+
         return 0; // TODO
     }
     public static getBoardValueFromScratch(slice: P4PartSlice): number {
@@ -305,9 +307,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             score += tmpScore;
             yMax--;
         }
-        if (P4Rules.VERBOSE) {
-            console.log('board Value evaluated without (pre)victory to ' + score);
-        }
+        P4Rules.display(P4Rules.VERBOSE, 'board Value evaluated without (pre)victory to ' + score);
+
         return score;
     }
     public static getScoreColonne_A_TESTER(board: number[][], x: number): number {
@@ -335,9 +336,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             } else {
                 // cette case est différente de la précédente
                 if (nInALine === 4) {
-                    if (P4Rules.VERBOSE) {
-                        console.log('there is some kind of victory here 2');
-                    }
+                    P4Rules.display(P4Rules.VERBOSE, 'there is some kind of victory here 2');
+
                     return aligner === Player.ZERO.value
                         ? Number.MIN_SAFE_INTEGER
                         : Number.MAX_SAFE_INTEGER;
@@ -352,9 +352,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             y++;
         }
         if (nInALine === 4) {
-            if (P4Rules.VERBOSE) {
-                console.log('there is some kind of victory here 3');
-            }
+            P4Rules.display(P4Rules.VERBOSE, 'there is some kind of victory here 3');
+
             return aligner === Player.ZERO.value
                 ? Number.MIN_SAFE_INTEGER
                 : Number.MAX_SAFE_INTEGER;
@@ -451,7 +450,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
     public isLegal(move: MoveX, slice: P4PartSlice): LegalityStatus {
         const ILLEGAL: LegalityStatus = {legal: false};
-        if (P4Rules.VERBOSE) console.log("Is " + move.toString() + " legal on ", slice.board);
+        P4Rules.display(P4Rules.VERBOSE, "Is " + move.toString() + " legal on " + slice.board);
         if (move.x < 0 || move.x > 6) return ILLEGAL;
         if (slice.getBoardByXY(move.x, 5) !== Player.NONE.value) return ILLEGAL;
         return {legal: true};
