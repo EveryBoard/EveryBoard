@@ -6,8 +6,9 @@ import { SiamPartSlice } from "../SiamPartSlice";
 import { SiamMove } from "../siammove/SiamMove";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
-describe("SiamRules - Minimax:", () => {
+fdescribe("SiamRules - Minimax:", () => {
 
     let rules: SiamRules;
 
@@ -49,7 +50,7 @@ describe("SiamRules - Minimax:", () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const node: SiamNode = new MNode(null, null, slice, 0);
         const bestSon: SiamNode = node.findBestMoveAndSetDepth(1);
-        const bestMove: SiamMove = new SiamMove(3, 1, Orthogonale.UP, Orthogonale.UP);
+        const bestMove: SiamMove = new SiamMove(3, 1, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         const expectedSon: SiamNode = new MNode(node, bestMove, expectedSlice, Number.MIN_SAFE_INTEGER);
         expect(bestSon).toEqual(expectedSon);
@@ -65,7 +66,7 @@ describe("SiamRules - Minimax:", () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(3, 3, Orthogonale.UP, Orthogonale.UP);
+        const move: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         expect(rules.getBoardValue(move, slice)).toBeLessThan(0, "First player should be considered as closer to victory");
     });
     it("Should know who is closer to win", () => {
@@ -77,7 +78,7 @@ describe("SiamRules - Minimax:", () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(3, 3, Orthogonale.UP, Orthogonale.UP);
+        const move: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         expect(rules.getBoardValue(move, slice)).toBeLessThan(0, "First player should be considered as closer to victory");
     });
     it("Should know how far a mountain is from the border", () => {

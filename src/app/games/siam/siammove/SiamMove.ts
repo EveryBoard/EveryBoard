@@ -1,12 +1,13 @@
 import { MoveCoord } from "src/app/jscaip/MoveCoord";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
 export class SiamMove extends MoveCoord {
 
     public static encode(move: SiamMove): number {
         const y: number = move.coord.y + 1; // 0 to 6
         const x: number = move.coord.x + 1; // 0 to 6
-        const moveDirection: number = move.moveDirection == null ? 0 : move.moveDirection.toInt(); // 0 to 4
+        const moveDirection: number = move.moveDirection.isAbsent() ? 0 : move.moveDirection.get().toInt(); // 0 to 4
         const landingOrientation: number = move.landingOrientation.toInt();
         return (245 * landingOrientation) + (49 * moveDirection) + (7 * x) + y;
     }
@@ -18,7 +19,9 @@ export class SiamMove extends MoveCoord {
         encodedMove -= x;
         encodedMove/= 7;
         const moveDirectionInt: number = encodedMove % 5;
-        const moveDirection: Orthogonale = moveDirectionInt === 0 ? null : Orthogonale.fromInt(moveDirectionInt);
+        const moveDirection: MGPOptional<Orthogonale> = moveDirectionInt === 0 ?
+            MGPOptional.empty() :
+            MGPOptional.of(Orthogonale.fromInt(moveDirectionInt));
         encodedMove -= moveDirectionInt;
         encodedMove /= 5;
         const landingOrientation: Orthogonale = Orthogonale.fromInt(encodedMove);
@@ -27,10 +30,11 @@ export class SiamMove extends MoveCoord {
     constructor(
         readonly x: number,
         readonly y: number,
-        public readonly moveDirection: Orthogonale,
+        public readonly moveDirection: MGPOptional<Orthogonale>,
         public readonly landingOrientation: Orthogonale)
     {
         super(x, y);
+        if (moveDirection == null) throw new Error("Move Direction must be set (even if optional)")
         if (landingOrientation == null) throw new Error("Landing orientation must be set");
         this.checkValidity();
     }
@@ -41,13 +45,13 @@ export class SiamMove extends MoveCoord {
                 throw new Error("Cannot rotate piece outside the board: " + this.toString());
             }
         } else {
-            const finishedInside: boolean = this.coord.getNext(this.moveDirection).isInRange(5, 5);
+            const finishedInside: boolean = this.coord.getNext(this.moveDirection.get()).isInRange(5, 5);
             if (!finishedInside && !startedInside)
                 throw new Error("SiamMove should end or start on the board: " + this.toString());
         }
     }
     public isRotation(): boolean {
-        return this.moveDirection == null;
+        return this.moveDirection.isAbsent();
     }
     public encode(): number {
         return SiamMove.encode(this);
@@ -66,14 +70,14 @@ export class SiamMove extends MoveCoord {
         return true;
     }
     public toString(): String {
-        const moveDirection: string = this.moveDirection == null ? "-" : this.moveDirection.toString();
+        const moveDirection: string = this.moveDirection.isAbsent() ? "-" : this.moveDirection.get().toString();
         return "SiamMove(" + this.coord.x + ", "
                            + this.coord.y + ", "
                            + moveDirection + ", "
                            + this.landingOrientation + ")"
     }
     public isForward(): boolean {
-        return this.moveDirection != null;
+        return this.moveDirection.isPresent();
     }
     public isInsertion(): boolean {
         return SiamMove.isInsertion(this);

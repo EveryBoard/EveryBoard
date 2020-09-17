@@ -16,7 +16,16 @@ export class Orthogonale {
             case 2: return Orthogonale.RIGHT;
             case 3: return Orthogonale.DOWN;
             case 4: return Orthogonale.LEFT;
-            default: throw new Error("No Orthogonale matching " + int);
+            default: throw new Error("No Orthogonale matching int " + int);
+        }
+    }
+    public static fromString(str: string): Orthogonale {
+        switch (str) {
+            case "UP":    return Orthogonale.UP;
+            case "RIGHT": return Orthogonale.RIGHT;
+            case "DOWN":  return Orthogonale.DOWN;
+            case "LEFT":  return Orthogonale.LEFT;
+            default: throw new Error("Unknown direction " + str);
         }
     }
     private constructor(public readonly x: number, public readonly y: number) {}

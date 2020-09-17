@@ -6,6 +6,7 @@ import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { SiamPiece } from "../SiamPiece";
 import { MNode } from "src/app/jscaip/MNode";
+import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
 describe('SiamMove', () => {
 
@@ -30,7 +31,7 @@ describe('SiamMove', () => {
             [_, _, _, _, _],
             [_, _, _, _, _]
         ];
-        const move: SiamMove = new SiamMove(0, 0, Orthogonale.DOWN, Orthogonale.UP);
+        const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonale.DOWN), Orthogonale.UP);
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const node: SiamNode = new MNode(null, move, slice, 0);
         const rules: SiamRules = new SiamRules();
@@ -43,14 +44,14 @@ describe('SiamMove', () => {
         }
     });
     it('should delegate decoding to static method', () => {
-        const testMove: SiamMove = new SiamMove(-1, 0, Orthogonale.RIGHT, Orthogonale.RIGHT);
+        const testMove: SiamMove = new SiamMove(-1, 0, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT);
         spyOn(SiamMove, "decode").and.callThrough();
         testMove.decode(testMove.encode());
         expect(SiamMove.decode).toHaveBeenCalledTimes(1);
     });
     it("Should force move to end inside the board", () => {
         expect(() => {
-            new SiamMove(-1, 2, Orthogonale.UP, Orthogonale.UP);
+            new SiamMove(-1, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         }).toThrowError("SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP)");
     });
     it("Should forbid rotation outside the board", () => {
@@ -60,20 +61,20 @@ describe('SiamMove', () => {
     });
     it("Should throw during creation of SiamMove without landing direction", () => {
         expect(() => {
-            new SiamMove(2, 2, Orthogonale.UP, null);
+            new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), null);
         }).toThrowError("Landing orientation must be set");
     });
     it('Should override correctly equality', () => {
-        const moveA: SiamMove = new SiamMove(2, 2, Orthogonale.UP, Orthogonale.RIGHT);
-        const twin: SiamMove = new SiamMove(2, 2, Orthogonale.UP, Orthogonale.RIGHT);
+        const moveA: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);
+        const twin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);
         const android: Object = {
             coord: new Coord(2, 2),
             movingDirection: Orthogonale.UP,
             landingOrientation: Orthogonale.RIGHT
         };
-        const neighboor: SiamMove = new SiamMove(3, 3, Orthogonale.UP, Orthogonale.RIGHT);
-        const cousin: SiamMove = new SiamMove(2, 2, Orthogonale.DOWN, Orthogonale.RIGHT);
-        const stranger: SiamMove = new SiamMove(2, 2, Orthogonale.UP, Orthogonale.LEFT);
+        const neighboor: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);
+        const cousin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.DOWN), Orthogonale.RIGHT);
+        const stranger: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.LEFT);
         expect(moveA.equals(moveA)).toBeTruthy("Move should equals himself");
         expect(moveA.equals(android)).toBeFalsy("Instance should be checked");
         expect(moveA.equals(twin)).toBeTruthy("Move should be equals");
