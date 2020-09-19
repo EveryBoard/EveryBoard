@@ -62,14 +62,8 @@ export class SiamRules extends _SiamRules {
         }
     }
     public isLegalInsertion(coord: Coord, slice: SiamPartSlice): {insertedPiece: number, legal: boolean} {
-        const board: number[][] = slice.getCopiedBoard();
-        let numberOnBoard: number = 0;
+        let numberOnBoard: number = slice.countPlayerPawn();
         const currentPlayer: Player = slice.getCurrentPlayer();
-        board.forEach(line => line.forEach(c => {
-            if (SiamPiece.belongTo(c, currentPlayer)) {
-                numberOnBoard++;
-            }
-        }));
         let legal: boolean = (numberOnBoard < 5);
         let insertedPiece: number = SiamRules.getInsertedPiece(coord, currentPlayer).value;
         return {insertedPiece, legal};
@@ -183,12 +177,22 @@ export class SiamRules extends _SiamRules {
                 let zeroPusher: number = 0;
                 let onePusher: number = 0;
                 for (let pusher of closestPushers.closestPushers) {
-                    const owner: Player = SiamPiece.getOwner(slice.getBoardAt(pusher));
-                    if (owner === Player.ZERO) {
-                        zeroPusher++;
+                    if (pusher.isInRange(5, 5)) {
+                        const piece: number = slice.getBoardAt(pusher);
+                        if (SiamPiece.belongTo(piece, Player.ZERO)) {
+                            zeroPusher++;
+                        } else if (SiamPiece.belongTo(piece, Player.ONE)) {
+                            onePusher++;
+                        }
                     } else {
-                        onePusher++;
+                        if (slice.getCurrentPlayer() === Player.ZERO) zeroPusher++;
+                        else onePusher++;
                     }
+                }
+                if (slice.getCurrentPlayer() === Player.ZERO) {
+                    zeroPusher++;
+                } else {
+                    onePusher++;
                 }
                 return (onePusher - zeroPusher) * (6 - closestPushers.distance);
             }
@@ -240,6 +244,7 @@ export class SiamRules extends _SiamRules {
             pusher = pushed;
             pushed = pushed.getNext(pushingDirection);
             const pushingPiece: SiamPiece = SiamPiece.decode(slice.getBoardAt(pusher));
+            // TODO: test when mountain amongst the pushers
             if (pushingPiece !== SiamPiece.MOUNTAIN && pushingPiece.getDirection() === pushingDirection) {
                 lastCorrectPusher = pusher;
             }
@@ -247,6 +252,7 @@ export class SiamRules extends _SiamRules {
         return lastCorrectPusher;
     }
     public getClosestPushers(slice: SiamPartSlice, mountainList: Coord[]): { distance: number, closestPushers: Coord[]} {
+        SiamRules.display(SiamRules.VERBOSE, { getClosestPushers: { slice, mountainList }});
         let maximalDistance: number = 5;
         let closestPushers: Coord[] = [];
         for(let mountain of mountainList) {
@@ -254,13 +260,9 @@ export class SiamRules extends _SiamRules {
                 const directionClosestPusher: { distance: number, coord: Coord } =
                     this.getDirectionClosestPusher(slice, mountain, direction, maximalDistance);
                 if (directionClosestPusher.distance < maximalDistance) {
-                    // console.log("for " + direction.toString() + " of " + mountain.toString())
-                    // console.log( { maximalDistanceCreatedBy: directionClosestPusher})
                     maximalDistance = directionClosestPusher.distance;
                     closestPushers = [directionClosestPusher.coord];
                 } else if (directionClosestPusher.distance === maximalDistance) {
-                    // console.log("for " + direction.toString() + " of " + mountain.toString())
-                    // console.log( { maximalDistanceAddedFor: directionClosestPusher})
                     closestPushers.push(directionClosestPusher.coord)
                 }
             }
@@ -274,26 +276,78 @@ export class SiamRules extends _SiamRules {
         maximalDistance: number)
         : { distance: number, coord: Coord }
     {
+        SiamRules.display(SiamRules.VERBOSE, { getDirectionClosestPusher: { slice, mountain, direction: direction.toString(), maximalDistance }});
         let currentDistance: number = this.getDistanceFromMountainToBoard(mountain, direction.getOpposite());
+        let previousPiece: number = slice.getBoardAt(mountain);
         let testedCoord: Coord = mountain.getNext(direction);
+        let weakPusher: Player = null;
+        let almostPusher: Coord;
         let pusherFound: boolean = false;
+        let missingForce: number = -0.1;
         while (testedCoord.isInRange(5, 5) &&
-               (currentDistance <= maximalDistance) &&
-               (pusherFound === false))
+               currentDistance <= maximalDistance &&
+               pusherFound === false)
         {
             const currentPiece: number = slice.getBoardAt(testedCoord);
-            if (currentPiece === SiamPiece.MOUNTAIN.value) { // No one can push that, no pusher
-                // Mountain will be considered pusher with infinite distance
-                currentDistance = Number.MAX_SAFE_INTEGER;
-            } else if (currentPiece === SiamPiece.EMPTY.value) { // Still empty place, let's go back further
-                testedCoord = testedCoord.getNext(direction);
-                currentDistance++;
-            } else { // Pusher found
-                pusherFound = true;
+            SiamRules.display(SiamRules.VERBOSE, { testedCoord, currentDistance, currentPiece });
+            if (SiamPiece.isEmptyOrMountain(currentPiece)) {
+                if (currentPiece === SiamPiece.MOUNTAIN.value) {
+                    SiamRules.display(SiamRules.VERBOSE, "found mountain");
+                    missingForce += 0.9
+                } else { // Encountered empty case
+                    SiamRules.display(SiamRules.VERBOSE, "found empty place");
+                    currentDistance++;
+                }
+            } else { // Player found
+                const playerOrientation: Orthogonale = SiamPiece.getDirection(currentPiece);
+                if (playerOrientation === direction.getOpposite()) {
+                    // We found a piece pushing right in the good direction
+                    if (missingForce > 0) { // But she can't push by herself
+                    SiamRules.display(SiamRules.VERBOSE, "found WEEAAK pushing player");
+                        missingForce -= 1; // We count her as active pusher
+                        weakPusher = SiamPiece.getOwner(currentPiece);
+                        // weakPusher are the one counsidered as winner in case of victory, whoever played
+                    } else { // And she has enough force to push
+                        SiamRules.display(SiamRules.VERBOSE, "found STRRRONG pushing player")
+                        pusherFound = true;
+                        testedCoord = testedCoord.getPrevious(direction);
+                    }
+                } else if (playerOrientation === direction) {
+                    SiamRules.display(SiamRules.VERBOSE, "found resisting player");
+                    // We found a piece resisting the pushing direction
+                    missingForce += 1;
+                } else {
+                    SiamRules.display(SiamRules.VERBOSE, "found a sideway almost-pusher");
+                    almostPusher = testedCoord.getCopy();
+                    if (previousPiece !== SiamPiece.EMPTY.value) {
+                        SiamRules.display(SiamRules.VERBOSE, "his orientation will slow him down");
+                        currentDistance++;
+                    }
+                }
+            }
+            // Still no player there, let's go back further
+            previousPiece = currentPiece;
+            testedCoord = testedCoord.getNext(direction);
+        }
+        SiamRules.display(SiamRules.VERBOSE, { testedCoord, currentDistance });
+        if (pusherFound === false && almostPusher != null) {
+            currentDistance++;
+            SiamRules.display(SiamRules.VERBOSE, "no pusher found but found one sideway guy");
+            while (testedCoord.equals(almostPusher) === false) {
+                SiamRules.display(SiamRules.VERBOSE, "he was one piece backward");
+                testedCoord = testedCoord.getPrevious(direction);
+                currentDistance--;
             }
         }
         if (testedCoord.isNotInRange(5, 5)) {
-            // Potential player from outside the board will for now not be taken in account (hence "Infinite")
+            SiamRules.display(SiamRules.VERBOSE, "we end up out of the board");
+            if (slice.countPlayerPawn() === 5) {
+                SiamRules.display(SiamRules.VERBOSE, "and we cannot insert");
+                currentDistance = Number.MAX_SAFE_INTEGER;
+            }
+        }
+        if (missingForce > 0) {
+            SiamRules.display(SiamRules.VERBOSE, "we end up with not enough force to push");
             currentDistance = Number.MAX_SAFE_INTEGER;
         }
         return { distance: currentDistance, coord: testedCoord };

@@ -12,4 +12,16 @@ export class SiamPartSlice extends GamePartSlice {
         board[2][3] = SiamPiece.MOUNTAIN.value;
         return board;
     }
+
+    public countPlayerPawn(): number {
+        let count: number = 0;
+        for (let y = 0; y < 5; y++) {
+            for (let x = 0; x < 5; x++) {
+                if (SiamPiece.belongTo(this.board[y][x], this.getCurrentPlayer())) {
+                    count++;
+                }
+            }
+        }
+        return count;
+    }
 }

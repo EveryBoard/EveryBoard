@@ -41,16 +41,19 @@ export class SiamPiece {
     public static belongTo(value: number, player: Player): boolean {
         if (player === Player.ZERO) {
             return (1 <= value && value <= 4);
-        }
-        if (player === Player.ONE) {
+        } else if (player === Player.ONE) {
             return (5 <= value && value <= 8);
+        } else {
+            return false;
         }
-        throw new Error("Player.NONE do not own piece");
+    }
+    public static isEmptyOrMountain(value: number): boolean {
+        return [0, 9].includes(value);
     }
     public static getOwner(value: number): Player {
         if (1 <= value && value <= 4) return Player.ZERO;
         if (5 <= value && value <= 8) return Player.ONE;
-        return Player.NONE;
+        throw new Error("Player.NONE do not own piece");
     }
     public static getNullableDirection(value: number): Orthogonale {
         switch (value) {

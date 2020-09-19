@@ -74,7 +74,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         else {
             const piece: number = this.board[y][x];
             const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
-            if (SiamPiece.belongTo(piece, ennemy)) {
+            if (SiamPiece.getOwner(piece) === ennemy) {
                 return this.cancelMove("Can't choose ennemy's pieces");
             }
             this.chosenCoord = new Coord(x, y);
@@ -184,7 +184,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                x7 + ' ' + y7 + ' ' + x8 + ' ' + y8;
     }
     public stylePiece(c: number): any {
-        if (SiamPiece.belongTo(c, Player.ZERO)) {
+        if (SiamPiece.getOwner(c) === Player.ZERO) {
             return {
                 fill: 'red',
                 stroke: 'black'
