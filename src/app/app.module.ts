@@ -42,6 +42,7 @@ import {P4Component} from './components/game-components/p4/p4.component';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {ReversiComponent} from './components/game-components/reversi/reversi.component';
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
+import {KamisadoComponent} from './components/game-components/kamisado/kamisado.component';
 import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
@@ -89,6 +90,7 @@ const routes: Route [] = [
         TablutComponent,
         ConfirmInscriptionComponent,
         SaharaComponent,
+        KamisadoComponent,
     ],
     entryComponents: [
         AwaleComponent,
@@ -101,6 +103,7 @@ const routes: Route [] = [
         SaharaComponent,
         SiamComponent,
         TablutComponent,
+        KamisadoComponent,
 
         CountDownComponent,
     ],

@@ -1,0 +1,25 @@
+<table>
+    <tr *ngFor="let line of board; index as y;">
+        <td *ngFor="let caseContent of line; index as x;"
+            style="position:relative;"
+            (click)="onClick(x, y);">
+                <img *ngIf="(end.x === x && end.y === y) || (chosen.x === x && chosen.y === y) || (moving.x === x && moving.y === y)"
+                    width="50" height="50"
+                    id="{{'t'+y+x}}"
+                    alt="highlighted"
+                    [src]="imagesLocation+'squared_highlight.svg'"
+                    style="position:absolute; top:0; left:0;"/>
+                <img
+                    width="50" height="50" id="{{'b'+y+x}}"
+                    [src]="imagesLocation+backgroundImage(x, y)"/>
+                <img *ngIf="caseContent !== UNOCCUPIED"
+                    width="50"
+                    height="50"
+                    id="{{'u'+y+x}}"
+                    style="position:absolute; top: 0; left: 0;"
+                    alt=":{{ caseContent }}:"
+                    [src]="imagesLocation+imageOfContent(caseContent)"/>
+        </td>
+    </tr>
+</table>
+{{rules.getBoardValue(rules.node)}}

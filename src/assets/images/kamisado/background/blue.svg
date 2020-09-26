@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="500px" height="500px"
+     viewBox="0 0 500 500" preserveAspectRatio="xMidYMid meet">
+    <rect x="5" y="5" width="495" height="495"
+            style="fill:#006bac;stroke:black;stroke-width:10px;"
+    />
+</svg>

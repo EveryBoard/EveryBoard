@@ -10,6 +10,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 import {ReversiComponent} from './reversi/reversi.component';
 import {TablutComponent} from './tablut/tablut.component';
+import {KamisadoComponent} from './kamisado/kamisado.component';
 import {QuartoComponent} from './quarto/quarto.component';
 import {P4Component} from './p4/p4.component';
 import {AwaleComponent} from './awale/awale.component';
@@ -75,6 +76,8 @@ export abstract class GameWrapper {
                 return SiamComponent;
             case 'Tablut':
                 return TablutComponent;
+            case   'Kamisado':
+                return KamisadoComponent;
             default:
                 throw new Error("Unknown Games are unwrappable");
         }
