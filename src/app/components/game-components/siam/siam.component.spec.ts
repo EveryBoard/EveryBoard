@@ -29,7 +29,7 @@ const authenticationServiceStub = {
 
     getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
 };
-fdescribe('SiamComponent', () => {
+describe('SiamComponent', () => {
 
     let wrapper: LocalGameWrapperComponent;
 
@@ -44,7 +44,7 @@ fdescribe('SiamComponent', () => {
         } else {
             const moveDirection: string = move.moveDirection.isAbsent() ? '' : move.moveDirection.get().toString();
             return gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
-                   await gameComponent.chooseDirection(moveDirection) &&
+                   await gameComponent.chooseDirection(moveDirection) && // TODO: take in account eventual "piece outing"
                    await gameComponent.chooseOrientation(move.landingOrientation.toString());
         }
     }
@@ -67,10 +67,12 @@ fdescribe('SiamComponent', () => {
         tick(1);
         gameComponent = wrapper.gameComponent as SiamComponent;
     }));
+
     it('should create', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("SiamComponent should be created");
     });
+
     it('should accept simple part', async() => {
         const listMoves: SiamMove[] = [
             new SiamMove(-1, 4, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT),
@@ -86,9 +88,11 @@ fdescribe('SiamComponent', () => {
             if (!legal) break;
         };
     });
+
     it('should accept insertion at first turn', async() => {
         expect(await gameComponent.insertAt(2, 5)).toBeTruthy();
     });
+
     it('should cancel move when trying to select direction or orientation before piece, or trying to move empty case', async() => {
         spyOn(gameComponent, "cancelMove").and.callThrough();
         expect(await gameComponent.chooseDirection('')).toBeFalsy("Should not allow to choose direction before choosing piece");
@@ -96,6 +100,7 @@ fdescribe('SiamComponent', () => {
         expect(gameComponent.onBoardClick(0, 0)).toBeFalsy("Should not allow to move empty case");
         expect(gameComponent.cancelMove).toHaveBeenCalledTimes(2);
     });
+
     it('should cancel move when calling tryMove without direction or choosen coord', async() => {
         spyOn(gameComponent, "cancelMove").and.callThrough();
         expect(await gameComponent.chooseOrientation('UP')).toBeFalsy("Should not allow to choose orientation before choosing piece");
@@ -103,6 +108,7 @@ fdescribe('SiamComponent', () => {
         expect(await gameComponent.tryMove()).toBeFalsy("Should not call tryMove before setting everything");
         expect(gameComponent.cancelMove).toHaveBeenCalledTimes(2);
     });
+
     it('should cancel move when trying to insert while having selected a piece', async() => {
         await doMove(new SiamMove(-1, 4, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT));
         gameComponent.onBoardClick(0, 4);
@@ -110,11 +116,13 @@ fdescribe('SiamComponent', () => {
         expect(await gameComponent.insertAt(-1, 2)).toBeFalsy();
         expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
     });
+
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(SiamMove, "decode").and.callThrough();
         gameComponent.decodeMove(269);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
+
     it('should delegate encoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(SiamMove, "encode").and.callThrough();
         gameComponent.encodeMove(new SiamMove(2, 2, MGPOptional.empty(), Orthogonale.UP));

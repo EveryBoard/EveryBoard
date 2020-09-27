@@ -16,7 +16,7 @@ import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 })
 export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice, SiamLegalityStatus> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public rules: SiamRules = new SiamRules();
 
@@ -94,7 +94,8 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
             if (this.landingCoord.isNotInRange(5, 5)) {
-                this.chosenOrientation = Orthogonale.DOWN; // Who cares
+                console.log("orientation and direction should be the same: " + dir);
+                this.chosenOrientation = dir;
                 return this.tryMove();
             }
         }

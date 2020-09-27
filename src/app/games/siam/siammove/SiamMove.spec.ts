@@ -43,27 +43,32 @@ describe('SiamMove', () => {
             expect(decodedMove).toEqual(move);
         }
     });
+
     it('should delegate decoding to static method', () => {
         const testMove: SiamMove = new SiamMove(-1, 0, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT);
         spyOn(SiamMove, "decode").and.callThrough();
         testMove.decode(testMove.encode());
         expect(SiamMove.decode).toHaveBeenCalledTimes(1);
     });
+
     it("Should force move to end inside the board", () => {
         expect(() => {
             new SiamMove(-1, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         }).toThrowError("SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP)");
     });
+
     it("Should forbid rotation outside the board", () => {
         expect(() => {
-            new SiamMove(-1, 2, null, Orthogonale.UP);
+            new SiamMove(-1, 2, MGPOptional.empty(), Orthogonale.UP);
         }).toThrowError("Cannot rotate piece outside the board: SiamMove(-1, 2, -, UP)");
     });
+
     it("Should throw during creation of SiamMove without landing direction", () => {
         expect(() => {
             new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), null);
         }).toThrowError("Landing orientation must be set");
     });
+
     it('Should override correctly equality', () => {
         const moveA: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);
         const twin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);

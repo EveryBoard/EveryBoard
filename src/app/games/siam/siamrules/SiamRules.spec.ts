@@ -8,7 +8,7 @@ import { SiamLegalityStatus } from '../SiamLegalityStatus';
 import { Orthogonale } from 'src/app/jscaip/DIRECTION';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
-fdescribe('SiamRules:', () => {
+describe('SiamRules:', () => {
 
     let rules: SiamRules;
 

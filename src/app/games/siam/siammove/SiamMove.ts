@@ -45,9 +45,15 @@ export class SiamMove extends MoveCoord {
                 throw new Error("Cannot rotate piece outside the board: " + this.toString());
             }
         } else {
-            const finishedInside: boolean = this.coord.getNext(this.moveDirection.get()).isInRange(5, 5);
-            if (!finishedInside && !startedInside)
-                throw new Error("SiamMove should end or start on the board: " + this.toString());
+            const finishedOutside: boolean = this.coord.getNext(this.moveDirection.get()).isNotInRange(5, 5);
+            if (finishedOutside) {
+                if (!startedInside) {
+                    throw new Error("SiamMove should end or start on the board: " + this.toString());
+                }
+                if (this.moveDirection.get() !== this.landingOrientation) {
+                    throw new Error("SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: " + this.toString());
+                }
+            }
         }
     }
     public isRotation(): boolean {
@@ -65,7 +71,7 @@ export class SiamMove extends MoveCoord {
 
         const other: SiamMove = <SiamMove> o;
         if (!this.coord.equals(o.coord)) return false;
-        if (this.moveDirection !== other.moveDirection) return false;
+        if (this.moveDirection.equals(other.moveDirection, (a, b) => a === b) === false) return false;
         if (this.landingOrientation !== other.landingOrientation) return false;
         return true;
     }
@@ -80,12 +86,9 @@ export class SiamMove extends MoveCoord {
         return this.moveDirection.isPresent();
     }
     public isInsertion(): boolean {
-        return SiamMove.isInsertion(this);
-    }
-    public static isInsertion(move: SiamMove): boolean {
-        return move.coord.x === -1 ||
-               move.coord.x === +5 ||
-               move.coord.y === -1 ||
-               move.coord.y === +5;
+        return this.coord.x === -1 ||
+               this.coord.x === +5 ||
+               this.coord.y === -1 ||
+               this.coord.y === +5;
     }
 }
