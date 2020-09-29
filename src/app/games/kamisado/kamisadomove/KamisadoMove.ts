@@ -1,8 +1,6 @@
 import { Coord } from "src/app/jscaip/coord/Coord"
 import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
-import { Move } from "src/app/jscaip/Move"
 import { KamisadoRulesConfig } from "../kamisadorules/KamisadoRulesConfig";
-import { Direction } from "src/app/jscaip/DIRECTION";
 
 export class KamisadoMove extends MoveCoordToCoord {
     public static decode(encodedMove: number): KamisadoMove {

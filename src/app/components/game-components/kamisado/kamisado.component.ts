@@ -21,9 +21,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public colors = KamisadoBoard.COLORS;
 
-    public moving: Coord = new Coord(-1, -1);
-
-    public end: Coord = new Coord(-1, -1);
+    public lastMove: KamisadoMove = null; // TODO: use an option
 
     public chosen: Coord = new Coord(-1, -1);
 
@@ -36,14 +34,26 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         return 'kamisado/pieces/' + piece.color.name + piece.player.value + '.svg'; // TODO: distinguish both players
     }
 
+    public isLastMove(x: number, y: number): boolean {
+        if (this.lastMove === null)
+            return false;
+        if (this.lastMove.coord.x === x && this.lastMove.coord.y === y)
+            return true;
+        if (this.lastMove.end.x === x && this.lastMove.end.y === y)
+            return true;
+    }
+
+    public isChosen(x: number, y: number): boolean {
+        return this.chosen.x === x && this.chosen.y === y;
+    }
+
     public updateBoard() {
         const slice: KamisadoPartSlice = this.rules.node.gamePartSlice;
         const move: KamisadoMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
 
         if (move != null) {
-            this.moving = move.coord;
-            this.end = move.end;
+            this.lastMove = move;
         }
         this.cancelMove();
     }
@@ -66,12 +76,26 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         return success;
     }
 
+    public selectNextPiece(move: KamisadoMove): void {
+        const slice: KamisadoPartSlice = this.rules.node.gamePartSlice;
+        const color: KamisadoColor = KamisadoBoard.getColorAt(move.end.x, move.end.y);
+        for (let y = 0; y < slice.board.length; y++) {
+            for (let x = 0; x < slice.board.length; x++) {
+                const piece = slice.getPieceAt(x, y);
+                if (piece.player === slice.getCurrentEnnemy() && piece.color.equals(color)) {
+                    this.chosen = new Coord(x, y);
+                    return;
+                }
+            }
+        }
+    }
+
     private async chooseDestination(x: number, y: number): Promise<boolean> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
         try {
             const move: KamisadoMove = new KamisadoMove(chosenPiece, chosenDestination);
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null).then(b => { this.selectNextPiece(move); return b });
         } catch (error) {
             this.cancelMove();
             return false;
@@ -83,7 +107,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             console.log("isEndGame");
             return false;
         }
-        this.hideLastMove();
 
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
             console.log("!pieceBelongToCurrentPlayer, current player is: " + this.rules.node.gamePartSlice.turn % 2);
@@ -98,10 +121,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const coord: Coord = new Coord(x, y);
         const piece: number = this.rules.node.gamePartSlice.board[y][x];
         return (piece > 0 && ((player === 0 && piece < 16) || (player === 1) && piece >= 16));
-    }
-    public hideLastMove() {
-        this.moving = new Coord(-1, -1);
-        this.end = new Coord(-1, -1);
     }
     public cancelMove() {
         this.chosen = new Coord(-1, -1);

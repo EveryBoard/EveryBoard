@@ -71,8 +71,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         console.log("There are " + moves.size() + " moves");
         return moves;
     }
-    public getBoardValue(n: KamisadoNode): number {
-        const slice: KamisadoPartSlice = n.gamePartSlice;
+    public getBoardValue(move: KamisadoMove, slice: KamisadoPartSlice): number {
         // 1. See who is playing: 0 is first player, 1 is second player
         const player = slice.getCurrentPlayer();
         // 2. See how far my piece is
