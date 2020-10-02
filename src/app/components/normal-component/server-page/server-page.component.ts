@@ -26,13 +26,14 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     readonly gameNameList: String[] = ['Awale',          // 1
                                        'Encapsule',      // 2
                                        'Go',             // 3
-                                       'MinimaxTesting', // neh.
+                                       // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
                                        'P4',             // 4
-                                       'Quarto',         // 5
-                                       'Reversi',        // 6
-                                       'Sahara',         // 7
-                                       'Siam',           // 8
-                                       'Tablut'];        // 9
+                                       'Pylos',          // 5
+                                       'Quarto',         // 6
+                                       'Reversi',        // 7
+                                       'Sahara',         // 8
+                                       'Siam',           // 9
+                                       'Tablut'];        // 10
 
     public selectedGame: string;
 

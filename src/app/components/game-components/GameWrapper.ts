@@ -19,6 +19,7 @@ import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.compo
 import { SiamComponent } from './siam/siam.component';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { SaharaComponent } from './sahara/sahara.component';
+import { PylosComponent } from './pylos/pylos.component';
 
 export abstract class GameWrapper {
 
@@ -65,6 +66,8 @@ export abstract class GameWrapper {
                 return MinimaxTestingComponent;
             case 'P4':
                 return P4Component;
+            case 'Pylos':
+                return PylosComponent;
             case 'Quarto':
                 return QuartoComponent;
             case 'Reversi':

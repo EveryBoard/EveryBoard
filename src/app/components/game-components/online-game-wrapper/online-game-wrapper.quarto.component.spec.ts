@@ -25,6 +25,7 @@ import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { By } from '@angular/platform-browser';
 import { QuartoComponent } from '../quarto/quarto.component';
+import { QuartoEnum } from 'src/app/games/quarto/QuartoEnum';
 
 const activatedRouteStub = {
     snapshot: {
@@ -134,12 +135,14 @@ describe('OnlineGameWrapperComponent of Quarto', () => {
             ],
         }).compileComponents();
     }));
+
     it('Should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareStartedGameForCreator();
         fixture.detectChanges();
         tick(1);
         tick(component.maximalMoveDuration);
     }));
+
     it('Prepared Game for creator should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         await prepareStartedGameForCreator();
         fixture.detectChanges();
@@ -158,6 +161,7 @@ describe('OnlineGameWrapperComponent of Quarto', () => {
         expect(component.gameComponent).toBeTruthy("gameComponent field should also be present after config accepted and async millisec finished");
         tick(component.maximalMoveDuration);
     }));
+
     it('Prepared Game for creator should allow simple move', fakeAsync(async() => {
         await prepareStartedGameForCreator();
         fixture.detectChanges();
@@ -183,27 +187,70 @@ describe('OnlineGameWrapperComponent of Quarto', () => {
         expect(component.currentPart.copy().listMoves).toEqual([107, 166, 69]);
         tick(component.maximalMoveDuration);
     }));
+
     it('Move should trigger db change', fakeAsync(async() => {
         await prepareStartedGameForCreator();
         fixture.detectChanges();
         tick(1);
         expect(component.currentPart.copy().listMoves).toEqual([]);
-        const partDAOUpdate: jasmine.Spy = spyOn(partDAO, "update").and.callThrough();
-        expect(partDAOUpdate).not.toHaveBeenCalled();
+        spyOn(partDAO, "update").and.callThrough();
+        expect(partDAO.update).not.toHaveBeenCalled();
 
         let slice: QuartoPartSlice = component.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
         const chosenMove: QuartoMove = new QuartoMove(0, 3, 11);
         const legalFirst: boolean = await component.gameComponent.chooseMove(chosenMove, slice, null, null);
         expect(legalFirst).toBeTruthy("First movement should be legal");
 
-        expect(component.currentPart.copy().listMoves).toEqual([107]);
+        expect(component.currentPart.copy().listMoves).toEqual([chosenMove.encode()]);
         const expectedUpdate = {
             listMoves: [ chosenMove.encode() ], turn: 1,
             scorePlayerZero: null,              scorePlayerOne: null
         };
-        expect(partDAOUpdate).toHaveBeenCalledWith("joinerId", expectedUpdate );
+        expect(partDAO.update).toHaveBeenCalledWith("joinerId", expectedUpdate );
         tick(component.maximalMoveDuration);
     }));
+
+    it('Victory move from player should notifyVictory', fakeAsync(async() => {
+        await prepareStartedGameForCreator();
+        fixture.detectChanges();
+        tick(1);
+
+        let slice: QuartoPartSlice = component.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
+        const move0: QuartoMove = new QuartoMove(0, 3, QuartoEnum.AAAB);
+        const move1: QuartoMove = new QuartoMove(1, 3, QuartoEnum.AABA);
+        const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.BBBB);
+        const move3: QuartoMove = new QuartoMove(0, 0, QuartoEnum.AABB);
+        const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoEnum.ABAA);
+        await component.gameComponent.chooseMove(move0, slice, null, null);
+        await partDAO.update("joinerId", {
+            listMoves: [move0.encode(), move1.encode()], turn : 2,
+            scorePlayerZero: null,                       scorePlayerOne: null
+        });
+        await component.gameComponent.chooseMove(move2, slice, null, null);
+        await partDAO.update("joinerId", {
+            listMoves: [move0.encode(), move1.encode(), move2.encode(), move3.encode()], turn : 4,
+            scorePlayerZero: null,              scorePlayerOne: null
+        });
+        tick();
+        fixture.detectChanges();
+
+        spyOn(partDAO, 'update').and.callThrough();
+        await component.gameComponent.chooseMove(winningMove, slice, null, null);
+
+        expect(component.gameComponent.rules.node.move.toString()).toBe(winningMove.toString());
+        expect(partDAO.update).toHaveBeenCalledTimes(2);
+        expect(partDAO.update).toHaveBeenCalledWith("joinerId", {
+            listMoves: [move0.encode(), move1.encode(), move2.encode(), move3.encode(), winningMove.encode()],
+            turn: 5, scorePlayerZero: null, scorePlayerOne: null
+        });
+        expect(partDAO.update).toHaveBeenCalledWith("joinerId", {
+            winner: 'creator',
+            result: 3,
+            request: null
+        });
+        console.table(component.gameComponent.rules.node.gamePartSlice.board);
+    }));
+
     afterEach(fakeAsync(async() => {
         fixture.destroy();
         await fixture.whenStable();

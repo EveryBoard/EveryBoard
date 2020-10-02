@@ -30,8 +30,6 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
 
     public chosenOrientation: Orthogonale;
 
-    public imagesNames: String[] = ["EMPTY", "WHITE_UP", "WHITE_RIGHT", "WHITE_DOWN", "WHITE_LEFT", "BLACK_UP", "BLACK_RIGHT", "BLACK_DOWN", "BLACK_LEFT", "MOUNTAIN"];
-
     public updateBoard() {
         const slice: SiamPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.board;
