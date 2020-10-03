@@ -27,6 +27,8 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public chosen: Coord = new Coord(-1, -1);
 
+    public chosenAutomatically: boolean = false;
+
     public backgroundImage(x: number, y: number): string {
         return 'kamisado/background/' + this.colors[y][x].name + '.svg';
     }
@@ -74,7 +76,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             console.log("no success");
             this.cancelMove();
         }
-        console.log("success!");
         return success;
     }
 
@@ -84,8 +85,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         for (let y = 0; y < slice.board.length; y++) {
             for (let x = 0; x < slice.board.length; x++) {
                 const piece = slice.getPieceAt(x, y);
-                if (piece.player === slice.getCurrentEnnemy() && piece.color.equals(color)) {
+                if (piece.player === slice.getCurrentPlayer() && piece.color.equals(color)) {
                     this.chosen = new Coord(x, y);
+                    this.chosenAutomatically = true;
                     return;
                 }
             }
@@ -97,7 +99,10 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const chosenDestination: Coord = new Coord(x, y);
         try {
             const move: KamisadoMove = new KamisadoMove(chosenPiece, chosenDestination);
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null).then(b => { this.selectNextPiece(move); return b });
+            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null).then(b => {
+                 if (b) { this.selectNextPiece(move) }
+                 return b 
+            });
         } catch (error) {
             this.cancelMove();
             return false;
@@ -111,7 +116,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         }
 
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
-            console.log("!pieceBelongToCurrentPlayer, current player is: " + this.rules.node.gamePartSlice.turn % 2);
             return false;
         }
         this.showSelectedPiece(x, y);
@@ -119,13 +123,14 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     }
 
     public pieceBelongToCurrentPlayer(x: number, y: number): boolean {
-        const player = this.rules.node.gamePartSlice.turn % 2 === 0 ? 0 : 1
-        const coord: Coord = new Coord(x, y);
-        const piece: number = this.rules.node.gamePartSlice.board[y][x];
-        return (piece > 0 && ((player === 0 && piece < 16) || (player === 1) && piece >= 16));
+        const player = this.rules.node.gamePartSlice.getCurrentPlayer();
+        const piece = this.rules.node.gamePartSlice.getPieceAt(x, y);
+        return piece.player === player;
     }
     public cancelMove() {
-        this.chosen = new Coord(-1, -1);
+        console.log({auto: this.chosenAutomatically})
+        if (!this.chosenAutomatically)
+            this.chosen = new Coord(-1, -1);
     }
     public showSelectedPiece(x: number, y: number) {
         this.chosen = new Coord(x, y);

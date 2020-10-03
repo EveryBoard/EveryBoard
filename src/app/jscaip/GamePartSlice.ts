@@ -34,10 +34,14 @@ export abstract class GamePartSlice {
     // Getters
 
     public getBoardByXY(x: number, y: number): number {
-        return this.board[y][x];
+        const value = this.board[y][x];
+        if (value === undefined) {
+            throw new Error("getBoardByXY(" + x + "," + y + ") is undefined");
+        }
+        return value;
     }
     public getBoardAt(c: Coord): number {
-        return this.board[c.y][c.x];
+        return this.getBoardByXY(c.x, c.y);
     }
     // Methods:
 

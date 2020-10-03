@@ -1,3 +1,6 @@
+import { environment } from "src/environments/environment";
+import { Coord } from "./coord/Coord";
+
 export class Orthogonale {
 
     public static readonly UP: Orthogonale = new Orthogonale(0, -1);
@@ -120,6 +123,26 @@ export class Direction {
             throw new Error("Invalid argument for Direction (x = " + x + ")");
         }
         throw new Error("Invalid argument for Direction (y = " + y + ")")
+    }
+    public static fromMove(start: Coord, end: Coord): Direction {
+        if (start.x === end.x && start.y === end.y) {
+            throw new Error("Invalid direction from static move");
+        } else if (start.x === end.x) {
+            // Vertical move
+            if (start.y < end.y) return Direction.DOWN;
+            if (start.y > end.y) return Direction.UP;
+        } else if (start.y === end.y) {
+            // Horizontal move
+            if (start.x < end.x) return Direction.RIGHT;
+            if (start.y > end.y) return Direction.LEFT;
+        } else if (Math.abs(start.x - end.x) === Math.abs(start.y - end.y)) {
+            // Diagonal move
+            if (start.x < end.x && start.y < end.y) return Direction.DOWN_RIGHT;
+            if (start.x < end.x && start.y > end.y) return Direction.UP_RIGHT;
+            if (start.x > end.x && start.y < end.y) return Direction.DOWN_LEFT;
+            if (start.x > end.x && start.y > end.y) return Direction.UP_LEFT;
+        }
+        throw new Error("Invalid direction from move: " + start.toString() + "->" + end.toString());
     }
     private constructor(public readonly x: number, public readonly y: number) {}
 }

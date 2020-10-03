@@ -24,6 +24,9 @@ export class KamisadoPiece implements Comparable {
     static ZERO = KamisadoPiece.createPlayerColors(Player.ZERO);
     static ONE = KamisadoPiece.createPlayerColors(Player.ONE);
     public static of(value: number): KamisadoPiece {
+        if (value === undefined) {
+            throw new Error("KamisadoPiece.of undefined!");
+        }
         const color = value % 16;
         const player = (value - color) / 16;
         return new KamisadoPiece(Player.of(player), KamisadoColor.of(color));
@@ -33,5 +36,8 @@ export class KamisadoPiece implements Comparable {
     }
     public equals(piece: KamisadoPiece): boolean {
         return piece.player === this.player && piece.color === this.color;
+    }
+    public isEmpty(): boolean {
+        return this.equals(KamisadoPiece.NONE);
     }
 }

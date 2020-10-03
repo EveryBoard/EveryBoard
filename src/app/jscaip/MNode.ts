@@ -246,6 +246,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         while (i < moves.size() && !hasWinningMove) {
             const move: M = moves.getByIndex(i).key
             const slice: S = moves.getByIndex(i).value;
+            if (slice === undefined) throw new Error("slice is undefined");
             const sliceValue: number = MNode.ruler.getBoardValue(move, slice);
             boardValues[i] = sliceValue;
             hasWinningMove = winningValue === sliceValue;

@@ -30,4 +30,7 @@ export class KamisadoColor implements Comparable {
     public equals(color: KamisadoColor): boolean {
         return color.value === this.value;
     }
+    public toString(): string {
+        return this.name;
+    }
 }

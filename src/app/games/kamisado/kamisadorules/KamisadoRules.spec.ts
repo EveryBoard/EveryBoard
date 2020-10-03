@@ -42,12 +42,12 @@ describe('KamisadoRules:', () => {
         expect(rules).toBeTruthy();
         expect(rules.node.gamePartSlice.turn).toBe(0, "Game should start a turn 0");
     });
-    it('Should provide 96 possible moves at turn 0', () => {
-        // Each piece can do 6 vertical moves and 6 diagonal ones = 12 moves per piece
-        // There are 8 pieces
-        // In total, that makes 96 possible moves
+    it('Should provide 102 possible moves at turn 0', () => {
+        // Each piece on the side can do 6 vertical moves and 6 diagonal ones = 12 moves per piece * 2 side pieces
+        // Other pieces  can do 6 vertical and 7 diagonal = 13 moves per piece * 6 pieces
+        // In total, that makes 102 possible moves
         const firstTurnMoves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMoves(rules.node);
-        expect(firstTurnMoves.size()).toEqual(96);
+        expect(firstTurnMoves.size()).toEqual(102);
         expect(firstTurnMoves.getByIndex(0).value.turn).toEqual(1);
     });
     it('Vertical moves without obstacle are allowed', () => {

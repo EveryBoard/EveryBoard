@@ -12,6 +12,7 @@ import { KamisadoPartSlice } from "../KamisadoPartSlice";
 import { KamisadoMove } from "../kamisadomove/KamisadoMove";
 import { SlicePipe } from "@angular/common";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { KamisadoRulesConfig } from "./KamisadoRulesConfig";
 
 abstract class KamisadoNode extends MNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> {}
 
@@ -72,6 +73,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                         const move = new KamisadoMove(startCoord, endCoord);
                         const result = KamisadoRules.tryMove(slice, move);
                         if (result.success) {
+                            if (result.slice === undefined) throw new Error("result.slice is undefined");
                             moves.set(move, result.slice);
                        }
                     }
@@ -84,6 +86,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             const move: KamisadoMove = KamisadoMove.PASS;
             const result = KamisadoRules.tryMove(slice, move);
             if (result.success) {
+                if (result.slice === undefined) throw new Error("result.slice is undefined");
                 moves.set(move, result.slice);
             }
         }
@@ -129,6 +132,12 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             return { success: true, slice: new KamisadoPartSlice(slice.turn+1, slice.colorToPlay, true, slice.board)};
         }
 
+        if (!start.isInRange(KamisadoRulesConfig.WIDTH, KamisadoRulesConfig.HEIGHT) || 
+            !end.isInRange(KamisadoRulesConfig.WIDTH, KamisadoRulesConfig.HEIGHT)) {
+            // This should already have been checked when constructing the move
+            throw new Error("KamisadoRules.tryMove: move out of bounds");
+        }
+
         // Check legality
         const piece = slice.getPieceAt(start.x, start.y);
         // Start case should be owned by the player that plays
@@ -147,7 +156,17 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             //console.log("end case is not empty (" + Player.NONE.value + "): it is: " + endPiece.player.value);
             return failure;
         }
+        // All steps between start and end should be empty
+        const dir = Direction.fromMove(start, end);
+        let currentCoord: Coord = start;
+        while (!currentCoord.equals(end)) {
+            currentCoord = currentCoord.getNext(dir);
+            console.log("current coord: " + currentCoord.toString() + " (start: " + start.toString() + ", end: " + end.toString() + ") =? end" + currentCoord.equals(end));
+            if (!slice.getPieceAt(currentCoord.x, currentCoord.y).isEmpty())
+                return failure;
+        }
 
+        console.log("applying the move");
         // Apply the move
         const newBoard = slice.getCopiedBoard();
         newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move
@@ -162,8 +181,8 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         const colorToPlay: KamisadoColor = slice.colorToPlay;
 
         const player: Player = slice.getCurrentPlayer();
+        console.log("apply legal move");
         const resultingSlice: KamisadoPartSlice = KamisadoRules.tryMove(slice, move).slice;
-        //const resultingSlice: KamisadoPartSlice = new KamisadoPartSlice(turn + 1, colorToPlay, resultingBoard)
         return {resultingSlice, resultingMove: move};
     }
     public isLegal(move: KamisadoMove, slice: KamisadoPartSlice): LegalityStatus {
