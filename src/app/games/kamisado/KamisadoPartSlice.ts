@@ -6,14 +6,16 @@ import { KamisadoPiece } from "./KamisadoPiece";
 
 export class KamisadoPartSlice extends GamePartSlice {
     public readonly colorToPlay: KamisadoColor;
-    public constructor(turn: number, colorToPlay: KamisadoColor, board: ReadonlyArray<ReadonlyArray<number>>) {
+    public readonly alreadyPassed: boolean;
+    public constructor(turn: number, colorToPlay: KamisadoColor, alreadyPassed: boolean, board: ReadonlyArray<ReadonlyArray<number>>) {
         super(ArrayUtils.copyBiArray(board), turn);
         this.colorToPlay = colorToPlay;
+        this.alreadyPassed = alreadyPassed;
     }
 
     public static EMPTY: number = -1;
     public static getStartingSlice(): KamisadoPartSlice {
-        return new KamisadoPartSlice(0, KamisadoColor.ANY, ArrayUtils.mapBiArray(KamisadoBoard.INITIAL, p => p.getValue()));
+        return new KamisadoPartSlice(0, KamisadoColor.ANY, false, ArrayUtils.mapBiArray(KamisadoBoard.INITIAL, p => p.getValue()));
     }
 
     public getPieceAt(x: number, y: number): KamisadoPiece {

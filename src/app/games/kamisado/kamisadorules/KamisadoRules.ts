@@ -10,10 +10,20 @@ import { KamisadoColor } from "../KamisadoColor";
 import { KamisadoPiece } from "../KamisadoPiece";
 import { KamisadoPartSlice } from "../KamisadoPartSlice";
 import { KamisadoMove } from "../kamisadomove/KamisadoMove";
+import { SlicePipe } from "@angular/common";
+import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 abstract class KamisadoNode extends MNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> {}
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
+
+    constructor() {
+        super(true); // TODO: ALL RULES ARE NOW PEARED
+        this.node = MNode.getFirstNode(
+            new KamisadoPartSlice(0, KamisadoColor.ANY, false, ArrayUtils.mapBiArray(KamisadoBoard.getInitialBoard(), p => p.getValue())),
+            this
+        );
+    }
     public static getMovablePieces(partSlice: KamisadoPartSlice, player: Player, colorToPlay: KamisadoColor): Array<Coord> {
         const len = partSlice.board.length;
         let coords: Array<Coord> = [];
@@ -38,13 +48,13 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         }
     }
     public getListMoves(node: KamisadoNode): MGPMap<KamisadoMove, KamisadoPartSlice> {
-        const partSlice = node.gamePartSlice;
-        const player = partSlice.getCurrentPlayer();
-        const len = partSlice.board.length;
-        const colorToPlay = partSlice.colorToPlay;
+        const slice = node.gamePartSlice;
+        const player = slice.getCurrentPlayer();
+        const len = slice.board.length;
+        const colorToPlay = slice.colorToPlay;
         // Get all the pieces that can play
         let moves = new MGPMap<KamisadoMove, KamisadoPartSlice>();
-        for (const startCoord of KamisadoRules.getMovablePieces(partSlice, player, colorToPlay)) {
+        for (const startCoord of KamisadoRules.getMovablePieces(slice, player, colorToPlay)) {
             // For each piece, look at all positions where it can go
             for (let i = 1; i < len; i++) {
                 // For each direction, create a move of i in that direction
@@ -52,15 +62,15 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                     let endCoord = startCoord;
                     for (let j = 0; j < i; j++) {
                         endCoord = endCoord.getNext(dir);
-                        if (!endCoord.isInRange(len, len) || !partSlice.isEmptyAt(endCoord.x, endCoord.y)) {
+                        if (!endCoord.isInRange(len, len) || !slice.isEmptyAt(endCoord.x, endCoord.y)) {
                             // Way is obstructed, don't continue
                             break;
                         }
                     }
-                    if (endCoord.isInRange(len, len) && partSlice.isEmptyAt(endCoord.x, endCoord.y)) {
+                    if (endCoord.isInRange(len, len) && slice.isEmptyAt(endCoord.x, endCoord.y)) {
                         // Check if the move can be done, and if so, add the resulting slice to the map to be returned
                         const move = new KamisadoMove(startCoord, endCoord);
-                        const result = KamisadoRules.tryMove(partSlice, move);
+                        const result = KamisadoRules.tryMove(slice, move);
                         if (result.success) {
                             moves.set(move, result.slice);
                        }
@@ -69,6 +79,14 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             }
         }
         console.log("There are " + moves.size() + " moves");
+        if (moves.size() === 0 && !slice.alreadyPassed) {
+            // No move, player can only pass
+            const move: KamisadoMove = KamisadoMove.PASS;
+            const result = KamisadoRules.tryMove(slice, move);
+            if (result.success) {
+                moves.set(move, result.slice);
+            }
+        }
         return moves;
     }
     public getBoardValue(move: KamisadoMove, slice: KamisadoPartSlice): number {
@@ -107,6 +125,10 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         const failure = {success: false, slice: null};
         const colorToPlay = slice.colorToPlay;
 
+        if (move.equals(KamisadoMove.PASS)) {
+            return { success: true, slice: new KamisadoPartSlice(slice.turn+1, slice.colorToPlay, true, slice.board)};
+        }
+
         // Check legality
         const piece = slice.getPieceAt(start.x, start.y);
         // Start case should be owned by the player that plays
@@ -131,7 +153,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move
         newBoard[start.y][start.x] = KamisadoPiece.NONE.getValue(); // unoccupied
         const newColorToPlay: KamisadoColor = KamisadoBoard.COLORS[end.y][end.x];
-        const resultingSlice = new KamisadoPartSlice(slice.turn+1, newColorToPlay, newBoard);
+        const resultingSlice = new KamisadoPartSlice(slice.turn+1, newColorToPlay, false, newBoard);
         return {success: true, slice: resultingSlice};
     }
     public applyLegalMove(move: KamisadoMove, slice: KamisadoPartSlice, status: LegalityStatus): {resultingMove: KamisadoMove, resultingSlice: KamisadoPartSlice} {

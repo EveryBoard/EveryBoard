@@ -3,21 +3,22 @@ import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
 import { KamisadoRulesConfig } from "../kamisadorules/KamisadoRulesConfig";
 
 export class KamisadoMove extends MoveCoordToCoord {
-    public static PASS: KamisadoMove = new KamisadoMove(new Coord(-1, -1), new Coord(-1, -1));
+    // TODO: find a better encoding
+    public static PASS: KamisadoMove = new KamisadoMove(new Coord(-1, -1), new Coord(-2, -2));
     public static decode(encodedMove: number): KamisadoMove {
         if (encodedMove < 0) return this.PASS;
-        const y2 = encodedMove % 16;
-        encodedMove = (encodedMove / 16) - (encodedMove % 1);
-        const x2 = encodedMove % 16;
-        encodedMove = (encodedMove / 16) - (encodedMove % 1);
-        const y1 = encodedMove % 16;
-        encodedMove = (encodedMove / 16) - (encodedMove % 1);
-        const x1 = encodedMove % 16;
+        const y2 = encodedMove % 16 - (encodedMove % 1);
+        encodedMove = encodedMove / 16
+        const x2 = encodedMove % 16 - (encodedMove % 1);
+        encodedMove = encodedMove / 16;
+        const y1 = encodedMove % 16 - (encodedMove % 1);
+        encodedMove = encodedMove / 16;
+        const x1 = encodedMove % 16 - (encodedMove % 1);
         return new KamisadoMove(new Coord(x1, y1), new Coord(x2, y2));
     }
     public constructor(start: Coord, end: Coord) {
         super(start, end);
-        if (start.equals(end) && start.equals(new Coord(-1, -1))) {
+        if (start.equals(new Coord(-1, -1)) && end.equals(new Coord(-2, -2))) {
             // Valid move, it is PASS
             return;
         }

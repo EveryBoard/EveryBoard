@@ -1,11 +1,13 @@
-import {Component} from '@angular/core';
-import {AbstractGameComponent} from '../AbstractGameComponent';
-import {Coord} from '../../../jscaip/coord/Coord';
-import {KamisadoMove} from 'src/app/games/kamisado/kamisadomove/KamisadoMove';
-import {KamisadoBoard, KamisadoColor, KamisadoPartSlice, KamisadoPiece} from 'src/app/games/kamisado/KamisadoPartSlice';
-import {KamisadoRules} from 'src/app/games/kamisado/kamisadorules/KamisadoRules';
-import {LegalityStatus} from 'src/app/jscaip/LegalityStatus';
-import { Player } from 'src/app/jscaip/Player';
+import { Component } from '@angular/core';
+import { AbstractGameComponent } from '../AbstractGameComponent';
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { KamisadoMove } from 'src/app/games/kamisado/kamisadomove/KamisadoMove';
+import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
+import { KamisadoRules } from 'src/app/games/kamisado/kamisadorules/KamisadoRules';
+import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
+import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
+import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 
 @Component({
     selector: 'app-kamisado-new',
@@ -15,7 +17,7 @@ import { Player } from 'src/app/jscaip/Player';
 export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
     public imagesNames: string[] = ["none", "brown.svg", "green.svg", "red.svg", "yellow.svg", "pink.svg", "purple.svg", "blue.svg", "orange.svg"];
 
-    public rules = new KamisadoRules(false);
+    public rules = new KamisadoRules();
 
     public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();
 
