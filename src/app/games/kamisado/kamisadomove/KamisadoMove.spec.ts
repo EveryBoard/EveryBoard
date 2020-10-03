@@ -1,11 +1,13 @@
 import { KamisadoRules } from "../kamisadorules/KamisadoRules";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { KamisadoMove } from "./KamisadoMove";
-import { KamisadoPartSlice, KamisadoPiece, KamisadoBoard } from "../KamisadoPartSlice";
+import { KamisadoPartSlice } from "../KamisadoPartSlice";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { MNode } from "src/app/jscaip/MNode";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { KamisadoPiece } from "../KamisadoPiece";
+import { KamisadoBoard } from "../KamisadoBoard";
 
 describe('SiamMove', () => {
 

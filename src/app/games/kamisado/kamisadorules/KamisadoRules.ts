@@ -2,14 +2,14 @@ import {Rules} from "../../../jscaip/Rules";
 import {Coord} from "../../../jscaip/coord/Coord";
 import {MNode} from "../../../jscaip/MNode";
 import {LegalityStatus} from "src/app/jscaip/LegalityStatus";
-
-import {KamisadoPartSlice, KamisadoColor, KamisadoPiece, KamisadoBoard} from "../KamisadoPartSlice";
-import {KamisadoMove} from "../kamisadomove/KamisadoMove";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { Direction } from "src/app/jscaip/DIRECTION";
 import { Player } from "src/app/jscaip/Player";
-import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
-import { SlicePipe } from "@angular/common";
+import { KamisadoBoard } from "../KamisadoBoard";
+import { KamisadoColor } from "../KamisadoColor";
+import { KamisadoPiece } from "../KamisadoPiece";
+import { KamisadoPartSlice } from "../KamisadoPartSlice";
+import { KamisadoMove } from "../kamisadomove/KamisadoMove";
 
 abstract class KamisadoNode extends MNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> {}
 

@@ -3,7 +3,9 @@ import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
 import { KamisadoRulesConfig } from "../kamisadorules/KamisadoRulesConfig";
 
 export class KamisadoMove extends MoveCoordToCoord {
+    public static PASS: KamisadoMove = new KamisadoMove(new Coord(-1, -1), new Coord(-1, -1));
     public static decode(encodedMove: number): KamisadoMove {
+        if (encodedMove < 0) return this.PASS;
         const y2 = encodedMove % 16;
         encodedMove = (encodedMove / 16) - (encodedMove % 1);
         const x2 = encodedMove % 16;
@@ -15,6 +17,10 @@ export class KamisadoMove extends MoveCoordToCoord {
     }
     public constructor(start: Coord, end: Coord) {
         super(start, end);
+        if (start.equals(end) && start.equals(new Coord(-1, -1))) {
+            // Valid move, it is PASS
+            return;
+        }
         if (!start.isInRange(KamisadoRulesConfig.WIDTH, KamisadoRulesConfig.HEIGHT)) {
             throw new Error("Starting coord of KamisadoMove must be on the board, not at " + start.toString());
         }
