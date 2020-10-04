@@ -129,45 +129,31 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
         return PylosRules.applyLegalMove(move, slice, status);
     }
     public isLegal(move: PylosMove, slice: PylosPartSlice): LegalityStatus {
-        if (slice.getBoardAt(move.landingCoord) !== Player.NONE.value) {
-            console.log("landing occupied");
-            return { legal: false };
-        }
+        if (slice.getBoardAt(move.landingCoord) !== Player.NONE.value) return { legal: false };
+
         const startingCoord: PylosCoord = move.startingCoord.getOrNull();
         const currentPlayer: number = slice.getCurrentPlayer().value;
 
         if (startingCoord != null) {
-            if (slice.getBoardAt(startingCoord) !== currentPlayer) {
-                console.log("starting is not mine");
-                return { legal: false };
-            }
+            if (slice.getBoardAt(startingCoord) !== currentPlayer) return { legal: false };
+
             const supportedPieces: PylosCoord[] = startingCoord.getHigherPieces()
                 .filter((p: PylosCoord) => slice.getBoardAt(p) !== Player.NONE.value ||
                                            p.equals(move.landingCoord));
-            if (supportedPieces.length > 0) {
-                console.log("illegal first piece to capture: supporting piece");
-                return { legal: false };
-            }
+            if (supportedPieces.length > 0) return { legal: false };
         }
-        if (!slice.isLandable(move.landingCoord)) {
-            console.log("not landable landing coord");
-            return { legal: false };
-        }
+        if (!slice.isLandable(move.landingCoord)) return { legal: false };
+
         if (move.firstCapture.isPresent()) {
-            if (!PylosRules.canCapture(slice, move.landingCoord)) {
-                console.log("illegal capture");
-                return { legal: false };
-            }
+            if (!PylosRules.canCapture(slice, move.landingCoord)) return { legal: false };
+
             if (PylosRules.isValidCapture(slice, move, move.firstCapture.get())) {
                 if (move.secondCapture.isPresent() &&
                     !PylosRules.isValidCapture(slice, move, move.secondCapture.get())) {
                     return { legal: false };
                 }
-            } else {
-                return { legal: false };
-            }
+            } else return { legal: false };
         }
-        console.log("legal move");
         return { legal: true };
     }
     public static isValidCapture(slice: PylosPartSlice, move: PylosMove, capture: PylosCoord): boolean {

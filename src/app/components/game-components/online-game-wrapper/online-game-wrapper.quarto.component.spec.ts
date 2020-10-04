@@ -248,7 +248,6 @@ describe('OnlineGameWrapperComponent of Quarto', () => {
             result: 3,
             request: null
         });
-        console.table(component.gameComponent.rules.node.gamePartSlice.board);
     }));
 
     afterEach(fakeAsync(async() => {
