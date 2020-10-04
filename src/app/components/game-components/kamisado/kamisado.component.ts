@@ -17,7 +17,7 @@ import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
     public imagesNames: string[] = ["none", "brown.svg", "green.svg", "red.svg", "yellow.svg", "pink.svg", "purple.svg", "blue.svg", "orange.svg"];
 
-    public rules = new KamisadoRules();
+    public rules = new KamisadoRules(KamisadoPartSlice.getStartingSlice());
 
     public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();
 
@@ -28,6 +28,8 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     public chosen: Coord = new Coord(-1, -1);
 
     public chosenAutomatically: boolean = false;
+
+    public canOnlyPass: boolean = false;
 
     public backgroundImage(x: number, y: number): string {
         return 'kamisado/background/' + this.colors[y][x].name + '.svg';
@@ -59,21 +61,29 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         if (move != null) {
             this.lastMove = move;
         }
+        this.canOnlyPass = this.rules.canOnlyPass();
         this.cancelMove();
     }
 
+    public async pass(): Promise<boolean> {
+        if (this.canOnlyPass) {
+            const move: KamisadoMove = KamisadoMove.PASS;
+            return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null).then(b => {
+                if (b) { this.selectNextPiece(move) }
+                return b 
+            });
+        }
+        return false;
+    }
+
     public async onClick(x: number, y: number): Promise<boolean> {
-        console.log("click: " + x+ ","+ y);
         let success: boolean;
         if (this.chosen.x === -1) {
-            console.log("choosePiece")
             success = this.choosePiece(x, y);
         } else {
-            console.log("chooseDestination")
             success = await this.chooseDestination(x, y);
         }
         if (!success) {
-            console.log("no success");
             this.cancelMove();
         }
         return success;
@@ -81,7 +91,18 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public selectNextPiece(move: KamisadoMove): void {
         const slice: KamisadoPartSlice = this.rules.node.gamePartSlice;
-        const color: KamisadoColor = KamisadoBoard.getColorAt(move.end.x, move.end.y);
+        const color: KamisadoColor = slice.colorToPlay;
+        const moves = this.rules.getListMoves(this.rules.node);
+        for (const move of moves.listKeys()) {
+            console.log({move});
+        }
+        if (moves.size() === 1 && moves.listKeys()[0] === KamisadoMove.PASS) {
+            this.canOnlyPass = true;
+            this.chosenAutomatically = false;
+            return;
+        } else {
+            this.canOnlyPass = false;
+        }
         for (let y = 0; y < slice.board.length; y++) {
             for (let x = 0; x < slice.board.length; x++) {
                 const piece = slice.getPieceAt(x, y);
@@ -111,7 +132,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public choosePiece(x: number, y: number): boolean {
         if (this.rules.node.isEndGame()) {
-            console.log("isEndGame");
             return false;
         }
 
