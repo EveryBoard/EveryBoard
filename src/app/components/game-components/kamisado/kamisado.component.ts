@@ -61,7 +61,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         if (move != null) {
             this.lastMove = move;
         }
-        this.canOnlyPass = this.rules.canOnlyPass();
+        this.canOnlyPass = this.rules.canOnlyPass(slice);
         this.cancelMove();
     }
 
@@ -93,25 +93,13 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const slice: KamisadoPartSlice = this.rules.node.gamePartSlice;
         const color: KamisadoColor = slice.colorToPlay;
         const moves = this.rules.getListMoves(this.rules.node);
-        for (const move of moves.listKeys()) {
-            console.log({move});
-        }
-        if (moves.size() === 1 && moves.listKeys()[0] === KamisadoMove.PASS) {
+        if (this.rules.canOnlyPass(slice)) {
             this.canOnlyPass = true;
             this.chosenAutomatically = false;
             return;
         } else {
             this.canOnlyPass = false;
-        }
-        for (let y = 0; y < slice.board.length; y++) {
-            for (let x = 0; x < slice.board.length; x++) {
-                const piece = slice.getPieceAt(x, y);
-                if (piece.player === slice.getCurrentPlayer() && piece.color.equals(color)) {
-                    this.chosen = new Coord(x, y);
-                    this.chosenAutomatically = true;
-                    return;
-                }
-            }
+            this.chosen = slice.coordToPlay.get();
         }
     }
 

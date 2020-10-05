@@ -3,7 +3,7 @@ import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
 import { KamisadoRulesConfig } from "../kamisadorules/KamisadoRulesConfig";
 
 export class KamisadoMove extends MoveCoordToCoord {
-    // TODO: find a better encoding
+    // The PASS move is encoded as a MoveCoordToCoord that is out of the board
     public static PASS: KamisadoMove = new KamisadoMove(new Coord(-1, -1), new Coord(-2, -2));
     public static decode(encodedMove: number): KamisadoMove {
         if (encodedMove < 0) return this.PASS;

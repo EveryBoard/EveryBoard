@@ -40,4 +40,7 @@ export class KamisadoPiece implements Comparable {
     public isEmpty(): boolean {
         return this.equals(KamisadoPiece.NONE);
     }
+    public belongsTo(player: Player): boolean {
+        return this.player === player;
+    }
 }
