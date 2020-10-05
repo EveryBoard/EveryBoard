@@ -25,7 +25,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
 
     // Returns the list of pieces that can be moved for a slice
     // This is often only one piece, except in the first turn
-    public static getMovablePieces(slice: KamisadoPartSlice, player: Player, colorToPlay: KamisadoColor): Array<Coord> {
+    public static getMovablePieces(slice: KamisadoPartSlice): Array<Coord> {
         if (slice.colorToPlay !== KamisadoColor.ANY) {
             // Only one piece can move, and its coord is stored in slice.coordToPlay
             return [slice.coordToPlay.get()];
@@ -72,10 +72,9 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     public getListMovesFromSlice(slice: KamisadoPartSlice): MGPMap<KamisadoMove, KamisadoPartSlice> {
         const player: Player = slice.getCurrentPlayer();
         const len: number = slice.board.length;
-        const colorToPlay: KamisadoColor= slice.colorToPlay;
         // Get all the pieces that can play
         let moves: MGPMap<KamisadoMove, KamisadoPartSlice> = new MGPMap<KamisadoMove, KamisadoPartSlice>();
-        for (const startCoord of KamisadoRules.getMovablePieces(slice, player, colorToPlay)) {
+        for (const startCoord of KamisadoRules.getMovablePieces(slice)) {
             // For each piece, look at all positions where it can go
             for (let i = 1; i < len; i++) {
                 // For each direction, create a move of i in that direction
@@ -154,11 +153,12 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         for (let y = 0; y < slice.board.length; y++) {
             for (let x = 0; x < slice.board.length; x++) {
                 const piece = slice.getPieceAt(x, y);
-                if (piece.player === slice.getCurrentPlayer() && piece.color.equals(colorToPlay)) {
+                if (piece.player === slice.getCurrentEnnemy() && piece.color.equals(colorToPlay)) {
                     return MGPOptional.of(new Coord(x, y));
                 }
             }
         }
+        console.log("No piece found! Color:" + colorToPlay.toString());
         return MGPOptional.empty();
     }
     // Perform the move if possible
@@ -183,7 +183,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         // Check legality
         const piece: KamisadoPiece = slice.getPieceAt(start.x, start.y);
         // Start case should be owned by the player that plays
-        if (piece.belongsTo(slice.getCurrentPlayer())) {
+        if (!piece.belongsTo(slice.getCurrentPlayer())) {
             return failure;
         }
         // Start case should contain a piece of the right color (or any color can be played)
@@ -192,7 +192,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         }
         const endPiece: KamisadoPiece = slice.getPieceAt(end.x, end.y);
         // End case should be empty
-        if (endPiece.isEmpty()) {
+        if (!endPiece.isEmpty()) {
             return failure;
         }
         // All steps between start and end should be empty
