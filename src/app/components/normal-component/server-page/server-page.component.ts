@@ -27,14 +27,14 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                                        'Encapsule',      // 2
                                        'Go',             // 3
                                        'Kamisado',       // 4
-                                       'MinimaxTesting', // neh.
+                                       // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
                                        'P4',             // 5
-                                       'Quarto',         // 6
-                                       'Reversi',        // 7
-                                       'Sahara',         // 8
-                                       'Siam',           // 9
-                                       'Tablut'];        // 10
-                                       
+                                       'Pylos',          // 6
+                                       'Quarto',         // 7
+                                       'Reversi',        // 8
+                                       'Sahara',         // 9
+                                       'Siam',           // 10
+                                       'Tablut'];        // 11
 
     public selectedGame: string;
 

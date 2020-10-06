@@ -40,10 +40,10 @@ export class QuartoMove extends MoveCoord {
         return QuartoMove.decode(xyp);
     }
     public toString(): String {
-        return 'QuartoMove{' + 'piece=' + this.piece
-                             + ' at (' + this.coord.x
-                             + ', ' + this.coord.y +
-                ')}';
+        return 'QuartoMove(' + this.coord.x + ', '
+                             + this.coord.y + ', '
+                             + this.piece +
+                ')';
     }
     public equals(o: any): boolean {
         if (this === o) return true;

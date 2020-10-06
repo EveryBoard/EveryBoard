@@ -15,10 +15,10 @@ export class Orthogonale {
 
     public static fromInt(int: number): Orthogonale {
         switch (int) {
-            case 1: return Orthogonale.UP;
-            case 2: return Orthogonale.RIGHT;
-            case 3: return Orthogonale.DOWN;
-            case 4: return Orthogonale.LEFT;
+            case 0: return Orthogonale.UP;
+            case 1: return Orthogonale.RIGHT;
+            case 2: return Orthogonale.DOWN;
+            case 3: return Orthogonale.LEFT;
             default: throw new Error("No Orthogonale matching int " + int);
         }
     }
@@ -51,10 +51,10 @@ export class Orthogonale {
     }
     public toInt(): number {
         switch (this) {
-            case Orthogonale.UP:    return 1;
-            case Orthogonale.RIGHT: return 2;
-            case Orthogonale.DOWN:  return 3;
-            case Orthogonale.LEFT:  return 4;
+            case Orthogonale.UP:    return 0;
+            case Orthogonale.RIGHT: return 1;
+            case Orthogonale.DOWN:  return 2;
+            case Orthogonale.LEFT:  return 3;
         }
     }
 }

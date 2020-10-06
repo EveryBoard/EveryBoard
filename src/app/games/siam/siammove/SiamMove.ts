@@ -7,7 +7,7 @@ export class SiamMove extends MoveCoord {
     public static encode(move: SiamMove): number {
         const y: number = move.coord.y + 1; // 0 to 6
         const x: number = move.coord.x + 1; // 0 to 6
-        const moveDirection: number = move.moveDirection.isAbsent() ? 0 : move.moveDirection.get().toInt(); // 0 to 4
+        const moveDirection: number = move.moveDirection.isAbsent() ? 4 : move.moveDirection.get().toInt(); // 0 to 4
         const landingOrientation: number = move.landingOrientation.toInt();
         return (245 * landingOrientation) + (49 * moveDirection) + (7 * x) + y;
     }
@@ -19,7 +19,7 @@ export class SiamMove extends MoveCoord {
         encodedMove -= x;
         encodedMove/= 7;
         const moveDirectionInt: number = encodedMove % 5;
-        const moveDirection: MGPOptional<Orthogonale> = moveDirectionInt === 0 ?
+        const moveDirection: MGPOptional<Orthogonale> = moveDirectionInt === 4 ?
             MGPOptional.empty() :
             MGPOptional.of(Orthogonale.fromInt(moveDirectionInt));
         encodedMove -= moveDirectionInt;

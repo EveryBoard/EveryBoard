@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="500px" height="500px"
+     viewBox="0 0 800 800"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let z of [0, 1, 2]">
+        <g *ngFor="let y of getLevelRange(z)">
+            <g *ngFor="let x of getLevelRange(z)">
+                <circle *ngIf="isDrawable(x, y, z)"
+                        (click)="onClick(x, y, z)"
+                        [ngStyle]="getPieceStyle(x, y, z)"
+                        [attr.r]="getPieceRay(z)"
+                        [attr.cx]="getPieceCx(x, y, z)"
+                        [attr.cy]="getPieceCy(x, y, z)" />
+            </g>
+        </g>
+    </g>
+    <circle *ngIf="chosenFirstCapture != null"
+            (click)="validateSingleCapture()"
+            [ngStyle]="getPieceStyle(chosenFirstCapture.x, chosenFirstCapture.y, chosenFirstCapture.z)"
+            [attr.r]="getPieceRay(chosenFirstCapture.z - 2)"
+            [attr.cx]="getPieceCx(chosenFirstCapture.x, chosenFirstCapture.y, chosenFirstCapture.z)"
+            [attr.cy]="getPieceCy(chosenFirstCapture.x, chosenFirstCapture.y, chosenFirstCapture.z)" />
+</svg>
+
+{{ rules.getBoardValue(lastMove, slice) }}

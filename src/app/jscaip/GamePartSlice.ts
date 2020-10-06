@@ -1,6 +1,5 @@
 import {Coord} from './coord/Coord';
 import { Player } from './Player';
-import { Comparable } from '../collectionlib/Comparable';
 import { ArrayUtils } from '../collectionlib/arrayutils/ArrayUtils';
 
 export abstract class GamePartSlice {

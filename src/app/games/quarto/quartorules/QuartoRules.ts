@@ -237,7 +237,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
             return QuartoRules.INVALID_MOVE;
         }
         if (pieceInHand === chosenPiece) {
-            // la pi�ce donn�e est la même que celle en main, c'est ill�gal
+            // la pièce donnée est la même que celle en main, c'est illégal
             return QuartoRules.INVALID_MOVE;
         }
         return QuartoRules.VALID_MOVE;
@@ -245,7 +245,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     // Overrides :
 
     constructor() {
-        super(false);
+        super(true);
         this.node = MNode.getFirstNode(
             new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA),
             // TODO: move in PartSlice.getStartingSlice

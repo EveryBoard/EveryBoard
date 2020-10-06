@@ -192,7 +192,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             const correctDBMove: boolean = this.gameComponent.rules.choose(chosenMove);
             updateIsMove = true;
             if (correctDBMove === false) {
-                throw new Error('We received an incorrect db move: ' + chosenMove + ' in ' + listMoves + ' at turn ' + currentPartTurn);
+                throw new Error('We received an incorrect db move: ' + chosenMove.toString() + ' in ' + listMoves + ' at turn ' + currentPartTurn);
             }
             if (this.gameComponent.rules.node.isEndGame()) {
                 if (this.gameComponent.rules.node.ownValue === 0) {
