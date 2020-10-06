@@ -116,7 +116,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     // This calls getListMoves, so it may be expensive
     public canOnlyPass(slice: KamisadoPartSlice): boolean {
         const moves: MGPMap<KamisadoMove, KamisadoPartSlice> = this.getListMovesFromSlice(slice);
-        return moves.size() === 1 && moves.listKeys()[0] === KamisadoMove.PASS;
+        return moves.size() === 0 || (moves.size() === 1 && moves.listKeys()[0] === KamisadoMove.PASS);
     }
     // Returns the value of the board, as the difference of distance to the win
     public getBoardValue(move: KamisadoMove, slice: KamisadoPartSlice): number {
@@ -158,7 +158,6 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                 }
             }
         }
-        console.log("No piece found! Color:" + colorToPlay.toString());
         return MGPOptional.empty();
     }
     // Perform the move if possible

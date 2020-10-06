@@ -20,11 +20,9 @@ describe('KamisadoRules:', () => {
     const B: number = KamisadoPiece.ZERO.BLUE.getValue();
 
     const r: number = KamisadoPiece.ONE.RED.getValue();
-    const g: number = KamisadoPiece.ONE.GREEN.getValue();
     const o: number = KamisadoPiece.ONE.ORANGE.getValue();
-    const b: number = KamisadoPiece.ONE.BLUE.getValue();
+    const b: number = KamisadoPiece.ONE.BROWN.getValue();
     const p: number = KamisadoPiece.ONE.PURPLE.getValue();
-    const br: number = KamisadoPiece.ONE.BROWN.getValue();
 
     beforeEach(() => {
         rules = new KamisadoRules(KamisadoPartSlice.getStartingSlice());
@@ -130,7 +128,7 @@ describe('KamisadoRules:', () => {
     });
     it('Diagonal moves without obstacle are allowed', () => {
         const board: number[][] = [
-            [_, br, _, _, _, _, _, _],
+            [_, b, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -140,7 +138,7 @@ describe('KamisadoRules:', () => {
             [R, B, _, _, _, _, _, _]
         ];
         const expectedBoard1: number[][] = [
-            [_, br, _, _, _, _, _, _],
+            [_, b, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -150,7 +148,7 @@ describe('KamisadoRules:', () => {
             [_, B, _, _, _, _, _, _]
         ];
         const expectedBoard2: number[][] = [
-            [_, br, _, _, _, _, _, R],
+            [_, b, _, _, _, _, _, R],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -242,7 +240,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [b, r,   _, _, _, _, _, _],
+            [b, r, _, _, _, _, _, _],
             [R, G, B, _, _, _, _, _]
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
