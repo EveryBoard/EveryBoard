@@ -50,6 +50,9 @@ export class KamisadoMove extends MoveCoordToCoord {
         const y2: number = this.end.y;
         return (x1 * 4096) + (y1 * 256) + (x2 * 16) + y2;
     }
+    public static encode(move: KamisadoMove): number {
+        return move.encode();
+    }
     public decode(encodedMove: number): KamisadoMove {
         return KamisadoMove.decode(encodedMove);
     }

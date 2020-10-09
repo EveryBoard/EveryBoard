@@ -1,10 +1,5 @@
-import { KamisadoRules } from "../kamisadorules/KamisadoRules";
-import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { KamisadoMove } from "./KamisadoMove";
-import { KamisadoPartSlice } from "../KamisadoPartSlice";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { Coord } from "src/app/jscaip/coord/Coord";
-import { MNode } from "src/app/jscaip/MNode";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { KamisadoPiece } from "../KamisadoPiece";
 import { KamisadoBoard } from "../KamisadoBoard";
@@ -15,7 +10,7 @@ describe('KamisadoMove', () => {
 
     const initialBoard: number[][] = ArrayUtils.mapBiArray(KamisadoBoard.getInitialBoard(), p => p.getValue());
     it('should toString in a readable way', () => {
-        expect((new KamisadoMove(new Coord(0, 0), new Coord(1, 5))).toString()).toEqual("KamisadoMove((0, 0) -> (1, 5))");
+        expect((new KamisadoMove(new Coord(0, 0), new Coord(1, 5))).toString()).toEqual("KamisadoMove((0, 0)->(1, 5))");
         expect(KamisadoMove.PASS.toString()).toEqual("KamisadoMove(PASS)");
     });
     it('should correctly encode and decode all moves', () => {

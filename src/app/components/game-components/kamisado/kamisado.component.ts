@@ -16,13 +16,9 @@ import { Player } from 'src/app/jscaip/Player';
 })
 
 export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
-    public imagesNames: string[] = ["none", "brown.svg", "green.svg", "red.svg", "yellow.svg", "pink.svg", "purple.svg", "blue.svg", "orange.svg"];
-
     public rules = new KamisadoRules(KamisadoPartSlice.getStartingSlice());
 
     public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();
-
-    public colors = KamisadoBoard.COLORS;
 
     public lastMove: KamisadoMove = null;
 
@@ -34,7 +30,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public styleBackground(x: number, y: number): any {
         return {
-            fill: this.colors[y][x].rgb,
+            fill: KamisadoBoard.COLORS[y][x].rgb,
             stroke: 'black',
             'stroke-width': '1px',
         };
@@ -55,13 +51,13 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         this.board = slice.getCopiedBoard();
         this.lastMove = move;
 
-        this.canOnlyPass = this.rules.canOnlyPass(slice);
+        this.canOnlyPass = KamisadoRules.canOnlyPass(slice);
         this.cancelMove();
-        if (!this.canOnlyPass) {
+        if (this.canOnlyPass) {
+            this.chosenAutomatically = false;
+        } else {
             this.chosenAutomatically = true;
             this.chosen = slice.coordToPlay.get();
-        } else {
-            this.chosenAutomatically = false;
         }
     }
 
@@ -116,7 +112,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         return piece.player === player;
     }
     public cancelMove() {
-        console.log({auto: this.chosenAutomatically})
         if (!this.chosenAutomatically)
             this.chosen = new Coord(-1, -1);
     }
@@ -127,6 +122,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         return KamisadoMove.decode(encodedMove);
     }
     public encodeMove(move: KamisadoMove): number {
-        return move.encode();
+        return KamisadoMove.encode(move);
     }
 }
