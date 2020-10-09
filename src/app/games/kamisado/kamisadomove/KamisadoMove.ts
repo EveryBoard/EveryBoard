@@ -38,6 +38,9 @@ export class KamisadoMove extends MoveCoordToCoord {
         return true;
     }
     public toString(): String {
+        if (this === KamisadoMove.PASS) {
+            return "KamisadoMove(PASS)";
+        }
         return "KamisadoMove(" + this.coord + "->" + this.end + ")";
     }
     public encode(): number {

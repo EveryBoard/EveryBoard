@@ -1,31 +1,41 @@
-<table>
-    <tr *ngFor="let line of board; index as y;">
-        <td *ngFor="let caseContent of line; index as x;"
-            style="position:relative;"
-            (click)="onClick(x, y);">
-                <img *ngIf="isLastMove(x, y)"
-                    width="50" height="50"
-                    id="{{'t'+y+x}}"
-                    alt="highlighted"
-                    [src]="imagesLocation+'squared_highlight.svg'"
-                    style="position:absolute; top:0; left:0;"/>
-                <img *ngIf="isChosen(x, y)"
-                    width="50" height="50"
-                    id="{{'t'+y+x}}"
-                    alt="highlighted"
-                    [src]="imagesLocation+'highlight.svg'"
-                    style="position: absolute; top:0; left:0;"/>
-                <img
-                    width="50" height="50" id="{{'b'+y+x}}"
-                    [src]="imagesLocation+backgroundImage(x, y)"/>
-                <img *ngIf="caseContent !== UNOCCUPIED"
-                    width="50"
-                    height="50"
-                    id="{{'u'+y+x}}"
-                    style="position:absolute; top: 0; left: 0;"
-                    alt=":{{ caseContent }}:"
-                    [src]="imagesLocation+imageOfContent(caseContent)"/>
-        </td>
-    </tr>
-</table>
-<button *ngIf="canOnlyPass" (click)="pass()">Passer mon tour</button>
+<svg  xmlns="http://www.w3.org/2000/svg"
+      width="600px" height="600px"
+      viewBox="0 0 700 700"
+      preserveAspectRatio="xMidYMid meet">
+      <g *ngFor="let line of board; index as y;">
+          <g *ngFor="let caseContent of line; index as x;">
+              <g (click)="onClick(x, y)">
+              <!-- Background -->
+              <rect [attr.x]="(x * 75)" 
+                    [attr.y]="(y * 75)" 
+                    width="75" height="75"
+                    [ngStyle]="styleBackground(x, y)"/>
+              <!-- Piece -->
+              <circle *ngIf="caseContent !== UNOCCUPIED"
+                    [attr.cx]="37.5 + (x * 75)" 
+                    [attr.cy]="37.5 + (y * 75)" 
+                    r="25"
+                    [ngStyle]="stylePiece(caseContent)"/>
+            </g>
+        </g>
+      </g>
+      <!-- Highlight last move -->
+      <rect *ngIf="lastMove !== null"
+            [attr.x]="(lastMove.coord.x * 75)"
+            [attr.y]="(lastMove.coord.y * 75)"
+            width="75" height="75"
+            style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
+        <rect *ngIf="lastMove !== null"
+            [attr.x]="(lastMove.end.x * 75)"
+            [attr.y]="(lastMove.end.y * 75)"
+            width="75" height="75"
+            style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
+      <!-- Highlight selected piece -->
+       <circle *ngIf="chosen !== null"
+            [attr.cx]="37.5 + (chosen.x * 75)"
+            [attr.cy]="37.5 + (chosen.y * 75)"
+            r="30"
+            style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
+
+      </svg>
+                   

@@ -9,13 +9,16 @@ import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { KamisadoPiece } from "../KamisadoPiece";
 import { KamisadoBoard } from "../KamisadoBoard";
 
-describe('SiamMove', () => {
+describe('KamisadoMove', () => {
 
     const _: number = KamisadoPiece.NONE.getValue();
 
     const initialBoard: number[][] = ArrayUtils.mapBiArray(KamisadoBoard.getInitialBoard(), p => p.getValue());
-
-    it('KamisadoMove.encode and KamisadoMove.decode should be reversible', () => {
+    it('should toString in a readable way', () => {
+        expect((new KamisadoMove(new Coord(0, 0), new Coord(1, 5))).toString()).toEqual("KamisadoMove((0, 0) -> (1, 5))");
+        expect(KamisadoMove.PASS.toString()).toEqual("KamisadoMove(PASS)");
+    });
+    it('should correctly encode and decode all moves', () => {
         for (let y1 = 0; y1 < KamisadoBoard.SIZE; y1++) {
             for (let x1 = 0; x1 < KamisadoBoard.SIZE; x1++) {
                 const startCoord: Coord = new Coord(x1, y1);
@@ -33,20 +36,25 @@ describe('SiamMove', () => {
             }
         }
     });
+    it('should correctly encode and decode PASS', () => {
+        const encodedMove: number = KamisadoMove.PASS.encode();
+        const decodedMove: KamisadoMove = KamisadoMove.decode(encodedMove);
+        expect(decodedMove).toEqual(KamisadoMove.PASS);
+    });
     it('should delegate decoding to static method', () => {
         const testMove: KamisadoMove = new KamisadoMove(new Coord(0, 0), new Coord(1, 1));
         spyOn(KamisadoMove, "decode").and.callThrough();
         testMove.decode(testMove.encode());
         expect(KamisadoMove.decode).toHaveBeenCalledTimes(1);
     });
-    it("Should force move to start and end inside the board", () => {
+    it("should force move to start and end inside the board", () => {
         expect(() => new KamisadoMove(new Coord(-1, 2), new Coord(2, 2))).toThrowError();
         expect(() => new KamisadoMove(new Coord(0, 0), new Coord(-1, -1))).toThrowError();
         expect(() => new KamisadoMove(new Coord(0, 0), new Coord(9, 9))).toThrowError();
         expect(() => new KamisadoMove(new Coord(8, 5), new Coord(5, 5))).toThrowError();
         
     });
-    it('Should override correctly equality', () => {
+    it('should override correctly equality', () => {
         const move: KamisadoMove = new KamisadoMove(new Coord(2, 2), new Coord(3, 3));
         const sameMove: KamisadoMove = new KamisadoMove(new Coord(2, 2), new Coord(3, 3));
         const moveAsObject: Object = {

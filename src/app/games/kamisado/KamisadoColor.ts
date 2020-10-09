@@ -1,15 +1,15 @@
 import { Comparable } from "src/app/collectionlib/Comparable";
 
 export class KamisadoColor implements Comparable {
-    public static readonly ANY: KamisadoColor = new KamisadoColor(0, "any");
-    public static readonly ORANGE: KamisadoColor = new KamisadoColor(1, "orange");
-    public static readonly BLUE  : KamisadoColor = new KamisadoColor(2, "blue");
-    public static readonly PURPLE: KamisadoColor = new KamisadoColor(3, "purple");
-    public static readonly PINK  : KamisadoColor = new KamisadoColor(4, "pink");
-    public static readonly YELLOW: KamisadoColor = new KamisadoColor(5, "yellow");
-    public static readonly RED   : KamisadoColor = new KamisadoColor(6, "red");
-    public static readonly GREEN : KamisadoColor = new KamisadoColor(7, "green");
-    public static readonly BROWN : KamisadoColor = new KamisadoColor(8, "brown");
+    public static readonly ANY: KamisadoColor = new KamisadoColor(0, "any", "#000");
+    public static readonly ORANGE: KamisadoColor = new KamisadoColor(1, "orange", "#d67421");
+    public static readonly BLUE  : KamisadoColor = new KamisadoColor(2, "blue", "#006bac");
+    public static readonly PURPLE: KamisadoColor = new KamisadoColor(3, "purple", "#6f3787");
+    public static readonly PINK  : KamisadoColor = new KamisadoColor(4, "pink", "#d2719e");
+    public static readonly YELLOW: KamisadoColor = new KamisadoColor(5, "yellow", "#e2c200");
+    public static readonly RED   : KamisadoColor = new KamisadoColor(6, "red", "#d23339");
+    public static readonly GREEN : KamisadoColor = new KamisadoColor(7, "green", "#009157");
+    public static readonly BROWN : KamisadoColor = new KamisadoColor(8, "brown", "#562500");
 
     public static of(value: number): KamisadoColor {
         switch (value) {
@@ -25,7 +25,7 @@ export class KamisadoColor implements Comparable {
             default: throw new Error("Invalid value " + value + " for EncapsulePiece")
         }
     }
-    private constructor(public readonly value: number, public readonly name: string) {
+    private constructor(public readonly value: number, public readonly name: string, public readonly rgb: string) {
     }
     public equals(color: KamisadoColor): boolean {
         return color.value === this.value;
