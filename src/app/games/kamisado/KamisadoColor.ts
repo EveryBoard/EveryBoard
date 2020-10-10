@@ -22,15 +22,12 @@ export class KamisadoColor implements Comparable {
             case 6: return KamisadoColor.RED;
             case 7: return KamisadoColor.GREEN;
             case 8: return KamisadoColor.BROWN;
-            default: throw new Error("Invalid value " + value + " for EncapsulePiece")
+            default: throw new Error("Invalid value " + value + " for KamisadoColor")
         }
     }
     private constructor(public readonly value: number, public readonly name: string, public readonly rgb: string) {
     }
     public equals(color: KamisadoColor): boolean {
         return color.value === this.value;
-    }
-    public toString(): string {
-        return this.name;
     }
 }

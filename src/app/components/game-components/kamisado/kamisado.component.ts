@@ -30,7 +30,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public styleBackground(x: number, y: number): any {
         return {
-            fill: KamisadoBoard.COLORS[y][x].rgb,
+            fill: KamisadoBoard.getColorAt(x, y).rgb,
             stroke: 'black',
             'stroke-width': '1px',
         };
@@ -85,13 +85,8 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     private async chooseDestination(x: number, y: number): Promise<boolean> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        try {
-            const move: KamisadoMove = new KamisadoMove(chosenPiece, chosenDestination);
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-        } catch (error) {
-            this.cancelMove();
-            return false;
-        }
+        const move: KamisadoMove = new KamisadoMove(chosenPiece, chosenDestination);
+        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
 
     public choosePiece(x: number, y: number): boolean {

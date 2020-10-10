@@ -19,12 +19,13 @@ export class KamisadoPiece implements Comparable {
             public static RED:    KamisadoPiece = new KamisadoPiece(player, KamisadoColor.RED);
             public static GREEN:  KamisadoPiece = new KamisadoPiece(player, KamisadoColor.GREEN);
             public static BROWN:  KamisadoPiece = new KamisadoPiece(player, KamisadoColor.BROWN);
-        }
+        };
     }
     static ZERO = KamisadoPiece.createPlayerColors(Player.ZERO);
     static ONE = KamisadoPiece.createPlayerColors(Player.ONE);
     public static of(value: number): KamisadoPiece {
         if (value === undefined) {
+            // This should not be necessary, but is a safeguard in case an invalid board location is accessed
             throw new Error("KamisadoPiece.of undefined!");
         }
         const color = value % 16;

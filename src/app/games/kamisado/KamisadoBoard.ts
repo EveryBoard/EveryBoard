@@ -3,7 +3,7 @@ import { KamisadoPiece } from "./KamisadoPiece";
 
 export class KamisadoBoard {
     public static SIZE: number = 8;
-    public static COLORS: ReadonlyArray<ReadonlyArray<KamisadoColor>> = [
+    private static COLORS: ReadonlyArray<ReadonlyArray<KamisadoColor>> = [
         [1, 2, 3, 4, 5, 6, 7, 8].map(KamisadoColor.of),
         [6, 1, 4, 7, 2, 5, 8, 3].map(KamisadoColor.of),
         [7, 4, 1, 6, 3, 8, 5, 2].map(KamisadoColor.of),

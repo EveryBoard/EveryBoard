@@ -361,4 +361,8 @@ describe('KamisadoRules:', () => {
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         expect(rules.getBoardValue(null, slice)).toEqual(2);
     });
+    it('should not allow creating invalid color or pieces', () => {
+        expect(() => KamisadoColor.of(15)).toThrowError();
+        expect(() => KamisadoPiece.of(undefined)).toThrowError();
+    });
 });

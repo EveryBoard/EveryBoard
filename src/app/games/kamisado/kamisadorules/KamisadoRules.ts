@@ -196,7 +196,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         const newBoard: number[][] = slice.getCopiedBoard();
         newBoard[end.y][end.x] = newBoard[start.y][start.x]; // actual move
         newBoard[start.y][start.x] = KamisadoPiece.NONE.getValue(); // unoccupied
-        const newColorToPlay: KamisadoColor = KamisadoBoard.COLORS[end.y][end.x];
+        const newColorToPlay: KamisadoColor = KamisadoBoard.getColorAt(end.x, end.y);
 
         // Get the next piece that can move
         let nextCoord: MGPOptional<Coord> = KamisadoRules.nextCoordToPlay(slice, newColorToPlay);
