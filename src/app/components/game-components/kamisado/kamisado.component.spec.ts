@@ -4,19 +4,16 @@ import { KamisadoComponent } from './kamisado.component';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
+
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { ActivatedRoute } from '@angular/router';
-import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { AppModule } from 'src/app/app.module';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { KamisadoMove } from 'src/app/games/kamisado/kamisadomove/KamisadoMove';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
-import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
-import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoRules } from 'src/app/games/kamisado/kamisadorules/KamisadoRules';
+import { KamisadoMove } from 'src/app/games/kamisado/kamisadomove/KamisadoMove';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 
 const activatedRouteStub = {
     snapshot: {
@@ -83,7 +80,7 @@ describe('KamisadoComponent', () => {
         expect(await gameComponent.onClick(0, 1)).toBeTruthy(); // move it on the red
         expect(await gameComponent.onClick(5, 2)).toBeTruthy(); // move the red on the brown
         // brown is now stuck
-        expect(gameComponent.canOnlyPass).toBeTruthy();
+        expect(gameComponent.canPass).toBeTruthy();
         expect(await gameComponent.pass()).toBeTruthy();
     });
     it('should disallow moving to invalid location', async () => {

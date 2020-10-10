@@ -1,8 +1,8 @@
-import { KamisadoMove } from "./KamisadoMove";
-import { Coord } from "src/app/jscaip/coord/Coord";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
-import { KamisadoPiece } from "../KamisadoPiece";
+import { Coord } from "src/app/jscaip/coord/Coord";
 import { KamisadoBoard } from "../KamisadoBoard";
+import { KamisadoMove } from "./KamisadoMove";
+import { KamisadoPiece } from "../KamisadoPiece";
 
 describe('KamisadoMove', () => {
 

@@ -1,9 +1,9 @@
-import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { Coord } from "src/app/jscaip/coord/Coord";
+import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { KamisadoBoard } from "./KamisadoBoard";
 import { KamisadoColor } from "./KamisadoColor";
 import { KamisadoPiece } from "./KamisadoPiece";
-import { Coord } from "src/app/jscaip/coord/Coord";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
 export class KamisadoPartSlice extends GamePartSlice {

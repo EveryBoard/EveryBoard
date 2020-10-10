@@ -1,6 +1,6 @@
 import { Comparable } from "src/app/collectionlib/Comparable";
-import { Player } from "src/app/jscaip/Player";
 import { KamisadoColor } from "./KamisadoColor";
+import { Player } from "src/app/jscaip/Player";
 
 export class KamisadoPiece implements Comparable {
     private constructor (public readonly player: Player, public readonly color: KamisadoColor) {

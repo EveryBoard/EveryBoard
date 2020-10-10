@@ -1,6 +1,6 @@
 import { Coord } from "src/app/jscaip/coord/Coord"
 import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
-import { KamisadoRulesConfig } from "../kamisadorules/KamisadoRulesConfig";
+import { KamisadoBoard } from "../KamisadoBoard";
 
 export class KamisadoMove extends MoveCoordToCoord {
     // The PASS move is encoded as a MoveCoordToCoord that is out of the board
@@ -22,10 +22,10 @@ export class KamisadoMove extends MoveCoordToCoord {
             // Valid move, it is PASS
             return;
         }
-        if (!start.isInRange(KamisadoRulesConfig.WIDTH, KamisadoRulesConfig.HEIGHT)) {
+        if (!start.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
             throw new Error("Starting coord of KamisadoMove must be on the board, not at " + start.toString());
         }
-        if (!end.isInRange(KamisadoRulesConfig.WIDTH, KamisadoRulesConfig.HEIGHT)) {
+        if (!end.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
             throw new Error("End coord of KamisadoMove must be on the board, not at " + end.toString());
         }
     }

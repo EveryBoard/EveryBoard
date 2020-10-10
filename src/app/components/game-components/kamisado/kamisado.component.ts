@@ -1,13 +1,12 @@
-import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
+import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
 import { KamisadoMove } from 'src/app/games/kamisado/kamisadomove/KamisadoMove';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
-import { KamisadoRules } from 'src/app/games/kamisado/kamisadorules/KamisadoRules';
-import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
-import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
+import { KamisadoRules } from 'src/app/games/kamisado/kamisadorules/KamisadoRules';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 
 @Component({
@@ -26,7 +25,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public chosenAutomatically: boolean = false;
 
-    public canOnlyPass: boolean = false;
+    public canPass: boolean = false;
 
     public styleBackground(x: number, y: number): any {
         return {
@@ -51,9 +50,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         this.board = slice.getCopiedBoard();
         this.lastMove = move;
 
-        this.canOnlyPass = KamisadoRules.canOnlyPass(slice);
+        this.canPass = KamisadoRules.canOnlyPass(slice);
         this.cancelMove();
-        if (this.canOnlyPass) {
+        if (this.canPass) {
             this.chosenAutomatically = false;
         } else {
             this.chosenAutomatically = true;
@@ -62,7 +61,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     }
 
     public async pass(): Promise<boolean> {
-        if (this.canOnlyPass) {
+        if (this.canPass) {
             const move: KamisadoMove = KamisadoMove.PASS;
             return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null);
         }
