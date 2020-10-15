@@ -20,6 +20,7 @@ import { SiamComponent } from './siam/siam.component';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { SaharaComponent } from './sahara/sahara.component';
 import { PylosComponent } from './pylos/pylos.component';
+import { QuixoComponent } from './quixo/quixo.component';
 
 export abstract class GameWrapper {
 
@@ -70,6 +71,8 @@ export abstract class GameWrapper {
                 return PylosComponent;
             case 'Quarto':
                 return QuartoComponent;
+            case 'Quixo':
+                return QuixoComponent;
             case 'Reversi':
                 return ReversiComponent;
             case 'Sahara':

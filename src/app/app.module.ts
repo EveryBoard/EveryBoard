@@ -48,6 +48,7 @@ import { InscriptionComponent } from './components/normal-component/inscription/
 import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 import { PylosComponent } from './components/game-components/pylos/pylos.component';
+import { QuixoComponent } from './components/game-components/quixo/quixo.component';
 
 export const INCLUDE_VERBOSE_LINE_IN_TEST = false;
 // scp -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
@@ -86,6 +87,7 @@ const routes: Route [] = [
         P4Component,
         PylosComponent,
         QuartoComponent,
+        QuixoComponent,
         ReversiComponent,
         SiamComponent,
         TablutComponent,
@@ -100,6 +102,7 @@ const routes: Route [] = [
         P4Component,
         PylosComponent,
         QuartoComponent,
+        QuixoComponent,
         ReversiComponent,
         SaharaComponent,
         SiamComponent,

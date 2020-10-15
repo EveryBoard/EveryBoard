@@ -10,6 +10,8 @@ import { QuixoMove } from "../QuixoMove";
 describe("QuixoMove:", () => {
 
     let _: number = Player.NONE.value;
+    let X: number = Player.ONE.value;
+    let O: number = Player.ZERO.value;
 
     it("Should forbid move creation for invalid x or y coord", () => {
         expect(() => new QuixoMove(-1, 0, Orthogonale.UP)).toThrowError("Invalid coord for QuixoMove: (-1, 0) is outside the board.");
@@ -32,11 +34,11 @@ describe("QuixoMove:", () => {
 
     it('SiamMove.encode and SiamMove.decode should be reversible', () => {
         const board: number[][] = [
+            [_, X, _, _, _],
+            [_, _, _, _, X],
             [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _]
+            [X, _, _, _, _],
+            [_, _, _, X, _]
         ];
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonale.DOWN);
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);

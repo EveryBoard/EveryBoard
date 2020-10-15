@@ -25,10 +25,7 @@ export class SiamRules extends _SiamRules {
     }
     constructor() {
         super(true); // TODO: ALL RULES ARE NOW PEARED
-        this.node = MNode.getFirstNode(
-            new SiamPartSlice(SiamPartSlice.getStartingBoard(), 0),
-            this
-        );
+        this.setInitialBoard(); // TODO: generalize Rules constructor like this
     }
     public setInitialBoard(): void {
         if (this.node == null) {

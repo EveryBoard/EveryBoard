@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="500px" height="500px"
+     viewBox="0 0 500 500"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let c of line; index as x">
+            <circle (click)="onBoardClick(x, y)"
+                    [ngStyle]="getPieceStyle(x, y)"
+                    stroke-width="10px"
+                    r="45"
+                    [attr.cx]="50 + 100*x"
+                    [attr.cy]="50 + 100*y" />
+        </g>
+    </g>
+    <g *ngIf="chosenCoord != null">
+        <polyline *ngFor="let direction of getPossiblesDirections()"
+                  (click)="chooseDirection(direction[2])"
+                  [attr.points]="getTriangleCoordinate(direction[0], direction[1])"/>
+    </g>
+</svg>
+<br/> Board value: {{ rules.getBoardValue(rules.node.move, rules.node.gamePartSlice) }}
