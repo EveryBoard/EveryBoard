@@ -1,5 +1,6 @@
 import { KamisadoColor } from "./KamisadoColor";
 import { KamisadoPiece } from "./KamisadoPiece";
+import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 export class KamisadoBoard {
     public static SIZE: number = 8;

@@ -6,14 +6,14 @@
           <g *ngFor="let caseContent of line; index as x;">
               <g (click)="onClick(x, y)">
               <!-- Background -->
-              <rect [attr.x]="(x * 75)" 
-                    [attr.y]="(y * 75)" 
+              <rect [attr.x]="x * 75"
+                    [attr.y]="y * 75"
                     width="75" height="75"
                     [ngStyle]="styleBackground(x, y)"/>
               <!-- Piece -->
               <circle *ngIf="caseContent !== UNOCCUPIED"
-                    [attr.cx]="37.5 + (x * 75)" 
-                    [attr.cy]="37.5 + (y * 75)" 
+                    [attr.cx]="37.5 + (x * 75)"
+                    [attr.cy]="37.5 + (y * 75)"
                     r="25"
                     [ngStyle]="stylePiece(caseContent)"/>
             </g>
@@ -21,13 +21,13 @@
       </g>
       <!-- Highlight last move -->
       <rect *ngIf="lastMove !== null"
-            [attr.x]="(lastMove.coord.x * 75)"
-            [attr.y]="(lastMove.coord.y * 75)"
+            [attr.x]="lastMove.coord.x * 75"
+            [attr.y]="lastMove.coord.y * 75"
             width="75" height="75"
             style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
         <rect *ngIf="lastMove !== null"
-            [attr.x]="(lastMove.end.x * 75)"
-            [attr.y]="(lastMove.end.y * 75)"
+            [attr.x]="lastMove.end.x * 75"
+            [attr.y]="lastMove.end.y * 75"
             width="75" height="75"
             style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
       <!-- Highlight selected piece -->

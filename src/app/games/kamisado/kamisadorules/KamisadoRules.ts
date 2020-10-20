@@ -12,9 +12,11 @@ import { MNode } from "src/app/jscaip/MNode";
 import { Player } from "src/app/jscaip/Player";
 import { Rules } from "src/app/jscaip/Rules";
 
-abstract class KamisadoNode extends MNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> {}
+export type KamisadoLegalityStatus = { legal: boolean, slice: KamisadoPartSlice }
 
-export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
+abstract class KamisadoNode extends MNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, KamisadoLegalityStatus> { }
+
+export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, KamisadoLegalityStatus> {
     constructor(initialSlice: KamisadoPartSlice) {
         super(true);
         this.node = MNode.getFirstNode(initialSlice, this);
@@ -31,7 +33,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         // Otherwise, this is the first turn and all pieces can move
         // Player 0 starts the game, so we don't have to compute the list of movable pieces
         return [new Coord(0, 7), new Coord(1, 7), new Coord(2, 7), new Coord(3, 7),
-                new Coord(4, 7), new Coord(5, 7), new Coord(6, 7), new Coord(7, 7)];
+        new Coord(4, 7), new Coord(5, 7), new Coord(6, 7), new Coord(7, 7)];
     }
     // Returns the directions allowed for the move of a player
     public static playerDirections(player: Player): Array<Direction> {
@@ -78,7 +80,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                         const result = KamisadoRules.tryMove(slice, move);
                         if (result.success) {
                             moves.set(move, result.slice);
-                       }
+                        }
                     }
                 }
             }
@@ -134,7 +136,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         }
     }
     // Returns the next coord that plays
-    public static nextCoordToPlay(slice: KamisadoPartSlice, colorToPlay: KamisadoColor) : MGPOptional<Coord> {
+    public static nextCoordToPlay(slice: KamisadoPartSlice, colorToPlay: KamisadoColor): MGPOptional<Coord> {
         for (let y = 0; y < slice.board.length; y++) {
             for (let x = 0; x < slice.board.length; x++) {
                 const piece = slice.getPieceAt(x, y);
@@ -147,15 +149,15 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     }
     // Perform the move if possible
     public static tryMove(slice: KamisadoPartSlice, move: KamisadoMove)
-    : {success: boolean, slice: KamisadoPartSlice} {
+        : { success: boolean, slice: KamisadoPartSlice } {
         const start: Coord = move.coord;
         const end: Coord = move.end;
-        const failure = {success: false, slice: null};
+        const failure = { success: false, slice: null };
         const colorToPlay: KamisadoColor = slice.colorToPlay;
 
         if (move.equals(KamisadoMove.PASS)) {
             let nextCoord: MGPOptional<Coord> = KamisadoRules.nextCoordToPlay(slice, slice.colorToPlay);
-            return { success: true, slice: new KamisadoPartSlice(slice.turn+1, slice.colorToPlay, nextCoord, true, slice.board)};
+            return { success: true, slice: new KamisadoPartSlice(slice.turn + 1, slice.colorToPlay, nextCoord, true, slice.board) };
         }
 
         // Assumption: the move is within the board (this has been checked when constructing the move)
@@ -177,7 +179,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         }
         // All steps between start and end should be empty
         try {
-            const dir:Direction = Direction.fromMove(start, end);
+            const dir: Direction = Direction.fromMove(start, end);
             if (!KamisadoRules.directionAllowedForPlayer(dir, slice.getCurrentPlayer())) {
                 return failure;
             }
@@ -201,17 +203,19 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         let nextCoord: MGPOptional<Coord> = KamisadoRules.nextCoordToPlay(slice, newColorToPlay);
 
         // Construct the next slice
-        const resultingSlice = new KamisadoPartSlice(slice.turn+1, newColorToPlay, nextCoord, false, newBoard);
-        return {success: true, slice: resultingSlice};
+        const resultingSlice = new KamisadoPartSlice(slice.turn + 1, newColorToPlay, nextCoord, false, newBoard);
+        return { success: true, slice: resultingSlice };
     }
     // Apply the move by only relying on tryMove
-    public applyLegalMove(move: KamisadoMove, slice: KamisadoPartSlice, status: LegalityStatus): {resultingMove: KamisadoMove, resultingSlice: KamisadoPartSlice} {
-        const resultingSlice: KamisadoPartSlice = KamisadoRules.tryMove(slice, move).slice;
-        return {resultingSlice, resultingMove: move};
+    public applyLegalMove(move: KamisadoMove, slice: KamisadoPartSlice, status: KamisadoLegalityStatus)
+        : { resultingMove: KamisadoMove, resultingSlice: KamisadoPartSlice } {
+        const resultingSlice: KamisadoPartSlice = status.slice;
+        return { resultingSlice, resultingMove: move };
     }
     // Check the legality on the move by applying it with tryMove
-    public isLegal(move: KamisadoMove, slice: KamisadoPartSlice): LegalityStatus {
-        return { legal: KamisadoRules.tryMove(slice, move).success }
+    public isLegal(move: KamisadoMove, slice: KamisadoPartSlice): KamisadoLegalityStatus {
+        const resultFromMove = KamisadoRules.tryMove(slice, move);
+        return { legal: resultFromMove.success, slice: resultFromMove.slice };
     }
     public setInitialBoard(): void {
         if (this.node == null) {

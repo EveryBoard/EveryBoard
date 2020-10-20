@@ -38,11 +38,11 @@ import {GameIncluderComponent} from './components/game-components/game-includer/
 import {AwaleComponent} from './components/game-components/awale/awale.component';
 import {EncapsuleComponent} from './components/game-components/encapsule/encapsule.component';
 import {GoComponent} from './components/game-components/go/go.component';
+import {KamisadoComponent} from './components/game-components/kamisado/kamisado.component';
 import {P4Component} from './components/game-components/p4/p4.component';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {ReversiComponent} from './components/game-components/reversi/reversi.component';
 import {TablutComponent} from './components/game-components/tablut/tablut.component';
-import {KamisadoComponent} from './components/game-components/kamisado/kamisado.component';
 import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';

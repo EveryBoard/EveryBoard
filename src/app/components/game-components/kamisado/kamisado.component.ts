@@ -10,7 +10,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 
 @Component({
-    selector: 'app-kamisado-new',
+    selector: 'app-kamisado',
     templateUrl: './kamisado.component.html'
 })
 
@@ -46,9 +46,8 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public updateBoard() {
         const slice: KamisadoPartSlice = this.rules.node.gamePartSlice;
-        const move: KamisadoMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
-        this.lastMove = move;
+        this.lastMove = this.rules.node.move;
 
         this.canPass = KamisadoRules.canOnlyPass(slice);
         this.cancelMove();
@@ -62,7 +61,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public async pass(): Promise<boolean> {
         if (this.canPass) {
-            const move: KamisadoMove = KamisadoMove.PASS;
             return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null);
         }
         return false;
@@ -92,29 +90,26 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         if (this.rules.node.isEndGame()) {
             return false;
         }
-
-        if (!this.pieceBelongToCurrentPlayer(x, y)) {
+        if (!this.rules.node.gamePartSlice.pieceBelongToCurrentPlayer(x, y)) {
             return false;
         }
         this.showSelectedPiece(x, y);
         return true;
     }
 
-    public pieceBelongToCurrentPlayer(x: number, y: number): boolean {
-        const player = this.rules.node.gamePartSlice.getCurrentPlayer();
-        const piece = this.rules.node.gamePartSlice.getPieceAt(x, y);
-        return piece.player === player;
-    }
     public cancelMove() {
         if (!this.chosenAutomatically)
             this.chosen = new Coord(-1, -1);
     }
+
     public showSelectedPiece(x: number, y: number) {
         this.chosen = new Coord(x, y);
     }
+
     public decodeMove(encodedMove: number): KamisadoMove {
         return KamisadoMove.decode(encodedMove);
     }
+
     public encodeMove(move: KamisadoMove): number {
         return KamisadoMove.encode(move);
     }

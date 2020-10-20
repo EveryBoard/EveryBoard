@@ -6,9 +6,6 @@ import { KamisadoPiece } from "../KamisadoPiece";
 
 describe('KamisadoMove', () => {
 
-    const _: number = KamisadoPiece.NONE.getValue();
-
-    const initialBoard: number[][] = ArrayUtils.mapBiArray(KamisadoBoard.getInitialBoard(), p => p.getValue());
     it('should toString in a readable way', () => {
         expect((new KamisadoMove(new Coord(0, 0), new Coord(1, 5))).toString()).toEqual("KamisadoMove((0, 0)->(1, 5))");
         expect(KamisadoMove.PASS.toString()).toEqual("KamisadoMove(PASS)");
@@ -27,7 +24,7 @@ describe('KamisadoMove', () => {
                             expect(decodedMove).toEqual(move);
                         }
                     }
-                }       
+                }
             }
         }
     });
@@ -47,7 +44,7 @@ describe('KamisadoMove', () => {
         expect(() => new KamisadoMove(new Coord(0, 0), new Coord(-1, -1))).toThrowError();
         expect(() => new KamisadoMove(new Coord(0, 0), new Coord(9, 9))).toThrowError();
         expect(() => new KamisadoMove(new Coord(8, 5), new Coord(5, 5))).toThrowError();
-        
+
     });
     it('should override correctly equality', () => {
         const move: KamisadoMove = new KamisadoMove(new Coord(2, 2), new Coord(3, 3));
