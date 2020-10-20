@@ -34,24 +34,24 @@ export class SiamMove extends MoveCoord {
         public readonly landingOrientation: Orthogonale)
     {
         super(x, y);
-        if (moveDirection == null) throw new Error("Move Direction must be set (even if optional)")
-        if (landingOrientation == null) throw new Error("Landing orientation must be set");
+        if (moveDirection == null) throw new Error("Move Direction must be set (even if optional).")
+        if (landingOrientation == null) throw new Error("Landing orientation must be set.");
         this.checkValidity();
     }
     public checkValidity() {
         const startedInside: boolean = this.coord.isInRange(5, 5);
         if (this.isRotation()) {
             if (!startedInside) {
-                throw new Error("Cannot rotate piece outside the board: " + this.toString());
+                throw new Error("Cannot rotate piece outside the board: " + this.toString() + ".");
             }
         } else {
             const finishedOutside: boolean = this.coord.getNext(this.moveDirection.get()).isNotInRange(5, 5);
             if (finishedOutside) {
                 if (!startedInside) {
-                    throw new Error("SiamMove should end or start on the board: " + this.toString());
+                    throw new Error("SiamMove should end or start on the board: " + this.toString() + ".");
                 }
                 if (this.moveDirection.get() !== this.landingOrientation) {
-                    throw new Error("SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: " + this.toString());
+                    throw new Error("SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: " + this.toString() + ".");
                 }
             }
         }
@@ -81,9 +81,6 @@ export class SiamMove extends MoveCoord {
                            + this.coord.y + ", "
                            + moveDirection + ", "
                            + this.landingOrientation + ")"
-    }
-    public isForward(): boolean {
-        return this.moveDirection.isPresent();
     }
     public isInsertion(): boolean {
         return this.coord.x === -1 ||

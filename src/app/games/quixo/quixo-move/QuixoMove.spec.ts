@@ -32,7 +32,7 @@ describe("QuixoMove:", () => {
         expect(() => new QuixoMove(2, 4, Orthogonale.DOWN)).toThrowError("Invalid direction: pawn on the bottom side can't be moved down (2, 4).");
     });
 
-    it('SiamMove.encode and SiamMove.decode should be reversible', () => {
+    it('QuixoMove.encode and QuixoMove.decode should be reversible', () => {
         const board: number[][] = [
             [_, X, _, _, _],
             [_, _, _, _, X],

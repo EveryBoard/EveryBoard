@@ -1,6 +1,6 @@
 import { SiamRules } from './SiamRules';
 import { SiamMove } from '../siammove/SiamMove';
-import { SiamPiece } from '../SiamPiece';
+import { SiamPiece } from '../siampiece/SiamPiece';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
@@ -85,6 +85,19 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
+    });
+    it('Should forbid moving opponent pieces', () => {
+        const board: number[][] = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [_, _, u, _, _]
+        ];
+        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
+        const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const status: SiamLegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal).toBeFalsy("Move should be illegal");
     });
     it('Side pushing should work', () => {
         const board: number[][] = [
@@ -177,6 +190,19 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
+    });
+    it('Should recognize fake-rotations', () => {
+        const board: number[][] = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [_, _, U, _, _]
+        ];
+        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
+        const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonale.UP);
+        const status: SiamLegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal).toBeFalsy("Move should be illegal");
     });
     it('Moving in a direction different from the piece should be legal', () => {
         const board: number[][] = [
@@ -276,7 +302,7 @@ describe('SiamRules:', () => {
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal).toBeFalsy("Move should be illegal");
     });
-    it('6 insertion should be impossible', () => {
+    it('6 insertions should be impossible', () => {
         const board: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -377,19 +403,19 @@ describe('SiamRules:', () => {
         const board: number[][] = [
             [_, _, M, _, _],
             [_, _, l, _, _],
-            [_, M, U, M, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, M, R, M, _],
+            [_, _, R, _, _],
+            [_, _, R, _, _]
         ];
         const expectedBoard: number[][] = [
             [_, _, l, _, _],
-            [_, _, U, _, _],
-            [_, M, _, M, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, R, _, _],
+            [_, M, R, M, _],
+            [_, _, R, _, _],
+            [_, _, U, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal).toBeTruthy("Move should be legal");
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;

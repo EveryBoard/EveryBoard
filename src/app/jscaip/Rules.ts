@@ -6,6 +6,9 @@ import { LegalityStatus } from './LegalityStatus';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     public constructor(public readonly pruned: boolean) {}
 
     public node: MNode<Rules<M, S, L>, M, S, L>; // TODO: check that this should not made static

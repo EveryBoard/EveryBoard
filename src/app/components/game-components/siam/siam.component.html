@@ -3,19 +3,23 @@
      viewBox="0 0 700 700"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let n of [0, 1, 2, 3, 4]">
-        <polyline (click)="insertAt(n, -1)"
+        <polyline id="insertAt_{{n}}_-1"
+                  (click)="insertAt(n, -1)"
                   [attr.points]="getArrowCoordinate(n + 1, 0)"
                   [attr.transform]="rotate(n + 1, 0, 'DOWN')"
                   style="fill:grey;stroke:grey"/>
-        <polyline (click)="insertAt(n, 5)"
+        <polyline id="insertAt_{{n}}_5"
+                  (click)="insertAt(n, 5)"
                   [attr.points]="getArrowCoordinate(n + 1, 6)"
                   [attr.transform]="rotate(n + 1, 6, 'UP')"
                   style="fill:grey;stroke:grey"/>
-        <polyline (click)="insertAt(-1, n)"
+        <polyline id="insertAt_-1_{{n}}"
+                  (click)="insertAt(-1, n)"
                   [attr.points]="getArrowCoordinate(0, n + 1)"
                   [attr.transform]="rotate(0, n + 1, 'RIGHT')"
                   style="fill:grey;stroke:grey"/>
-        <polyline (click)="insertAt(5, n)"
+        <polyline id="insertAt_5_{{n}}"
+                  (click)="insertAt(5, n)"
                   [attr.points]="getArrowCoordinate(6, n + 1)"
                   [attr.transform]="rotate(6, n + 1, 'LEFT')"
                   style="fill:grey;stroke:grey"/>
@@ -23,12 +27,14 @@
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
             <g *ngIf="isPiece(c)">
-                <polyline (click)="onPieceClick(x, y)"
+                <polyline id="clickPiece_{{x}}_{{y}}"
+                          (click)="clickPiece(x, y)"
                           [attr.points]="getArrowCoordinate(x + 1, y + 1)"
                           [attr.transform]="rotateOf(x, y)"
-                          [ngStyle]="stylePiece(c)"/>
+                          [ngStyle]="stylePiece(x, y, c)"/>
                 <g *ngIf="choosingDirection(x, y)">
-                    <polyline *ngFor="let direction of [[1, 1, ''], [2, 1, 'RIGHT'], [1, 2, 'DOWN'], [0, 1, 'LEFT'], [1, 0, 'UP']]"
+                    <polyline id="chooseDirection_{{x}}_{{y}}_{{direction[2]}}"
+                              *ngFor="let direction of [[1, 1, ''], [2, 1, 'RIGHT'], [1, 2, 'DOWN'], [0, 1, 'LEFT'], [1, 0, 'UP']]"
                               (click)="chooseDirection(direction[2])"
                               [attr.points]="getTriangleCoordinate(x + 1, y + 1, direction[0], direction[1])"/>
                 </g>
@@ -36,7 +42,8 @@
             <polyline *ngIf="isMountain(c)"
                       [attr.points]="getMountainCoordinate(x + 1, y + 1)" />
             <g *ngIf="choosingOrientation(x, y)">
-                <polyline *ngFor="let orientation of [[2, 1, 'RIGHT'], [1, 2, 'DOWN'], [0, 1, 'LEFT'], [1, 0, 'UP']]"
+                <polyline id="chooseOrientation_{{x}}_{{y}}_{{orientation[2]}}"
+                          *ngFor="let orientation of [[2, 1, 'RIGHT'], [1, 2, 'DOWN'], [0, 1, 'LEFT'], [1, 0, 'UP']]"
                           (click)="chooseOrientation(orientation[2])"
                           [attr.points]="getTriangleCoordinate(x + 1, y + 1, orientation[0], orientation[1])"/>
             </g>

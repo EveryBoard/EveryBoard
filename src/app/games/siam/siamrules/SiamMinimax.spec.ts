@@ -1,6 +1,6 @@
 import { SiamRules, SiamNode } from "./SiamRules";
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
-import { SiamPiece } from "../SiamPiece";
+import { SiamPiece } from "../siampiece/SiamPiece";
 import { MNode } from "src/app/jscaip/MNode";
 import { SiamPartSlice } from "../SiamPartSlice";
 import { SiamMove } from "../siammove/SiamMove";
@@ -107,7 +107,7 @@ describe("SiamRules - Minimax:", () => {
         const board: number[][] = [
             [_, _, _, d, _],
             [_, _, _, d, _],
-            [_, M, M, M, _],
+            [L, M, M, M, R],
             [_, _, _, U, _],
             [_, _, _, U, _]
         ];
@@ -134,7 +134,7 @@ describe("SiamRules - Minimax:", () => {
         const bestSon: SiamNode = node.findBestMoveAndSetDepth(1);
         const bestMove: SiamMove = new SiamMove(3, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         expect(bestSon.move.toString()).toEqual(bestMove.toString());
-        expect(moveType).toEqual({ moving: 17, rotation: 6, pushingInsertion: 20, slidingInsertion: 20 });
+        expect(moveType).toEqual({ moving: 35, rotation: 12, pushingInsertion: 18, slidingInsertion: 16 });
     });
 
     it("Best choice test: Inserting a piece when 5 player are on the board should not be an option", () => {
