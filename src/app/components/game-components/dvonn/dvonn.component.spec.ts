@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { KamisadoComponent } from './kamisado.component';
+import { DvonnComponent } from './dvonn.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -11,8 +11,8 @@ import { AppModule } from 'src/app/app.module';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoMove } from 'src/app/games/kamisado/kamisadomove/KamisadoMove';
+import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
+import { DvonnMove } from 'src/app/games/dvonn/dvonnmove/DvonnMove';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 
 const activatedRouteStub = {
@@ -36,7 +36,7 @@ describe('KamisadoComponent', () => {
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
-    let gameComponent: KamisadoComponent;
+    let gameComponent: DvonnComponent;
 
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
@@ -55,7 +55,7 @@ describe('KamisadoComponent', () => {
         wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
         tick(1);
-        gameComponent = wrapper.gameComponent as KamisadoComponent;
+        gameComponent = wrapper.gameComponent as DvonnComponent;
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
@@ -65,39 +65,32 @@ describe('KamisadoComponent', () => {
         expect(await gameComponent.pass()).toBeFalsy();
     });
     it('should allow to pass if stuck position', async () => {
-        expect(await gameComponent.onClick(0, 7)).toBeTruthy(); // select brown piece
-        expect(await gameComponent.pass()).toBeFalsy(); // can't pass now
-        expect(await gameComponent.onClick(0, 1)).toBeTruthy(); // move it on the red
-        expect(await gameComponent.onClick(5, 2)).toBeTruthy(); // move the red on the brown
-        // brown is now stuck
-        expect(gameComponent.canPass).toBeTruthy();
-        expect(await gameComponent.pass()).toBeTruthy();
+        // TODO
+        expect(false).toBeTruthy();
     });
-    it('should disallow moving to invalid location', async () => {
-        expect(await gameComponent.onClick(0, 7)).toBeTruthy();
-        expect(await gameComponent.onClick(5, 4)).toBeFalsy();
-    });
-    it('should disallow choosing an incorrect piece', async () => {
+    it('should disallow moving from an invalid location', async () => {
         expect(await gameComponent.onClick(0, 0)).toBeFalsy();
     });
+    it('should disallow moving to invalid location', async () => {
+        expect(await gameComponent.onClick(2, 0)).toBeTruthy();
+        expect(await gameComponent.onClick(1, 0)).toBeFalsy();
+    });
+    it('should disallow choosing an incorrect piece', async () => {
+        expect(await gameComponent.onClick(1, 1)).toBeFalsy(); // select black piece (but white plays first)
+    });
     it('should disallow choosing a piece at end of the game', async () => {
-        expect(await gameComponent.onClick(0, 7)).toBeTruthy(); // select brown piece
-        expect(await gameComponent.onClick(0, 1)).toBeTruthy(); // move it to the red
-        expect(await gameComponent.onClick(4, 1)).toBeTruthy(); // move it to the blue
-        expect(await gameComponent.onClick(7, 6)).toBeTruthy(); // move it to the red
-        expect(await gameComponent.onClick(4, 2)).toBeTruthy(); // move it to the purple
-        expect(await gameComponent.onClick(5, 0)).toBeTruthy(); // move it to the winning position
-        expect(await gameComponent.onClick(2, 0)).toBeFalsy();
-        expect(gameComponent.choosePiece(2, 0)).toBeFalsy(); // can't select a piece either
+        // TODO
+        expect(false).toBeTruthy();
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(KamisadoMove, "decode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(DvonnMove, "decode").and.callThrough();
         gameComponent.decodeMove(5);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        spyOn(KamisadoMove, "encode").and.callThrough();
-        gameComponent.encodeMove(new KamisadoMove(new Coord(0, 7), new Coord(0, 6)));
-        expect(KamisadoMove.encode).toHaveBeenCalledTimes(1);
+        spyOn(DvonnMove, "encode").and.callThrough();
+        gameComponent.encodeMove(new DvonnMove(new Coord(2, 0), new Coord(2, 1)));
+        expect(DvonnMove.encode).toHaveBeenCalledTimes(1);
     });
 });
+

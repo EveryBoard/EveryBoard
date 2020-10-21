@@ -8,6 +8,7 @@ import {Move} from '../../jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
+import {DvonnComponent} from './dvonn/dvonn.component';
 import {ReversiComponent} from './reversi/reversi.component';
 import {TablutComponent} from './tablut/tablut.component';
 import {KamisadoComponent} from './kamisado/kamisado.component';
@@ -59,6 +60,8 @@ export abstract class GameWrapper {
         switch (compoString) {
             case 'Awale':
                 return AwaleComponent;
+            case 'Dvonn':
+                return DvonnComponent;
             case 'Encapsule':
                 return EncapsuleComponent;
             case 'Go':
@@ -79,7 +82,7 @@ export abstract class GameWrapper {
                 return SiamComponent;
             case 'Tablut':
                 return TablutComponent;
-            case   'Kamisado':
+            case 'Kamisado':
                 return KamisadoComponent;
             default:
                 throw new Error("Unknown Games are unwrappable");

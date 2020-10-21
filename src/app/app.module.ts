@@ -36,6 +36,7 @@ import {LocalGameWrapperComponent} from './components/game-components/local-game
 import {GameIncluderComponent} from './components/game-components/game-includer/game-includer.component';
 
 import {AwaleComponent} from './components/game-components/awale/awale.component';
+import {DvonnComponent} from './components/game-components/dvonn/dvonn.component';
 import {EncapsuleComponent} from './components/game-components/encapsule/encapsule.component';
 import {GoComponent} from './components/game-components/go/go.component';
 import {KamisadoComponent} from './components/game-components/kamisado/kamisado.component';
@@ -81,6 +82,7 @@ const routes: Route [] = [
         LocalGameWrapperComponent,
 
         AwaleComponent,
+        DvonnComponent,
         EncapsuleComponent,
         GoComponent,
         MinimaxTestingComponent,
@@ -96,6 +98,7 @@ const routes: Route [] = [
     ],
     entryComponents: [
         AwaleComponent,
+        DvonnComponent,
         EncapsuleComponent,
         GoComponent,
         MinimaxTestingComponent,
