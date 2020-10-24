@@ -7,7 +7,7 @@ import { QuixoPartSlice } from "../quixo-part-slice/QuixoPartSlice";
 import { QuixoNode, QuixoRules } from "../quixo-rules/QuixoRules";
 import { QuixoMove } from "../QuixoMove";
 
-describe("QuixoMove:", () => {
+describe('QuixoMove:', () => {
 
     let _: number = Player.NONE.value;
     let X: number = Player.ONE.value;

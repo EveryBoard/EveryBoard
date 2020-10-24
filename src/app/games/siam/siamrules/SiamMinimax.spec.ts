@@ -10,7 +10,7 @@ import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { Player } from "src/app/jscaip/Player";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 
-describe("SiamRules - Minimax:", () => {
+describe('SiamRules - Minimax:', () => {
 
     let rules: SiamRules;
 

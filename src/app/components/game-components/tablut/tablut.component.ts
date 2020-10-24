@@ -6,6 +6,7 @@ import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
 import {TablutRules} from '../../../games/tablut/tablutrules/TablutRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { TablutCase } from 'src/app/games/tablut/tablutrules/TablutCase';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-tablut-new',
@@ -27,9 +28,6 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public chosen: Coord = new Coord(-1, -1);
 
-    public static display(verbose: boolean, message: any) {
-        if (verbose) console.log(message);
-    }
     public updateBoard() {
         const slice: TablutPartSlice = this.rules.node.gamePartSlice;
         const move: TablutMove = this.rules.node.move;
@@ -43,7 +41,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         this.cancelMove();
     }
     public async onClick(x: number, y: number): Promise<boolean> {
-        TablutComponent.display(TablutComponent.VERBOSE, "TablutComponent.onClick(" + x + ", " + y + ")");
+        Rules.display(TablutComponent.VERBOSE, "TablutComponent.onClick(" + x + ", " + y + ")");
 
         let success: boolean;
         if (this.chosen.x === -1) {
@@ -57,7 +55,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         return success;
     }
     private async chooseDestination(x: number, y: number): Promise<boolean> {
-        TablutComponent.display(TablutComponent.VERBOSE, 'TablutComponent.chooseDestination');
+        Rules.display(TablutComponent.VERBOSE, 'TablutComponent.chooseDestination');
 
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
@@ -71,24 +69,24 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     }
     public choosePiece(x: number, y: number): boolean {
 
-        TablutComponent.display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
+        Rules.display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
         if (this.rules.node.isEndGame()) {
-            TablutComponent.display(TablutComponent.VERBOSE, 'la partie est finie');
+            Rules.display(TablutComponent.VERBOSE, 'la partie est finie');
             return false;
         } else { // TODO: action double non ?
-            TablutComponent.display(TablutComponent.VERBOSE, 'la partie est en court');
+            Rules.display(TablutComponent.VERBOSE, 'la partie est en court');
         }
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
-            TablutComponent.display(TablutComponent.VERBOSE, 'not a piece of the current player');
+            Rules.display(TablutComponent.VERBOSE, 'not a piece of the current player');
             return false;
         }
 
         this.showSelectedPiece(x, y);
-        TablutComponent.display(TablutComponent.VERBOSE, 'selected piece = (' + x + ', ' + y + ')');
+        Rules.display(TablutComponent.VERBOSE, 'selected piece = (' + x + ', ' + y + ')');
         return true;
     }
     public pieceBelongToCurrentPlayer(x: number, y: number): number { // TODO: see that verification is done and refactor this shit

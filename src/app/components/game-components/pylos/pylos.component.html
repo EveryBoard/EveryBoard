@@ -5,7 +5,8 @@
     <g *ngFor="let z of [0, 1, 2]">
         <g *ngFor="let y of getLevelRange(z)">
             <g *ngFor="let x of getLevelRange(z)">
-                <circle *ngIf="isDrawable(x, y, z)"
+                <circle [id]="'clickable_' + x + '_' + y + '_' + z"
+                        *ngIf="isDrawable(x, y, z)"
                         (click)="onClick(x, y, z)"
                         [ngStyle]="getPieceStyle(x, y, z)"
                         [attr.r]="getPieceRay(z)"
@@ -14,12 +15,6 @@
             </g>
         </g>
     </g>
-    <circle *ngIf="chosenFirstCapture != null"
-            (click)="validateSingleCapture()"
-            [ngStyle]="getPieceStyle(chosenFirstCapture.x, chosenFirstCapture.y, chosenFirstCapture.z)"
-            [attr.r]="getPieceRay(chosenFirstCapture.z - 2)"
-            [attr.cx]="getPieceCx(chosenFirstCapture.x, chosenFirstCapture.y, chosenFirstCapture.z)"
-            [attr.cy]="getPieceCy(chosenFirstCapture.x, chosenFirstCapture.y, chosenFirstCapture.z)" />
 </svg>
 
 {{ rules.getBoardValue(lastMove, slice) }}

@@ -39,7 +39,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         this.lastMove = this.rules.node.move;
     }
     public cancelMove(reason: string): boolean {
-        AbstractGameComponent.display(SiamComponent.VERBOSE, reason);
+        Rules.display(SiamComponent.VERBOSE, reason);
         this.chosenCoord = null;
         this.chosenDirection = null;
         this.landingCoord = null;
@@ -62,7 +62,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         return true;
     }
     public async chooseDirection(direction: string): Promise<boolean> {
-        AbstractGameComponent.display(SiamComponent.VERBOSE, "SiamComponent.chooseDirection(" + direction + ")");
+        Rules.display(SiamComponent.VERBOSE, "SiamComponent.chooseDirection(" + direction + ")");
         if (direction === '') {
             this.chosenDirection = MGPOptional.empty();
             this.landingCoord = this.chosenCoord;
@@ -71,7 +71,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
             if (this.landingCoord.isNotInRange(5, 5)) {
-                console.log("orientation and direction should be the same: " + dir);
+                Rules.display(SiamComponent.VERBOSE, "orientation and direction should be the same: " + dir);
                 this.chosenOrientation = dir;
                 return this.tryMove();
             }
@@ -79,12 +79,12 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         return true;
     }
     public async chooseOrientation(orientation: string): Promise<boolean> {
-        AbstractGameComponent.display(SiamComponent.VERBOSE, "SiamComponent.chooseOrientation(" + orientation + ")");
+        Rules.display(SiamComponent.VERBOSE, "SiamComponent.chooseOrientation(" + orientation + ")");
         this.chosenOrientation = Orthogonale.fromString(orientation);
         return this.tryMove();
     }
     public async insertAt(x: number, y: number): Promise<boolean> {
-        AbstractGameComponent.display(SiamComponent.VERBOSE, "SiamComponent.insertAt(" + x + ", " + y + ")");
+        Rules.display(SiamComponent.VERBOSE, "SiamComponent.insertAt(" + x + ", " + y + ")");
 
         if (this.chosenCoord) {
             return this.cancelMove("Can't insert when there is already a selected piece");
@@ -103,7 +103,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                                             this.chosenOrientation);
         this.cancelMove("Hiding move before submitting it");
         const legal: boolean = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-        AbstractGameComponent.display(SiamComponent.VERBOSE, "SiamComponent.tryMove: " + legal);
+        Rules.display(SiamComponent.VERBOSE, "SiamComponent.tryMove: " + legal);
         return legal;
     }
     public getArrowCoordinate(x: number, y: number, o: string): string {
@@ -168,7 +168,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             coord.equals(this.landingCoord) &&
             this.chosenOrientation == null)
         {
-            SiamComponent.display(SiamComponent.VERBOSE, "choosing orientation now");
+            Rules.display(SiamComponent.VERBOSE, "choosing orientation now");
             return true;
         }
         return false;
@@ -180,7 +180,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             this.landingCoord == null &&
             this.chosenOrientation == null)
         {
-            SiamComponent.display(SiamComponent.VERBOSE, "choosing direction now");
+            Rules.display(SiamComponent.VERBOSE, "choosing direction now");
             return true;
         }
         return false;

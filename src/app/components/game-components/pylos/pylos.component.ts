@@ -6,6 +6,7 @@ import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSl
 import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-pylos',
@@ -32,7 +33,6 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             case 0: return [0, 1, 2, 3];
             case 1: return [0, 1, 2];
             case 2: return [0, 1];
-            default: throw new Error("PylosComponent: invalid Z: " + z);
         }
     }
     public isDrawable(x: number, y: number, z: number): boolean {
@@ -43,56 +43,33 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         return true;
     }
     public async onClick(x: number, y: number, z: number): Promise<boolean> {
-        console.log("onClick("+ x + ", " + y + ", " + z + ")");
-        const slice: PylosPartSlice = this.rules.node.gamePartSlice;
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        const clickedPiece: number = slice.getBoardAt(clickedCoord);
-        if (clickedPiece === Player.NONE.value) {
-            if (clickedCoord.equals(this.chosenLandingCoord)) {
-                if (this.chosenFirstCapture) {
-                    return this.concludeMoveWithCapture([this.chosenFirstCapture, clickedCoord]);
-                } else {
-                    this.chosenFirstCapture = clickedCoord;
-                    return true;
-                }
-            }
-            if (PylosRules.canCapture(slice, clickedCoord)) {
-                console.log("Can capture, so choose landing");
-                this.chosenLandingCoord = clickedCoord;
-                return true; // now player can click on his captures
-            } else {
-                console.log("Can not capture");
-                let move: PylosMove;
-                if (this.chosenStartingCoord == null) { // Doing a drop without possible capture
-                    console.log("do drop without capture");
-                    move = PylosMove.fromDrop(clickedCoord, []);
-                } else {
-                    if (clickedCoord.isUpperThan(this.chosenStartingCoord)) { // Ending a climbing without possible capture
-                        console.log("do climbing without capture");
-                        move = PylosMove.fromMove(this.chosenStartingCoord, clickedCoord, []);
-                    } else {
-                        return this.cancelMove();
-                    }
-                }
-                return this.tryMove(move, slice);
-            }
-        } else if (clickedPiece === slice.getCurrentPlayer().value) {
-            if (this.chosenLandingCoord == null) {
-                console.log("starting a climb");
-                // Starting do describe a climbing move
-                this.chosenStartingCoord = clickedCoord;
-                return true;
-            } else {
-                // Starting to select capture
-                if (this.chosenFirstCapture == null) { // First capture
-                    this.chosenFirstCapture = clickedCoord;
-                    return true;
-                } else { // Last capture
-                    return this.concludeMoveWithCapture([this.chosenFirstCapture, clickedCoord]);
-                }
-            }
+        const clickedPiece: number = this.slice.getBoardAt(clickedCoord);
+        if (clickedPiece === this.slice.getCurrentPlayer().value ||
+            clickedCoord.equals(this.chosenLandingCoord))
+        {
+            return this.onPieceClick(clickedCoord);
+        } else if (clickedPiece === Player.NONE.value) {
+            return this.onEmptyCaseClick(clickedCoord);
         } else {
-            return this.cancelMove();
+            return this.cancelMove("Can't click on ennemy pieces.");
+        }
+    }
+    private async onPieceClick(clickedCoord: PylosCoord): Promise<boolean> {
+        if (this.chosenLandingCoord == null) {
+            // Starting do describe a climbing move
+            this.chosenStartingCoord = clickedCoord;
+            return true;
+        } else {
+            // Starting to select capture
+            if (this.chosenFirstCapture == null) { // First capture
+                this.chosenFirstCapture = clickedCoord;
+                return true;
+            } else if (clickedCoord.equals(this.chosenFirstCapture)) {
+                return this.concludeMoveWithCapture([this.chosenFirstCapture]);
+            } else { // Last capture
+                return this.concludeMoveWithCapture([this.chosenFirstCapture, clickedCoord]);
+            }
         }
     }
     public async concludeMoveWithCapture(captures: PylosCoord[]): Promise<boolean> {
@@ -100,28 +77,35 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         if (this.chosenStartingCoord == null) {
             move = PylosMove.fromDrop(this.chosenLandingCoord, captures);
         } else {
-            move = PylosMove.fromMove(this.chosenStartingCoord, this.chosenLandingCoord, captures);
-        }
-        return this.tryMove(move, this.slice);
-    }
-    public async validateSingleCapture(): Promise<boolean> {
-        let move: PylosMove;
-        if (this.chosenStartingCoord == null) {
-            move = PylosMove.fromDrop(this.chosenLandingCoord, [this.chosenFirstCapture]);
-        } else {
-            move = PylosMove.fromMove(this.chosenStartingCoord, this.chosenLandingCoord, [this.chosenFirstCapture]);
+            move = PylosMove.fromClimb(this.chosenStartingCoord, this.chosenLandingCoord, captures);
         }
         return this.tryMove(move, this.slice);
     }
     public async tryMove(move: PylosMove, slice: PylosPartSlice): Promise<boolean> {
-        this.cancelMove();
+        this.cancelMove("Hiding the move.");
         return this.chooseMove(move, slice, null, null);
     }
-    public cancelMove(): boolean {
+    public cancelMove(reason: string): boolean {
+        Rules.display(PylosComponent.VERBOSE, reason);
         this.chosenStartingCoord = null;
         this.chosenLandingCoord = null;
         this.chosenFirstCapture = null;
         return false;
+    }
+    private async onEmptyCaseClick(clickedCoord: PylosCoord): Promise<boolean> {
+        if (PylosRules.canCapture(this.slice, clickedCoord)) {
+            this.chosenLandingCoord = clickedCoord;
+            return true; // now player can click on his captures
+        } else {
+            if (this.chosenStartingCoord == null || // Doing a drop without possible capture
+                clickedCoord.isUpperThan(this.chosenStartingCoord)) // Ending a climbing without possible capture
+            {
+                this.chosenLandingCoord = clickedCoord;
+                return this.concludeMoveWithCapture([]);
+            } else {
+                return this.cancelMove("Must move pieces upward.");
+            }
+        }
     }
     public getPieceStyle(x: number, y: number, z: number): any {
         const c: PylosCoord = new PylosCoord(x, y, z);
@@ -137,13 +121,14 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         return { fill, stroke, 'stroke-width': '10px' };
     }
     public getPieceFill(c: PylosCoord): string {
-        if (c.equals(this.chosenLandingCoord)) return this.slice.getCurrentPlayer().value === 0 ? 'blue' : 'red';
-        else {
-            switch (this.slice.getBoardAt(c)) {
-                case Player.NONE.value: return 'lightgrey';
-                case Player.ZERO.value: return 'blue';
-                case Player.ONE.value:  return 'red';
-            }
+        let owner: number = this.slice.getBoardAt(c);
+        if (c.equals(this.chosenLandingCoord)) {
+            owner = this.slice.getCurrentPlayer().value;
+        }
+        switch (owner) {
+            case Player.NONE.value: return 'lightgrey';
+            case Player.ZERO.value: return 'blue';
+            case Player.ONE.value:  return 'red';
         }
     }
     public getPieceRay(z: number): number {
@@ -154,9 +139,6 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
     }
     public getPieceCy(x: number, y: number, z: number): number {
         return 100 + (z * 100) + (y * 200);
-    }
-    public static display(verbose: boolean, message: any) {
-        if (verbose) console.log(message);
     }
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;

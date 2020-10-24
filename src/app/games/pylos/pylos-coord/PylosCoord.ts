@@ -24,7 +24,7 @@ export class PylosCoord extends Coord {
         if (encodedOptional === 0) {
             return MGPOptional.empty();
         }
-        return MGPOptional.of(PylosCoord.decode(encodedOptional - 1))
+        return MGPOptional.of(PylosCoord.decode(encodedOptional - 1));
     }
     public static decode(coord: number): PylosCoord {
         const z: number = coord % 4;
@@ -39,16 +39,21 @@ export class PylosCoord extends Coord {
     }
     constructor(x: number, y: number, public readonly z: number) {
         super(x, y);
-        if (z == null) throw new Error("PylosCoord: Z can't be null");
-        if (x < 0 || x > 3) throw new Error("PylosCoord: Invalid X: " + x);
-        if (y < 0 || y > 3) throw new Error("PylosCoord: Invalid Y: " + y);
-        if (z < 0 || z > 3) throw new Error("PylosCoord: Invalid Z: " + z);
+        if (z == null) throw new Error("PylosCoord: Z can't be null.");
+        if (x < 0 || x > 3) throw new Error("PylosCoord: Invalid X: " + x + ".");
+        if (y < 0 || y > 3) throw new Error("PylosCoord: Invalid Y: " + y + ".");
+        if (z < 0 || z > 3) throw new Error("PylosCoord: Invalid Z: " + z + ".");
         const floorSize: number = 4 - z;
-        if (this.isNotInRange(floorSize, floorSize)) throw new Error(this.toString() + " is not in range");
+        if (this.isNotInRange(floorSize, floorSize)) throw new Error(this.toString() + " is not in range.");
+    }
+    public toString(): string {
+        return "PylosCoord" + this.toShortString();
+    }
+    public toShortString(): string {
+        return "(" + this.x + ", " + this.y + ", " + this.z + ")";
     }
     public equals(obj: any): boolean {
         if (this === obj) return true;
-        if (obj === null || obj === undefined) return false;
         if (!(obj instanceof PylosCoord)) return false;
         if (obj.x !== this.x) return false;
         if (obj.y !== this.y) return false;
@@ -59,7 +64,7 @@ export class PylosCoord extends Coord {
         return this.z > p.z;
     }
     public getLowerPieces(): PylosCoord[] {
-        if (this.z === 0) throw new Error("Floor pieces don't have lower pieces");
+        if (this.z === 0) throw new Error("PylosCoord: floor pieces don't have lower pieces.");
         const lowerZ: number = this.z - 1;
         const upLeft: PylosCoord = new PylosCoord(this.x, this.y, lowerZ);
         const upRight: PylosCoord = new PylosCoord(this.x + 1, this.y, lowerZ);
@@ -68,7 +73,7 @@ export class PylosCoord extends Coord {
         return [upLeft, upRight, downLeft, downRight];
     }
     public getHigherPieces(): PylosCoord[] {
-        if (this.z === 3) throw new Error("Top piece don't have lower pieces");
+        if (this.z === 3) throw new Error("Top piece don't have lower pieces.");
         const higherZ: number = this.z + 1;
         const upLeft: Coord = new Coord(this.x - 1, this.y - 1);
         const upRight: Coord = new Coord(this.x, this.y - 1);

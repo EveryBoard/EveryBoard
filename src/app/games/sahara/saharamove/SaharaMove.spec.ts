@@ -29,7 +29,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when starting coord is outside the board', () => {
         const start: Coord = new Coord(-1, 0);
         const end: Coord = new Coord(0, 0);
-        const expectedError: string = "Move must start inside the board not at "+ start.toString()
+        const expectedError: string = "Move must start inside the board not at "+ start.toString();
         expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
     });
     it('Should throw error when move end outside the board', () => {

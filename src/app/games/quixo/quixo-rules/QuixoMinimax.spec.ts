@@ -4,7 +4,7 @@ import { QuixoPartSlice } from "../quixo-part-slice/QuixoPartSlice";
 import { QuixoMove } from "../QuixoMove";
 import { QuixoRules } from "./QuixoRules";
 
-describe("QuixoMinimax:", () => {
+describe('QuixoMinimax:', () => {
 
     let rules: QuixoRules;
     let _: number = Player.NONE.value;

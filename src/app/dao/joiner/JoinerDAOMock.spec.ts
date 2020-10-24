@@ -3,7 +3,7 @@ import { IJoinerId, IJoiner } from "src/app/domain/ijoiner";
 import { async } from "@angular/core/testing";
 import { JoinerMocks } from "src/app/domain/JoinerMocks";
 
-describe("JoinerDAOMock", () => {
+describe('JoinerDAOMock', () => {
 
     let joinerDaoMock: JoinerDAOMock;
 

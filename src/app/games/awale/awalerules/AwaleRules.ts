@@ -11,15 +11,12 @@ abstract class AwaleNode extends MNode<AwaleRules, AwaleMove, AwalePartSlice, Aw
 
 export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
-    public static GET_BOARD_VALUE_CALL_COUNT: number = 0;
+    public static GET_BOARD_VALUE_CALL_COUNT: number = 0; // TODO: Remove, useless
 
-    public static GET_LIST_MOVES_CALL_COUNT: number = 0;
+    public static GET_LIST_MOVES_CALL_COUNT: number = 0; // TODO: Remove, useless
 
     public static VERBOSE: boolean = false;
 
-    public static display(verbose: boolean, message: any) {
-        if (verbose) console.log(message);
-    }
     constructor() {
         super(false);
         this.node = MNode.getFirstNode(
@@ -28,7 +25,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         );
     }
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): { resultingMove: AwaleMove; resultingSlice: AwalePartSlice; } {
-        AwaleRules.display(AwaleRules.VERBOSE, "applyLegalMove");
+        Rules.display(AwaleRules.VERBOSE, "applyLegalMove");
         const turn: number = slice.turn;
         const player = turn % 2;
         const ennemy = (turn + 1) % 2;
@@ -50,7 +47,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
          * return the sum of all captured seeds
          * is called when a game is over because of starvation
          */
-        console.log('mansoon');
         let sum = 0;
         let x: number = 0;
         do {

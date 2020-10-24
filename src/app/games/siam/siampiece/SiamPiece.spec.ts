@@ -1,7 +1,8 @@
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { Player } from "src/app/jscaip/Player";
 import { SiamPiece } from "./SiamPiece";
-describe("SiamPiece", () => {
+
+describe('SiamPiece:', () => {
 
     it('should give string version of each pieces', () => {
         const values: number[] = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9];

@@ -191,9 +191,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     public node: MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>;
     // enum boolean {TRUE, FALSE, NULL}
 
-    public static display(verbose: boolean, message: any) {
-        if (verbose) console.log(message);
-    }
     private static isOccupied(qcase: number): boolean {
         return (qcase !== QuartoEnum.UNOCCUPIED);
     }
@@ -294,7 +291,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                 }
             }
         }
-        // console.log(node + ' has ' + listMoves.size() + ' sons ');
         return listMoves;
     }
     public getBoardValue(move: QuartoMove, slice: QuartoPartSlice): number {
@@ -309,7 +305,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         let score = 0; // valeur par d�faut
         let preVictory = false; // nous permet d'�viter des v�rifications inutiles
 
-        // console.log('testons le plateau');
         for (const line of QuartoRules.lines) {
             // pour chaque ligne (les horizontales, verticales, puis diagonales
             cx = line[0];
@@ -353,15 +348,15 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         // si la case est occupée
                         if (commonCrit == null) {
                             commonCrit = new Critere(c);
-                            QuartoRules.display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c
+                            Rules.display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c
                                                                      + ' = ' + commonCrit.toString() + '\n');
                         } else {
                             commonCrit.mergeWithNumber(c);
-                            QuartoRules.display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');
+                            Rules.display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');
                         }
                     }
                 }
-                QuartoRules.display(QuartoRules.VERBOSE, ' ' + line[0] + line[1] + line[2] + line[3] +
+                Rules.display(QuartoRules.VERBOSE, ' ' + line[0] + line[1] + line[2] + line[3] +
                                                          'contient ' + nbCasesVides + ' case vides au tour ' + slice.turn);
 
                 // on a maintenant traité l'entierté de la ligne
@@ -375,7 +370,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouv� et assign�
                         // est dans ce cas bel et bien une case sensible
                         if (commonCrit.matchInt(slice.pieceInHand)) {
-                            QuartoRules.display(QuartoRules.VERBOSE, 'Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
+                            Rules.display(QuartoRules.VERBOSE, 'Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
 
                             preVictory = true;
                             score = (slice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;
