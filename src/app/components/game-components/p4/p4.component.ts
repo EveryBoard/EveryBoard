@@ -36,6 +36,8 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
         this.board = p4PartSlice.getCopiedBoard().reverse();
         if (lastMove !== null) {
             this.lastX = lastMove.x;
+        } else{
+            this.lastX = null;
         }
     }
     public decodeMove(encodedMove: number): Move {

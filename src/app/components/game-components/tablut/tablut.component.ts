@@ -33,9 +33,12 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const move: TablutMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
 
-        if (move != null) {
-            this.moving = move.coord
+        if (move) {
+            this.moving = move.coord;
             this.arriving = move.end;
+        } else {
+            this.moving = null;
+            this.arriving = null;
         }
 
         this.cancelMove();

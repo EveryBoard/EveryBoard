@@ -1,7 +1,7 @@
 import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
@@ -12,6 +12,8 @@ import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { MoveX } from 'src/app/jscaip/MoveX';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { UserService } from 'src/app/services/user/UserService';
+import { By } from '@angular/platform-browser';
+import { Player } from 'src/app/jscaip/Player';
 
 const activatedRouteStub = {
     snapshot: {
@@ -39,6 +41,8 @@ describe('LocalGameWrapperComponent', () => {
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
+    let debugElement: DebugElement;
+
     beforeAll(() => {
         LocalGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || LocalGameWrapperComponent.VERBOSE;
     });
@@ -57,6 +61,7 @@ describe('LocalGameWrapperComponent', () => {
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(LocalGameWrapperComponent);
+        debugElement = fixture.debugElement;
         component = fixture.debugElement.componentInstance;
     }));
     it('should create', async(() => {
@@ -86,7 +91,7 @@ describe('LocalGameWrapperComponent', () => {
         expect(p4Tag).toBeTruthy("app-p4 tag should be present after view init");
         expect(component.gameComponent).toBeTruthy("gameComponent should be present once component view init");
     }));
-    it('Connected user should be able to play', fakeAsync(async() => {
+    it('connected user should be able to play', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
 
         fixture.detectChanges();
@@ -94,6 +99,26 @@ describe('LocalGameWrapperComponent', () => {
 
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
         const legality: boolean = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
-        expect(legality).toBeTruthy("Connected user should be able to play")
+        expect(legality).toBeTruthy("Connected user should be able to play");
+    }));
+    it('should allow to go back one move', fakeAsync(async() => {
+        AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
+        fixture.detectChanges();
+        tick(1);
+        const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
+        expect(slice.turn).toBe(0);
+        const legality: boolean = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
+        expect(legality).toBeTruthy("Move 0 should be legal");
+        await fixture.whenStable(); fixture.detectChanges();
+        expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
+
+        spyOn(component.gameComponent, 'updateBoard').and.callThrough();
+        const takeBackElement: DebugElement = debugElement.query(By.css('#takeBack'));
+        expect(takeBackElement).toBeTruthy("TakeBackElement should exist");
+        takeBackElement.triggerEventHandler('click', null);
+        await fixture.whenStable(); fixture.detectChanges();
+
+        expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
+        expect(component.gameComponent.updateBoard).toHaveBeenCalledTimes(1);
     }));
 });

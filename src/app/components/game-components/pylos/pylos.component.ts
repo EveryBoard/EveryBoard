@@ -7,6 +7,7 @@ import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
+import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
 @Component({
     selector: 'app-pylos',
@@ -143,10 +144,17 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;
         const lastMove: PylosMove = this.rules.node.move;
-        this.lastLandingCoord = lastMove.landingCoord;
-        this.lastStartingCoord = lastMove.startingCoord.getOrNull();
-        this.lastFirstCapture = lastMove.firstCapture.getOrNull();
-        this.lastSecondCapture = lastMove.secondCapture.getOrNull();
+        if (lastMove) {
+            this.lastLandingCoord = lastMove.landingCoord;
+            this.lastStartingCoord = lastMove.startingCoord.getOrNull();
+            this.lastFirstCapture = lastMove.firstCapture.getOrNull();
+            this.lastSecondCapture = lastMove.secondCapture.getOrNull();
+        } else{
+            this.lastLandingCoord = null;
+            this.lastStartingCoord = null;
+            this.lastFirstCapture = null;
+            this.lastSecondCapture = null;
+        }
     }
     public decodeMove(encodedMove: number): PylosMove {
         return PylosMove.decode(encodedMove);

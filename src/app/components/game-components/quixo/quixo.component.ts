@@ -30,7 +30,9 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     public updateBoard() {
         this.slice = this.rules.node.gamePartSlice;
         this.board = this.slice.board;
-        this.lastMoveCoord = this.rules.node.move.coord;
+        const move: QuixoMove = this.rules.node.move;
+        if (move) this.lastMoveCoord = move.coord;
+        else this.lastMoveCoord = null;
     }
     public cancelMove(): boolean {
         this.chosenCoord = null;

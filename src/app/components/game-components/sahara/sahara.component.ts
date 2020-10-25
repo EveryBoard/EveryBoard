@@ -107,12 +107,15 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
     }
     public updateBoard(): void {
         this.chosenCoord = new Coord(-2, -2);
-        if (this.rules.node.gamePartSlice.turn > 0) {
-            this.lastCoord = this.rules.node.move.coord;
-            this.lastMoved = this.rules.node.move.end;
+        const move: SaharaMove = this.rules.node.move;
+        if (move) {
+            this.lastCoord = move.coord;
+            this.lastMoved = move.end;
+        } else {
+            this.lastCoord = null;
+            this.lastMoved = null;
         }
         this.board = this.rules.node.gamePartSlice.board;
-        if (SaharaComponent.VERBOSE) console.table(this.board);
     }
     public decodeMove(encodedMove: number): SaharaMove {
         return SaharaMove.decode(encodedMove);

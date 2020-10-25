@@ -66,6 +66,13 @@
                     Passer son tour
                 </button>
             </ng-template>
+
+            <div *ngIf="compo.rules.node.gamePartSlice.turn > 0">
+                <button id="takeBack"
+                        (click)="takeBack()">
+                    Reprendre un coup
+                </button>
+            </div>
         </div>
     </div>
 </div>
