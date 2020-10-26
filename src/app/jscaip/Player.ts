@@ -16,4 +16,8 @@ export class Player {
             default: throw new Error("Unknown Player value " + value);
         }
     }
+
+    public toString(): string {
+        return "Player" + this.value;
+    }
 }

@@ -27,7 +27,7 @@ export class KamisadoPartSlice extends GamePartSlice {
         return this.getPieceAt(x, y).equals(KamisadoPiece.NONE);
     }
     public pieceBelongToCurrentPlayer(x: number, y: number): boolean {
-        throw this.getPieceAt(x, y).player === this.getCurrentPlayer();
+        return this.getPieceAt(x, y).player === this.getCurrentPlayer();
     }
 
 }

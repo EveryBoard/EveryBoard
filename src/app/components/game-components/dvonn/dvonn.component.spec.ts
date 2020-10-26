@@ -30,7 +30,7 @@ const authenticationServiceStub = {
 
     getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
 };
-describe('KamisadoComponent', () => {
+describe('DvonnComponent', () => {
 
     let wrapper: LocalGameWrapperComponent;
 

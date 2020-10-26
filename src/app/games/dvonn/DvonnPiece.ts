@@ -5,18 +5,33 @@ export class DvonnPiece {
     public static readonly PLAYER_ZERO: DvonnPiece = new DvonnPiece(Player.ZERO);
     public static readonly PLAYER_ONE: DvonnPiece = new DvonnPiece(Player.ONE);
     // This is the maximal possible number returned by getValue.
-    // TODO: this should be Player.MAX_VALUE
-    public static readonly MAX_VALUE: number = 2;
+    // TODO: this should be Player.MAX_VALUE+1
+    public static readonly MAX_VALUE: number = 3;
     public static of(value: number): DvonnPiece {
-        return new DvonnPiece(Player.of(value));
+        return new DvonnPiece(Player.of(value-1));
     }
 
     private constructor(public readonly player: Player) {
     }
     public getValue(): number {
-        return this.player.value
+        return this.player.value+1; // We don't want 0 as a value
     }
     public belongsTo(player: Player): boolean {
         return this.player === player;
+    }
+    public isSource(): boolean {
+        return this.belongsTo(Player.NONE);
+    }
+    public toString(): string {
+        if (this === DvonnPiece.SOURCE) {
+            return "D";
+        } else if (this === DvonnPiece.PLAYER_ZERO) {
+            return "W";
+        } else if (this === DvonnPiece.PLAYER_ONE) {
+            return "B";
+        } else {
+            console.log({player: this.player.toString()});
+            return "UNK";
+        }
     }
 }
