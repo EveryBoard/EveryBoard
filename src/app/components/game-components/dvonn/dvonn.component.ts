@@ -9,6 +9,7 @@ import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
 import { DvonnRules } from 'src/app/games/dvonn/dvonnrules/DvonnRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 
 @Component({
     selector: 'app-dvonn',
@@ -18,16 +19,63 @@ import { Player } from 'src/app/jscaip/Player';
 export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSlice, LegalityStatus> {
     public rules = new DvonnRules(DvonnPartSlice.getStartingSlice(ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(), p => p.getValue())));
 
+    public CASE_SIZE = 70;
+    public lastMove: DvonnMove = null;
+    public chosen: Coord = null;
+    public canPass: boolean = false;
+
+
     public updateBoard() {
-        throw new Error("NYI");
+        const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
+        this.board = slice.getCopiedBoard();
+        this.lastMove = this.rules.node.move;
+        this.canPass = this.rules.canOnlyPass(slice);
+        this.chosen = null;
     }
 
-    public pass(): boolean {
-        throw new Error("NYI");
+    public async pass(): Promise<boolean> {
+        if (this.canPass) {
+            return this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null);
+        }
+        return false;
     }
 
-    public onClick(x: number, y: number): boolean {
-        throw new Error("NYI");
+    public async onClick(x: number, y: number): Promise<boolean> {
+        console.log({x, y});
+        let success: boolean;
+        if (this.chosen === null) {
+            success = this.choosePiece(x, y);
+        } else {
+            success = await this.chooseDestination(x, y);
+        }
+        if (!success) {
+            this.chosen = null;
+        }
+        return success;
+    }
+
+
+    public choosePiece(x: number, y: number): boolean {
+        if (this.rules.node.isEndGame()) {
+            return false;
+        }
+        if (!DvonnBoard.getStackAt(this.board, new Coord(x, y)).belongsTo(this.rules.node.gamePartSlice.getCurrentPlayer())) {
+            return false;
+        }
+        this.chosen = new Coord(x, y);
+        return true;
+    }
+
+    private async chooseDestination(x: number, y: number): Promise<boolean> {
+        const chosenPiece: Coord = this.chosen;
+        const chosenDestination: Coord = new Coord(x, y);
+        console.log({'from': chosenPiece, to: chosenDestination});
+        try {
+            const move: DvonnMove = new DvonnMove(chosenPiece, chosenDestination);
+            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        } catch (e) {
+            return false;
+        }
     }
 
     public decodeMove(encodedMove: number): DvonnMove {
@@ -38,4 +86,62 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         return DvonnMove.encode(move);
     }
 
+    public isOnBoard(x: number, y: number): boolean {
+        return DvonnBoard.isOnBoard(new Coord(x, y));
+    }
+    public center(x: number, y: number): Coord {
+        let xshift = 0;
+        switch (y) {
+            case 0:
+                xshift = 0;
+                break;
+            case 1:
+                xshift = this.CASE_SIZE/2;
+                break;
+            case 2:
+                xshift = this.CASE_SIZE;
+                break;
+            case 3:
+                xshift = 3 * this.CASE_SIZE/2;
+                break;
+            case 4:
+                xshift = 2 * this.CASE_SIZE;
+                break;
+        }
+        return new Coord(xshift + this.CASE_SIZE / 2 + (x * this.CASE_SIZE),
+                         this.CASE_SIZE / 2 + (y * (this.CASE_SIZE * 0.75)));
+    }
+    public source(stackValue: number): boolean {
+        return DvonnPieceStack.of(stackValue).containsSource();
+    }
+    public size(stackValue: number): number {
+        return DvonnPieceStack.of(stackValue).size();
+    }
+    public stylePiece(stackValue: number, hasSource: boolean): any {
+        const stack = DvonnPieceStack.of(stackValue);
+        return {
+            fill: (hasSource && stack.size() === 1) ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
+            stroke: hasSource ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
+            'stroke-width': '5px'
+        }
+    }
+
+    public pieceText(stackValue: number): string {
+        return '' + DvonnPieceStack.of(stackValue).size()
+    }
+
+    public getHexaCoordinates(center: Coord): string {
+        const x = center.x;
+        const y = center.y;
+        const size = this.CASE_SIZE/2;
+        const halfsize = size / 2;
+        const a = new Coord(x,        y + size);
+        const b = new Coord(x + size, y + halfsize);
+        const c = new Coord(x + size, y - halfsize);
+        const d = new Coord(x,        y - size);
+        const e = new Coord(x - size, y - halfsize);
+        const f = new Coord(x - size, y + halfsize);
+        return a.x + ' ' + a.y + ' ' + b.x + ' ' + b.y + ' ' + c.x + ' ' + c.y + ' ' +
+            d.x + ' ' + d.y + ' ' + e.x + ' ' + e.y + ' ' + f.x + ' ' + f.y + ' ' + a.x + ' ' + a.y;
+    }
 }

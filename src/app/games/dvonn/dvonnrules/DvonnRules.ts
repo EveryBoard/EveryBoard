@@ -23,7 +23,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         return DvonnBoard.getAllPieces(slice.board)
             .filter((c: Coord): boolean =>
                 DvonnBoard.getStackAt(slice.board, c).belongsTo(slice.getCurrentPlayer()) &&
-                    DvonnBoard.numberOfNeighbors(slice.board, c) < 6);
+                DvonnBoard.numberOfNeighbors(slice.board, c) < 6);
     }
     private pieceTargets(slice: DvonnPartSlice, coord: Coord): Coord[] {
         const stackSize: number = DvonnBoard.getStackAt(slice.board, coord).size();
@@ -43,6 +43,9 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         // and which can move to target (an occupied space at a distance equal to their length)
         return this.getFreePieces(slice).
             filter((c: Coord): boolean => this.pieceHasTarget(slice, c));
+    }
+    public canOnlyPass(slice: DvonnPartSlice): boolean {
+        return this.getMovablePieces(slice).length === 0;
     }
     public getListMovesFromSlice(slice: DvonnPartSlice): MGPMap<DvonnMove, DvonnPartSlice> {
         const map: MGPMap<DvonnMove, DvonnPartSlice> = new MGPMap();
@@ -143,6 +146,10 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         // A move is legal if:
         // - the start and end coordinates are on the board
         if (!DvonnBoard.isOnBoard(move.coord) || !DvonnBoard.isOnBoard(move.end)) {
+            return failure;
+        }
+        // - there are less than 6 neighbors
+        if (DvonnBoard.numberOfNeighbors(slice.board, move.coord) === 6) {
             return failure;
         }
         const stack = DvonnBoard.getStackAt(slice.board, move.coord);
