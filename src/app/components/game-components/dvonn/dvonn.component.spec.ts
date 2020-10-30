@@ -41,11 +41,8 @@ describe('DvonnComponent', () => {
 
     let gameComponent: DvonnComponent;
 
-    // TODO: test pass
-    // TODO: test choose piece after end game
     const _  : number = DvonnPieceStack.EMPTY.getValue();
     const D  : number = DvonnPieceStack.SOURCE.getValue();
-    const W  : number = DvonnPieceStack.PLAYER_ZERO.getValue();
     const WW : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
 
     beforeEach(fakeAsync(() => {
