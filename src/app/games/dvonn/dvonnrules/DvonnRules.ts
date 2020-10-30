@@ -137,6 +137,8 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     public isLegal(move: DvonnMove, slice: DvonnPartSlice): LegalityStatus {
         const failure = { legal: false }
         if (this.getMovablePieces(slice).length === 0) {
+            // If no pieces are movable, the player can pass
+            // but only if the previous move was not a pass itself
             if (move === DvonnMove.PASS && !slice.alreadyPassed) {
                 return { legal: true };
             } else {

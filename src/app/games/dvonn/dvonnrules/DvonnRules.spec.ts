@@ -12,17 +12,33 @@ import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 describe('DvonnRules:', () => {
     let rules: DvonnRules;
 
-    const _  : number = DvonnPieceStack.EMPTY.getValue();
-    const D  : number = DvonnPieceStack.SOURCE.getValue();
-    const W  : number = DvonnPieceStack.PLAYER_ZERO.getValue();
-    const WB : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ONE]).getValue();
-    const WW : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
-    const WD : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.SOURCE]).getValue();
-    const WWW: number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
-    const B  : number = DvonnPieceStack.PLAYER_ONE.getValue();
-    const BD : number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.SOURCE]).getValue();
-    const BB : number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE]).getValue();
+    const _   : number = DvonnPieceStack.EMPTY.getValue();
+    const D   : number = DvonnPieceStack.SOURCE.getValue();
+    const W   : number = DvonnPieceStack.PLAYER_ZERO.getValue();
+    const WB  : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ONE]).getValue();
+    const WW  : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
+    const WD  : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.SOURCE]).getValue();
+    const WWW : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
+    const B   : number = DvonnPieceStack.PLAYER_ONE.getValue();
+    const BD  : number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.SOURCE]).getValue();
+    const BB  : number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE]).getValue();
     const BDB : number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.SOURCE, DvonnPiece.PLAYER_ONE]).getValue();
+    const B5  : number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                              DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                              DvonnPiece.PLAYER_ONE]).getValue();
+    const B6  : number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                              DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                              DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE]).getValue();
+    const BD6 : number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                              DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                              DvonnPiece.SOURCE, DvonnPiece.PLAYER_ONE]).getValue();
+    const W2  : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
+    const W6  : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
+                                              DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
+                                              DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
+    const WD6 : number =  new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
+                                               DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
+                                               DvonnPiece.SOURCE, DvonnPiece.PLAYER_ZERO]).getValue();
 
     beforeEach(() => {
         rules = new DvonnRules(DvonnPartSlice.getStartingSlice(ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(), p => p.getValue())));
@@ -203,22 +219,6 @@ describe('DvonnRules:', () => {
         expect(rules.getListMovesFromSlice(DvonnMove.PASS, slice).size()).toEqual(0);
     });
     it('should not end if moves can be done', () => {
-        const B5 = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-                                        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-                                        DvonnPiece.PLAYER_ONE]).getValue();
-        const B6 = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-                                        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-                                        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE]).getValue();
-        const BD6 = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-                                         DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-                                         DvonnPiece.SOURCE, DvonnPiece.PLAYER_ONE]).getValue();
-        const W2 = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
-        const W6 = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
-                                        DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
-                                        DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
-        const WD6 =  new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
-                                         DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
-                                         DvonnPiece.SOURCE, DvonnPiece.PLAYER_ZERO]).getValue();
         const board = [
             [_,   _, _,  _,  _,   _,  _, _, _, BD6, _],
             [_,   _, _, B6, W2,   _, B5, _, _,   _, _],
