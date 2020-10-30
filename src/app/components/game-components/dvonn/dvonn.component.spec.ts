@@ -80,7 +80,6 @@ describe('DvonnComponent', () => {
         expect(await gameComponent.onClick(1, 1)).toBeTruthy();
         expect(await gameComponent.onClick(2, 1)).toBeTruthy();
     })
-    /*
     it('should allow to pass if stuck position', async () => {
         const board = [
             [_, _, WW, _, _, _, _, _, _, _, _],
@@ -89,10 +88,11 @@ describe('DvonnComponent', () => {
             [_, _,  _, _, _, _, _, _, _, _, _],
             [_, _,  _, _, _, _, _, _, _, _, _]];
         const slice: DvonnPartSlice = DvonnPartSlice.getStartingSlice(board);
-        gameComponent.rules.node = new MNodeDvonnRules(slice);
+        gameComponent.rules = new DvonnRules(slice);
+        gameComponent.updateBoard();
         expect(gameComponent.canPass).toBeTruthy();
         expect(await gameComponent.pass()).toBeTruthy();
-    }); */
+    });
     it('should disallow moving from an invalid location', async () => {
         expect(await gameComponent.onClick(0, 0)).toBeFalsy();
     });
@@ -103,12 +103,20 @@ describe('DvonnComponent', () => {
     it('should disallow choosing an incorrect piece', async () => {
         expect(await gameComponent.onClick(1, 1)).toBeFalsy(); // select black piece (but white plays first)
     });
-    /*
+
     it('should disallow choosing a piece at end of the game', async () => {
-        // TODO
-        expect(false).toBeTruthy();
+        const board = [
+            [_, _, WW, _, _, _, _, _, _, _, _],
+            [_, _,  D, _, _, _, _, _, _, _, _],
+            [_, _,  _, _, _, _, _, _, _, _, _],
+            [_, _,  _, _, _, _, _, _, _, _, _],
+            [_, _,  _, _, _, _, _, _, _, _, _]];
+        const slice: DvonnPartSlice = DvonnPartSlice.getStartingSlice(board);
+        gameComponent.rules = new DvonnRules(slice);
+        gameComponent.updateBoard();
+        expect(await gameComponent.pass()).toBeTruthy();
+        expect(await gameComponent.onClick(2, 0)).toBeFalsy();
     });
-*/
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(DvonnMove, "decode").and.callThrough();
         const encoded = gameComponent.encodeMove(new DvonnMove(new Coord(2, 0), new Coord(2, 1)));
