@@ -71,12 +71,14 @@ describe('DvonnComponent', () => {
     it('should not allow to pass initially', async () => {
         expect(await gameComponent.pass()).toBeFalsy();
     });
-    it('should allow valid moves', async () => {
+    it('should allow valid moves', fakeAsync(async () => {
         expect(await gameComponent.onClick(2, 0)).toBeTruthy();
         expect(await gameComponent.onClick(2, 1)).toBeTruthy();
         expect(await gameComponent.onClick(1, 1)).toBeTruthy();
         expect(await gameComponent.onClick(2, 1)).toBeTruthy();
-    })
+        await fixture.whenStable();
+        fixture.detectChanges();
+    }));
     it('should allow to pass if stuck position', async () => {
         const board = [
             [_, _, WW, _, _, _, _, _, _, _, _],
