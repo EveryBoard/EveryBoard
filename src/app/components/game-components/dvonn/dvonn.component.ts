@@ -59,10 +59,14 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         if (this.rules.node.isEndGame()) {
             return false;
         }
-        if (!DvonnBoard.getStackAt(this.board, new Coord(x, y)).belongsTo(this.rules.node.gamePartSlice.getCurrentPlayer())) {
+        const coord = new Coord(x, y)
+        if (!DvonnBoard.isOnBoard(coord)) {
+            return false
+        }
+        if (!DvonnBoard.getStackAt(this.board, coord).belongsTo(this.rules.node.gamePartSlice.getCurrentPlayer())) {
             return false;
         }
-        this.chosen = new Coord(x, y);
+        this.chosen = coord;
         return true;
     }
 

@@ -95,7 +95,4 @@ export class DvonnBoard {
             [W, W, B, W, W, B, B, B, W, W, _],
             [W, R, W, B, B, W, W, W, B, _, _]];
     }
-    public static getRandomBoard(): DvonnBoardT {
-        throw new Error("NYI");
-    }
 }

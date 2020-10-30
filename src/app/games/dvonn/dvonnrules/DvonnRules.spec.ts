@@ -9,7 +9,9 @@ import { DvonnBoard } from "../DvonnBoard";
 import { DvonnPiece } from "../DvonnPiece";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
-fdescribe('DvonnRules:', () => {
+describe('DvonnRules:', () => {
+    // TODO: check legality of PASS
+    // TODO: check illegality of 6 neighbors
     let rules: DvonnRules;
 
     const _  : number = DvonnPieceStack.EMPTY.getValue();
@@ -73,6 +75,11 @@ fdescribe('DvonnRules:', () => {
         }
         expect(rules.isLegal(new DvonnMove(new Coord(1, 1), new Coord(1, 2)), slice).legal).toBeFalsy();
     });
+    it('should not allow moves for pieces with more than 6 neighbors', () => {
+        const slice = rules.node.gamePartSlice;
+        expect(rules.isLegal(new DvonnMove(new Coord(1, 3), new Coord(1, 2)), slice).legal).toBeFalsy();
+    });
+
     it('should allow moves only to occupied spaces', () => {
         const board = [
             [_, _, W, B, _, B, W, _, B, D, B],
@@ -147,6 +154,8 @@ fdescribe('DvonnRules:', () => {
         const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(slice);
         expect(moves.size()).toEqual(1);
         expect(moves.getByIndex(0).key).toEqual(DvonnMove.PASS);
+        expect(rules.isLegal(DvonnMove.PASS, slice).legal).toBeTruthy();
+        expect(rules.isLegal(new DvonnMove(new Coord(2, 0), new Coord(2, 1)), slice).legal).toBeFalsy();
     });
     it('should remove of the board any portion disconnected from a source', () => {
         const board = [

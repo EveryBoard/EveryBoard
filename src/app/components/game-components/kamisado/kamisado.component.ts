@@ -79,13 +79,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         return success;
     }
 
-    private async chooseDestination(x: number, y: number): Promise<boolean> {
-        const chosenPiece: Coord = this.chosen;
-        const chosenDestination: Coord = new Coord(x, y);
-        const move: KamisadoMove = new KamisadoMove(chosenPiece, chosenDestination);
-        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-    }
-
     public choosePiece(x: number, y: number): boolean {
         if (this.rules.node.isEndGame()) {
             return false;
@@ -93,17 +86,21 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         if (!this.rules.node.gamePartSlice.pieceBelongToCurrentPlayer(x, y)) {
             return false;
         }
-        this.showSelectedPiece(x, y);
+        this.chosen = new Coord(x, y);
         return true;
     }
+
+    private async chooseDestination(x: number, y: number): Promise<boolean> {
+        const chosenPiece: Coord = this.chosen;
+        const chosenDestination: Coord = new Coord(x, y);
+        const move: KamisadoMove = new KamisadoMove(chosenPiece, chosenDestination);
+        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+    }
+
 
     public cancelMove() {
         if (!this.chosenAutomatically)
             this.chosen = new Coord(-1, -1);
-    }
-
-    public showSelectedPiece(x: number, y: number) {
-        this.chosen = new Coord(x, y);
     }
 
     public decodeMove(encodedMove: number): KamisadoMove {

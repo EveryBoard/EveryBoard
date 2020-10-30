@@ -11,6 +11,8 @@ describe('DvonnMove', () => {
         const encoded1: number = move1.encode();
         const decoded1: DvonnMove = DvonnMove.decode(encoded1);
         expect(decoded1).toEqual(move1);
+        const decoded2: DvonnMove = move1.decode(encoded1);
+        expect(decoded2).toEqual(move1);
     });
     it('should correctly encode and decode PASS', () => {
         const encodedMove: number = DvonnMove.PASS.encode();
