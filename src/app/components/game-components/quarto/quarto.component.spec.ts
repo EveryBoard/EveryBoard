@@ -12,8 +12,6 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { QuartoRules } from 'src/app/games/quarto/quartorules/QuartoRules';
 import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 
 const activatedRouteStub = {
     snapshot: {

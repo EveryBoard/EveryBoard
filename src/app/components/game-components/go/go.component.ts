@@ -7,6 +7,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { GroupDatas } from 'src/app/games/go/groupdatas/GroupDatas';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-go',
@@ -28,9 +29,6 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public canPass: boolean;
 
-    public static display(verbose: boolean, message: string) {
-        if (verbose) console.log(message);
-    }
     constructor() {
         super();
         this.canPass = true;
@@ -41,7 +39,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
         const result: boolean = await this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
-        GoComponent.display(GoComponent.VERBOSE, "GoComponent.onClick: AbstractGameComponent.chooseMove said : " + result);
+        Rules.display(GoComponent.VERBOSE, "GoComponent.onClick: AbstractGameComponent.chooseMove said : " + result);
         return result;
     }
     public decodeMove(encodedMove: number): GoMove {
@@ -51,7 +49,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         return move.encode();
     }
     public updateBoard(): void {
-        GoComponent.display(GoComponent.VERBOSE, 'updateBoard');
+        Rules.display(GoComponent.VERBOSE, 'updateBoard');
 
         const slice: GoPartSlice = this.rules.node.gamePartSlice;
         const move: GoMove = this.rules.node.move;

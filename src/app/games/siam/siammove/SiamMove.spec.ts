@@ -4,7 +4,7 @@ import { SiamMove } from "./SiamMove";
 import { SiamPartSlice } from "../SiamPartSlice";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { Coord } from "src/app/jscaip/coord/Coord";
-import { SiamPiece } from "../SiamPiece";
+import { SiamPiece } from "../siampiece/SiamPiece";
 import { MNode } from "src/app/jscaip/MNode";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
@@ -13,15 +13,7 @@ describe('SiamMove', () => {
     const _: number = SiamPiece.EMPTY.value;
     const M: number = SiamPiece.MOUNTAIN.value;
 
-    const U: number = SiamPiece.WHITE_UP.value;
-    const L: number = SiamPiece.WHITE_LEFT.value;
-    const R: number = SiamPiece.WHITE_RIGHT.value;
     const D: number = SiamPiece.WHITE_DOWN.value;
-
-    const u: number = SiamPiece.BLACK_UP.value;
-    const l: number = SiamPiece.BLACK_LEFT.value;
-    const r: number = SiamPiece.BLACK_RIGHT.value;
-    const d: number = SiamPiece.BLACK_DOWN.value;
 
     it('SiamMove.encode and SiamMove.decode should be reversible', () => {
         const board: number[][] = [
@@ -54,19 +46,25 @@ describe('SiamMove', () => {
     it("Should force move to end inside the board", () => {
         expect(() => {
             new SiamMove(-1, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
-        }).toThrowError("SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP)");
+        }).toThrowError("SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP).");
     });
 
     it("Should forbid rotation outside the board", () => {
         expect(() => {
             new SiamMove(-1, 2, MGPOptional.empty(), Orthogonale.UP);
-        }).toThrowError("Cannot rotate piece outside the board: SiamMove(-1, 2, -, UP)");
+        }).toThrowError("Cannot rotate piece outside the board: SiamMove(-1, 2, -, UP).");
     });
 
-    it("Should throw during creation of SiamMove without landing direction", () => {
+    it("Should throw during invalid SiamMove creation", () => {
         expect(() => {
             new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), null);
-        }).toThrowError("Landing orientation must be set");
+        }).toThrowError("Landing orientation must be set.");
+        expect(() => {
+            new SiamMove(2, 2, null, Orthogonale.UP);
+        }).toThrowError("Move Direction must be set (even if optional).");
+        expect(() => {
+            new SiamMove(0, 0, MGPOptional.of(Orthogonale.UP), Orthogonale.DOWN);
+        }).toThrowError("SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: SiamMove(0, 0, UP, DOWN).");
     });
 
     it('Should override correctly equality', () => {

@@ -26,9 +26,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
 
     public botTimeOut: number = 1000; // this.aiDepth * 500;
 
-    public static display(verbose: boolean, message: string) {
-        if (verbose) console.log(message);
-    }
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 router: Router,
@@ -36,7 +33,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 authenticationService: AuthenticationService,
                 private cdr: ChangeDetectorRef) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
-        LocalGameWrapperComponent.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper.constructor");
+        GameWrapper.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper.constructor");
     }
     public ngAfterViewInit() {
         setTimeout(() => {
@@ -45,7 +42,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 if (this.isAI(this.players[0]) === false) this.players[0] = user.pseudo;
                 if (this.isAI(this.players[1]) === false) this.players[1] = user.pseudo;
             });
-            LocalGameWrapperComponent.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
+            GameWrapper.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
             this.afterGameIncluderViewInit();
             this.cdr.detectChanges();
         }, 1);
@@ -116,5 +113,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
         return this.gameComponent;
+    }
+    public takeBack() {
+        if (this.gameComponent.rules.node.gamePartSlice.turn > 0) {
+            this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
+            this.gameComponent.updateBoard();
+        }
     }
 }

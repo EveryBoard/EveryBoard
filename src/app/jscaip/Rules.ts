@@ -6,6 +6,9 @@ import { LegalityStatus } from './LegalityStatus';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 
+    public static display(verbose: boolean, message: any) {
+        if (verbose) console.log(message);
+    }
     public constructor(public readonly pruned: boolean) {}
 
     public node: MNode<Rules<M, S, L>, M, S, L>; // TODO: check that this should not made static
@@ -33,27 +36,25 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          * return false otherwise
          */
         const LOCAL_VERBOSE: boolean = false;
-        if (LOCAL_VERBOSE) console.log("Rules.choose: " + move.toString() + " was proposed");
+        Rules.display(LOCAL_VERBOSE, "Rules.choose: " + move.toString() + " was proposed");
         if ((this.pruned === false) && this.node.hasMoves()) { // if calculation has already been done by the AI
-            if (LOCAL_VERBOSE) console.log("Rules.choose: current node has moves");
+            Rules.display(LOCAL_VERBOSE, "Rules.choose: current node has moves");
             let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing it twice
             if (choix === null) {
-                if (LOCAL_VERBOSE) console.log("Rules.choose: but this proposed move is not found in the list, so it's illegal");
+                Rules.display(LOCAL_VERBOSE, "Rules.choose: but this proposed move is not found in the list, so it's illegal");
                 return false;
             } else {
-                if (LOCAL_VERBOSE) console.log("Rules.choose: and this proposed move is found in the list, so it is legal");
+                Rules.display(LOCAL_VERBOSE, "Rules.choose: and this proposed move is found in the list, so it is legal");
                 this.node = choix; // qui devient le plateau actuel
                 return true;
             }
         }
-        if (LOCAL_VERBOSE) console.log("Rules.choose: current node has no moves or is pruned, let's verify ourselves");
+        Rules.display(LOCAL_VERBOSE, "Rules.choose: current node has no moves or is pruned, let's verify ourselves");
         const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
         if (!status.legal) {
-            if (LOCAL_VERBOSE) console.log("Rules.choose: Move is illegal");
+            Rules.display(LOCAL_VERBOSE, "Rules.choose: Move is illegal");
             return false;
-        } else if (LOCAL_VERBOSE) {
-            console.log("Rules.choose: Move is legal, let's apply it");
-        }
+        } else Rules.display(LOCAL_VERBOSE, "Rules.choose: Move is legal, let's apply it");
 
         const result: {resultingMove: Move, resultingSlice: GamePartSlice} = MNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
         const boardValue: number = MNode.ruler.getBoardValue(result.resultingMove, result.resultingSlice);

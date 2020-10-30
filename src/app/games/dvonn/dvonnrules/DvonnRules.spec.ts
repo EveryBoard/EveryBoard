@@ -10,13 +10,12 @@ import { DvonnPiece } from "../DvonnPiece";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 describe('DvonnRules:', () => {
-    // TODO: check legality of PASS
-    // TODO: check illegality of 6 neighbors
     let rules: DvonnRules;
 
     const _  : number = DvonnPieceStack.EMPTY.getValue();
     const D  : number = DvonnPieceStack.SOURCE.getValue();
     const W  : number = DvonnPieceStack.PLAYER_ZERO.getValue();
+    const WB : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ONE]).getValue();
     const WW : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
     const WD : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.SOURCE]).getValue();
     const WWW: number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
@@ -57,7 +56,7 @@ describe('DvonnRules:', () => {
     });
     it('should provide 41 moves in the first turn on the balanced board', () => {
         const slice = rules.node.gamePartSlice;
-        const firstTurnMoves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(slice);
+        const firstTurnMoves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         expect(firstTurnMoves.size()).toEqual(41);
         expect(firstTurnMoves.getByIndex(0).value.turn).toEqual(1);
     });
@@ -67,7 +66,7 @@ describe('DvonnRules:', () => {
         for (const coord of movablePieces) {
             expect(DvonnBoard.getStackAt(slice.board, coord).belongsTo(Player.ZERO));
         }
-        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(slice);
+        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         const slice2 = moves.getByIndex(0).value;
         const movablePieces2: Coord[] = rules.getMovablePieces(slice2);
         for (const coord of movablePieces2) {
@@ -79,7 +78,22 @@ describe('DvonnRules:', () => {
         const slice = rules.node.gamePartSlice;
         expect(rules.isLegal(new DvonnMove(new Coord(1, 3), new Coord(1, 2)), slice).legal).toBeFalsy();
     });
-
+    it('should have the target stack owned by the owner of the source stack', () => {
+        const expectedBoard = [
+            [_, _, W, B, B, B, W, W, B, D, B],
+            [_, B, B, W, W, W, B, B, W, B, B],
+            [WB, B, B, B, W, D, B, W, W, W, W],
+            [_, W, B, W, W, B, B, B, W, W, _],
+            [W, D, W, B, B, W, W, W, B, _, _]];
+        const slice = rules.node.gamePartSlice;
+        const move = new DvonnMove(new Coord(0, 3), new Coord(0, 2));
+        const legality = rules.isLegal(move, slice);
+        expect(legality.legal).toBeTruthy();
+        const moveResult = rules.applyLegalMove(move, slice, legality);
+        expect(moveResult.resultingMove).toEqual(move);
+        expect(moveResult.resultingSlice.board).toEqual(expectedBoard);
+        expect(DvonnBoard.getStackAt(moveResult.resultingSlice.board, new Coord(0, 2)).belongsTo(Player.ZERO)).toBeTruthy()
+    });
     it('should allow moves only to occupied spaces', () => {
         const board = [
             [_, _, W, B, _, B, W, _, B, D, B],
@@ -88,7 +102,7 @@ describe('DvonnRules:', () => {
                [W, _, B, W, W, _, B, B, W, W, _],
                 [W, D, W, B, B, W, W, W, B, _, _]];
         const slice : DvonnPartSlice = DvonnPartSlice.getStartingSlice(board);
-        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(slice);
+        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
             expect(DvonnBoard.getStackAt(board, move.end).isEmpty()).toBeFalsy();
         }
@@ -102,7 +116,7 @@ describe('DvonnRules:', () => {
             [  W,   _,   B, WWW, W, _, _,  _, _, _, _],
             [  W,   D,   W,   B, B, W, _,  _, _, _, _]];
         const slice : DvonnPartSlice = DvonnPartSlice.getStartingSlice(board);
-        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(slice);
+        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
             expect(move.length()).toEqual(DvonnBoard.getStackAt(board, move.coord).size());
         }
@@ -116,7 +130,7 @@ describe('DvonnRules:', () => {
             [  W,   _,   B, WWW, W, _, _,  _, _, _, _],
             [  W,   D,   W,   B, B, W, _,  _, _, _, _]];
         const slice : DvonnPartSlice = DvonnPartSlice.getStartingSlice(board);
-        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(slice);
+        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
             expect(DvonnBoard.getStackAt(board, move.end).isEmpty()).toBeFalsy();
         }
@@ -129,7 +143,7 @@ describe('DvonnRules:', () => {
             [  W,   _, BDB, WWW, W, _, _,  _, _, _, _],
             [  W,   D,   W,   B, B, W, _,  _, _, _, _]];
         const slice: DvonnPartSlice = DvonnPartSlice.getStartingSlice(board);
-        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(slice);
+        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
             const stack = DvonnBoard.getStackAt(board, move.coord);
             // every movable piece should belong to the current player
@@ -151,7 +165,7 @@ describe('DvonnRules:', () => {
             [_, _,  _, _, _, _, _, _, _, _, _],
             [_, _,  _, _, _, _, _, _, _, _, _]];
         const slice: DvonnPartSlice = DvonnPartSlice.getStartingSlice(board);
-        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(slice);
+        const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         expect(moves.size()).toEqual(1);
         expect(moves.getByIndex(0).key).toEqual(DvonnMove.PASS);
         expect(rules.isLegal(DvonnMove.PASS, slice).legal).toBeTruthy();
@@ -186,7 +200,33 @@ describe('DvonnRules:', () => {
             [_, _,  _, _, _, _, _, _, _, _, _],
             [_, _,  _, _, _, _, _, _, _, _, _]];
         const slice: DvonnPartSlice = new DvonnPartSlice(10, true, board);
-        expect(rules.getListMovesFromSlice(slice).size()).toEqual(0);
+        expect(rules.getListMovesFromSlice(DvonnMove.PASS, slice).size()).toEqual(0);
+    });
+    it('should not end if moves can be done', () => {
+        const B5 = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                        DvonnPiece.PLAYER_ONE]).getValue();
+        const B6 = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE]).getValue();
+        const BD6 = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                         DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
+                                         DvonnPiece.SOURCE, DvonnPiece.PLAYER_ONE]).getValue();
+        const W2 = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
+        const W6 = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
+                                        DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
+                                        DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
+        const WD6 =  new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
+                                         DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
+                                         DvonnPiece.SOURCE, DvonnPiece.PLAYER_ZERO]).getValue();
+        const board = [
+            [_,   _, _,  _,  _,   _,  _, _, _, BD6, _],
+            [_,   _, _, B6, W2,   _, B5, _, _,   _, _],
+            [_,   _, _,  _,  W, BD6, W6, _, _,   _, _],
+            [_,   _, _,  _,  _,   _,  _, _, _,   _, _],
+            [_, WD6, _,  _,  _,   _,  _, _, _,   _, _]];
+        const slice: DvonnPartSlice = new DvonnPartSlice(11, true, board);
+        expect(rules.getListMovesFromSlice(new DvonnMove(new Coord(1, 3), new Coord(1, 4)), slice).size()).toEqual(1);
     });
     it('should assign the right score to winning boards', () => {
         const boardW = [

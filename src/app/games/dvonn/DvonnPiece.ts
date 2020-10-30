@@ -23,11 +23,11 @@ export class DvonnPiece {
         return this.belongsTo(Player.NONE);
     }
     public toString(): string {
-        if (this === DvonnPiece.SOURCE) {
+        if (this.player === Player.NONE) {
             return "D";
-        } else if (this === DvonnPiece.PLAYER_ZERO) {
+        } else if (this.player === Player.ZERO) {
             return "W";
-        } else if (this === DvonnPiece.PLAYER_ONE) {
+        } else if (this.player === Player.ONE) {
             return "B";
         } else {
             console.log({player: this.player.toString()});

@@ -103,7 +103,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         return playerFreedoms.sort((a: number, b: number) => a-b);
     }
     public applyLegalMove(move: SaharaMove, slice: SaharaPartSlice, status: LegalityStatus): { resultingMove: SaharaMove; resultingSlice: SaharaPartSlice; } {
-        if (SaharaRules.VERBOSE) console.log('Legal move ' + move.toString() + ' applied');
+        Rules.display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
         let board: SaharaPawn[][] = slice.getCopiedBoard();
         board[move.end.y][move.end.x] = board[move.coord.y][move.coord.x];
         board[move.coord.y][move.coord.x] = SaharaPawn.EMPTY;
@@ -113,12 +113,12 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
     public isLegal(move: SaharaMove, slice: SaharaPartSlice): LegalityStatus {
         const movedPawn: SaharaPawn = slice.getBoardAt(move.coord);
         if (movedPawn !== slice.getCurrentPlayer().value) {
-            if (SaharaRules.VERBOSE) console.log("This move is illegal because it is not the current player's turn");
+            Rules.display(SaharaRules.VERBOSE, "This move is illegal because it is not the current player's turn");
             return {legal: false};
         }
         const landingCase: SaharaPawn = slice.getBoardAt(move.end);
         if (landingCase !== SaharaPawn.EMPTY) {
-            if (SaharaRules.VERBOSE) console.log("This move is illegal because the landing case is not empty");
+            Rules.display(SaharaRules.VERBOSE, "This move is illegal because the landing case is not empty");
             return {legal: false};
         }
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);

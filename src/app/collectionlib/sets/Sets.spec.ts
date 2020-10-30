@@ -1,7 +1,7 @@
 import { Sets } from "./Sets";
 import { MGPStr } from "../mgpstr/MGPStr";
 
-describe("Sets", () => {
+describe('Sets', () => {
 
     it("Should remove doublon with number", () => {
         const withDoublon: number[] = [0, 1, 2, 2];

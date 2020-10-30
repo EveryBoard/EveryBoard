@@ -87,12 +87,12 @@ export class DvonnBoard {
         const _ = DvonnPieceStack.EMPTY;
         const W = DvonnPieceStack.PLAYER_ZERO;
         const B = DvonnPieceStack.PLAYER_ONE;
-        const R = DvonnPieceStack.SOURCE;
+        const D = DvonnPieceStack.SOURCE;
         return [
-            [_, _, W, B, B, B, W, W, B, R, B],
+            [_, _, W, B, B, B, W, W, B, D, B],
             [_, B, B, W, W, W, B, B, W, B, B],
-            [B, B, B, B, W, R, B, W, W, W, W],
+            [B, B, B, B, W, D, B, W, W, W, W],
             [W, W, B, W, W, B, B, B, W, W, _],
-            [W, R, W, B, B, W, W, W, B, _, _]];
+            [W, D, W, B, B, W, W, W, B, _, _]];
     }
 }

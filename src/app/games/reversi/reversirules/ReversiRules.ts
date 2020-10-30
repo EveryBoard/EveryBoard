@@ -50,7 +50,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             player = Player.ONE.value;
             ennemy = Player.ZERO.value;
         }
-        // console.log(player + ' essaye de capturer');
+
         for (const direction of Direction.DIRECTIONS) {
             const firstCase: Coord = move.coord.getNext(direction);
             if (firstCase.isInRange(ReversiPartSlice.BOARD_WIDTH, ReversiPartSlice.BOARD_HEIGHT)) {
@@ -63,7 +63,6 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
                 }
             }
         }
-        // console.log(move + ' : switched : ' + switcheds);
         return switcheds;
     }
     public static getSandwicheds(capturer: number, direction: Direction, start: Coord, board: number[][]): Coord[] {
@@ -144,7 +143,6 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         if (listMoves.size() === 0) {
             // when the user cannot start, his only move is to pass, which he cannot do otherwise
             // board unchanged, only the turn changed "pass"
-            // console.log('f91 The user can do nothing but pass at turn ' + (nextTurn - 1));
             moveAppliedPartSlice = new ReversiPartSlice(slice.getCopiedBoard(), nextTurn);
             listMoves.set(ReversiMove.pass, moveAppliedPartSlice);
         }
@@ -161,11 +159,11 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             return {legal: ReversiRules.playerCanOnlyPass(reversiPartSlice), switched: null};
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE.value) {
-            if (ReversiRules.VERBOSE) console.log("ReversiRules.isLegal: non, on ne peux pas jouer sur une case occup�e");
+            Rules.display(ReversiRules.VERBOSE, "ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée");
             return {legal: false, switched: null};
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, turn, board);
-        if (ReversiRules.VERBOSE) console.log("ReversiRules.isLegal: "+ switched.length + " element(s) switched");
+        Rules.display(ReversiRules.VERBOSE, "ReversiRules.isLegal: "+ switched.length + " element(s) switched");
         return {legal: (switched.length !== 0), switched};
     }
     public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): number {

@@ -10,25 +10,16 @@ export class PylosPartSlice extends GamePartSlice {
         const board0: number[][] = ArrayUtils.createBiArray(4, 4, Player.NONE.value);
         const board1: number[][] = ArrayUtils.createBiArray(3, 3, Player.NONE.value);
         const board2: number[][] = ArrayUtils.createBiArray(2, 2, Player.NONE.value);
-        const board3: number = Player.NONE.value;
+        const board3: number[][] = [[Player.NONE.value]];
         const turn: number = 0;
-        return new PylosPartSlice(board0, board1, board2, board3, turn);
+        return new PylosPartSlice([board0, board1, board2, board3], turn);
     }
-    constructor(board: number[][],
-                public readonly board1: ReadonlyArray<ReadonlyArray<number>>,
-                public readonly board2: ReadonlyArray<ReadonlyArray<number>>,
-                public readonly board3: number,
+    constructor(public readonly boards: ReadonlyArray<ReadonlyArray<ReadonlyArray<number>>>,
                 turn: number) {
-        super(board, turn);
+        super([], turn);
     }
     public getBoardAt(coord: PylosCoord): number {
-        switch (coord.z) {
-            case 0: return this.board[coord.y][coord.x];
-            case 1: return this.board1[coord.y][coord.x];
-            case 2: return this.board2[coord.y][coord.x];
-            case 3: return this.board3;
-            default: throw new Error("Out of range Z value: " + coord.z);
-        }
+        return this.boards[coord.z][coord.y][coord.x];
     }
     public applyLegalMove(move: PylosMove): PylosPartSlice {
         const updateValues: { coord: PylosCoord, value: Player }[] = [];
@@ -45,21 +36,19 @@ export class PylosPartSlice extends GamePartSlice {
         return this.setBoardAts(updateValues, this.turn + 1);
     }
     public setBoardAts(coordValues: {coord: PylosCoord, value: Player}[], turn: number): PylosPartSlice {
-        const newBoard0: number[][] = ArrayUtils.copyBiArray(this.board);
-        const newBoard1: number[][] = ArrayUtils.copyBiArray(this.board1);
-        const newBoard2: number[][] = ArrayUtils.copyBiArray(this.board2);
-        let newBoard3: number = this.board3;
+        const newBoard: number[][][] = [
+            ArrayUtils.copyBiArray(this.boards[0]),
+            ArrayUtils.copyBiArray(this.boards[1]),
+            ArrayUtils.copyBiArray(this.boards[2]),
+            ArrayUtils.copyBiArray(this.boards[3])
+        ];
+
         for (const coordValue of coordValues) {
             const coord: PylosCoord = coordValue.coord;
             const value: number = coordValue.value.value;
-            switch (coord.z) {
-                case 0: newBoard0[coord.y][coord.x] = value; break;
-                case 1: newBoard1[coord.y][coord.x] = value; break;
-                case 2: newBoard2[coord.y][coord.x] = value; break;
-                case 3: newBoard3 = value; break;
-            }
+            newBoard[coord.z][coord.y][coord.x] = value;
         }
-        return new PylosPartSlice(newBoard0, newBoard1, newBoard2, newBoard3, turn);
+        return new PylosPartSlice(newBoard, turn);
     }
     public isLandable(coord: PylosCoord): boolean {
         if (this.getBoardAt(coord) !== Player.NONE.value) return false;

@@ -32,10 +32,11 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                                        'P4',             // 6
                                        'Pylos',          // 7
                                        'Quarto',         // 8
-                                       'Reversi',        // 9
-                                       'Sahara',         // 10
-                                       'Siam',           // 11
-                                       'Tablut'];        // 12
+                                       'Quixo',          // 9
+                                       'Reversi',        // 10
+                                       'Sahara',         // 11
+                                       'Siam',           // 12
+                                       'Tablut'];        // 13
 
     public selectedGame: string;
 

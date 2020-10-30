@@ -1,5 +1,5 @@
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
-import { SiamPiece } from "./SiamPiece";
+import { SiamPiece } from "./siampiece/SiamPiece";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 export class SiamPartSlice extends GamePartSlice {

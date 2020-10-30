@@ -7,9 +7,11 @@ import { QuixoPartSlice } from "../quixo-part-slice/QuixoPartSlice";
 import { QuixoNode, QuixoRules } from "../quixo-rules/QuixoRules";
 import { QuixoMove } from "../QuixoMove";
 
-describe("QuixoMove:", () => {
+describe('QuixoMove:', () => {
 
     let _: number = Player.NONE.value;
+    let X: number = Player.ONE.value;
+    let O: number = Player.ZERO.value;
 
     it("Should forbid move creation for invalid x or y coord", () => {
         expect(() => new QuixoMove(-1, 0, Orthogonale.UP)).toThrowError("Invalid coord for QuixoMove: (-1, 0) is outside the board.");
@@ -30,13 +32,13 @@ describe("QuixoMove:", () => {
         expect(() => new QuixoMove(2, 4, Orthogonale.DOWN)).toThrowError("Invalid direction: pawn on the bottom side can't be moved down (2, 4).");
     });
 
-    it('SiamMove.encode and SiamMove.decode should be reversible', () => {
+    it('QuixoMove.encode and QuixoMove.decode should be reversible', () => {
         const board: number[][] = [
+            [_, X, _, _, _],
+            [_, _, _, _, X],
             [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _]
+            [X, _, _, _, _],
+            [_, _, _, X, _]
         ];
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonale.DOWN);
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);

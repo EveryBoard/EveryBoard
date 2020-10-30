@@ -34,6 +34,8 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
         if (move != null) {
             this.lastMove = move.coord;
+        } else {
+            this.lastMove = null;
         }
 
         this.cancelMove();

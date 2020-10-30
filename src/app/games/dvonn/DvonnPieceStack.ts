@@ -10,7 +10,7 @@ export class DvonnPieceStack {
             value = value / (DvonnPiece.MAX_VALUE+1);
             pieces.push(DvonnPiece.of(pieceValue));
         }
-        return new DvonnPieceStack(pieces);
+        return new DvonnPieceStack(pieces.reverse());
     }
     public static EMPTY: DvonnPieceStack = new DvonnPieceStack([]);
     public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO]);

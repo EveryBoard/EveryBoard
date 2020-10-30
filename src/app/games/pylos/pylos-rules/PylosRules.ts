@@ -1,6 +1,6 @@
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
-import { Direction, Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MNode } from "src/app/jscaip/MNode";
 import { Player } from "src/app/jscaip/Player";
@@ -9,13 +9,23 @@ import { PylosCoord } from "../pylos-coord/PylosCoord";
 import { PylosMove } from "../pylos-move/PylosMove";
 import { PylosPartSlice } from "../pylos-part-slice/PylosPartSlice";
 
-class PylosNode extends MNode<Rules<PylosMove, PylosPartSlice, LegalityStatus>, PylosMove, PylosPartSlice, LegalityStatus> {}
+export class PylosNode extends MNode<Rules<PylosMove, PylosPartSlice, LegalityStatus>, PylosMove, PylosPartSlice, LegalityStatus> {}
 
 export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus> {
 
     public constructor() {
         super(true);
         this.setInitialBoard(); // TODO: generalize Rules constructor like this
+    }
+    public setInitialBoard(): void {
+        if (this.node == null) {
+            this.node = MNode.getFirstNode(
+                PylosPartSlice.getStartingSlice(),
+                this
+            );
+        } else {
+            this.node = this.node.getInitialNode();
+        }
     }
     public getListMoves(node: PylosNode): MGPMap<PylosMove, PylosPartSlice> {
         const slice: PylosPartSlice = node.gamePartSlice;
@@ -47,10 +57,10 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
             for (let y: number = 0; y < (4 - z); y++) {
                 for (let x: number = 0; x < (4 - z); x++) {
                     let c: PylosCoord = new PylosCoord(x, y, z);
-                    if (slice.getBoardAt(c) === slice.getCurrentPlayer().value) {
-                        if (slice.isSupporting(c) === false) {
-                            freeToMove.push(c);
-                        }
+                    if (slice.getBoardAt(c) === slice.getCurrentPlayer().value &&
+                        slice.isSupporting(c) === false)
+                    {
+                        freeToMove.push(c);
                     }
                     if (slice.isLandable(c)) {
                         landable.push(c);
@@ -67,7 +77,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
                 if (landingCoord.isUpperThan(startingCoord) &&
                     landingCoord.getLowerPieces().some((c: PylosCoord) => startingCoord.equals(c)) === false)
                 {
-                    const newMove: PylosMove = PylosMove.fromMove(startingCoord, landingCoord, []);
+                    const newMove: PylosMove = PylosMove.fromClimb(startingCoord, landingCoord, []);
                     moves.push(newMove);
                 }
             }
@@ -88,10 +98,13 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
             const firstNeighboors: MGPOptional<PylosCoord> = landingCoord.getNextValid(vertical);
             if (firstNeighboors.isPresent() && slice.getBoardAt(firstNeighboors.get()) === currentPlayer) {
                 for (let horizontal of [Orthogonale.LEFT, Orthogonale.RIGHT]) {
-                    const secondNeighboors: MGPOptional<PylosCoord> = firstNeighboors.get().getNextValid(horizontal);
-                    if (secondNeighboors.isPresent() && slice.getBoardAt(secondNeighboors.get()) === currentPlayer) {
+                    const secondNeighboors: PylosCoord = firstNeighboors
+                            .get()
+                            .getNextValid(horizontal)
+                            .getOrNull();
+                    if (secondNeighboors && slice.getBoardAt(secondNeighboors) === currentPlayer) {
                         const thirdDirection = vertical.getOpposite();
-                        const thirdNeighboors: PylosCoord = secondNeighboors.get().getNextValid(thirdDirection).get();
+                        const thirdNeighboors: PylosCoord = secondNeighboors.getNextValid(thirdDirection).get();
                         if (slice.getBoardAt(thirdNeighboors) === currentPlayer) return true;
                     }
                 }
@@ -103,15 +116,16 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
                                       startingCoord: MGPOptional<PylosCoord>,
                                       landingCoord: PylosCoord): PylosCoord[][] {
         const possiblesCapturesSet: PylosCoord[][] = [];
-        if (startingCoord.isPresent()) {
-            freeToMoves = freeToMoves.filter((c: PylosCoord) => c.equals(startingCoord) === false);
-        }
-        for (const firstCapture of freeToMoves.concat(landingCoord)) {
+
+        freeToMoves = freeToMoves.filter((c: PylosCoord) => c.equals(startingCoord.getOrNull()) === false);
+
+        const capturables: PylosCoord[] = freeToMoves.concat(landingCoord);
+        for (let i: number = 0; i < capturables.length; i++) {
+            const firstCapture: PylosCoord = capturables[i];
             possiblesCapturesSet.push([firstCapture]);
-            for (const secondCapture of freeToMoves) {
-                if (firstCapture.equals(secondCapture) === false) {
-                    possiblesCapturesSet.push([firstCapture, secondCapture]);
-                }
+            for (let j: number = i + 1; j < capturables.length; j++) {
+                const secondCapture: PylosCoord = capturables[j];
+                possiblesCapturesSet.push([secondCapture, firstCapture]);
             }
         }
         return possiblesCapturesSet;
@@ -160,26 +174,14 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
         const currentPlayer: number = slice.getCurrentPlayer().value;
         if (!capture.equals(move.landingCoord) &&
             slice.getBoardAt(capture) !== currentPlayer) {
-            console.log("illegal first piece to capture: not one of yours");
             return false;
         }
         const supportedPieces: PylosCoord[] = capture.getHigherPieces()
             .filter((p: PylosCoord) => slice.getBoardAt(p) !== Player.NONE.value &&
                                        p.equals(move.firstCapture.get()) === false);
         if (supportedPieces.length > 0) {
-            console.log("illegal first piece to capture: supporting piece");
             return false;
         }
         return true;
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                PylosPartSlice.getStartingSlice(),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
 }

@@ -13,8 +13,18 @@ export abstract class QuixoNode extends MNode<Rules<QuixoMove, QuixoPartSlice, L
 export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus> {
 
     public constructor() {
-        super(true);
+        super(true); // TODO: ALL RULES ARE NOW PEARED
         this.setInitialBoard(); // TODO: generalize Rules constructor like this
+    }
+    public setInitialBoard(): void {
+        if (this.node == null) {
+            this.node = MNode.getFirstNode(
+                QuixoPartSlice.getStartingSlice(),
+                this
+            );
+        } else {
+            this.node = this.node.getInitialNode();
+        }
     }
     public getListMoves(node: QuixoNode): MGPMap<QuixoMove, QuixoPartSlice> {
         const slice: QuixoPartSlice = node.gamePartSlice;
@@ -73,20 +83,13 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
         const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
         const currentPlayer: Player = slice.getCurrentPlayer();
         if (zerosFullestLine === 5) {
-            console.log("zero aligned");
             if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
-                console.log("and one didnt aligned");
                 return Number.MIN_SAFE_INTEGER;
             }
         }
         if (onesFullestLine === 5) {
-            console.log("one aligned");
-            if (currentPlayer === Player.ONE || zerosFullestLine < 5) {
-                console.log("and zero didnt aligned");
-                return Number.MAX_SAFE_INTEGER;
-            }
+            return Number.MAX_SAFE_INTEGER;
         }
-        console.log("no one win");
         return onesFullestLine - zerosFullestLine;
     }
     public static getLinesSums(slice: QuixoPartSlice): {[player: number]: {[lineType: string]: number[]}} {
@@ -112,7 +115,6 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
                 }
             }
         }
-        console.log(sums);
         return sums;
     }
     public static getFullestLine(playersLinesInfo: {[lineType: string]: number[]}): number {
@@ -132,15 +134,5 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
     public isLegal(move: QuixoMove, slice: QuixoPartSlice): LegalityStatus {
         if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) return { legal: false };
         else return { legal: true };
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                QuixoPartSlice.getStartingSlice(),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
 }

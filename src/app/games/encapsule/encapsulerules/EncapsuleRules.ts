@@ -63,24 +63,23 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         const LOCAL_VERBOSE: boolean = false;
         const FAILURE: EncapsuleLegalityStatus = {legal: false, newLandingCase: null};
         let boardCopy: number[][] = slice.getCopiedBoard();
-        if (LOCAL_VERBOSE) console.log(move.toString());
+        Rules.display(LOCAL_VERBOSE, move.toString());
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             if (!slice.isDropable(movingPiece)) {
-                if (LOCAL_VERBOSE) console.log("move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
+                Rules.display(LOCAL_VERBOSE, "move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
                 return FAILURE;
             }
         } else {
             const startingCoord: Coord = move.startingCoord.get();
             const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
-            if (LOCAL_VERBOSE) {
-                console.log("at " + move.startingCoord);
-                console.log("there is " + startingCase.toString());
-                console.log("whose bigger is " + EncapsuleMapper.getNameFromPiece(movingPiece));
-                console.log("move illegal because: piece does not belong to current player");
-            }
+            Rules.display(LOCAL_VERBOSE,
+                "at " + startingCoord.toString() + "\n" +
+                "there is " + startingCase.toString() + "\n" +
+                "whose bigger is " + EncapsuleMapper.getNameFromPiece(movingPiece) + "\n" +
+                "move illegal because: piece does not belong to current player");
             if (!EncapsulePartSlice.pieceBelongToCurrentPlayer(movingPiece, slice.turn)) {
                 return FAILURE;
             }
@@ -91,8 +90,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (superpositionResult.success === true) {
             return {legal: true, newLandingCase: superpositionResult.result};
         }
-        if (LOCAL_VERBOSE)
-            console.log("move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
+        Rules.display(LOCAL_VERBOSE, "move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
         return FAILURE;
     }
     public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus): { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; } {

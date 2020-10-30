@@ -5,6 +5,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaRules } from 'src/app/games/sahara/sahararules/SaharaRules';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-sahara',
@@ -27,9 +28,6 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
 
     public highlightNames: string[] = ["upward_highlight.svg", "downward_highlight.svg"];
 
-    public static display(verbose: boolean, message: any) {
-        if (verbose) console.log(message);
-    }
     public getCoordinate(x: number, y: number) : string {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
         else return this.getUpwardCoordinate(x, y);
@@ -90,18 +88,18 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
     }
     public async onClick(x: number, y: number) {
         const clickedCoord: Coord = new Coord(x, y);
-        SaharaComponent.display(SaharaComponent.VERBOSE, "Clicked on "+clickedCoord.toString());
+        Rules.display(SaharaComponent.VERBOSE, "Clicked on "+clickedCoord.toString());
         if (-1 < this.chosenCoord.x) {
             try {
                 const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
                 const moveResult: boolean = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
                 if (moveResult === true) {
-                    SaharaComponent.display(SaharaComponent.VERBOSE, "Move is legal");
+                    Rules.display(SaharaComponent.VERBOSE, "Move is legal");
                 } else {
-                    SaharaComponent.display(SaharaComponent.VERBOSE, "Move is illegal");
+                    Rules.display(SaharaComponent.VERBOSE, "Move is illegal");
                 }
             } catch (error) {
-                SaharaComponent.display(SaharaComponent.VERBOSE, "That move can't be legal because: " + error.message);
+                Rules.display(SaharaComponent.VERBOSE, "That move can't be legal because: " + error.message);
             }
             this.chosenCoord = new Coord(-2, -2);
         }
@@ -109,12 +107,15 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
     }
     public updateBoard(): void {
         this.chosenCoord = new Coord(-2, -2);
-        if (this.rules.node.gamePartSlice.turn > 0) {
-            this.lastCoord = this.rules.node.move.coord;
-            this.lastMoved = this.rules.node.move.end;
+        const move: SaharaMove = this.rules.node.move;
+        if (move) {
+            this.lastCoord = move.coord;
+            this.lastMoved = move.end;
+        } else {
+            this.lastCoord = null;
+            this.lastMoved = null;
         }
         this.board = this.rules.node.gamePartSlice.board;
-        if (SaharaComponent.VERBOSE) console.table(this.board);
     }
     public decodeMove(encodedMove: number): SaharaMove {
         return SaharaMove.decode(encodedMove);

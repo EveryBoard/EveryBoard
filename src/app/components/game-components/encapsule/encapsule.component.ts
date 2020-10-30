@@ -51,6 +51,9 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         if (move != null) {
             this.lastLandingCoord = move.landingCoord;
             this.lastStartingCoord = move.startingCoord;
+        } else {
+            this.lastLandingCoord = null;
+            this.lastStartingCoord = MGPOptional.empty();
         }
     }
     public mapNumberBoard(board: number[][]): EncapsuleCase[][] { // TODO: Move those to ArrayUtils and EncapsuleMapper

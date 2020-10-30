@@ -47,7 +47,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     public canOnlyPass(slice: DvonnPartSlice): boolean {
         return this.getMovablePieces(slice).length === 0;
     }
-    public getListMovesFromSlice(slice: DvonnPartSlice): MGPMap<DvonnMove, DvonnPartSlice> {
+    public getListMovesFromSlice(move: DvonnMove, slice: DvonnPartSlice): MGPMap<DvonnMove, DvonnPartSlice> {
         const map: MGPMap<DvonnMove, DvonnPartSlice> = new MGPMap();
         // For each movable piece, look at its possible targets
         this.getMovablePieces(slice).forEach(start =>
@@ -56,13 +56,13 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
                 const legalityStatus = this.isLegal(move, slice); // the move should be legal by construction, hence we don't check it
                 map.set(move, this.applyLegalMove(move, slice, legalityStatus).resultingSlice);
             }));
-        if (map.size() === 0 && !slice.alreadyPassed) {
+        if (map.size() === 0 && move !== DvonnMove.PASS) {
             map.set(DvonnMove.PASS, this.applyLegalMove(DvonnMove.PASS, slice, {legal: true}).resultingSlice);
         }
         return map;
     }
     public getListMoves(node: DvonnNode): MGPMap<DvonnMove, DvonnPartSlice> {
-        return this.getListMovesFromSlice(node.gamePartSlice);
+        return this.getListMovesFromSlice(node.move, node.gamePartSlice);
     }
     public getBoardValue(move: DvonnMove, slice: DvonnPartSlice): number {
         // Board values is the total number of pieces controlled by player 0 - by player 1
@@ -137,7 +137,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     public isLegal(move: DvonnMove, slice: DvonnPartSlice): LegalityStatus {
         const failure = { legal: false }
         if (this.getMovablePieces(slice).length === 0) {
-            if (move === DvonnMove.PASS) {
+            if (move === DvonnMove.PASS && !slice.alreadyPassed) {
                 return { legal: true };
             } else {
                 return failure;

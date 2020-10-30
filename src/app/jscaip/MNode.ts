@@ -78,19 +78,19 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
          * because it's how we encode the boardValue if there's a victory
          */
         if (score === Number.MAX_SAFE_INTEGER) {
-            if (MNode.VERBOSE) console.log('VICTORY');
+            Rules.display(MNode.VERBOSE, 'VICTORY');
             return SCORE.VICTORY;
         }
         if (score === Number.MIN_SAFE_INTEGER) {
-            if (MNode.VERBOSE) console.log('VICTORY');
+            Rules.display(MNode.VERBOSE, 'VICTORY');
             return SCORE.VICTORY;
         }
         if (score === Number.MIN_SAFE_INTEGER + 1) {
-            if (MNode.VERBOSE) console.log('PRE_VICTORY_MIN');
+            Rules.display(MNode.VERBOSE, 'PRE_VICTORY_MIN');
             return SCORE.PRE_VICTORY;
         }
         if (score === Number.MAX_SAFE_INTEGER - 1) {
-            if (MNode.VERBOSE) console.log('PRE_VICTORY_MAX');
+            Rules.display(MNode.VERBOSE, 'PRE_VICTORY_MAX');
             return SCORE.PRE_VICTORY;
         }
         return SCORE.DEFAULT;
@@ -113,9 +113,7 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         // this.ownValue = this.mother == null ? 0 : MNode.ruler.getBoardValue(this.move, this.gamePartSlice);
         this.ownValue = boardValue;
         this.hopedValue = this.ownValue;
-        if (MNode.VERBOSE || LOCAL_VERBOSE) {
-            console.log({ createdNode: this });
-        }
+        Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, { createdNode: this });
         MNode.NB_NODE_CREATED += 1;
     }
     public getNodeStatus(): String {
@@ -141,40 +139,41 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         return mother + ' ' + fertility + ' ' + calculated;
     }
     public findBestMoveAndSetDepth(readingDepth: number): MNode<R, M, S, L> {
-        if (MNode.VERBOSE) console.log("findBestMoveAndSetDepth(" + readingDepth + ") = " + this.gamePartSlice.toString() + " => " + this.ownValue);
+        Rules.display(MNode.VERBOSE, "findBestMoveAndSetDepth(" + readingDepth + ") = " + this.gamePartSlice.toString() + " => " + this.ownValue);
         this.depth = readingDepth;
         return this.findBestMove();
     }
     public findBestMove(): MNode<R, M, S, L> {
         const LOCAL_VERBOSE: boolean = false;
         if (this.isLeaf()) {
-            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('isLeaf (' + this.myToString());
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf (' + this.myToString());
             return this; // rules - leaf or calculation - leaf
         }
 
         // here it's not a calculation - leaf and not yet proven to be a rules - leaf
-        if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('Not A Leaf');
+        Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'Not A Leaf');
 
         if (this.childs === null) {
             // if the Node has no child yet
-            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('has No Child Yet');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'has No Child Yet');
 
             this.createChilds();
-            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('Childs created');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'Childs created');
 
             // here it's not a calculation - leaf but now we can check if it's a rule - leaf
             if (this.childs && this.childs.length === 0) {
                 // here this.depth !== 0 and this.hasAlreadyChild()
                 // so this is the last condition needed to see if it's a leaf - by - rules
-                if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('is A Leaf By Rules');
+                Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'is A Leaf By Rules');
                 return this; // rules - leaf
             }
-            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('has Child NOW');
-        } else if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('Has already Childs');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'has Child NOW');
+        } else
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'Has already Childs');
 
         // here it's not a calculation - leaf nor a rules - leaf
         this.calculateChildsValue();
-        if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('has Calculate Childs Value');
+        Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'has Calculate Childs Value');
         return this.setBestChild();
     }
     public createChilds() {
@@ -203,29 +202,26 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         const LOCAL_VERBOSE: boolean = false;
         const moves: MGPMap<M, S> = MNode.ruler.getListMoves(this) as MGPMap<M, S>;
         this.childs = new Array<MNode<R, M, S, L>>();
-        if (MNode.VERBOSE || LOCAL_VERBOSE) {
-            console.log('createChilds received listMoves from ruler');
-            console.log(moves);
-        }
+        Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'createChilds received listMoves from ruler');
+        Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, moves);
+
         const winningMoveInfo: { winningMoveIndex: number, boardValues: number[] } =
             this.getWinningMoveIndex(moves, this.gamePartSlice.turn);
         if (winningMoveInfo.winningMoveIndex === -1) {
             for (let i=0; i<moves.size(); i++) {
                 const entry = moves.getByIndex(i);
-                if (MNode.VERBOSE || LOCAL_VERBOSE) {
-                    console.log('in the loop');
-                    console.log(entry);
-                }
+                Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'in the loop');
+                Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, entry);
+
                 const move: M = entry.key;
                 const slice: S = entry.value;
-                if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('move and board retrieved from the entry');
+                Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'move and board retrieved from the entry');
 
                 const boardValue: number = winningMoveInfo.boardValues[i];
                 const child: MNode<R, M, S, L> = new MNode<R, M, S, L>(this, move, slice, boardValue);
-                if (MNode.VERBOSE || LOCAL_VERBOSE) {
-                    console.log('child created');
-                    console.log(child);
-                }
+                Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'child created');
+                Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, child);
+
                 this.childs.push(child);
             }
         } else {
@@ -233,10 +229,8 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
             const boardValue: number = winningMoveInfo.boardValues[winningMoveInfo.winningMoveIndex];
             this.createOnlyWinningChild(winningMove, boardValue);
         }
-        if (MNode.VERBOSE || LOCAL_VERBOSE) {
-            console.log('out of the loop');
-            if (this.isEndGame()) console.log('Node.createChilds has found a endGame');
-        }
+        Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'out of the loop');
+        Rules.display((MNode.VERBOSE || LOCAL_VERBOSE) && this.isEndGame(), 'Node.createChilds has found a endGame');
     }
     private getWinningMoveIndex(moves: MGPMap<M, S>, turn: number): { winningMoveIndex: number, boardValues: number[] } {
         const winningValue: number = turn % 2 === 0 ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
@@ -379,26 +373,26 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         const LOCAL_VERBOSE: boolean = false;
 
         const scoreStatus: SCORE = MNode.getScoreStatus(this.ownValue);
-        if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('\nscoreStatus === ' + scoreStatus + '; ');
+        Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, '\nscoreStatus === ' + scoreStatus + '; ');
 
         if (scoreStatus === SCORE.VICTORY) {
-            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('MNode.isEndGame by victory');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'MNode.isEndGame by victory');
             return true;
         }
 
         if (this.childs === null) {
-            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('uncalculated childs : [calculating childs...]');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'uncalculated childs : [calculating childs...]');
             this.createChilds();
         }
 
-        // CHILDS ARE CREATED NOW if ((MNode.VERBOSE || LOCAL_VERBOSE) && this.childs) console.log(this.childs.length + ' childs; ');
+        // CHILDS ARE CREATED NOW
 
         if (this.childs.length === 0) {
-            if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('MNode.isEndGame by  by no-child after calculation');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'MNode.isEndGame by no-child after calculation');
             return true;
         }
 
-        if (MNode.VERBOSE || LOCAL_VERBOSE) console.log('MNode.isEndGame : no (childs and normal score)');
+        Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'MNode.isEndGame : no (childs and normal score)');
         return false;
     }
     public hasMoves(): boolean {
