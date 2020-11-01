@@ -20,14 +20,4 @@ export class KamisadoPartSlice extends GamePartSlice {
     public static getStartingSlice(): KamisadoPartSlice {
         return new KamisadoPartSlice(0, KamisadoColor.ANY, MGPOptional.empty(), false, ArrayUtils.mapBiArray(KamisadoBoard.INITIAL, p => p.getValue()));
     }
-    public getPieceAt(x: number, y: number): KamisadoPiece {
-        return KamisadoPiece.of(this.getBoardByXY(x, y));
-    }
-    public isEmptyAt(x: number, y: number): boolean {
-        return this.getPieceAt(x, y).equals(KamisadoPiece.NONE);
-    }
-    public pieceBelongToCurrentPlayer(x: number, y: number): boolean {
-        return this.getPieceAt(x, y).player === this.getCurrentPlayer();
-    }
-
 }

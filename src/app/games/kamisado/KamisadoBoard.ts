@@ -1,6 +1,9 @@
 import { KamisadoColor } from "./KamisadoColor";
 import { KamisadoPiece } from "./KamisadoPiece";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { Coord } from "src/app/jscaip/coord/Coord";
+
+export type KamisadoBoardEncoded = ReadonlyArray<ReadonlyArray<number>>;
 
 export class KamisadoBoard {
     public static SIZE: number = 8;
@@ -31,4 +34,32 @@ export class KamisadoBoard {
         ];
     }
     public static INITIAL: ReadonlyArray<ReadonlyArray<KamisadoPiece>> = KamisadoBoard.getInitialBoard();
+
+    public static isOnBoard(coord: Coord): boolean {
+        return coord.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE);
+    }
+    public static getPieceAt(board: KamisadoBoardEncoded, coord: Coord): KamisadoPiece {
+        return KamisadoPiece.of(board[coord.y][coord.x]);
+    }
+
+    public static isEmptyAt(board: KamisadoBoardEncoded, coord: Coord): boolean {
+        return KamisadoBoard.getPieceAt(board, coord).equals(KamisadoPiece.NONE);
+    }
+
+    public static allPieceCoords(board: KamisadoBoardEncoded): Coord[] {
+        const l: Coord[] = [];
+        for (let y = 0; y < board.length; y++) {
+            for (let x = 0; x < board[y].length; x++) {
+                const coord = new Coord(x, y)
+                if (!KamisadoBoard.isEmptyAt(board, coord)) {
+                    l.push(coord);
+                }
+            }
+        }
+        return l;
+    }
+    public static allPieces(board: KamisadoBoardEncoded): KamisadoPiece[] {
+        return KamisadoBoard.allPieceCoords(board).map((c: Coord): KamisadoPiece =>
+            KamisadoBoard.getPieceAt(board, c));
+    }
 }

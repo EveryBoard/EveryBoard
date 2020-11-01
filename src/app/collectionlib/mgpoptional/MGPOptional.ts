@@ -4,6 +4,10 @@ export class MGPOptional<T> {
         if (value == null) throw new Error("Optional cannot be create with empty value, use MGPOptional.empty instead");
         return new MGPOptional(value);
     }
+    public static ofPossiblyUndefined<T>(value: any): MGPOptional<T> {
+        if (value == undefined) return MGPOptional.empty()
+        return MGPOptional.of(value);
+    }
     public static empty<T>(): MGPOptional<T> {
         return new MGPOptional(null);
     }

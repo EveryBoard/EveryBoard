@@ -16,7 +16,7 @@ export class KamisadoPiece implements Comparable {
             public static PURPLE: KamisadoPiece = new KamisadoPiece(player, KamisadoColor.PURPLE);
             public static PINK:   KamisadoPiece = new KamisadoPiece(player, KamisadoColor.PINK);
             public static YELLOW: KamisadoPiece = new KamisadoPiece(player, KamisadoColor.YELLOW);
-            public static RED:    KamisadoPiece = new KamisadoPiece(player, KamisadoColor.RED);
+            public static RED:    KamisadoPiece = new KamisadoPiece(player, KamisadoColor.RED);
             public static GREEN:  KamisadoPiece = new KamisadoPiece(player, KamisadoColor.GREEN);
             public static BROWN:  KamisadoPiece = new KamisadoPiece(player, KamisadoColor.BROWN);
         };
@@ -39,7 +39,7 @@ export class KamisadoPiece implements Comparable {
         return piece.player === this.player && piece.color === this.color;
     }
     public isEmpty(): boolean {
-        return this.equals(KamisadoPiece.NONE);
+        return this.player === Player.NONE; //equals(KamisadoPiece.NONE);
     }
     public belongsTo(player: Player): boolean {
         return this.player === player;

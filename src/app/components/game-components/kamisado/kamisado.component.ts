@@ -49,7 +49,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         this.board = slice.getCopiedBoard();
         this.lastMove = this.rules.node.move;
 
-        this.canPass = KamisadoRules.canOnlyPass(slice);
+        this.canPass = this.rules.canOnlyPass(slice);
         this.cancelMove();
         if (this.canPass) {
             this.chosenAutomatically = false;
@@ -83,7 +83,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         if (this.rules.node.isEndGame()) {
             return false;
         }
-        if (!this.rules.node.gamePartSlice.pieceBelongToCurrentPlayer(x, y)) {
+        const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
+        const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
+        if (!piece.belongsTo(player)) {
             return false;
         }
         this.chosen = new Coord(x, y);
