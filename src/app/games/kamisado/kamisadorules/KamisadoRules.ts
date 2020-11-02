@@ -133,7 +133,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         let furthest1: number = 0; // player 1 goes from top (0) to bottom (7)
         KamisadoBoard.allPieceCoords(slice.board).forEach((c: Coord) => {
             const piece = KamisadoBoard.getPieceAt(slice.board, c);
-            if (!piece.equals(KamisadoPiece.NONE)) {
+            if (piece !== KamisadoPiece.NONE) {
                 if (piece.player === Player.ONE) { // player 1, top (0) to bottom (7) so we want the max
                     furthest1 = Math.max(furthest1, c.y);
                 } else if (piece.player === Player.ZERO) { // player 0, bottom (7) to top (0), so we want the min
@@ -154,13 +154,13 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     public nextCoordToPlay(slice: KamisadoPartSlice, colorToPlay: KamisadoColor): MGPOptional<Coord> {
         return MGPOptional.ofPossiblyUndefined(KamisadoBoard.allPieceCoords(slice.board).find((c: Coord): boolean => {
             const piece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, c);
-            return piece.player === slice.getCurrentEnnemy() && piece.color.equals(colorToPlay);  // TODO: why not ===?
+            return piece.player === slice.getCurrentEnnemy() && piece.color === colorToPlay;
         }));
     }
     // Apply the move by only relying on tryMove
     public applyLegalMove(move: KamisadoMove, slice: KamisadoPartSlice, status: LegalityStatus)
     : { resultingMove: KamisadoMove, resultingSlice: KamisadoPartSlice } {
-        if (move.equals(KamisadoMove.PASS)) { // TODO: why not ===?
+        if (move === KamisadoMove.PASS) {
             let nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(slice, slice.colorToPlay);
             const resultingSlice = new KamisadoPartSlice(slice.turn + 1, slice.colorToPlay, nextCoord, true, slice.board);
             return { resultingSlice, resultingMove: move }
@@ -187,7 +187,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         const failure = { legal: false };
         const colorToPlay: KamisadoColor = slice.colorToPlay;
 
-        if (move.equals(KamisadoMove.PASS)) { // TODO: why not ===?
+        if (move === KamisadoMove.PASS) {
             if (this.canOnlyPass(slice) && !slice.alreadyPassed) {
                 return { legal: true };
             } else {

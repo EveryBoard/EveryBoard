@@ -30,7 +30,6 @@ export class DvonnPiece {
         } else if (this.player === Player.ONE) {
             return "B";
         } else {
-            console.log({player: this.player.toString()});
             return "UNK";
         }
     }

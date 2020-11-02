@@ -214,7 +214,6 @@ describe('KamisadoRules:', () => {
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const moves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMovesFromSlice(slice);
-        console.log("first check");
         expect(moves.size()).toEqual(1);
         const onlyMove = moves.listKeys()[0];
         expect(onlyMove).toEqual(KamisadoMove.PASS);
@@ -223,7 +222,6 @@ describe('KamisadoRules:', () => {
         const resultingSlice: KamisadoPartSlice = rules.applyLegalMove(onlyMove, slice, status).resultingSlice;
         expect(resultingSlice).toEqual(expectedSlice);
         const nextMoves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMovesFromSlice(expectedSlice);
-        console.log("second check");
         expect(nextMoves.size()).toEqual(1);
         const finalMove = nextMoves.listKeys()[0];
         expect(finalMove).toEqual(new KamisadoMove(new Coord(1, 6), new Coord(2, 7)));

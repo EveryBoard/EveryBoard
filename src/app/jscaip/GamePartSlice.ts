@@ -33,11 +33,12 @@ export abstract class GamePartSlice {
     // Getters
 
     public getBoardByXY(x: number, y: number): number {
-        const value = this.board[y][x];
-        if (value === undefined) {
-            throw new Error("getBoardByXY(" + x + "," + y + ") is undefined");
+        if (y >= 0 && y < this.board.length && x >= 0 && x < this.board[y].length) {
+            const value = this.board[y][x];
+            return value;
+        } else {
+            throw new Error("invalid board access");
         }
-        return value;
     }
     public getBoardAt(c: Coord): number {
         return this.getBoardByXY(c.x, c.y);

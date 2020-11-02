@@ -1,4 +1,3 @@
-import { environment } from "src/environments/environment";
 import { Coord } from "./coord/Coord";
 
 export class Orthogonale {

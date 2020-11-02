@@ -41,7 +41,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
     }
 
     public async onClick(x: number, y: number): Promise<boolean> {
-        console.log({x, y});
         let success: boolean;
         if (this.chosen === null) {
             success = this.choosePiece(x, y);
@@ -73,7 +72,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
     private async chooseDestination(x: number, y: number): Promise<boolean> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        console.log({'from': chosenPiece, to: chosenDestination});
         try {
             const move: DvonnMove = new DvonnMove(chosenPiece, chosenDestination);
             return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
