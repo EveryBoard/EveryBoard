@@ -8,7 +8,7 @@ import { of, Observable } from 'rxjs';
 import { UserService } from 'src/app/services/user/UserService';
 import { GameService } from 'src/app/services/game/GameService';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MatTabsModule } from '@angular/material';
+import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
