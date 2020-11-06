@@ -1,4 +1,4 @@
-import {ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
+import { ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild, Directive } from '@angular/core';
 import {ActivatedRoute, Router} from '@angular/router';
 import {AbstractGameComponent} from './AbstractGameComponent';
 import {GameIncluderComponent} from './game-includer/game-includer.component';
@@ -24,12 +24,13 @@ import { SaharaComponent } from './sahara/sahara.component';
 import { PylosComponent } from './pylos/pylos.component';
 import { QuixoComponent } from './quixo/quixo.component';
 
+@Directive()
 export abstract class GameWrapper {
 
     public static VERBOSE: boolean = false;
 
     // component loading
-    @ViewChild(GameIncluderComponent, {static: false})
+    @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
     public gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
