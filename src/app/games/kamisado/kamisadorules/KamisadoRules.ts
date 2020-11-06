@@ -121,7 +121,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     }
     // Check if the only possible move is to pass
     public canOnlyPass(slice: KamisadoPartSlice): boolean {
-        return this.getMovablePieces(slice).length == 0;
+        return this.getMovablePieces(slice).length === 0;
     }
     // Returns the value of the board, as the difference of distance to the win
     public getBoardValue(move: KamisadoMove, slice: KamisadoPartSlice): number {
@@ -152,7 +152,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     }
     // Returns the next coord that plays
     public nextCoordToPlay(slice: KamisadoPartSlice, colorToPlay: KamisadoColor): MGPOptional<Coord> {
-        return MGPOptional.ofPossiblyUndefined(KamisadoBoard.allPieceCoords(slice.board).find((c: Coord): boolean => {
+        return MGPOptional.ofNullable(KamisadoBoard.allPieceCoords(slice.board).find((c: Coord): boolean => {
             const piece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, c);
             return piece.player === slice.getCurrentEnnemy() && piece.color === colorToPlay;
         }));
