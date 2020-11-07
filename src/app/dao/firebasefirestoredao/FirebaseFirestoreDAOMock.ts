@@ -6,6 +6,10 @@ import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { IFirebaseFirestoreDAO } from "./FirebaseFirestoreDAO";
 import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
 
+import firebase from "firebase/app";
+import "firebase/firestore";
+
+
 export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
 
     public static VERBOSE: boolean = false;

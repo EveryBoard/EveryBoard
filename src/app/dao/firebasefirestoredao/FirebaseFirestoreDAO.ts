@@ -3,6 +3,9 @@ import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
 import { Observable } from "rxjs";
 import { map } from "rxjs/operators";
 
+import firebase from "firebase/app";
+import "firebase/firestore";
+
 export interface IFirebaseFirestoreDAO<T, PT> {
 
     create(newElement: T): Promise<String>;
