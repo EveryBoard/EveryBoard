@@ -94,12 +94,8 @@ describe('ServerPageComponent', () => {
     }));
     it('should create', async(() => {
         expect(component).toBeTruthy();
-        const ngOnInit = spyOn(component, "ngOnInit").and.callThrough();;
-        expect(ngOnInit).not.toHaveBeenCalled();
-
         fixture.detectChanges();
-
-        expect(ngOnInit).toHaveBeenCalledTimes(1);
+        expect(component['userNameSub']).toBeDefined(); // This is inspecting a private field (not very clean)
     }));
     it('should subscribe to three observable on init', async(() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true};

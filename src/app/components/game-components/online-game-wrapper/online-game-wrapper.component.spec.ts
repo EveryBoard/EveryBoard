@@ -115,17 +115,16 @@ describe('OnlineGameWrapperComponent', () => {
     it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
-        const ngOnInitSpy: jasmine.Spy = spyOn(component, 'ngOnInit').and.callThrough();
         const joinGame: jasmine.Spy = spyOn(joinerService, 'joinGame').and.callThrough();
         const startObserving: jasmine.Spy = spyOn(joinerService, 'startObserving').and.callThrough();
-        expect(ngOnInitSpy).not.toHaveBeenCalled();
+        expect(component.currentPartId).not.toBeDefined();
         expect(joinGame).not.toHaveBeenCalled();
         expect(startObserving).not.toHaveBeenCalled();
 
         fixture.detectChanges();
-        tick(1);
+        tick();
 
-        expect(ngOnInitSpy).toHaveBeenCalledTimes(1);
+        expect(component.currentPartId).toBeDefined();
         expect(joinGame).toHaveBeenCalledTimes(1);
         expect(startObserving).toHaveBeenCalledTimes(1);
         expect(component).toBeTruthy();
