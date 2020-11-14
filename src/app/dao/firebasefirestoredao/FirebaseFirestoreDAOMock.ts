@@ -80,7 +80,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         return Promise.resolve();
     }
     public async update(id: string, update: PT): Promise<void> {
-        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".update(" + id + ", " + JSON.stringify(update) + ")");
+        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE || true) console.log(this.collectionName + ".update(" + id + ", " + JSON.stringify(update) + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);

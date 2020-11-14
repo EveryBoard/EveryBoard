@@ -1,5 +1,4 @@
-import {MGPRequest} from './request';
-import { GamePartSlice } from '../jscaip/GamePartSlice';
+import { IMGPRequest } from './request';
 import { ArrayUtils } from '../collectionlib/arrayutils/ArrayUtils';
 
 export interface ICurrentPart {
@@ -28,20 +27,7 @@ export interface ICurrentPart {
 
     historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
     listMoves: number[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
-    request?: MGPRequest;
-    /* null : rien de tout ce qui suit
-     * request.code: significations
-     * 0: 0 propose match nul
-     * 1: 1 propose match nul
-     * Note:  match nul accepté se traduit par un result égal à 6
-     * 2: 0 ajoute du temps
-     * 3: 1 ajoute du temps
-     * 4: 0 demande à reprendre d'un tour
-     * 5: 1 demande à reprendre d'un tour
-     * 6: 0 propose un rematch
-     * 7: 1 propose un rematch
-     * 8: rematch accepté
-     */
+    request?: IMGPRequest;
 }
 export class Part {
 
@@ -61,7 +47,7 @@ export class Part {
         private readonly scorePlayerOne?: number|string, // TODO : implémenter ça aussi en même temps
 
         private readonly historic?: string,
-        private readonly request?: MGPRequest
+        private readonly request?: IMGPRequest
     ) {
         if (typeGame == null) throw new Error("typeGame can't be null");
         if (playerZero == null) throw new Error("playerZero can't be null");
@@ -132,5 +118,5 @@ export interface PICurrentPart {
 
     historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
     listMoves?: number[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
-    request?: MGPRequest;
+    request?: IMGPRequest;
 }

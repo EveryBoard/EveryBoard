@@ -35,7 +35,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
-        const LOCAL_VERBOSE: boolean = false;
+        const LOCAL_VERBOSE: boolean = true;
         Rules.display(LOCAL_VERBOSE, "Rules.choose: " + move.toString() + " was proposed");
         if ((this.pruned === false) && this.node.hasMoves()) { // if calculation has already been done by the AI
             Rules.display(LOCAL_VERBOSE, "Rules.choose: current node has moves");

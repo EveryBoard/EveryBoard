@@ -1,8 +1,6 @@
 import { FirebaseFirestoreDAO } from "../firebasefirestoredao/FirebaseFirestoreDAO";
-import { ICurrentPart, PICurrentPart, ICurrentPartId } from "../../domain/icurrentpart";
+import { ICurrentPart, PICurrentPart } from "../../domain/icurrentpart";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
 import { environment } from "src/environments/environment";
