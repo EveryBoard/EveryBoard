@@ -18,11 +18,13 @@ export class DvonnMove extends MoveCoordToCoord {
     public static encode(move: DvonnMove): number {
         return move.encode();
     }
-    public constructor(start: Coord, end: Coord) {
+    private constructor(start: Coord, end: Coord) {
         super(start, end);
+    }
+    public static of(start: Coord, end: Coord) {
         if (start.x === -1 && start.y === -1 && end.x === -2 && end.y === -2) {
             // PASS move
-            return;
+            return DvonnMove.PASS;
         }
         // Move should be on board
         if (!DvonnBoard.isOnBoard(start)) {
@@ -34,13 +36,13 @@ export class DvonnMove extends MoveCoordToCoord {
         // Move should be a straight line
         if (start.y === end.y) {
             // vertical move, allowed
-            return
+            return new DvonnMove(start, end);
         } else if (start.x === end.x) {
             // horizontal move, allowed
-            return;
+            return new DvonnMove(start, end);
         } else if (start.x + start.y == end.x + end.y) {
             // diagonal move, allowed
-            return;
+            return new DvonnMove(start, end);
         } else {
             throw new Error("Invalid move");
         }

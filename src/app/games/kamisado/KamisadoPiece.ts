@@ -24,9 +24,9 @@ export class KamisadoPiece implements Comparable {
     static ZERO = KamisadoPiece.createPlayerColors(Player.ZERO);
     static ONE = KamisadoPiece.createPlayerColors(Player.ONE);
     public static of(value: number): KamisadoPiece {
-        if (value === undefined) {
+        if (value == null) {
             // This should not be necessary, but is a safeguard in case an invalid board location is accessed
-            throw new Error("KamisadoPiece.of undefined!");
+            throw new Error("KamisadoPiece.of null!");
         }
         const color = value % 16;
         const player = (value - color) / 16;

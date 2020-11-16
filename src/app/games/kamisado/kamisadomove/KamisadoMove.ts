@@ -16,11 +16,13 @@ export class KamisadoMove extends MoveCoordToCoord {
         const x1 = encodedMove % 16 - (encodedMove % 1);
         return new KamisadoMove(new Coord(x1, y1), new Coord(x2, y2));
     }
-    public constructor(start: Coord, end: Coord) {
+    private constructor(start: Coord, end: Coord) {
         super(start, end);
+    }
+    public static of(start: Coord, end: Coord): KamisadoMove {
         if (start.equals(new Coord(-1, -1)) && end.equals(new Coord(-2, -2))) {
             // Valid move, it is PASS
-            return;
+            return KamisadoMove.PASS;
         }
         if (!start.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
             throw new Error("Starting coord of KamisadoMove must be on the board, not at " + start.toString());
@@ -28,6 +30,7 @@ export class KamisadoMove extends MoveCoordToCoord {
         if (!end.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
             throw new Error("End coord of KamisadoMove must be on the board, not at " + end.toString());
         }
+        return new KamisadoMove(start, end);
     }
     public equals(o: any): boolean {
         if (o === this) return true;

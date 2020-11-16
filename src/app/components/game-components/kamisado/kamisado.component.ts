@@ -95,7 +95,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     private async chooseDestination(x: number, y: number): Promise<boolean> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        const move: KamisadoMove = new KamisadoMove(chosenPiece, chosenDestination);
+        const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
 

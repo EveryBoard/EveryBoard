@@ -11,7 +11,6 @@ import { AppModule } from 'src/app/app.module';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoMove } from 'src/app/games/kamisado/kamisadomove/KamisadoMove';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 
@@ -97,7 +96,7 @@ describe('KamisadoComponent', () => {
     });
     it('should delegate encoding to move', () => {
         spyOn(KamisadoMove, "encode").and.callThrough();
-        gameComponent.encodeMove(new KamisadoMove(new Coord(0, 7), new Coord(0, 6)));
+        gameComponent.encodeMove(KamisadoMove.of(new Coord(0, 7), new Coord(0, 6)));
         expect(KamisadoMove.encode).toHaveBeenCalledTimes(1);
     });
 });

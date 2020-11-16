@@ -1,9 +1,6 @@
+import { ReadonlyBiArray, ReadonlyNumberBiArray } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { DvonnPiece } from "./DvonnPiece";
 import { DvonnPieceStack } from "./DvonnPieceStack";
-
-export type DvonnBoardEncoded = ReadonlyArray<ReadonlyArray<number>>;
-export type DvonnBoardT = ReadonlyArray<ReadonlyArray<DvonnPieceStack>>;
 
 export class DvonnBoard {
     public static WIDTH: number = 11;
@@ -26,7 +23,7 @@ export class DvonnBoard {
         return true;
     }
 
-    public static getStackAt(board: DvonnBoardEncoded, coord: Coord): DvonnPieceStack {
+    public static getStackAt(board: ReadonlyNumberBiArray, coord: Coord): DvonnPieceStack {
         if (!DvonnBoard.isOnBoard(coord)) {
             throw new Error("Position is not within the board");
         }
@@ -40,13 +37,13 @@ export class DvonnBoard {
             new Coord(coord.x, coord.y+distance), new Coord(coord.x, coord.y-distance)
         ];
     }
-    public static numberOfNeighbors(board: DvonnBoardEncoded, coord: Coord): number {
+    public static numberOfNeighbors(board: ReadonlyNumberBiArray, coord: Coord): number {
         return DvonnBoard.neighbors(coord, 1)
             .filter((c: Coord): boolean => DvonnBoard.isOnBoard(c) && !DvonnBoard.getStackAt(board, c).isEmpty())
             .length
     }
 
-    public static getAllPieces(board: DvonnBoardEncoded): Coord[] {
+    public static getAllPieces(board: ReadonlyNumberBiArray): Coord[] {
         const pieces: Coord[] = []
         for (let y = 0; y < DvonnBoard.HEIGHT; y++) {
             for (let x = 0; x < DvonnBoard.WIDTH; x++) {
@@ -83,7 +80,7 @@ export class DvonnBoard {
                            7  |  9
                               8
     */
-    public static getBalancedBoard(): DvonnBoardT {
+    public static getBalancedBoard(): ReadonlyBiArray<DvonnPieceStack> {
         const _ = DvonnPieceStack.EMPTY;
         const W = DvonnPieceStack.PLAYER_ZERO;
         const B = DvonnPieceStack.PLAYER_ONE;

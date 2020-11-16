@@ -6,8 +6,8 @@ export class DvonnPieceStack {
         let value = v;
         let pieces = [];
         while (value >= 1) {
-            const pieceValue = (value % (DvonnPiece.MAX_VALUE+1)) - (value % 1);
-            value = value / (DvonnPiece.MAX_VALUE+1);
+            const pieceValue = (value % (DvonnPiece.MAX_VALUE)) - (value % 1);
+            value = value / (DvonnPiece.MAX_VALUE);
             pieces.push(DvonnPiece.of(pieceValue));
         }
         return new DvonnPieceStack(pieces.reverse());
@@ -26,7 +26,7 @@ export class DvonnPieceStack {
     public getValue(): number {
         let value = 0;
         for (const piece of this.pieces) {
-            value = (value * (DvonnPiece.MAX_VALUE+1)) + piece.getValue();
+            value = (value * (DvonnPiece.MAX_VALUE)) + piece.getValue();
         }
         return value;
     }

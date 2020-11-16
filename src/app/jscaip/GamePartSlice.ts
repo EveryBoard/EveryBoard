@@ -34,8 +34,7 @@ export abstract class GamePartSlice {
 
     public getBoardByXY(x: number, y: number): number {
         if (y >= 0 && y < this.board.length && x >= 0 && x < this.board[y].length) {
-            const value = this.board[y][x];
-            return value;
+            return this.board[y][x];
         } else {
             throw new Error("invalid board access");
         }
