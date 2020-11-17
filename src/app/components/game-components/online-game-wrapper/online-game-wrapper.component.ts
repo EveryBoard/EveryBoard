@@ -27,7 +27,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 })
 export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, AfterViewInit, OnDestroy {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @ViewChild('partCreation', {static: false})
     public partCreation: PartCreationComponent;
@@ -297,11 +297,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameService.notifyVictory(this.currentPartId, victoriousPlayer);
     }
     public canAskTakeBack(): boolean {
-        if (this.currentPart.copy().turn === 0) return false;
-        if (this.getTakeBackRequester() === Player.NONE) return true;
-        return false;
+        if (this.observerRole === 2) return false;
+        else if (this.currentPart.copy().turn <= this.observerRole) return false;
+        else if (this.getTakeBackRequester() === Player.NONE) return true;
+        else return false;
     }
-    public playerMustRespondToTakeBackRequest(): boolean {
+    public isOpponentWaitingForTakeBackResponse(): boolean {
         const takeBackRequester: Player = this.getTakeBackRequester();
         if (takeBackRequester === Player.ONE && this.observerRole === 0) return true;
         if (takeBackRequester === Player.ZERO && this.observerRole === 1) return true;
@@ -362,13 +363,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     private takeBackFor(player: Player) {
         this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
         if (this.gameComponent.rules.node.gamePartSlice.turn % 2 !== player.value) {
-            console.log("CountDown is alright, taking back two turn for " + player.value)
             // Second time to make sure it end up on player's turn
             this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
         } else {
-            console.log("CountDown might fuck up for " + player.value + " so let's resume")
             this.resumeCountDownFor(player);
         }
+        this.gameComponent.updateBoard();
     }
     public setPlayersDatas(updatedICurrentPart: ICurrentPart) {
         Rules.display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
@@ -396,7 +396,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     public async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
         Rules.display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapperComponent.onValidUserMove");
-        return this.updateDBBoard(move, scorePlayerZero, scorePlayerOne);
+        if (this.isOpponentWaitingForTakeBackResponse()) {
+            // TODO: ticket du toast
+            console.log("You must answer to take back request lord");
+        } else {
+            return this.updateDBBoard(move, scorePlayerZero, scorePlayerOne);
+        }
     }
     public async updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
         Rules.display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.updateDBBoard(" + move.toString() + ", " + scorePlayerZero + ", " + scorePlayerOne + ")");

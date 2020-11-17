@@ -60,7 +60,7 @@ class RouterMock {
         return Promise.resolve(true);
     };
 };
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)
@@ -90,7 +90,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         partDAO = TestBed.get(PartDAO);
         joinerDAO = TestBed.get(JoinerDAO);
         let chatDAOMock: ChatDAOMock = TestBed.get(ChatDAO);
-        component = fixture.debugElement.componentInstance;
+        component = debugElement.componentInstance;
         await joinerDAO.set("joinerId", initialJoiner);
         await partDAO.set("joinerId", PartMocks.INITIAL.copy());
         await chatDAOMock.set("joinerId", { messages: [], status: "I don't have a clue" });
@@ -123,29 +123,44 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const FIRST_MOVE_ENCODED: number = FIRST_MOVE.encode();
 
-    let doMove: (move: QuartoMove) => Promise<void> = async(move: QuartoMove) => {
+    let doMove: (move: QuartoMove) => Promise<boolean> = async(move: QuartoMove) => {
         let slice: QuartoPartSlice = component.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
-        await component.gameComponent.chooseMove(move, slice, null, null);
+        const result: boolean = await component.gameComponent.chooseMove(move, slice, null, null);
         fixture.detectChanges();
         tick(1);
+        return result;
     };
     let askTakeBack: () => Promise<boolean> = async() => {
-        const takeBackRequestElement: DebugElement = debugElement.query(By.css('#askTakeBackButton'));
-        if (takeBackRequestElement == null) {
-            return false;
-        } else {
-            takeBackRequestElement.triggerEventHandler('click', null);
-            await fixture.whenStable(); fixture.detectChanges();
-            return true;
-        }
+        return await clickElement('#askTakeBackButton');
     };
     let acceptTakeBack: () => Promise<boolean> = async() => {
-        const acceptTakeBackElement: DebugElement = debugElement.query(By.css('#acceptTakeBackButton'));
-        if (acceptTakeBackElement == null) {
+        return await clickElement('#acceptTakeBackButton');
+    };
+    let receiveRequest: (request: RequestCode) => Promise<void> = async(request: RequestCode) => {
+        await partDAO.update('joinerId', {
+            request: { code: request.value }
+        });
+        fixture.detectChanges(); tick(1);
+    };
+    let receiveNewMoves: (moves: number[]) => Promise<void> = async(moves: number[]) => {
+        await partDAO.update("joinerId", {
+            listMoves: moves,
+            turn: moves.length,
+            request: null,
+            scorePlayerOne: null,
+            scorePlayerZero: null,
+        });
+        fixture.detectChanges();
+        return;
+    };
+    let clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
+        const element: DebugElement = debugElement.query(By.css(elementName));
+        if (element == null) {
             return false;
         } else {
-            acceptTakeBackElement.triggerEventHandler('click', null);
-            await fixture.whenStable(); fixture.detectChanges();
+            element.triggerEventHandler('click', null);
+            await fixture.whenStable();
+            fixture.detectChanges();
             return true;
         }
     };
@@ -199,14 +214,14 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Prepared Game for creator should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        await doMove(FIRST_MOVE);
+
+        expect(await doMove(FIRST_MOVE)).toBeTruthy("First move should be possible");
 
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED]);
         expect(component.currentPart.copy().turn).toEqual(1);
 
         // Receive second move
-        await partDAO.update("joinerId", { listMoves: [FIRST_MOVE_ENCODED, 166], turn: 2 });
-        fixture.detectChanges();
+        await receiveNewMoves([FIRST_MOVE_ENCODED, 166]);
 
         expect(component.currentPart.copy().turn).toEqual(2);
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
@@ -218,8 +233,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
 
         // Receive first move
-        await partDAO.update("joinerId", { listMoves: [FIRST_MOVE_ENCODED], turn: 1 });
-        fixture.detectChanges();
+        await receiveNewMoves([FIRST_MOVE_ENCODED]);
 
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED]);
         expect(component.currentPart.copy().turn).toEqual(1);
@@ -258,21 +272,12 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         const move3: QuartoMove = new QuartoMove(0, 0, QuartoEnum.AABB);
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoEnum.ABAA);
         await doMove(move0);
-        await partDAO.update("joinerId", {
-            listMoves: [move0.encode(), move1.encode()], turn : 2,
-            scorePlayerZero: null, scorePlayerOne: null, request: null
-        });
+        await receiveNewMoves([move0.encode(), move1.encode()]);
         await doMove(move2);
-        await partDAO.update("joinerId", {
-            listMoves: [move0.encode(), move1.encode(), move2.encode(), move3.encode()], turn : 4,
-            scorePlayerZero: null, scorePlayerOne: null, request: null
-        });
-        tick();
-        fixture.detectChanges();
+        await receiveNewMoves([move0.encode(), move1.encode(), move2.encode(), move3.encode()]);
 
         spyOn(partDAO, 'update').and.callThrough();
         await doMove(winningMove);
-        tick();
 
         expect(component.gameComponent.rules.node.move.toString()).toBe(winningMove.toString());
         expect(partDAO.update).toHaveBeenCalledTimes(2);
@@ -345,20 +350,10 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         const move1: QuartoMove = new QuartoMove(3, 3, QuartoEnum.BABA);
         const move2: QuartoMove = new QuartoMove(3, 0, QuartoEnum.ABBA);
 
-        // Doing First move
         await doMove(FIRST_MOVE);
-        // Receiving Second move
-        await partDAO.update('joinerId', {
-            listMoves: [FIRST_MOVE_ENCODED, move1.encode()], turn : 2,
-            scorePlayerZero: null, scorePlayerOne: null, request: null
-        });
-        // Doing Third Move
+        await receiveNewMoves([FIRST_MOVE_ENCODED, move1.encode()]);
         await doMove(move2);
-        // Receiving Take back request from Player.ONE
-        await partDAO.update('joinerId', {
-            request: { code: RequestCode.ONE_ASKED_TAKE_BACK.value }
-        });
-        fixture.detectChanges(); tick(1);
+        await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(3);
 
         spyOn(partDAO, 'update').and.callThrough();
@@ -373,10 +368,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
         const move1Bis: QuartoMove = new QuartoMove(1, 1, QuartoEnum.BAAB);
         // Receiving alternative move of Player.ONE
-        await partDAO.update('joinerId', {
-            listMoves: [FIRST_MOVE_ENCODED, move1Bis.encode()], turn: 2,
-            scorePlayerZero: null, scorePlayerOne: null, request: null
-        });
+        await receiveNewMoves([FIRST_MOVE_ENCODED, move1Bis.encode()]);
 
         tick(component.maximalMoveDuration);
     }));
@@ -384,6 +376,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
+        expect(await askTakeBack()).toBeFalsy("Take Back before having played once should be impossible");
         await doMove(FIRST_MOVE);
         expect(await askTakeBack()).toBeTruthy("First proposition of take back should be possible");
         fixture.detectChanges();
@@ -392,11 +385,68 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(component.maximalMoveDuration);
     }));
 
-    it('Should only propose to accept take back when opponent asked');
+    it('Should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
+        await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
+        tick(1);
+        expect(await askTakeBack()).toBeFalsy("Take Back before anyone played should be impossible");
+        await receiveNewMoves([FIRST_MOVE_ENCODED]);
+        expect(await askTakeBack()).toBeFalsy("Take Back before having played once should be impossible");
+        await doMove(new QuartoMove(2, 2, QuartoEnum.BBAA));
+        expect(await askTakeBack()).toBeTruthy("First proposition of take back should be possible");
+        expect(await askTakeBack()).toBeFalsy("Second proposition of take back should be impossible");
 
-    it('Should not be allowed to play while take back request is waiting');
+        tick(component.maximalMoveDuration);
+    }));
 
-    it('should forbid player to send three take back request in a row');
+    it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        expect(await acceptTakeBack()).toBeFalsy("Accepting Take Back before Take Back is asked should be impossible");
+        await doMove(FIRST_MOVE);
+        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
+        await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
+        expect(await acceptTakeBack()).toBeFalsy("Accepting Take Back before Take Back is asked should be impossible, bis");
+        await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
+        expect(await acceptTakeBack()).toBeTruthy("When asked, accepting take back should be possible");
+        expect(await acceptTakeBack()).toBeFalsy("Should not be able to accept twice");
+
+        tick(component.maximalMoveDuration);
+    }));
+
+    it('Should not be allowed player to play while take back request is waiting for him', fakeAsync(async() => {
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        await doMove(FIRST_MOVE);
+        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
+        await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
+        await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
+
+        spyOn(partDAO, 'update').and.callThrough();
+        const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.ABBA);
+        await doMove(move2);
+        expect(partDAO.update).not.toHaveBeenCalled();
+
+        tick(component.maximalMoveDuration);
+    }));
+
+    it('Should cancel take back request when take back requester do a move', fakeAsync(async() => {
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
+        const move2: QuartoMove = new QuartoMove(2, 1, QuartoEnum.ABBA);
+        await doMove(FIRST_MOVE);
+        await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
+        await askTakeBack();
+
+        spyOn(partDAO, 'update').and.callThrough();
+        await doMove(move2);
+        expect(partDAO.update).not.toHaveBeenCalledWith('joinerId', {
+            listMoves: [FIRST_MOVE_ENCODED, move1, move2.encode()], turn: 3,
+            playerZero: null, playerOne: null, request: null,
+        });
+
+        tick(component.maximalMoveDuration);
+    }));
 
     afterEach(fakeAsync(async() => {
         fixture.destroy();

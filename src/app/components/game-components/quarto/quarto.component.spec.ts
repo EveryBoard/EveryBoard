@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { QuartoComponent } from './quarto.component';
 
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
@@ -12,6 +12,7 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { QuartoRules } from 'src/app/games/quarto/quartorules/QuartoRules';
 import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
+import { By } from '@angular/platform-browser';
 
 const activatedRouteStub = {
     snapshot: {
@@ -34,8 +35,27 @@ describe('QuartoComponent', () => {
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
+    let debugElement: DebugElement;
+
     let gameComponent: QuartoComponent;
 
+    let clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
+        const element: DebugElement = debugElement.query(By.css(elementName));
+        if (element == null) {
+            return false;
+        } else {
+            element.triggerEventHandler('click', null);
+            await fixture.whenStable();
+            fixture.detectChanges();
+            return true;
+        }
+    };
+    let doMove: (move: QuartoMove) => Promise<boolean> = async(move: QuartoMove) => {
+        const chooseCoordElementName: string = '#chooseCoord_' + move.coord.x + '_' + move.coord.y;
+        const choosePieceElementName: string = '#choosePiece_' + move.piece;
+        return await clickElement(chooseCoordElementName) &&
+               await clickElement(choosePieceElementName);
+    };
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -52,6 +72,7 @@ describe('QuartoComponent', () => {
         fixture = TestBed.createComponent(LocalGameWrapperComponent);
         wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
+        debugElement = fixture.debugElement;
         tick(1);
         gameComponent = wrapper.gameComponent as QuartoComponent;
     }));
@@ -59,13 +80,13 @@ describe('QuartoComponent', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("QuartoComponent should be created");
     });
-    it('should accept simple move', () => {
+    it('should accept simple move', fakeAsync(async() => {
         const rules: QuartoRules = new QuartoRules();
         const listMoves: QuartoMove[] = rules.getListMoves(rules.node).listKeys();
         const currentMove: QuartoMove = listMoves[0];
-        expect(gameComponent.chooseCoord(currentMove.coord.x, currentMove.coord.y)).toBeTruthy(0);
-        expect(gameComponent.choosePiece(currentMove.piece)).toBeTruthy(1);
-    });
+
+        expect(await doMove(currentMove)).toBeTruthy("Should work");
+    }));
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(QuartoMove, "decode").and.callThrough();
         gameComponent.decodeMove(5);

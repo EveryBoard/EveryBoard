@@ -25,7 +25,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 
 export abstract class GameWrapper {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     // component loading
     @ViewChild(GameIncluderComponent, {static: false})
@@ -113,7 +113,7 @@ export abstract class GameWrapper {
         this.canPass = this.gameComponent.canPass;
     }
     public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean> => {
-        const LOCAL_VERBOSE: boolean = true;
+        const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
             Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
             return false;
@@ -135,9 +135,8 @@ export abstract class GameWrapper {
 
     public isPlayerTurn() {
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;
-        console.log((this.gameComponent.getTurn() - turn) + " dans la chaaaatte à " + turn)
         const indexPlayer: number = turn % 2;
-        Rules.display(GameWrapper.VERBOSE || true, "It is turn " + turn + "(" + this.players[indexPlayer] + ") and you are " + this.userName);
+        Rules.display(GameWrapper.VERBOSE, "It is turn " + turn + "(" + this.players[indexPlayer] + ") and you are " + this.userName);
         return this.players[indexPlayer] === this.userName;
     }
 }

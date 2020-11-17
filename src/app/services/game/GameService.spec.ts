@@ -3,7 +3,7 @@ import { async, TestBed } from '@angular/core/testing';
 import { GameService } from './GameService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { of } from 'rxjs';
-import { ICurrentPartId } from 'src/app/domain/icurrentpart';
+import { ICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
@@ -11,6 +11,8 @@ import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks';
+import { Player } from 'src/app/jscaip/Player';
+import { RequestCode } from 'src/app/domain/request';
 
 describe('GameService', () => {
 
@@ -62,5 +64,17 @@ describe('GameService', () => {
         expect(deleteSpy).toHaveBeenCalled();
     });
 
-    it('should forbid to accept a take back that the player proposed himself');
+    it('should forbid to accept a take back that the player proposed himself', () => {
+        const part: ICurrentPart = {
+            typeGame: 'Quarto',
+            playerZero: 'creator',
+            playerOne: 'joiner',
+            turn: 2,
+            listMoves: [ 107, 161],
+            request: { code: RequestCode.ZERO_ASKED_TAKE_BACK.value }
+        };
+        expect(() => service.acceptTakeBack('joinerId', part, Player.ZERO)).toThrowError('Illegal to accept your own request.');
+        part.request.code = RequestCode.ONE_ASKED_TAKE_BACK.value;
+        expect(() => service.acceptTakeBack('joinerId', part, Player.ONE)).toThrowError('Illegal to accept your own request.');
+    });
 });

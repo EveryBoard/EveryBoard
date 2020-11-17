@@ -197,7 +197,7 @@ export class GameService {
         }});
     }
     public async updateDBBoard(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number, partId: string): Promise<void> {
-        GameService.display(GameService.VERBOSE || true, "GameService.updateDBBoard(" + encodedMove + ", " + scorePlayerZero + ", " + scorePlayerOne + ", " + partId + ")");
+        GameService.display(GameService.VERBOSE, "GameService.updateDBBoard(" + encodedMove + ", " + scorePlayerZero + ", " + scorePlayerOne + ", " + partId + ")");
 
         const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
@@ -222,9 +222,18 @@ export class GameService {
     }
     public acceptTakeBack(id: string, part: ICurrentPart, observerRole: Player): Promise<void> {
         let code: RequestCode;
-        if (observerRole === Player.ZERO) code = RequestCode.ZERO_ACCEPTED_TAKE_BACK;
-        else if (observerRole === Player.ONE) code = RequestCode.ONE_ACCEPTED_TAKE_BACK;
-        else throw new Error("Illegal for observer to make request");
+        if (observerRole === Player.ZERO) {
+            if (part.request.code === RequestCode.ZERO_ASKED_TAKE_BACK.value) {
+                throw new Error("Illegal to accept your own request.");
+            }
+            code = RequestCode.ZERO_ACCEPTED_TAKE_BACK;
+        } else if (observerRole === Player.ONE) {
+            if (part.request.code === RequestCode.ONE_ASKED_TAKE_BACK.value) {
+                throw new Error("Illegal to accept your own request.");
+            }
+            code = RequestCode.ONE_ACCEPTED_TAKE_BACK;
+        } else
+            throw new Error("Illegal for observer to make request");
         let listMoves: number[] = part.listMoves.slice(0, part.listMoves.length - 1);
         if (listMoves.length % 2 === observerRole.value) {
             // Deleting a second move

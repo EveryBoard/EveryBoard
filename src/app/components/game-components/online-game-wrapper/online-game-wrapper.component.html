@@ -13,7 +13,8 @@
          *ngIf="gameStarted"
          [ngStyle] = "{ 'height': getGameHeight(), 'max-height': '100%' }">
 
-         <div id="board" class="flex-container circled col-sm-9">
+         <div id="board"
+              class="flex-container circled col-sm-9">
             <app-game-includer></app-game-includer>
         </div>
 
@@ -55,10 +56,14 @@
                 <h4> {{ currentPart.turn }}ème tour : c'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
             </div>
             <div class="inforow" *ngIf="!endGame && opponent && observerRole <2">
-                <button mat-stroked-button (click)="resign()"> Abandonner </button>
+                <button mat-stroked-button
+                        (click)="resign()">
+                    Abandonner
+                </button>
             </div>
             <div *ngIf="!endGame && (observerRole < 2)" class="inforow">
-                <button *ngIf="canPass && (currentPlayer===userName)"
+                <button mat-stroked-button
+                        *ngIf="canPass && (currentPlayer===userName)"
                         (click)="gameComponent.pass()" mat-stroked-button>
                     Passer son tour
                 </button>
@@ -66,29 +71,34 @@
             <!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
             <div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> -->
             <div *ngIf="!endGame && (observerRole < 2)" class="inforow">
-                <button *ngIf="!rematchProposed"
+                <button mat-stroked-button
+                        *ngIf="!rematchProposed"
                         (click)="proposeRematch()">
                     Proposer un rematch
                 </button>
-                <button *ngIf="rematchProposed && opponentProposedRematch"
+                <button mat-stroked-button
+                        *ngIf="rematchProposed && opponentProposedRematch"
                         (click)="acceptRematch()">
                     Accepter le rematch
                 </button>
 
-                <ng-container *ngIf="playerMustRespondToTakeBackRequest() else askTakeBackContainer">
-                    <button id="acceptTakeBackButton"
+                <ng-container *ngIf="isOpponentWaitingForTakeBackResponse() else askTakeBackContainer">
+                    <button mat-stroked-button
+                            id="acceptTakeBackButton"
                             (click)="acceptTakeBack()">
                         Authoriser à reprendre un tour
                     </button>
 
-                    <button id="refuseTakeBack"
+                    <button mat-stroked-button
+                            id="refuseTakeBack"
                             (click)="refuseTakeBack()">
                         Refuser de reprendre un tour
                     </button>
                 </ng-container>
                 <ng-container #askTakeBackContainer
                               *ngIf="canAskTakeBack()">
-                    <button id="askTakeBackButton"
+                    <button mat-stroked-button
+                            id="askTakeBackButton"
                             (click)="askTakeBack()">
                         Demander à reprendre un coup
                     </button>
