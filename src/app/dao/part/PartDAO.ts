@@ -1,5 +1,5 @@
 import { FirebaseFirestoreDAO } from "../firebasefirestoredao/FirebaseFirestoreDAO";
-import { ICurrentPart, PICurrentPart } from "../../domain/icurrentpart";
+import { ICurrentPart, MGPResult, PICurrentPart } from "../../domain/icurrentpart";
 import { AngularFirestore } from "@angular/fire/firestore";
 import { Injectable } from "@angular/core";
 import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
@@ -18,6 +18,6 @@ export class PartDAO extends FirebaseFirestoreDAO<ICurrentPart, PICurrentPart> {
         if(PartDAO.VERBOSE) console.log("PartDAO.constructor");
     }
     public observeActivesParts(callback: FirebaseCollectionObserver<ICurrentPart>): () => void {
-        return this.observingWhere("result", "==", 5, callback);
+        return this.observingWhere("result", "==", MGPResult.UNACHIEVED.toInterface(), callback);
     }
 }

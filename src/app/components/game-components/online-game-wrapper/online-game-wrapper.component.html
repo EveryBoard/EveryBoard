@@ -55,21 +55,23 @@
             <div *ngIf="!endGame && currentPart" class="inforow">
                 <h4> {{ currentPart.turn }}ème tour : c'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
             </div>
-            <div class="inforow" *ngIf="!endGame && opponent && observerRole <2">
+            <div *ngIf="!endGame && opponent && observerRole <2"
+                 class="inforow">
                 <button mat-stroked-button
+                        id="resignButton"
                         (click)="resign()">
                     Abandonner
                 </button>
             </div>
-            <div *ngIf="!endGame && (observerRole < 2)" class="inforow">
+            <div *ngIf="!endGame && (observerRole < 2)"
+                 class="inforow">
                 <button mat-stroked-button
                         *ngIf="canPass && (currentPlayer===userName)"
-                        (click)="gameComponent.pass()" mat-stroked-button>
+                        (click)="gameComponent.pass()">
                     Passer son tour
                 </button>
             </div>
-            <!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>
-            <div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Reprendre un coup TODO </div> -->
+            <!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>-->
             <div *ngIf="!endGame && (observerRole < 2)" class="inforow">
                 <button mat-stroked-button
                         *ngIf="!rematchProposed"

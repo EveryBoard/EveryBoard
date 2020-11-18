@@ -71,10 +71,10 @@ describe('GameService', () => {
             playerOne: 'joiner',
             turn: 2,
             listMoves: [ 107, 161],
-            request: { code: RequestCode.ZERO_ASKED_TAKE_BACK.value }
+            request: { code: RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code }
         };
         expect(() => service.acceptTakeBack('joinerId', part, Player.ZERO)).toThrowError('Illegal to accept your own request.');
-        part.request.code = RequestCode.ONE_ASKED_TAKE_BACK.value;
+        part.request.code = RequestCode.ONE_ASKED_TAKE_BACK.toInterface().code;
         expect(() => service.acceptTakeBack('joinerId', part, Player.ONE)).toThrowError('Illegal to accept your own request.');
     });
 });

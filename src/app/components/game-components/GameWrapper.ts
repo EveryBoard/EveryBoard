@@ -118,7 +118,7 @@ export abstract class GameWrapper {
             Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
             return false;
         }
-        if (this.gameComponent.rules.node.isEndGame()) {
+        if (this.endGame) {
             Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: part is finished');
             return false;
         }

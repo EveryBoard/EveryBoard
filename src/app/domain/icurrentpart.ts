@@ -12,15 +12,7 @@ export interface ICurrentPart {
     lastMove?: number; // should/could? be a date; is a timestamp
 
     typePart?: number|string; // amicale, comptabilisée, pédagogique
-    result?: number;
-    /* draw = 0,
-     * resign = 1,
-     * escape = 2,
-     * victory = 3,
-     * timeout = 4,
-     * unachieved = 5 // todo : voir à mettre unachieved par défaut
-     * agreed-draw = 6
-     */
+    result?: IMGPResult; // todo : voir à mettre unachieved par défaut
     winner?: string; // joueur 1, joueur 2, null
     scorePlayerZero?: number|string; // TODO : implémenter ça
     scorePlayerOne?: number|string; // TODO : implémenter ça aussi en même temps
@@ -36,7 +28,7 @@ export class Part {
         private readonly playerZero: string,
         private readonly turn: number,
         private readonly listMoves: number[],
-        private readonly result: number,
+        private readonly result: IMGPResult,
         private readonly playerOne?: string,
 
         private readonly beginning?: number,
@@ -56,15 +48,15 @@ export class Part {
         for (let move of listMoves)
             if (move == null)
                 throw new Error("No element in listMoves can be null");
-        if (result == null) throw new Error("result can't be null");
+        if (result == null || result.value == null) throw new Error("result can't be null");
     }
     public copy(): ICurrentPart {
         const copied: ICurrentPart = {
             typeGame: this.typeGame,
             playerZero: this.playerZero,
             turn: this.turn,
-            listMoves: this.listMoves.map((move: number) => move),
-            result: this.result
+            listMoves: ArrayUtils.copyArray(this.listMoves),
+            result: { value: this.result.value }
         }
         if (this.playerOne != null) copied.playerOne = this.playerOne;
         if (this.beginning != null) copied.beginning = this.beginning;
@@ -111,7 +103,7 @@ export interface PICurrentPart {
     lastMove?: number; // should/could? be a date; is a timestamp
 
     typePart?: number|string; // amicale, comptabilisée, pédagogique
-    result?: number;
+    result?: IMGPResult;
     winner?: string; // joueur 1, joueur 2, null
     scorePlayerZero?: number|string; // TODO : implémenter ça
     scorePlayerOne?: number|string; // TODO : implémenter ça aussi en même temps
@@ -119,4 +111,29 @@ export interface PICurrentPart {
     historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
     listMoves?: number[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
     request?: IMGPRequest;
+}
+export class MGPResult {
+
+    public static DRAW: MGPResult = new MGPResult(0);
+
+    public static RESIGN: MGPResult = new MGPResult(1);
+
+    public static ESCAPE: MGPResult = new MGPResult(2);
+
+    public static VICTORY: MGPResult = new MGPResult(3);
+
+    public static TIMEOUT: MGPResult = new MGPResult(4);
+
+    public static UNACHIEVED: MGPResult = new MGPResult(5);
+
+    public static AGREED_DRAW: MGPResult = new MGPResult(6);
+
+    private constructor(private readonly value: number) {};
+
+    public toInterface(): IMGPResult {
+        return { value: this.value };
+    }
+}
+export interface IMGPResult {
+    value: number;
 }
