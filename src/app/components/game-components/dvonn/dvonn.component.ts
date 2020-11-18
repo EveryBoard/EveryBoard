@@ -123,7 +123,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         return {
             fill: (hasSource && stack.size() === 1) ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
             stroke: hasSource ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
-            'stroke-width': '5px'
         }
     }
 

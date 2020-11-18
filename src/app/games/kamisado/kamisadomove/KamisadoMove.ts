@@ -24,10 +24,10 @@ export class KamisadoMove extends MoveCoordToCoord {
             // Valid move, it is PASS
             return KamisadoMove.PASS;
         }
-        if (!start.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
+        if (start.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
             throw new Error("Starting coord of KamisadoMove must be on the board, not at " + start.toString());
         }
-        if (!end.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
+        if (end.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
             throw new Error("End coord of KamisadoMove must be on the board, not at " + end.toString());
         }
         return new KamisadoMove(start, end);

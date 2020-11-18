@@ -16,6 +16,7 @@
                 [attr.cx] = "center(x, y).x"
                 [attr.cy] = "center(x, y).y"
                 [attr.r]="CASE_SIZE/3"
+                style="stroke-width: 5px;"
                 [ngStyle]="stylePiece(caseContent, false)"/>
         <circle *ngIf="source(caseContent)"
                 (click)="onClick(x, y)"
