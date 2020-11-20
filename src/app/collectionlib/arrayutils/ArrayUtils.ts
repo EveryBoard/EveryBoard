@@ -1,3 +1,6 @@
+export type ReadonlyBiArray<T> = ReadonlyArray<ReadonlyArray<T>>;
+export type ReadonlyNumberBiArray = ReadonlyBiArray<number>;
+
 export class ArrayUtils {
 
     public static mapBiArray<T, U>(biArray: ReadonlyArray<ReadonlyArray<T>>, mapper: (t: T) => U): U[][] {

@@ -36,8 +36,10 @@ import {LocalGameWrapperComponent} from './components/game-components/local-game
 import {GameIncluderComponent} from './components/game-components/game-includer/game-includer.component';
 
 import {AwaleComponent} from './components/game-components/awale/awale.component';
+import {DvonnComponent} from './components/game-components/dvonn/dvonn.component';
 import {EncapsuleComponent} from './components/game-components/encapsule/encapsule.component';
 import {GoComponent} from './components/game-components/go/go.component';
+import {KamisadoComponent} from './components/game-components/kamisado/kamisado.component';
 import {P4Component} from './components/game-components/p4/p4.component';
 import {QuartoComponent} from './components/game-components/quarto/quarto.component';
 import {ReversiComponent} from './components/game-components/reversi/reversi.component';
@@ -81,6 +83,7 @@ const routes: Route [] = [
         LocalGameWrapperComponent,
 
         AwaleComponent,
+        DvonnComponent,
         EncapsuleComponent,
         GoComponent,
         MinimaxTestingComponent,
@@ -93,9 +96,11 @@ const routes: Route [] = [
         TablutComponent,
         ConfirmInscriptionComponent,
         SaharaComponent,
+        KamisadoComponent,
     ],
     entryComponents: [
         AwaleComponent,
+        DvonnComponent,
         EncapsuleComponent,
         GoComponent,
         MinimaxTestingComponent,
@@ -107,6 +112,7 @@ const routes: Route [] = [
         SaharaComponent,
         SiamComponent,
         TablutComponent,
+        KamisadoComponent,
 
         CountDownComponent,
     ],

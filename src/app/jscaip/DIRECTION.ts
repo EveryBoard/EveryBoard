@@ -1,3 +1,5 @@
+import { Coord } from "./coord/Coord";
+
 export class Orthogonale {
 
     public static readonly UP: Orthogonale = new Orthogonale(0, -1);
@@ -104,96 +106,31 @@ export class Direction {
     public static isDiagonal(d: Direction): boolean {
         return (d.x !== 0) && (d.y !== 0);
     }
-    public static of(x: number, y: number): Direction {
-        if (x === -1) {
-            if (y === -1) return Direction.UP_LEFT;
-            if (y === 0) return Direction.LEFT;
-            if (y === 1) return Direction.DOWN_LEFT;
-        } else if (x === 0) {
-            if (y === -1) return Direction.UP;
-            if (y === 1) return Direction.DOWN;
-        } else if (x === 1) {
-            if (y === -1) return Direction.UP_RIGHT;
-            if (y === 0) return Direction.RIGHT;
-            if (y === 1) return Direction.DOWN_RIGHT;
-        } else {
-            throw new Error("Invalid argument for Direction (x = " + x + ")");
+    public static fromDelta(dx: number, dy: number): Direction {
+        if (dx === 0 && dy === 0) {
+            throw new Error("Invalid direction from static move");
+        } else if (dx === 0) {
+            // Vertical move
+            if (dy > 0) return Direction.DOWN;
+            if (dy < 0) return Direction.UP;
+        } else if (dy === 0) {
+            // Horizontal move
+            if (dx > 0) return Direction.RIGHT;
+            if (dx < 0) return Direction.LEFT;
+        } else if (Math.abs(dx) === Math.abs(dy)) {
+            // Diagonal move
+            if (dx > 0 && dy > 0) return Direction.DOWN_RIGHT;
+            if (dx > 0 && dy < 0) return Direction.UP_RIGHT;
+            if (dx < 0 && dy > 0) return Direction.DOWN_LEFT;
+            if (dx < 0 && dy < 0) return Direction.UP_LEFT;
         }
-        throw new Error("Invalid argument for Direction (y = " + y + ")")
+        throw new Error("Invalid direction from delta dx:" + dx + ", dy:" + dy);
+    }
+    public static of(x: number, y: number): Direction {
+        return Direction.fromDelta(x, y);
+    }
+    public static fromMove(start: Coord, end: Coord): Direction {
+        return Direction.fromDelta(end.x - start.x, end.y - start.y);
     }
     private constructor(public readonly x: number, public readonly y: number) {}
 }
-/*export type _DIRECTION =
-    {x:  0, y: -1} | // UP
-    {x:  1, y: -1} | // UPRIGHT
-    {x:  1, y:  0} | // RIGHT
-    {x:  1, y:  1} | // DOWNRIGHT
-    {x:  0, y:  1} | // DOWN
-    {x: -1, y:  1} | // DOWNLEFT
-    {x: -1, y:  0} | // LEFT
-    {x: -1, y: -1};  // UPLEFT
-
-export namespace _DIRECTION {
-    export function equals(first: _DIRECTION, second: _DIRECTION): boolean {
-        return (first.x === second.x) && (first.y === second.y);
-    }
-    export function _isOrthogonal(d: _DIRECTION) {
-        return (d.x === 0) || (d.y === 0);
-    }
-    export function getOpposite(dir: _DIRECTION): _DIRECTION {
-        const index: number = _DIRECTIONS.indexOf(dir);
-        return _DIRECTIONS[(index + 4) % 8];
-    }
-    export function toString(dir: _DIRECTION): string {
-        return "DIRECTION(" + dir.x + ", " + dir.y + ")";
-    }
-}
-*/
-/* export let DIRECTION = {
-    UP:        {x:  0, y: -1},
-    UPRIGHT:   {x: +1, y: -1},
-    RIGHT:     {x: +1, y:  0},
-    DOWNRIGHT: {x: +1, y: +1},
-    DOWN:      {x:  0, y: +1},
-    DOWNLEFT:  {x: -1, y: +1},
-    LEFT:      {x: -1, y:  0},
-    UPLEFT:    {x: -1, y: -1}
-} */
-/*
-export interface XY {
-    readonly x: number;
-    readonly y: number;
-}
-*/
-/* triées dans l'ordre horloger de sorte que DIRECTIONS[i]
- * soit la direction opposée à DIRECTIONS[i+1]
- * changer l'ordre affecterait le puissance 4
- */
-/*
-export const _DIRECTIONS: ReadonlyArray<_DIRECTION> = [
-    {x: -1, y: -1},
-    {x:  0, y: -1},
-    {x: +1, y: -1},
-    {x: +1, y:  0},
-    {x: +1, y: +1},
-    {x:  0, y: +1},
-    {x: -1, y: +1},
-    {x: -1, y:  0},
-];
-export const _ORTHOGONALES: ReadonlyArray<_ORTHOGONALE> = [
-    {x:  0, y: -1},
-    {x: +1, y:  0},
-    {x:  0, y: +1},
-    {x: -1, y:  0}
-];
-export const DIR_ARRAY: ReadonlyArray<ReadonlyArray<_DIRECTION | null>> = [
-    [ {x: -1, y: -1}, {x:  0, y: -1}, {x:  1, y: -1} ],
-    [ {x: -1, y:  0},             null, {x:  1, y:  0} ],
-    [ {x: -1, y:  1}, {x:  0, y:  1}, {x:  1, y:  1} ]
-];
-export const ORTH_ARRAY: ReadonlyArray<ReadonlyArray<_ORTHOGONALE | null>> = [
-    [           null, {x:  0, y: -1},           null ],
-    [ {x: -1, y:  0},             null, {x:  1, y:  0} ],
-    [           null, {x:  0, y:  1},           null ]
-];
-*/

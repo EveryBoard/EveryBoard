@@ -24,17 +24,19 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public activesUsers: IJoueurId[];
 
     readonly gameNameList: String[] = ['Awale',          // 1
-                                       'Encapsule',      // 2
-                                       'Go',             // 3
+                                       'Dvonn',          // 2
+                                       'Encapsule',      // 3
+                                       'Go',             // 4
+                                       'Kamisado',       // 5
                                        // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
-                                       'P4',             // 4
-                                       'Pylos',          // 5
-                                       'Quarto',         // 6
-                                       'Quixo',          // 7
-                                       'Reversi',        // 8
-                                       'Sahara',         // 9
-                                       'Siam',           // 10
-                                       'Tablut'];        // 11
+                                       'P4',             // 6
+                                       'Pylos',          // 7
+                                       'Quarto',         // 8
+                                       'Quixo',          // 9
+                                       'Reversi',        // 10
+                                       'Sahara',         // 11
+                                       'Siam',           // 12
+                                       'Tablut'];        // 13
 
     public selectedGame: string;
 
