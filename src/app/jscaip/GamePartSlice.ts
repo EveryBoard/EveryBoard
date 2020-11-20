@@ -33,10 +33,14 @@ export abstract class GamePartSlice {
     // Getters
 
     public getBoardByXY(x: number, y: number): number {
-        return this.board[y][x];
+        if (y >= 0 && y < this.board.length && x >= 0 && x < this.board[y].length) {
+            return this.board[y][x];
+        } else {
+            throw new Error("invalid board access");
+        }
     }
     public getBoardAt(c: Coord): number {
-        return this.board[c.y][c.x];
+        return this.getBoardByXY(c.x, c.y);
     }
     // Methods:
 

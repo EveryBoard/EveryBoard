@@ -13,7 +13,11 @@ export class Player {
             case 0: return Player.ZERO;
             case 1: return Player.ONE;
             case 2: return Player.NONE;
-            default: throw new Error("Unknow Player value");
+            default: throw new Error("Unknown Player value " + value);
         }
+    }
+
+    public toString(): string {
+        return "Player" + this.value;
     }
 }

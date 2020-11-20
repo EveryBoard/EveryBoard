@@ -1,8 +1,12 @@
 export class MGPOptional<T> {
 
-    public static of<T>(value: any): MGPOptional<T> {
+    public static of<T>(value: T): MGPOptional<T> {
         if (value == null) throw new Error("Optional cannot be create with empty value, use MGPOptional.empty instead");
         return new MGPOptional(value);
+    }
+    public static ofNullable<T>(value: T): MGPOptional<T> {
+        if (value == null) return MGPOptional.empty()
+        return MGPOptional.of(value);
     }
     public static empty<T>(): MGPOptional<T> {
         return new MGPOptional(null);
