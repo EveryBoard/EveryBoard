@@ -8,6 +8,7 @@ import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSl
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-quixo',
@@ -34,7 +35,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         if (move) this.lastMoveCoord = move.coord;
         else this.lastMoveCoord = null;
     }
-    public cancelMove(): boolean {
+    public cancelMove(reason: string): boolean {
+        Rules.display(QuixoComponent.VERBOSE, reason);
         this.chosenCoord = null;
         return false;
     }
@@ -64,10 +66,10 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     public onBoardClick(x: number, y: number): boolean {
         const clickedCoord: Coord = new Coord(x, y);
         if (QuixoMove.isValidCoord(clickedCoord).valid === false) {
-            return this.cancelMove();
+            return this.cancelMove("Unvalid coord " + clickedCoord.toString());
         }
         if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove();
+            return this.cancelMove("Cannot click on an ennemy piece " + clickedCoord.toString());
         } else {
             this.chosenCoord = clickedCoord;
             return true;
@@ -89,7 +91,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         const move: QuixoMove = new QuixoMove(this.chosenCoord.x,
                                               this.chosenCoord.y,
                                               this.chosenDirection);
-        this.cancelMove();
+        this.cancelMove("Move submitted");
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
     public getTriangleCoordinate(lx: number, ly: number): string {

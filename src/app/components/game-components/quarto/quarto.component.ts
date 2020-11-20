@@ -23,9 +23,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public pieceToGive: number = -1; // the piece that the user want to give to the opponent
 
-    public constructor() {
-        super();
-    }
     public updateBoard() {
         const slice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;
@@ -102,8 +99,13 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public showPieceInHandOnBoard(x: number, y: number) {
         this.chosen = new Coord(x, y);
     }
-    public isRemaining(pawn: number) {
+    public isRemaining(pawn: number): boolean {
         return QuartoPartSlice.isGivable(pawn, this.board, this.pieceInHand);
+    }
+    public isHighlighted(x: number, y: number): boolean {
+        const clickedCoord: Coord = new Coord(x, y);
+        return clickedCoord.equals(this.lastMove) ||
+               clickedCoord.equals(this.chosen);
     }
     // creating method for OnlineQuarto
 

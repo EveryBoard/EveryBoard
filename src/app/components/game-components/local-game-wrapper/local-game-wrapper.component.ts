@@ -9,6 +9,7 @@ import { GameWrapper } from 'src/app/components/game-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/user/UserService';
 import { AbstractGameComponent } from '../AbstractGameComponent';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -33,7 +34,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 authenticationService: AuthenticationService,
                 private cdr: ChangeDetectorRef) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
-        GameWrapper.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper.constructor");
+        Rules.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper.constructor");
     }
     public ngAfterViewInit() {
         setTimeout(() => {
@@ -42,7 +43,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 if (this.isAI(this.players[0]) === false) this.players[0] = user.pseudo;
                 if (this.isAI(this.players[1]) === false) this.players[1] = user.pseudo;
             });
-            GameWrapper.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
+            Rules.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
             this.afterGameIncluderViewInit();
             this.cdr.detectChanges();
         }, 1);
@@ -78,7 +79,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 // called only when it's AI's Turn
                 if (!this.gameComponent.rules.node.isEndGame()) {
                     const aiMove: Move = this.gameComponent.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
-                    if (this.gameComponent.rules.choose(aiMove)) {  // TODO: remove since useless
+                    if (this.gameComponent.rules.choose(aiMove)) {
                         this.updateBoard();
                         this.cdr.detectChanges();
                         this.proposeAIToPlay();
