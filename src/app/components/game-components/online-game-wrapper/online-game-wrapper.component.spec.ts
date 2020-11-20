@@ -58,7 +58,7 @@ class RouterMock {
         return Promise.resolve(true);
     };
 }
-describe('OnlineGameWrapperComponent', () => {
+describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     /* Life cycle summary
      * component construction (beforeEach)

@@ -38,4 +38,8 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     public abstract decodeMove(encodedMove: number): Move;
 
     public abstract encodeMove(move: Move): number;
+
+    public getTurn(): number {
+        return this.rules.node.gamePartSlice.turn;
+    }
 }

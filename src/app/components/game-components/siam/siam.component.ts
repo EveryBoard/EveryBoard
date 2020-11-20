@@ -18,7 +18,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 })
 export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice, SiamLegalityStatus> {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public rules: SiamRules = new SiamRules();
 

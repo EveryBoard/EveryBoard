@@ -3,15 +3,17 @@ import { Player } from "src/app/jscaip/Player";
 
 export class DvonnPieceStack {
     public static of(v: number): DvonnPieceStack {
-        let value = v;
-        let pieces = [];
-        while (value >= 1) {
-            const pieceValue = (value % (DvonnPiece.MAX_VALUE)) - (value % 1);
-            value = value / (DvonnPiece.MAX_VALUE);
+        const pieces = [];
+        const size = (v / (DvonnPiece.MAX_VALUE * DvonnPieceStack.MAX_SIZE)) | 0;
+        let value = (v % (DvonnPiece.MAX_VALUE * DvonnPieceStack.MAX_SIZE));
+        for (let i = 0; i < size; i++) {
+            const pieceValue = value % DvonnPiece.MAX_VALUE;
+            value = (value / DvonnPiece.MAX_VALUE) | 0;
             pieces.push(DvonnPiece.of(pieceValue));
         }
         return new DvonnPieceStack(pieces.reverse());
     }
+    public static MAX_SIZE: number = 49; // The maximal possible size for a stack
     public static EMPTY: DvonnPieceStack = new DvonnPieceStack([]);
     public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO]);
     public static PLAYER_ONE: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ONE]);
@@ -26,8 +28,9 @@ export class DvonnPieceStack {
     public getValue(): number {
         let value = 0;
         for (const piece of this.pieces) {
-            value = (value * (DvonnPiece.MAX_VALUE)) + piece.getValue();
+            value = (value * DvonnPiece.MAX_VALUE) + piece.getValue();
         }
+        value += (this.pieces.length * DvonnPiece.MAX_VALUE * DvonnPieceStack.MAX_SIZE);
         return value;
     }
     public belongsTo(player: Player): boolean {

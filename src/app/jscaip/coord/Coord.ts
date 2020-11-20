@@ -91,7 +91,7 @@ export class Coord implements Comparable {
     public getDirectionToward(c: Coord): Direction {
         const dx: number = Coord.getBinarised(c.x - this.x);
         const dy: number = Coord.getBinarised(c.y - this.y);
-        return Direction.of(dx, dy);
+        return Direction.of(dx, dy); // TODO: method myght have to be deleted in favor of Direction.fromMove
     }
     public _getOrthogonalDirectionToward(c: Coord): Orthogonale {
         const dx: number = Coord.getBinarised(c.x - this.x) + 1;

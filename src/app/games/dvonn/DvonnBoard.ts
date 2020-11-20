@@ -7,7 +7,7 @@ export class DvonnBoard {
     public static HEIGHT: number = 5;
 
     public static isOnBoard(coord: Coord): boolean {
-        if (!coord.isInRange(DvonnBoard.WIDTH, DvonnBoard.HEIGHT))
+        if (coord.isNotInRange(DvonnBoard.WIDTH, DvonnBoard.HEIGHT))
             return false;
         // Also check if this is not one of the unreachable positions
         // invalid positions: (0, 0), (0, 1), (1, 0)
@@ -59,26 +59,11 @@ export class DvonnBoard {
     }
 
     /** Returns the following board:
-         0
-      1   \ __
-   2   \ __/w \__
-    \ __/b \__/b \__
-  3  /b \__/b \__/b \__
-   \ \__/b \__/w \__/b \__
-  4  /w \__/b \__/w \__/w \__
-   \ \__/w \__/b \__/w \__/w \__
-     /w \__/b \__/w \__/b \__/b \__
-     \__/D \__/w \__/D \__/b \__/D \__
-      | \__/w \__/w \__/b \__/w \__/b \
-      0  | \__/b \__/b \__/w \__/b \__/
-         1  | \__/b \__/b \__/w \__/b \
-            2  | \__/w \__/b \__/w \__/
-               3  | \__/w \__/w \__/w \
-                  4  | \__/w \__/w \__/
-                     5  | \__/b \__/|
-                        6  | \__/|  10
-                           7  |  9
-                              8
+    W B B B W W B D B
+   B B W W W B B W B B
+  B B B B W D B W W W W
+   W W B W W B B B W W
+    W D W B B W W W B
     */
     public static getBalancedBoard(): ReadonlyBiArray<DvonnPieceStack> {
         const _ = DvonnPieceStack.EMPTY;
@@ -87,9 +72,9 @@ export class DvonnBoard {
         const D = DvonnPieceStack.SOURCE;
         return [
             [_, _, W, B, B, B, W, W, B, D, B],
-            [_, B, B, W, W, W, B, B, W, B, B],
-            [B, B, B, B, W, D, B, W, W, W, W],
-            [W, W, B, W, W, B, B, B, W, W, _],
-            [W, D, W, B, B, W, W, W, B, _, _]];
+              [_, B, B, W, W, W, B, B, W, B, B],
+                [B, B, B, B, W, D, B, W, W, W, W],
+                  [W, W, B, W, W, B, B, B, W, W, _],
+                    [W, D, W, B, B, W, W, W, B, _, _]];
     }
 }

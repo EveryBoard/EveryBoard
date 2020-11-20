@@ -30,8 +30,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     public styleBackground(x: number, y: number): any {
         return {
             fill: KamisadoBoard.getColorAt(x, y).rgb,
-            stroke: 'black',
-            'stroke-width': '1px',
         };
     }
 
@@ -40,7 +38,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         return {
             fill: piece.color.rgb,
             stroke: piece.belongsTo(Player.ONE) ? 'black' : 'white',
-            'stroke-width': '15px',
         };
     }
 

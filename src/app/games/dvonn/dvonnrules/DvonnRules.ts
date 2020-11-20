@@ -173,7 +173,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(DvonnPartSlice.getStartingSlice(ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(), p => p.getValue())), this);
+            this.node = MNode.getFirstNode(DvonnPartSlice.getStartingSlice(), this);
         } else {
             this.node = this.node.getInitialNode();
         }

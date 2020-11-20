@@ -7,13 +7,13 @@ export class KamisadoMove extends MoveCoordToCoord {
     public static PASS: KamisadoMove = new KamisadoMove(new Coord(-1, -1), new Coord(-2, -2));
     public static decode(encodedMove: number): KamisadoMove {
         if (encodedMove < 0) return this.PASS;
-        const y2 = encodedMove % 16 - (encodedMove % 1);
-        encodedMove = encodedMove / 16
-        const x2 = encodedMove % 16 - (encodedMove % 1);
-        encodedMove = encodedMove / 16;
-        const y1 = encodedMove % 16 - (encodedMove % 1);
-        encodedMove = encodedMove / 16;
-        const x1 = encodedMove % 16 - (encodedMove % 1);
+        const y2 = encodedMove % 16;
+        encodedMove = (encodedMove / 16) | 0;
+        const x2 = encodedMove % 16;
+        encodedMove = (encodedMove / 16) | 0;
+        const y1 = encodedMove % 16;
+        encodedMove = (encodedMove / 16) | 0;
+        const x1 = encodedMove % 16;
         return new KamisadoMove(new Coord(x1, y1), new Coord(x2, y2));
     }
     private constructor(start: Coord, end: Coord) {
@@ -24,10 +24,10 @@ export class KamisadoMove extends MoveCoordToCoord {
             // Valid move, it is PASS
             return KamisadoMove.PASS;
         }
-        if (!start.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
+        if (start.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
             throw new Error("Starting coord of KamisadoMove must be on the board, not at " + start.toString());
         }
-        if (!end.isInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
+        if (end.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
             throw new Error("End coord of KamisadoMove must be on the board, not at " + end.toString());
         }
         return new KamisadoMove(start, end);

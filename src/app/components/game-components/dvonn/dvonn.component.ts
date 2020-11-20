@@ -16,7 +16,7 @@ import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 })
 
 export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSlice, LegalityStatus> {
-    public rules: DvonnRules = new DvonnRules(DvonnPartSlice.getStartingSlice(ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(), p => p.getValue())));
+    public rules: DvonnRules = new DvonnRules(DvonnPartSlice.getStartingSlice());
 
     public CASE_SIZE: number = 70;
     public lastMove: DvonnMove = null;
@@ -123,7 +123,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         return {
             fill: (hasSource && stack.size() === 1) ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
             stroke: hasSource ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
-            'stroke-width': '5px'
         }
     }
 

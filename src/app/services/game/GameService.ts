@@ -3,16 +3,16 @@ import {Observable, Subscription} from 'rxjs';
 
 import {PartDAO} from '../../dao/part/PartDAO';
 
-import {ICurrentPart, ICurrentPartId} from '../../domain/icurrentpart';
+import {ICurrentPart, ICurrentPartId, MGPResult} from '../../domain/icurrentpart';
 import {IJoiner} from '../../domain/ijoiner';
 
 import {JoinerService} from '../joiner/JoinerService';
 import {ActivesPartsService} from '../actives-parts/ActivesPartsService';
 import {ChatService} from '../chat/ChatService';
 import {IChat} from '../../domain/ichat';
-import {MGPRequest} from '../../domain/request';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import {IMGPRequest, RequestCode} from '../../domain/request';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { Player } from 'src/app/jscaip/Player';
 
 @Injectable({
     providedIn: 'root'
@@ -45,7 +45,7 @@ export class GameService {
             listMoves: [],
             playerZero: creatorName,
             playerOne: chosenPlayer,
-            result: 5, // todo : constantiser ça, bordel
+            result: MGPResult.UNACHIEVED.toInterface(),
             turn: -1,
             typeGame
         };
@@ -135,34 +135,34 @@ export class GameService {
     public resign(partId: string, winner: string): Promise<void> {
         return this.partDao.update(partId, {
             winner: winner,
-            result: 1,
+            result: MGPResult.RESIGN.toInterface(),
             request: null
         }); // resign
     }
     public notifyDraw(partId: string): Promise<void> {
         return this.partDao.update(partId, {
-            result: 0,
-            request: null
+            result: MGPResult.DRAW.toInterface(),
+            request: null // TODO: check line use
         }); // DRAW CONSTANT
     }
     public notifyTimeout(partId: string, winner: string): Promise<void> {
         return this.partDao.update(partId, {
             winner: winner,
-            result: 4,
-            request: null
+            result: MGPResult.TIMEOUT.toInterface(),
+            request: null // TODO: check line use
         });
     }
     public notifyVictory(partId: string, winner: string): Promise<void> {
         GameService.display(GameService.VERBOSE, "GameService.notifyVictory(" + partId + ", " + winner + ")");
         return this.partDao.update(partId, {
             winner,
-            result: 3,
-            request: null
+            result: MGPResult.VICTORY.toInterface(),
+            request: null // TODO: check line use
         });
     }
-    public proposeRematch(partId: string, oberserverRole: 0 | 1): Promise<void> {
-        const req: MGPRequest = {code: 6 + oberserverRole};
-        return this.partDao.update(partId, {request: req});
+    public proposeRematch(partId: string, observerRole: 0 | 1): Promise<void> {
+        const code: RequestCode = observerRole === 0 ? RequestCode.ZERO_PROPOSED_REMATCH : RequestCode.ONE_PROPOSED_REMATCH;
+        return this.partDao.update(partId, code.toInterface());
     }
     public async acceptRematch(part: ICurrentPartId): Promise<void> {
         GameService.display(GameService.VERBOSE, "GameService.acceptRematch(" + JSON.stringify(part) + ")");
@@ -189,13 +189,12 @@ export class GameService {
             maximalMoveDuration: iJoiner.maximalMoveDuration,
             totalPartDuration: iJoiner.totalPartDuration
         };
-        const req: MGPRequest = {
-            code: 8,
+        await this.joinerService.updateJoinerById(rematchId, newJoiner);
+        return this.partDao.update(part.id, {request: {
+            code: RequestCode.REMATCH_ACCEPTED.toInterface().code,
             partId: rematchId,
             typeGame: part.doc.typeGame
-        };
-        await this.joinerService.updateJoinerById(rematchId, newJoiner);
-        return this.partDao.update(part.id, {request: req});
+        }});
     }
     public async updateDBBoard(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number, partId: string): Promise<void> {
         GameService.display(GameService.VERBOSE, "GameService.updateDBBoard(" + encodedMove + ", " + scorePlayerZero + ", " + scorePlayerOne + ", " + partId + ")");
@@ -209,9 +208,54 @@ export class GameService {
             turn,
             scorePlayerZero,
             scorePlayerOne,
+            request: null,
         });
         GameService.display(GameService.VERBOSE, "GameService.updateDBBoard: over");
         return Promise.resolve();
+    }
+    public askTakeBack(partId: string, observerRole: Player): Promise<void> {
+        let code: RequestCode;
+        if (observerRole === Player.ZERO) code = RequestCode.ZERO_ASKED_TAKE_BACK;
+        else if (observerRole === Player.ONE) code = RequestCode.ONE_ASKED_TAKE_BACK;
+        else throw new Error("Illegal for observer to make request");
+        return this.partDao.update(partId, { request: code.toInterface() });
+    }
+    public acceptTakeBack(id: string, part: ICurrentPart, observerRole: Player): Promise<void> {
+        let code: RequestCode;
+        if (observerRole === Player.ZERO) {
+            if (part.request.code === RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code) {
+                throw new Error("Illegal to accept your own request.");
+            }
+            code = RequestCode.ZERO_ACCEPTED_TAKE_BACK;
+        } else if (observerRole === Player.ONE) {
+            if (part.request.code === RequestCode.ONE_ASKED_TAKE_BACK.toInterface().code) {
+                throw new Error("Illegal to accept your own request.");
+            }
+            code = RequestCode.ONE_ACCEPTED_TAKE_BACK;
+        } else
+            throw new Error("Illegal for observer to make request");
+        let listMoves: number[] = part.listMoves.slice(0, part.listMoves.length - 1);
+        if (listMoves.length % 2 === observerRole.value) {
+            // Deleting a second move
+            listMoves = listMoves.slice(0, listMoves.length - 1);
+        }
+        return this.partDao.update(id, {
+            request: code.toInterface(),
+            listMoves,
+            turn: listMoves.length
+        });
+    }
+    public refuseTakeBack(id: string, observerRole: Player): Promise<void> {
+        let request: IMGPRequest;
+        if (observerRole === Player.ZERO) {
+            request = RequestCode.ZERO_REFUSED_TAKE_BACK.toInterface();
+        } else if (observerRole === Player.ONE) {
+            request = RequestCode.ONE_REFUSED_TAKE_BACK.toInterface();
+        } else
+            throw new Error("Illegal for observer to make request");
+        return this.partDao.update(id, {
+            request
+        });
     }
     public stopObserving() {
         GameService.display(GameService.VERBOSE, 'GameService.stopObserving();');
