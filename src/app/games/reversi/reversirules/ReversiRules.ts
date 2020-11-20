@@ -21,18 +21,24 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             this
         );
     }
+    public setInitialBoard(): void {
+        if (this.node == null) {
+            this.node = MNode.getFirstNode(
+                new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
+                this
+            );
+        } else {
+            this.node = this.node.getInitialNode();
+        }
+    }
     public applyLegalMove(move: ReversiMove, slice: ReversiPartSlice, status: ReversiLegalityStatus): { resultingMove: ReversiMove; resultingSlice: ReversiPartSlice; } {
         const turn: number = slice.turn;
         const player: number = turn % 2;
         const board: number[][] = slice.getCopiedBoard();
-        if (move.equals(ReversiMove.pass)) { // if the player pass
-            // let's check that pass is a legal move right now
-            if (ReversiRules.playerCanOnlyPass(slice)) {
-                // if he had no choice but to pass, then passing is legal !
-                const sameBoardDifferentTurn: ReversiPartSlice =
-                    new ReversiPartSlice(board, turn + 1);
-                return {resultingMove: move, resultingSlice: sameBoardDifferentTurn};
-            }
+        if (move.equals(ReversiMove.PASS)) { // if the player pass
+            const sameBoardDifferentTurn: ReversiPartSlice =
+                new ReversiPartSlice(board, turn + 1);
+            return {resultingMove: move, resultingSlice: sameBoardDifferentTurn};
         }
         for (const s of status.switched) {
             board[s.y][s.x] = player;
@@ -96,7 +102,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         const currentPlayerChoices: MGPMap<ReversiMove, ReversiPartSlice> = this.getListMoves(reversiPartSlice);
         // if the current player cannot start, then the part is ended
         return (currentPlayerChoices.size() === 1) &&
-               currentPlayerChoices.getByIndex(0).key.equals(ReversiMove.pass);
+               currentPlayerChoices.getByIndex(0).key.equals(ReversiMove.PASS);
     }
     public static nextPlayerCantOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
         const nextBoard: number[][] = reversiPartSlice.getCopiedBoard();
@@ -144,7 +150,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             // when the user cannot start, his only move is to pass, which he cannot do otherwise
             // board unchanged, only the turn changed "pass"
             moveAppliedPartSlice = new ReversiPartSlice(slice.getCopiedBoard(), nextTurn);
-            listMoves.set(ReversiMove.pass, moveAppliedPartSlice);
+            listMoves.set(ReversiMove.PASS, moveAppliedPartSlice);
         }
         return listMoves;
     }
@@ -152,7 +158,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice;
         const turn: number = this.node.gamePartSlice.turn;
         const board: number[][] = reversiPartSlice.getCopiedBoard();
-        if (move.equals(ReversiMove.pass)) { // if the player pass
+        if (move.equals(ReversiMove.PASS)) { // if the player pass
             // let's check that pass is a legal move right now
             // if he had no choice but to pass, then passing is legal !
             // else, passing was illegal
@@ -197,15 +203,5 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
     }
     public getListMoves(n: ReversiNode): MGPMap<ReversiMove, ReversiPartSlice> {
         return ReversiRules.getListMoves(n.gamePartSlice);
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
 }

@@ -210,8 +210,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             }
 
         }
-        this.gameComponent.updateBoard();
         this.currentPlayer = this.players[this.gameComponent.rules.node.gamePartSlice.turn % 2];
+        this.gameComponent.updateBoard();
     }
     private checkPlayersData() {
         if (this.players == null || this.opponent == null) { // TODO: voir à supprimer ce sparadra
@@ -268,6 +268,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameService.notifyVictory(this.currentPartId, victoriousPlayer);
     }
     public canAskTakeBack(): boolean {
+        if (this.currentPart == null) {
+            return false;
+        }
         const currentPart: ICurrentPart = this.currentPart.copy();
         if (this.observerRole === 2) return false;
         else if (currentPart.turn <= this.observerRole) return false;
@@ -288,7 +291,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         if (takeBackRequester === Player.ZERO && this.observerRole === 1) return true;
         return false;
     }
-    public getTakeBackRequester(): Player {
+    private getTakeBackRequester(): Player {
+        if (this.currentPart == null) {
+            return Player.NONE;
+        }
         const request: IMGPRequest = this.currentPart.copy().request;
         if (request == null) {
             return Player.NONE;
@@ -359,6 +365,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.players = [
             updatedICurrentPart.playerZero,
             updatedICurrentPart.playerOne];
+        this.currentPlayer = this.players[updatedICurrentPart.turn % 2];
         this.observerRole = 2;
         this.gameBeginningTime = updatedICurrentPart.beginning;
         let opponentName = '';

@@ -50,6 +50,6 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.canPass = ReversiRules.playerCanOnlyPass(slice);
     }
     public pass() {
-        this.onClick(ReversiMove.pass.coord.x, ReversiMove.pass.coord.y);
+        this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
     }
 }
