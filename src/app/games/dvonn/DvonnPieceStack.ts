@@ -30,7 +30,7 @@ export class DvonnPieceStack {
         for (const piece of this.pieces) {
             value = (value * DvonnPiece.MAX_VALUE) + piece.getValue();
         }
-        value = value + (this.pieces.length * DvonnPiece.MAX_VALUE * DvonnPieceStack.MAX_SIZE);
+        value += (this.pieces.length * DvonnPiece.MAX_VALUE * DvonnPieceStack.MAX_SIZE);
         return value;
     }
     public belongsTo(player: Player): boolean {
