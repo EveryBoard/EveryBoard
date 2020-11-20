@@ -39,7 +39,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         // let y: number = move.coord.y;
         // 1. for each direction where there is an ennemy block
         //  a. for the 1 to 3 ennemy block in a row
-        P4Rules.display(P4Rules.VERBOSE, 'getBoardValueShortened appellée');
+        Rules.display(P4Rules.VERBOSE, 'getBoardValueShortened appellée');
 
         return 0; // TODO
     }
@@ -301,7 +301,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             score += tmpScore;
             yMax--;
         }
-        P4Rules.display(P4Rules.VERBOSE, 'board Value evaluated without (pre)victory to ' + score);
+        Rules.display(P4Rules.VERBOSE, 'board Value evaluated without (pre)victory to ' + score);
 
         return score;
     }
@@ -330,7 +330,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             } else {
                 // cette case est différente de la précédente
                 if (nInALine === 4) {
-                    P4Rules.display(P4Rules.VERBOSE, 'there is some kind of victory here 2');
+                    Rules.display(P4Rules.VERBOSE, 'there is some kind of victory here 2');
 
                     return aligner === Player.ZERO.value
                         ? Number.MIN_SAFE_INTEGER
@@ -346,7 +346,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             y++;
         }
         if (nInALine === 4) {
-            P4Rules.display(P4Rules.VERBOSE, 'there is some kind of victory here 3');
+            Rules.display(P4Rules.VERBOSE, 'there is some kind of victory here 3');
 
             return aligner === Player.ZERO.value
                 ? Number.MIN_SAFE_INTEGER
@@ -424,7 +424,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
     public isLegal(move: MoveX, slice: P4PartSlice): LegalityStatus {
         const ILLEGAL: LegalityStatus = {legal: false};
-        P4Rules.display(P4Rules.VERBOSE, "Is " + move.toString() + " legal on " + slice.board);
+        Rules.display(P4Rules.VERBOSE, "Is " + move.toString() + " legal on " + slice.board);
         if (move.x < 0 || move.x > 6) return ILLEGAL;
         if (slice.getBoardByXY(move.x, 5) !== Player.NONE.value) return ILLEGAL;
         return {legal: true};

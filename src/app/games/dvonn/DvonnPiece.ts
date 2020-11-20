@@ -5,16 +5,16 @@ export class DvonnPiece {
     public static readonly PLAYER_ZERO: DvonnPiece = new DvonnPiece(Player.ZERO);
     public static readonly PLAYER_ONE: DvonnPiece = new DvonnPiece(Player.ONE);
     // This is the maximal possible number returned by getValue.
-    // TODO: this should be Player.MAX_VALUE+1 (but Player.MAX_VALUE is not defined)
+    // TODO: this should be Player.MAX_VALUE (but Player.MAX_VALUE is not defined)
     public static readonly MAX_VALUE: number = 3;
     public static of(value: number): DvonnPiece {
-        return new DvonnPiece(Player.of(value-1));
+        return new DvonnPiece(Player.of(value));
     }
 
     private constructor(public readonly player: Player) {
     }
     public getValue(): number {
-        return this.player.value+1; // We don't want 0 as a value
+        return this.player.value;
     }
     public belongsTo(player: Player): boolean {
         return this.player === player;

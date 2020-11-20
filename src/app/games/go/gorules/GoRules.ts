@@ -412,7 +412,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
     }
     public static markTerritoryAndCount(slice: GoPartSlice): GoPartSlice {
-        GoRules.display(GoRules.VERBOSE, { markTerritoryAndCount: { slice }});
+        Rules.display(GoRules.VERBOSE, { markTerritoryAndCount: { slice }});
         const resultingBoard: GoPiece[][] = slice.getCopiedBoardGoPiece();
         let emptyZones: GroupDatas[] = GoRules.getTerritoryLikeGroup(slice);
         const captured = slice.getCapturedCopy();

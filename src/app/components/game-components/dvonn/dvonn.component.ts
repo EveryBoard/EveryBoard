@@ -5,7 +5,6 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { DvonnMove } from 'src/app/games/dvonn/dvonnmove/DvonnMove';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
-import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
 import { DvonnRules } from 'src/app/games/dvonn/dvonnrules/DvonnRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
@@ -17,9 +16,9 @@ import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 })
 
 export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSlice, LegalityStatus> {
-    public rules = new DvonnRules(DvonnPartSlice.getStartingSlice(ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(), p => p.getValue())));
+    public rules: DvonnRules = new DvonnRules(DvonnPartSlice.getStartingSlice());
 
-    public CASE_SIZE = 70;
+    public CASE_SIZE: number = 70;
     public lastMove: DvonnMove = null;
     public chosen: Coord = null;
     public canPass: boolean = false;
@@ -73,7 +72,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
         try {
-            const move: DvonnMove = new DvonnMove(chosenPiece, chosenDestination);
+            const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
             return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         } catch (e) {
             return false;
@@ -124,7 +123,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         return {
             fill: (hasSource && stack.size() === 1) ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
             stroke: hasSource ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
-            'stroke-width': '5px'
         }
     }
 
@@ -137,12 +135,12 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         const y = center.y;
         const size = this.CASE_SIZE/2;
         const halfsize = size / 2;
-        const a = new Coord(x,        y + size);
-        const b = new Coord(x + size, y + halfsize);
-        const c = new Coord(x + size, y - halfsize);
-        const d = new Coord(x,        y - size);
-        const e = new Coord(x - size, y - halfsize);
-        const f = new Coord(x - size, y + halfsize);
+        const a: Coord = new Coord(x,        y + size);
+        const b: Coord = new Coord(x + size, y + halfsize);
+        const c: Coord = new Coord(x + size, y - halfsize);
+        const d: Coord = new Coord(x,        y - size);
+        const e: Coord = new Coord(x - size, y - halfsize);
+        const f: Coord = new Coord(x - size, y + halfsize);
         return a.x + ' ' + a.y + ' ' + b.x + ' ' + b.y + ' ' + c.x + ' ' + c.y + ' ' +
             d.x + ' ' + d.y + ' ' + e.x + ' ' + e.y + ' ' + f.x + ' ' + f.y + ' ' + a.x + ' ' + a.y;
     }

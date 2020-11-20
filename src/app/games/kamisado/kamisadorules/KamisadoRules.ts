@@ -39,7 +39,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                     const endCoord = startCoord.getNext(dir);
                     if (KamisadoBoard.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(slice.board, endCoord)) {
                         // Move is valid, check legality
-                        const move = new KamisadoMove(startCoord, endCoord);
+                        const move = KamisadoMove.of(startCoord, endCoord);
                         if (this.isLegal(move, slice)) {
                             // Move is legal
                             return true;
@@ -102,7 +102,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                         }
                         if (KamisadoBoard.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(slice.board, endCoord)) {
                             // Check if the move can be done, and if so, add the resulting slice to the map to be returned
-                            const move = new KamisadoMove(startCoord, endCoord);
+                            const move = KamisadoMove.of(startCoord, endCoord);
                             const legality = this.isLegal(move, slice);
                             if (legality.legal) {
                                 const result = this.applyLegalMove(move, slice, legality);

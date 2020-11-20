@@ -47,6 +47,7 @@ export abstract class FirebaseFirestoreDAO<T, PT> implements IFirebaseFirestoreD
         return docSnapshot.data() as T;
     }
     public async update(id: string, modification: PT): Promise<void> {
+        console.log(modification); // TODELETE
         return this.afs.collection(this.collectionName).doc<T>(id).ref.update(modification);
     }
     public delete(messageId: string): Promise<void> {

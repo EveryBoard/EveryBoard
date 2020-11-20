@@ -52,7 +52,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         // For each movable piece, look at its possible targets
         this.getMovablePieces(slice).forEach(start =>
             this.pieceTargets(slice, start).forEach(end => {
-                const move = new DvonnMove(start, end);
+                const move = DvonnMove.of(start, end);
                 const legalityStatus = this.isLegal(move, slice); // the move should be legal by construction, hence we don't check it
                 map.set(move, this.applyLegalMove(move, slice, legalityStatus).resultingSlice);
             }));
@@ -173,7 +173,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(DvonnPartSlice.getStartingSlice(ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(), p => p.getValue())), this);
+            this.node = MNode.getFirstNode(DvonnPartSlice.getStartingSlice(), this);
         } else {
             this.node = this.node.getInitialNode();
         }

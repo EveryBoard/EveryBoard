@@ -86,7 +86,7 @@ describe('DvonnComponent', () => {
             [_, _,  _, _, _, _, _, _, _, _, _],
             [_, _,  _, _, _, _, _, _, _, _, _],
             [_, _,  _, _, _, _, _, _, _, _, _]];
-        const slice: DvonnPartSlice = DvonnPartSlice.getStartingSlice(board);
+        const slice: DvonnPartSlice = new DvonnPartSlice(0, false, board);
         gameComponent.rules = new DvonnRules(slice);
         gameComponent.updateBoard();
         expect(gameComponent.canPass).toBeTruthy();
@@ -110,7 +110,7 @@ describe('DvonnComponent', () => {
             [_, _,  _, _, _, _, _, _, _, _, _],
             [_, _,  _, _, _, _, _, _, _, _, _],
             [_, _,  _, _, _, _, _, _, _, _, _]];
-        const slice: DvonnPartSlice = DvonnPartSlice.getStartingSlice(board);
+        const slice: DvonnPartSlice = new DvonnPartSlice(0, false, board);
         gameComponent.rules = new DvonnRules(slice);
         gameComponent.updateBoard();
         expect(await gameComponent.pass()).toBeTruthy();
@@ -118,13 +118,13 @@ describe('DvonnComponent', () => {
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(DvonnMove, "decode").and.callThrough();
-        const encoded = gameComponent.encodeMove(new DvonnMove(new Coord(2, 0), new Coord(2, 1)));
+        const encoded = gameComponent.encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
         gameComponent.decodeMove(encoded);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
         spyOn(DvonnMove, "encode").and.callThrough();
-        gameComponent.encodeMove(new DvonnMove(new Coord(2, 0), new Coord(2, 1)));
+        gameComponent.encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
         expect(DvonnMove.encode).toHaveBeenCalledTimes(1);
     });
 });

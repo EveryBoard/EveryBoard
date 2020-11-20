@@ -1,21 +1,21 @@
-import { ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild, Directive } from '@angular/core';
-import {ActivatedRoute, Router} from '@angular/router';
-import {AbstractGameComponent} from './AbstractGameComponent';
-import {GameIncluderComponent} from './game-includer/game-includer.component';
-import {UserService} from '../../services/user/UserService';
+import { ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { AbstractGameComponent } from './AbstractGameComponent';
+import { GameIncluderComponent } from './game-includer/game-includer.component';
+import { UserService } from '../../services/user/UserService';
 
-import {Move} from '../../jscaip/Move';
+import { Move } from '../../jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
-import {DvonnComponent} from './dvonn/dvonn.component';
-import {ReversiComponent} from './reversi/reversi.component';
-import {TablutComponent} from './tablut/tablut.component';
-import {KamisadoComponent} from './kamisado/kamisado.component';
-import {QuartoComponent} from './quarto/quarto.component';
-import {P4Component} from './p4/p4.component';
-import {AwaleComponent} from './awale/awale.component';
-import {GoComponent} from './go/go.component';
+import { DvonnComponent } from './dvonn/dvonn.component';
+import { KamisadoComponent } from './kamisado/kamisado.component';
+import { ReversiComponent } from './reversi/reversi.component';
+import { TablutComponent } from './tablut/tablut.component';
+import { QuartoComponent } from './quarto/quarto.component';
+import { P4Component } from './p4/p4.component';
+import { AwaleComponent } from './awale/awale.component';
+import { GoComponent } from './go/go.component';
 import { EncapsuleComponent } from './encapsule/encapsule.component';
 import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
 import { SiamComponent } from './siam/siam.component';
@@ -23,6 +23,7 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { SaharaComponent } from './sahara/sahara.component';
 import { PylosComponent } from './pylos/pylos.component';
 import { QuixoComponent } from './quixo/quixo.component';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Directive()
 export abstract class GameWrapper {
@@ -39,13 +40,13 @@ export abstract class GameWrapper {
 
     public players: string[] = [null, null];
 
-    public observerRole: number;
+    public observerRole: number; // TODO: change into Player
 
     public canPass: boolean;
 
     public endGame: boolean = false;
 
-    public static display(verbose: boolean, message: string) {
+    public static display(verbose: boolean, message: any) {
         if (verbose) console.log(message);
     }
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
@@ -54,10 +55,10 @@ export abstract class GameWrapper {
                 protected userService: UserService,
                 protected authenticationService: AuthenticationService,
                 ) {
-        GameWrapper.display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
+        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
-        GameWrapper.display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent: '+(this.gameIncluder!=null));
+        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent: '+(this.gameIncluder!=null));
 
         switch (compoString) {
             case 'Awale':
@@ -93,7 +94,7 @@ export abstract class GameWrapper {
         }
     }
     protected afterGameIncluderViewInit() {
-        GameWrapper.display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
+        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
 
         this.createGameComponent();
         // this.resetGameDatas();
@@ -103,7 +104,7 @@ export abstract class GameWrapper {
         this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
     }
     protected createGameComponent() {
-        GameWrapper.display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent: '+(this.gameIncluder!=null));
+        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent: '+(this.gameIncluder!=null));
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
         const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
@@ -121,27 +122,28 @@ export abstract class GameWrapper {
     public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean> => {
         const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
-            GameWrapper.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
+            Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
             return false;
         }
-        if (this.gameComponent.rules.node.isEndGame()) {
-            GameWrapper.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: part is finished');
+        if (this.endGame) {
+            Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: part is finished');
             return false;
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal === false) {
-            GameWrapper.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
+            Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
             return false;
         }
         await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
-        GameWrapper.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
+        Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
         return true;
     }
     public abstract async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     public isPlayerTurn() {
-        const indexPlayer = this.gameComponent.rules.node.gamePartSlice.turn % 2;
-        GameWrapper.display(GameWrapper.VERBOSE, "It is player " + indexPlayer + "'s turn (" + this.players[indexPlayer] + ") and you are " + this.userName)
+        const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;
+        const indexPlayer: number = turn % 2;
+        Rules.display(GameWrapper.VERBOSE, "It is turn " + turn + "(" + this.players[indexPlayer] + ") and you are " + this.userName);
         return this.players[indexPlayer] === this.userName;
     }
 }

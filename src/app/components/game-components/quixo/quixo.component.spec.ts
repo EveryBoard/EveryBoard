@@ -44,7 +44,6 @@ describe('QuixoComponent', () => {
     let O: number = Player.ZERO.value;
 
     let doMove: (move: QuixoMove) => Promise<boolean> = async(move: QuixoMove) => {
-        console.table(gameComponent.board);
         return gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
                await gameComponent.chooseDirection(move.direction.toString());
     }
