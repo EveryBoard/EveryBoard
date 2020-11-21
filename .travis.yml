@@ -13,3 +13,8 @@ service:
 before_script:
   - npm install
   - cp src/app/firebaseConfig.ts.dummy src/app/firebaseConfig.ts
+
+script:
+  - npx eslint src/**
+  - npm test
+  - npx ng build
