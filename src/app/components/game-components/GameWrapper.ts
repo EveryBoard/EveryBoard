@@ -25,7 +25,6 @@ import { PylosComponent } from './pylos/pylos.component';
 import { QuixoComponent } from './quixo/quixo.component';
 import { Rules } from 'src/app/jscaip/Rules';
 
-@Directive()
 export abstract class GameWrapper {
 
     public static VERBOSE: boolean = false;
@@ -138,7 +137,7 @@ export abstract class GameWrapper {
         Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
         return true;
     }
-    public abstract async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
+    public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     public isPlayerTurn() {
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;
