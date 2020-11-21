@@ -1,11 +1,11 @@
+dist: xenial
 language: node_js
 node_js:
   - 12
 
 script: node_modules/karma/bin/karma start src/karma.conf.js --single-run
-before_install:
-  - export DISPLAY=:99.0
-  - sh -e /etc/init.d/xvfb start
+service:
+  - xvfb
 before_script:
   - npm install
   - cp src/app/firebaseConfig.ts.dummy src/app/firebaseConfig.ts
