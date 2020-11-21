@@ -1,9 +1,11 @@
 language: node_js
 node_js:
-  - 15
-  - 14
-  - 13
   - 12
 
+script: node_modules/karma/bin/karma start src/karma.conf.js --single-run
+before_install:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
 before_script:
+  - npm install
   - cp src/app/firebaseConfig.ts.dummy src/app/firebaseConfig.ts
