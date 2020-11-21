@@ -3,10 +3,13 @@ language: node_js
 node_js:
   - 12
 
-script: node_modules/karma/bin/karma start src/karma.conf.js --single-run
+env:
+    - CHROME_BIN=google-chrome-stable
+
+addons:
+  chrome: stable
 service:
   - xvfb
 before_script:
-  - rm package-lock.json
   - npm install
   - cp src/app/firebaseConfig.ts.dummy src/app/firebaseConfig.ts
