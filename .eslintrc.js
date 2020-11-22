@@ -7,9 +7,6 @@ module.exports = {
         browser: true,
         es2021: true
     },
-    extends: [
-        'standard'
-    ],
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 12,
@@ -24,6 +21,13 @@ module.exports = {
         'quotes': [WARN, 'single'],
         'indent': [WARN, 4],
         'quote-props': [OFF],
-        'line-between-class-members': [WARN, 'always']
+        'lines-between-class-members': [WARN, 'always'],
+        'object-curly-spacing': [WARN, 'always'],
+        'padded-blocks': [WARN, 'never'],
+        'array-bracket-spacing': [WARN, 'never'],
+        'comma-dangle': [WARN, 'never'],
+        'eol-last': [WARN, 'always'],
+        'no-multi-space': [WARN, 'always'],
+        'quotes': [WARN, 'single'],
     }
 };
