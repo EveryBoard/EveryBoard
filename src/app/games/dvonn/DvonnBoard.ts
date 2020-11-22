@@ -1,6 +1,6 @@
 import { ReadonlyBiArray, ReadonlyNumberBiArray } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { DvonnPieceStack } from "./DvonnPieceStack";
+import { DvonnPieceStack } from "./dvonnpiecestack/DvonnPieceStack";
 
 export class DvonnBoard {
     public static WIDTH: number = 11;

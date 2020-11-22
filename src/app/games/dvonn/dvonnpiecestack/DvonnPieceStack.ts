@@ -1,4 +1,4 @@
-import { DvonnPiece } from "./DvonnPiece";
+import { DvonnPiece } from "../DvonnPiece";
 import { Player } from "src/app/jscaip/Player";
 
 export class DvonnPieceStack {

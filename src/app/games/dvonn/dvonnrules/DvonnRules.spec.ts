@@ -1,4 +1,4 @@
-import { DvonnPieceStack } from "../DvonnPieceStack";
+import { DvonnPieceStack } from "../dvonnpiecestack/DvonnPieceStack";
 import { DvonnPartSlice } from "../DvonnPartSlice";
 import { DvonnRules } from "./DvonnRules";
 import { Coord } from "src/app/jscaip/coord/Coord";
