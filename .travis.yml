@@ -14,7 +14,11 @@ before_script:
   - npm install
   - cp src/app/firebaseConfig.ts.dummy src/app/firebaseConfig.ts
 
-script:
-  - npx eslint src/**
-  - npm test
-  - npx ng build
+jobs:
+  include:
+    - stage: Linter
+      script: npx eslint "src/**"
+    - stage: Test
+      script: npm test
+    - stage: Build and deploy
+      script: npx ng build
