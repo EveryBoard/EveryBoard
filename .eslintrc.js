@@ -27,7 +27,7 @@ module.exports = {
         'array-bracket-spacing': [WARN, 'never'],
         'comma-dangle': [WARN, 'never'],
         'eol-last': [WARN, 'always'],
-        'no-multi-space': [WARN, 'always'],
         'quotes': [WARN, 'single'],
+        'no-multi-spaces': [WARN, {'ignoreEOLComments': true}]
     }
 };

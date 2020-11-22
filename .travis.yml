@@ -17,7 +17,7 @@ before_script:
 jobs:
   include:
     - stage: Linter
-      script: npx eslint "src/**"
+      script: npx eslint --ext .ts ./
     - stage: Test
       script: npm test
     - stage: Build and deploy
