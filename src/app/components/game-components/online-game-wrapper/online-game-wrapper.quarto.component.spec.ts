@@ -501,6 +501,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(await clickElement('#passButton')).toBeFalsy();
 
         component.gameComponent.canPass = true;
+        component.gameComponent.pass = () => {};
         fixture.detectChanges();
 
         expect(await clickElement('#passButton')).toBeTruthy();

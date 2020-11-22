@@ -25,7 +25,7 @@
                       [attr.x]="50*x" [attr.y]="50*y"
                       fill="white"
                       (click)="onClick(x, y);"/>
-                <line [attr.x1]="50*x" [attr.y1]="25 + 50*y"
+                <line [attr.x1]="50*x"      [attr.y1]="25 + 50*y"
                       [attr.x2]="50 + 50*x" [attr.y2]="25 + 50*y"
                       style="fill:#ffffff; stroke:black; stroke-width: 5px;"
                       (click)="onClick(x, y);"/>
@@ -46,7 +46,3 @@
         </g>
     </g>
 </svg>
-<br/>
-{{ territorialize(rules.node.gamePartSlice).getCapturedCopy() }} <br/>
-{{ "last: (" + last.x + ", " + last.y +")" }} <br/>
-{{ rules.node.gamePartSlice.phase }}

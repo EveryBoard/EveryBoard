@@ -18,7 +18,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
     public canPass: boolean = false;
 
-    public scores: number[] = [0, 0];
+    public scores: number[] = [2, 2];
 
     constructor() {
         super();
@@ -49,7 +49,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.scores = slice.countScore();
         this.canPass = ReversiRules.playerCanOnlyPass(slice);
     }
-    public pass() {
-        this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
+    public async pass(): Promise<boolean> {
+        return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
     }
 }

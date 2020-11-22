@@ -47,9 +47,9 @@
                                 (outOfTimeAction)="reachedOutOfTime(1)">
                 </app-count-down>
             </div>
-            <div class="inforow" *ngIf="currentPart">
-                <h4 style="float: left"> {{ currentPart.scorePlayerZero }} pts </h4>
-                <h4 style="float: right"> {{ currentPart.scorePlayerOne }} pts </h4>
+            <div class="inforow" *ngIf="currentPart && compo && compo.showScore">
+                <h4 style="float: left"> {{ compo.scores[0] }} pts </h4>
+                <h4 style="float: right"> {{ compo.scores[1] }} pts </h4>
             </div>
             <div *ngIf="currentPart" class="inforow">
                 <h4> Tour n°{{ currentPart.turn + 1 }}</h4>
@@ -66,12 +66,11 @@
                         Abandonner
                     </button>
                 </div>
-                <div *ngIf="observerRole < 2"
+                <div *ngIf="observerRole < 2 && compo.canPass && (currentPlayer===userName)"
                      class="inforow">
                     <button mat-stroked-button
                             id="passButton"
-                            *ngIf="gameComponent.canPass && (currentPlayer===userName)"
-                            (click)="gameComponent.pass()">
+                            (click)="compo.pass()">
                         Passer son tour
                     </button>
                 </div>
