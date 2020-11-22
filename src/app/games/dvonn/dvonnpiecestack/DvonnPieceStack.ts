@@ -4,8 +4,8 @@ import { Player } from "src/app/jscaip/Player";
 export class DvonnPieceStack {
     public static of(v: number): DvonnPieceStack {
         const pieces = [];
-        const size = (v / (DvonnPiece.MAX_VALUE * DvonnPieceStack.MAX_SIZE)) | 0;
-        let value = (v % (DvonnPiece.MAX_VALUE * DvonnPieceStack.MAX_SIZE));
+        const size = v % DvonnPieceStack.MAX_SIZE;
+        let value = (v / DvonnPieceStack.MAX_SIZE) | 0;
         for (let i = 0; i < size; i++) {
             const pieceValue = value % DvonnPiece.MAX_VALUE;
             value = (value / DvonnPiece.MAX_VALUE) | 0;
@@ -30,7 +30,7 @@ export class DvonnPieceStack {
         for (const piece of this.pieces) {
             value = (value * DvonnPiece.MAX_VALUE) + piece.getValue();
         }
-        value += (this.pieces.length * DvonnPiece.MAX_VALUE * DvonnPieceStack.MAX_SIZE);
+        value = (value * DvonnPieceStack.MAX_SIZE) + this.pieces.length;
         return value;
     }
     public belongsTo(player: Player): boolean {
