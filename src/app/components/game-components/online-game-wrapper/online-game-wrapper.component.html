@@ -19,7 +19,6 @@
         </div>
 
         <div id="info" class="circled col-sm-3">
-             <!--*ngIf="currentPart">-->
             <div *ngIf="players" class="inforow">
                 <h4 style="float: left"> {{ players[0] }} </h4>
                 <h4 style="float: right"> {{ players[1] }} </h4>
@@ -48,42 +47,33 @@
                                 (outOfTimeAction)="reachedOutOfTime(1)">
                 </app-count-down>
             </div>
-            <div class="inforow" *ngIf="currentPart">
-                <h4 style="float: left"> {{ currentPart.scorePlayerZero }} pts </h4>
-                <h4 style="float: right"> {{ currentPart.scorePlayerOne }} pts </h4>
+            <div class="inforow" *ngIf="currentPart && compo && compo.showScore">
+                <h4 style="float: left"> {{ compo.scores[0] }} pts </h4>
+                <h4 style="float: right"> {{ compo.scores[1] }} pts </h4>
             </div>
-            <div *ngIf="!endGame && currentPart" class="inforow">
-                <h4> {{ currentPart.turn }}ème tour : c'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
+            <div *ngIf="currentPart" class="inforow">
+                <h4> Tour n°{{ currentPart.turn + 1 }}</h4>
             </div>
-            <div *ngIf="!endGame && opponent && observerRole <2"
-                 class="inforow">
-                <button mat-stroked-button
-                        id="resignButton"
-                        (click)="resign()">
-                    Abandonner
-                </button>
-            </div>
-            <div *ngIf="!endGame && (observerRole < 2)"
-                 class="inforow">
-                <button mat-stroked-button
-                        *ngIf="canPass && (currentPlayer===userName)"
-                        (click)="gameComponent.pass()">
-                    Passer son tour
-                </button>
-            </div>
-            <!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>-->
-            <div *ngIf="!endGame && (observerRole < 2)" class="inforow">
-                <button mat-stroked-button
-                        *ngIf="!rematchProposed"
-                        (click)="proposeRematch()">
-                    Proposer un rematch
-                </button>
-                <button mat-stroked-button
-                        *ngIf="rematchProposed && opponentProposedRematch"
-                        (click)="acceptRematch()">
-                    Accepter le rematch
-                </button>
-
+            <ng-container *ngIf="!endGame else endGameBlock">
+                <div class="inforow">
+                    c'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}
+                </div>
+                <div *ngIf="opponent && observerRole < 2"
+                     class="inforow">
+                    <button mat-stroked-button
+                            id="resignButton"
+                            (click)="resign()">
+                        Abandonner
+                    </button>
+                </div>
+                <div *ngIf="observerRole < 2 && compo.canPass && (currentPlayer===userName)"
+                     class="inforow">
+                    <button mat-stroked-button
+                            id="passButton"
+                            (click)="compo.pass()">
+                        Passer son tour
+                    </button>
+                </div>
                 <ng-container *ngIf="isOpponentWaitingForTakeBackResponse() else askTakeBackContainer">
                     <button mat-stroked-button
                             id="acceptTakeBackButton"
@@ -105,27 +95,45 @@
                         Demander à reprendre un coup
                     </button>
                 </ng-container>
-            </div>
-            <div class="inforow" *ngIf="endGame">
-                <div *ngIf="currentPart.winner != null else noWinner">
+                <!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>-->
+            </ng-container>
+            <ng-template #endGameBlock>
+                <div *ngIf="observerRole < 2" class="inforow">
+                    <button mat-stroked-button
+                            *ngIf="!rematchProposed"
+                            (click)="proposeRematch()">
+                        Proposer un rematch
+                    </button>
+                    <button mat-stroked-button
+                            *ngIf="rematchProposed && opponentProposedRematch"
+                            (click)="acceptRematch()">
+                        Accepter le rematch
+                    </button>
+                </div>
+                <div class="inforow"
+                     *ngIf="currentPart.winner != null else noWinner">
                     <h3 *ngIf="(currentPart.winner === userName)"> Vous avez gagné </h3>
                     <h3 *ngIf="(currentPart.winner !== userName) && (observerRole < 2)"> Vous avez perdu </h3>
                     <h3 *ngIf="(currentPart.winner !== userName) && (observerRole >= 2)"> Victoire de {{ currentPart.winner }} </h3>
                 </div>
                 <ng-template #noWinner>
-                    <h3> Match nul </h3>
+                    <div class="inforow">
+                        <h3> Match nul </h3>
+                    </div>
                 </ng-template>
-            </div>
-            <div *ngIf="endGame" class="inforow">
-                <button mat-stroked-button routerLink="server">Retour au serveur</button>
-            </div>
+                <div class="inforow">
+                    <button mat-stroked-button
+                            routerLink="server">
+                        Retour au serveur
+                    </button>
+                </div>
+            </ng-template>
         </div>
-
     </div>
 
-    <div id="chat" class="circled"
-         [ngStyle] = "{ 'height': getChatHeight(), 'max-height': '40%', 'float': 'bottom' }"
-         >
+    <div id="chat"
+         class="circled"
+         [ngStyle] = "{ 'height': getChatHeight(), 'max-height': '40%', 'float': 'bottom' }">
         <app-chat #chatComponent
                   [chatId]="currentPartId"
                   [turn]="currentPart?.turn"></app-chat>

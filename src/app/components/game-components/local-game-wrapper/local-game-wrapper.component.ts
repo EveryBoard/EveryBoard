@@ -53,7 +53,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return player.substr(0, 3) === "bot";
     }
     public async onValidUserMove(move: Move): Promise<void> {
-        LocalGameWrapperComponent.display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onValidUserMove');
+        Rules.display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onValidUserMove');
 
         this.gameComponent.rules.choose(move);
         this.updateBoard();
@@ -111,9 +111,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             this.aiDepth = numberValue;
         }
         this.proposeAIToPlay();
-    }
-    get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
-        return this.gameComponent;
     }
     public takeBack() {
         if (this.gameComponent.rules.node.gamePartSlice.turn > 0) {

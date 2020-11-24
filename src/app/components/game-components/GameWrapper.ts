@@ -45,9 +45,6 @@ export abstract class GameWrapper {
 
     public endGame: boolean = false;
 
-    public static display(verbose: boolean, message: any) {
-        if (verbose) console.log(message);
-    }
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
                 protected router: Router,
@@ -144,5 +141,8 @@ export abstract class GameWrapper {
         const indexPlayer: number = turn % 2;
         Rules.display(GameWrapper.VERBOSE, "It is turn " + turn + "(" + this.players[indexPlayer] + ") and you are " + this.userName);
         return this.players[indexPlayer] === this.userName;
+    }
+    get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
+        return this.gameComponent;
     }
 }

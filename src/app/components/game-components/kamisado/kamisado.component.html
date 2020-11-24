@@ -2,40 +2,40 @@
       width="600px" height="600px"
       viewBox="0 0 700 700"
       preserveAspectRatio="xMidYMid meet">
-      <g *ngFor="let line of board; index as y;">
-          <g *ngFor="let caseContent of line; index as x;">
-              <g (click)="onClick(x, y)">
-              <!-- Background -->
-              <rect [attr.x]="x * 75"
-                    [attr.y]="y * 75"
-                    width="75" height="75"
-                    style="stroke: 'black'; stroke-width: 1px;"
-                    [ngStyle]="styleBackground(x, y)"/>
-              <!-- Piece -->
-              <circle *ngIf="caseContent !== UNOCCUPIED"
-                      [attr.cx]="37.5 + (x * 75)"
-                      [attr.cy]="37.5 + (y * 75)"
-                      r="25"
-                      style="stroke-width: 15px"
-                      [ngStyle]="stylePiece(caseContent)"/>
+    <g *ngFor="let line of board; index as y;">
+        <g *ngFor="let caseContent of line; index as x;">
+            <g (click)="onClick(x, y)">
+                <!-- Background -->
+                <rect [attr.x]="x * 75"
+                      [attr.y]="y * 75"
+                      width="75" height="75"
+                      style="stroke: 'black'; stroke-width: 1px;"
+                      [ngStyle]="styleBackground(x, y)"/>
+                <!-- Piece -->
+                <circle *ngIf="caseContent !== UNOCCUPIED"
+                        [attr.cx]="37.5 + (x * 75)"
+                        [attr.cy]="37.5 + (y * 75)"
+                        r="25"
+                        style="stroke-width: 15px"
+                        [ngStyle]="stylePiece(caseContent)"/>
             </g>
         </g>
-      </g>
-      <!-- Highlight last move -->
-      <rect *ngIf="lastMove !== null"
-            [attr.x]="lastMove.coord.x * 75"
-            [attr.y]="lastMove.coord.y * 75"
-            width="75" height="75"
-            style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
-      <rect *ngIf="lastMove !== null"
-            [attr.x]="lastMove.end.x * 75"
-            [attr.y]="lastMove.end.y * 75"
-            width="75" height="75"
-            style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
-      <!-- Highlight selected piece -->
-      <circle *ngIf="chosen !== null"
-              [attr.cx]="37.5 + (chosen.x * 75)"
-              [attr.cy]="37.5 + (chosen.y * 75)"
-              r="30"
+    </g>
+    <!-- Highlight last move -->
+    <g *ngIf="lastMove !== null">
+        <rect [attr.x]="lastMove.coord.x * 75"
+              [attr.y]="lastMove.coord.y * 75"
+              width="75" height="75"
               style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
+        <rect [attr.x]="lastMove.end.x * 75"
+              [attr.y]="lastMove.end.y * 75"
+              width="75" height="75"
+              style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
+    </g>
+    <!-- Highlight selected piece -->
+    <circle *ngIf="chosen !== null"
+            [attr.cx]="37.5 + (chosen.x * 75)"
+            [attr.cy]="37.5 + (chosen.y * 75)"
+            r="30"
+            style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
 </svg>

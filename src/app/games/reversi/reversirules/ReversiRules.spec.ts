@@ -3,8 +3,14 @@ import { ReversiRules } from './ReversiRules';
 import { ReversiMove } from '../reversimove/ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { Player } from 'src/app/jscaip/Player';
+import { MNode } from 'src/app/jscaip/MNode';
 
 describe('ReversiRules', () => {
+
+    const _: number = Player.NONE.value;
+    const X: number = Player.ONE.value;
+    const O: number = Player.ZERO.value;
 
     let rules: ReversiRules;
 
@@ -27,8 +33,33 @@ describe('ReversiRules', () => {
         expect(rules.node.gamePartSlice.countScore()).toEqual([4, 1]);
     });
     it('Passing at first turn should be illegal', () => {
-        const isLegal: boolean = rules.choose(ReversiMove.pass);
+        const isLegal: boolean = rules.choose(ReversiMove.PASS);
 
         expect(isLegal).toBeFalsy();
+    });
+    it('should forbid non capturing move', () => {
+        const moveLegality: boolean = rules.choose(new ReversiMove(0, 0));
+
+        expect(moveLegality).toBeFalsy();
+    });
+    it('should forbid choosing occupied case', () => {
+        const moveLegality: boolean = rules.choose(new ReversiMove(3, 3));
+
+        expect(moveLegality).toBeFalsy();
+    });
+    it('Should allow player to pass when no other moves are possible', () => {
+        const board: number[][] = [
+            [_, _, _, _, _, _, _, _,],
+            [_, _, _, _, _, _, _, _,],
+            [_, _, _, _, _, _, _, _,],
+            [_, _, _, _, _, _, _, _,],
+            [_, _, _, _, _, _, _, _,],
+            [_, _, _, _, _, _, _, _,],
+            [_, _, _, _, X, _, _, _,],
+            [_, _, _, _, O, _, _, _,],
+        ];
+        const slice: ReversiPartSlice = new ReversiPartSlice(board, 1);
+        rules.node = new MNode(null, null, slice, 0);
+        expect(rules.choose(ReversiMove.PASS)).toBeTruthy();
     });
 });

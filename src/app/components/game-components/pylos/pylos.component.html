@@ -5,7 +5,7 @@
     <g *ngFor="let z of [0, 1, 2]">
         <g *ngFor="let y of getLevelRange(z)">
             <g *ngFor="let x of getLevelRange(z)">
-                <circle [id]="'clickable_' + x + '_' + y + '_' + z"
+                <circle id="clickable_{{x}}_{{y}}_{{z}}"
                         *ngIf="isDrawable(x, y, z)"
                         (click)="onClick(x, y, z)"
                         [ngStyle]="getPieceStyle(x, y, z)"
@@ -17,4 +17,3 @@
     </g>
 </svg>
 
-{{ rules.getBoardValue(lastMove, slice) }}

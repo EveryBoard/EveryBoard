@@ -191,6 +191,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         expect(component.currentPart.copy().listMoves).toEqual([]);
+        expect(component.currentPlayer).toEqual('creator');
         tick(component.maximalMoveDuration);
     }));
 
@@ -490,6 +491,20 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.ABBA);
         expect(await doMove(move2)).toBeFalsy("Should not allow player to play after resign");
         expect(partDAO.update).not.toHaveBeenCalled();
+
+        tick(component.maximalMoveDuration);
+    }));
+
+    it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        expect(await clickElement('#passButton')).toBeFalsy();
+
+        component.gameComponent.canPass = true;
+        component.gameComponent.pass = () => {};
+        fixture.detectChanges();
+
+        expect(await clickElement('#passButton')).toBeTruthy();
 
         tick(component.maximalMoveDuration);
     }));
