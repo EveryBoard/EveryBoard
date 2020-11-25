@@ -14,6 +14,7 @@ import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { UserService } from 'src/app/services/user/UserService';
 import { By } from '@angular/platform-browser';
 import { Player } from 'src/app/jscaip/Player';
+import { MNode } from 'src/app/jscaip/MNode';
 
 const activatedRouteStub = {
     snapshot: {
@@ -42,6 +43,10 @@ describe('LocalGameWrapperComponent', () => {
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
     let debugElement: DebugElement;
+
+    let O: number = Player.ZERO.value;
+    let X: number = Player.ONE.value;
+    let _: number = Player.NONE.value;
 
     beforeAll(() => {
         LocalGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || LocalGameWrapperComponent.VERBOSE;
@@ -121,4 +126,23 @@ describe('LocalGameWrapperComponent', () => {
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
         expect(component.gameComponent.updateBoard).toHaveBeenCalledTimes(1);
     }));
+    // it('should show match nul', fakeAsync(async() => {
+    //     AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
+    //     fixture.detectChanges();
+    //     tick(1);
+
+    //     const board: number[][] = [
+    //         [X, X, X, _, X, X, X],
+    //         [O, O, O, X, O, O, O],
+    //         [X, X, X, O, X, X, X],
+    //         [O, O, O, X, O, O, O],
+    //         [X, X, X, O, X, X, X],
+    //         [O, O, O, X, O, O, O],
+    //     ];
+    //     const slice: P4PartSlice = new P4PartSlice(board, 0);
+    //     component.gameComponent.rules.node = new MNode(null, null, slice, 0);
+
+    //     expect(await component.gameComponent.chooseMove(MoveX.get(3), slice, null, null)).toBeTruthy("Last move should be legal");
+
+    // }));
 });

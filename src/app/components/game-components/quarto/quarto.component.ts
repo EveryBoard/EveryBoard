@@ -26,7 +26,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public pieceToGive: QuartoEnum = QuartoEnum.UNOCCUPIED; // the piece that the user want to give to the opponent
 
     public updateBoard() {
-        console.log('board updated');
         const slice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();

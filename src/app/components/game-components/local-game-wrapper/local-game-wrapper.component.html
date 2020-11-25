@@ -8,8 +8,9 @@
         </div>
 
         <div *ngIf="compo" id="info" class="circled col-sm-3">
-            <div style="text-align:center">
-                Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }} <br/>
+            <div class="inforow"
+                 style="text-align:center">
+                <h4>Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }}</h4>
             </div>
             <div class="inforow" style="float: left">
                 <mat-form-field>
@@ -23,8 +24,7 @@
                         <mat-option value="6"> IA LEVEL 6 </mat-option>
                         <mat-option value="7"> IA LEVEL 7 </mat-option>
                     </mat-select>
-                </mat-form-field><br/>
-                <ng-container *ngIf="compo.showScore"> {{ compo.scores[0] }} pts </ng-container>
+                </mat-form-field>
             </div>
             <div class="inforow" style="float: right">
                 <mat-form-field>
@@ -41,33 +41,24 @@
                 </mat-form-field><br/>
                 <ng-container *ngIf="compo.showScore"> {{ compo.scores[1] }} pts </ng-container>
             </div>
-<!--        <div class="inforow" style="float: left">
-                {{ players[0] ? players[0] : "Humain" }} 0 <br/>
-                <button (click)="switchPlayerOne()">{{ players[0] === 'bot' ? 'Humain' : ('Robot lvl ' + aiDepth) }}</button> <br/>
-                <ng-container *ngIf="compo.showScore"> {{ compo.scores[0] }} pts </ng-container>
+            <div class="inforow" *ngIf="currentPart && compo && compo.showScore">
+                <h4 style="float: left"> {{ compo.scores[0] }} pts </h4>
+                <h4 style="float: right"> {{ compo.scores[1] }} pts </h4>
             </div>
-            <div class="inforow" style="float: right">
-                {{ players[1] ? players[1] : "Humain" }} 1 <br/>
-                <button (click)="switchPlayerTwo()">{{ players[1] === 'bot' ? 'Humain' : ('Robot lvl ' + aiDepth) }}</button> <br/>
-                <ng-container *ngIf="compo.showScore"> {{ compo.scores[1] }} pts </ng-container>
-            </div> -->
-            <div *ngIf="endGame else pass" class="inforow">
-                <div *ngIf="winner else drawn"
-                     class="inforow">
-                    {{ winner }} as gagné
-                </div>
-                <ng-template #draw>
-                    Match nul
-                </ng-template>
+            <div *ngIf="endGame" class="inforow">
+                <h4 *ngIf="winner">{{ winner }} as gagné</h4>
+                <h4 *ngIf="winner == null">Match nul</h4>
             </div>
-            <ng-template #pass>
+            <div *ngIf="endGame === false"
+                 class="inforow">
                 <button *ngIf="compo.canPass"
-                        (click)="compo.pass()" mat-stroked-button>
+                        (click)="compo.pass()"
+                        mat-stroked-button>
                     Passer son tour
                 </button>
-            </ng-template>
-
-            <div *ngIf="compo.rules.node.gamePartSlice.turn > 0">
+            </div>
+            <div *ngIf="endGame === false && compo.rules.node.gamePartSlice.turn > 0"
+                 class="inforow">
                 <button id="takeBack"
                         (click)="takeBack()">
                     Reprendre un coup

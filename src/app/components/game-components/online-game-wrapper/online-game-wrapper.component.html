@@ -19,6 +19,11 @@
         </div>
 
         <div id="info" class="circled col-sm-3">
+            <div *ngIf="currentPart"
+                 style="text-align:center"
+                 class="inforow">
+                <h4>Tour n° {{ currentPart.turn + 1 }}</h4>
+            </div>
             <div *ngIf="players" class="inforow">
                 <h4 style="float: left"> {{ players[0] }} </h4>
                 <h4 style="float: right"> {{ players[1] }} </h4>
@@ -50,9 +55,6 @@
             <div class="inforow" *ngIf="currentPart && compo && compo.showScore">
                 <h4 style="float: left"> {{ compo.scores[0] }} pts </h4>
                 <h4 style="float: right"> {{ compo.scores[1] }} pts </h4>
-            </div>
-            <div *ngIf="currentPart" class="inforow">
-                <h4>Tour n°{{ currentPart.turn + 1 }}</h4>
             </div>
             <ng-container *ngIf="!endGame else endGameBlock">
                 <div class="inforow">
