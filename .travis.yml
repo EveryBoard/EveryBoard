@@ -1,0 +1,28 @@
+dist: xenial
+language: node_js
+node_js:
+  - 12
+
+env:
+    - CHROME_BIN=google-chrome-stable
+
+addons:
+  chrome: stable
+service:
+  - xvfb
+before_install:
+  - openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in .travis/id_rsa.enc -out .travis/id_rsa -d
+before_script:
+  - npm install
+  - cp src/app/firebaseConfig.ts.dummy src/app/firebaseConfig.ts
+
+jobs:
+  include:
+    - stage: Linter
+      script: npx eslint --ext .ts ./
+    - stage: Test
+      script: npm test
+    - stage: Build and deploy
+      script:
+        - npx ng build
+        - sh .travis/deploy.sh

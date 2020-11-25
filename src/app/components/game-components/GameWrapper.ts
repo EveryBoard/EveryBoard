@@ -1,4 +1,4 @@
-import { ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
+import { ComponentFactory, ComponentFactoryResolver, ComponentRef, Injectable, Type, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractGameComponent } from './AbstractGameComponent';
 import { GameIncluderComponent } from './game-includer/game-includer.component';
@@ -25,12 +25,13 @@ import { PylosComponent } from './pylos/pylos.component';
 import { QuixoComponent } from './quixo/quixo.component';
 import { Rules } from 'src/app/jscaip/Rules';
 
+@Injectable()
 export abstract class GameWrapper {
 
     public static VERBOSE: boolean = false;
 
     // component loading
-    @ViewChild(GameIncluderComponent, {static: false})
+    @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
     public gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
@@ -134,7 +135,7 @@ export abstract class GameWrapper {
         Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
         return true;
     }
-    public abstract async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
+    public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     public isPlayerTurn() {
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;

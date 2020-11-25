@@ -8,7 +8,7 @@ import { of, Observable } from 'rxjs';
 import { UserService } from 'src/app/services/user/UserService';
 import { GameService } from 'src/app/services/game/GameService';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MatTabsModule } from '@angular/material';
+import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
@@ -94,12 +94,8 @@ describe('ServerPageComponent', () => {
     }));
     it('should create', async(() => {
         expect(component).toBeTruthy();
-        const ngOnInit = spyOn(component, "ngOnInit").and.callThrough();;
-        expect(ngOnInit).not.toHaveBeenCalled();
-
         fixture.detectChanges();
-
-        expect(ngOnInit).toHaveBeenCalledTimes(1);
+        expect(component['userNameSub']).toBeDefined(); // This is inspecting a private field (not very clean)
     }));
     it('should subscribe to three observable on init', async(() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true};

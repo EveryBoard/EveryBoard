@@ -1,10 +1,13 @@
 import { AngularFireAuth } from '@angular/fire/auth';
-import * as firebase from 'firebase';
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { PIJoueur } from '../../domain/iuser';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
 import { environment } from 'src/environments/environment';
+
+import firebase from "firebase/app";
+import "firebase/auth";
+import "firebase/firestore";
 
 @Injectable()
 export class AuthenticationService implements OnDestroy {
@@ -48,7 +51,7 @@ export class AuthenticationService implements OnDestroy {
         provider.addScope('profile');
         provider.addScope('email');
         const userCredential: firebase.auth.UserCredential =
-            await this.afAuth.auth.signInWithPopup(provider)
+            await this.afAuth.signInWithPopup(provider)
         await this.updateUserDataAndGoToServer(userCredential.user);
         return userCredential;
     }
@@ -77,7 +80,7 @@ export class AuthenticationService implements OnDestroy {
             last_changed: firebase.database.ServerValue.TIMESTAMP,
         };
         await firebase.database().ref('/status/' + uid).set(isOfflineForDatabase);
-        return this.afAuth.auth.signOut();
+        return this.afAuth.signOut();
     }
     public getAuthenticatedUser(): {pseudo: string, verified: boolean} {
         return this.joueurBS.getValue();

@@ -67,12 +67,6 @@ describe('LocalGameWrapperComponent', () => {
     it('should create', async(() => {
         AuthenticationServiceMock.USER = { pseudo: null, verified: null };
         expect(component).toBeTruthy();
-        const ngAfterViewInit = spyOn(component, "ngAfterViewInit").and.callThrough();
-        expect(ngAfterViewInit).not.toHaveBeenCalled();
-
-        fixture.detectChanges();
-
-        expect(ngAfterViewInit).toHaveBeenCalledTimes(1);
     }));
     it('should have game included after view init', fakeAsync(() => {
         AuthenticationServiceMock.USER = { pseudo: null, verified: null };
