@@ -8,4 +8,4 @@ id_rsa
 VERSION=$(git rev-parse HEAD | cut -c1-8)
 sed -i "s/Pantheon's Game/Pantheon's Game ($VERSION)"
 
-rsync -avz dist/ $USER@$HOST:$PATH
+rsync -avz dist/ $USER@$HOST:$DEPLOY_PATH
