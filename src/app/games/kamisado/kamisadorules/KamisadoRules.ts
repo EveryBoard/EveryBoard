@@ -16,7 +16,7 @@ abstract class KamisadoNode extends MNode<KamisadoRules, KamisadoMove, KamisadoP
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
     constructor(initialSlice: KamisadoPartSlice) {
-        super(true);
+        super();
         this.node = MNode.getFirstNode(initialSlice, this);
         this
     }

@@ -14,7 +14,7 @@ abstract class DvonnNode extends MNode<DvonnRules, DvonnMove, DvonnPartSlice, Le
 
 export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus> {
     constructor(initialSlice: DvonnPartSlice) {
-        super(false);
+        super();
         this.node = MNode.getFirstNode(initialSlice, this);
         this
     }

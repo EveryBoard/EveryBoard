@@ -6,6 +6,7 @@ import {QuartoEnum} from '../../../games/quarto/QuartoEnum';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-quarto',
@@ -19,11 +20,13 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public lastMove: Coord = new Coord(-1, -1);
 
-    public pieceInHand: number = 0; // the piece that the current user must place on the board
+    public pieceInHand: QuartoEnum = this.rules.node.gamePartSlice.pieceInHand;
+    // the piece that the current user must place on the board
 
-    public pieceToGive: number = -1; // the piece that the user want to give to the opponent
+    public pieceToGive: QuartoEnum = QuartoEnum.UNOCCUPIED; // the piece that the user want to give to the opponent
 
     public updateBoard() {
+        console.log('board updated');
         const slice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
@@ -47,7 +50,8 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     }
     // creating method for Quarto
 
-    public chooseCoord(x: number, y: number): boolean {
+    public async chooseCoord(x: number, y: number): Promise<boolean> {
+        console.log("choose coord (" + x + ", " + y + ")")
         // called when the user click on the quarto board
 
         this.hideLastMove(); // now the user tried to choose something
@@ -59,11 +63,11 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             if (this.rules.node.gamePartSlice.turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
-                return this.suggestMove(new QuartoMove(x, y, QuartoEnum.UNOCCUPIED));
+                return await this.suggestMove(new QuartoMove(x, y, QuartoEnum.UNOCCUPIED));
             }
             if (this.pieceToGive !== -1) {
                 // the user has already chosen his piece before his coord
-                return this.suggestMove(new QuartoMove(x, y, this.pieceToGive));
+                return await this.suggestMove(new QuartoMove(x, y, this.pieceToGive));
             }
             return true; // the user has just chosen his coord
         }
@@ -71,7 +75,8 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         this.cancelMove();
         return false;
     }
-    public choosePiece(givenPiece: number): boolean {
+    public async choosePiece(givenPiece: number): Promise<boolean> {
+        console.log("choose piece " + givenPiece)
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
@@ -80,7 +85,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             if (this.chosen.x !== -1) {
                 // the user has chosen the coord before the piece
                 const chosenMove = new QuartoMove(this.chosen.x, this.chosen.y, this.pieceToGive);
-                return this.suggestMove(chosenMove);
+                return await this.suggestMove(chosenMove);
             }
             return true; // the user has just chosen his piece
         }
@@ -109,9 +114,10 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     }
     // creating method for OnlineQuarto
 
-    public suggestMove(chosenMove: QuartoMove): boolean {
-        if (this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null)) {
+    public async suggestMove(chosenMove: QuartoMove): Promise<boolean> {
+        if (await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null)) {
             this.chosen = new Coord(-1, -1);
+            console.log("Move was legal");
             return true;
         } else {
             this.cancelMove();

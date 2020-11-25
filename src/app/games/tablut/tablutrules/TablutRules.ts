@@ -521,7 +521,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return scoreOne - scoreZero; // TODO : countInvader vs Defenders
     }
     constructor() {
-        super(false);
+        super();
         this.node = MNode.getFirstNode(
             new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true),
             this

@@ -60,6 +60,9 @@ describe('ReversiRules', () => {
         ];
         const slice: ReversiPartSlice = new ReversiPartSlice(board, 1);
         rules.node = new MNode(null, null, slice, 0);
+        const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
+        expect(moves.size()).toBe(1);
+        expect(moves.getByIndex(0).key).toBe(ReversiMove.PASS);
         expect(rules.choose(ReversiMove.PASS)).toBeTruthy();
     });
 });

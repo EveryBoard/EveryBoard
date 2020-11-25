@@ -45,7 +45,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         return (owner[0] === owner[1]) && (owner[1] === owner[2]);
     }
     constructor() {
-        super(false);
+        super();
         this.node = MNode.getFirstNode(
             EncapsulePartSlice.getStartingSlice(),
             this);

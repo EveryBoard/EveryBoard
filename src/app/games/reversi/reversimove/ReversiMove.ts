@@ -2,17 +2,14 @@ import { MoveCoord } from "src/app/jscaip/MoveCoord";
 
 export class ReversiMove extends MoveCoord {
 
-    public static readonly PASS: ReversiMove = new ReversiMove(-1, 1); // TODO: make correctly encodable, with same rules
+    public static readonly PASS: ReversiMove = new ReversiMove(-1, -1);
 
-    public static readonly PASS_NUMBER: number = -1; // TODO: make correctly encodable, with same rules
+    public static readonly PASS_NUMBER: number = ReversiMove.PASS.encode();
 
     public static encode(move: ReversiMove): number {
         return (move.coord.y*8) + move.coord.x;
     }
     public static decode(encodedMove: number): ReversiMove {
-        if (encodedMove === ReversiMove.PASS_NUMBER) {
-            return ReversiMove.PASS;
-        }
         const x = encodedMove % 8; // TODO: vérifier ici le cas où ce sera pas un plateau de taille standard 8x8
         const y = (encodedMove - x) / 8;
         return new ReversiMove(x, y);

@@ -414,7 +414,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     // instance methods
 
     constructor() {
-        super(false);
+        super();
         this.node = MNode.getFirstNode(
             new P4PartSlice(P4PartSlice.getStartingBoard(), 0),
             this

@@ -7,11 +7,14 @@ describe('ReversiMove', () => {
 
     it('ReversiMove.encode and ReversiMove.decode should be reversible', () => {
         const rules: ReversiRules = new ReversiRules();
-        const firstTurnMoves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
-        for (let i = 0; i < firstTurnMoves.size(); i++) {
-            const move: ReversiMove = firstTurnMoves.getByIndex(i).key;
+        const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
+        moves.put(ReversiMove.PASS, new ReversiPartSlice([], 0));
+        for (let i = 0; i < moves.size(); i++) {
+            const move: ReversiMove = moves.getByIndex(i).key;
             const encodedMove: number = move.encode();
             const decodedMove: ReversiMove = ReversiMove.decode(encodedMove);
+            const reEncodedMove: number = decodedMove.encode();
+            expect(reEncodedMove).toEqual(encodedMove);
             expect(decodedMove).toEqual(move);
         }
     });

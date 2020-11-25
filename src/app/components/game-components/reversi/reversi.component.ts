@@ -14,7 +14,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
     public rules: ReversiRules = new ReversiRules();
 
-    public lastMove: Coord = new Coord(-1, -1);
+    public lastMove: Coord = new Coord(-2, -2);
 
     public canPass: boolean = false;
 
@@ -43,8 +43,10 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
         this.board = slice.getCopiedBoard();
 
-        if (moveCoord) this.lastMove = moveCoord.coord;
-        else this.lastMove = null;
+        if (moveCoord)
+            this.lastMove = moveCoord.coord;
+        else
+            this.lastMove = new Coord(-2, -2);
 
         this.scores = slice.countScore();
         this.canPass = ReversiRules.playerCanOnlyPass(slice);

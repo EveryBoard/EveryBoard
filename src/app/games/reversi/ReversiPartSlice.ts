@@ -17,10 +17,6 @@ export class ReversiPartSlice extends GamePartSlice {
         board[4][4] = Player.ZERO.value;
         board[3][4] = Player.ONE.value;
         board[4][3] = Player.ONE.value;
-        /*board[0][0] = Player.ZERO.value;
-        board[0][1] = Player.ONE.value;
-        board[7][0] = Player.ZERO.value;
-        board[7][1] = Player.ONE.value;*/ // TODO to test "must pass"
 
         return board;
     }

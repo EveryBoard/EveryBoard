@@ -4,16 +4,15 @@ import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class QuartoPartSlice extends GamePartSlice {
 
-    // private QuartoEnum[] pawns; enlevé pour optimisation mémoire
-
-    readonly pieceInHand: number; // the piece that the previous player gave you to put
-
-    constructor(b: number[][], turn: number, pieceInHand: number) {
+    constructor(b: number[][], turn: number, public readonly pieceInHand: number) {
         super(b, turn);
-        this.pieceInHand = pieceInHand;
     }
     public static getStartingBoard(): number[][] {
         return ArrayUtils.createBiArray(4, 4, QuartoEnum.UNOCCUPIED);
+        // return [[QuartoEnum.AABB, QuartoEnum.UNOCCUPIED, QuartoEnum.ABBA, QuartoEnum.BBAA],
+        //        [QuartoEnum.BBAB,       QuartoEnum.BAAA, QuartoEnum.BBBA, QuartoEnum.ABBB],
+        //        [QuartoEnum.BABA,       QuartoEnum.BBBB, QuartoEnum.ABAA, QuartoEnum.AABA],
+        //        [QuartoEnum.AAAA,       QuartoEnum.ABAB, QuartoEnum.BABB, QuartoEnum.BAAB]];
     }
     public static getFullPawnsList(): Array<QuartoEnum> {
         const all: QuartoEnum[] = QuartoEnum.values();

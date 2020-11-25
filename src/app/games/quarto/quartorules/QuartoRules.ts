@@ -159,6 +159,20 @@ abstract class QuartoNode extends MNode<QuartoRules, QuartoMove, QuartoPartSlice
 
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStatus> {
 
+    constructor() {
+        super();
+        this.setInitialBoard();
+    }
+    public setInitialBoard() {
+        if (this.node == null) {
+            this.node = MNode.getFirstNode(
+                new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA), // TODO: make generic
+                this);
+        } else {
+            this.node = this.node.getInitialNode();
+        }
+    }
+
     public applyLegalMove(move: QuartoMove, slice: QuartoPartSlice, status: LegalityStatus): { resultingMove: QuartoMove; resultingSlice: QuartoPartSlice; } {
         let newBoard: number[][] = slice.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = slice.pieceInHand;
@@ -241,26 +255,9 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     }
     // Overrides :
 
-    constructor() {
-        super(true);
-        this.node = MNode.getFirstNode(
-            new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA),
-            // TODO: move in PartSlice.getStartingSlice
-            this
-        );
-    }
     public isLegal(move: QuartoMove): LegalityStatus {
         const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice;
         return {legal: QuartoRules.isLegal(move, quartoPartSlice) === QuartoRules.VALID_MOVE};
-    }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA), // TODO: make generic
-                this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
     public getListMoves(n: QuartoNode): MGPMap<QuartoMove, QuartoPartSlice> {
         const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = new MGPMap<QuartoMove, QuartoPartSlice>();

@@ -14,7 +14,7 @@ export class PylosNode extends MNode<Rules<PylosMove, PylosPartSlice, LegalitySt
 export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus> {
 
     public constructor() {
-        super(true);
+        super();
         this.setInitialBoard(); // TODO: generalize Rules constructor like this
     }
     public setInitialBoard(): void {

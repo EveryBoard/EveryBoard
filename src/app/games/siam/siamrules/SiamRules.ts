@@ -21,7 +21,7 @@ export class SiamRules extends _SiamRules {
     private static readonly ILLEGAL: SiamLegalityStatus = {legal: false, resultingBoard: null};
 
     constructor() {
-        super(true); // TODO: ALL RULES ARE NOW PEARED
+        super();
         this.setInitialBoard(); // TODO: generalize Rules constructor like this
     }
     public setInitialBoard(): void {

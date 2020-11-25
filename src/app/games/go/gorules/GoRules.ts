@@ -16,7 +16,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
     public static VERBOSE: boolean = false;
 
     constructor() {
-        super(true);
+        super();
         this.node = MNode.getFirstNode(
             new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING),
             this

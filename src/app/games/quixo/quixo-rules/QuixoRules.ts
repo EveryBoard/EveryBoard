@@ -13,7 +13,7 @@ export abstract class QuixoNode extends MNode<Rules<QuixoMove, QuixoPartSlice, L
 export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus> {
 
     public constructor() {
-        super(true); // TODO: ALL RULES ARE NOW PEARED
+        super();
         this.setInitialBoard(); // TODO: generalize Rules constructor like this
     }
     public setInitialBoard(): void {

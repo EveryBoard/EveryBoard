@@ -13,6 +13,9 @@ import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { QuartoRules } from 'src/app/games/quarto/quartorules/QuartoRules';
 import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
 import { By } from '@angular/platform-browser';
+import { QuartoEnum } from 'src/app/games/quarto/QuartoEnum';
+import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
+import { MNode } from 'src/app/jscaip/MNode';
 
 const activatedRouteStub = {
     snapshot: {
@@ -86,6 +89,22 @@ describe('QuartoComponent', () => {
         const currentMove: QuartoMove = listMoves[0];
 
         expect(await doMove(currentMove)).toBeTruthy("Should work");
+    }));
+    it('should allow to make last move', fakeAsync(async() => {
+        const board: number[][] = [
+            [QuartoEnum.AABB, QuartoEnum.UNOCCUPIED, QuartoEnum.ABBA, QuartoEnum.BBAA],
+            [QuartoEnum.BBAB,       QuartoEnum.BAAA, QuartoEnum.BBBA, QuartoEnum.ABBB],
+            [QuartoEnum.BABA,       QuartoEnum.BBBB, QuartoEnum.ABAA, QuartoEnum.AABA],
+            [QuartoEnum.AAAA,       QuartoEnum.ABAB, QuartoEnum.BABB, QuartoEnum.BAAB],
+        ];
+        const pieceInHand: number = QuartoEnum.AAAB;
+        const slice: QuartoPartSlice = new QuartoPartSlice(board, 15, pieceInHand);
+        gameComponent.rules.node = new MNode(null, null, slice, 0);
+
+        spyOn(gameComponent, 'chooseMove').and.callThrough();
+        expect(await clickElement('#chooseCoord_1_0')).toBeTruthy('Should be able to click on final coord');
+        expect(gameComponent.chooseMove).toHaveBeenCalledWith(new QuartoMove(1, 0, QuartoEnum.UNOCCUPIED), slice, null, null);
+        expect(gameComponent.rules.node.gamePartSlice.turn).toBe(16);
     }));
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(QuartoMove, "decode").and.callThrough();

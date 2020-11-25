@@ -9,7 +9,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
     public static display(verbose: boolean, message: any) {
         if (verbose) console.log(message);
     }
-    public constructor(public readonly pruned: boolean) {}
+    public constructor() {}
 
     public node: MNode<Rules<M, S, L>, M, S, L>; // TODO: check that this should not made static
     /* The data that represent the status of the game at the current moment, including:
@@ -37,17 +37,15 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          */
         const LOCAL_VERBOSE: boolean = false;
         Rules.display(LOCAL_VERBOSE, "Rules.choose: " + move.toString() + " was proposed");
-        if ((this.pruned === false) && this.node.hasMoves()) { // if calculation has already been done by the AI
+        if (this.node.hasMoves()) { // if calculation has already been done by the AI
             Rules.display(LOCAL_VERBOSE, "Rules.choose: current node has moves");
             let choix: MNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing it twice
-            if (choix === null) {
-                Rules.display(LOCAL_VERBOSE, "Rules.choose: but this proposed move is not found in the list, so it's illegal");
-                return false;
-            } else {
+            if (choix !== null) {
                 Rules.display(LOCAL_VERBOSE, "Rules.choose: and this proposed move is found in the list, so it is legal");
                 this.node = choix; // qui devient le plateau actuel
                 return true;
             }
+            // TODO: decide if usefull part
         }
         Rules.display(LOCAL_VERBOSE, "Rules.choose: current node has no moves or is pruned, let's verify ourselves");
         const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
