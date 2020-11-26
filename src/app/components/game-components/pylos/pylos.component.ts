@@ -29,6 +29,8 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
     public lastFirstCapture: PylosCoord = null;
     public lastSecondCapture: PylosCoord = null;
 
+    public lastMove: PylosMove = null;
+
     public getLevelRange(z: number): number[] {
         switch (z) {
             case 0: return [0, 1, 2, 3];
@@ -143,12 +145,12 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
     }
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;
-        const lastMove: PylosMove = this.rules.node.move;
-        if (lastMove) {
-            this.lastLandingCoord = lastMove.landingCoord;
-            this.lastStartingCoord = lastMove.startingCoord.getOrNull();
-            this.lastFirstCapture = lastMove.firstCapture.getOrNull();
-            this.lastSecondCapture = lastMove.secondCapture.getOrNull();
+        this.lastMove = this.rules.node.move;
+        if (this.lastMove) {
+            this.lastLandingCoord = this.lastMove.landingCoord;
+            this.lastStartingCoord = this.lastMove.startingCoord.getOrNull();
+            this.lastFirstCapture = this.lastMove.firstCapture.getOrNull();
+            this.lastSecondCapture = this.lastMove.secondCapture.getOrNull();
         } else{
             this.lastLandingCoord = null;
             this.lastStartingCoord = null;

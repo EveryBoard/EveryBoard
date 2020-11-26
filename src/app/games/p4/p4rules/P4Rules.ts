@@ -16,7 +16,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     public applyLegalMove(move: MoveX, slice: P4PartSlice, status: LegalityStatus): { resultingMove: MoveX; resultingSlice: P4PartSlice; } {
         const x: number = move.x;
         const board: number[][] = slice.getCopiedBoard();
-        const y = P4Rules.getLowestUnoccupiedCase(board, x);
+        const y: number = P4Rules.getLowestUnoccupiedCase(board, x);
 
         const turn: number = slice.turn;
 
@@ -54,8 +54,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
         while (x < 7) {
             // pour chaque colonne
-            y = 0; // on commence en bas
-            while (y !== 6 && currentBoard[y][x] !== Player.NONE.value) {
+            y = 5; // on commence en bas
+            while (y !== -1 && currentBoard[y][x] !== Player.NONE.value) {
                 // tant qu'on a pas atteint le haut ni une case inoccupée
 
                 tmpScore = P4Rules.getCaseScore(currentBoard, new Coord(x, y));
@@ -66,16 +66,16 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
                     // TODO vérifier que PRE_VICTORY n'écrase pas les VICTORY dans ce cas ci
                 }
                 score += tmpScore;
-                y++; // et on remonte
+                y--; // et on remonte
             }
             x++;
         }
         return score;
     }
     public static getLowestUnoccupiedCase(board: number[][], x: number): number {
-        let y = 6;
-        while (y > 0 && board[y - 1][x] === Player.NONE.value) {
-            y--;
+        let y: number = 0;
+        while (y < 5 && board[y + 1][x] === Player.NONE.value) {
+            y++;
         }
         return y;
     }
@@ -425,8 +425,14 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     public isLegal(move: MoveX, slice: P4PartSlice): LegalityStatus {
         const ILLEGAL: LegalityStatus = {legal: false};
         Rules.display(P4Rules.VERBOSE, "Is " + move.toString() + " legal on " + slice.board);
-        if (move.x < 0 || move.x > 6) return ILLEGAL;
-        if (slice.getBoardByXY(move.x, 5) !== Player.NONE.value) return ILLEGAL;
+        if (move.x < 0 || move.x > 6) {
+            console.log('sang d\'cul putain');
+            return ILLEGAL;
+        }
+        if (slice.getBoardByXY(move.x, 0) !== Player.NONE.value) {
+            console.log({ slice, move, player: Player.NONE.value })
+            return ILLEGAL;
+        }
         return {legal: true};
     }
     public setInitialBoard(): void {

@@ -29,17 +29,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
 
     public static VERBOSE: boolean = false;
 
-    @ViewChild('partCreation', {static: false})
+    @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
 
-    @ViewChild('chatComponent', {static: false})
+    @ViewChild('chatComponent')
     public chatComponent: ChatComponent;
 
     // GameWrapping's Template
-    @ViewChild('chronoZeroGlobal', {static: false}) public chronoZeroGlobal: CountDownComponent;
-    @ViewChild('chronoOneGlobal', {static: false}) public chronoOneGlobal: CountDownComponent;
-    @ViewChild('chronoZeroLocal', {static: false}) public chronoZeroLocal: CountDownComponent;
-    @ViewChild('chronoOneLocal', {static: false}) public chronoOneLocal: CountDownComponent;
+    @ViewChild('chronoZeroGlobal') public chronoZeroGlobal: CountDownComponent;
+    @ViewChild('chronoOneGlobal') public chronoOneGlobal: CountDownComponent;
+    @ViewChild('chronoZeroLocal') public chronoZeroLocal: CountDownComponent;
+    @ViewChild('chronoOneLocal') public chronoOneLocal: CountDownComponent;
 
     // link between GameWrapping's template and remote opponent
     public currentPart: Part;

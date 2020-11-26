@@ -26,7 +26,7 @@ export class Part {
     public constructor(
         private readonly typeGame: string,
         private readonly playerZero: string,
-        private readonly turn: number,
+        public readonly turn: number,
         private readonly listMoves: number[],
         private readonly result: IMGPResult,
         private readonly playerOne?: string,

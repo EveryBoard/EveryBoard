@@ -1,0 +1,9 @@
+export const firebaseConfig = {
+	apiKey: 'invalid',
+	authDomain: 'invalid.firebaseapp.com',
+	databaseURL: 'https://invalid.firebaseio.com',
+	projectId: 'invalid',
+	storageBucket: 'invalid.appspot.com',
+	messagingSenderId: 'invalid'
+};
+

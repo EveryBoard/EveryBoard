@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
@@ -51,7 +51,7 @@ describe('LocalGameWrapperComponent', () => {
     beforeAll(() => {
         LocalGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || LocalGameWrapperComponent.VERBOSE;
     });
-    beforeEach(async(async() => {
+    beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
@@ -69,15 +69,9 @@ describe('LocalGameWrapperComponent', () => {
         debugElement = fixture.debugElement;
         component = fixture.debugElement.componentInstance;
     }));
-    it('should create', async(() => {
+    it('should create', fakeAsync(() => {
         AuthenticationServiceMock.USER = { pseudo: null, verified: null };
         expect(component).toBeTruthy();
-        const ngAfterViewInit = spyOn(component, "ngAfterViewInit").and.callThrough();
-        expect(ngAfterViewInit).not.toHaveBeenCalled();
-
-        fixture.detectChanges();
-
-        expect(ngAfterViewInit).toHaveBeenCalledTimes(1);
     }));
     it('should have game included after view init', fakeAsync(() => {
         AuthenticationServiceMock.USER = { pseudo: null, verified: null };
@@ -126,23 +120,26 @@ describe('LocalGameWrapperComponent', () => {
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
         expect(component.gameComponent.updateBoard).toHaveBeenCalledTimes(1);
     }));
-    // it('should show match nul', fakeAsync(async() => {
-    //     AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
-    //     fixture.detectChanges();
-    //     tick(1);
+    it('should show match nul', fakeAsync(async() => {
+        AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
+        fixture.detectChanges();
+        tick(1);
 
-    //     const board: number[][] = [
-    //         [X, X, X, _, X, X, X],
-    //         [O, O, O, X, O, O, O],
-    //         [X, X, X, O, X, X, X],
-    //         [O, O, O, X, O, O, O],
-    //         [X, X, X, O, X, X, X],
-    //         [O, O, O, X, O, O, O],
-    //     ];
-    //     const slice: P4PartSlice = new P4PartSlice(board, 0);
-    //     component.gameComponent.rules.node = new MNode(null, null, slice, 0);
+        const board: number[][] = [
+            [X, X, X, _, X, X, X],
+            [O, O, O, X, O, O, O],
+            [X, X, X, O, X, X, X],
+            [O, O, O, X, O, O, O],
+            [X, X, X, O, X, X, X],
+            [O, O, O, X, O, O, O],
+        ];
+        const slice: P4PartSlice = new P4PartSlice(board, 0);
+        component.gameComponent.rules.node = new MNode(null, null, slice, 0);
+        fixture.detectChanges();
 
-    //     expect(await component.gameComponent.chooseMove(MoveX.get(3), slice, null, null)).toBeTruthy("Last move should be legal");
-
-    // }));
+        expect(await component.gameComponent.chooseMove(MoveX.get(3), slice, null, null)).toBeTruthy("Last move should be legal");
+        fixture.detectChanges();
+        const drawIndicator: DebugElement = debugElement.query(By.css("#draw"));
+        expect(drawIndicator).toBeTruthy("Draw indicator should be present");
+    }));
 });

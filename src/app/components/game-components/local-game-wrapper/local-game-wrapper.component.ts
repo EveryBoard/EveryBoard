@@ -1,14 +1,10 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
          ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { GameWrapper } from 'src/app/components/game-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/user/UserService';
-import { AbstractGameComponent } from '../AbstractGameComponent';
 import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
@@ -68,6 +64,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             if (boardValue !== 0) {
                 const intWinner: number = boardValue < 0 ? 1 : 2;
                 this.winner = "Joueur " + intWinner + "(" + this.players[intWinner - 1] + ")"
+            } else {
+                console.log("There was no winner, du cu");
             }
         }
     }

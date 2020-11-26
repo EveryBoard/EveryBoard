@@ -77,22 +77,24 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
         /* the score status is VICTORY if the score is minValue or MaxValue,
          * because it's how we encode the boardValue if there's a victory
          */
+        const LOCAL_VERBOSE: boolean = false;
         if (score === Number.MAX_SAFE_INTEGER) {
-            Rules.display(MNode.VERBOSE, 'VICTORY');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'VICTORY');
             return SCORE.VICTORY;
         }
         if (score === Number.MIN_SAFE_INTEGER) {
-            Rules.display(MNode.VERBOSE, 'VICTORY');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'VICTORY');
             return SCORE.VICTORY;
         }
         if (score === Number.MIN_SAFE_INTEGER + 1) {
-            Rules.display(MNode.VERBOSE, 'PRE_VICTORY_MIN');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'PRE_VICTORY_MIN');
             return SCORE.PRE_VICTORY;
         }
         if (score === Number.MAX_SAFE_INTEGER - 1) {
-            Rules.display(MNode.VERBOSE, 'PRE_VICTORY_MAX');
+            Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'PRE_VICTORY_MAX');
             return SCORE.PRE_VICTORY;
         }
+        Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
         return SCORE.DEFAULT;
     }
     public static getFirstNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> (initialBoard: S, gameRuler: R) {
@@ -370,7 +372,6 @@ export class MNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartS
     }
     public isEndGame(): boolean {
         const LOCAL_VERBOSE: boolean = false;
-
         const scoreStatus: SCORE = MNode.getScoreStatus(this.ownValue);
         Rules.display(MNode.VERBOSE || LOCAL_VERBOSE, '\nscoreStatus === ' + scoreStatus + '; ');
 

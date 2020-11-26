@@ -47,7 +47,10 @@
             </div>
             <div *ngIf="endGame" class="inforow">
                 <h4 *ngIf="winner">{{ winner }} as gagné</h4>
-                <h4 *ngIf="winner == null">Match nul</h4>
+                <h4 id="draw"
+                    *ngIf="winner == null">
+                    Match nul
+                </h4>
             </div>
             <div *ngIf="endGame === false"
                  class="inforow">
