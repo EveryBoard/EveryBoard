@@ -1,4 +1,4 @@
-import { ComponentFactory, ComponentFactoryResolver, ComponentRef, Injectable, Type, ViewChild } from '@angular/core';
+import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Injectable, Type, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractGameComponent } from './AbstractGameComponent';
 import { GameIncluderComponent } from './game-includer/game-includer.component';
@@ -25,7 +25,7 @@ import { PylosComponent } from './pylos/pylos.component';
 import { QuixoComponent } from './quixo/quixo.component';
 import { Rules } from 'src/app/jscaip/Rules';
 
-@Injectable()
+@Component({template: ''})
 export abstract class GameWrapper {
 
     public static VERBOSE: boolean = false;
