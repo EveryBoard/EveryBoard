@@ -9,6 +9,8 @@ import { DvonnRules } from 'src/app/games/dvonn/dvonnrules/DvonnRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-dvonn',
@@ -24,6 +26,12 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
     public canPass: boolean = false;
 
 
+    constructor(public snackBar: MatSnackBar) {
+        super();
+    }
+    public message(msg: string) {
+        this.snackBar.open(msg);
+    }
     public updateBoard() {
         const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
@@ -47,25 +55,26 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
             success = await this.chooseDestination(x, y);
         }
         if (!success) {
+            this.message('Cannot choose this piece!');
             this.chosen = null;
         }
         return success;
     }
 
 
-    public choosePiece(x: number, y: number): boolean {
+    public choosePiece(x: number, y: number): MGPValidation<null> {
         if (this.rules.node.isEndGame()) {
-            return false;
+            return MGPValidation.error("Cannot choose a piece at the end of the game");
         }
         const coord = new Coord(x, y)
         if (!DvonnBoard.isOnBoard(coord)) {
-            return false
+            return MGPValidation.error("Cannot choose a piece outside of the board");
         }
         if (!DvonnBoard.getStackAt(this.board, coord).belongsTo(this.rules.node.gamePartSlice.getCurrentPlayer())) {
-            return false;
+            return MGPValidation.error("Cannot choose a piece that does not belong to you");
         }
         this.chosen = coord;
-        return true;
+        return MGPValidation.success(null);
     }
 
     private async chooseDestination(x: number, y: number): Promise<boolean> {
