@@ -50,7 +50,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     // creating method for Quarto
 
     public async chooseCoord(x: number, y: number): Promise<boolean> {
-        console.log("choose coord (" + x + ", " + y + ")")
         // called when the user click on the quarto board
 
         this.hideLastMove(); // now the user tried to choose something
@@ -75,7 +74,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         return false;
     }
     public async choosePiece(givenPiece: number): Promise<boolean> {
-        console.log("choose piece " + givenPiece)
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
@@ -116,7 +114,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public async suggestMove(chosenMove: QuartoMove): Promise<boolean> {
         if (await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null)) {
             this.chosen = new Coord(-1, -1);
-            console.log("Move was legal");
             return true;
         } else {
             this.cancelMove();

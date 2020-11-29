@@ -5,7 +5,7 @@ import { SiamPartSlice } from "../SiamPartSlice";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { SiamPiece } from "../siampiece/SiamPiece";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
 describe('SiamMove', () => {
@@ -25,7 +25,7 @@ describe('SiamMove', () => {
         ];
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonale.DOWN), Orthogonale.UP);
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const node: SiamNode = new MNode(null, move, slice, 0);
+        const node: SiamNode = new MGPNode(null, move, slice, 0);
         const rules: SiamRules = new SiamRules();
         const moves: MGPMap<SiamMove, SiamPartSlice> = rules.getListMoves(node);
         for (let i = 0; i < moves.size(); i++) {

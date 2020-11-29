@@ -1,5 +1,5 @@
 import {Rules} from '../../../jscaip/Rules';
-import {MNode} from '../../../jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import {Coord} from '../../../jscaip/coord/Coord';
 import {GoPartSlice, Phase, GoPiece} from '../GoPartSlice';
 import {Direction, Orthogonale} from 'src/app/jscaip/DIRECTION';
@@ -9,7 +9,7 @@ import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { GroupDatas } from '../groupdatas/GroupDatas';
 
-abstract class GoNode extends MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
+abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
 
 export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
@@ -17,7 +17,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
     constructor() {
         super();
-        this.node = MNode.getFirstNode(
+        this.node = MGPNode.getFirstNode(
             new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING),
             this
         );
@@ -406,7 +406,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
     }
     public setInitialBoard() {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING), this);
+            this.node = MGPNode.getFirstNode(new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING), this);
         } else {
             this.node = this.node.getInitialNode();
         }

@@ -2,13 +2,13 @@ import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { Player } from "src/app/jscaip/Player";
 import { Rules } from "src/app/jscaip/Rules";
 import { QuixoPartSlice } from "../quixo-part-slice/QuixoPartSlice";
 import { QuixoMove } from "../QuixoMove";
 
-export abstract class QuixoNode extends MNode<Rules<QuixoMove, QuixoPartSlice, LegalityStatus>, QuixoMove, QuixoPartSlice, LegalityStatus> {};
+export abstract class QuixoNode extends MGPNode<Rules<QuixoMove, QuixoPartSlice, LegalityStatus>, QuixoMove, QuixoPartSlice, LegalityStatus> {};
 
 export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus> {
 
@@ -18,7 +18,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(
+            this.node = MGPNode.getFirstNode(
                 QuixoPartSlice.getStartingSlice(),
                 this
             );

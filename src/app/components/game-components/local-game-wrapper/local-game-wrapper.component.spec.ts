@@ -14,7 +14,7 @@ import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { UserService } from 'src/app/services/user/UserService';
 import { By } from '@angular/platform-browser';
 import { Player } from 'src/app/jscaip/Player';
-import { MNode } from 'src/app/jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 const activatedRouteStub = {
     snapshot: {
@@ -120,7 +120,7 @@ describe('LocalGameWrapperComponent', () => {
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
         expect(component.gameComponent.updateBoard).toHaveBeenCalledTimes(1);
     }));
-    it('should show match nul', fakeAsync(async() => {
+    it('should show draw', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
         fixture.detectChanges();
         tick(1);
@@ -134,11 +134,9 @@ describe('LocalGameWrapperComponent', () => {
             [O, O, O, X, O, O, O],
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 0);
-        component.gameComponent.rules.node = new MNode(null, null, slice, 0);
-        fixture.detectChanges();
-
+        component.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         expect(await component.gameComponent.chooseMove(MoveX.get(3), slice, null, null)).toBeTruthy("Last move should be legal");
-        fixture.detectChanges();
+        component.cdr.detectChanges();
         const drawIndicator: DebugElement = debugElement.query(By.css("#draw"));
         expect(drawIndicator).toBeTruthy("Draw indicator should be present");
     }));

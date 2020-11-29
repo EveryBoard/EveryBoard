@@ -1,5 +1,5 @@
 import {Rules} from '../../../jscaip/Rules';
-import {MNode} from '../../../jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import {QuartoPartSlice} from '../QuartoPartSlice';
 import {QuartoMove} from '../quartomove/QuartoMove';
 import {QuartoEnum} from '../QuartoEnum';
@@ -155,7 +155,7 @@ class Critere {
             })) + '}';
     }
 }
-abstract class QuartoNode extends MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus> {}
+abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus> {}
 
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStatus> {
 
@@ -165,7 +165,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     }
     public setInitialBoard() {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(
+            this.node = MGPNode.getFirstNode(
                 new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA), // TODO: make generic
                 this);
         } else {
@@ -202,7 +202,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     // c (x, y) est la coordonnées de la première case
     // d (x, y) est la direction de la ligne en question
 
-    public node: MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>;
+    public node: MGPNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>;
     // enum boolean {TRUE, FALSE, NULL}
 
     private static isOccupied(qcase: number): boolean {

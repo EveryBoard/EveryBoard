@@ -1,4 +1,4 @@
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { Player } from "src/app/jscaip/Player";
 import { PylosCoord } from "../pylos-coord/PylosCoord";
 import { PylosMove } from "../pylos-move/PylosMove";
@@ -43,7 +43,7 @@ describe('PylosRules - Minimax:', () => {
         ];
 
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
-        const node: PylosNode = new MNode(null, null, slice, 0);
+        const node: PylosNode = new MGPNode(null, null, slice, 0);
         expect(rules.getListMoves(node).listKeys().length).toBe(31);
     });
 

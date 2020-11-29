@@ -1,4 +1,4 @@
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { DvonnPartSlice } from "../DvonnPartSlice";
 import { DvonnMove } from "../dvonnmove/DvonnMove";
@@ -10,12 +10,12 @@ import { DvonnBoard } from "../DvonnBoard";
 import { Player } from "src/app/jscaip/Player";
 import { DvonnPieceStack } from "../DvonnPieceStack";
 
-abstract class DvonnNode extends MNode<DvonnRules, DvonnMove, DvonnPartSlice, LegalityStatus> { }
+abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnPartSlice, LegalityStatus> { }
 
 export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus> {
     constructor(initialSlice: DvonnPartSlice) {
         super();
-        this.node = MNode.getFirstNode(initialSlice, this);
+        this.node = MGPNode.getFirstNode(initialSlice, this);
         this
     }
     private getFreePieces(slice: DvonnPartSlice): Coord[] {
@@ -173,7 +173,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(DvonnPartSlice.getStartingSlice(), this);
+            this.node = MGPNode.getFirstNode(DvonnPartSlice.getStartingSlice(), this);
         } else {
             this.node = this.node.getInitialNode();
         }

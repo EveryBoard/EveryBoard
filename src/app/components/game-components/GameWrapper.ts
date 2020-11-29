@@ -1,4 +1,4 @@
-import { ComponentFactory, ComponentFactoryResolver, ComponentRef, Injectable, Type, ViewChild } from '@angular/core';
+import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractGameComponent } from './AbstractGameComponent';
 import { GameIncluderComponent } from './game-includer/game-includer.component';
@@ -8,24 +8,25 @@ import { Move } from '../../jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
-import { DvonnComponent } from './dvonn/dvonn.component';
-import { KamisadoComponent } from './kamisado/kamisado.component';
-import { ReversiComponent } from './reversi/reversi.component';
-import { TablutComponent } from './tablut/tablut.component';
-import { QuartoComponent } from './quarto/quarto.component';
-import { P4Component } from './p4/p4.component';
 import { AwaleComponent } from './awale/awale.component';
-import { GoComponent } from './go/go.component';
+import { DvonnComponent } from './dvonn/dvonn.component';
 import { EncapsuleComponent } from './encapsule/encapsule.component';
+import { GoComponent } from './go/go.component';
+import { KamisadoComponent } from './kamisado/kamisado.component';
 import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
-import { SiamComponent } from './siam/siam.component';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { SaharaComponent } from './sahara/sahara.component';
+import { P4Component } from './p4/p4.component';
 import { PylosComponent } from './pylos/pylos.component';
+import { QuartoComponent } from './quarto/quarto.component';
 import { QuixoComponent } from './quixo/quixo.component';
+import { ReversiComponent } from './reversi/reversi.component';
+import { SaharaComponent } from './sahara/sahara.component';
+import { SiamComponent } from './siam/siam.component';
+import { TablutComponent } from './tablut/tablut.component';
+
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { Rules } from 'src/app/jscaip/Rules';
 
-@Injectable()
+@Component({template: ''})
 export abstract class GameWrapper {
 
     public static VERBOSE: boolean = false;
@@ -55,7 +56,7 @@ export abstract class GameWrapper {
         Rules.display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
-        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent: '+(this.gameIncluder!=null));
+        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
 
         switch (compoString) {
             case 'Awale':
@@ -101,7 +102,8 @@ export abstract class GameWrapper {
         this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
     }
     protected createGameComponent() {
-        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent: '+(this.gameIncluder!=null));
+        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
+        Rules.display(GameWrapper.VERBOSE && this.gameIncluder == null, "GameIncluder should be present");
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
         const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>

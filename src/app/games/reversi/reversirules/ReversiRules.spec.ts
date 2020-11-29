@@ -4,7 +4,7 @@ import { ReversiMove } from '../reversimove/ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Player } from 'src/app/jscaip/Player';
-import { MNode } from 'src/app/jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 describe('ReversiRules', () => {
 
@@ -59,7 +59,7 @@ describe('ReversiRules', () => {
             [_, _, _, _, O, _, _, _,],
         ];
         const slice: ReversiPartSlice = new ReversiPartSlice(board, 1);
-        rules.node = new MNode(null, null, slice, 0);
+        rules.node = new MGPNode(null, null, slice, 0);
         const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
         expect(moves.size()).toBe(1);
         expect(moves.getByIndex(0).key).toBe(ReversiMove.PASS);

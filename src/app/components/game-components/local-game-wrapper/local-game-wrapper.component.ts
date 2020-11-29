@@ -19,7 +19,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     public playerZeroValue: string = "0";
     public playerOneValue: string = "0";
     public aiDepth: number = 5;
-    public winner: string;
+    public winner: string = null;
 
     public botTimeOut: number = 1000; // this.aiDepth * 500;
 
@@ -28,12 +28,14 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 router: Router,
                 userService: UserService,
                 authenticationService: AuthenticationService,
-                private cdr: ChangeDetectorRef) {
+                public cdr: ChangeDetectorRef) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         Rules.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper.constructor");
     }
     public ngAfterViewInit() {
+        Rules.display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.ngAfterViewInit')
         setTimeout(() => {
+            Rules.display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.ngAfterViewInit inside timeout')
             this.authenticationService.getJoueurObs().subscribe(user => {
                 this.userName = user.pseudo;
                 if (this.isAI(this.players[0]) === false) this.players[0] = user.pseudo;
@@ -63,9 +65,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             const boardValue: number = this.gameComponent.rules.node.ownValue;
             if (boardValue !== 0) {
                 const intWinner: number = boardValue < 0 ? 1 : 2;
-                this.winner = "Joueur " + intWinner + "(" + this.players[intWinner - 1] + ")"
-            } else {
-                console.log("There was no winner, du cu");
+                this.winner = "Joueur " + intWinner + "(" + this.players[intWinner - 1] + ")";
             }
         }
     }

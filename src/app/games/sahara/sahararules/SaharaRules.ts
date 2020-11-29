@@ -1,7 +1,6 @@
 import { Rules } from "src/app/jscaip/Rules";
-import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { Player } from "src/app/jscaip/Player";
 import { Coord } from "src/app/jscaip/coord/Coord";
@@ -12,7 +11,7 @@ import { TriangularCheckerBoard } from "src/app/jscaip/TriangularCheckerBoard";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
-abstract class SaharaNode extends MNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
+abstract class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
 
 export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStatus> {
 
@@ -134,7 +133,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(
+            this.node = MGPNode.getFirstNode(
                 new SaharaPartSlice(SaharaPartSlice.getStartingBoard(), 0),
                 this
             );

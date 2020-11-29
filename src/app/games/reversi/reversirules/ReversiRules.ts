@@ -1,5 +1,5 @@
 import {Rules} from '../../../jscaip/Rules';
-import {MNode} from '../../../jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import {ReversiPartSlice} from '../ReversiPartSlice';
 import {Coord} from '../../../jscaip/coord/Coord';
 import {Direction} from '../../../jscaip/DIRECTION';
@@ -8,7 +8,7 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 
-abstract class ReversiNode extends MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
+abstract class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
 
 export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
@@ -16,14 +16,14 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
 
     constructor() {
         super();
-        this.node = MNode.getFirstNode(
+        this.node = MGPNode.getFirstNode(
             new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
             this
         );
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(
+            this.node = MGPNode.getFirstNode(
                 new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
                 this
             );

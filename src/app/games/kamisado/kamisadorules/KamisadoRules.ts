@@ -8,16 +8,16 @@ import { KamisadoPiece } from "../KamisadoPiece";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { Player } from "src/app/jscaip/Player";
 import { Rules } from "src/app/jscaip/Rules";
 
-abstract class KamisadoNode extends MNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> { }
+abstract class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> { }
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
     constructor(initialSlice: KamisadoPartSlice) {
         super();
-        this.node = MNode.getFirstNode(initialSlice, this);
+        this.node = MGPNode.getFirstNode(initialSlice, this);
         this
     }
 
@@ -231,7 +231,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(KamisadoPartSlice.getStartingSlice(), this);
+            this.node = MGPNode.getFirstNode(KamisadoPartSlice.getStartingSlice(), this);
         } else {
             this.node = this.node.getInitialNode();
         }

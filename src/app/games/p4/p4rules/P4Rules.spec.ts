@@ -1,10 +1,10 @@
-import {P4Rules} from './P4Rules';
+import {P4Node, P4Rules} from './P4Rules';
 import {MoveX} from '../../../jscaip/MoveX';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Player } from 'src/app/jscaip/Player';
 import { P4PartSlice } from '../P4PartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MNode } from 'src/app/jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 describe('P4Rules', () => {
 
@@ -65,7 +65,7 @@ describe('P4Rules', () => {
             [_, _, _, O, _, _, _],
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 0);
-        rules.node = new MNode(null, null, slice, 0);
+        rules.node = new MGPNode(null, null, slice, 0);
         const move: MoveX = MoveX.get(3);
         expect(rules.choose(move)).toBeTruthy("Move should be legal");
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
@@ -90,7 +90,7 @@ describe('P4Rules', () => {
             [_, _, _, X, _, _, _],
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 1);
-        rules.node = new MNode(null, null, slice, 0);
+        rules.node = new MGPNode(null, null, slice, 0);
         const move: MoveX = MoveX.get(3);
         expect(rules.choose(move)).toBeTruthy("Move should be legal");
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
@@ -115,13 +115,25 @@ describe('P4Rules', () => {
             [X, X, X, O, X, X, X],
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 41);
-        rules.node = new MNode(null, null, slice, 0);
+        rules.node = new MGPNode(null, null, slice, 0);
         const move: MoveX = MoveX.get(3);
-        const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal).toBeTruthy();
-        const resultingSlice: P4PartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        expect(rules.choose(move)).toBeTruthy("Move should be legal");
+        const resultingSlice: P4PartSlice = rules.node.gamePartSlice;
         expect(resultingSlice.board).toEqual(expectedBoard);
-        expect(rules.getBoardValue(move, resultingSlice)).toEqual(0);
-        expect(rules.node.isEndGame()).toBeTruthy();
+        expect(rules.node.isEndGame()).toBeTruthy("Should be endgame");
+        expect(rules.node.ownValue).toBe(0);
+    });
+    it('Should know when a column is full or not', () => {
+        const board: number[][] = [
+            [X, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _],
+            [O, O, X, O, X, O, X],
+        ];
+        const slice: P4PartSlice = new P4PartSlice(board, 12);
+        const node: P4Node = new MGPNode(null, null, slice, 0);
+        expect(rules.getListMoves(node).size()).toBe(6);
     });
 });

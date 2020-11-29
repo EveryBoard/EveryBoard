@@ -1,7 +1,7 @@
 import { Rules } from "src/app/jscaip/Rules";
 import { SiamMove } from "../siammove/SiamMove";
 import { SiamPartSlice } from "../SiamPartSlice";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { SiamPiece } from "../siampiece/SiamPiece";
 import { Player } from "src/app/jscaip/Player";
 import { Coord } from "src/app/jscaip/coord/Coord";
@@ -12,7 +12,7 @@ import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
 abstract class _SiamRules extends Rules<SiamMove, SiamPartSlice, SiamLegalityStatus> {}
 
-export abstract class SiamNode extends MNode<_SiamRules, SiamMove, SiamPartSlice, SiamLegalityStatus> {}
+export abstract class SiamNode extends MGPNode<_SiamRules, SiamMove, SiamPartSlice, SiamLegalityStatus> {}
 
 export class SiamRules extends _SiamRules {
 
@@ -26,7 +26,7 @@ export class SiamRules extends _SiamRules {
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(
+            this.node = MGPNode.getFirstNode(
                 new SiamPartSlice(SiamPartSlice.getStartingBoard(), 0),
                 this
             );

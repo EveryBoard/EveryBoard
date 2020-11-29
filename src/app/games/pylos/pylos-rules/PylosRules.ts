@@ -2,14 +2,14 @@ import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { Player } from "src/app/jscaip/Player";
 import { Rules } from "src/app/jscaip/Rules";
 import { PylosCoord } from "../pylos-coord/PylosCoord";
 import { PylosMove } from "../pylos-move/PylosMove";
 import { PylosPartSlice } from "../pylos-part-slice/PylosPartSlice";
 
-export class PylosNode extends MNode<Rules<PylosMove, PylosPartSlice, LegalityStatus>, PylosMove, PylosPartSlice, LegalityStatus> {}
+export class PylosNode extends MGPNode<Rules<PylosMove, PylosPartSlice, LegalityStatus>, PylosMove, PylosPartSlice, LegalityStatus> {}
 
 export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus> {
 
@@ -19,7 +19,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(
+            this.node = MGPNode.getFirstNode(
                 PylosPartSlice.getStartingSlice(),
                 this
             );

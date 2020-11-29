@@ -1,13 +1,12 @@
 import {Rules} from '../../../jscaip/Rules';
-import {MNode} from '../../../jscaip/MNode';
-import {GamePartSlice} from '../../../jscaip/GamePartSlice';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import {AwalePartSlice} from '../AwalePartSlice';
 import { AwaleMove } from '../awalemove/AwaleMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
-abstract class AwaleNode extends MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
+abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
 export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
@@ -19,7 +18,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
     constructor() {
         super();
-        this.node = MNode.getFirstNode(
+        this.node = MGPNode.getFirstNode(
             new AwalePartSlice(AwalePartSlice.getStartingBoard(), 0, [0, 0]),
             this
         );
@@ -273,7 +272,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     }
     public setInitialBoard() {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(
+            this.node = MGPNode.getFirstNode(
                 new AwalePartSlice(AwalePartSlice.getStartingBoard(), 0, [0, 0]),
                 this
             );

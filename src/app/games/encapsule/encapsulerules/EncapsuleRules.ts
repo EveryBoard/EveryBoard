@@ -1,5 +1,5 @@
 import { Rules } from '../../../jscaip/Rules';
-import { MNode } from 'src/app/jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import { EncapsulePartSlice, EncapsuleCase } from '../EncapsulePartSlice';
 import { EncapsuleMove } from '../encapsulemove/EncapsuleMove';
 import { EncapsulePiece, EncapsuleMapper } from '../EncapsuleEnums';
@@ -10,7 +10,7 @@ import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
-abstract class EncapsuleNode extends MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
+abstract class EncapsuleNode extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
@@ -46,13 +46,13 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
     }
     constructor() {
         super();
-        this.node = MNode.getFirstNode(
+        this.node = MGPNode.getFirstNode(
             EncapsulePartSlice.getStartingSlice(),
             this);
     }
     public setInitialBoard(): void {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(
+            this.node = MGPNode.getFirstNode(
                 EncapsulePartSlice.getStartingSlice(),
                 this);
         } else {

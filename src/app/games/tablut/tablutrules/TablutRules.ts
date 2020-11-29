@@ -1,7 +1,7 @@
 import {Orthogonale, Direction} from '../../../jscaip/DIRECTION';
 import {Rules} from '../../../jscaip/Rules';
 import {Coord} from '../../../jscaip/coord/Coord';
-import {MNode} from '../../../jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import {TablutPartSlice} from '../TablutPartSlice';
 import { TablutMove } from '../tablutmove/TablutMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
@@ -11,7 +11,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { TablutCase } from './TablutCase';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
-abstract class TablutNode extends MNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus> {}
+abstract class TablutNode extends MGPNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus> {}
 
 export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStatus> {
 
@@ -522,7 +522,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
     }
     constructor() {
         super();
-        this.node = MNode.getFirstNode(
+        this.node = MGPNode.getFirstNode(
             new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true),
             this
         );
@@ -619,7 +619,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
     }
     public setInitialBoard() {
         if (this.node == null) {
-            this.node = MNode.getFirstNode(
+            this.node = MGPNode.getFirstNode(
                 new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true), // TODO: rendre ça configurable
                 this
             );
