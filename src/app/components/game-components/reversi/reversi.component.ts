@@ -5,6 +5,7 @@ import { ReversiPartSlice } from '../../../games/reversi/ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/reversimove/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-reversi',
@@ -20,8 +21,8 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
     public scores: number[] = [2, 2];
 
-    constructor() {
-        super();
+    constructor(snackBar: MatSnackBar) {
+        super(snackBar);
         this.showScore = true;
     }
     public async onClick(x: number, y: number): Promise<boolean> {

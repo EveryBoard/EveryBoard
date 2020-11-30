@@ -8,6 +8,7 @@ import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { GroupDatas } from 'src/app/games/go/groupdatas/GroupDatas';
 import { Rules } from 'src/app/jscaip/Rules';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-go',
@@ -29,8 +30,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public canPass: boolean;
 
-    constructor() {
-        super();
+    constructor(public snackBar: MatSnackBar) {
+        super(snackBar);
         this.canPass = true;
         this.showScore = true;
     }

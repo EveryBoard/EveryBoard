@@ -8,7 +8,6 @@ import { DvonnRules } from 'src/app/games/dvonn/dvonnrules/DvonnRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
@@ -24,13 +23,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
     public chosen: Coord = null;
     public canPass: boolean = false;
 
-
-    constructor(public snackBar: MatSnackBar) {
-        super();
-    }
-    public message(msg: string) {
-        this.snackBar.open(msg);
-    }
     public updateBoard() {
         const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
@@ -72,14 +64,18 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
-        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null).then((v: boolean) => {
-            if (v) {
-                return MGPValidation.success();
-            } else {
-                return MGPValidation.error("Cannot choose this move");
-            }
-        });
+        try {
+            const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
+            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null).then((v: boolean) => {
+                if (v) {
+                    return MGPValidation.success();
+                } else {
+                    return MGPValidation.error("Cannot choose this move");
+                }
+            });
+        } catch (e) {
+            return MGPValidation.error("Cannot choose this move: " + e)
+        }
     }
 
     public decodeMove(encodedMove: number): DvonnMove {

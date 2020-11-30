@@ -5,6 +5,7 @@ import {AwaleMove} from 'src/app/games/awale/awalemove/AwaleMove';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-awale-new-component',
@@ -18,8 +19,8 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
     public last: Coord = new Coord(-1, -1);
 
-    constructor() {
-        super();
+    constructor(snackBar: MatSnackBar) {
+        super(snackBar);
         this.showScore = true;
     }
     public async onClick(x: number, y: number): Promise<boolean> {
