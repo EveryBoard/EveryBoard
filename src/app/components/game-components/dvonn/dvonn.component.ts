@@ -1,5 +1,4 @@
 import { AbstractGameComponent } from '../AbstractGameComponent';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
@@ -48,44 +47,39 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
     }
 
     public async onClick(x: number, y: number): Promise<boolean> {
-        let success: boolean;
-        if (this.chosen === null) {
-            success = this.choosePiece(x, y);
-        } else {
-            success = await this.chooseDestination(x, y);
-        }
-        if (!success) {
-            this.message('Cannot choose this piece!');
+        const onError: (err: string) => void = (err: string) => {
+            this.message(err);
             this.chosen = null;
+        };
+        if (this.chosen === null) {
+            this.choosePiece(x, y).ifError(onError).isSuccess();
+        } else {
+            return this.chooseDestination(x, y).then((v) => v.ifError(onError).isSuccess());
         }
-        return success;
     }
 
 
-    public choosePiece(x: number, y: number): MGPValidation<null> {
+    public choosePiece(x: number, y: number): MGPValidation {
         if (this.rules.node.isEndGame()) {
             return MGPValidation.error("Cannot choose a piece at the end of the game");
         }
-        const coord = new Coord(x, y)
-        if (!DvonnBoard.isOnBoard(coord)) {
-            return MGPValidation.error("Cannot choose a piece outside of the board");
-        }
-        if (!DvonnBoard.getStackAt(this.board, coord).belongsTo(this.rules.node.gamePartSlice.getCurrentPlayer())) {
-            return MGPValidation.error("Cannot choose a piece that does not belong to you");
-        }
-        this.chosen = coord;
-        return MGPValidation.success(null);
+        const coord: Coord = new Coord(x, y);
+        return this.rules.isMovablePiece(this.rules.node.gamePartSlice, coord).ifSuccess(() => {
+            this.chosen = coord;
+        });
     }
 
-    private async chooseDestination(x: number, y: number): Promise<boolean> {
+    private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        try {
-            const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-        } catch (e) {
-            return false;
-        }
+        const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
+        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null).then((v: boolean) => {
+            if (v) {
+                return MGPValidation.success();
+            } else {
+                return MGPValidation.error("Cannot choose this move");
+            }
+        });
     }
 
     public decodeMove(encodedMove: number): DvonnMove {

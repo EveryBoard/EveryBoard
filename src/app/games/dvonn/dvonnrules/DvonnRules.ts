@@ -9,6 +9,7 @@ import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { DvonnBoard } from "../DvonnBoard";
 import { Player } from "src/app/jscaip/Player";
 import { DvonnPieceStack } from "../DvonnPieceStack";
+import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 
 abstract class DvonnNode extends MNode<DvonnRules, DvonnMove, DvonnPartSlice, LegalityStatus> { }
 
@@ -43,6 +44,25 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         // and which can move to target (an occupied space at a distance equal to their length)
         return this.getFreePieces(slice).
             filter((c: Coord): boolean => this.pieceHasTarget(slice, c));
+    }
+    public isMovablePiece(slice: DvonnPartSlice, coord: Coord): MGPValidation {
+        if (!DvonnBoard.isOnBoard(coord)) {
+            return MGPValidation.error("Cannot choose a piece outside of the board");
+        }
+        if (!DvonnBoard.getStackAt(slice.board, coord).belongsTo(slice.getCurrentPlayer())) {
+            return MGPValidation.error("Cannot choose a piece that does not belong to the current player");
+        }
+        const stackSize: number = DvonnBoard.getStackAt(slice.board, coord).size();
+        if (stackSize < 1) {
+            return MGPValidation.error("Stack can't move because it is empty");
+        }
+        if (DvonnBoard.numberOfNeighbors(slice.board, coord) >= 6) {
+            return MGPValidation.error("Stack can't move because it has 6 or more neighbors");
+        }
+        if (!this.pieceHasTarget(slice, coord)) {
+            return MGPValidation.error("Stack can't move because it cannot end on a valid target");
+        }
+        return MGPValidation.success();
     }
     public canOnlyPass(slice: DvonnPartSlice): boolean {
         return this.getMovablePieces(slice).length === 0;
