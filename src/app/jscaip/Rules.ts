@@ -3,6 +3,7 @@ import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
 import { MGPMap } from '../collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
+import { display } from '../collectionlib/utils';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 
@@ -36,23 +37,23 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          * return false otherwise
          */
         const LOCAL_VERBOSE: boolean = false;
-        Rules.display(LOCAL_VERBOSE, "Rules.choose: " + move.toString() + " was proposed");
+        display(LOCAL_VERBOSE, "Rules.choose: " + move.toString() + " was proposed");
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
-            Rules.display(LOCAL_VERBOSE, "Rules.choose: current node has moves");
+            display(LOCAL_VERBOSE, "Rules.choose: current node has moves");
             let choix: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing it twice
             if (choix !== null) {
-                Rules.display(LOCAL_VERBOSE, "Rules.choose: and this proposed move is found in the list, so it is legal");
+                display(LOCAL_VERBOSE, "Rules.choose: and this proposed move is found in the list, so it is legal");
                 this.node = choix; // qui devient le plateau actuel
                 return true;
             }
             // TODO: decide if usefull part
         }
-        Rules.display(LOCAL_VERBOSE, "Rules.choose: current node has no moves or is pruned, let's verify ourselves");
+        display(LOCAL_VERBOSE, "Rules.choose: current node has no moves or is pruned, let's verify ourselves");
         const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
         if (!status.legal) {
-            Rules.display(LOCAL_VERBOSE, "Rules.choose: Move is illegal");
+            display(LOCAL_VERBOSE, "Rules.choose: Move is illegal");
             return false;
-        } else Rules.display(LOCAL_VERBOSE, "Rules.choose: Move is legal, let's apply it");
+        } else display(LOCAL_VERBOSE, "Rules.choose: Move is legal, let's apply it");
 
         const result: {resultingMove: Move, resultingSlice: GamePartSlice} = MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
         const boardValue: number = MGPNode.ruler.getBoardValue(result.resultingMove, result.resultingSlice);

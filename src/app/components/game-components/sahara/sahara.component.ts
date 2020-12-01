@@ -6,6 +6,7 @@ import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaRules } from 'src/app/games/sahara/sahararules/SaharaRules';
 import { Rules } from 'src/app/jscaip/Rules';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-sahara',
@@ -88,18 +89,18 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
     }
     public async onClick(x: number, y: number) {
         const clickedCoord: Coord = new Coord(x, y);
-        Rules.display(SaharaComponent.VERBOSE, "Clicked on "+clickedCoord.toString());
+        display(SaharaComponent.VERBOSE, "Clicked on "+clickedCoord.toString());
         if (-1 < this.chosenCoord.x) {
             try {
                 const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
                 const moveResult: boolean = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
                 if (moveResult === true) {
-                    Rules.display(SaharaComponent.VERBOSE, "Move is legal");
+                    display(SaharaComponent.VERBOSE, "Move is legal");
                 } else {
-                    Rules.display(SaharaComponent.VERBOSE, "Move is illegal");
+                    display(SaharaComponent.VERBOSE, "Move is illegal");
                 }
             } catch (error) {
-                Rules.display(SaharaComponent.VERBOSE, "That move can't be legal because: " + error.message);
+                display(SaharaComponent.VERBOSE, "That move can't be legal because: " + error.message);
             }
             this.chosenCoord = new Coord(-2, -2);
         }

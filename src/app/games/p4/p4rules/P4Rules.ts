@@ -8,6 +8,7 @@ import { P4PartSlice} from '../P4PartSlice';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+import { display } from 'src/app/collectionlib/utils';
 
 export abstract class P4Node extends MGPNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> {}
 
@@ -39,13 +40,13 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         // let y: number = move.coord.y;
         // 1. for each direction where there is an ennemy block
         //  a. for the 1 to 3 ennemy block in a row
-        Rules.display(P4Rules.VERBOSE, 'getBoardValueShortened appellée');
+        display(P4Rules.VERBOSE, 'getBoardValueShortened appellée');
 
         return 0; // TODO
     } */
     public static getBoardValueFromScratch(slice: P4PartSlice): number {
-        Rules.display(P4Rules.VERBOSE, 'getBoardValueFromScratch appellée');
-        Rules.display(P4Rules.VERBOSE, slice.getCopiedBoard());
+        display(P4Rules.VERBOSE, 'getBoardValueFromScratch appellée');
+        display(P4Rules.VERBOSE, slice.getCopiedBoard());
         const currentBoard: number[][] = slice.getCopiedBoard();
         let score: number = 0;
         let tmpScore: number = 0;
@@ -61,7 +62,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
                 tmpScore = P4Rules.getCaseScore(currentBoard, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
                     // si on trouve un [pré]victoire
-                    Rules.display(P4Rules.VERBOSE, { preVictoryOrVictory: { slice, tmpScore, coord: { x, y }}});
+                    display(P4Rules.VERBOSE, { preVictoryOrVictory: { slice, tmpScore, coord: { x, y }}});
                     return tmpScore; // on la retourne
                     // TODO vérifier que PRE_VICTORY n'écrase pas les VICTORY dans ce cas ci
                 }
@@ -127,8 +128,8 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
                                                                      : Player.ONE.value);
     }
     public static getCaseScore(board: number[][], c: Coord): number {
-        Rules.display(P4Rules.VERBOSE, 'getCaseScore(board, ' + c.x + ', ' + c.y + ') appellée');
-        Rules.display(P4Rules.VERBOSE, board);
+        display(P4Rules.VERBOSE, 'getCaseScore(board, ' + c.x + ', ' + c.y + ') appellée');
+        display(P4Rules.VERBOSE, board);
 
         if (board[c.y][c.x] === Player.NONE.value) {
             throw new Error('cannot call getCaseScore on empty case');
@@ -163,7 +164,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             lineAllies = alliesByDirs[i] + alliesByDirs[i + 4]; // in the two opposite dirs
             // System.out.println('lineAllies = ' + lineAllies + ' in (' + x + ', ' + y + ') pour dir ' + i);
             if (lineAllies > 2) {
-                Rules.display(P4Rules.VERBOSE, { text:
+                display(P4Rules.VERBOSE, { text:
                     'there is some kind of victory here (' + c.x + ', ' + c.y + ')' + '\n' +
                     'line allies : ' + lineAllies + '\n' +
                     'i : ' + i + '\n',
@@ -299,7 +300,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             score += tmpScore;
             yMax--;
         }
-        Rules.display(P4Rules.VERBOSE, 'board Value evaluated without (pre)victory to ' + score);
+        display(P4Rules.VERBOSE, 'board Value evaluated without (pre)victory to ' + score);
 
         return score;
     }*/
@@ -328,7 +329,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             } else {
                 // cette case est différente de la précédente
                 if (nInALine === 4) {
-                    Rules.display(P4Rules.VERBOSE, 'there is some kind of victory here 2');
+                    display(P4Rules.VERBOSE, 'there is some kind of victory here 2');
 
                     return aligner === Player.ZERO.value
                         ? Number.MIN_SAFE_INTEGER
@@ -344,7 +345,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             y++;
         }
         if (nInALine === 4) {
-            Rules.display(P4Rules.VERBOSE, 'there is some kind of victory here 3');
+            display(P4Rules.VERBOSE, 'there is some kind of victory here 3');
 
             return aligner === Player.ZERO.value
                 ? Number.MIN_SAFE_INTEGER
@@ -367,7 +368,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     // static delegates
 
     public static getListMoves(node: P4Node): MGPMap<MoveX, P4PartSlice> {
-        Rules.display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });
+        display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });
 
         // ne doit être appellé que si cette partie n'est pas une partie finie
         const originalPartSlice: P4PartSlice = node.gamePartSlice;
@@ -402,7 +403,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
           return P4Rules.getBoardValueShortened(n);
         }
         */
-        Rules.display(P4Rules.VERBOSE, {
+       display(P4Rules.VERBOSE, {
             text: 'P4Rules.getBoardValue called',
             board: slice.getCopiedBoard()
         });
@@ -421,7 +422,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
 
     public isLegal(move: MoveX, slice: P4PartSlice): LegalityStatus {
         const ILLEGAL: LegalityStatus = {legal: false};
-        Rules.display(P4Rules.VERBOSE, { context: "P4Rules.isLegal", move: move.toString(), slice});
+        display(P4Rules.VERBOSE, { context: "P4Rules.isLegal", move: move.toString(), slice});
         if (move.x < 0 || move.x > 6) {
             return ILLEGAL;
         }
@@ -445,7 +446,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         return P4Rules.getListMoves(node);
     }
     public getBoardValue(move: MoveX, slice: P4PartSlice): number {
-        Rules.display(P4Rules.VERBOSE, {
+        display(P4Rules.VERBOSE, {
             text: 'P4Rules instance methods getBoardValue called',
             board: slice.getCopiedBoard()
         });

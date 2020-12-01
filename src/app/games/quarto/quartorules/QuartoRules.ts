@@ -5,6 +5,7 @@ import {QuartoMove} from '../quartomove/QuartoMove';
 import {QuartoEnum} from '../QuartoEnum';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { display } from 'src/app/collectionlib/utils';
 
 class CaseSensible {
 
@@ -345,15 +346,15 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         // si la case est occupée
                         if (commonCrit == null) {
                             commonCrit = new Critere(c);
-                            Rules.display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c
+                            display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c
                                                                      + ' = ' + commonCrit.toString() + '\n');
                         } else {
                             commonCrit.mergeWithNumber(c);
-                            Rules.display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');
+                            display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');
                         }
                     }
                 }
-                Rules.display(QuartoRules.VERBOSE, ' ' + line[0] + line[1] + line[2] + line[3] +
+                display(QuartoRules.VERBOSE, ' ' + line[0] + line[1] + line[2] + line[3] +
                                                          'contient ' + nbCasesVides + ' case vides au tour ' + slice.turn);
 
                 // on a maintenant traité l'entierté de la ligne
@@ -367,7 +368,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouv� et assign�
                         // est dans ce cas bel et bien une case sensible
                         if (commonCrit.matchInt(slice.pieceInHand)) {
-                            Rules.display(QuartoRules.VERBOSE, 'Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
+                            display(QuartoRules.VERBOSE, 'Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
 
                             preVictory = true;
                             score = (slice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;

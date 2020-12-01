@@ -25,6 +25,7 @@ import { TablutComponent } from './tablut/tablut.component';
 
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { Rules } from 'src/app/jscaip/Rules';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({template: ''})
 export abstract class GameWrapper {
@@ -53,10 +54,10 @@ export abstract class GameWrapper {
                 protected userService: UserService,
                 protected authenticationService: AuthenticationService,
                 ) {
-        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
+        display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
-        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
+        display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
 
         switch (compoString) {
             case 'Awale':
@@ -92,7 +93,7 @@ export abstract class GameWrapper {
         }
     }
     protected afterGameIncluderViewInit() {
-        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
+        display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
 
         this.createGameComponent();
         // this.resetGameDatas();
@@ -102,8 +103,8 @@ export abstract class GameWrapper {
         this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
     }
     protected createGameComponent() {
-        Rules.display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
-        Rules.display(GameWrapper.VERBOSE && this.gameIncluder == null, "GameIncluder should be present");
+        display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
+        display(GameWrapper.VERBOSE && this.gameIncluder == null, "GameIncluder should be present");
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
         const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>
@@ -121,20 +122,20 @@ export abstract class GameWrapper {
     public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean> => {
         const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
-            Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
+            display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
             return false;
         }
         if (this.endGame) {
-            Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: part is finished');
+            display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: part is finished');
             return false;
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal === false) {
-            Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
+            display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
             return false;
         }
         await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
-        Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
+        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
         return true;
     }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
@@ -142,7 +143,7 @@ export abstract class GameWrapper {
     public isPlayerTurn() {
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;
         const indexPlayer: number = turn % 2;
-        Rules.display(GameWrapper.VERBOSE, "It is turn " + turn + "(" + this.players[indexPlayer] + ") and you are " + this.userName);
+        display(GameWrapper.VERBOSE, "It is turn " + turn + "(" + this.players[indexPlayer] + ") and you are " + this.userName);
         return this.players[indexPlayer] === this.userName;
     }
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {

@@ -9,6 +9,7 @@ import { Sets } from 'src/app/collectionlib/sets/Sets';
 import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { display } from 'src/app/collectionlib/utils';
 
 abstract class EncapsuleNode extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
 
@@ -63,19 +64,19 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         const LOCAL_VERBOSE: boolean = false;
         const FAILURE: EncapsuleLegalityStatus = {legal: false, newLandingCase: null};
         let boardCopy: number[][] = slice.getCopiedBoard();
-        Rules.display(LOCAL_VERBOSE, move.toString());
+        display(LOCAL_VERBOSE, move.toString());
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             if (!slice.isDropable(movingPiece)) {
-                Rules.display(LOCAL_VERBOSE, "move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
+                display(LOCAL_VERBOSE, "move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
                 return FAILURE;
             }
         } else {
             const startingCoord: Coord = move.startingCoord.get();
             const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
-            Rules.display(LOCAL_VERBOSE,
+            display(LOCAL_VERBOSE,
                 "at " + startingCoord.toString() + "\n" +
                 "there is " + startingCase.toString() + "\n" +
                 "whose bigger is " + EncapsuleMapper.getNameFromPiece(movingPiece) + "\n" +
@@ -90,7 +91,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (superpositionResult.success === true) {
             return {legal: true, newLandingCase: superpositionResult.result};
         }
-        Rules.display(LOCAL_VERBOSE, "move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
+        display(LOCAL_VERBOSE, "move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
         return FAILURE;
     }
     public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus): { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; } {

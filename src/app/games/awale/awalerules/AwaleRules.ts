@@ -5,6 +5,7 @@ import { AwaleMove } from '../awalemove/AwaleMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { display } from 'src/app/collectionlib/utils';
 
 abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
@@ -24,7 +25,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         );
     }
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): { resultingMove: AwaleMove; resultingSlice: AwalePartSlice; } {
-        Rules.display(AwaleRules.VERBOSE, "applyLegalMove");
+        display(AwaleRules.VERBOSE, "applyLegalMove");
         const turn: number = slice.turn;
         const player = turn % 2;
         const ennemy = (turn + 1) % 2;
@@ -109,19 +110,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             captured[ennemi] += AwaleRules.mansoon(ennemi, resultingBoard);
         }
         return {legal: true, captured, resultingBoard};
-    }
-    private static printInLine(board: number[][]): string {
-        let retour: string = '';
-        let y: number = 0;
-        let x: number;
-        do {
-            x = 0;
-            do {
-                retour += ':' + board[y][x++];
-            } while (x < 6);
-            y++;
-        } while (y < 2);
-        return retour;
     }
     private static doesDistribute(x: number, y: number, board: number[][]): boolean {
         if (y === 0) { // distribution from left to right

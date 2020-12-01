@@ -8,6 +8,7 @@ import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-pylos',
@@ -89,7 +90,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         return this.chooseMove(move, slice, null, null);
     }
     public cancelMove(reason: string): boolean {
-        Rules.display(PylosComponent.VERBOSE, reason);
+        display(PylosComponent.VERBOSE, reason);
         this.chosenStartingCoord = null;
         this.chosenLandingCoord = null;
         this.chosenFirstCapture = null;

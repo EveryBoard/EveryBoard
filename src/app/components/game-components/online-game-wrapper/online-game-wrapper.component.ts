@@ -19,6 +19,7 @@ import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-game-wrapper',
@@ -69,10 +70,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                 authenticationService: AuthenticationService,
                 private gameService: GameService) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent constructed");
+        display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent constructed");
     }
     public ngOnInit() {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
 
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
         this.userSub = this.authenticationService.getJoueurObs()
@@ -93,7 +94,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         else return "90%";
     }
     public resetGameDatas() {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGame.resetGameDatas');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGame.resetGameDatas');
 
         this.players = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
 
@@ -107,7 +108,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
     }
     public startGame(iJoiner: IJoiner) {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
         if (iJoiner == null) throw new Error("Cannot start Game of empty joiner doc");
         this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
@@ -124,7 +125,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }, 1);
     }
     protected async startPart(): Promise<void> {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.startPart");
+        display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.startPart");
 
         this.startCountDownFor(this.totalPartDuration, this.totalPartDuration, 0); // TODO: ZERO SEEMS TO BE A MISTAKE
         // TODO: recharger une page dont les deux joueurs étaient partis
@@ -135,7 +136,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
         const part: ICurrentPart = updatedICurrentPart.doc;
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
+        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
             then: updatedICurrentPart.doc,
             before_part_turn: part.turn,
@@ -152,14 +153,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.checkRequests();
         this.checkEndgames();
 
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, {
+        display(OnlineGameWrapperComponent.VERBOSE, {
             after_part_turn: part.turn,
             after_slice_turn: this.gameComponent.rules.node.gamePartSlice.turn,
             nbPlayedMoves: part.listMoves.length
         });
 
         if ((!this.endGame) && updateIsMove) {
-            Rules.display(OnlineGameWrapperComponent.VERBOSE, {
+            display(OnlineGameWrapperComponent.VERBOSE, {
                 updateIsMove: true,
                 part_turn: part.turn,
                 slice_turn: this.gameComponent.rules.node.gamePartSlice.turn,
@@ -167,16 +168,16 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             });
 
             if (this.isUpdateFirstPlayerMove()) {
-                Rules.display(OnlineGameWrapperComponent.VERBOSE, ">>> dans OnlineGameWrapperComponent.onCurrentPartUpdate: FIRST UPDATE TO BE A MOVE");
+                display(OnlineGameWrapperComponent.VERBOSE, ">>> dans OnlineGameWrapperComponent.onCurrentPartUpdate: FIRST UPDATE TO BE A MOVE");
                 this.firstPlayedTurn = part.turn - 1;
                 this.startCountDownFor(this.totalPartDuration, this.totalPartDuration, part.turn % 2 === 0 ? 0 : 1);
             } else {
-                Rules.display(OnlineGameWrapperComponent.VERBOSE, ">>> dans OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player");
+                display(OnlineGameWrapperComponent.VERBOSE, ">>> dans OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player");
                 this.resumeCountDownFor(part.turn % 2 === 0 ? Player.ZERO : Player.ONE);
             }
         }
         if (!updateIsMove) {
-            Rules.display(OnlineGameWrapperComponent.VERBOSE, ">>> dans OnlineGameWrapperComponent.onCurrentPartUpdate: cette update n\'est pas un mouvement ! ");
+            display(OnlineGameWrapperComponent.VERBOSE, ">>> dans OnlineGameWrapperComponent.onCurrentPartUpdate: cette update n\'est pas un mouvement ! ");
         }
     }
     private isUpdateMove(update: ICurrentPart): boolean {
@@ -187,11 +188,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     private isUpdateFirstPlayerMove(): boolean {
         const firstPlayedTurn: number = this.firstPlayedTurn;
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "dans isUpdateFirstPlayerMove: firstPlayedTurn: " + firstPlayedTurn);
+        display(OnlineGameWrapperComponent.VERBOSE, "dans isUpdateFirstPlayerMove: firstPlayedTurn: " + firstPlayedTurn);
         return firstPlayedTurn == null;
     }
     private doNewMoves(part: ICurrentPart) {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "dans doNewMoves")
+        display(OnlineGameWrapperComponent.VERBOSE, "dans doNewMoves")
         let currentPartTurn: number;
         const listMoves = part.listMoves;
         while (this.gameComponent.rules.node.gamePartSlice.turn < listMoves.length) {
@@ -232,7 +233,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         {
             this.endGame = true;
             this.stopCountdowns();
-            Rules.display(OnlineGameWrapperComponent.VERBOSE && currentPart.result.value === MGPResult.DRAW.toInterface().value,
+            display(OnlineGameWrapperComponent.VERBOSE && currentPart.result.value === MGPResult.DRAW.toInterface().value,
                           'match nul means winner = ' + currentPart.winner);
         }
     }
@@ -307,7 +308,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     protected onRequest(request: IMGPRequest) {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapper.onRequest(" + request.code + ")");
+        display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapper.onRequest(" + request.code + ")");
         switch (request.code) {
             case RequestCode.ONE_ASKED_TAKE_BACK.toInterface().code:
                 break;
@@ -326,14 +327,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             case RequestCode.ZERO_PROPOSED_REMATCH.toInterface().code: // 0 propose un rematch
                 this.rematchProposed = true;
                 if (this.observerRole === 1) {
-                    Rules.display(OnlineGameWrapperComponent.VERBOSE, 'ton adversaire te propose une revanche, 1');
+                    display(OnlineGameWrapperComponent.VERBOSE, 'ton adversaire te propose une revanche, 1');
                     this.opponentProposedRematch = true;
                 }
                 break;
             case RequestCode.ONE_PROPOSED_REMATCH.toInterface().code: // 1 propose un rematch
                 this.rematchProposed = true;
                 if (this.observerRole === 0) {
-                    Rules.display(OnlineGameWrapperComponent.VERBOSE, 'ton adversaire te propose une revanche, 0');
+                    display(OnlineGameWrapperComponent.VERBOSE, 'ton adversaire te propose une revanche, 0');
                     this.opponentProposedRematch = true;
                 }
                 break;
@@ -361,7 +362,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameComponent.updateBoard();
     }
     public setPlayersDatas(updatedICurrentPart: ICurrentPart) {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
+        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapper_setPlayersDatas: updatedICurrentPart });
         this.players = [
             updatedICurrentPart.playerZero,
             updatedICurrentPart.playerOne];
@@ -386,7 +387,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapperComponent.onValidUserMove");
+        display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapperComponent.onValidUserMove");
         if (this.isOpponentWaitingForTakeBackResponse()) {
             // TODO: ticket du toast
             console.log("You must answer to take back request lord");
@@ -395,7 +396,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public async updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.updateDBBoard(" + move.toString() + ", " + scorePlayerZero + ", " + scorePlayerOne + ")");
+        display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.updateDBBoard(" + move.toString() + ", " + scorePlayerZero + ", " + scorePlayerOne + ")");
 
         const encodedMove: number = this.gameComponent.encodeMove(move);
         return this.gameService.updateDBBoard(encodedMove, scorePlayerZero, scorePlayerOne, this.currentPartId);
@@ -405,7 +406,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameService.resign(this.currentPartId, victoriousOpponent);
     }
     public reachedOutOfTime(player: 0 | 1) {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.reachedOutOfTime(" + player + ")");
+        display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.reachedOutOfTime(" + player + ")");
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
             this.notifyTimeoutVictory(this.opponent.doc.pseudo);
@@ -444,7 +445,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameService.refuseTakeBack(this.currentPartId, player);
     }
     private startCountDownFor(durationZero: number, durationOne: number, player: 0 | 1) {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapperComponent.startCountDownFor(" + durationZero + ", " + durationOne + ", " + player + ")");
+        display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapperComponent.startCountDownFor(" + durationZero + ", " + durationOne + ", " + player + ")");
 
         if (player === 0) {
             this.chronoZeroGlobal.start(durationZero);
@@ -459,7 +460,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     private resumeCountDownFor(player: Player) {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapperComponent.resumeCountDownFor(" + player.value + ")");
+        display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapperComponent.resumeCountDownFor(" + player.value + ")");
 
         if (player.value === 0) {
             this.chronoZeroGlobal.resume();
@@ -474,7 +475,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     private stopCountdowns() {
-        Rules.display(OnlineGameWrapperComponent.VERBOSE, 'cdc::stop count downs');
+        display(OnlineGameWrapperComponent.VERBOSE, 'cdc::stop count downs');
 
         this.chronoZeroGlobal.stop();
         this.chronoZeroLocal.stop();

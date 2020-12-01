@@ -2,6 +2,7 @@ import { Coord } from "src/app/jscaip/coord/Coord";
 import { GoPiece, GoPartSlice } from "../GoPartSlice";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { Rules } from "src/app/jscaip/Rules";
+import { display } from "src/app/collectionlib/utils";
 
 export class GroupDatas {
 
@@ -15,13 +16,13 @@ export class GroupDatas {
                 public deadWhiteCoords: Coord[]) {
     }
     public static getGroupDatas(coord: Coord, board: GoPiece[][]): GroupDatas {
-        Rules.display(GroupDatas.VERBOSE, "GroupDatas.getGroupDatas("+coord+", "+board+")");
+        display(GroupDatas.VERBOSE, "GroupDatas.getGroupDatas("+coord+", "+board+")");
         let color: GoPiece = board[coord.y][coord.x];
         let groupDatas: GroupDatas = new GroupDatas(color, [], [], [], [], []);
         return GroupDatas._getGroupDatas(coord, board, groupDatas);
     }
     private static _getGroupDatas(coord: Coord, board: GoPiece[][], groupDatas: GroupDatas): GroupDatas {
-        Rules.display(GroupDatas.VERBOSE, { GroupDatas_getGroupDatas: { groupDatas, coord }});
+        display(GroupDatas.VERBOSE, { GroupDatas_getGroupDatas: { groupDatas, coord }});
         let color: GoPiece = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
         if (color === groupDatas.color) {

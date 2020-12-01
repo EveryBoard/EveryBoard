@@ -9,6 +9,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { Rules } from 'src/app/jscaip/Rules';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-quixo',
@@ -36,7 +37,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         else this.lastMoveCoord = null;
     }
     public cancelMove(reason: string): boolean {
-        Rules.display(QuixoComponent.VERBOSE, reason);
+        display(QuixoComponent.VERBOSE, reason);
         this.chosenCoord = null;
         return false;
     }

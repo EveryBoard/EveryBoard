@@ -1,4 +1,5 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-count-down',
@@ -18,15 +19,12 @@ export class CountDownComponent implements OnInit, OnDestroy {
 
     @Output() outOfTimeAction = new EventEmitter<void>();
 
-    public static display(verbose: boolean, message: any) {
-        if (verbose) console.log(message);
-    }
     public ngOnInit() {
-        CountDownComponent.display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
+        display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
     }
     public start(duration: number) {
         // duration is in ms
-        CountDownComponent.display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".start(" + (duration/1000) + "s);");
+        display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".start(" + (duration/1000) + "s);");
 
         if (this.isStarted) {
             throw new Error("CountDownComponent.start should not be called while already started (" + this.debugName + ")");
@@ -36,16 +34,14 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.resume();
     }
     public pause() {
-        CountDownComponent.display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".pause");
+        display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".pause");
 
         if (this.isPaused) {
-            CountDownComponent.display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".pause: it is already paused");
-
+            display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".pause: it is already paused");
             return;
         }
         if (!this.isStarted) {
-            CountDownComponent.display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".pause: it is not started yet");
-
+            display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".pause: it is not started yet");
             return;
         }
         const started: boolean = this.clearTimeouts();
@@ -56,17 +52,16 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.updateShownTime();
     }
     public stop() {
-        CountDownComponent.display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.stop');
+        display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.stop');
 
         this.pause();
         this.isStarted = false;
     }
     public resume() {
-        CountDownComponent.display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.resume');
+        display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.resume');
 
         if (!this.isPaused) {
-            CountDownComponent.display(CountDownComponent.VERBOSE, '!!!cdc::' + this.debugName + '::resume it is not paused, how to resume?');
-
+            display(CountDownComponent.VERBOSE, '!!!cdc::' + this.debugName + '::resume it is not paused, how to resume?');
             return;
         }
         this.startTime = Date.now();
@@ -79,7 +74,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         }, 1000);
     }
     public onEndReached() {
-        CountDownComponent.display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.onEndReached');
+        display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.onEndReached');
 
         this.isPaused = true;
         this.isStarted = false;
@@ -99,7 +94,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
         }
     }
     public clearTimeouts(): boolean {
-        CountDownComponent.display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.clearTimeouts');
+        display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.clearTimeouts');
 
         let useFull = false;
         if (this.timeoutHandleSec) {

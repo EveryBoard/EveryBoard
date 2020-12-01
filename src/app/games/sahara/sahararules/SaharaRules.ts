@@ -10,6 +10,7 @@ import { SaharaPartSlice } from "../SaharaPartSlice";
 import { TriangularCheckerBoard } from "src/app/jscaip/TriangularCheckerBoard";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { display } from "src/app/collectionlib/utils";
 
 abstract class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
 
@@ -102,7 +103,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         return playerFreedoms.sort((a: number, b: number) => a-b);
     }
     public applyLegalMove(move: SaharaMove, slice: SaharaPartSlice, status: LegalityStatus): { resultingMove: SaharaMove; resultingSlice: SaharaPartSlice; } {
-        Rules.display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
+        display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
         let board: SaharaPawn[][] = slice.getCopiedBoard();
         board[move.end.y][move.end.x] = board[move.coord.y][move.coord.x];
         board[move.coord.y][move.coord.x] = SaharaPawn.EMPTY;
@@ -112,12 +113,12 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
     public isLegal(move: SaharaMove, slice: SaharaPartSlice): LegalityStatus {
         const movedPawn: SaharaPawn = slice.getBoardAt(move.coord);
         if (movedPawn !== slice.getCurrentPlayer().value) {
-            Rules.display(SaharaRules.VERBOSE, "This move is illegal because it is not the current player's turn");
+            display(SaharaRules.VERBOSE, "This move is illegal because it is not the current player's turn");
             return {legal: false};
         }
         const landingCase: SaharaPawn = slice.getBoardAt(move.end);
         if (landingCase !== SaharaPawn.EMPTY) {
-            Rules.display(SaharaRules.VERBOSE, "This move is illegal because the landing case is not empty");
+            display(SaharaRules.VERBOSE, "This move is illegal because the landing case is not empty");
             return {legal: false};
         }
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);

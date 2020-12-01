@@ -55,16 +55,18 @@ describe('JoinerService', () => {
         service.updateJoinerById("partId", JoinerMocks.INITIAL.copy());
         expect(update).toHaveBeenCalled();
     });
-    it('joinGame should throw when called by a user already in the game', fakeAsync(async() => {
-        dao.set("joinerId", JoinerMocks.INITIAL.copy());
+    it('joinGame should throw when called by a candidate already in the game', fakeAsync(async() => {
+        dao.set("joinerId", JoinerMocks.WITH_FIRST_CANDIDATE.copy());
+        const candidateName: string = JoinerMocks.WITH_FIRST_CANDIDATE.copy().candidatesNames[0];
+        const expectedError: string = "JoinerService.joinGame was called by a user already in the game";
 
         let erreur: string = "";
         try {
-            await service.joinGame("joinerId", JoinerMocks.INITIAL.copy().candidatesNames[0]);
+            await service.joinGame("joinerId", candidateName);
         } catch (error) {
             erreur = error.message;
         } finally {
-            expect(erreur).toBe("JoinerService.joinGame was called by a user already in the game");
+            expect(erreur).toBe(expectedError);
         }
     }));
     it('joinGame should not update joiner when called by the creator', fakeAsync(async() => {

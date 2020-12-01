@@ -4,6 +4,7 @@ import {Rules} from '../Rules';
 import {GamePartSlice} from '../GamePartSlice';
 import { MGPMap } from '../../collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from '../LegalityStatus';
+import { display } from 'src/app/collectionlib/utils';
 
 export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
@@ -79,22 +80,22 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
          */
         const LOCAL_VERBOSE: boolean = false;
         if (score === Number.MAX_SAFE_INTEGER) {
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'VICTORY');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'VICTORY');
             return SCORE.VICTORY;
         }
         if (score === Number.MIN_SAFE_INTEGER) {
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'VICTORY');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'VICTORY');
             return SCORE.VICTORY;
         }
         if (score === Number.MIN_SAFE_INTEGER + 1) {
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'PRE_VICTORY_MIN');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'PRE_VICTORY_MIN');
             return SCORE.PRE_VICTORY;
         }
         if (score === Number.MAX_SAFE_INTEGER - 1) {
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'PRE_VICTORY_MAX');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'PRE_VICTORY_MAX');
             return SCORE.PRE_VICTORY;
         }
-        Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
         return SCORE.DEFAULT;
     }
     public static getFirstNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> (initialBoard: S, gameRuler: R) {
@@ -115,7 +116,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         // this.ownValue = this.mother == null ? 0 : MGPNode.ruler.getBoardValue(this.move, this.gamePartSlice);
         this.ownValue = boardValue;
         this.hopedValue = this.ownValue;
-        Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, { createdNode: this });
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, { createdNode: this });
         MGPNode.NB_NODE_CREATED += 1;
     }
     public getNodeStatus(): String {
@@ -141,41 +142,41 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         return mother + ' ' + fertility + ' ' + calculated;
     }
     public findBestMoveAndSetDepth(readingDepth: number): MGPNode<R, M, S, L> {
-        Rules.display(MGPNode.VERBOSE, "findBestMoveAndSetDepth(" + readingDepth + ") = " + this.gamePartSlice.toString() + " => " + this.ownValue);
+        display(MGPNode.VERBOSE, "findBestMoveAndSetDepth(" + readingDepth + ") = " + this.gamePartSlice.toString() + " => " + this.ownValue);
         this.depth = readingDepth;
         return this.findBestMove();
     }
     public findBestMove(): MGPNode<R, M, S, L> {
         const LOCAL_VERBOSE: boolean = false;
         if (this.isLeaf()) {
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf (' + this.myToString());
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf (' + this.myToString());
             return this; // rules - leaf or calculation - leaf
         }
 
         // here it's not a calculation - leaf and not yet proven to be a rules - leaf
-        Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'Not A Leaf');
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'Not A Leaf');
 
         if (this.childs === null) {
             // if the Node has no child yet
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'has No Child Yet');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'has No Child Yet');
 
             this.createChilds();
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'Childs created');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'Childs created');
 
             // here it's not a calculation - leaf but now we can check if it's a rule - leaf
             if (this.childs && this.childs.length === 0) {
                 // here this.depth !== 0 and this.hasAlreadyChild()
                 // so this is the last condition needed to see if it's a leaf - by - rules
-                Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'is A Leaf By Rules');
+                display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'is A Leaf By Rules');
                 return this; // rules - leaf
             }
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'has Child NOW');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'has Child NOW');
         } else
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'Has already Childs');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'Has already Childs');
 
         // here it's not a calculation - leaf nor a rules - leaf
         this.calculateChildsValue();
-        Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'has Calculate Childs Value');
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'has Calculate Childs Value');
         return this.setBestChild();
     }
     public createChilds() {
@@ -204,25 +205,25 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         const LOCAL_VERBOSE: boolean = false;
         const moves: MGPMap<M, S> = MGPNode.ruler.getListMoves(this) as MGPMap<M, S>;
         this.childs = new Array<MGPNode<R, M, S, L>>();
-        Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'createChilds received listMoves from ruler');
-        Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, moves);
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'createChilds received listMoves from ruler');
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, moves);
 
         const winningMoveInfo: { winningMoveIndex: number, boardValues: number[] } =
             this.getWinningMoveIndex(moves, this.gamePartSlice.turn);
         if (winningMoveInfo.winningMoveIndex === -1) {
             for (let i=0; i<moves.size(); i++) {
                 const entry = moves.getByIndex(i);
-                Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'in the loop');
-                Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, entry);
+                display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'in the loop');
+                display(MGPNode.VERBOSE || LOCAL_VERBOSE, entry);
 
                 const move: M = entry.key;
                 const slice: S = entry.value;
-                Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'move and board retrieved from the entry');
+                display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'move and board retrieved from the entry');
 
                 const boardValue: number = winningMoveInfo.boardValues[i];
                 const child: MGPNode<R, M, S, L> = new MGPNode<R, M, S, L>(this, move, slice, boardValue);
-                Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'child created');
-                Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, child);
+                display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'child created');
+                display(MGPNode.VERBOSE || LOCAL_VERBOSE, child);
 
                 this.childs.push(child);
             }
@@ -231,8 +232,8 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
             const boardValue: number = winningMoveInfo.boardValues[winningMoveInfo.winningMoveIndex];
             this.createOnlyWinningChild(winningMove, boardValue);
         }
-        Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'out of the loop');
-        Rules.display((MGPNode.VERBOSE || LOCAL_VERBOSE) && this.isEndGame(), 'Node.createChilds has found a endGame');
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'out of the loop');
+        display((MGPNode.VERBOSE || LOCAL_VERBOSE) && this.isEndGame(), 'Node.createChilds has found a endGame');
     }
     private getWinningMoveIndex(moves: MGPMap<M, S>, turn: number): { winningMoveIndex: number, boardValues: number[] } {
         const winningValue: number = turn % 2 === 0 ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
@@ -375,23 +376,23 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         const scoreStatus: SCORE = MGPNode.getScoreStatus(this.ownValue);
 
         if (scoreStatus === SCORE.VICTORY) {
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'MGPNode.isEndGame by victory');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'MGPNode.isEndGame by victory');
             return true;
         }
 
         if (this.childs === null) {
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'uncalculated childs : [calculating childs...]');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'uncalculated childs : [calculating childs...]');
             this.createChilds();
         }
 
         // CHILDS ARE CREATED NOW
 
         if (this.childs.length === 0) {
-            Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'MGPNode.isEndGame by no-child after calculation');
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'MGPNode.isEndGame by no-child after calculation');
             return true;
         }
 
-        Rules.display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'MGPNode.isEndGame : no (childs and normal score)');
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'MGPNode.isEndGame : no (childs and normal score)');
         return false;
     }
     public hasMoves(): boolean {
