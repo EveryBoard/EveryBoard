@@ -31,11 +31,12 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         this.chosen = null;
     }
 
-    public async pass(): Promise<boolean> {
+    public async pass() {
         if (this.canPass) {
-            return this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null);
+            this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null).then((v) => v.ifError(this.message));
+        } else {
+            this.message("Cannot pass");
         }
-        return false;
     }
 
     public async onClick(x: number, y: number): Promise<boolean> {
@@ -49,7 +50,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
             return this.chooseDestination(x, y).then((v) => v.ifError(onError).isSuccess());
         }
     }
-
 
     public choosePiece(x: number, y: number): MGPValidation {
         if (this.rules.node.isEndGame()) {
@@ -66,13 +66,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         const chosenDestination: Coord = new Coord(x, y);
         try {
             const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null).then((v: boolean) => {
-                if (v) {
-                    return MGPValidation.success();
-                } else {
-                    return MGPValidation.error("Cannot choose this move");
-                }
-            });
+            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         } catch (e) {
             return MGPValidation.error("Cannot choose this move: " + e)
         }

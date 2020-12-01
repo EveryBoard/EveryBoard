@@ -24,6 +24,7 @@ import { SaharaComponent } from './sahara/sahara.component';
 import { PylosComponent } from './pylos/pylos.component';
 import { QuixoComponent } from './quixo/quixo.component';
 import { Rules } from 'src/app/jscaip/Rules';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({template: ''})
 export abstract class GameWrapper {
@@ -116,24 +117,21 @@ export abstract class GameWrapper {
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
     }
-    public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean> => {
+    public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<MGPValidation> => {
         const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
-            Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
-            return false;
+            return MGPValidation.error("not your turn");
         }
         if (this.endGame) {
-            Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: part is finished');
-            return false;
+            return MGPValidation.error("game is finished your turn");
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal === false) {
-            Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
-            return false;
+            return MGPValidation.error("move illegal");
         }
         await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
         Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
-        return true;
+        return MGPValidation.success();
     }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
