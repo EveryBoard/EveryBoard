@@ -1,17 +1,16 @@
-import {async, ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {GameIncluderComponent} from './game-includer.component';
+import { GameIncluderComponent } from './game-includer.component';
 
 describe('GameIncluderComponent', () => {
     let component: GameIncluderComponent;
     let fixture: ComponentFixture<GameIncluderComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [GameIncluderComponent]
-        })
-            .compileComponents();
-    }));
+        }).compileComponents();
+    });
     beforeEach(() => {
         fixture = TestBed.createComponent(GameIncluderComponent);
         component = fixture.componentInstance;

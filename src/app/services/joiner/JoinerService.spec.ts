@@ -1,4 +1,4 @@
-import { async, fakeAsync } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 
 import { JoinerService } from './JoinerService';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';

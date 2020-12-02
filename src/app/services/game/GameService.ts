@@ -218,7 +218,7 @@ export class GameService {
         else throw new Error("Illegal for observer to make request");
         return this.partDao.update(partId, { request: code.toInterface() });
     }
-    public acceptTakeBack(id: string, part: ICurrentPart, observerRole: Player): Promise<void> {
+    public async acceptTakeBack(id: string, part: ICurrentPart, observerRole: Player): Promise<void> {
         let code: RequestCode;
         if (observerRole === Player.ZERO) {
             if (part.request.code === RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code) {
@@ -230,14 +230,15 @@ export class GameService {
                 throw new Error("Illegal to accept your own request.");
             }
             code = RequestCode.ONE_ACCEPTED_TAKE_BACK;
-        } else
+        } else {
             throw new Error("Illegal for observer to make request");
+        }
         let listMoves: number[] = part.listMoves.slice(0, part.listMoves.length - 1);
         if (listMoves.length % 2 === observerRole.value) {
             // Deleting a second move
             listMoves = listMoves.slice(0, listMoves.length - 1);
         }
-        return this.partDao.update(id, {
+        return await this.partDao.update(id, {
             request: code.toInterface(),
             listMoves,
             turn: listMoves.length

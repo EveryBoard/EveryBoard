@@ -69,10 +69,10 @@ describe('LocalGameWrapperComponent', () => {
         debugElement = fixture.debugElement;
         component = fixture.debugElement.componentInstance;
     }));
-    it('should create', fakeAsync(() => {
+    it('should create', () => {
         AuthenticationServiceMock.USER = { pseudo: null, verified: null };
         expect(component).toBeTruthy();
-    }));
+    });
     it('should have game included after view init', fakeAsync(() => {
         AuthenticationServiceMock.USER = { pseudo: null, verified: null };
         const compiled = fixture.debugElement.nativeElement;

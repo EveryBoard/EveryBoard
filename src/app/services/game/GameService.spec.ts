@@ -1,4 +1,4 @@
-import { async, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, tick } from '@angular/core/testing';
 
 import { GameService } from './GameService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
@@ -23,7 +23,6 @@ describe('GameService', () => {
     beforeAll(() => {
         GameService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GameService.VERBOSE;
     });
-
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
@@ -35,36 +34,31 @@ describe('GameService', () => {
         service = TestBed.get(GameService);
         partDao = TestBed.get(PartDAO);
     });
-
-    it('should create', async(() => {
+    it('should create', () => {
         expect(service).toBeTruthy();
-    }));
-
-    it('startObserving should delegate callback to partDao', async(() => {
+    });
+    it('startObserving should delegate callback to partDao', () => {
         const myCallback: (iPart: ICurrentPartId) => void = (iPart: ICurrentPartId) => {
             expect(iPart.id).toBe("partId");
         };
-        const mySpy: jasmine.Spy = spyOn(partDao, "getObsById").and.returnValue(of({id: "partId", doc: null}));
+        spyOn(partDao, "getObsById").and.returnValue(of({id: "partId", doc: null}));
         service.startObserving("partId", myCallback);
-        expect(mySpy).toHaveBeenCalled();
-    }));
-
-    it('startObserving should throw exception when called while observing ', async(() => {
-        partDao.set("myJoinerId", PartMocks.INITIAL.copy());
+        expect(partDao.getObsById).toHaveBeenCalled();
+    });
+    it('startObserving should throw exception when called while observing ', async() => {
+        await partDao.set("myJoinerId", PartMocks.INITIAL.copy());
 
         expect(() => {
             service.startObserving("myJoinerId", (iPart: ICurrentPartId) => {});
             service.startObserving("myJoinerId", (iPart: ICurrentPartId) => {});
         }).toThrowError("GameService.startObserving should not be called while already observing a game");
-    }));
-
-    it('should delegate delete to PartDAO', () => {
-        const deleteSpy: jasmine.Spy = spyOn(partDao, "delete");
-        service.deletePart("partId");
-        expect(deleteSpy).toHaveBeenCalled();
     });
-
-    it('should forbid to accept a take back that the player proposed himself', () => {
+    it('should delegate delete to PartDAO', () => {
+        spyOn(partDao, "delete");
+        service.deletePart("partId");
+        expect(partDao.delete).toHaveBeenCalled();
+    });
+    it('should forbid to accept a take back that the player proposed himself', async() => {
         const part: ICurrentPart = {
             typeGame: 'Quarto',
             playerZero: 'creator',
@@ -73,8 +67,20 @@ describe('GameService', () => {
             listMoves: [ 107, 161],
             request: { code: RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code }
         };
-        expect(() => service.acceptTakeBack('joinerId', part, Player.ZERO)).toThrowError('Illegal to accept your own request.');
+        const getError: (player: Player) => Promise<string> = async(player: Player) => {
+            let errorMessage: string;
+            try {
+                await service.acceptTakeBack('joinerId', part, player);
+            } catch (error) {
+                errorMessage = error.message;
+            } finally {
+                return errorMessage;
+            }
+        };
+        const firstError: string = await getError(Player.ZERO);
         part.request.code = RequestCode.ONE_ASKED_TAKE_BACK.toInterface().code;
-        expect(() => service.acceptTakeBack('joinerId', part, Player.ONE)).toThrowError('Illegal to accept your own request.');
+        const secondError: string = await getError(Player.ONE);
+        expect(firstError).toEqual('Illegal to accept your own request.');
+        expect(secondError).toEqual('Illegal to accept your own request.');
     });
 });

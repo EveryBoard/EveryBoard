@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -168,8 +168,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     beforeAll(() => {
         OnlineGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || OnlineGameWrapperComponent.VERBOSE;
     });
-
-    beforeEach(async(async() => {
+    beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -186,7 +185,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ],
         }).compileComponents();
     }));
-
     it('Should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -194,7 +192,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(component.currentPlayer).toEqual('creator');
         tick(component.maximalMoveDuration);
     }));
-
     it('Prepared Game for creator should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
 
@@ -212,7 +209,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(component.gameComponent).toBeTruthy("gameComponent field should also be present after config accepted and async millisec finished");
         tick(component.maximalMoveDuration);
     }));
-
     it('Prepared Game for creator should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -229,7 +225,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
         tick(component.maximalMoveDuration);
     }));
-
     it('Prepared Game for joiner should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
         tick(1);
@@ -248,7 +243,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Move should trigger db change', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -263,7 +257,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partDAO.update).toHaveBeenCalledWith("joinerId", expectedUpdate );
         tick(component.maximalMoveDuration);
     }));
-
     it('Victory move from player should notifyVictory', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -293,7 +286,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             request: null
         });
     }));
-
     it('Should send take back request when player ask to', fakeAsync(async() => {
         // Doing a first move so take back make sens
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
@@ -311,7 +303,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Opponent accepting take back should move player board backward (one move)', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -344,7 +335,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
         tick(component.maximalMoveDuration);
     }));
-
     it('Player accepting take back should move player board backward (two moves)', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -374,7 +364,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -386,7 +375,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
         tick(1);
@@ -399,7 +387,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -414,7 +401,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Should not be allowed player to play while take back request is waiting for him', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -430,7 +416,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Should cancel take back request when take back requester do a move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -449,7 +434,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Should allow player to refuse take back request', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -466,7 +450,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Should forbid player to ask take back again after refusal', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -478,7 +461,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Should not allow player to move after resigning', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -494,7 +476,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -508,7 +489,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-
     afterEach(fakeAsync(async() => {
         fixture.destroy();
         await fixture.whenStable();

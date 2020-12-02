@@ -1,5 +1,3 @@
-import { async } from '@angular/core/testing';
-
 import { UserService } from './UserService';
 import { ActivesUsersService } from '../actives-users/ActivesUsersService';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
@@ -18,7 +16,7 @@ describe('UserService', () => {
                                   new ActivesUsersService(joueursDAOMock as unknown as JoueursDAO),
                                   joueursDAOMock as unknown as JoueursDAO);
     });
-    it('should create', async(() => {
+    it('should create', () => {
         expect(service).toBeTruthy();
-    }));
+    });
 });

@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -23,7 +23,6 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
-import { MoveX } from 'src/app/jscaip/MoveX';
 
 const activatedRouteStub = {
     snapshot: {
@@ -93,8 +92,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     beforeAll(() => {
         OnlineGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || OnlineGameWrapperComponent.VERBOSE;
     });
-
-    beforeEach(async(async() => {
+    beforeEach(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -110,8 +108,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
                 { provide: Router,                useClass: RouterMock },
             ],
         }).compileComponents();
-    }));
-
+    });
     it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
@@ -129,7 +126,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         expect(startObserving).toHaveBeenCalledTimes(1);
         expect(component).toBeTruthy();
     }));
-
     it('Initialisation on accepted config should lead to PartCreationComponent to call startGame ', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
@@ -145,7 +141,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         tick(1);
         tick(component.maximalMoveDuration);
     }));
-
     it('Some tags are needed before initialisation', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
@@ -165,7 +160,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         fixture.detectChanges();
         tick(1);
     }));
-
     it('Some ids are needed before initialisation', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
@@ -181,7 +175,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         fixture.detectChanges();
         tick(1);
     }));
-
     it('Initialisation should make appear PartCreationComponent', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
@@ -194,7 +187,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         partCreationId = fixture.debugElement.query(By.css('#partCreation'));
         expect(partCreationId).toBeTruthy("partCreation id should be present after ngOnInit");
     }));
-
     it('StartGame should replace PartCreationComponent by GameIncluderComponent for creator', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
@@ -215,7 +207,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         tick(1);
         tick(component.maximalMoveDuration);
     }));
-
     it('StartGame should replace PartCreationComponent by GameIncluderComponent for chosenPlayer', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "chosenPlayer", verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
@@ -236,7 +227,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         tick(1);
         tick(component.maximalMoveDuration);
     }));
-
     it('stage three should make the game component appear at last', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
@@ -251,7 +241,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         expect(fixture.debugElement.nativeElement.querySelector("app-p4")).toBeTruthy("p4Tag id should be present after startGame's async method has complete");
         tick(component.maximalMoveDuration);
     }));
-
     afterEach(fakeAsync(async() => {
         fixture.destroy();
         await fixture.whenStable();

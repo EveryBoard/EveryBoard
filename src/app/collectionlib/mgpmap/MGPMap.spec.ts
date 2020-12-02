@@ -44,7 +44,7 @@ describe('MGPMap', () => {
         const map: MGPMap<MGPStr, Number> = new MGPMap();
         map.set(new MGPStr("first"), 1);
 
-        expect( () => map.replace(new MGPStr("firstZUUU"), 0)).toThrow();
+        expect(() => map.replace(new MGPStr("firstZUUU"), 0)).toThrow();
     });
     it('Delete should delete element', () => {
         const map: MGPMap<MGPStr, Number> = new MGPMap();
