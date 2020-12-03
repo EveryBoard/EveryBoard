@@ -8,7 +8,7 @@ import { GameService } from 'src/app/services/game/GameService';
 import { UserService } from 'src/app/services/user/UserService';
 
 import { Move } from '../../../jscaip/Move';
-import { ICurrentPart, ICurrentPartId, PICurrentPart, Part, MGPResult } from '../../../domain/icurrentpart';
+import { ICurrentPart, ICurrentPartId, Part, MGPResult } from '../../../domain/icurrentpart';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../../normal-component/part-creation/part-creation.component';
 import { IJoueurId, IJoueur } from '../../../domain/iuser';
@@ -18,7 +18,6 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({
@@ -168,23 +167,22 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             });
 
             if (this.isUpdateFirstPlayerMove()) {
-                display(OnlineGameWrapperComponent.VERBOSE, ">>> dans OnlineGameWrapperComponent.onCurrentPartUpdate: FIRST UPDATE TO BE A MOVE");
+                display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.onCurrentPartUpdate: FIRST UPDATE TO BE A MOVE");
                 this.firstPlayedTurn = part.turn - 1;
                 this.startCountDownFor(this.totalPartDuration, this.totalPartDuration, part.turn % 2 === 0 ? 0 : 1);
             } else {
-                display(OnlineGameWrapperComponent.VERBOSE, ">>> dans OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player");
+                display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player");
                 this.resumeCountDownFor(part.turn % 2 === 0 ? Player.ZERO : Player.ONE);
             }
         }
         if (!updateIsMove) {
-            display(OnlineGameWrapperComponent.VERBOSE, ">>> dans OnlineGameWrapperComponent.onCurrentPartUpdate: cette update n\'est pas un mouvement ! ");
+            display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.onCurrentPartUpdate: cette update n\'est pas un mouvement !");
         }
     }
     private isUpdateMove(update: ICurrentPart): boolean {
         let previousTurn: number = 0;
         if (this.currentPart != null) previousTurn = this.currentPart.copy().turn;
         return previousTurn < update.turn;
-
     }
     private isUpdateFirstPlayerMove(): boolean {
         const firstPlayedTurn: number = this.firstPlayedTurn;
@@ -192,7 +190,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         return firstPlayedTurn == null;
     }
     private doNewMoves(part: ICurrentPart) {
-        display(OnlineGameWrapperComponent.VERBOSE, "dans doNewMoves")
+        display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.doNewMoves")
         let currentPartTurn: number;
         const listMoves = part.listMoves;
         while (this.gameComponent.rules.node.gamePartSlice.turn < listMoves.length) {
@@ -202,14 +200,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             if (correctDBMove === false) {
                 throw new Error('We received an incorrect db move: ' + chosenMove.toString() + ' in ' + listMoves + ' at turn ' + currentPartTurn);
             }
-            if (this.gameComponent.rules.node.isEndGame()) {
-                 // TODO: this might be seen from both side, making two request instead of one, it must not
-                if (this.gameComponent.rules.node.ownValue === 0) {
-                    this.notifyDraw();
-                } else
-                    this.notifyVictory();
-            }
-
         }
         this.currentPlayer = this.players[this.gameComponent.rules.node.gamePartSlice.turn % 2];
         this.gameComponent.updateBoard();
@@ -233,13 +223,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         {
             this.endGame = true;
             this.stopCountdowns();
-            display(OnlineGameWrapperComponent.VERBOSE && currentPart.result.value === MGPResult.DRAW.toInterface().value,
-                          'match nul means winner = ' + currentPart.winner);
+            display(OnlineGameWrapperComponent.VERBOSE, 'endGame est true et winner est ' + currentPart.winner);
         }
     }
-    public notifyDraw() {
+    public notifyDraw(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number) {
         this.endGame = true;
-        this.gameService.notifyDraw(this.currentPartId);
+        this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, true);
     }
     public notifyTimeoutVictory(victoriousPlayer: string) {
         this.endGame = true;
@@ -250,23 +239,23 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
 
         this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer);
     }
-    public notifyVictory() {
-        // Previous line is wrong, assume that last player who notice the victory is the victorious, wrong as fuck
-        let victoriousPlayer: string;
+    public notifyVictory(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number) {
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
+        let winner: string;
         if (this.gameComponent.rules.node.ownValue === Number.MAX_SAFE_INTEGER) {
-            victoriousPlayer = this.players[1];
+            winner = this.players[1];
         } else if (this.gameComponent.rules.node.ownValue === Number.MIN_SAFE_INTEGER) {
-            victoriousPlayer = this.players[0];
+            winner = this.players[0];
         } else {
             throw new Error('How the fuck did you notice victory?');
         }
         this.endGame = true;
 
         const wonPart: ICurrentPart = this.currentPart.copy();
-        wonPart.winner = victoriousPlayer;
+        wonPart.winner = winner;
         this.currentPart = Part.of(wonPart);
 
-        this.gameService.notifyVictory(this.currentPartId, victoriousPlayer);
+        this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, false, winner);
     }
     public canAskTakeBack(): boolean {
         if (this.currentPart == null) {
@@ -396,10 +385,18 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public async updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.updateDBBoard(" + move.toString() + ", " + scorePlayerZero + ", " + scorePlayerOne + ")");
-
         const encodedMove: number = this.gameComponent.encodeMove(move);
-        return this.gameService.updateDBBoard(encodedMove, scorePlayerZero, scorePlayerOne, this.currentPartId);
+        display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent.updateDBBoard(" + move.toString() + ", " + scorePlayerZero + ", " + scorePlayerOne + ")");
+        this.gameComponent.rules.choose(move);
+        if (this.gameComponent.rules.node.isEndGame()) {
+            if (this.gameComponent.rules.node.ownValue === 0) {
+                this.notifyDraw(encodedMove, scorePlayerZero, scorePlayerOne);
+            } else {
+                this.notifyVictory(encodedMove, scorePlayerZero, scorePlayerOne);
+            }
+        } else {
+            return this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne);
+        }
     }
     public resign() {
         const victoriousOpponent = this.players[(this.observerRole + 1) % 2];
@@ -410,12 +407,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
             this.notifyTimeoutVictory(this.opponent.doc.pseudo);
-        } else {
-            // the other player has timeout
-            if (!this.endGame) {
-                this.notifyTimeoutVictory(this.userName);
-                this.endGame = true;
-            }
+        } else if (!this.endGame) {
+            // the other player has timed out
+            this.notifyTimeoutVictory(this.userName);
+            this.endGame = true;
         }
     }
     public acceptRematch() {

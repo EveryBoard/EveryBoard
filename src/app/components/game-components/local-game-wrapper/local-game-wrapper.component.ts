@@ -5,7 +5,6 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { GameWrapper } from 'src/app/components/game-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/user/UserService';
-import { Rules } from 'src/app/jscaip/Rules';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({

@@ -7,7 +7,6 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { GroupDatas } from 'src/app/games/go/groupdatas/GroupDatas';
-import { Rules } from 'src/app/jscaip/Rules';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({

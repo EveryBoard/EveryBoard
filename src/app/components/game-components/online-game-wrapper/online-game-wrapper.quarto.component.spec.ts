@@ -152,10 +152,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             scorePlayerZero: null,
         });
         fixture.detectChanges();
+        tick();
         return;
     };
+    let getElement: (elementName: string) => DebugElement = (elementName: string) => {
+        return debugElement.query(By.css(elementName));
+    };
     let clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
-        const element: DebugElement = debugElement.query(By.css(elementName));
+        const element: DebugElement = getElement(elementName);
         if (element == null) {
             return false;
         } else {
@@ -163,6 +167,17 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await fixture.whenStable();
             fixture.detectChanges();
             return true;
+        }
+    };
+    let prepareBoard: (moves: QuartoMove[]) => Promise<void> = async(moves: QuartoMove[]) => {
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        let receivedMoves: number[] = [];
+        for (let i: number = 0; i < moves.length; i+=2) {
+            const move: QuartoMove = moves[i];
+            await doMove(moves[i]);
+            receivedMoves.push(move.encode(), moves[i+1].encode());
+            await receiveNewMoves(receivedMoves);
         }
     };
     beforeAll(() => {
@@ -195,7 +210,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Prepared Game for creator should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
 
-        const partCreationId = fixture.debugElement.query(By.css('#partCreation'));
+        const partCreationId: DebugElement = getElement('#partCreation');
         let quartoTag = fixture.debugElement.nativeElement.querySelector("app-quarto");
         expect(partCreationId).toBeFalsy("partCreation id should be absent after config accepted");
         expect(quartoTag).toBeFalsy("quarto tag should be absent before config accepted and async millisec finished");
@@ -258,33 +273,26 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(component.maximalMoveDuration);
     }));
     it('Victory move from player should notifyVictory', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        tick(1);
-
         const move0: QuartoMove = new QuartoMove(0, 3, QuartoEnum.AAAB);
         const move1: QuartoMove = new QuartoMove(1, 3, QuartoEnum.AABA);
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.BBBB);
         const move3: QuartoMove = new QuartoMove(0, 0, QuartoEnum.AABB);
-        const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoEnum.ABAA);
-        await doMove(move0);
-        await receiveNewMoves([move0.encode(), move1.encode()]);
-        await doMove(move2);
-        await receiveNewMoves([move0.encode(), move1.encode(), move2.encode(), move3.encode()]);
+        await prepareBoard([move0, move1, move2, move3]);
+        expect(getElement('#youWonIndicator')).toBeFalsy('Element should not exist yet');
 
         spyOn(partDAO, 'update').and.callThrough();
+        const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoEnum.ABAA);
         await doMove(winningMove);
 
         expect(component.gameComponent.rules.node.move.toString()).toBe(winningMove.toString());
-        expect(partDAO.update).toHaveBeenCalledTimes(2);
+        expect(partDAO.update).toHaveBeenCalledTimes(1);
         expect(partDAO.update).toHaveBeenCalledWith("joinerId", {
             listMoves: [move0.encode(), move1.encode(), move2.encode(), move3.encode(), winningMove.encode()],
-            turn: 5, scorePlayerZero: null, scorePlayerOne: null, request: null
+            turn: 5, scorePlayerZero: null, scorePlayerOne: null, request: null,
+            winner: 'creator', result: MGPResult.VICTORY.toInterface(),
         });
-        expect(partDAO.update).toHaveBeenCalledWith("joinerId", {
-            winner: 'creator',
-            result: MGPResult.VICTORY.toInterface(),
-            request: null
-        });
+        await fixture.whenStable();
+        expect(getElement('#youWonIndicator')).toBeTruthy('Component should show who is the winner.')
     }));
     it('Should send take back request when player ask to', fakeAsync(async() => {
         // Doing a first move so take back make sens

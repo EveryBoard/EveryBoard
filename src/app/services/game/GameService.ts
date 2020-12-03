@@ -3,7 +3,7 @@ import {Observable, Subscription} from 'rxjs';
 
 import {PartDAO} from '../../dao/part/PartDAO';
 
-import {ICurrentPart, ICurrentPartId, MGPResult} from '../../domain/icurrentpart';
+import {ICurrentPart, ICurrentPartId, MGPResult, PICurrentPart} from '../../domain/icurrentpart';
 import {IJoiner} from '../../domain/ijoiner';
 
 import {JoinerService} from '../joiner/JoinerService';
@@ -137,24 +137,10 @@ export class GameService {
             request: null
         }); // resign
     }
-    public notifyDraw(partId: string): Promise<void> {
-        return this.partDao.update(partId, {
-            result: MGPResult.DRAW.toInterface(),
-            request: null // TODO: check line use
-        }); // DRAW CONSTANT
-    }
     public notifyTimeout(partId: string, winner: string): Promise<void> {
         return this.partDao.update(partId, {
             winner: winner,
             result: MGPResult.TIMEOUT.toInterface(),
-            request: null // TODO: check line use
-        });
-    }
-    public notifyVictory(partId: string, winner: string): Promise<void> {
-        display(GameService.VERBOSE, "GameService.notifyVictory(" + partId + ", " + winner + ")");
-        return this.partDao.update(partId, {
-            winner,
-            result: MGPResult.VICTORY.toInterface(),
             request: null // TODO: check line use
         });
     }
@@ -194,22 +180,35 @@ export class GameService {
             typeGame: part.doc.typeGame
         }});
     }
-    public async updateDBBoard(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number, partId: string): Promise<void> {
+    public async updateDBBoard(
+        partId: string,
+        encodedMove: number,
+        scorePlayerZero: number,
+        scorePlayerOne: number,
+        notifyDraw?: boolean,
+        winner?: string,
+    ): Promise<void>
+    {
         display(GameService.VERBOSE, "GameService.updateDBBoard(" + encodedMove + ", " + scorePlayerZero + ", " + scorePlayerOne + ", " + partId + ")");
 
         const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
         const listMoves: number[] = ArrayUtils.copyArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
-        await this.partDao.update(partId, {
+        let update: PICurrentPart = {
             listMoves,
             turn,
-            scorePlayerZero,
-            scorePlayerOne,
+            scorePlayerZero, // TODO: make optional
+            scorePlayerOne, // TODO: make optional
             request: null,
-        });
-        display(GameService.VERBOSE, "GameService.updateDBBoard: over");
-        return Promise.resolve();
+        };
+        if (winner != null) {
+            update.winner = winner;
+            update.result = MGPResult.VICTORY.toInterface();
+        } else if (notifyDraw) {
+            update.result = MGPResult.DRAW.toInterface();
+        }
+        return await this.partDao.update(partId, update);
     }
     public askTakeBack(partId: string, observerRole: Player): Promise<void> {
         let code: RequestCode;

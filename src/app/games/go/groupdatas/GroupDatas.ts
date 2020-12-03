@@ -1,7 +1,6 @@
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { GoPiece, GoPartSlice } from "../GoPartSlice";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
-import { Rules } from "src/app/jscaip/Rules";
 import { display } from "src/app/collectionlib/utils";
 
 export class GroupDatas {

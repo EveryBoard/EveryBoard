@@ -10,7 +10,6 @@ import { Orthogonale } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { GameComponentUtils } from '../GameComponentUtils';
-import { Rules } from 'src/app/jscaip/Rules';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({

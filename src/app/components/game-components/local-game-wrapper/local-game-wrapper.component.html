@@ -49,7 +49,7 @@
                     Match nul
                 </h4>
             </div>
-            <div class="inforow" id="passButton" *ngIf="endGame === false && compo.canPass">
+            <div class="inforow" id="passButtonDiv" *ngIf="endGame === false && compo.canPass">
                 <button (click)="compo.pass()"
                         mat-stroked-button>
                     Passer son tour

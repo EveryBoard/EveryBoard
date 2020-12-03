@@ -8,7 +8,6 @@ import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSl
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
-import { Rules } from 'src/app/jscaip/Rules';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({

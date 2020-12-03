@@ -24,7 +24,6 @@ import { SiamComponent } from './siam/siam.component';
 import { TablutComponent } from './tablut/tablut.component';
 
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { Rules } from 'src/app/jscaip/Rules';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({template: ''})

@@ -1,11 +1,10 @@
-import {Component} from '@angular/core';
-import {P4PartSlice} from '../../../games/p4/P4PartSlice';
-import {MoveX} from '../../../jscaip/MoveX';
-import {P4Rules} from '../../../games/p4/p4rules/P4Rules';
-import {Move} from '../../../jscaip/Move';
-import {AbstractGameComponent} from '../AbstractGameComponent';
+import { Component } from '@angular/core';
+import { P4PartSlice } from '../../../games/p4/P4PartSlice';
+import { MoveX } from '../../../jscaip/MoveX';
+import { P4Rules } from '../../../games/p4/p4rules/P4Rules';
+import { Move } from '../../../jscaip/Move';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Rules } from 'src/app/jscaip/Rules';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({
