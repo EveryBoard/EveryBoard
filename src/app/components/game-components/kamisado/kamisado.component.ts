@@ -72,7 +72,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         } else {
             success = await this.chooseDestination(x, y);
         }
-        if (!success.isSuccess) {
+        if (!success.isSuccess()) {
             this.cancelMove();
         }
         return success;
