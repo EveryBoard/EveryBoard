@@ -16,7 +16,7 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
 
     public static VERBOSE: boolean = false;
 
-    public rules: SaharaRules = new SaharaRules();
+    public rules: SaharaRules = new SaharaRules(SaharaPartSlice);
 
     public lastCoord: Coord = new Coord(-2, -2);
 

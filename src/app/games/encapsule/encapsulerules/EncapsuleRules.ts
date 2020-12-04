@@ -45,21 +45,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (owner[0] === Player.NONE) return false;
         return (owner[0] === owner[1]) && (owner[1] === owner[2]);
     }
-    constructor() {
-        super();
-        this.node = MGPNode.getFirstNode(
-            EncapsulePartSlice.getStartingSlice(),
-            this);
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                EncapsulePartSlice.getStartingSlice(),
-                this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
         const LOCAL_VERBOSE: boolean = false;
         const FAILURE: EncapsuleLegalityStatus = {legal: false, newLandingCase: null};

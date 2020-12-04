@@ -6,7 +6,8 @@ import { MinimaxTestingPartSlice } from "../MinimaxTestingPartSlice";
 describe('MinimaxTestingMove', () => {
 
     it('MinimaxTestingMove.encode and MinimaxTestingMove.decode should be reversible', () => {
-        const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_1);
+        MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
+        const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         const firstTurnMoves: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> = rules.getListMoves(rules.node);
         for (let i = 0; i < firstTurnMoves.size(); i++) {
             const move: MinimaxTestingMove = firstTurnMoves.getByIndex(i).key;

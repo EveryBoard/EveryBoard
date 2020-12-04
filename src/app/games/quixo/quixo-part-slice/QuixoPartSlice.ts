@@ -6,7 +6,7 @@ import { QuixoMove } from "../QuixoMove";
 
 export class QuixoPartSlice extends GamePartSlice {
 
-    public static getStartingSlice(): QuixoPartSlice {
+    public static getInitialSlice(): QuixoPartSlice {
         const initialBoard: number[][] = ArrayUtils.createBiArray(5, 5, Player.NONE.value);
         return new QuixoPartSlice(initialBoard, 0);
     }

@@ -16,7 +16,7 @@ import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 })
 export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
-    public rules = new EncapsuleRules();
+    public rules = new EncapsuleRules(EncapsulePartSlice);
 
     public mappedBoard: String[][][];
 

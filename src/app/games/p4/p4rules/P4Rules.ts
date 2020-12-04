@@ -409,15 +409,6 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         });
         return P4Rules.getBoardValueFromScratch(slice);
     }
-    // instance methods
-
-    constructor() {
-        super();
-        this.node = MGPNode.getFirstNode(
-            new P4PartSlice(P4PartSlice.getStartingBoard(), 0),
-            this
-        );
-    }
     // Overrides:
 
     public isLegal(move: MoveX, slice: P4PartSlice): LegalityStatus {
@@ -431,16 +422,6 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             return ILLEGAL;
         }
         return {legal: true};
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                new P4PartSlice(P4PartSlice.getStartingBoard(), 0),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
     public getListMoves(node: P4Node): MGPMap<MoveX, P4PartSlice> {
         return P4Rules.getListMoves(node);

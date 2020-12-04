@@ -13,11 +13,7 @@ import { DvonnPieceStack } from "../DvonnPieceStack";
 abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnPartSlice, LegalityStatus> { }
 
 export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus> {
-    constructor(initialSlice: DvonnPartSlice) {
-        super();
-        this.node = MGPNode.getFirstNode(initialSlice, this);
-        this
-    }
+
     private getFreePieces(slice: DvonnPartSlice): Coord[] {
         // Free pieces are the ones that have less than 6 neighbors (and belong to the current player)
         return DvonnBoard.getAllPieces(slice.board)
@@ -170,12 +166,5 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
             return failure;
         }
         return { legal: true };
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(DvonnPartSlice.getStartingSlice(), this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
 }

@@ -20,7 +20,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
 
     public static VERBOSE: boolean = false;
 
-    public rules: SiamRules = new SiamRules();
+    public rules: SiamRules = new SiamRules(SiamPartSlice);
 
     public lastMove: SiamMove;
 

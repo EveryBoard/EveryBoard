@@ -65,7 +65,7 @@ describe('P4Component', () => {
         expect(gameComponent).toBeTruthy("GoComponent should be created");
     });
     it('should accept simple move', () => {
-        const rules: P4Rules = new P4Rules();
+        const rules: P4Rules = new P4Rules(P4PartSlice);
         const listMoves: MGPMap<MoveX, P4PartSlice> = rules.getListMoves(rules.node);
         const currentMove: MoveX = listMoves.getByIndex(0).key;
         expect(gameComponent.onClick(currentMove.x)).toBeTruthy(0);

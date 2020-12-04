@@ -1,8 +1,8 @@
-import {Orthogonale, Direction} from '../../../jscaip/DIRECTION';
-import {Rules} from '../../../jscaip/Rules';
-import {Coord} from '../../../jscaip/coord/Coord';
+import { Orthogonale, Direction } from '../../../jscaip/DIRECTION';
+import { Rules } from '../../../jscaip/Rules';
+import { Coord } from '../../../jscaip/coord/Coord';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
-import {TablutPartSlice} from '../TablutPartSlice';
+import { TablutPartSlice } from '../TablutPartSlice';
 import { TablutMove } from '../tablutmove/TablutMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -521,13 +521,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const scoreOne = nbPlayerOnePawns * oneMult;
         return scoreOne - scoreZero; // TODO : countInvader vs Defenders
     }
-    constructor() {
-        super();
-        this.node = MGPNode.getFirstNode(
-            new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true),
-            this
-        );
-    }
     // instance methods :
 
     public applyLegalMove(move: TablutMove, slice: TablutPartSlice, status: LegalityStatus): { resultingMove: TablutMove; resultingSlice: TablutPartSlice; } {
@@ -618,15 +611,5 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         // test
         const player: 0|1 = turn % 2 === 0 ? 0 : 1;
         return {legal: TablutRules.tryMove(player, invaderStart, move, board).success === TablutRules.SUCCESS };
-    }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                new TablutPartSlice(TablutPartSlice.getStartingBoard(true), 0, true), // TODO: rendre ça configurable
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
 }

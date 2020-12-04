@@ -12,7 +12,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
-    public rules = new AwaleRules();
+    public rules = new AwaleRules(AwalePartSlice);
 
     public scores: number[] = [0, 0];
 

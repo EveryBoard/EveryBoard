@@ -15,7 +15,8 @@ import { Player } from 'src/app/jscaip/Player';
 })
 
 export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
-    public rules = new KamisadoRules(KamisadoPartSlice.getStartingSlice());
+
+    public rules = new KamisadoRules(KamisadoPartSlice);
 
     public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();
 

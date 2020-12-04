@@ -31,8 +31,8 @@ describe('SiamRules - Minimax:', () => {
         SiamRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SiamRules.VERBOSE;
     });
     beforeEach(() => {
-        rules = new SiamRules();
-        MGPNode.NB_NODE_CREATED = 0;
+        rules = new SiamRules(SiamPartSlice);
+        MGPNode.NB_NODE_CREATED = 0; // TODO: Delete and use spy
     });
     it("Board value test: Should know who is closer to win (1)", () => {
         const board: number[][] = [

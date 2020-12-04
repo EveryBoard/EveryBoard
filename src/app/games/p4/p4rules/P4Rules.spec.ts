@@ -1,5 +1,5 @@
-import {P4Node, P4Rules} from './P4Rules';
-import {MoveX} from '../../../jscaip/MoveX';
+import { P4Node, P4Rules } from './P4Rules';
+import { MoveX } from '../../../jscaip/MoveX';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Player } from 'src/app/jscaip/Player';
 import { P4PartSlice } from '../P4PartSlice';
@@ -17,7 +17,7 @@ describe('P4Rules', () => {
         P4Rules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || P4Rules.VERBOSE;
     });
     beforeEach(() => {
-        rules = new P4Rules();
+        rules = new P4Rules(P4PartSlice);
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

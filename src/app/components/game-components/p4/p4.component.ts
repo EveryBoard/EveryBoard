@@ -17,7 +17,7 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
 
     public static VERBOSE: boolean = false;
 
-    public rules = new P4Rules();
+    public rules = new P4Rules(P4PartSlice);
 
     public imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg', ];
 

@@ -15,23 +15,6 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
 
     public static VERBOSE: boolean = false;
 
-    constructor() {
-        super();
-        this.node = MGPNode.getFirstNode(
-            new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
-            this
-        );
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public applyLegalMove(move: ReversiMove, slice: ReversiPartSlice, status: ReversiLegalityStatus): { resultingMove: ReversiMove; resultingSlice: ReversiPartSlice; } {
         const turn: number = slice.turn;
         const player: number = turn % 2;

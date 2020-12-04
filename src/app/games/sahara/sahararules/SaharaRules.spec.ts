@@ -15,7 +15,7 @@ describe('SaharaRules', () => {
         SaharaRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SaharaRules.VERBOSE;
     });
     beforeEach(() => {
-        rules = new SaharaRules();
+        rules = new SaharaRules(SaharaPartSlice);
     });
     it('SaharaRules should be created', () => {
         expect(rules).toBeTruthy();

@@ -16,7 +16,7 @@ describe('PylosRules - Minimax:', () => {
     let O: number = Player.ZERO.value;
 
     beforeEach(() => {
-        rules = new PylosRules();
+        rules = new PylosRules(PylosPartSlice);
     });
 
     it("Should provide 16 drops at first turn", () => {

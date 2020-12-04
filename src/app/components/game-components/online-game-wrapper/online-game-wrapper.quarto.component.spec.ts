@@ -1,6 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { By } from '@angular/platform-browser';
 
 import { of } from 'rxjs';
 
@@ -23,7 +24,6 @@ import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
-import { By } from '@angular/platform-browser';
 import { QuartoEnum } from 'src/app/games/quarto/QuartoEnum';
 import { RequestCode } from 'src/app/domain/request';
 import { MGPResult } from 'src/app/domain/icurrentpart';
@@ -278,7 +278,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.BBBB);
         const move3: QuartoMove = new QuartoMove(0, 0, QuartoEnum.AABB);
         await prepareBoard([move0, move1, move2, move3]);
-        expect(getElement('#youWonIndicator')).toBeFalsy('Element should not exist yet');
+        expect(getElement('#winnerIndicator')).toBeFalsy('Element should not exist yet');
 
         spyOn(partDAO, 'update').and.callThrough();
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoEnum.ABAA);

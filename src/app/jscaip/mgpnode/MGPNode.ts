@@ -99,7 +99,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         return SCORE.DEFAULT;
     }
     public static getFirstNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> (initialBoard: S, gameRuler: R) {
-        MGPNode.ruler = gameRuler; // pour toutes les node, gameRuler sera le r�f�rent
+        MGPNode.ruler = gameRuler; // pour toutes les node, gameRuler sera le référent
         return new MGPNode(null, null, initialBoard, 0);
     }
     // instance methods:

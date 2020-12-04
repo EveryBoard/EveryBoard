@@ -18,7 +18,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public static VERBOSE: boolean = false;
 
-    public rules: QuixoRules = new QuixoRules();
+    public rules: QuixoRules = new QuixoRules(QuixoPartSlice);
 
     public slice: QuixoPartSlice = this.rules.node.gamePartSlice;
 

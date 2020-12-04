@@ -23,23 +23,6 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
             resultingMove: move
         };
     }
-    constructor(initialBoard: ReadonlyArray<ReadonlyArray<number>>) {
-        super();
-        MinimaxTestingPartSlice.initialBoard = initialBoard;
-        this.node = MGPNode.getFirstNode(
-            new MinimaxTestingPartSlice(0, new Coord(0, 0)),
-            this
-        );
-    }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                MinimaxTestingPartSlice.getStartingSlice(),
-                this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public isLegal(move: MinimaxTestingMove): LegalityStatus {
         const ILLEGAL: LegalityStatus = {legal: false};
         const slice: MinimaxTestingPartSlice = this.node.gamePartSlice;

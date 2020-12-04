@@ -17,13 +17,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
     public static VERBOSE: boolean = false;
 
-    constructor() {
-        super();
-        this.node = MGPNode.getFirstNode(
-            new AwalePartSlice(AwalePartSlice.getStartingBoard(), 0, [0, 0]),
-            this
-        );
-    }
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): { resultingMove: AwaleMove; resultingSlice: AwalePartSlice; } {
         display(AwaleRules.VERBOSE, "applyLegalMove");
         const turn: number = slice.turn;
@@ -257,15 +250,5 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             return Number.MIN_SAFE_INTEGER;
         }
         return c1 - c0;
-    }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                new AwalePartSlice(AwalePartSlice.getStartingBoard(), 0, [0, 0]),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
 }

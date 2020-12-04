@@ -62,7 +62,7 @@ describe('ReversiComponent', () => {
         expect(gameComponent).toBeTruthy("GoComponent should be created");
     });
     it('should accept simple move', () => {
-        const rules: ReversiRules = new ReversiRules();
+        const rules: ReversiRules = new ReversiRules(ReversiPartSlice);
         const listMoves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
         const currentMove: ReversiMove = listMoves.getByIndex(0).key;
         expect(gameComponent.onClick(currentMove.coord.x, currentMove.coord.y)).toBeTruthy(0);

@@ -9,6 +9,7 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 describe('KamisadoRules:', () => {
     let rules: KamisadoRules;
@@ -25,7 +26,7 @@ describe('KamisadoRules:', () => {
     const p: number = KamisadoPiece.ONE.PURPLE.getValue();
 
     beforeEach(() => {
-        rules = new KamisadoRules(KamisadoPartSlice.getStartingSlice());
+        rules = new KamisadoRules(KamisadoPartSlice);
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
@@ -97,7 +98,7 @@ describe('KamisadoRules:', () => {
             [R, _, _, _, _, _, _, _]
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board1);
-        rules = new KamisadoRules(slice);
+        rules.node = new MGPNode(null, null, slice, 0);
         const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
         const status1: LegalityStatus = rules.isLegal(move1, slice);
         expect(status1.legal).toBeFalsy("Move on existing piece should be illegal");
@@ -117,7 +118,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 6)), false, board);
-        rules = new KamisadoRules(slice);
+        rules.node = new MGPNode(null, null, slice, 0);
         const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(0, 7));
         const status1: LegalityStatus = rules.isLegal(move1, slice);
         expect(status1.legal).toBeFalsy("Backward vertical move should be illegal");
@@ -183,7 +184,7 @@ describe('KamisadoRules:', () => {
             [R, _, _, _, _, _, _, _]
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        rules = new KamisadoRules(slice);
+        rules.node = new MGPNode(null, null, slice, 0);
         const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(1, 6));
         const status1: LegalityStatus = rules.isLegal(move1, slice);
         expect(status1.legal).toBeFalsy("Diagonal move on existing piece should be illegal");

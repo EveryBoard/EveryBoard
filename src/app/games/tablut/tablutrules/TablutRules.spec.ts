@@ -18,7 +18,7 @@ describe('TablutRules', () => {
         TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || TablutRules.VERBOSE;
     });
     beforeEach(() => {
-        rules = new TablutRules();
+        rules = new TablutRules(TablutPartSlice);
     });
     it('TablutRules should be created', () => {
         expect(rules).toBeTruthy();

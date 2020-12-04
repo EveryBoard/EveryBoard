@@ -12,7 +12,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 })
 export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
-    public rules: ReversiRules = new ReversiRules();
+    public rules: ReversiRules = new ReversiRules(ReversiPartSlice);
 
     public lastMove: Coord = new Coord(-2, -2);
 

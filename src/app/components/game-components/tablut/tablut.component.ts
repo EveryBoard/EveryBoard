@@ -17,7 +17,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public static VERBOSE: boolean = false;
 
-    public rules = new TablutRules();
+    public rules = new TablutRules(TablutPartSlice);
 
     public imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
 

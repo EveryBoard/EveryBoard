@@ -4,13 +4,13 @@ import { GamePartSlice } from './GamePartSlice';
 import { MGPMap } from '../collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
 import { display } from '../collectionlib/utils';
+import { Type } from '@angular/core';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 
-    public static display(verbose: boolean, message: any) {
-        if (verbose) console.log(message);
+    public constructor(public readonly sliceType: Type<S>) { // TODO: Make singleton ?
+        this.setInitialBoard();
     }
-    public constructor() {}
 
     public node: MGPNode<Rules<M, S, L>, M, S, L>; // TODO: check that this should not made static
     /* The data that represent the status of the game at the current moment, including:
@@ -65,15 +65,22 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
         this.node = son;
         return true;
     };
-
     public abstract applyLegalMove(move: M, slice: S, status: L): {resultingMove: M, resultingSlice: S};
 
     public abstract isLegal(move: M, slice: S): L;
     /* return a legality status about the move, allowing to return already calculated info
      * don't do any modification to the board
      */
-
-    public abstract setInitialBoard(): void;  // TODO: make generic and unherited
-    /* set the initial board
-     */
+    public setInitialBoard() {
+        if (this.node == null) {
+            if (this.sliceType['getInitialSlice']) {
+                const initialSlice: S = this.sliceType['getInitialSlice']();
+                this.node = MGPNode.getFirstNode(initialSlice, this);
+            } else {
+                throw new Error("Should implement staticm ethod getInitialSlice on every Rules child classes.");
+            }
+        } else {
+            this.node = this.node.getInitialNode();
+        }
+    }
 }

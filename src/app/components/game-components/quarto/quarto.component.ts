@@ -13,7 +13,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 })
 export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice, LegalityStatus> {
 
-    public rules = new QuartoRules();
+    public rules = new QuartoRules(QuartoPartSlice);
 
     public chosen: Coord = new Coord(-1, -1);
 

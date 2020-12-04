@@ -13,20 +13,6 @@ export class PylosNode extends MGPNode<Rules<PylosMove, PylosPartSlice, Legality
 
 export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus> {
 
-    public constructor() {
-        super();
-        this.setInitialBoard(); // TODO: generalize Rules constructor like this
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                PylosPartSlice.getStartingSlice(),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public getListMoves(node: PylosNode): MGPMap<PylosMove, PylosPartSlice> {
         const slice: PylosPartSlice = node.gamePartSlice;
         const result: MGPMap<PylosMove, PylosPartSlice> = new MGPMap<PylosMove, PylosPartSlice>();

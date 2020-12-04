@@ -20,6 +20,10 @@ export class ReversiPartSlice extends GamePartSlice {
 
         return board;
     }
+    public static getInitialSlice(): ReversiPartSlice {
+        const board: number[][] = ReversiPartSlice.getStartingBoard();
+        return new ReversiPartSlice(board, 0);
+    }
     public static getNeighbooringPawnLike(board: number[][], searchedValue: number, cx: number, cy: number): Coord[] {
         let c: Coord;
         const result: Coord[] = [];

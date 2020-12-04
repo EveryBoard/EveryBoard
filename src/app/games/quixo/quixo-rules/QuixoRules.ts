@@ -12,20 +12,6 @@ export abstract class QuixoNode extends MGPNode<Rules<QuixoMove, QuixoPartSlice,
 
 export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus> {
 
-    public constructor() {
-        super();
-        this.setInitialBoard(); // TODO: generalize Rules constructor like this
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                QuixoPartSlice.getStartingSlice(),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public getListMoves(node: QuixoNode): MGPMap<QuixoMove, QuixoPartSlice> {
         const slice: QuixoPartSlice = node.gamePartSlice;
         const moves: MGPMap<QuixoMove, QuixoPartSlice> = new MGPMap<QuixoMove, QuixoPartSlice>();

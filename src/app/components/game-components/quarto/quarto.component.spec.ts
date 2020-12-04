@@ -84,7 +84,7 @@ describe('QuartoComponent', () => {
         expect(gameComponent).toBeTruthy("QuartoComponent should be created");
     });
     it('should accept simple move', fakeAsync(async() => {
-        const rules: QuartoRules = new QuartoRules();
+        const rules: QuartoRules = new QuartoRules(QuartoPartSlice);
         const listMoves: QuartoMove[] = rules.getListMoves(rules.node).listKeys();
         const currentMove: QuartoMove = listMoves[0];
 

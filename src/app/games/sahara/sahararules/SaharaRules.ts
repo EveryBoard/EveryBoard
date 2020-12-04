@@ -18,10 +18,6 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
 
     public static VERBOSE: boolean = false;
 
-    constructor() {
-        super();
-        this.setInitialBoard();
-    }
     public getListMoves(node: SaharaNode): MGPMap<SaharaMove, SaharaPartSlice> {
         const moves: MGPMap<SaharaMove, SaharaPartSlice> = new MGPMap<SaharaMove, SaharaPartSlice>();
         const board: SaharaPawn[][] = node.gamePartSlice.getCopiedBoard();
@@ -130,16 +126,6 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
             }
         } else {
             return {legal: true};
-        }
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                new SaharaPartSlice(SaharaPartSlice.getStartingBoard(), 0),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
         }
     }
 }

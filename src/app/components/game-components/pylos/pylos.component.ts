@@ -16,7 +16,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     public static VERBOSE: boolean = false;
 
-    public rules: PylosRules = new PylosRules();
+    public rules: PylosRules = new PylosRules(PylosPartSlice);
 
     public slice: PylosPartSlice = this.rules.node.gamePartSlice;
 

@@ -29,7 +29,7 @@ describe('SiamRules:', () => {
         SiamRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SiamRules.VERBOSE;
     });
     beforeEach(() => {
-        rules = new SiamRules();
+        rules = new SiamRules(SiamPartSlice);
     });
     it('Should be created', () => {
         expect(rules).toBeTruthy();

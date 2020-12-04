@@ -2,6 +2,7 @@ import { QuartoRules } from "./QuartoRules";
 import { QuartoMove } from "../quartomove/QuartoMove";
 import { QuartoEnum } from "../QuartoEnum";
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
+import { QuartoPartSlice } from "../QuartoPartSlice";
 
 describe('QuartoRules', () => {
 
@@ -11,7 +12,7 @@ describe('QuartoRules', () => {
         QuartoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || QuartoRules.VERBOSE;
     });
     beforeEach(() => {
-        rules = new QuartoRules();
+        rules = new QuartoRules(QuartoPartSlice);
     });
     it('Should create', () => {
         expect(rules).toBeTruthy();

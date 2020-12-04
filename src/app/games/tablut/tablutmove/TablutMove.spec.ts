@@ -11,7 +11,7 @@ describe('TablutMove', () => {
         TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || TablutRules.VERBOSE;
     });
     it('TablutMove.encode and TablutMove.decode should be reversible', () => {
-        const rules: TablutRules = new TablutRules();
+        const rules: TablutRules = new TablutRules(TablutPartSlice);
         const firstTurnMoves: MGPMap<TablutMove, TablutPartSlice> = rules.getListMoves(rules.node);
         for (let i = 0; i < firstTurnMoves.size(); i++) {
             const move: TablutMove = firstTurnMoves.getByIndex(i).key;

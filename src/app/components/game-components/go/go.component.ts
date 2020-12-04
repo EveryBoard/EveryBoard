@@ -19,7 +19,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public scores: number[] = [0, 0];
 
-    public rules = new GoRules();
+    public rules = new GoRules(GoPartSlice);
 
     public boardInfo: GroupDatas;
 

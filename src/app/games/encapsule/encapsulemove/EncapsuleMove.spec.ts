@@ -8,7 +8,7 @@ import { EncapsulePiece } from "../EncapsuleEnums";
 describe('EncapsuleMove', () => {
 
     it('EncapsuleMove.encode and EncapsuleMove.decode should be reversible', () => {
-        const rules: EncapsuleRules = new EncapsuleRules();
+        const rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
         const firstTurnMoves: MGPMap<EncapsuleMove, EncapsulePartSlice> = rules.getListMoves(rules.node);
         for (let i = 0; i < firstTurnMoves.size(); i++) {
             const move: EncapsuleMove = firstTurnMoves.getByIndex(i).key;

@@ -2,6 +2,7 @@ import { EncapsuleRules } from "./EncapsuleRules";
 import { EncapsuleMove } from "../encapsulemove/EncapsuleMove";
 import { EncapsulePiece } from "../EncapsuleEnums";
 import { Coord } from "src/app/jscaip/coord/Coord";
+import { EncapsulePartSlice } from "../EncapsulePartSlice";
 
 describe('EncapsuleRules', () => {
 
@@ -16,7 +17,7 @@ describe('EncapsuleRules', () => {
         return rules.choose(move);
     }
     beforeEach(() => {
-        rules = new EncapsuleRules();
+        rules = new EncapsuleRules(EncapsulePartSlice);
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

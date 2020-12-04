@@ -18,7 +18,7 @@ describe('ReversiRules', () => {
         ReversiRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ReversiRules.VERBOSE;
     });
     beforeEach(() => {
-        rules = new ReversiRules();
+        rules = new ReversiRules(ReversiPartSlice);
     });
     it('ReversiRules should be created', () => {
         expect(rules).toBeTruthy();

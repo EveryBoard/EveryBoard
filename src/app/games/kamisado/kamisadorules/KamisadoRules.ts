@@ -15,11 +15,6 @@ import { Rules } from "src/app/jscaip/Rules";
 abstract class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> { }
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
-    constructor(initialSlice: KamisadoPartSlice) {
-        super();
-        this.node = MGPNode.getFirstNode(initialSlice, this);
-        this
-    }
 
     public getColorMatchingPiece(slice: KamisadoPartSlice): Array<Coord> {
         if (slice.colorToPlay !== KamisadoColor.ANY) {
@@ -115,7 +110,6 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         }
         return moves;
     }
-
     public getListMoves(node: KamisadoNode): MGPMap<KamisadoMove, KamisadoPartSlice> {
         return this.getListMovesFromSlice(node.gamePartSlice);
     }
@@ -228,12 +222,5 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             return failure;
         }
         return { legal: true }
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(KamisadoPartSlice.getStartingSlice(), this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
 }

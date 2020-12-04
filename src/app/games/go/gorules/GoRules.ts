@@ -16,13 +16,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
-    constructor() {
-        super();
-        this.node = MGPNode.getFirstNode(
-            new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING),
-            this
-        );
-    }
     public isLegal(move: GoMove, slice: GoPartSlice): GoLegalityStatus {
         return GoRules.isLegal(move, slice);
     }
@@ -403,13 +396,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             }
         } else {
             return null;
-        }
-    }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING), this);
-        } else {
-            this.node = this.node.getInitialNode();
         }
     }
     public static markTerritoryAndCount(slice: GoPartSlice): GoPartSlice {

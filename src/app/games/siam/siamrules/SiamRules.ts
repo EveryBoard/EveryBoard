@@ -21,20 +21,6 @@ export class SiamRules extends _SiamRules {
 
     private static readonly ILLEGAL: SiamLegalityStatus = {legal: false, resultingBoard: null};
 
-    constructor() {
-        super();
-        this.setInitialBoard(); // TODO: generalize Rules constructor like this
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                new SiamPartSlice(SiamPartSlice.getStartingBoard(), 0),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public isLegal(move: SiamMove, slice: SiamPartSlice): SiamLegalityStatus {
         display(SiamRules.VERBOSE, { SiamRules_isLegal: { move, slice }});
 

@@ -21,4 +21,8 @@ export class SaharaPartSlice extends GamePartSlice {
             [ NONE,  NONE, WHITE, BLACK, EMPTY, EMPTY, EMPTY, WHITE, BLACK,  NONE,  NONE]
         ];
     }
+    public static getInitialSlice(): SaharaPartSlice {
+        const board: number[][] = SaharaPartSlice.getStartingBoard();
+        return new SaharaPartSlice(board, 0);
+    }
 }

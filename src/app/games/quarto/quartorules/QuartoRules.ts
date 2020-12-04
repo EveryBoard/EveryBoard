@@ -1,8 +1,8 @@
-import {Rules} from '../../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
-import {QuartoPartSlice} from '../QuartoPartSlice';
-import {QuartoMove} from '../quartomove/QuartoMove';
-import {QuartoEnum} from '../QuartoEnum';
+import { Rules } from '../../../jscaip/Rules';
+import {  MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { QuartoPartSlice } from '../QuartoPartSlice';
+import { QuartoMove } from '../quartomove/QuartoMove';
+import { QuartoEnum } from '../QuartoEnum';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { display } from 'src/app/collectionlib/utils';
@@ -159,20 +159,6 @@ class Critere {
 abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus> {}
 
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStatus> {
-
-    constructor() {
-        super();
-        this.setInitialBoard();
-    }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MGPNode.getFirstNode(
-                new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA), // TODO: make generic
-                this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
 
     public applyLegalMove(move: QuartoMove, slice: QuartoPartSlice, status: LegalityStatus): { resultingMove: QuartoMove; resultingSlice: QuartoPartSlice; } {
         let newBoard: number[][] = slice.getCopiedBoard();

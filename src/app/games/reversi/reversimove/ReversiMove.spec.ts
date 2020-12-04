@@ -6,7 +6,7 @@ import { ReversiPartSlice } from "../ReversiPartSlice";
 describe('ReversiMove', () => {
 
     it('ReversiMove.encode and ReversiMove.decode should be reversible', () => {
-        const rules: ReversiRules = new ReversiRules();
+        const rules: ReversiRules = new ReversiRules(ReversiPartSlice);
         const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
         moves.put(ReversiMove.PASS, new ReversiPartSlice([], 0));
         for (let i = 0; i < moves.size(); i++) {
