@@ -1,5 +1,4 @@
 import { Rules } from "src/app/jscaip/Rules";
-import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MNode } from "src/app/jscaip/MNode";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
@@ -11,6 +10,7 @@ import { SaharaPartSlice } from "../SaharaPartSlice";
 import { TriangularCheckerBoard } from "src/app/jscaip/TriangularCheckerBoard";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 
 abstract class SaharaNode extends MNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
 
@@ -114,22 +114,22 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         const movedPawn: SaharaPawn = slice.getBoardAt(move.coord);
         if (movedPawn !== slice.getCurrentPlayer().value) {
             Rules.display(SaharaRules.VERBOSE, "This move is illegal because it is not the current player's turn");
-            return {legal: false};
+            return {legal: MGPValidation.failure("move pawned not owned by current player")};
         }
         const landingCase: SaharaPawn = slice.getBoardAt(move.end);
         if (landingCase !== SaharaPawn.EMPTY) {
             Rules.display(SaharaRules.VERBOSE, "This move is illegal because the landing case is not empty");
-            return {legal: false};
+            return {legal: MGPValidation.failure("landing case is not empty")};
         }
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
         if (commonNeighboor.isPresent()) {
             if (slice.getBoardAt(commonNeighboor.get()) === SaharaPawn.EMPTY) {
-                return {legal: true};
+                return {legal: MGPValidation.success()};
             } else {
-                return {legal: false};
+                return {legal: MGPValidation.failure("common neighbor not empty")};
             }
         } else {
-            return {legal: true};
+            return {legal: MGPValidation.success()};
         }
     }
     public setInitialBoard(): void {

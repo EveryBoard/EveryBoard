@@ -5,6 +5,7 @@ import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTe
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/minimaxtestingmove/MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-minimax-testing',
@@ -19,11 +20,11 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
 
     public coord: Coord = new Coord(-1, -1);
 
-    public chooseRight(): Promise<boolean> {
+    public chooseRight(): Promise<MGPValidation> {
         const chosenMove = MinimaxTestingMove.RIGHT;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
-    public chooseDown(): Promise<boolean> {
+    public chooseDown(): Promise<MGPValidation> {
         const chosenMove = MinimaxTestingMove.DOWN;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }

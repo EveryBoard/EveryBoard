@@ -9,6 +9,7 @@ import {Coord} from 'src/app/jscaip/coord/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-encapsule',
@@ -90,7 +91,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         const chosenPieceName: String = EncapsuleMapper.getNameFromPiece(this.chosenPiece);
         return chosenPieceName === pieceName;
     }
-    public async onBoardClick(x: number, y: number): Promise<boolean> {
+    public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
         this.hideLastMove();
         const clickedCoord: Coord = new Coord(x, y);
         if (this.chosenCoord == null) {
@@ -100,12 +101,12 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
                 return this.suggestMove(chosenMove);
             } else {
-                return false;
+                return MGPValidation.failure("no chosen piece");
             }
         } else {
             if (this.chosenCoord.equals(clickedCoord)) {
                 this.cancelMove();
-                return false;
+                return MGPValidation.failure("chosen coord is different from clicked coord");
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
@@ -121,16 +122,16 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         this.chosenCoord = null;
         this.chosenPiece = null;
     }
-    public async onPieceClick(pieceString: String): Promise<boolean> {
+    public async onPieceClick(pieceString: String): Promise<MGPValidation> {
         this.hideLastMove();
         const piece: EncapsulePiece = this.getEncapsulePieceFromName(pieceString);
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (!slice.isDropable(piece) || (piece === this.chosenPiece)) {
             this.cancelMove();
-            return false;
+            return MGPValidation.failure("piece is not droppable");
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
-            return true;
+            return MGPValidation.failure("no chosen coord");
         } else {
             const chosenMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, this.chosenCoord);
             return this.suggestMove(chosenMove);
@@ -145,7 +146,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
     }
     // creating method for OnlineQuarto
 
-    private suggestMove(chosenMove: EncapsuleMove): Promise<boolean> {
+    private suggestMove(chosenMove: EncapsuleMove): Promise<MGPValidation> {
         this.cancelMove();
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }

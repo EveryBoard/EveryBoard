@@ -6,6 +6,7 @@ import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaRules } from 'src/app/games/sahara/sahararules/SaharaRules';
 import { Rules } from 'src/app/jscaip/Rules';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-sahara',
@@ -92,8 +93,8 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
         if (-1 < this.chosenCoord.x) {
             try {
                 const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
-                const moveResult: boolean = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
-                if (moveResult === true) {
+                const moveResult: MGPValidation = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
+                if (moveResult.isSuccess()) {
                     Rules.display(SaharaComponent.VERBOSE, "Move is legal");
                 } else {
                     Rules.display(SaharaComponent.VERBOSE, "Move is illegal");

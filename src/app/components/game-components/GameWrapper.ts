@@ -1,4 +1,4 @@
-import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Injectable, Type, ViewChild } from '@angular/core';
+import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractGameComponent } from './AbstractGameComponent';
 import { GameIncluderComponent } from './game-includer/game-includer.component';
@@ -59,11 +59,12 @@ export abstract class GameWrapper {
         Rules.display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent: '+(this.gameIncluder!=null));
 
         switch (compoString) {
+                /*
             case 'Awale':
-                return AwaleComponent;
+                return AwaleComponent; */
             case 'Dvonn':
                 return DvonnComponent;
-            case 'Encapsule':
+            /* case 'Encapsule':
                 return EncapsuleComponent;
             case 'Go':
                 return GoComponent;
@@ -86,7 +87,7 @@ export abstract class GameWrapper {
             case 'Tablut':
                 return TablutComponent;
             case 'Kamisado':
-                return KamisadoComponent;
+                return KamisadoComponent; */
             default:
                 throw new Error("Unknown Games are unwrappable");
         }
@@ -120,14 +121,14 @@ export abstract class GameWrapper {
     public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<MGPValidation> => {
         const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
-            return MGPValidation.error("not your turn");
+            return MGPValidation.failure("not your turn");
         }
         if (this.endGame) {
-            return MGPValidation.error("game is finished your turn");
+            return MGPValidation.failure("game is finished your turn");
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
-        if (legality.legal === false) {
-            return MGPValidation.error("move illegal");
+        if (legality.legal.isFailure) {
+            return legality.legal
         }
         await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
         Rules.display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");

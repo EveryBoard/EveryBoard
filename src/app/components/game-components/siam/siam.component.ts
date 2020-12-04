@@ -11,6 +11,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { Rules } from 'src/app/jscaip/Rules';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-siam',
@@ -38,13 +39,13 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         this.board = slice.board;
         this.lastMove = this.rules.node.move;
     }
-    public cancelMove(reason: string): boolean {
+    public cancelMove(reason: string): MGPValidation {
         Rules.display(SiamComponent.VERBOSE, reason);
         this.chosenCoord = null;
         this.chosenDirection = null;
         this.landingCoord = null;
         this.chosenOrientation = null;
-        return false;
+        return MGPValidation.failure(reason);
     }
     public decodeMove(encodedMove: number): SiamMove {
         return SiamMove.decode(encodedMove);
@@ -52,16 +53,16 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public encodeMove(move: SiamMove): number {
         return move.encode();
     }
-    public clickPiece(x: number, y: number): boolean {
+    public clickPiece(x: number, y: number): MGPValidation {
         const piece: number = this.board[y][x];
         const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
         if (SiamPiece.getOwner(piece) === ennemy) {
             return this.cancelMove("Can't choose ennemy's pieces");
         }
         this.chosenCoord = new Coord(x, y);
-        return true;
+        return MGPValidation.success();
     }
-    public async chooseDirection(direction: string): Promise<boolean> {
+    public async chooseDirection(direction: string): Promise<MGPValidation> {
         Rules.display(SiamComponent.VERBOSE, "SiamComponent.chooseDirection(" + direction + ")");
         if (direction === '') {
             this.chosenDirection = MGPOptional.empty();
@@ -76,14 +77,14 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                 return this.tryMove();
             }
         }
-        return true;
+        return MGPValidation.success();
     }
-    public async chooseOrientation(orientation: string): Promise<boolean> {
+    public async chooseOrientation(orientation: string): Promise<MGPValidation> {
         Rules.display(SiamComponent.VERBOSE, "SiamComponent.chooseOrientation(" + orientation + ")");
         this.chosenOrientation = Orthogonale.fromString(orientation);
         return this.tryMove();
     }
-    public async insertAt(x: number, y: number): Promise<boolean> {
+    public async insertAt(x: number, y: number): Promise<MGPValidation> {
         Rules.display(SiamComponent.VERBOSE, "SiamComponent.insertAt(" + x + ", " + y + ")");
 
         if (this.chosenCoord) {
@@ -93,16 +94,16 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             const dir: Orthogonale = SiamRules.getCoordDirection(x, y, this.rules.node.gamePartSlice);
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
-            return true;
+            return MGPValidation.success();
         }
     }
-    public async tryMove(): Promise<boolean> {
+    public async tryMove(): Promise<MGPValidation> {
         const move: SiamMove = new SiamMove(this.chosenCoord.x,
                                             this.chosenCoord.y,
                                             this.chosenDirection,
                                             this.chosenOrientation);
         this.cancelMove("Hiding move before submitting it");
-        const legal: boolean = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        const legal: MGPValidation = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         Rules.display(SiamComponent.VERBOSE, "SiamComponent.tryMove: " + legal);
         return legal;
     }

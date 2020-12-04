@@ -9,6 +9,7 @@ import { Sets } from 'src/app/collectionlib/sets/Sets';
 import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 abstract class EncapsuleNode extends MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
 
@@ -61,7 +62,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
     }
     public isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
         const LOCAL_VERBOSE: boolean = false;
-        const FAILURE: EncapsuleLegalityStatus = {legal: false, newLandingCase: null};
         let boardCopy: number[][] = slice.getCopiedBoard();
         Rules.display(LOCAL_VERBOSE, move.toString());
         let movingPiece: EncapsulePiece;
@@ -69,29 +69,29 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             movingPiece = move.piece.get();
             if (!slice.isDropable(movingPiece)) {
                 Rules.display(LOCAL_VERBOSE, "move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
-                return FAILURE;
+                return EncapsuleLegalityStatus.failure("move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
             }
         } else {
             const startingCoord: Coord = move.startingCoord.get();
             const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
-            Rules.display(LOCAL_VERBOSE,
-                "at " + startingCoord.toString() + "\n" +
-                "there is " + startingCase.toString() + "\n" +
-                "whose bigger is " + EncapsuleMapper.getNameFromPiece(movingPiece) + "\n" +
-                "move illegal because: piece does not belong to current player");
             if (!EncapsulePartSlice.pieceBelongToCurrentPlayer(movingPiece, slice.turn)) {
-                return FAILURE;
+                Rules.display(LOCAL_VERBOSE,
+                              "at " + startingCoord.toString() + "\n" +
+                    "there is " + startingCase.toString() + "\n" +
+                    "whose bigger is " + EncapsuleMapper.getNameFromPiece(movingPiece) + "\n" +
+                    "move illegal because: piece does not belong to current player");
+                return EncapsuleLegalityStatus.failure("piece does not belong to current player");
             }
         }
         let landingNumber: number = boardCopy[move.landingCoord.y][move.landingCoord.x];
         let landingCase: EncapsuleCase = EncapsuleCase.decode(landingNumber);
         let superpositionResult: {success: boolean, result: EncapsuleCase} = landingCase.tryToSuperposePiece(movingPiece);
         if (superpositionResult.success === true) {
-            return {legal: true, newLandingCase: superpositionResult.result};
+            return {legal: MGPValidation.success(), newLandingCase: superpositionResult.result};
         }
         Rules.display(LOCAL_VERBOSE, "move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
-        return FAILURE;
+        return EncapsuleLegalityStatus.failure("impossible superposition");
     }
     public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus): { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; } {
 

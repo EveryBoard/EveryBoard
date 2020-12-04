@@ -1,4 +1,5 @@
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
+import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
@@ -132,7 +133,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
         };
     }
     public isLegal(move: QuixoMove, slice: QuixoPartSlice): LegalityStatus {
-        if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) return { legal: false };
-        else return { legal: true };
+        if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) return { legal: MGPValidation.failure("piece not owned by ennemy player") };
+        else return { legal: MGPValidation.success() };
     }
 }

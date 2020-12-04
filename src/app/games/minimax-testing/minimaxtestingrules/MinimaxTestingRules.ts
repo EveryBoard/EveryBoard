@@ -5,6 +5,7 @@ import { MinimaxTestingPartSlice } from "../MinimaxTestingPartSlice";
 import { MinimaxTestingMove } from "../minimaxtestingmove/MinimaxTestingMove";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
+import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 
 abstract class MinimaxTestingNode extends MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {}
 
@@ -41,17 +42,16 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         }
     }
     public isLegal(move: MinimaxTestingMove): LegalityStatus {
-        const ILLEGAL: LegalityStatus = {legal: false};
         const slice: MinimaxTestingPartSlice = this.node.gamePartSlice;
         const coord: Coord = slice.location;
         const board: number[][] = slice.getCopiedBoard();
         if (coord.x + 1 === board[0].length && move.right === true) {
-            return ILLEGAL;
+            return { legal: MGPValidation.failure("incorrect move") };
         }
         if (coord.y + 1 === board.length && move.right === false) {
-            return ILLEGAL;
+            return { legal: MGPValidation.failure("incorrect move") };
         }
-        return {legal: true};
+        return {legal: MGPValidation.success()};
     }
     public getBoardValue(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice): number {
         MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT++;
@@ -61,7 +61,7 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT++;
         const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> = new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();
         const slice: MinimaxTestingPartSlice = n.gamePartSlice;
-        const LEGAL: LegalityStatus = {legal: true};
+        const LEGAL: LegalityStatus = {legal: MGPValidation.success()};
         if (slice.location.x < 3) {
             const rightMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
             const rightSlice: MinimaxTestingPartSlice = this.applyLegalMove(rightMove, slice, LEGAL).resultingSlice;

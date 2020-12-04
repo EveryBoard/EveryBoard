@@ -1,5 +1,6 @@
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
+import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MNode } from "src/app/jscaip/MNode";
@@ -44,7 +45,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
             }
             for (const possiblesCapture of possiblesCaptures) {
                 const newMove: PylosMove = PylosMove.changeCapture(move, possiblesCapture);
-                const newSlice: PylosPartSlice = PylosRules.applyLegalMove(newMove, slice, { legal: true }).resultingSlice;
+                const newSlice: PylosPartSlice = PylosRules.applyLegalMove(newMove, slice, { legal: MGPValidation.success() }).resultingSlice;
                 result.set(newMove, newSlice);
             }
         }
@@ -143,32 +144,32 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
         return PylosRules.applyLegalMove(move, slice, status);
     }
     public isLegal(move: PylosMove, slice: PylosPartSlice): LegalityStatus {
-        if (slice.getBoardAt(move.landingCoord) !== Player.NONE.value) return { legal: false };
+        if (slice.getBoardAt(move.landingCoord) !== Player.NONE.value) return { legal: MGPValidation.failure("move does not land on empty target") };
 
         const startingCoord: PylosCoord = move.startingCoord.getOrNull();
         const currentPlayer: number = slice.getCurrentPlayer().value;
 
         if (startingCoord != null) {
-            if (slice.getBoardAt(startingCoord) !== currentPlayer) return { legal: false };
+            if (slice.getBoardAt(startingCoord) !== currentPlayer) return { legal: MGPValidation.failure("move does not start from a player piece") };
 
             const supportedPieces: PylosCoord[] = startingCoord.getHigherPieces()
                 .filter((p: PylosCoord) => slice.getBoardAt(p) !== Player.NONE.value ||
                                            p.equals(move.landingCoord));
-            if (supportedPieces.length > 0) return { legal: false };
+            if (supportedPieces.length > 0) return { legal: MGPValidation.failure("move does not have supported pieces") };
         }
-        if (!slice.isLandable(move.landingCoord)) return { legal: false };
+        if (!slice.isLandable(move.landingCoord)) return { legal: MGPValidation.failure("landing coord is not landable") };
 
         if (move.firstCapture.isPresent()) {
-            if (!PylosRules.canCapture(slice, move.landingCoord)) return { legal: false };
+            if (!PylosRules.canCapture(slice, move.landingCoord)) return { legal: MGPValidation.failure("cannot capture") };
 
             if (PylosRules.isValidCapture(slice, move, move.firstCapture.get())) {
                 if (move.secondCapture.isPresent() &&
                     !PylosRules.isValidCapture(slice, move, move.secondCapture.get())) {
-                    return { legal: false };
+                    return { legal: MGPValidation.failure("second capture is not valid") };
                 }
-            } else return { legal: false };
+            } else return { legal: MGPValidation.failure("first capture is not valid") };
         }
-        return { legal: true };
+        return { legal: MGPValidation.failure("no capture") };
     }
     public static isValidCapture(slice: PylosPartSlice, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: number = slice.getCurrentPlayer().value;

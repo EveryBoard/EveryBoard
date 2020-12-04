@@ -1,32 +1,32 @@
 
 export class MGPValidation {
-    private constructor(private error?: string) {
+    private constructor(private reason?: string) {
     }
     public static success(): MGPValidation {
         return new MGPValidation(null);
     }
-    public static error(error: string): MGPValidation {
-        return new MGPValidation(error);
+    public static failure(reason: string): MGPValidation {
+        return new MGPValidation(reason);
     }
-    public ifError(f: (arg: string) => void): MGPValidation {
-        if (this.isError()) { f(this.error) }
+    public onFailure(f: (arg: string) => void): MGPValidation {
+        if (this.isFailure()) { f(this.reason) }
         return this;
     }
-    public ifSuccess(f: () => void): MGPValidation {
+    public onSuccess(f: () => void): MGPValidation {
         if (this.isSuccess()) { f() }
         return this;
     }
-    public isError(): boolean {
-        return this.error !== null;
+    public isFailure(): boolean {
+        return this.reason !== null;
     }
     public isSuccess(): boolean {
-        return !this.isError()
+        return !this.isFailure()
     }
-    public getError(): string {
-        if (this.isError()) {
-            return this.error;
+    public getReason(): string {
+        if (this.isFailure()) {
+            return this.reason;
         } else {
-            throw new Error("Cannot extract error from success");
+            throw new Error("MGPValidation: Cannot extract reason from success");
         }
     }
 }

@@ -31,32 +31,32 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         this.chosen = null;
     }
 
-    public async pass() {
+    public async pass(): Promise<MGPValidation> {
         if (this.canPass) {
-            this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null).then((v) => v.ifError(this.message));
+            this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null).then((v) => v.onFailure(this.message));
         } else {
-            this.message("Cannot pass");
+            return MGPValidation.failure("Cannot pass").onFailure(this.message);
         }
     }
 
-    public async onClick(x: number, y: number): Promise<boolean> {
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
         const onError: (err: string) => void = (err: string) => {
             this.message(err);
             this.chosen = null;
         };
         if (this.chosen === null) {
-            this.choosePiece(x, y).ifError(onError).isSuccess();
+            this.choosePiece(x, y).onFailure(onError);
         } else {
-            return this.chooseDestination(x, y).then((v) => v.ifError(onError).isSuccess());
+            return this.chooseDestination(x, y).then((v) => v.onFailure(onError));
         }
     }
 
     public choosePiece(x: number, y: number): MGPValidation {
         if (this.rules.node.isEndGame()) {
-            return MGPValidation.error("Cannot choose a piece at the end of the game");
+            return MGPValidation.failure("Cannot choose a piece at the end of the game");
         }
         const coord: Coord = new Coord(x, y);
-        return this.rules.isMovablePiece(this.rules.node.gamePartSlice, coord).ifSuccess(() => {
+        return this.rules.isMovablePiece(this.rules.node.gamePartSlice, coord).onSuccess(() => {
             this.chosen = coord;
         });
     }
@@ -68,7 +68,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
             const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
             return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         } catch (e) {
-            return MGPValidation.error("Cannot choose this move: " + e)
+            return MGPValidation.failure("Cannot choose this move: " + e)
         }
     }
 
