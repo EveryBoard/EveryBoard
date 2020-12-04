@@ -11,7 +11,6 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
     public constructor(public readonly sliceType: Type<S>) { // TODO: Make singleton ?
         this.setInitialBoard();
     }
-
     public node: MGPNode<Rules<M, S, L>, M, S, L>; // TODO: check that this should not made static
     /* The data that represent the status of the game at the current moment, including:
      * the board
@@ -77,7 +76,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
                 const initialSlice: S = this.sliceType['getInitialSlice']();
                 this.node = MGPNode.getFirstNode(initialSlice, this);
             } else {
-                throw new Error("Should implement staticm ethod getInitialSlice on every Rules child classes.");
+                throw new Error("Should implement static method getInitialSlice on " + this.sliceType.name + ".");
             }
         } else {
             this.node = this.node.getInitialNode();

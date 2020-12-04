@@ -52,7 +52,7 @@ export abstract class GameWrapper {
                 protected router: Router,
                 protected userService: UserService,
                 protected authenticationService: AuthenticationService,
-                ) {
+    ) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {

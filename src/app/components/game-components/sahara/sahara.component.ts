@@ -7,6 +7,7 @@ import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaRules } from 'src/app/games/sahara/sahararules/SaharaRules';
 import { display } from 'src/app/collectionlib/utils';
+import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 
 @Component({
     selector: 'app-sahara',
@@ -29,6 +30,10 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
 
     public highlightNames: string[] = ["upward_highlight.svg", "downward_highlight.svg"];
 
+    public cancelMove(reason: string) {
+        this.chosenCoord = new Coord(-2, -2);
+        return display(true, "TODO: Toast that, say to user '" + reason + "'");
+    }
     public getCoordinate(x: number, y: number) : string {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
         else return this.getUpwardCoordinate(x, y);
@@ -89,22 +94,34 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
     }
     public async onClick(x: number, y: number) {
         const clickedCoord: Coord = new Coord(x, y);
-        display(SaharaComponent.VERBOSE, "Clicked on "+clickedCoord.toString());
-        if (-1 < this.chosenCoord.x) {
-            try {
-                const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
-                const moveResult: boolean = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
-                if (moveResult === true) {
-                    display(SaharaComponent.VERBOSE, "Move is legal");
-                } else {
-                    display(SaharaComponent.VERBOSE, "Move is illegal");
-                }
-            } catch (error) {
-                display(SaharaComponent.VERBOSE, "That move can't be legal because: " + error.message);
-            }
-            this.chosenCoord = new Coord(-2, -2);
+        if (this.observerRole === 2) {
+            return display(true, "TODO: Toast that, say to the user: 'Cloning Feature Will Be Added Soon'");
+            // TODO: generalize this for each game (might be complicated)
         }
-        else this.chosenCoord = clickedCoord;
+        if (this.chosenCoord.equals(new Coord(-2, -2))) { // Must select pyramid
+            if (this.board[y][x] === SaharaPawn.EMPTY) { // Did not select pyramid
+                return this.cancelMove("You must first select a pyramid.");
+            } else if (this.getTurn() % 2 === this.board[y][x]) { // selected his own pyramid
+                this.chosenCoord = clickedCoord;
+            } else { // Selected ennemy pyramid
+                return this.cancelMove("You cannot select ennemy pyramid.");
+            }
+        } else { // Must choose empty landing case
+            if (this.board[y][x] === SaharaPawn.EMPTY) { // Selected empty landing coord
+                try {
+                    const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
+                    const moveResult: boolean = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
+                    if (moveResult === false) {
+                        return this.cancelMove("You can only bounce on UNOCCUPIED brown case.");
+                    }
+                } catch (error) {
+                    return this.cancelMove(error.message);
+                }
+                this.chosenCoord = new Coord(-2, -2);
+            } else {
+                return this.cancelMove("You can't land your pyramid on the ennemy's.");
+            }
+        }
     }
     public updateBoard(): void {
         this.chosenCoord = new Coord(-2, -2);

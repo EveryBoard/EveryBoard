@@ -48,6 +48,17 @@ describe('LocalGameWrapperComponent', () => {
     let X: number = Player.ONE.value;
     let _: number = Player.NONE.value;
 
+    let clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
+        const element: DebugElement = debugElement.query(By.css(elementName));
+        if (element != null) {
+            element.triggerEventHandler('click', null);
+            await fixture.whenStable();
+            fixture.detectChanges();
+            return true;
+        } else {
+            return false;
+        }
+    };
     beforeAll(() => {
         LocalGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || LocalGameWrapperComponent.VERBOSE;
     });
@@ -139,5 +150,15 @@ describe('LocalGameWrapperComponent', () => {
         component.cdr.detectChanges();
         const drawIndicator: DebugElement = debugElement.query(By.css("#draw"));
         expect(drawIndicator).toBeTruthy("Draw indicator should be present");
+    }));
+    it('should show score if needed', fakeAsync(async() => {
+        AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
+        fixture.detectChanges();
+        tick(1);
+        expect(await clickElement('#scoreIndicator')).toBeFalsy();
+        component.gameComponent.showScore = true;
+        component.gameComponent['scores'] = [0, 0];
+        fixture.detectChanges();
+        expect(await clickElement('#scoreIndicator')).toBeTruthy();
     }));
 });

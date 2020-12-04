@@ -109,12 +109,12 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
     public isLegal(move: SaharaMove, slice: SaharaPartSlice): LegalityStatus {
         const movedPawn: SaharaPawn = slice.getBoardAt(move.coord);
         if (movedPawn !== slice.getCurrentPlayer().value) {
-            display(SaharaRules.VERBOSE, "This move is illegal because it is not the current player's turn");
+            display(SaharaRules.VERBOSE, "This move is illegal because it is not the current player's turn.");
             return {legal: false};
         }
         const landingCase: SaharaPawn = slice.getBoardAt(move.end);
         if (landingCase !== SaharaPawn.EMPTY) {
-            display(SaharaRules.VERBOSE, "This move is illegal because the landing case is not empty");
+            display(SaharaRules.VERBOSE, "This move is illegal because the landing case is not empty.");
             return {legal: false};
         }
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
