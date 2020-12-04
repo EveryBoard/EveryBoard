@@ -9,6 +9,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { GroupDatas } from 'src/app/games/go/groupdatas/GroupDatas';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-go',
@@ -35,11 +36,11 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.canPass = true;
         this.showScore = true;
     }
-    public async onClick(x: number, y: number): Promise<boolean> {
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
-        const result: boolean = await this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
+        const result: MGPValidation = await this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
         display(GoComponent.VERBOSE, "GoComponent.onClick: AbstractGameComponent.chooseMove said : " + result);
         return result;
     }
@@ -71,14 +72,14 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         }
         this.canPass = phase !== Phase.FINISHED;
     }
-    public async pass(): Promise<boolean> {
+    public async pass(): Promise<MGPValidation> {
         const phase: Phase = this.rules.node.gamePartSlice.phase;
         if (phase === Phase.PLAYING || phase === Phase.PASSED)
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
         if (phase === Phase.COUNTING || phase === Phase.ACCEPT)
             return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
         else
-            return false;
+            return MGPValidation.failure("cannot pass");
     }
     public getCaseColor(x: number, y: number): string {
         const piece: number = this.rules.node.gamePartSlice.getBoardByXY(x, y);

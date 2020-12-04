@@ -33,7 +33,8 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
 
     public async pass(): Promise<MGPValidation> {
         if (this.canPass) {
-            this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null).then((v) => v.onFailure(this.message));
+            const success = await this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null);
+            return success.onFailure(this.message);
         } else {
             return MGPValidation.failure("Cannot pass").onFailure(this.message);
         }
@@ -45,9 +46,10 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
             this.chosen = null;
         };
         if (this.chosen === null) {
-            this.choosePiece(x, y).onFailure(onError);
+            return this.choosePiece(x, y).onFailure(onError);
         } else {
-            return this.chooseDestination(x, y).then((v) => v.onFailure(onError));
+            const success = await this.chooseDestination(x, y);
+            return success.onFailure(onError);
         }
     }
 

@@ -65,7 +65,7 @@ export abstract class GameWrapper {
                 return AwaleComponent; */
             case 'Dvonn':
                 return DvonnComponent;
-            /* case 'Encapsule':
+            case 'Encapsule':
                 return EncapsuleComponent;
             case 'Go':
                 return GoComponent;
@@ -88,7 +88,7 @@ export abstract class GameWrapper {
             case 'Tablut':
                 return TablutComponent;
             case 'Kamisado':
-                return KamisadoComponent; */
+                return KamisadoComponent;
             default:
                 throw new Error("Unknown Games are unwrappable");
         }

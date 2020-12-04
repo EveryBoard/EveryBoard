@@ -9,6 +9,7 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 export abstract class P4Node extends MGPNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> {}
 
@@ -412,16 +413,15 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     // Overrides:
 
     public isLegal(move: MoveX, slice: P4PartSlice): LegalityStatus {
-        const ILLEGAL: LegalityStatus = {legal: false};
         display(P4Rules.VERBOSE, { context: "P4Rules.isLegal", move: move.toString(), slice});
         if (move.x < 0 || move.x > 6) {
-            return ILLEGAL;
+            return { legal: MGPValidation.failure("invalid move") };
         }
         if (slice.getBoardByXY(move.x, 0) !== Player.NONE.value) {
             console.log({ illegalMove: { slice, move, player: Player.NONE.value }})
-            return ILLEGAL;
+            return { legal: MGPValidation.failure("illegal move") };
         }
-        return {legal: true};
+        return {legal: MGPValidation.success()};
     }
     public getListMoves(node: P4Node): MGPMap<MoveX, P4PartSlice> {
         return P4Rules.getListMoves(node);

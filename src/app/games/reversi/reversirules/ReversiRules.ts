@@ -8,6 +8,7 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 abstract class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
 
@@ -146,15 +147,15 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             // let's check that pass is a legal move right now
             // if he had no choice but to pass, then passing is legal !
             // else, passing was illegal
-            return {legal: ReversiRules.playerCanOnlyPass(reversiPartSlice), switched: null};
+            return {legal: ReversiRules.playerCanOnlyPass(reversiPartSlice) ? MGPValidation.success() : MGPValidation.failure("player can only pass"), switched: null};
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE.value) {
             display(ReversiRules.VERBOSE, "ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée");
-            return {legal: false, switched: null};
+            return {legal: MGPValidation.failure("occupied case"), switched: null};
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, turn, board);
         display(ReversiRules.VERBOSE, "ReversiRules.isLegal: "+ switched.length + " element(s) switched");
-        return {legal: (switched.length !== 0), switched};
+        return {legal: (switched.length !== 0) ? MGPValidation.success() : MGPValidation.failure("no elements switched"), switched};
     }
     public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): number {
         const board: number[][] = slice.getCopiedBoard();

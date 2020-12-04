@@ -185,7 +185,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             if (this.canOnlyPass(slice) && !slice.alreadyPassed) {
                 return { legal: MGPValidation.success() };
             } else {
-                return { legal: MGPValidation.failure("can only pass") };
+                return { legal: MGPValidation.failure("you cannot pass, you can still move") };
             }
         }
 

@@ -6,6 +6,7 @@ import { ReversiMove } from 'src/app/games/reversi/reversimove/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-reversi',
@@ -25,7 +26,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         super(snackBar);
         this.showScore = true;
     }
-    public async onClick(x: number, y: number): Promise<boolean> {
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
         this.lastMove = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove = new ReversiMove(x, y);
@@ -52,7 +53,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.scores = slice.countScore();
         this.canPass = ReversiRules.playerCanOnlyPass(slice);
     }
-    public async pass(): Promise<boolean> {
+    public async pass(): Promise<MGPValidation> {
         return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);
     }
 }

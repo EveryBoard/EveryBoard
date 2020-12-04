@@ -77,7 +77,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             return {legal: MGPValidation.success(), newLandingCase: superpositionResult.result};
         }
         display(LOCAL_VERBOSE, "move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
-        return EncapsuleLegalityStatus.failure("impossible superposition");
+        return EncapsuleLegalityStatus.failure("cannot put a piece on a larger one");
     }
     public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus): { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; } {
 

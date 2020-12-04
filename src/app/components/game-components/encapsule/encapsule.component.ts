@@ -131,7 +131,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             return MGPValidation.failure("piece is not droppable");
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
-            return MGPValidation.failure("no chosen coord");
+            return MGPValidation.success();
         } else {
             const chosenMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, this.chosenCoord);
             return this.suggestMove(chosenMove);

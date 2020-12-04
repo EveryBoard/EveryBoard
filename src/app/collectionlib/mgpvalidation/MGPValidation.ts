@@ -1,6 +1,6 @@
 
 export class MGPValidation {
-    private constructor(private reason?: string) {
+    private constructor(public readonly reason: string) {
     }
     public static success(): MGPValidation {
         return new MGPValidation(null);
@@ -17,7 +17,7 @@ export class MGPValidation {
         return this;
     }
     public isFailure(): boolean {
-        return this.reason !== null;
+        return this.reason != null;
     }
     public isSuccess(): boolean {
         return !this.isFailure()

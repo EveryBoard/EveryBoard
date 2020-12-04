@@ -9,6 +9,7 @@ import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { GroupDatas } from '../groupdatas/GroupDatas';
 import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
 
@@ -29,17 +30,17 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE,
                 "GoRules.isLegal at" + slice.phase + ((playing || passed) ? " forbid" : " allowed") +
                 " passing on " + slice.getCopiedBoard());
-            return {legal: playing || passed, capturedCoords: []};
+            return {legal: (playing || passed) ? MGPValidation.success() : MGPValidation.failure("not playing or not passed"), capturedCoords: []};
         } else if (GoRules.isAccept(move)) {
             const counting: boolean = slice.phase === Phase.COUNTING;
             const accept: boolean = slice.phase === Phase.ACCEPT;
             display(GoRules.VERBOSE || LOCAL_VERBOSE, "GoRules.isLegal: move is GoMove.ACCEPT, hence, it is " + ((counting || accept) ? " legal" : "illegal"));
-            return {legal: counting || accept, capturedCoords: []};
+            return {legal: (counting || accept) ? MGPValidation.success() : MGPValidation.failure("not countig or not accept"), capturedCoords: []};
         }
         if (GoRules.isOccupied(move.coord, slice.getCopiedBoardGoPiece())) {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegal: move is marking");
             const legal: boolean = GoRules.isLegalDeadMarking(move, slice);
-            return { legal, capturedCoords: []};
+            return { legal: legal ? MGPValidation.success() : MGPValidation.failure("not legal dead marking"), capturedCoords: []};
         } else {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegal: move is normal stuff: " + move.toString());
             return GoRules.isLegalNormalMove(move, slice);
@@ -61,11 +62,11 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         let boardCopy: GoPiece[][] = slice.getCopiedBoardGoPiece();
         if (GoRules.isOccupied(move.coord, boardCopy)) {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " illegal ecrasement on " + slice.getCopiedBoard());
-            return GoLegalityStatus.ILLEGAL;
+            return GoLegalityStatus.failure("illegal ecrasement");
         }
         else if (GoRules.isKo(move, slice)) {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " illegal ko on " + slice.getCopiedBoard());
-            return GoLegalityStatus.ILLEGAL;
+            return GoLegalityStatus.failure("illegal ko");
         }
         if ([Phase.COUNTING, Phase.ACCEPT].includes(slice.phase)) {
             slice = GoRules.resurectStones(slice);
@@ -73,7 +74,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         let captureState: CaptureState = GoRules.getCaptureState(move, slice);
         if (CaptureState.isCapturing(captureState)) {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " legal avec capture on " + slice.getCopiedBoard());
-            return {legal: true, capturedCoords: captureState.capturedCoords};
+            return {legal: MGPValidation.success(), capturedCoords: captureState.capturedCoords};
         } else {
             boardCopy[move.coord.y][move.coord.x] = slice.turn%2 === 0 ? GoPiece.BLACK : GoPiece.WHITE;
             let isSuicide: boolean = GroupDatas.getGroupDatas(move.coord, boardCopy).emptyCoords.length === 0;
@@ -81,10 +82,10 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
             if (isSuicide) {
                 display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " illegal suicide on " + slice.getCopiedBoard());
-                return GoLegalityStatus.ILLEGAL;
+                return GoLegalityStatus.failure("illegal suicide");
             } else {
                 display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " legal on " + slice.getCopiedBoard());
-                return {legal: true, capturedCoords: []};
+                return {legal: MGPValidation.success(), capturedCoords: []};
             }
         }
     }

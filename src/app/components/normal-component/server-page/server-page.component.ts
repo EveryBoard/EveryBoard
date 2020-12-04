@@ -88,7 +88,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             // create Part and Joiner
             this.router.navigate(['/play/' + this.selectedGame, gameId]);
         } else {
-            this.messageError('Vous devez vous connecter pour créer une partie');
+            this.messageError('Vous devez vous connecter pour créer une partie'); // TODO: redirect vers la connexion
         }
     }
     public canCreateGame(): boolean {

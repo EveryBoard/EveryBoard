@@ -155,7 +155,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
                 }
             } else return { legal: MGPValidation.failure("first capture is not valid") };
         }
-        return { legal: MGPValidation.failure("no capture") };
+        return { legal: MGPValidation.success() };
     }
     public static isValidCapture(slice: PylosPartSlice, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: number = slice.getCurrentPlayer().value;
