@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { LoginComponent } from './login.component';
 import { ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +16,7 @@ describe('LoginComponent', () => {
 
     let fixture: ComponentFixture<LoginComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 ReactiveFormsModule,
@@ -26,9 +26,8 @@ describe('LoginComponent', () => {
             providers: [
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
-        })
-            .compileComponents();
-    }));
+        }).compileComponents();
+    });
     beforeEach(() => {
         fixture = TestBed.createComponent(LoginComponent);
         component = fixture.componentInstance;

@@ -1,5 +1,5 @@
 import {Rules} from '../../../jscaip/Rules';
-import {MNode} from '../../../jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import {ReversiPartSlice} from '../ReversiPartSlice';
 import {Coord} from '../../../jscaip/coord/Coord';
 import {Direction} from '../../../jscaip/DIRECTION';
@@ -7,30 +7,14 @@ import { ReversiMove } from '../reversimove/ReversiMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+import { display } from 'src/app/collectionlib/utils';
 
-abstract class ReversiNode extends MNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
+abstract class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
 
 export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
-    constructor() {
-        super();
-        this.node = MNode.getFirstNode(
-            new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
-            this
-        );
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                new ReversiPartSlice(ReversiPartSlice.getStartingBoard(), 0),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public applyLegalMove(move: ReversiMove, slice: ReversiPartSlice, status: ReversiLegalityStatus): { resultingMove: ReversiMove; resultingSlice: ReversiPartSlice; } {
         const turn: number = slice.turn;
         const player: number = turn % 2;
@@ -165,11 +149,11 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             return {legal: ReversiRules.playerCanOnlyPass(reversiPartSlice), switched: null};
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE.value) {
-            Rules.display(ReversiRules.VERBOSE, "ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée");
+            display(ReversiRules.VERBOSE, "ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée");
             return {legal: false, switched: null};
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, turn, board);
-        Rules.display(ReversiRules.VERBOSE, "ReversiRules.isLegal: "+ switched.length + " element(s) switched");
+        display(ReversiRules.VERBOSE, "ReversiRules.isLegal: "+ switched.length + " element(s) switched");
         return {legal: (switched.length !== 0), switched};
     }
     public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): number {

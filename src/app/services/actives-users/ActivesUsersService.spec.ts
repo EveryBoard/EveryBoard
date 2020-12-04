@@ -1,5 +1,3 @@
-import { async } from '@angular/core/testing';
-
 import { ActivesUsersService } from './ActivesUsersService';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
@@ -16,11 +14,11 @@ describe('ActivesUsersService', () => {
     beforeEach(() => {
         service = new ActivesUsersService(new JoueursDAOMock() as unknown as JoueursDAO);
     });
-    it('should create', async(() => {
+    it('should create', () => {
         expect(service).toBeTruthy();
         service.startObserving();
         service.stopObserving();
-    }));
+    });
     it('should order', () => {
         const joueurIds: IJoueurId[] = [
             { id: "second", doc: {pseudo: "second", last_changed: { seconds: 2}}},

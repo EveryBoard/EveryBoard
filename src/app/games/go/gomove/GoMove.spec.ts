@@ -6,7 +6,7 @@ import { GoPartSlice } from "../GoPartSlice";
 describe('GoMove', () => {
 
     it('GoMove.encode and GoMove.decode should be reversible', () => {
-        const rules: GoRules = new GoRules();
+        const rules: GoRules = new GoRules(GoPartSlice);
         const firstTurnMoves: MGPMap<GoMove, GoPartSlice> = rules.getListMoves(rules.node);
         for (let i = 0; i < firstTurnMoves.size(); i++) {
             const move: GoMove = firstTurnMoves.getByIndex(i).key;

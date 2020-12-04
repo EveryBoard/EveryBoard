@@ -1,10 +1,11 @@
-import {Rules} from '../../../jscaip/Rules';
-import {MNode} from '../../../jscaip/MNode';
-import {QuartoPartSlice} from '../QuartoPartSlice';
-import {QuartoMove} from '../quartomove/QuartoMove';
-import {QuartoEnum} from '../QuartoEnum';
+import { Rules } from '../../../jscaip/Rules';
+import {  MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { QuartoPartSlice } from '../QuartoPartSlice';
+import { QuartoMove } from '../quartomove/QuartoMove';
+import { QuartoEnum } from '../QuartoEnum';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { display } from 'src/app/collectionlib/utils';
 
 class CaseSensible {
 
@@ -155,23 +156,9 @@ class Critere {
             })) + '}';
     }
 }
-abstract class QuartoNode extends MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus> {}
+abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus> {}
 
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStatus> {
-
-    constructor() {
-        super();
-        this.setInitialBoard();
-    }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                new QuartoPartSlice(QuartoPartSlice.getStartingBoard(), 0, QuartoEnum.AAAA), // TODO: make generic
-                this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
 
     public applyLegalMove(move: QuartoMove, slice: QuartoPartSlice, status: LegalityStatus): { resultingMove: QuartoMove; resultingSlice: QuartoPartSlice; } {
         let newBoard: number[][] = slice.getCopiedBoard();
@@ -202,7 +189,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     // c (x, y) est la coordonnées de la première case
     // d (x, y) est la direction de la ligne en question
 
-    public node: MNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>;
+    public node: MGPNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>;
     // enum boolean {TRUE, FALSE, NULL}
 
     private static isOccupied(qcase: number): boolean {
@@ -345,15 +332,15 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         // si la case est occupée
                         if (commonCrit == null) {
                             commonCrit = new Critere(c);
-                            Rules.display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c
+                            display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c
                                                                      + ' = ' + commonCrit.toString() + '\n');
                         } else {
                             commonCrit.mergeWithNumber(c);
-                            Rules.display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');
+                            display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');
                         }
                     }
                 }
-                Rules.display(QuartoRules.VERBOSE, ' ' + line[0] + line[1] + line[2] + line[3] +
+                display(QuartoRules.VERBOSE, ' ' + line[0] + line[1] + line[2] + line[3] +
                                                          'contient ' + nbCasesVides + ' case vides au tour ' + slice.turn);
 
                 // on a maintenant traité l'entierté de la ligne
@@ -367,7 +354,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouv� et assign�
                         // est dans ce cas bel et bien une case sensible
                         if (commonCrit.matchInt(slice.pieceInHand)) {
-                            Rules.display(QuartoRules.VERBOSE, 'Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
+                            display(QuartoRules.VERBOSE, 'Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
 
                             preVictory = true;
                             score = (slice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;

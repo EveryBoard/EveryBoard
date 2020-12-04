@@ -102,6 +102,10 @@ export class GoPartSlice extends GamePartSlice {
         this.koCoord = koCoord;
         this.phase = phase;
     }
+    public static getInitialSlice(): GoPartSlice {
+        const board: GoPiece[][] = GoPartSlice.getStartingBoard();
+        return new GoPartSlice(board, [0, 0], 0, null, Phase.PLAYING);
+    }
     public getCapturedCopy(): number[] {
         return [this.captured[0], this.captured[1]];
     }

@@ -22,7 +22,7 @@ describe('GoRules:', () => {
         GoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GoRules.VERBOSE;
     });
     beforeEach(() => {
-        rules = new GoRules();
+        rules = new GoRules(GoPartSlice);
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

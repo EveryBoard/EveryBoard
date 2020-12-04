@@ -1,7 +1,7 @@
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { Player } from "src/app/jscaip/Player";
 import { QuixoPartSlice } from "../quixo-part-slice/QuixoPartSlice";
 import { QuixoNode, QuixoRules } from "../quixo-rules/QuixoRules";
@@ -42,8 +42,8 @@ describe('QuixoMove:', () => {
         ];
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonale.DOWN);
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
-        const node: QuixoNode = new MNode(null, move, slice, 0);
-        const rules: QuixoRules = new QuixoRules();
+        const node: QuixoNode = new MGPNode(null, move, slice, 0);
+        const rules: QuixoRules = new QuixoRules(QuixoPartSlice);
         const moves: MGPMap<QuixoMove, QuixoPartSlice> = rules.getListMoves(node);
         for (let i = 0; i < moves.size(); i++) {
             const move: QuixoMove = moves.getByIndex(i).key;

@@ -12,7 +12,7 @@ describe('QuixoMinimax:', () => {
     let O: number = Player.ZERO.value;
 
     beforeEach(() => {
-        rules = new QuixoRules();
+        rules = new QuixoRules(QuixoPartSlice);
     });
 
     it("Should calcule board value according to longest line differences", () => {

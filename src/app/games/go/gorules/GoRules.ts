@@ -1,5 +1,5 @@
 import {Rules} from '../../../jscaip/Rules';
-import {MNode} from '../../../jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import {Coord} from '../../../jscaip/coord/Coord';
 import {GoPartSlice, Phase, GoPiece} from '../GoPartSlice';
 import {Direction, Orthogonale} from 'src/app/jscaip/DIRECTION';
@@ -8,46 +8,40 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { GroupDatas } from '../groupdatas/GroupDatas';
+import { display } from 'src/app/collectionlib/utils';
 
-abstract class GoNode extends MNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
+abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
 
 export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
-    constructor() {
-        super();
-        this.node = MNode.getFirstNode(
-            new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING),
-            this
-        );
-    }
     public isLegal(move: GoMove, slice: GoPartSlice): GoLegalityStatus {
         return GoRules.isLegal(move, slice);
     }
     public static isLegal(move: GoMove, slice: GoPartSlice): GoLegalityStatus {
         const LOCAL_VERBOSE: boolean = false;
-        Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, { isLegal: { move, slice }});
+        display(GoRules.VERBOSE ||LOCAL_VERBOSE, { isLegal: { move, slice }});
 
         if (GoRules.isPass(move)) {
             const playing: boolean = slice.phase === Phase.PLAYING;
             const passed: boolean = slice.phase === Phase.PASSED;
-            Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE,
+            display(GoRules.VERBOSE ||LOCAL_VERBOSE,
                 "GoRules.isLegal at" + slice.phase + ((playing || passed) ? " forbid" : " allowed") +
                 " passing on " + slice.getCopiedBoard());
             return {legal: playing || passed, capturedCoords: []};
         } else if (GoRules.isAccept(move)) {
             const counting: boolean = slice.phase === Phase.COUNTING;
             const accept: boolean = slice.phase === Phase.ACCEPT;
-            Rules.display(GoRules.VERBOSE || LOCAL_VERBOSE, "GoRules.isLegal: move is GoMove.ACCEPT, hence, it is " + ((counting || accept) ? " legal" : "illegal"));
+            display(GoRules.VERBOSE || LOCAL_VERBOSE, "GoRules.isLegal: move is GoMove.ACCEPT, hence, it is " + ((counting || accept) ? " legal" : "illegal"));
             return {legal: counting || accept, capturedCoords: []};
         }
         if (GoRules.isOccupied(move.coord, slice.getCopiedBoardGoPiece())) {
-            Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegal: move is marking");
+            display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegal: move is marking");
             const legal: boolean = GoRules.isLegalDeadMarking(move, slice);
             return { legal, capturedCoords: []};
         } else {
-            Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegal: move is normal stuff: " + move.toString());
+            display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegal: move is normal stuff: " + move.toString());
             return GoRules.isLegalNormalMove(move, slice);
         }
     }
@@ -66,11 +60,11 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
         let boardCopy: GoPiece[][] = slice.getCopiedBoardGoPiece();
         if (GoRules.isOccupied(move.coord, boardCopy)) {
-            Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " illegal ecrasement on " + slice.getCopiedBoard());
+            display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " illegal ecrasement on " + slice.getCopiedBoard());
             return GoLegalityStatus.ILLEGAL;
         }
         else if (GoRules.isKo(move, slice)) {
-            Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " illegal ko on " + slice.getCopiedBoard());
+            display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " illegal ko on " + slice.getCopiedBoard());
             return GoLegalityStatus.ILLEGAL;
         }
         if ([Phase.COUNTING, Phase.ACCEPT].includes(slice.phase)) {
@@ -78,7 +72,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         let captureState: CaptureState = GoRules.getCaptureState(move, slice);
         if (CaptureState.isCapturing(captureState)) {
-            Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " legal avec capture on " + slice.getCopiedBoard());
+            display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " legal avec capture on " + slice.getCopiedBoard());
             return {legal: true, capturedCoords: captureState.capturedCoords};
         } else {
             boardCopy[move.coord.y][move.coord.x] = slice.turn%2 === 0 ? GoPiece.BLACK : GoPiece.WHITE;
@@ -86,10 +80,10 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             boardCopy[move.coord.y][move.coord.x] = GoPiece.EMPTY;
 
             if (isSuicide) {
-                Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " illegal suicide on " + slice.getCopiedBoard());
+                display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " illegal suicide on " + slice.getCopiedBoard());
                 return GoLegalityStatus.ILLEGAL;
             } else {
-                Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " legal on " + slice.getCopiedBoard());
+                display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegalNormalMove: " + move + " legal on " + slice.getCopiedBoard());
                 return {legal: true, capturedCoords: []};
             }
         }
@@ -102,7 +96,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
     }
     public static getCaptureState(move: GoMove, slice: GoPartSlice): CaptureState {
         const LOCAL_VERBOSE: boolean = false;
-        Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, { getCaptureState: { move, slice}});
+        display(GoRules.VERBOSE ||LOCAL_VERBOSE, { getCaptureState: { move, slice}});
         let captureState: CaptureState = new CaptureState();
         let capturedInDirection: Coord[];
         for (let direction of Orthogonale.ORTHOGONALES) {
@@ -121,11 +115,11 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         if (neightbooringCoord.isInRange(GoPartSlice.WIDTH, GoPartSlice.HEIGHT)) {
             let ennemi: GoPiece = slice.turn%2 === 0 ? GoPiece.WHITE : GoPiece.BLACK;
             if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === ennemi) {
-                Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, "un groupe pourrait être capturé");
+                display(GoRules.VERBOSE ||LOCAL_VERBOSE, "un groupe pourrait être capturé");
                 let neightbooringGroup: GroupDatas = GroupDatas.getGroupDatas(neightbooringCoord, copiedBoard);
                 let koCoord: Coord = slice.koCoord;
                 if (GoRules.isCapturableGroup(neightbooringGroup, koCoord)) {
-                    Rules.display(GoRules.VERBOSE || LOCAL_VERBOSE, {
+                    display(GoRules.VERBOSE || LOCAL_VERBOSE, {
                         neightbooringGroupCoord: neightbooringGroup.getCoords(),
                         message: "is capturable"
                     });
@@ -144,7 +138,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
     }
     public getListMoves(node: GoNode): MGPMap<GoMove, GoPartSlice> {
         const LOCAL_VERBOSE: boolean = false;
-        Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.getListMoves');
+        display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.getListMoves');
 
         const currentSlice: GoPartSlice = node.gamePartSlice;
         const playingMoves: MGPMap<GoMove, GoPartSlice> = GoRules.getPlayingMovesList(currentSlice);
@@ -156,7 +150,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         } else if (currentSlice.phase === Phase.COUNTING ||
                    currentSlice.phase === Phase.ACCEPT)
         {
-            Rules.display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.getListMoves in counting phase');
+            display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.getListMoves in counting phase');
             const markingMoves: MGPMap<GoMove, GoPartSlice> = this.getCountingMovesList(currentSlice);
             if (markingMoves.size() === 0) {
                 markingMoves.set(GoMove.ACCEPT, GoRules.applyAccept(currentSlice).resultingSlice);
@@ -259,18 +253,18 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         return GoRules.applyLegalMove(legalMove, slice, status);
     }
     public static applyLegalMove(legalMove: GoMove, slice: GoPartSlice, status: GoLegalityStatus): {resultingMove: GoMove, resultingSlice: GoPartSlice} {
-        Rules.display(GoRules.VERBOSE, { applyLegalMove: { legalMove, slice, status }});
+        display(GoRules.VERBOSE, { applyLegalMove: { legalMove, slice, status }});
         if (GoRules.isPass(legalMove)) {
-            Rules.display(GoRules.VERBOSE, "GoRules.applyLegalMove: isPass");
+            display(GoRules.VERBOSE, "GoRules.applyLegalMove: isPass");
             return GoRules.applyPass(slice);
         } else if (GoRules.isAccept(legalMove)) {
-            Rules.display(GoRules.VERBOSE, "GoRules.applyLegalMove: isAccept");
+            display(GoRules.VERBOSE, "GoRules.applyLegalMove: isAccept");
             return GoRules.applyAccept(slice);
         } else if (GoRules.isLegalDeadMarking(legalMove, slice)) {
-            Rules.display(GoRules.VERBOSE, "GoRules.applyLegalMove: isDeadMarking");
+            display(GoRules.VERBOSE, "GoRules.applyLegalMove: isDeadMarking");
             return GoRules.applyDeadMarkingMove(legalMove, slice);
         } else {
-            Rules.display(GoRules.VERBOSE, "GoRules.applyLegalMove: else it is normal move");
+            display(GoRules.VERBOSE, "GoRules.applyLegalMove: else it is normal move");
             return GoRules.applyNormalLegalMove(slice, legalMove, status);
         }
     }
@@ -317,7 +311,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
     }
     private static applyNormalLegalMove(currentPartSlice: GoPartSlice, legalMove: GoMove, status: GoLegalityStatus): {resultingMove: GoMove, resultingSlice: GoPartSlice} {
-        Rules.display(GoRules.VERBOSE, { applyNormalLegal: { currentPartSlice, legalMove, status}});
+        display(GoRules.VERBOSE, { applyNormalLegal: { currentPartSlice, legalMove, status}});
         let slice: GoPartSlice;
         if ([Phase.COUNTING, Phase.ACCEPT].includes(currentPartSlice.phase)) {
             slice = GoRules.resurectStones(currentPartSlice);
@@ -362,7 +356,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         return GoRules.mapBoard(board, setAlivePawn);
     }
     private static applyDeadMarkingMove(legalMove: GoMove, slice: GoPartSlice): {resultingMove: GoMove, resultingSlice: GoPartSlice} {
-        Rules.display(GoRules.VERBOSE, { applyDeadMarkingMove: { legalMove, slice}});
+        display(GoRules.VERBOSE, { applyDeadMarkingMove: { legalMove, slice}});
         const territorylessSlice: GoPartSlice = GoRules.removeAndSubstractTerritory(slice);
         const switchedSlice: GoPartSlice = GoRules.switchAliveness(legalMove.coord, territorylessSlice);
         let resultingSlice: GoPartSlice =
@@ -377,7 +371,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
     public getBoardValue(move: GoMove, slice: GoPartSlice): number {
         const LOCAL_VERBOSE: boolean = false;
 
-        Rules.display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getBoardValue');
+        display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getBoardValue');
 
         const goPartSlice: GoPartSlice = GoRules.markTerritoryAndCount(slice);
 
@@ -404,15 +398,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             return null;
         }
     }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(new GoPartSlice(GoPartSlice.getStartingBoard(), [0, 0], 0, null, Phase.PLAYING), this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public static markTerritoryAndCount(slice: GoPartSlice): GoPartSlice {
-        Rules.display(GoRules.VERBOSE, { markTerritoryAndCount: { slice }});
+        display(GoRules.VERBOSE, { markTerritoryAndCount: { slice }});
         const resultingBoard: GoPiece[][] = slice.getCopiedBoardGoPiece();
         let emptyZones: GroupDatas[] = GoRules.getTerritoryLikeGroup(slice);
         const captured = slice.getCapturedCopy();

@@ -1,5 +1,5 @@
 import { Rules } from '../../../jscaip/Rules';
-import { MNode } from 'src/app/jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import { EncapsulePartSlice, EncapsuleCase } from '../EncapsulePartSlice';
 import { EncapsuleMove } from '../encapsulemove/EncapsuleMove';
 import { EncapsulePiece, EncapsuleMapper } from '../EncapsuleEnums';
@@ -10,8 +10,9 @@ import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { display } from 'src/app/collectionlib/utils';
 
-abstract class EncapsuleNode extends MNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
+abstract class EncapsuleNode extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
@@ -45,30 +46,15 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (owner[0] === Player.NONE) return false;
         return (owner[0] === owner[1]) && (owner[1] === owner[2]);
     }
-    constructor() {
-        super();
-        this.node = MNode.getFirstNode(
-            EncapsulePartSlice.getStartingSlice(),
-            this);
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                EncapsulePartSlice.getStartingSlice(),
-                this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
         const LOCAL_VERBOSE: boolean = false;
         let boardCopy: number[][] = slice.getCopiedBoard();
-        Rules.display(LOCAL_VERBOSE, move.toString());
+        display(LOCAL_VERBOSE, move.toString());
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             if (!slice.isDropable(movingPiece)) {
-                Rules.display(LOCAL_VERBOSE, "move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
+                display(LOCAL_VERBOSE, "move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
                 return EncapsuleLegalityStatus.failure("move illegal because: this piece is missing form the remaining pieces or do not belong to the current player");
             }
         } else {
@@ -76,8 +62,8 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
             if (!EncapsulePartSlice.pieceBelongToCurrentPlayer(movingPiece, slice.turn)) {
-                Rules.display(LOCAL_VERBOSE,
-                              "at " + startingCoord.toString() + "\n" +
+                display(LOCAL_VERBOSE,
+                    "at " + startingCoord.toString() + "\n" +
                     "there is " + startingCase.toString() + "\n" +
                     "whose bigger is " + EncapsuleMapper.getNameFromPiece(movingPiece) + "\n" +
                     "move illegal because: piece does not belong to current player");
@@ -90,7 +76,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (superpositionResult.success === true) {
             return {legal: MGPValidation.success(), newLandingCase: superpositionResult.result};
         }
-        Rules.display(LOCAL_VERBOSE, "move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
+        display(LOCAL_VERBOSE, "move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
         return EncapsuleLegalityStatus.failure("impossible superposition");
     }
     public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus): { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; } {

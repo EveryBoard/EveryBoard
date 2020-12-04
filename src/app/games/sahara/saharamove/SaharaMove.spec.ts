@@ -7,7 +7,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 describe('SaharaMoves', () => {
 
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
-        const rules: SaharaRules = new SaharaRules();
+        const rules: SaharaRules = new SaharaRules(SaharaPartSlice);
         expect(rules).toBeTruthy();
         const moves: MGPMap<SaharaMove, SaharaPartSlice> = rules.getListMoves(rules.node);
         expect(moves.size()).toEqual(12);

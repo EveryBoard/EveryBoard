@@ -6,7 +6,7 @@ import { AwalePartSlice } from "../AwalePartSlice";
 describe('AwaleMove', () => {
 
     it('AwaleMove.encode and AwaleMove.decode should be reversible', () => {
-        const rules: AwaleRules = new AwaleRules();
+        const rules: AwaleRules = new AwaleRules(AwalePartSlice);
         const firstTurnMoves: MGPMap<AwaleMove, AwalePartSlice> = rules.getListMoves(rules.node);
         for (let i = 0; i < firstTurnMoves.size(); i++) {
             const move: AwaleMove = firstTurnMoves.getByIndex(i).key;

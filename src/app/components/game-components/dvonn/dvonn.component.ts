@@ -7,7 +7,7 @@ import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { DvonnRules } from 'src/app/games/dvonn/dvonnrules/DvonnRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
-import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
+import { DvonnPieceStack } from 'src/app/games/dvonn/dvonnpiecestack/DvonnPieceStack';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
@@ -16,7 +16,7 @@ import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation
 })
 
 export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSlice, LegalityStatus> {
-    public rules: DvonnRules = new DvonnRules(DvonnPartSlice.getStartingSlice());
+    public rules: DvonnRules = new DvonnRules(DvonnPartSlice);
 
     public CASE_SIZE: number = 70;
     public lastMove: DvonnMove = null;

@@ -12,10 +12,7 @@ export class EncapsulePartSlice extends GamePartSlice {
         if (remainingPieces == null) throw new Error("RemainingPieces cannot be null");
         this.remainingPieces = remainingPieces;
     }
-    public getRemainingPiecesCopy(): EncapsulePiece[] {
-        return ArrayUtils.copyImmutableArray(this.remainingPieces);
-    }
-    public static getStartingSlice(): EncapsulePartSlice {
+    public static getInitialSlice(): EncapsulePartSlice {
         const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
         const emptyNumber: number = emptyCase.encode();
         let startingBoard: number[][] = ArrayUtils.createBiArray(3, 3, emptyNumber);
@@ -24,6 +21,9 @@ export class EncapsulePartSlice extends GamePartSlice {
             EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
              EncapsulePiece.SMALL_BLACK,  EncapsulePiece.SMALL_BLACK,  EncapsulePiece.SMALL_WHITE,  EncapsulePiece.SMALL_WHITE];
         return new EncapsulePartSlice(startingBoard, 0, initialPieces);
+    }
+    public getRemainingPiecesCopy(): EncapsulePiece[] {
+        return ArrayUtils.copyImmutableArray(this.remainingPieces);
     }
     public static pieceBelongToCurrentPlayer(piece: EncapsulePiece, turn: number): boolean {
         const pieceOwner: Player = EncapsuleMapper.toPlayer(piece);

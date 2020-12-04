@@ -3,31 +3,17 @@ import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { Player } from "src/app/jscaip/Player";
 import { Rules } from "src/app/jscaip/Rules";
 import { PylosCoord } from "../pylos-coord/PylosCoord";
 import { PylosMove } from "../pylos-move/PylosMove";
 import { PylosPartSlice } from "../pylos-part-slice/PylosPartSlice";
 
-export class PylosNode extends MNode<Rules<PylosMove, PylosPartSlice, LegalityStatus>, PylosMove, PylosPartSlice, LegalityStatus> {}
+export class PylosNode extends MGPNode<Rules<PylosMove, PylosPartSlice, LegalityStatus>, PylosMove, PylosPartSlice, LegalityStatus> {}
 
 export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus> {
 
-    public constructor() {
-        super();
-        this.setInitialBoard(); // TODO: generalize Rules constructor like this
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                PylosPartSlice.getStartingSlice(),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
-    }
     public getListMoves(node: PylosNode): MGPMap<PylosMove, PylosPartSlice> {
         const slice: PylosPartSlice = node.gamePartSlice;
         const result: MGPMap<PylosMove, PylosPartSlice> = new MGPMap<PylosMove, PylosPartSlice>();

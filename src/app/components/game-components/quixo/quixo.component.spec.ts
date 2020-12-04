@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, async } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -45,7 +45,7 @@ describe('QuixoComponent', () => {
 
     let doMove: (move: QuixoMove) => Promise<boolean> = async(move: QuixoMove) => {
         return gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
-               await gameComponent.chooseDirection(move.direction.toString());
+               await gameComponent.chooseDirection(move.direction.toString()); // TODO simulate clicks, not function call
     }
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
@@ -66,12 +66,10 @@ describe('QuixoComponent', () => {
         tick(1);
         gameComponent = wrapper.gameComponent as QuixoComponent;
     }));
-
     it('should create', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("QuixoComponent should be created");
     });
-
     it('should style piece correctly', () => {
         expect(gameComponent.getPieceFill(Player.ZERO.value)).toBe('blue');
         expect(gameComponent.getPieceFill(Player.ONE.value)).toBe('red');
@@ -82,7 +80,6 @@ describe('QuixoComponent', () => {
         gameComponent.lastMoveCoord = new Coord(4, 4);
         expect(gameComponent.getPieceStyle(4, 4)).toEqual({fill: 'lightgrey', stroke: 'orange'});
     });
-
     it('should give correct direction', () => {
         let possibleDirections: any[][];
 
@@ -94,7 +91,6 @@ describe('QuixoComponent', () => {
         possibleDirections = gameComponent.getPossiblesDirections();
         expect(possibleDirections).toEqual([[0, 1, 'LEFT'], [1, 0, 'UP']]);
     });
-
     it('should cancel move when trying to select ennemy piece or center coord', async() => {
         const firstMove: QuixoMove = new QuixoMove(0, 0, Orthogonale.RIGHT);
 
@@ -107,20 +103,17 @@ describe('QuixoComponent', () => {
 
         expect(gameComponent.onBoardClick(1, 1)).toBeFalsy("Should not be allowed to click on center piece");
     });
-
     it('should delegate triangleCoord calculation to GameComponentUtils', () => {
         spyOn(GameComponentUtils, "getTriangleCoordinate").and.callThrough();
         gameComponent.onBoardClick(0, 2);
         gameComponent.getTriangleCoordinate(2, 1);
         expect(GameComponentUtils.getTriangleCoordinate).toHaveBeenCalledWith(0, 2, 2, 1);
     });
-
     it('should delegate decoding to move', () => {
         spyOn(QuixoMove, "decode").and.callThrough();
         gameComponent.decodeMove(new QuixoMove(0, 0, Orthogonale.DOWN).encode());
         expect(QuixoMove.decode).toHaveBeenCalledTimes(1);
     });
-
     it('should delegate encoding to move', () => {
         spyOn(QuixoMove, "encode").and.callThrough();
         gameComponent.encodeMove(new QuixoMove(0, 0, Orthogonale.DOWN));

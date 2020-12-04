@@ -17,7 +17,7 @@ import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation
 })
 export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
-    public rules = new EncapsuleRules();
+    public rules = new EncapsuleRules(EncapsulePartSlice);
 
     public mappedBoard: String[][][];
 

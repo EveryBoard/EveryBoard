@@ -1,11 +1,11 @@
-import {Component} from '@angular/core';
-import {P4PartSlice} from '../../../games/p4/P4PartSlice';
-import {MoveX} from '../../../jscaip/MoveX';
-import {P4Rules} from '../../../games/p4/p4rules/P4Rules';
-import {Move} from '../../../jscaip/Move';
-import {AbstractGameComponent} from '../AbstractGameComponent';
+import { Component } from '@angular/core';
+import { P4PartSlice } from '../../../games/p4/P4PartSlice';
+import { MoveX } from '../../../jscaip/MoveX';
+import { P4Rules } from '../../../games/p4/p4rules/P4Rules';
+import { Move } from '../../../jscaip/Move';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Rules } from 'src/app/jscaip/Rules';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-p4',
@@ -17,7 +17,7 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
 
     public static VERBOSE: boolean = false;
 
-    public rules = new P4Rules();
+    public rules = new P4Rules(P4PartSlice);
 
     public imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg', ];
 
@@ -26,7 +26,7 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
     public async onClick(x: number): Promise<boolean> {
         const chosenMove = MoveX.get(x);
         const legal: boolean = await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
-        Rules.display(P4Component.VERBOSE, "Move " + chosenMove.toString() + " was " + (legal ? 'legal' : 'illegal'));
+        display(P4Component.VERBOSE, "Move " + chosenMove.toString() + " was " + (legal ? 'legal' : 'illegal'));
         return legal;
     }
     public updateBoard() {

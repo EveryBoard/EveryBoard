@@ -13,7 +13,7 @@ describe('QuixoRules:', () => {
     let O: number = Player.ZERO.value;
 
     beforeEach(() => {
-        rules = new QuixoRules();
+        rules = new QuixoRules(QuixoPartSlice);
     });
 
     it("Should forbid player to start a move with opponents piece", () => {

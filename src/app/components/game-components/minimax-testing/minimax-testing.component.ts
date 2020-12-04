@@ -16,7 +16,7 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
 
     /*************************** Common Fields **************************/
 
-    public rules = new MinimaxTestingRules(MinimaxTestingPartSlice.BOARD_0);
+    public rules = new MinimaxTestingRules(MinimaxTestingPartSlice);
 
     public coord: Coord = new Coord(-1, -1);
 

@@ -12,7 +12,10 @@ export class SiamPartSlice extends GamePartSlice {
         board[2][3] = SiamPiece.MOUNTAIN.value;
         return board;
     }
-
+    public static getInitialSlice(): SiamPartSlice {
+        const board: number[][] = SiamPartSlice.getStartingBoard();
+        return new SiamPartSlice(board, 0);
+    }
     public countPlayerPawn(): number {
         let count: number = 0;
         for (let y = 0; y < 5; y++) {

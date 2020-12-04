@@ -1,7 +1,7 @@
 import { SiamRules, SiamNode } from "./SiamRules";
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
 import { SiamPiece } from "../siampiece/SiamPiece";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { SiamPartSlice } from "../SiamPartSlice";
 import { SiamMove } from "../siammove/SiamMove";
 import { Coord } from "src/app/jscaip/coord/Coord";
@@ -30,12 +30,10 @@ describe('SiamRules - Minimax:', () => {
     beforeAll(() => {
         SiamRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SiamRules.VERBOSE;
     });
-
     beforeEach(() => {
-        rules = new SiamRules();
-        MNode.NB_NODE_CREATED = 0;
+        rules = new SiamRules(SiamPartSlice);
+        MGPNode.NB_NODE_CREATED = 0; // TODO: Delete and use spy
     });
-
     it("Board value test: Should know who is closer to win (1)", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -48,7 +46,6 @@ describe('SiamRules - Minimax:', () => {
         const move: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         expect(rules.getBoardValue(move, slice)).toBeLessThan(0, "First player should be considered as closer to victory");
     });
-
     it("Board value test: Should know who is closer to win (2)", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -61,7 +58,6 @@ describe('SiamRules - Minimax:', () => {
         const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         expect(rules.getBoardValue(move, slice)).toBeLessThan(0, "First player should be considered as closer to victory");
     });
-
     it("Best choice test: Should choose victory immediately", () => {
         const board: number[][] = [
             [_, _, _, M, _],
@@ -78,16 +74,15 @@ describe('SiamRules - Minimax:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const node: SiamNode = new MNode(null, null, slice, 0);
+        const node: SiamNode = new MGPNode(null, null, slice, 0);
         const bestSon: SiamNode = node.findBestMoveAndSetDepth(1);
         const bestMove: SiamMove = new SiamMove(3, 1, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
-        const expectedSon: SiamNode = new MNode(node, bestMove, expectedSlice, Number.MIN_SAFE_INTEGER);
+        const expectedSon: SiamNode = new MGPNode(node, bestMove, expectedSlice, Number.MIN_SAFE_INTEGER);
         expect(bestSon).toEqual(expectedSon);
         expect(node.countDescendants()).toBe(1, "Pre-victory node should only have victory child");
-        expect(MNode.NB_NODE_CREATED).toBe(3, "Node under test + Victory Node + expected node should make 3 MNode created");
+        expect(MGPNode.NB_NODE_CREATED).toBe(3, "Node under test + Victory Node + expected node should make 3 MGPNode created");
     });
-
     it("Best choice test: Should consider pushing as the best option", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -97,12 +92,11 @@ describe('SiamRules - Minimax:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const node: SiamNode = new MNode(null, null, slice, 0);
+        const node: SiamNode = new MGPNode(null, null, slice, 0);
         const bestSon: SiamNode = node.findBestMoveAndSetDepth(1);
         const bestMove: SiamMove = new SiamMove(3, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
         expect(bestSon.move.toString()).toEqual(bestMove.toString());
     });
-
     it("Best choice test: Pushing from outside could be considered the best option", () => {
         const board: number[][] = [
             [_, _, _, d, _],
@@ -112,7 +106,7 @@ describe('SiamRules - Minimax:', () => {
             [_, _, _, U, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const node: SiamNode = new MNode(null, null, slice, 0);
+        const node: SiamNode = new MGPNode(null, null, slice, 0);
         const moves: MGPMap<SiamMove, SiamPartSlice> = rules.getListMoves(node);
         let moveType = { moving: 0, rotation: 0, pushingInsertion: 0, slidingInsertion: 0};
         let choicesValues = {};
@@ -136,7 +130,6 @@ describe('SiamRules - Minimax:', () => {
         expect(bestSon.move.toString()).toEqual(bestMove.toString());
         expect(moveType).toEqual({ moving: 35, rotation: 12, pushingInsertion: 18, slidingInsertion: 16 });
     });
-
     it("Best choice test: Inserting a piece when 5 player are on the board should not be an option", () => {
         const board: number[][] = [
             [d, _, _, d, _],
@@ -146,16 +139,17 @@ describe('SiamRules - Minimax:', () => {
             [_, _, _, M, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 1);
-        const node: SiamNode = new MNode(null, null, slice, 0);
+        const node: SiamNode = new MGPNode(null, null, slice, 0);
         const moves: MGPMap<SiamMove, SiamPartSlice> = rules.getListMoves(node);
+        let isInsertionPossible: boolean = false;
         for (const move of moves.listKeys()) {
             if (move.isInsertion()) {
-                expect(false).toBeTruthy("Insertion are impossible when 5 pieces on the board");
+                isInsertionPossible = true;
                 break;
             }
         }
+        expect(isInsertionPossible).toBeFalsy("Insertion are impossible when 5 pieces on the board");
     });
-
     it("Board value test: At equal 'closestPusher' player who'se turn it is to play should have the advantage", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -169,7 +163,6 @@ describe('SiamRules - Minimax:', () => {
         const boardValue: number = rules.getBoardValue(move, slice);
         expect(boardValue).toBeLessThan(0);
     });
-
     it("Board value test: Symetry test", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -186,7 +179,6 @@ describe('SiamRules - Minimax:', () => {
         const symetryBoardValue: number = rules.getBoardValue(move, symetrySlice);
         expect(boardValue).toEqual(-1 * symetryBoardValue, "Both board value should have same absolute value");
     });
-
     it("Logical test: Should get option for first turn", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -201,7 +193,6 @@ describe('SiamRules - Minimax:', () => {
         expect(pushers.length).toBe(6, "should not include horizontal push");
         expect(pushers[0].distance).toBe(5, "should all be to the same distance");
     });
-
     it("Logical test: Should know how far a mountain is from the border", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -219,7 +210,6 @@ describe('SiamRules - Minimax:', () => {
             coord: new Coord(3, 3)
         }));
     });
-
     it("Logical test: Should count rotation as +1 for pushing distance if up-close", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -237,7 +227,6 @@ describe('SiamRules - Minimax:', () => {
             coord: new Coord(3, 3)
         }));
     });
-
     it("Logical test: Should not count rotation as +1 for pushing distance if not up-close", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -255,7 +244,6 @@ describe('SiamRules - Minimax:', () => {
             coord: new Coord(3, 4)
         }));
     });
-
     it("Logical test: Should count outside pieces", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -273,7 +261,6 @@ describe('SiamRules - Minimax:', () => {
             coord: new Coord(3, 5)
         }));
     });
-
     it("Logical test: Should count outside pieces in force conflict", () => {
         const board: number[][] = [
             [_, _, _, d, _],
@@ -291,7 +278,6 @@ describe('SiamRules - Minimax:', () => {
             coord: new Coord(3, 5)
         }));
     });
-
     it("Logical test: When 5 player on board, no outside pusher can't be counted", () => {
         const board: number[][] = [
             [d, _, _, _, R],
@@ -306,7 +292,6 @@ describe('SiamRules - Minimax:', () => {
             rules.getLineClosestPusher(slice, fallingCoord, Orthogonale.UP);
         expect(closestPusher).toEqual(MGPOptional.empty());
     });
-
     it("Logical test: When pusher is out-powered, pusher should not be counted", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -321,7 +306,6 @@ describe('SiamRules - Minimax:', () => {
             rules.getLineClosestPusher(slice, fallingCoord, Orthogonale.UP);
         expect(closestPusher).toEqual(MGPOptional.empty());
     });
-
     it("Logical test: When closest pusher is out-powered, furthest pusher should be found", () => {
         const board: number[][] = [
             [_, _, _, _, _],
@@ -339,7 +323,6 @@ describe('SiamRules - Minimax:', () => {
             coord: new Coord(3, 5)
         }));
     });
-
     it("Logical test: Post-Mountain side pushed pieces should not affect distance calculation", () => {
         const board: number[][] = [
             [_, _, _, r, _],
@@ -357,8 +340,7 @@ describe('SiamRules - Minimax:', () => {
             coord: new Coord(3, 4)
         }));
     });
-
-    it("unpushable mountain should not be counted", () => {
+    it("Should not count unpushable mountains", () => {
         const board: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -372,8 +354,7 @@ describe('SiamRules - Minimax:', () => {
         expect(closestPusher).toEqual(MGPOptional.empty());
 
     });
-
-    it("getScoreFromShortestDistances should work (Player Zero)", () => {
+    it("Should getScoreFromShortestDistances (Player Zero) correctly", () => {
         const currentPlayer: Player = Player.ZERO;
         const T: number = currentPlayer === Player.ZERO ? -1 : 1;
         const expectedValues: number[][] = [

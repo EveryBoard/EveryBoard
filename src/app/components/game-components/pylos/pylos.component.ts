@@ -6,8 +6,8 @@ import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSl
 import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-pylos',
@@ -17,7 +17,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     public static VERBOSE: boolean = false;
 
-    public rules: PylosRules = new PylosRules();
+    public rules: PylosRules = new PylosRules(PylosPartSlice);
 
     public slice: PylosPartSlice = this.rules.node.gamePartSlice;
 
@@ -89,7 +89,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         return this.chooseMove(move, slice, null, null);
     }
     public cancelMove(reason: string): MGPValidation {
-        Rules.display(PylosComponent.VERBOSE, reason);
+        display(PylosComponent.VERBOSE, reason);
         this.chosenStartingCoord = null;
         this.chosenLandingCoord = null;
         this.chosenFirstCapture = null;

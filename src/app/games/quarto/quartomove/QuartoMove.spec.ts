@@ -6,7 +6,7 @@ import { QuartoPartSlice } from "../QuartoPartSlice";
 describe('QuartoMove', () => {
 
     it('QuartoMove.encode and QuartoMove.decode should be reversible', () => {
-        const rules: QuartoRules = new QuartoRules();
+        const rules: QuartoRules = new QuartoRules(QuartoPartSlice);
         const firstTurnMoves: MGPMap<QuartoMove, QuartoPartSlice> = rules.getListMoves(rules.node);
         for (let i = 0; i < firstTurnMoves.size(); i++) {
             const move: QuartoMove = firstTurnMoves.getByIndex(i).key;

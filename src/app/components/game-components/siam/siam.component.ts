@@ -10,8 +10,8 @@ import { Orthogonale } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { GameComponentUtils } from '../GameComponentUtils';
-import { Rules } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-siam',
@@ -21,7 +21,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
 
     public static VERBOSE: boolean = false;
 
-    public rules: SiamRules = new SiamRules();
+    public rules: SiamRules = new SiamRules(SiamPartSlice);
 
     public lastMove: SiamMove;
 
@@ -34,13 +34,13 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public chosenOrientation: Orthogonale;
 
     public updateBoard() {
-        Rules.display(SiamComponent.VERBOSE, "updateBoard");
+        display(SiamComponent.VERBOSE, "updateBoard");
         const slice: SiamPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.board;
         this.lastMove = this.rules.node.move;
     }
     public cancelMove(reason: string): MGPValidation {
-        Rules.display(SiamComponent.VERBOSE, reason);
+        display(SiamComponent.VERBOSE, reason);
         this.chosenCoord = null;
         this.chosenDirection = null;
         this.landingCoord = null;
@@ -63,7 +63,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         return MGPValidation.success();
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
-        Rules.display(SiamComponent.VERBOSE, "SiamComponent.chooseDirection(" + direction + ")");
+        display(SiamComponent.VERBOSE, "SiamComponent.chooseDirection(" + direction + ")");
         if (direction === '') {
             this.chosenDirection = MGPOptional.empty();
             this.landingCoord = this.chosenCoord;
@@ -72,7 +72,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
             if (this.landingCoord.isNotInRange(5, 5)) {
-                Rules.display(SiamComponent.VERBOSE, "orientation and direction should be the same: " + dir);
+                display(SiamComponent.VERBOSE, "orientation and direction should be the same: " + dir);
                 this.chosenOrientation = dir;
                 return this.tryMove();
             }
@@ -80,12 +80,12 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         return MGPValidation.success();
     }
     public async chooseOrientation(orientation: string): Promise<MGPValidation> {
-        Rules.display(SiamComponent.VERBOSE, "SiamComponent.chooseOrientation(" + orientation + ")");
+        display(SiamComponent.VERBOSE, "SiamComponent.chooseOrientation(" + orientation + ")");
         this.chosenOrientation = Orthogonale.fromString(orientation);
         return this.tryMove();
     }
     public async insertAt(x: number, y: number): Promise<MGPValidation> {
-        Rules.display(SiamComponent.VERBOSE, "SiamComponent.insertAt(" + x + ", " + y + ")");
+        display(SiamComponent.VERBOSE, "SiamComponent.insertAt(" + x + ", " + y + ")");
 
         if (this.chosenCoord) {
             return this.cancelMove("Can't insert when there is already a selected piece");
@@ -104,7 +104,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                                             this.chosenOrientation);
         this.cancelMove("Hiding move before submitting it");
         const legal: MGPValidation = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-        Rules.display(SiamComponent.VERBOSE, "SiamComponent.tryMove: " + legal);
+        display(SiamComponent.VERBOSE, "SiamComponent.tryMove: " + legal);
         return legal;
     }
     public getArrowCoordinate(x: number, y: number, o: string): string {
@@ -169,7 +169,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             coord.equals(this.landingCoord) &&
             this.chosenOrientation == null)
         {
-            Rules.display(SiamComponent.VERBOSE, "choosing orientation now");
+            display(SiamComponent.VERBOSE, "choosing orientation now");
             return true;
         }
         return false;
@@ -181,7 +181,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             this.landingCoord == null &&
             this.chosenOrientation == null)
         {
-            Rules.display(SiamComponent.VERBOSE, "choosing direction now");
+            display(SiamComponent.VERBOSE, "choosing direction now");
             return true;
         }
         return false;

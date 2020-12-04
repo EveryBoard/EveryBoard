@@ -36,6 +36,10 @@ export class TablutPartSlice extends GamePartSlice {
         // the other side
         return board;
     }
+    public static getInitialSlice(): TablutPartSlice {
+        const board: number[][] = TablutPartSlice.getStartingBoard(true);
+        return new TablutPartSlice(board, 0, true);
+    }
     constructor(b: number[][], turn: number, invaderStart: boolean) {
         super(b, turn);
         this.invaderStart = invaderStart;

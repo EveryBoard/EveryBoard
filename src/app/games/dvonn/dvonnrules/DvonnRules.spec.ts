@@ -1,4 +1,4 @@
-import { DvonnPieceStack } from "../DvonnPieceStack";
+import { DvonnPieceStack } from "../dvonnpiecestack/DvonnPieceStack";
 import { DvonnPartSlice } from "../DvonnPartSlice";
 import { DvonnRules } from "./DvonnRules";
 import { Coord } from "src/app/jscaip/coord/Coord";
@@ -7,7 +7,6 @@ import { DvonnMove } from "../dvonnmove/DvonnMove";
 import { Player } from "src/app/jscaip/Player";
 import { DvonnBoard } from "../DvonnBoard";
 import { DvonnPiece } from "../DvonnPiece";
-import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 describe('DvonnRules:', () => {
     let rules: DvonnRules;
@@ -41,7 +40,7 @@ describe('DvonnRules:', () => {
                                                DvonnPiece.SOURCE, DvonnPiece.PLAYER_ZERO]).getValue();
 
     beforeEach(() => {
-        rules = new DvonnRules(DvonnPartSlice.getStartingSlice());
+        rules = new DvonnRules(DvonnPartSlice);
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

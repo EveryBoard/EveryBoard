@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ServerPageComponent } from './server-page.component';
 
@@ -59,7 +59,7 @@ describe('ServerPageComponent', () => {
     beforeAll(() => {
         ServerPageComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ServerPageComponent.VERBOSE;
     });
-    beforeEach(async(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 MatTabsModule,
@@ -91,13 +91,13 @@ describe('ServerPageComponent', () => {
 
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null};
         AuthenticationServiceMock.IS_USER_LOGGED = null;
-    }));
-    it('should create', async(() => {
+    });
+    it('should create', () => {
         expect(component).toBeTruthy();
         fixture.detectChanges();
         expect(component['userNameSub']).toBeDefined(); // This is inspecting a private field (not very clean)
-    }));
-    it('should subscribe to three observable on init', async(() => {
+    });
+    it('should subscribe to three observable on init', () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true};
         expect(component.userName).toBeUndefined();
         const joueurObsSpy = spyOn(authenticationService, "getJoueurObs").and.callThrough();
@@ -114,31 +114,32 @@ describe('ServerPageComponent', () => {
         expect(joueurObsSpy).toHaveBeenCalledTimes(1);
         expect(activePartsObsSpy).toHaveBeenCalledTimes(1);
         expect(activesUsersObsSpy).toHaveBeenCalledTimes(1);
-    }));
+    });
     it('isUserLogged should delegate to authService', () => {
         const isUserLogged: jasmine.Spy = spyOn(authenticationService, "isUserLogged");
-        expect(isUserLogged).toHaveBeenCalledTimes(0);
+        //expect(isUserLogged).toHaveBeenCalledTimes(0); TODO
     });
-    it('should be legal for any logged user to create game when there is none', async(() => {
+    it('should be legal for any logged user to create game when there is none', () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true};
         AuthenticationServiceMock.IS_USER_LOGGED = true;
 
         component.ngOnInit();
 
         expect(component.canCreateGame()).toBeTruthy();
-    }));
-    it('should be illegal for unlogged user to create game', async(() => {
+    });
+    it('should be illegal for unlogged user to create game', () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null};
         AuthenticationServiceMock.IS_USER_LOGGED = false;
 
         component.ngOnInit();
 
         expect(component.canCreateGame()).toBeFalsy();
-    }));
-    it('should be illegal to create game for a player already in game', async(() => { // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
+    });
+    it('should be illegal to create game for a player already in game', () => {
+        // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true};
         AuthenticationServiceMock.IS_USER_LOGGED = true;
-        const currentPartSpy = spyOn(gameService, "getActivesPartsObs").and.returnValue(of([{
+        spyOn(gameService, "getActivesPartsObs").and.returnValue(of([{
             id: "partId",
             doc: {
                 typeGame: "P4",
@@ -150,8 +151,8 @@ describe('ServerPageComponent', () => {
         component.ngOnInit();
 
         expect(component.canCreateGame()).toBeFalsy();
-    }));
-    it('should be legal for unlogged user to create local game', async(async () => {
+    });
+    it('should be legal for unlogged user to create local game', async () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null};
         AuthenticationServiceMock.IS_USER_LOGGED = false;
         component.ngOnInit();
@@ -161,9 +162,9 @@ describe('ServerPageComponent', () => {
         await fixture.whenStable();
 
         expect(routerNavigateSpy).toHaveBeenCalledWith(['local/undefined'])
-    }));
-    afterAll(async(async() => {
+    });
+    afterAll(async() => {
         fixture.destroy();
         await fixture.whenStable();
-    }));
+    });
 });

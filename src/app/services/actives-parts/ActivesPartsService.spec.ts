@@ -1,5 +1,3 @@
-import { async } from '@angular/core/testing';
-
 import { ActivesPartsService } from './ActivesPartsService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
@@ -11,7 +9,7 @@ describe('ActivesPartsService', () => {
     beforeEach(() => {
         service = new ActivesPartsService(new PartDAOMock() as unknown as PartDAO);
     });
-    it('should create', async(() => {
+    it('should create', () => {
         expect(service).toBeTruthy();
-    }));
+    });
 });

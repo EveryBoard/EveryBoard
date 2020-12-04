@@ -12,7 +12,7 @@ describe('KamisadoMove', () => {
         expect(KamisadoMove.PASS.toString()).toEqual("KamisadoMove(PASS)");
     });
     it('should correctly encode and decode all moves', () => {
-        const rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice.getStartingSlice());
+        const rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice);
         const firstTurnMoves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMoves(rules.node);
         for (const move of firstTurnMoves.listKeys()) {
             const encodedMove: number = move.encode();

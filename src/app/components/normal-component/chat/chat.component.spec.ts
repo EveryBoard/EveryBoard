@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { ChatComponent } from './chat.component';
@@ -46,7 +46,7 @@ describe('ChatComponent', () => {
     beforeAll(() => {
         ChatComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ChatComponent.VERBOSE;
     });
-    beforeEach(async(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [
                 FormsModule,
@@ -68,11 +68,11 @@ describe('ChatComponent', () => {
 
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null};
         AuthenticationServiceMock.IS_USER_LOGGED = null;
-    }));
-    it('should create', async(() => {
+    });
+    it('should create', () => {
         expect(component).toBeTruthy();
-    }));
-    it('should not load message for unlogged user', async(async () => {
+    });
+    it('should not load message for unlogged user', async() => {
         const startObservingSpy = spyOn(chatService, "startObserving");
         const stopObservingSpy = spyOn(chatService, "stopObserving");
         const showDisconnectedChatSpy = spyOn(component, "showDisconnectedChat");
@@ -87,8 +87,8 @@ describe('ChatComponent', () => {
         component.ngOnDestroy();
         await fixture.whenStable();
         expect(stopObservingSpy).toHaveBeenCalledTimes(0);
-    }));
-    it('should propose to hide chat when chat is visible, and work', async(async () => {
+    });
+    it('should propose to hide chat when chat is visible, and work', async () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: "Jean-Connecté", verified: true};
         fixture.detectChanges();
         let switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
@@ -105,8 +105,8 @@ describe('ChatComponent', () => {
         expect(chat).toBeFalsy("Chat should be invisible after calling hideChat");
         component.ngOnDestroy();
         await fixture.whenStable();
-    }));
-    it('should propose to show chat when chat is hidden, and work', async(async () => {
+    });
+    it('should propose to show chat when chat is hidden, and work', async () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: "Jean-Connecté", verified: true};
         fixture.detectChanges();
         component.switchChatVisibility();
@@ -126,8 +126,8 @@ describe('ChatComponent', () => {
         expect(chat).toBeTruthy("Chat should be visible after calling show");
         component.ngOnDestroy();
         await fixture.whenStable();
-    }));
-    it('should show how many messages where sent since you hide the chat', async(async() => {
+    });
+    it('should show how many messages where sent since you hide the chat', async() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: "Jean-Connecté", verified: true};
         fixture.detectChanges();
         component.switchChatVisibility();
@@ -135,7 +135,7 @@ describe('ChatComponent', () => {
         let switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         expect(switchButton.nativeElement.innerText).toEqual("Show chat (0 new messages)");
 
-        chatDAO.update("fauxChat", { messages : [ {
+        await chatDAO.update("fauxChat", { messages : [ {
             sender: "roger",
             content: "Saluuuut",
             lastTurnThen: 0,
@@ -145,13 +145,13 @@ describe('ChatComponent', () => {
 
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         expect(switchButton.nativeElement.innerText).toEqual("Show chat (1 new messages)");
-    }));
-    it('should reset new messages count once messages have been read', async(async() => {
+    });
+    it('should reset new messages count once messages have been read', async() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: "Jean-Connecté", verified: true};
         fixture.detectChanges();
         component.switchChatVisibility();
         fixture.detectChanges();
-        chatDAO.update("fauxChat", { messages : [ { sender: "roger", content: "Saluuuut", lastTurnThen: 0, postedTime: 5}]});
+        await chatDAO.update("fauxChat", { messages : [ { sender: "roger", content: "Saluuuut", lastTurnThen: 0, postedTime: 5}]});
         fixture.detectChanges();
         let switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         expect(switchButton.nativeElement.innerText).toEqual("Show chat (1 new messages)");
@@ -161,8 +161,8 @@ describe('ChatComponent', () => {
 
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         expect(switchButton.nativeElement.innerText).toEqual("Hide chat (0 new messages)");
-    }));
-    afterAll(async(() => {
+    });
+    afterAll(() => {
         component.ngOnDestroy();
-    }));
+    });
 });

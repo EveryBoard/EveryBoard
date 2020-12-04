@@ -16,7 +16,7 @@ describe('PylosRules:', () => {
     let O: number = Player.ZERO.value;
 
     beforeEach(() => {
-        rules = new PylosRules();
+        rules = new PylosRules(PylosPartSlice);
     });
 
     it("should forbid move who'se landing coord is not empty", () => {

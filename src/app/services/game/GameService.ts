@@ -3,7 +3,7 @@ import {Observable, Subscription} from 'rxjs';
 
 import {PartDAO} from '../../dao/part/PartDAO';
 
-import {ICurrentPart, ICurrentPartId, MGPResult} from '../../domain/icurrentpart';
+import {ICurrentPart, ICurrentPartId, MGPResult, PICurrentPart} from '../../domain/icurrentpart';
 import {IJoiner} from '../../domain/ijoiner';
 
 import {JoinerService} from '../joiner/JoinerService';
@@ -13,6 +13,7 @@ import {IChat} from '../../domain/ichat';
 import {IMGPRequest, RequestCode} from '../../domain/request';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
+import { display } from 'src/app/collectionlib/utils';
 
 @Injectable({
     providedIn: 'root'
@@ -27,19 +28,16 @@ export class GameService {
 
     private followedPartSub: Subscription;
 
-    public static display(verbose: boolean, message: any) {
-        if (verbose) console.log(message);
-    }
     constructor(private partDao: PartDAO,
                 private activesPartsService: ActivesPartsService,
                 private joinerService: JoinerService,
                 private chatService: ChatService) {
-        GameService.display(GameService.VERBOSE, "GameService.constructor");
+        display(GameService.VERBOSE, "GameService.constructor");
     }
     // on Server Component
 
     protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<String> {
-        GameService.display(GameService.VERBOSE, 'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer);
+        display(GameService.VERBOSE, 'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer);
 
         const newPart: ICurrentPart = {
             listMoves: [],
@@ -52,7 +50,7 @@ export class GameService {
         return this.partDao.create(newPart);
     }
     protected createChat(chatId: string): Promise<void> {
-        GameService.display(GameService.VERBOSE, 'GameService.createChat(' + chatId + ')');
+        display(GameService.VERBOSE, 'GameService.createChat(' + chatId + ')');
 
         const newChat: IChat = {
             status: 'not implemented',
@@ -61,7 +59,7 @@ export class GameService {
         return this.chatService.set(chatId, newChat);
     }
     public async createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
-        GameService.display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
+        display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
 
         const gameId: string = await this.createPart(creatorName, typeGame, chosenPlayer) as string;
         await this.joinerService.createInitialJoiner(creatorName, gameId);
@@ -70,20 +68,20 @@ export class GameService {
     }
     public getActivesPartsObs(): Observable<ICurrentPartId[]> {
         // TODO: désabonnements de sûreté aux autres abonnements activesParts
-        GameService.display(GameService.VERBOSE, 'GameService.getActivesPartsObs');
+        display(GameService.VERBOSE, 'GameService.getActivesPartsObs');
 
         this.activesPartsService.startObserving();
         return this.activesPartsService.activesPartsObs;
     }
     public unSubFromActivesPartsObs() {
-        GameService.display(GameService.VERBOSE, 'GameService.unSubFromActivesPartsObs()');
+        display(GameService.VERBOSE, 'GameService.unSubFromActivesPartsObs()');
 
         this.activesPartsService.stopObserving();
     }
     // on Part Creation Component
 
     private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
-        GameService.display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ", " + JSON.stringify(joiner));
+        display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ", " + JSON.stringify(joiner));
 
         let firstPlayer = joiner.creator;
         let secondPlayer = joiner.chosenPlayer;
@@ -105,7 +103,7 @@ export class GameService {
         return this.partDao.update(partId, modification);
     }
     public async deletePart(partId: string): Promise<void> {
-        GameService.display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
+        display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
 
         if (partId == null) {
             throw new Error("Can't delete id for partId = null");
@@ -113,7 +111,7 @@ export class GameService {
         return this.partDao.delete(partId);
     }
     public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {
-        GameService.display(GameService.VERBOSE, 'GameService.acceptConfig(' + partId + ", " + JSON.stringify(joiner) + ') + tmp partStatus: ' + joiner.partStatus);
+        display(GameService.VERBOSE, 'GameService.acceptConfig(' + partId + ", " + JSON.stringify(joiner) + ') + tmp partStatus: ' + joiner.partStatus);
 
         await this.joinerService.acceptConfig();
         return this.startGameWithConfig(partId, joiner);
@@ -122,7 +120,7 @@ export class GameService {
 
     public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void) {
         if (this.followedPartId == null) {
-            GameService.display(GameService.VERBOSE, '[start watching part ' + partId);
+            display(GameService.VERBOSE, '[start watching part ' + partId);
 
             this.followedPartId = partId;
             this.followedPartObs = this.partDao.getObsById(partId);
@@ -139,24 +137,10 @@ export class GameService {
             request: null
         }); // resign
     }
-    public notifyDraw(partId: string): Promise<void> {
-        return this.partDao.update(partId, {
-            result: MGPResult.DRAW.toInterface(),
-            request: null // TODO: check line use
-        }); // DRAW CONSTANT
-    }
     public notifyTimeout(partId: string, winner: string): Promise<void> {
         return this.partDao.update(partId, {
             winner: winner,
             result: MGPResult.TIMEOUT.toInterface(),
-            request: null // TODO: check line use
-        });
-    }
-    public notifyVictory(partId: string, winner: string): Promise<void> {
-        GameService.display(GameService.VERBOSE, "GameService.notifyVictory(" + partId + ", " + winner + ")");
-        return this.partDao.update(partId, {
-            winner,
-            result: MGPResult.VICTORY.toInterface(),
             request: null // TODO: check line use
         });
     }
@@ -165,7 +149,7 @@ export class GameService {
         return this.partDao.update(partId, code.toInterface());
     }
     public async acceptRematch(part: ICurrentPartId): Promise<void> {
-        GameService.display(GameService.VERBOSE, "GameService.acceptRematch(" + JSON.stringify(part) + ")");
+        display(GameService.VERBOSE, "GameService.acceptRematch(" + JSON.stringify(part) + ")");
 
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
         const rematchId: string = await this.createGame(iJoiner.creator, part.doc.typeGame, iJoiner.chosenPlayer);
@@ -196,22 +180,35 @@ export class GameService {
             typeGame: part.doc.typeGame
         }});
     }
-    public async updateDBBoard(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number, partId: string): Promise<void> {
-        GameService.display(GameService.VERBOSE, "GameService.updateDBBoard(" + encodedMove + ", " + scorePlayerZero + ", " + scorePlayerOne + ", " + partId + ")");
+    public async updateDBBoard(
+        partId: string,
+        encodedMove: number,
+        scorePlayerZero: number,
+        scorePlayerOne: number,
+        notifyDraw?: boolean,
+        winner?: string,
+    ): Promise<void>
+    {
+        display(GameService.VERBOSE, "GameService.updateDBBoard(" + encodedMove + ", " + scorePlayerZero + ", " + scorePlayerOne + ", " + partId + ")");
 
         const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
         const listMoves: number[] = ArrayUtils.copyArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
-        await this.partDao.update(partId, {
+        let update: PICurrentPart = {
             listMoves,
             turn,
-            scorePlayerZero,
-            scorePlayerOne,
+            scorePlayerZero, // TODO: make optional
+            scorePlayerOne, // TODO: make optional
             request: null,
-        });
-        GameService.display(GameService.VERBOSE, "GameService.updateDBBoard: over");
-        return Promise.resolve();
+        };
+        if (winner != null) {
+            update.winner = winner;
+            update.result = MGPResult.VICTORY.toInterface();
+        } else if (notifyDraw) {
+            update.result = MGPResult.DRAW.toInterface();
+        }
+        return await this.partDao.update(partId, update);
     }
     public askTakeBack(partId: string, observerRole: Player): Promise<void> {
         let code: RequestCode;
@@ -220,7 +217,7 @@ export class GameService {
         else throw new Error("Illegal for observer to make request");
         return this.partDao.update(partId, { request: code.toInterface() });
     }
-    public acceptTakeBack(id: string, part: ICurrentPart, observerRole: Player): Promise<void> {
+    public async acceptTakeBack(id: string, part: ICurrentPart, observerRole: Player): Promise<void> {
         let code: RequestCode;
         if (observerRole === Player.ZERO) {
             if (part.request.code === RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code) {
@@ -232,14 +229,15 @@ export class GameService {
                 throw new Error("Illegal to accept your own request.");
             }
             code = RequestCode.ONE_ACCEPTED_TAKE_BACK;
-        } else
+        } else {
             throw new Error("Illegal for observer to make request");
+        }
         let listMoves: number[] = part.listMoves.slice(0, part.listMoves.length - 1);
         if (listMoves.length % 2 === observerRole.value) {
             // Deleting a second move
             listMoves = listMoves.slice(0, listMoves.length - 1);
         }
-        return this.partDao.update(id, {
+        return await this.partDao.update(id, {
             request: code.toInterface(),
             listMoves,
             turn: listMoves.length
@@ -258,12 +256,12 @@ export class GameService {
         });
     }
     public stopObserving() {
-        GameService.display(GameService.VERBOSE, 'GameService.stopObserving();');
+        display(GameService.VERBOSE, 'GameService.stopObserving();');
 
         if (this.followedPartId == null) {
             console.log('!!!we already stop watching doc'); // TODO: Remove or make an alert
         } else {
-            GameService.display(GameService.VERBOSE, 'stopped watching joiner ' + this.followedPartId + ']');
+            display(GameService.VERBOSE, 'stopped watching joiner ' + this.followedPartId + ']');
 
             this.followedPartId = null;
             this.followedPartSub.unsubscribe();

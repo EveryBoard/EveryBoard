@@ -1,6 +1,7 @@
-import {AwaleRules} from './AwaleRules';
+import { AwaleRules } from './AwaleRules';
 import { AwaleMove } from '../awalemove/AwaleMove';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { AwalePartSlice } from '../AwalePartSlice';
 
 describe('AwaleRules', () => {
 
@@ -12,7 +13,7 @@ describe('AwaleRules', () => {
         AwaleRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || AwaleRules.VERBOSE;
     });
     beforeEach(() => {
-        rules = new AwaleRules();
+        rules = new AwaleRules(AwalePartSlice);
         AwaleRules.GET_BOARD_VALUE_CALL_COUNT = 0;
         AwaleRules.GET_LIST_MOVES_CALL_COUNT = 0;
     });

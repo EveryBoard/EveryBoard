@@ -1,12 +1,9 @@
-import {Coord} from './coord/Coord';
+import { Coord } from './coord/Coord';
 import { Player } from './Player';
 import { ArrayUtils } from '../collectionlib/arrayutils/ArrayUtils';
 
 export abstract class GamePartSlice {
 
-    public toString(): String {
-        return "(t:"+this.turn+") = " + JSON.stringify(this.board);
-    }
     public readonly board: ReadonlyArray<ReadonlyArray<number>>;
 
     public readonly turn: number;
@@ -52,5 +49,8 @@ export abstract class GamePartSlice {
     }
     public getCurrentEnnemy(): Player {
         return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;
+    }
+    public toString(): String {
+        return "(t:"+this.turn+") = " + JSON.stringify(this.board);
     }
 }

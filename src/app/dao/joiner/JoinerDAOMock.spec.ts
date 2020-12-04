@@ -1,6 +1,5 @@
 import { JoinerDAOMock } from "./JoinerDAOMock";
 import { IJoinerId, IJoiner } from "src/app/domain/ijoiner";
-import { async } from "@angular/core/testing";
 import { JoinerMocks } from "src/app/domain/JoinerMocks";
 
 describe('JoinerDAOMock', () => {
@@ -16,7 +15,7 @@ describe('JoinerDAOMock', () => {
         callCount = 0;
         lastJoiner = null;
     });
-    it("Total update should update", async(async() => {
+    it("Total update should update", async() => {
         await joinerDaoMock.set("joinerId", JoinerMocks.INITIAL.copy());
 
         expect(lastJoiner).toBeNull();
@@ -37,8 +36,8 @@ describe('JoinerDAOMock', () => {
 
         expect(callCount).toEqual(2);
         expect(lastJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
-    }));
-    it("Partial update should update", async(async() => {
+    });
+    it("Partial update should update", async() => {
         await joinerDaoMock.set("joinerId", JoinerMocks.INITIAL.copy());
 
         expect(callCount).toEqual(0);
@@ -59,5 +58,5 @@ describe('JoinerDAOMock', () => {
 
         expect(callCount).toEqual(2);
         expect(lastJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
-    }));
+    });
 });

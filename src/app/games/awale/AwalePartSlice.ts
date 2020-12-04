@@ -8,6 +8,10 @@ export class AwalePartSlice extends GamePartSlice {
         if (captured == null) throw new Error("Captured cannot be null");
         if (captured.length !== 2) throw new Error("Captured must be of length 2");
     }
+    public static getInitialSlice(): AwalePartSlice {
+        const board: number[][] = ArrayUtils.createBiArray(6, 2, 4);
+        return new AwalePartSlice(board, 0, [0, 0]);
+    }
     public static getStartingBoard(): number[][] {
         const board: number[][] = ArrayUtils.createBiArray(6, 2, 4);
         return board;

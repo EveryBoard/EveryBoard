@@ -1,5 +1,5 @@
-import {GamePartSlice} from '../../jscaip/GamePartSlice';
-import {QuartoEnum} from './QuartoEnum';
+import { GamePartSlice } from '../../jscaip/GamePartSlice';
+import { QuartoEnum } from './QuartoEnum';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class QuartoPartSlice extends GamePartSlice {
@@ -9,10 +9,10 @@ export class QuartoPartSlice extends GamePartSlice {
     }
     public static getStartingBoard(): number[][] {
         return ArrayUtils.createBiArray(4, 4, QuartoEnum.UNOCCUPIED);
-        // return [[QuartoEnum.AABB, QuartoEnum.UNOCCUPIED, QuartoEnum.ABBA, QuartoEnum.BBAA],
-        //        [QuartoEnum.BBAB,       QuartoEnum.BAAA, QuartoEnum.BBBA, QuartoEnum.ABBB],
-        //        [QuartoEnum.BABA,       QuartoEnum.BBBB, QuartoEnum.ABAA, QuartoEnum.AABA],
-        //        [QuartoEnum.AAAA,       QuartoEnum.ABAB, QuartoEnum.BABB, QuartoEnum.BAAB]];
+    }
+    public static getInitialSlice(): QuartoPartSlice {
+        const board: number[][] = QuartoPartSlice.getStartingBoard();
+        return new QuartoPartSlice(board, 0, QuartoEnum.AAAA);
     }
     public static getFullPawnsList(): Array<QuartoEnum> {
         const all: QuartoEnum[] = QuartoEnum.values();

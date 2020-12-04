@@ -6,7 +6,6 @@ import {QuartoEnum} from '../../../games/quarto/QuartoEnum';
 import {AbstractGameComponent} from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-quarto',
@@ -14,7 +13,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 })
 export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice, LegalityStatus> {
 
-    public rules = new QuartoRules();
+    public rules = new QuartoRules(QuartoPartSlice);
 
     public chosen: Coord = new Coord(-1, -1);
 
@@ -26,7 +25,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public pieceToGive: QuartoEnum = QuartoEnum.UNOCCUPIED; // the piece that the user want to give to the opponent
 
     public updateBoard() {
-        console.log('board updated');
         const slice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
@@ -51,7 +49,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     // creating method for Quarto
 
     public async chooseCoord(x: number, y: number): Promise<boolean> {
-        console.log("choose coord (" + x + ", " + y + ")")
         // called when the user click on the quarto board
 
         this.hideLastMove(); // now the user tried to choose something
@@ -76,7 +73,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         return false;
     }
     public async choosePiece(givenPiece: number): Promise<boolean> {
-        console.log("choose piece " + givenPiece)
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
@@ -117,7 +113,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public async suggestMove(chosenMove: QuartoMove): Promise<boolean> {
         if (await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null)) {
             this.chosen = new Coord(-1, -1);
-            console.log("Move was legal");
             return true;
         } else {
             this.cancelMove();

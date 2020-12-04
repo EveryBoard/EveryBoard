@@ -1,15 +1,11 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
          ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { GameWrapper } from 'src/app/components/game-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/user/UserService';
-import { AbstractGameComponent } from '../AbstractGameComponent';
-import { Rules } from 'src/app/jscaip/Rules';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -23,7 +19,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     public playerZeroValue: string = "0";
     public playerOneValue: string = "0";
     public aiDepth: number = 5;
-    public winner: string;
+    public winner: string = null;
 
     public botTimeOut: number = 1000; // this.aiDepth * 500;
 
@@ -32,18 +28,20 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                 router: Router,
                 userService: UserService,
                 authenticationService: AuthenticationService,
-                private cdr: ChangeDetectorRef) {
+                public cdr: ChangeDetectorRef) {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
-        Rules.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper.constructor");
+        display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper.constructor");
     }
     public ngAfterViewInit() {
+        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.ngAfterViewInit')
         setTimeout(() => {
+            display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.ngAfterViewInit inside timeout')
             this.authenticationService.getJoueurObs().subscribe(user => {
                 this.userName = user.pseudo;
                 if (this.isAI(this.players[0]) === false) this.players[0] = user.pseudo;
                 if (this.isAI(this.players[1]) === false) this.players[1] = user.pseudo;
             });
-            Rules.display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
+            display(LocalGameWrapperComponent.VERBOSE, "LocalGameWrapper AfterViewInit: "+(this.gameComponent!=null));
             this.afterGameIncluderViewInit();
             this.cdr.detectChanges();
         }, 1);
@@ -53,7 +51,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return player.substr(0, 3) === "bot";
     }
     public async onValidUserMove(move: Move): Promise<void> {
-        Rules.display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onValidUserMove');
+        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onValidUserMove');
 
         this.gameComponent.rules.choose(move);
         this.updateBoard();
@@ -67,7 +65,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             const boardValue: number = this.gameComponent.rules.node.ownValue;
             if (boardValue !== 0) {
                 const intWinner: number = boardValue < 0 ? 1 : 2;
-                this.winner = "Joueur " + intWinner + "(" + this.players[intWinner - 1] + ")"
+                this.winner = "Joueur " + intWinner + "(" + this.players[intWinner - 1] + ")";
             }
         }
     }

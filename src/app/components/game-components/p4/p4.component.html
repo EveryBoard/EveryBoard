@@ -1,6 +1,6 @@
 <table>
-    <tr *ngFor="let line of board; index as y;">
-        <td *ngFor="let currentCase of line; index as x;"
+    <tr *ngFor="let y of [5, 4, 3, 2, 1, 0]">
+        <td *ngFor="let currentCase of board[y]; index as x;"
             style="position:relative;"
             (click)="onClick(x);">
             <img width="50" height="50"

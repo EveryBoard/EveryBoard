@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { ConfirmInscriptionComponent } from './confirm-inscription.component';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
@@ -13,7 +13,7 @@ describe('ConfirmInscriptionComponent', () => {
 
     let fixture: ComponentFixture<ConfirmInscriptionComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
                 ConfirmInscriptionComponent
@@ -21,9 +21,8 @@ describe('ConfirmInscriptionComponent', () => {
             providers: [
                 { provide: AuthenticationService, useValue: authenticationServiceStub},
             ]
-        })
-            .compileComponents();
-    }));
+        }).compileComponents();
+    });
     beforeEach(() => {
         fixture = TestBed.createComponent(ConfirmInscriptionComponent);
         component = fixture.componentInstance;

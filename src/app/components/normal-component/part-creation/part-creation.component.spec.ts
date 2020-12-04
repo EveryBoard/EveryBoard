@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
@@ -40,7 +40,7 @@ describe('PartCreationComponent with fixture:', () => {
     beforeAll(() => {
         PartCreationComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || PartCreationComponent.VERBOSE;
     });
-    beforeEach(async(async() => {
+    beforeEach(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 MatStepperModule, MatRadioModule, MatSliderModule,
@@ -64,8 +64,8 @@ describe('PartCreationComponent with fixture:', () => {
         component.partId = "joinerId";
         await chatDAOMock.set("joinerId", { messages: [], status: "I don't have a clue TODO" });
         await partDAOMock.set("joinerId", PartMocks.INITIAL.copy());
-    }));
-    it('(0) Player arrival on component should call joinGame and startObserving', async(async() => {
+    });
+    it('(0) Player arrival on component should call joinGame and startObserving', async() => {
         component.userName = "creator";
         const joinerService: JoinerService = TestBed.get(JoinerService);
         await joinerDAOMock.set("joinerId", JoinerMocks.INITIAL.copy());
@@ -80,8 +80,8 @@ describe('PartCreationComponent with fixture:', () => {
         expect(joinGameSpy).toHaveBeenCalledTimes(1);
         expect(startObservingSpy).toHaveBeenCalledTimes(1);
         expect(component).toBeTruthy("PartCreationComponent should have been created");
-    }));
-    it('(1) Joiner arrival should make candidate choice possible for creator', async(async() => {
+    });
+    it('(1) Joiner arrival should make candidate choice possible for creator', async() => {
         component.userName = "creator";
         await joinerDAOMock.set("joinerId", JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -93,8 +93,8 @@ describe('PartCreationComponent with fixture:', () => {
 
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
         expect(fixture.debugElement.query(By.css('#chooseCandidate'))).toBeTruthy("Choosing candidate should be possible after first candidate arrival");
-    }));
-    it('(2) Joiner arrival should change joiner doc', async(async() => {
+    });
+    it('(2) Joiner arrival should change joiner doc', async() => {
         component.userName = "firstCandidate";
         await joinerDAOMock.set("joinerId", JoinerMocks.INITIAL.copy());
 
@@ -102,8 +102,8 @@ describe('PartCreationComponent with fixture:', () => {
         await fixture.whenStable();
 
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
-    }));
-    it('(3) (4) Candidate choice should change joiner doc and make config proposal possible', async(async() => {
+    });
+    it('(3) (4) Candidate choice should change joiner doc and make config proposal possible', async() => {
         component.userName = "creator";
         await joinerDAOMock.set("joinerId", JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -119,8 +119,8 @@ describe('PartCreationComponent with fixture:', () => {
         expect(fixture.debugElement.query(By.css('#selected_firstCandidate'))).toBeTruthy('First candidate should be present in present player list');
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_CHOSEN_PLAYER.copy());
         expect(fixture.debugElement.query(By.css('#proposeConfig'))).toBeTruthy("Choosing candidate should become possible after chosenPlayer is set");
-    }));
-    it('(?) Chosenplayer deconnection should change board', async(async() => {
+    });
+    it('(?) Chosenplayer deconnection should change board', async() => {
         component.userName = "creator";
         await joinerDAOMock.set("joinerId", JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -135,8 +135,8 @@ describe('PartCreationComponent with fixture:', () => {
 
         expect(fixture.debugElement.query(By.css('#selected_firstCandidate'))).toBeFalsy('First candidate should no longer appear');
         expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.copy());
-    }));
-    it('(8) Config proposal should make config acceptation possible for joiner', async(async() => {
+    });
+    it('(8) Config proposal should make config acceptation possible for joiner', async() => {
         component.userName = "firstCandidate";
         await joinerDAOMock.set("joinerId", JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -153,8 +153,8 @@ describe('PartCreationComponent with fixture:', () => {
 
         expect(fixture.debugElement.query(By.css('#acceptConfig')))
               .toBeTruthy("Config proposal should make config acceptation possible");
-    }));
-    it('(9) Config proposal by creator should change joiner doc', async(async() => {
+    });
+    it('(9) Config proposal by creator should change joiner doc', async() => {
         component.userName = "creator";
         await joinerDAOMock.set("joinerId", JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -171,8 +171,8 @@ describe('PartCreationComponent with fixture:', () => {
         fixture.detectChanges();
 
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_PROPOSED_CONFIG.copy());
-    }));
-    it('(10) Config acceptation by joiner should change joiner doc and part doc', async(async() => {
+    });
+    it('(10) Config acceptation by joiner should change joiner doc and part doc', async() => {
         component.userName = "firstCandidate";
         await joinerDAOMock.set("joinerId", JoinerMocks.INITIAL.copy());
         fixture.detectChanges(); // joiner arrival
@@ -197,7 +197,7 @@ describe('PartCreationComponent with fixture:', () => {
         let expectedPart: ICurrentPart = PartMocks.STARTING.copy();
         expectedPart.beginning = currentPart.beginning;
         expect(currentPart).toEqual(expectedPart);
-    }));
+    });
     afterEach(fakeAsync(async() => {
         fixture.destroy();
         await fixture.whenStable();

@@ -1,5 +1,3 @@
-import { async } from '@angular/core/testing';
-
 import { AuthenticationService } from './AuthenticationService';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
@@ -22,14 +20,14 @@ describe('AuthenticationService', () => {
     beforeEach(() => {
         service = new AuthenticationService(afAuth as AngularFireAuth, afs as AngularFirestore);
     });
-    it('should create', async(() => {
+    it('should create', () => {
         expect(service).toBeTruthy();
-    }));
+    });
     it('user should be considered not logged at start', () => {
         expect(service.isUserLogged()).toBeFalsy();
     });
-    afterAll(async(() => {
+    afterAll(() => {
         service.ngOnDestroy();
         AuthenticationService.IN_TESTING = false;
-    }));
+    });
 });

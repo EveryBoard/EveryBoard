@@ -1,4 +1,4 @@
-import { async, ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { HeaderComponent } from './header.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -15,16 +15,15 @@ describe('HeaderComponent', () => {
 
     let fixture: ComponentFixture<HeaderComponent>;
 
-    beforeEach(async(() => {
+    beforeEach(() => {
         TestBed.configureTestingModule({
             imports: [ RouterTestingModule ],
             declarations: [HeaderComponent],
             providers: [
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ]
-        })
-            .compileComponents();
-    }));
+        }).compileComponents();
+    });
     beforeEach(() => {
         fixture = TestBed.createComponent(HeaderComponent);
         component = fixture.componentInstance;

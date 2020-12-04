@@ -1,6 +1,7 @@
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { DvonnPartSlice } from "../DvonnPartSlice";
+import { DvonnPieceStack } from "../dvonnpiecestack/DvonnPieceStack";
 import { DvonnMove } from "../dvonnmove/DvonnMove";
 import { Rules } from "src/app/jscaip/Rules";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
@@ -8,17 +9,12 @@ import { Coord } from "src/app/jscaip/coord/Coord";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { DvonnBoard } from "../DvonnBoard";
 import { Player } from "src/app/jscaip/Player";
-import { DvonnPieceStack } from "../DvonnPieceStack";
 import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 
-abstract class DvonnNode extends MNode<DvonnRules, DvonnMove, DvonnPartSlice, LegalityStatus> { }
+abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnPartSlice, LegalityStatus> { }
 
 export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus> {
-    constructor(initialSlice: DvonnPartSlice) {
-        super();
-        this.node = MNode.getFirstNode(initialSlice, this);
-        this
-    }
+
     private getFreePieces(slice: DvonnPartSlice): Coord[] {
         // Free pieces are the ones that have less than 6 neighbors (and belong to the current player)
         return DvonnBoard.getAllPieces(slice.board)
@@ -190,12 +186,5 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
             return { legal: MGPValidation.failure("move finishes on an empty stack") };
         }
         return { legal: MGPValidation.success() };
-    }
-    public setInitialBoard(): void {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(DvonnPartSlice.getStartingSlice(), this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
 }

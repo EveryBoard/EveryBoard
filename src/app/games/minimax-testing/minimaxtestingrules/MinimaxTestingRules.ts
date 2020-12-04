@@ -1,5 +1,5 @@
 import { Rules } from "src/app/jscaip/Rules";
-import { MNode } from "src/app/jscaip/MNode";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MinimaxTestingPartSlice } from "../MinimaxTestingPartSlice";
 import { MinimaxTestingMove } from "../minimaxtestingmove/MinimaxTestingMove";
@@ -7,7 +7,7 @@ import { Coord } from "src/app/jscaip/coord/Coord";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 
-abstract class MinimaxTestingNode extends MNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {}
+abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {}
 
 export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {
 
@@ -23,23 +23,6 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
             resultingSlice: new MinimaxTestingPartSlice(slice.turn + 1, newLocation),
             resultingMove: move
         };
-    }
-    constructor(initialBoard: ReadonlyArray<ReadonlyArray<number>>) {
-        super();
-        MinimaxTestingPartSlice.initialBoard = initialBoard;
-        this.node = MNode.getFirstNode(
-            new MinimaxTestingPartSlice(0, new Coord(0, 0)),
-            this
-        );
-    }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                MinimaxTestingPartSlice.getStartingSlice(),
-                this);
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
     public isLegal(move: MinimaxTestingMove): LegalityStatus {
         const slice: MinimaxTestingPartSlice = this.node.gamePartSlice;

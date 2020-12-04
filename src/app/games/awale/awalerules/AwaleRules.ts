@@ -1,13 +1,13 @@
 import {Rules} from '../../../jscaip/Rules';
-import {MNode} from '../../../jscaip/MNode';
-import {GamePartSlice} from '../../../jscaip/GamePartSlice';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import {AwalePartSlice} from '../AwalePartSlice';
 import { AwaleMove } from '../awalemove/AwaleMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { display } from 'src/app/collectionlib/utils';
 
-abstract class AwaleNode extends MNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
+abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
 export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
@@ -17,15 +17,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
     public static VERBOSE: boolean = false;
 
-    constructor() {
-        super();
-        this.node = MNode.getFirstNode(
-            new AwalePartSlice(AwalePartSlice.getStartingBoard(), 0, [0, 0]),
-            this
-        );
-    }
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): { resultingMove: AwaleMove; resultingSlice: AwalePartSlice; } {
-        Rules.display(AwaleRules.VERBOSE, "applyLegalMove");
+        display(AwaleRules.VERBOSE, "applyLegalMove");
         const turn: number = slice.turn;
         const player = turn % 2;
         const ennemy = (turn + 1) % 2;
@@ -110,19 +103,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             captured[ennemi] += AwaleRules.mansoon(ennemi, resultingBoard);
         }
         return {legal: true, captured, resultingBoard};
-    }
-    private static printInLine(board: number[][]): string {
-        let retour: string = '';
-        let y: number = 0;
-        let x: number;
-        do {
-            x = 0;
-            do {
-                retour += ':' + board[y][x++];
-            } while (x < 6);
-            y++;
-        } while (y < 2);
-        return retour;
     }
     private static doesDistribute(x: number, y: number, board: number[][]): boolean {
         if (y === 0) { // distribution from left to right
@@ -270,15 +250,5 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             return Number.MIN_SAFE_INTEGER;
         }
         return c1 - c0;
-    }
-    public setInitialBoard() {
-        if (this.node == null) {
-            this.node = MNode.getFirstNode(
-                new AwalePartSlice(AwalePartSlice.getStartingBoard(), 0, [0, 0]),
-                this
-            );
-        } else {
-            this.node = this.node.getInitialNode();
-        }
     }
 }

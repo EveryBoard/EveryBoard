@@ -15,7 +15,7 @@ import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
 import { By } from '@angular/platform-browser';
 import { QuartoEnum } from 'src/app/games/quarto/QuartoEnum';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
-import { MNode } from 'src/app/jscaip/MNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 const activatedRouteStub = {
     snapshot: {
@@ -84,7 +84,7 @@ describe('QuartoComponent', () => {
         expect(gameComponent).toBeTruthy("QuartoComponent should be created");
     });
     it('should accept simple move', fakeAsync(async() => {
-        const rules: QuartoRules = new QuartoRules();
+        const rules: QuartoRules = new QuartoRules(QuartoPartSlice);
         const listMoves: QuartoMove[] = rules.getListMoves(rules.node).listKeys();
         const currentMove: QuartoMove = listMoves[0];
 
@@ -99,7 +99,7 @@ describe('QuartoComponent', () => {
         ];
         const pieceInHand: number = QuartoEnum.AAAB;
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 15, pieceInHand);
-        gameComponent.rules.node = new MNode(null, null, slice, 0);
+        gameComponent.rules.node = new MGPNode(null, null, slice, 0);
 
         spyOn(gameComponent, 'chooseMove').and.callThrough();
         expect(await clickElement('#chooseCoord_1_0')).toBeTruthy('Should be able to click on final coord');

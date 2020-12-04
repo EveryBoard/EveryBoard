@@ -1,7 +1,6 @@
 import { EmailVerified } from "./EmailVerified";
 import { AuthenticationService } from "src/app/services/authentication/AuthenticationService";
 import { Router } from "@angular/router";
-import { async } from "@angular/core/testing";
 
 class RouterMock {
 
@@ -22,9 +21,9 @@ describe('EmailVerified', () => {
         router = new RouterMock() as Router;
         guard = new EmailVerified(authService, router);
     });
-    it('should create', async(() => {
+    it('should create', () => {
         expect(guard).toBeTruthy();
-    }));
+    });
     it('should move unconnected user to login page and refuse them', () => {
         authService.getAuthenticatedUser = () => { return {pseudo: null, verified: null} };
         spyOn(router, "navigate");

@@ -14,9 +14,9 @@ import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
 import { DvonnMove } from 'src/app/games/dvonn/dvonnmove/DvonnMove';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
-import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
+import { DvonnPieceStack } from 'src/app/games/dvonn/dvonnpiecestack/DvonnPieceStack';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
-import { DvonnRules } from 'src/app/games/dvonn/dvonnrules/DvonnRules';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 const activatedRouteStub = {
     snapshot: {
@@ -87,7 +87,7 @@ describe('DvonnComponent', () => {
             [_, _,  _, _, _, _, _, _, _, _, _],
             [_, _,  _, _, _, _, _, _, _, _, _]];
         const slice: DvonnPartSlice = new DvonnPartSlice(0, false, board);
-        gameComponent.rules = new DvonnRules(slice);
+        gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
         expect(gameComponent.canPass).toBeTruthy();
         expect((await gameComponent.pass()).isSuccess()).toBeTruthy();
@@ -111,7 +111,7 @@ describe('DvonnComponent', () => {
             [_, _,  _, _, _, _, _, _, _, _, _],
             [_, _,  _, _, _, _, _, _, _, _, _]];
         const slice: DvonnPartSlice = new DvonnPartSlice(0, false, board);
-        gameComponent.rules = new DvonnRules(slice);
+        gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
         expect((await gameComponent.pass()).isSuccess()).toBeTruthy();
         expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeFalsy();

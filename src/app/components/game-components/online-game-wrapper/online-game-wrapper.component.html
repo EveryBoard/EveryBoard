@@ -19,11 +19,19 @@
         </div>
 
         <div id="info" class="circled col-sm-3">
-            <div *ngIf="players" class="inforow">
+            <div class="inforow" id="turnIndicator" style="text-align:center"
+                 *ngIf="currentPart">
+                <h4>Tour n° {{ currentPart.turn + 1 }}</h4>
+            </div>
+            <div class="inforow" id="playerIndicator" *ngIf="players">
                 <h4 style="float: left"> {{ players[0] }} </h4>
                 <h4 style="float: right"> {{ players[1] }} </h4>
             </div>
-            <div class="inforow">
+            <div class="inforow" id="scoreIndicator" *ngIf="currentPart && compo && compo.showScore">
+                <h4 style="float: left"> {{ compo.scores[0] }} pts </h4>
+                <h4 style="float: right"> {{ compo.scores[1] }} pts </h4>
+            </div>
+            <div class="inforow" id="partChronos">
                 <app-count-down #chronoZeroGlobal
                                 style="float: left"
                                 debugName="chrono Zero Global"
@@ -35,7 +43,7 @@
                                 (outOfTimeAction)="reachedOutOfTime(1)">
                 </app-count-down>
             </div>
-            <div class="inforow">
+            <div class="inforow" id="turnChronos">
                 <app-count-down #chronoZeroLocal
                                 style="float: left"
                                 debugName="chrono Zero Local"
@@ -47,94 +55,69 @@
                                 (outOfTimeAction)="reachedOutOfTime(1)">
                 </app-count-down>
             </div>
-            <div class="inforow" *ngIf="currentPart && compo && compo.showScore">
-                <h4 style="float: left"> {{ compo.scores[0] }} pts </h4>
-                <h4 style="float: right"> {{ compo.scores[1] }} pts </h4>
+            <div class="inforow" id="currentPlayerIndicator" *ngIf="endGame === false">
+                <h4>C'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
             </div>
-            <div *ngIf="currentPart" class="inforow">
-                <h4>Tour n°{{ currentPart.turn + 1 }}</h4>
+            <div class="inforow" id="resignButtonDiv" *ngIf="endGame === false && opponent && observerRole < 2">
+                <button mat-stroked-button
+                        id="resignButton"
+                        (click)="resign()">
+                    Abandonner
+                </button>
             </div>
-            <ng-container *ngIf="!endGame else endGameBlock">
-                <div class="inforow">
-                    <h4>C'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
-                </div>
-                <div *ngIf="opponent && observerRole < 2"
-                     class="inforow">
-                    <button mat-stroked-button
-                            id="resignButton"
-                            (click)="resign()">
-                        Abandonner
-                    </button>
-                </div>
-                <div *ngIf="observerRole < 2 && compo.canPass && (currentPlayer===userName)"
-                     class="inforow">
-                    <button mat-stroked-button
-                            id="passButton"
-                            (click)="compo.pass()">
-                        Passer son tour
-                    </button>
-                </div>
-                <ng-container *ngIf="isOpponentWaitingForTakeBackResponse() else askTakeBackContainer">
-                    <div class="inforow">
-                        <button mat-stroked-button
-                                id="acceptTakeBackButton"
-                                (click)="acceptTakeBack()">
-                            Autoriser à reprendre un tour
-                        </button>
-                    </div>
-
-                    <div class="inforow">
-                        <button mat-stroked-button
-                                id="refuseTakeBack"
-                                (click)="refuseTakeBack()">
-                            Refuser de reprendre un tour
-                        </button>
-                    </div>
-                </ng-container>
-                <ng-container #askTakeBackContainer
-                              *ngIf="canAskTakeBack()">
-                    <div class="inforow">
-                        <button mat-stroked-button
-                                id="askTakeBackButton"
-                                (click)="askTakeBack()">
-                            Demander à reprendre un coup
-                        </button>
-                    </div>
-                </ng-container>
-                <!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>-->
-            </ng-container>
-            <ng-template #endGameBlock>
-                <div class="inforow"
-                     *ngIf="currentPart.winner != null else noWinner">
-                    <h4 *ngIf="(currentPart.winner === userName)"> Vous avez gagné </h4>
-                    <h4 *ngIf="(currentPart.winner !== userName) && (observerRole < 2)"> Vous avez perdu </h4>
-                    <h4 *ngIf="(currentPart.winner !== userName) && (observerRole >= 2)"> Victoire de {{ currentPart.winner }} </h4>
-                </div>
-                <ng-template #noWinner>
-                    <div class="inforow">
-                        <h4> Match nul </h4>
-                    </div>
-                </ng-template>
-                <div class="inforow">
-                    <button mat-stroked-button
-                            routerLink="server">
+            <div class="inforow" id="passButtonDiv" *ngIf="endGame === false && observerRole < 2 && compo.canPass && (currentPlayer===userName)">
+                <button mat-stroked-button
+                        id="passButton"
+                        (click)="compo.pass()">
+                    Passer son tour
+                </button>
+            </div>
+            <div class="inforow" id="allowTakeBackDiv" *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
+                <button mat-stroked-button
+                        id="acceptTakeBackButton"
+                        (click)="acceptTakeBack()">
+                    Autoriser à reprendre un tour
+                </button>
+            </div>
+            <div class="inforow" id="refuseTakeBackDiv" *ngIf="endGame === false">
+                <button mat-stroked-button
+                        id="refuseTakeBack"
+                        (click)="refuseTakeBack()">
+                    Refuser de reprendre un tour
+                </button>
+            </div>
+            <div class="inforow" id="askTakeBackDiv" *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse() === false && canAskTakeBack()">
+                <button mat-stroked-button
+                        id="askTakeBackButton"
+                        (click)="askTakeBack()">
+                    Demander à reprendre un coup
+                </button>
+            </div>
+            <!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>-->
+            <div class="inforow" id="winnerIndicator" *ngIf="endGame">
+                <h4 id="youWonIndicator" *ngIf="currentPart.winner === userName"> Vous avez gagné </h4>
+                <h4 *ngIf="(currentPart.winner != null) && (currentPart.winner !== userName) && (observerRole < 2)"> Vous avez perdu </h4>
+                <h4 *ngIf="(currentPart.winner != null) && (currentPart.winner !== userName) && (observerRole >= 2)"> Victoire de {{ currentPart.winner }} </h4>
+                <h4 *ngIf="currentPart.winner == null"> Match nul </h4>
+            </div>
+            <div class="inforow" id="backToServerButton">
+                <button mat-stroked-button
+                        routerLink="server">
                         Retour au serveur
-                    </button>
-                </div>
-                <div *ngIf="observerRole < 2"
-                     class="inforow">
-                    <button mat-stroked-button
-                            *ngIf="!rematchProposed"
-                            (click)="proposeRematch()">
-                        Proposer un rematch
-                    </button>
-                    <button mat-stroked-button
-                            *ngIf="rematchProposed && opponentProposedRematch"
-                            (click)="acceptRematch()">
-                        Accepter le rematch
-                    </button>
-                </div>
-            </ng-template>
+                </button>
+            </div>
+            <div class="inforow" id="proposeRematchDiv" *ngIf="endGame && observerRole < 2 && rematchProposed === false">
+                <button mat-stroked-button
+                        (click)="proposeRematch()">
+                    Proposer un rematch
+                </button>
+            </div>
+            <div class="inforow" id="acceptRematchDiv" *ngIf="endGame && observerRole < 2 && rematchProposed && opponentProposedRematch">
+                <button mat-stroked-button
+                        (click)="acceptRematch()">
+                    Accepter le rematch
+                </button>
+            </div>
         </div>
     </div>
 
