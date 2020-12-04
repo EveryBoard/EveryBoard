@@ -8,7 +8,7 @@ import { Coord } from "src/app/jscaip/coord/Coord";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { DvonnBoard } from "../DvonnBoard";
 import { Player } from "src/app/jscaip/Player";
-import { DvonnPieceStack } from "../DvonnPieceStack";
+import { DvonnPieceStack } from "../dvonnpiecestack/DvonnPieceStack";
 
 abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnPartSlice, LegalityStatus> { }
 
