@@ -50,7 +50,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
         }
         display(LOCAL_VERBOSE, "Rules.choose: current node has no moves or is pruned, let's verify ourselves");
         const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
-        if (!status.legal) {
+        if (status.legal.isFailure()) {
             display(LOCAL_VERBOSE, "Rules.choose: Move is illegal");
             return false;
         } else display(LOCAL_VERBOSE, "Rules.choose: Move is legal, let's apply it");

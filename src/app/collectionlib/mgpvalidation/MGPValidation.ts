@@ -1,11 +1,15 @@
 
 export class MGPValidation {
+    private static SUCCESS: MGPValidation = new MGPValidation(null);
     private constructor(public readonly reason: string) {
     }
     public static success(): MGPValidation {
-        return new MGPValidation(null);
+        return MGPValidation.SUCCESS;
     }
     public static failure(reason: string): MGPValidation {
+        if (reason == null) {
+            throw new Error("MGPValidation.failure called with null")
+        }
         return new MGPValidation(reason);
     }
     public onFailure(f: (arg: string) => void): MGPValidation {

@@ -27,7 +27,7 @@ describe('QuixoRules:', () => {
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonale.LEFT);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal).toBeFalsy("Move should be illegal");
+        expect(status.legal.isSuccess()).toBeFalsy("Move should be illegal");
     });
 
     it("Should always put moved piece to currentPlayer symbol", () => {
@@ -48,7 +48,7 @@ describe('QuixoRules:', () => {
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal).toBeTruthy("Move should be legal");
+        expect(status.legal.isSuccess()).toBeTruthy("Move should be legal");
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: QuixoPartSlice = new QuixoPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
@@ -72,7 +72,7 @@ describe('QuixoRules:', () => {
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal).toBeTruthy("Move should be legal");
+        expect(status.legal.isSuccess()).toBeTruthy("Move should be legal");
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: QuixoPartSlice = new QuixoPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
@@ -97,7 +97,7 @@ describe('QuixoRules:', () => {
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 1);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal).toBeTruthy("Move should be legal");
+        expect(status.legal.isSuccess()).toBeTruthy("Move should be legal");
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: QuixoPartSlice = new QuixoPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);
@@ -122,7 +122,7 @@ describe('QuixoRules:', () => {
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal).toBeTruthy("Move should be legal");
+        expect(status.legal.isSuccess()).toBeTruthy("Move should be legal");
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: QuixoPartSlice = new QuixoPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
@@ -147,7 +147,7 @@ describe('QuixoRules:', () => {
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 1);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal).toBeTruthy("Move should be legal");
+        expect(status.legal.isSuccess()).toBeTruthy("Move should be legal");
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: QuixoPartSlice = new QuixoPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);

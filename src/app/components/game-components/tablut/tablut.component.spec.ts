@@ -12,6 +12,7 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { TablutMove } from 'src/app/games/tablut/tablutmove/TablutMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 const activatedRouteStub = {
     snapshot: {
@@ -64,17 +65,17 @@ describe('TablutComponent', () => {
         expect(gameComponent).toBeTruthy("TablutComponent should be created");
     });
     it('Should enable same action as rules', async() => {
-        const isOccupied: boolean = await gameComponent.onClick(4, 1);
-        const isLegal: boolean = await gameComponent.onClick(0, 1);
-        expect(isOccupied).toBeTruthy('Should be legal to click on player');
-        expect(isLegal).toBeTruthy('Simple first move from invader should be legal');
+        const isOccupied: MGPValidation = await gameComponent.onClick(4, 1);
+        const isLegal: MGPValidation = await gameComponent.onClick(0, 1);
+        expect(isOccupied.isSuccess()).toBeTruthy('Should be legal to click on player');
+        expect(isLegal.isSuccess()).toBeTruthy('Simple first move from invader should be legal');
     });
     it('Diagonal move attempt should not throw', async() => {
         expect(await gameComponent.onClick(3, 0)).toBeTruthy(0.5);
         let threw: boolean = false;
         try {
-            let diagonalMoveIsLegal: boolean = await gameComponent.onClick(4, 1);
-            expect(diagonalMoveIsLegal).toBeFalsy("Move should be considered legal");
+            let diagonalMoveIsLegal: MGPValidation = await gameComponent.onClick(4, 1);
+            expect(diagonalMoveIsLegal.isSuccess()).toBeFalsy("Move should be considered legal");
         } catch (error) {
             threw = true;
         } finally {

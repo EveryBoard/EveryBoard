@@ -5,6 +5,7 @@ import { Orthogonale } from "src/app/jscaip/DIRECTION";
 import { TablutPartSlice } from "../TablutPartSlice";
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
 import { TablutCase } from "./TablutCase";
+import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 
 describe('TablutRules', () => {
 
@@ -84,9 +85,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } =
+        const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(moveResult.success.isSuccess()).toBeTruthy();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).toBe(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king should require three invader and an edge lead to victory', () => {
@@ -102,9 +103,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } =
+        const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(moveResult.success.isSuccess()).toBeTruthy();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).toBe(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king with two soldier, one throne, and one edge should not work', () => {
@@ -120,9 +121,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } =
+        const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(moveResult.success.isSuccess()).toBeTruthy();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king against a throne should not work', () => {
@@ -138,9 +139,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } =
+        const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(moveResult.success.isSuccess()).toBeTruthy();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king against a throne with 3 soldier should not work', () => {
@@ -156,9 +157,9 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } =
+        const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(moveResult.success.isSuccess()).toBeTruthy();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
     });
     it('King should be authorised to come back on the throne', () => {
@@ -174,8 +175,8 @@ describe('TablutRules', () => {
             [_, _, _, _, _, _, _, _, _ ],
             [_, _, _, _, _, _, _, _, _ ]
         ];
-        const moveResult: { success: number; resultingBoard: number[][] } =
+        const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(1, false, move, board);
-        expect(moveResult.success).toBe(TablutRules.SUCCESS);
+        expect(moveResult.success.isSuccess()).toBeTruthy();
     });
 });
