@@ -60,9 +60,8 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
 
         switch (compoString) {
-                /*
             case 'Awale':
-                return AwaleComponent; */
+                return AwaleComponent;
             case 'Dvonn':
                 return DvonnComponent;
             case 'Encapsule':
