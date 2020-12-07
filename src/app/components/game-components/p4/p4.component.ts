@@ -6,6 +6,7 @@ import { Move } from '../../../jscaip/Move';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-p4',
@@ -23,9 +24,9 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
 
     public lastX: number;
 
-    public async onClick(x: number): Promise<boolean> {
+    public async onClick(x: number): Promise<MGPValidation> {
         const chosenMove = MoveX.get(x);
-        const legal: boolean = await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+        const legal: MGPValidation = await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
         display(P4Component.VERBOSE, "Move " + chosenMove.toString() + " was " + (legal ? 'legal' : 'illegal'));
         return legal;
     }

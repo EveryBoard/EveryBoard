@@ -27,6 +27,7 @@ import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoEnum } from 'src/app/games/quarto/QuartoEnum';
 import { RequestCode } from 'src/app/domain/request';
 import { MGPResult } from 'src/app/domain/icurrentpart';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 const activatedRouteStub = {
     snapshot: {
@@ -124,9 +125,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const FIRST_MOVE_ENCODED: number = FIRST_MOVE.encode();
 
-    let doMove: (move: QuartoMove) => Promise<boolean> = async(move: QuartoMove) => {
+    let doMove: (move: QuartoMove) => Promise<MGPValidation> = async(move: QuartoMove) => {
         let slice: QuartoPartSlice = component.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
-        const result: boolean = await component.gameComponent.chooseMove(move, slice, null, null);
+        const result: MGPValidation = await component.gameComponent.chooseMove(move, slice, null, null);
         fixture.detectChanges();
         tick(1);
         return result;
@@ -228,7 +229,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
 
-        expect(await doMove(FIRST_MOVE)).toBeTruthy("First move should be possible");
+        expect((await doMove(FIRST_MOVE)).isSuccess()).toBeTruthy("First move should be possible");
 
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED]);
         expect(component.currentPart.copy().turn).toEqual(1);
@@ -479,7 +480,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         spyOn(partDAO, 'update').and.callThrough();
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.ABBA);
-        expect(await doMove(move2)).toBeFalsy("Should not allow player to play after resign");
+        expect((await doMove(move2)).isSuccess()).toBeFalsy("Should not allow player to play after resign");
         expect(partDAO.update).not.toHaveBeenCalled();
 
         tick(component.maximalMoveDuration);

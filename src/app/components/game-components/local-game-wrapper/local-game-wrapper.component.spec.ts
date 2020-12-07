@@ -15,6 +15,7 @@ import { UserService } from 'src/app/services/user/UserService';
 import { By } from '@angular/platform-browser';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 const activatedRouteStub = {
     snapshot: {
@@ -108,8 +109,8 @@ describe('LocalGameWrapperComponent', () => {
         tick(1);
 
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
-        const legality: boolean = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
-        expect(legality).toBeTruthy("Connected user should be able to play");
+        const legality: MGPValidation = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
+        expect(legality.isSuccess()).toBeTruthy("Connected user should be able to play");
     }));
     it('should allow to go back one move', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
@@ -117,8 +118,8 @@ describe('LocalGameWrapperComponent', () => {
         tick(1);
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
         expect(slice.turn).toBe(0);
-        const legality: boolean = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
-        expect(legality).toBeTruthy("Move 0 should be legal");
+        const legality: MGPValidation = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
+        expect(legality.isSuccess()).toBeTruthy("Move 0 should be legal");
         await fixture.whenStable(); fixture.detectChanges();
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
 

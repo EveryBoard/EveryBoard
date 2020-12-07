@@ -43,7 +43,7 @@ describe('P4Rules', () => {
         const slice: P4PartSlice = new P4PartSlice(board, 0);
         const move: MoveX = MoveX.get(3);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal).toBeTruthy();
+        expect(status.legal.isSuccess()).toBeTruthy();
         const resultingSlice: P4PartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         expect(resultingSlice.board).toEqual(expectedBoard);
     });

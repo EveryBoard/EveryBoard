@@ -8,6 +8,7 @@ import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSl
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({
@@ -83,11 +84,11 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         if (this.chosenCoord.y !== 0) infos.push([1, 0, 'UP']);
         return infos;
     }
-    public async chooseDirection(direction: string): Promise<boolean> {
+    public async chooseDirection(direction: string): Promise<MGPValidation> {
         this.chosenDirection = Orthogonale.fromString(direction);
         return this.tryMove();
     }
-    public async tryMove(): Promise<boolean> {
+    public async tryMove(): Promise<MGPValidation> {
         const move: QuixoMove = new QuixoMove(this.chosenCoord.x,
                                               this.chosenCoord.y,
                                               this.chosenDirection);

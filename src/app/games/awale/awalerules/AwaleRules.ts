@@ -6,6 +6,7 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
@@ -56,7 +57,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
          * return the number captured otherwise
          */
 
-        const ILLEGAL: AwaleLegalityStatus = {legal: false, captured: null, resultingBoard: null};
         const turn: number = slice.turn;
         let resultingBoard: number[][] = slice.getCopiedBoard();
 
@@ -67,16 +67,16 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         const ennemi: number = (turn + 1) % 2;
 
         if (y !== player) {
-            return ILLEGAL; // on ne distribue que ses maisons
+            return AwaleLegalityStatus.failure("you cannot distribute from the ennemy's home"); // on ne distribue que ses maisons
         }
         const x: number = move.coord.x;
         if (resultingBoard[y][x] === 0) {
-            return ILLEGAL; // on ne distribue pas une case vide
+            return AwaleLegalityStatus.failure("you cannot distribute from an empty case"); // on ne distribue pas une case vide
         }
 
         if (!AwaleRules.doesDistribute(x, y, resultingBoard) && AwaleRules.isStarving(ennemi, resultingBoard) ) {
             // you can distribute but you don't, illegal move
-            return ILLEGAL;
+            return AwaleLegalityStatus.failure("you can distribute but you don't");
         }
         // arrived here you can distribute this house
         // but we'll have to check if you can capture
@@ -85,7 +85,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         const landingCamp: number = lastCase[1];
         if (landingCamp === player) {
             // on termine la distribution dans son propre camp, rien d'autre à vérifier
-            return {legal: true, captured: [0, 0], resultingBoard};
+            return {legal: MGPValidation.success(), captured: [0, 0], resultingBoard};
         }
         // on as donc terminé la distribution dans le camps adverse, capture est de mise
         const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
@@ -102,7 +102,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             // if the player distributed his last seeds and the opponent could not give him seeds
             captured[ennemi] += AwaleRules.mansoon(ennemi, resultingBoard);
         }
-        return {legal: true, captured, resultingBoard};
+        return {legal: MGPValidation.success(), captured, resultingBoard};
     }
     private static doesDistribute(x: number, y: number, board: number[][]): boolean {
         if (y === 0) { // distribution from left to right

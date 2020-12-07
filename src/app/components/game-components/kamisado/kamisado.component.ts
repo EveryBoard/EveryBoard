@@ -8,6 +8,7 @@ import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoRules } from 'src/app/games/kamisado/kamisadorules/KamisadoRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-kamisado',
@@ -57,46 +58,45 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         }
     }
 
-    public async pass(): Promise<boolean> {
+    public async pass(): Promise<MGPValidation> {
         if (this.canPass) {
             return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null);
         }
-        return false;
+        return MGPValidation.failure("you cannot pass");
     }
 
-    public async onClick(x: number, y: number): Promise<boolean> {
-        let success: boolean;
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
+        let success: MGPValidation;
         if (this.chosen.x === -1) {
             success = this.choosePiece(x, y);
         } else {
             success = await this.chooseDestination(x, y);
         }
-        if (!success) {
+        if (!success.isSuccess()) {
             this.cancelMove();
         }
         return success;
     }
 
-    public choosePiece(x: number, y: number): boolean {
+    public choosePiece(x: number, y: number): MGPValidation {
         if (this.rules.node.isEndGame()) {
-            return false;
+            return MGPValidation.failure("game is ended");
         }
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
         const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
         if (!piece.belongsTo(player)) {
-            return false;
+            return MGPValidation.failure("piece does not belong to player");
         }
         this.chosen = new Coord(x, y);
-        return true;
+        return MGPValidation.success();
     }
 
-    private async chooseDestination(x: number, y: number): Promise<boolean> {
+    private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
-
 
     public cancelMove() {
         if (!this.chosenAutomatically)
