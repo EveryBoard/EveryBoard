@@ -110,7 +110,7 @@ describe('LocalGameWrapperComponent', () => {
 
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
         const legality: MGPValidation = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
-        expect(legality.isSuccess()).toBeTruthy("Connected user should be able to play");
+        expect(legality.isSuccess()).toBeTrue();
     }));
     it('should allow to go back one move', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
@@ -119,7 +119,7 @@ describe('LocalGameWrapperComponent', () => {
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
         expect(slice.turn).toBe(0);
         const legality: MGPValidation = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
-        expect(legality.isSuccess()).toBeTruthy("Move 0 should be legal");
+        expect(legality.isSuccess()).toBeTrue();
         await fixture.whenStable(); fixture.detectChanges();
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
 
@@ -160,6 +160,6 @@ describe('LocalGameWrapperComponent', () => {
         component.gameComponent.showScore = true;
         component.gameComponent['scores'] = [0, 0];
         fixture.detectChanges();
-        expect(await clickElement('#scoreIndicator')).toBeTruthy();
+        expect(await clickElement('#scoreIndicator')).toBeTrue();
     }));
 });

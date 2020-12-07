@@ -421,7 +421,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
             console.log({ illegalMove: { slice, move, player: Player.NONE.value }})
             return { legal: MGPValidation.failure("illegal move") };
         }
-        return {legal: MGPValidation.success()};
+        return {legal: MGPValidation.SUCCESS};
     }
     public getListMoves(node: P4Node): MGPMap<MoveX, P4PartSlice> {
         return P4Rules.getListMoves(node);

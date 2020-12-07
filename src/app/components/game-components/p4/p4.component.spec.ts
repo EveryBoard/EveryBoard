@@ -64,11 +64,11 @@ describe('P4Component', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("GoComponent should be created");
     });
-    it('should accept simple move', () => {
+    it('should accept simple move', async() => {
         const rules: P4Rules = new P4Rules(P4PartSlice);
         const listMoves: MGPMap<MoveX, P4PartSlice> = rules.getListMoves(rules.node);
         const currentMove: MoveX = listMoves.getByIndex(0).key;
-        expect(gameComponent.onClick(currentMove.x)).toBeTruthy(0);
+        expect((await gameComponent.onClick(currentMove.x)).isSuccess()).toBeTrue();
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(MoveX, "decode").and.callThrough();

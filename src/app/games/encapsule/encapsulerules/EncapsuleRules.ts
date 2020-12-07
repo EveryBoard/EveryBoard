@@ -74,7 +74,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         let landingCase: EncapsuleCase = EncapsuleCase.decode(landingNumber);
         let superpositionResult: {success: boolean, result: EncapsuleCase} = landingCase.tryToSuperposePiece(movingPiece);
         if (superpositionResult.success === true) {
-            return {legal: MGPValidation.success(), newLandingCase: superpositionResult.result};
+            return {legal: MGPValidation.SUCCESS, newLandingCase: superpositionResult.result};
         }
         display(LOCAL_VERBOSE, "move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
         return EncapsuleLegalityStatus.failure("cannot put a piece on a larger one");
@@ -135,7 +135,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                 for (let piece of puttablePieces) {
                     const newMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
                     let status: EncapsuleLegalityStatus = this.isLegal(newMove, slice);
-                    if (status.legal) {
+                    if (status.legal.isSuccess()) {
                         const result = this.applyLegalMove(newMove, slice, status);
                         moves.set(result.resultingMove, result.resultingSlice);
                     }
@@ -147,7 +147,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                             if (!landingCoord.equals(coord)) {
                                 const newMove: EncapsuleMove = EncapsuleMove.fromMove(coord, landingCoord);
                                 let status: EncapsuleLegalityStatus = this.isLegal(newMove, slice);
-                                if (status.legal) {
+                                if (status.legal.isSuccess()) {
                                     const result = this.applyLegalMove(newMove, slice, status);
                                     moves.set(result.resultingMove, result.resultingSlice);
                                 }

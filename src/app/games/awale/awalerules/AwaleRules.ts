@@ -85,7 +85,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         const landingCamp: number = lastCase[1];
         if (landingCamp === player) {
             // on termine la distribution dans son propre camp, rien d'autre à vérifier
-            return {legal: MGPValidation.success(), captured: [0, 0], resultingBoard};
+            return {legal: MGPValidation.SUCCESS, captured: [0, 0], resultingBoard};
         }
         // on as donc terminé la distribution dans le camps adverse, capture est de mise
         const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
@@ -102,7 +102,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             // if the player distributed his last seeds and the opponent could not give him seeds
             captured[ennemi] += AwaleRules.mansoon(ennemi, resultingBoard);
         }
-        return {legal: MGPValidation.success(), captured, resultingBoard};
+        return {legal: MGPValidation.SUCCESS, captured, resultingBoard};
     }
     private static doesDistribute(x: number, y: number, board: number[][]): boolean {
         if (y === 0) { // distribution from left to right
@@ -213,7 +213,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
                 newMove = new AwaleMove(x, player);
                 const legality: AwaleLegalityStatus = this.isLegal(newMove, oldSlice); // see if the move is legal
 
-                if (legality.legal) {
+                if (legality.legal.isSuccess()) {
                     // if the move is legal, we addPart it to the listMoves
                     const capturedCopy: number[] = oldSlice.getCapturedCopy();
                     capturedCopy[player] += legality.captured[player];

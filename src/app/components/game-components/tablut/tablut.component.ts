@@ -91,7 +91,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
         this.showSelectedPiece(x, y);
         display(TablutComponent.VERBOSE, 'selected piece = (' + x + ', ' + y + ')');
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
     public pieceBelongToCurrentPlayer(x: number, y: number): number { // TODO: see that verification is done and refactor this shit
         const player = this.rules.node.gamePartSlice.turn % 2 === 0 ? 0 : 1;

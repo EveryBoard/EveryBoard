@@ -136,7 +136,7 @@ export abstract class GameWrapper {
         }
         await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 

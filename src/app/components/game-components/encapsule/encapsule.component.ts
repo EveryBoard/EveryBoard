@@ -128,7 +128,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             return MGPValidation.failure("piece is not droppable");
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
-            return MGPValidation.success();
+            return MGPValidation.SUCCESS;
         } else {
             const chosenMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, this.chosenCoord);
             return this.suggestMove(chosenMove);
@@ -141,8 +141,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         return slice.isDropable(EncapsulePiece.of(piece));
     }
-    // creating method for OnlineQuarto
-
     private suggestMove(chosenMove: EncapsuleMove): Promise<MGPValidation> {
         this.cancelMove();
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);

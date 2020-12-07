@@ -35,10 +35,9 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     constructor(public snackBar: MatSnackBar) {
     }
 
-    public message(msg: string) {
+    public message: (msg: string) => void = (msg: string) => {
         this.snackBar.open(msg);
-    }
-
+    };
     public abstract updateBoard(): void;
 
     public abstract decodeMove(encodedMove: number): Move;

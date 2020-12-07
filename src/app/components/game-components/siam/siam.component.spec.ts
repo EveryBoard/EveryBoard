@@ -117,44 +117,44 @@ describe('SiamComponent', () => {
 
     it('should accept insertion at first turn', fakeAsync(async() => {
         const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonale.DOWN), Orthogonale.DOWN);
-        expect(await doMove(move)).toBeTruthy("Insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
     }));
 
     it('Should not allow to choose direction before choosing piece', async() => {
         let move: SiamMove = new SiamMove(5, 2, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
         move = new SiamMove(2, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
-        expect(await doMove(move)).toBeTruthy("Insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
 
-        expect(await chooseDirection(new Coord(4, 2), 'UP')).toBeFalsy();
+        expect(await chooseDirection(new Coord(4, 2), 'UP')).toBeFalse();
     });
 
     it('Should not allow to move empty case or ennemy pieces', async() => {
         let move: SiamMove = new SiamMove(-1, 2, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT);
-        expect(await doMove(move)).toBeTruthy("Insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
 
-        expect(await clickPiece(new Coord(0, 0))).toBeFalsy("Should not allow to move empty case");
+        expect(await clickPiece(new Coord(0, 0))).toBeFalse();
         spyOn(gameComponent, "cancelMove").and.callThrough();
-        expect(await clickPiece(new Coord(0, 2))).toBeTruthy("Should allow to click ennemy piece (even if it will cancelMove)");
+        expect(await clickPiece(new Coord(0, 2))).toBeTrue();
         expect(gameComponent.cancelMove).toHaveBeenCalledWith("Can't choose ennemy's pieces");
     });
 
     it('should cancel move when trying to insert while having selected a piece', fakeAsync(async() => {
         let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
         move = new SiamMove(5, 0, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Second insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
 
         // clickPiece shoud work
         spyOn(gameComponent, "clickPiece").and.callThrough();
-        expect(await clickPiece(new Coord(4, 4))).toBeTruthy("Piece should be there after previous move");
+        expect(await clickPiece(new Coord(4, 4))).toBeTrue();
         expect(gameComponent.clickPiece).toHaveBeenCalledTimes(1);
         expect(gameComponent.clickPiece).toHaveBeenCalledWith(4, 4);
 
         // then insertion should not
         spyOn(gameComponent, "cancelMove").and.callThrough();
         spyOn(gameComponent, "insertAt").and.callThrough();
-        expect(await insertAt(new Coord(-1, 2))).toBeTruthy("For now insert arrow are present always, even when illegal");
+        expect(await insertAt(new Coord(-1, 2))).toBeTrue();
         expect(gameComponent.insertAt).toHaveBeenCalledTimes(1);
         expect(gameComponent.insertAt).toHaveBeenCalledWith(-1, 2);
         expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
@@ -162,33 +162,33 @@ describe('SiamComponent', () => {
 
     it('should allow rotation', fakeAsync(async() => {
         let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
         move = new SiamMove(5, 0, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Second insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
 
         move = new SiamMove(4, 4, MGPOptional.empty(), Orthogonale.DOWN);
-        expect(await doMove(move)).toBeTruthy("Should allow rotation");
+        expect(await doMove(move)).toBeTrue();
     }));
 
     it('should allow normal move', fakeAsync(async() => {
         let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
         move = new SiamMove(5, 0, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Second insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
 
         move = new SiamMove(4, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Should allow normal move");
+        expect(await doMove(move)).toBeTrue();
     }));
 
     it('should decide outing orientation automatically', fakeAsync(async() => {
         let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
         move = new SiamMove(5, 0, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
-        expect(await doMove(move)).toBeTruthy("Second insertion should be legal");
+        expect(await doMove(move)).toBeTrue();
 
-        expect(await clickPiece(new Coord(4, 4))).toBeTruthy("Should allow click");
+        expect(await clickPiece(new Coord(4, 4))).toBeTrue();
         spyOn(gameComponent, "tryMove").and.callThrough();
-        expect(await chooseDirection(new Coord(4, 4), 'RIGHT')).toBeTruthy("Should allow choosing direction");
+        expect(await chooseDirection(new Coord(4, 4), 'RIGHT')).toBeTrue();
         expect(gameComponent.tryMove).toHaveBeenCalledTimes(1);
     }));
 

@@ -120,6 +120,6 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
     }
     public isLegal(move: QuixoMove, slice: QuixoPartSlice): LegalityStatus {
         if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) return { legal: MGPValidation.failure("piece owned by ennemy player") };
-        else return { legal: MGPValidation.success() };
+        else return { legal: MGPValidation.SUCCESS };
     }
 }

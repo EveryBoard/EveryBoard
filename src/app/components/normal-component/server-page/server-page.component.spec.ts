@@ -128,7 +128,7 @@ describe('ServerPageComponent', () => {
 
         component.ngOnInit();
 
-        expect(component.canCreateGame()).toBeTruthy();
+        expect(component.canCreateGame()).toBeTrue();
     });
     it('should be illegal for unlogged user to create game', () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null};
@@ -136,7 +136,7 @@ describe('ServerPageComponent', () => {
 
         component.ngOnInit();
 
-        expect(component.canCreateGame()).toBeFalsy();
+        expect(component.canCreateGame()).toBeFalse();
     });
     it('should be illegal to create game for a player already in game', () => {
         // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
@@ -153,7 +153,7 @@ describe('ServerPageComponent', () => {
         }]));
         component.ngOnInit();
 
-        expect(component.canCreateGame()).toBeFalsy();
+        expect(component.canCreateGame()).toBeFalse();
     });
     it('should be legal for unlogged user to create local game', async () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null};

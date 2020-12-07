@@ -81,74 +81,74 @@ describe('PylosComponent', () => {
     });
     it('should allow droping piece on occupable case', fakeAsync(async() => {
         spyOn(gameComponent, 'tryMove').and.callThrough();
-        expect(await onClick(0, 0, 0)).toBeTruthy();
+        expect(await onClick(0, 0, 0)).toBeTrue();
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
         const previousSlice: PylosPartSlice = gameComponent.rules.node.mother.gamePartSlice;
         expect(gameComponent.tryMove).toHaveBeenCalledWith(move, previousSlice);
     }));
     it('should forbid clicking on ennemy piece', fakeAsync(async() => {
-        expect(await onClick(0, 0, 0)).toBeTruthy();
+        expect(await onClick(0, 0, 0)).toBeTrue();
 
         spyOn(gameComponent, 'cancelMove').and.callThrough();
-        expect(await onClick(0, 0, 0)).toBeTruthy();
+        expect(await onClick(0, 0, 0)).toBeTrue();
         expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
         expect(gameComponent.cancelMove).toHaveBeenCalledWith("Can't click on ennemy pieces.");
     }));
     it('should allow climbing', fakeAsync(async() => {
-        expect(await onClick(0, 0, 0)).toBeTruthy("Move 0 should be legal");
-        expect(await onClick(3, 3, 0)).toBeTruthy("Move 1 should be legal");
-        expect(await onClick(1, 0, 0)).toBeTruthy("Move 2 should be legal");
-        expect(await onClick(0, 1, 0)).toBeTruthy("Move 3 should be legal");
-        expect(await onClick(1, 1, 0)).toBeTruthy("Move 4 should be legal");
+        expect(await onClick(0, 0, 0)).toBeTrue();
+        expect(await onClick(3, 3, 0)).toBeTrue();
+        expect(await onClick(1, 0, 0)).toBeTrue();
+        expect(await onClick(0, 1, 0)).toBeTrue();
+        expect(await onClick(1, 1, 0)).toBeTrue();
 
         spyOn(gameComponent, 'tryMove').and.callThrough();
-        expect(await onClick(3, 3, 0)).toBeTruthy();
-        expect(await onClick(0, 0, 1)).toBeTruthy();
+        expect(await onClick(3, 3, 0)).toBeTrue();
+        expect(await onClick(0, 0, 1)).toBeTrue();
         expect(gameComponent.tryMove).toHaveBeenCalledTimes(1);
     }));
     it('should allow capturing unique piece by double clicking on it', fakeAsync(async() => {
-        expect(await onClick(0, 0, 0)).toBeTruthy("Move 0 should be legal");
-        expect(await onClick(3, 0, 0)).toBeTruthy("Move 1 should be legal");
-        expect(await onClick(0, 1, 0)).toBeTruthy("Move 2 should be legal");
-        expect(await onClick(3, 1, 0)).toBeTruthy("Move 3 should be legal");
-        expect(await onClick(1, 0, 0)).toBeTruthy("Move 4 should be legal");
-        expect(await onClick(3, 2, 0)).toBeTruthy("Move 5 should be legal");
+        expect(await onClick(0, 0, 0)).toBeTrue();
+        expect(await onClick(3, 0, 0)).toBeTrue();
+        expect(await onClick(0, 1, 0)).toBeTrue();
+        expect(await onClick(3, 1, 0)).toBeTrue();
+        expect(await onClick(1, 0, 0)).toBeTrue();
+        expect(await onClick(3, 2, 0)).toBeTrue();
 
         spyOn(gameComponent, 'tryMove').and.callThrough();
-        expect(await onClick(1, 1, 0)).toBeTruthy();
-        expect(await onClick(0, 0, 0)).toBeTruthy();
-        expect(await onClick(0, 0, 0)).toBeTruthy();
+        expect(await onClick(1, 1, 0)).toBeTrue();
+        expect(await onClick(0, 0, 0)).toBeTrue();
+        expect(await onClick(0, 0, 0)).toBeTrue();
         expect(gameComponent.tryMove).toHaveBeenCalledTimes(1);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), [new PylosCoord(0, 0, 0)]);
         const previousSlice: PylosPartSlice = gameComponent.rules.node.mother.gamePartSlice;
         expect(gameComponent.tryMove).toHaveBeenCalledWith(move, previousSlice);
     }));
     it('should allow capturing two pieces', fakeAsync(async() => {
-        expect(await onClick(0, 0, 0)).toBeTruthy("Move 0 should be legal");
-        expect(await onClick(3, 0, 0)).toBeTruthy("Move 1 should be legal");
-        expect(await onClick(0, 1, 0)).toBeTruthy("Move 2 should be legal");
-        expect(await onClick(3, 1, 0)).toBeTruthy("Move 3 should be legal");
-        expect(await onClick(1, 0, 0)).toBeTruthy("Move 4 should be legal");
-        expect(await onClick(3, 2, 0)).toBeTruthy("Move 5 should be legal");
+        expect(await onClick(0, 0, 0)).toBeTrue();
+        expect(await onClick(3, 0, 0)).toBeTrue();
+        expect(await onClick(0, 1, 0)).toBeTrue();
+        expect(await onClick(3, 1, 0)).toBeTrue();
+        expect(await onClick(1, 0, 0)).toBeTrue();
+        expect(await onClick(3, 2, 0)).toBeTrue();
 
         spyOn(gameComponent, 'concludeMoveWithCapture').and.callThrough();
-        expect(await onClick(1, 1, 0)).toBeTruthy();
-        expect(await onClick(0, 0, 0)).toBeTruthy();
-        expect(await onClick(0, 1, 0)).toBeTruthy();
+        expect(await onClick(1, 1, 0)).toBeTrue();
+        expect(await onClick(0, 0, 0)).toBeTrue();
+        expect(await onClick(0, 1, 0)).toBeTrue();
         expect(gameComponent.concludeMoveWithCapture).toHaveBeenCalledWith([new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)]);
     }));
     it('should forbid piece to land lower than they started', fakeAsync(async() => {
-        expect(await onClick(0, 0, 0)).toBeTruthy("Move 0 should be legal");
-        expect(await onClick(0, 1, 0)).toBeTruthy("Move 1 should be legal");
-        expect(await onClick(1, 0, 0)).toBeTruthy("Move 2 should be legal");
-        expect(await onClick(1, 1, 0)).toBeTruthy("Move 3 should be legal");
-        expect(await onClick(3, 3, 0)).toBeTruthy("Move 4 should be legal");
-        expect(await onClick(0, 0, 1)).toBeTruthy("Move 5 should be legal");
-        expect(await onClick(3, 2, 0)).toBeTruthy("Move 6 should be legal");
+        expect(await onClick(0, 0, 0)).toBeTrue();
+        expect(await onClick(0, 1, 0)).toBeTrue();
+        expect(await onClick(1, 0, 0)).toBeTrue();
+        expect(await onClick(1, 1, 0)).toBeTrue();
+        expect(await onClick(3, 3, 0)).toBeTrue();
+        expect(await onClick(0, 0, 1)).toBeTrue();
+        expect(await onClick(3, 2, 0)).toBeTrue();
 
         spyOn(gameComponent, 'cancelMove').and.callThrough();
-        expect(await onClick(0, 0, 1)).toBeTruthy("Selecting descending piece should be doable");
-        expect(await onClick(2, 2, 0)).toBeTruthy("Clicking lower than her should be doable");
+        expect(await onClick(0, 0, 1)).toBeTrue();
+        expect(await onClick(2, 2, 0)).toBeTrue();
         expect(gameComponent.cancelMove).toHaveBeenCalledWith("Must move pieces upward.");
         expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
     }));

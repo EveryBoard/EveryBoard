@@ -63,13 +63,13 @@ describe('GoComponent', () => {
         expect(gameComponent).toBeTruthy("GoComponent should be created");
     });
     it('should allow to pass twice, then use "pass" as the method to "accept"', async() => {
-        expect((await gameComponent.pass()).isSuccess()).toBeTruthy(0); // Passed
-        expect((await gameComponent.pass()).isSuccess()).toBeTruthy(1); // Counting
-        expect((await gameComponent.pass()).isSuccess()).toBeTruthy(2); // Accept
+        expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Passed
+        expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Counting
+        expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Accept
 
-        expect((await gameComponent.pass()).isSuccess()).toBeTruthy(3); // Finished
+        expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Finished
 
-        expect((await gameComponent.pass()).isSuccess()).toBeFalsy(4);
+        expect((await gameComponent.pass()).isSuccess()).toBeFalse();
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(GoMove, "decode").and.callThrough();

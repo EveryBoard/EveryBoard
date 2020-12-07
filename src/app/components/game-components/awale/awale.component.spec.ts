@@ -54,9 +54,9 @@ describe('AwaleComponent', () => {
         tick(1);
         gameComponent = wrapper.gameComponent as AwaleComponent;
     }));
-    it('should create', () => {
+    it('should create', async() => {
         expect(gameComponent).toBeTruthy();
-        expect(gameComponent.onClick(0, 0)).toBeTruthy();
+        expect((await gameComponent.onClick(0, 0)).isSuccess()).toBeTrue();
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(AwaleMove, "decode").and.callThrough();

@@ -31,7 +31,7 @@ describe('EmailVerified', () => {
         const authorisation: boolean = guard.canActivate(null, null);
 
         expect(router.navigate).toHaveBeenCalledWith(["/login"]);
-        expect(authorisation).toBeFalsy("Should not accept unlogged user");
+        expect(authorisation).toBeFalse();
     });
     it('should move unverified user to confirm-inscription page and refuse them', () => {
         authService.getAuthenticatedUser = () => { return {pseudo: "JeanMichelNouveau user", verified: false} };
@@ -40,13 +40,13 @@ describe('EmailVerified', () => {
         const authorisation: boolean = guard.canActivate(null, null);
 
         expect(router.navigate).toHaveBeenCalledWith(["/confirm-inscription"]);
-        expect(authorisation).toBeFalsy("Should not accept unverified user");
+        expect(authorisation).toBeFalse();
     });
     it('should accept logged user', () => {
         authService.getAuthenticatedUser = () => { return {pseudo: "JeanJaJa Toujours là", verified: true} };
 
         const authorisation: boolean = guard.canActivate(null, null);
 
-        expect(authorisation).toBeTruthy("Should accept logged user");
+        expect(authorisation).toBeTrue();
     });
 });

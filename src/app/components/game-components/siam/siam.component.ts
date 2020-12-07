@@ -60,7 +60,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             return this.cancelMove("Can't choose ennemy's pieces");
         }
         this.chosenCoord = new Coord(x, y);
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, "SiamComponent.chooseDirection(" + direction + ")");
@@ -77,7 +77,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                 return this.tryMove();
             }
         }
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
     public async chooseOrientation(orientation: string): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, "SiamComponent.chooseOrientation(" + orientation + ")");
@@ -94,7 +94,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             const dir: Orthogonale = SiamRules.getCoordDirection(x, y, this.rules.node.gamePartSlice);
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
-            return MGPValidation.success();
+            return MGPValidation.SUCCESS;
         }
     }
     public async tryMove(): Promise<MGPValidation> {

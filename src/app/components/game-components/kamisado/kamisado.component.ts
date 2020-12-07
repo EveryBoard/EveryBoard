@@ -72,7 +72,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         } else {
             success = await this.chooseDestination(x, y);
         }
-        if (!success.isSuccess()) {
+        if (success.isFailure()) {
             this.cancelMove();
         }
         return success;
@@ -88,7 +88,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             return MGPValidation.failure("piece does not belong to player");
         }
         this.chosen = new Coord(x, y);
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
 
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {

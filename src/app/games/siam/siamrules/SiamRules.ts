@@ -50,7 +50,7 @@ export class SiamRules extends _SiamRules {
     public isLegalInsertion(coord: Coord, slice: SiamPartSlice): {insertedPiece: number, legal: MGPValidation} {
         let numberOnBoard: number = slice.countPlayerPawn();
         const currentPlayer: Player = slice.getCurrentPlayer();
-        let legal: MGPValidation = (numberOnBoard < 5) ? MGPValidation.success() : MGPValidation.failure("all player pieces have been placed");
+        let legal: MGPValidation = (numberOnBoard < 5) ? MGPValidation.SUCCESS : MGPValidation.failure("all player pieces have been placed");
         let insertedPiece: number = SiamRules.getInsertedPiece(coord, currentPlayer).value;
         return {insertedPiece, legal};
     }
@@ -113,7 +113,7 @@ export class SiamRules extends _SiamRules {
         }
 
         display(SiamRules.VERBOSE, "This move is a legal push: "+resultingBoard);
-        return {legal: MGPValidation.success(), resultingBoard};
+        return {legal: MGPValidation.SUCCESS, resultingBoard};
     }
     public static isStraight(piece: number, move: SiamMove): boolean {
         const siamPiece: SiamPiece = SiamPiece.decode(piece);
@@ -132,7 +132,7 @@ export class SiamRules extends _SiamRules {
         }
         let resultingBoard: number[][] = slice.getCopiedBoard();
         resultingBoard[c.y][c.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer).value;
-        return {legal: MGPValidation.success(), resultingBoard};
+        return {legal: MGPValidation.SUCCESS, resultingBoard};
     }
     public applyLegalMove(move: SiamMove, slice: SiamPartSlice, status: SiamLegalityStatus): { resultingMove: SiamMove; resultingSlice: SiamPartSlice} {
         const resultingMove: SiamMove = move;
@@ -457,7 +457,7 @@ export class SiamRules extends _SiamRules {
                         for (let orientation of orientations) {
                             const forwardMove: SiamMove = new SiamMove(x, y, MGPOptional.of(direction), orientation);
                             legality = this.isLegalForwarding(forwardMove, node.gamePartSlice, c);
-                            if (legality.legal) {
+                            if (legality.legal.isSuccess()) {
                                 const forwardSlice: SiamPartSlice = new SiamPartSlice(legality.resultingBoard, turn + 1);
                                 moves.set(forwardMove, forwardSlice);
                             }
@@ -487,7 +487,7 @@ export class SiamRules extends _SiamRules {
         let newSlice: SiamPartSlice; let legality: SiamLegalityStatus;
         for (let i = 0; i < newMoves.length; i++) {
             legality = this.isLegalForwarding(newMoves[i], node.gamePartSlice, insertedPieces[i]);
-            if (legality.legal) {
+            if (legality.legal.isSuccess()) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMoves[i], newSlice);
             }
@@ -504,7 +504,7 @@ export class SiamRules extends _SiamRules {
             newMove = new SiamMove(-1, y, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.UP);
             insertedPiece = SiamPiece.of(Orthogonale.UP, currentPlayer).value;
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
-            if (legality.legal) {
+            if (legality.legal.isSuccess()) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
 
@@ -519,7 +519,7 @@ export class SiamRules extends _SiamRules {
             newMove = new SiamMove(5, y, MGPOptional.of(Orthogonale.LEFT), Orthogonale.UP);
             insertedPiece = SiamPiece.of(Orthogonale.UP, currentPlayer).value;
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
-            if (legality.legal) {
+            if (legality.legal.isSuccess()) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
 
@@ -535,7 +535,7 @@ export class SiamRules extends _SiamRules {
             newMove = new SiamMove(x, -1, MGPOptional.of(Orthogonale.DOWN), Orthogonale.LEFT);
             insertedPiece = SiamPiece.of(Orthogonale.LEFT, currentPlayer).value;
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
-            if (legality.legal) {
+            if (legality.legal.isSuccess()) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
 
@@ -550,7 +550,7 @@ export class SiamRules extends _SiamRules {
             newMove = new SiamMove(x, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.LEFT);
             insertedPiece = SiamPiece.of(Orthogonale.LEFT, currentPlayer).value;
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
-            if (legality.legal) {
+            if (legality.legal.isSuccess()) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
 

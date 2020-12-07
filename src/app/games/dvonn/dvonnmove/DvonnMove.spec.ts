@@ -26,12 +26,14 @@ describe('DvonnMove', () => {
         expect(() => DvonnMove.of(new Coord(10, 5), new Coord(10, 3))).toThrowError();
     });
     it('should force moves to be in a straight line', () => {
-        expect(DvonnMove.of(new Coord(2, 0), new Coord(4, 0))).toBeTruthy();
-        expect(DvonnMove.of(new Coord(2, 0), new Coord(2, 3))).toBeTruthy();
-        expect(DvonnMove.of(new Coord(2, 0), new Coord(1, 1))).toBeTruthy();
-        expect(DvonnMove.of(new Coord(5, 2), new Coord(4, 2))).toBeTruthy();
-        expect(DvonnMove.of(new Coord(5, 2), new Coord(5, 1))).toBeTruthy();
-        expect(DvonnMove.of(new Coord(5, 2), new Coord(6, 1))).toBeTruthy();
+        expect(() => {
+            DvonnMove.of(new Coord(2, 0), new Coord(4, 0));
+            DvonnMove.of(new Coord(2, 0), new Coord(2, 3));
+            DvonnMove.of(new Coord(2, 0), new Coord(1, 1));
+            DvonnMove.of(new Coord(5, 2), new Coord(4, 2));
+            DvonnMove.of(new Coord(5, 2), new Coord(5, 1));
+            DvonnMove.of(new Coord(5, 2), new Coord(6, 1));
+        }).not.toThrowError();
         expect(() => DvonnMove.of(new Coord(2, 0), new Coord(3, 2))).toThrowError();
     });
     it('should correctly compute move lengths', () => {
@@ -51,10 +53,10 @@ describe('DvonnMove', () => {
         };
         const neighboor: DvonnMove = DvonnMove.of(new Coord(3, 3), new Coord(2, 3));
         const stranger: DvonnMove = DvonnMove.of(new Coord(5, 2), new Coord(6, 2));
-        expect(move.equals(move)).toBeTruthy("Move should equals himself");
-        expect(move.equals(moveAsObject)).toBeFalsy("Instance should be checked");
-        expect(move.equals(sameMove)).toBeTruthy("Move should be equals");
-        expect(move.equals(neighboor)).toBeFalsy("Different move should be different");
-        expect(move.equals(stranger)).toBeFalsy("Different move should be different");
+        expect(move.equals(move)).toBeTrue();
+        expect(move.equals(moveAsObject)).toBeFalse();
+        expect(move.equals(sameMove)).toBeTrue();
+        expect(move.equals(neighboor)).toBeFalse();
+        expect(move.equals(stranger)).toBeFalse();
     });
 });

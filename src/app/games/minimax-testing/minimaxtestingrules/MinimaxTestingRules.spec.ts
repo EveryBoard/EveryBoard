@@ -18,7 +18,7 @@ describe('MinimaxTestingRules', () => {
     it('should be a victory of second player', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
         rules = new MinimaxTestingRules(MinimaxTestingPartSlice);
-        expect(rules.choose(MinimaxTestingMove.RIGHT)).toBeTruthy('Move should be legal');
+        expect(rules.choose(MinimaxTestingMove.RIGHT)).toBeTrue();
         expect(rules.getBoardValue(rules.node.move, rules.node.gamePartSlice)).toEqual(Number.MAX_SAFE_INTEGER);
     });
     it('IA should avoid loosing 4 move in a row', () => {

@@ -98,7 +98,7 @@ describe('JoinerService', () => {
             expect(error.message).toEqual('cannot cancel joining when not observing a joiner');
             threw = true;
         } finally {
-            expect(threw).toBeTruthy();
+            expect(threw).toBeTrue();
         }
     }));
     it('cancelJoining should delegate update to DAO', fakeAsync(async() => {
@@ -136,7 +136,7 @@ describe('JoinerService', () => {
             threw = true;
         } finally {
             expect(errorMessage).toEqual('someone that was nor candidate nor chosenPlayer just left the chat: who is that');
-            expect(threw).toBeTruthy();
+            expect(threw).toBeTrue();
         }
     }));
 });

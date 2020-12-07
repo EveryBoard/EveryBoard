@@ -58,7 +58,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         if (!this.pieceHasTarget(slice, coord)) {
             return MGPValidation.failure("Stack can't move because it cannot end on a valid target");
         }
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
     public canOnlyPass(slice: DvonnPartSlice): boolean {
         return this.getMovablePieces(slice).length === 0;
@@ -73,7 +73,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
                 map.set(move, this.applyLegalMove(move, slice, legalityStatus).resultingSlice);
             }));
         if (map.size() === 0 && move !== DvonnMove.PASS) {
-            map.set(DvonnMove.PASS, this.applyLegalMove(DvonnMove.PASS, slice, {legal: MGPValidation.success()}).resultingSlice);
+            map.set(DvonnMove.PASS, this.applyLegalMove(DvonnMove.PASS, slice, {legal: MGPValidation.SUCCESS}).resultingSlice);
         }
         return map;
     }
@@ -156,7 +156,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself
             if (move === DvonnMove.PASS && !slice.alreadyPassed) {
-                return { legal: MGPValidation.success() };
+                return { legal: MGPValidation.SUCCESS };
             } else {
                 return { legal: MGPValidation.failure("can only pass") };
             }
@@ -185,6 +185,6 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         if (targetStack.isEmpty()) {
             return { legal: MGPValidation.failure("move finishes on an empty stack") };
         }
-        return { legal: MGPValidation.success() };
+        return { legal: MGPValidation.SUCCESS };
     }
 }

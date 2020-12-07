@@ -70,7 +70,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                 board[captured.y][captured.x] = TablutCase.UNOCCUPIED.value; // do capture, unless if king
             }
         }
-        return {success: MGPValidation.success(), resultingBoard: board};
+        return {success: MGPValidation.SUCCESS, resultingBoard: board};
     }
     private static getMoveValidity(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): MGPValidation {
         const cOwner: number = this.getRelativeOwner(player, invaderStart, move.coord, board);
@@ -105,7 +105,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             }
             c = c.getNext(dir);
         }
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
     private static tryCapture(player: 0|1, invaderStart: boolean, landingPawn: Coord, d: Orthogonale, board: number[][]): Coord {
         const LOCAL_VERBOSE: boolean = false;

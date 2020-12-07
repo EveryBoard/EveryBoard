@@ -227,7 +227,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         if (chosenPiece === 16) {
             if (quartoPartSlice.turn === 15) {
                 // on doit donner une pièce ! sauf au dernier tour
-                return MGPValidation.success();
+                return MGPValidation.SUCCESS;
             }
             return MGPValidation.failure("you must give a piece");
         }
@@ -239,7 +239,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
             // la pièce donnée est la même que celle en main, c'est illégal
             return MGPValidation.failure("illegal piece given: already in your hands");
         }
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
     // Overrides :
 

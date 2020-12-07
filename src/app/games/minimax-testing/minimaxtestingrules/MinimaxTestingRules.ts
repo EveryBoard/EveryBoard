@@ -34,7 +34,7 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         if (coord.y + 1 === board.length && move.right === false) {
             return { legal: MGPValidation.failure("incorrect move") };
         }
-        return {legal: MGPValidation.success()};
+        return {legal: MGPValidation.SUCCESS};
     }
     public getBoardValue(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice): number {
         MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT++;
@@ -44,7 +44,7 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT++;
         const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> = new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();
         const slice: MinimaxTestingPartSlice = n.gamePartSlice;
-        const LEGAL: LegalityStatus = {legal: MGPValidation.success()};
+        const LEGAL: LegalityStatus = {legal: MGPValidation.SUCCESS};
         if (slice.location.x < 3) {
             const rightMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
             const rightSlice: MinimaxTestingPartSlice = this.applyLegalMove(rightMove, slice, LEGAL).resultingSlice;

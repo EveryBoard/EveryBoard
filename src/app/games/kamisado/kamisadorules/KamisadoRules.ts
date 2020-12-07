@@ -74,7 +74,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             if (!slice.alreadyPassed) {
                 const move: KamisadoMove = KamisadoMove.PASS;
                 const legality = this.isLegal(move, slice);
-                if (legality.legal) {
+                if (legality.legal.isSuccess()) {
                     const result = this.applyLegalMove(move, slice, legality);
                     moves.set(result.resultingMove, result.resultingSlice);
                 }
@@ -100,7 +100,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                             // Check if the move can be done, and if so, add the resulting slice to the map to be returned
                             const move = KamisadoMove.of(startCoord, endCoord);
                             const legality = this.isLegal(move, slice);
-                            if (legality.legal) {
+                            if (legality.legal.isSuccess()) {
                                 const result = this.applyLegalMove(move, slice, legality);
                                 moves.set(result.resultingMove, result.resultingSlice);
                             }
@@ -183,7 +183,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
 
         if (move === KamisadoMove.PASS) {
             if (this.canOnlyPass(slice) && !slice.alreadyPassed) {
-                return { legal: MGPValidation.success() };
+                return { legal: MGPValidation.SUCCESS };
             } else {
                 return { legal: MGPValidation.failure("you cannot pass, you can still move") };
             }
@@ -221,6 +221,6 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         } catch (e) {
             return { legal: MGPValidation.failure("invalid direction") };
         }
-            return { legal: MGPValidation.success() }
+            return { legal: MGPValidation.SUCCESS }
     }
 }

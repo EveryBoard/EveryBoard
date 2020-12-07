@@ -97,12 +97,12 @@ describe('QuixoComponent', () => {
 
         let legal: MGPValidation = await doMove(firstMove);
         spyOn(gameComponent, "cancelMove").and.callThrough();
-        expect(legal.isSuccess()).toBeTruthy("first move should be correct to continue the test");
+        expect(legal.isSuccess()).toBeTrue();
 
-        expect(gameComponent.onBoardClick(4, 0)).toBeFalsy("Should not be allowed to click on ennemy piece");
+        expect(gameComponent.onBoardClick(4, 0)).toBeFalse();
         expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
 
-        expect(gameComponent.onBoardClick(1, 1)).toBeFalsy("Should not be allowed to click on center piece");
+        expect(gameComponent.onBoardClick(1, 1)).toBeFalse();
     });
     it('should delegate triangleCoord calculation to GameComponentUtils', () => {
         spyOn(GameComponentUtils, "getTriangleCoordinate").and.callThrough();
