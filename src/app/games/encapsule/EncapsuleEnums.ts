@@ -1,5 +1,6 @@
 import { Player } from "src/app/jscaip/Player";
 import { Comparable } from "src/app/collectionlib/Comparable";
+import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 export class EncapsulePiece implements Comparable {
 

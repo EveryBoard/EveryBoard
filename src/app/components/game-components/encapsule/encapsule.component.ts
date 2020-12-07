@@ -9,6 +9,7 @@ import {Coord} from 'src/app/jscaip/coord/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 @Component({
     selector: 'app-encapsule',
@@ -57,14 +58,10 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         }
     }
     public mapNumberBoard(board: number[][]): EncapsuleCase[][] { // TODO: Move those to ArrayUtils and EncapsuleMapper
-        return board.map(numberLine =>
-                numberLine.map(numberCase =>
-                        EncapsuleCase.decode(numberCase)));
+        return ArrayUtils.mapBiArray(board, EncapsuleCase.decode);
     }
     public mapCaseBoard(board: EncapsuleCase[][]): String[][][] { // TODO: Move those to ArrayUtils and EncapsuleMapper
-        return board.map(caseLine =>
-                caseLine.map(currentCase =>
-                        currentCase.toOrderedPieceNames()));
+        return ArrayUtils.mapBiArray(board, (c: EncapsuleCase) => c.toOrderedPieceNames());
     }
     /********************************** For Online Game **********************************/
 

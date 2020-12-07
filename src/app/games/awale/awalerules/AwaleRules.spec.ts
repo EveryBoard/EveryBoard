@@ -1,4 +1,4 @@
-import {AwaleRules} from './AwaleRules';
+import { AwaleRules } from './AwaleRules';
 import { AwaleMove } from '../awalemove/AwaleMove';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { AwalePartSlice } from '../AwalePartSlice';
