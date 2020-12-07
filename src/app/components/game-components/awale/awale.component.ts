@@ -5,6 +5,8 @@ import {AwaleMove} from 'src/app/games/awale/awalemove/AwaleMove';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-awale-new-component',
@@ -18,18 +20,18 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
     public last: Coord = new Coord(-1, -1);
 
-    constructor() {
-        super();
+    constructor(snackBar: MatSnackBar) {
+        super(snackBar);
         this.showScore = true;
     }
-    public async onClick(x: number, y: number): Promise<boolean> {
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
         // TODO : option de clonage revision commentage
 
         this.last  = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = new AwaleMove(x, y);
         // let's confirm on java-server-side that the move is legal
-        const result: boolean = await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
+        const result: MGPValidation = await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
         return result;
     }
     public decodeMove(encodedMove: number): AwaleMove {

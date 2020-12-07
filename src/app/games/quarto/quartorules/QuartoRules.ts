@@ -6,6 +6,7 @@ import { QuartoEnum } from '../QuartoEnum';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 class CaseSensible {
 
@@ -202,7 +203,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         }
         return result + ']';
     }
-    private static isLegal(move: QuartoMove, quartoPartSlice: QuartoPartSlice): number {
+    private static isLegal(move: QuartoMove, quartoPartSlice: QuartoPartSlice): MGPValidation {
         /* pieceInHand is the one to be placed
          * move.piece is the one gave to the next players
          */
@@ -213,38 +214,38 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         const pieceInHand: number = quartoPartSlice.pieceInHand;
         if (chosenPiece < 0) {
             // nombre trop bas, ce n'est pas une pièce
-            return QuartoRules.INVALID_MOVE;
+            return MGPValidation.failure("this is not a piece");
         }
         if (chosenPiece > 16) {
             // nombre trop grand, ce n'est pas une pièce
-            return QuartoRules.INVALID_MOVE;
+            return MGPValidation.failure("this is not a piece");
         }
         if (QuartoRules.isOccupied(board[y][x])) {
             // on ne joue pas sur une case occupée
-            return QuartoRules.INVALID_MOVE;
+            return MGPValidation.failure("this case is unoccupied");
         }
         if (chosenPiece === 16) {
             if (quartoPartSlice.turn === 15) {
                 // on doit donner une pièce ! sauf au dernier tour
-                return QuartoRules.VALID_MOVE;
+                return MGPValidation.success();
             }
-            return QuartoRules.INVALID_MOVE;
+            return MGPValidation.failure("you must give a piece");
         }
         if (!QuartoPartSlice.isPlacable(chosenPiece, board)) {
             // la piece est d�jà sur le plateau
-            return QuartoRules.INVALID_MOVE;
+            return MGPValidation.failure("piece is already on the board");
         }
         if (pieceInHand === chosenPiece) {
             // la pièce donnée est la même que celle en main, c'est illégal
-            return QuartoRules.INVALID_MOVE;
+            return MGPValidation.failure("illegal piece given: already in your hands");
         }
-        return QuartoRules.VALID_MOVE;
+        return MGPValidation.success();
     }
     // Overrides :
 
     public isLegal(move: QuartoMove): LegalityStatus {
         const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice;
-        return {legal: QuartoRules.isLegal(move, quartoPartSlice) === QuartoRules.VALID_MOVE};
+        return {legal: QuartoRules.isLegal(move, quartoPartSlice)};
     }
     public getListMoves(n: QuartoNode): MGPMap<QuartoMove, QuartoPartSlice> {
         const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = new MGPMap<QuartoMove, QuartoPartSlice>();

@@ -8,6 +8,7 @@ import { TablutRules } from '../../../games/tablut/tablutrules/TablutRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { TablutCase } from 'src/app/games/tablut/tablutrules/TablutCase';
 import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-tablut-new',
@@ -44,10 +45,10 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
         this.cancelMove();
     }
-    public async onClick(x: number, y: number): Promise<boolean> {
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
         display(TablutComponent.VERBOSE, "TablutComponent.onClick(" + x + ", " + y + ")");
 
-        let success: boolean;
+        let success: MGPValidation;
         if (this.chosen.x === -1) {
             success = this.choosePiece(x, y);
         } else {
@@ -58,7 +59,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         }
         return success;
     }
-    private async chooseDestination(x: number, y: number): Promise<boolean> {
+    private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         display(TablutComponent.VERBOSE, 'TablutComponent.chooseDestination');
 
         const chosenPiece: Coord = this.chosen;
@@ -68,15 +69,15 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
             return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         } catch (error) {
             this.cancelMove();
-            return false;
+            return MGPValidation.failure("invalid move");
         }
     }
-    public choosePiece(x: number, y: number): boolean {
+    public choosePiece(x: number, y: number): MGPValidation {
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
         if (this.rules.node.isEndGame()) {
             display(TablutComponent.VERBOSE, 'la partie est finie');
-            return false;
+            return MGPValidation.failure("game is ended");
         } else { // TODO: action double non ?
             display(TablutComponent.VERBOSE, 'la partie est en court');
         }
@@ -85,12 +86,12 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
             display(TablutComponent.VERBOSE, 'not a piece of the current player');
-            return false;
+            return MGPValidation.failure("not a piece of the current player");
         }
 
         this.showSelectedPiece(x, y);
         display(TablutComponent.VERBOSE, 'selected piece = (' + x + ', ' + y + ')');
-        return true;
+        return MGPValidation.success();
     }
     public pieceBelongToCurrentPlayer(x: number, y: number): number { // TODO: see that verification is done and refactor this shit
         const player = this.rules.node.gamePartSlice.turn % 2 === 0 ? 0 : 1;

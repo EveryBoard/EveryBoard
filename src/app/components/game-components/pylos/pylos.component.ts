@@ -6,6 +6,7 @@ import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSl
 import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({
@@ -44,7 +45,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         }
         return true;
     }
-    public async onClick(x: number, y: number, z: number): Promise<boolean> {
+    public async onClick(x: number, y: number, z: number): Promise<MGPValidation> {
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
         const clickedPiece: number = this.slice.getBoardAt(clickedCoord);
         if (clickedPiece === this.slice.getCurrentPlayer().value ||
@@ -57,16 +58,16 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             return this.cancelMove("Can't click on ennemy pieces.");
         }
     }
-    private async onPieceClick(clickedCoord: PylosCoord): Promise<boolean> {
+    private async onPieceClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         if (this.chosenLandingCoord == null) {
             // Starting do describe a climbing move
             this.chosenStartingCoord = clickedCoord;
-            return true;
+            return MGPValidation.success();
         } else {
             // Starting to select capture
             if (this.chosenFirstCapture == null) { // First capture
                 this.chosenFirstCapture = clickedCoord;
-                return true;
+                return MGPValidation.success();
             } else if (clickedCoord.equals(this.chosenFirstCapture)) {
                 return this.concludeMoveWithCapture([this.chosenFirstCapture]);
             } else { // Last capture
@@ -74,7 +75,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             }
         }
     }
-    public async concludeMoveWithCapture(captures: PylosCoord[]): Promise<boolean> {
+    public async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
         let move: PylosMove;
         if (this.chosenStartingCoord == null) {
             move = PylosMove.fromDrop(this.chosenLandingCoord, captures);
@@ -83,21 +84,21 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         }
         return this.tryMove(move, this.slice);
     }
-    public async tryMove(move: PylosMove, slice: PylosPartSlice): Promise<boolean> {
+    public async tryMove(move: PylosMove, slice: PylosPartSlice): Promise<MGPValidation> {
         this.cancelMove("Hiding the move.");
         return this.chooseMove(move, slice, null, null);
     }
-    public cancelMove(reason: string): boolean {
+    public cancelMove(reason: string): MGPValidation {
         display(PylosComponent.VERBOSE, reason);
         this.chosenStartingCoord = null;
         this.chosenLandingCoord = null;
         this.chosenFirstCapture = null;
-        return false;
+        return MGPValidation.failure(reason);
     }
-    private async onEmptyCaseClick(clickedCoord: PylosCoord): Promise<boolean> {
+    private async onEmptyCaseClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         if (PylosRules.canCapture(this.slice, clickedCoord)) {
             this.chosenLandingCoord = clickedCoord;
-            return true; // now player can click on his captures
+            return MGPValidation.success(); // now player can click on his captures
         } else {
             if (this.chosenStartingCoord == null || // Doing a drop without possible capture
                 clickedCoord.isUpperThan(this.chosenStartingCoord)) // Ending a climbing without possible capture

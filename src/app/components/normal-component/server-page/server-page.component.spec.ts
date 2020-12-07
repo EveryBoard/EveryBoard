@@ -21,6 +21,7 @@ import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 class AuthenticationServiceMock {
 
@@ -46,6 +47,7 @@ class RouterMock {
         return true;
     };
 }
+
 describe('ServerPageComponent', () => {
 
     let component: ServerPageComponent;
@@ -63,6 +65,7 @@ describe('ServerPageComponent', () => {
         TestBed.configureTestingModule({
             imports: [
                 MatTabsModule,
+                MatSnackBarModule,
                 FormsModule,
                 RouterTestingModule,
                 BrowserAnimationsModule,

@@ -6,6 +6,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaRules } from 'src/app/games/sahara/sahararules/SaharaRules';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 import { display } from 'src/app/collectionlib/utils';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 
@@ -110,8 +111,8 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
             if (this.board[y][x] === SaharaPawn.EMPTY) { // Selected empty landing coord
                 try {
                     const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
-                    const moveResult: boolean = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
-                    if (moveResult === false) {
+                    const moveResult: MGPValidation = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
+                    if (moveResult.isFailure()) {
                         return this.cancelMove("You can only bounce on UNOCCUPIED brown case.");
                     }
                 } catch (error) {

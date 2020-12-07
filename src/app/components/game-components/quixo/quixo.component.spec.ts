@@ -15,6 +15,7 @@ import { Orthogonale } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GameComponentUtils } from '../GameComponentUtils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 const activatedRouteStub = {
     snapshot: {
@@ -43,7 +44,7 @@ describe('QuixoComponent', () => {
     let X: number = Player.ONE.value;
     let O: number = Player.ZERO.value;
 
-    let doMove: (move: QuixoMove) => Promise<boolean> = async(move: QuixoMove) => {
+    let doMove: (move: QuixoMove) => Promise<MGPValidation> = async(move: QuixoMove) => {
         return gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
                await gameComponent.chooseDirection(move.direction.toString()); // TODO simulate clicks, not function call
     }
@@ -94,9 +95,9 @@ describe('QuixoComponent', () => {
     it('should cancel move when trying to select ennemy piece or center coord', async() => {
         const firstMove: QuixoMove = new QuixoMove(0, 0, Orthogonale.RIGHT);
 
-        let legal: boolean = await doMove(firstMove);
+        let legal: MGPValidation = await doMove(firstMove);
         spyOn(gameComponent, "cancelMove").and.callThrough();
-        expect(legal).toBeTruthy("first move should be correct to continue the test");
+        expect(legal.isSuccess()).toBeTruthy("first move should be correct to continue the test");
 
         expect(gameComponent.onBoardClick(4, 0)).toBeFalsy("Should not be allowed to click on ennemy piece");
         expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);

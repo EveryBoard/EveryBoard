@@ -11,6 +11,7 @@ import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { Player } from "src/app/jscaip/Player";
 import { Rules } from "src/app/jscaip/Rules";
+import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 
 abstract class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> { }
 
@@ -178,14 +179,13 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     public isLegal(move: KamisadoMove, slice: KamisadoPartSlice): LegalityStatus {
         const start: Coord = move.coord;
         const end: Coord = move.end;
-        const failure = { legal: false };
         const colorToPlay: KamisadoColor = slice.colorToPlay;
 
         if (move === KamisadoMove.PASS) {
             if (this.canOnlyPass(slice) && !slice.alreadyPassed) {
-                return { legal: true };
+                return { legal: MGPValidation.success() };
             } else {
-                return failure;
+                return { legal: MGPValidation.failure("you cannot pass, you can still move") };
             }
         }
 
@@ -194,33 +194,33 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         //   - start piece should be owned by the current player
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, start);
         if (!piece.belongsTo(slice.getCurrentPlayer())) {
-            return failure;
+            return { legal: MGPValidation.failure("not a piece of the current player") };
         }
         //  - start case should contain a piece of the right color (or any color can be played)
         if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {
-            return failure;
+            return { legal: MGPValidation.failure("not the right color") };
         }
         //  - end case should be empty
         const endPiece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, end);
         if (!endPiece.isEmpty()) {
-            return failure;
+            return { legal: MGPValidation.failure("end case is not empty") };
         }
         //  - all steps between start and end should be empty
         try {
             const dir: Direction = Direction.fromMove(start, end);
             if (!this.directionAllowedForPlayer(dir, slice.getCurrentPlayer())) {
-                return failure;
+                return { legal: MGPValidation.failure("direction not allowed for player") };
             }
             let currentCoord: Coord = start;
             while (!currentCoord.equals(end)) {
                 currentCoord = currentCoord.getNext(dir);
                 if (!KamisadoBoard.getPieceAt(slice.board, currentCoord).isEmpty()) {
-                    return failure;
+                    return { legal: MGPValidation.failure("move is blocked") };
                 }
             }
         } catch (e) {
-            return failure;
+            return { legal: MGPValidation.failure("invalid direction") };
         }
-        return { legal: true }
+            return { legal: MGPValidation.success() }
     }
 }

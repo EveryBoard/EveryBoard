@@ -1,4 +1,5 @@
-export interface LegalityStatus {
+import { MGPValidation } from "../collectionlib/mgpvalidation/MGPValidation";
 
-    readonly legal: boolean;
+export interface LegalityStatus {
+    readonly legal: MGPValidation;
 }

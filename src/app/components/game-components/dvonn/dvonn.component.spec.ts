@@ -72,10 +72,10 @@ describe('DvonnComponent', () => {
         expect(await gameComponent.pass()).toBeFalsy();
     });
     it('should allow valid moves', fakeAsync(async () => {
-        expect(await gameComponent.onClick(2, 0)).toBeTruthy();
-        expect(await gameComponent.onClick(2, 1)).toBeTruthy();
-        expect(await gameComponent.onClick(1, 1)).toBeTruthy();
-        expect(await gameComponent.onClick(2, 1)).toBeTruthy();
+        expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeTruthy();
+        expect((await gameComponent.onClick(2, 1)).isSuccess()).toBeTruthy();
+        expect((await gameComponent.onClick(1, 1)).isSuccess()).toBeTruthy();
+        expect((await gameComponent.onClick(2, 1)).isSuccess()).toBeTruthy();
         await fixture.whenStable();
         fixture.detectChanges();
     }));
@@ -90,17 +90,17 @@ describe('DvonnComponent', () => {
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
         expect(gameComponent.canPass).toBeTruthy();
-        expect(await gameComponent.pass()).toBeTruthy();
+        expect((await gameComponent.pass()).isSuccess()).toBeTruthy();
     });
     it('should disallow moving from an invalid location', async () => {
-        expect(await gameComponent.onClick(0, 0)).toBeFalsy();
+        expect((await gameComponent.onClick(0, 0)).isSuccess()).toBeFalsy();
     });
     it('should disallow moving to invalid location', async () => {
-        expect(await gameComponent.onClick(2, 0)).toBeTruthy();
-        expect(await gameComponent.onClick(1, 0)).toBeFalsy();
+        expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeTruthy();
+        expect((await gameComponent.onClick(1, 0)).isSuccess()).toBeFalsy();
     });
     it('should disallow choosing an incorrect piece', async () => {
-        expect(await gameComponent.onClick(1, 1)).toBeFalsy(); // select black piece (but white plays first)
+        expect((await gameComponent.onClick(1, 1)).isSuccess()).toBeFalsy(); // select black piece (but white plays first)
     });
 
     it('should disallow choosing a piece at end of the game', async () => {
@@ -113,8 +113,8 @@ describe('DvonnComponent', () => {
         const slice: DvonnPartSlice = new DvonnPartSlice(0, false, board);
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
-        expect(await gameComponent.pass()).toBeTruthy();
-        expect(await gameComponent.onClick(2, 0)).toBeFalsy();
+        expect((await gameComponent.pass()).isSuccess()).toBeTruthy();
+        expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeFalsy();
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(DvonnMove, "decode").and.callThrough();

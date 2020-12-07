@@ -11,6 +11,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { TablutCase } from './TablutCase';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 abstract class TablutNode extends MGPNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus> {}
 
@@ -31,18 +32,10 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
     public static THREE_INVADER_AND_A_BORDER_CAN_CAPTURE_KING = true;
     // the king can be captured by only three invaders if he's against the corner
 
-    public static readonly SUCCESS = 10;
-    public static readonly NOT_IN_RANGE_ERROR = 20;
-    public static readonly SOMETHING_IN_THE_WAY_ERROR = 21;
-    public static readonly PAWN_COORD_UNOCCUPIED_ERROR = 22;
-    public static readonly MOVING_OPPONENT_PIECE_ERROR = 23;
-    public static readonly LANDING_ON_OCCUPIED_CASE_ERROR = 24;
-    public static readonly PAWN_LANDING_ON_THRONE_ERROR = 25;
-    public static readonly CASTLE_IS_LEFT_FOR_GOOD_ERROR = 26;
-
     private static readonly NONE = 50;
     private static readonly ENNEMY = 51;
     private static readonly PLAYER = 52;
+
 
     // statics methods :
     private static applyLegalMove(move: TablutMove, slice: TablutPartSlice, status: LegalityStatus): { resultingMove: TablutMove; resultingSlice: TablutPartSlice; } {
@@ -58,11 +51,11 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const resultingSlice: TablutPartSlice = new TablutPartSlice(resultingBoard, turn + 1, invaderStart);
         return {resultingSlice, resultingMove: move};
     }
-    public static tryMove(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): {success: number, resultingBoard: number[][]} {
+    public static tryMove(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): {success: MGPValidation, resultingBoard: number[][]} {
         display(TablutRules.VERBOSE, { call_context: "TablutRules.tryMove", player, invaderStart, move, board });
-        const errorValue: number = this.getMoveValidity(player, invaderStart, move, board);
-        if (errorValue !== this.SUCCESS) {
-            return {success: errorValue, resultingBoard: null};
+        const validity = this.getMoveValidity(player, invaderStart, move, board);
+        if (validity.isFailure()) {
+            return {success: validity, resultingBoard: null};
         }
 
         // move is legal here
@@ -77,28 +70,28 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                 board[captured.y][captured.x] = TablutCase.UNOCCUPIED.value; // do capture, unless if king
             }
         }
-        return {success: this.SUCCESS, resultingBoard: board};
+        return {success: MGPValidation.success(), resultingBoard: board};
     }
-    private static getMoveValidity(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): number {
+    private static getMoveValidity(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): MGPValidation {
         const cOwner: number = this.getRelativeOwner(player, invaderStart, move.coord, board);
         if (cOwner === this.NONE) {
-            return this.PAWN_COORD_UNOCCUPIED_ERROR;
+            return MGPValidation.failure("pawn coord unoccupied");
         }
         if (cOwner === this.ENNEMY) { // TODO OwnerEnum/Type
-            return this.MOVING_OPPONENT_PIECE_ERROR;
+            return MGPValidation.failure("moving opponent piece");
         }
 
         const landingCoordOwner: number = this.getRelativeOwner(player, invaderStart, move.end, board);
         if (landingCoordOwner !== this.NONE) {
-            return this.LANDING_ON_OCCUPIED_CASE_ERROR;
+            return MGPValidation.failure("landing on occupied case");
         }
         if (this.isThrone(move.end)) {
             if (this.isKing(board[move.coord.y][move.coord.x])) {
                 if (this.isCentralThrone(move.end) && this.CASTLE_IS_LEFT_FOR_GOOD) {
-                    return this.CASTLE_IS_LEFT_FOR_GOOD_ERROR;
+                    return MGPValidation.failure("castle is left for good");
                 }
             } else {
-                return this.PAWN_LANDING_ON_THRONE_ERROR;
+                return MGPValidation.failure("pawn landing on throne");
             }
         }
 
@@ -108,11 +101,11 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         let c: Coord = move.coord.getNext(dir); // the inspected coord
         for (let i = 1; i < dist; i++) {
             if (board[c.y][c.x] !== TablutCase.UNOCCUPIED.value) {
-                return this.SOMETHING_IN_THE_WAY_ERROR;
+                return MGPValidation.failure("something in the way");
             }
             c = c.getNext(dir);
         }
-        return this.SUCCESS;
+        return MGPValidation.success();
     }
     private static tryCapture(player: 0|1, invaderStart: boolean, landingPawn: Coord, d: Orthogonale, board: number[][]): Coord {
         const LOCAL_VERBOSE: boolean = false;
@@ -546,11 +539,11 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const nextTurn: number = currentTurn + 1;
 
         let newPartSlice: TablutPartSlice;
-        let moveResult: number;
+        let moveResult: MGPValidation;
         for (const newMove of listMoves)    {
             currentBoard = currentPartSlice.getCopiedBoard();
             moveResult = TablutRules.tryMove(currentPlayer, invaderStart, newMove, currentBoard).success;
-            if (moveResult === TablutRules.SUCCESS) {
+            if (moveResult.isSuccess()) {
                 newPartSlice = new TablutPartSlice(currentBoard, nextTurn, currentPartSlice.invaderStart);
                 listCombinaison.set(newMove, newPartSlice);
             } else {
@@ -610,6 +603,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
 
         // test
         const player: 0|1 = turn % 2 === 0 ? 0 : 1;
-        return {legal: TablutRules.tryMove(player, invaderStart, move, board).success === TablutRules.SUCCESS };
+        return {legal: TablutRules.tryMove(player, invaderStart, move, board).success };
     }
 }

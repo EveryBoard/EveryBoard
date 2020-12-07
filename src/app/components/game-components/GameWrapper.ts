@@ -24,6 +24,7 @@ import { SiamComponent } from './siam/siam.component';
 import { TablutComponent } from './tablut/tablut.component';
 
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({template: ''})
@@ -118,24 +119,24 @@ export abstract class GameWrapper {
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
     }
-    public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<boolean> => {
+    public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<MGPValidation> => {
         const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
             display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
-            return false;
+            return MGPValidation.failure("not your turn");
         }
         if (this.endGame) {
             display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: part is finished');
-            return false;
+            return MGPValidation.failure("game is finished your turn");
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
-        if (legality.legal === false) {
+        if (legality.legal.isFailure()) {
             display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
-            return false;
+            return legality.legal
         }
         await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, "GameWrapper.receiveChildData says: valid move legal");
-        return true;
+        return MGPValidation.success();
     }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 

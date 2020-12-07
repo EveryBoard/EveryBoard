@@ -9,6 +9,7 @@ import {ICurrentPartId} from '../../../domain/icurrentpart';
 import { UserService } from '../../../services/user/UserService';
 import { GameService } from '../../../services/game/GameService';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-server-page',
@@ -48,7 +49,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     private activesUsersSub: Subscription;
 
-    constructor(public router: Router,
+    constructor(private snackBar: MatSnackBar,
+                public router: Router,
                 private userService: UserService,
                 private gameService: GameService,
                 private authenticationService: AuthenticationService) {
@@ -73,13 +75,20 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public playLocally() {
         this.router.navigate(['local/' + this.selectedGame]);
     }
+    public messageInfo(msg: string) {
+        this.snackBar.open(msg, "Ok!", { duration: 2000, });
+    }
+    public messageError(msg: string) {
+        this.snackBar.open(msg, "Ok!", { duration: 2000, });
+    }
+
     public async createGame() {
         if (this.canCreateGame()) {
             const gameId: string = await this.gameService.createGame(this.userName, this.selectedGame, '');
             // create Part and Joiner
             this.router.navigate(['/play/' + this.selectedGame, gameId]);
         } else {
-            console.log('vous devez vous connecter pour créer une partie'); // TODO: redirect vers la connection
+            this.messageError('Vous devez vous connecter pour créer une partie'); // TODO: redirect vers la connexion
         }
     }
     public canCreateGame(): boolean {
