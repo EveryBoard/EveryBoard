@@ -378,7 +378,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, "dans OnlineGameWrapperComponent.onValidUserMove");
         if (this.isOpponentWaitingForTakeBackResponse()) {
-            display(true, "TODO: Toast that, say to user 'You must answer to take back request'");
+            this.gameComponent.message("You must answer to take back request");
         } else {
             return this.updateDBBoard(move, scorePlayerZero, scorePlayerOne);
         }

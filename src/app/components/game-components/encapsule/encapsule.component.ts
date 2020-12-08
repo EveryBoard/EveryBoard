@@ -125,13 +125,13 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (!slice.isDropable(piece) || (piece === this.chosenPiece)) {
             this.cancelMove();
-            return MGPValidation.failure("piece is not droppable");
+            return MGPValidation.failure("piece is not droppable").onFailure(this.message);
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
             return MGPValidation.success();
         } else {
             const chosenMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, this.chosenCoord);
-            return this.suggestMove(chosenMove);
+            return (await this.suggestMove(chosenMove)).onFailure(this.message);
         }
     }
     public getEncapsulePieceFromName(pieceName: String): EncapsulePiece {

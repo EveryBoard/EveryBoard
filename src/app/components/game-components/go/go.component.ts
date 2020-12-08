@@ -42,7 +42,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         const resultlessMove: GoMove = new GoMove(x, y);
         const result: MGPValidation = await this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
         display(GoComponent.VERBOSE, "GoComponent.onClick: AbstractGameComponent.chooseMove said : " + result);
-        return result;
+        return result.onFailure(this.message);
     }
     public decodeMove(encodedMove: number): GoMove {
         return GoMove.decode(encodedMove);
@@ -79,7 +79,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         if (phase === Phase.COUNTING || phase === Phase.ACCEPT)
             return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
         else
-            return MGPValidation.failure("cannot pass");
+            return MGPValidation.failure("cannot pass").onFailure(this.message);
     }
     public getCaseColor(x: number, y: number): string {
         const piece: number = this.rules.node.gamePartSlice.getBoardByXY(x, y);

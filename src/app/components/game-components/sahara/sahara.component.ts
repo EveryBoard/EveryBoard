@@ -31,9 +31,9 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
 
     public highlightNames: string[] = ["upward_highlight.svg", "downward_highlight.svg"];
 
-    public cancelMove(reason: string) {
+    public cancelMove(reason: string): MGPValidation {
         this.chosenCoord = new Coord(-2, -2);
-        return display(true, "TODO: Toast that, say to user '" + reason + "'");
+        return MGPValidation.failure(reason)
     }
     public getCoordinate(x: number, y: number) : string {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
@@ -93,19 +93,20 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
                CENTER     + ',' +
                DOWN_RIGHT;
     }
-    public async onClick(x: number, y: number) {
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
         if (this.observerRole === 2) {
-            return display(true, "TODO: Toast that, say to the user: 'Cloning Feature Will Be Added Soon'");
+            return MGPValidation.failure("cloning feature will be added soon").onFailure(this.message);
             // TODO: generalize this for each game (might be complicated)
+            // generalize what? The toasts?
         }
         if (this.chosenCoord.equals(new Coord(-2, -2))) { // Must select pyramid
             if (this.board[y][x] === SaharaPawn.EMPTY) { // Did not select pyramid
-                return this.cancelMove("You must first select a pyramid.");
+                return this.cancelMove("You must first select a pyramid.").onFailure(this.message);
             } else if (this.getTurn() % 2 === this.board[y][x]) { // selected his own pyramid
                 this.chosenCoord = clickedCoord;
             } else { // Selected ennemy pyramid
-                return this.cancelMove("You cannot select ennemy pyramid.");
+                return this.cancelMove("You cannot select ennemy pyramid.").onFailure(this.message);
             }
         } else { // Must choose empty landing case
             if (this.board[y][x] === SaharaPawn.EMPTY) { // Selected empty landing coord
@@ -113,14 +114,15 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
                     const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
                     const moveResult: MGPValidation = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
                     if (moveResult.isFailure()) {
-                        return this.cancelMove("You can only bounce on UNOCCUPIED brown case.");
+                        // TODO: why not return moveResult
+                        return this.cancelMove("You can only bounce on UNOCCUPIED brown case.").onFailure(this.message);
                     }
                 } catch (error) {
-                    return this.cancelMove(error.message);
+                    return this.cancelMove(error.message).onFailure(this.message);
                 }
                 this.chosenCoord = new Coord(-2, -2);
             } else {
-                return this.cancelMove("You can't land your pyramid on the ennemy's.");
+                return this.cancelMove("You can't land your pyramid on the ennemy's.").onFailure(this.message);
             }
         }
     }
