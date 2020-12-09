@@ -7,11 +7,8 @@ export class QuartoPartSlice extends GamePartSlice {
     constructor(b: number[][], turn: number, public readonly pieceInHand: number) {
         super(b, turn);
     }
-    public static getStartingBoard(): number[][] {
-        return ArrayUtils.createBiArray(4, 4, QuartoEnum.UNOCCUPIED);
-    }
     public static getInitialSlice(): QuartoPartSlice {
-        const board: number[][] = QuartoPartSlice.getStartingBoard();
+        const board: number[][] = ArrayUtils.createBiArray(4, 4, QuartoEnum.UNOCCUPIED);
         return new QuartoPartSlice(board, 0, QuartoEnum.AAAA);
     }
     public static getFullPawnsList(): Array<QuartoEnum> {

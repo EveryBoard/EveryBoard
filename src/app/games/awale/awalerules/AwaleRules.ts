@@ -1,6 +1,6 @@
-import {Rules} from '../../../jscaip/Rules';
+import { Rules } from '../../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
-import {AwalePartSlice} from '../AwalePartSlice';
+import { AwalePartSlice } from '../AwalePartSlice';
 import { AwaleMove } from '../awalemove/AwaleMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
@@ -71,7 +71,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         const x: number = move.coord.x;
         if (resultingBoard[y][x] === 0) {
-            return AwaleLegalityStatus.failure("you cannot distribute from an empty case"); // on ne distribue pas une case vide
+            return AwaleLegalityStatus.failure("You must choose a non-empty house to distribute.");
         }
 
         if (!AwaleRules.doesDistribute(x, y, resultingBoard) && AwaleRules.isStarving(ennemi, resultingBoard) ) {

@@ -7,12 +7,12 @@ export class SaharaPartSlice extends GamePartSlice {
 
     public static WIDTH: number = 11;
 
-    public static getStartingBoard(): number[][] {
+    public static getInitialSlice(): SaharaPartSlice {
         const NONE: number = SaharaPawn.NONE;
         const BLACK: number = SaharaPawn.BLACK;
         const WHITE: number = SaharaPawn.WHITE;
         const EMPTY: number = SaharaPawn.EMPTY;
-        return [
+        const board: number[][] = [
             [ NONE,  NONE, BLACK, WHITE, EMPTY, EMPTY, EMPTY, BLACK, WHITE,  NONE,  NONE],
             [ NONE, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,  NONE],
             [WHITE, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, BLACK],
@@ -20,9 +20,6 @@ export class SaharaPartSlice extends GamePartSlice {
             [ NONE, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY,  NONE],
             [ NONE,  NONE, WHITE, BLACK, EMPTY, EMPTY, EMPTY, WHITE, BLACK,  NONE,  NONE]
         ];
-    }
-    public static getInitialSlice(): SaharaPartSlice {
-        const board: number[][] = SaharaPartSlice.getStartingBoard();
         return new SaharaPartSlice(board, 0);
     }
 }

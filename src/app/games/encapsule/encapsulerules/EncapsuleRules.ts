@@ -16,7 +16,7 @@ abstract class EncapsuleNode extends MGPNode<EncapsuleRules, EncapsuleMove, Enca
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
-    static readonly LINES: Coord[][] = [
+    public static readonly LINES: Coord[][] = [
         [ new Coord(0, 0), new Coord(0, 1), new Coord(0, 2)],
         [ new Coord(1, 0), new Coord(1, 1), new Coord(1, 2)],
         [ new Coord(2, 0), new Coord(2, 1), new Coord(2, 2)],
@@ -122,9 +122,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
     public getListMoves(n: EncapsuleNode): MGPMap<EncapsuleMove, EncapsulePartSlice> {
         const moves: MGPMap<EncapsuleMove, EncapsulePartSlice> = new MGPMap<EncapsuleMove, EncapsulePartSlice>();
         const slice: EncapsulePartSlice = n.gamePartSlice;
-        if (EncapsuleRules.isVictory(slice)) {
-            return moves;
-        }
         const newBoard: EncapsuleCase[][] = slice.toCase();
         const currentPlayer: Player = slice.getCurrentPlayer();
         const puttablePieces: EncapsulePiece[] = Sets.toImmutableSet(slice.getPlayerRemainingPieces(currentPlayer));

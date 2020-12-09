@@ -131,6 +131,7 @@ export abstract class GameWrapper {
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal.isFailure()) {
+            this.compo.message(legality.legal.getReason());
             display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
             return legality.legal
         }

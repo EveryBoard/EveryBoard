@@ -4,16 +4,13 @@ import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 export class SiamPartSlice extends GamePartSlice {
 
-    public static getStartingBoard(): number[][] {
+    public static getInitialSlice(): SiamPartSlice {
         let board: number[][] = ArrayUtils.createBiArray(5, 5, SiamPiece.EMPTY.value);
 
         board[2][1] = SiamPiece.MOUNTAIN.value;
         board[2][2] = SiamPiece.MOUNTAIN.value;
         board[2][3] = SiamPiece.MOUNTAIN.value;
-        return board;
-    }
-    public static getInitialSlice(): SiamPartSlice {
-        const board: number[][] = SiamPartSlice.getStartingBoard();
+
         return new SiamPartSlice(board, 0);
     }
     public countPlayerPawn(): number {

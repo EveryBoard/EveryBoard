@@ -26,7 +26,7 @@ describe('TablutRules', () => {
         expect(rules.node.gamePartSlice.turn).toBe(0, "Game should start a turn 0");
     });
     it('TablutRules.getSurroundings should return neighboorings cases', () => {
-        const startingBoard: number[][] = TablutPartSlice.getStartingBoard(true);
+        const startingBoard: number[][] = rules.node.gamePartSlice.getCopiedBoard();
         const {
             backCoord,  back, backInRange,
             leftCoord,  left,
