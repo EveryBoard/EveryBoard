@@ -26,7 +26,7 @@ describe('TablutRules', () => {
         expect(rules.node.gamePartSlice.turn).toBe(0, "Game should start a turn 0");
     });
     it('TablutRules.getSurroundings should return neighboorings cases', () => {
-        const startingBoard: number[][] = TablutPartSlice.getStartingBoard(true);
+        const startingBoard: number[][] = rules.node.gamePartSlice.getCopiedBoard();
         const {
             backCoord,  back, backInRange,
             leftCoord,  left,
@@ -37,39 +37,39 @@ describe('TablutRules', () => {
     it('TablutRules.applyLegalMove should apply legal simple move', () => {
         const move: TablutMove = new TablutMove(new Coord(4, 1), new Coord(0, 1));
         const isLegal: boolean = rules.choose(move);
-        expect(isLegal).toBeTruthy('Simple first move from invader should be legal');
+        expect(isLegal).toBeTrue();
     });
     it('Quicker capture should work', () => {
-        expect(rules.choose(new TablutMove(new Coord(0, 3), new Coord(2, 3)))).toBeTruthy(0);
-        expect(rules.choose(new TablutMove(new Coord(4, 2), new Coord(2, 2)))).toBeTruthy(1);
+        expect(rules.choose(new TablutMove(new Coord(0, 3), new Coord(2, 3)))).toBeTrue();
+        expect(rules.choose(new TablutMove(new Coord(4, 2), new Coord(2, 2)))).toBeTrue();
         expect(rules.node.gamePartSlice.getBoardByXY(2, 3)).toEqual(TablutCase.UNOCCUPIED.value, "Location should be unoccupied");
     });
     it('Moving emptyness should be illegal', () => {
-        expect(rules.choose(new TablutMove(new Coord(0, 1), new Coord(1, 1)))).toBeFalsy();
+        expect(rules.choose(new TablutMove(new Coord(0, 1), new Coord(1, 1)))).toBeFalse();
     });
     it('Moving ennemy pawn should be illegal', () => {
-        expect(rules.choose(new TablutMove(new Coord(4, 2), new Coord(4, 3)))).toBeFalsy();
+        expect(rules.choose(new TablutMove(new Coord(4, 2), new Coord(4, 3)))).toBeFalse();
     });
     it('Landing on pawn should be illegal', () => {
-        expect(rules.choose(new TablutMove(new Coord(0, 3), new Coord(4, 3)))).toBeFalsy();
+        expect(rules.choose(new TablutMove(new Coord(0, 3), new Coord(4, 3)))).toBeFalse();
     });
     it('Passing through pawn should be illegal', () => {
-        expect(rules.choose(new TablutMove(new Coord(0, 3), new Coord(5, 3)))).toBeFalsy();
+        expect(rules.choose(new TablutMove(new Coord(0, 3), new Coord(5, 3)))).toBeFalse();
     });
     it('Capturing against empty throne should work', () => {
-        expect(rules.choose(new TablutMove(new Coord(0, 3), new Coord(3, 3)))).toBeTruthy(0); // Stupid attack
-        expect(rules.choose(new TablutMove(new Coord(2, 4), new Coord(2, 3)))).toBeTruthy(1); // resulting capture
-        expect(rules.choose(new TablutMove(new Coord(3, 0), new Coord(3, 1)))).toBeTruthy(2); // "pass"
-        expect(rules.choose(new TablutMove(new Coord(3, 4), new Coord(3, 7)))).toBeTruthy(3); // leaving a exit for the king
-        expect(rules.choose(new TablutMove(new Coord(0, 5), new Coord(0, 6)))).toBeTruthy(4); // "pass"
-        expect(rules.choose(new TablutMove(new Coord(4, 4), new Coord(2, 4)))).toBeTruthy(5); // emptying the throne
-        expect(rules.choose(new TablutMove(new Coord(0, 6), new Coord(0, 7)))).toBeTruthy(6); // "pass"
-        expect(rules.choose(new TablutMove(new Coord(2, 4), new Coord(2, 6)))).toBeTruthy(7);
+        expect(rules.choose(new TablutMove(new Coord(0, 3), new Coord(3, 3)))).toBeTrue(); // Stupid attack
+        expect(rules.choose(new TablutMove(new Coord(2, 4), new Coord(2, 3)))).toBeTrue(); // resulting capture
+        expect(rules.choose(new TablutMove(new Coord(3, 0), new Coord(3, 1)))).toBeTrue(); // "pass"
+        expect(rules.choose(new TablutMove(new Coord(3, 4), new Coord(3, 7)))).toBeTrue(); // leaving a exit for the king
+        expect(rules.choose(new TablutMove(new Coord(0, 5), new Coord(0, 6)))).toBeTrue(); // "pass"
+        expect(rules.choose(new TablutMove(new Coord(4, 4), new Coord(2, 4)))).toBeTrue(); // emptying the throne
+        expect(rules.choose(new TablutMove(new Coord(0, 6), new Coord(0, 7)))).toBeTrue(); // "pass"
+        expect(rules.choose(new TablutMove(new Coord(2, 4), new Coord(2, 6)))).toBeTrue();
         // the king leaving the coord that will allow him to capture later
         expect(rules.choose(new TablutMove(new Coord(1, 4), new Coord(4, 4))))
-              .toBeFalsy("should impossible to step on the throne for ennemy");
-        expect(rules.choose(new TablutMove(new Coord(1, 4), new Coord(3, 4)))).toBeTruthy(8); // going right against the empty throne
-        expect(rules.choose(new TablutMove(new Coord(2, 6), new Coord(2, 4)))).toBeTruthy(9); // King capture against empty throne
+              .toBeFalse();
+        expect(rules.choose(new TablutMove(new Coord(1, 4), new Coord(3, 4)))).toBeTrue(); // going right against the empty throne
+        expect(rules.choose(new TablutMove(new Coord(2, 6), new Coord(2, 4)))) // King capture against empty throne
         expect(rules.node.gamePartSlice.getBoardByXY(3, 4)).toEqual(TablutCase.UNOCCUPIED.value, "Location should be unoccupied");
     });
     it('Capturing king should require four invader and lead to victory', () => {
@@ -87,7 +87,7 @@ describe('TablutRules', () => {
         ];
         const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success.isSuccess()).toBeTruthy();
+        expect(moveResult.success.isSuccess()).toBeTrue();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).toBe(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king should require three invader and an edge lead to victory', () => {
@@ -105,7 +105,7 @@ describe('TablutRules', () => {
         ];
         const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success.isSuccess()).toBeTruthy();
+        expect(moveResult.success.isSuccess()).toBeTrue();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).toBe(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king with two soldier, one throne, and one edge should not work', () => {
@@ -123,7 +123,7 @@ describe('TablutRules', () => {
         ];
         const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success.isSuccess()).toBeTruthy();
+        expect(moveResult.success.isSuccess()).toBeTrue();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king against a throne should not work', () => {
@@ -141,7 +141,7 @@ describe('TablutRules', () => {
         ];
         const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success.isSuccess()).toBeTruthy();
+        expect(moveResult.success.isSuccess()).toBeTrue();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
     });
     it('Capturing king against a throne with 3 soldier should not work', () => {
@@ -159,7 +159,7 @@ describe('TablutRules', () => {
         ];
         const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(0, true, winningMove, board);
-        expect(moveResult.success.isSuccess()).toBeTruthy();
+        expect(moveResult.success.isSuccess()).toBeTrue();
         expect(TablutRules.getBoardValue(moveResult.resultingBoard, true)).not.toBe(Number.MIN_SAFE_INTEGER);
     });
     it('King should be authorised to come back on the throne', () => {
@@ -177,6 +177,6 @@ describe('TablutRules', () => {
         ];
         const moveResult: { success: MGPValidation; resultingBoard: number[][] } =
             TablutRules.tryMove(1, false, move, board);
-        expect(moveResult.success.isSuccess()).toBeTruthy();
+        expect(moveResult.success.isSuccess()).toBeTrue();
     });
 });

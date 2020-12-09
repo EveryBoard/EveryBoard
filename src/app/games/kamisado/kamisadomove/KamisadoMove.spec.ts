@@ -47,10 +47,10 @@ describe('KamisadoMove', () => {
         };
         const neighboor: KamisadoMove = KamisadoMove.of(new Coord(3, 3), new Coord(2, 2));
         const stranger: KamisadoMove = KamisadoMove.of(new Coord(5, 5), new Coord(6, 5));
-        expect(move.equals(move)).toBeTruthy("Move should equals himself");
-        expect(move.equals(moveAsObject)).toBeFalsy("Instance should be checked");
-        expect(move.equals(sameMove)).toBeTruthy("Move should be equals");
-        expect(move.equals(neighboor)).toBeFalsy("Different move should be different");
-        expect(move.equals(stranger)).toBeFalsy("Different move should be different");
+        expect(move.equals(move)).toBeTrue();
+        expect(move.equals(moveAsObject)).toBeFalse();
+        expect(move.equals(sameMove)).toBeTrue();
+        expect(move.equals(neighboor)).toBeFalse();
+        expect(move.equals(stranger)).toBeFalse();
     });
 });

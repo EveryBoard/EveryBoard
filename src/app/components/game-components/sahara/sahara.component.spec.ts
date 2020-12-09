@@ -92,14 +92,14 @@ describe('SaharaComponent', () => {
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('Should play correctly shortest victory', fakeAsync(async() => {
-        expect(await onClick(0, 3)).toBeTruthy();
-        expect(await onClick(1, 4)).toBeTruthy("First move should be legal");
-        expect(await onClick(3, 0)).toBeTruthy();
-        expect(await onClick(4, 0)).toBeTruthy("Second move should be legal");
-        expect(await onClick(1, 4)).toBeTruthy();
-        expect(await onClick(2, 4)).toBeTruthy("Third move should be legal");
+        expect(await onClick(0, 3)).toBeTrue();
+        expect(await onClick(1, 4)).toBeTrue();
+        expect(await onClick(3, 0)).toBeTrue();
+        expect(await onClick(4, 0)).toBeTrue();
+        expect(await onClick(1, 4)).toBeTrue();
+        expect(await onClick(2, 4)).toBeTrue();
         fixture.detectChanges();
-        expect(wrapper.endGame).toBeTruthy("Game should be over");
+        expect(wrapper.endGame).toBeTrue();
     }));
     it('should not allow to click on empty case when no pyramid selected', fakeAsync(async() => {
         expect(gameComponent.chosenCoord).toEqual(new Coord(-2, -2));

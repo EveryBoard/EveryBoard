@@ -22,11 +22,10 @@ describe('JoinerDAOMock', () => {
         expect(callCount).toBe(0);
 
         joinerDaoMock.getObsById("joinerId").subscribe((iJoinerId: IJoinerId) => {
-            callCount ++;
+            callCount++;
             lastJoiner = iJoinerId.doc;
-            if (callCount > 2) {
-                expect(false).toBeTruthy("Should not have been called more than twice");
-            }
+            expect(callCount).toBeLessThanOrEqual(2 ,"Should not have been called more than twice");
+            // TODO: REDO
         });
 
         expect(callCount).toEqual(1);
@@ -45,9 +44,8 @@ describe('JoinerDAOMock', () => {
 
         joinerDaoMock.getObsById("joinerId").subscribe((iJoinerId: IJoinerId) => {
             callCount ++;
-            if (callCount > 2) {
-                expect(false).toBeTruthy("Should not have been called more than twice");
-            }
+            // TODO: REDO
+            expect(callCount).toBeLessThanOrEqual(2, "Should not have been called more than twice");
             lastJoiner = iJoinerId.doc;
         });
 

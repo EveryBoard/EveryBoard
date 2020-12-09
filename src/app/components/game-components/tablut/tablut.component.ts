@@ -91,11 +91,11 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
         this.showSelectedPiece(x, y);
         display(TablutComponent.VERBOSE, 'selected piece = (' + x + ', ' + y + ')');
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
     public pieceBelongToCurrentPlayer(x: number, y: number): number { // TODO: see that verification is done and refactor this shit
         const player = this.rules.node.gamePartSlice.turn % 2 === 0 ? 0 : 1;
-        const invaderStart = this.rules.node.gamePartSlice.invaderStart;
+        const invaderStart = TablutPartSlice.INVADER_START;
         const coord: Coord = new Coord(x, y);
         return TablutRules.getRelativeOwner(player, invaderStart, coord, this.board);
     }

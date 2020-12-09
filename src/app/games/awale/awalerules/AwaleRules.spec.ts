@@ -17,7 +17,7 @@ describe('AwaleRules', () => {
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.choose(new AwaleMove(0, 0))).toBeTruthy();
+        expect(rules.choose(new AwaleMove(0, 0))).toBeTrue();
     });
     it('IA(depth=N) should create exactly as much descendant as it calculate their value, but not calculate listMove for last generation', () => {
         const previousGenerationsSizes: number[] = [0, 1, null, null, null, null];

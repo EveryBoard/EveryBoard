@@ -29,7 +29,7 @@ describe('EncapsuleMove', () => {
         const moveA: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0));
         const twin: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0));
         const neighboor: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.MEDIUM_BLACK, new Coord(0, 0));
-        expect(moveA.equals(twin)).toBeTruthy("Move should be equals");
-        expect(moveA.equals(neighboor)).toBeFalsy("Move should be different");
+        expect(moveA.equals(twin)).toBeTrue();
+        expect(moveA.equals(neighboor)).toBeFalse();
     });
 });

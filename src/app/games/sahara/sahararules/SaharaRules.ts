@@ -121,12 +121,12 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
         if (commonNeighboor.isPresent()) {
             if (slice.getBoardAt(commonNeighboor.get()) === SaharaPawn.EMPTY) {
-                return {legal: MGPValidation.success()};
+                return {legal: MGPValidation.SUCCESS};
             } else {
                 return {legal: MGPValidation.failure("common neighbor not empty")};
             }
         } else {
-            return {legal: MGPValidation.success()};
+            return {legal: MGPValidation.SUCCESS};
         }
     }
 }

@@ -43,12 +43,12 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         // copies
         const board: number[][] = slice.getCopiedBoard();
         const turn: number = slice.turn;
-        const invaderStart: boolean = slice.invaderStart;
+        const invaderStart: boolean = TablutPartSlice.INVADER_START;
 
         // test
         const player: 0|1 = turn % 2 === 0 ? 0 : 1;
         const resultingBoard: number[][] = TablutRules.tryMove(player, invaderStart, move, board).resultingBoard;
-        const resultingSlice: TablutPartSlice = new TablutPartSlice(resultingBoard, turn + 1, invaderStart);
+        const resultingSlice: TablutPartSlice = new TablutPartSlice(resultingBoard, turn + 1);
         return {resultingSlice, resultingMove: move};
     }
     public static tryMove(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): {success: MGPValidation, resultingBoard: number[][]} {
@@ -70,7 +70,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
                 board[captured.y][captured.x] = TablutCase.UNOCCUPIED.value; // do capture, unless if king
             }
         }
-        return {success: MGPValidation.success(), resultingBoard: board};
+        return {success: MGPValidation.SUCCESS, resultingBoard: board};
     }
     private static getMoveValidity(player: 0|1, invaderStart: boolean, move: TablutMove, board: number[][]): MGPValidation {
         const cOwner: number = this.getRelativeOwner(player, invaderStart, move.coord, board);
@@ -105,7 +105,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             }
             c = c.getNext(dir);
         }
-        return MGPValidation.success();
+        return MGPValidation.SUCCESS;
     }
     private static tryCapture(player: 0|1, invaderStart: boolean, landingPawn: Coord, d: Orthogonale, board: number[][]): Coord {
         const LOCAL_VERBOSE: boolean = false;
@@ -530,7 +530,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const currentTurn: number = currentPartSlice.turn;
         let currentBoard: number[][] = currentPartSlice.getCopiedBoard();
         const currentPlayer: 0|1 = currentTurn % 2 === 0 ? 0 : 1;
-        const invaderStart: boolean = currentPartSlice.invaderStart;
+        const invaderStart: boolean = TablutPartSlice.INVADER_START;
 
         const listMoves: TablutMove[] =
             TablutRules.getPlayerListMoves(currentPlayer, invaderStart, currentBoard);
@@ -544,7 +544,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             currentBoard = currentPartSlice.getCopiedBoard();
             moveResult = TablutRules.tryMove(currentPlayer, invaderStart, newMove, currentBoard).success;
             if (moveResult.isSuccess()) {
-                newPartSlice = new TablutPartSlice(currentBoard, nextTurn, currentPartSlice.invaderStart);
+                newPartSlice = new TablutPartSlice(currentBoard, nextTurn);
                 listCombinaison.set(newMove, newPartSlice);
             } else {
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE,
@@ -559,7 +559,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const currentPartSlice: TablutPartSlice = n.gamePartSlice;
         const currentBoard: number[][] = currentPartSlice.getCopiedBoard();
         const currentTurn: number = currentPartSlice.turn;
-        const invaderStart: boolean = currentPartSlice.invaderStart;
+        const invaderStart: boolean = TablutPartSlice.INVADER_START;
         let coord: Coord;
         let owner: number;
         const currentPlayer: 0|1 = (currentTurn % 2 === 0) ? 0 : 1;
@@ -590,7 +590,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         // 3. is one player immobilised ?
         // 4. let's just for now just count the pawns
         const board: number[][] = slice.getCopiedBoard();
-        const invaderStart: boolean = slice.invaderStart;
+        const invaderStart: boolean = TablutPartSlice.INVADER_START;
 
         return TablutRules.getBoardValue(board, invaderStart);
     }
@@ -599,7 +599,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const partSlice: TablutPartSlice = this.node.gamePartSlice;
         const board: number[][] = partSlice.getCopiedBoard();
         const turn: number = partSlice.turn;
-        const invaderStart: boolean = partSlice.invaderStart;
+        const invaderStart: boolean = TablutPartSlice.INVADER_START;
 
         // test
         const player: 0|1 = turn % 2 === 0 ? 0 : 1;

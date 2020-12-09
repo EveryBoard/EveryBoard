@@ -1,5 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -124,7 +124,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         expect(component.currentPartId).toBeDefined();
         expect(joinGame).toHaveBeenCalledTimes(1);
         expect(startObserving).toHaveBeenCalledTimes(1);
-        expect(component).toBeTruthy();
     }));
     it('Initialisation on accepted config should lead to PartCreationComponent to call startGame ', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
@@ -151,7 +150,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const p4Tag = compiled.querySelector("app-p4");
         const chatTag = compiled.querySelector("app-chat");
 
-        expect(component.gameStarted).toBeFalsy("gameStarted should be false atstart");
+        expect(component.gameStarted).toBeFalse();
         expect(partCreationTag).toBeFalsy("app-part-creation tag should be present at start");
         expect(gameIncluderTag).toBeFalsy("app-game-includer tag should be absent at start");
         expect(p4Tag).toBeFalsy("app-p4 tag should be absent at start");
@@ -167,7 +166,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const gameId = fixture.debugElement.query(By.css('#game'));
         const chatId = fixture.debugElement.query(By.css('#chat'));
 
-        expect(component.gameStarted).toBeFalsy("gameStarted should be false at start");
+        expect(component.gameStarted).toBeFalse();
         expect(partCreationId).toBeFalsy("partCreation id should be present at start");
         expect(gameId).toBeFalsy("game id should be absent at start");
         expect(chatId).toBeTruthy("chat id should be present at start");
@@ -178,7 +177,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     it('Initialisation should make appear PartCreationComponent', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
-        let partCreationId = fixture.debugElement.query(By.css('#partCreation'));
+        let partCreationId: DebugElement = fixture.debugElement.query(By.css('#partCreation'));
         expect(partCreationId).toBeFalsy("partCreation id should be absent before ngOnInit");
 
         fixture.detectChanges();
@@ -200,7 +199,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         const compiled = fixture.debugElement.nativeElement;
         const p4Tag = compiled.querySelector("app-p4");
 
-        expect(component.gameStarted).toBeTruthy("gameStarted should be true after startGame call");
+        expect(component.gameStarted).toBeTrue();
         expect(partCreationId).toBeFalsy("partCreation id should be absent after startGame call");
         expect(gameId).toBeTruthy("game id should be present after startGame call");
         expect(p4Tag).toBeNull("p4Tag id should still be absent after startGame call");
@@ -215,12 +214,12 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         fixture.detectChanges();
 
-        const partCreationId = fixture.debugElement.query(By.css('#partCreation'));
-        const gameId = fixture.debugElement.query(By.css('#game'));
+        const partCreationId: DebugElement = fixture.debugElement.query(By.css('#partCreation'));
+        const gameId: DebugElement = fixture.debugElement.query(By.css('#game'));
         const compiled = fixture.debugElement.nativeElement;
         const p4Tag = compiled.querySelector("app-p4");
 
-        expect(component.gameStarted).toBeTruthy("gameStarted should be true after startGame call");
+        expect(component.gameStarted).toBeTrue();
         expect(partCreationId).toBeFalsy("partCreation id should be absent after startGame call");
         expect(gameId).toBeTruthy("game id should be present after startGame call");
         expect(p4Tag).toBeNull("p4Tag id should still be absent after startGame call");

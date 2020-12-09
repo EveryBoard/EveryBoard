@@ -54,7 +54,7 @@ describe('DvonnRules:', () => {
                 if (DvonnBoard.isOnBoard(coord)) {
                     const stack = DvonnBoard.getStackAt(slice.board, coord);
                     expect(stack.size()).toEqual(1);
-                    expect(stack.isEmpty()).toBeFalsy();
+                    expect(stack.isEmpty()).toBeFalse();
                 }
             }
         }
@@ -85,13 +85,13 @@ describe('DvonnRules:', () => {
         const slice2 = moves.getByIndex(0).value;
         const movablePieces2: Coord[] = rules.getMovablePieces(slice2);
         for (const coord of movablePieces2) {
-            expect(DvonnBoard.getStackAt(slice2.board, coord).belongsTo(Player.ONE)).toBeTruthy();
+            expect(DvonnBoard.getStackAt(slice2.board, coord).belongsTo(Player.ONE)).toBeTrue();
         }
-        expect(rules.isLegal(DvonnMove.of(new Coord(1, 1), new Coord(1, 2)), slice).legal.isSuccess()).toBeFalsy();
+        expect(rules.isLegal(DvonnMove.of(new Coord(1, 1), new Coord(1, 2)), slice).legal.isSuccess()).toBeFalse();
     });
     it('should not allow moves for pieces with more than 6 neighbors', () => {
         const slice = rules.node.gamePartSlice;
-        expect(rules.isLegal(DvonnMove.of(new Coord(1, 3), new Coord(1, 2)), slice).legal.isSuccess()).toBeFalsy();
+        expect(rules.isLegal(DvonnMove.of(new Coord(1, 3), new Coord(1, 2)), slice).legal.isSuccess()).toBeFalse();
     });
     it('should have the target stack owned by the owner of the source stack', () => {
         const expectedBoard = [
@@ -103,11 +103,11 @@ describe('DvonnRules:', () => {
         const slice = rules.node.gamePartSlice;
         const move = DvonnMove.of(new Coord(0, 3), new Coord(0, 2));
         const legality = rules.isLegal(move, slice);
-        expect(legality.legal.isSuccess()).toBeTruthy();
+        expect(legality.legal.isSuccess()).toBeTrue();
         const moveResult = rules.applyLegalMove(move, slice, legality);
         expect(moveResult.resultingMove).toEqual(move);
         expect(moveResult.resultingSlice.board).toEqual(expectedBoard);
-        expect(DvonnBoard.getStackAt(moveResult.resultingSlice.board, new Coord(0, 2)).belongsTo(Player.ZERO)).toBeTruthy()
+        expect(DvonnBoard.getStackAt(moveResult.resultingSlice.board, new Coord(0, 2)).belongsTo(Player.ZERO)).toBeTrue()
     });
     it('should allow moves only to occupied spaces', () => {
         const board = [
@@ -119,9 +119,9 @@ describe('DvonnRules:', () => {
         const slice : DvonnPartSlice = new DvonnPartSlice(0, false, board);
         const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
-            expect(DvonnBoard.getStackAt(board, move.end).isEmpty()).toBeFalsy();
+            expect(DvonnBoard.getStackAt(board, move.end).isEmpty()).toBeFalse();
         }
-        expect(rules.isLegal(DvonnMove.of(new Coord(3, 1), new Coord(3, 2)), slice).legal.isSuccess()).toBeFalsy();
+        expect(rules.isLegal(DvonnMove.of(new Coord(3, 1), new Coord(3, 2)), slice).legal.isSuccess()).toBeFalse();
     });
     it('should move stacks as a whole, by as many spaces as there are pieces in the stack', () => {
         const board = [
@@ -135,7 +135,7 @@ describe('DvonnRules:', () => {
         for (const move of moves.listKeys()) {
             expect(move.length()).toEqual(DvonnBoard.getStackAt(board, move.coord).size());
         }
-        expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(3, 0)), slice).legal.isSuccess()).toBeFalsy();
+        expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(3, 0)), slice).legal.isSuccess()).toBeFalse();
     });
     it('should not allow moves that end on an empty space', () => {
         const board = [
@@ -147,7 +147,7 @@ describe('DvonnRules:', () => {
         const slice : DvonnPartSlice = new DvonnPartSlice(0, false, board);
         const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
-            expect(DvonnBoard.getStackAt(board, move.end).isEmpty()).toBeFalsy();
+            expect(DvonnBoard.getStackAt(board, move.end).isEmpty()).toBeFalse();
         }
     });
     it('should not allow to move a single red piece, but allows stacks with red pieces within it to move', () => {
@@ -162,15 +162,15 @@ describe('DvonnRules:', () => {
         for (const move of moves.listKeys()) {
             const stack = DvonnBoard.getStackAt(board, move.coord);
             // every movable piece should belong to the current player
-            expect(stack.belongsTo(slice.getCurrentPlayer())).toBeTruthy("stack belongs to the current player");
+            expect(stack.belongsTo(slice.getCurrentPlayer())).toBeTrue();
             // extra check: look at the stack internals for the top piece
-            expect(stack.pieces[0].belongsTo(slice.getCurrentPlayer())).toBeTruthy("first piece of the stack belongs to the current player");
+            expect(stack.pieces[0].belongsTo(slice.getCurrentPlayer())).toBeTrue();
         }
-        expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(2, 4)), slice).legal.isSuccess()).toBeFalsy();
+        expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(2, 4)), slice).legal.isSuccess()).toBeFalse();
     });
     it('should not allow to pass turns if moves are possible', () => {
         const slice = rules.node.gamePartSlice;
-        expect(rules.isLegal(DvonnMove.PASS, slice).legal.isSuccess()).toBeFalsy();
+        expect(rules.isLegal(DvonnMove.PASS, slice).legal.isSuccess()).toBeFalse();
     });
     it('should allow to pass turn if no moves are possible', () => {
         const board = [
@@ -183,8 +183,8 @@ describe('DvonnRules:', () => {
         const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         expect(moves.size()).toEqual(1);
         expect(moves.getByIndex(0).key).toEqual(DvonnMove.PASS);
-        expect(rules.isLegal(DvonnMove.PASS, slice).legal.isSuccess()).toBeTruthy();
-        expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)), slice).legal.isSuccess()).toBeFalsy();
+        expect(rules.isLegal(DvonnMove.PASS, slice).legal.isSuccess()).toBeTrue();
+        expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)), slice).legal.isSuccess()).toBeFalse();
     });
     it('should remove of the board any portion disconnected from a source', () => {
         const board = [
@@ -202,7 +202,7 @@ describe('DvonnRules:', () => {
         const slice: DvonnPartSlice = new DvonnPartSlice(0, false, board);
         const move = DvonnMove.of(new Coord(3, 1), new Coord(2, 1));
         const legality = rules.isLegal(move, slice);
-        expect(legality.legal.isSuccess()).toBeTruthy();
+        expect(legality.legal.isSuccess()).toBeTrue();
         const moveResult = rules.applyLegalMove(move, slice, legality);
         expect(moveResult.resultingMove).toEqual(move);
         expect(moveResult.resultingSlice.board).toEqual(expectedBoard);

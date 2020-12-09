@@ -22,32 +22,41 @@ describe('EncapsuleRules', () => {
     it('should be created', () => {
         expect(rules).toBeTruthy();
     });
-    it('should allow simplest victory', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTruthy(0);
-        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTruthy(1);
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1))).toBeTruthy(2);
-        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 1))).toBeTruthy(3);
-        expect(drop(EncapsulePiece.MEDIUM_BLACK, new Coord(2, 2))).toBeTruthy(4);
+    it('should allow simplest victory for player zero', () => {
+        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_BLACK, new Coord(2, 2))).toBeTrue();
         expect(rules.node.ownValue).toBe(Number.MIN_SAFE_INTEGER);
     });
+    it('should allow simplest victory for player zero', () => {
+        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_BLACK, new Coord(1, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(1, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(2, 2))).toBeTrue();
+        expect(rules.node.ownValue).toBe(Number.MAX_SAFE_INTEGER);
+    });
     it('should refuse to put three identical piece on the board', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTruthy(0);
-        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTruthy(1);
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1))).toBeTruthy(2);
-        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 1))).toBeTruthy(3);
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 2))).toBeFalsy();
+        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 1))).toBeTrue();
+        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 2))).toBeFalse();
     });
     it('should refuse to move small piece on bigger piece', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTruthy(0);
-        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTruthy(1);
-        expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalsy();
+        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
+        expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(1, 0))).toBeTrue();
+        expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalse();
     });
     it('should refuse to move ennemy piece on the board', () => {
-        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTruthy(0);
-        expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalsy();
+        expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();
+        expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalse();
     });
     it('should refuse to move or drop void', () => {
-        expect(drop(EncapsulePiece.NONE, new Coord(0, 0))).toBeFalsy("drop");
-        expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalsy("move");
+        expect(drop(EncapsulePiece.NONE, new Coord(0, 0))).toBeFalse();
+        expect(move(new Coord(0, 0), new Coord(1, 0))).toBeFalse();
     });
 });

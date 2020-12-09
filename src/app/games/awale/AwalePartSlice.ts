@@ -12,10 +12,6 @@ export class AwalePartSlice extends GamePartSlice {
         const board: number[][] = ArrayUtils.createBiArray(6, 2, 4);
         return new AwalePartSlice(board, 0, [0, 0]);
     }
-    public static getStartingBoard(): number[][] {
-        const board: number[][] = ArrayUtils.createBiArray(6, 2, 4);
-        return board;
-    }
     public getCapturedCopy(): number[] {
         return [this.captured[0], this.captured[1]];
     }

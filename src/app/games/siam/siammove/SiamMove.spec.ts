@@ -78,11 +78,11 @@ describe('SiamMove', () => {
         const neighboor: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);
         const cousin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.DOWN), Orthogonale.RIGHT);
         const stranger: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.LEFT);
-        expect(moveA.equals(moveA)).toBeTruthy("Move should equals himself");
-        expect(moveA.equals(android)).toBeFalsy("Instance should be checked");
-        expect(moveA.equals(twin)).toBeTruthy("Move should be equals");
-        expect(moveA.equals(neighboor)).toBeFalsy("Neighboor Move should be different");
-        expect(moveA.equals(cousin)).toBeFalsy("Cousin Move should be different");
-        expect(moveA.equals(stranger)).toBeFalsy("Stranger Move should be different");
+        expect(moveA.equals(moveA)).toBeTrue();
+        expect(moveA.equals(android)).toBeFalse();
+        expect(moveA.equals(twin)).toBeTrue();
+        expect(moveA.equals(neighboor)).toBeFalse();
+        expect(moveA.equals(cousin)).toBeFalse();
+        expect(moveA.equals(stranger)).toBeFalse();
     });
 });

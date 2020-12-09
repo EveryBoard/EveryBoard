@@ -3,7 +3,6 @@ import { GoPartSlice, GoPiece } from "../GoPartSlice";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { GroupInfos } from "../gorules/GoRules";
 import { Coord } from "src/app/jscaip/coord/Coord";
-import { JSDocTagName } from "@angular/compiler/src/output/output_ast";
 
 describe('GoBoardDatas', () => {
 

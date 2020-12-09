@@ -27,7 +27,7 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
     public async onClick(x: number): Promise<MGPValidation> {
         const chosenMove = MoveX.get(x);
         const legal: MGPValidation = await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
-        display(P4Component.VERBOSE, "Move " + chosenMove.toString() + " was " + (legal ? 'legal' : 'illegal'));
+        display(P4Component.VERBOSE, "Move " + chosenMove.toString() + " was " + (legal.isSuccess() ? 'legal' : 'illegal'));
         return legal.onFailure(this.message);
     }
     public updateBoard() {

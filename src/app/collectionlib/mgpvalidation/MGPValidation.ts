@@ -1,10 +1,8 @@
-
 export class MGPValidation {
-    private static SUCCESS: MGPValidation = new MGPValidation(null);
+
+    public static readonly SUCCESS: MGPValidation = new MGPValidation(null);
+
     private constructor(public readonly reason: string) {
-    }
-    public static success(): MGPValidation {
-        return MGPValidation.SUCCESS;
     }
     public static failure(reason: string): MGPValidation {
         if (reason == null) {

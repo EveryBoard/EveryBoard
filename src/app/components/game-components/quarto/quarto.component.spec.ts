@@ -88,7 +88,7 @@ describe('QuartoComponent', () => {
         const listMoves: QuartoMove[] = rules.getListMoves(rules.node).listKeys();
         const currentMove: QuartoMove = listMoves[0];
 
-        expect(await doMove(currentMove)).toBeTruthy("Should work");
+        expect(await doMove(currentMove)).toBeTrue();
     }));
     it('should allow to make last move', fakeAsync(async() => {
         const board: number[][] = [
@@ -102,7 +102,7 @@ describe('QuartoComponent', () => {
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
 
         spyOn(gameComponent, 'chooseMove').and.callThrough();
-        expect(await clickElement('#chooseCoord_1_0')).toBeTruthy('Should be able to click on final coord');
+        expect(await clickElement('#chooseCoord_1_0')).toBeTrue();
         expect(gameComponent.chooseMove).toHaveBeenCalledWith(new QuartoMove(1, 0, QuartoEnum.UNOCCUPIED), slice, null, null);
         expect(gameComponent.rules.node.gamePartSlice.turn).toBe(16);
     }));

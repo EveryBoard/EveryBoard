@@ -43,7 +43,7 @@ describe('P4Rules', () => {
         const slice: P4PartSlice = new P4PartSlice(board, 0);
         const move: MoveX = MoveX.get(3);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy();
+        expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: P4PartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         expect(resultingSlice.board).toEqual(expectedBoard);
     });
@@ -67,10 +67,10 @@ describe('P4Rules', () => {
         const slice: P4PartSlice = new P4PartSlice(board, 0);
         rules.node = new MGPNode(null, null, slice, 0);
         const move: MoveX = MoveX.get(3);
-        expect(rules.choose(move)).toBeTruthy("Move should be legal");
+        expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
         expect(rules.node.ownValue).toEqual(Number.MIN_SAFE_INTEGER);
-        expect(rules.node.isEndGame()).toBeTruthy("Game should be over");
+        expect(rules.node.isEndGame()).toBeTrue();
     });
     it('Second player should win vertically', () => {
         const board: number[][] = [
@@ -92,10 +92,10 @@ describe('P4Rules', () => {
         const slice: P4PartSlice = new P4PartSlice(board, 1);
         rules.node = new MGPNode(null, null, slice, 0);
         const move: MoveX = MoveX.get(3);
-        expect(rules.choose(move)).toBeTruthy("Move should be legal");
+        expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
         expect(rules.node.ownValue).toEqual(Number.MAX_SAFE_INTEGER);
-        expect(rules.node.isEndGame()).toBeTruthy("Game should be over");
+        expect(rules.node.isEndGame()).toBeTrue();
     });
     it('Should be a draw', () => {
         const board: number[][] = [
@@ -117,10 +117,10 @@ describe('P4Rules', () => {
         const slice: P4PartSlice = new P4PartSlice(board, 41);
         rules.node = new MGPNode(null, null, slice, 0);
         const move: MoveX = MoveX.get(3);
-        expect(rules.choose(move)).toBeTruthy("Move should be legal");
+        expect(rules.choose(move)).toBeTrue();
         const resultingSlice: P4PartSlice = rules.node.gamePartSlice;
         expect(resultingSlice.board).toEqual(expectedBoard);
-        expect(rules.node.isEndGame()).toBeTruthy("Should be endgame");
+        expect(rules.node.isEndGame()).toBeTrue();
         expect(rules.node.ownValue).toBe(0);
     });
     it('Should know when a column is full or not', () => {

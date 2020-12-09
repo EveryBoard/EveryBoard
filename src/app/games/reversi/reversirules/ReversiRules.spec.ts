@@ -29,23 +29,23 @@ describe('ReversiRules', () => {
     it('First move should be legal and change score', () => {
         const isLegal: boolean = rules.choose(new ReversiMove(2, 4));
 
-        expect(isLegal).toBeTruthy();
+        expect(isLegal).toBeTrue();
         expect(rules.node.gamePartSlice.countScore()).toEqual([4, 1]);
     });
     it('Passing at first turn should be illegal', () => {
         const isLegal: boolean = rules.choose(ReversiMove.PASS);
 
-        expect(isLegal).toBeFalsy();
+        expect(isLegal).toBeFalse();
     });
     it('should forbid non capturing move', () => {
         const moveLegality: boolean = rules.choose(new ReversiMove(0, 0));
 
-        expect(moveLegality).toBeFalsy();
+        expect(moveLegality).toBeFalse();
     });
     it('should forbid choosing occupied case', () => {
         const moveLegality: boolean = rules.choose(new ReversiMove(3, 3));
 
-        expect(moveLegality).toBeFalsy();
+        expect(moveLegality).toBeFalse();
     });
     it('Should allow player to pass when no other moves are possible', () => {
         const board: number[][] = [
@@ -63,6 +63,6 @@ describe('ReversiRules', () => {
         const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
         expect(moves.size()).toBe(1);
         expect(moves.getByIndex(0).key).toBe(ReversiMove.PASS);
-        expect(rules.choose(ReversiMove.PASS)).toBeTruthy();
+        expect(rules.choose(ReversiMove.PASS)).toBeTrue();
     });
 });

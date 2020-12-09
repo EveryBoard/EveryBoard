@@ -31,7 +31,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
             }
             for (const possiblesCapture of possiblesCaptures) {
                 const newMove: PylosMove = PylosMove.changeCapture(move, possiblesCapture);
-                const newSlice: PylosPartSlice = PylosRules.applyLegalMove(newMove, slice, { legal: MGPValidation.success() }).resultingSlice;
+                const newSlice: PylosPartSlice = PylosRules.applyLegalMove(newMove, slice, { legal: MGPValidation.SUCCESS }).resultingSlice;
                 result.set(newMove, newSlice);
             }
         }
@@ -155,7 +155,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
                 }
             } else return { legal: MGPValidation.failure("first capture is not valid") };
         }
-        return { legal: MGPValidation.success() };
+        return { legal: MGPValidation.SUCCESS };
     }
     public static isValidCapture(slice: PylosPartSlice, move: PylosMove, capture: PylosCoord): boolean {
         const currentPlayer: number = slice.getCurrentPlayer().value;

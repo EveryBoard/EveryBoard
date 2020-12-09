@@ -67,19 +67,19 @@ describe('TablutComponent', () => {
     it('Should enable same action as rules', async() => {
         const isOccupied: MGPValidation = await gameComponent.onClick(4, 1);
         const isLegal: MGPValidation = await gameComponent.onClick(0, 1);
-        expect(isOccupied.isSuccess()).toBeTruthy('Should be legal to click on player');
-        expect(isLegal.isSuccess()).toBeTruthy('Simple first move from invader should be legal');
+        expect(isOccupied.isSuccess()).toBeTrue();
+        expect(isLegal.isSuccess()).toBeTrue();
     });
     it('Diagonal move attempt should not throw', async() => {
-        expect(await gameComponent.onClick(3, 0)).toBeTruthy(0.5);
+        expect((await gameComponent.onClick(3, 0)).isSuccess()).toBeTrue();
         let threw: boolean = false;
         try {
             let diagonalMoveIsLegal: MGPValidation = await gameComponent.onClick(4, 1);
-            expect(diagonalMoveIsLegal.isSuccess()).toBeFalsy("Move should be considered legal");
+            expect(diagonalMoveIsLegal.isSuccess()).toBeFalse();
         } catch (error) {
             threw = true;
         } finally {
-            expect(threw).toBeFalsy("Function threw");
+            expect(threw).toBeFalse();
         }
     });
     it('should delegate decoding to move', () => {

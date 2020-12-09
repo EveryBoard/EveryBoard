@@ -18,18 +18,18 @@ describe('DvonnPieceStack', () => {
         expect(DvonnPieceStack.append(stack4, stack4)).toEqual(stack8);
     });
     it('should identify owner of stacks', () => {
-        expect(stack1.belongsTo(Player.ZERO)).toBeTruthy();
-        expect(stack2.belongsTo(Player.ONE)).toBeTruthy();
-        expect(stack4.belongsTo(Player.ZERO)).toBeTruthy();
-        expect(stack8.belongsTo(Player.ZERO)).toBeTruthy();
+        expect(stack1.belongsTo(Player.ZERO)).toBeTrue();
+        expect(stack2.belongsTo(Player.ONE)).toBeTrue();
+        expect(stack4.belongsTo(Player.ZERO)).toBeTrue();
+        expect(stack8.belongsTo(Player.ZERO)).toBeTrue();
         const source: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.SOURCE]);
-        expect(source.belongsTo(Player.ZERO)).toBeFalsy();
-        expect(source.belongsTo(Player.ONE)).toBeFalsy();
+        expect(source.belongsTo(Player.ZERO)).toBeFalse();
+        expect(source.belongsTo(Player.ONE)).toBeFalse();
     });
     it('should identify sources', () => {
-        expect(stack1.containsSource()).toBeFalsy();
-        expect(stack2.containsSource()).toBeFalsy();
-        expect(stack4.containsSource()).toBeTruthy();
-        expect(stack8.containsSource()).toBeTruthy();
+        expect(stack1.containsSource()).toBeFalse();
+        expect(stack2.containsSource()).toBeFalse();
+        expect(stack4.containsSource()).toBeTrue();
+        expect(stack8.containsSource()).toBeTrue();
     });
  });

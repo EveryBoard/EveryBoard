@@ -33,18 +33,18 @@ describe('PylosCoord:', () => {
         const close2: PylosCoord = new PylosCoord(0, 1, 0);
         const close3: PylosCoord = new PylosCoord(0, 0, 1);
         const twin: PylosCoord = new PylosCoord(0, 0, 0);
-        expect(coord.equals(coord)).toBeTruthy("Should be equal to itself");
-        expect(coord.equals(android)).toBeFalsy("Should not be equal to non PylosCoord instance");
-        expect(coord.equals(close1)).toBeFalsy("Should check x");
-        expect(coord.equals(close2)).toBeFalsy("Should check y");
-        expect(coord.equals(close3)).toBeFalsy("Should check z");
-        expect(coord.equals(twin)).toBeTruthy("Should be equal to self valued PylosCoord");
+        expect(coord.equals(coord)).toBeTrue();
+        expect(coord.equals(android)).toBeFalse();
+        expect(coord.equals(close1)).toBeFalse();
+        expect(coord.equals(close2)).toBeFalse();
+        expect(coord.equals(close3)).toBeFalse();
+        expect(coord.equals(twin)).toBeTrue();
     });
 
     it("Should compare Z correctly", () => {
         const coord: PylosCoord = new PylosCoord(0, 0, 0);
         const upperCoord: PylosCoord = new PylosCoord(0, 0, 1);
-        expect(coord.isUpperThan(upperCoord)).toBeFalsy();
+        expect(coord.isUpperThan(upperCoord)).toBeFalse();
     });
 
     it("Should give list of lower pieces, except for floor coord", () => {

@@ -16,7 +16,7 @@ abstract class EncapsuleNode extends MGPNode<EncapsuleRules, EncapsuleMove, Enca
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
-    static readonly LINES: Coord[][] = [
+    public static readonly LINES: Coord[][] = [
         [ new Coord(0, 0), new Coord(0, 1), new Coord(0, 2)],
         [ new Coord(1, 0), new Coord(1, 1), new Coord(1, 2)],
         [ new Coord(2, 0), new Coord(2, 1), new Coord(2, 2)],
@@ -74,7 +74,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         let landingCase: EncapsuleCase = EncapsuleCase.decode(landingNumber);
         let superpositionResult: {success: boolean, result: EncapsuleCase} = landingCase.tryToSuperposePiece(movingPiece);
         if (superpositionResult.success === true) {
-            return {legal: MGPValidation.success(), newLandingCase: superpositionResult.result};
+            return {legal: MGPValidation.SUCCESS, newLandingCase: superpositionResult.result};
         }
         display(LOCAL_VERBOSE, "move illegal because: Impossible Superposition ("+ EncapsuleMapper.getNameFromPiece(movingPiece) + " on " + landingCase.toString() + ")");
         return EncapsuleLegalityStatus.failure("cannot put a piece on a larger one");
@@ -122,9 +122,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
     public getListMoves(n: EncapsuleNode): MGPMap<EncapsuleMove, EncapsulePartSlice> {
         const moves: MGPMap<EncapsuleMove, EncapsulePartSlice> = new MGPMap<EncapsuleMove, EncapsulePartSlice>();
         const slice: EncapsulePartSlice = n.gamePartSlice;
-        if (EncapsuleRules.isVictory(slice)) {
-            return moves;
-        }
         const newBoard: EncapsuleCase[][] = slice.toCase();
         const currentPlayer: Player = slice.getCurrentPlayer();
         const puttablePieces: EncapsulePiece[] = Sets.toImmutableSet(slice.getPlayerRemainingPieces(currentPlayer));
@@ -135,7 +132,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                 for (let piece of puttablePieces) {
                     const newMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
                     let status: EncapsuleLegalityStatus = this.isLegal(newMove, slice);
-                    if (status.legal) {
+                    if (status.legal.isSuccess()) {
                         const result = this.applyLegalMove(newMove, slice, status);
                         moves.set(result.resultingMove, result.resultingSlice);
                     }
@@ -147,7 +144,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                             if (!landingCoord.equals(coord)) {
                                 const newMove: EncapsuleMove = EncapsuleMove.fromMove(coord, landingCoord);
                                 let status: EncapsuleLegalityStatus = this.isLegal(newMove, slice);
-                                if (status.legal) {
+                                if (status.legal.isSuccess()) {
                                     const result = this.applyLegalMove(newMove, slice, status);
                                     moves.set(result.resultingMove, result.resultingSlice);
                                 }

@@ -62,12 +62,12 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         if (this.chosenLandingCoord == null) {
             // Starting do describe a climbing move
             this.chosenStartingCoord = clickedCoord;
-            return MGPValidation.success();
+            return MGPValidation.SUCCESS;
         } else {
             // Starting to select capture
             if (this.chosenFirstCapture == null) { // First capture
                 this.chosenFirstCapture = clickedCoord;
-                return MGPValidation.success();
+                return MGPValidation.SUCCESS;
             } else if (clickedCoord.equals(this.chosenFirstCapture)) {
                 return this.concludeMoveWithCapture([this.chosenFirstCapture]);
             } else { // Last capture
@@ -98,7 +98,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
     private async onEmptyCaseClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         if (PylosRules.canCapture(this.slice, clickedCoord)) {
             this.chosenLandingCoord = clickedCoord;
-            return MGPValidation.success(); // now player can click on his captures
+            return MGPValidation.SUCCESS; // now player can click on his captures
         } else {
             if (this.chosenStartingCoord == null || // Doing a drop without possible capture
                 clickedCoord.isUpperThan(this.chosenStartingCoord)) // Ending a climbing without possible capture

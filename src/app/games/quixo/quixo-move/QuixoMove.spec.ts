@@ -69,11 +69,11 @@ describe('QuixoMove:', () => {
         const neighboor: QuixoMove = new QuixoMove(0, 1, Orthogonale.RIGHT);
         const twin: QuixoMove = new QuixoMove(0, 0, Orthogonale.RIGHT);
         const cousin: QuixoMove = new QuixoMove(0, 0, Orthogonale.DOWN);
-        expect(move.equals(move)).toBeTruthy("Move should equals himself");
-        expect(move.equals(android)).toBeFalsy("Instance should be checked");
-        expect(move.equals(neighboor)).toBeFalsy("Neighboor Move should be different");
-        expect(move.equals(cousin)).toBeFalsy("Stranger Move should be different");
-        expect(move.equals(twin)).toBeTruthy("Move should be equals");
+        expect(move.equals(move)).toBeTrue();
+        expect(move.equals(android)).toBeFalse();
+        expect(move.equals(neighboor)).toBeFalse();
+        expect(move.equals(cousin)).toBeFalse();
+        expect(move.equals(twin)).toBeTrue();
         expect(move.toString()).toBe("QuixoMove(0, 0, RIGHT)");
     });
 });

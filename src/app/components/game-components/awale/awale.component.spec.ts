@@ -11,6 +11,8 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { of } from 'rxjs';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 
 const activatedRouteStub = {
     snapshot: {
@@ -54,9 +56,9 @@ describe('AwaleComponent', () => {
         tick(1);
         gameComponent = wrapper.gameComponent as AwaleComponent;
     }));
-    it('should create', () => {
+    it('should create', async() => {
         expect(gameComponent).toBeTruthy();
-        expect(gameComponent.onClick(0, 0)).toBeTruthy();
+        expect((await gameComponent.onClick(0, 0)).isSuccess()).toBeTrue();
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(AwaleMove, "decode").and.callThrough();
@@ -67,5 +69,17 @@ describe('AwaleComponent', () => {
         const moveSpy: jasmine.Spy = spyOn(AwaleMove, "encode").and.callThrough();
         gameComponent.encodeMove(new AwaleMove(1, 1));
         expect(moveSpy).toHaveBeenCalledTimes(1);
+    });
+    it('should tell to user he can\'t move empty house', async() => {
+        const board: number[][] = [
+            [0, 4, 4, 4, 4, 4],
+            [4, 4, 4, 4, 4, 4]
+        ];
+        const slice: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
+        gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+        fixture.detectChanges();
+        spyOn(gameComponent, "message").and.callThrough();
+        expect((await gameComponent.onClick(0, 0)).isFailure()).toBeTrue();
+        expect(gameComponent.message).toHaveBeenCalledWith("You must choose a non-empty house to distribute.");
     });
 });

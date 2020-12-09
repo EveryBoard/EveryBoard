@@ -61,11 +61,11 @@ describe('ReversiComponent', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("GoComponent should be created");
     });
-    it('should accept simple move', () => {
+    it('should accept simple move', async() => {
         const rules: ReversiRules = new ReversiRules(ReversiPartSlice);
         const listMoves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
         const currentMove: ReversiMove = listMoves.getByIndex(0).key;
-        expect(gameComponent.onClick(currentMove.coord.x, currentMove.coord.y)).toBeTruthy(0);
+        expect((await gameComponent.onClick(currentMove.coord.x, currentMove.coord.y)).isSuccess()).toBeTrue();
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(ReversiMove, "decode").and.callThrough();

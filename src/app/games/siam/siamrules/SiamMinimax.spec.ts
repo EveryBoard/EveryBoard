@@ -148,7 +148,7 @@ describe('SiamRules - Minimax:', () => {
                 break;
             }
         }
-        expect(isInsertionPossible).toBeFalsy("Insertion are impossible when 5 pieces on the board");
+        expect(isInsertionPossible).toBeFalse();
     });
     it("Board value test: At equal 'closestPusher' player who'se turn it is to play should have the advantage", () => {
         const board: number[][] = [

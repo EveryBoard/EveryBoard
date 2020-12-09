@@ -29,9 +29,9 @@ describe('GoRules:', () => {
         expect(rules).toBeTruthy();
     });
     it('simple capture should be legal', () => {
-        expect(rules.choose(new GoMove(0, 1))).toBeTruthy();
-        expect(rules.choose(new GoMove(0, 0))).toBeTruthy();
-        expect(rules.choose(new GoMove(1, 1))).toBeTruthy();
+        expect(rules.choose(new GoMove(0, 1))).toBeTrue();
+        expect(rules.choose(new GoMove(0, 0))).toBeTrue();
+        expect(rules.choose(new GoMove(1, 1))).toBeTrue();
     });
     it('complex capture should be legal', () => {
         const board: GoPiece[][] = [
@@ -51,14 +51,14 @@ describe('GoRules:', () => {
         const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 1, null, Phase.PLAYING);
         const move: GoMove = new GoMove(2, 3);
         const status: GoLegalityStatus = GoRules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy();
+        expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: GoPartSlice = GoRules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: GoPartSlice = new GoPartSlice(expectedBoard, [0, 3], 2, null, Phase.PLAYING);
         expect(resultingSlice).toEqual(expectedSlice);
     });
     it('superposition should be illegal in playing phase', () => {
-        expect(rules.choose(new GoMove(0, 1))).toBeTruthy();
-        expect(rules.choose(new GoMove(0, 1))).toBeFalsy();
+        expect(rules.choose(new GoMove(0, 1))).toBeTrue();
+        expect(rules.choose(new GoMove(0, 1))).toBeFalse();
     });
     it('ko should be illegal', () => {
         const board: GoPiece[][] = [
@@ -81,27 +81,27 @@ describe('GoRules:', () => {
         const resultingSlice: GoPartSlice = GoRules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: GoPartSlice = new GoPartSlice(expectedBoard, [1, 0], 1, new Coord(1, 0), Phase.PLAYING);
         expect(resultingSlice).toEqual(expectedSlice, "resultingSlice");
-        expect(GoRules.isLegal(new GoMove(1, 0), resultingSlice).legal.isSuccess()).toBeFalsy("Ko should be illegal")
+        expect(GoRules.isLegal(new GoMove(1, 0), resultingSlice).legal.isSuccess()).toBeFalse()
     });
     it('snap back should be legal TODO: Enhance', () => {
-        expect(rules.choose(new GoMove(2, 4))).toBeTruthy(0); expect(rules.choose(new GoMove(3, 4))).toBeTruthy(1);
-        expect(rules.choose(new GoMove(2, 3))).toBeTruthy(2); expect(rules.choose(new GoMove(3, 3))).toBeTruthy(3);
-        expect(rules.choose(new GoMove(3, 2))).toBeTruthy(4); expect(rules.choose(GoMove.PASS)).toBeTruthy(5);
-        expect(rules.choose(new GoMove(4, 2))).toBeTruthy(6); expect(rules.choose(GoMove.PASS)).toBeTruthy(7);
-        expect(rules.choose(new GoMove(4, 4))).toBeTruthy(8); // Capturable pawn on purpose (snapback)
-        expect(rules.choose(new GoMove(4, 3))).toBeTruthy(9); // Capture NOT creating ko
-        expect(rules.choose(new GoMove(4, 4))).toBeTruthy('Snapback should be legal'); // Legal snapback
+        expect(rules.choose(new GoMove(2, 4))).toBeTrue(); expect(rules.choose(new GoMove(3, 4))).toBeTrue();
+        expect(rules.choose(new GoMove(2, 3))).toBeTrue(); expect(rules.choose(new GoMove(3, 3))).toBeTrue();
+        expect(rules.choose(new GoMove(3, 2))).toBeTrue(); expect(rules.choose(GoMove.PASS)).toBeTrue();
+        expect(rules.choose(new GoMove(4, 2))).toBeTrue(); expect(rules.choose(GoMove.PASS)).toBeTrue();
+        expect(rules.choose(new GoMove(4, 4))).toBeTrue(); // Capturable pawn on purpose (snapback)
+        expect(rules.choose(new GoMove(4, 3))).toBeTrue(); // Capture NOT creating ko
+        expect(rules.choose(new GoMove(4, 4))).toBeTrue(); // Legal snapback
     });
     it('Phase.PLAYING + GoMove.PASS = Phase.PASSED', () => {
         expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, "Initial phase should be 'PLAYING'");
-        expect(rules.choose(GoMove.PASS)).toBeTruthy("Passing in playing phase should be legal");
+        expect(rules.choose(GoMove.PASS)).toBeTrue();
         expect(rules.node.gamePartSlice.phase).toBe(Phase.PASSED, "Phase should have been switched to 'PASSED'");
     });
     it('Phase.PASSED + GoMove/play = Phase.PLAYING', () => {
-        expect(rules.choose(GoMove.PASS)).toBeTruthy(0);
+        expect(rules.choose(GoMove.PASS)).toBeTrue();
         expect(rules.node.gamePartSlice.phase).toBe(Phase.PASSED);
 
-        expect(rules.choose(new GoMove(1, 1))).toBeTruthy(1);
+        expect(rules.choose(new GoMove(1, 1))).toBeTrue();
 
         expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, 'Phase should have been switched to PLAYING');
     });
@@ -145,7 +145,7 @@ describe('GoRules:', () => {
         const slice: GoPartSlice = new GoPartSlice(board, [5, 10], 0, null, Phase.COUNTING);
         const move: GoMove = new GoMove(1, 1);
         const status: GoLegalityStatus = GoRules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy("Marking stone as dead should be legal");
+        expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: GoPartSlice = GoRules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: GoPartSlice = new GoPartSlice(expectedBoard, [0, 25], 1, null, Phase.COUNTING);
         expect(resultingSlice).toEqual(expectedSlice);
@@ -169,7 +169,7 @@ describe('GoRules:', () => {
         const move: GoMove = new GoMove(2, 2);
         const status: GoLegalityStatus = GoRules.isLegal(move, slice);
         const resultingSlice: GoPartSlice = GoRules.applyLegalMove(move, slice, status).resultingSlice;
-        expect(status.legal.isSuccess()).toBeTruthy("Marking stone as dead should be legal");
+        expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingSlice.getCopiedBoardGoPiece()).toEqual(expectedBoard);
         expect(resultingSlice.getCapturedCopy()).toEqual([25, 0]);
     });
@@ -213,17 +213,17 @@ describe('GoRules:', () => {
         const slice: GoPartSlice = new GoPartSlice(board, [25, 0], 1, null, Phase.COUNTING);
         const move: GoMove = new GoMove(4, 3);
         const status: GoLegalityStatus = GoRules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy("Playing again in ACCEPT phase should be legal");
+        expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: GoPartSlice = GoRules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: GoPartSlice = new GoPartSlice(expectedBoard, [0, 1], 2, null, Phase.PLAYING);
         expect(resultingSlice).toEqual(expectedSlice);
     });
     it('Phase.COUNTING + GoMove.ACCEPT = Phase.ACCEPT', () => {
-        expect(rules.choose(GoMove.PASS)).toBeTruthy(0);
-        expect(rules.choose(GoMove.PASS)).toBeTruthy(1);
+        expect(rules.choose(GoMove.PASS)).toBeTrue();
+        expect(rules.choose(GoMove.PASS)).toBeTrue();
         expect(rules.node.gamePartSlice.phase).toBe(Phase.COUNTING);
 
-        expect(rules.choose(GoMove.ACCEPT)).toBeTruthy(2);
+        expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
 
         expect(rules.node.gamePartSlice.phase).toBe(Phase.ACCEPT, 'Phase should have been switched to ACCEPT');
     });
@@ -245,7 +245,7 @@ describe('GoRules:', () => {
         const slice: GoPartSlice = new GoPartSlice(board, [23, 0], 1, null, Phase.COUNTING);
         const move: GoMove = new GoMove(0, 2);
         const status: GoLegalityStatus = GoRules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy("Playing again in ACCEPT phase should be legal");
+        expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: GoPartSlice = GoRules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: GoPartSlice = new GoPartSlice(expectedBoard, [0, 0], 2, null, Phase.PLAYING);
         expect(resultingSlice).toEqual(expectedSlice);
@@ -268,32 +268,32 @@ describe('GoRules:', () => {
         const slice: GoPartSlice = new GoPartSlice(board, [0, 23], 1, null, Phase.ACCEPT);
         const move: GoMove = new GoMove(4, 3);
         const status: GoLegalityStatus = GoRules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy("Playing again in ACCEPT phase should be legal");
+        expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: GoPartSlice = GoRules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: GoPartSlice = new GoPartSlice(expectedBoard, [0, 1], 2, null, Phase.PLAYING);
         expect(resultingSlice).toEqual(expectedSlice);
     });
     it('Phase.ACCEPT + GoMove/markAsDead = Phase.COUNTING', () => {
-        expect(rules.choose(new GoMove(1, 1))).toBeTruthy(0); // Playing
-        expect(rules.choose(GoMove.PASS)).toBeTruthy(1); // Passed
-        expect(rules.choose(GoMove.PASS)).toBeTruthy(2); // Counting
-        expect(rules.choose(GoMove.ACCEPT)).toBeTruthy(3); // Accept
+        expect(rules.choose(new GoMove(1, 1))).toBeTrue(); // Playing
+        expect(rules.choose(GoMove.PASS)).toBeTrue(); // Passed
+        expect(rules.choose(GoMove.PASS)).toBeTrue(); // Counting
+        expect(rules.choose(GoMove.ACCEPT)).toBeTrue(); // Accept
         expect(rules.node.gamePartSlice.phase).toBe(Phase.ACCEPT);
 
-        expect(rules.choose(new GoMove(1, 1))).toBeTruthy(4); // Counting
+        expect(rules.choose(new GoMove(1, 1))).toBeTrue(); // Counting
 
         expect(rules.node.gamePartSlice.phase).toBe(Phase.COUNTING, 'Phase should have been switched to COUNTING');
     });
     it('Phase.ACCEPT + GoMove.ACCEPT = Game Over', () => {
-        expect(rules.choose(new GoMove(1, 1))).toBeTruthy(0); // Playing
-        expect(rules.choose(GoMove.PASS)).toBeTruthy(1); // Passed
-        expect(rules.choose(GoMove.PASS)).toBeTruthy(2); // Counting
-        expect(rules.choose(GoMove.ACCEPT)).toBeTruthy(3); // Accept
+        expect(rules.choose(new GoMove(1, 1))).toBeTrue(); // Playing
+        expect(rules.choose(GoMove.PASS)).toBeTrue(); // Passed
+        expect(rules.choose(GoMove.PASS)).toBeTrue(); // Counting
+        expect(rules.choose(GoMove.ACCEPT)).toBeTrue(); // Accept
         expect(rules.node.gamePartSlice.phase).toBe(Phase.ACCEPT);
 
-        expect(rules.choose(GoMove.ACCEPT)).toBeTruthy(4);
+        expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
 
-        expect(rules.node.isEndGame()).toBeTruthy("Game should be over after two player agreed");
+        expect(rules.node.isEndGame()).toBeTrue();
         expect(rules.node.gamePartSlice.phase).toBe(Phase.FINISHED, "Phase should have been switched to 'FINISHED'")
     });
     it('simply shared board should be simple to calculate', () => {

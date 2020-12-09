@@ -229,7 +229,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
 
-        expect((await doMove(FIRST_MOVE)).isSuccess()).toBeTruthy("First move should be possible");
+        expect((await doMove(FIRST_MOVE)).isSuccess()).toBeTrue();
 
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED]);
         expect(component.currentPart.copy().turn).toEqual(1);
@@ -376,37 +376,37 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        expect(await askTakeBack()).toBeFalsy("Take Back before having played once should be impossible");
+        expect(await askTakeBack()).toBeFalse();
         await doMove(FIRST_MOVE);
-        expect(await askTakeBack()).toBeTruthy("First proposition of take back should be possible");
+        expect(await askTakeBack()).toBeTrue();
         fixture.detectChanges();
-        expect(await askTakeBack()).toBeFalsy("Second proposition of take back should be impossible");
+        expect(await askTakeBack()).toBeFalse();
 
         tick(component.maximalMoveDuration);
     }));
     it('Should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
         tick(1);
-        expect(await askTakeBack()).toBeFalsy("Take Back before anyone played should be impossible");
+        expect(await askTakeBack()).toBeFalse();
         await receiveNewMoves([FIRST_MOVE_ENCODED]);
-        expect(await askTakeBack()).toBeFalsy("Take Back before having played once should be impossible");
+        expect(await askTakeBack()).toBeFalse();
         await doMove(new QuartoMove(2, 2, QuartoEnum.BBAA));
-        expect(await askTakeBack()).toBeTruthy("First proposition of take back should be possible");
-        expect(await askTakeBack()).toBeFalsy("Second proposition of take back should be impossible");
+        expect(await askTakeBack()).toBeTrue();
+        expect(await askTakeBack()).toBeFalse();
 
         tick(component.maximalMoveDuration);
     }));
     it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        expect(await acceptTakeBack()).toBeFalsy("Accepting Take Back before Take Back is asked should be impossible");
+        expect(await acceptTakeBack()).toBeFalse();
         await doMove(FIRST_MOVE);
         const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
-        expect(await acceptTakeBack()).toBeFalsy("Accepting Take Back before Take Back is asked should be impossible, bis");
+        expect(await acceptTakeBack()).toBeFalse();
         await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
-        expect(await acceptTakeBack()).toBeTruthy("When asked, accepting take back should be possible");
-        expect(await acceptTakeBack()).toBeFalsy("Should not be able to accept twice");
+        expect(await acceptTakeBack()).toBeTrue();
+        expect(await acceptTakeBack()).toBeFalse();
 
         tick(component.maximalMoveDuration);
     }));
@@ -466,7 +466,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await askTakeBack();
         await receiveRequest(RequestCode.ONE_REFUSED_TAKE_BACK);
 
-        expect(await askTakeBack()).toBeFalsy("Should not be allowed to ask take back after refusal");
+        expect(await askTakeBack()).toBeFalse();
 
         tick(component.maximalMoveDuration);
     }));
@@ -480,7 +480,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         spyOn(partDAO, 'update').and.callThrough();
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.ABBA);
-        expect((await doMove(move2)).isSuccess()).toBeFalsy("Should not allow player to play after resign");
+        expect((await doMove(move2)).isSuccess()).toBeFalse();
         expect(partDAO.update).not.toHaveBeenCalled();
 
         tick(component.maximalMoveDuration);
@@ -488,7 +488,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        expect(await clickElement('#passButton')).toBeFalsy();
+        expect(await clickElement('#passButton')).toBeFalse();
 
         component.gameComponent.canPass = true;
         component.gameComponent.pass = () => {};

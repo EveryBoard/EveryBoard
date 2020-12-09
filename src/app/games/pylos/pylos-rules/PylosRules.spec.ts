@@ -41,7 +41,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalsy("Move should be illegal");
+        expect(status.legal.isSuccess()).toBeFalse();
     });
 
     it("should forbid move who'se starting coord is not a player's piece", () => {
@@ -66,7 +66,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalsy("Move should be illegal");
+        expect(status.legal.isSuccess()).toBeFalse();
     });
 
     it("should forbid move who'se landing coord is not landable (not on the floor, not over 4 lower pieces)", () => {
@@ -91,7 +91,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalsy("Move should be illegal");
+        expect(status.legal.isSuccess()).toBeFalse();
     });
 
     it("should forbid move who capture without having formed a squared", () => {
@@ -116,7 +116,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 3, 0), [new PylosCoord(0, 0, 0), new PylosCoord(3, 3, 0)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalsy("Move should be illegal");
+        expect(status.legal.isSuccess()).toBeFalse();
     });
 
     it("should forbid move who capture non-player piece or supporting-piece", () => {
@@ -142,11 +142,11 @@ describe('PylosRules:', () => {
 
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(2, 2, 0)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalsy("Move should be illegal, capturing empty case");
+        expect(status.legal.isSuccess()).toBeFalse();
 
         const otherMove: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
         const otherStatus: LegalityStatus = rules.isLegal(otherMove, slice);
-        expect(otherStatus.legal.isSuccess()).toBeFalsy("Move should be illegal, second capture is supporting a piece");
+        expect(otherStatus.legal.isSuccess()).toBeFalse();
     });
 
     it("should allow legal capture to include landing piece", () => {
@@ -171,7 +171,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(0, 0, 0)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy("Move should be legal");
+        expect(status.legal.isSuccess()).toBeTrue();
     });
 
     it("should forbid piece to climb over itself", () => {
@@ -196,7 +196,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 1, 0), new PylosCoord(0, 0, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalsy("Move should be illegal");
+        expect(status.legal.isSuccess()).toBeFalse();
     });
 
     it("should forbid piece to climb when supporting", () => {
@@ -221,7 +221,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 0, 0), new PylosCoord(0, 1, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalsy("Move should be illegal");
+        expect(status.legal.isSuccess()).toBeFalse();
     });
 
     it("should allow legal capture to include piece supporting previously captured stone", () => {
@@ -246,7 +246,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 3, 0), new PylosCoord(0, 0, 1), [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy("Move should be legal");
+        expect(status.legal.isSuccess()).toBeTrue();
     });
 
     it("should declare looser Player.ZERO when he put his 15th ball", () => {
@@ -271,7 +271,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy("Move should be legal");
+        expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         expect(rules.getBoardValue(move, resultingSlice)).toBe(Number.MAX_SAFE_INTEGER);
     });
@@ -298,7 +298,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 1);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTruthy("Move should be legal");
+        expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         expect(rules.getBoardValue(move, resultingSlice)).toBe(Number.MIN_SAFE_INTEGER);
     });

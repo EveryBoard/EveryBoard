@@ -20,14 +20,14 @@ describe('QuartoRules', () => {
     it('Should allow first move', () => {
         const move: QuartoMove = new QuartoMove(2, 2, QuartoEnum.AAAB);
         const isLegal: boolean = rules.choose(move);
-        expect(isLegal).toBeTruthy();
+        expect(isLegal).toBeTrue();
     });
     it('Test: Should allow simple move from db', () => {
         const movesFromDB: number[] = [ 107, 166, 69 ];
         for (let encodedMove of movesFromDB) {
             const move: QuartoMove = QuartoMove.decode(encodedMove);
             const isLegal: boolean = rules.choose(move);
-            expect(isLegal).toBeTruthy(move.toString() + " was an illegal move");
+            expect(isLegal).toBeTrue();
         }
     });
 });

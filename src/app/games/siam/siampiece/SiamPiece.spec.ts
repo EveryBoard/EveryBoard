@@ -35,7 +35,6 @@ describe('SiamPiece:', () => {
         expect(names).toEqual(expectedNames);
         expect(pieces).toEqual(expectedPieces);
     });
-
     it('Should throw when static method are called inadequately', () => {
         expect(() => SiamPiece.of(Orthogonale.UP, null)).toThrowError("Player must be set.");
         expect(() => SiamPiece.of(null, Player.ONE)).toThrowError("Orientation must be set.");
@@ -45,10 +44,9 @@ describe('SiamPiece:', () => {
         expect(() => SiamPiece.getOwner(10)).toThrowError("Player.NONE do not own piece.");
         expect(() => SiamPiece.getDirection(null)).toThrowError("Piece null has no direction.");
     });
-
     it('Should consider moutains as belonging to no player and now which one do', () => {
-        expect(SiamPiece.belongTo(SiamPiece.MOUNTAIN.value, Player.NONE)).toBeFalsy("Mountain belong to no player");
-        expect(SiamPiece.belongTo(SiamPiece.BLACK_DOWN.value, Player.ZERO)).toBeFalsy("Black/Elephant should play first");
-        expect(SiamPiece.belongTo(SiamPiece.WHITE_RIGHT.value, Player.ONE)).toBeFalsy("White/Rhino should second player");
+        expect(SiamPiece.belongTo(SiamPiece.MOUNTAIN.value, Player.NONE)).toBeFalse();
+        expect(SiamPiece.belongTo(SiamPiece.BLACK_DOWN.value, Player.ZERO)).toBeFalse();
+        expect(SiamPiece.belongTo(SiamPiece.WHITE_RIGHT.value, Player.ONE)).toBeFalse();
     });
 });

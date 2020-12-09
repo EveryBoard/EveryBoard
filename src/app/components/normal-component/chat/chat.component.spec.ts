@@ -14,6 +14,7 @@ import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { By } from '@angular/platform-browser';
+import { DebugElement } from '@angular/core';
 
 class AuthenticationServiceMock {
 
@@ -92,7 +93,7 @@ describe('ChatComponent', () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: "Jean-Connecté", verified: true};
         fixture.detectChanges();
         let switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
-        let chat = fixture.debugElement.query(By.css('#chatForm'));
+        let chat: DebugElement = fixture.debugElement.query(By.css('#chatForm'));
         expect(switchButton.nativeElement.innerText).toEqual("Hide chat (0 new messages)");
         expect(chat).toBeTruthy("Chat should be visible on init");
 
@@ -113,7 +114,7 @@ describe('ChatComponent', () => {
         fixture.detectChanges();
 
         let switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
-        let chat = fixture.debugElement.query(By.css('#chatForm'));
+        let chat: DebugElement = fixture.debugElement.query(By.css('#chatForm'));
         expect(switchButton.nativeElement.innerText).toEqual("Show chat (0 new messages)");
         expect(chat).toBeFalsy("Chat should be hidden");
 

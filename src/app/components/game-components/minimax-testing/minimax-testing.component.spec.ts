@@ -67,8 +67,8 @@ describe('MinimaxTestingComponent', () => {
         gameComponent.encodeMove(MinimaxTestingMove.DOWN);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
-    it('should allow simple moves', () => {
-        expect(gameComponent.chooseDown()).toBeTruthy(0);
-        expect(gameComponent.chooseRight()).toBeTruthy(1);
+    it('should allow simple moves', async() => {
+        expect((await gameComponent.chooseDown()).isSuccess()).toBeTrue();
+        expect((await gameComponent.chooseRight()).isSuccess()).toBeTrue();
     });
 });
