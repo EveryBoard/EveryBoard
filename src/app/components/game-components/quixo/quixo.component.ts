@@ -36,10 +36,10 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         if (move) this.lastMoveCoord = move.coord;
         else this.lastMoveCoord = null;
     }
-    public cancelMove(reason: string): boolean {
+    public cancelMove(reason: string): MGPValidation {
         display(QuixoComponent.VERBOSE, reason);
         this.chosenCoord = null;
-        return false;
+        return MGPValidation.failure(reason);
     }
     public decodeMove(encodedMove: number): QuixoMove {
         return QuixoMove.decode(encodedMove);
@@ -64,16 +64,16 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
             case Player.ONE.value:  return 'red';
         }
     }
-    public onBoardClick(x: number, y: number): boolean {
+    public onBoardClick(x: number, y: number): MGPValidation {
         const clickedCoord: Coord = new Coord(x, y);
         if (QuixoMove.isValidCoord(clickedCoord).valid === false) {
-            return this.cancelMove("Unvalid coord " + clickedCoord.toString());
+            return this.cancelMove("Unvalid coord " + clickedCoord.toString()).onFailure(this.message);
         }
         if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove("Cannot click on an ennemy piece " + clickedCoord.toString());
+            return this.cancelMove("Cannot click on an ennemy piece " + clickedCoord.toString()).onFailure(this.message);
         } else {
             this.chosenCoord = clickedCoord;
-            return true;
+            return MGPValidation.success();
         }
     }
     public getPossiblesDirections(): any[][] {
@@ -86,7 +86,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
         this.chosenDirection = Orthogonale.fromString(direction);
-        return this.tryMove();
+        return (await this.tryMove()).onFailure(this.message);
     }
     public async tryMove(): Promise<MGPValidation> {
         const move: QuixoMove = new QuixoMove(this.chosenCoord.x,

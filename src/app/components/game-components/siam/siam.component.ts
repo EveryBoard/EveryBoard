@@ -57,7 +57,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         const piece: number = this.board[y][x];
         const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
         if (SiamPiece.getOwner(piece) === ennemy) {
-            return this.cancelMove("Can't choose ennemy's pieces");
+            return this.cancelMove("Can't choose ennemy's pieces").onFailure(this.message);
         }
         this.chosenCoord = new Coord(x, y);
         return MGPValidation.SUCCESS;
@@ -74,7 +74,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             if (this.landingCoord.isNotInRange(5, 5)) {
                 display(SiamComponent.VERBOSE, "orientation and direction should be the same: " + dir);
                 this.chosenOrientation = dir;
-                return this.tryMove();
+                return (await this.tryMove()).onFailure(this.message);
             }
         }
         return MGPValidation.SUCCESS;
@@ -82,13 +82,13 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public async chooseOrientation(orientation: string): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, "SiamComponent.chooseOrientation(" + orientation + ")");
         this.chosenOrientation = Orthogonale.fromString(orientation);
-        return this.tryMove();
+        return (await this.tryMove()).onFailure(this.message);
     }
     public async insertAt(x: number, y: number): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, "SiamComponent.insertAt(" + x + ", " + y + ")");
 
         if (this.chosenCoord) {
-            return this.cancelMove("Can't insert when there is already a selected piece");
+            return this.cancelMove("Can't insert when there is already a selected piece").onFailure(this.message);
         } else {
             this.chosenCoord = new Coord(x, y);
             const dir: Orthogonale = SiamRules.getCoordDirection(x, y, this.rules.node.gamePartSlice);

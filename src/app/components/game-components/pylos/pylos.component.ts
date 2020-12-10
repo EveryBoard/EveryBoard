@@ -51,11 +51,11 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         if (clickedPiece === this.slice.getCurrentPlayer().value ||
             clickedCoord.equals(this.chosenLandingCoord))
         {
-            return this.onPieceClick(clickedCoord);
+            return (await this.onPieceClick(clickedCoord)).onFailure(this.message);
         } else if (clickedPiece === Player.NONE.value) {
-            return this.onEmptyCaseClick(clickedCoord);
+            return (await this.onEmptyCaseClick(clickedCoord)).onFailure(this.message);
         } else {
-            return this.cancelMove("Can't click on ennemy pieces.");
+            return this.cancelMove("Can't click on ennemy pieces.").onFailure(this.message);
         }
     }
     private async onPieceClick(clickedCoord: PylosCoord): Promise<MGPValidation> {

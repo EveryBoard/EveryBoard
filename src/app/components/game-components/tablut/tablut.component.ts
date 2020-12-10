@@ -57,7 +57,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         if (!success) {
             this.cancelMove();
         }
-        return success;
+        return success.onFailure(this.message);
     }
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         display(TablutComponent.VERBOSE, 'TablutComponent.chooseDestination');
@@ -66,10 +66,10 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const chosenDestination: Coord = new Coord(x, y);
         try {
             const move: TablutMove = new TablutMove(chosenPiece, chosenDestination);
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+            return (await this.chooseMove(move, this.rules.node.gamePartSlice, null, null)).onFailure(this.message);
         } catch (error) {
             this.cancelMove();
-            return MGPValidation.failure("invalid move");
+            return MGPValidation.failure("invalid move").onFailure(this.message);
         }
     }
     public choosePiece(x: number, y: number): MGPValidation {
