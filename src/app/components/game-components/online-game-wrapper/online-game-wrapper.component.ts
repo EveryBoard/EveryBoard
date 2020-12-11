@@ -80,7 +80,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     public ngAfterViewInit() {
         /*this.chat.changes.subscribe((comps: QueryList<ElementRef>) => {
-            console.log({ comps });
             this.chatVisibility = comps.first.nativeElement.firstChild.visible;
         });*/
     }

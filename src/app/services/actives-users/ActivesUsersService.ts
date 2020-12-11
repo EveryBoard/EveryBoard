@@ -4,6 +4,7 @@ import {IJoueurId, IJoueur} from '../../domain/iuser';
 import {JoueursDAO} from '../../dao/joueurs/JoueursDAO';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
 import { environment } from 'src/environments/environment';
+import { display } from 'src/app/collectionlib/utils';
 
 @Injectable({
     providedIn: 'root'
@@ -21,11 +22,11 @@ export class ActivesUsersService {
     constructor(private joueursDAO: JoueursDAO) {
     }
     public startObserving() {
-        if (ActivesUsersService.VERBOSE) console.log("ActivesUsersService.startObservingActivesUsers");
+        display(ActivesUsersService.VERBOSE, "ActivesUsersService.startObservingActivesUsers");
         const joueursObserver: FirebaseCollectionObserver<IJoueur> = new FirebaseCollectionObserver();
         joueursObserver.onDocumentModified = (users) => {
             let updatedUsers: IJoueurId[] = this.activesUsersBS.value;
-            if (ActivesUsersService.VERBOSE) console.log("our DAO updated " + users.length + " user(s)");
+            display(ActivesUsersService.VERBOSE, "our DAO updated " + users.length + " user(s)");
             for (let u of users) {
                 updatedUsers.forEach(user => {
                     if (user.id === u.id) user.doc = u.doc;
@@ -35,7 +36,7 @@ export class ActivesUsersService {
             this.activesUsersBS.next(updatedUsers);
         };
         joueursObserver.onDocumentCreated = (newUsers) => {
-            if (ActivesUsersService.VERBOSE) console.log("our DAO gave us " + newUsers.length + " new user(s)");
+            display(ActivesUsersService.VERBOSE, "our DAO gave us " + newUsers.length + " new user(s)");
             const newUsersList: IJoueurId[] = this.activesUsersBS.value.concat(...newUsers);
             this.activesUsersBS.next(this.order(newUsersList));
         };

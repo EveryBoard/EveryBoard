@@ -3,6 +3,7 @@ import { MGPStr } from "src/app/collectionlib/mgpstr/MGPStr";
 import { ObservableSubject } from "src/app/collectionlib/ObservableSubject";
 import { FirebaseFirestoreDAOMock } from "../firebasefirestoredao/FirebaseFirestoreDAOMock";
 import { IChat, PIChat, IChatId } from "src/app/domain/ichat";
+import { display } from "src/app/collectionlib/utils";
 
 interface ChatOS extends ObservableSubject<IChatId> {}
 
@@ -14,7 +15,7 @@ export class ChatDAOMock extends FirebaseFirestoreDAOMock<IChat, PIChat> {
 
     public constructor() {
         super("ChatDAOMock", ChatDAOMock.VERBOSE);
-        if (this.VERBOSE) console.log("ChatDAOMock.constructor");
+        display(this.VERBOSE, "ChatDAOMock.constructor");
     }
     public getStaticDB(): MGPMap<MGPStr, ChatOS> {
         return ChatDAOMock.chatDB;

@@ -36,10 +36,14 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         if (move) this.lastMoveCoord = move.coord;
         else this.lastMoveCoord = null;
     }
-    public cancelMove(reason: string): MGPValidation {
-        display(QuixoComponent.VERBOSE, reason);
+    public cancelMove(reason?: string): MGPValidation {
         this.chosenCoord = null;
-        return MGPValidation.failure(reason);
+        if (reason) {
+            this.message(reason);
+            return MGPValidation.failure(reason);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
     public decodeMove(encodedMove: number): QuixoMove {
         return QuixoMove.decode(encodedMove);
@@ -67,13 +71,14 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     public onBoardClick(x: number, y: number): MGPValidation {
         const clickedCoord: Coord = new Coord(x, y);
         if (QuixoMove.isValidCoord(clickedCoord).valid === false) {
-            return this.cancelMove("Unvalid coord " + clickedCoord.toString()).onFailure(this.message);
+            // TODO: is this possible ? If not, should'nt it be a classic Error ?
+            return this.cancelMove("Unvalid coord " + clickedCoord.toString());
         }
         if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove("Cannot click on an ennemy piece " + clickedCoord.toString()).onFailure(this.message);
+            return this.cancelMove("Cannot click on an ennemy piece " + clickedCoord.toString());
         } else {
             this.chosenCoord = clickedCoord;
-            return MGPValidation.success();
+            return MGPValidation.SUCCESS;
         }
     }
     public getPossiblesDirections(): any[][] {
@@ -92,7 +97,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         const move: QuixoMove = new QuixoMove(this.chosenCoord.x,
                                               this.chosenCoord.y,
                                               this.chosenDirection);
-        this.cancelMove("Move submitted");
+        this.cancelMove();
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
     public getTriangleCoordinate(lx: number, ly: number): string {

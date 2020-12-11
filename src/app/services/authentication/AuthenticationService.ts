@@ -8,6 +8,7 @@ import { environment } from 'src/environments/environment';
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import { display } from 'src/app/collectionlib/utils';
 
 @Injectable()
 export class AuthenticationService implements OnDestroy {
@@ -26,13 +27,13 @@ export class AuthenticationService implements OnDestroy {
     constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
         if (environment.test && !AuthenticationService.IN_TESTING) throw new Error("NO AUTH SERVICE IN TEST");
 
-        if (AuthenticationService.VERBOSE) console.log("1 authService subscribe to Obs<User>");
+        display(AuthenticationService.VERBOSE, "1 authService subscribe to Obs<User>");
         this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
             if (user == null) { // user logged out
-                if (AuthenticationService.VERBOSE) console.log("2.B: Obs<User> Sends null, logged out");
+                display(AuthenticationService.VERBOSE, "2.B: Obs<User> Sends null, logged out");
                 this.joueurBS.next({pseudo: null, verified: null});
             } else { // user logged in
-                if (AuthenticationService.VERBOSE) console.log("2.A: Obs<User> Sends " + user.displayName + ", logged in");
+                display(AuthenticationService.VERBOSE, "2.A: Obs<User> Sends " + user.displayName + ", logged in");
                 this.updatePresence();
                 let pseudo: string = (user.displayName === "" || user.displayName == null) ? user.email : user.displayName;
                 let verified: boolean = user.emailVerified;

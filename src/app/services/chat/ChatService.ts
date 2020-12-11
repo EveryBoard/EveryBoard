@@ -62,7 +62,7 @@ export class ChatService implements OnDestroy {
             this.followedChatSub = this.followedChatObs
                 .subscribe(onFullFilled => callback(onFullFilled));
         } else if (chatId === this.followedChatId) {
-            console.log('WTF :: Already observing chat \'' + chatId + '\'');
+            throw new Error('WTF :: Already observing chat \'' + chatId + '\'');
         } else {
             // this.stopObserving();
             // this.startObserving(chatId, callback); // TODO: remove comments

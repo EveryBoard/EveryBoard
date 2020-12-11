@@ -103,32 +103,32 @@ describe('SaharaComponent', () => {
     }));
     it('should not allow to click on empty case when no pyramid selected', fakeAsync(async() => {
         expect(gameComponent.chosenCoord).toEqual(new Coord(-2, -2));
-        spyOn(gameComponent, 'cancelMove').and.callThrough();
+        spyOn(gameComponent, 'message').and.callThrough();
         await onClick(2, 2);
         expect(gameComponent.chosenCoord).toEqual(new Coord(-2, -2));
-        expect(gameComponent.cancelMove).toHaveBeenCalledWith("You must first select a pyramid.");
+        expect(gameComponent.message).toHaveBeenCalledWith("You must first select a pyramid.");
     }));
     it('should not allow to select ennemy pyramid', fakeAsync(async() => {
-        spyOn(gameComponent, 'cancelMove').and.callThrough();
+        spyOn(gameComponent, 'message').and.callThrough();
         await onClick(0, 4);
-        expect(gameComponent.cancelMove).toHaveBeenCalledWith("You cannot select ennemy pyramid.");
+        expect(gameComponent.message).toHaveBeenCalledWith("You cannot select ennemy pyramid.");
     }));
     it('should not allow to select ennemy pyramid', fakeAsync(async() => {
         await onClick(0, 3);
-        spyOn(gameComponent, 'cancelMove').and.callThrough();
+        spyOn(gameComponent, 'message').and.callThrough();
         await onClick(0, 4);
-        expect(gameComponent.cancelMove).toHaveBeenCalledWith("You can't land your pyramid on the ennemy's.");
+        expect(gameComponent.message).toHaveBeenCalledWith("You can't land your pyramid on the ennemy's.");
     }));
     it('should not allow to bounce on occupied brown case', fakeAsync(async() => {
         await onClick(7, 0);
-        spyOn(gameComponent, 'cancelMove').and.callThrough();
+        spyOn(gameComponent, 'message').and.callThrough();
         await onClick(8, 1);
-        expect(gameComponent.cancelMove).toHaveBeenCalledWith("You can only bounce on UNOCCUPIED brown case.");
+        expect(gameComponent.message).toHaveBeenCalledWith("You can only bounce on UNOCCUPIED brown case.");
     }));
     it('should not allow to do invalid moves', fakeAsync(async() => {
         await onClick(0, 3);
-        spyOn(gameComponent, 'cancelMove').and.callThrough();
+        spyOn(gameComponent, 'message').and.callThrough();
         await onClick(2, 2);
-        expect(gameComponent.cancelMove).toHaveBeenCalledWith("Maximal |x| + |y| distance for SaharaMove is 2, got 3.");
+        expect(gameComponent.message).toHaveBeenCalledWith("Maximal |x| + |y| distance for SaharaMove is 2, got 3.");
     }));
 });

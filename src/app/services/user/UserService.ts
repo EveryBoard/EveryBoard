@@ -56,7 +56,6 @@ export class UserService {
     private getUserNameBS(): BehaviorSubject<string> {
         const currentUser: {'user': string; 'pw': string} = JSON.parse(sessionStorage.getItem('currentUser'));
         if (currentUser != null) {
-            console.log('trying to log ' + JSON.stringify(currentUser));
             this.logAsHalfMember(currentUser.user, currentUser.pw);
         }
         return new BehaviorSubject<string>('');
@@ -98,7 +97,7 @@ export class UserService {
         if (code === foundUser.doc.code) {
             this.logValidHalfMember(foundUser.doc.pseudo, foundUser.doc.code, foundUser.id);
         } else {
-            console.log('code incorrect !'); // TODO : rendre ça visible de l'user
+            display(true, 'code incorrect !'); // TODO : rendre ça visible de l'user
         }
     }
     private logValidHalfMember(pseudo: string, code: string, id: string) {

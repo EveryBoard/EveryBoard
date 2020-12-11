@@ -89,10 +89,9 @@ describe('PylosComponent', () => {
     it('should forbid clicking on ennemy piece', fakeAsync(async() => {
         expect(await onClick(0, 0, 0)).toBeTrue();
 
-        spyOn(gameComponent, 'cancelMove').and.callThrough();
+        spyOn(gameComponent, 'message').and.callThrough();
         expect(await onClick(0, 0, 0)).toBeTrue();
-        expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
-        expect(gameComponent.cancelMove).toHaveBeenCalledWith("Can't click on ennemy pieces.");
+        expect(gameComponent.message).toHaveBeenCalledWith("Can't click on ennemy pieces.");
     }));
     it('should allow climbing', fakeAsync(async() => {
         expect(await onClick(0, 0, 0)).toBeTrue();
@@ -146,11 +145,10 @@ describe('PylosComponent', () => {
         expect(await onClick(0, 0, 1)).toBeTrue();
         expect(await onClick(3, 2, 0)).toBeTrue();
 
-        spyOn(gameComponent, 'cancelMove').and.callThrough();
+        spyOn(gameComponent, 'message').and.callThrough();
         expect(await onClick(0, 0, 1)).toBeTrue();
         expect(await onClick(2, 2, 0)).toBeTrue();
-        expect(gameComponent.cancelMove).toHaveBeenCalledWith("Must move pieces upward.");
-        expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
+        expect(gameComponent.message).toHaveBeenCalledWith("Must move pieces upward.");
     }));
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(PylosMove, "decode").and.callThrough();

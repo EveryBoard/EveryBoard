@@ -11,7 +11,7 @@ import { display } from 'src/app/collectionlib/utils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
-    selector: 'app-tablut-new',
+    selector: 'app-tablut',
     templateUrl: './tablut.component.html'
 })
 export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, LegalityStatus> {
@@ -42,22 +42,16 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
             this.moving = null;
             this.arriving = null;
         }
-
         this.cancelMove();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         display(TablutComponent.VERBOSE, "TablutComponent.onClick(" + x + ", " + y + ")");
 
-        let success: MGPValidation;
         if (this.chosen.x === -1) {
-            success = this.choosePiece(x, y);
+            return this.choosePiece(x, y);
         } else {
-            success = await this.chooseDestination(x, y);
+            return await this.chooseDestination(x, y);
         }
-        if (!success) {
-            this.cancelMove();
-        }
-        return success.onFailure(this.message);
     }
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         display(TablutComponent.VERBOSE, 'TablutComponent.chooseDestination');
@@ -66,18 +60,16 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const chosenDestination: Coord = new Coord(x, y);
         try {
             const move: TablutMove = new TablutMove(chosenPiece, chosenDestination);
-            return (await this.chooseMove(move, this.rules.node.gamePartSlice, null, null)).onFailure(this.message);
+            return await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         } catch (error) {
-            this.cancelMove();
-            return MGPValidation.failure("invalid move").onFailure(this.message);
+            return this.cancelMove(error.message);
         }
     }
     public choosePiece(x: number, y: number): MGPValidation {
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
-        if (this.rules.node.isEndGame()) {
-            display(TablutComponent.VERBOSE, 'la partie est finie');
-            return MGPValidation.failure("game is ended");
+        if (this.rules.node.isEndGame()) { // TODO: clean, isn't that redondant ?
+            return this.cancelMove("Game is ended.");
         } else { // TODO: action double non ?
             display(TablutComponent.VERBOSE, 'la partie est en court');
         }
@@ -85,8 +77,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         // so I guess he don't need to see what's the last move of the opponent
 
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
-            display(TablutComponent.VERBOSE, 'not a piece of the current player');
-            return MGPValidation.failure("not a piece of the current player");
+            return this.cancelMove("Not a piece of the current player.");
         }
 
         this.showSelectedPiece(x, y);
@@ -103,8 +94,14 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         this.moving = new Coord(-1, -1);
         this.arriving = new Coord(-1, -1);
     }
-    public cancelMove() {
+    public cancelMove(reason?: string): MGPValidation {
         this.chosen = new Coord(-1, -1);
+        if (reason) {
+            this.message(reason);
+            return MGPValidation.failure(reason);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
     public isThrone(x: number, y: number): boolean {
         return TablutRules.isThrone(new Coord(x, y));

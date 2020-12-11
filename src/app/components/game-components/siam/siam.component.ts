@@ -39,13 +39,17 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         this.board = slice.board;
         this.lastMove = this.rules.node.move;
     }
-    public cancelMove(reason: string): MGPValidation {
-        display(SiamComponent.VERBOSE, reason);
+    public cancelMove(reason?: string): MGPValidation {
         this.chosenCoord = null;
         this.chosenDirection = null;
         this.landingCoord = null;
         this.chosenOrientation = null;
-        return MGPValidation.failure(reason);
+        if (reason) {
+            this.message(reason);
+            return MGPValidation.failure(reason);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
     public decodeMove(encodedMove: number): SiamMove {
         return SiamMove.decode(encodedMove);
@@ -57,7 +61,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         const piece: number = this.board[y][x];
         const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
         if (SiamPiece.getOwner(piece) === ennemy) {
-            return this.cancelMove("Can't choose ennemy's pieces").onFailure(this.message);
+            return this.cancelMove("Can't choose ennemy's pieces");
         }
         this.chosenCoord = new Coord(x, y);
         return MGPValidation.SUCCESS;
@@ -74,7 +78,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             if (this.landingCoord.isNotInRange(5, 5)) {
                 display(SiamComponent.VERBOSE, "orientation and direction should be the same: " + dir);
                 this.chosenOrientation = dir;
-                return (await this.tryMove()).onFailure(this.message);
+                return await this.tryMove();
             }
         }
         return MGPValidation.SUCCESS;
@@ -82,13 +86,13 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public async chooseOrientation(orientation: string): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, "SiamComponent.chooseOrientation(" + orientation + ")");
         this.chosenOrientation = Orthogonale.fromString(orientation);
-        return (await this.tryMove()).onFailure(this.message);
+        return await this.tryMove();
     }
     public async insertAt(x: number, y: number): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, "SiamComponent.insertAt(" + x + ", " + y + ")");
 
         if (this.chosenCoord) {
-            return this.cancelMove("Can't insert when there is already a selected piece").onFailure(this.message);
+            return this.cancelMove("Can't insert when there is already a selected piece");
         } else {
             this.chosenCoord = new Coord(x, y);
             const dir: Orthogonale = SiamRules.getCoordDirection(x, y, this.rules.node.gamePartSlice);
@@ -102,7 +106,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                                             this.chosenCoord.y,
                                             this.chosenDirection,
                                             this.chosenOrientation);
-        this.cancelMove("Hiding move before submitting it");
+        this.cancelMove();
         const legal: MGPValidation = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         display(SiamComponent.VERBOSE, "SiamComponent.tryMove: " + legal);
         return legal;
@@ -160,7 +164,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         const isHighlighted: boolean = coord.equals(last);
         const stroke: string = isHighlighted ? 'yellow' : 'black';
         const fill: string = SiamPiece.getOwner(c) === Player.ZERO ? 'red' : 'blue';
-        return { fill, stroke, 'stroke-width': '5px' };
+        return { fill, stroke, 'stroke-width': '5px' }; // TODO: stroke-width in html
     }
     public choosingOrientation(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);

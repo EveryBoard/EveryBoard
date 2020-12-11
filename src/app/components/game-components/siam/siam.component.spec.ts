@@ -109,17 +109,14 @@ describe('SiamComponent', () => {
         tick(1);
         gameComponent = wrapper.gameComponent as SiamComponent;
     }));
-
     it('should create', () => {
         expect(wrapper).toBeTruthy("Wrapper should be created");
         expect(gameComponent).toBeTruthy("SiamComponent should be created");
     });
-
     it('should accept insertion at first turn', fakeAsync(async() => {
         const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonale.DOWN), Orthogonale.DOWN);
         expect(await doMove(move)).toBeTrue();
     }));
-
     it('Should not allow to choose direction before choosing piece', async() => {
         let move: SiamMove = new SiamMove(5, 2, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
         expect(await doMove(move)).toBeTrue();
@@ -128,17 +125,15 @@ describe('SiamComponent', () => {
 
         expect(await chooseDirection(new Coord(4, 2), 'UP')).toBeFalse();
     });
-
     it('Should not allow to move empty case or ennemy pieces', async() => {
         let move: SiamMove = new SiamMove(-1, 2, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT);
         expect(await doMove(move)).toBeTrue();
 
         expect(await clickPiece(new Coord(0, 0))).toBeFalse();
-        spyOn(gameComponent, "cancelMove").and.callThrough();
+        spyOn(gameComponent, "message").and.callThrough();
         expect(await clickPiece(new Coord(0, 2))).toBeTrue();
-        expect(gameComponent.cancelMove).toHaveBeenCalledWith("Can't choose ennemy's pieces");
+        expect(gameComponent.message).toHaveBeenCalledWith("Can't choose ennemy's pieces");
     });
-
     it('should cancel move when trying to insert while having selected a piece', fakeAsync(async() => {
         let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
         expect(await doMove(move)).toBeTrue();
@@ -152,14 +147,13 @@ describe('SiamComponent', () => {
         expect(gameComponent.clickPiece).toHaveBeenCalledWith(4, 4);
 
         // then insertion should not
-        spyOn(gameComponent, "cancelMove").and.callThrough();
+        spyOn(gameComponent, "message").and.callThrough();
         spyOn(gameComponent, "insertAt").and.callThrough();
         expect(await insertAt(new Coord(-1, 2))).toBeTrue();
         expect(gameComponent.insertAt).toHaveBeenCalledTimes(1);
         expect(gameComponent.insertAt).toHaveBeenCalledWith(-1, 2);
-        expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
+        expect(gameComponent.message).toHaveBeenCalledWith("Can't insert when there is already a selected piece");
     }));
-
     it('should allow rotation', fakeAsync(async() => {
         let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
         expect(await doMove(move)).toBeTrue();
@@ -169,7 +163,6 @@ describe('SiamComponent', () => {
         move = new SiamMove(4, 4, MGPOptional.empty(), Orthogonale.DOWN);
         expect(await doMove(move)).toBeTrue();
     }));
-
     it('should allow normal move', fakeAsync(async() => {
         let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
         expect(await doMove(move)).toBeTrue();
@@ -179,7 +172,6 @@ describe('SiamComponent', () => {
         move = new SiamMove(4, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
         expect(await doMove(move)).toBeTrue();
     }));
-
     it('should decide outing orientation automatically', fakeAsync(async() => {
         let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
         expect(await doMove(move)).toBeTrue();
@@ -191,13 +183,11 @@ describe('SiamComponent', () => {
         expect(await chooseDirection(new Coord(4, 4), 'RIGHT')).toBeTrue();
         expect(gameComponent.tryMove).toHaveBeenCalledTimes(1);
     }));
-
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(SiamMove, "decode").and.callThrough();
         gameComponent.decodeMove(269);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
-
     it('should delegate encoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(SiamMove, "encode").and.callThrough();
         gameComponent.encodeMove(new SiamMove(2, 2, MGPOptional.empty(), Orthogonale.UP));

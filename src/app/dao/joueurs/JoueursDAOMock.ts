@@ -4,6 +4,7 @@ import { ObservableSubject } from "src/app/collectionlib/ObservableSubject";
 import { FirebaseFirestoreDAOMock } from "../firebasefirestoredao/FirebaseFirestoreDAOMock";
 import { IJoueurId, IJoueur, PIJoueur } from "src/app/domain/iuser";
 import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
+import { display } from "src/app/collectionlib/utils";
 
 interface JoueursOS extends ObservableSubject<IJoueurId> {}
 
@@ -15,7 +16,7 @@ export class JoueursDAOMock extends FirebaseFirestoreDAOMock<IJoueur, PIJoueur> 
 
     public constructor() {
         super("JoueursDAOMock", JoueursDAOMock.VERBOSE);
-        if (this.VERBOSE) console.log("JoueursDAOMock.constructor");
+        display(this.VERBOSE, "JoueursDAOMock.constructor");
     }
     public getStaticDB(): MGPMap<MGPStr, JoueursOS> {
         return JoueursDAOMock.joueursDB;

@@ -8,6 +8,7 @@ import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { display } from "src/app/collectionlib/utils";
 
 
 export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
@@ -32,16 +33,13 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
     public abstract resetStaticDB(): void;
 
     public reset() {
-        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) {
-            const removed: string = this.getStaticDB() ?
-                this.getStaticDB().size() + " removed" :
-                "not initialised yet";
-            console.log(this.collectionName + ".reset, " + removed);
-        }
+        const removed: string = this.getStaticDB() ? this.getStaticDB().size() + " removed" : "not initialised yet";
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + ".reset, " + removed);
+
         this.resetStaticDB();
     }
     public getObsById(id: string): Observable<{id: string, doc: T}> {
-        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".getObsById(" + id + ")");
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + ".getObsById(" + id + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -58,7 +56,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         return elemName;
     }
     public async read(id: string): Promise<T> {
-        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".read(" + id + ")");
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + ".read(" + id + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -69,7 +67,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         }
     }
     public async set(id: string, doc: T): Promise<void> {
-        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".set(" + id + ", " + JSON.stringify(doc) + ")");
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + ".set(" + id + ", " + JSON.stringify(doc) + ")");
 
         const key: MGPStr = new MGPStr(id);
         let optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -84,7 +82,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         return Promise.resolve();
     }
     public async update(id: string, update: PT): Promise<void> {
-        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".update(" + id + ", " + JSON.stringify(update) + ")");
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + ".update(" + id + ", " + JSON.stringify(update) + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -99,7 +97,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         }
     }
     public async delete(id: string): Promise<void> {
-        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log(this.collectionName + ".delete(" + id + ")");
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + ".delete(" + id + ")");
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);

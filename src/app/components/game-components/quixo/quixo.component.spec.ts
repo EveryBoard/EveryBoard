@@ -96,13 +96,14 @@ describe('QuixoComponent', () => {
         const firstMove: QuixoMove = new QuixoMove(0, 0, Orthogonale.RIGHT);
 
         let legal: MGPValidation = await doMove(firstMove);
-        spyOn(gameComponent, "cancelMove").and.callThrough();
+        spyOn(gameComponent, "message").and.callThrough();
         expect(legal.isSuccess()).toBeTrue();
 
-        expect(gameComponent.onBoardClick(4, 0)).toBeFalse();
-        expect(gameComponent.cancelMove).toHaveBeenCalledTimes(1);
+        expect(gameComponent.onBoardClick(4, 0).isFailure()).toBeTrue();
+        expect(gameComponent.message).toHaveBeenCalledWith("Cannot click on an ennemy piece (4, 0)");
 
-        expect(gameComponent.onBoardClick(1, 1)).toBeFalse();
+        expect(gameComponent.onBoardClick(1, 1).isFailure()).toBeTrue();
+        expect(gameComponent.message).toHaveBeenCalledWith("Unvalid coord (1, 1)");
     });
     it('should delegate triangleCoord calculation to GameComponentUtils', () => {
         spyOn(GameComponentUtils, "getTriangleCoordinate").and.callThrough();

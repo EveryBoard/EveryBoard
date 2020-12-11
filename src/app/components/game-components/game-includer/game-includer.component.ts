@@ -1,4 +1,5 @@
 import {Component, ViewContainerRef } from '@angular/core';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-game-includer',
@@ -9,6 +10,6 @@ export class GameIncluderComponent {
     public static VERBOSE: boolean = false;
 
     constructor(public viewContainerRef: ViewContainerRef) {
-        if (GameIncluderComponent.VERBOSE) console.log("GameIncluderComponent constructor");
+        display(GameIncluderComponent.VERBOSE, "GameIncluderComponent constructor");
     }
 }

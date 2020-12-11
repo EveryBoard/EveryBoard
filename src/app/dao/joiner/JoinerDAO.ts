@@ -1,10 +1,9 @@
 import { FirebaseFirestoreDAO } from "../firebasefirestoredao/FirebaseFirestoreDAO";
-import { IJoiner, PIJoiner, IJoinerId } from "../../domain/ijoiner";
+import { IJoiner, PIJoiner } from "../../domain/ijoiner";
 import { AngularFirestore } from "@angular/fire/firestore";
-import { Observable } from "rxjs";
-import { map } from "rxjs/operators";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
+import { display } from "src/app/collectionlib/utils";
 
 @Injectable({
     providedIn: 'root'
@@ -16,6 +15,6 @@ export class JoinerDAO extends FirebaseFirestoreDAO<IJoiner, PIJoiner> {
     constructor(protected afs: AngularFirestore) {
         super("joiners", afs);
         if (environment.test) throw new Error("NO JOINER DAO IN TEST");
-        if (JoinerDAO.VERBOSE) console.log("JoinerDAO.constructor");
+        display(JoinerDAO.VERBOSE, "JoinerDAO.constructor");
     }
 }

@@ -61,17 +61,18 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             if (this.rules.node.gamePartSlice.turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
-                return (await this.suggestMove(new QuartoMove(x, y, QuartoEnum.UNOCCUPIED))).onFailure(this.message);
+                const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoEnum.UNOCCUPIED);
+                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null)
             }
             if (this.pieceToGive !== -1) {
                 // the user has already chosen his piece before his coord
-                return (await this.suggestMove(new QuartoMove(x, y, this.pieceToGive))).onFailure(this.message);
+                const chosenMove: QuartoMove = new QuartoMove(x, y, this.pieceToGive);
+                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             }
-            return MGPValidation.success(); // the user has just chosen his coord
+            return MGPValidation.SUCCESS; // the user has just chosen his coord
         }
         // the user chose an occupied place of the board, so an illegal move, so we cancel all
-        this.cancelMove();
-        return MGPValidation.failure("you cannot move from an empty case").onFailure(this.message);
+        return this.cancelMove("you cannot move from an empty case");
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
         this.hideLastMove(); // now the user tried to choose something
@@ -81,22 +82,27 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             this.pieceToGive = givenPiece;
             if (this.chosen.x !== -1) {
                 // the user has chosen the coord before the piece
-                const chosenMove = new QuartoMove(this.chosen.x, this.chosen.y, this.pieceToGive);
-                return (await this.suggestMove(chosenMove)).onFailure(this.message);
+                const chosenMove: QuartoMove = new QuartoMove(this.chosen.x, this.chosen.y, this.pieceToGive);
+                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             }
-            return MGPValidation.success(); // the user has just chosen his piece
+            return MGPValidation.SUCCESS; // the user has just chosen his piece
         }
         // the user chose an empty piece, let's cancel this
-        this.cancelMove();
-        return MGPValidation.failure("you can't choose an empty piece");
+        return this.cancelMove("you can't choose an empty piece");
     }
     public hideLastMove() {
         this.lastMove = new Coord(-1, -1);
     }
-    public cancelMove() {
+    public cancelMove(reason?: string): MGPValidation {
         // called when the user do a wrong move, then, we unselect his pieceToGive and/or the chosen coord
         this.chosen = new Coord(-1, -1);
         this.pieceToGive = -1;
+        if (reason) {
+            this.message(reason);
+            return MGPValidation.failure(reason);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
     public showPieceInHandOnBoard(x: number, y: number) {
         this.chosen = new Coord(x, y);
@@ -108,16 +114,5 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         const clickedCoord: Coord = new Coord(x, y);
         return clickedCoord.equals(this.lastMove) ||
                clickedCoord.equals(this.chosen);
-    }
-    // creating method for OnlineQuarto
-
-    public async suggestMove(chosenMove: QuartoMove): Promise<MGPValidation> {
-        const moveResult: MGPValidation = await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
-        if (moveResult.isSuccess()) {
-            this.chosen = new Coord(-1, -1);
-        } else {
-            this.cancelMove();
-        }
-        return moveResult;
     }
 }

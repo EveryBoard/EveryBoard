@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 import { FirebaseFirestoreDAO } from "../firebasefirestoredao/FirebaseFirestoreDAO";
 import { Injectable } from "@angular/core";
 import { environment } from "src/environments/environment";
+import { display } from "src/app/collectionlib/utils";
 
 @Injectable({
     providedIn: 'root'
@@ -16,6 +17,6 @@ export class ChatDAO extends FirebaseFirestoreDAO<IChat, PIChat> {
     constructor(protected afs: AngularFirestore) {
         super("chats", afs);
         if (environment.test) throw new Error("NO CHAT DAO IN TEST");
-        if (ChatDAO.VERBOSE) console.log("ChatDAO.constructor");
+        display(ChatDAO.VERBOSE, "ChatDAO.constructor");
     }
 }

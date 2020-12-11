@@ -156,8 +156,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.stopObserving(); // this.observedJoinerId = ' + this.observedJoinerId);
 
         if (this.observedJoinerId == null) {
-            // TODO: make an exception for this
-            console.log('!!!we already stop watching doc');
+            throw new Error('!!! JoinerService.stopObserving: we already stop watching doc');
         } else {
             this.observedJoinerId = null;
             this.observedJoinerSub.unsubscribe();

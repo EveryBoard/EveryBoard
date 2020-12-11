@@ -96,18 +96,17 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             if (this.chosenPiece != null) {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
-                return this.suggestMove(chosenMove);
+                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             } else {
-                return MGPValidation.failure("no chosen piece");
+                return this.cancelMove("no chosen piece");
             }
         } else {
             if (this.chosenCoord.equals(clickedCoord)) {
-                this.cancelMove();
-                return MGPValidation.failure("chosen coord is different from clicked coord");
+                return this.cancelMove("Chosen coord must be different from clicked coord");
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
-                return this.suggestMove(chosenMove);
+                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             }
         }
     }
@@ -115,23 +114,28 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         this.lastLandingCoord = null;
         this.lastStartingCoord = MGPOptional.empty();
     }
-    private cancelMove() {
+    private cancelMove(reason?: string): MGPValidation {
         this.chosenCoord = null;
         this.chosenPiece = null;
+        if (reason) {
+            this.message(reason);
+            return MGPValidation.failure(reason);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
     public async onPieceClick(pieceString: String): Promise<MGPValidation> {
         this.hideLastMove();
         const piece: EncapsulePiece = this.getEncapsulePieceFromName(pieceString);
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (!slice.isDropable(piece) || (piece === this.chosenPiece)) {
-            this.cancelMove();
-            return MGPValidation.failure("piece is not droppable").onFailure(this.message);
+            return this.cancelMove("piece is not droppable");
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
             return MGPValidation.SUCCESS;
         } else {
             const chosenMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, this.chosenCoord);
-            return (await this.suggestMove(chosenMove)).onFailure(this.message);
+            return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
         }
     }
     public getEncapsulePieceFromName(pieceName: String): EncapsulePiece {
@@ -140,9 +144,5 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
     public isDropable(piece: number) {
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         return slice.isDropable(EncapsulePiece.of(piece));
-    }
-    private suggestMove(chosenMove: EncapsuleMove): Promise<MGPValidation> {
-        this.cancelMove();
-        return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
 }

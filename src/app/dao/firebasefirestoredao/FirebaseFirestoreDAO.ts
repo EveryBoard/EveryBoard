@@ -5,6 +5,7 @@ import { map } from "rxjs/operators";
 
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { display } from "src/app/collectionlib/utils";
 
 export interface IFirebaseFirestoreDAO<T, PT> {
 
@@ -91,15 +92,15 @@ export abstract class FirebaseFirestoreDAO<T, PT> implements IFirebaseFirestoreD
                 else if (change.type === "removed") deletedDocs.push(doc);
             });
             if (createdDocs.length > 0) {
-                if (FirebaseFirestoreDAO.VERBOSE) console.log("firebase gave us " + createdDocs.length + " NEW " + this.collectionName);
+                display(FirebaseFirestoreDAO.VERBOSE, "firebase gave us " + createdDocs.length + " NEW " + this.collectionName);
                 callback.onDocumentCreated(createdDocs);
             }
             if (modifiedDocs.length > 0) {
-                if (FirebaseFirestoreDAO.VERBOSE) console.log("firebase gave us " + modifiedDocs.length + " MODIFIED " + this.collectionName);
+                display(FirebaseFirestoreDAO.VERBOSE, "firebase gave us " + modifiedDocs.length + " MODIFIED " + this.collectionName);
                 callback.onDocumentModified(modifiedDocs);
             }
             if (deletedDocs.length > 0) {
-                if (FirebaseFirestoreDAO.VERBOSE) console.log("firebase gave us " + deletedDocs.length + " DELETED " + this.collectionName);
+                display(FirebaseFirestoreDAO.VERBOSE, "firebase gave us " + deletedDocs.length + " DELETED " + this.collectionName);
                 callback.onDocumentDeleted(deletedDocs);
             }
         });

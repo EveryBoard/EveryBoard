@@ -66,6 +66,7 @@ describe('KamisadoComponent', () => {
     it('should allow to pass if stuck position', async () => {
         expect((await gameComponent.onClick(0, 7)).isSuccess()).toBeTrue(); // select brown piece
         expect((await gameComponent.pass()).isSuccess()).toBeFalse(); // can't pass now
+        expect((await gameComponent.onClick(0, 7)).isSuccess()).toBeTrue(); // must reselect brown piece
         expect((await gameComponent.onClick(0, 1)).isSuccess()).toBeTrue(); // move it on the red
         expect((await gameComponent.onClick(5, 2)).isSuccess()).toBeTrue(); // move the red on the brown
         // brown is now stuck
@@ -76,10 +77,10 @@ describe('KamisadoComponent', () => {
         expect((await gameComponent.onClick(0, 7)).isSuccess()).toBeTrue();
         expect((await gameComponent.onClick(5, 4)).isSuccess()).toBeFalse();
     });
-    it('should disallow choosing an incorrect piece', async () => {
+    it('should disallow choosing an incorrect piece', async() => {
         expect((await gameComponent.onClick(0, 0)).isSuccess()).toBeFalse();
     });
-    it('should disallow choosing a piece at end of the game', async () => {
+    it('should disallow choosing a piece at end of the game', async() => {
         expect((await gameComponent.onClick(0, 7)).isSuccess()).toBeTrue(); // select brown piece
         expect((await gameComponent.onClick(0, 1)).isSuccess()).toBeTrue(); // move it to the red
         expect((await gameComponent.onClick(4, 1)).isSuccess()).toBeTrue(); // move it to the blue
@@ -87,7 +88,7 @@ describe('KamisadoComponent', () => {
         expect((await gameComponent.onClick(4, 2)).isSuccess()).toBeTrue(); // move it to the purple
         expect((await gameComponent.onClick(5, 0)).isSuccess()).toBeTrue(); // move it to the winning position
         expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeFalse();
-        expect(gameComponent.choosePiece(2, 0).isSuccess()).toBeFalse(); // can't select a piece either
+        expect((await gameComponent.choosePiece(2, 0)).isSuccess()).toBeFalse(); // can't select a piece either
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(KamisadoMove, "decode").and.callThrough();

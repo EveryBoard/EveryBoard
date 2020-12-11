@@ -34,7 +34,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             fill: KamisadoBoard.getColorAt(x, y).rgb,
         };
     }
-
     public stylePiece(pieceValue: number): any {
         const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
         return {
@@ -42,7 +41,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             stroke: piece.belongsTo(Player.ONE) ? 'black' : 'white',
         };
     }
-
     public updateBoard() {
         const slice: KamisadoPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
@@ -57,56 +55,52 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             this.chosen = slice.coordToPlay.get();
         }
     }
-
     public async pass(): Promise<MGPValidation> {
         if (this.canPass) {
-            return (await this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null)).onFailure(this.message);
-        }
-        return MGPValidation.failure("you cannot pass").onFailure(this.message);
-    }
-
-    public async onClick(x: number, y: number): Promise<MGPValidation> {
-        let success: MGPValidation;
-        if (this.chosen.x === -1) {
-            success = this.choosePiece(x, y);
+            return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
-            success = await this.chooseDestination(x, y);
+            // TODO: check use
+            return this.cancelMove("Cannot pass.");
         }
-        if (success.isFailure()) {
-            this.cancelMove();
-        }
-        return success.onFailure(this.message);
     }
-
-    public choosePiece(x: number, y: number): MGPValidation {
+    public async onClick(x: number, y: number): Promise<MGPValidation> {
+        if (this.chosen.x === -1) {
+            return this.choosePiece(x, y);
+        } else {
+            return await this.chooseDestination(x, y);
+        }
+    }
+    public async choosePiece(x: number, y: number): Promise<MGPValidation> {
         if (this.rules.node.isEndGame()) {
-            return MGPValidation.failure("game is ended");
+            return this.cancelMove("game is ended");
         }
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
         const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
         if (!piece.belongsTo(player)) {
-            return MGPValidation.failure("piece does not belong to player");
+            return await this.cancelMove("piece does not belong to player");
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;
     }
-
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
-
-    public cancelMove() {
+    public async cancelMove(reason?: string): Promise<MGPValidation> {
         if (!this.chosenAutomatically)
             this.chosen = new Coord(-1, -1);
+        if (reason) {
+            this.message(reason);
+            return MGPValidation.failure(reason);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
-
     public decodeMove(encodedMove: number): KamisadoMove {
         return KamisadoMove.decode(encodedMove);
     }
-
     public encodeMove(move: KamisadoMove): number {
         return KamisadoMove.encode(move);
     }

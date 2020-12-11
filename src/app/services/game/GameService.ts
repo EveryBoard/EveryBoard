@@ -259,7 +259,7 @@ export class GameService {
         display(GameService.VERBOSE, 'GameService.stopObserving();');
 
         if (this.followedPartId == null) {
-            console.log('!!!we already stop watching doc'); // TODO: Remove or make an alert
+            throw new Error('!!! GameService.stopObserving: we already stop watching doc');
         } else {
             display(GameService.VERBOSE, 'stopped watching joiner ' + this.followedPartId + ']');
 

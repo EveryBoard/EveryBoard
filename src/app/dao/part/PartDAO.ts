@@ -4,6 +4,7 @@ import { AngularFirestore } from "@angular/fire/firestore";
 import { Injectable } from "@angular/core";
 import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
 import { environment } from "src/environments/environment";
+import { display } from "src/app/collectionlib/utils";
 
 @Injectable({
     providedIn: 'root'
@@ -15,7 +16,7 @@ export class PartDAO extends FirebaseFirestoreDAO<ICurrentPart, PICurrentPart> {
     constructor(protected afs: AngularFirestore) {
         super("parties", afs);
         if (environment.test) throw new Error("NO PART DAO IN TEST");
-        if(PartDAO.VERBOSE) console.log("PartDAO.constructor");
+        display(PartDAO.VERBOSE, "PartDAO.constructor");
     }
     public observeActivesParts(callback: FirebaseCollectionObserver<ICurrentPart>): () => void {
         return this.observingWhere("result", "==", MGPResult.UNACHIEVED.toInterface(), callback);

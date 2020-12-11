@@ -40,9 +40,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
-        const result: MGPValidation = await this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
-        display(GoComponent.VERBOSE, "GoComponent.onClick: AbstractGameComponent.chooseMove said : " + result);
-        return result.onFailure(this.message);
+        return this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
     }
     public decodeMove(encodedMove: number): GoMove {
         return GoMove.decode(encodedMove);
@@ -78,8 +76,10 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
         if (phase === Phase.COUNTING || phase === Phase.ACCEPT)
             return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
-        else
-            return MGPValidation.failure("cannot pass").onFailure(this.message);
+        else {
+            this.message("Cannot pass");
+            return MGPValidation.failure("Cannot pass");
+        }
     }
     public getCaseColor(x: number, y: number): string {
         const piece: number = this.rules.node.gamePartSlice.getBoardByXY(x, y);

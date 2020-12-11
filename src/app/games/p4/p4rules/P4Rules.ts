@@ -415,11 +415,11 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     public isLegal(move: MoveX, slice: P4PartSlice): LegalityStatus {
         display(P4Rules.VERBOSE, { context: "P4Rules.isLegal", move: move.toString(), slice});
         if (move.x < 0 || move.x > 6) {
+            // TODO: MoveX should become P4Move, having X0 to X6 static instances, so this line is deleted
             return { legal: MGPValidation.failure("invalid move") };
         }
         if (slice.getBoardByXY(move.x, 0) !== Player.NONE.value) {
-            console.log({ illegalMove: { slice, move, player: Player.NONE.value }})
-            return { legal: MGPValidation.failure("illegal move") };
+            return { legal: MGPValidation.failure("Column " + move.x + " is full.") };
         }
         return {legal: MGPValidation.SUCCESS};
     }

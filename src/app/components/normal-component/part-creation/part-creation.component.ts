@@ -163,7 +163,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Promise.resolve();
     }
     public cancelAndLeave() {
-        console.log("I CANCEL AND LEAVE");
+        console.log("I CANCEL AND LEAVE"); // TODO: Toast this
         this.router.navigate(['/server']);
     }
     public unselectChosenPlayer() {

@@ -4,6 +4,7 @@ import { MGPStr } from "src/app/collectionlib/mgpstr/MGPStr";
 import { ObservableSubject } from "src/app/collectionlib/ObservableSubject";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
+import { display } from "src/app/collectionlib/utils";
 
 interface PartOS extends ObservableSubject<ICurrentPartId> {}
 
@@ -15,7 +16,7 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<ICurrentPart, PICurren
 
     public constructor() {
         super("PartDAOMock", PartDAOMock.VERBOSE);
-        if (this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE) console.log("PartDAOMock.constructor");
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, "PartDAOMock.constructor");
     }
     public getStaticDB(): MGPMap<MGPStr, PartOS> {
         return PartDAOMock.partDB;

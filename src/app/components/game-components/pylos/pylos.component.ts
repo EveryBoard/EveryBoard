@@ -7,7 +7,6 @@ import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-pylos',
@@ -51,11 +50,11 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         if (clickedPiece === this.slice.getCurrentPlayer().value ||
             clickedCoord.equals(this.chosenLandingCoord))
         {
-            return (await this.onPieceClick(clickedCoord)).onFailure(this.message);
+            return await this.onPieceClick(clickedCoord);
         } else if (clickedPiece === Player.NONE.value) {
-            return (await this.onEmptyCaseClick(clickedCoord)).onFailure(this.message);
+            return await this.onEmptyCaseClick(clickedCoord);
         } else {
-            return this.cancelMove("Can't click on ennemy pieces.").onFailure(this.message);
+            return this.cancelMove("Can't click on ennemy pieces.");
         }
     }
     private async onPieceClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
@@ -85,15 +84,19 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         return this.tryMove(move, this.slice);
     }
     public async tryMove(move: PylosMove, slice: PylosPartSlice): Promise<MGPValidation> {
-        this.cancelMove("Hiding the move.");
+        this.cancelMove();
         return this.chooseMove(move, slice, null, null);
     }
-    public cancelMove(reason: string): MGPValidation {
-        display(PylosComponent.VERBOSE, reason);
+    public cancelMove(reason?: string): MGPValidation {
         this.chosenStartingCoord = null;
         this.chosenLandingCoord = null;
         this.chosenFirstCapture = null;
-        return MGPValidation.failure(reason);
+        if (reason) {
+            this.message(reason);
+            return MGPValidation.failure(reason);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
     }
     private async onEmptyCaseClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         if (PylosRules.canCapture(this.slice, clickedCoord)) {
@@ -121,7 +124,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
                  c.equals(this.chosenLandingCoord)) stroke = 'grey'
         else if (c.equals(this.lastFirstCapture) ||
                  c.equals(this.lastSecondCapture)) stroke = 'orange';
-        return { fill, stroke, 'stroke-width': '10px' };
+        return { fill, stroke, 'stroke-width': '10px' }; // TODO: stoke-width go in html if not dynamic
     }
     public getPieceFill(c: PylosCoord): string {
         let owner: number = this.slice.getBoardAt(c);
@@ -151,7 +154,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             this.lastStartingCoord = this.lastMove.startingCoord.getOrNull();
             this.lastFirstCapture = this.lastMove.firstCapture.getOrNull();
             this.lastSecondCapture = this.lastMove.secondCapture.getOrNull();
-        } else{
+        } else {
             this.lastLandingCoord = null;
             this.lastStartingCoord = null;
             this.lastFirstCapture = null;
