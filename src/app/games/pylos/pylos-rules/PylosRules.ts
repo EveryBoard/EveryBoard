@@ -1,7 +1,7 @@
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { Player } from "src/app/jscaip/Player";
@@ -81,10 +81,10 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
     }
     public static canCapture(slice: PylosPartSlice, landingCoord: PylosCoord): boolean {
         const currentPlayer: number = slice.getCurrentPlayer().value;
-        for (let vertical of [Orthogonale.UP, Orthogonale.DOWN]) {
+        for (let vertical of [Orthogonal.UP, Orthogonal.DOWN]) {
             const firstNeighboors: MGPOptional<PylosCoord> = landingCoord.getNextValid(vertical);
             if (firstNeighboors.isPresent() && slice.getBoardAt(firstNeighboors.get()) === currentPlayer) {
-                for (let horizontal of [Orthogonale.LEFT, Orthogonale.RIGHT]) {
+                for (let horizontal of [Orthogonal.LEFT, Orthogonal.RIGHT]) {
                     const secondNeighboors: PylosCoord = firstNeighboors
                             .get()
                             .getNextValid(horizontal)

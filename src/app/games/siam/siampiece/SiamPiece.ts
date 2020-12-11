@@ -1,5 +1,5 @@
 import { Player } from "src/app/jscaip/Player";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 
 export class SiamPiece {
 
@@ -56,44 +56,44 @@ export class SiamPiece {
         if (5 <= value && value <= 8) return Player.ONE;
         throw new Error("Player.NONE do not own piece.");
     }
-    public static getNullableDirection(value: number): Orthogonale {
+    public static getNullableDirection(value: number): Orthogonal {
         switch (value) {
             case 0: return null;
-            case 1: return Orthogonale.UP;
-            case 5: return Orthogonale.UP;
-            case 2: return Orthogonale.RIGHT;
-            case 6: return Orthogonale.RIGHT;
-            case 3: return Orthogonale.DOWN;
-            case 7: return Orthogonale.DOWN;
-            case 4: return Orthogonale.LEFT;
-            case 8: return Orthogonale.LEFT;
+            case 1: return Orthogonal.UP;
+            case 5: return Orthogonal.UP;
+            case 2: return Orthogonal.RIGHT;
+            case 6: return Orthogonal.RIGHT;
+            case 3: return Orthogonal.DOWN;
+            case 7: return Orthogonal.DOWN;
+            case 4: return Orthogonal.LEFT;
+            case 8: return Orthogonal.LEFT;
             case 9: return null;
         }
     }
-    public static getDirection(value: number): Orthogonale {
-        const direction: Orthogonale = SiamPiece.getNullableDirection(value);
+    public static getDirection(value: number): Orthogonal {
+        const direction: Orthogonal = SiamPiece.getNullableDirection(value);
         if (direction == null) throw new Error("Piece " + value + " has no direction.");
         return direction;
     }
-    public static of(orientation: Orthogonale, player: Player): SiamPiece {
+    public static of(orientation: Orthogonal, player: Player): SiamPiece {
         if (orientation == null) throw new Error("Orientation must be set.");
         if (player == null) throw new Error("Player must be set.");
         if (player === Player.NONE) throw new Error("Player None don't have any pieces.");
         if (player === Player.ZERO) {
-            if (orientation === Orthogonale.UP) return SiamPiece.WHITE_UP;
-            if (orientation === Orthogonale.RIGHT) return SiamPiece.WHITE_RIGHT;
-            if (orientation === Orthogonale.DOWN) return SiamPiece.WHITE_DOWN;
+            if (orientation === Orthogonal.UP) return SiamPiece.WHITE_UP;
+            if (orientation === Orthogonal.RIGHT) return SiamPiece.WHITE_RIGHT;
+            if (orientation === Orthogonal.DOWN) return SiamPiece.WHITE_DOWN;
             return SiamPiece.WHITE_LEFT;
         } else {
-            if (orientation === Orthogonale.UP) return SiamPiece.BLACK_UP;
-            if (orientation === Orthogonale.RIGHT) return SiamPiece.BLACK_RIGHT;
-            if (orientation === Orthogonale.DOWN) return SiamPiece.BLACK_DOWN;
+            if (orientation === Orthogonal.UP) return SiamPiece.BLACK_UP;
+            if (orientation === Orthogonal.RIGHT) return SiamPiece.BLACK_RIGHT;
+            if (orientation === Orthogonal.DOWN) return SiamPiece.BLACK_DOWN;
             return SiamPiece.BLACK_LEFT;
         }
     }
     private constructor(public readonly value: number) {}
 
-    public getDirection(): Orthogonale {
+    public getDirection(): Orthogonal {
         return SiamPiece.getDirection(this.value);
     }
     public toString(): string {

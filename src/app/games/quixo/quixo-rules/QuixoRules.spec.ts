@@ -1,4 +1,4 @@
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { Player } from "src/app/jscaip/Player";
 import { QuixoPartSlice } from "../quixo-part-slice/QuixoPartSlice";
@@ -25,7 +25,7 @@ describe('QuixoRules:', () => {
             [_, _, _, _, _],
         ];
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
-        const move: QuixoMove = new QuixoMove(4, 2, Orthogonale.LEFT);
+        const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -46,7 +46,7 @@ describe('QuixoRules:', () => {
             [_, _, _, _, _],
         ];
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
-        const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
+        const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -70,7 +70,7 @@ describe('QuixoRules:', () => {
             [_, _, _, _, O],
         ];
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
-        const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
+        const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -95,7 +95,7 @@ describe('QuixoRules:', () => {
             [_, _, _, _, X],
         ];
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 1);
-        const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
+        const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -120,7 +120,7 @@ describe('QuixoRules:', () => {
             [X, _, _, _, O],
         ];
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
-        const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
+        const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -145,7 +145,7 @@ describe('QuixoRules:', () => {
             [O, _, _, _, X],
         ];
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 1);
-        const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
+        const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;

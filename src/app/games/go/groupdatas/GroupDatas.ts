@@ -1,6 +1,6 @@
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { GoPiece, GoPartSlice } from "../GoPartSlice";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { display } from "src/app/collectionlib/utils";
 
 export class GroupDatas {
@@ -25,7 +25,7 @@ export class GroupDatas {
         let color: GoPiece = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
         if (color === groupDatas.color) {
-            for (let direction of Orthogonale.ORTHOGONALES) {
+            for (let direction of Orthogonal.ORTHOGONALS) {
                 let nextCoord: Coord = coord.getNext(direction);
                 if (nextCoord.isInRange(GoPartSlice.WIDTH, GoPartSlice.HEIGHT)) {
                     if (!groupDatas.countains(nextCoord)) {

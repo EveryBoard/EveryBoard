@@ -1,7 +1,7 @@
 import { TablutRules } from "./TablutRules";
 import { TablutMove } from "../tablutmove/TablutMove";
 import { Coord } from "src/app/jscaip/coord/Coord";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { TablutPartSlice } from "../TablutPartSlice";
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
 import { TablutCase } from "./TablutCase";
@@ -31,7 +31,7 @@ describe('TablutRules', () => {
             backCoord,  back, backInRange,
             leftCoord,  left,
             rightCoord, right
-        } = TablutRules.getSurroundings(new Coord(3, 1), Orthogonale.RIGHT, 0, true, startingBoard);
+        } = TablutRules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, 0, true, startingBoard);
         expect(backCoord).toEqual(new Coord(4, 1));
     });
     it('TablutRules.applyLegalMove should apply legal simple move', () => {

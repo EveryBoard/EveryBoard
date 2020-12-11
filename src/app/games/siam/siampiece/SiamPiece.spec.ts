@@ -1,4 +1,4 @@
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { Player } from "src/app/jscaip/Player";
 import { SiamPiece } from "./SiamPiece";
 
@@ -36,9 +36,9 @@ describe('SiamPiece:', () => {
         expect(pieces).toEqual(expectedPieces);
     });
     it('Should throw when static method are called inadequately', () => {
-        expect(() => SiamPiece.of(Orthogonale.UP, null)).toThrowError("Player must be set.");
+        expect(() => SiamPiece.of(Orthogonal.UP, null)).toThrowError("Player must be set.");
         expect(() => SiamPiece.of(null, Player.ONE)).toThrowError("Orientation must be set.");
-        expect(() => SiamPiece.of(Orthogonale.UP, Player.NONE)).toThrowError("Player None don't have any pieces.");
+        expect(() => SiamPiece.of(Orthogonal.UP, Player.NONE)).toThrowError("Player None don't have any pieces.");
         expect(() => SiamPiece.decode(10)).toThrowError("Unknown value for SiamPiece(10).");
         expect(() => SiamPiece.belongTo(1, null)).toThrowError("Player must be set (even if Player.NONE).");
         expect(() => SiamPiece.getOwner(10)).toThrowError("Player.NONE do not own piece.");

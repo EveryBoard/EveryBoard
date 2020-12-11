@@ -13,7 +13,7 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { SiamComponent } from './siam.component';
 import { SiamMove } from 'src/app/games/siam/siammove/SiamMove';
-import { Orthogonale } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 
@@ -79,7 +79,7 @@ describe('SiamComponent', () => {
                 return chooseOrientation(inserted, move.landingOrientation.toString());
             }
         } else if (await clickPiece(move.coord)) {
-            const direction: Orthogonale = move.moveDirection.getOrNull();
+            const direction: Orthogonal = move.moveDirection.getOrNull();
             const moveDirection: string = direction ? direction.toString() : '';
             if (await chooseDirection(move.coord, moveDirection)) {
                 const futureCoord: Coord = direction ? move.coord.getNext(direction): move.coord;
@@ -114,19 +114,19 @@ describe('SiamComponent', () => {
         expect(gameComponent).toBeTruthy("SiamComponent should be created");
     });
     it('should accept insertion at first turn', fakeAsync(async() => {
-        const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonale.DOWN), Orthogonale.DOWN);
+        const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         expect(await doMove(move)).toBeTrue();
     }));
     it('Should not allow to choose direction before choosing piece', async() => {
-        let move: SiamMove = new SiamMove(5, 2, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        let move: SiamMove = new SiamMove(5, 2, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
-        move = new SiamMove(2, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        move = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         expect(await doMove(move)).toBeTrue();
 
         expect(await chooseDirection(new Coord(4, 2), 'UP')).toBeFalse();
     });
     it('Should not allow to move empty case or ennemy pieces', async() => {
-        let move: SiamMove = new SiamMove(-1, 2, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT);
+        let move: SiamMove = new SiamMove(-1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         expect(await doMove(move)).toBeTrue();
 
         expect(await clickPiece(new Coord(0, 0))).toBeFalse();
@@ -135,9 +135,9 @@ describe('SiamComponent', () => {
         expect(gameComponent.message).toHaveBeenCalledWith("Can't choose ennemy's pieces");
     });
     it('should cancel move when trying to insert while having selected a piece', fakeAsync(async() => {
-        let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
-        move = new SiamMove(5, 0, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        move = new SiamMove(5, 0, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
 
         // clickPiece shoud work
@@ -155,27 +155,27 @@ describe('SiamComponent', () => {
         expect(gameComponent.message).toHaveBeenCalledWith("Can't insert when there is already a selected piece");
     }));
     it('should allow rotation', fakeAsync(async() => {
-        let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
-        move = new SiamMove(5, 0, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        move = new SiamMove(5, 0, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
 
-        move = new SiamMove(4, 4, MGPOptional.empty(), Orthogonale.DOWN);
+        move = new SiamMove(4, 4, MGPOptional.empty(), Orthogonal.DOWN);
         expect(await doMove(move)).toBeTrue();
     }));
     it('should allow normal move', fakeAsync(async() => {
-        let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
-        move = new SiamMove(5, 0, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        move = new SiamMove(5, 0, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
 
-        move = new SiamMove(4, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        move = new SiamMove(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
     }));
     it('should decide outing orientation automatically', fakeAsync(async() => {
-        let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        let move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
-        move = new SiamMove(5, 0, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT);
+        move = new SiamMove(5, 0, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
 
         expect(await clickPiece(new Coord(4, 4))).toBeTrue();
@@ -190,7 +190,7 @@ describe('SiamComponent', () => {
     });
     it('should delegate encoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(SiamMove, "encode").and.callThrough();
-        gameComponent.encodeMove(new SiamMove(2, 2, MGPOptional.empty(), Orthogonale.UP));
+        gameComponent.encodeMove(new SiamMove(2, 2, MGPOptional.empty(), Orthogonal.UP));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
 });

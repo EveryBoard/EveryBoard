@@ -1,7 +1,7 @@
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 import { Coord } from "src/app/jscaip/coord/Coord";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { Player } from "src/app/jscaip/Player";
@@ -20,7 +20,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
         const horizontalCenterCoords: Coord[] = QuixoRules.getHorizontalCenterCoords(node);
         const coords: Coord[] = horizontalCenterCoords.concat(verticalCoords);
         for (const coord of coords) {
-            const possibleDirections: Orthogonale[] = QuixoRules.getPossibleDirections(coord);
+            const possibleDirections: Orthogonal[] = QuixoRules.getPossibleDirections(coord);
             for (let possibleDirection of possibleDirections) {
                 const newMove: QuixoMove = new QuixoMove(coord.x, coord.y, possibleDirection);
                 const resultingSlice: QuixoPartSlice = QuixoRules.applyLegalMove(newMove, slice, null).resultingSlice;
@@ -55,12 +55,12 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
         }
         return horizontalCenterCoords;
     }
-    public static getPossibleDirections(coord: Coord): Orthogonale[] {
-        const possibleDirections: Orthogonale[] = [];
-        if (coord.x !== 0) possibleDirections.push(Orthogonale.LEFT);
-        if (coord.y !== 0) possibleDirections.push(Orthogonale.UP);
-        if (coord.x !== 4) possibleDirections.push(Orthogonale.RIGHT);
-        if (coord.y !== 4) possibleDirections.push(Orthogonale.DOWN);
+    public static getPossibleDirections(coord: Coord): Orthogonal[] {
+        const possibleDirections: Orthogonal[] = [];
+        if (coord.x !== 0) possibleDirections.push(Orthogonal.LEFT);
+        if (coord.y !== 0) possibleDirections.push(Orthogonal.UP);
+        if (coord.x !== 4) possibleDirections.push(Orthogonal.RIGHT);
+        if (coord.y !== 4) possibleDirections.push(Orthogonal.DOWN);
         return possibleDirections;
     }
     public getBoardValue(move: QuixoMove, slice: QuixoPartSlice): number {

@@ -1,59 +1,59 @@
 import { Coord } from "./coord/Coord";
 
-export class Orthogonale {
+export class Orthogonal {
 
-    public static readonly UP: Orthogonale = new Orthogonale(0, -1);
+    public static readonly UP: Orthogonal = new Orthogonal(0, -1);
 
-    public static readonly RIGHT: Orthogonale = new Orthogonale(1, 0);
+    public static readonly RIGHT: Orthogonal = new Orthogonal(1, 0);
 
-    public static readonly DOWN: Orthogonale = new Orthogonale(0, 1);
+    public static readonly DOWN: Orthogonal = new Orthogonal(0, 1);
 
-    public static readonly LEFT: Orthogonale = new Orthogonale(-1, 0);
+    public static readonly LEFT: Orthogonal = new Orthogonal(-1, 0);
 
-    public static readonly ORTHOGONALES = [Orthogonale.UP, Orthogonale.RIGHT, Orthogonale.DOWN, Orthogonale.LEFT];
+    public static readonly ORTHOGONALS = [Orthogonal.UP, Orthogonal.RIGHT, Orthogonal.DOWN, Orthogonal.LEFT];
 
-    public static fromInt(int: number): Orthogonale {
+    public static fromInt(int: number): Orthogonal {
         switch (int) {
-            case 0: return Orthogonale.UP;
-            case 1: return Orthogonale.RIGHT;
-            case 2: return Orthogonale.DOWN;
-            case 3: return Orthogonale.LEFT;
-            default: throw new Error("No Orthogonale matching int " + int);
+            case 0: return Orthogonal.UP;
+            case 1: return Orthogonal.RIGHT;
+            case 2: return Orthogonal.DOWN;
+            case 3: return Orthogonal.LEFT;
+            default: throw new Error("No Orthogonal matching int " + int);
         }
     }
-    public static fromString(str: string): Orthogonale {
+    public static fromString(str: string): Orthogonal {
         switch (str) {
-            case "UP":    return Orthogonale.UP;
-            case "RIGHT": return Orthogonale.RIGHT;
-            case "DOWN":  return Orthogonale.DOWN;
-            case "LEFT":  return Orthogonale.LEFT;
+            case "UP":    return Orthogonal.UP;
+            case "RIGHT": return Orthogonal.RIGHT;
+            case "DOWN":  return Orthogonal.DOWN;
+            case "LEFT":  return Orthogonal.LEFT;
             default: throw new Error("Unknown direction " + str);
         }
     }
     private constructor(public readonly x: number, public readonly y: number) {}
 
-    public getOpposite(): Orthogonale {
+    public getOpposite(): Orthogonal {
         switch (this) {
-            case Orthogonale.UP:    return Orthogonale.DOWN;
-            case Orthogonale.RIGHT: return Orthogonale.LEFT;
-            case Orthogonale.DOWN:  return Orthogonale.UP;
-            case Orthogonale.LEFT:  return Orthogonale.RIGHT;
+            case Orthogonal.UP:    return Orthogonal.DOWN;
+            case Orthogonal.RIGHT: return Orthogonal.LEFT;
+            case Orthogonal.DOWN:  return Orthogonal.UP;
+            case Orthogonal.LEFT:  return Orthogonal.RIGHT;
         }
     }
     public toString(): string {
         switch (this) {
-            case Orthogonale.UP:    return "UP";
-            case Orthogonale.RIGHT: return "RIGHT";
-            case Orthogonale.DOWN:  return "DOWN";
-            case Orthogonale.LEFT:  return "LEFT";
+            case Orthogonal.UP:    return "UP";
+            case Orthogonal.RIGHT: return "RIGHT";
+            case Orthogonal.DOWN:  return "DOWN";
+            case Orthogonal.LEFT:  return "LEFT";
         }
     }
     public toInt(): number {
         switch (this) {
-            case Orthogonale.UP:    return 0;
-            case Orthogonale.RIGHT: return 1;
-            case Orthogonale.DOWN:  return 2;
-            case Orthogonale.LEFT:  return 3;
+            case Orthogonal.UP:    return 0;
+            case Orthogonal.RIGHT: return 1;
+            case Orthogonal.DOWN:  return 2;
+            case Orthogonal.LEFT:  return 3;
         }
     }
 }
