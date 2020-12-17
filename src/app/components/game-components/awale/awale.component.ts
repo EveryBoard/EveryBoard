@@ -31,8 +31,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         // we stop showing him the last move
         const chosenMove: AwaleMove = new AwaleMove(x, y);
         // let's confirm on java-server-side that the move is legal
-        const result: MGPValidation = await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
-        return result.onFailure(this.message);
+        return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
     }
     public decodeMove(encodedMove: number): AwaleMove {
         return AwaleMove.decode(encodedMove);

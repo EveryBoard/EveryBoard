@@ -88,7 +88,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
             const stack = DvonnBoard.getStackAt(slice.board, c);
             if (stack.belongsTo(Player.ZERO)) {
                 p0_score += stack.size();
-            } else if (stack.belongsTo(Player.ONE)){
+            } else if (stack.belongsTo(Player.ONE)) {
                 p1_score += stack.size();
             }
         });

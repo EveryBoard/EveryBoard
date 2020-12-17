@@ -31,7 +31,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         // we stop showing him the last move
         const chosenMove = new ReversiMove(x, y);
 
-        return (await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1])).onFailure(this.message);
+        return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
     }
     public decodeMove(encodedMove: number): ReversiMove {
         return ReversiMove.decode(encodedMove);

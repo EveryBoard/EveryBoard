@@ -53,7 +53,7 @@ import { PylosComponent } from './components/game-components/pylos/pylos.compone
 import { QuixoComponent } from './components/game-components/quixo/quixo.component';
 
 export const INCLUDE_VERBOSE_LINE_IN_TEST = false;
-// scp -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
+// time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
 const routes: Route [] = [
     {path: 'login',               component: LoginComponent},

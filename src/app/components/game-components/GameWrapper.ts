@@ -122,17 +122,14 @@ export abstract class GameWrapper {
     public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<MGPValidation> => {
         const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
-            display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: not your turn');
             return MGPValidation.failure("not your turn");
         }
         if (this.endGame) {
-            display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: part is finished');
             return MGPValidation.failure("game is finished your turn");
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal.isFailure()) {
             this.compo.message(legality.legal.getReason());
-            display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: move illegal, not transmitting it to db');
             return legality.legal
         }
         await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
