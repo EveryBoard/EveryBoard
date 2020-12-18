@@ -11,7 +11,7 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { QuixoComponent } from './quixo.component';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
-import { Orthogonale } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GameComponentUtils } from '../GameComponentUtils';
@@ -93,7 +93,7 @@ describe('QuixoComponent', () => {
         expect(possibleDirections).toEqual([[0, 1, 'LEFT'], [1, 0, 'UP']]);
     });
     it('should cancel move when trying to select ennemy piece or center coord', async() => {
-        const firstMove: QuixoMove = new QuixoMove(0, 0, Orthogonale.RIGHT);
+        const firstMove: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
 
         let legal: MGPValidation = await doMove(firstMove);
         spyOn(gameComponent, "message").and.callThrough();
@@ -113,12 +113,12 @@ describe('QuixoComponent', () => {
     });
     it('should delegate decoding to move', () => {
         spyOn(QuixoMove, "decode").and.callThrough();
-        gameComponent.decodeMove(new QuixoMove(0, 0, Orthogonale.DOWN).encode());
+        gameComponent.decodeMove(new QuixoMove(0, 0, Orthogonal.DOWN).encode());
         expect(QuixoMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
         spyOn(QuixoMove, "encode").and.callThrough();
-        gameComponent.encodeMove(new QuixoMove(0, 0, Orthogonale.DOWN));
+        gameComponent.encodeMove(new QuixoMove(0, 0, Orthogonal.DOWN));
         expect(QuixoMove.encode).toHaveBeenCalledTimes(1);
     });
 });

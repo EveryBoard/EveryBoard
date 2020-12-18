@@ -1,16 +1,15 @@
 import {Move} from './Move';
 
 export class MoveX extends Move {
-
+    private static pool: { [label: number]: MoveX } = {};
     public static get(x: number): MoveX {
-        const newMove: MoveX = new MoveX(x);
-        for (const existingMove of MoveX.pool) {
-            if (existingMove.equals(newMove)) {
-                return existingMove;
-            }
+        if (MoveX.pool[x] !== undefined) {
+            return MoveX.pool[x];
+        } else {
+            const newMove: MoveX = new MoveX(x);
+            MoveX.pool[x] = newMove;
+            return newMove
         }
-        MoveX.pool.push(newMove);
-        return newMove;
     }
     public static encode(move: MoveX): number {
         return move.x;
@@ -18,7 +17,6 @@ export class MoveX extends Move {
     public static decode(encodedMove: number): MoveX {
         return MoveX.get(encodedMove);
     }
-    private static pool: Array<MoveX> = new Array<MoveX>();
 
     protected constructor(public readonly x: number) {
         super();

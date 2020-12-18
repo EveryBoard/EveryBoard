@@ -3,7 +3,7 @@ import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class AwalePartSlice extends GamePartSlice {
 
-    constructor(b: number[][], turn: number, public captured: ReadonlyArray<number>) {
+    constructor(b: number[][], turn: number, public readonly captured: ReadonlyArray<number>) {
         super(b, turn);
         if (captured == null) throw new Error("Captured cannot be null");
         if (captured.length !== 2) throw new Error("Captured must be of length 2");

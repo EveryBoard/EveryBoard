@@ -1,6 +1,6 @@
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { Coord } from "src/app/jscaip/coord/Coord";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 
 export class PylosCoord extends Coord {
 
@@ -84,7 +84,7 @@ export class PylosCoord extends Coord {
                 .filter((coord: Coord) => coord.isInRange(levelSize, levelSize))
                 .map((c: Coord) => new PylosCoord(c.x, c.y, higherZ));
     }
-    public getNextValid(dir: Orthogonale): MGPOptional<PylosCoord> {
+    public getNextValid(dir: Orthogonal): MGPOptional<PylosCoord> {
         const xyNext: Coord = new Coord(this.x, this.y).getNext(dir);
         const floorSize: number = 4 - this.z;
         if (xyNext.isNotInRange(floorSize, floorSize)) {

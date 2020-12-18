@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Orthogonale } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSlice';
@@ -27,7 +27,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public chosenCoord: Coord;
 
-    public chosenDirection: Orthogonale;
+    public chosenDirection: Orthogonal;
 
     public updateBoard() {
         this.slice = this.rules.node.gamePartSlice;
@@ -90,7 +90,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         return infos;
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
-        this.chosenDirection = Orthogonale.fromString(direction);
+        this.chosenDirection = Orthogonal.fromString(direction);
         return await this.tryMove();
     }
     public async tryMove(): Promise<MGPValidation> {

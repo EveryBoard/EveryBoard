@@ -2,7 +2,7 @@ import {Rules} from '../../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import {Coord} from '../../../jscaip/coord/Coord';
 import {GoPartSlice, Phase, GoPiece} from '../GoPartSlice';
-import {Direction, Orthogonale} from 'src/app/jscaip/DIRECTION';
+import {Direction, Orthogonal} from 'src/app/jscaip/DIRECTION';
 import {GoMove} from '../gomove/GoMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { GoLegalityStatus } from '../GoLegalityStatus';
@@ -100,7 +100,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         display(GoRules.VERBOSE ||LOCAL_VERBOSE, { getCaptureState: { move, slice}});
         let captureState: CaptureState = new CaptureState();
         let capturedInDirection: Coord[];
-        for (let direction of Orthogonale.ORTHOGONALES) {
+        for (let direction of Orthogonal.ORTHOGONALS) {
             capturedInDirection = GoRules.getCapturedInDirection(move.coord, direction, slice);
             if (capturedInDirection.length > 0 &&
                 captureState.capturedCoords.every(coord => !capturedInDirection[0].equals(coord))) {

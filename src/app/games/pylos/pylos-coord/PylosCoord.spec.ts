@@ -1,5 +1,5 @@
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { PylosCoord } from "./PylosCoord";
 
 describe('PylosCoord:', () => {
@@ -75,7 +75,7 @@ describe('PylosCoord:', () => {
     it("Should give optional next piece in direction", () => {
         const piece: PylosCoord = new PylosCoord(0, 0, 0);
         const right: PylosCoord = new PylosCoord(1, 0, 0);
-        expect(piece.getNextValid(Orthogonale.LEFT)).toEqual(MGPOptional.empty());
-        expect(piece.getNextValid(Orthogonale.RIGHT)).toEqual(MGPOptional.of(right));
+        expect(piece.getNextValid(Orthogonal.LEFT)).toEqual(MGPOptional.empty());
+        expect(piece.getNextValid(Orthogonal.RIGHT)).toEqual(MGPOptional.of(right));
     });
 });

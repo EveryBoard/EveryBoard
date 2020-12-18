@@ -1,4 +1,4 @@
-import {Orthogonale, Direction} from '../DIRECTION';
+import {Orthogonal, Direction} from '../DIRECTION';
 import { Comparable } from '../../collectionlib/Comparable';
 
 export class Coord implements Comparable {
@@ -93,7 +93,7 @@ export class Coord implements Comparable {
         const dy: number = Coord.getBinarised(c.y - this.y);
         return Direction.of(dx, dy); // TODO: method myght have to be deleted in favor of Direction.fromMove
     }
-    public _getOrthogonalDirectionToward(c: Coord): Orthogonale {
+    public _getOrthogonalDirectionToward(c: Coord): Orthogonal {
         const dx: number = Coord.getBinarised(c.x - this.x) + 1;
         const dy: number = Coord.getBinarised(c.y - this.y) + 1;
         return // ORTH_ARRAY[dy][dx];

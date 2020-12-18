@@ -2,7 +2,7 @@ import { SiamRules, SiamNode } from "../siamrules/SiamRules";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { SiamMove } from "./SiamMove";
 import { SiamPartSlice } from "../SiamPartSlice";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { SiamPiece } from "../siampiece/SiamPiece";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
@@ -23,7 +23,7 @@ describe('SiamMove', () => {
             [_, _, _, _, _],
             [_, _, _, _, _]
         ];
-        const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonale.DOWN), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const node: SiamNode = new MGPNode(null, move, slice, 0);
         const rules: SiamRules = new SiamRules(SiamPartSlice);
@@ -37,7 +37,7 @@ describe('SiamMove', () => {
     });
 
     it('should delegate decoding to static method', () => {
-        const testMove: SiamMove = new SiamMove(-1, 0, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT);
+        const testMove: SiamMove = new SiamMove(-1, 0, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         spyOn(SiamMove, "decode").and.callThrough();
         testMove.decode(testMove.encode());
         expect(SiamMove.decode).toHaveBeenCalledTimes(1);
@@ -45,39 +45,39 @@ describe('SiamMove', () => {
 
     it("Should force move to end inside the board", () => {
         expect(() => {
-            new SiamMove(-1, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+            new SiamMove(-1, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         }).toThrowError("SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP).");
     });
 
     it("Should forbid rotation outside the board", () => {
         expect(() => {
-            new SiamMove(-1, 2, MGPOptional.empty(), Orthogonale.UP);
+            new SiamMove(-1, 2, MGPOptional.empty(), Orthogonal.UP);
         }).toThrowError("Cannot rotate piece outside the board: SiamMove(-1, 2, -, UP).");
     });
 
     it("Should throw during invalid SiamMove creation", () => {
         expect(() => {
-            new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), null);
+            new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), null);
         }).toThrowError("Landing orientation must be set.");
         expect(() => {
-            new SiamMove(2, 2, null, Orthogonale.UP);
+            new SiamMove(2, 2, null, Orthogonal.UP);
         }).toThrowError("Move Direction must be set (even if optional).");
         expect(() => {
-            new SiamMove(0, 0, MGPOptional.of(Orthogonale.UP), Orthogonale.DOWN);
+            new SiamMove(0, 0, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
         }).toThrowError("SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: SiamMove(0, 0, UP, DOWN).");
     });
 
     it('Should override correctly equality', () => {
-        const moveA: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);
-        const twin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);
+        const moveA: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
+        const twin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
         const android: Object = {
             coord: new Coord(2, 2),
-            movingDirection: Orthogonale.UP,
-            landingOrientation: Orthogonale.RIGHT
+            movingDirection: Orthogonal.UP,
+            landingOrientation: Orthogonal.RIGHT
         };
-        const neighboor: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);
-        const cousin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.DOWN), Orthogonale.RIGHT);
-        const stranger: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.LEFT);
+        const neighboor: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
+        const cousin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.DOWN), Orthogonal.RIGHT);
+        const stranger: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
         expect(moveA.equals(moveA)).toBeTrue();
         expect(moveA.equals(android)).toBeFalse();
         expect(moveA.equals(twin)).toBeTrue();

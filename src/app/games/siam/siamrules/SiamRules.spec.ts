@@ -5,7 +5,7 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { SiamLegalityStatus } from '../SiamLegalityStatus';
-import { Orthogonale } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
 describe('SiamRules:', () => {
@@ -56,7 +56,7 @@ describe('SiamRules:', () => {
             [R, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(-1, 4, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT);
+        const move: SiamMove = new SiamMove(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -79,7 +79,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -95,7 +95,7 @@ describe('SiamRules:', () => {
             [_, _, u, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -115,7 +115,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -138,7 +138,7 @@ describe('SiamRules:', () => {
             [R, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonale.RIGHT);
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.RIGHT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -161,7 +161,7 @@ describe('SiamRules:', () => {
             [D, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonale.DOWN);
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -184,7 +184,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonale.UP), Orthogonale.DOWN);
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -200,7 +200,7 @@ describe('SiamRules:', () => {
             [_, _, U, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -220,7 +220,7 @@ describe('SiamRules:', () => {
             [_, L, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.LEFT);
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -236,7 +236,7 @@ describe('SiamRules:', () => {
             [U, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -249,7 +249,7 @@ describe('SiamRules:', () => {
             [u, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 3, MGPOptional.of(Orthogonale.DOWN), Orthogonale.DOWN);
+        const move: SiamMove = new SiamMove(0, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -269,7 +269,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -285,7 +285,7 @@ describe('SiamRules:', () => {
             [U, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -298,7 +298,7 @@ describe('SiamRules:', () => {
             [U, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonale.UP), Orthogonale.LEFT);
+        const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -311,7 +311,7 @@ describe('SiamRules:', () => {
             [U, U, U, U, U]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, -1, MGPOptional.of(Orthogonale.DOWN), Orthogonale.DOWN);
+        const move: SiamMove = new SiamMove(0, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -324,7 +324,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT);
+        const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -344,7 +344,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT);
+        const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -367,7 +367,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -391,7 +391,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -415,7 +415,7 @@ describe('SiamRules:', () => {
             [_, _, U, _, _]
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.UP);
+        const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
