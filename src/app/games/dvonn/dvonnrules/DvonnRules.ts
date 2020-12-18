@@ -133,12 +133,12 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
                 newBoard[c.y][c.x] = DvonnPieceStack.EMPTY.getValue();
             }
         })
-        return new DvonnPartSlice(slice.turn, slice.alreadyPassed, newBoard);
+        return new DvonnPartSlice(slice.turn, newBoard, slice.alreadyPassed);
     }
     public applyLegalMove(move: DvonnMove, slice: DvonnPartSlice, status: LegalityStatus)
     : { resultingMove: DvonnMove, resultingSlice: DvonnPartSlice } {
         if (move === DvonnMove.PASS) {
-            return { resultingSlice: new DvonnPartSlice(slice.turn+1, true, ArrayUtils.copyBiArray(slice.board)), resultingMove: move }
+            return { resultingSlice: new DvonnPartSlice(slice.turn+1, ArrayUtils.copyBiArray(slice.board), true), resultingMove: move }
         } else {
             // To apply a legal move, the stack is added in the front of its end coordinate (and removed from its start coordinate)
             const stack = DvonnBoard.getStackAt(slice.board, move.coord);
@@ -146,7 +146,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
             const newBoard = ArrayUtils.copyBiArray(slice.board);
             newBoard[move.coord.y][move.coord.x] = DvonnPieceStack.EMPTY.getValue();
             newBoard[move.end.y][move.end.x] = DvonnPieceStack.append(stack, targetStack).getValue();
-            const resultingSlice: DvonnPartSlice = this.removeDisconnectedPieces(new DvonnPartSlice(slice.turn+1, false, newBoard));
+            const resultingSlice: DvonnPartSlice = this.removeDisconnectedPieces(new DvonnPartSlice(slice.turn+1, newBoard, false));
             return { resultingSlice, resultingMove: move };
         }
     }
