@@ -1,13 +1,15 @@
 import { AngularFireAuth } from '@angular/fire/auth';
 import { Injectable, OnDestroy } from '@angular/core';
-import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { PIJoueur } from '../../domain/iuser';
 import { AngularFirestore, AngularFirestoreDocument } from '@angular/fire/firestore';
-import { environment } from 'src/environments/environment';
-
 import firebase from "firebase/app";
 import "firebase/auth";
 import "firebase/firestore";
+import "firebase/database";
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
+
+import { PIJoueur } from '../../domain/iuser';
+import { environment } from 'src/environments/environment';
+
 import { display } from 'src/app/collectionlib/utils';
 
 @Injectable()

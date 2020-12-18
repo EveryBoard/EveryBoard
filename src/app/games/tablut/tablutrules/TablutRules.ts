@@ -407,8 +407,9 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             while (!endFound) {
                 foundDestination = foundDestination.getNext(dir);
                 endFound =
-                    !foundDestination.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) ||
-                    this.getAbsoluteOwner(foundDestination, invaderStart, board) !== Player.NONE;
+                    foundDestination.isNotInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) ||
+                    this.getAbsoluteOwner(foundDestination, invaderStart, board) !== Player.NONE ||
+                    TablutRules.isThrone(foundDestination);
                 if (!endFound) {
                     destinations.push(foundDestination);
                 }
@@ -519,13 +520,13 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
     public applyLegalMove(move: TablutMove, slice: TablutPartSlice, status: LegalityStatus): { resultingMove: TablutMove; resultingSlice: TablutPartSlice; } {
         return TablutRules.applyLegalMove(move, slice, status);
     }
-    public getListMoves(n: TablutNode): MGPMap<TablutMove, TablutPartSlice> {
+    public getListMoves(node: TablutNode): MGPMap<TablutMove, TablutPartSlice> {
         const LOCAL_VERBOSE: boolean = false;
-        display(TablutRules.VERBOSE || LOCAL_VERBOSE, 'get list move available to ' + n);
+        display(TablutRules.VERBOSE || LOCAL_VERBOSE, { TablutRules_getListMoves: { node }});
 
         const listCombinaison: MGPMap<TablutMove, TablutPartSlice> = new MGPMap<TablutMove, TablutPartSlice>();
 
-        const currentPartSlice: TablutPartSlice = n.gamePartSlice;
+        const currentPartSlice: TablutPartSlice = node.gamePartSlice;
 
         const currentTurn: number = currentPartSlice.turn;
         let currentBoard: number[][] = currentPartSlice.getCopiedBoard();
@@ -534,23 +535,15 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
 
         const listMoves: TablutMove[] =
             TablutRules.getPlayerListMoves(currentPlayer, invaderStart, currentBoard);
-            display(TablutRules.VERBOSE || LOCAL_VERBOSE, {listMoves});
+        display(TablutRules.VERBOSE || LOCAL_VERBOSE, {listMoves});
 
         const nextTurn: number = currentTurn + 1;
 
         let newPartSlice: TablutPartSlice;
-        let moveResult: MGPValidation;
         for (const newMove of listMoves)    {
             currentBoard = currentPartSlice.getCopiedBoard();
-            moveResult = TablutRules.tryMove(currentPlayer, invaderStart, newMove, currentBoard).success;
-            if (moveResult.isSuccess()) {
-                newPartSlice = new TablutPartSlice(currentBoard, nextTurn);
-                listCombinaison.set(newMove, newPartSlice);
-            } else {
-                display(TablutRules.VERBOSE || LOCAL_VERBOSE,
-                    'how is it that I receive a moveResult == to ' +
-                    moveResult + ' with ' + newMove + ' at turn ' + currentTurn + ' of player ' + currentPlayer);
-            }
+            newPartSlice = new TablutPartSlice(currentBoard, nextTurn);
+            listCombinaison.set(newMove, newPartSlice);
         }
         return listCombinaison;
     }

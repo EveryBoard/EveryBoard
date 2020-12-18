@@ -116,17 +116,13 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
             }
         } else { // Must choose empty landing case
             if (this.board[y][x] === SaharaPawn.EMPTY) { // Selected empty landing coord
+                let newMove: SaharaMove;
                 try {
-                    const newMove: SaharaMove = new SaharaMove(this.chosenCoord, clickedCoord);
-                    const moveResult: MGPValidation = await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
-                    if (moveResult.isFailure()) {
-                        // TODO: why not return moveResult
-                        return this.cancelMove("You can only bounce on UNOCCUPIED brown case.");
-                    }
+                    newMove = new SaharaMove(this.chosenCoord, clickedCoord);
                 } catch (error) {
                     return this.cancelMove(error.message);
                 }
-                this.chosenCoord = new Coord(-2, -2);
+                return await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
             } else {
                 return this.cancelMove("You can't land your pyramid on the ennemy's.");
             }

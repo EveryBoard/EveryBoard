@@ -107,9 +107,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                                             this.chosenDirection,
                                             this.chosenOrientation);
         this.cancelMove();
-        const legal: MGPValidation = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-        display(SiamComponent.VERBOSE, "SiamComponent.tryMove: " + legal);
-        return legal;
+        return await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
     public getArrowCoordinate(x: number, y: number, o: string): string {
         const x0: number = 100*x;     const y0: number = 100*y;

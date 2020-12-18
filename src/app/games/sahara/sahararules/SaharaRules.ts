@@ -115,7 +115,6 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         }
         const landingCase: SaharaPawn = slice.getBoardAt(move.end);
         if (landingCase !== SaharaPawn.EMPTY) {
-            display(SaharaRules.VERBOSE, "This move is illegal because the landing case is not empty.");
             return {legal: MGPValidation.failure("landing case is not empty")};
         }
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
@@ -123,7 +122,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
             if (slice.getBoardAt(commonNeighboor.get()) === SaharaPawn.EMPTY) {
                 return {legal: MGPValidation.SUCCESS};
             } else {
-                return {legal: MGPValidation.failure("common neighbor not empty")};
+                return {legal: MGPValidation.failure("You can only bounce on UNOCCUPIED brown case.")};
             }
         } else {
             return {legal: MGPValidation.SUCCESS};

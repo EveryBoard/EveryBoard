@@ -91,7 +91,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
         this.chosenDirection = Orthogonal.fromString(direction);
-        return (await this.tryMove()).onFailure(this.message);
+        return await this.tryMove();
     }
     public async tryMove(): Promise<MGPValidation> {
         const move: QuixoMove = new QuixoMove(this.chosenCoord.x,

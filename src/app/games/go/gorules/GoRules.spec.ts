@@ -5,7 +5,7 @@ import { Phase, GoPartSlice, GoPiece } from '../GoPartSlice';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 describe('GoRules:', () => {
 
@@ -329,5 +329,22 @@ describe('GoRules:', () => {
         const expectedScore: number[] = [7, 3];
         const score: number[] = GoRules.addDeadToScore(sliceWithDead);
         expect(score).toEqual(expectedScore, "Score should be 7 vs 3")
+    });
+    it('Should calculate correctly board with dead stones', () => {
+        const board: GoPiece[][] = [
+            [_, _, X, O, _],
+            [_, _, X, O, _],
+            [_, _, X, O, X],
+            [X, X, X, O, _],
+            [_, O, O, O, _]
+        ];
+        const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 0, null, Phase.PASSED);
+        rules.node = new MGPNode(null, null, slice, -6);
+        expect(rules.choose(GoMove.PASS)).toBeTrue();
+        expect(rules.node.gamePartSlice.phase).toBe(Phase.COUNTING);
+        expect(rules.choose(new GoMove(4, 2))).toBeTrue();
+        expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
+        expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
+        expect(rules.getBoardValue(rules.node.move, rules.node.gamePartSlice)).toBe(0);
     });
 });

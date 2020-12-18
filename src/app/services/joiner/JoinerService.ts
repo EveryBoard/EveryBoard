@@ -85,7 +85,7 @@ export class JoinerService {
                 // if the chosenPlayer leave, we're back to partStatus 0 (waiting for a chosenPlayer)
                 chosenPlayer = '';
                 partStatus = 0;
-            } else if(indexLeaver >= 0) { // candidate including chosenPlayer
+            } else if (indexLeaver >= 0) { // candidate including chosenPlayer
                 joinersList.splice(indexLeaver, 1);
             } else {
                 throw new Error("someone that was nor candidate nor chosenPlayer just left the chat: " + userName);

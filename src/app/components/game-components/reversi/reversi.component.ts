@@ -14,24 +14,22 @@ import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation
 })
 export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
-    public rules: ReversiRules = new ReversiRules(ReversiPartSlice);
-
     public lastMove: Coord = new Coord(-2, -2);
-
-    public canPass: boolean = false;
 
     public scores: number[] = [2, 2];
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
         this.showScore = true;
+        this.canPass = false;
+        this.rules = new ReversiRules(ReversiPartSlice);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         this.lastMove = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
-        const chosenMove = new ReversiMove(x, y);
+        const chosenMove: ReversiMove = new ReversiMove(x, y);
 
-        return (await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1])).onFailure(this.message);
+        return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
     }
     public decodeMove(encodedMove: number): ReversiMove {
         return ReversiMove.decode(encodedMove);

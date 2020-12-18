@@ -28,9 +28,9 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             const playing: boolean = slice.phase === Phase.PLAYING;
             const passed: boolean = slice.phase === Phase.PASSED;
             display(GoRules.VERBOSE ||LOCAL_VERBOSE,
-                "GoRules.isLegal at" + slice.phase + ((playing || passed) ? " forbid" : " allowed") +
+                "GoRules.isLegal at " + slice.phase + ((playing || passed) ? " forbid" : " allowed") +
                 " passing on " + slice.getCopiedBoard());
-            return {legal: (playing || passed) ? MGPValidation.SUCCESS : MGPValidation.failure("not playing or not passed"), capturedCoords: []};
+            return {legal: (playing || passed) ? MGPValidation.SUCCESS : MGPValidation.failure("We are nor in playing nor in passed phase, you must mark stone as dead or alive or accept current board."), capturedCoords: []};
         } else if (GoRules.isAccept(move)) {
             const counting: boolean = slice.phase === Phase.COUNTING;
             const accept: boolean = slice.phase === Phase.ACCEPT;
@@ -40,7 +40,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         if (GoRules.isOccupied(move.coord, slice.getCopiedBoardGoPiece())) {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegal: move is marking");
             const legal: boolean = GoRules.isLegalDeadMarking(move, slice);
-            return { legal: legal ? MGPValidation.SUCCESS : MGPValidation.failure("not legal dead marking"), capturedCoords: []};
+            return { legal: legal ? MGPValidation.SUCCESS : MGPValidation.failure("You must click on empty case."), capturedCoords: []};
         } else {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, "GoRules.isLegal: move is normal stuff: " + move.toString());
             return GoRules.isLegalNormalMove(move, slice);
@@ -377,8 +377,9 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const goPartSlice: GoPartSlice = GoRules.markTerritoryAndCount(slice);
 
         const goScore: number[] = goPartSlice.getCapturedCopy();
+        const goKilled: number[] = GoRules.getDeadStones(goPartSlice);
         // TODO: add counted territory here
-        return goScore[1] - goScore[0];
+        return (goScore[1] + (2*goKilled[0])) - (goScore[0] + (2*goKilled[1]));
     }
     public static getNewKo(move: GoMove, newBoard: GoPiece[][], captures: Coord[]): Coord {
         if (captures.length === 1) {
@@ -422,6 +423,20 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             }
         }
         return new GoPartSlice(resultingBoard, captured, slice.turn, slice.koCoord, slice.phase);
+    }
+    public static getDeadStones(slice: GoPartSlice): number[] {
+        const killed: number[] = [0, 0];
+        for (let y: number = 0; y < GoPartSlice.HEIGHT; y++) {
+            for (let x: number = 0; x < GoPartSlice.WIDTH; x++) {
+                const piece: number = slice.getBoardByXY(x, y);
+                if (piece === GoPiece.DEAD_BLACK.value) {
+                    killed[0] = killed[0] + 1;
+                } else if (piece === GoPiece.DEAD_WHITE.value) {
+                    killed[1] = killed[1] + 1;
+                }
+            }
+        }
+        return killed;
     }
     public static removeAndSubstractTerritory(slice: GoPartSlice): GoPartSlice {
         const resultingBoard: GoPiece[][] = slice.getCopiedBoardGoPiece();
