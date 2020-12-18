@@ -80,8 +80,8 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     public getListMoves(node: DvonnNode): MGPMap<DvonnMove, DvonnPartSlice> {
         return this.getListMovesFromSlice(node.move, node.gamePartSlice);
     }
-    public getBoardValue(move: DvonnMove, slice: DvonnPartSlice): number {
-        // Board values is the total number of pieces controlled by player 0 - by player 1
+    public getScores(slice: DvonnPartSlice): number[] {
+        // Board value is the total number of pieces controlled by player 0 - by player 1
         let p0_score = 0;
         let p1_score = 0;
         DvonnBoard.getAllPieces(slice.board).map((c: Coord) => {
@@ -92,17 +92,22 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
                 p1_score += stack.size();
             }
         });
+        return [p0_score, p1_score];
+    }
+    public getBoardValue(move: DvonnMove, slice: DvonnPartSlice): number {
+        // Board values is the total number of pieces controlled by player 0 - by player 1
+        const scores = this.getScores(slice);
         if (this.getMovablePieces(slice).length === 0) {
             // This is the end of the game, boost the score to clearly indicate it
-            if (p0_score > p1_score) {
+            if (scores[0] > scores[1]) {
                 return Number.MIN_SAFE_INTEGER;
-            } else if (p0_score < p1_score) {
+            } else if (scores[0] < scores[1]) {
                 return Number.MAX_SAFE_INTEGER;
             } else {
                 return 0;
             }
         } else {
-            return p0_score - p1_score;
+            return scores[0] - scores[1];
         }
     }
     private sourceCoords(slice: DvonnPartSlice): Coord[] {

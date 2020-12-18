@@ -9,6 +9,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonnpiecestack/DvonnPieceStack';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-dvonn',
@@ -18,10 +19,20 @@ import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation
 export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSlice, LegalityStatus> {
     public rules: DvonnRules = new DvonnRules(DvonnPartSlice);
 
+    public scores: number[] = [0, 0];
+
     public CASE_SIZE: number = 70;
+
     public lastMove: DvonnMove = null;
+
     public chosen: Coord = null;
+
     public canPass: boolean = false;
+
+    constructor(public snackBar: MatSnackBar) {
+        super(snackBar);
+        this.showScore = true;
+    }
 
     public updateBoard() {
         const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
@@ -29,6 +40,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         this.lastMove = this.rules.node.move;
         this.canPass = this.rules.canOnlyPass(slice);
         this.chosen = null;
+        this.scores = this.rules.getScores(slice);
     }
     public cancelMove(reason?: string): MGPValidation {
         this.chosen = null;
