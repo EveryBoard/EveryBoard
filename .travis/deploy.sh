@@ -3,6 +3,7 @@
 eval "$(ssh-agent -s)"
 chmod 600 id_rsa
 ssh-add id_rsa
+echo -e "Host $SERVER_IP_ADDRESS\n\tStrictHostKeyChecking no\n" >> ~/.ssh/config
 
 #VERSION=$(git rev-parse HEAD | cut -c1-8)
 #sed -i "s/Pantheon's Game/Pantheon's Game ($VERSION)"
