@@ -21,7 +21,7 @@ jobs:
     - stage: Linter
       script: npx eslint --ext .ts ./
     - stage: Test
-      script: npm test
+      script: npx ng test --watch false --browsers ChromeHeadless
     - stage: Build and deploy
       script:
         - npx ng build
