@@ -32,6 +32,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
     constructor(public snackBar: MatSnackBar) {
         super(snackBar);
         this.showScore = true;
+        this.scores = this.rules.getScores(this.rules.node.gamePartSlice);
     }
 
     public updateBoard() {
