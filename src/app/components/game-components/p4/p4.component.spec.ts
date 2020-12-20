@@ -12,8 +12,8 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { P4Rules } from 'src/app/games/p4/p4rules/P4Rules';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { MoveX } from 'src/app/jscaip/MoveX';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
+import { P4Move } from 'src/app/games/p4/P4Move';
 
 const activatedRouteStub = {
     snapshot: {
@@ -66,18 +66,18 @@ describe('P4Component', () => {
     });
     it('should accept simple move', async() => {
         const rules: P4Rules = new P4Rules(P4PartSlice);
-        const listMoves: MGPMap<MoveX, P4PartSlice> = rules.getListMoves(rules.node);
-        const currentMove: MoveX = listMoves.getByIndex(0).key;
+        const listMoves: MGPMap<P4Move, P4PartSlice> = rules.getListMoves(rules.node);
+        const currentMove: P4Move = listMoves.getByIndex(0).key;
         expect((await gameComponent.onClick(currentMove.x)).isSuccess()).toBeTrue();
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(MoveX, "decode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(P4Move, "decode").and.callThrough();
         gameComponent.decodeMove(5);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(MoveX, "encode").and.callThrough();
-        gameComponent.encodeMove(MoveX.get(5));
+        const moveSpy: jasmine.Spy = spyOn(P4Move, "encode").and.callThrough();
+        gameComponent.encodeMove(P4Move.of(5));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
 });

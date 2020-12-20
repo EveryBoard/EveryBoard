@@ -1,18 +1,17 @@
 import { Component } from '@angular/core';
 import { P4PartSlice } from '../../../games/p4/P4PartSlice';
-import { MoveX } from '../../../jscaip/MoveX';
 import { P4Rules } from '../../../games/p4/p4rules/P4Rules';
 import { Move } from '../../../jscaip/Move';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { display } from 'src/app/collectionlib/utils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { P4Move } from 'src/app/games/p4/P4Move';
 
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html'
 })
-export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, LegalityStatus> {
+export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, LegalityStatus> {
 
     /*************************** Common Fields **************************/
 
@@ -25,12 +24,12 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
     public lastX: number;
 
     public async onClick(x: number): Promise<MGPValidation> {
-        const chosenMove = MoveX.get(x);
+        const chosenMove = P4Move.of(x);
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
     public updateBoard() {
         const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
-        const lastMove: MoveX = this.rules.node.move;
+        const lastMove: P4Move = this.rules.node.move;
 
         this.board = p4PartSlice.getCopiedBoard().reverse();
         if (lastMove !== null) {
@@ -40,9 +39,9 @@ export class P4Component extends AbstractGameComponent<MoveX, P4PartSlice, Legal
         }
     }
     public decodeMove(encodedMove: number): Move {
-        return MoveX.decode(encodedMove);
+        return P4Move.decode(encodedMove);
     }
-    public encodeMove(move: MoveX): number {
-        return MoveX.encode(move);
+    public encodeMove(move: P4Move): number {
+        return P4Move.encode(move);
     }
 }

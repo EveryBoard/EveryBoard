@@ -1,21 +1,22 @@
 import { Direction } from '../../../jscaip/DIRECTION';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { Rules } from '../../../jscaip/Rules';
-import { MoveX } from '../../../jscaip/MoveX';
 import { SCORE } from '../../../jscaip/SCORE';
 import { MGPNode } from '../../../jscaip/mgpnode/MGPNode';
+
 import { P4PartSlice} from '../P4PartSlice';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { display } from 'src/app/collectionlib/utils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { P4Move } from '../P4Move';
 
-export abstract class P4Node extends MGPNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> {}
+export abstract class P4Node extends MGPNode<P4Rules, P4Move, P4PartSlice, LegalityStatus> {}
 
-export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
+export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
 
-    public applyLegalMove(move: MoveX, slice: P4PartSlice, status: LegalityStatus): { resultingMove: MoveX; resultingSlice: P4PartSlice; } {
+    public applyLegalMove(move: P4Move, slice: P4PartSlice, status: LegalityStatus): { resultingMove: P4Move; resultingSlice: P4PartSlice; } {
         const x: number = move.x;
         const board: number[][] = slice.getCopiedBoard();
         const y: number = P4Rules.getLowestUnoccupiedCase(board, x);
@@ -34,7 +35,7 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     // statics methods:
 
     /* public static getBoardValueShortened(n: P4Node): number {
-        // let mother: MGPNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> = < MGPNode<P4Rules, MoveX, P4PartSlice, LegalityStatus> > n.getMother(); // is not null, otherwise this method should not have been called
+        // let mother: MGPNode<P4Rules, P4Move, P4PartSlice, LegalityStatus> = < MGPNode<P4Rules, P4Move, P4PartSlice, LegalityStatus> > n.getMother(); // is not null, otherwise this method should not have been called
         // let previousBoardValue: number = mother.getOwnValue(); // is not null either logically
         // let move: MoveCoord = < MoveCoord > n.getMove();
         // let x: number = move.coord.x;
@@ -368,23 +369,23 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     }*/
     // static delegates
 
-    public static getListMoves(node: P4Node): MGPMap<MoveX, P4PartSlice> {
+    public static getListMoves(node: P4Node): MGPMap<P4Move, P4PartSlice> {
         display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });
 
         // ne doit être appellé que si cette partie n'est pas une partie finie
         const originalPartSlice: P4PartSlice = node.gamePartSlice;
         const originalBoard: number[][] = originalPartSlice.getCopiedBoard();
-        const retour: MGPMap<MoveX, P4PartSlice> = new MGPMap<MoveX, P4PartSlice>();
+        const retour: MGPMap<P4Move, P4PartSlice> = new MGPMap<P4Move, P4PartSlice>();
         const turn: number = originalPartSlice.turn;
         let y: number;
-        let move: MoveX;
+        let move: P4Move;
 
         let x: number = 0;
         while (x < 7) {
             if (originalPartSlice.getBoardByXY(x, 0) === Player.NONE.value) {
                 y = P4Rules.getLowestUnoccupiedCase(originalBoard, x);
 
-                move = MoveX.get(x);
+                move = P4Move.of(x);
                 let newBoard: number[][] = originalPartSlice.getCopiedBoard();
 
                 newBoard[y][x] = originalPartSlice.getCurrentPlayer().value;
@@ -412,10 +413,10 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
     }
     // Overrides:
 
-    public isLegal(move: MoveX, slice: P4PartSlice): LegalityStatus {
+    public isLegal(move: P4Move, slice: P4PartSlice): LegalityStatus {
         display(P4Rules.VERBOSE, { context: "P4Rules.isLegal", move: move.toString(), slice});
         if (move.x < 0 || move.x > 6) {
-            // TODO: MoveX should become P4Move, having X0 to X6 static instances, so this line is deleted
+            // TODO: P4Move should become P4Move, having X0 to X6 static instances, so this line is deleted
             return { legal: MGPValidation.failure("invalid move") };
         }
         if (slice.getBoardByXY(move.x, 0) !== Player.NONE.value) {
@@ -423,10 +424,10 @@ export class P4Rules extends Rules<MoveX, P4PartSlice, LegalityStatus> {
         }
         return {legal: MGPValidation.SUCCESS};
     }
-    public getListMoves(node: P4Node): MGPMap<MoveX, P4PartSlice> {
+    public getListMoves(node: P4Node): MGPMap<P4Move, P4PartSlice> {
         return P4Rules.getListMoves(node);
     }
-    public getBoardValue(move: MoveX, slice: P4PartSlice): number {
+    public getBoardValue(move: P4Move, slice: P4PartSlice): number {
         display(P4Rules.VERBOSE, {
             text: 'P4Rules instance methods getBoardValue called',
             board: slice.getCopiedBoard()

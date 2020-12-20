@@ -9,13 +9,13 @@ import { ActivatedRoute } from '@angular/router';
 import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { MoveX } from 'src/app/jscaip/MoveX';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { UserService } from 'src/app/services/user/UserService';
 import { By } from '@angular/platform-browser';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { P4Move } from 'src/app/games/p4/P4Move';
 
 const activatedRouteStub = {
     snapshot: {
@@ -109,7 +109,7 @@ describe('LocalGameWrapperComponent', () => {
         tick(1);
 
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
-        const legality: MGPValidation = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
+        const legality: MGPValidation = await component.gameComponent.chooseMove(P4Move.of(4), slice, null, null);
         expect(legality.isSuccess()).toBeTrue();
     }));
     it('should allow to go back one move', fakeAsync(async() => {
@@ -118,7 +118,7 @@ describe('LocalGameWrapperComponent', () => {
         tick(1);
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
         expect(slice.turn).toBe(0);
-        const legality: MGPValidation = await component.gameComponent.chooseMove(MoveX.get(4), slice, null, null);
+        const legality: MGPValidation = await component.gameComponent.chooseMove(P4Move.of(4), slice, null, null);
         expect(legality.isSuccess()).toBeTrue();
         await fixture.whenStable(); fixture.detectChanges();
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
@@ -147,7 +147,7 @@ describe('LocalGameWrapperComponent', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 0);
         component.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        expect(await component.gameComponent.chooseMove(MoveX.get(3), slice, null, null)).toBeTruthy("Last move should be legal");
+        expect(await component.gameComponent.chooseMove(P4Move.of(3), slice, null, null)).toBeTruthy("Last move should be legal");
         component.cdr.detectChanges();
         const drawIndicator: DebugElement = debugElement.query(By.css("#draw"));
         expect(drawIndicator).toBeTruthy("Draw indicator should be present");
