@@ -1,5 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import { NavigationEnd, Router} from '@angular/router';
+import { Location } from '@angular/common';
 
 import {Subscription} from 'rxjs';
 
@@ -53,7 +54,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                 public router: Router,
                 private userService: UserService,
                 private gameService: GameService,
-                private authenticationService: AuthenticationService) {
+                private authenticationService: AuthenticationService,
+                private location: Location) {
     }
     public ngOnInit() {
         this.userNameSub = this.authenticationService.getJoueurObs()
@@ -65,7 +67,29 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             .subscribe(activesParts => this.activesParts = activesParts);
         this.activesUsersSub = this.userService.getActivesUsersObs()
             .subscribe(activesUsers => this.activesUsers = activesUsers);
+        this.router.events.subscribe((event) => {
+            if (event instanceof NavigationEnd) {
+                const path = this.location.path();
+                if (path.startsWith("/play/")) {
+                    this.checkGameNameInPath(path, /^\/play\/([a-zA-Z0-9]+)\/[a-zA-Z0-9]+$/);
+                } else if (path.startsWith("/local/")) {
+                    this.checkGameNameInPath(path, /^\/local\/([a-zA-Z0-9]+)$/);
+                }
+            }
+        });
     }
+    private checkGameNameInPath(path: string, regex: RegExp) {
+        const matches = path.match(regex);
+        if (matches == null || matches.length != 2) {
+            this.router.navigate(['/server']);
+        } else {
+            const game = matches[1];
+            if (!this.gameNameList.includes(game)) {
+                this.router.navigate(['/server']);
+            }
+        }
+    }
+
     public joinGame(partId: string, typeGame: string) {
         this.router.navigate(['/play/' + typeGame, partId]);
     }
