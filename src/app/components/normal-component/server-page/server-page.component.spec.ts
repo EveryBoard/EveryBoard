@@ -46,6 +46,13 @@ class RouterMock {
     public async navigate(to: string[]): Promise<boolean> {
         return true;
     };
+
+    public events: EventsMock = new EventsMock();
+}
+
+class EventsMock {
+    public subscribe(_f: (ev: any) => void): void {
+    }
 }
 
 describe('ServerPageComponent', () => {
