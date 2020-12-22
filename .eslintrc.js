@@ -15,7 +15,8 @@ module.exports = {
     plugins: [
         '@typescript-eslint'
     ],
-    rules: {
+    "extends": ["eslint:recommended", "google"],
+    /*rules: {
         'semi': [WARN, 'always'],
         'space-before-function-paren': [WARN, 'never'],
         'quotes': [WARN, 'single'],
@@ -29,5 +30,5 @@ module.exports = {
         'eol-last': [WARN, 'always'],
         'quotes': [WARN, 'single'],
         'no-multi-spaces': [WARN, {'ignoreEOLComments': true}]
-    }
+    }*/
 };
