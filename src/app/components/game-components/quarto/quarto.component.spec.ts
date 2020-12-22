@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { QuartoComponent } from './quarto.component';
 
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
@@ -89,6 +89,7 @@ describe('QuartoComponent', () => {
         const currentMove: QuartoMove = listMoves[0];
 
         expect(await doMove(currentMove)).toBeTrue();
+        flush();
     }));
     it('should allow to make last move', fakeAsync(async() => {
         const board: number[][] = [

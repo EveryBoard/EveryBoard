@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -91,6 +91,7 @@ describe('PylosComponent', () => {
 
         spyOn(gameComponent, 'message').and.callThrough();
         expect(await onClick(0, 0, 0)).toBeTrue();
+        flush();
         expect(gameComponent.message).toHaveBeenCalledWith("Can't click on ennemy pieces.");
     }));
     it('should allow climbing', fakeAsync(async() => {
@@ -148,6 +149,7 @@ describe('PylosComponent', () => {
         spyOn(gameComponent, 'message').and.callThrough();
         expect(await onClick(0, 0, 1)).toBeTrue();
         expect(await onClick(2, 2, 0)).toBeTrue();
+        flush();
         expect(gameComponent.message).toHaveBeenCalledWith("Must move pieces upward.");
     }));
     it('should delegate decoding to move', () => {

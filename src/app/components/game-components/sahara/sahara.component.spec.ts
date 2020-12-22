@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -105,30 +105,35 @@ describe('SaharaComponent', () => {
         expect(gameComponent.chosenCoord).toEqual(new Coord(-2, -2));
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(2, 2);
+        flush();
         expect(gameComponent.chosenCoord).toEqual(new Coord(-2, -2));
         expect(gameComponent.message).toHaveBeenCalledWith("You must first select a pyramid.");
     }));
     it('should not allow to select ennemy pyramid', fakeAsync(async() => {
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(0, 4);
+        flush();
         expect(gameComponent.message).toHaveBeenCalledWith("You cannot select ennemy pyramid.");
     }));
     it('should not allow to select ennemy pyramid', fakeAsync(async() => {
         await onClick(0, 3);
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(0, 4);
+        flush();
         expect(gameComponent.message).toHaveBeenCalledWith("You can't land your pyramid on the ennemy's.");
     }));
     it('should not allow to bounce on occupied brown case', fakeAsync(async() => {
         await onClick(7, 0);
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(8, 1);
+        flush();
         expect(gameComponent.message).toHaveBeenCalledWith("You can only bounce on UNOCCUPIED brown case.");
     }));
     it('should not allow to do invalid moves', fakeAsync(async() => {
         await onClick(0, 3);
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(2, 2);
+        flush();
         expect(gameComponent.message).toHaveBeenCalledWith("Maximal |x| + |y| distance for SaharaMove is 2, got 3.");
     }));
 });

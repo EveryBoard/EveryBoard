@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ActivatedRoute } from '@angular/router';
@@ -143,6 +143,7 @@ describe('SiamComponent', () => {
         // clickPiece shoud work
         spyOn(gameComponent, "clickPiece").and.callThrough();
         expect(await clickPiece(new Coord(4, 4))).toBeTrue();
+        flush();
         expect(gameComponent.clickPiece).toHaveBeenCalledTimes(1);
         expect(gameComponent.clickPiece).toHaveBeenCalledWith(4, 4);
 
@@ -150,6 +151,7 @@ describe('SiamComponent', () => {
         spyOn(gameComponent, "message").and.callThrough();
         spyOn(gameComponent, "insertAt").and.callThrough();
         expect(await insertAt(new Coord(-1, 2))).toBeTrue();
+        flush();
         expect(gameComponent.insertAt).toHaveBeenCalledTimes(1);
         expect(gameComponent.insertAt).toHaveBeenCalledWith(-1, 2);
         expect(gameComponent.message).toHaveBeenCalledWith("Can't insert when there is already a selected piece");
