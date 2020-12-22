@@ -1,15 +1,14 @@
-import { Rules } from '../../../jscaip/Rules';
-import {  MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
-import { QuartoPartSlice } from '../QuartoPartSlice';
-import { QuartoMove } from '../quartomove/QuartoMove';
-import { QuartoEnum } from '../QuartoEnum';
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { display } from 'src/app/collectionlib/utils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import {Rules} from '../../../jscaip/Rules';
+import {MGPNode} from 'src/app/jscaip/mgpnode/MGPNode';
+import {QuartoPartSlice} from '../QuartoPartSlice';
+import {QuartoMove} from '../quartomove/QuartoMove';
+import {QuartoEnum} from '../QuartoEnum';
+import {MGPMap} from 'src/app/collectionlib/mgpmap/MGPMap';
+import {LegalityStatus} from 'src/app/jscaip/LegalityStatus';
+import {display} from 'src/app/collectionlib/utils';
+import {MGPValidation} from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 class CaseSensible {
-
     criteres: Critere[];
     // listes des crit�res qu'il faut remplir dans cette case pour gagner
     // si la pi�ce en main match un de ces crit�res, c'est une pr�-victoire
@@ -30,7 +29,7 @@ class CaseSensible {
         // return true si le crit�re a �t� ajout�
         const i: number = this.indexOf(c);
         if (i > 0) {
-            // pas ajout�, compt� en double
+        // pas ajout�, compt� en double
             return false;
         }
         if (i === 3) {
@@ -152,17 +151,16 @@ class Critere {
     }
     toString(): string {
         return 'Critere{' + QuartoRules.printArray(
-            this.subCritere.map( b => {
-                return (b === true) ? 1 : 0 ;
+            this.subCritere.map( (b) => {
+                return (b === true) ? 1 : 0;
             })) + '}';
     }
 }
 abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus> {}
 
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStatus> {
-
     public applyLegalMove(move: QuartoMove, slice: QuartoPartSlice, status: LegalityStatus): { resultingMove: QuartoMove; resultingSlice: QuartoPartSlice; } {
-        let newBoard: number[][] = slice.getCopiedBoard();
+        const newBoard: number[][] = slice.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = slice.pieceInHand;
         const resultingSlice: QuartoPartSlice = new QuartoPartSlice(newBoard, slice.turn + 1, move.piece);
         return {resultingSlice, resultingMove: move};
@@ -213,31 +211,31 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         const board: number[][] = quartoPartSlice.getCopiedBoard();
         const pieceInHand: number = quartoPartSlice.pieceInHand;
         if (chosenPiece < 0) {
-            // nombre trop bas, ce n'est pas une pièce
-            return MGPValidation.failure("this is not a piece");
+        // nombre trop bas, ce n'est pas une pièce
+            return MGPValidation.failure('this is not a piece');
         }
         if (chosenPiece > 16) {
-            // nombre trop grand, ce n'est pas une pièce
-            return MGPValidation.failure("this is not a piece");
+        // nombre trop grand, ce n'est pas une pièce
+            return MGPValidation.failure('this is not a piece');
         }
         if (QuartoRules.isOccupied(board[y][x])) {
-            // on ne joue pas sur une case occupée
-            return MGPValidation.failure("this case is unoccupied");
+        // on ne joue pas sur une case occupée
+            return MGPValidation.failure('this case is unoccupied');
         }
         if (chosenPiece === 16) {
             if (quartoPartSlice.turn === 15) {
                 // on doit donner une pièce ! sauf au dernier tour
                 return MGPValidation.SUCCESS;
             }
-            return MGPValidation.failure("you must give a piece");
+            return MGPValidation.failure('you must give a piece');
         }
         if (!QuartoPartSlice.isPlacable(chosenPiece, board)) {
-            // la piece est d�jà sur le plateau
-            return MGPValidation.failure("piece is already on the board");
+        // la piece est d�jà sur le plateau
+            return MGPValidation.failure('piece is already on the board');
         }
         if (pieceInHand === chosenPiece) {
-            // la pièce donnée est la même que celle en main, c'est illégal
-            return MGPValidation.failure("illegal piece given: already in your hands");
+        // la pièce donnée est la même que celle en main, c'est illégal
+            return MGPValidation.failure('illegal piece given: already in your hands');
         }
         return MGPValidation.SUCCESS;
     }
@@ -282,7 +280,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         const board: number[][] = slice.getCopiedBoard();
 
         let nbCasesVides: number;
-        let cx, cy, dx, dy, c: number;
+        let cx; let cy; let dx; let dy; let c: number;
         const casesSensibles: Array<CaseSensible> = new Array<CaseSensible>(7);
         let nbCasesSensibles = 0;
         let cs: CaseSensible;
@@ -291,7 +289,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         let preVictory = false; // nous permet d'�viter des v�rifications inutiles
 
         for (const line of QuartoRules.lines) {
-            // pour chaque ligne (les horizontales, verticales, puis diagonales
+        // pour chaque ligne (les horizontales, verticales, puis diagonales
             cx = line[0];
             cy = line[1];
             dx = line[2];
@@ -333,8 +331,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         // si la case est occupée
                         if (commonCrit == null) {
                             commonCrit = new Critere(c);
-                            display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c
-                                                                     + ' = ' + commonCrit.toString() + '\n');
+                            display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c +
+                                                                     ' = ' + commonCrit.toString() + '\n');
                         } else {
                             commonCrit.mergeWithNumber(c);
                             display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');

@@ -1,8 +1,7 @@
-import { Coord } from "./coord/Coord";
-import { MGPOptional } from "../collectionlib/mgpoptional/MGPOptional";
+import {Coord} from './coord/Coord';
+import {MGPOptional} from '../collectionlib/mgpoptional/MGPOptional';
 
 export class TriangularCheckerBoard {
-
     public static getNeighboors(c: Coord): Coord[] {
         let neighboors: Coord[];
         const left: Coord = new Coord(c.x - 1, c.y);

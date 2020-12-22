@@ -1,11 +1,10 @@
-import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
-import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
-import { Player } from "src/app/jscaip/Player";
-import { PylosCoord } from "../pylos-coord/PylosCoord";
-import { PylosMove } from "../pylos-move/PylosMove";
+import {ArrayUtils} from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import {GamePartSlice} from 'src/app/jscaip/GamePartSlice';
+import {Player} from 'src/app/jscaip/Player';
+import {PylosCoord} from '../pylos-coord/PylosCoord';
+import {PylosMove} from '../pylos-move/PylosMove';
 
 export class PylosPartSlice extends GamePartSlice {
-
     public static getInitialSlice(): PylosPartSlice {
         const board0: number[][] = ArrayUtils.createBiArray(4, 4, Player.NONE.value);
         const board1: number[][] = ArrayUtils.createBiArray(3, 3, Player.NONE.value);
@@ -15,7 +14,7 @@ export class PylosPartSlice extends GamePartSlice {
         return new PylosPartSlice([board0, board1, board2, board3], turn);
     }
     constructor(public readonly boards: ReadonlyArray<ReadonlyArray<ReadonlyArray<number>>>,
-                turn: number) {
+        turn: number) {
         super([], turn);
     }
     public getBoardAt(coord: PylosCoord): number {
@@ -23,15 +22,15 @@ export class PylosPartSlice extends GamePartSlice {
     }
     public applyLegalMove(move: PylosMove): PylosPartSlice {
         const updateValues: { coord: PylosCoord, value: Player }[] = [];
-        updateValues.push({ coord: move.landingCoord, value: this.getCurrentPlayer() });
+        updateValues.push({coord: move.landingCoord, value: this.getCurrentPlayer()});
         if (move.startingCoord.isPresent()) {
-            updateValues.push({ coord: move.startingCoord.get(), value: Player.NONE });
+            updateValues.push({coord: move.startingCoord.get(), value: Player.NONE});
         }
         if (move.firstCapture.isPresent()) {
-            updateValues.push({ coord: move.firstCapture.get(), value: Player.NONE });
+            updateValues.push({coord: move.firstCapture.get(), value: Player.NONE});
         }
         if (move.secondCapture.isPresent()) {
-            updateValues.push({ coord: move.secondCapture.get(), value: Player.NONE });
+            updateValues.push({coord: move.secondCapture.get(), value: Player.NONE});
         }
         return this.setBoardAts(updateValues, this.turn + 1);
     }
@@ -40,7 +39,7 @@ export class PylosPartSlice extends GamePartSlice {
             ArrayUtils.copyBiArray(this.boards[0]),
             ArrayUtils.copyBiArray(this.boards[1]),
             ArrayUtils.copyBiArray(this.boards[2]),
-            ArrayUtils.copyBiArray(this.boards[3])
+            ArrayUtils.copyBiArray(this.boards[3]),
         ];
 
         for (const coordValue of coordValues) {
@@ -54,9 +53,10 @@ export class PylosPartSlice extends GamePartSlice {
         if (this.getBoardAt(coord) !== Player.NONE.value) return false;
         if (coord.z === 0) return true;
         const lowerPieces: PylosCoord[] = coord.getLowerPieces();
-        for (let lowerPiece of lowerPieces) {
-            if (this.getBoardAt(lowerPiece) === Player.NONE.value)
+        for (const lowerPiece of lowerPieces) {
+            if (this.getBoardAt(lowerPiece) === Player.NONE.value) {
                 return false;
+            }
         }
         return true;
     }
@@ -76,8 +76,8 @@ export class PylosPartSlice extends GamePartSlice {
         for (let z: number = 0; z < 3; z++) {
             for (let y: number = 0; y < (4 - z); y++) {
                 for (let x: number = 0; x < (4 - z); x++) {
-                    let c: PylosCoord = new PylosCoord(x, y, z);
-                    let v: number = this.getBoardAt(c);
+                    const c: PylosCoord = new PylosCoord(x, y, z);
+                    const v: number = this.getBoardAt(c);
                     ownershipMap[v] = 1 + ownershipMap[v];
                 }
             }

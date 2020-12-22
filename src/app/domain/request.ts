@@ -1,5 +1,4 @@
-export class  RequestCode {
-
+export class RequestCode {
     public static ZERO_PROPOSED_DRAW: RequestCode = new RequestCode('ZERO_PROPOSED_DRAW');
 
     public static ONE_PROPOSED_DRAW: RequestCode = new RequestCode('ONE_PROPOSED_DRAW');
@@ -26,10 +25,10 @@ export class  RequestCode {
 
     public static ONE_ACCEPTED_TAKE_BACK: RequestCode = new RequestCode('ONE_ACCEPTED_TAKE_BACK');
 
-    private constructor(private readonly value: string) {};
+    private constructor(private readonly value: string) {}
 
     public toInterface(): IMGPRequest {
-        return { code: this.value };
+        return {code: this.value};
     }
 }
 export interface IMGPRequest {
@@ -40,18 +39,16 @@ export interface IMGPRequest {
     typeGame?: string;
 }
 export class MGPRequest {
-
     public readonly code: string;
 
     public constructor(
         code: RequestCode,
         public readonly partId?: string,
-        public readonly typeGame?: string
+        public readonly typeGame?: string,
     ) {
         if (code === RequestCode.REMATCH_ACCEPTED &&
-            (partId == null || typeGame == null))
-        {
-            throw new Error("To accept rematch, one must provide new partId and typeGame.");
+            (partId == null || typeGame == null)) {
+            throw new Error('To accept rematch, one must provide new partId and typeGame.');
         }
         this.code = code.toInterface().code;
         if (this.partId === undefined) this.partId = null;

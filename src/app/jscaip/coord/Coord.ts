@@ -1,8 +1,7 @@
 import {Orthogonal, Direction} from '../DIRECTION';
-import { Comparable } from '../../collectionlib/Comparable';
+import {Comparable} from '../../collectionlib/Comparable';
 
 export class Coord implements Comparable {
-
     public readonly x: number;
 
     public readonly y: number;
@@ -14,8 +13,8 @@ export class Coord implements Comparable {
         if (n > 0) return 1;
     }
     constructor(x: number, y: number) {
-        if (x == null) throw new Error("X cannot be null");
-        if (y == null) throw new Error("Y cannot be null");
+        if (x == null) throw new Error('X cannot be null');
+        if (y == null) throw new Error('Y cannot be null');
         this.x = x;
         this.y = y;
     }
@@ -41,7 +40,7 @@ export class Coord implements Comparable {
         // (-+) -> (++)
         // (-0) -> (0+)
         // ...
-        const newX = this.x +  dir.y;
+        const newX = this.x + dir.y;
         const newY = this.y + -dir.x; // (this.x, thix.y) + (dir.y, -dir.x)
         return new Coord(newX, newY);
     }
@@ -49,7 +48,7 @@ export class Coord implements Comparable {
         // looking in the direction "dir", we just go one step right
         // see getLeft's logic, it's the opposite
         const newX = this.x + -dir.y;
-        const newY = this.y +  dir.x; // (this.x, thix.y) + (-dir.y, dir.x)
+        const newY = this.y + dir.x; // (this.x, thix.y) + (-dir.y, dir.x)
         return new Coord(newX, newY);
     }
     public getOpposite(): Coord {
@@ -96,7 +95,7 @@ export class Coord implements Comparable {
     public _getOrthogonalDirectionToward(c: Coord): Orthogonal {
         const dx: number = Coord.getBinarised(c.x - this.x) + 1;
         const dy: number = Coord.getBinarised(c.y - this.y) + 1;
-        return // ORTH_ARRAY[dy][dx];
+        return; // ORTH_ARRAY[dy][dx];
     }
     public getOrthogonalDistance(c: Coord): number {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);

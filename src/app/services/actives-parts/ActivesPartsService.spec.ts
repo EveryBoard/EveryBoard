@@ -1,9 +1,8 @@
-import { ActivesPartsService } from './ActivesPartsService';
-import { PartDAO } from 'src/app/dao/part/PartDAO';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
+import {ActivesPartsService} from './ActivesPartsService';
+import {PartDAO} from 'src/app/dao/part/PartDAO';
+import {PartDAOMock} from 'src/app/dao/part/PartDAOMock';
 
 describe('ActivesPartsService', () => {
-
     let service: ActivesPartsService;
 
     beforeEach(() => {

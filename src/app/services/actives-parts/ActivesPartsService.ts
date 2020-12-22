@@ -2,10 +2,10 @@ import {Injectable} from '@angular/core';
 import {BehaviorSubject, Observable} from 'rxjs';
 import {PartDAO} from '../../dao/part/PartDAO';
 import {ICurrentPartId, ICurrentPart} from '../../domain/icurrentpart';
-import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
+import {FirebaseCollectionObserver} from '../../dao/FirebaseCollectionObserver';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class ActivesPartsService {
     /* Actives Parts service
@@ -23,9 +23,9 @@ export class ActivesPartsService {
     public startObserving() {
         const partObserver: FirebaseCollectionObserver<ICurrentPart> = new FirebaseCollectionObserver();
         partObserver.onDocumentModified = (modifiedParts: ICurrentPartId[]) => {
-            let result: ICurrentPartId[] = this.activesPartsBS.value;
-            for (let p of modifiedParts) {
-                result.forEach(part => {
+            const result: ICurrentPartId[] = this.activesPartsBS.value;
+            for (const p of modifiedParts) {
+                result.forEach((part) => {
                     if (part.id === p.id) part.doc = p.doc;
                 });
             }
@@ -36,9 +36,9 @@ export class ActivesPartsService {
             this.activesPartsBS.next(result);
         };
         partObserver.onDocumentDeleted = (deletedDocs: ICurrentPartId[]) => {
-            let result: ICurrentPartId[] = [];
-            let deletedIds: string[] = deletedDocs.map(doc => doc.id);
-            for (let p of this.activesPartsBS.value) {
+            const result: ICurrentPartId[] = [];
+            const deletedIds: string[] = deletedDocs.map((doc) => doc.id);
+            for (const p of this.activesPartsBS.value) {
                 if (!deletedIds.includes(p.id)) {
                     result.push(p);
                 }
@@ -48,7 +48,7 @@ export class ActivesPartsService {
         this.unsubscribe = this.partDao.observeActivesParts(partObserver);
     }
     public stopObserving() {
-        if (this.unsubscribe == null) throw new Error("Canno't stop observing actives part when you have not started observing");
+        if (this.unsubscribe == null) throw new Error('Canno\'t stop observing actives part when you have not started observing');
         this.activesPartsBS.next([]);
         this.unsubscribe();
     }

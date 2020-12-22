@@ -1,11 +1,10 @@
-import { Move } from "src/app/jscaip/Move";
-import { Coord } from "src/app/jscaip/coord/Coord";
-import { EncapsulePiece, EncapsuleMapper } from "../EncapsuleEnums";
-import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
-import { Comparable_Equals } from "src/app/collectionlib/Comparable";
+import {Move} from 'src/app/jscaip/Move';
+import {Coord} from 'src/app/jscaip/coord/Coord';
+import {EncapsulePiece, EncapsuleMapper} from '../EncapsuleEnums';
+import {MGPOptional} from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import {ComparableEquals} from 'src/app/collectionlib/Comparable';
 
 export class EncapsuleMove extends Move {
-
     public static decode(encodedMove: number): EncapsuleMove {
         const d: number = encodedMove%2;
         encodedMove -= d;
@@ -19,7 +18,7 @@ export class EncapsuleMove extends Move {
         const landingCoord: Coord = new Coord(lx, ly);
         if (d === 0) { // drop
             const piece: EncapsulePiece = EncapsulePiece.of(encodedMove);
-            return EncapsuleMove.fromDrop(piece, landingCoord)
+            return EncapsuleMove.fromDrop(piece, landingCoord);
         } else {
             const sy: number = encodedMove%3;
             encodedMove -= sy;
@@ -36,7 +35,7 @@ export class EncapsuleMove extends Move {
         return EncapsuleMove.decode(encodedMove);
     }
     public encode(): number {
-        /* d: 0|1
+    /* d: 0|1
          *     - 0: c'est un drop
          *     - 1: c'est un move
          * ly: 0|1|2
@@ -67,12 +66,12 @@ export class EncapsuleMove extends Move {
                         public readonly landingCoord: Coord,
                         public readonly piece: MGPOptional<EncapsulePiece>) {
         super();
-        if (startingCoord == null) throw new Error("Starting Coord's optional can't be null");
-        if (landingCoord == null) throw new Error("Landing Coord can't be null");
-        if (piece == null) throw new Error("Piece's optional can't be null");
+        if (startingCoord == null) throw new Error('Starting Coord\'s optional can\'t be null');
+        if (landingCoord == null) throw new Error('Landing Coord can\'t be null');
+        if (piece == null) throw new Error('Piece\'s optional can\'t be null');
     }
     public static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
-        if (startingCoord.equals(landingCoord)) throw new Error("Starting coord and landing coord must be separate coords");
+        if (startingCoord.equals(landingCoord)) throw new Error('Starting coord and landing coord must be separate coords');
         return new EncapsuleMove(MGPOptional.of(startingCoord), landingCoord, MGPOptional.empty());
     }
     public static fromDrop(piece: EncapsulePiece, landingCoord: Coord): EncapsuleMove {
@@ -95,19 +94,19 @@ export class EncapsuleMove extends Move {
         if (!other.landingCoord.equals(this.landingCoord)) {
             return false;
         }
-        if (!this.startingCoord.equals(other.startingCoord, Comparable_Equals)) {
+        if (!this.startingCoord.equals(other.startingCoord, ComparableEquals)) {
             return false;
         }
-        if (!this.piece.equals(other.piece, Comparable_Equals)) {
+        if (!this.piece.equals(other.piece, ComparableEquals)) {
             return false;
         }
         return true;
     }
     public toString(): String {
         if (this.isDropping()) {
-            return "EncapsuleMove(" + EncapsuleMapper.getNameFromPiece(this.piece.get()) + " -> " + this.landingCoord + ")";
+            return 'EncapsuleMove(' + EncapsuleMapper.getNameFromPiece(this.piece.get()) + ' -> ' + this.landingCoord + ')';
         } else {
-            return "EncapsuleMove(" + this.startingCoord.get() + "->" + this.landingCoord + ")";
+            return 'EncapsuleMove(' + this.startingCoord.get() + '->' + this.landingCoord + ')';
         }
     }
 }

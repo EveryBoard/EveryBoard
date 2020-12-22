@@ -1,28 +1,27 @@
-import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
-import { PylosCoord } from "../pylos-coord/PylosCoord";
-import { PylosMove } from "./PylosMove";
+import {MGPOptional} from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import {PylosCoord} from '../pylos-coord/PylosCoord';
+import {PylosMove} from './PylosMove';
 
 describe('PylosMove', () => {
-
     const coord: PylosCoord = new PylosCoord(0, 0, 0);
     const highCoord: PylosCoord = new PylosCoord(0, 0, 2);
 
     it('Should forbid invalid move creation', () => {
-        // From Climb
-        expect(() => PylosMove.fromClimb(null, coord, [])).toThrowError("PylosMove: Starting Coord can't be null  if it's when created fromClimb.");
-        expect(() => PylosMove.fromClimb(coord, coord, [])).toThrowError("PylosMove: When piece move it must move upward.");
+    // From Climb
+        expect(() => PylosMove.fromClimb(null, coord, [])).toThrowError('PylosMove: Starting Coord can\'t be null  if it\'s when created fromClimb.');
+        expect(() => PylosMove.fromClimb(coord, coord, [])).toThrowError('PylosMove: When piece move it must move upward.');
         expect(PylosMove.fromClimb(coord, highCoord, [])).toBeDefined();
 
         // From Drop
-        expect(() => PylosMove.fromDrop(null, [])).toThrowError("PylosMove: Landing Coord can't be null.");
+        expect(() => PylosMove.fromDrop(null, [])).toThrowError('PylosMove: Landing Coord can\'t be null.');
         expect(PylosMove.fromDrop(coord, [coord])).toBeDefined();
     });
-    it("Should check and change captures correctly", () => {
-        // Check capture
-        expect(() => PylosMove.checkCaptures([null])).toThrowError("PylosMove: first capture cannot be null, use empty list instead.");
-        expect(() => PylosMove.checkCaptures([coord, null])).toThrowError("PylosMove: second capture cannot be null, use 1 sized list instead.");
-        expect(() => PylosMove.checkCaptures([coord, coord])).toThrowError("PylosMove: should not capture twice same piece.");
-        expect(() => PylosMove.checkCaptures([coord, highCoord, coord])).toThrowError("PylosMove: can't capture that much piece.");
+    it('Should check and change captures correctly', () => {
+    // Check capture
+        expect(() => PylosMove.checkCaptures([null])).toThrowError('PylosMove: first capture cannot be null, use empty list instead.');
+        expect(() => PylosMove.checkCaptures([coord, null])).toThrowError('PylosMove: second capture cannot be null, use 1 sized list instead.');
+        expect(() => PylosMove.checkCaptures([coord, coord])).toThrowError('PylosMove: should not capture twice same piece.');
+        expect(() => PylosMove.checkCaptures([coord, highCoord, coord])).toThrowError('PylosMove: can\'t capture that much piece.');
         expect(() => PylosMove.checkCaptures([coord, highCoord])).not.toThrowError();
 
         // Change capture
@@ -46,29 +45,28 @@ describe('PylosMove', () => {
     it('should delegate to static method decode', () => {
         const testMove: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
 
-        spyOn(PylosMove, "decode").and.callThrough();
+        spyOn(PylosMove, 'decode').and.callThrough();
         testMove.decode(testMove.encode());
         expect(PylosMove.decode).toHaveBeenCalledTimes(1);
 
-        spyOn(testMove, "encode").and.callThrough();
+        spyOn(testMove, 'encode').and.callThrough();
         PylosMove.encode(testMove);
         expect(testMove.encode).toHaveBeenCalledTimes(1);
-
     });
-    it("Should override toString correctly", () => {
+    it('Should override toString correctly', () => {
         const lightMove: PylosMove = PylosMove.fromDrop(coord, []);
         const heavyMove: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
-        expect(lightMove.toString()).toEqual("PylosMove(-, (0, 0, 0), -, -)");
-        expect(heavyMove.toString()).toEqual("PylosMove((0, 0, 0), (0, 0, 2), (0, 0, 0), (0, 0, 2))");
+        expect(lightMove.toString()).toEqual('PylosMove(-, (0, 0, 0), -, -)');
+        expect(heavyMove.toString()).toEqual('PylosMove((0, 0, 0), (0, 0, 2), (0, 0, 0), (0, 0, 2))');
     });
-    it("Should override equals correctly", () => {
+    it('Should override equals correctly', () => {
         const badCoord: PylosCoord = new PylosCoord(1, 1, 1);
         const move: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
         const android: Object = {
             startingCoord: MGPOptional.of(coord),
             landingCoord: highCoord,
             firstCapture: MGPOptional.of(coord),
-            secondCapture: MGPOptional.of(highCoord)
+            secondCapture: MGPOptional.of(highCoord),
         };
         const otherMove1: PylosMove = PylosMove.fromClimb(badCoord, highCoord, [coord, highCoord]);
         const otherMove2: PylosMove = PylosMove.fromClimb(coord, badCoord, [coord, highCoord]);

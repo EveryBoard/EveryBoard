@@ -1,8 +1,8 @@
-import { AuthenticationService } from './AuthenticationService';
-import { AngularFireAuth } from '@angular/fire/auth';
-import { AngularFirestore } from '@angular/fire/firestore';
-import { of } from 'rxjs';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import {AuthenticationService} from './AuthenticationService';
+import {AngularFireAuth} from '@angular/fire/auth';
+import {AngularFirestore} from '@angular/fire/firestore';
+import {of} from 'rxjs';
+import {INCLUDE_VERBOSE_LINE_IN_TEST} from 'src/app/app.module';
 
 const afAuth = {
     authState: of(null),
@@ -10,7 +10,6 @@ const afAuth = {
 const afs = {
 };
 describe('AuthenticationService', () => {
-
     let service: AuthenticationService;
 
     beforeAll(() => {

@@ -1,29 +1,28 @@
-import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
-import { Player } from "src/app/jscaip/Player";
-import { PylosCoord } from "../pylos-coord/PylosCoord";
-import { PylosMove } from "../pylos-move/PylosMove";
-import { PylosPartSlice } from "../pylos-part-slice/PylosPartSlice";
-import { PylosNode, PylosRules } from "./PylosRules";
+import {MGPNode} from 'src/app/jscaip/mgpnode/MGPNode';
+import {Player} from 'src/app/jscaip/Player';
+import {PylosCoord} from '../pylos-coord/PylosCoord';
+import {PylosMove} from '../pylos-move/PylosMove';
+import {PylosPartSlice} from '../pylos-part-slice/PylosPartSlice';
+import {PylosNode, PylosRules} from './PylosRules';
 
 describe('PylosRules - Minimax:', () => {
-
     let rules: PylosRules;
 
-    let _: number = Player.NONE.value;
+    const _: number = Player.NONE.value;
 
-    let X: number = Player.ONE.value;
+    const X: number = Player.ONE.value;
 
-    let O: number = Player.ZERO.value;
+    const O: number = Player.ZERO.value;
 
     beforeEach(() => {
         rules = new PylosRules(PylosPartSlice);
     });
 
-    it("Should provide 16 drops at first turn", () => {
+    it('Should provide 16 drops at first turn', () => {
         expect(rules.getListMoves(rules.node).listKeys().length).toBe(16);
     });
 
-    it("Should provide 7 drops without capture, 6 drops with one capture, 15 drops with two capture, 3 climbing", () => {
+    it('Should provide 7 drops without capture, 6 drops with one capture, 15 drops with two capture, 3 climbing', () => {
         const board: number[][][] = [
             [
                 [X, O, O, _],
@@ -38,8 +37,8 @@ describe('PylosRules - Minimax:', () => {
                 [_, _],
                 [_, _],
             ], [
-                [_]
-            ]
+                [_],
+            ],
         ];
 
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
@@ -47,7 +46,7 @@ describe('PylosRules - Minimax:', () => {
         expect(rules.getListMoves(node).listKeys().length).toBe(31);
     });
 
-    it("should calculate board value according to number of pawn of each player", () => {
+    it('should calculate board value according to number of pawn of each player', () => {
         const board: number[][][] = [
             [
                 [O, X, O, X],
@@ -62,8 +61,8 @@ describe('PylosRules - Minimax:', () => {
                 [_, _],
                 [_, _],
             ], [
-                [_]
-            ]
+                [_],
+            ],
         ];
 
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);

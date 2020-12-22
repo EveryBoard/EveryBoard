@@ -1,10 +1,10 @@
-import { DvonnMove } from "./DvonnMove";
-import { Coord } from "src/app/jscaip/coord/Coord";
+import {DvonnMove} from './DvonnMove';
+import {Coord} from 'src/app/jscaip/coord/Coord';
 
 describe('DvonnMove', () => {
     it('should toString in a readable way', () => {
-        expect((DvonnMove.of(new Coord(3, 2), new Coord(3, 3))).toString()).toEqual("DvonnMove((3, 2)->(3, 3))");
-        expect(DvonnMove.PASS.toString()).toEqual("DvonnMove(PASS)");
+        expect((DvonnMove.of(new Coord(3, 2), new Coord(3, 3))).toString()).toEqual('DvonnMove((3, 2)->(3, 3))');
+        expect(DvonnMove.PASS.toString()).toEqual('DvonnMove(PASS)');
     });
     it('should correctly encode and decode coord to coord moves', () => {
         const move1: DvonnMove = DvonnMove.of(new Coord(3, 2), new Coord(3, 3));
@@ -37,19 +37,19 @@ describe('DvonnMove', () => {
         expect(() => DvonnMove.of(new Coord(2, 0), new Coord(3, 2))).toThrowError();
     });
     it('should correctly compute move lengths', () => {
-        expect(DvonnMove.of(new Coord(2, 0), new Coord(4, 0)).length()).toEqual(2)
+        expect(DvonnMove.of(new Coord(2, 0), new Coord(4, 0)).length()).toEqual(2);
         expect(DvonnMove.of(new Coord(2, 0), new Coord(2, 3)).length()).toEqual(3);
         expect(DvonnMove.of(new Coord(2, 0), new Coord(1, 1)).length()).toEqual(1);
         expect(DvonnMove.of(new Coord(5, 2), new Coord(3, 2)).length()).toEqual(2);
         expect(DvonnMove.of(new Coord(5, 2), new Coord(5, 0)).length()).toEqual(2);
         expect(DvonnMove.of(new Coord(5, 2), new Coord(6, 1)).length()).toEqual(1);
-    })
+    });
     it('should override equality', () => {
         const move: DvonnMove = DvonnMove.of(new Coord(2, 2), new Coord(2, 3));
         const sameMove: DvonnMove = DvonnMove.of(new Coord(2, 2), new Coord(2, 3));
         const moveAsObject: Object = {
             start: new Coord(2, 2),
-            end: new Coord(2, 3)
+            end: new Coord(2, 3),
         };
         const neighboor: DvonnMove = DvonnMove.of(new Coord(3, 3), new Coord(2, 3));
         const stranger: DvonnMove = DvonnMove.of(new Coord(5, 2), new Coord(6, 2));

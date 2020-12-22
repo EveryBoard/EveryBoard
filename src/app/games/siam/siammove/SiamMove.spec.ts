@@ -1,15 +1,14 @@
-import { SiamRules, SiamNode } from "../siamrules/SiamRules";
-import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
-import { SiamMove } from "./SiamMove";
-import { SiamPartSlice } from "../SiamPartSlice";
-import { Orthogonal } from "src/app/jscaip/DIRECTION";
-import { Coord } from "src/app/jscaip/coord/Coord";
-import { SiamPiece } from "../siampiece/SiamPiece";
-import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
-import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
+import {SiamRules, SiamNode} from '../siamrules/SiamRules';
+import {MGPMap} from 'src/app/collectionlib/mgpmap/MGPMap';
+import {SiamMove} from './SiamMove';
+import {SiamPartSlice} from '../SiamPartSlice';
+import {Orthogonal} from 'src/app/jscaip/DIRECTION';
+import {Coord} from 'src/app/jscaip/coord/Coord';
+import {SiamPiece} from '../siampiece/SiamPiece';
+import {MGPNode} from 'src/app/jscaip/mgpnode/MGPNode';
+import {MGPOptional} from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
 describe('SiamMove', () => {
-
     const _: number = SiamPiece.EMPTY.value;
     const M: number = SiamPiece.MOUNTAIN.value;
 
@@ -21,7 +20,7 @@ describe('SiamMove', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
@@ -38,33 +37,33 @@ describe('SiamMove', () => {
 
     it('should delegate decoding to static method', () => {
         const testMove: SiamMove = new SiamMove(-1, 0, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        spyOn(SiamMove, "decode").and.callThrough();
+        spyOn(SiamMove, 'decode').and.callThrough();
         testMove.decode(testMove.encode());
         expect(SiamMove.decode).toHaveBeenCalledTimes(1);
     });
 
-    it("Should force move to end inside the board", () => {
+    it('Should force move to end inside the board', () => {
         expect(() => {
             new SiamMove(-1, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        }).toThrowError("SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP).");
+        }).toThrowError('SiamMove should end or start on the board: SiamMove(-1, 2, UP, UP).');
     });
 
-    it("Should forbid rotation outside the board", () => {
+    it('Should forbid rotation outside the board', () => {
         expect(() => {
             new SiamMove(-1, 2, MGPOptional.empty(), Orthogonal.UP);
-        }).toThrowError("Cannot rotate piece outside the board: SiamMove(-1, 2, -, UP).");
+        }).toThrowError('Cannot rotate piece outside the board: SiamMove(-1, 2, -, UP).');
     });
 
-    it("Should throw during invalid SiamMove creation", () => {
+    it('Should throw during invalid SiamMove creation', () => {
         expect(() => {
             new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), null);
-        }).toThrowError("Landing orientation must be set.");
+        }).toThrowError('Landing orientation must be set.');
         expect(() => {
             new SiamMove(2, 2, null, Orthogonal.UP);
-        }).toThrowError("Move Direction must be set (even if optional).");
+        }).toThrowError('Move Direction must be set (even if optional).');
         expect(() => {
             new SiamMove(0, 0, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
-        }).toThrowError("SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: SiamMove(0, 0, UP, DOWN).");
+        }).toThrowError('SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: SiamMove(0, 0, UP, DOWN).');
     });
 
     it('Should override correctly equality', () => {
@@ -73,7 +72,7 @@ describe('SiamMove', () => {
         const android: Object = {
             coord: new Coord(2, 2),
             movingDirection: Orthogonal.UP,
-            landingOrientation: Orthogonal.RIGHT
+            landingOrientation: Orthogonal.RIGHT,
         };
         const neighboor: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
         const cousin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.DOWN), Orthogonal.RIGHT);

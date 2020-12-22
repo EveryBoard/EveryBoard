@@ -1,21 +1,20 @@
-import { Component } from '@angular/core';
+import {Component} from '@angular/core';
 
-import { AbstractGameComponent } from '../AbstractGameComponent';
-import { Coord } from '../../../jscaip/coord/Coord';
-import { TablutMove } from 'src/app/games/tablut/tablutmove/TablutMove';
-import { TablutPartSlice } from '../../../games/tablut/TablutPartSlice';
-import { TablutRules } from '../../../games/tablut/tablutrules/TablutRules';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { TablutCase } from 'src/app/games/tablut/tablutrules/TablutCase';
-import { display } from 'src/app/collectionlib/utils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import {AbstractGameComponent} from '../AbstractGameComponent';
+import {Coord} from '../../../jscaip/coord/Coord';
+import {TablutMove} from 'src/app/games/tablut/tablutmove/TablutMove';
+import {TablutPartSlice} from '../../../games/tablut/TablutPartSlice';
+import {TablutRules} from '../../../games/tablut/tablutrules/TablutRules';
+import {LegalityStatus} from 'src/app/jscaip/LegalityStatus';
+import {TablutCase} from 'src/app/games/tablut/tablutrules/TablutCase';
+import {display} from 'src/app/collectionlib/utils';
+import {MGPValidation} from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-tablut',
-    templateUrl: './tablut.component.html'
+    templateUrl: './tablut.component.html',
 })
 export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, LegalityStatus> {
-
     public static VERBOSE: boolean = false;
 
     public rules = new TablutRules(TablutPartSlice);
@@ -45,7 +44,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         this.cancelMove();
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        display(TablutComponent.VERBOSE, "TablutComponent.onClick(" + x + ", " + y + ")");
+        display(TablutComponent.VERBOSE, 'TablutComponent.onClick(' + x + ', ' + y + ')');
 
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);
@@ -69,7 +68,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
         if (this.rules.node.isEndGame()) { // TODO: clean, isn't that redondant ?
-            return this.cancelMove("Game is ended.");
+            return this.cancelMove('Game is ended.');
         } else { // TODO: action double non ?
             display(TablutComponent.VERBOSE, 'la partie est en court');
         }
@@ -77,7 +76,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         // so I guess he don't need to see what's the last move of the opponent
 
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
-            return this.cancelMove("Not a piece of the current player.");
+            return this.cancelMove('Not a piece of the current player.');
         }
 
         this.showSelectedPiece(x, y);

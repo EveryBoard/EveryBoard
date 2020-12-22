@@ -1,9 +1,8 @@
-import { GamePartSlice } from '../../jscaip/GamePartSlice';
-import { QuartoEnum } from './QuartoEnum';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import {GamePartSlice} from '../../jscaip/GamePartSlice';
+import {QuartoEnum} from './QuartoEnum';
+import {ArrayUtils} from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class QuartoPartSlice extends GamePartSlice {
-
     constructor(b: number[][], turn: number, public readonly pieceInHand: number) {
         super(b, turn);
     }
@@ -13,7 +12,7 @@ export class QuartoPartSlice extends GamePartSlice {
     }
     public static getFullPawnsList(): Array<QuartoEnum> {
         const all: QuartoEnum[] = QuartoEnum.values();
-        const filtered: Array<QuartoEnum> = new Array<QuartoEnum>();
+        const filtered: Array<QuartoEnum> = [];
         for (const q of all) {
             if (q !== QuartoEnum.UNOCCUPIED) {
                 filtered.push(q);
@@ -28,7 +27,7 @@ export class QuartoPartSlice extends GamePartSlice {
         return QuartoPartSlice.isPlacable(pawn, board);
     }
     public static isPlacable(pawn: number, board: ReadonlyArray<ReadonlyArray<number>>): boolean {
-        // return true if the pawn is not already placed on the board
+    // return true if the pawn is not already placed on the board
         let found = false;
         let indexY = 0;
         let indexX: number;
@@ -43,10 +42,10 @@ export class QuartoPartSlice extends GamePartSlice {
         return !found;
     }
     public getRemainingPawns(): Array<QuartoEnum> {
-        // return the pawn that are nor on the board nor the one that you have in your hand
-        // (hence, the one that your about to put on the board)
+    // return the pawn that are nor on the board nor the one that you have in your hand
+    // (hence, the one that your about to put on the board)
         const allPawn: Array<QuartoEnum> = QuartoPartSlice.getFullPawnsList();
-        const remainingPawns: Array<QuartoEnum> = new Array<QuartoEnum>();
+        const remainingPawns: Array<QuartoEnum> = [];
         for (const quartoEnum of allPawn) {
             if (QuartoPartSlice.isGivable(quartoEnum, this.board, this.pieceInHand)) {
                 remainingPawns.push(quartoEnum);

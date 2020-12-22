@@ -1,8 +1,8 @@
 export enum QuartoEnum {
     UNOCCUPIED = 16,
-    AAAA =  0, AAAB =  1, AABA =  2, AABB =  3,
-    ABAA =  4, ABAB =  5, ABBA =  6, ABBB =  7,
-    BAAA =  8, BAAB =  9, BABA = 10, BABB = 11,
+    AAAA = 0, AAAB = 1, AABA = 2, AABB = 3,
+    ABAA = 4, ABAB = 5, ABBA = 6, ABBB = 7,
+    BAAA = 8, BAAB = 9, BABA = 10, BABB = 11,
     BBAA = 12, BBAB = 13, BBBA = 14, BBBB = 15
 }
 

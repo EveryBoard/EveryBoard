@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { GameIncluderComponent } from './game-includer.component';
+import {GameIncluderComponent} from './game-includer.component';
 
 describe('GameIncluderComponent', () => {
     let component: GameIncluderComponent;
@@ -8,7 +8,7 @@ describe('GameIncluderComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [GameIncluderComponent]
+            declarations: [GameIncluderComponent],
         }).compileComponents();
     });
     beforeEach(() => {

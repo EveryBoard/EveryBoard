@@ -1,9 +1,8 @@
-import { Coord } from './coord/Coord';
-import { Player } from './Player';
-import { ArrayUtils } from '../collectionlib/arrayutils/ArrayUtils';
+import {Coord} from './coord/Coord';
+import {Player} from './Player';
+import {ArrayUtils} from '../collectionlib/arrayutils/ArrayUtils';
 
 export abstract class GamePartSlice {
-
     public readonly board: ReadonlyArray<ReadonlyArray<number>>;
 
     public readonly turn: number;
@@ -11,15 +10,15 @@ export abstract class GamePartSlice {
     // contructor ;
 
     constructor(board: number[][], turn: number) {
-        if (board == null) throw new Error("board cannot be null");
-        if (turn == null) throw new Error("turn cannot be null");
+        if (board == null) throw new Error('board cannot be null');
+        if (turn == null) throw new Error('turn cannot be null');
         this.board = board;
         this.turn = turn;
     }
     // Statics:
 
     public static copyCoordArray(array: Coord[]): Coord[] { //  TODO: Check that one immutability  && REMOVE FOR copyImmutableArray
-        const retour: Array<Coord> = new Array<Coord>();
+        const retour: Array<Coord> = [];
         let x = 0;
         while (x < array.length) {
             retour[x] = array[x];
@@ -33,7 +32,7 @@ export abstract class GamePartSlice {
         if (y >= 0 && y < this.board.length && x >= 0 && x < this.board[y].length) {
             return this.board[y][x];
         } else {
-            throw new Error("invalid board access");
+            throw new Error('invalid board access');
         }
     }
     public getBoardAt(c: Coord): number {
@@ -51,6 +50,6 @@ export abstract class GamePartSlice {
         return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;
     }
     public toString(): String {
-        return "(t:"+this.turn+") = " + JSON.stringify(this.board);
+        return '(t:'+this.turn+') = ' + JSON.stringify(this.board);
     }
 }

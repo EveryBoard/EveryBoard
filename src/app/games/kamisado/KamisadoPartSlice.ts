@@ -1,12 +1,11 @@
-import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
-import { Coord } from "src/app/jscaip/coord/Coord";
-import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
-import { KamisadoBoard } from "./KamisadoBoard";
-import { KamisadoColor } from "./KamisadoColor";
-import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
+import {ArrayUtils} from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import {Coord} from 'src/app/jscaip/coord/Coord';
+import {GamePartSlice} from 'src/app/jscaip/GamePartSlice';
+import {KamisadoBoard} from './KamisadoBoard';
+import {KamisadoColor} from './KamisadoColor';
+import {MGPOptional} from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
 export class KamisadoPartSlice extends GamePartSlice {
-
     public constructor(turn: number,
                        // The color that needs to be played next
                        public readonly colorToPlay: KamisadoColor,
@@ -17,6 +16,6 @@ export class KamisadoPartSlice extends GamePartSlice {
         super(ArrayUtils.copyBiArray(board), turn);
     }
     public static getInitialSlice(): KamisadoPartSlice {
-        return new KamisadoPartSlice(0, KamisadoColor.ANY, MGPOptional.empty(), false, ArrayUtils.mapBiArray(KamisadoBoard.INITIAL, p => p.getValue()));
+        return new KamisadoPartSlice(0, KamisadoColor.ANY, MGPOptional.empty(), false, ArrayUtils.mapBiArray(KamisadoBoard.INITIAL, (p) => p.getValue()));
     }
 }

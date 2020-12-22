@@ -6,12 +6,12 @@ import {Router} from '@angular/router';
 import {GameService} from '../../../services/game/GameService';
 import {JoinerService} from '../../../services/joiner/JoinerService';
 import {ChatService} from '../../../services/chat/ChatService';
-import { display } from 'src/app/collectionlib/utils';
+import {display} from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-part-creation',
     templateUrl: './part-creation.component.html',
-    styleUrls: ['./part-creation.component.css']
+    styleUrls: ['./part-creation.component.css'],
 })
 export class PartCreationComponent implements OnInit, OnDestroy {
     /* First  : choosing an opponent
@@ -28,7 +28,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     @Input() partId: string;
     @Input() userName: string;
 
-    @Output("gameStartNotification") gameStartNotification: EventEmitter<IJoiner> = new EventEmitter<IJoiner>();
+    @Output('gameStartNotification') gameStartNotification: EventEmitter<IJoiner> = new EventEmitter<IJoiner>();
     public gameStarted = false; // notify that the game has started, a thing evaluated with the joiner doc game status
 
     public currentJoiner: IJoiner = null;
@@ -58,10 +58,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public joinerService: JoinerService,
                        public chatService: ChatService,
                        public formBuilder: FormBuilder) {
-        display(PartCreationComponent.VERBOSE, "PartCreationComponent constructed for " + this.userName);
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed for ' + this.userName);
     }
     public async ngOnInit(): Promise<void> {
-        display(PartCreationComponent.VERBOSE, "PartCreationComponent.ngOnInit for " + this.userName);
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit for ' + this.userName);
 
         this.checkEntry();
         this.createForms();
@@ -69,37 +69,35 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.joinerService.startObserving(this.partId, (iJoinerId: IJoinerId) =>
             this.onCurrentJoinerUpdate(iJoinerId));
 
-            display(PartCreationComponent.VERBOSE, "PartCreationComponent.ngOnInit asynchronouseries finisheds");
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit asynchronouseries finisheds');
         return Promise.resolve();
     }
     private checkEntry() {
         if (this.userName == null ||
             this.userName === '' ||
-            this.userName === "undefined" ||
-            this.userName === "null")
-        { // TODO: ces vérifications doivent être faite par le composant mère, et une seule fois ??
+            this.userName === 'undefined' ||
+            this.userName === 'null') { // TODO: ces vérifications doivent être faite par le composant mère, et une seule fois ??
             throw new Error('PartCreationComponent should not be created with an empty userName');
         }
         if (this.partId == null ||
             this.partId === '' ||
-            this.partId === "undefined" ||
-            this.partId === "null")
-        {
+            this.partId === 'undefined' ||
+            this.partId === 'null') {
             throw new Error('PartCreationComponent should not be created with an empty partId');
         }
     }
     private createForms() {
         this.opponentFormGroup = this.formBuilder.group({
-            chosenOpponent: ['', Validators.required]
+            chosenOpponent: ['', Validators.required],
         });
         this.configFormGroup = this.formBuilder.group({
             firstPlayer: ['0', Validators.required],
             maximalMoveDuration: [10, Validators.required],
-            totalPartDuration: [60, Validators.required]
+            totalPartDuration: [60, Validators.required],
         });
     }
     private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
-        display(PartCreationComponent.VERBOSE, { PartCreationComponent_onCurrentJoinerUpdate: { before: this.currentJoiner, then: iJoinerId }});
+        display(PartCreationComponent.VERBOSE, {PartCreationComponent_onCurrentJoinerUpdate: {before: this.currentJoiner, then: iJoinerId}});
         if (this.isGameCanceled(iJoinerId)) {
             display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
             return this.onGameCancelled();
@@ -117,7 +115,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private onGameCancelled() {
         // TODO: inform that the game has been cancelled
-        display(PartCreationComponent.VERBOSE, "PartCreationComponent.onGameCancelled");
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
         this.router.navigate(['/server']);
     }
     private isGameStarted(iJoinerId: IJoinerId): boolean {
@@ -131,7 +129,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameStarted finished');
     }
     private updateJoiner(iJoinerId: IJoinerId) {
-        display(PartCreationComponent.VERBOSE, "PartCreationComponent.updateJoiner");
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.updateJoiner');
 
         // Update the form depending on which state we're on now
         this.userIsCreator = (this.userName === iJoinerId.doc.creator);
@@ -140,7 +138,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         if (this.userIsCreator) {
             this.proposingDisabled = (iJoinerId.doc.partStatus !== 1);
         } else {
-            // this.timeout = iJoinerId.joiner.timeoutMinimalDuration;
+        // this.timeout = iJoinerId.joiner.timeoutMinimalDuration;
             this.maximalMoveDuration = iJoinerId.doc.maximalMoveDuration;
             this.firstPlayer = iJoinerId.doc.firstPlayer;
             this.acceptingDisabled = (iJoinerId.doc.partStatus !== 2);
@@ -151,7 +149,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         // callable only by the creator
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 
-        await this.gameService.deletePart(this.partId)
+        await this.gameService.deletePart(this.partId);
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation: game deleted');
 
         await this.joinerService.deleteJoiner();
@@ -163,7 +161,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Promise.resolve();
     }
     public cancelAndLeave() {
-        console.log("I CANCEL AND LEAVE"); // TODO: Toast this
+        console.log('I CANCEL AND LEAVE'); // TODO: Toast this
         this.router.navigate(['/server']);
     }
     public unselectChosenPlayer() {
@@ -185,7 +183,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return this.joinerService.proposeConfig(maxMoveDur, firstPlayer, totalPartDuration);
     }
     public acceptConfig(): Promise<void> {
-        display(PartCreationComponent.VERBOSE, "PartCreationComponent.acceptConfig");
+        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.acceptConfig');
         // called by the joiner
 
         // trigger the beginning redirection that will be called on every subscribed user

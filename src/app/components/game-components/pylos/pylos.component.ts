@@ -1,19 +1,18 @@
-import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../AbstractGameComponent';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { PylosMove } from 'src/app/games/pylos/pylos-move/PylosMove';
-import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
-import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
-import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
-import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import {Component} from '@angular/core';
+import {AbstractGameComponent} from '../AbstractGameComponent';
+import {LegalityStatus} from 'src/app/jscaip/LegalityStatus';
+import {PylosMove} from 'src/app/games/pylos/pylos-move/PylosMove';
+import {PylosPartSlice} from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
+import {PylosRules} from 'src/app/games/pylos/pylos-rules/PylosRules';
+import {PylosCoord} from 'src/app/games/pylos/pylos-coord/PylosCoord';
+import {Player} from 'src/app/jscaip/Player';
+import {MGPValidation} from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-pylos',
-    templateUrl: './pylos.component.html'
+    templateUrl: './pylos.component.html',
 })
 export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSlice, LegalityStatus> {
-
     public static VERBOSE: boolean = false;
 
     public rules: PylosRules = new PylosRules(PylosPartSlice);
@@ -32,9 +31,9 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     public getLevelRange(z: number): number[] {
         switch (z) {
-            case 0: return [0, 1, 2, 3];
-            case 1: return [0, 1, 2];
-            case 2: return [0, 1];
+        case 0: return [0, 1, 2, 3];
+        case 1: return [0, 1, 2];
+        case 2: return [0, 1];
         }
     }
     public isDrawable(x: number, y: number, z: number): boolean {
@@ -48,22 +47,21 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
         const clickedPiece: number = this.slice.getBoardAt(clickedCoord);
         if (clickedPiece === this.slice.getCurrentPlayer().value ||
-            clickedCoord.equals(this.chosenLandingCoord))
-        {
+            clickedCoord.equals(this.chosenLandingCoord)) {
             return await this.onPieceClick(clickedCoord);
         } else if (clickedPiece === Player.NONE.value) {
             return await this.onEmptyCaseClick(clickedCoord);
         } else {
-            return this.cancelMove("Can't click on ennemy pieces.");
+            return this.cancelMove('Can\'t click on ennemy pieces.');
         }
     }
     private async onPieceClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         if (this.chosenLandingCoord == null) {
-            // Starting do describe a climbing move
+        // Starting do describe a climbing move
             this.chosenStartingCoord = clickedCoord;
             return MGPValidation.SUCCESS;
         } else {
-            // Starting to select capture
+        // Starting to select capture
             if (this.chosenFirstCapture == null) { // First capture
                 this.chosenFirstCapture = clickedCoord;
                 return MGPValidation.SUCCESS;
@@ -104,27 +102,26 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             return MGPValidation.SUCCESS; // now player can click on his captures
         } else {
             if (this.chosenStartingCoord == null || // Doing a drop without possible capture
-                clickedCoord.isUpperThan(this.chosenStartingCoord)) // Ending a climbing without possible capture
-            {
+            clickedCoord.isUpperThan(this.chosenStartingCoord)) { // Ending a climbing without possible capture
                 this.chosenLandingCoord = clickedCoord;
                 return this.concludeMoveWithCapture([]);
             } else {
-                return this.cancelMove("Must move pieces upward.");
+                return this.cancelMove('Must move pieces upward.');
             }
         }
     }
     public getPieceStyle(x: number, y: number, z: number): any {
         const c: PylosCoord = new PylosCoord(x, y, z);
-        let fill: string = this.getPieceFill(c);
-        let stroke: string  = "black";
+        const fill: string = this.getPieceFill(c);
+        let stroke: string = 'black';
 
         if (c.equals(this.lastLandingCoord) ||
             c.equals(this.lastStartingCoord)) stroke = 'yellow';
         else if (c.equals(this.chosenStartingCoord) ||
-                 c.equals(this.chosenLandingCoord)) stroke = 'grey'
+                 c.equals(this.chosenLandingCoord)) stroke = 'grey';
         else if (c.equals(this.lastFirstCapture) ||
                  c.equals(this.lastSecondCapture)) stroke = 'orange';
-        return { fill, stroke, 'stroke-width': '10px' }; // TODO: stoke-width go in html if not dynamic
+        return {fill, stroke, 'stroke-width': '10px'}; // TODO: stoke-width go in html if not dynamic
     }
     public getPieceFill(c: PylosCoord): string {
         let owner: number = this.slice.getBoardAt(c);
@@ -132,9 +129,9 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             owner = this.slice.getCurrentPlayer().value;
         }
         switch (owner) {
-            case Player.NONE.value: return 'lightgrey';
-            case Player.ZERO.value: return 'blue';
-            case Player.ONE.value:  return 'red';
+        case Player.NONE.value: return 'lightgrey';
+        case Player.ZERO.value: return 'blue';
+        case Player.ONE.value: return 'red';
         }
     }
     public getPieceRay(z: number): number {

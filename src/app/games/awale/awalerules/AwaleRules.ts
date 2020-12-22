@@ -1,17 +1,16 @@
-import { Rules } from '../../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
-import { AwalePartSlice } from '../AwalePartSlice';
-import { AwaleMove } from '../awalemove/AwaleMove';
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
-import { display } from 'src/app/collectionlib/utils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import {Rules} from '../../../jscaip/Rules';
+import {MGPNode} from 'src/app/jscaip/mgpnode/MGPNode';
+import {AwalePartSlice} from '../AwalePartSlice';
+import {AwaleMove} from '../awalemove/AwaleMove';
+import {MGPMap} from 'src/app/collectionlib/mgpmap/MGPMap';
+import {AwaleLegalityStatus} from '../AwaleLegalityStatus';
+import {ArrayUtils} from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import {display} from 'src/app/collectionlib/utils';
+import {MGPValidation} from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
 export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
-
     public static GET_BOARD_VALUE_CALL_COUNT: number = 0; // TODO: Remove, useless
 
     public static GET_LIST_MOVES_CALL_COUNT: number = 0; // TODO: Remove, useless
@@ -19,7 +18,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     public static VERBOSE: boolean = false;
 
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): { resultingMove: AwaleMove; resultingSlice: AwalePartSlice; } {
-        display(AwaleRules.VERBOSE, "applyLegalMove");
+        display(AwaleRules.VERBOSE, 'applyLegalMove');
         const turn: number = slice.turn;
         const player = turn % 2;
         const ennemy = (turn + 1) % 2;
@@ -67,16 +66,16 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         const ennemi: number = (turn + 1) % 2;
 
         if (y !== player) {
-            return AwaleLegalityStatus.failure("you cannot distribute from the ennemy's home"); // on ne distribue que ses maisons
+            return AwaleLegalityStatus.failure('you cannot distribute from the ennemy\'s home'); // on ne distribue que ses maisons
         }
         const x: number = move.coord.x;
         if (resultingBoard[y][x] === 0) {
-            return AwaleLegalityStatus.failure("You must choose a non-empty house to distribute.");
+            return AwaleLegalityStatus.failure('You must choose a non-empty house to distribute.');
         }
 
         if (!AwaleRules.doesDistribute(x, y, resultingBoard) && AwaleRules.isStarving(ennemi, resultingBoard) ) {
-            // you can distribute but you don't, illegal move
-            return AwaleLegalityStatus.failure("you can distribute but you don't");
+        // you can distribute but you don't, illegal move
+            return AwaleLegalityStatus.failure('you can distribute but you don\'t');
         }
         // arrived here you can distribute this house
         // but we'll have to check if you can capture
@@ -84,7 +83,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         // of the last stone
         const landingCamp: number = lastCase[1];
         if (landingCamp === player) {
-            // on termine la distribution dans son propre camp, rien d'autre à vérifier
+        // on termine la distribution dans son propre camp, rien d'autre à vérifier
             return {legal: MGPValidation.SUCCESS, captured: [0, 0], resultingBoard};
         }
         // on as donc terminé la distribution dans le camps adverse, capture est de mise
@@ -99,7 +98,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             }
         }
         if (AwaleRules.isStarving(player, resultingBoard) && !AwaleRules.canDistribute(ennemi, resultingBoard)) {
-            // if the player distributed his last seeds and the opponent could not give him seeds
+        // if the player distributed his last seeds and the opponent could not give him seeds
             captured[ennemi] += AwaleRules.mansoon(ennemi, resultingBoard);
         }
         return {legal: MGPValidation.SUCCESS, captured, resultingBoard};
@@ -133,14 +132,13 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         // does not make the capture nor verify the legality of the move
         // return (x, y) of the last case the move got down
 
-        let ix: number, iy: number;
-        ix = x;
-        iy = y; // iy et ix sont les cases initiales
+        const ix: number = x;
+        const iy: number = y; // iy et ix sont les cases initiales
         // à retenir pour appliquer la règle de la jachère en cas de tour complet
         let inHand = board[y][x];
         board[y][x] = 0; // on vide la case
         while (inHand > 0) {
-            // get next case
+        // get next case
             if (y === 0) {
                 if (x === 5) {
                     y = 1; // passage de frontière du bas vers le haut
@@ -176,10 +174,10 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
 
         let captured = 0;
-        let direction = -1 ; // by defaut, capture from right to left
+        let direction = -1; // by defaut, capture from right to left
         let limite = -1;
         if (player === 0) {
-            /* if turn == 0 capture is on the bottom line
+        /* if turn == 0 capture is on the bottom line
              * means capture goes from left to right ( + 1)
              * so one ending condition of the loop is reaching index 6
              */
@@ -205,7 +203,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         let newSlice: AwalePartSlice;
         let x = 0;
         do {
-            // for each house that might be playable
+        // for each house that might be playable
 
             if (n.gamePartSlice.getBoardByXY(x, player) !== 0) {
                 // if the house is not empty

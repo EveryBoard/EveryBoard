@@ -1,16 +1,15 @@
-import { GoBoardDatas } from "./GoBoardDatas";
-import { GoPartSlice, GoPiece } from "../GoPartSlice";
-import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
-import { GroupInfos } from "../gorules/GoRules";
-import { Coord } from "src/app/jscaip/coord/Coord";
+import {GoBoardDatas} from './GoBoardDatas';
+import {GoPartSlice, GoPiece} from '../GoPartSlice';
+import {ArrayUtils} from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import {GroupInfos} from '../gorules/GoRules';
+import {Coord} from 'src/app/jscaip/coord/Coord';
 
 describe('GoBoardDatas', () => {
+    const _: GoPiece = GoPiece.EMPTY;
 
-    let _: GoPiece = GoPiece.EMPTY;
+    const X: GoPiece = GoPiece.WHITE;
 
-    let X: GoPiece = GoPiece.WHITE;
-
-    let O: GoPiece = GoPiece.BLACK;
+    const O: GoPiece = GoPiece.BLACK;
 
     it('should create one big group for initial board', () => {
         const board: GoPiece[][] = GoPartSlice.getStartingBoard();
@@ -46,11 +45,11 @@ describe('GoBoardDatas', () => {
         expect(emptyGroupInfos.neighboorsEP).toEqual([new Coord(2, 3), new Coord(2, 2)]);
 
         const whiteGroupInfos: GroupInfos = datas.groups[1];
-        expect(whiteGroupInfos.coords.length).toBe(2, "White group is composed of two stones");
+        expect(whiteGroupInfos.coords.length).toBe(2, 'White group is composed of two stones');
         expect(whiteGroupInfos.neighboorsEP).toEqual([new Coord(2, 1), new Coord(2, 3)]);
 
         const blackGroupInfos: GroupInfos = datas.groups[2];
-        expect(blackGroupInfos.coords.length).toBe(1, "Black group is composed of two stones");
+        expect(blackGroupInfos.coords.length).toBe(1, 'Black group is composed of two stones');
         expect(blackGroupInfos.neighboorsEP).toEqual([new Coord(1, 3), new Coord(2, 2)]);
     });
 });
