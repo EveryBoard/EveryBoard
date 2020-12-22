@@ -25,6 +25,7 @@ module.exports = {
         'no-undef': ['off'], // Because there are false positives
         'no-unused-vars': ['warn'],
         'no-invalid-this': ['warn'],
-        'indent': ['error', 4]
+        'indent': ['error', 4],
+        'no-redeclare': ['warn'], // TODO: add option ignoreDeclarationMerge: true and set to error
     }
 };
