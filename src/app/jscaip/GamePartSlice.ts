@@ -1,10 +1,10 @@
 import { Coord } from './coord/Coord';
 import { Player } from './Player';
-import { ArrayUtils } from '../collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils, NumberTable } from '../collectionlib/arrayutils/ArrayUtils';
 
 export abstract class GamePartSlice {
 
-    public readonly board: ReadonlyArray<ReadonlyArray<number>>;
+    public readonly board: NumberTable;
 
     public readonly turn: number;
 

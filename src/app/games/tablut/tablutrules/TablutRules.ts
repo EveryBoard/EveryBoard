@@ -12,6 +12,7 @@ import { TablutCase } from './TablutCase';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { display } from 'src/app/collectionlib/utils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 abstract class TablutNode extends MGPNode<TablutRules, TablutMove, TablutPartSlice, LegalityStatus> {}
 
@@ -314,7 +315,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         center -= center % 2;
         return (c.x === center && c.y === center);
     }
-    private static getAbsoluteOwner(c: Coord, invaderStart: boolean, board: ReadonlyArray<ReadonlyArray<number>>): Player {
+    private static getAbsoluteOwner(c: Coord, invaderStart: boolean, board: NumberTable): Player {
         const case_c: number = board[c.y][c.x];
         let owner: Player;
         switch (case_c) {
@@ -338,7 +339,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
         return owner;
     }
-    public static getRelativeOwner(player: 0|1, invaderStart: boolean, c: Coord, board: ReadonlyArray<ReadonlyArray<number>>): number {
+    public static getRelativeOwner(player: 0|1, invaderStart: boolean, c: Coord, board: NumberTable): number {
         if (!c.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
             throw new Error('cannot call getRelativeOwner on Out Of Range Coord' + c);
         }

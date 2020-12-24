@@ -1,4 +1,4 @@
-import { ReadonlyBiArray, ReadonlyNumberBiArray } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { Table, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DvonnPieceStack } from "./dvonnpiecestack/DvonnPieceStack";
 
@@ -23,7 +23,7 @@ export class DvonnBoard {
         return true;
     }
 
-    public static getStackAt(board: ReadonlyNumberBiArray, coord: Coord): DvonnPieceStack {
+    public static getStackAt(board: NumberTable, coord: Coord): DvonnPieceStack {
         if (!DvonnBoard.isOnBoard(coord)) {
             throw new Error("Position is not within the board");
         }
@@ -37,13 +37,13 @@ export class DvonnBoard {
             new Coord(coord.x, coord.y+distance), new Coord(coord.x, coord.y-distance)
         ];
     }
-    public static numberOfNeighbors(board: ReadonlyNumberBiArray, coord: Coord): number {
+    public static numberOfNeighbors(board: NumberTable, coord: Coord): number {
         return DvonnBoard.neighbors(coord, 1)
             .filter((c: Coord): boolean => DvonnBoard.isOnBoard(c) && !DvonnBoard.getStackAt(board, c).isEmpty())
             .length
     }
 
-    public static getAllPieces(board: ReadonlyNumberBiArray): Coord[] {
+    public static getAllPieces(board: NumberTable): Coord[] {
         const pieces: Coord[] = []
         for (let y = 0; y < DvonnBoard.HEIGHT; y++) {
             for (let x = 0; x < DvonnBoard.WIDTH; x++) {
@@ -65,7 +65,7 @@ export class DvonnBoard {
    W W B W W B B B W W
     W D W B B W W W B
     */
-    public static getBalancedBoard(): ReadonlyBiArray<DvonnPieceStack> {
+    public static getBalancedBoard(): Table<DvonnPieceStack> {
         const _ = DvonnPieceStack.EMPTY;
         const W = DvonnPieceStack.PLAYER_ZERO;
         const B = DvonnPieceStack.PLAYER_ONE;

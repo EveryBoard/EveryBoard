@@ -1,7 +1,7 @@
-import {GamePartSlice} from '../../jscaip/GamePartSlice';
-import {Coord} from 'src/app/jscaip/coord/Coord';
+import { GamePartSlice } from '../../jscaip/GamePartSlice';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class GoPiece {
 
@@ -90,7 +90,7 @@ export class GoPartSlice extends GamePartSlice {
     public static mapGoPieceBoard(board: GoPiece[][]): number[][] {
         return ArrayUtils.mapBiArray<GoPiece, number>(board, (goPiece: GoPiece) => goPiece.value);
     }
-    public static mapNumberBoard(board: ReadonlyArray<ReadonlyArray<number>>): GoPiece[][] {
+    public static mapNumberBoard(board: NumberTable): GoPiece[][] {
         return ArrayUtils.mapBiArray<number, GoPiece>(board, GoPiece.of);
     }
     public constructor(board: GoPiece[][], captured: number[], turn: number, koCoord: Coord, phase: Phase) {

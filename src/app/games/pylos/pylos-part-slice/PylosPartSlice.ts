@@ -1,4 +1,4 @@
-import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { ArrayUtils, Table } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { Player } from "src/app/jscaip/Player";
 import { PylosCoord } from "../pylos-coord/PylosCoord";
@@ -14,7 +14,7 @@ export class PylosPartSlice extends GamePartSlice {
         const turn: number = 0;
         return new PylosPartSlice([board0, board1, board2, board3], turn);
     }
-    constructor(public readonly boards: ReadonlyArray<ReadonlyArray<ReadonlyArray<number>>>,
+    constructor(public readonly boards: Table<ReadonlyArray<number>>,
                 turn: number) {
         super([], turn);
     }
