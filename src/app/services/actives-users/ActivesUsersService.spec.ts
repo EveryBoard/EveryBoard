@@ -20,16 +20,16 @@ describe('ActivesUsersService', () => {
     });
     it('should order', () => {
         const joueurIds: IJoueurId[] = [
-            {id: 'second', doc: {pseudo: 'second', last_changed: {seconds: 2}}},
-            {id: 'first', doc: {pseudo: 'first', last_changed: {seconds: 1}}},
-            {id: 'fourth', doc: {pseudo: 'fourth', last_changed: {seconds: 4}}},
-            {id: 'third', doc: {pseudo: 'third', last_changed: {seconds: 3}}},
+            {id: 'second', doc: {pseudo: 'second', lastChanged: {seconds: 2}}},
+            {id: 'first', doc: {pseudo: 'first', lastChanged: {seconds: 1}}},
+            {id: 'fourth', doc: {pseudo: 'fourth', lastChanged: {seconds: 4}}},
+            {id: 'third', doc: {pseudo: 'third', lastChanged: {seconds: 3}}},
         ];
         const expectedOrder: IJoueurId[] = [
-            {id: 'first', doc: {pseudo: 'first', last_changed: {seconds: 1}}},
-            {id: 'second', doc: {pseudo: 'second', last_changed: {seconds: 2}}},
-            {id: 'third', doc: {pseudo: 'third', last_changed: {seconds: 3}}},
-            {id: 'fourth', doc: {pseudo: 'fourth', last_changed: {seconds: 4}}},
+            {id: 'first', doc: {pseudo: 'first', lastChanged: {seconds: 1}}},
+            {id: 'second', doc: {pseudo: 'second', lastChanged: {seconds: 2}}},
+            {id: 'third', doc: {pseudo: 'third', lastChanged: {seconds: 3}}},
+            {id: 'fourth', doc: {pseudo: 'fourth', lastChanged: {seconds: 4}}},
         ];
         const orderedJoueursId: IJoueurId[] = service.order(joueurIds);
         expect(expectedOrder).toEqual(orderedJoueursId);

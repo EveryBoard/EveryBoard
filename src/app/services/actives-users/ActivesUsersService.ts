@@ -52,8 +52,8 @@ export class ActivesUsersService {
     }
     public order(users: IJoueurId[]): IJoueurId[] {
         return users.sort((first, second) => {
-            const firstTimestamp: number = (first.doc.last_changed as {seconds: number}).seconds;
-            const secondTimestamp: number = (second.doc.last_changed as {seconds: number}).seconds;
+            const firstTimestamp: number = (first.doc.lastChanged as {seconds: number}).seconds;
+            const secondTimestamp: number = (second.doc.lastChanged as {seconds: number}).seconds;
             return firstTimestamp - secondTimestamp;
         });
     }
