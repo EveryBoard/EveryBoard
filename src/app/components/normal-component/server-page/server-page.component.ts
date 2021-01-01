@@ -66,27 +66,6 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             .subscribe((activesParts) => this.activesParts = activesParts);
         this.activesUsersSub = this.userService.getActivesUsersObs()
             .subscribe((activesUsers) => this.activesUsers = activesUsers);
-        this.router.events.subscribe((event) => {
-            if (event instanceof NavigationEnd) {
-                const path = this.location.path();
-                if (path.startsWith('/play/')) {
-                    this.checkGameNameInPath(path, /^\/play\/([a-zA-Z0-9]+)\/[a-zA-Z0-9]+$/);
-                } else if (path.startsWith('/local/')) {
-                    this.checkGameNameInPath(path, /^\/local\/([a-zA-Z0-9]+)$/);
-                }
-            }
-        });
-    }
-    private checkGameNameInPath(path: string, regex: RegExp) {
-        const matches = path.match(regex);
-        if (matches == null || matches.length != 2) {
-            this.router.navigate(['/server']);
-        } else {
-            const game = matches[1];
-            if (!this.gameNameList.includes(game)) {
-                this.router.navigate(['/server']);
-            }
-        }
     }
 
     public joinGame(partId: string, typeGame: string) {
