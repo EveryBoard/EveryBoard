@@ -36,7 +36,7 @@ const authenticationServiceStub = {
 
     getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
 };
-fdescribe('EpaminondasComponent:', () => {
+describe('EpaminondasComponent:', () => {
 
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;

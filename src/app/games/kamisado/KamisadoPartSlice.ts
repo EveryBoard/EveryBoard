@@ -7,23 +7,14 @@ import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
 export class KamisadoPartSlice extends GamePartSlice {
 
-<<<<<<< HEAD
-    public readonly colorToPlay: KamisadoColor; // The color that needs to be played next
-
-    public readonly coordToPlay: MGPOptional<Coord>; // The next coord that has to be played
-
-    public readonly alreadyPassed: boolean; // Did a PASS move have been performed on the last turn?
-
-    public constructor(turn: number, colorToPlay: KamisadoColor, coordToPlay: MGPOptional<Coord>, alreadyPassed: boolean, board: NumberTable) {
-=======
     public constructor(turn: number,
                        // The color that needs to be played next
                        public readonly colorToPlay: KamisadoColor,
                        // The next coord that has to be played
                        public readonly coordToPlay: MGPOptional<Coord>,
                        // Did a PASS move have been performed on the last turn?
-                       public readonly alreadyPassed: boolean, board: ReadonlyArray<ReadonlyArray<number>>) {
->>>>>>> 217d3a34e76b09075b752b86152ccca23d7a7c36
+                       public readonly alreadyPassed: boolean,
+                       board: NumberTable) {
         super(ArrayUtils.copyBiArray(board), turn);
     }
     public static getInitialSlice(): KamisadoPartSlice {

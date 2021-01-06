@@ -71,10 +71,10 @@ export class Direction {
     }
     public static fromInt(int: number): Direction {
         switch (int) {
-            case 0: return Orthogonale.UP;
-            case 1: return Orthogonale.RIGHT;
-            case 2: return Orthogonale.DOWN;
-            case 3: return Orthogonale.LEFT;
+            case 0: return Direction.UP;
+            case 1: return Direction.RIGHT;
+            case 2: return Direction.DOWN;
+            case 3: return Direction.LEFT;
             case 4: return Direction.UP_LEFT;
             case 5: return Direction.UP_RIGHT;
             case 6: return Direction.DOWN_LEFT;
@@ -152,5 +152,5 @@ export class Orthogonal extends Direction {
 
     public static readonly LEFT: Orthogonal = Direction.LEFT;
 
-    public static readonly ORTHOGONALES = [Orthogonal.UP, Orthogonal.RIGHT, Orthogonal.DOWN, Orthogonal.LEFT];
+    public static readonly ORTHOGONALS = [Orthogonal.UP, Orthogonal.RIGHT, Orthogonal.DOWN, Orthogonal.LEFT];
 }
