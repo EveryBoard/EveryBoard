@@ -1,6 +1,6 @@
-import {MoveCoord} from './MoveCoord';
-import {Coord} from './coord/Coord';
-import { GamePartSlice } from './GamePartSlice';
+import { MoveCoord } from './MoveCoord';
+import { Coord } from './coord/Coord';
+import { ArrayUtils } from '../collectionlib/arrayutils/ArrayUtils';
 
 export abstract class MoveCoordToCoordAndCapture extends MoveCoord {
 
@@ -19,6 +19,6 @@ export abstract class MoveCoordToCoordAndCapture extends MoveCoord {
         this.captures = captures;
     }
     public getCapturesCopy(): Coord[] {
-        return GamePartSlice.copyCoordArray(this.captures);
+        return ArrayUtils.copyCoordArray(this.captures);
     }
 }

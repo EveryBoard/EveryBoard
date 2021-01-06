@@ -26,6 +26,7 @@ import { TablutComponent } from './tablut/tablut.component';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 import { display } from 'src/app/collectionlib/utils';
+import { EpaminondasComponent } from './epaminondas/epaminondas.component';
 
 @Component({template: ''})
 export abstract class GameWrapper {
@@ -66,6 +67,8 @@ export abstract class GameWrapper {
                 return DvonnComponent;
             case 'Encapsule':
                 return EncapsuleComponent;
+            case 'Epaminondas':
+                return EpaminondasComponent;
             case 'Go':
                 return GoComponent;
             case 'MinimaxTesting':

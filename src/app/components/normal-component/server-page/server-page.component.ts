@@ -1,15 +1,15 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {Router} from '@angular/router';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
 
 import { IJoueurId } from '../../../domain/iuser';
-import {ICurrentPartId} from '../../../domain/icurrentpart';
+import { ICurrentPartId } from '../../../domain/icurrentpart';
 
 import { UserService } from '../../../services/user/UserService';
 import { GameService } from '../../../services/game/GameService';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-server-page',
@@ -27,17 +27,18 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     readonly gameNameList: String[] = ['Awale',          // 1
                                        'Dvonn',          // 2
                                        'Encapsule',      // 3
-                                       'Go',             // 4
-                                       'Kamisado',       // 5
+                                       'Epaminondas',    // 4
+                                       'Go',             // 5
+                                       'Kamisado',       // 6
                                        // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
-                                       'P4',             // 6
-                                       'Pylos',          // 7
-                                       'Quarto',         // 8
-                                       'Quixo',          // 9
-                                       'Reversi',        // 10
-                                       'Sahara',         // 11
-                                       'Siam',           // 12
-                                       'Tablut'];        // 13
+                                       'P4',             // 7
+                                       'Pylos',          // 8
+                                       'Quarto',         // 9
+                                       'Quixo',          // 10
+                                       'Reversi',        // 11
+                                       'Sahara',         // 12
+                                       'Siam',           // 13
+                                       'Tablut'];        // 14
 
     public selectedGame: string;
 

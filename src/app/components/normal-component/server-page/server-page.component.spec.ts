@@ -1,17 +1,18 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { ServerPageComponent } from './server-page.component';
-
 import { RouterTestingModule } from '@angular/router/testing';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { of, Observable } from 'rxjs';
-import { UserService } from 'src/app/services/user/UserService';
-import { GameService } from 'src/app/services/game/GameService';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { Router } from '@angular/router';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+
+import { of, Observable } from 'rxjs';
+
+import { ServerPageComponent } from './server-page.component';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { UserService } from 'src/app/services/user/UserService';
+import { GameService } from 'src/app/services/game/GameService';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
@@ -21,7 +22,6 @@ import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
-import { MatSnackBar, MatSnackBarModule } from '@angular/material/snack-bar';
 
 class AuthenticationServiceMock {
 

@@ -4,36 +4,21 @@ import { ArrayUtils, NumberTable } from '../collectionlib/arrayutils/ArrayUtils'
 
 export abstract class GamePartSlice {
 
-    public readonly board: NumberTable;
-
-    public readonly turn: number;
-
-    // contructor ;
-
-    constructor(board: number[][], turn: number) {
-        if (board == null) throw new Error("board cannot be null");
-        if (turn == null) throw new Error("turn cannot be null");
-        this.board = board;
-        this.turn = turn;
-    }
-    // Statics:
-
-    public static copyCoordArray(array: Coord[]): Coord[] { //  TODO: Check that one immutability  && REMOVE FOR copyImmutableArray
-        const retour: Array<Coord> = new Array<Coord>();
-        let x = 0;
-        while (x < array.length) {
-            retour[x] = array[x];
-            x++;
-        }
-        return retour;
+    public constructor(
+        public readonly board: NumberTable,
+        public readonly turn: number)
+    {
+        if (board == null) throw new Error("Board cannot be null.");
+        if (turn == null) throw new Error("Turn cannot be null.");
     }
     // Getters
 
     public getBoardByXY(x: number, y: number): number {
-        if (y >= 0 && y < this.board.length && x >= 0 && x < this.board[y].length) {
+        if (0 <= y && y < this.board.length &&
+            0 <= x && x < this.board[y].length) {
             return this.board[y][x];
         } else {
-            throw new Error("invalid board access");
+            throw new Error("Out of range coord: (" + x + ", " + y + ").");
         }
     }
     public getBoardAt(c: Coord): number {
