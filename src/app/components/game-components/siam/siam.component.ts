@@ -6,7 +6,7 @@ import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
 import { SiamRules } from 'src/app/games/siam/siamrules/SiamRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SiamPiece } from 'src/app/games/siam/siampiece/SiamPiece';
-import { Orthogonale } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { GameComponentUtils } from '../GameComponentUtils';
@@ -29,9 +29,9 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
 
     public landingCoord: Coord;
 
-    public chosenDirection: MGPOptional<Orthogonale>;
+    public chosenDirection: MGPOptional<Orthogonal>;
 
-    public chosenOrientation: Orthogonale;
+    public chosenOrientation: Orthogonal;
 
     public updateBoard() {
         display(SiamComponent.VERBOSE, "updateBoard");
@@ -72,7 +72,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             this.chosenDirection = MGPOptional.empty();
             this.landingCoord = this.chosenCoord;
         } else {
-            const dir: Orthogonale = Orthogonale.fromString(direction);
+            const dir: Orthogonal = Orthogonal.fromString(direction);
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
             if (this.landingCoord.isNotInRange(5, 5)) {
@@ -85,7 +85,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     }
     public async chooseOrientation(orientation: string): Promise<MGPValidation> {
         display(SiamComponent.VERBOSE, "SiamComponent.chooseOrientation(" + orientation + ")");
-        this.chosenOrientation = Orthogonale.fromString(orientation);
+        this.chosenOrientation = Orthogonal.fromString(orientation);
         return await this.tryMove();
     }
     public async insertAt(x: number, y: number): Promise<MGPValidation> {
@@ -95,7 +95,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             return this.cancelMove("Can't insert when there is already a selected piece");
         } else {
             this.chosenCoord = new Coord(x, y);
-            const dir: Orthogonale = SiamRules.getCoordDirection(x, y, this.rules.node.gamePartSlice);
+            const dir: Orthogonal = SiamRules.getCoordDirection(x, y, this.rules.node.gamePartSlice);
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
             return MGPValidation.SUCCESS;
@@ -125,7 +125,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                x7 + ' ' + y7 + ' ' + x8 + ' ' + y8;
     }
     public rotate(x: number, y: number, o: string): string {
-        const orientation: number = Orthogonale.fromString(o).toInt() - 2;
+        const orientation: number = Orthogonal.fromString(o).toInt() - 2;
         return "rotate(" + (90*orientation) + " " + ((100*x) + 50) + " " + ((100*y) + 50) + ")"
     }
     public isPiece(c: number): boolean {
@@ -157,7 +157,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public stylePiece(x: number, y:number, c: number): any {
         const coord: Coord = new Coord(x, y);
         let last: Coord = this.lastMove.coord;
-        const direction: Orthogonale = this.lastMove.moveDirection.getOrNull();
+        const direction: Orthogonal = this.lastMove.moveDirection.getOrNull();
         last = last && direction ? last.getNext(direction) : last;
         const isHighlighted: boolean = coord.equals(last);
         const stroke: string = isHighlighted ? 'yellow' : 'black';

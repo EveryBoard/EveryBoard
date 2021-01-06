@@ -142,15 +142,15 @@ export class Direction {
     }
     protected constructor(public readonly x: number, public readonly y: number) {}
 }
-export class Orthogonale extends Direction {
+export class Orthogonal extends Direction {
 
-    public static readonly UP: Orthogonale = Direction.UP;
+    public static readonly UP: Orthogonal = Direction.UP;
 
-    public static readonly RIGHT: Orthogonale = Direction.RIGHT;
+    public static readonly RIGHT: Orthogonal = Direction.RIGHT;
 
-    public static readonly DOWN: Orthogonale = Direction.DOWN;
+    public static readonly DOWN: Orthogonal = Direction.DOWN;
 
-    public static readonly LEFT: Orthogonale = Direction.LEFT;
+    public static readonly LEFT: Orthogonal = Direction.LEFT;
 
-    public static readonly ORTHOGONALES = [Orthogonale.UP, Orthogonale.RIGHT, Orthogonale.DOWN, Orthogonale.LEFT];
+    public static readonly ORTHOGONALES = [Orthogonal.UP, Orthogonal.RIGHT, Orthogonal.DOWN, Orthogonal.LEFT];
 }

@@ -1,5 +1,5 @@
 import { MoveCoord } from "src/app/jscaip/MoveCoord";
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 
 export class SiamMove extends MoveCoord {
@@ -19,19 +19,19 @@ export class SiamMove extends MoveCoord {
         encodedMove -= x;
         encodedMove/= 7;
         const moveDirectionInt: number = encodedMove % 5;
-        const moveDirection: MGPOptional<Orthogonale> = moveDirectionInt === 4 ?
+        const moveDirection: MGPOptional<Orthogonal> = moveDirectionInt === 4 ?
             MGPOptional.empty() :
-            MGPOptional.of(Orthogonale.fromInt(moveDirectionInt));
+            MGPOptional.of(Orthogonal.fromInt(moveDirectionInt));
         encodedMove -= moveDirectionInt;
         encodedMove /= 5;
-        const landingOrientation: Orthogonale = Orthogonale.fromInt(encodedMove);
+        const landingOrientation: Orthogonal = Orthogonal.fromInt(encodedMove);
         return new SiamMove(x - 1, y - 1, moveDirection, landingOrientation);
     }
     constructor(
         readonly x: number,
         readonly y: number,
-        public readonly moveDirection: MGPOptional<Orthogonale>,
-        public readonly landingOrientation: Orthogonale)
+        public readonly moveDirection: MGPOptional<Orthogonal>,
+        public readonly landingOrientation: Orthogonal)
     {
         super(x, y);
         if (moveDirection == null) throw new Error("Move Direction must be set (even if optional).")

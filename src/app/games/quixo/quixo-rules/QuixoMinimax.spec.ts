@@ -1,4 +1,4 @@
-import { Orthogonale } from "src/app/jscaip/DIRECTION";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { Player } from "src/app/jscaip/Player";
 import { QuixoPartSlice } from "../quixo-part-slice/QuixoPartSlice";
 import { QuixoMove } from "../QuixoMove";
@@ -24,7 +24,7 @@ describe('QuixoMinimax:', () => {
             [X, _, _, _, O],
         ];
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
-        const move: QuixoMove = new QuixoMove(0, 2, Orthogonale.RIGHT);
+        const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
         expect(rules.getBoardValue(move, slice)).toEqual(-1);
     });
 });

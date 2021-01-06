@@ -5,7 +5,7 @@ import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { SiamPiece } from "../siampiece/SiamPiece";
 import { Player } from "src/app/jscaip/Player";
 import { Coord } from "src/app/jscaip/coord/Coord";
-import { Orthogonale, Direction } from "src/app/jscaip/DIRECTION";
+import { Orthogonal, Direction } from "src/app/jscaip/DIRECTION";
 import { SiamLegalityStatus } from "../SiamLegalityStatus";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
@@ -55,16 +55,16 @@ export class SiamRules extends _SiamRules {
         return {insertedPiece, legal};
     }
     public static getInsertedPiece(entrance: Coord, player: Player): SiamPiece {
-        if (entrance.x === -1) return SiamPiece.of(Orthogonale.RIGHT, player);
-        if (entrance.y === -1) return SiamPiece.of(Orthogonale.DOWN, player);
-        if (entrance.x === 5) return SiamPiece.of(Orthogonale.LEFT, player);
-        return SiamPiece.of(Orthogonale.UP, player);
+        if (entrance.x === -1) return SiamPiece.of(Orthogonal.RIGHT, player);
+        if (entrance.y === -1) return SiamPiece.of(Orthogonal.DOWN, player);
+        if (entrance.x === 5) return SiamPiece.of(Orthogonal.LEFT, player);
+        return SiamPiece.of(Orthogonal.UP, player);
     }
     public isLegalForwarding(move: SiamMove, slice: SiamPartSlice, firstPiece: number): SiamLegalityStatus {
         display(SiamRules.VERBOSE, { isLegalForwarding: {move: move.toString(), slice, firstPiece }});
 
         let movingPiece: number = SiamPiece.of(move.landingOrientation, slice.getCurrentPlayer()).value;
-        const pushingDir: Orthogonale = move.moveDirection.get();
+        const pushingDir: Orthogonal = move.moveDirection.get();
         let landingCoord: Coord = move.coord.getNext(pushingDir);
         if (landingCoord.isInRange(5, 5) &&
             slice.getBoardAt(landingCoord) !== SiamPiece.EMPTY.value &&
@@ -73,8 +73,8 @@ export class SiamRules extends _SiamRules {
             display(SiamRules.VERBOSE, "Illegal push because not straight or not pushing anything or leaving the board");
             return SiamLegalityStatus.failure("Illegal push because not straight or not pushing anything or leaving the board")
         }
-        let currentDirection: Orthogonale = pushingDir;
-        const resistingDir: Orthogonale = pushingDir.getOpposite();
+        let currentDirection: Orthogonal = pushingDir;
+        const resistingDir: Orthogonal = pushingDir.getOpposite();
         let totalForce: number = 0;
         let resultingBoard: number[][] = slice.getCopiedBoard();
         if (move.coord.isInRange(5, 5)) {
@@ -117,7 +117,7 @@ export class SiamRules extends _SiamRules {
     }
     public static isStraight(piece: number, move: SiamMove): boolean {
         const siamPiece: SiamPiece = SiamPiece.decode(piece);
-        const pieceDirection: Orthogonale = siamPiece.getDirection();
+        const pieceDirection: Orthogonal = siamPiece.getDirection();
         return (pieceDirection === move.moveDirection.getOrNull() &&
                 pieceDirection === move.landingOrientation);
     }
@@ -240,14 +240,14 @@ export class SiamRules extends _SiamRules {
         } else { // insertion
             moveStarterPiece = SiamRules.getInsertedPiece(moveStarterCoord, slice.getCurrentEnnemy()).value;
         }
-        const pushingDirection: Orthogonale = SiamPiece.getDirection(moveStarterPiece);
+        const pushingDirection: Orthogonal = SiamPiece.getDirection(moveStarterPiece);
         const pusherCoord: Coord = this.getPusherCoord(slice, pushingDirection, moveStarterCoord);
         const winner: Player = SiamPiece.getOwner(slice.getBoardAt(pusherCoord));
         display(SiamRules.VERBOSE, moveStarterCoord.toString() + " belong to " + slice.getCurrentEnnemy().value + ", "
                 + pusherCoord.toString() + " belong to " + winner.value + ", " + winner.value + " win");
         return winner;
     }
-    public getPusherCoord(slice: SiamPartSlice, pushingDirection: Orthogonale, pusher: Coord): Coord {
+    public getPusherCoord(slice: SiamPartSlice, pushingDirection: Orthogonal, pusher: Coord): Coord {
         let pushed: Coord = pusher.getNext(pushingDirection);
         let lastCorrectPusher: Coord = pusher;
         while (pushed.isInRange(5, 5)) {
@@ -269,28 +269,28 @@ export class SiamRules extends _SiamRules {
     {
         display(SiamRules.VERBOSE, { getPushers: { slice, mountainsColumn, mountainsRow }});
         let pushers: { coord: Coord; distance: number; }[] = [];
-        let lineDirections: { direction: Orthogonale, fallingCoord: Coord}[] = []
+        let lineDirections: { direction: Orthogonal, fallingCoord: Coord}[] = []
         for (let x of mountainsColumn) {
-            let direction: Orthogonale = Orthogonale.DOWN;
+            let direction: Orthogonal = Orthogonal.DOWN;
             let fallingCoord: Coord = new Coord(x, 4);
             lineDirections.push({ direction, fallingCoord });
 
-            direction = Orthogonale.UP;
+            direction = Orthogonal.UP;
             fallingCoord = new Coord(x, 0);
             lineDirections.push({ direction, fallingCoord });
         }
         for (let y of mountainsRow) {
-            let direction: Orthogonale = Orthogonale.LEFT;
+            let direction: Orthogonal = Orthogonal.LEFT;
             let fallingCoord: Coord = new Coord(0, y);
             lineDirections.push({ direction, fallingCoord })
 
-            direction = Orthogonale.RIGHT;
+            direction = Orthogonal.RIGHT;
             fallingCoord = new Coord(4, y);
             lineDirections.push({ direction, fallingCoord });
         }
         for (let lineDirection of lineDirections) {
             const fallingCoord: Coord = lineDirection.fallingCoord;
-            const direction: Orthogonale = lineDirection.direction;
+            const direction: Orthogonal = lineDirection.direction;
 
             pushers = this.addPotentialDirectionPusher(slice, fallingCoord, direction, pushers);
         }
@@ -299,7 +299,7 @@ export class SiamRules extends _SiamRules {
     public addPotentialDirectionPusher(
         slice: SiamPartSlice,
         fallingCoord: Coord,
-        direction: Orthogonale,
+        direction: Orthogonal,
         pushers: { coord: Coord, distance: number }[]
     ): { coord: Coord, distance: number }[] {
         const directionClosestPusher: MGPOptional<{ distance: number, coord: Coord }> =
@@ -328,11 +328,11 @@ export class SiamRules extends _SiamRules {
     public getLineClosestPusher(
         slice: SiamPartSlice,
         fallingCoord: Coord,
-        direction: Orthogonale)
+        direction: Orthogonal)
         : MGPOptional<{ distance: number, coord: Coord }>
     {
         display(SiamRules.VERBOSE, { getDirectionClosestPusher: { slice, fallingCoord, direction: direction.toString() }});
-        const resistance: Orthogonale = direction.getOpposite();
+        const resistance: Orthogonal = direction.getOpposite();
         let currentDistance: number = 1;
         let previousPiece: number = slice.getBoardAt(fallingCoord);
         let testedCoord: Coord = fallingCoord.getCopy();
@@ -354,7 +354,7 @@ export class SiamRules extends _SiamRules {
                     currentDistance++;
                 }
             } else { // Player found
-                const playerOrientation: Orthogonale = SiamPiece.getDirection(currentPiece);
+                const playerOrientation: Orthogonal = SiamPiece.getDirection(currentPiece);
                 if (playerOrientation === direction) {
                     if (mountainEncountered) {
                         missingForce -= 1; // We count her as active pusher
@@ -438,8 +438,8 @@ export class SiamRules extends _SiamRules {
             for (let x=0; x<5; x++) {
                 c = node.gamePartSlice.getBoardByXY(x, y);
                 if (SiamPiece.belongTo(c, currentPlayer)) {
-                    const currentOrientation: Orthogonale = SiamPiece.getDirection(c);
-                    for (let direction of Orthogonale.ORTHOGONALES) {
+                    const currentOrientation: Orthogonal = SiamPiece.getDirection(c);
+                    for (let direction of Orthogonal.ORTHOGONALS) {
                         // three rotation
                         if (direction !== currentOrientation) {
                             const newBoard: number[][] = node.gamePartSlice.getCopiedBoard();
@@ -450,8 +450,8 @@ export class SiamRules extends _SiamRules {
                         }
 
                         const landingCoord: Coord = new Coord(x + direction.x, y + direction.y);
-                        let orientations: Orthogonale[];
-                        if (landingCoord.isInRange(5, 5)) orientations = Orthogonale.ORTHOGONALES;
+                        let orientations: Orthogonal[];
+                        if (landingCoord.isInRange(5, 5)) orientations = Orthogonal.ORTHOGONALS;
                         else orientations = [direction];
 
                         for (let orientation of orientations) {
@@ -475,14 +475,14 @@ export class SiamRules extends _SiamRules {
         const newTurn: number = node.gamePartSlice.turn + 1;
         let newMoves: SiamMove[] = []; let insertedPieces: number[] = [];
         for (let xOrY=0; xOrY<5; xOrY++) {
-            newMoves.push(new SiamMove(-1, xOrY, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.RIGHT));
-            insertedPieces.push(SiamPiece.of(Orthogonale.RIGHT, currentPlayer).value);
-            newMoves.push(new SiamMove(5, xOrY, MGPOptional.of(Orthogonale.LEFT), Orthogonale.LEFT));
-            insertedPieces.push(SiamPiece.of(Orthogonale.LEFT, currentPlayer).value);
-            newMoves.push(new SiamMove(xOrY, -1, MGPOptional.of(Orthogonale.DOWN), Orthogonale.DOWN));
-            insertedPieces.push(SiamPiece.of(Orthogonale.DOWN, currentPlayer).value);
-            newMoves.push(new SiamMove(xOrY, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.UP));
-            insertedPieces.push(SiamPiece.of(Orthogonale.UP, currentPlayer).value);
+            newMoves.push(new SiamMove(-1, xOrY, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT));
+            insertedPieces.push(SiamPiece.of(Orthogonal.RIGHT, currentPlayer).value);
+            newMoves.push(new SiamMove(5, xOrY, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT));
+            insertedPieces.push(SiamPiece.of(Orthogonal.LEFT, currentPlayer).value);
+            newMoves.push(new SiamMove(xOrY, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN));
+            insertedPieces.push(SiamPiece.of(Orthogonal.DOWN, currentPlayer).value);
+            newMoves.push(new SiamMove(xOrY, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP));
+            insertedPieces.push(SiamPiece.of(Orthogonal.UP, currentPlayer).value);
         }
         let newSlice: SiamPartSlice; let legality: SiamLegalityStatus;
         for (let i = 0; i < newMoves.length; i++) {
@@ -501,62 +501,62 @@ export class SiamRules extends _SiamRules {
         let newMove: SiamMove; let insertedPiece: number; let newSlice: SiamPartSlice;
         let legality: SiamLegalityStatus;
         for (let y=1; y<=3; y++) {
-            newMove = new SiamMove(-1, y, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.UP);
-            insertedPiece = SiamPiece.of(Orthogonale.UP, currentPlayer).value;
+            newMove = new SiamMove(-1, y, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.UP);
+            insertedPiece = SiamPiece.of(Orthogonal.UP, currentPlayer).value;
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
             if (legality.legal.isSuccess()) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
 
                 // If this insertion is legal, then the same one in an opposite landing direction will be
-                newMove = new SiamMove(-1, y, MGPOptional.of(Orthogonale.RIGHT), Orthogonale.DOWN);
-                insertedPiece = SiamPiece.of(Orthogonale.DOWN, currentPlayer).value;
+                newMove = new SiamMove(-1, y, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.DOWN);
+                insertedPiece = SiamPiece.of(Orthogonal.DOWN, currentPlayer).value;
                 legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
             }
 
-            newMove = new SiamMove(5, y, MGPOptional.of(Orthogonale.LEFT), Orthogonale.UP);
-            insertedPiece = SiamPiece.of(Orthogonale.UP, currentPlayer).value;
+            newMove = new SiamMove(5, y, MGPOptional.of(Orthogonal.LEFT), Orthogonal.UP);
+            insertedPiece = SiamPiece.of(Orthogonal.UP, currentPlayer).value;
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
             if (legality.legal.isSuccess()) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
 
                 // If this insertion is legal, then the same one in an opposite landing direction will be
-                newMove = new SiamMove(5, y, MGPOptional.of(Orthogonale.LEFT), Orthogonale.DOWN);
-                insertedPiece = SiamPiece.of(Orthogonale.DOWN, currentPlayer).value;
+                newMove = new SiamMove(5, y, MGPOptional.of(Orthogonal.LEFT), Orthogonal.DOWN);
+                insertedPiece = SiamPiece.of(Orthogonal.DOWN, currentPlayer).value;
                 legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
             }
         }
         for (let x=1; x<=3; x++) {
-            newMove = new SiamMove(x, -1, MGPOptional.of(Orthogonale.DOWN), Orthogonale.LEFT);
-            insertedPiece = SiamPiece.of(Orthogonale.LEFT, currentPlayer).value;
+            newMove = new SiamMove(x, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.LEFT);
+            insertedPiece = SiamPiece.of(Orthogonal.LEFT, currentPlayer).value;
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
             if (legality.legal.isSuccess()) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
 
                 // If this insertion is legal, then the same one in an opposite landing direction will be
-                newMove = new SiamMove(x, -1, MGPOptional.of(Orthogonale.DOWN), Orthogonale.RIGHT);
-                insertedPiece = SiamPiece.of(Orthogonale.RIGHT, currentPlayer).value;
+                newMove = new SiamMove(x, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.RIGHT);
+                insertedPiece = SiamPiece.of(Orthogonal.RIGHT, currentPlayer).value;
                 legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
             }
 
-            newMove = new SiamMove(x, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.LEFT);
-            insertedPiece = SiamPiece.of(Orthogonale.LEFT, currentPlayer).value;
+            newMove = new SiamMove(x, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
+            insertedPiece = SiamPiece.of(Orthogonal.LEFT, currentPlayer).value;
             legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
             if (legality.legal.isSuccess()) {
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
 
                 // If this insertion is legal, then the same one in an opposite landing direction will be
-                newMove = new SiamMove(x, 5, MGPOptional.of(Orthogonale.UP), Orthogonale.RIGHT);
-                insertedPiece = SiamPiece.of(Orthogonale.RIGHT, currentPlayer).value;
+                newMove = new SiamMove(x, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
+                insertedPiece = SiamPiece.of(Orthogonal.RIGHT, currentPlayer).value;
                 legality = this.isLegalForwarding(newMove, node.gamePartSlice, insertedPiece);
                 newSlice = new SiamPartSlice(legality.resultingBoard, newTurn);
                 insertions.set(newMove, newSlice);
@@ -564,7 +564,7 @@ export class SiamRules extends _SiamRules {
         }
         return insertions;
     }
-    public static getCoordDirection(x: number, y: number, slice: SiamPartSlice): Orthogonale {
+    public static getCoordDirection(x: number, y: number, slice: SiamPartSlice): Orthogonal {
         const coord: Coord = new Coord(x, y);
         const insertedPiece: SiamPiece = this.getInsertedPiece(coord, slice.getCurrentPlayer());
         return insertedPiece.getDirection();

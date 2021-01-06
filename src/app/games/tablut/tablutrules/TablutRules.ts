@@ -1,4 +1,4 @@
-import { Orthogonale, Direction } from '../../../jscaip/DIRECTION';
+import { Orthogonal, Direction } from '../../../jscaip/DIRECTION';
 import { Rules } from '../../../jscaip/Rules';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
@@ -65,7 +65,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         board[arrival.y][arrival.x] = board[depart.y][depart.x]; // dédoublement
         board[depart.y][depart.x] = TablutCase.UNOCCUPIED.value; // suppression du précédent
         let captured: Coord;
-        for (const d of Orthogonale.ORTHOGONALES) {
+        for (const d of Orthogonal.ORTHOGONALS) {
             captured = this.tryCapture(player, invaderStart, move.end, d, board);
             if (captured != null) {
                 board[captured.y][captured.x] = TablutCase.UNOCCUPIED.value; // do capture, unless if king
@@ -108,7 +108,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         }
         return MGPValidation.SUCCESS;
     }
-    private static tryCapture(player: 0|1, invaderStart: boolean, landingPawn: Coord, d: Orthogonale, board: number[][]): Coord {
+    private static tryCapture(player: 0|1, invaderStart: boolean, landingPawn: Coord, d: Orthogonal, board: number[][]): Coord {
         const LOCAL_VERBOSE: boolean = false;
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
@@ -135,7 +135,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return (piece === TablutCase.PLAYER_ZERO_KING.value) ||
                (piece === TablutCase.PLAYER_ONE_KING.value);
     }
-    private static captureKing(player: 0|1, invaderStart: boolean, landingPiece: Coord, d: Orthogonale, board: number[][]): Coord {
+    private static captureKing(player: 0|1, invaderStart: boolean, landingPiece: Coord, d: Orthogonal, board: number[][]): Coord {
         /* the king is the next coord after c (in direction d)
          * the landingPiece partipate in the capture
          *
@@ -241,7 +241,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             rightCoord, right
         };
     }
-    private static capturePawn(player: 0|1, invaderStart: boolean, c: Coord, d: Orthogonale, board: number[][]): Coord {
+    private static capturePawn(player: 0|1, invaderStart: boolean, c: Coord, d: Orthogonal, board: number[][]): Coord {
         /* the pawn is the next coord after c (in direction d)
          * c partipate in the capture
          *
@@ -401,7 +401,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         const destinations: Coord[] = [];
         let endFound: boolean;
         let foundDestination: Coord;
-        for (const dir of Orthogonale.ORTHOGONALES) {
+        for (const dir of Orthogonal.ORTHOGONALS) {
             // we look for empty existing destinations in each direction as far as we can
             foundDestination = depart;
             endFound = false;

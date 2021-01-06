@@ -1,4 +1,4 @@
-import { Direction } from '../DIRECTION';
+import { Direction} from '../DIRECTION';
 import { Comparable } from '../../collectionlib/Comparable';
 
 export class Coord implements Comparable {
