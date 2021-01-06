@@ -7,7 +7,7 @@ export interface IJoueur {
     pseudo: string;
     email?: string;
     displayName?: string;
-    lastChanged?: Time;
+    last_changed?: Time;
     emailVerified?: boolean;
 }
 
@@ -15,7 +15,7 @@ export interface PIJoueur {
     pseudo?: string;
     email?: string;
     displayName?: string;
-    lastChanged?: Time;
+    last_changed?: Time;
     emailVerified?: boolean;
 }
 

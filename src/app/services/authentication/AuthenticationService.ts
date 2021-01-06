@@ -79,7 +79,7 @@ export class AuthenticationService implements OnDestroy {
         const uid: string = firebase.auth().currentUser.uid;
         const isOfflineForDatabase = {
             state: 'offline',
-            lastChanged: firebase.database.ServerValue.TIMESTAMP,
+            last_changed: firebase.database.ServerValue.TIMESTAMP,
         };
         await firebase.database().ref('/status/' + uid).set(isOfflineForDatabase);
         return this.afAuth.signOut();
@@ -105,11 +105,11 @@ export class AuthenticationService implements OnDestroy {
             }
             const isOfflineForDatabase = {
                 state: 'offline',
-                lastChanged: firebase.database.ServerValue.TIMESTAMP,
+                last_changed: firebase.database.ServerValue.TIMESTAMP,
             };
             const isOnlineForDatabase = {
                 state: 'online',
-                lastChanged: firebase.database.ServerValue.TIMESTAMP,
+                last_changed: firebase.database.ServerValue.TIMESTAMP,
             };
             userStatusDatabaseRef.onDisconnect().set(isOfflineForDatabase).then(function() {
                 userStatusDatabaseRef.set(isOnlineForDatabase);
