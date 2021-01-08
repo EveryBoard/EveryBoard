@@ -1,9 +1,10 @@
 import {GamePartSlice} from '../../jscaip/GamePartSlice';
 import {Coord} from 'src/app/jscaip/coord/Coord';
-import {Player} from 'src/app/jscaip/Player';
-import {ArrayUtils} from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { Player } from 'src/app/jscaip/Player';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class GoPiece {
+
     public static BLACK: GoPiece = new GoPiece(Player.ZERO.value);
 
     public static WHITE: GoPiece = new GoPiece(Player.ONE.value);
@@ -29,26 +30,26 @@ export class GoPiece {
             return piece === GoPiece.WHITE.value ||
                    piece === GoPiece.DEAD_WHITE.value;
         }
-        throw new Error('Owner must be 0 or 1, got ' + owner);
+        throw new Error("Owner must be 0 or 1, got " + owner);
     }
     public static of(value: number): GoPiece {
         switch (value) {
-        case Player.ZERO.value:
-            return GoPiece.BLACK;
-        case Player.ONE.value:
-            return GoPiece.WHITE;
-        case Player.NONE.value:
-            return GoPiece.EMPTY;
-        case 3:
-            return GoPiece.DEAD_BLACK;
-        case 4:
-            return GoPiece.DEAD_WHITE;
-        case 5:
-            return GoPiece.BLACK_TERRITORY;
-        case 6:
-            return GoPiece.WHITE_TERRITORY;
-        default:
-            throw new Error('Unknwon GoPiece.value ' + value);
+            case Player.ZERO.value:
+                return GoPiece.BLACK;
+            case Player.ONE.value:
+                return GoPiece.WHITE;
+            case Player.NONE.value:
+                return GoPiece.EMPTY;
+            case 3:
+                return GoPiece.DEAD_BLACK;
+            case 4:
+                return GoPiece.DEAD_WHITE;
+            case 5:
+                return GoPiece.BLACK_TERRITORY;
+            case 6:
+                return GoPiece.WHITE_TERRITORY;
+            default:
+                throw new Error("Unknwon GoPiece.value " + value);
         }
     }
     public isOccupied(): boolean {
@@ -63,7 +64,7 @@ export class GoPiece {
     public getAliveOpposite(): GoPiece {
         if (this === GoPiece.DEAD_BLACK) return GoPiece.WHITE;
         if (this === GoPiece.DEAD_WHITE) return GoPiece.BLACK;
-        else throw new Error('Only dead piece have an alive opposite');
+        else throw new Error("Only dead piece have an alive opposite");
     }
     public nonTerritory(): GoPiece {
         if (this.isEmpty()) return GoPiece.EMPTY;
@@ -71,14 +72,15 @@ export class GoPiece {
     }
 }
 export enum Phase {
-    PLAYING = 'PLAYING',
-    PASSED = 'PASSED',
-    COUNTING = 'COUNTING',
-    ACCEPT = 'ACCEPT',
-    FINISHED = 'FINISHED'
+    PLAYING  = "PLAYING",
+    PASSED   = "PASSED",
+    COUNTING = "COUNTING",
+    ACCEPT   = "ACCEPT",
+    FINISHED = "FINISHED"
 }
 
 export class GoPartSlice extends GamePartSlice {
+
     public readonly koCoord: Coord | null; // TODO: MGPOptional this
 
     public readonly captured: ReadonlyArray<number>;
@@ -94,8 +96,8 @@ export class GoPartSlice extends GamePartSlice {
     public constructor(board: GoPiece[][], captured: number[], turn: number, koCoord: Coord, phase: Phase) {
         const intBoard: number[][] = GoPartSlice.mapGoPieceBoard(board);
         super(intBoard, turn);
-        if (captured == null) throw new Error('Captured cannot be null');
-        if (phase == null) throw new Error('Phase cannot be null');
+        if (captured == null) throw new Error("Captured cannot be null");
+        if (phase == null) throw new Error("Phase cannot be null");
         this.captured = captured;
         this.koCoord = koCoord;
         this.phase = phase;
@@ -122,18 +124,18 @@ export class GoPartSlice extends GamePartSlice {
     }
     public copy(): GoPartSlice {
         return new GoPartSlice(this.getCopiedBoardGoPiece(),
-            this.getCapturedCopy(),
-            this.turn,
-            this.koCoord,
-            this.phase);
+                               this.getCapturedCopy(),
+                               this.turn,
+                               this.koCoord,
+                               this.phase);
     }
     public toString(): string {
-        let result: string = '';
-        for (const lines of this.board) {
-            for (const piece of lines) {
-                result += piece + ' ';
+        let result: string = ""
+        for (let lines of this.board) {
+            for (let piece of lines) {
+                result += piece + " "
             }
-            result += '\n';
+            result += "\n"
         }
         return result;
     }

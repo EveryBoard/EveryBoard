@@ -1,11 +1,11 @@
-import {AngularFirestore, DocumentReference, CollectionReference} from '@angular/fire/firestore';
-import {FirebaseCollectionObserver} from '../FirebaseCollectionObserver';
-import {Observable} from 'rxjs';
-import {map} from 'rxjs/operators';
+import { AngularFirestore, DocumentReference, CollectionReference } from "@angular/fire/firestore";
+import { FirebaseCollectionObserver } from "../FirebaseCollectionObserver";
+import { Observable } from "rxjs";
+import { map } from "rxjs/operators";
 
-import firebase from 'firebase/app';
-import 'firebase/firestore';
-import {display} from 'src/app/collectionlib/utils';
+import firebase from "firebase/app";
+import "firebase/firestore";
+import { display } from "src/app/collectionlib/utils";
 
 export interface IFirebaseFirestoreDAO<T, PT> {
 
@@ -28,6 +28,7 @@ export interface IFirebaseFirestoreDAO<T, PT> {
 }
 
 export abstract class FirebaseFirestoreDAO<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
+
     public static VERBOSE: boolean = false;
 
     // T is a full element
@@ -59,48 +60,49 @@ export abstract class FirebaseFirestoreDAO<T, PT> implements IFirebaseFirestoreD
 
     public getObsById(id: string): Observable<{ id: string, doc: T}> {
         return this.afs.doc(this.collectionName + '/' + id).snapshotChanges()
-            .pipe(map((actions) => {
+            .pipe(map(actions => {
                 return {
                     doc: actions.payload.data() as T,
-                    id,
+                    id
                 };
             }));
     }
     public observingWhere(field: string,
-        condition: firebase.firestore.WhereFilterOp,
-        value: any,
-        callback: FirebaseCollectionObserver<T>): () => void {
+                          condition: firebase.firestore.WhereFilterOp,
+                          value: any,
+                          callback: FirebaseCollectionObserver<T>): () => void
+    {
         let collection: CollectionReference | firebase.firestore.Query<firebase.firestore.DocumentData> =
             this.afs.collection(this.collectionName).ref;
         if (field && condition && value) {
             collection = collection.where(field, condition, value);
         }
         return collection.where(field, condition, value)
-            .onSnapshot((snapshot) => {
+            .onSnapshot(snapshot => {
                 const createdDocs: {doc: T, id: string}[] = [];
                 const modifiedDocs: {doc: T, id: string}[] = [];
                 const deletedDocs: {doc: T, id: string}[] = [];
-                snapshot.docChanges().forEach((change) => {
+                snapshot.docChanges().forEach(change => {
                     const doc: {doc: T, id: string} = {
                         id: change.doc.id,
-                        doc: change.doc.data() as T,
-                    };
-                    if (change.type === 'added') createdDocs.push(doc);
-                    else if (change.type === 'modified') modifiedDocs.push(doc);
-                    else if (change.type === 'removed') deletedDocs.push(doc);
-                });
-                if (createdDocs.length > 0) {
-                    display(FirebaseFirestoreDAO.VERBOSE, 'firebase gave us ' + createdDocs.length + ' NEW ' + this.collectionName);
-                    callback.onDocumentCreated(createdDocs);
-                }
-                if (modifiedDocs.length > 0) {
-                    display(FirebaseFirestoreDAO.VERBOSE, 'firebase gave us ' + modifiedDocs.length + ' MODIFIED ' + this.collectionName);
-                    callback.onDocumentModified(modifiedDocs);
-                }
-                if (deletedDocs.length > 0) {
-                    display(FirebaseFirestoreDAO.VERBOSE, 'firebase gave us ' + deletedDocs.length + ' DELETED ' + this.collectionName);
-                    callback.onDocumentDeleted(deletedDocs);
-                }
+                        doc: change.doc.data() as T
+                };
+                if (change.type === "added") createdDocs.push(doc);
+                else if (change.type === "modified") modifiedDocs.push(doc);
+                else if (change.type === "removed") deletedDocs.push(doc);
             });
+            if (createdDocs.length > 0) {
+                display(FirebaseFirestoreDAO.VERBOSE, "firebase gave us " + createdDocs.length + " NEW " + this.collectionName);
+                callback.onDocumentCreated(createdDocs);
+            }
+            if (modifiedDocs.length > 0) {
+                display(FirebaseFirestoreDAO.VERBOSE, "firebase gave us " + modifiedDocs.length + " MODIFIED " + this.collectionName);
+                callback.onDocumentModified(modifiedDocs);
+            }
+            if (deletedDocs.length > 0) {
+                display(FirebaseFirestoreDAO.VERBOSE, "firebase gave us " + deletedDocs.length + " DELETED " + this.collectionName);
+                callback.onDocumentDeleted(deletedDocs);
+            }
+        });
     }
 }

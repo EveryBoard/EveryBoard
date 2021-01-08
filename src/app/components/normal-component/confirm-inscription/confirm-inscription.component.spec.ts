@@ -1,17 +1,14 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {ConfirmInscriptionComponent} from './confirm-inscription.component';
-import {AuthenticationService} from 'src/app/services/authentication/AuthenticationService';
+import { ConfirmInscriptionComponent } from './confirm-inscription.component';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 
 const authenticationServiceStub = {
-    getAuthenticatedUser: () => {
-        return {pseudo: 'Pseudo', verified: false};
-    },
-    sendEmailVerification: () => {
-        return;
-    },
+    getAuthenticatedUser: () => { return { pseudo: 'Pseudo', verified: false}; },
+    sendEmailVerification: () => { return },
 };
 describe('ConfirmInscriptionComponent', () => {
+
     let component: ConfirmInscriptionComponent;
 
     let fixture: ComponentFixture<ConfirmInscriptionComponent>;
@@ -19,11 +16,11 @@ describe('ConfirmInscriptionComponent', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             declarations: [
-                ConfirmInscriptionComponent,
+                ConfirmInscriptionComponent
             ],
             providers: [
-                {provide: AuthenticationService, useValue: authenticationServiceStub},
-            ],
+                { provide: AuthenticationService, useValue: authenticationServiceStub},
+            ]
         }).compileComponents();
     });
     beforeEach(() => {

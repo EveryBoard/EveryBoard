@@ -8,9 +8,9 @@ import {MaterialModule} from '../material-modules';
 
 import {AngularFireModule} from '@angular/fire';
 import {AngularFirestoreModule, AngularFirestore} from '@angular/fire/firestore';
-import {AngularFireAuth} from '@angular/fire/auth';
+import { AngularFireAuth } from '@angular/fire/auth';
 
-import {PartDAO} from './dao/part/PartDAO';
+import { PartDAO } from './dao/part/PartDAO';
 
 import {ChatService} from './services/chat/ChatService';
 import {UserService} from './services/user/UserService';
@@ -18,7 +18,7 @@ import {AuthenticationService} from './services/authentication/AuthenticationSer
 import {GameService} from './services/game/GameService';
 import {JoinerService} from './services/joiner/JoinerService';
 
-import {EmailVerified} from './guard/emailverified/EmailVerified';
+import { EmailVerified } from './guard/emailverified/EmailVerified';
 
 import {AppComponent} from './app.component';
 
@@ -35,36 +35,36 @@ import {OnlineGameWrapperComponent} from './components/game-components/online-ga
 import {LocalGameWrapperComponent} from './components/game-components/local-game-wrapper/local-game-wrapper.component';
 import {GameIncluderComponent} from './components/game-components/game-includer/game-includer.component';
 
-import {AwaleComponent} from './components/game-components/awale/awale.component';
-import {DvonnComponent} from './components/game-components/dvonn/dvonn.component';
-import {EncapsuleComponent} from './components/game-components/encapsule/encapsule.component';
-import {GoComponent} from './components/game-components/go/go.component';
-import {KamisadoComponent} from './components/game-components/kamisado/kamisado.component';
-import {P4Component} from './components/game-components/p4/p4.component';
-import {QuartoComponent} from './components/game-components/quarto/quarto.component';
-import {ReversiComponent} from './components/game-components/reversi/reversi.component';
-import {TablutComponent} from './components/game-components/tablut/tablut.component';
-import {MinimaxTestingComponent} from './components/game-components/minimax-testing/minimax-testing.component';
-import {SiamComponent} from './components/game-components/siam/siam.component';
-import {InscriptionComponent} from './components/normal-component/inscription/inscription.component';
-import {ConfirmInscriptionComponent} from './components/normal-component/confirm-inscription/confirm-inscription.component';
-import {SaharaComponent} from './components/game-components/sahara/sahara.component';
-import {PylosComponent} from './components/game-components/pylos/pylos.component';
-import {QuixoComponent} from './components/game-components/quixo/quixo.component';
+import { AwaleComponent } from './components/game-components/awale/awale.component';
+import { DvonnComponent } from './components/game-components/dvonn/dvonn.component';
+import { EncapsuleComponent } from './components/game-components/encapsule/encapsule.component';
+import { GoComponent } from './components/game-components/go/go.component';
+import { KamisadoComponent } from './components/game-components/kamisado/kamisado.component';
+import { P4Component } from './components/game-components/p4/p4.component';
+import { QuartoComponent } from './components/game-components/quarto/quarto.component';
+import { ReversiComponent } from './components/game-components/reversi/reversi.component';
+import { TablutComponent } from './components/game-components/tablut/tablut.component';
+import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
+import { SiamComponent } from './components/game-components/siam/siam.component';
+import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
+import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
+import { SaharaComponent } from './components/game-components/sahara/sahara.component';
+import { PylosComponent } from './components/game-components/pylos/pylos.component';
+import { QuixoComponent } from './components/game-components/quixo/quixo.component';
 
 export const INCLUDE_VERBOSE_LINE_IN_TEST = false;
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
 const routes: Route [] = [
-    {path: 'login', component: LoginComponent},
-    {path: 'server', component: ServerPageComponent},
-    {path: 'inscription', component: InscriptionComponent},
+    {path: 'login',               component: LoginComponent},
+    {path: 'server',              component: ServerPageComponent},
+    {path: 'inscription',         component: InscriptionComponent},
     {path: 'confirm-inscription', component: ConfirmInscriptionComponent},
 
-    {path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified]},
-    {path: 'local/:compo', component: LocalGameWrapperComponent},
+    {path: 'play/:compo/:id',     component: OnlineGameWrapperComponent, canActivate: [EmailVerified]},
+    {path: 'local/:compo',        component: LocalGameWrapperComponent},
     {path: '', redirectTo: 'server', pathMatch: 'full'},
-    {path: '**', component: ServerPageComponent},
+    {path: '**',                  component: ServerPageComponent}
 ];
 
 @NgModule({
@@ -135,8 +135,8 @@ const routes: Route [] = [
         ChatService,
         PartDAO,
         AngularFirestore,
-        AngularFireAuth,
+        AngularFireAuth
     ],
-    bootstrap: [AppComponent],
+    bootstrap: [AppComponent]
 })
 export class AppModule { }

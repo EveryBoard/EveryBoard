@@ -1,4 +1,4 @@
-import {Coord} from './Coord';
+import { Coord } from "./Coord";
 
 describe('Coord', () => {
     it('should compare correctly, y first', () => {

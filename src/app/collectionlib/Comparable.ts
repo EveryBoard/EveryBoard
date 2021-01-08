@@ -4,6 +4,6 @@ export interface Comparable {
     toString(): String;
 }
 
-export const ComparableEquals = (a: Comparable, b: Comparable) => {
+export const Comparable_Equals = (a: Comparable, b: Comparable) => {
     return a.equals(b);
-};
+}

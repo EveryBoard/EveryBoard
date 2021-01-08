@@ -2,9 +2,9 @@ import {Move} from '../Move';
 import {SCORE} from '../SCORE';
 import {Rules} from '../Rules';
 import {GamePartSlice} from '../GamePartSlice';
-import {MGPMap} from '../../collectionlib/mgpmap/MGPMap';
-import {LegalityStatus} from '../LegalityStatus';
-import {display} from 'src/app/collectionlib/utils';
+import { MGPMap } from '../../collectionlib/mgpmap/MGPMap';
+import { LegalityStatus } from '../LegalityStatus';
+import { display } from 'src/app/collectionlib/utils';
 
 export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
@@ -98,7 +98,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
         return SCORE.DEFAULT;
     }
-    public static getFirstNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus>(initialBoard: S, gameRuler: R) {
+    public static getFirstNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> (initialBoard: S, gameRuler: R) {
         MGPNode.ruler = gameRuler; // pour toutes les node, gameRuler sera le référent
         return new MGPNode(null, null, initialBoard, 0);
     }
@@ -116,7 +116,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         // this.ownValue = this.mother == null ? 0 : MGPNode.ruler.getBoardValue(this.move, this.gamePartSlice);
         this.ownValue = boardValue;
         this.hopedValue = this.ownValue;
-        display(MGPNode.VERBOSE || LOCAL_VERBOSE, {createdNode: this});
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, { createdNode: this });
         MGPNode.NB_NODE_CREATED += 1;
     }
     public getNodeStatus(): String {
@@ -142,7 +142,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         return mother + ' ' + fertility + ' ' + calculated;
     }
     public findBestMoveAndSetDepth(readingDepth: number): MGPNode<R, M, S, L> {
-        display(MGPNode.VERBOSE, 'findBestMoveAndSetDepth(' + readingDepth + ') = ' + this.gamePartSlice.toString() + ' => ' + this.ownValue);
+        display(MGPNode.VERBOSE, "findBestMoveAndSetDepth(" + readingDepth + ") = " + this.gamePartSlice.toString() + " => " + this.ownValue);
         this.depth = readingDepth;
         return this.findBestMove();
     }
@@ -157,7 +157,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'Not A Leaf');
 
         if (this.childs === null) {
-        // if the Node has no child yet
+            // if the Node has no child yet
             display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'has No Child Yet');
 
             this.createChilds();
@@ -171,9 +171,8 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
                 return this; // rules - leaf
             }
             display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'has Child NOW');
-        } else {
+        } else
             display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'Has already Childs');
-        }
 
         // here it's not a calculation - leaf nor a rules - leaf
         this.calculateChildsValue();
@@ -202,10 +201,10 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
          * Si il y a un mouvement menant à la victoire du joueur courant:
          *     faire les étape 2a à 2h uniquement pour ce noeud là
          */
-        if (this.childs != null) throw new Error('multiple node childs calculation error');
+        if (this.childs != null) throw new Error("multiple node childs calculation error");
         const LOCAL_VERBOSE: boolean = false;
         const moves: MGPMap<M, S> = MGPNode.ruler.getListMoves(this) as MGPMap<M, S>;
-        this.childs = [];
+        this.childs = new Array<MGPNode<R, M, S, L>>();
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'createChilds received listMoves from ruler');
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, moves);
 
@@ -242,7 +241,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         const boardValues: number[] = [];
         let i: number = 0;
         while (i < moves.size() && !hasWinningMove) {
-            const move: M = moves.getByIndex(i).key;
+            const move: M = moves.getByIndex(i).key
             const slice: S = moves.getByIndex(i).value;
             const sliceValue: number = MGPNode.ruler.getBoardValue(move, slice);
             boardValues[i] = sliceValue;
@@ -250,7 +249,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
             i++;
         }
         const winningMoveIndex = hasWinningMove ? i - 1 : -1;
-        return {winningMoveIndex, boardValues};
+        return { winningMoveIndex, boardValues };
     }
     private createOnlyWinningChild(move: { key: M, value: S }, winningValue: number) {
         const winningChild: MGPNode<R, M, S, L> = new MGPNode<R, M, S, L>(
@@ -267,7 +266,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
          * - la Node n'est pas une feuille
          */
         if (this.childs == null) {
-            throw new Error('theses childs should have been calculated');
+            throw new Error("theses childs should have been calculated");
         }
         for (const child of this.childs) {
             child.findBestMoveAndSetDepth(this.depth - 1);
@@ -335,16 +334,16 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
     }
     public isLeaf(): boolean {
         if (this.depth === 0) {
-        // we've reach the end of calculation here, so it's a leaf - by calculation limit
+            // we've reach the end of calculation here, so it's a leaf - by calculation limit
             return true;
         } else {
-        // it's a leaf - by rules
+            // it's a leaf - by rules
             return this.isEndGame();
         }
     }
     public getSonByMove(move: M): MGPNode<R, M, S, L> | null {
         if (this.childs == null) {
-            throw new Error('Cannot get son of uncalculated node');
+            throw new Error("Cannot get son of uncalculated node");
         }
         for (const node of this.childs) {
             if (node.move && node.move.equals(move)) {
@@ -414,7 +413,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         return nbDescendants;
     }
     public keepOnlyChoosenChild(choix: MGPNode<R, M, S, L>) {
-        this.childs = [];
+        this.childs = new Array<MGPNode<R, M, S, L>>();
         this.childs.push(choix);
     }
 }

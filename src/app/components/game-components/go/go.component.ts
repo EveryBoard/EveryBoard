@@ -1,21 +1,22 @@
-import {Component} from '@angular/core';
-import {AbstractGameComponent} from '../AbstractGameComponent';
-import {GoMove} from 'src/app/games/go/gomove/GoMove';
-import {GoRules} from 'src/app/games/go/gorules/GoRules';
-import {GoPartSlice, Phase, GoPiece} from 'src/app/games/go/GoPartSlice';
-import {Coord} from 'src/app/jscaip/coord/Coord';
-import {GoLegalityStatus} from 'src/app/games/go/GoLegalityStatus';
-import {Player} from 'src/app/jscaip/Player';
-import {GroupDatas} from 'src/app/games/go/groupdatas/GroupDatas';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {display} from 'src/app/collectionlib/utils';
-import {MGPValidation} from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { Component } from '@angular/core';
+import { AbstractGameComponent } from '../AbstractGameComponent';
+import { GoMove } from 'src/app/games/go/gomove/GoMove';
+import { GoRules } from 'src/app/games/go/gorules/GoRules';
+import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
+import { Player } from 'src/app/jscaip/Player';
+import { GroupDatas } from 'src/app/games/go/groupdatas/GroupDatas';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-go',
-    templateUrl: './go.component.html',
+    templateUrl: './go.component.html'
 })
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
+
     public static VERBOSE: boolean = false;
 
     public scores: number[] = [0, 0];
@@ -71,25 +72,24 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     }
     public async pass(): Promise<MGPValidation> {
         const phase: Phase = this.rules.node.gamePartSlice.phase;
-        if (phase === Phase.PLAYING || phase === Phase.PASSED) {
+        if (phase === Phase.PLAYING || phase === Phase.PASSED)
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
-        }
-        if (phase === Phase.COUNTING || phase === Phase.ACCEPT) {
+        if (phase === Phase.COUNTING || phase === Phase.ACCEPT)
             return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
-        } else {
-            this.message('Cannot pass');
-            return MGPValidation.failure('Cannot pass');
+        else {
+            this.message("Cannot pass");
+            return MGPValidation.failure("Cannot pass");
         }
     }
     public getCaseColor(x: number, y: number): string {
         const piece: number = this.rules.node.gamePartSlice.getBoardByXY(x, y);
         if (GoPiece.pieceBelongTo(piece, Player.ZERO)) {
-            return 'black';
+            return "black";
         }
         if (GoPiece.pieceBelongTo(piece, Player.ONE)) {
-            return 'white';
+            return "white";
         }
-        throw new Error('Empty case has no color');
+        throw new Error("Empty case has no color");
     }
     public caseIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);

@@ -1,15 +1,16 @@
-import {Rules} from 'src/app/jscaip/Rules';
-import {MGPNode} from 'src/app/jscaip/mgpnode/MGPNode';
-import {MGPMap} from 'src/app/collectionlib/mgpmap/MGPMap';
-import {MinimaxTestingPartSlice} from '../MinimaxTestingPartSlice';
-import {MinimaxTestingMove} from '../minimaxtestingmove/MinimaxTestingMove';
-import {Coord} from 'src/app/jscaip/coord/Coord';
-import {LegalityStatus} from 'src/app/jscaip/LegalityStatus';
-import {MGPValidation} from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { Rules } from "src/app/jscaip/Rules";
+import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
+import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
+import { MinimaxTestingPartSlice } from "../MinimaxTestingPartSlice";
+import { MinimaxTestingMove } from "../minimaxtestingmove/MinimaxTestingMove";
+import { Coord } from "src/app/jscaip/coord/Coord";
+import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
+import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 
 abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules, MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {}
 
 export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {
+
     public static GET_BOARD_VALUE_CALL_COUNT: number = 0;
 
     public static GET_LIST_MOVES_CALL_COUNT: number = 0;
@@ -17,10 +18,10 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
     public applyLegalMove(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice, status: LegalityStatus): { resultingMove: MinimaxTestingMove; resultingSlice: MinimaxTestingPartSlice; } {
         const newX: number = slice.location.x + (move.right === true ? 1 : 0);
         const newY: number = slice.location.y + (move.right === false ? 1 : 0);
-        const newLocation: Coord = new Coord(newX, newY);
+        let newLocation: Coord = new Coord(newX, newY);
         return {
             resultingSlice: new MinimaxTestingPartSlice(slice.turn + 1, newLocation),
-            resultingMove: move,
+            resultingMove: move
         };
     }
     public isLegal(move: MinimaxTestingMove): LegalityStatus {
@@ -28,10 +29,10 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         const coord: Coord = slice.location;
         const board: number[][] = slice.getCopiedBoard();
         if (coord.x + 1 === board[0].length && move.right === true) {
-            return {legal: MGPValidation.failure('incorrect move')};
+            return { legal: MGPValidation.failure("incorrect move") };
         }
         if (coord.y + 1 === board.length && move.right === false) {
-            return {legal: MGPValidation.failure('incorrect move')};
+            return { legal: MGPValidation.failure("incorrect move") };
         }
         return {legal: MGPValidation.SUCCESS};
     }

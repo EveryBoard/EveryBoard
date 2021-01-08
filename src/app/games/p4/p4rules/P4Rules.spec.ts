@@ -1,16 +1,17 @@
-import {P4Node, P4Rules} from './P4Rules';
-import {INCLUDE_VERBOSE_LINE_IN_TEST} from 'src/app/app.module';
-import {Player} from 'src/app/jscaip/Player';
-import {P4PartSlice} from '../P4PartSlice';
-import {LegalityStatus} from 'src/app/jscaip/LegalityStatus';
-import {MGPNode} from 'src/app/jscaip/mgpnode/MGPNode';
-import {P4Move} from '../P4Move';
+import { P4Node, P4Rules } from './P4Rules';
+import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { Player } from 'src/app/jscaip/Player';
+import { P4PartSlice } from '../P4PartSlice';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { P4Move } from '../P4Move';
 
 describe('P4Rules', () => {
+
     let rules: P4Rules;
-    const O: number = Player.ZERO.value;
-    const X: number = Player.ONE.value;
-    const _: number = Player.NONE.value;
+    let O: number = Player.ZERO.value;
+    let X: number = Player.ONE.value;
+    let _: number = Player.NONE.value;
 
     beforeAll(() => {
         P4Rules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || P4Rules.VERBOSE;

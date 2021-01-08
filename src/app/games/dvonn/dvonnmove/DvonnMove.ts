@@ -1,6 +1,6 @@
-import {Coord} from 'src/app/jscaip/coord/Coord';
-import {MoveCoordToCoord} from 'src/app/jscaip/MoveCoordToCoord';
-import {DvonnBoard} from '../DvonnBoard';
+import { Coord } from "src/app/jscaip/coord/Coord";
+import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
+import { DvonnBoard } from "../DvonnBoard";
 
 export class DvonnMove extends MoveCoordToCoord {
     public static PASS: DvonnMove = new DvonnMove(new Coord(-1, -1), new Coord(-2, -2));
@@ -23,35 +23,35 @@ export class DvonnMove extends MoveCoordToCoord {
     }
     public static of(start: Coord, end: Coord) {
         if (start.x === -1 && start.y === -1 && end.x === -2 && end.y === -2) {
-        // PASS move
+            // PASS move
             return DvonnMove.PASS;
         }
         // Move should be on board
         if (!DvonnBoard.isOnBoard(start)) {
-            throw new Error('Starting coord of DvonnMove must be on the board, not at ' + start.toString());
+            throw new Error("Starting coord of DvonnMove must be on the board, not at " + start.toString());
         }
         if (!DvonnBoard.isOnBoard(end)) {
-            throw new Error('End coord of DvonnMove must be on the board, not at ' + start.toString());
+            throw new Error("End coord of DvonnMove must be on the board, not at " + start.toString());
         }
         // Move should be a straight line
         if (start.y === end.y) {
-        // vertical move, allowed
+            // vertical move, allowed
             return new DvonnMove(start, end);
         } else if (start.x === end.x) {
-        // horizontal move, allowed
+            // horizontal move, allowed
             return new DvonnMove(start, end);
         } else if (start.x + start.y == end.x + end.y) {
-        // diagonal move, allowed
+            // diagonal move, allowed
             return new DvonnMove(start, end);
         } else {
-            throw new Error('Invalid move');
+            throw new Error("Invalid move");
         }
     }
     public toString(): String {
         if (this === DvonnMove.PASS) {
-            return 'DvonnMove(PASS)';
+            return "DvonnMove(PASS)";
         }
-        return 'DvonnMove(' + this.coord + '->' + this.end + ')';
+        return "DvonnMove(" + this.coord + "->" + this.end + ")";
     }
     public length(): number {
         if (this.coord.y === this.end.y) {

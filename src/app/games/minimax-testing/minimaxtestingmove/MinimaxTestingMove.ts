@@ -1,6 +1,7 @@
-import {Move} from 'src/app/jscaip/Move';
+import { Move } from "src/app/jscaip/Move";
 
 export class MinimaxTestingMove extends Move {
+
     static readonly RIGHT: MinimaxTestingMove = new MinimaxTestingMove(true);
 
     static readonly DOWN: MinimaxTestingMove = new MinimaxTestingMove(false);
@@ -36,6 +37,6 @@ export class MinimaxTestingMove extends Move {
         return this.right === obj.right;
     }
     public toString(): String {
-        return this.right ? 'Move RIGHT' : 'Move DOWN';
+        return this.right ? "Move RIGHT" : "Move DOWN";
     }
 }

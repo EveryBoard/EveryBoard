@@ -1,9 +1,10 @@
-import {AwaleRules} from '../awalerules/AwaleRules';
-import {MGPMap} from 'src/app/collectionlib/mgpmap/MGPMap';
-import {AwaleMove} from './AwaleMove';
-import {AwalePartSlice} from '../AwalePartSlice';
+import { AwaleRules } from "../awalerules/AwaleRules";
+import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
+import { AwaleMove } from "./AwaleMove";
+import { AwalePartSlice } from "../AwalePartSlice";
 
 describe('AwaleMove', () => {
+
     it('AwaleMove.encode and AwaleMove.decode should be reversible', () => {
         const rules: AwaleRules = new AwaleRules(AwalePartSlice);
         const firstTurnMoves: MGPMap<AwaleMove, AwalePartSlice> = rules.getListMoves(rules.node);
@@ -16,7 +17,7 @@ describe('AwaleMove', () => {
     });
     it('should delegate to static method decode', () => {
         const testMove: AwaleMove = new AwaleMove(1, 1);
-        spyOn(AwaleMove, 'decode').and.callThrough();
+        spyOn(AwaleMove, "decode").and.callThrough();
 
         testMove.decode(testMove.encode());
 

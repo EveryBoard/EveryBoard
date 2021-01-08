@@ -1,8 +1,9 @@
-import {GroupDatas} from './GroupDatas';
-import {GoPiece} from '../GoPartSlice';
-import {Coord} from 'src/app/jscaip/coord/Coord';
+import { GroupDatas } from "./GroupDatas";
+import { GoPiece } from "../GoPartSlice";
+import { Coord } from "src/app/jscaip/coord/Coord";
 
 describe('GroupDatas:', () => {
+
     const c: Coord = new Coord(0, 0);
 
     // dead wrapping => that wrapping alive opposite
@@ -11,7 +12,7 @@ describe('GroupDatas:', () => {
 
     it('should throw when getWrapped is called on a multi wrapped group', () => {
         const group: GroupDatas = new GroupDatas(GoPiece.EMPTY, [c, c], [c, c], [c, c], [], []);
-        expect(() => group.getWrapper()).toThrowError('Incorrect number of wrapper: 2');
+        expect(() => group.getWrapper()).toThrowError("Incorrect number of wrapper: 2");
     });
     it('should not throw when getWrapped is called on a multi wrapped group where one is the alive opposite of the other', () => {
         const group: GroupDatas = new GroupDatas(GoPiece.EMPTY, [c, c], [], [c, c], [c, c], []);

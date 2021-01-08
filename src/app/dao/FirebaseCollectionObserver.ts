@@ -1,4 +1,5 @@
 export class FirebaseCollectionObserver<T> {
+
     public onDocumentCreated: (createdDocIds: {doc: T, id: string}[]) => void;
 
     public onDocumentModified: (modifiedDocIds: {doc: T, id: string}[]) => void;

@@ -1,6 +1,6 @@
-import {Coord} from 'src/app/jscaip/coord/Coord';
-import {MoveCoordToCoord} from 'src/app/jscaip/MoveCoordToCoord';
-import {KamisadoBoard} from '../KamisadoBoard';
+import { Coord } from "src/app/jscaip/coord/Coord"
+import { MoveCoordToCoord } from "src/app/jscaip/MoveCoordToCoord";
+import { KamisadoBoard } from "../KamisadoBoard";
 
 export class KamisadoMove extends MoveCoordToCoord {
     // The PASS move is encoded as a MoveCoordToCoord that is out of the board
@@ -21,14 +21,14 @@ export class KamisadoMove extends MoveCoordToCoord {
     }
     public static of(start: Coord, end: Coord): KamisadoMove {
         if (start.equals(new Coord(-1, -1)) && end.equals(new Coord(-2, -2))) {
-        // Valid move, it is PASS
+            // Valid move, it is PASS
             return KamisadoMove.PASS;
         }
         if (start.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
-            throw new Error('Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
+            throw new Error("Starting coord of KamisadoMove must be on the board, not at " + start.toString());
         }
         if (end.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
-            throw new Error('End coord of KamisadoMove must be on the board, not at ' + end.toString());
+            throw new Error("End coord of KamisadoMove must be on the board, not at " + end.toString());
         }
         return new KamisadoMove(start, end);
     }
@@ -42,9 +42,9 @@ export class KamisadoMove extends MoveCoordToCoord {
     }
     public toString(): String {
         if (this === KamisadoMove.PASS) {
-            return 'KamisadoMove(PASS)';
+            return "KamisadoMove(PASS)";
         }
-        return 'KamisadoMove(' + this.coord + '->' + this.end + ')';
+        return "KamisadoMove(" + this.coord + "->" + this.end + ")";
     }
     public encode(): number {
         const x1: number = this.coord.x;

@@ -1,4 +1,4 @@
-import {Player} from 'src/app/jscaip/Player';
+import { Player } from "src/app/jscaip/Player";
 
 export enum SaharaPawn {
     BLACK = Player.ZERO.value,

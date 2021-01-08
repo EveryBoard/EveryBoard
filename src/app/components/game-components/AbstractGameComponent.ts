@@ -1,10 +1,10 @@
-import {Move} from '../../jscaip/Move';
-import {Rules} from '../../jscaip/Rules';
-import {GamePartSlice} from 'src/app/jscaip/GamePartSlice';
-import {LegalityStatus} from 'src/app/jscaip/LegalityStatus';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {Component} from '@angular/core';
-import {MGPValidation} from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { Move } from '../../jscaip/Move';
+import { Rules } from '../../jscaip/Rules';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { Component } from '@angular/core';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -12,6 +12,7 @@ import {MGPValidation} from 'src/app/collectionlib/mgpvalidation/MGPValidation';
  */
 @Component({template: ''})
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
+
     public rules: Rules<M, S, L>;
 
     public board: ReadonlyArray<ReadonlyArray<number>>;
@@ -47,6 +48,6 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
         return this.rules.node.gamePartSlice.turn;
     }
     public pass() {
-        throw new Error('AbstractGameComponent.pass should be overriden before being used.');
+        throw new Error("AbstractGameComponent.pass should be overriden before being used.");
     }
 }

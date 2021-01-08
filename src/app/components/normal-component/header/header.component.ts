@@ -1,14 +1,15 @@
 import {Component, OnInit, OnDestroy} from '@angular/core';
 import {Router} from '@angular/router';
-import {AuthenticationService} from 'src/app/services/authentication/AuthenticationService';
-import {IJoueurId, IJoueur} from 'src/app/domain/iuser';
-import {Subscription} from 'rxjs';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { IJoueurId, IJoueur } from 'src/app/domain/iuser';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-header',
-    templateUrl: './header.component.html',
+    templateUrl: './header.component.html'
 })
 export class HeaderComponent implements OnInit, OnDestroy {
+
     public userName: string;
 
     private joueurSub: Subscription;
@@ -18,7 +19,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     }
     public ngOnInit() {
         this.joueurSub = this.authenticationService.getJoueurObs()
-            .subscribe((joueur) => {
+            .subscribe(joueur => {
                 if (joueur) this.userName = joueur.pseudo;
                 else this.userName = null;
             });

@@ -1,7 +1,7 @@
-import {KamisadoColor} from './KamisadoColor';
-import {KamisadoPiece} from './KamisadoPiece';
-import {ArrayUtils, ReadonlyBiArray, ReadonlyNumberBiArray} from 'src/app/collectionlib/arrayutils/ArrayUtils';
-import {Coord} from 'src/app/jscaip/coord/Coord';
+import { KamisadoColor } from "./KamisadoColor";
+import { KamisadoPiece } from "./KamisadoPiece";
+import { ArrayUtils, ReadonlyBiArray, ReadonlyNumberBiArray } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { Coord } from "src/app/jscaip/coord/Coord";
 
 export class KamisadoBoard {
     public static SIZE: number = 8;
@@ -13,7 +13,7 @@ export class KamisadoBoard {
         [5, 6, 7, 8, 1, 2, 3, 4],
         [2, 5, 8, 3, 6, 1, 4, 7],
         [3, 8, 5, 2, 7, 4, 1, 6],
-        [8, 7, 6, 5, 4, 3, 2, 1],
+        [8, 7, 6, 5, 4, 3, 2, 1]
     ], KamisadoColor.of);
     public static getColorAt(x: number, y: number): KamisadoColor {
         return KamisadoBoard.COLORS[y][x];
@@ -48,7 +48,7 @@ export class KamisadoBoard {
         const l: Coord[] = [];
         for (let y = 0; y < board.length; y++) {
             for (let x = 0; x < board[y].length; x++) {
-                const coord = new Coord(x, y);
+                const coord = new Coord(x, y)
                 if (!KamisadoBoard.isEmptyAt(board, coord)) {
                     l.push(coord);
                 }

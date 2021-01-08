@@ -1,6 +1,7 @@
-import {MoveCoord} from 'src/app/jscaip/MoveCoord';
+import { MoveCoord } from "src/app/jscaip/MoveCoord";
 
 export class AwaleMove extends MoveCoord {
+
     public equals(o: any): boolean {
         if (o === this) return true;
         if (!(o instanceof AwaleMove)) return false;
@@ -9,7 +10,7 @@ export class AwaleMove extends MoveCoord {
         return true;
     }
     public toString(): String {
-        return 'AwaleMove(' + this.coord.x + ', ' + this.coord.y + ')';
+        return "AwaleMove(" + this.coord.x + ", " + this.coord.y + ")";
     }
     public static decode(encodedMove: number): AwaleMove {
         const x = encodedMove % 6;
@@ -23,9 +24,9 @@ export class AwaleMove extends MoveCoord {
         return AwaleMove.decode(encodedMove);
     }
     public encode(): number {
-    // An awalé move goes on x from o to 5
-    // and y from 0 to 1
-    // encoded as y*6 + x
+        // An awalé move goes on x from o to 5
+        // and y from 0 to 1
+        // encoded as y*6 + x
         return (this.coord.y * 6) + this.coord.x;
     }
 }

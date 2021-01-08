@@ -1,10 +1,11 @@
-import {ArrayUtils} from 'src/app/collectionlib/arrayutils/ArrayUtils';
-import {Coord} from 'src/app/jscaip/coord/Coord';
-import {GamePartSlice} from 'src/app/jscaip/GamePartSlice';
-import {Player} from 'src/app/jscaip/Player';
-import {QuixoMove} from '../QuixoMove';
+import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { Coord } from "src/app/jscaip/coord/Coord";
+import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
+import { Player } from "src/app/jscaip/Player";
+import { QuixoMove } from "../QuixoMove";
 
 export class QuixoPartSlice extends GamePartSlice {
+
     public static getInitialSlice(): QuixoPartSlice {
         const initialBoard: number[][] = ArrayUtils.createBiArray(5, 5, Player.NONE.value);
         return new QuixoPartSlice(initialBoard, 0);

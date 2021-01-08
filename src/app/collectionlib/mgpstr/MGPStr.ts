@@ -1,6 +1,7 @@
-import {Comparable} from '../Comparable';
+import { Comparable } from "../Comparable";
 
 export class MGPStr implements Comparable {
+
     constructor(private readonly string: String) {}
 
     public equals(o: any): boolean {

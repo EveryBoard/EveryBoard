@@ -1,18 +1,17 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import {LoginComponent} from './login.component';
-import {ReactiveFormsModule} from '@angular/forms';
-import {RouterTestingModule} from '@angular/router/testing';
-import {AuthenticationService} from 'src/app/services/authentication/AuthenticationService';
-import {of} from 'rxjs';
+import { LoginComponent } from './login.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { RouterTestingModule } from '@angular/router/testing';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { of } from 'rxjs';
 
 const authenticationServiceStub = {
-    getJoueurObs: () => of({pseudo: 'Pseudo', verified: true}),
-    getAuthenticatedUser: () => {
-        return {pseudo: 'Pseudo', verified: true};
-    },
+    getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true}),
+    getAuthenticatedUser: () => { return { pseudo: 'Pseudo', verified: true}; },
 };
 describe('LoginComponent', () => {
+
     let component: LoginComponent;
 
     let fixture: ComponentFixture<LoginComponent>;
@@ -25,7 +24,7 @@ describe('LoginComponent', () => {
             ],
             declarations: [LoginComponent],
             providers: [
-                {provide: AuthenticationService, useValue: authenticationServiceStub},
+                { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
     });

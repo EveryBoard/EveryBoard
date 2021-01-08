@@ -1,16 +1,17 @@
-import {Component, Input, OnInit, OnDestroy} from '@angular/core';
-import {ChatService} from '../../../services/chat/ChatService';
-import {IMessage} from '../../../domain/imessage';
-import {AuthenticationService} from 'src/app/services/authentication/AuthenticationService';
-import {IChatId} from 'src/app/domain/ichat';
-import {display} from 'src/app/collectionlib/utils';
+import { Component, Input, OnInit, OnDestroy } from '@angular/core';
+import { ChatService } from '../../../services/chat/ChatService';
+import { IMessage } from '../../../domain/imessage';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { IChatId } from 'src/app/domain/ichat';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
-    styleUrls: ['./chat.component.css'],
+    styleUrls: ['./chat.component.css']
 })
 export class ChatComponent implements OnInit, OnDestroy {
+
     public static VERBOSE: boolean = false;
 
     @Input() public chatId: string;
@@ -26,7 +27,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     constructor(private chatService: ChatService,
                 private authenticationService: AuthenticationService) {
-        display(ChatComponent.VERBOSE, 'ChatComponent constructor');
+        display(ChatComponent.VERBOSE, "ChatComponent constructor");
     }
     public ngOnInit() {
         display(ChatComponent.VERBOSE, 'ChatComponent.ngOnInit');
@@ -34,13 +35,13 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
 
         this.authenticationService.getJoueurObs()
-            .subscribe((joueur) => {
+            .subscribe(joueur => {
                 if (this.isConnectedUser(joueur)) {
-                    display(ChatComponent.VERBOSE, JSON.stringify(joueur) + ' just connected');
+                    display(ChatComponent.VERBOSE, JSON.stringify(joueur) + " just connected");
                     this.userName = joueur.pseudo;
                     this.loadChatContent();
                 } else {
-                    display(ChatComponent.VERBOSE, 'No User Logged');
+                    display(ChatComponent.VERBOSE, "No User Logged");
                     this.showDisconnectedChat();
                 }
             });
@@ -78,9 +79,8 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.userMessage = '';
     }
     public ngOnDestroy() {
-        if (this.chatService.isObserving()) {
+        if (this.chatService.isObserving())
             this.chatService.stopObserving();
-        }
     }
     public switchChatVisibility() {
         if (this.visible === true) {

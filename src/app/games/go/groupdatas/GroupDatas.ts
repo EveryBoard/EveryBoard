@@ -1,9 +1,10 @@
-import {Coord} from 'src/app/jscaip/coord/Coord';
-import {GoPiece, GoPartSlice} from '../GoPartSlice';
-import {Orthogonal} from 'src/app/jscaip/DIRECTION';
-import {display} from 'src/app/collectionlib/utils';
+import { Coord } from "src/app/jscaip/coord/Coord";
+import { GoPiece, GoPartSlice } from "../GoPartSlice";
+import { Orthogonal } from "src/app/jscaip/DIRECTION";
+import { display } from "src/app/collectionlib/utils";
 
 export class GroupDatas {
+
     public static VERBOSE: boolean = false;
 
     constructor(public color: GoPiece,
@@ -14,18 +15,18 @@ export class GroupDatas {
                 public deadWhiteCoords: Coord[]) {
     }
     public static getGroupDatas(coord: Coord, board: GoPiece[][]): GroupDatas {
-        display(GroupDatas.VERBOSE, 'GroupDatas.getGroupDatas('+coord+', '+board+')');
-        const color: GoPiece = board[coord.y][coord.x];
-        const groupDatas: GroupDatas = new GroupDatas(color, [], [], [], [], []);
+        display(GroupDatas.VERBOSE, "GroupDatas.getGroupDatas("+coord+", "+board+")");
+        let color: GoPiece = board[coord.y][coord.x];
+        let groupDatas: GroupDatas = new GroupDatas(color, [], [], [], [], []);
         return GroupDatas._getGroupDatas(coord, board, groupDatas);
     }
     private static _getGroupDatas(coord: Coord, board: GoPiece[][], groupDatas: GroupDatas): GroupDatas {
-        display(GroupDatas.VERBOSE, {GroupDatas_getGroupDatas: {groupDatas, coord}});
-        const color: GoPiece = board[coord.y][coord.x];
+        display(GroupDatas.VERBOSE, { GroupDatas_getGroupDatas: { groupDatas, coord }});
+        let color: GoPiece = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
         if (color === groupDatas.color) {
-            for (const direction of Orthogonal.ORTHOGONALS) {
-                const nextCoord: Coord = coord.getNext(direction);
+            for (let direction of Orthogonal.ORTHOGONALS) {
+                let nextCoord: Coord = coord.getNext(direction);
                 if (nextCoord.isInRange(GoPartSlice.WIDTH, GoPartSlice.HEIGHT)) {
                     if (!groupDatas.countains(nextCoord)) {
                         groupDatas = GroupDatas._getGroupDatas(nextCoord, board, groupDatas);
@@ -49,20 +50,20 @@ export class GroupDatas {
         }
     }
     public countains(coord: Coord): boolean {
-        const allCoords: Coord[] = this.blackCoords
-            .concat(this.whiteCoords
-                .concat(this.emptyCoords
-                    .concat(this.deadBlackCoords
+        let allCoords: Coord[] = this.blackCoords
+                        .concat(this.whiteCoords
+                        .concat(this.emptyCoords
+                        .concat(this.deadBlackCoords
                         .concat(this.deadWhiteCoords))));
-        return allCoords.some((c) => c.equals(coord));
+        return allCoords.some(c => c.equals(coord));
     }
     public selfCountains(coord: Coord): boolean {
         const ownCoords: Coord[] = this.getCoords();
-        return ownCoords.some((c) => c.equals(coord));
+        return ownCoords.some(c => c.equals(coord));
     }
     public addPawn(coord: Coord, color: GoPiece) {
         if (this.countains(coord)) {
-            throw new Error('Ce groupe contient déjà ' + coord);
+            throw new Error("Ce groupe contient déjà " + coord);
         }
         if (color === GoPiece.BLACK) {
             this.blackCoords = GroupDatas.insertAsEntryPoint(this.blackCoords, coord);
@@ -77,7 +78,7 @@ export class GroupDatas {
                    color === GoPiece.WHITE_TERRITORY) {
             this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         } else {
-            throw new Error('Cette couleur de pion de Go n\'existe pas: ' + color.value);
+            throw new Error("Cette couleur de pion de Go n'existe pas: " + color.value);
         }
     }
     public static insertAsEntryPoint(list: Coord[], coord: Coord): Coord[] {
@@ -116,31 +117,26 @@ export class GroupDatas {
         wrapperSizes[GoPiece.WHITE.value] = this.whiteCoords.length + this.deadBlackCoords.length;
         wrapperSizes[this.color.nonTerritory().value] = 0;
 
-        const nbWrapper: number = wrapperSizes.filter((wrapperSize) => wrapperSize > 0).length;
+        const nbWrapper: number = wrapperSizes.filter(wrapperSize => wrapperSize > 0).length;
         if (nbWrapper === 1) {
-            const wrapper: number = wrapperSizes.findIndex((wrapperSize) => wrapperSize > 0);
+            const wrapper: number = wrapperSizes.findIndex(wrapperSize => wrapperSize > 0);
             return GoPiece.of(wrapper);
         } else {
-            throw new Error('Incorrect number of wrapper: ' + nbWrapper);
+            throw new Error("Incorrect number of wrapper: " + nbWrapper);
         }
     }
     public getNeighboorsEntryPoint(): Coord[] {
         const neighboorsEntryPoint: Coord[] = [];
-        if (this.color !== GoPiece.EMPTY && this.emptyCoords.length > 0) {
+        if (this.color !== GoPiece.EMPTY && this.emptyCoords.length > 0)
             neighboorsEntryPoint.push(this.emptyCoords[0]);
-        }
-        if (this.color !== GoPiece.BLACK && this.blackCoords.length > 0) {
+        if (this.color !== GoPiece.BLACK && this.blackCoords.length > 0)
             neighboorsEntryPoint.push(this.blackCoords[0]);
-        }
-        if (this.color !== GoPiece.WHITE && this.whiteCoords.length > 0) {
+        if (this.color !== GoPiece.WHITE && this.whiteCoords.length > 0)
             neighboorsEntryPoint.push(this.whiteCoords[0]);
-        }
-        if (this.color !== GoPiece.DEAD_BLACK && this.deadBlackCoords.length > 0) {
+        if (this.color !== GoPiece.DEAD_BLACK && this.deadBlackCoords.length > 0)
             neighboorsEntryPoint.push(this.deadBlackCoords[0]);
-        }
-        if (this.color !== GoPiece.DEAD_WHITE && this.deadWhiteCoords.length > 0) {
+        if (this.color !== GoPiece.DEAD_WHITE && this.deadWhiteCoords.length > 0)
             neighboorsEntryPoint.push(this.deadWhiteCoords[0]);
-        }
         return neighboorsEntryPoint;
     }
 }

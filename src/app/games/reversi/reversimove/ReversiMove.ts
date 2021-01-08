@@ -1,6 +1,7 @@
-import {MoveCoord} from 'src/app/jscaip/MoveCoord';
+import { MoveCoord } from "src/app/jscaip/MoveCoord";
 
 export class ReversiMove extends MoveCoord {
+
     public static readonly PASS: ReversiMove = new ReversiMove(-1, -1);
 
     public static readonly PASS_NUMBER: number = ReversiMove.PASS.encode();
@@ -20,7 +21,7 @@ export class ReversiMove extends MoveCoord {
         return other.coord.equals(this.coord);
     }
     public toString(): String {
-        return 'ReversiMove(' + this.coord.x + ', ' + this.coord.y + ')';
+        return "ReversiMove(" + this.coord.x + ", " + this.coord.y + ")";
     }
     public encode(): number {
         return ReversiMove.encode(this);

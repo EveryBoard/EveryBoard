@@ -1,9 +1,10 @@
-import {MinimaxTestingRules} from './MinimaxTestingRules';
-import {MinimaxTestingPartSlice} from '../MinimaxTestingPartSlice';
-import {MinimaxTestingMove} from '../minimaxtestingmove/MinimaxTestingMove';
-import {MGPNode} from 'src/app/jscaip/mgpnode/MGPNode';
+import { MinimaxTestingRules } from './MinimaxTestingRules';
+import { MinimaxTestingPartSlice } from '../MinimaxTestingPartSlice';
+import { MinimaxTestingMove } from '../minimaxtestingmove/MinimaxTestingMove';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 describe('MinimaxTestingRules', () => {
+
     beforeEach(() => {
         MGPNode.NB_NODE_CREATED = 0;
         MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT = 0;
@@ -32,7 +33,7 @@ describe('MinimaxTestingRules', () => {
     it('IA should not create sister-node to winning-node', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
-        const bestMove: MinimaxTestingMove = rules.node.findBestMoveAndSetDepth(5).move;
+        let bestMove: MinimaxTestingMove = rules.node.findBestMoveAndSetDepth(5).move;
         expect(bestMove).toEqual(MinimaxTestingMove.DOWN);
         expect(rules.node.getHopedValue()).toEqual(Number.MIN_SAFE_INTEGER);
         expect(MGPNode.NB_NODE_CREATED).toEqual(10);
@@ -73,8 +74,8 @@ describe('MinimaxTestingRules', () => {
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         rules.node.findBestMoveAndSetDepth(4);
         expect(rules.node.countDescendants()).toEqual(28);
-        expect(MGPNode.NB_NODE_CREATED).toEqual(29, 'Only 29 nodes should have been created');
-        expect(MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT).toEqual(MGPNode.NB_NODE_CREATED - 1, 'Only 28 nodes should had their own value calculated');
+        expect(MGPNode.NB_NODE_CREATED).toEqual(29, "Only 29 nodes should have been created");
+        expect(MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT).toEqual(MGPNode.NB_NODE_CREATED - 1, "Only 28 nodes should had their own value calculated");
         expect(MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT).toEqual(MGPNode.NB_NODE_CREATED - 14);
     });
     it('IA(depth=5) should create exactly 48 child', () => {

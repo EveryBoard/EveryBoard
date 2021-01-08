@@ -1,4 +1,5 @@
 export class GameComponentUtils {
+
     public static getTriangleCoordinate(x: number, y: number, lx: number, ly: number): string {
         const x0: number = (100*x) + (lx*33);
         const y0: number = (100*y) + (ly*33);

@@ -27,6 +27,7 @@ export interface IJoiner {
      */
 }
 export class Joiner {
+
     public constructor(
         private readonly candidatesNames: string[],
         private readonly creator: string,
@@ -35,13 +36,13 @@ export class Joiner {
         private readonly partStatus: number,
         private readonly maximalMoveDuration?: number,
         private readonly totalPartDuration?: number,
-        private readonly gameType?: number,
+        private readonly gameType?: number
     ) {
-        if (candidatesNames == null) throw new Error('candidatesNames can\'t be null');
-        if (creator == null) throw new Error('creator can\'t be null');
-        if (chosenPlayer == null) throw new Error('chosenPlayer can\'t be null');
-        if (firstPlayer == null) throw new Error('firstPlayer can\'t be null');
-        if (partStatus == null) throw new Error('partStatus can\'t be null');
+        if (candidatesNames == null) throw new Error("candidatesNames can't be null");
+        if (creator == null) throw new Error("creator can't be null");
+        if (chosenPlayer == null) throw new Error("chosenPlayer can't be null");
+        if (firstPlayer == null) throw new Error("firstPlayer can't be null");
+        if (partStatus == null) throw new Error("partStatus can't be null");
     }
     public equals(j: IJoiner): boolean {
         if (j.candidatesNames == null) return false;
@@ -62,9 +63,7 @@ export class Joiner {
     }
     public copy(): IJoiner {
         const copied: IJoiner = {
-            candidatesNames: this.candidatesNames.map((e: string) => {
-                return '' + e;
-            }),
+            candidatesNames: this.candidatesNames.map((e: string) => { return '' + e; }),
             creator: this.creator,
             chosenPlayer: this.chosenPlayer,
             firstPlayer: this.firstPlayer,

@@ -1,20 +1,21 @@
-import {EncapsuleRules} from './EncapsuleRules';
-import {EncapsuleMove} from '../encapsulemove/EncapsuleMove';
-import {EncapsulePiece} from '../EncapsuleEnums';
-import {Coord} from 'src/app/jscaip/coord/Coord';
-import {EncapsulePartSlice} from '../EncapsulePartSlice';
+import { EncapsuleRules } from "./EncapsuleRules";
+import { EncapsuleMove } from "../encapsulemove/EncapsuleMove";
+import { EncapsulePiece } from "../EncapsuleEnums";
+import { Coord } from "src/app/jscaip/coord/Coord";
+import { EncapsulePartSlice } from "../EncapsulePartSlice";
 
 describe('EncapsuleRules', () => {
+
     let rules: EncapsuleRules;
 
     const drop: (piece: EncapsulePiece, coord: Coord) => boolean = (piece: EncapsulePiece, coord: Coord) => {
         const move: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
         return rules.choose(move);
-    };
+    }
     const move: (start: Coord, end: Coord) => boolean = (start: Coord, end: Coord) => {
         const move: EncapsuleMove = EncapsuleMove.fromMove(start, end);
         return rules.choose(move);
-    };
+    }
     beforeEach(() => {
         rules = new EncapsuleRules(EncapsulePartSlice);
     });

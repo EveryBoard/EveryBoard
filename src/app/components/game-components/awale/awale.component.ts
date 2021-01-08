@@ -3,16 +3,17 @@ import {AbstractGameComponent} from '../AbstractGameComponent';
 import {AwaleRules} from '../../../games/awale/awalerules/AwaleRules';
 import {AwaleMove} from 'src/app/games/awale/awalemove/AwaleMove';
 import {AwalePartSlice} from '../../../games/awale/AwalePartSlice';
-import {AwaleLegalityStatus} from 'src/app/games/awale/AwaleLegalityStatus';
-import {Coord} from 'src/app/jscaip/coord/Coord';
-import {MatSnackBar} from '@angular/material/snack-bar';
-import {MGPValidation} from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-awale-new-component',
-    templateUrl: './awale.component.html',
+    templateUrl: './awale.component.html'
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
+
     public rules = new AwaleRules(AwalePartSlice);
 
     public scores: number[] = [0, 0];
@@ -26,7 +27,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         // TODO : option de clonage revision commentage
 
-        this.last = new Coord(-1, -1); // now the user stop try to do a move
+        this.last  = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: AwaleMove = new AwaleMove(x, y);
         // let's confirm on java-server-side that the move is legal
@@ -46,7 +47,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         if (this.observerRole === 1) {
             const orientedBoard: number[][] = [];
             awalePartSlice.getCopiedBoard().forEach(
-                (line) => orientedBoard.push(line.reverse()));
+                line => orientedBoard.push(line.reverse()));
             this.board = orientedBoard;
         } else {
             this.board = awalePartSlice.getCopiedBoard().reverse();
