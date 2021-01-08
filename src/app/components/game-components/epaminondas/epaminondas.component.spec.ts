@@ -115,9 +115,39 @@ describe('EpaminondasComponent:', () => {
         expect(gameComponent.message).toHaveBeenCalledWith("Cette case est vide, vous devez sélectionner une de vos pièces.");
     }));
     it('Should select all soldier between first selected and new click', fakeAsync(async() => {
+        const initialBoard: NumberTable = [
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+        ];
+        const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
+        gameComponent.rules.node = new EpaminondasNode(null, null, initialSlice, 0);
+        gameComponent.updateBoard();
         spyOn(gameComponent, "message");
-        expect(await clickElement("#click_0_10")).toBeTrue();
-        expect(await clickElement("#click_2_10")).toBeTrue();
+        expect(await clickElement("#click_0_7")).toBeTrue();
+
+        expect(await clickElement("#click_0_5")).toBeTrue();
+
+        expect(gameComponent.getRectStyle(0, 2)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 3)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 4)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 5)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 6)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 7)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 8)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 9)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 10)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 11)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+
         expect(gameComponent.message).not.toHaveBeenCalled();
     }));
     it('Should cancel move when selecting non-contiguous soldier line', fakeAsync(async() => {
@@ -183,16 +213,18 @@ describe('EpaminondasComponent:', () => {
         ];
         const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
         gameComponent.rules.node = new EpaminondasNode(null, null, initialSlice, 0);
+        gameComponent.updateBoard();
 
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 1, Direction.UP);
+        console.clear()
         const validity: MGPValidation = await gameComponent.tryMove(move);
         expect(validity.isSuccess()).toBeTrue();
 
-        expect(gameComponent.getRectFill(0, 7)).toBe(gameComponent.CAPTURED_FILL);
-        expect(gameComponent.getRectFill(0, 8)).toBe(gameComponent.CAPTURED_FILL);
-        expect(gameComponent.getRectFill(0, 11)).toBe(gameComponent.MOVED_FILL);
-        expect(gameComponent.getRectFill(0, 10)).toBe(gameComponent.MOVED_FILL);
-        expect(gameComponent.getRectFill(0, 9)).toBe(gameComponent.MOVED_FILL);
+        expect(gameComponent.getRectFill(0, 7)).toEqual(gameComponent.CAPTURED_FILL);
+        expect(gameComponent.getRectFill(0, 8)).toEqual(gameComponent.CAPTURED_FILL);
+        expect(gameComponent.getRectFill(0, 9)).toEqual(gameComponent.MOVED_FILL);
+        expect(gameComponent.getRectFill(0, 10)).toEqual(gameComponent.MOVED_FILL);
+        expect(gameComponent.getRectFill(0, 11)).toEqual(gameComponent.MOVED_FILL);
     }));
     it('Should show possible next click (after first click)', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -211,13 +243,14 @@ describe('EpaminondasComponent:', () => {
         ];
         const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
         gameComponent.rules.node = new EpaminondasNode(null, null, initialSlice, 0);
+        gameComponent.updateBoard();
 
         expect(await clickElement("#click_0_11")).toBeTrue();
 
-        expect(gameComponent.getRectStyle(0, 10)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(0, 9)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(1, 11)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(1, 10)).toBe(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 10)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 9)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(1, 11)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(1, 10)).toEqual(gameComponent.CLICKABLE_STYLE);
     }));
     it('Should deselect first piece when clicked (and no last piece exist)', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -236,13 +269,14 @@ describe('EpaminondasComponent:', () => {
         ];
         const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
         gameComponent.rules.node = new EpaminondasNode(null, null, initialSlice, 0);
+        gameComponent.updateBoard();
 
         expect(await clickElement("#click_0_11")).toBeTrue();
         expect(await clickElement("#click_0_11")).toBeTrue();
 
-        expect(gameComponent.getRectStyle(0, 11)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(0, 10)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(0, 9)).toBe(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 11)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 10)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 9)).toEqual(gameComponent.CLICKABLE_STYLE);
     }));
     it('Should change first piece coord when clicked and last piece is neighboors', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -261,14 +295,21 @@ describe('EpaminondasComponent:', () => {
         ];
         const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
         gameComponent.rules.node = new EpaminondasNode(null, null, initialSlice, 0);
+        gameComponent.updateBoard();
+
         expect(await clickElement("#click_0_11")).toBeTrue(); // select first piece
         expect(await clickElement("#click_0_10")).toBeTrue(); // select last piece neighboor
 
         expect(await clickElement("#click_0_11")).toBeTrue(); // deselect first piece
-        expect(gameComponent.firstPiece).toBe(new Coord(0, 10));
-        expect(gameComponent.lastPiece).toBe(new Coord(-15, -1));
-        expect(gameComponent.getRectStyle(0, 9)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(0, 11)).toBe(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.firstPiece).toEqual(new Coord(0, 10));
+        expect(gameComponent.lastPiece).toEqual(new Coord(-15, -1));
+        expect(gameComponent.getRectStyle(0, 9)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 10)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 11)).toEqual(gameComponent.CLICKABLE_STYLE);
+
+        expect(gameComponent.getRectStyle(1, 9)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(1, 10)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(1, 11)).toEqual(gameComponent.CLICKABLE_STYLE);
     }));
     it('Should change first piece coord when clicked and last piece exist but is not neighboors', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -287,16 +328,20 @@ describe('EpaminondasComponent:', () => {
         ];
         const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
         gameComponent.rules.node = new EpaminondasNode(null, null, initialSlice, 0);
+        gameComponent.updateBoard();
+
         expect(await clickElement("#click_0_11")).toBeTrue(); // select first piece
         expect(await clickElement("#click_0_9")).toBeTrue(); // select last piece neighboor
 
         expect(await clickElement("#click_0_11")).toBeTrue(); // deselect first piece
 
-        expect(gameComponent.firstPiece).toBe(new Coord(0, 10));
-        expect(gameComponent.lastPiece).toBe(new Coord(0, 9));
-        expect(gameComponent.getRectStyle(0, 7)).not.toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(0, 8)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(0, 11)).toBe(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.firstPiece).toEqual(new Coord(0, 10));
+        expect(gameComponent.lastPiece).toEqual(new Coord(0, 9));
+        expect(gameComponent.getRectStyle(0, 7)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 8)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 9)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 10)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 11)).toEqual(gameComponent.CLICKABLE_STYLE);
     }));
     it("Should show valid phalanx extension (both way)", fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -315,12 +360,16 @@ describe('EpaminondasComponent:', () => {
         ];
         const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
         gameComponent.rules.node = new EpaminondasNode(null, null, initialSlice, 0);
+        gameComponent.updateBoard();
+
         expect(await clickElement("#click_1_11")).toBeTrue(); // select first piece
         expect(await clickElement("#click_2_11")).toBeTrue(); // select last piece neighboor
 
-        expect(gameComponent.getRectStyle(0, 11)).not.toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(3, 11)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(4, 11)).toBe(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(0, 11)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(1, 11)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(2, 11)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(3, 11)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(4, 11)).toEqual(gameComponent.CLICKABLE_STYLE);
     }));
     it("Should show valid phalanx landing (both way)", fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -334,17 +383,18 @@ describe('EpaminondasComponent:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, X, O, O, O, _, O, _, _, _, _, _, _, _],
+            [X, X, X, O, O, O, _, O, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
         ];
         const initialSlice: EpaminondasPartSlice = new EpaminondasPartSlice(initialBoard, 0);
         gameComponent.rules.node = new EpaminondasNode(null, null, initialSlice, 0);
-        expect(await clickElement("#click_2_10")).toBeTrue();
-        expect(await clickElement("#click_4_10")).toBeTrue();
+        gameComponent.updateBoard();
 
-        expect(gameComponent.getRectStyle(0, 10)).not.toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(1, 10)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(5, 10)).toBe(gameComponent.CLICKABLE_STYLE);
-        expect(gameComponent.getRectStyle(6, 10)).not.toBe(gameComponent.CLICKABLE_STYLE);
+        expect(await clickElement("#click_3_10")).toBeTrue();
+        expect(await clickElement("#click_5_10")).toBeTrue();
+
+        expect(gameComponent.getRectStyle(2, 10)).not.toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(6, 10)).toEqual(gameComponent.CLICKABLE_STYLE);
+        expect(gameComponent.getRectStyle(7, 10)).not.toEqual(gameComponent.CLICKABLE_STYLE);
     }));
 });

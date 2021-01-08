@@ -123,7 +123,7 @@ export abstract class GameWrapper {
         this.canPass = this.gameComponent.canPass;
     }
     public receiveChildData = async(move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<MGPValidation> => {
-        const LOCAL_VERBOSE: boolean = false;
+        const LOCAL_VERBOSE: boolean = true;
         if (!this.isPlayerTurn()) {
             return MGPValidation.failure("not your turn");
         }
