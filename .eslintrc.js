@@ -30,6 +30,7 @@ module.exports = {
         'no-unused-vars': ['warn'],
         'no-invalid-this': ['warn'],
         'indent': ['error', 4],
+        'object-curly-spacing': ['warn', 'always'],
         'no-redeclare': ['warn'], // TODO: add option ignoreDeclarationMerge: true and set to error
     }
 };
