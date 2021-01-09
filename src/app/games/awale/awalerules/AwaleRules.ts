@@ -133,9 +133,9 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         // does not make the capture nor verify the legality of the move
         // return (x, y) of the last case the move got down
 
-        let ix: number, iy: number;
-        ix = x;
-        iy = y; // iy et ix sont les cases initiales
+        // iy et ix sont les cases initiales
+        const ix: number = x
+        const iy: number = y;
         // à retenir pour appliquer la règle de la jachère en cas de tour complet
         let inHand = board[y][x];
         board[y][x] = 0; // on vide la case

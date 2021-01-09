@@ -73,9 +73,8 @@ describe('GameService', () => {
                 await service.acceptTakeBack('joinerId', part, player);
             } catch (error) {
                 errorMessage = error.message;
-            } finally {
-                return errorMessage;
             }
+            return errorMessage;
         };
         const firstError: string = await getError(Player.ZERO);
         part.request.code = RequestCode.ONE_ASKED_TAKE_BACK.toInterface().code;

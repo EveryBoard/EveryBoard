@@ -21,10 +21,10 @@ export class ArrayUtils {
         return result;
     }
     public static createBiArray<T>(width: number, height: number, initValue: T): T[][] {
-        const retour: Array<Array<T>> = new Array<Array<T>>();
+        const retour: Array<Array<T>> = [];
         let y = height - 1;
         while (y >= 0) {
-            retour[y] = new Array<T>();
+            retour[y] = [];
             let x = width - 1;
             while (x >= 0) {
                 retour[y][x] = initValue;
@@ -46,7 +46,7 @@ export class ArrayUtils {
         }
     }
     public static copyBiArray<T>(biArray: Table<T>): T[][] {
-        const retour: Array<Array<T>> = new Array<Array<T>>();
+        const retour: Array<Array<T>> = [];
         let y = 0;
         while (y < biArray.length) {
             retour[y] = ArrayUtils.copyArray<T>(biArray[y]);
@@ -55,7 +55,7 @@ export class ArrayUtils {
         return retour;
     }
     public static copyImmutableArray<I>(array: ReadonlyArray<I>): I[] {
-        const retour: Array<I> = new Array<I>();
+        const retour: Array<I> = [];
         let x = 0;
         while (x < array.length) {
             retour[x] = array[x];
@@ -64,7 +64,7 @@ export class ArrayUtils {
         return retour;
     }
     public static copyArray<T>(array: ReadonlyArray<T>): T[] { // TODO: REMOVE FOR copyImmutableArray
-        const retour: Array<T> = new Array<T>();
+        const retour: Array<T> = [];
         let x = 0;
         while (x < array.length) {
             retour[x] = array[x];
@@ -73,7 +73,7 @@ export class ArrayUtils {
         return retour;
     }
     public static copyCoordArray(array: Coord[]): Coord[] { //  TODO: Check that one immutability  && REMOVE FOR copyImmutableArray
-        const retour: Array<Coord> = new Array<Coord>();
+        const retour: Array<Coord> = [];
         let x = 0;
         while (x < array.length) {
             retour[x] = array[x];

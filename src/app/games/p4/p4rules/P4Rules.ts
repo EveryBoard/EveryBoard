@@ -420,7 +420,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
             return { legal: MGPValidation.failure("invalid move") };
         }
         if (slice.getBoardByXY(move.x, 0) !== Player.NONE.value) {
-            return { legal: MGPValidation.failure("Column " + move.x + " is full.") };
+            return { legal: MGPValidation.failure("Column " + move.x + " is full.") };
         }
         return {legal: MGPValidation.SUCCESS};
     }

@@ -32,5 +32,8 @@ module.exports = {
         'indent': ['error', 4],
         'object-curly-spacing': ['warn', 'always'],
         'no-redeclare': ['warn'], // TODO: add option ignoreDeclarationMerge: true and set to error
+        'camelcase': ['warn'],
+        'valid-jsdoc': ['warn'],
+        'no-case-declarations': ['warn']
     }
 };

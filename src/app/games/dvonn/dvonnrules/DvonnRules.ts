@@ -82,17 +82,17 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     }
     public getScores(slice: DvonnPartSlice): number[] {
         // Board value is the total number of pieces controlled by player 0 - by player 1
-        let p0_score = 0;
-        let p1_score = 0;
+        let p0Score = 0;
+        let p1Score = 0;
         DvonnBoard.getAllPieces(slice.board).map((c: Coord) => {
             const stack = DvonnBoard.getStackAt(slice.board, c);
             if (stack.belongsTo(Player.ZERO)) {
-                p0_score += stack.size();
+                p0Score += stack.size();
             } else if (stack.belongsTo(Player.ONE)) {
-                p1_score += stack.size();
+                p1Score += stack.size();
             }
         });
-        return [p0_score, p1_score];
+        return [p0Score, p1Score];
     }
     public getBoardValue(move: DvonnMove, slice: DvonnPartSlice): number {
         // Board values is the total number of pieces controlled by player 0 - by player 1

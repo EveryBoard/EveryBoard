@@ -316,9 +316,9 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         return (c.x === center && c.y === center);
     }
     private static getAbsoluteOwner(c: Coord, invaderStart: boolean, board: NumberTable): Player {
-        const case_c: number = board[c.y][c.x];
+        const caseC: number = board[c.y][c.x];
         let owner: Player;
-        switch (case_c) {
+        switch (caseC) {
             case TablutCase.PLAYER_ZERO_KING.value:
                 owner = Player.ZERO;
                 break;
@@ -343,7 +343,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
         if (!c.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
             throw new Error('cannot call getRelativeOwner on Out Of Range Coord' + c);
         }
-        const case_c: number = board[c.y][c.x];
+        const caseC: number = board[c.y][c.x];
         const owner: Player = this.getAbsoluteOwner(c, invaderStart, board);
         let relativeOwner: number;
         if (owner === Player.NONE) {
@@ -354,11 +354,11 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             relativeOwner = this.ENNEMY;
         }
         // TESTS
-        if (case_c === TablutCase.UNOCCUPIED.value) {
+        if (caseC === TablutCase.UNOCCUPIED.value) {
             if (relativeOwner !== this.NONE) {
                 display(TablutRules.VERBOSE, 'WTF, empty is on no one side but here is on ' + relativeOwner + ' :: ' + owner + ' :: ' + player); }
         } else if (player === 0) {
-            if (case_c === TablutCase.INVADERS.value) {
+            if (caseC === TablutCase.INVADERS.value) {
                 if (invaderStart) {
                     if (relativeOwner !== this.PLAYER) {
                         display(TablutRules.VERBOSE,
@@ -376,14 +376,14 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, LegalityStat
             }
         } else { // player follow
             if (invaderStart) {
-                if (case_c === TablutCase.INVADERS.value) {
+                if (caseC === TablutCase.INVADERS.value) {
                     if (relativeOwner !== this.ENNEMY) {
                         display(TablutRules.VERBOSE, 'player follow, invader start, case is invader, but case is not ennemy '
                             + relativeOwner + ' :: ' + owner + ' :: ' + player);
                     }
                 }
             } else { // invader follow
-                if (case_c === TablutCase.INVADERS.value) {
+                if (caseC === TablutCase.INVADERS.value) {
                     if (relativeOwner !== this.PLAYER) {
                         display(TablutRules.VERBOSE, 'player follow, invader follow, case is invader, but player don\t own it ??? '
                             + relativeOwner + ' :: ' + owner + ' :: ' + player);

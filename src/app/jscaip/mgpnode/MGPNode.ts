@@ -204,7 +204,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         if (this.childs != null) throw new Error("multiple node childs calculation error");
         const LOCAL_VERBOSE: boolean = false;
         const moves: MGPMap<M, S> = MGPNode.ruler.getListMoves(this) as MGPMap<M, S>;
-        this.childs = new Array<MGPNode<R, M, S, L>>();
+        this.childs = [];
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'createChilds received listMoves from ruler');
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, moves);
 
@@ -413,7 +413,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
         return nbDescendants;
     }
     public keepOnlyChoosenChild(choix: MGPNode<R, M, S, L>) {
-        this.childs = new Array<MGPNode<R, M, S, L>>();
+        this.childs = [];
         this.childs.push(choix);
     }
 }

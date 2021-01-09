@@ -13,13 +13,15 @@ export class DvonnBoard {
         // invalid positions: (0, 0), (0, 1), (1, 0)
         //                    (10, 4), (10, 3), (9, 4)
         if ((coord.x === 0 && coord.y <= 1) ||
-            (coord.x === 1 && coord.y === 0))
+            (coord.x === 1 && coord.y === 0)) {
             // unreachable in the top left
             return false;
+        }
         if ((coord.x === DvonnBoard.WIDTH-1 && coord.y >= DvonnBoard.HEIGHT-2) ||
-            (coord.x === DvonnBoard.WIDTH-2 && coord.y === DvonnBoard.HEIGHT-1))
+            (coord.x === DvonnBoard.WIDTH-2 && coord.y === DvonnBoard.HEIGHT-1)) {
             // unreachable in the top right
             return false;
+        }
         return true;
     }
 
@@ -49,8 +51,7 @@ export class DvonnBoard {
             for (let x = 0; x < DvonnBoard.WIDTH; x++) {
                 const coord = new Coord(x, y);
                 if (DvonnBoard.isOnBoard(coord) &&
-                    !DvonnBoard.getStackAt(board, coord).isEmpty())
-                {
+                    !DvonnBoard.getStackAt(board, coord).isEmpty()) {
                     pieces.push(coord);
                 }
             }

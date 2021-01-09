@@ -29,6 +29,7 @@ export class MGPOptional<T> {
     public getOrNull(): T{
         return this.value;
     }
+    // TODO: instead of having the comparator argument, require T to implement compare
     public equals(t: MGPOptional<T>, comparator: (a: T, b: T) => boolean) {
         if (this.isAbsent()) {
             return t.isAbsent();
