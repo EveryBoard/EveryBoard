@@ -13,6 +13,7 @@ service:
 
 before_script:
   - npm install
+  - cp src/app/firebaseConfig.ts.dummy src/app/firebaseConfig.ts
 
 jobs:
   include:
