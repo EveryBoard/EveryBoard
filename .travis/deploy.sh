@@ -6,7 +6,7 @@ ssh-add id_rsa
 echo "Host $HOST" >> ~/.ssh/config
 echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-#VERSION=$(git rev-parse HEAD | cut -c1-8)
-#sed -i "s/Pantheon's Game/Pantheon's Game ($VERSION)"
+VERSION=$(git rev-parse HEAD | cut -c1-8)
+sed -i "s/COMMIT/$VERSION/" src/index.html
 
 rsync -avz dist/pantheonsgame/ $USER@$HOST:$DEPLOY_PATH
