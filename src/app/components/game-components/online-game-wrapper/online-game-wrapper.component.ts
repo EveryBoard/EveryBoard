@@ -1,5 +1,5 @@
 import { Component, ComponentFactoryResolver, OnDestroy, OnInit, ViewChild, AfterViewInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
@@ -58,6 +58,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
 
     public firstPlayedTurn: number = null;
 
+    protected routerEventsSub: Subscription;
     protected userSub: Subscription;
     protected observedPartSubscription: Subscription;
     protected opponentSubscription: () => void;
@@ -71,10 +72,37 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         display(OnlineGameWrapperComponent.VERBOSE, "OnlineGameWrapperComponent constructed");
     }
-    public ngOnInit() {
+    private extractPartIdFromURL(): string {
+        return this.actRoute.snapshot.paramMap.get('id');
+    }
+    private extractGameTypeFromURL(): string {
+        // url is ["play", "game-name", "part-id"]
+        return this.actRoute.snapshot.url[1].path;
+    }
+    private async redirectIfPartIsInvalid(): Promise<void> {
+        const gameType: string = this.extractGameTypeFromURL();
+        const partExistsAndIsOfRightType = await this.gameService.partExistsAndIsOfType(this.currentPartId, gameType);
+        console.log({partExistsAndIsOfRightType});
+        if (!partExistsAndIsOfRightType) {
+            console.log("redirecting...");
+            this.routerEventsSub.unsubscribe();
+            this.router.navigate(['/']); // TODO: redirect to an error/404 page instead?
+        }
+    }
+    private async setCurrentPartIdOrRedirect(): Promise<void> {
+        this.currentPartId = this.extractPartIdFromURL();
+        await this.redirectIfPartIsInvalid();
+    }
+
+    public async ngOnInit() {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
 
-        this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
+        this.routerEventsSub = this.router.events.subscribe(async (ev) => {
+            if (ev instanceof NavigationEnd) {
+                await this.setCurrentPartIdOrRedirect();
+            }
+        });
+        await this.setCurrentPartIdOrRedirect();
         this.userSub = this.authenticationService.getJoueurObs()
             .subscribe(user => this.userName = user.pseudo);
     }

@@ -36,6 +36,12 @@ export class GameService {
     }
     // on Server Component
 
+    public async partExistsAndIsOfType(partId: string, gameType: string): Promise<boolean> {
+        const part: ICurrentPart = await this.partDao.read(partId);
+        console.log({part});
+        return part != null && part.typeGame === gameType;
+    }
+
     protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<String> {
         display(GameService.VERBOSE, 'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer);
 
