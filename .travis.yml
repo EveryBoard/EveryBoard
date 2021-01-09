@@ -10,21 +10,21 @@ addons:
   chrome: stable
 service:
   - xvfb
-before_install:
-  - openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in .travis/id_rsa.enc -out id_rsa -d
-  - openssl aes-256-cbc -K $encrypted_bdd73078a253_key -iv $encrypted_bdd73078a253_iv -in .travis/firebaseConfig.ts.enc -out src/app/firebaseConfig.ts -d
 
 before_script:
   - npm install
 
 jobs:
   include:
-    - stage: Linter
-      script: npx eslint --ext .ts ./
     - stage: Test
       script: npx ng test --watch false --browsers ChromeHeadless
     - stage: Build and deploy
       if: branch = master
       script:
+        - openssl aes-256-cbc -K $encrypted_bdd73078a253_key -iv $encrypted_bdd73078a253_iv -in .travis/firebaseConfig.ts.enc -out src/app/firebaseConfig.ts -d
+        - openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in .travis/id_rsa.enc -out id_rsa -d
         - npx ng build
         - sh .travis/deploy.sh
+    - stage: Linter
+      script: npx eslint --ext .ts ./
+
