@@ -24,6 +24,7 @@ jobs:
     - stage: Test
       script: npx ng test --watch false --browsers ChromeHeadless
     - stage: Build and deploy
+      if: branch = master
       script:
         - npx ng build
         - sh .travis/deploy.sh
