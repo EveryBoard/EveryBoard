@@ -107,7 +107,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
 
         for (let y = 0; y < 8; y++) {
             for (let x = 0; x < 8; x++) {
-                if (slice.board[y][x] === Player.NONE.value) {
+                if (slice.getBoardByXY(x, y) === Player.NONE.value) {
                     // For each empty cases
                     nextBoard = slice.getCopiedBoard();
                     const ennemyNeighboors = ReversiPartSlice.getNeighbooringPawnLike(nextBoard, ennemy, x, y);
@@ -118,7 +118,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
                         if (result.length > 0) {
                             // there was switched piece and hence, a legal move
                             for (const switched of result) {
-                                if (player === slice.board[switched.y][switched.x]) {
+                                if (player === slice.getBoardAt(switched)) {
                                     alert(switched + 'was already switched!');
                                 }
                                 nextBoard[switched.y][switched.x] = player;

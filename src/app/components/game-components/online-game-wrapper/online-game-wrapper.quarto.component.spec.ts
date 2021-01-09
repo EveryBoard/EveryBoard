@@ -138,6 +138,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     let acceptTakeBack: () => Promise<boolean> = async() => {
         return await clickElement('#acceptTakeBackButton');
     };
+    let refuseTakeBack: () => Promise<boolean> = async() => {
+        return await clickElement('#refuseTakeBackButton');
+    };
     let receiveRequest: (request: RequestCode) => Promise<void> = async(request: RequestCode) => {
         await partDAO.update('joinerId', {
             request: request.toInterface()
@@ -399,18 +402,39 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        expect(await acceptTakeBack()).toBeFalse();
-        await doMove(FIRST_MOVE);
         const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
+        await doMove(FIRST_MOVE);
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         expect(await acceptTakeBack()).toBeFalse();
         await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
+        spyOn(partDAO, 'update').and.callThrough();
         expect(await acceptTakeBack()).toBeTrue();
         expect(await acceptTakeBack()).toBeFalse();
+        expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+            request: RequestCode.ZERO_ACCEPTED_TAKE_BACK.toInterface(),
+            turn: 1, listMoves: [FIRST_MOVE_ENCODED]
+        });
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should not be allowed player to play while take back request is waiting for him', fakeAsync(async() => {
+    it('Should only propose player to refuse take back when opponent asked', fakeAsync(async() => {
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
+        await doMove(FIRST_MOVE);
+        await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
+        expect(await refuseTakeBack()).toBeFalse();
+        await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
+        spyOn(partDAO, 'update').and.callThrough();
+        expect(await refuseTakeBack()).toBeTrue();
+        expect(await refuseTakeBack()).toBeFalse();
+        expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+            request: RequestCode.ZERO_REFUSED_TAKE_BACK.toInterface()
+        });
+
+        tick(component.maximalMoveDuration);
+    }));
+    it('Should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         await doMove(FIRST_MOVE);
@@ -439,22 +463,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partDAO.update).not.toHaveBeenCalledWith('joinerId', {
             listMoves: [FIRST_MOVE_ENCODED, move1, move2.encode()], turn: 3,
             playerZero: null, playerOne: null, request: null,
-        });
-
-        tick(component.maximalMoveDuration);
-    }));
-    it('Should allow player to refuse take back request', fakeAsync(async() => {
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        tick(1);
-        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
-        await doMove(FIRST_MOVE);
-        await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
-        await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
-
-        spyOn(partDAO, 'update').and.callThrough();
-        expect(await clickElement('#refuseTakeBack')).toBeTruthy("Should be allowed to refuse take back");
-        expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
-            request: RequestCode.ZERO_REFUSED_TAKE_BACK.toInterface()
         });
 
         tick(component.maximalMoveDuration);

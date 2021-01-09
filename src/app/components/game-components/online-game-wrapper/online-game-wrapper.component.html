@@ -79,9 +79,9 @@
                     Autoriser à reprendre un tour
                 </button>
             </div>
-            <div class="inforow" id="refuseTakeBackDiv" *ngIf="endGame === false">
+            <div class="inforow" id="refuseTakeBackDiv" *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
                 <button mat-stroked-button
-                        id="refuseTakeBack"
+                        id="refuseTakeBackButton"
                         (click)="refuseTakeBack()">
                     Refuser de reprendre un tour
                 </button>

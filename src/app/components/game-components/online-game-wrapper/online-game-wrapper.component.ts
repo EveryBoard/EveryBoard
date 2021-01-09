@@ -355,21 +355,32 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             updatedICurrentPart.playerZero,
             updatedICurrentPart.playerOne];
         this.currentPlayer = this.players[updatedICurrentPart.turn % 2];
-        this.observerRole = 2;
         this.gameBeginningTime = updatedICurrentPart.beginning;
-        let opponentName = '';
+        let opponentName: string = '';
         if (this.players[0] === this.userName) {
             this.observerRole = 0;
             opponentName = this.players[1];
         } else if (this.players[1] === this.userName) {
             this.observerRole = 1;
             opponentName = this.players[0];
+        } else {
+            this.observerRole = 2;
         }
         if (opponentName !== '') {
-            const callback: FirebaseCollectionObserver<IJoueur> = new FirebaseCollectionObserver();
-            callback.onDocumentCreated = (foundUser: IJoueurId[]) => {
-                this.opponent = foundUser[0];
+            const onDocumentCreated: (foundUser: IJoueurId[]) => void =
+                (foundUser: IJoueurId[]) => { this.opponent = foundUser[0]; };
+            const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) =>
+            {
+                throw new Error("OnlineGameWrapper: Opponent was modified, what sorcery is this: " + JSON.stringify(modifiedUsers));
             };
+            const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) =>
+            {
+                throw new Error("OnlineGameWrapper: Opponent was deleted, what sorcery is this: " + JSON.stringify(deletedUsers));
+            };
+            const callback: FirebaseCollectionObserver<IJoueur> =
+                new FirebaseCollectionObserver(onDocumentCreated,
+                                               onDocumentModified,
+                                               onDocumentDeleted);
             this.opponentSubscription =
                 this.userService.observeUserByPseudo(opponentName, callback); // TODO: CHECK IF USEFULL OR NOT WITH NEW WAY TO DETECT DISCONNECTION
         }

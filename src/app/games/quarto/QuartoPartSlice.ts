@@ -1,6 +1,6 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
 import { QuartoEnum } from './QuartoEnum';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class QuartoPartSlice extends GamePartSlice {
 
@@ -21,13 +21,13 @@ export class QuartoPartSlice extends GamePartSlice {
         }
         return filtered;
     }
-    public static isGivable(pawn: number, board: ReadonlyArray<ReadonlyArray<number>>, pieceInHand: number): boolean {
+    public static isGivable(pawn: number, board: NumberTable, pieceInHand: number): boolean {
         if (pawn === pieceInHand) {
             return false;
         }
         return QuartoPartSlice.isPlacable(pawn, board);
     }
-    public static isPlacable(pawn: number, board: ReadonlyArray<ReadonlyArray<number>>): boolean {
+    public static isPlacable(pawn: number, board: NumberTable): boolean {
         // return true if the pawn is not already placed on the board
         let found = false;
         let indexY = 0;

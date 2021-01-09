@@ -1,9 +1,12 @@
-export type ReadonlyBiArray<T> = ReadonlyArray<ReadonlyArray<T>>;
-export type ReadonlyNumberBiArray = ReadonlyBiArray<number>;
+import { Coord } from "src/app/jscaip/coord/Coord";
+
+export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
+
+export type NumberTable = Table<number>;
 
 export class ArrayUtils {
 
-    public static mapBiArray<T, U>(biArray: ReadonlyArray<ReadonlyArray<T>>, mapper: (t: T) => U): U[][] {
+    public static mapBiArray<T, U>(biArray: Table<T>, mapper: (t: T) => U): U[][] {
         const result: U[][] = [];
         let y: number = 0;
         while (y < biArray.length) {
@@ -42,7 +45,7 @@ export class ArrayUtils {
             y--;
         }
     }
-    public static copyBiArray<T>(biArray: ReadonlyArray<ReadonlyArray<T>>): T[][] {
+    public static copyBiArray<T>(biArray: Table<T>): T[][] {
         const retour: Array<Array<T>> = new Array<Array<T>>();
         let y = 0;
         while (y < biArray.length) {
@@ -62,6 +65,15 @@ export class ArrayUtils {
     }
     public static copyArray<T>(array: ReadonlyArray<T>): T[] { // TODO: REMOVE FOR copyImmutableArray
         const retour: Array<T> = new Array<T>();
+        let x = 0;
+        while (x < array.length) {
+            retour[x] = array[x];
+            x++;
+        }
+        return retour;
+    }
+    public static copyCoordArray(array: Coord[]): Coord[] { //  TODO: Check that one immutability  && REMOVE FOR copyImmutableArray
+        const retour: Array<Coord> = new Array<Coord>();
         let x = 0;
         while (x < array.length) {
             retour[x] = array[x];

@@ -16,22 +16,18 @@ describe('QuixoMove:', () => {
     it("Should forbid move creation for invalid x or y coord", () => {
         expect(() => new QuixoMove(-1, 0, Orthogonal.UP)).toThrowError("Invalid coord for QuixoMove: (-1, 0) is outside the board.");
     });
-
     it("Should forbid move creation from coord not on the side", () => {
         expect(() => new QuixoMove(1, 1, Orthogonal.UP)).toThrowError("Invalid coord for QuixoMove: (1, 1) is not on the edge.");
     });
-
     it("Should forbid move creation without direction", () => {
         expect(() => new QuixoMove(0, 0, null)).toThrowError("Direction cannot be null.");
     });
-
     it("Should forbid move creation from board who'se side is the same as the direction", () => {
         expect(() => new QuixoMove(0, 2, Orthogonal.LEFT)).toThrowError("Invalid direction: pawn on the left side can't be moved to the left (0, 2).");
         expect(() => new QuixoMove(4, 2, Orthogonal.RIGHT)).toThrowError("Invalid direction: pawn on the right side can't be moved to the right (4, 2).");
         expect(() => new QuixoMove(2, 0, Orthogonal.UP)).toThrowError("Invalid direction: pawn on the top side can't be moved up (2, 0).");
         expect(() => new QuixoMove(2, 4, Orthogonal.DOWN)).toThrowError("Invalid direction: pawn on the bottom side can't be moved down (2, 4).");
     });
-
     it('QuixoMove.encode and QuixoMove.decode should be reversible', () => {
         const board: number[][] = [
             [_, X, _, _, _],
@@ -52,14 +48,12 @@ describe('QuixoMove:', () => {
             expect(decodedMove).toEqual(move);
         }
     });
-
     it('should delegate decoding to static method', () => {
         const testMove: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
         spyOn(QuixoMove, "decode").and.callThrough();
         testMove.decode(testMove.encode());
         expect(QuixoMove.decode).toHaveBeenCalledTimes(1);
     });
-
     it('Should override correctly equals and toString', () => {
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
         const android: Object = {

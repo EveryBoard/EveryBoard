@@ -24,7 +24,7 @@ export class AuthenticationService implements OnDestroy {
     private joueurBS: BehaviorSubject<{pseudo: string, verified: boolean}> =
         new BehaviorSubject<{pseudo: string, verified: boolean}>({pseudo: null, verified: null});
 
-    private joueurObs: Observable<{pseudo: string, verified: boolean}> = this.joueurBS.asObservable();;
+    private joueurObs: Observable<{pseudo: string, verified: boolean}> = this.joueurBS.asObservable();
 
     constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
         if (environment.test && !AuthenticationService.IN_TESTING) throw new Error("NO AUTH SERVICE IN TEST");

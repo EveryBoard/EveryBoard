@@ -47,7 +47,8 @@ describe('SiamComponent', () => {
             element.triggerEventHandler('click', null);
             await fixture.whenStable();
             fixture.detectChanges();
-            return true;
+            return true; // TODO: should return wether or not cancelMove was called for illegal move reason
+            // TODO: generalise that for all clickElement
         } else {
             return false;
         }

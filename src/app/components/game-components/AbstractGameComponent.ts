@@ -5,6 +5,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -15,7 +16,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public rules: Rules<M, S, L>;
 
-    public board: ReadonlyArray<ReadonlyArray<number>>;
+    public board: NumberTable;
 
     public canPass: boolean;
 
@@ -34,9 +35,8 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     constructor(public snackBar: MatSnackBar) {
     }
-
     public message: (msg: string) => void = (msg: string) => {
-        this.snackBar.open(msg);
+        this.snackBar.open(msg, 'Ok!', { duration: 3000 });
     };
     public abstract updateBoard(): void;
 

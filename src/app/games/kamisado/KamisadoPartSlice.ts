@@ -1,4 +1,4 @@
-import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { ArrayUtils, NumberTable } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { KamisadoBoard } from "./KamisadoBoard";
@@ -13,7 +13,8 @@ export class KamisadoPartSlice extends GamePartSlice {
                        // The next coord that has to be played
                        public readonly coordToPlay: MGPOptional<Coord>,
                        // Did a PASS move have been performed on the last turn?
-                       public readonly alreadyPassed: boolean, board: ReadonlyArray<ReadonlyArray<number>>) {
+                       public readonly alreadyPassed: boolean,
+                       board: NumberTable) {
         super(ArrayUtils.copyBiArray(board), turn);
     }
     public static getInitialSlice(): KamisadoPartSlice {

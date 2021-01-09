@@ -1,9 +1,8 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject} from 'rxjs';
-import {IJoueurId, IJoueur} from '../../domain/iuser';
-import {JoueursDAO} from '../../dao/joueurs/JoueursDAO';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
+import { IJoueurId, IJoueur } from '../../domain/iuser';
+import { JoueursDAO } from '../../dao/joueurs/JoueursDAO';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
-import { environment } from 'src/environments/environment';
 import { display } from 'src/app/collectionlib/utils';
 
 @Injectable({
@@ -23,11 +22,17 @@ export class ActivesUsersService {
     }
     public startObserving() {
         display(ActivesUsersService.VERBOSE, "ActivesUsersService.startObservingActivesUsers");
-        const joueursObserver: FirebaseCollectionObserver<IJoueur> = new FirebaseCollectionObserver();
-        joueursObserver.onDocumentModified = (users) => {
+        const onDocumentCreated: (newUsers: IJoueurId[]) => void = (newUsers: IJoueurId[]) =>
+        {
+            display(ActivesUsersService.VERBOSE, "our DAO gave us " + newUsers.length + " new user(s)");
+            const newUsersList: IJoueurId[] = this.activesUsersBS.value.concat(...newUsers);
+            this.activesUsersBS.next(this.order(newUsersList));
+        };
+        const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) =>
+        {
             let updatedUsers: IJoueurId[] = this.activesUsersBS.value;
-            display(ActivesUsersService.VERBOSE, "our DAO updated " + users.length + " user(s)");
-            for (let u of users) {
+            display(ActivesUsersService.VERBOSE, "our DAO updated " + modifiedUsers.length + " user(s)");
+            for (let u of modifiedUsers) {
                 updatedUsers.forEach(user => {
                     if (user.id === u.id) user.doc = u.doc;
                 });
@@ -35,16 +40,16 @@ export class ActivesUsersService {
             }
             this.activesUsersBS.next(updatedUsers);
         };
-        joueursObserver.onDocumentCreated = (newUsers) => {
-            display(ActivesUsersService.VERBOSE, "our DAO gave us " + newUsers.length + " new user(s)");
-            const newUsersList: IJoueurId[] = this.activesUsersBS.value.concat(...newUsers);
-            this.activesUsersBS.next(this.order(newUsersList));
-        };
-        joueursObserver.onDocumentDeleted = (deletedUsers) => {
+        const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) =>
+        {
             const deletedUsersId: string[] = deletedUsers.map(u => u.id);
             const newUsersList: IJoueurId[] = this.activesUsersBS.value.filter(u => !deletedUsersId.includes(u.id));
             this.activesUsersBS.next(this.order(newUsersList));
         };
+        const joueursObserver: FirebaseCollectionObserver<IJoueur> =
+            new FirebaseCollectionObserver(onDocumentCreated,
+                                           onDocumentModified,
+                                           onDocumentDeleted);
         this.unsubscribe = this.joueursDAO.observeActivesUsers(joueursObserver);
     }
     public stopObserving() {

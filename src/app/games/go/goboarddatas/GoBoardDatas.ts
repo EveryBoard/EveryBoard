@@ -1,13 +1,13 @@
 import { GroupInfos } from "../gorules/GoRules";
 import { GoPiece, GoPartSlice } from "../GoPartSlice";
-import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
+import { ArrayUtils, NumberTable } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { GroupDatas } from "../groupdatas/GroupDatas";
 
 export class GoBoardDatas {
 
     private constructor(
-        readonly groupIndexes: ReadonlyArray<ReadonlyArray<number>>,
+        readonly groupIndexes: NumberTable,
         readonly groups: ReadonlyArray<GroupInfos>
     ) { }
     public static ofGoPiece(board: GoPiece[][]): GoBoardDatas {

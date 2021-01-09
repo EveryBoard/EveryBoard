@@ -21,8 +21,13 @@ export class ActivesPartsService {
     constructor(private partDao: PartDAO) {
     }
     public startObserving() {
-        const partObserver: FirebaseCollectionObserver<ICurrentPart> = new FirebaseCollectionObserver();
-        partObserver.onDocumentModified = (modifiedParts: ICurrentPartId[]) => {
+        const onDocumentCreated: (createdParts: ICurrentPartId[]) => void = (createdParts: ICurrentPartId[]) =>
+        {
+            const result: ICurrentPartId[] = this.activesPartsBS.value.concat(...createdParts);
+            this.activesPartsBS.next(result);
+        };
+        const onDocumentModified: (modifiedParts: ICurrentPartId[]) => void = (modifiedParts: ICurrentPartId[]) =>
+        {
             let result: ICurrentPartId[] = this.activesPartsBS.value;
             for (let p of modifiedParts) {
                 result.forEach(part => {
@@ -31,11 +36,8 @@ export class ActivesPartsService {
             }
             this.activesPartsBS.next(result);
         };
-        partObserver.onDocumentCreated = (createdParts: ICurrentPartId[]) => {
-            const result: ICurrentPartId[] = this.activesPartsBS.value.concat(...createdParts);
-            this.activesPartsBS.next(result);
-        };
-        partObserver.onDocumentDeleted = (deletedDocs: ICurrentPartId[]) => {
+        const onDocumentDeleted: (deletedDocs: ICurrentPartId[]) => void = (deletedDocs: ICurrentPartId[]) =>
+        {
             let result: ICurrentPartId[] = [];
             let deletedIds: string[] = deletedDocs.map(doc => doc.id);
             for (let p of this.activesPartsBS.value) {
@@ -45,6 +47,10 @@ export class ActivesPartsService {
             }
             this.activesPartsBS.next(result);
         };
+        const partObserver: FirebaseCollectionObserver<ICurrentPart> =
+            new FirebaseCollectionObserver(onDocumentCreated,
+                                           onDocumentModified,
+                                           onDocumentDeleted);
         this.unsubscribe = this.partDao.observeActivesParts(partObserver);
     }
     public stopObserving() {

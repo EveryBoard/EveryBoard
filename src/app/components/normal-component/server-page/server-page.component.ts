@@ -1,43 +1,44 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {NavigationEnd, Router} from '@angular/router';
-import {Location} from '@angular/common';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
-import {Subscription} from 'rxjs';
+import { Subscription } from 'rxjs';
 
-import {IJoueurId} from '../../../domain/iuser';
-import {ICurrentPartId} from '../../../domain/icurrentpart';
+import { IJoueurId } from '../../../domain/iuser';
+import { ICurrentPartId } from '../../../domain/icurrentpart';
 
-import {UserService} from '../../../services/user/UserService';
-import {GameService} from '../../../services/game/GameService';
-import {AuthenticationService} from 'src/app/services/authentication/AuthenticationService';
-import {MatSnackBar} from '@angular/material/snack-bar';
+import { UserService } from '../../../services/user/UserService';
+import { GameService } from '../../../services/game/GameService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 
 @Component({
     selector: 'app-server-page',
     templateUrl: './server-page.component.html',
-    styleUrls: ['./server-page.component.css'],
+    styleUrls: ['./server-page.component.css']
 })
 export class ServerPageComponent implements OnInit, OnDestroy {
+
     public static VERBOSE: boolean = false;
 
     public activesParts: ICurrentPartId[];
 
     public activesUsers: IJoueurId[];
 
-    readonly gameNameList: String[] = ['Awale', // 1
-        'Dvonn', // 2
-        'Encapsule', // 3
-        'Go', // 4
-        'Kamisado', // 5
-        // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
-        'P4', // 6
-        'Pylos', // 7
-        'Quarto', // 8
-        'Quixo', // 9
-        'Reversi', // 10
-        'Sahara', // 11
-        'Siam', // 12
-        'Tablut']; // 13
+    readonly gameNameList: String[] = ['Awale',          // 1
+                                       'Dvonn',          // 2
+                                       'Encapsule',      // 3
+                                       'Epaminondas',    // 4
+                                       'Go',             // 5
+                                       'Kamisado',       // 6
+                                       // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
+                                       'P4',             // 7
+                                       'Pylos',          // 8
+                                       'Quarto',         // 9
+                                       'Quixo',          // 10
+                                       'Reversi',        // 11
+                                       'Sahara',         // 12
+                                       'Siam',           // 13
+                                       'Tablut'];        // 14
 
     public selectedGame: string;
 
@@ -53,21 +54,19 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                 public router: Router,
                 private userService: UserService,
                 private gameService: GameService,
-                private authenticationService: AuthenticationService,
-                private location: Location) {
+                private authenticationService: AuthenticationService) {
     }
     public ngOnInit() {
         this.userNameSub = this.authenticationService.getJoueurObs()
-            .subscribe((joueur) => {
+            .subscribe(joueur => {
                 if (joueur == null) this.userName = null;
                 else this.userName = joueur.pseudo;
             });
         this.activesPartsSub = this.gameService.getActivesPartsObs()
-            .subscribe((activesParts) => this.activesParts = activesParts);
+            .subscribe(activesParts => this.activesParts = activesParts);
         this.activesUsersSub = this.userService.getActivesUsersObs()
-            .subscribe((activesUsers) => this.activesUsers = activesUsers);
+            .subscribe(activesUsers => this.activesUsers = activesUsers);
     }
-
     public joinGame(partId: string, typeGame: string) {
         this.router.navigate(['/play/' + typeGame, partId]);
     }
@@ -78,10 +77,10 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         this.router.navigate(['local/' + this.selectedGame]);
     }
     public messageInfo(msg: string) {
-        this.snackBar.open(msg, 'Ok!', {duration: 2000});
+        this.snackBar.open(msg, "Ok!", { duration: 2000, });
     }
     public messageError(msg: string) {
-        this.snackBar.open(msg, 'Ok!', {duration: 2000});
+        this.snackBar.open(msg, "Ok!", { duration: 2000, });
     }
 
     public async createGame() {
