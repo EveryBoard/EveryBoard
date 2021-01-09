@@ -23,10 +23,7 @@ jobs:
     - stage: Build and deploy
       if: repo = MartinREMY42/multi-game-project AND branch = master
       script:
-        - openssl aes-256-cbc -K $encrypted_bdd73078a253_key -iv $encrypted_bdd73078a253_iv -in .travis/firebaseConfig.ts.enc -out src/app/firebaseConfig.ts -d
-        - openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in .travis/id_rsa.enc -out id_rsa -d
-        - npx ng build
-        - sh .travis/deploy.sh
+        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then sh ./.travis/deploy.sh; fi'
     - stage: Linter
       script: npx eslint --ext .ts ./
 
