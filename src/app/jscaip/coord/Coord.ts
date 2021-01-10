@@ -156,11 +156,9 @@ export class Coord implements Comparable {
 
     public equals(obj: any): boolean {
         if (this === obj) return true;
-        if (obj === null || obj === undefined) return false;
         if (!(obj instanceof Coord)) return false;
         if (obj.x !== this.x) return false;
-        if (obj.y !== this.y) return false;
-        return true;
+        return (obj.y === this.y);
     }
     public compareTo(c: Coord): number {
         if (c.y === this.y) {

@@ -4,7 +4,7 @@ import { DvonnRules } from "./DvonnRules";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { DvonnMove } from "../dvonnmove/DvonnMove";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { DvonnBoard } from "../DvonnBoard";
 import { DvonnPiece } from "../DvonnPiece";
 

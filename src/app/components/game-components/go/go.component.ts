@@ -5,7 +5,7 @@ import { GoRules } from 'src/app/games/go/gorules/GoRules';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { GroupDatas } from 'src/app/games/go/groupdatas/GroupDatas';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/collectionlib/utils';
@@ -84,12 +84,11 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     public getCaseColor(x: number, y: number): string {
         const piece: number = this.rules.node.gamePartSlice.getBoardByXY(x, y);
         if (GoPiece.pieceBelongTo(piece, Player.ZERO)) {
-            return "black";
+            return "darkgrey";
         }
         if (GoPiece.pieceBelongTo(piece, Player.ONE)) {
             return "white";
         }
-        throw new Error("Empty case has no color");
     }
     public caseIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
@@ -108,8 +107,5 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     public isTerritory(x: number, y: number): boolean {
         const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
         return piece === GoPiece.WHITE_TERRITORY || piece === GoPiece.BLACK_TERRITORY;
-    }
-    public territorialize(slice: GoPartSlice): GoPartSlice {
-        return GoRules.markTerritoryAndCount(slice);
     }
 }

@@ -12,7 +12,7 @@ import {ChatService} from '../chat/ChatService';
 import {IChat} from '../../domain/ichat';
 import {IMGPRequest, RequestCode} from '../../domain/request';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { display } from 'src/app/collectionlib/utils';
 
 @Injectable({

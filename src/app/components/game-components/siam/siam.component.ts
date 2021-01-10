@@ -7,7 +7,7 @@ import { SiamRules } from 'src/app/games/siam/siamrules/SiamRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SiamPiece } from 'src/app/games/siam/siampiece/SiamPiece';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';

@@ -1,4 +1,4 @@
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { Orthogonal } from "src/app/jscaip/DIRECTION";
 
 export class SiamPiece {

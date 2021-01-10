@@ -7,7 +7,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { Sets } from 'src/app/collectionlib/sets/Sets';
 import { EncapsuleLegalityStatus } from '../EncapsuleLegalityStatus';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 import { display } from 'src/app/collectionlib/utils';

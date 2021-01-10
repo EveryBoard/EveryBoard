@@ -1,5 +1,5 @@
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { PylosCoord } from "../pylos-coord/PylosCoord";
 import { PylosMove } from "../pylos-move/PylosMove";
 import { PylosPartSlice } from "../pylos-part-slice/PylosPartSlice";

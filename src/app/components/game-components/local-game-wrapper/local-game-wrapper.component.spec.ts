@@ -13,7 +13,7 @@ import { MoveX } from 'src/app/jscaip/MoveX';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { UserService } from 'src/app/services/user/UserService';
 import { By } from '@angular/platform-browser';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 

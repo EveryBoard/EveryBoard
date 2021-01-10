@@ -28,21 +28,6 @@ export class Direction {
         Direction.LEFT,
         Direction.UP_LEFT
     ];
-    public static equals(first: Direction, second: Direction): boolean {
-        if (first == null) {
-            if (second == null) return true;
-            else return false;
-        } else {
-            if (second == null) return false;
-            return first.equals(second);
-        }
-    }
-    public static isOrthogonal(d: Direction): boolean {
-        return (d.x === 0) || (d.y === 0);
-    }
-    public static isDiagonal(d: Direction): boolean {
-        return (d.x !== 0) && (d.y !== 0);
-    }
     public static fromDelta(dx: number, dy: number): Direction {
         if (dx === 0 && dy === 0) {
             throw new Error("Invalid direction from static move");
@@ -120,6 +105,9 @@ export class Direction {
             default: throw new Error("Unknown direction: " + this.toString());
         }
     }
+    public isDiagonal(): boolean {
+        return (this.x !== 0) && (this.y !== 0);
+    }
     public toString(): string {
         switch (this) {
             case Direction.UP:    return "UP";
@@ -134,11 +122,7 @@ export class Direction {
         }
     }
     public equals(o: any): boolean {
-        if (o === this) return true;
-        if (!(o instanceof Direction)) return false;
-        const other: Direction = <Direction> o;
-        if (this.x !== other.x) return false;
-        return this.y === other.y; // TODO simplify to first line since constructor private ?
+        return this === o;
     }
     protected constructor(public readonly x: number, public readonly y: number) {}
 }

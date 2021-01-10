@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';

@@ -12,6 +12,10 @@ describe('GoBoardDatas', () => {
 
     let O: GoPiece = GoPiece.BLACK;
 
+    beforeAll(() => {
+        GoPartSlice.HEIGHT = 5;
+        GoPartSlice.WIDTH = 5;
+    });
     it('should create one big group for initial board', () => {
         const board: GoPiece[][] = GoPartSlice.getStartingBoard();
         const datas: GoBoardDatas = GoBoardDatas.ofGoPiece(board);

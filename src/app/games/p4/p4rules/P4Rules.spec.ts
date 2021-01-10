@@ -1,7 +1,7 @@
 import { P4Node, P4Rules } from './P4Rules';
 import { MoveX } from '../../../jscaip/MoveX';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { P4PartSlice } from '../P4PartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';

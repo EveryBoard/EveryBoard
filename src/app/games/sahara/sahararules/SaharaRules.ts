@@ -2,7 +2,7 @@ import { Rules } from "src/app/jscaip/Rules";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { SaharaMove } from "../saharamove/SaharaMove";
 import { SaharaPawn } from "../SaharaPawn";

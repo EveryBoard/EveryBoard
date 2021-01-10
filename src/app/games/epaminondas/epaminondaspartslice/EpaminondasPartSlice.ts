@@ -1,6 +1,6 @@
 import { NumberTable } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 
 export class EpaminondasPartSlice extends GamePartSlice {
 

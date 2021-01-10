@@ -4,7 +4,7 @@ import { display } from "src/app/collectionlib/utils";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { Direction } from "src/app/jscaip/DIRECTION";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { Rules } from "src/app/jscaip/Rules";
 import { EpaminondasLegalityStatus } from "../epaminondaslegalitystatus";
 import { EpaminondasMove } from "../epaminondasmove/EpaminondasMove";
@@ -114,12 +114,12 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         const ENNEMY: number = slice.getCurrentEnnemy().value;
         while (soldierIndex < move.movedPieces) {
             if (coord.isNotInRange(14, 12))
-                return MGPValidation.failure("Phalanx go outside the board.");
+                return MGPValidation.failure("Cette phalange contient des pièces en dehors du plateau.");
             caseContent = slice.getBoardAt(coord);
             if (caseContent === Player.NONE.value)
-                return MGPValidation.failure("Phalanx cannot contain empty cases.");
+                return MGPValidation.failure("Une phalange ne peut pas contenir cases vides.");
             if (caseContent === ENNEMY)
-                return MGPValidation.failure("Phalanx cannot contain ennemy pawn.");
+                return MGPValidation.failure("Une phalange ne peut pas contenir de pièces ennemies.");
             coord = coord.getNext(move.direction, 1);
             soldierIndex++;
         }
@@ -163,7 +163,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
             }
             captured++;
             if (captured >= move.movedPieces)
-                return EpaminondasLegalityStatus.failure("You cannot capture this phalanx, yours must be greater to do it.");
+                return EpaminondasLegalityStatus.failure("Votre phalange doit être plus grande que celle qu'elle tente de capturer.");
             capturedSoldier = capturedSoldier.getNext(move.direction, 1);
         }
         return { newBoard: board, legal: MGPValidation.SUCCESS };

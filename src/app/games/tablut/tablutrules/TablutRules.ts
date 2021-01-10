@@ -7,7 +7,7 @@ import { TablutMove } from '../tablutmove/TablutMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { TablutRulesConfig } from './TablutRulesConfig';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { TablutCase } from './TablutCase';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { display } from 'src/app/collectionlib/utils';

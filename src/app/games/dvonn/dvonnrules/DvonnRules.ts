@@ -8,7 +8,7 @@ import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { DvonnBoard } from "../DvonnBoard";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 
 abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnPartSlice, LegalityStatus> { }

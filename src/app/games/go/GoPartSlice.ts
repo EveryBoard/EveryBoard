@@ -1,6 +1,6 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { ArrayUtils, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class GoPiece {
@@ -81,6 +81,10 @@ export enum Phase {
 
 export class GoPartSlice extends GamePartSlice {
 
+    public static WIDTH: number = 9;
+
+    public static HEIGHT: number = 9;
+
     public readonly koCoord: Coord | null; // TODO: MGPOptional this
 
     public readonly captured: ReadonlyArray<number>;
@@ -139,7 +143,4 @@ export class GoPartSlice extends GamePartSlice {
         }
         return result;
     }
-    public static readonly WIDTH: number = 5;
-
-    public static readonly HEIGHT: number = 5;
 }

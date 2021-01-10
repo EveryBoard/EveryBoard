@@ -6,7 +6,7 @@ import { DvonnMove } from 'src/app/games/dvonn/dvonnmove/DvonnMove';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { DvonnRules } from 'src/app/games/dvonn/dvonnrules/DvonnRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonnpiecestack/DvonnPieceStack';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 

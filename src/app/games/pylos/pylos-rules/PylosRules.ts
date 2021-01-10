@@ -4,7 +4,7 @@ import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation
 import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { Rules } from "src/app/jscaip/Rules";
 import { PylosCoord } from "../pylos-coord/PylosCoord";
 import { PylosMove } from "../pylos-move/PylosMove";

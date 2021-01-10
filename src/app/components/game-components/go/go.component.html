@@ -7,7 +7,7 @@
             <g *ngIf="caseIsFull(x, y) else empty">
                 <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
                         stroke="black"
-                        [attr.fill]="getCaseColor(x, y) === 'black' ? 'darkgrey' : 'white'"
+                        [attr.fill]="getCaseColor(x, y)"
                         stroke-width="5px"
                         (click)="onClick(x, y);"/>
                 <circle *ngIf="isLastCase(x, y)"
@@ -21,7 +21,8 @@
                       style="stroke: red; stroke-width: 5px;"/>
             </g>
             <ng-template #empty>
-                <rect width="50" height="50"
+                <rect id="click_{{x}}_{{y}}"
+                      width="50" height="50"
                       [attr.x]="50*x" [attr.y]="50*y"
                       fill="white"
                       (click)="onClick(x, y);"/>

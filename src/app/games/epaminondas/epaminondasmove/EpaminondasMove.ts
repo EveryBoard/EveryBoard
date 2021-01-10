@@ -42,16 +42,11 @@ export class EpaminondasMove extends MoveCoord {
     }
     public encode(): number {
         const direction: number = this.direction.toInt(); // Between 0 and 7
-        if (direction < 0 || direction > 7) throw new Error("teubé de direction");
         const stepSize: number = this.stepSize - 1; // Between 1 and 7 => between 0 and 6
-        if (stepSize < 0 || stepSize > 6) throw new Error("teubé de stepSize on: " + this.toString());
         const movedPieces: number = this.movedPieces -1; // Between 1 and 13 => between 0 and 12
 
-        if (movedPieces < 0 || movedPieces > 12) throw new Error("teubé de movedPieces");
         const cy: number = this.coord.y; // Between 0 and 11
-        if (cy < 0 || cy > 11) throw new Error("teubé de cy");
         const cx: number = this.coord.x; // Between 0 and 13
-        if (cx < 0 || cx > 13) throw new Error("teubé de cx");
         return (cx * 8 * 7 * 13 * 12) + (cy * 8 * 7 * 13) + (movedPieces * 8 * 7) + (stepSize * 8) + direction;
     }
     public decode(encodedMove: number): EpaminondasMove {
