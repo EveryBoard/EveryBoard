@@ -245,7 +245,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         expect(fixture.debugElement.nativeElement.querySelector("app-p4")).toBeTruthy("p4Tag id should be present after startGame's async method has complete");
         tick(component.maximalMoveDuration);
     }));
-    fit('should redirect to index page if part does not exist', fakeAsync(async() => {
+    it('should redirect to index page if part does not exist', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "player", verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();

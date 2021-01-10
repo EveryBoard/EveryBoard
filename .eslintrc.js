@@ -15,8 +15,9 @@ module.exports = {
     plugins: [
         '@typescript-eslint'
     ],
-    "extends": ["eslint:recommended", "google"],
+    extends: ['eslint:recommended', 'google', 'plugin:@typescript-eslint/recommended' ],
     rules: {
+        '@typescript-eslint/typedef': ['error'],
         'max-len': ['warn', {'code': 80}],
         'require-jsdoc': ['warn', {'require': {
             "FunctionDeclaration": false,
