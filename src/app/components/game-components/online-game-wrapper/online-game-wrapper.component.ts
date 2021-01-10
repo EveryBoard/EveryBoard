@@ -77,7 +77,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     private extractGameTypeFromURL(): string {
         // url is ["play", "game-name", "part-id"]
-        return this.actRoute.snapshot.url[1].path;
+        return this.actRoute.snapshot.paramMap.get('compo');
     }
     private async redirectIfPartIsInvalid(): Promise<void> {
         const gameType: string = this.extractGameTypeFromURL();
@@ -515,6 +515,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.chronoOneLocal.stop();
     }
     public ngOnDestroy() {
+        if (this.routerEventsSub && this.routerEventsSub.unsubscribe) {
+            this.routerEventsSub.unsubscribe();
+        }
         if (this.userSub && this.userSub.unsubscribe) {
             this.userSub.unsubscribe();
         }

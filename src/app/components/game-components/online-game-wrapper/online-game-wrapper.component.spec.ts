@@ -51,7 +51,20 @@ class AuthenticationServiceMock {
         };
     }
 };
+
+// TODO: there should be a way to have this done automatically by Angular?
+class SubscriptionMock {
+    public unsubscribe(): void {
+    }
+}
+class EventsMock {
+    public subscribe(_fn: (ev: any) => void): SubscriptionMock {
+        return new SubscriptionMock()
+    }
+}
+
 class RouterMock {
+    public events = new EventsMock();
 
     public async navigate(to: string[]): Promise<boolean> {
         return Promise.resolve(true);
