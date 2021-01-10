@@ -28,6 +28,7 @@ import { QuartoEnum } from 'src/app/games/quarto/QuartoEnum';
 import { RequestCode } from 'src/app/domain/request';
 import { MGPResult } from 'src/app/domain/icurrentpart';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { RouterTestingModule } from '@angular/router/testing';
 
 const activatedRouteStub = {
     snapshot: {
@@ -57,24 +58,6 @@ class AuthenticationServiceMock {
     }
 };
 
-// TODO: there should be a way to have this done automatically by Angular?
-class SubscriptionMock {
-    public unsubscribe(): void {
-    }
-}
-class EventsMock {
-    public subscribe(_fn: (ev: any) => void): SubscriptionMock {
-        return new SubscriptionMock()
-    }
-}
-
-class RouterMock {
-    public events = new EventsMock();
-
-    public async navigate(to: string[]): Promise<boolean> {
-        return Promise.resolve(true);
-    };
-}
 describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     /* Life cycle summary
@@ -204,6 +187,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
+                RouterTestingModule.withRoutes([
+                    {path:'play', component: OnlineGameWrapperComponent}])
             ],
             schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
             providers: [
@@ -213,7 +198,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
                 { provide: JoueursDAO,            useClass: JoueursDAOMock },
                 { provide: ChatDAO,               useClass: ChatDAOMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-                { provide: Router,                useClass: RouterMock },
             ],
         }).compileComponents();
     }));
