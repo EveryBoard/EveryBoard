@@ -81,10 +81,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     private async redirectIfPartIsInvalid(): Promise<void> {
         const gameType: string = this.extractGameTypeFromURL();
-        const partExistsAndIsOfRightType = await this.gameService.partExistsAndIsOfType(this.currentPartId, gameType);
-        console.log({partExistsAndIsOfRightType});
+        const partExistsAndIsOfRightType: boolean = await this.gameService.partExistsAndIsOfType(this.currentPartId, gameType);
         if (!partExistsAndIsOfRightType) {
-            console.log("redirecting...");
             this.routerEventsSub.unsubscribe();
             this.router.navigate(['/']); // TODO: redirect to an error/404 page instead?
         }

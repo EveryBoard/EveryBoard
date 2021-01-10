@@ -134,7 +134,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         // return (x, y) of the last case the move got down
 
         // iy et ix sont les cases initiales
-        const ix: number = x
+        const ix: number = x;
         const iy: number = y;
         // à retenir pour appliquer la règle de la jachère en cas de tour complet
         let inHand = board[y][x];

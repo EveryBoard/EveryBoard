@@ -38,7 +38,7 @@
                     <ul>
                         <li *ngFor="let user of activesUsers">
                             {{ user.doc.pseudo }} :
-                            {{ (1000*user.doc.lastChanged.seconds) | date:'HH:mm:ss':'+0100'}}
+                            {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
                         </li>
                     </ul>
                 </div>

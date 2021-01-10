@@ -38,7 +38,6 @@ export class GameService {
 
     public async partExistsAndIsOfType(partId: string, gameType: string): Promise<boolean> {
         const part: ICurrentPart = await this.partDao.read(partId);
-        console.log({part});
         return part != null && part.typeGame === gameType;
     }
 
