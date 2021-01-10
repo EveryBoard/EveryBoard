@@ -1,5 +1,5 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { ComponentFixture, TestBed, fakeAsync, tick, discardPeriodicTasks, flush } from '@angular/core/testing';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 
@@ -53,6 +53,9 @@ class AuthenticationServiceMock {
     }
 };
 
+@Component({})
+class BlankComponent {}
+
 describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     /* Life cycle summary
@@ -72,6 +75,8 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     let component: OnlineGameWrapperComponent;
 
     let joinerService: JoinerService;
+
+    let router: Router
 
     let prepareComponent: (initialJoiner: IJoiner) => Promise<void> = async(initialJoiner: IJoiner) => {
         fixture = TestBed.createComponent(OnlineGameWrapperComponent);
@@ -93,7 +98,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             imports: [
                 AppModule,
                 RouterTestingModule.withRoutes([
-                    {path:'play', component: OnlineGameWrapperComponent}])
+                    { path: 'play', component: OnlineGameWrapperComponent },
+                    { path: 'server', component: BlankComponent}
+                ])
             ],
             schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
             providers: [
@@ -105,6 +112,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
             ],
         }).compileComponents();
+        router = TestBed.inject(Router);
     });
     it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: "creator", verified: true };
@@ -237,6 +245,21 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         expect(fixture.debugElement.nativeElement.querySelector("app-p4")).toBeTruthy("p4Tag id should be present after startGame's async method has complete");
         tick(component.maximalMoveDuration);
     }));
+    fit('should redirect to index page if part does not exist', fakeAsync(async() => {
+        AuthenticationServiceMock.USER = { pseudo: "player", verified: true };
+        await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
+        fixture.detectChanges();
+        tick();
+
+        fixture.ngZone.run(async () => {
+            await router.navigate(['/play', 'P4', 'invalid-part-id']);
+            fixture.detectChanges();
+            flush();
+            tick(component.maximalMoveDuration);
+        });
+        expect(router.url).toBe('/server');
+    }));
+
     afterEach(fakeAsync(async() => {
         fixture.destroy();
         await fixture.whenStable();
