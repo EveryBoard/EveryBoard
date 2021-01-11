@@ -18,6 +18,6 @@ export class Player {
     }
 
     public toString(): string {
-        return "Player" + this.value;
+        return "Player " + this.value;
     }
 }

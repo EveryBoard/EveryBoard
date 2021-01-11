@@ -33,6 +33,9 @@ describe('EpaminondasMove: ', () => {
             expect(decodedMove).toEqual(move);
         }
     });
+    it('Should forbid non integer number to decode', () => {
+        expect(() => EpaminondasMove.decode(0.5)).toThrowError("EncodedMove must be an integer.");
+    });
     it('should delegate decoding to static method', () => {
         const testMove: EpaminondasMove = new EpaminondasMove(10, 11, 2, 1, Direction.UP);
         spyOn(EpaminondasMove, "decode").and.callThrough();

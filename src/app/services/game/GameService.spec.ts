@@ -11,7 +11,7 @@ import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { RequestCode } from 'src/app/domain/request';
 
 describe('GameService', () => {

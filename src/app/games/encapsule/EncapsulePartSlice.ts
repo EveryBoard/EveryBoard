@@ -1,6 +1,6 @@
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
 import { EncapsulePiece, Size, EncapsuleMapper } from "./EncapsuleEnums";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { ArrayUtils } from "src/app/collectionlib/arrayutils/ArrayUtils";
 
 export class EncapsulePartSlice extends GamePartSlice {

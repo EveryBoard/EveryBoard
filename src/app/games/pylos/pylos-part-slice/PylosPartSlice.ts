@@ -1,6 +1,6 @@
 import { ArrayUtils, Table } from "src/app/collectionlib/arrayutils/ArrayUtils";
 import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { PylosCoord } from "../pylos-coord/PylosCoord";
 import { PylosMove } from "../pylos-move/PylosMove";
 

@@ -21,6 +21,8 @@ describe('GoRules:', () => {
 
     beforeAll(() => {
         GoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GoRules.VERBOSE;
+        GoPartSlice.HEIGHT = 5;
+        GoPartSlice.WIDTH = 5;
     });
     beforeEach(() => {
         rules = new GoRules(GoPartSlice);

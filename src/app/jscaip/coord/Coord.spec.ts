@@ -18,6 +18,16 @@ describe('Coord', () => {
         const downRight: Coord = new Coord(9, 9);
         expect(middle.isBetween(upLeft, downRight)).toBeTrue();
     });
+    it('Should override equals correctly', () => {
+        const coord: Coord = new Coord(0, 0);
+        const android: { x: number, y: number } = { x: 0, y: 0};
+        const horizontalNeighboors: Coord = new Coord(1, 0);
+        const verticalNeighboors: Coord = new Coord(0, 1);
+        expect(coord.equals(coord)).toBeTrue();
+        expect(coord.equals(android)).toBeFalse();
+        expect(coord.equals(horizontalNeighboors)).toBeFalse();
+        expect(coord.equals(verticalNeighboors)).toBeFalse();
+    });
     it('Should vectorise correctly', () => {
         const c: Coord = new Coord(3, -11);
         expect(c.toVector()).toEqual(c);

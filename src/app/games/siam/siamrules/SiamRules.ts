@@ -3,7 +3,7 @@ import { SiamMove } from "../siammove/SiamMove";
 import { SiamPartSlice } from "../SiamPartSlice";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
 import { SiamPiece } from "../siampiece/SiamPiece";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonal, Direction } from "src/app/jscaip/DIRECTION";
 import { SiamLegalityStatus } from "../SiamLegalityStatus";
@@ -84,11 +84,11 @@ export class SiamRules extends _SiamRules {
                                        movingPiece !== SiamPiece.EMPTY.value
 
         while (pushingPossible) {
-            if (Direction.equals(pushingDir, currentDirection))
+            if (pushingDir.equals(currentDirection))
                 totalForce++;
-            else if (Direction.equals(resistingDir, currentDirection))
+            else if (resistingDir.equals(currentDirection))
                 totalForce--;
-                display(SiamRules.VERBOSE, {totalForce, movingPiece, landingCoord});
+            display(SiamRules.VERBOSE, {totalForce, movingPiece, landingCoord});
             const tmpPiece: number = resultingBoard[landingCoord.y][landingCoord.x];
             if (tmpPiece === SiamPiece.MOUNTAIN.value) totalForce -= 0.9;
             resultingBoard[landingCoord.y][landingCoord.x] = movingPiece;
@@ -102,9 +102,9 @@ export class SiamRules extends _SiamRules {
         if (landingCoord.isNotInRange(5, 5)) {
             display(SiamRules.VERBOSE, "This movement would push " + movingPiece + " outside the board");
 
-            if (Direction.equals(pushingDir, currentDirection))
+            if (pushingDir.equals(currentDirection))
                 totalForce++;
-            else if (Direction.equals(resistingDir, currentDirection))
+            else if (resistingDir.equals(currentDirection))
                 totalForce--;
         }
         if (totalForce <= 0) {

@@ -1,4 +1,4 @@
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 
 export class DvonnPiece {
     public static readonly SOURCE: DvonnPiece = new DvonnPiece(Player.NONE);

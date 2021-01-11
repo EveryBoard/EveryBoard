@@ -5,7 +5,7 @@ import { PylosMove } from 'src/app/games/pylos/pylos-move/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
 import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({

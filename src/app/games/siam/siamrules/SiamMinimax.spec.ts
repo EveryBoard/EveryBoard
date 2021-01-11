@@ -7,7 +7,7 @@ import { SiamMove } from "../siammove/SiamMove";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 
 describe('SiamRules - Minimax:', () => {

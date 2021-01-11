@@ -6,8 +6,7 @@ export class AwaleMove extends MoveCoord {
         if (o === this) return true;
         if (!(o instanceof AwaleMove)) return false;
         const other: AwaleMove = o as AwaleMove;
-        if (!other.coord.equals(this.coord)) return false;
-        return true;
+        return (other.coord.equals(this.coord));
     }
     public toString(): String {
         return "AwaleMove(" + this.coord.x + ", " + this.coord.y + ")";

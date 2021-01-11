@@ -3,7 +3,7 @@ import { ReversiRules } from './ReversiRules';
 import { ReversiMove } from '../reversimove/ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 describe('ReversiRules', () => {

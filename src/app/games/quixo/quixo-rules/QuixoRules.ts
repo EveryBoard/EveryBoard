@@ -4,7 +4,7 @@ import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { Rules } from "src/app/jscaip/Rules";
 import { QuixoPartSlice } from "../quixo-part-slice/QuixoPartSlice";
 import { QuixoMove } from "../QuixoMove";

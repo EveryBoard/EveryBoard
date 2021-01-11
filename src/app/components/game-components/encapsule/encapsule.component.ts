@@ -7,7 +7,7 @@ import {EncapsuleMove} from 'src/app/games/encapsule/encapsulemove/EncapsuleMove
 import {EncapsulePiece, EncapsuleMapper} from 'src/app/games/encapsule/EncapsuleEnums';
 import {Coord} from 'src/app/jscaip/coord/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';

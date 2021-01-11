@@ -1,5 +1,5 @@
 import { DvonnPiece } from "../DvonnPiece";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 
 export class DvonnPieceStack {
     public static of(v: number): DvonnPieceStack {

@@ -6,7 +6,7 @@ import {Direction, Orthogonal} from 'src/app/jscaip/DIRECTION';
 import {GoMove} from '../gomove/GoMove';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { GoLegalityStatus } from '../GoLegalityStatus';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { GroupDatas } from '../groupdatas/GroupDatas';
 import { display } from 'src/app/collectionlib/utils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';

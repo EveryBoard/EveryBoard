@@ -22,10 +22,10 @@ export class ArrayUtils {
     }
     public static createBiArray<T>(width: number, height: number, initValue: T): T[][] {
         const retour: Array<Array<T>> = [];
-        let y = height - 1;
+        let y: number = height - 1;
         while (y >= 0) {
             retour[y] = [];
-            let x = width - 1;
+            let x: number = width - 1;
             while (x >= 0) {
                 retour[y][x] = initValue;
                 x--;
@@ -33,17 +33,6 @@ export class ArrayUtils {
             y--;
         }
         return retour;
-    }
-    public static setAllValueTo(board: number[][], value: number) {
-        let y = board.length - 1;
-        while (y >= 0) {
-            let x = board[y].length - 1;
-            while (x >= 0) {
-                board[y][x] = value;
-                x--;
-            }
-            y--;
-        }
     }
     public static copyBiArray<T>(biArray: Table<T>): T[][] {
         const retour: Array<Array<T>> = [];

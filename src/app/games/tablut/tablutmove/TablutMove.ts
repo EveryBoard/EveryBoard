@@ -35,14 +35,14 @@ export class TablutMove extends MoveCoordToCoord {
     public constructor(start: Coord, end: Coord) {
         super(start, end);
         if (!start.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) { // TODO: put that somewhere it does not say "mutual import"
-            throw new Error("Starting coord of TablutMove must be on the board, not at " + start.toString());
+            throw new Error("Starting coord of TablutMove must be on the board, not at " + start.toString() + ".");
         }
         if (!end.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) { // TODO: put that somewhere it does not say "mutual import"
-            throw new Error("Starting coord of TablutMove must be on the board, not at " + end.toString());
+            throw new Error("Starting coord of TablutMove must be on the board, not at " + end.toString() + ".");
         }
         const dir: Direction = start.getDirectionToward(end);
-        if (Direction.isDiagonal(dir)) {
-            throw new Error("TablutMove cannot be diagonal");
+        if (dir.isDiagonal()) {
+            throw new Error("TablutMove cannot be diagonal.");
         }
     }
     public equals(o: any): boolean {
@@ -50,8 +50,7 @@ export class TablutMove extends MoveCoordToCoord {
         if (!(o instanceof TablutMove)) return false;
         const other: TablutMove = o as TablutMove;
         if (!other.coord.equals(this.coord)) return false;
-        if (!other.end.equals(this.end)) return false;
-        return true;
+        return (other.end.equals(this.end));
     }
     public toString(): String {
         return "TablutMove(" + this.coord + "->" + this.end + ")";

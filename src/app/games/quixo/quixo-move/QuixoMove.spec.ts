@@ -2,7 +2,7 @@ import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { Orthogonal } from "src/app/jscaip/DIRECTION";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { QuixoPartSlice } from "../quixo-part-slice/QuixoPartSlice";
 import { QuixoNode, QuixoRules } from "../quixo-rules/QuixoRules";
 import { QuixoMove } from "../QuixoMove";

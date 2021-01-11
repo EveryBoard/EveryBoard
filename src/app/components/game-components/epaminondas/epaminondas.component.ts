@@ -6,7 +6,7 @@ import { EpaminondasPartSlice } from "src/app/games/epaminondas/epaminondasparts
 import { EpaminondasRules } from "src/app/games/epaminondas/epaminondasrules/EpaminondasRules";
 import { Coord } from "src/app/jscaip/coord/Coord";
 import { Direction } from "src/app/jscaip/DIRECTION";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { AbstractGameComponent } from "../AbstractGameComponent";
 
 @Component({
@@ -41,7 +41,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     private captureds: Coord[] = [];
 
     public updateBoard(): void {
-        console.log("updateBoard")
         this.firstPiece = new Coord(-15, -1);
         this.lastPiece = new Coord(-15, -1);
         if (this.rules.node.move) {
@@ -55,7 +54,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         this.moveds = [moved];
         for(let i: number = 1; i < (move.stepSize + move.movedPieces); i++) {
             moved = moved.getNext(move.direction, 1);
-            console.log({ wasMoved: moved })
             this.moveds.push(moved);
         }
 
@@ -64,12 +62,9 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         while (moved.isInRange(14, 12) &&
                this.rules.node.mother.gamePartSlice.getBoardAt(moved) === PREVIOUS_ENNEMY)
         {
-            console.log({ wasCaptured: moved })
             this.captureds.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
-
-        console.log({ showPreviousMove: { moveds: this.moveds, captureds: this.captureds }})
     }
     public decodeMove(encodedMove: number): EpaminondasMove {
         return EpaminondasMove.decode(encodedMove);
@@ -78,7 +73,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return EpaminondasMove.encode(move);
     }
     public async onClick(x: number, y: number) {
-        console.log({ aFirst: this.firstPiece, bSecond: this.lastPiece });
         if (this.firstPiece.x === -15) {
             return this.firstClick(x, y);
         } else if (this.lastPiece.x === -15) {
@@ -88,7 +82,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
     }
     private firstClick(x: number, y: number) {
-        console.log("first click on (" + x + ", " + y + ")");
         this.hidePreviousMove();
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
@@ -155,7 +148,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             const dx: number = Math.abs(this.firstPiece.x - this.lastPiece.x);
             const dy: number = Math.abs(this.firstPiece.y - this.lastPiece.y);
             const phalanxSize: number = Math.max(dx, dy) + 1;
-            console.log({ phalanxSize })
 
             let direction: Direction = Direction.fromMove(this.firstPiece, this.lastPiece);
             let landingForward: Coord = this.lastPiece.getNext(direction, 1);
@@ -164,7 +156,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             direction = direction.getOpposite();
             let landingBackward: Coord = this.firstPiece.getNext(direction, 1);
             const landingsBackward: Coord[] = this.getLandingsToward(landingBackward, direction, phalanxSize);
-            console.log({ canLand: landingsBackward.concat(landingsForward) });
             return landingsBackward.concat(landingsForward);
         }
     }
@@ -181,7 +172,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return neighboors;
     }
     private getLandingsToward(landing: Coord, direction: Direction, phalanxSize: number): Coord[] {
-        console.log({ getLandingsToward: { landing, direction, phalanxSize }})
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const landings: Coord[] = [];
@@ -219,7 +209,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         this.phalanxMiddles = [];
         this.hidePreviousMove();
         if (reason) {
-            console.log("Move Canceled Because: " + reason);
             this.message(reason);
             return MGPValidation.failure(reason);
         } else {
@@ -227,7 +216,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
     }
     private secondClick(x: number, y: number) {
-        console.log("second click on (" + x + ", " + y + ")");
         const clicked: Coord = new Coord(x, y);
         if (clicked.equals(this.firstPiece)) {
             return this.cancelMove();
@@ -241,7 +229,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         const direction: Direction = this.firstPiece.getDirectionToward(clicked);
         switch (this.board[y][x]) {
             case Player.NONE.value:
-                console.log({ board: this.board });
                 if (distance === 1) {
                     const move: EpaminondasMove = new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction);
                     return this.tryMove(move);
@@ -249,7 +236,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                     return this.cancelMove("Une pièce seule ne peut se déplacer que d'une case.");
                 }
             case ENNEMY:
-                return this.cancelMove("Cette pièces est celle d'un ennemi et n'est pas à côté de la première, vous devez choisir une deuxième pièce pour votre phalange ou une case voisine d'une pièce isolée.");
+                return this.cancelMove("Une pièce seule ne peut pas capturer.");
             case PLAYER:
                 const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
                                                                             this.firstPiece.y,
@@ -271,14 +258,16 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
     }
     private thirdClick(x: number, y: number) {
-        console.log("third click on (" + x + ", " + y + ")");
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         const clicked: Coord = new Coord(x, y);
         if (clicked.equals(this.firstPiece)) {
             return this.moveFirstPiece(PLAYER);
         }
+        if (clicked.equals(this.lastPiece)) {
+            return this.moveLastPiece(PLAYER);
+        }
         if (!clicked.isAlignedWith(this.firstPiece)) {
-            return this.cancelMove("This case is not align with the phalanx direction.");
+            return this.cancelMove("Cette case n'est pas alignée avec la direction de la phalange.");
         }
         let phalanxDirection: Direction = Direction.fromMove(this.firstPiece, this.lastPiece);
         const phalanxLanding: Direction = Direction.fromMove(this.firstPiece, clicked);
@@ -289,31 +278,29 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             phalanxDirection = phalanxLanding;
         }
         if (phalanxDirection !== phalanxLanding) {
-            return this.cancelMove("This case is not align with the phalanx direction.");
+            return this.cancelMove("Cette case n'est pas alignée avec la direction de la phalange.");
         }
-        const phalanxSize: number = this.firstPiece.getDistance(this.lastPiece) + 1;
-        const stepSize: number = this.lastPiece.getDistance(clicked);
         if (this.board[y][x] === PLAYER) {
+            this.lastPiece = clicked;
+            const phalanxSize: number = this.firstPiece.getDistance(this.lastPiece) + 1;
             const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
                                                                         this.firstPiece.y,
                                                                         phalanxSize,
-                                                                        stepSize,
+                                                                        1,
                                                                         phalanxDirection);
             const phalanxValidity: MGPValidation = this.rules.getPhalanxValidity(this.rules.node.gamePartSlice,
                                                                                  incompleteMove);
             if (phalanxValidity.isFailure()) {
                 return this.cancelMove(phalanxValidity.reason);
             } else {
-                this.lastPiece = clicked;
                 this.phalanxMiddles = this.firstPiece.getCoordsToward(this.lastPiece);
                 this.validExtensions = this.getValidExtensions(PLAYER);
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 return;
             }
         } else {
-            if (stepSize > phalanxSize) {
-                return this.cancelMove("Mais c'est trop loin ça ba-tar (phalanxSize: " + phalanxSize + ", stepSize: " + stepSize + ")");
-            }
+            const phalanxSize: number = this.firstPiece.getDistance(this.lastPiece) + 1;
+            const stepSize: number = this.lastPiece.getDistance(clicked);
             const move: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
                                                               this.firstPiece.y,
                                                               phalanxSize,
@@ -323,24 +310,34 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
     }
     private moveFirstPiece(PLAYER: number) {
-        console.log("third click on first piece");
         this.firstPiece = this.firstPiece.getNext(this.phalanxDirection, 1);
         if (this.firstPiece.equals(this.lastPiece)) {
-            console.log("they were neighboors");
             this.lastPiece = new Coord(-15, -1);
             this.validExtensions = this.getFirstPieceExtensions(PLAYER);
             this.phalanxDirection = null;
             this.phalanxMiddles = [];
         } else {
-            console.log("they wer far enof");
             this.phalanxMiddles = this.phalanxMiddles.slice(1);
             this.validExtensions = this.getPhalanxValidExtensions(PLAYER);
         }
 
         this.phalanxValidLandings = this.getPhalanxValidLandings();
     }
+    private moveLastPiece(PLAYER: number) {
+        this.lastPiece = this.lastPiece.getPrevious(this.phalanxDirection, 1);
+        if (this.firstPiece.equals(this.lastPiece)) {
+            this.lastPiece = new Coord(-15, -1);
+            this.validExtensions = this.getFirstPieceExtensions(PLAYER);
+            this.phalanxDirection = null;
+            this.phalanxMiddles = [];
+        } else {
+            this.phalanxMiddles = this.firstPiece.getCoordsToward(this.lastPiece);
+            this.validExtensions = this.getPhalanxValidExtensions(PLAYER);
+        }
+
+        this.phalanxValidLandings = this.getPhalanxValidLandings();
+    }
     public tryMove(move: EpaminondasMove): Promise<MGPValidation> {
-        console.log({ tryingMove: move })
         const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
         this.cancelMove();
         return this.chooseMove(move, slice, null, null);
@@ -352,12 +349,11 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     }
     private getPlayerColor(player: number): string {
         switch (player) {
-            case Player.NONE.value: return "grey"; // TODO: if not needed, remove or throw
             case Player.ONE.value: return "#ffc34d";
             case Player.ZERO.value: return "#994d00";
         }
     }
-    private getPieceStroke(x: number, y: number): string {
+    public getPieceStroke(x: number, y: number): string {
         // Show pieces belonging to the phalanx to move
         const coord: Coord = new Coord(x, y);
         if (this.firstPiece.x === -15 && this.lastPiece.x === -15)

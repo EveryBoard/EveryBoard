@@ -9,7 +9,7 @@ import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
 import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
 import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
 import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
-import { Player } from "src/app/jscaip/Player";
+import { Player } from "src/app/jscaip/player/Player";
 import { Rules } from "src/app/jscaip/Rules";
 import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
 

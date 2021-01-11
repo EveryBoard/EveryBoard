@@ -7,7 +7,7 @@ import { MGPNode } from '../../../jscaip/mgpnode/MGPNode';
 import { P4PartSlice} from '../P4PartSlice';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Player } from 'src/app/jscaip/Player';
+import { Player } from 'src/app/jscaip/player/Player';
 import { display } from 'src/app/collectionlib/utils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 import { P4Move } from '../P4Move';
@@ -47,8 +47,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
         return 0; // TODO
     } */
     public static getBoardValueFromScratch(slice: P4PartSlice): number {
-        display(P4Rules.VERBOSE, 'getBoardValueFromScratch appellée');
-        display(P4Rules.VERBOSE, slice.getCopiedBoard());
+        display(P4Rules.VERBOSE, { P4Rules_getBoardValueFromScratch: { slice }});
         const currentBoard: number[][] = slice.getCopiedBoard();
         let score: number = 0;
         let tmpScore: number = 0;

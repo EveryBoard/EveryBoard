@@ -1,5 +1,5 @@
 import { Coord } from './coord/Coord';
-import { Player } from './Player';
+import { Player } from './player/Player';
 import { ArrayUtils, NumberTable } from '../collectionlib/arrayutils/ArrayUtils';
 
 export abstract class GamePartSlice {
