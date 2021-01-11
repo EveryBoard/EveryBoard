@@ -17,10 +17,10 @@ module.exports = {
     ],
     extends: ['eslint:recommended', 'google', 'plugin:@typescript-eslint/recommended' ],
     rules: {
-        '@typescript-eslint/typedef': ['error', {'arrowParameter': true, 'memberVariableDeclaration': true, 'propertyDeclaration': true, 'variableDeclaration': true, 'parameter': true}],
+        '@typescript-eslint/typedef': ['warn', {'arrowParameter': true, 'memberVariableDeclaration': true, 'propertyDeclaration': true, 'variableDeclaration': true, 'parameter': true}],
         '@typescript-eslint/no-empty-function': ['off'],
         '@typescript-eslint/no-namespace': ['warn'],
-        '@typesscript-eslint/ban-types': ['warn'],
+        '@typescript-eslint/ban-types': ['error', {'types': {'String': {'message': 'Use string instead', 'fixWith': 'string'}}}],
         'max-len': ['warn', {'code': 80}],
         'require-jsdoc': ['warn', {'require': {
             "FunctionDeclaration": false,
