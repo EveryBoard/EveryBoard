@@ -10,6 +10,7 @@ import { ICurrentPartId } from '../../../domain/icurrentpart';
 import { UserService } from '../../../services/user/UserService';
 import { GameService } from '../../../services/game/GameService';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-server-page',
@@ -18,7 +19,7 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 })
 export class ServerPageComponent implements OnInit, OnDestroy {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     public activesParts: ICurrentPartId[];
 
@@ -57,13 +58,14 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                 private authenticationService: AuthenticationService) {
     }
     public ngOnInit() {
+        display(ServerPageComponent.VERBOSE, { serverPageComponent_ngOnInit: true });
         this.userNameSub = this.authenticationService.getJoueurObs()
             .subscribe(joueur => {
                 if (joueur == null) this.userName = null;
                 else this.userName = joueur.pseudo;
             });
         this.activesPartsSub = this.gameService.getActivesPartsObs()
-            .subscribe(activesParts => this.activesParts = activesParts);
+            .subscribe(activesParts => {this.activesParts = activesParts; console.log("OBSERVAID")});
         this.activesUsersSub = this.userService.getActivesUsersObs()
             .subscribe(activesUsers => this.activesUsers = activesUsers);
     }
@@ -77,12 +79,16 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         this.router.navigate(['local/' + this.selectedGame]);
     }
     public messageInfo(msg: string) {
-        this.snackBar.open(msg, "Ok!", { duration: 2000, });
+        // TODO: generalise this calculation method (sorry, it's out of sprint scope)
+        // 200 word by minute is the average reading speed, so:
+        // const words: number = StringUtils.count(" ") + 1;
+        // const readingTime: number = (words*60*1000)/150; // (150 for slow reader facility)
+        // const toastTime: number = Math.max(readingTime, 3000); // so at least 3 sec the toast is there
+        this.snackBar.open(msg, "Ok!", { duration: 3000, });
     }
     public messageError(msg: string) {
-        this.snackBar.open(msg, "Ok!", { duration: 2000, });
+        this.snackBar.open(msg, "Ok!", { duration: 3000, });
     }
-
     public async createGame() {
         if (this.canCreateGame()) {
             const gameId: string = await this.gameService.createGame(this.userName, this.selectedGame, '');
@@ -108,6 +114,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         return !found;
     }
     public ngOnDestroy() {
+        display(ServerPageComponent.VERBOSE, { serverPageComponent_ngOnDestroy: true });
         if (this.userNameSub) {
             this.userNameSub.unsubscribe();
         }

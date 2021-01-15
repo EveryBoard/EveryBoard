@@ -7,6 +7,10 @@ import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { display } from 'src/app/collectionlib/utils';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
 class CaseSensible {
 
@@ -240,6 +244,21 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
             return MGPValidation.failure("illegal piece given: already in your hands");
         }
         return MGPValidation.SUCCESS;
+    }
+    private static filter(
+        board: NumberTable,
+        depth: number,
+        firstPiece: MGPOptional<QuartoEnum>,
+        coordDirs: { coord: Coord, dir: Orthogonal}[]
+    ): { coord: Coord, dir: Orthogonal}[]
+    {
+        let remainingCoordDirs: { coord: Coord, dir: Orthogonal}[] = [];
+        let min: number = QuartoEnum.UNOCCUPIED;
+        if (remainingCoordDirs.length === 0) {
+            return coordDirs;
+        } else {
+            return remainingCoordDirs;
+        }
     }
     // Overrides :
 

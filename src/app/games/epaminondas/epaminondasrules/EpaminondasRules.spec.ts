@@ -366,4 +366,6 @@ describe('EpaminondasRules:', () => {
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
+    it('Should declare first player winner when last soldier of second player has been captured');
+    it('Should declare second player winner when last soldier of first player has been captured');
 });
