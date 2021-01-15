@@ -49,7 +49,7 @@ class RouterMock {
 
 }
 
-fdescribe('ServerPageComponent', () => {
+describe('ServerPageComponent', () => {
 
     let component: ServerPageComponent;
 
@@ -145,7 +145,7 @@ fdescribe('ServerPageComponent', () => {
 
         expect(component.canCreateGame()).toBeFalse();
     }));
-    fit('6. should be illegal to create game for a player already in game', fakeAsync(async() => {
+    it('6. should be illegal to create game for a player already in game', fakeAsync(async() => {
         console.log('6. should be illegal to create game for a player already in game');
         // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true};
