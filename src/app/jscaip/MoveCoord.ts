@@ -1,5 +1,5 @@
-import {Move} from './Move';
-import {Coord} from './coord/Coord';
+import { Move } from './Move';
+import { Coord } from './coord/Coord';
 
 export abstract class MoveCoord extends Move {
     public readonly coord: Coord;

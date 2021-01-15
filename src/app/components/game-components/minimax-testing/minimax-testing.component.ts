@@ -1,5 +1,5 @@
-import {Component} from '@angular/core';
-import {AbstractGameComponent} from '../AbstractGameComponent';
+import { Component } from '@angular/core';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { MinimaxTestingRules } from 'src/app/games/minimax-testing/minimaxtestingrules/MinimaxTestingRules';
 import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTestingPartSlice';
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/minimaxtestingmove/MinimaxTestingMove';
@@ -10,11 +10,10 @@ import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation
 @Component({
     selector: 'app-minimax-testing',
     templateUrl: './minimax-testing.component.html',
-    styleUrls: []
+    styleUrls: [],
 })
 export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {
-
-    /*************************** Common Fields **************************/
+    /** ************************* Common Fields **************************/
 
     public rules = new MinimaxTestingRules(MinimaxTestingPartSlice);
 
@@ -30,7 +29,7 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
     }
     public updateBoard() {
         const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice;
-        this.board = slice.getCopiedBoard()
+        this.board = slice.getCopiedBoard();
         this.coord = slice.location;
     }
     public decodeMove(encodedMove: number): MinimaxTestingMove {

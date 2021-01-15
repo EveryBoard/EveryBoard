@@ -5,21 +5,20 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 
 @Component({
     selector: 'app-inscription',
-    templateUrl: './inscription.component.html'
+    templateUrl: './inscription.component.html',
 })
 export class InscriptionComponent {
-
     constructor(private authService: AuthenticationService, private router : Router) {}
 
     public errorMessage: string;
 
     public inscriptionForm = new FormGroup({
         email: new FormControl(),
-        password: new FormControl()
+        password: new FormControl(),
     });
     public tryRegister(value: {email: string, pseudo: string, password: string}) {
         this.authService.doRegister(value)
-            .then(res => this.router.navigate(['/server']),
-                  err => this.errorMessage = err.message);
+            .then((res) => this.router.navigate(['/server']),
+                (err) => this.errorMessage = err.message);
     }
 }

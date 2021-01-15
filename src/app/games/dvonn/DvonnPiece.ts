@@ -1,4 +1,4 @@
-import { Player } from "src/app/jscaip/player/Player";
+import { Player } from 'src/app/jscaip/player/Player';
 
 export class DvonnPiece {
     public static readonly SOURCE: DvonnPiece = new DvonnPiece(Player.NONE);
@@ -24,13 +24,13 @@ export class DvonnPiece {
     }
     public toString(): string {
         if (this.player === Player.NONE) {
-            return "D";
+            return 'D';
         } else if (this.player === Player.ZERO) {
-            return "W";
+            return 'W';
         } else if (this.player === Player.ONE) {
-            return "B";
+            return 'B';
         } else {
-            return "UNK";
+            return 'UNK';
         }
     }
 }

@@ -1,5 +1,5 @@
 import { Rules } from '../../../jscaip/Rules';
-import {  MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 import { QuartoPartSlice } from '../QuartoPartSlice';
 import { QuartoMove } from '../quartomove/QuartoMove';
 import { QuartoEnum } from '../QuartoEnum';
@@ -13,7 +13,6 @@ import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
 class CaseSensible {
-
     criteres: Critere[];
     // listes des crit�res qu'il faut remplir dans cette case pour gagner
     // si la pi�ce en main match un de ces crit�res, c'est une pr�-victoire
@@ -156,23 +155,22 @@ class Critere {
     }
     toString(): string {
         return 'Critere{' + QuartoRules.printArray(
-            this.subCritere.map( b => {
-                return (b === true) ? 1 : 0 ;
+            this.subCritere.map( (b) => {
+                return (b === true) ? 1 : 0;
             })) + '}';
     }
 }
 abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus> {}
 
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStatus> {
-
     public applyLegalMove(move: QuartoMove, slice: QuartoPartSlice, status: LegalityStatus): { resultingMove: QuartoMove; resultingSlice: QuartoPartSlice; } {
-        let newBoard: number[][] = slice.getCopiedBoard();
+        const newBoard: number[][] = slice.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = slice.pieceInHand;
         const resultingSlice: QuartoPartSlice = new QuartoPartSlice(newBoard, slice.turn + 1, move.piece);
-        return {resultingSlice, resultingMove: move};
+        return { resultingSlice, resultingMove: move };
     } // TODO majeur bug : bloquer les undefined et null comme valeur de move !!
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE = false;
 
     private static readonly INVALID_MOVE = -1; // TODO: mettre en commun avec Legality
 
@@ -201,7 +199,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         return (qcase !== QuartoEnum.UNOCCUPIED);
     }
     public static printArray(array: number[]): string {
-        let result: string = '[';
+        let result = '[';
         for (const i of array) {
             result += i + ' ';
         }
@@ -218,30 +216,30 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         const pieceInHand: number = quartoPartSlice.pieceInHand;
         if (chosenPiece < 0) {
             // nombre trop bas, ce n'est pas une pièce
-            return MGPValidation.failure("this is not a piece");
+            return MGPValidation.failure('this is not a piece');
         }
         if (chosenPiece > 16) {
             // nombre trop grand, ce n'est pas une pièce
-            return MGPValidation.failure("this is not a piece");
+            return MGPValidation.failure('this is not a piece');
         }
         if (QuartoRules.isOccupied(board[y][x])) {
             // on ne joue pas sur une case occupée
-            return MGPValidation.failure("this case is unoccupied");
+            return MGPValidation.failure('this case is unoccupied');
         }
         if (chosenPiece === 16) {
             if (quartoPartSlice.turn === 15) {
                 // on doit donner une pièce ! sauf au dernier tour
                 return MGPValidation.SUCCESS;
             }
-            return MGPValidation.failure("you must give a piece");
+            return MGPValidation.failure('you must give a piece');
         }
         if (!QuartoPartSlice.isPlacable(chosenPiece, board)) {
             // la piece est d�jà sur le plateau
-            return MGPValidation.failure("piece is already on the board");
+            return MGPValidation.failure('piece is already on the board');
         }
         if (pieceInHand === chosenPiece) {
             // la pièce donnée est la même que celle en main, c'est illégal
-            return MGPValidation.failure("illegal piece given: already in your hands");
+            return MGPValidation.failure('illegal piece given: already in your hands');
         }
         return MGPValidation.SUCCESS;
     }
@@ -249,11 +247,10 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         board: NumberTable,
         depth: number,
         firstPiece: MGPOptional<QuartoEnum>,
-        coordDirs: { coord: Coord, dir: Orthogonal}[]
-    ): { coord: Coord, dir: Orthogonal}[]
-    {
-        let remainingCoordDirs: { coord: Coord, dir: Orthogonal}[] = [];
-        let min: number = QuartoEnum.UNOCCUPIED;
+        coordDirs: { coord: Coord, dir: Orthogonal}[],
+    ): { coord: Coord, dir: Orthogonal}[] {
+        const remainingCoordDirs: { coord: Coord, dir: Orthogonal}[] = [];
+        const min: number = QuartoEnum.UNOCCUPIED;
         if (remainingCoordDirs.length === 0) {
             return coordDirs;
         } else {
@@ -264,7 +261,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
 
     public isLegal(move: QuartoMove): LegalityStatus {
         const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice;
-        return {legal: QuartoRules.isLegal(move, quartoPartSlice)};
+        return { legal: QuartoRules.isLegal(move, quartoPartSlice) };
     }
     public getListMoves(n: QuartoNode): MGPMap<QuartoMove, QuartoPartSlice> {
         const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = new MGPMap<QuartoMove, QuartoPartSlice>();
@@ -301,7 +298,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         const board: number[][] = slice.getCopiedBoard();
 
         let nbCasesVides: number;
-        let cx, cy, dx, dy, c: number;
+        let cx; let cy; let dx; let dy; let c: number;
         const casesSensibles: Array<CaseSensible> = new Array<CaseSensible>(7);
         let nbCasesSensibles = 0;
         let cs: CaseSensible;
@@ -352,8 +349,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                         // si la case est occupée
                         if (commonCrit == null) {
                             commonCrit = new Critere(c);
-                            display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c
-                                                                     + ' = ' + commonCrit.toString() + '\n');
+                            display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c +
+                                                                     ' = ' + commonCrit.toString() + '\n');
                         } else {
                             commonCrit.mergeWithNumber(c);
                             display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');

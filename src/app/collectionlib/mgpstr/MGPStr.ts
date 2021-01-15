@@ -1,8 +1,7 @@
-import { Comparable } from "../Comparable";
+import { Comparable } from '../Comparable';
 
 export class MGPStr implements Comparable {
-
-    constructor(private readonly string: String) {}
+    constructor(private readonly string: string) {}
 
     public equals(o: any): boolean {
         if (o === this) return true;
@@ -10,7 +9,7 @@ export class MGPStr implements Comparable {
         const ostr: MGPStr = o as MGPStr;
         return ostr.string === this.string;
     }
-    public toString(): String {
+    public toString(): string {
         return this.string;
     }
 }

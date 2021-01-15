@@ -8,7 +8,7 @@ describe('GameIncluderComponent', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [GameIncluderComponent]
+            declarations: [GameIncluderComponent],
         }).compileComponents();
     });
     beforeEach(() => {

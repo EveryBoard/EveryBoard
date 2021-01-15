@@ -3,7 +3,6 @@ import { QuartoEnum } from './QuartoEnum';
 import { ArrayUtils, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class QuartoPartSlice extends GamePartSlice {
-
     constructor(b: number[][], turn: number, public readonly pieceInHand: number) {
         super(b, turn);
     }

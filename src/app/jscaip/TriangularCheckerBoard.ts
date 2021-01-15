@@ -1,8 +1,7 @@
-import { Coord } from "./coord/Coord";
-import { MGPOptional } from "../collectionlib/mgpoptional/MGPOptional";
+import { Coord } from './coord/Coord';
+import { MGPOptional } from '../collectionlib/mgpoptional/MGPOptional';
 
 export class TriangularCheckerBoard {
-
     public static getNeighboors(c: Coord): Coord[] {
         let neighboors: Coord[];
         const left: Coord = new Coord(c.x - 1, c.y);
@@ -23,10 +22,10 @@ export class TriangularCheckerBoard {
     public static getCommonNeighboor(a: Coord, b: Coord): MGPOptional<Coord> {
         const aNeighboors: Coord[] = TriangularCheckerBoard.getNeighboors(a);
         const bNeighboors: Coord[] = TriangularCheckerBoard.getNeighboors(b);
-        let i: number = 0;
+        let i = 0;
         while (i < aNeighboors.length) {
             const aNeighboor: Coord = aNeighboors[i];
-            let j: number = 0;
+            let j = 0;
             while (j < bNeighboors.length) {
                 const bNeighboor: Coord = bNeighboors[j];
                 if (aNeighboor.equals(bNeighboor)) {

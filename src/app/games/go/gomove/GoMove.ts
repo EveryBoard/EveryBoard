@@ -1,7 +1,6 @@
-import { MoveCoord } from "src/app/jscaip/MoveCoord";
+import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class GoMove extends MoveCoord {
-
     public static readonly PASS: GoMove = new GoMove(-1, 0);
 
     public static readonly PASS_NUMBER: number = -1;
@@ -30,8 +29,8 @@ export class GoMove extends MoveCoord {
         if (!this.coord.equals(o.coord)) return false;
         return true;
     }
-    public toString(): String {
-        return "GoMove(" + this.coord.x + ", " + this.coord.y + ")";
+    public toString(): string {
+        return 'GoMove(' + this.coord.x + ', ' + this.coord.y + ')';
     }
     public decode(encodedMove: number): GoMove {
         return GoMove.decode(encodedMove);

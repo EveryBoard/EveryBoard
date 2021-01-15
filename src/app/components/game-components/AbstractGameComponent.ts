@@ -11,9 +11,8 @@ import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */
-@Component({template: ''})
+@Component({ template: '' })
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
-
     public rules: Rules<M, S, L>;
 
     public board: NumberTable;
@@ -48,6 +47,6 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
         return this.rules.node.gamePartSlice.turn;
     }
     public pass() {
-        throw new Error("AbstractGameComponent.pass should be overriden before being used.");
+        throw new Error('AbstractGameComponent.pass should be overriden before being used.');
     }
 }

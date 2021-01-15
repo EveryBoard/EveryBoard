@@ -1,8 +1,7 @@
-import { Direction} from '../DIRECTION';
+import { Direction } from '../DIRECTION';
 import { Comparable } from '../../collectionlib/Comparable';
 
 export class Coord implements Comparable {
-
     public static getBinarised(n: number): -1 | 0 | 1 {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
         if (n < 0) return -1;
@@ -11,10 +10,9 @@ export class Coord implements Comparable {
     }
     constructor(
         public readonly x: number,
-        public readonly y: number)
-    {
-        if (x == null) throw new Error("X cannot be null.");
-        if (y == null) throw new Error("Y cannot be null.");
+        public readonly y: number) {
+        if (x == null) throw new Error('X cannot be null.');
+        if (y == null) throw new Error('Y cannot be null.');
     }
     public getNext(dir: Direction, distance?: number): Coord {
         // return the next coord in the direction 'dir'
@@ -42,7 +40,7 @@ export class Coord implements Comparable {
         // (-+) -> (++)
         // (-0) -> (0+)
         // ...
-        const newX = this.x +  dir.y;
+        const newX = this.x + dir.y;
         const newY = this.y + -dir.x; // (this.x, thix.y) + (dir.y, -dir.x)
         return new Coord(newX, newY);
     }
@@ -50,7 +48,7 @@ export class Coord implements Comparable {
         // looking in the direction "dir", we just go one step right
         // see getLeft's logic, it's the opposite
         const newX = this.x + -dir.y;
-        const newY = this.y +  dir.x; // (this.x, thix.y) + (-dir.y, dir.x)
+        const newY = this.y + dir.x; // (this.x, thix.y) + (-dir.y, dir.x)
         return new Coord(newX, newY);
     }
     public getOpposite(): Coord {
@@ -99,7 +97,7 @@ export class Coord implements Comparable {
     }
     public getDistance(c: Coord): number { // TODO: Rename, it's not really a distance
         if (!c.isAlignedWith(this)) {
-            throw new Error("Cannot calculate distance with non aligned coords.");
+            throw new Error('Cannot calculate distance with non aligned coords.');
         }
         const dx: number = Math.abs(c.x - this.x);
         const dy: number = Math.abs(c.y - this.y);
@@ -136,7 +134,7 @@ export class Coord implements Comparable {
         const minAbs: number = Math.max(absX, absY);
         let vx: number = this.x;
         let vy: number = this.y;
-        let divider: number = 2;
+        let divider = 2;
         while (divider <= minAbs) {
             if (vx % divider === 0 && vy % divider === 0) {
                 vx /= divider;

@@ -10,10 +10,9 @@ import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation
 
 @Component({
     selector: 'app-reversi',
-    templateUrl: './reversi.component.html'
+    templateUrl: './reversi.component.html',
 })
 export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
-
     public lastMove: Coord = new Coord(-2, -2);
 
     public scores: number[] = [2, 2];
@@ -43,10 +42,11 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
         this.board = slice.getCopiedBoard();
 
-        if (moveCoord)
+        if (moveCoord) {
             this.lastMove = moveCoord.coord;
-        else
+        } else {
             this.lastMove = new Coord(-2, -2);
+        }
 
         this.scores = slice.countScore();
         this.canPass = ReversiRules.playerCanOnlyPass(slice);

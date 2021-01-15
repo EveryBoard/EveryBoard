@@ -1,8 +1,7 @@
-import { Comparable } from "src/app/collectionlib/Comparable";
+import { Comparable } from 'src/app/collectionlib/Comparable';
 
 export abstract class Move implements Comparable {
-
-    public abstract toString(): String;
+    public abstract toString(): string;
 
     public abstract equals(o: any): boolean;
 

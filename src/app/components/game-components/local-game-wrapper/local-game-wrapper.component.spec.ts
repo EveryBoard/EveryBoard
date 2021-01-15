@@ -20,15 +20,14 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 const activatedRouteStub = {
     snapshot: {
         paramMap: {
-            get: (str: String) => {
-                return "P4"
+            get: (str: string) => {
+                return 'P4';
             },
         },
     },
-}
+};
 class AuthenticationServiceMock {
-
-    public static USER: { pseudo: string, verified: boolean } = { pseudo: null, verified: null};
+    public static USER: { pseudo: string, verified: boolean } = { pseudo: null, verified: null };
 
     public getJoueurObs(): Observable<{ pseudo: string, verified: boolean }> {
         return of(AuthenticationServiceMock.USER);
@@ -36,20 +35,19 @@ class AuthenticationServiceMock {
     public getAuthenticatedUser(): { pseudo: string, verified: boolean } {
         return AuthenticationServiceMock.USER;
     }
-};
+}
 describe('LocalGameWrapperComponent', () => {
-
     let component: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
     let debugElement: DebugElement;
 
-    let O: number = Player.ZERO.value;
-    let X: number = Player.ONE.value;
-    let _: number = Player.NONE.value;
+    const O: number = Player.ZERO.value;
+    const X: number = Player.ONE.value;
+    const _: number = Player.NONE.value;
 
-    let clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
+    const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
         const element: DebugElement = debugElement.query(By.css(elementName));
         if (element != null) {
             element.triggerEventHandler('click', null);
@@ -63,18 +61,18 @@ describe('LocalGameWrapperComponent', () => {
     beforeAll(() => {
         LocalGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || LocalGameWrapperComponent.VERBOSE;
     });
-    beforeEach(fakeAsync(async() => {
+    beforeEach(fakeAsync(async () => {
         await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
                 AppModule,
             ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-                { provide: UserService,           useValue: {}},
+                { provide: UserService, useValue: {} },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(LocalGameWrapperComponent);
@@ -88,22 +86,22 @@ describe('LocalGameWrapperComponent', () => {
     it('should have game included after view init', fakeAsync(() => {
         AuthenticationServiceMock.USER = { pseudo: null, verified: null };
         const compiled = fixture.debugElement.nativeElement;
-        const gameIncluderTag = compiled.querySelector("app-game-includer");
-        let p4Tag = compiled.querySelector("app-p4");
-        expect(gameIncluderTag).toBeTruthy("app-game-includer tag should be present at start");
-        expect(p4Tag).toBeFalsy("app-p4 tag should be absent at start");
-        expect(component.gameComponent).toBeUndefined("gameComponent should not be loaded before the timeout int afterViewInit resolve");
+        const gameIncluderTag = compiled.querySelector('app-game-includer');
+        let p4Tag = compiled.querySelector('app-p4');
+        expect(gameIncluderTag).toBeTruthy('app-game-includer tag should be present at start');
+        expect(p4Tag).toBeFalsy('app-p4 tag should be absent at start');
+        expect(component.gameComponent).toBeUndefined('gameComponent should not be loaded before the timeout int afterViewInit resolve');
 
         fixture.detectChanges();
         tick(1);
 
-        p4Tag = compiled.querySelector("app-p4");
-        expect(component.gameIncluder).toBeTruthy("gameIncluder should exist after view init");
-        expect(p4Tag).toBeTruthy("app-p4 tag should be present after view init");
-        expect(component.gameComponent).toBeTruthy("gameComponent should be present once component view init");
+        p4Tag = compiled.querySelector('app-p4');
+        expect(component.gameIncluder).toBeTruthy('gameIncluder should exist after view init');
+        expect(p4Tag).toBeTruthy('app-p4 tag should be present after view init');
+        expect(component.gameComponent).toBeTruthy('gameComponent should be present once component view init');
     }));
-    it('connected user should be able to play', fakeAsync(async() => {
-        AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
+    it('connected user should be able to play', fakeAsync(async () => {
+        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
 
         fixture.detectChanges();
         tick(1);
@@ -112,8 +110,8 @@ describe('LocalGameWrapperComponent', () => {
         const legality: MGPValidation = await component.gameComponent.chooseMove(P4Move.of(4), slice, null, null);
         expect(legality.isSuccess()).toBeTrue();
     }));
-    it('should allow to go back one move', fakeAsync(async() => {
-        AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
+    it('should allow to go back one move', fakeAsync(async () => {
+        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
         fixture.detectChanges();
         tick(1);
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
@@ -125,15 +123,15 @@ describe('LocalGameWrapperComponent', () => {
 
         spyOn(component.gameComponent, 'updateBoard').and.callThrough();
         const takeBackElement: DebugElement = debugElement.query(By.css('#takeBack'));
-        expect(takeBackElement).toBeTruthy("TakeBackElement should exist");
+        expect(takeBackElement).toBeTruthy('TakeBackElement should exist');
         takeBackElement.triggerEventHandler('click', null);
         await fixture.whenStable(); fixture.detectChanges();
 
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
         expect(component.gameComponent.updateBoard).toHaveBeenCalledTimes(1);
     }));
-    it('should show draw', fakeAsync(async() => {
-        AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
+    it('should show draw', fakeAsync(async () => {
+        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
         fixture.detectChanges();
         tick(1);
 
@@ -147,13 +145,13 @@ describe('LocalGameWrapperComponent', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 0);
         component.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        expect(await component.gameComponent.chooseMove(P4Move.of(3), slice, null, null)).toBeTruthy("Last move should be legal");
+        expect(await component.gameComponent.chooseMove(P4Move.of(3), slice, null, null)).toBeTruthy('Last move should be legal');
         component.cdr.detectChanges();
-        const drawIndicator: DebugElement = debugElement.query(By.css("#draw"));
-        expect(drawIndicator).toBeTruthy("Draw indicator should be present");
+        const drawIndicator: DebugElement = debugElement.query(By.css('#draw'));
+        expect(drawIndicator).toBeTruthy('Draw indicator should be present');
     }));
-    it('should show score if needed', fakeAsync(async() => {
-        AuthenticationServiceMock.USER = { pseudo: "Connecté", verified: true };
+    it('should show score if needed', fakeAsync(async () => {
+        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
         fixture.detectChanges();
         tick(1);
         expect(await clickElement('#scoreIndicator')).toBeFalsy();

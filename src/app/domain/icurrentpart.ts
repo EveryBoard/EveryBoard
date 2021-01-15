@@ -22,7 +22,6 @@ export interface ICurrentPart {
     request?: IMGPRequest;
 }
 export class Part {
-
     public constructor(
         private readonly typeGame: string,
         private readonly playerZero: string,
@@ -39,16 +38,18 @@ export class Part {
         private readonly scorePlayerOne?: number|string, // TODO : implémenter ça aussi en même temps
 
         private readonly historic?: string,
-        private readonly request?: IMGPRequest
+        private readonly request?: IMGPRequest,
     ) {
-        if (typeGame == null) throw new Error("typeGame can't be null");
-        if (playerZero == null) throw new Error("playerZero can't be null");
-        if (turn == null) throw new Error("turn can't be null");
-        if (listMoves == null) throw new Error("listMoves can't be null");
-        for (let move of listMoves)
-            if (move == null)
-                throw new Error("No element in listMoves can be null");
-        if (result == null || result.value == null) throw new Error("result can't be null");
+        if (typeGame == null) throw new Error('typeGame can\'t be null');
+        if (playerZero == null) throw new Error('playerZero can\'t be null');
+        if (turn == null) throw new Error('turn can\'t be null');
+        if (listMoves == null) throw new Error('listMoves can\'t be null');
+        for (const move of listMoves) {
+            if (move == null) {
+                throw new Error('No element in listMoves can be null');
+            }
+        }
+        if (result == null || result.value == null) throw new Error('result can\'t be null');
     }
     public copy(): ICurrentPart {
         const copied: ICurrentPart = {
@@ -56,8 +57,8 @@ export class Part {
             playerZero: this.playerZero,
             turn: this.turn,
             listMoves: ArrayUtils.copyArray(this.listMoves),
-            result: { value: this.result.value }
-        }
+            result: { value: this.result.value },
+        };
         if (this.playerOne != null) copied.playerOne = this.playerOne;
         if (this.beginning != null) copied.beginning = this.beginning;
         if (this.lastMove != null) copied.lastMove = this.lastMove;
@@ -113,7 +114,6 @@ export interface PICurrentPart {
     request?: IMGPRequest;
 }
 export class MGPResult {
-
     public static DRAW: MGPResult = new MGPResult(0);
 
     public static RESIGN: MGPResult = new MGPResult(1);
@@ -128,7 +128,7 @@ export class MGPResult {
 
     public static AGREED_DRAW: MGPResult = new MGPResult(6);
 
-    private constructor(private readonly value: number) {};
+    private constructor(private readonly value: number) {}
 
     public toInterface(): IMGPResult {
         return { value: this.value };

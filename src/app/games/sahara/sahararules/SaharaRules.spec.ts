@@ -8,7 +8,6 @@ import { SaharaPawn } from '../SaharaPawn';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 describe('SaharaRules', () => {
-
     let rules: SaharaRules;
 
     beforeAll(() => {
@@ -19,7 +18,7 @@ describe('SaharaRules', () => {
     });
     it('SaharaRules should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gamePartSlice.turn).toBe(0, "Game should start a turn 0");
+        expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start a turn 0');
         const moves: MGPMap<SaharaMove, SaharaPartSlice> = rules.getListMoves(rules.node);
         expect(moves.containsKey(new SaharaMove(new Coord( 2, 0), new Coord(2, 1)))).toBeTrue();
         expect(moves.containsKey(new SaharaMove(new Coord( 7, 0), new Coord(6, 0)))).toBeTrue();
@@ -48,7 +47,7 @@ describe('SaharaRules', () => {
         expect(rules.node.gamePartSlice.getBoardAt(new Coord(0, 3))).toBe(SaharaPawn.EMPTY, 'Just moved black piece should have left her initial spot');
         expect(rules.choose(new SaharaMove(new Coord(3, 0), new Coord(4, 0)))).toBeTrue();
         expect(rules.choose(new SaharaMove(new Coord(1, 4), new Coord(2, 4)))).toBeTrue();
-        expect(rules.node.ownValue).toBe(Number.MIN_SAFE_INTEGER, "Should be victory");
+        expect(rules.node.ownValue).toBe(Number.MIN_SAFE_INTEGER, 'Should be victory');
     });
     it('Bouncing on occupied case should be illegal', () => {
         expect(rules.choose(new SaharaMove(new Coord(7, 0), new Coord(8, 1)))).toBeFalse();

@@ -20,20 +20,21 @@ import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 const activatedRouteStub = {
     snapshot: {
         paramMap: {
-            get: (str: String) => {
-                return "Quarto"
+            get: (str: string) => {
+                return 'Quarto';
             },
         },
     },
-}
+};
 const authenticationServiceStub = {
 
-    getJoueurObs: () => of({ pseudo: null, verified: null}),
+    getJoueurObs: () => of({ pseudo: null, verified: null }),
 
-    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
+    getAuthenticatedUser: () => {
+        return { pseudo: null, verified: null };
+    },
 };
 describe('QuartoComponent', () => {
-
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
@@ -42,7 +43,7 @@ describe('QuartoComponent', () => {
 
     let gameComponent: QuartoComponent;
 
-    let clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
+    const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
         const element: DebugElement = debugElement.query(By.css(elementName));
         if (element == null) {
             return false;
@@ -53,7 +54,7 @@ describe('QuartoComponent', () => {
             return true;
         }
     };
-    let doMove: (move: QuartoMove) => Promise<boolean> = async(move: QuartoMove) => {
+    const doMove: (move: QuartoMove) => Promise<boolean> = async (move: QuartoMove) => {
         const chooseCoordElementName: string = '#chooseCoord_' + move.coord.x + '_' + move.coord.y;
         const choosePieceElementName: string = '#choosePiece_' + move.piece;
         return await clickElement(chooseCoordElementName) &&
@@ -65,10 +66,10 @@ describe('QuartoComponent', () => {
                 RouterTestingModule,
                 AppModule,
             ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
@@ -80,10 +81,10 @@ describe('QuartoComponent', () => {
         gameComponent = wrapper.gameComponent as QuartoComponent;
     }));
     it('should create', () => {
-        expect(wrapper).toBeTruthy("Wrapper should be created");
-        expect(gameComponent).toBeTruthy("QuartoComponent should be created");
+        expect(wrapper).toBeTruthy('Wrapper should be created');
+        expect(gameComponent).toBeTruthy('QuartoComponent should be created');
     });
-    it('should accept simple move', fakeAsync(async() => {
+    it('should accept simple move', fakeAsync(async () => {
         const rules: QuartoRules = new QuartoRules(QuartoPartSlice);
         const listMoves: QuartoMove[] = rules.getListMoves(rules.node).listKeys();
         const currentMove: QuartoMove = listMoves[0];
@@ -91,12 +92,12 @@ describe('QuartoComponent', () => {
         expect(await doMove(currentMove)).toBeTrue();
         flush();
     }));
-    it('should allow to make last move', fakeAsync(async() => {
+    it('should allow to make last move', fakeAsync(async () => {
         const board: number[][] = [
             [QuartoEnum.AABB, QuartoEnum.UNOCCUPIED, QuartoEnum.ABBA, QuartoEnum.BBAA],
-            [QuartoEnum.BBAB,       QuartoEnum.BAAA, QuartoEnum.BBBA, QuartoEnum.ABBB],
-            [QuartoEnum.BABA,       QuartoEnum.BBBB, QuartoEnum.ABAA, QuartoEnum.AABA],
-            [QuartoEnum.AAAA,       QuartoEnum.ABAB, QuartoEnum.BABB, QuartoEnum.BAAB],
+            [QuartoEnum.BBAB, QuartoEnum.BAAA, QuartoEnum.BBBA, QuartoEnum.ABBB],
+            [QuartoEnum.BABA, QuartoEnum.BBBB, QuartoEnum.ABAA, QuartoEnum.AABA],
+            [QuartoEnum.AAAA, QuartoEnum.ABAB, QuartoEnum.BABB, QuartoEnum.BAAB],
         ];
         const pieceInHand: number = QuartoEnum.AAAB;
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 15, pieceInHand);
@@ -108,12 +109,12 @@ describe('QuartoComponent', () => {
         expect(gameComponent.rules.node.gamePartSlice.turn).toBe(16);
     }));
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(QuartoMove, "decode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(QuartoMove, 'decode').and.callThrough();
         gameComponent.decodeMove(5);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(QuartoMove, "encode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(QuartoMove, 'encode').and.callThrough();
         gameComponent.encodeMove(new QuartoMove(2, 2, 2));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });

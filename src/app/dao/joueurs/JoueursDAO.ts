@@ -7,19 +7,18 @@ import { environment } from 'src/environments/environment';
 import { display } from 'src/app/collectionlib/utils';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class JoueursDAO extends FirebaseFirestoreDAO<IJoueur, PIJoueur> {
-
-    public static VERBOSE: boolean = false;
+    public static VERBOSE = false;
 
     constructor(protected afs: AngularFirestore) {
-        super("joueurs", afs);
-        if (environment.test) throw new Error("NO JOUEUR DAO IN TEST");
-        display(JoueursDAO.VERBOSE, "JoueursDAO.constructor");
+        super('joueurs', afs);
+        if (environment.test) throw new Error('NO JOUEUR DAO IN TEST');
+        display(JoueursDAO.VERBOSE, 'JoueursDAO.constructor');
     }
     public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
-        return this.observingWhere('pseudo', "==", pseudo, callback);
+        return this.observingWhere('pseudo', '==', pseudo, callback);
     }
     public observeActivesUsers(callback: FirebaseCollectionObserver<IJoueur>): () => void {
         return this.observingWhere('state', '==', 'online', callback);

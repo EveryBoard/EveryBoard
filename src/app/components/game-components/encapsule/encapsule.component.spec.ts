@@ -17,20 +17,21 @@ import { EncapsulePiece, EncapsuleMapper } from 'src/app/games/encapsule/Encapsu
 const activatedRouteStub = {
     snapshot: {
         paramMap: {
-            get: (str: String) => {
-                return "Encapsule"
+            get: (str: string) => {
+                return 'Encapsule';
             },
         },
     },
-}
+};
 const authenticationServiceStub = {
 
-    getJoueurObs: () => of({ pseudo: null, verified: null}),
+    getJoueurObs: () => of({ pseudo: null, verified: null }),
 
-    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
+    getAuthenticatedUser: () => {
+        return { pseudo: null, verified: null };
+    },
 };
 describe('EncapsuleComponent', () => {
-
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
@@ -43,10 +44,10 @@ describe('EncapsuleComponent', () => {
                 RouterTestingModule,
                 AppModule,
             ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
@@ -57,28 +58,28 @@ describe('EncapsuleComponent', () => {
         gameComponent = wrapper.gameComponent as EncapsuleComponent;
     }));
     it('should create', () => {
-        expect(wrapper).toBeTruthy("Wrapper should be created");
-        expect(gameComponent).toBeTruthy("EncapsuleComponent should be created");
-        const playerZeroPieces: String[] = gameComponent.remainingPieces[0];
-        const playerOnePieces: String[] = gameComponent.remainingPieces[1];
-        expect(playerZeroPieces).toEqual(["BIG_BLACK", "BIG_BLACK", "MEDIUM_BLACK", "MEDIUM_BLACK", "SMALL_BLACK", "SMALL_BLACK"]);
-        expect(playerOnePieces).toEqual(["BIG_WHITE", "BIG_WHITE", "MEDIUM_WHITE", "MEDIUM_WHITE", "SMALL_WHITE", "SMALL_WHITE"]);
+        expect(wrapper).toBeTruthy('Wrapper should be created');
+        expect(gameComponent).toBeTruthy('EncapsuleComponent should be created');
+        const playerZeroPieces: string[] = gameComponent.remainingPieces[0];
+        const playerOnePieces: string[] = gameComponent.remainingPieces[1];
+        expect(playerZeroPieces).toEqual(['BIG_BLACK', 'BIG_BLACK', 'MEDIUM_BLACK', 'MEDIUM_BLACK', 'SMALL_BLACK', 'SMALL_BLACK']);
+        expect(playerOnePieces).toEqual(['BIG_WHITE', 'BIG_WHITE', 'MEDIUM_WHITE', 'MEDIUM_WHITE', 'SMALL_WHITE', 'SMALL_WHITE']);
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(EncapsuleMove, "decode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(EncapsuleMove, 'decode').and.callThrough();
         gameComponent.decodeMove(0);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(EncapsuleMove, "encode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(EncapsuleMove, 'encode').and.callThrough();
         gameComponent.encodeMove(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2)));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
-    it('Should play correctly shortest victory', async() => {
-        const SMALL_BLACK: String = EncapsuleMapper.getNameFromPiece(EncapsulePiece.SMALL_BLACK);
-        const MEDIUM_WHITE: String = EncapsuleMapper.getNameFromPiece(EncapsulePiece.MEDIUM_WHITE);
-        const SMALL_WHITE: String = EncapsuleMapper.getNameFromPiece(EncapsulePiece.SMALL_WHITE);
-        const MEDIUM_BLACK: String = EncapsuleMapper.getNameFromPiece(EncapsulePiece.MEDIUM_BLACK);
+    it('Should play correctly shortest victory', async () => {
+        const SMALL_BLACK: string = EncapsuleMapper.getNameFromPiece(EncapsulePiece.SMALL_BLACK);
+        const MEDIUM_WHITE: string = EncapsuleMapper.getNameFromPiece(EncapsulePiece.MEDIUM_WHITE);
+        const SMALL_WHITE: string = EncapsuleMapper.getNameFromPiece(EncapsulePiece.SMALL_WHITE);
+        const MEDIUM_BLACK: string = EncapsuleMapper.getNameFromPiece(EncapsulePiece.MEDIUM_BLACK);
         expect((await gameComponent.onPieceClick(SMALL_BLACK)).isSuccess()).toBeTrue();
         expect((await gameComponent.onBoardClick(0, 0)).isSuccess()).toBeTrue();
         expect((await gameComponent.onPieceClick(MEDIUM_WHITE)).isSuccess()).toBeTrue();

@@ -1,22 +1,21 @@
-import { Coord } from "src/app/jscaip/coord/Coord";
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 
 export type NumberTable = Table<number>;
 
 export class ArrayUtils {
-
     public static mapBiArray<T, U>(biArray: Table<T>, mapper: (t: T) => U): U[][] {
         const result: U[][] = [];
-        let y: number = 0;
+        let y = 0;
         while (y < biArray.length) {
             result[y] = [];
-            let x: number = 0;
+            let x = 0;
             while (x < biArray[y].length) {
                 result[y][x] = mapper(biArray[y][x]);
                 x++;
             }
-            y++
+            y++;
         }
         return result;
     }

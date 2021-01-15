@@ -9,17 +9,16 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 
 @Component({
     selector: 'app-p4',
-    templateUrl: './p4.component.html'
+    templateUrl: './p4.component.html',
 })
 export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, LegalityStatus> {
+    /** ************************* Common Fields **************************/
 
-    /*************************** Common Fields **************************/
-
-    public static VERBOSE: boolean = false;
+    public static VERBOSE = false;
 
     public rules = new P4Rules(P4PartSlice);
 
-    public imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg', ];
+    public imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg'];
 
     public lastX: number;
 

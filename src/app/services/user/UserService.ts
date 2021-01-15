@@ -1,16 +1,15 @@
-import {Injectable} from '@angular/core';
-import {BehaviorSubject, Observable} from 'rxjs';
-import {JoueursDAO} from '../../dao/joueurs/JoueursDAO';
-import {IJoueur, IJoueurId} from '../../domain/iuser';
-import {Router} from '@angular/router';
-import {ActivesUsersService} from '../actives-users/ActivesUsersService';
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable } from 'rxjs';
+import { JoueursDAO } from '../../dao/joueurs/JoueursDAO';
+import { IJoueur, IJoueurId } from '../../domain/iuser';
+import { Router } from '@angular/router';
+import { ActivesUsersService } from '../actives-users/ActivesUsersService';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class UserService {
-
     // private userName = this.getUserNameBS();
 
     private userDocId = new BehaviorSubject<string>('');

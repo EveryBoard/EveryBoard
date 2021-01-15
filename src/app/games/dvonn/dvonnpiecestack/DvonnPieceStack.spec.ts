@@ -1,6 +1,6 @@
-import { Player } from "src/app/jscaip/player/Player";
-import { DvonnPiece } from "../DvonnPiece";
-import { DvonnPieceStack } from "./DvonnPieceStack";
+import { Player } from 'src/app/jscaip/player/Player';
+import { DvonnPiece } from '../DvonnPiece';
+import { DvonnPieceStack } from './DvonnPieceStack';
 
 describe('DvonnPieceStack', () => {
     const stack1: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO]);
@@ -32,4 +32,4 @@ describe('DvonnPieceStack', () => {
         expect(stack4.containsSource()).toBeTrue();
         expect(stack8.containsSource()).toBeTrue();
     });
- });
+});

@@ -7,11 +7,12 @@ import { of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 
 const authenticationServiceStub = {
-    getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true}),
-    getAuthenticatedUser: () => { return { pseudo: 'Pseudo', verified: true}; },
+    getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true }),
+    getAuthenticatedUser: () => {
+        return { pseudo: 'Pseudo', verified: true };
+    },
 };
 describe('InscriptionComponent', () => {
-
     let component: InscriptionComponent;
 
     let fixture: ComponentFixture<InscriptionComponent>;

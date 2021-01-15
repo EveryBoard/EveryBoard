@@ -15,7 +15,6 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { RequestCode } from 'src/app/domain/request';
 
 describe('GameService', () => {
-
     let service: GameService;
 
     let partDao: PartDAO;
@@ -26,9 +25,9 @@ describe('GameService', () => {
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
-                { provide: PartDAO,   useClass: PartDAOMock },
+                { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
-                { provide: ChatDAO,   useClass: ChatDAOMock },
+                { provide: ChatDAO, useClass: ChatDAOMock },
             ],
         }).compileComponents();
         service = TestBed.get(GameService);
@@ -39,35 +38,35 @@ describe('GameService', () => {
     });
     it('startObserving should delegate callback to partDao', () => {
         const myCallback: (iPart: ICurrentPartId) => void = (iPart: ICurrentPartId) => {
-            expect(iPart.id).toBe("partId");
+            expect(iPart.id).toBe('partId');
         };
-        spyOn(partDao, "getObsById").and.returnValue(of({id: "partId", doc: null}));
-        service.startObserving("partId", myCallback);
+        spyOn(partDao, 'getObsById').and.returnValue(of({ id: 'partId', doc: null }));
+        service.startObserving('partId', myCallback);
         expect(partDao.getObsById).toHaveBeenCalled();
     });
-    it('startObserving should throw exception when called while observing ', async() => {
-        await partDao.set("myJoinerId", PartMocks.INITIAL.copy());
+    it('startObserving should throw exception when called while observing ', async () => {
+        await partDao.set('myJoinerId', PartMocks.INITIAL.copy());
 
         expect(() => {
-            service.startObserving("myJoinerId", (iPart: ICurrentPartId) => {});
-            service.startObserving("myJoinerId", (iPart: ICurrentPartId) => {});
-        }).toThrowError("GameService.startObserving should not be called while already observing a game");
+            service.startObserving('myJoinerId', (iPart: ICurrentPartId) => {});
+            service.startObserving('myJoinerId', (iPart: ICurrentPartId) => {});
+        }).toThrowError('GameService.startObserving should not be called while already observing a game');
     });
     it('should delegate delete to PartDAO', () => {
-        spyOn(partDao, "delete");
-        service.deletePart("partId");
+        spyOn(partDao, 'delete');
+        service.deletePart('partId');
         expect(partDao.delete).toHaveBeenCalled();
     });
-    it('should forbid to accept a take back that the player proposed himself', async() => {
+    it('should forbid to accept a take back that the player proposed himself', async () => {
         const part: ICurrentPart = {
             typeGame: 'Quarto',
             playerZero: 'creator',
             playerOne: 'joiner',
             turn: 2,
-            listMoves: [ 107, 161],
-            request: { code: RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code }
+            listMoves: [107, 161],
+            request: { code: RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code },
         };
-        const getError: (player: Player) => Promise<string> = async(player: Player) => {
+        const getError: (player: Player) => Promise<string> = async (player: Player) => {
             let errorMessage: string;
             try {
                 await service.acceptTakeBack('joinerId', part, player);

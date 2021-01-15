@@ -6,22 +6,23 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { of } from 'rxjs';
 
 const authenticationServiceStub = {
-    getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true}),
-    getAuthenticatedUser: () => { return { pseudo: 'Pseudo', verified: true}; },
+    getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true }),
+    getAuthenticatedUser: () => {
+        return { pseudo: 'Pseudo', verified: true };
+    },
 };
 describe('HeaderComponent', () => {
-
     let component: HeaderComponent;
 
     let fixture: ComponentFixture<HeaderComponent>;
 
     beforeEach(() => {
         TestBed.configureTestingModule({
-            imports: [ RouterTestingModule ],
+            imports: [RouterTestingModule],
             declarations: [HeaderComponent],
             providers: [
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
-            ]
+            ],
         }).compileComponents();
     });
     beforeEach(() => {

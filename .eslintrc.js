@@ -21,6 +21,7 @@ module.exports = {
         '@typescript-eslint/no-empty-function': ['off'],
         '@typescript-eslint/no-namespace': ['warn'],
         '@typescript-eslint/ban-types': ['error', {'types': {'String': {'message': 'Use string instead', 'fixWith': 'string'}}}],
+        '@typescript-eslint/no-this-alias': ['warn'],
         'max-len': ['warn', {'code': 80}],
         'require-jsdoc': ['warn', {'require': {
             "FunctionDeclaration": false,
@@ -38,6 +39,6 @@ module.exports = {
         'no-redeclare': ['warn'], // TODO: add option ignoreDeclarationMerge: true and set to error
         'camelcase': ['warn'],
         'valid-jsdoc': ['warn'],
-        'no-case-declarations': ['warn']
+        'no-case-declarations': ['warn'],
     }
 };

@@ -4,7 +4,6 @@ import { CountDownComponent } from './count-down.component';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 describe('CountDownComponent', () => {
-
     let component: CountDownComponent;
 
     let fixture: ComponentFixture<CountDownComponent>;
@@ -14,7 +13,7 @@ describe('CountDownComponent', () => {
     });
     beforeEach(() => {
         TestBed.configureTestingModule({
-            declarations: [ CountDownComponent ],
+            declarations: [CountDownComponent],
         })
             .compileComponents();
     });

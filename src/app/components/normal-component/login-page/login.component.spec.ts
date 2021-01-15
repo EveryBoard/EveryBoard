@@ -7,11 +7,12 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { of } from 'rxjs';
 
 const authenticationServiceStub = {
-    getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true}),
-    getAuthenticatedUser: () => { return { pseudo: 'Pseudo', verified: true}; },
+    getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true }),
+    getAuthenticatedUser: () => {
+        return { pseudo: 'Pseudo', verified: true };
+    },
 };
 describe('LoginComponent', () => {
-
     let component: LoginComponent;
 
     let fixture: ComponentFixture<LoginComponent>;

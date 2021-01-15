@@ -1,4 +1,4 @@
-import {IMessage} from './imessage';
+import { IMessage } from './imessage';
 
 export interface IChat {
     /* the Id will always be the same as the joiner doc and part doc, or "server"

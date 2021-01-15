@@ -20,44 +20,45 @@ import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation
 const activatedRouteStub = {
     snapshot: {
         paramMap: {
-            get: (str: String) => {
-                return "Quixo"
+            get: (str: string) => {
+                return 'Quixo';
             },
         },
     },
-}
+};
 const authenticationServiceStub = {
 
-    getJoueurObs: () => of({ pseudo: null, verified: null}),
+    getJoueurObs: () => of({ pseudo: null, verified: null }),
 
-    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
+    getAuthenticatedUser: () => {
+        return { pseudo: null, verified: null };
+    },
 };
 describe('QuixoComponent', () => {
-
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
     let gameComponent: QuixoComponent;
 
-    let _: number = Player.NONE.value;
-    let X: number = Player.ONE.value;
-    let O: number = Player.ZERO.value;
+    const _: number = Player.NONE.value;
+    const X: number = Player.ONE.value;
+    const O: number = Player.ZERO.value;
 
-    let doMove: (move: QuixoMove) => Promise<MGPValidation> = async(move: QuixoMove) => {
+    const doMove: (move: QuixoMove) => Promise<MGPValidation> = async (move: QuixoMove) => {
         return gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
                await gameComponent.chooseDirection(move.direction.toString()); // TODO simulate clicks, not function call
-    }
+    };
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
                 AppModule,
             ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
@@ -68,18 +69,18 @@ describe('QuixoComponent', () => {
         gameComponent = wrapper.gameComponent as QuixoComponent;
     }));
     it('should create', () => {
-        expect(wrapper).toBeTruthy("Wrapper should be created");
-        expect(gameComponent).toBeTruthy("QuixoComponent should be created");
+        expect(wrapper).toBeTruthy('Wrapper should be created');
+        expect(gameComponent).toBeTruthy('QuixoComponent should be created');
     });
     it('should style piece correctly', () => {
         expect(gameComponent.getPieceFill(Player.ZERO.value)).toBe('blue');
         expect(gameComponent.getPieceFill(Player.ONE.value)).toBe('red');
 
         gameComponent.chosenCoord = new Coord(0, 0);
-        expect(gameComponent.getPieceStyle(0, 0)).toEqual({fill: 'lightgrey', stroke: 'grey'});
+        expect(gameComponent.getPieceStyle(0, 0)).toEqual({ fill: 'lightgrey', stroke: 'grey' });
 
         gameComponent.lastMoveCoord = new Coord(4, 4);
-        expect(gameComponent.getPieceStyle(4, 4)).toEqual({fill: 'lightgrey', stroke: 'orange'});
+        expect(gameComponent.getPieceStyle(4, 4)).toEqual({ fill: 'lightgrey', stroke: 'orange' });
     });
     it('should give correct direction', () => {
         let possibleDirections: any[][];
@@ -92,32 +93,32 @@ describe('QuixoComponent', () => {
         possibleDirections = gameComponent.getPossiblesDirections();
         expect(possibleDirections).toEqual([[0, 1, 'LEFT'], [1, 0, 'UP']]);
     });
-    it('should cancel move when trying to select ennemy piece or center coord', async() => {
+    it('should cancel move when trying to select ennemy piece or center coord', async () => {
         const firstMove: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
 
-        let legal: MGPValidation = await doMove(firstMove);
-        spyOn(gameComponent, "message").and.callThrough();
+        const legal: MGPValidation = await doMove(firstMove);
+        spyOn(gameComponent, 'message').and.callThrough();
         expect(legal.isSuccess()).toBeTrue();
 
         expect(gameComponent.onBoardClick(4, 0).isFailure()).toBeTrue();
-        expect(gameComponent.message).toHaveBeenCalledWith("Cannot click on an ennemy piece (4, 0)");
+        expect(gameComponent.message).toHaveBeenCalledWith('Cannot click on an ennemy piece (4, 0)');
 
         expect(gameComponent.onBoardClick(1, 1).isFailure()).toBeTrue();
-        expect(gameComponent.message).toHaveBeenCalledWith("Unvalid coord (1, 1)");
+        expect(gameComponent.message).toHaveBeenCalledWith('Unvalid coord (1, 1)');
     });
     it('should delegate triangleCoord calculation to GameComponentUtils', () => {
-        spyOn(GameComponentUtils, "getTriangleCoordinate").and.callThrough();
+        spyOn(GameComponentUtils, 'getTriangleCoordinate').and.callThrough();
         gameComponent.onBoardClick(0, 2);
         gameComponent.getTriangleCoordinate(2, 1);
         expect(GameComponentUtils.getTriangleCoordinate).toHaveBeenCalledWith(0, 2, 2, 1);
     });
     it('should delegate decoding to move', () => {
-        spyOn(QuixoMove, "decode").and.callThrough();
+        spyOn(QuixoMove, 'decode').and.callThrough();
         gameComponent.decodeMove(new QuixoMove(0, 0, Orthogonal.DOWN).encode());
         expect(QuixoMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        spyOn(QuixoMove, "encode").and.callThrough();
+        spyOn(QuixoMove, 'encode').and.callThrough();
         gameComponent.encodeMove(new QuixoMove(0, 0, Orthogonal.DOWN));
         expect(QuixoMove.encode).toHaveBeenCalledTimes(1);
     });

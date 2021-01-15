@@ -1,14 +1,15 @@
 import { Table, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { DvonnPieceStack } from "./dvonnpiecestack/DvonnPieceStack";
+import { DvonnPieceStack } from './dvonnpiecestack/DvonnPieceStack';
 
 export class DvonnBoard {
-    public static WIDTH: number = 11;
-    public static HEIGHT: number = 5;
+    public static WIDTH = 11;
+    public static HEIGHT = 5;
 
     public static isOnBoard(coord: Coord): boolean {
-        if (coord.isNotInRange(DvonnBoard.WIDTH, DvonnBoard.HEIGHT))
+        if (coord.isNotInRange(DvonnBoard.WIDTH, DvonnBoard.HEIGHT)) {
             return false;
+        }
         // Also check if this is not one of the unreachable positions
         // invalid positions: (0, 0), (0, 1), (1, 0)
         //                    (10, 4), (10, 3), (9, 4)
@@ -27,7 +28,7 @@ export class DvonnBoard {
 
     public static getStackAt(board: NumberTable, coord: Coord): DvonnPieceStack {
         if (!DvonnBoard.isOnBoard(coord)) {
-            throw new Error("Position is not within the board");
+            throw new Error('Position is not within the board');
         }
         return DvonnPieceStack.of(board[coord.y][coord.x]);
     }
@@ -36,17 +37,17 @@ export class DvonnBoard {
         return [
             new Coord(coord.x+distance, coord.y-distance), new Coord(coord.x+distance, coord.y),
             new Coord(coord.x-distance, coord.y+distance), new Coord(coord.x-distance, coord.y),
-            new Coord(coord.x, coord.y+distance), new Coord(coord.x, coord.y-distance)
+            new Coord(coord.x, coord.y+distance), new Coord(coord.x, coord.y-distance),
         ];
     }
     public static numberOfNeighbors(board: NumberTable, coord: Coord): number {
         return DvonnBoard.neighbors(coord, 1)
             .filter((c: Coord): boolean => DvonnBoard.isOnBoard(c) && !DvonnBoard.getStackAt(board, c).isEmpty())
-            .length
+            .length;
     }
 
     public static getAllPieces(board: NumberTable): Coord[] {
-        const pieces: Coord[] = []
+        const pieces: Coord[] = [];
         for (let y = 0; y < DvonnBoard.HEIGHT; y++) {
             for (let x = 0; x < DvonnBoard.WIDTH; x++) {
                 const coord = new Coord(x, y);
@@ -73,9 +74,9 @@ export class DvonnBoard {
         const D = DvonnPieceStack.SOURCE;
         return [
             [_, _, W, B, B, B, W, W, B, D, B],
-              [_, B, B, W, W, W, B, B, W, B, B],
-                [B, B, B, B, W, D, B, W, W, W, W],
-                  [W, W, B, W, W, B, B, B, W, W, _],
-                    [W, D, W, B, B, W, W, W, B, _, _]];
+            [_, B, B, W, W, W, B, B, W, B, B],
+            [B, B, B, B, W, D, B, W, W, W, W],
+            [W, W, B, W, W, B, B, B, W, W, _],
+            [W, D, W, B, B, W, W, W, B, _, _]];
     }
 }
