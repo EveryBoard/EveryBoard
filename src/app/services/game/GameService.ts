@@ -88,16 +88,22 @@ export class GameService {
     private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ", " + JSON.stringify(joiner));
 
-        let firstPlayer = joiner.creator;
-        let secondPlayer = joiner.chosenPlayer;
-        if (joiner.firstPlayer === '2' && (Math.random() < 0.5)) {
-            joiner.firstPlayer = '1';
-            // random
-        }
-        if (joiner.firstPlayer === '1') {
+        let firstPlayer: string;
+        let secondPlayer: string;
+        if (joiner.firstPlayer === '2') {
+            // '2' = random first player
+            if (Math.random() < 0.5) {
+                joiner.firstPlayer = '1';
+            } else {
+                joiner.firstPlayer = '0';
+            }
+        } else if (joiner.firstPlayer === '1') {
             // the opposite config is planned
             secondPlayer = joiner.creator;
             firstPlayer = joiner.chosenPlayer;
+        } else {
+            firstPlayer = joiner.creator;
+            secondPlayer = joiner.chosenPlayer;
         }
         const modification = {
             playerZero: firstPlayer,
