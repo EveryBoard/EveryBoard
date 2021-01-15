@@ -255,7 +255,6 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             await router.navigate(['/play', 'P4', 'invalid-part-id']);
             fixture.detectChanges();
             flush();
-            tick(component.maximalMoveDuration);
         });
         expect(router.url).toBe('/server');
     }));

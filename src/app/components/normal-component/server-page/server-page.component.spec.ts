@@ -47,12 +47,6 @@ class RouterMock {
         return true;
     };
 
-    public events: EventsMock = new EventsMock();
-}
-
-class EventsMock {
-    public subscribe(_f: (ev: any) => void): void {
-    }
 }
 
 describe('ServerPageComponent', () => {

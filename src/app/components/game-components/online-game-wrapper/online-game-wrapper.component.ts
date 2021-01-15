@@ -84,7 +84,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         const partExistsAndIsOfRightType: boolean = await this.gameService.partExistsAndIsOfType(this.currentPartId, gameType);
         if (!partExistsAndIsOfRightType) {
             this.routerEventsSub.unsubscribe();
-            this.router.navigate(['/']); // TODO: redirect to an error/404 page instead?
+            this.router.navigate(['/']);
         }
     }
     private async setCurrentPartIdOrRedirect(): Promise<void> {

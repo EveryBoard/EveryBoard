@@ -103,8 +103,8 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             this.chosenLandingCoord = clickedCoord;
             return MGPValidation.SUCCESS; // now player can click on his captures
         } else {
-            const dropWithoutCapture: boolean = this.chosenStartingCoord == null; // Doing a drop without possible capture
-            const endClimbingWithoutCapture: boolean = clickedCoord.isUpperThan(this.chosenStartingCoord); // Ending a climbing without possible capture
+            const dropWithoutCapture: boolean = this.chosenStartingCoord == null;
+            const endClimbingWithoutCapture: boolean = clickedCoord.isUpperThan(this.chosenStartingCoord);
             if (dropWithoutCapture || endClimbingWithoutCapture) {
                 this.chosenLandingCoord = clickedCoord;
                 return this.concludeMoveWithCapture([]);
