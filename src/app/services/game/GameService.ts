@@ -20,7 +20,7 @@ import { display } from 'src/app/collectionlib/utils';
 })
 export class GameService {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     private followedPartId: string;
 
