@@ -30,7 +30,7 @@ describe('KamisadoRules:', () => {
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gamePartSlice.turn).toBe(0, "Game should start a turn 0");
+        expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start a turn 0');
     });
     it('should provide 102 possible moves at turn 0', () => {
         // Each piece on the side can do 6 vertical moves and 6 diagonal ones = 12 moves per piece * 2 side pieces
@@ -49,7 +49,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [R, B, _, _, _, _, _, _]
+            [R, B, _, _, _, _, _, _],
         ];
         const expectedBoard1: number[][] = [
             [_, o, p, _, _, _, _, _],
@@ -59,7 +59,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [R, _, _, _, _, _, _, _],
-            [_, B, _, _, _, _, _, _]
+            [_, B, _, _, _, _, _, _],
         ];
         const expectedBoard2: number[][] = [
             [R, o, p, _, _, _, _, _],
@@ -69,7 +69,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, B, _, _, _, _, _, _]
+            [_, B, _, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
@@ -84,7 +84,7 @@ describe('KamisadoRules:', () => {
         const resultingSlice2: KamisadoPartSlice = rules.applyLegalMove(move2, slice, status2).resultingSlice;
         const expectedSlice2: KamisadoPartSlice = new KamisadoPartSlice(7, KamisadoColor.ORANGE, MGPOptional.of(new Coord(1, 0)), false, expectedBoard2);
         expect(resultingSlice2).toEqual(expectedSlice2);
-        expect(rules.getBoardValue(move2, expectedSlice2)).toEqual(Number.MIN_SAFE_INTEGER, "This should be a victory for player 0");
+        expect(rules.getBoardValue(move2, expectedSlice2)).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
     it('should not allow vertical moves with an obstacle', () => {
         const board1: number[][] = [
@@ -95,7 +95,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [r, _, _, _, _, _, _, _],
-            [R, _, _, _, _, _, _, _]
+            [R, _, _, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board1);
         rules.node = new MGPNode(null, null, slice, 0);
@@ -135,7 +135,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [R, B, _, _, _, _, _, _]
+            [R, B, _, _, _, _, _, _],
         ];
         const expectedBoard1: number[][] = [
             [_, b, _, _, _, _, _, _],
@@ -145,7 +145,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, R, _, _, _, _, _, _],
-            [_, B, _, _, _, _, _, _]
+            [_, B, _, _, _, _, _, _],
         ];
         const expectedBoard2: number[][] = [
             [_, b, _, _, _, _, _, R],
@@ -155,7 +155,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
-            [_, B, _, _, _, _, _, _]
+            [_, B, _, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(1, 6));
@@ -170,7 +170,7 @@ describe('KamisadoRules:', () => {
         const resultingSlice2: KamisadoPartSlice = rules.applyLegalMove(move2, slice, status2).resultingSlice;
         const expectedSlice2: KamisadoPartSlice = new KamisadoPartSlice(7, KamisadoColor.BROWN, MGPOptional.of(new Coord(1, 0)), false, expectedBoard2);
         expect(resultingSlice2).toEqual(expectedSlice2);
-        expect(rules.getBoardValue(move2, expectedSlice2)).toEqual(Number.MIN_SAFE_INTEGER, "This should be a victory for player 0");
+        expect(rules.getBoardValue(move2, expectedSlice2)).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
     it('should not allow diagonal moves with obstacles', () => {
         const board: number[][] = [
@@ -181,7 +181,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, r, _, _, _, _, _, _],
-            [R, _, _, _, _, _, _, _]
+            [R, _, _, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         rules.node = new MGPNode(null, null, slice, 0);
@@ -201,7 +201,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [b, r, _, _, _, _, _, _],
-            [R, G, _, _, _, _, _, _]
+            [R, G, _, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const moves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMovesFromSlice(slice);
@@ -212,7 +212,7 @@ describe('KamisadoRules:', () => {
         const expectedSlice: KamisadoPartSlice = new KamisadoPartSlice(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
         const resultingSlice: KamisadoPartSlice = rules.applyLegalMove(onlyMove, slice, status).resultingSlice;
         expect(resultingSlice).toEqual(expectedSlice);
-    })
+    });
     it('should detect victory', () => {
         const board: number[][] = [
             [_, _, _, _, _, _, _, _],
@@ -222,7 +222,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [b, r, _, _, _, _, _, _],
-            [R, G, _, _, _, _, _, _]
+            [R, G, _, _, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _, _, _, _],
@@ -232,7 +232,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [b, _, _, _, _, _, _, _],
-            [R, G, r, _, _, _, _, _]
+            [R, G, r, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
         const moves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMovesFromSlice(slice);
@@ -243,7 +243,7 @@ describe('KamisadoRules:', () => {
         const finalSlice: KamisadoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: KamisadoPartSlice = new KamisadoPartSlice(8, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, expectedBoard);
         expect(finalSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, finalSlice)).toEqual(Number.MAX_SAFE_INTEGER, "This should be a victory for player 1");
+        expect(rules.getBoardValue(move, finalSlice)).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
     it('should declare blocking player as loser', () => {
         const board: number[][] = [
@@ -254,7 +254,7 @@ describe('KamisadoRules:', () => {
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [b, r, _, _, _, _, _, _],
-            [R, G, B, _, _, _, _, _]
+            [R, G, B, _, _, _, _, _],
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const moves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMovesFromSlice(slice);
@@ -268,7 +268,7 @@ describe('KamisadoRules:', () => {
         expect(resultingSlice).toEqual(expectedSlice);
         const nextMoves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMovesFromSlice(resultingSlice);
         expect(nextMoves.size()).toEqual(0);
-        expect(rules.getBoardValue(onlyMove, resultingSlice)).toEqual(Number.MIN_SAFE_INTEGER, "This should be a victory for player 0");
+        expect(rules.getBoardValue(onlyMove, resultingSlice)).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
     it('should not have allowed directions for other players than 0 and 1', () => {
         expect(() => rules.playerDirections(Player.NONE)).toThrowError();
@@ -327,7 +327,7 @@ describe('KamisadoRules:', () => {
         ];
         const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const move1 = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
-        expect(rules.isLegal(move1, slice).legal.isSuccess()).toBeFalse()
+        expect(rules.isLegal(move1, slice).legal.isSuccess()).toBeFalse();
         const move2 = KamisadoMove.of(new Coord(0, 2), new Coord(0, 4));
         expect(rules.isLegal(move2, slice).legal.isSuccess()).toBeFalse();
     });

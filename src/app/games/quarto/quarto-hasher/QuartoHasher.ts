@@ -13,7 +13,6 @@ export interface QuartoHashInfo {
     readonly firstPiece: MGPOptional<QuartoEnum>
 }
 export class QuartoHasher {
-
     public static readonly coordDirs: CoordDir[] = [
         { coord: new Coord(0, 0), dir: Orthogonal.RIGHT },
         { coord: new Coord(0, 0), dir: Orthogonal.DOWN },
@@ -28,18 +27,17 @@ export class QuartoHasher {
         { coord: new Coord(0, 3), dir: Orthogonal.UP },
     ];
     public filter(board: NumberTable): QuartoHashInfo {
-        throw new Error("todo");
-    };
+        throw new Error('todo');
+    }
     public static filterSubLevel(
         board: NumberTable,
         depth: number,
         firstPiece: MGPOptional<QuartoEnum>,
-        coordDirs: CoordDir[]
-    ): QuartoHashInfo
-    {
+        coordDirs: CoordDir[],
+    ): QuartoHashInfo {
         let remainingCoordDirs: CoordDir[] = [];
-        let min: number = QuartoEnum.UNOCCUPIED;
-        for (let coordDir of coordDirs) {
+        const min: number = QuartoEnum.UNOCCUPIED;
+        for (const coordDir of coordDirs) {
             const c: Coord = QuartoHasher.get(coordDir, depth);
             let piece: number = board[c.y][c.x];
             if (piece !== QuartoEnum.UNOCCUPIED) {
@@ -56,15 +54,15 @@ export class QuartoHasher {
             }
         }
         if (remainingCoordDirs.length === 0) {
-            return //coordDirs;
+            return; // coordDirs;
         } else {
-            return // remainingCoordDirs;
+            return; // remainingCoordDirs;
         }
     }
     public static get(coordDir: CoordDir, n: number): Coord {
         let coord: Coord = coordDir.coord.getCopy();
-        let firstDir: Orthogonal = coordDir.dir;
-        let secondDir: Orthogonal = QuartoHasher.coordDirs.find((coordDir: CoordDir) =>
+        const firstDir: Orthogonal = coordDir.dir;
+        const secondDir: Orthogonal = QuartoHasher.coordDirs.find((coordDir: CoordDir) =>
             coordDir.coord.equals(coord) &&
             coordDir.dir.equals(firstDir) === false).dir;
         while (n >= 4) {
@@ -78,9 +76,9 @@ export class QuartoHasher {
         if (piece === QuartoEnum.UNOCCUPIED) {
             return QuartoEnum.UNOCCUPIED;
         } else {
-            let result: number = 0;
-            let n: number = 1;
-            for (let i: number = 0; i < 4; i++) {
+            let result = 0;
+            let n = 1;
+            for (let i = 0; i < 4; i++) {
                 if ((piece & n) !== (mapper & n)) {
                     result += n;
                 }

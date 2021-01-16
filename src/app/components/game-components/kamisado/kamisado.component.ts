@@ -12,11 +12,10 @@ import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation
 
 @Component({
     selector: 'app-kamisado',
-    templateUrl: './kamisado.component.html'
+    templateUrl: './kamisado.component.html',
 })
 
 export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
-
     public rules = new KamisadoRules(KamisadoPartSlice);
 
     public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();
@@ -25,9 +24,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public chosen: Coord = new Coord(-1, -1);
 
-    public chosenAutomatically: boolean = false;
+    public chosenAutomatically = false;
 
-    public canPass: boolean = false;
+    public canPass = false;
 
     public styleBackground(x: number, y: number): any {
         return {
@@ -60,7 +59,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
             // TODO: check use
-            return this.cancelMove("Cannot pass.");
+            return this.cancelMove('Cannot pass.');
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -72,12 +71,12 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     }
     public async choosePiece(x: number, y: number): Promise<MGPValidation> {
         if (this.rules.node.isEndGame()) {
-            return this.cancelMove("game is ended");
+            return this.cancelMove('game is ended');
         }
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
         const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
         if (!piece.belongsTo(player)) {
-            return await this.cancelMove("piece does not belong to player");
+            return await this.cancelMove('piece does not belong to player');
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;
@@ -89,8 +88,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
     public async cancelMove(reason?: string): Promise<MGPValidation> {
-        if (!this.chosenAutomatically)
+        if (!this.chosenAutomatically) {
             this.chosen = new Coord(-1, -1);
+        }
         if (reason) {
             this.message(reason);
             return MGPValidation.failure(reason);

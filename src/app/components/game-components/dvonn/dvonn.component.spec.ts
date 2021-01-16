@@ -21,28 +21,29 @@ import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 const activatedRouteStub = {
     snapshot: {
         paramMap: {
-            get: (str: String) => {
-                return "Dvonn"
+            get: (str: string) => {
+                return 'Dvonn';
             },
         },
     },
-}
+};
 const authenticationServiceStub = {
 
-    getJoueurObs: () => of({ pseudo: null, verified: null}),
+    getJoueurObs: () => of({ pseudo: null, verified: null }),
 
-    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
+    getAuthenticatedUser: () => {
+        return { pseudo: null, verified: null };
+    },
 };
 describe('DvonnComponent', () => {
-
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
     let gameComponent: DvonnComponent;
 
-    const _  : number = DvonnPieceStack.EMPTY.getValue();
-    const D  : number = DvonnPieceStack.SOURCE.getValue();
+    const _ : number = DvonnPieceStack.EMPTY.getValue();
+    const D : number = DvonnPieceStack.SOURCE.getValue();
     const WW : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
 
     beforeEach(fakeAsync(() => {
@@ -51,10 +52,10 @@ describe('DvonnComponent', () => {
                 RouterTestingModule,
                 AppModule,
             ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
@@ -65,8 +66,8 @@ describe('DvonnComponent', () => {
         gameComponent = wrapper.gameComponent as DvonnComponent;
     }));
     it('should create', () => {
-        expect(wrapper).toBeTruthy("Wrapper should be created");
-        expect(gameComponent).toBeTruthy("DvonnComponent should be created");
+        expect(wrapper).toBeTruthy('Wrapper should be created');
+        expect(gameComponent).toBeTruthy('DvonnComponent should be created');
     });
     it('should not allow to pass initially', async () => {
         expect((await gameComponent.pass()).isFailure()).toBeTrue();
@@ -82,10 +83,10 @@ describe('DvonnComponent', () => {
     it('should allow to pass if stuck position', async () => {
         const board = [
             [_, _, WW, _, _, _, _, _, _, _, _],
-            [_, _,  D, _, _, _, _, _, _, _, _],
-            [_, _,  _, _, _, _, _, _, _, _, _],
-            [_, _,  _, _, _, _, _, _, _, _, _],
-            [_, _,  _, _, _, _, _, _, _, _, _]];
+            [_, _, D, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _]];
         const slice: DvonnPartSlice = new DvonnPartSlice(0, board, false);
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
@@ -106,10 +107,10 @@ describe('DvonnComponent', () => {
     it('should disallow choosing a piece at end of the game', async () => {
         const board = [
             [_, _, WW, _, _, _, _, _, _, _, _],
-            [_, _,  D, _, _, _, _, _, _, _, _],
-            [_, _,  _, _, _, _, _, _, _, _, _],
-            [_, _,  _, _, _, _, _, _, _, _, _],
-            [_, _,  _, _, _, _, _, _, _, _, _]];
+            [_, _, D, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _]];
         const slice: DvonnPartSlice = new DvonnPartSlice(0, board, false);
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
@@ -117,13 +118,13 @@ describe('DvonnComponent', () => {
         expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeFalse();
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(DvonnMove, "decode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(DvonnMove, 'decode').and.callThrough();
         const encoded = gameComponent.encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
         gameComponent.decodeMove(encoded);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        spyOn(DvonnMove, "encode").and.callThrough();
+        spyOn(DvonnMove, 'encode').and.callThrough();
         gameComponent.encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
         expect(DvonnMove.encode).toHaveBeenCalledTimes(1);
     });

@@ -13,11 +13,10 @@ import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-quixo',
-    templateUrl: './quixo.component.html'
+    templateUrl: './quixo.component.html',
 })
 export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice, LegalityStatus> {
-
-    public static VERBOSE: boolean = false;
+    public static VERBOSE = false;
 
     public rules: QuixoRules = new QuixoRules(QuixoPartSlice);
 
@@ -54,28 +53,28 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     public getPieceStyle(x: number, y: number): any {
         const coord: Coord = new Coord(x, y);
         const c: number = this.board[y][x];
-        let fill: string = this.getPieceFill(c);
-        let stroke: string  = "black";
+        const fill: string = this.getPieceFill(c);
+        let stroke = 'black';
 
-        if (coord.equals(this.chosenCoord)) stroke = 'grey'
+        if (coord.equals(this.chosenCoord)) stroke = 'grey';
         else if (coord.equals(this.lastMoveCoord)) stroke = 'orange';
         return { fill, stroke };
     }
     public getPieceFill(c: number): string {
         switch (c) {
-            case Player.NONE.value: return 'lightgrey';
-            case Player.ZERO.value: return 'blue';
-            case Player.ONE.value:  return 'red';
+        case Player.NONE.value: return 'lightgrey';
+        case Player.ZERO.value: return 'blue';
+        case Player.ONE.value: return 'red';
         }
     }
     public onBoardClick(x: number, y: number): MGPValidation {
         const clickedCoord: Coord = new Coord(x, y);
         if (QuixoMove.isValidCoord(clickedCoord).valid === false) {
             // TODO: is this possible ? If not, should'nt it be a classic Error ?
-            return this.cancelMove("Unvalid coord " + clickedCoord.toString());
+            return this.cancelMove('Unvalid coord ' + clickedCoord.toString());
         }
         if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove("Cannot click on an ennemy piece " + clickedCoord.toString());
+            return this.cancelMove('Cannot click on an ennemy piece ' + clickedCoord.toString());
         } else {
             this.chosenCoord = clickedCoord;
             return MGPValidation.SUCCESS;
@@ -95,8 +94,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     }
     public async tryMove(): Promise<MGPValidation> {
         const move: QuixoMove = new QuixoMove(this.chosenCoord.x,
-                                              this.chosenCoord.y,
-                                              this.chosenDirection);
+            this.chosenCoord.y,
+            this.chosenDirection);
         this.cancelMove();
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }

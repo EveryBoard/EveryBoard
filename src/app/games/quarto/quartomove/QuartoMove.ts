@@ -1,7 +1,6 @@
-import {MoveCoord} from '../../../jscaip/MoveCoord';
+import { MoveCoord } from '../../../jscaip/MoveCoord';
 
 export class QuartoMove extends MoveCoord {
-
     public static encode(move: QuartoMove): number {
         /* x va de 0 à 3
          * y va de 0 à 3
@@ -29,9 +28,8 @@ export class QuartoMove extends MoveCoord {
          * piece is the quarto piece you give
          */
         super(x, y);
-        if (piece == null) throw new Error("Piece cannot be null");
+        if (piece == null) throw new Error('Piece cannot be null');
         this.piece = piece;
-
     }
     public encode(): number {
         return QuartoMove.encode(this);
@@ -39,10 +37,10 @@ export class QuartoMove extends MoveCoord {
     public decode(xyp: number): QuartoMove {
         return QuartoMove.decode(xyp);
     }
-    public toString(): String {
-        return 'QuartoMove(' + this.coord.x + ', '
-                             + this.coord.y + ', '
-                             + this.piece +
+    public toString(): string {
+        return 'QuartoMove(' + this.coord.x + ', ' +
+                             this.coord.y + ', ' +
+                             this.piece +
                 ')';
     }
     public equals(o: any): boolean {

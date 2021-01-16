@@ -1,9 +1,8 @@
-import { MoveCoord } from "src/app/jscaip/MoveCoord";
-import { Orthogonal } from "src/app/jscaip/DIRECTION";
-import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
+import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
 export class SiamMove extends MoveCoord {
-
     public static encode(move: SiamMove): number {
         const y: number = move.coord.y + 1; // 0 to 6
         const x: number = move.coord.x + 1; // 0 to 6
@@ -31,27 +30,26 @@ export class SiamMove extends MoveCoord {
         readonly x: number,
         readonly y: number,
         public readonly moveDirection: MGPOptional<Orthogonal>,
-        public readonly landingOrientation: Orthogonal)
-    {
+        public readonly landingOrientation: Orthogonal) {
         super(x, y);
-        if (moveDirection == null) throw new Error("Move Direction must be set (even if optional).")
-        if (landingOrientation == null) throw new Error("Landing orientation must be set.");
+        if (moveDirection == null) throw new Error('Move Direction must be set (even if optional).');
+        if (landingOrientation == null) throw new Error('Landing orientation must be set.');
         this.checkValidity();
     }
     public checkValidity() {
         const startedInside: boolean = this.coord.isInRange(5, 5);
         if (this.isRotation()) {
             if (!startedInside) {
-                throw new Error("Cannot rotate piece outside the board: " + this.toString() + ".");
+                throw new Error('Cannot rotate piece outside the board: ' + this.toString() + '.');
             }
         } else {
             const finishedOutside: boolean = this.coord.getNext(this.moveDirection.get()).isNotInRange(5, 5);
             if (finishedOutside) {
                 if (!startedInside) {
-                    throw new Error("SiamMove should end or start on the board: " + this.toString() + ".");
+                    throw new Error('SiamMove should end or start on the board: ' + this.toString() + '.');
                 }
                 if (this.moveDirection.get() !== this.landingOrientation) {
-                    throw new Error("SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: " + this.toString() + ".");
+                    throw new Error('SiamMove should have moveDirection and landingOrientation matching when a piece goes out of the board: ' + this.toString() + '.');
                 }
             }
         }
@@ -75,12 +73,12 @@ export class SiamMove extends MoveCoord {
         if (this.landingOrientation !== other.landingOrientation) return false;
         return true;
     }
-    public toString(): String {
-        const moveDirection: string = this.moveDirection.isAbsent() ? "-" : this.moveDirection.get().toString();
-        return "SiamMove(" + this.coord.x + ", "
-                           + this.coord.y + ", "
-                           + moveDirection + ", "
-                           + this.landingOrientation + ")"
+    public toString(): string {
+        const moveDirection: string = this.moveDirection.isAbsent() ? '-' : this.moveDirection.get().toString();
+        return 'SiamMove(' + this.coord.x + ', ' +
+                           this.coord.y + ', ' +
+                           moveDirection + ', ' +
+                           this.landingOrientation + ')';
     }
     public isInsertion(): boolean {
         return this.coord.x === -1 ||

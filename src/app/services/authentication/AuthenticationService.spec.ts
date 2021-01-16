@@ -10,7 +10,6 @@ const afAuth = {
 const afs = {
 };
 describe('AuthenticationService', () => {
-
     let service: AuthenticationService;
 
     beforeAll(() => {

@@ -1,5 +1,4 @@
 export class Player {
-
     public static readonly ZERO = new Player(0);
 
     public static readonly ONE = new Player(1);
@@ -10,14 +9,14 @@ export class Player {
 
     public static of(value: number): Player {
         switch (value) {
-            case 0: return Player.ZERO;
-            case 1: return Player.ONE;
-            case 2: return Player.NONE;
-            default: throw new Error("Unknown Player value " + value);
+        case 0: return Player.ZERO;
+        case 1: return Player.ONE;
+        case 2: return Player.NONE;
+        default: throw new Error('Unknown Player value ' + value);
         }
     }
 
     public toString(): string {
-        return "Player " + this.value;
+        return 'Player ' + this.value;
     }
 }

@@ -1,13 +1,12 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core';
+import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-count-down',
-    templateUrl: './count-down.component.html'
+    templateUrl: './count-down.component.html',
 })
 export class CountDownComponent implements OnInit, OnDestroy {
-
-    public static VERBOSE: boolean = false;
+    public static VERBOSE = false;
 
     @Input() debugName: string;
     remainingTime: number;
@@ -24,29 +23,29 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     public start(duration: number) {
         // duration is in ms
-        display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".start(" + (duration/1000) + "s);");
+        display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.start(' + (duration/1000) + 's);');
 
         if (this.isStarted) {
-            throw new Error("CountDownComponent.start should not be called while already started (" + this.debugName + ")");
+            throw new Error('CountDownComponent.start should not be called while already started (' + this.debugName + ')');
         }
         this.isStarted = true;
         this.remainingTime = duration;
         this.resume();
     }
     public pause() {
-        display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".pause");
+        display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.pause');
 
         if (this.isPaused) {
-            display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".pause: it is already paused");
+            display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.pause: it is already paused');
             return;
         }
         if (!this.isStarted) {
-            display(CountDownComponent.VERBOSE, "CountDownComponent." + this.debugName + ".pause: it is not started yet");
+            display(CountDownComponent.VERBOSE, 'CountDownComponent.' + this.debugName + '.pause: it is not started yet');
             return;
         }
         const started: boolean = this.clearTimeouts();
         if (!started) {
-            throw new Error("Cannot pause unstarted CountDown (" + this.debugName + ")");
+            throw new Error('Cannot pause unstarted CountDown (' + this.debugName + ')');
         }
         this.isPaused = true;
         this.updateShownTime();

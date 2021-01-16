@@ -7,7 +7,6 @@ import { display } from '../collectionlib/utils';
 import { Type } from '@angular/core';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
-
     public constructor(public readonly sliceType: Type<S>) { // TODO: Make singleton ?
         this.setInitialBoard();
     }
@@ -35,24 +34,24 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
-        const LOCAL_VERBOSE: boolean = false;
-        display(LOCAL_VERBOSE, "Rules.choose: " + move.toString() + " was proposed");
+        const LOCAL_VERBOSE = false;
+        display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
-            display(LOCAL_VERBOSE, "Rules.choose: current node has moves");
-            let choix: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing it twice
+            display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
+            const choix: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing it twice
             if (choix !== null) {
-                display(LOCAL_VERBOSE, "Rules.choose: and this proposed move is found in the list, so it is legal");
+                display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
                 this.node = choix; // qui devient le plateau actuel
                 return true;
             }
             // TODO: decide if usefull part
         }
-        display(LOCAL_VERBOSE, "Rules.choose: current node has no moves or is pruned, let's verify ourselves");
+        display(LOCAL_VERBOSE, 'Rules.choose: current node has no moves or is pruned, let\'s verify ourselves');
         const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
         if (status.legal.isFailure()) {
-            display(LOCAL_VERBOSE, "Rules.choose: Move is illegal: " + status.legal.getReason());
+            display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + status.legal.getReason());
             return false;
-        } else display(LOCAL_VERBOSE, "Rules.choose: Move is legal, let's apply it");
+        } else display(LOCAL_VERBOSE, 'Rules.choose: Move is legal, let\'s apply it');
 
         const result: {resultingMove: Move, resultingSlice: GamePartSlice} = MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
         const boardValue: number = MGPNode.ruler.getBoardValue(result.resultingMove, result.resultingSlice);
@@ -76,7 +75,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
                 const initialSlice: S = this.sliceType['getInitialSlice']();
                 this.node = MGPNode.getFirstNode(initialSlice, this);
             } else {
-                throw new Error("Should implement static method getInitialSlice on " + this.sliceType.name + ".");
+                throw new Error('Should implement static method getInitialSlice on ' + this.sliceType.name + '.');
             }
         } else {
             this.node = this.node.getInitialNode();

@@ -1,24 +1,24 @@
-import {BrowserModule} from '@angular/platform-browser';
-import {NgModule} from '@angular/core';
-import {ReactiveFormsModule, FormsModule} from '@angular/forms';
-import {HttpClientModule} from '@angular/common/http';
-import {RouterModule, Route} from '@angular/router';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
-import {MaterialModule} from '../material-modules';
+import { BrowserModule } from '@angular/platform-browser';
+import { NgModule } from '@angular/core';
+import { ReactiveFormsModule, FormsModule } from '@angular/forms';
+import { HttpClientModule } from '@angular/common/http';
+import { RouterModule, Route } from '@angular/router';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
+import { MaterialModule } from '../material-modules';
 
-import {AngularFireModule} from '@angular/fire';
-import {AngularFirestoreModule, AngularFirestore} from '@angular/fire/firestore';
+import { AngularFireModule } from '@angular/fire';
+import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { firebaseConfig } from './firebaseConfig';
 
 import { PartDAO } from './dao/part/PartDAO';
 
-import {ChatService} from './services/chat/ChatService';
-import {UserService} from './services/user/UserService';
-import {AuthenticationService} from './services/authentication/AuthenticationService';
-import {GameService} from './services/game/GameService';
-import {JoinerService} from './services/joiner/JoinerService';
+import { ChatService } from './services/chat/ChatService';
+import { UserService } from './services/user/UserService';
+import { AuthenticationService } from './services/authentication/AuthenticationService';
+import { GameService } from './services/game/GameService';
+import { JoinerService } from './services/joiner/JoinerService';
 
 import { EmailVerified } from './guard/emailverified/EmailVerified';
 
@@ -55,15 +55,15 @@ export const INCLUDE_VERBOSE_LINE_IN_TEST = false;
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
 const routes: Route [] = [
-    {path: 'login',               component: LoginComponent},
-    {path: 'server',              component: ServerPageComponent},
-    {path: 'inscription',         component: InscriptionComponent},
-    {path: 'confirm-inscription', component: ConfirmInscriptionComponent},
+    { path: 'login', component: LoginComponent },
+    { path: 'server', component: ServerPageComponent },
+    { path: 'inscription', component: InscriptionComponent },
+    { path: 'confirm-inscription', component: ConfirmInscriptionComponent },
 
-    {path: 'play/:compo/:id',     component: OnlineGameWrapperComponent, canActivate: [EmailVerified]},
-    {path: 'local/:compo',        component: LocalGameWrapperComponent},
-    {path: '', redirectTo: 'server', pathMatch: 'full'},
-    {path: '**',                  component: ServerPageComponent}
+    { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
+    { path: 'local/:compo', component: LocalGameWrapperComponent },
+    { path: '', redirectTo: 'server', pathMatch: 'full' },
+    { path: '**', component: ServerPageComponent },
 ];
 
 @NgModule({
@@ -119,7 +119,7 @@ const routes: Route [] = [
     imports: [
         BrowserModule,
         HttpClientModule,
-        RouterModule.forRoot(routes, {useHash: true}),
+        RouterModule.forRoot(routes, { useHash: true }),
         ReactiveFormsModule,
         FormsModule,
         AngularFireModule.initializeApp(firebaseConfig),
@@ -135,8 +135,8 @@ const routes: Route [] = [
         ChatService,
         PartDAO,
         AngularFirestore,
-        AngularFireAuth
+        AngularFireAuth,
     ],
-    bootstrap: [AppComponent]
+    bootstrap: [AppComponent],
 })
 export class AppModule { }

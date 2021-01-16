@@ -1,5 +1,4 @@
 export class TablutCase {
-
     public static readonly UNOCCUPIED: TablutCase = new TablutCase(0);
 
     public static readonly PLAYER_ZERO_KING: TablutCase = new TablutCase(1);

@@ -1,3 +1,4 @@
+os: linux
 dist: xenial
 language: node_js
 node_js:
@@ -8,23 +9,21 @@ env:
 
 addons:
   chrome: stable
-service:
+services:
   - xvfb
-before_install:
-  - openssl aes-256-cbc -K $encrypted_f217180e22ee_key -iv $encrypted_f217180e22ee_iv -in .travis/id_rsa.enc -out id_rsa -d
-  - openssl aes-256-cbc -K $encrypted_bdd73078a253_key -iv $encrypted_bdd73078a253_iv -in .travis/firebaseConfig.ts.enc -out src/app/firebaseConfig.ts -d
 
 before_script:
   - npm install
+  - cp src/app/firebaseConfig.ts.dummy src/app/firebaseConfig.ts
 
 jobs:
   include:
-    - stage: Linter
-      script: npx eslint --ext .ts ./
     - stage: Test
       script: npx ng test --watch false --browsers ChromeHeadless
     - stage: Build and deploy
-      if: branch = master
+      if: repo = MartinREMY42/multi-game-project AND branch = master
       script:
-        - npx ng build
-        - sh .travis/deploy.sh
+        - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then sh ./.travis/deploy.sh; fi'
+    - stage: Linter
+      script: npx eslint --ext .ts ./
+

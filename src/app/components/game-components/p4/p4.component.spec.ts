@@ -12,26 +12,27 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { P4Rules } from 'src/app/games/p4/p4rules/P4Rules';
 import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { MoveX } from 'src/app/jscaip/MoveX';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
+import { P4Move } from 'src/app/games/p4/P4Move';
 
 const activatedRouteStub = {
     snapshot: {
         paramMap: {
-            get: (str: String) => {
-                return "P4"
+            get: (str: string) => {
+                return 'P4';
             },
         },
     },
-}
+};
 const authenticationServiceStub = {
 
-    getJoueurObs: () => of({ pseudo: null, verified: null}),
+    getJoueurObs: () => of({ pseudo: null, verified: null }),
 
-    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
+    getAuthenticatedUser: () => {
+        return { pseudo: null, verified: null };
+    },
 };
 describe('P4Component', () => {
-
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
@@ -47,10 +48,10 @@ describe('P4Component', () => {
                 RouterTestingModule,
                 AppModule,
             ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
@@ -61,23 +62,23 @@ describe('P4Component', () => {
         gameComponent = wrapper.gameComponent as P4Component;
     }));
     it('should create', () => {
-        expect(wrapper).toBeTruthy("Wrapper should be created");
-        expect(gameComponent).toBeTruthy("GoComponent should be created");
+        expect(wrapper).toBeTruthy('Wrapper should be created');
+        expect(gameComponent).toBeTruthy('GoComponent should be created');
     });
-    it('should accept simple move', async() => {
+    it('should accept simple move', async () => {
         const rules: P4Rules = new P4Rules(P4PartSlice);
-        const listMoves: MGPMap<MoveX, P4PartSlice> = rules.getListMoves(rules.node);
-        const currentMove: MoveX = listMoves.getByIndex(0).key;
+        const listMoves: MGPMap<P4Move, P4PartSlice> = rules.getListMoves(rules.node);
+        const currentMove: P4Move = listMoves.getByIndex(0).key;
         expect((await gameComponent.onClick(currentMove.x)).isSuccess()).toBeTrue();
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(MoveX, "decode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(P4Move, 'decode').and.callThrough();
         gameComponent.decodeMove(5);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(MoveX, "encode").and.callThrough();
-        gameComponent.encodeMove(MoveX.get(5));
+        const moveSpy: jasmine.Spy = spyOn(P4Move, 'encode').and.callThrough();
+        gameComponent.encodeMove(P4Move.of(5));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
 });

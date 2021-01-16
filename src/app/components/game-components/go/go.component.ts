@@ -13,11 +13,10 @@ import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation
 
 @Component({
     selector: 'app-go',
-    templateUrl: './go.component.html'
+    templateUrl: './go.component.html',
 })
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
-
-    public static VERBOSE: boolean = false;
+    public static VERBOSE = false;
 
     public scores: number[] = [0, 0];
 
@@ -72,22 +71,23 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     }
     public async pass(): Promise<MGPValidation> {
         const phase: Phase = this.rules.node.gamePartSlice.phase;
-        if (phase === Phase.PLAYING || phase === Phase.PASSED)
+        if (phase === Phase.PLAYING || phase === Phase.PASSED) {
             return this.onClick(GoMove.PASS.coord.x, GoMove.PASS.coord.y);
-        if (phase === Phase.COUNTING || phase === Phase.ACCEPT)
+        }
+        if (phase === Phase.COUNTING || phase === Phase.ACCEPT) {
             return this.onClick(GoMove.ACCEPT.coord.x, GoMove.ACCEPT.coord.y);
-        else {
-            this.message("Cannot pass");
-            return MGPValidation.failure("Cannot pass");
+        } else {
+            this.message('Cannot pass');
+            return MGPValidation.failure('Cannot pass');
         }
     }
     public getCaseColor(x: number, y: number): string {
         const piece: number = this.rules.node.gamePartSlice.getBoardByXY(x, y);
         if (GoPiece.pieceBelongTo(piece, Player.ZERO)) {
-            return "darkgrey";
+            return 'darkgrey';
         }
         if (GoPiece.pieceBelongTo(piece, Player.ONE)) {
-            return "white";
+            return 'white';
         }
     }
     public caseIsFull(x: number, y: number): boolean {

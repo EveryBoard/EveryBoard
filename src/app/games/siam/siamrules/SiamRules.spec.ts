@@ -9,7 +9,6 @@ import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 
 describe('SiamRules:', () => {
-
     let rules: SiamRules;
 
     const _: number = SiamPiece.EMPTY.value;
@@ -33,7 +32,7 @@ describe('SiamRules:', () => {
     });
     it('Should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gamePartSlice.turn).toBe(0, "Game should start a turn 0");
+        expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start a turn 0');
     });
     it('Should provide 44 first turn childs at turn 0', () => {
         const firstTurnMoves: MGPMap<SiamMove, SiamPartSlice> = rules.getListMoves(rules.node);
@@ -46,14 +45,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [R, _, _, _, _]
+            [R, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
@@ -69,14 +68,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, U, _, _]
+            [_, _, U, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, U, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -92,7 +91,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, u, _, _]
+            [_, _, u, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -105,14 +104,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [r, _, _, _, _],
-            [U, _, _, _, _]
+            [U, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [r, M, M, M, _],
             [U, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -128,14 +127,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [U, _, _, _, _]
+            [U, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [R, _, _, _, _]
+            [R, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.RIGHT);
@@ -151,14 +150,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [U, _, _, _, _]
+            [U, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [D, _, _, _, _]
+            [D, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.DOWN);
@@ -174,14 +173,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [U, _, _, _, _]
+            [U, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [D, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
@@ -197,7 +196,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, _, U, _, _]
+            [_, _, U, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonal.UP);
@@ -210,14 +209,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [U, _, _, _, _]
+            [U, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [_, L, _, _, _]
+            [_, L, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT);
@@ -233,7 +232,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [d, _, _, _, _],
-            [U, _, _, _, _]
+            [U, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -246,7 +245,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [D, _, _, _, _],
-            [u, _, _, _, _]
+            [u, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
@@ -259,14 +258,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [d, M, M, M, _],
             [U, _, _, _, _],
-            [U, _, _, _, _]
+            [U, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _],
             [d, _, _, _, _],
             [U, M, M, M, _],
             [U, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -282,7 +281,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [U, M, M, M, _],
             [d, _, _, _, _],
-            [U, _, _, _, _]
+            [U, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -295,7 +294,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [l, _, _, _, _],
-            [U, _, _, _, _]
+            [U, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
@@ -308,7 +307,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [_, M, M, M, _],
             [_, _, _, _, _],
-            [U, U, U, U, U]
+            [U, U, U, U, U],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
@@ -321,7 +320,7 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [R, M, M, _, _],
             [_, _, _, M, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
@@ -334,14 +333,14 @@ describe('SiamRules:', () => {
             [_, _, _, _, _],
             [R, R, M, M, _],
             [_, _, _, M, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, R, R, M, M],
             [_, _, _, M, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
@@ -357,14 +356,14 @@ describe('SiamRules:', () => {
             [_, _, U, _, _],
             [_, M, U, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, U, _, _],
             [_, _, U, _, _],
             [_, M, _, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -373,7 +372,7 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MIN_SAFE_INTEGER, "This should be a victory for player 0");
+        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
     it('Player 1 pushing player 0 pushing mountain should be a victory for player 0', () => {
         const board: number[][] = [
@@ -381,14 +380,14 @@ describe('SiamRules:', () => {
             [_, _, u, _, _],
             [_, M, U, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, u, _, _],
             [_, _, U, _, _],
             [_, M, _, M, _],
             [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -397,7 +396,7 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MAX_SAFE_INTEGER, "This should be a victory for player 1");
+        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
     it('Player 0 pushing player 1 on his side pushing mountain should be a victory for player 0', () => {
         const board: number[][] = [
@@ -405,14 +404,14 @@ describe('SiamRules:', () => {
             [_, _, l, _, _],
             [_, M, R, M, _],
             [_, _, R, _, _],
-            [_, _, R, _, _]
+            [_, _, R, _, _],
         ];
         const expectedBoard: number[][] = [
             [_, _, l, _, _],
             [_, _, R, _, _],
             [_, M, R, M, _],
             [_, _, R, _, _],
-            [_, _, U, _, _]
+            [_, _, U, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -421,6 +420,6 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MIN_SAFE_INTEGER, "This should be a victory for player 0");
+        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
 });

@@ -1,15 +1,15 @@
-import { MGPOptional } from "../mgpoptional/MGPOptional";
-import { Comparable } from "../Comparable";
+import { MGPOptional } from '../mgpoptional/MGPOptional';
+import { Comparable } from '../Comparable';
 
 export class MGPMap<K extends Comparable, V> {
-
     private map: {key: K, value: V}[] = [];
 
     public get(key: K): MGPOptional<V> {
-        if (key == null) throw new Error("Searched key will always be absent");
-        for (let keymap of this.map) {
-            if (keymap.key.equals(key))
+        if (key == null) throw new Error('Searched key will always be absent');
+        for (const keymap of this.map) {
+            if (keymap.key.equals(key)) {
                 return MGPOptional.of(keymap.value);
+            }
         }
         return MGPOptional.empty();
     }
@@ -17,14 +17,14 @@ export class MGPMap<K extends Comparable, V> {
         return this.map[index];
     }
     public putAll(m: MGPMap<K, V>) {
-        for (let entry of m.map) {
+        for (const entry of m.map) {
             this.put(entry.key, entry.value);
         }
     }
     public put(key: K, value: V): MGPOptional<V> {
-        if (key == null) throw new Error("Key cannot be null");
-        if (value == null) throw new Error("Value cannot be null");
-        for (let i: number = 0; i < this.map.length; i++) {
+        if (key == null) throw new Error('Key cannot be null');
+        if (value == null) throw new Error('Value cannot be null');
+        for (let i = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
             if (entry.key.equals(key)) {
                 const oldValue: V = this.map[i].value;
@@ -36,7 +36,7 @@ export class MGPMap<K extends Comparable, V> {
         return MGPOptional.empty();
     }
     public containsKey(key: K): boolean {
-        return this.map.some(entry => entry.key.equals(key));
+        return this.map.some((entry) => entry.key.equals(key));
     }
     public size(): number {
         return this.map.length;
@@ -45,9 +45,9 @@ export class MGPMap<K extends Comparable, V> {
         return this.map.map((entry: {key: K, value: V}) => entry.key);
     }
     public replace(key: K, newValue: V): V {
-        if (key == null) throw new Error("Key null has no mapped value");
-        if (newValue == null) throw new Error("Cannot replace value by null, use delete instead");
-        for (let i: number = 0; i < this.map.length; i++) {
+        if (key == null) throw new Error('Key null has no mapped value');
+        if (newValue == null) throw new Error('Cannot replace value by null, use delete instead');
+        for (let i = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
             if (entry.key.equals(key)) {
                 const oldValue: V = this.map[i].value;
@@ -55,20 +55,20 @@ export class MGPMap<K extends Comparable, V> {
                 return oldValue;
             }
         }
-        throw new Error("No Value to replace for key "+ key.toString());
+        throw new Error('No Value to replace for key '+ key.toString());
     }
     public set(key: K, firstValue: V) {
-        if (key == null) throw new Error("Key cannot be null");
-        if (firstValue == null) throw new Error("Value cannot be null");
+        if (key == null) throw new Error('Key cannot be null');
+        if (firstValue == null) throw new Error('Value cannot be null');
         if (this.containsKey(key)) {
-            throw new Error("Key " + key.toString() + " already exist in Map");
+            throw new Error('Key ' + key.toString() + ' already exist in Map');
         } else {
-            this.map.push({key, value: firstValue});
+            this.map.push({ key, value: firstValue });
         }
     }
     public delete(key: K): V {
-        if (key == null) throw new Error("Key null has no mapped value");
-        for (let i: number = 0; i < this.map.length; i++) {
+        if (key == null) throw new Error('Key null has no mapped value');
+        for (let i = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
             if (entry.key.equals(key)) {
                 const oldValue: V = this.map[i].value;
@@ -78,6 +78,6 @@ export class MGPMap<K extends Comparable, V> {
                 return oldValue;
             }
         }
-        throw new Error("No Value to delete for key "+ key.toString());
+        throw new Error('No Value to delete for key '+ key.toString());
     }
 }

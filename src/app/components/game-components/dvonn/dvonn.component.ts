@@ -9,19 +9,31 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonnpiecestack/DvonnPieceStack';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-dvonn',
-    templateUrl: './dvonn.component.html'
+    templateUrl: './dvonn.component.html',
 })
 
 export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSlice, LegalityStatus> {
     public rules: DvonnRules = new DvonnRules(DvonnPartSlice);
 
-    public CASE_SIZE: number = 70;
+    public scores: number[] = [0, 0];
+
+    public CASE_SIZE = 70;
+
     public lastMove: DvonnMove = null;
+
     public chosen: Coord = null;
-    public canPass: boolean = false;
+
+    public canPass = false;
+
+    constructor(public snackBar: MatSnackBar) {
+        super(snackBar);
+        this.showScore = true;
+        this.scores = this.rules.getScores(this.rules.node.gamePartSlice);
+    }
 
     public updateBoard() {
         const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
@@ -29,6 +41,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         this.lastMove = this.rules.node.move;
         this.canPass = this.rules.canOnlyPass(slice);
         this.chosen = null;
+        this.scores = this.rules.getScores(slice);
     }
     public cancelMove(reason?: string): MGPValidation {
         this.chosen = null;
@@ -44,7 +57,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
             return await this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
             // TODO: Should'nt it be an Exception ?
-            return this.cancelMove("Cannot pass.");
+            return this.cancelMove('Cannot pass.');
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -56,7 +69,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
     }
     public choosePiece(x: number, y: number): MGPValidation {
         if (this.rules.node.isEndGame()) {
-            return this.cancelMove("Cannot choose a piece at the end of the game");
+            return this.cancelMove('Cannot choose a piece at the end of the game');
         }
         const coord: Coord = new Coord(x, y);
         const legal: MGPValidation = this.rules.isMovablePiece(this.rules.node.gamePartSlice, coord);
@@ -74,7 +87,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
             const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
             return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         } catch (e) {
-            return this.cancelMove("Cannot choose this move: " + e);
+            return this.cancelMove('Cannot choose this move: ' + e);
         }
     }
     public decodeMove(encodedMove: number): DvonnMove {
@@ -89,24 +102,24 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
     public center(x: number, y: number): Coord {
         let xshift = 0;
         switch (y) {
-            case 0:
-                xshift = 0;
-                break;
-            case 1:
-                xshift = this.CASE_SIZE/2;
-                break;
-            case 2:
-                xshift = this.CASE_SIZE;
-                break;
-            case 3:
-                xshift = 3 * this.CASE_SIZE/2;
-                break;
-            case 4:
-                xshift = 2 * this.CASE_SIZE;
-                break;
+        case 0:
+            xshift = 0;
+            break;
+        case 1:
+            xshift = this.CASE_SIZE/2;
+            break;
+        case 2:
+            xshift = this.CASE_SIZE;
+            break;
+        case 3:
+            xshift = 3 * this.CASE_SIZE/2;
+            break;
+        case 4:
+            xshift = 2 * this.CASE_SIZE;
+            break;
         }
         return new Coord(xshift + this.CASE_SIZE / 2 + (x * this.CASE_SIZE),
-                         this.CASE_SIZE / 2 + (y * (this.CASE_SIZE * 0.75)));
+            this.CASE_SIZE / 2 + (y * (this.CASE_SIZE * 0.75)));
     }
     public source(stackValue: number): boolean {
         return DvonnPieceStack.of(stackValue).containsSource();
@@ -119,20 +132,20 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         return {
             fill: (hasSource && stack.size() === 1) ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
             stroke: hasSource ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
-        }
+        };
     }
     public pieceText(stackValue: number): string {
-        return '' + DvonnPieceStack.of(stackValue).size()
+        return '' + DvonnPieceStack.of(stackValue).size();
     }
     public getHexaCoordinates(center: Coord): string {
         const x = center.x;
         const y = center.y;
         const size = this.CASE_SIZE/2;
         const halfsize = size / 2;
-        const a: Coord = new Coord(x,        y + size);
+        const a: Coord = new Coord(x, y + size);
         const b: Coord = new Coord(x + size, y + halfsize);
         const c: Coord = new Coord(x + size, y - halfsize);
-        const d: Coord = new Coord(x,        y - size);
+        const d: Coord = new Coord(x, y - size);
         const e: Coord = new Coord(x - size, y - halfsize);
         const f: Coord = new Coord(x - size, y + halfsize);
         return a.x + ' ' + a.y + ' ' + b.x + ' ' + b.y + ' ' + c.x + ' ' + c.y + ' ' +

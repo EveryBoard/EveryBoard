@@ -1,21 +1,20 @@
-import { ArrayUtils, Table } from "src/app/collectionlib/arrayutils/ArrayUtils";
-import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
-import { Player } from "src/app/jscaip/player/Player";
-import { PylosCoord } from "../pylos-coord/PylosCoord";
-import { PylosMove } from "../pylos-move/PylosMove";
+import { ArrayUtils, Table } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { Player } from 'src/app/jscaip/player/Player';
+import { PylosCoord } from '../pylos-coord/PylosCoord';
+import { PylosMove } from '../pylos-move/PylosMove';
 
 export class PylosPartSlice extends GamePartSlice {
-
     public static getInitialSlice(): PylosPartSlice {
         const board0: number[][] = ArrayUtils.createBiArray(4, 4, Player.NONE.value);
         const board1: number[][] = ArrayUtils.createBiArray(3, 3, Player.NONE.value);
         const board2: number[][] = ArrayUtils.createBiArray(2, 2, Player.NONE.value);
         const board3: number[][] = [[Player.NONE.value]];
-        const turn: number = 0;
+        const turn = 0;
         return new PylosPartSlice([board0, board1, board2, board3], turn);
     }
     constructor(public readonly boards: Table<ReadonlyArray<number>>,
-                turn: number) {
+        turn: number) {
         super([], turn);
     }
     public getBoardAt(coord: PylosCoord): number {
@@ -40,7 +39,7 @@ export class PylosPartSlice extends GamePartSlice {
             ArrayUtils.copyBiArray(this.boards[0]),
             ArrayUtils.copyBiArray(this.boards[1]),
             ArrayUtils.copyBiArray(this.boards[2]),
-            ArrayUtils.copyBiArray(this.boards[3])
+            ArrayUtils.copyBiArray(this.boards[3]),
         ];
 
         for (const coordValue of coordValues) {
@@ -54,9 +53,10 @@ export class PylosPartSlice extends GamePartSlice {
         if (this.getBoardAt(coord) !== Player.NONE.value) return false;
         if (coord.z === 0) return true;
         const lowerPieces: PylosCoord[] = coord.getLowerPieces();
-        for (let lowerPiece of lowerPieces) {
-            if (this.getBoardAt(lowerPiece) === Player.NONE.value)
+        for (const lowerPiece of lowerPieces) {
+            if (this.getBoardAt(lowerPiece) === Player.NONE.value) {
                 return false;
+            }
         }
         return true;
     }
@@ -73,11 +73,11 @@ export class PylosPartSlice extends GamePartSlice {
         ownershipMap[Player.NONE.value] = 0;
         ownershipMap[Player.ZERO.value] = 0;
         ownershipMap[Player.ONE.value] = 0;
-        for (let z: number = 0; z < 3; z++) {
-            for (let y: number = 0; y < (4 - z); y++) {
-                for (let x: number = 0; x < (4 - z); x++) {
-                    let c: PylosCoord = new PylosCoord(x, y, z);
-                    let v: number = this.getBoardAt(c);
+        for (let z = 0; z < 3; z++) {
+            for (let y = 0; y < (4 - z); y++) {
+                for (let x = 0; x < (4 - z); x++) {
+                    const c: PylosCoord = new PylosCoord(x, y, z);
+                    const v: number = this.getBoardAt(c);
                     ownershipMap[v] = 1 + ownershipMap[v];
                 }
             }

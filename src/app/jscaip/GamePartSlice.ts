@@ -3,13 +3,11 @@ import { Player } from './player/Player';
 import { ArrayUtils, NumberTable } from '../collectionlib/arrayutils/ArrayUtils';
 
 export abstract class GamePartSlice {
-
     public constructor(
         public readonly board: NumberTable,
-        public readonly turn: number)
-    {
-        if (board == null) throw new Error("Board cannot be null.");
-        if (turn == null) throw new Error("Turn cannot be null.");
+        public readonly turn: number) {
+        if (board == null) throw new Error('Board cannot be null.');
+        if (turn == null) throw new Error('Turn cannot be null.');
     }
     // Getters
 
@@ -18,7 +16,7 @@ export abstract class GamePartSlice {
             0 <= x && x < this.board[y].length) {
             return this.board[y][x];
         } else {
-            throw new Error("Out of range coord: (" + x + ", " + y + ").");
+            throw new Error('Out of range coord: (' + x + ', ' + y + ').');
         }
     }
     public getBoardAt(c: Coord): number {
@@ -35,7 +33,7 @@ export abstract class GamePartSlice {
     public getCurrentEnnemy(): Player {
         return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;
     }
-    public toString(): String {
-        return "(t:"+this.turn+") = " + JSON.stringify(this.board);
+    public toString(): string {
+        return '(t:'+this.turn+') = ' + JSON.stringify(this.board);
     }
 }

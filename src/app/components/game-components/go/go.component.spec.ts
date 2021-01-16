@@ -16,20 +16,21 @@ import { By } from '@angular/platform-browser';
 const activatedRouteStub = {
     snapshot: {
         paramMap: {
-            get: (str: String) => {
-                return "Go"
+            get: (str: string) => {
+                return 'Go';
             },
         },
     },
-}
+};
 const authenticationServiceStub = {
 
-    getJoueurObs: () => of({ pseudo: null, verified: null}),
+    getJoueurObs: () => of({ pseudo: null, verified: null }),
 
-    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
+    getAuthenticatedUser: () => {
+        return { pseudo: null, verified: null };
+    },
 };
 describe('GoComponent', () => {
-
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
@@ -38,7 +39,7 @@ describe('GoComponent', () => {
 
     let gameComponent: GoComponent;
 
-    let clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
+    const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
         const element: DebugElement = debugElement.query(By.css(elementName));
         if (element == null) {
             return null;
@@ -58,10 +59,10 @@ describe('GoComponent', () => {
                 RouterTestingModule,
                 AppModule,
             ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
@@ -73,10 +74,10 @@ describe('GoComponent', () => {
         gameComponent = wrapper.gameComponent as GoComponent;
     }));
     it('should create', () => {
-        expect(wrapper).toBeTruthy("Wrapper should be created");
-        expect(gameComponent).toBeTruthy("GoComponent should be created");
+        expect(wrapper).toBeTruthy('Wrapper should be created');
+        expect(gameComponent).toBeTruthy('GoComponent should be created');
     });
-    it('should allow to pass twice, then use "pass" as the method to "accept"', async() => {
+    it('should allow to pass twice, then use "pass" as the method to "accept"', async () => {
         expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Passed
         expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Counting
         expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Accept
@@ -85,17 +86,17 @@ describe('GoComponent', () => {
 
         expect((await gameComponent.pass()).isSuccess()).toBeFalse();
     });
-    it('Should allow simple clicks', fakeAsync(async() => {
-        expect(await clickElement("#click_1_1")).toBeTrue();
-        expect(await clickElement("#click_2_2")).toBeTrue();
+    it('Should allow simple clicks', fakeAsync(async () => {
+        expect(await clickElement('#click_1_1')).toBeTrue();
+        expect(await clickElement('#click_2_2')).toBeTrue();
     }));
     it('should delegate decoding to move', () => {
-        spyOn(GoMove, "decode").and.callThrough();
+        spyOn(GoMove, 'decode').and.callThrough();
         gameComponent.decodeMove(5);
         expect(GoMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        spyOn(GoMove, "encode").and.callThrough();
+        spyOn(GoMove, 'encode').and.callThrough();
         gameComponent.encodeMove(new GoMove(1, 1));
         expect(GoMove.encode).toHaveBeenCalledTimes(1);
     });

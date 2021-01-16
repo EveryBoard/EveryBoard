@@ -1,26 +1,25 @@
-import { Component } from "@angular/core";
-import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
-import { EpaminondasLegalityStatus } from "src/app/games/epaminondas/epaminondaslegalitystatus";
-import { EpaminondasMove } from "src/app/games/epaminondas/epaminondasmove/EpaminondasMove";
-import { EpaminondasPartSlice } from "src/app/games/epaminondas/epaminondaspartslice/EpaminondasPartSlice";
-import { EpaminondasRules } from "src/app/games/epaminondas/epaminondasrules/EpaminondasRules";
-import { Coord } from "src/app/jscaip/coord/Coord";
-import { Direction } from "src/app/jscaip/DIRECTION";
-import { Player } from "src/app/jscaip/player/Player";
-import { AbstractGameComponent } from "../AbstractGameComponent";
+import { Component } from '@angular/core';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondaslegalitystatus';
+import { EpaminondasMove } from 'src/app/games/epaminondas/epaminondasmove/EpaminondasMove';
+import { EpaminondasPartSlice } from 'src/app/games/epaminondas/epaminondaspartslice/EpaminondasPartSlice';
+import { EpaminondasRules } from 'src/app/games/epaminondas/epaminondasrules/EpaminondasRules';
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Player } from 'src/app/jscaip/player/Player';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 
 @Component({
     selector: 'app-epaminondas',
-    templateUrl: './epaminondas.component.html'
+    templateUrl: './epaminondas.component.html',
 })
 export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
-
     public NONE: number = Player.NONE.value;
-    public CAPTURED_FILL: string = "red";
-    public MOVED_FILL: string = "gray";
-    public NORMAL_FILL: string = "lightgray";
+    public CAPTURED_FILL = 'red';
+    public MOVED_FILL = 'gray';
+    public NORMAL_FILL = 'lightgray';
     public CLICKABLE_STYLE: any = {
-        stroke: "yellow",
+        stroke: 'yellow',
     };
     public rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
 
@@ -52,7 +51,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         const move: EpaminondasMove = this.rules.node.move;
         let moved: Coord = move.coord;
         this.moveds = [moved];
-        for(let i: number = 1; i < (move.stepSize + move.movedPieces); i++) {
+        for (let i = 1; i < (move.stepSize + move.movedPieces); i++) {
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
@@ -60,8 +59,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         this.captureds = [];
         const PREVIOUS_ENNEMY: number = this.rules.node.mother.gamePartSlice.getCurrentEnnemy().value;
         while (moved.isInRange(14, 12) &&
-               this.rules.node.mother.gamePartSlice.getBoardAt(moved) === PREVIOUS_ENNEMY)
-        {
+               this.rules.node.mother.gamePartSlice.getBoardAt(moved) === PREVIOUS_ENNEMY) {
             this.captureds.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
@@ -86,15 +84,15 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         switch (this.board[y][x]) {
-            case PLAYER:
-                this.firstPiece = new Coord(x, y);
-                this.validExtensions = this.getValidExtensions(PLAYER);
-                this.phalanxValidLandings = this.getPhalanxValidLandings();
-                break;
-            case ENNEMY:
-                return this.cancelMove("Cette pièce appartient à l'ennemi, vous devez sélectionner une de vos pièces.");
-            case Player.NONE.value:
-                return this.cancelMove("Cette case est vide, vous devez sélectionner une de vos pièces.")
+        case PLAYER:
+            this.firstPiece = new Coord(x, y);
+            this.validExtensions = this.getValidExtensions(PLAYER);
+            this.phalanxValidLandings = this.getPhalanxValidLandings();
+            break;
+        case ENNEMY:
+            return this.cancelMove('Cette pièce appartient à l\'ennemi, vous devez sélectionner une de vos pièces.');
+        case Player.NONE.value:
+            return this.cancelMove('Cette case est vide, vous devez sélectionner une de vos pièces.');
         }
     }
     private hidePreviousMove() {
@@ -113,8 +111,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         for (const direction of Direction.DIRECTIONS) {
             let c: Coord = this.firstPiece.getNext(direction, 1);
             while (c.isInRange(14, 12) &&
-                   this.board[c.y][c.x] === PLAYER)
-            {
+                   this.board[c.y][c.x] === PLAYER) {
                 extensions.push(c);
                 c = c.getNext(direction, 1);
             }
@@ -123,19 +120,18 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     }
     private getPhalanxValidExtensions(PLAYER: number): Coord[] {
         let direction: Direction = Direction.fromMove(this.firstPiece, this.lastPiece);
-        let forward: Coord = this.lastPiece.getNext(direction, 1);
-        let extensionForward: Coord[] = this.getExtensionsToward(forward, direction, PLAYER);
+        const forward: Coord = this.lastPiece.getNext(direction, 1);
+        const extensionForward: Coord[] = this.getExtensionsToward(forward, direction, PLAYER);
 
         direction = direction.getOpposite();
-        let backWard: Coord = this.firstPiece.getNext(direction, 1);
-        let extensionsBackward: Coord[] = this.getExtensionsToward(backWard, direction, PLAYER);
+        const backWard: Coord = this.firstPiece.getNext(direction, 1);
+        const extensionsBackward: Coord[] = this.getExtensionsToward(backWard, direction, PLAYER);
         return extensionForward.concat(extensionsBackward);
     }
     private getExtensionsToward(coord: Coord, direction: Direction, PLAYER: number): Coord[] {
         const extensions: Coord[] = [];
         while (coord.isInRange(14, 12) &&
-               this.board[coord.y][coord.x] === PLAYER)
-        {
+               this.board[coord.y][coord.x] === PLAYER) {
             extensions.push(coord);
             coord = coord.getNext(direction, 1);
         }
@@ -150,11 +146,11 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             const phalanxSize: number = Math.max(dx, dy) + 1;
 
             let direction: Direction = Direction.fromMove(this.firstPiece, this.lastPiece);
-            let landingForward: Coord = this.lastPiece.getNext(direction, 1);
+            const landingForward: Coord = this.lastPiece.getNext(direction, 1);
             const landingsForward: Coord[] = this.getLandingsToward(landingForward, direction, phalanxSize);
 
             direction = direction.getOpposite();
-            let landingBackward: Coord = this.firstPiece.getNext(direction, 1);
+            const landingBackward: Coord = this.firstPiece.getNext(direction, 1);
             const landingsBackward: Coord[] = this.getLandingsToward(landingBackward, direction, phalanxSize);
             return landingsBackward.concat(landingsForward);
         }
@@ -164,8 +160,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         for (const direction of Direction.DIRECTIONS) {
             const coord: Coord = this.firstPiece.getNext(direction, 1);
             if (coord.isInRange(14, 12) &&
-                this.board[coord.y][coord.x] === Player.NONE.value)
-            {
+                this.board[coord.y][coord.x] === Player.NONE.value) {
                 neighboors.push(coord);
             }
         }
@@ -177,8 +172,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         const landings: Coord[] = [];
         while (landing.isInRange(14, 12) &&
                landings.length < phalanxSize &&
-               this.board[landing.y][landing.x] !== PLAYER)
-        {
+               this.board[landing.y][landing.x] !== PLAYER) {
             if (this.board[landing.y][landing.x] === ENNEMY) {
                 if (this.getPhalanxLength(landing, direction, ENNEMY) < phalanxSize) {
                     landings.push(landing);
@@ -192,10 +186,9 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return landings;
     }
     private getPhalanxLength(firstPiece: Coord, direction: Direction, owner: number): number {
-        let length: number = 0;
+        let length = 0;
         while (firstPiece.isInRange(14, 12) &&
-               this.board[firstPiece.y][firstPiece.x] === owner)
-        {
+               this.board[firstPiece.y][firstPiece.x] === owner) {
             length++;
             firstPiece = firstPiece.getNext(direction, 1);
         }
@@ -223,38 +216,38 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         if (!clicked.isAlignedWith(this.firstPiece)) {
-            return this.cancelMove("Cette case n'est pas alignée avec la pièce sélectionnée.");
+            return this.cancelMove('Cette case n\'est pas alignée avec la pièce sélectionnée.');
         }
         const distance: number = clicked.getDistance(this.firstPiece);
         const direction: Direction = this.firstPiece.getDirectionToward(clicked);
         switch (this.board[y][x]) {
-            case Player.NONE.value:
-                if (distance === 1) {
-                    const move: EpaminondasMove = new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction);
-                    return this.tryMove(move);
-                } else {
-                    return this.cancelMove("Une pièce seule ne peut se déplacer que d'une case.");
-                }
-            case ENNEMY:
-                return this.cancelMove("Une pièce seule ne peut pas capturer.");
-            case PLAYER:
-                const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
-                                                                            this.firstPiece.y,
-                                                                            distance,
-                                                                            1,
-                                                                            direction);
-                const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
-                const phalanxValidity: MGPValidation = this.rules.getPhalanxValidity(slice, incompleteMove);
-                if (phalanxValidity.isFailure()) {
-                    return this.cancelMove(phalanxValidity.reason);
-                } else {
-                    this.lastPiece = clicked;
-                    this.validExtensions = this.getValidExtensions(PLAYER);
-                    this.phalanxValidLandings = this.getPhalanxValidLandings();
-                    this.phalanxMiddles = this.firstPiece.getCoordsToward(this.lastPiece);
-                    this.phalanxDirection = direction;
-                    return;
-                }
+        case Player.NONE.value:
+            if (distance === 1) {
+                const move: EpaminondasMove = new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction);
+                return this.tryMove(move);
+            } else {
+                return this.cancelMove('Une pièce seule ne peut se déplacer que d\'une case.');
+            }
+        case ENNEMY:
+            return this.cancelMove('Une pièce seule ne peut pas capturer.');
+        case PLAYER:
+            const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
+                this.firstPiece.y,
+                distance,
+                1,
+                direction);
+            const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
+            const phalanxValidity: MGPValidation = this.rules.getPhalanxValidity(slice, incompleteMove);
+            if (phalanxValidity.isFailure()) {
+                return this.cancelMove(phalanxValidity.reason);
+            } else {
+                this.lastPiece = clicked;
+                this.validExtensions = this.getValidExtensions(PLAYER);
+                this.phalanxValidLandings = this.getPhalanxValidLandings();
+                this.phalanxMiddles = this.firstPiece.getCoordsToward(this.lastPiece);
+                this.phalanxDirection = direction;
+                return;
+            }
         }
     }
     private thirdClick(x: number, y: number) {
@@ -267,7 +260,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             return this.moveLastPiece(PLAYER);
         }
         if (!clicked.isAlignedWith(this.firstPiece)) {
-            return this.cancelMove("Cette case n'est pas alignée avec la direction de la phalange.");
+            return this.cancelMove('Cette case n\'est pas alignée avec la direction de la phalange.');
         }
         let phalanxDirection: Direction = Direction.fromMove(this.firstPiece, this.lastPiece);
         const phalanxLanding: Direction = Direction.fromMove(this.firstPiece, clicked);
@@ -278,18 +271,18 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             phalanxDirection = phalanxLanding;
         }
         if (phalanxDirection !== phalanxLanding) {
-            return this.cancelMove("Cette case n'est pas alignée avec la direction de la phalange.");
+            return this.cancelMove('Cette case n\'est pas alignée avec la direction de la phalange.');
         }
         if (this.board[y][x] === PLAYER) {
             this.lastPiece = clicked;
             const phalanxSize: number = this.firstPiece.getDistance(this.lastPiece) + 1;
             const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
-                                                                        this.firstPiece.y,
-                                                                        phalanxSize,
-                                                                        1,
-                                                                        phalanxDirection);
+                this.firstPiece.y,
+                phalanxSize,
+                1,
+                phalanxDirection);
             const phalanxValidity: MGPValidation = this.rules.getPhalanxValidity(this.rules.node.gamePartSlice,
-                                                                                 incompleteMove);
+                incompleteMove);
             if (phalanxValidity.isFailure()) {
                 return this.cancelMove(phalanxValidity.reason);
             } else {
@@ -302,10 +295,10 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             const phalanxSize: number = this.firstPiece.getDistance(this.lastPiece) + 1;
             const stepSize: number = this.lastPiece.getDistance(clicked);
             const move: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
-                                                              this.firstPiece.y,
-                                                              phalanxSize,
-                                                              stepSize,
-                                                              phalanxDirection);
+                this.firstPiece.y,
+                phalanxSize,
+                stepSize,
+                phalanxDirection);
             return this.tryMove(move);
         }
     }
@@ -349,20 +342,20 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     }
     private getPlayerColor(player: number): string {
         switch (player) {
-            case Player.ONE.value: return "#ffc34d";
-            case Player.ZERO.value: return "#994d00";
+        case Player.ONE.value: return '#ffc34d';
+        case Player.ZERO.value: return '#994d00';
         }
     }
     public getPieceStroke(x: number, y: number): string {
         // Show pieces belonging to the phalanx to move
         const coord: Coord = new Coord(x, y);
-        if (this.firstPiece.x === -15 && this.lastPiece.x === -15)
+        if (this.firstPiece.x === -15 && this.lastPiece.x === -15) {
             return null;
+        }
         if (this.firstPiece.equals(coord) ||
             this.lastPiece.equals(coord) ||
-            this.phalanxMiddles.some((c: Coord) => c.equals(coord)))
-        {
-            return "yellow";
+            this.phalanxMiddles.some((c: Coord) => c.equals(coord))) {
+            return 'yellow';
         } else {
             return null;
         }

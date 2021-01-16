@@ -7,7 +7,6 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 describe('ReversiRules', () => {
-
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;
     const O: number = Player.ZERO.value;
@@ -22,7 +21,7 @@ describe('ReversiRules', () => {
     });
     it('ReversiRules should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.node.gamePartSlice.turn).toBe(0, "Game should start a turn 0");
+        expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start a turn 0');
         const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
         expect(moves.size()).toBe(4);
     });
@@ -49,14 +48,14 @@ describe('ReversiRules', () => {
     });
     it('Should allow player to pass when no other moves are possible', () => {
         const board: number[][] = [
-            [_, _, _, _, _, _, _, _,],
-            [_, _, _, _, _, _, _, _,],
-            [_, _, _, _, _, _, _, _,],
-            [_, _, _, _, _, _, _, _,],
-            [_, _, _, _, _, _, _, _,],
-            [_, _, _, _, _, _, _, _,],
-            [_, _, _, _, X, _, _, _,],
-            [_, _, _, _, O, _, _, _,],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, X, _, _, _],
+            [_, _, _, _, O, _, _, _],
         ];
         const slice: ReversiPartSlice = new ReversiPartSlice(board, 1);
         rules.node = new MGPNode(null, null, slice, 0);

@@ -1,15 +1,14 @@
-import {Injectable} from '@angular/core';
-import {Observable, Subscription} from 'rxjs';
-import {IJoiner, IJoinerId, PIJoiner} from '../../domain/ijoiner';
-import {JoinerDAO} from '../../dao/joiner/JoinerDAO';
+import { Injectable } from '@angular/core';
+import { Observable, Subscription } from 'rxjs';
+import { IJoiner, IJoinerId, PIJoiner } from '../../domain/ijoiner';
+import { JoinerDAO } from '../../dao/joiner/JoinerDAO';
 import { display } from 'src/app/collectionlib/utils';
 
 @Injectable({
-    providedIn: 'root'
+    providedIn: 'root',
 })
 export class JoinerService {
-
-    public static VERBOSE: boolean = false;
+    public static VERBOSE = false;
 
     public static readonly EMPTY_JOINER: IJoiner = {
         creator: null,
@@ -17,7 +16,7 @@ export class JoinerService {
         chosenPlayer: '',
         // abandonned feature timeoutMinimalDuration: 60,
         firstPlayer: '0', // par défaut: le créateur
-        partStatus: 0 // en attente de tout, TODO: constantifier ça aussi !
+        partStatus: 0, // en attente de tout, TODO: constantifier ça aussi !
     };
 
     private observedJoinerId: string;
@@ -25,10 +24,10 @@ export class JoinerService {
     private observedJoinerSub: Subscription;
 
     constructor(private joinerDao: JoinerDAO) {
-        display(JoinerService.VERBOSE, "JoinerService.constructor");
+        display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
     public startObserving(joinerId: string, callback: (iJoinerId: IJoinerId) => void) {
-        display(JoinerService.VERBOSE, "JoinerService.startObserving " + joinerId);
+        display(JoinerService.VERBOSE, 'JoinerService.startObserving ' + joinerId);
 
         if (this.observedJoinerId == null) {
             display(JoinerService.VERBOSE, '[start observing joiner ' + joinerId);
@@ -36,9 +35,9 @@ export class JoinerService {
             this.observedJoinerId = joinerId;
             this.observedJoinerObs = this.joinerDao.getObsById(joinerId);
             this.observedJoinerSub = this.observedJoinerObs
-                .subscribe(onFullFilled => callback(onFullFilled));
+                .subscribe((onFullFilled) => callback(onFullFilled));
         } else {
-            throw new Error("JoinerService.startObserving should not be called while already observing a joiner");
+            throw new Error('JoinerService.startObserving should not be called while already observing a joiner');
         }
     }
     public async createInitialJoiner(creatorName: string, joinerId: string): Promise<void> {
@@ -55,16 +54,16 @@ export class JoinerService {
 
         const joiner: IJoiner = await this.joinerDao.read(partId);
         if (!joiner) {
-            throw new Error("No Joiner Received from DAO");
+            throw new Error('No Joiner Received from DAO');
         }
         const joinerList: string[] = joiner.candidatesNames;
         if (joinerList.includes(userName)) {
-            throw new Error("JoinerService.joinGame was called by a user already in the game");
+            throw new Error('JoinerService.joinGame was called by a user already in the game');
         } else if (userName === joiner.creator) {
             return Promise.resolve();
         } else {
             joinerList[joinerList.length] = userName;
-            return this.joinerDao.update(partId, {candidatesNames: joinerList});
+            return this.joinerDao.update(partId, { candidatesNames: joinerList });
         }
     }
     public async cancelJoining(userName: string): Promise<void> {
@@ -88,12 +87,12 @@ export class JoinerService {
             } else if (indexLeaver >= 0) { // candidate including chosenPlayer
                 joinersList.splice(indexLeaver, 1);
             } else {
-                throw new Error("someone that was nor candidate nor chosenPlayer just left the chat: " + userName);
+                throw new Error('someone that was nor candidate nor chosenPlayer just left the chat: ' + userName);
             }
             const modification: PIJoiner = {
                 chosenPlayer,
                 partStatus,
-                candidatesNames: joinersList
+                candidatesNames: joinersList,
             };
             await this.joinerDao.update(this.observedJoinerId, modification);
         }
@@ -109,10 +108,10 @@ export class JoinerService {
     public async setChosenPlayer(chosenPlayerPseudo: string): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.setChosenPlayer(' + chosenPlayerPseudo + ')');
 
-        let joiner: IJoiner = await this.joinerDao.read(this.observedJoinerId);
+        const joiner: IJoiner = await this.joinerDao.read(this.observedJoinerId);
         const candidatesNames: string[] = joiner.candidatesNames;
         const chosenPlayerIndex = candidatesNames.indexOf(chosenPlayerPseudo);
-        if (chosenPlayerIndex < 0 ) throw new Error("Cannot choose player, " + chosenPlayerPseudo + " is not in the room");
+        if (chosenPlayerIndex < 0 ) throw new Error('Cannot choose player, ' + chosenPlayerPseudo + ' is not in the room');
 
         // if user is still present, take him off the candidate list
         candidatesNames.splice(chosenPlayerIndex, 1);
@@ -125,11 +124,11 @@ export class JoinerService {
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: 1,
             candidatesNames,
-            chosenPlayer: chosenPlayerPseudo
+            chosenPlayer: chosenPlayerPseudo,
         });
     }
     public unselectChosenPlayer() {
-        throw new Error("JoinerService.unselectChosenPlayer: TODO");
+        throw new Error('JoinerService.unselectChosenPlayer: TODO');
     }
     public proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.proposeConfig(' + maximalMoveDuration + ', ' + firstPlayer + ', ' + totalPartDuration + ')');
@@ -144,13 +143,13 @@ export class JoinerService {
         });
     }
     public acceptConfig(): Promise<void> {
-        display(JoinerService.VERBOSE, "JoinerService.acceptConfig");
+        display(JoinerService.VERBOSE, 'JoinerService.acceptConfig');
 
         if (this.observedJoinerId == null) {
             throw new Error('Can\'t acceptConfig when no joiner doc observed !!');
         }
 
-        return this.joinerDao.update(this.observedJoinerId, {partStatus: 3});
+        return this.joinerDao.update(this.observedJoinerId, { partStatus: 3 });
     }
     public stopObserving() {
         display(JoinerService.VERBOSE, 'JoinerService.stopObserving(); // this.observedJoinerId = ' + this.observedJoinerId);

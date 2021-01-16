@@ -8,7 +8,6 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
 
 describe('GoRules:', () => {
-
     let rules: GoRules;
 
     const X: GoPiece = GoPiece.WHITE;
@@ -41,14 +40,14 @@ describe('GoRules:', () => {
             [_, _, X, X, _],
             [_, X, O, O, X],
             [_, _, _, O, X],
-            [_, _, _, X, _]
+            [_, _, _, X, _],
         ];
         const expectedBoard: GoPiece[][] = [
             [_, _, _, _, _],
             [_, _, X, X, _],
             [_, X, _, _, X],
             [_, _, X, _, X],
-            [_, _, _, X, _]
+            [_, _, _, X, _],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 1, null, Phase.PLAYING);
         const move: GoMove = new GoMove(2, 3);
@@ -68,22 +67,22 @@ describe('GoRules:', () => {
             [X, O, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const expectedBoard: GoPiece[][] = [
             [O, _, O, _, _],
             [X, O, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
-            [_, _, _, _, _]
+            [_, _, _, _, _],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 0, null, Phase.PLAYING);
         const move: GoMove = new GoMove(0, 0);
         const status: GoLegalityStatus = GoRules.isLegal(move, slice);
         const resultingSlice: GoPartSlice = GoRules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: GoPartSlice = new GoPartSlice(expectedBoard, [1, 0], 1, new Coord(1, 0), Phase.PLAYING);
-        expect(resultingSlice).toEqual(expectedSlice, "resultingSlice");
-        expect(GoRules.isLegal(new GoMove(1, 0), resultingSlice).legal.isSuccess()).toBeFalse()
+        expect(resultingSlice).toEqual(expectedSlice, 'resultingSlice');
+        expect(GoRules.isLegal(new GoMove(1, 0), resultingSlice).legal.isSuccess()).toBeFalse();
     });
     it('snap back should be legal TODO: Enhance', () => {
         expect(rules.choose(new GoMove(2, 4))).toBeTrue(); expect(rules.choose(new GoMove(3, 4))).toBeTrue();
@@ -95,9 +94,9 @@ describe('GoRules:', () => {
         expect(rules.choose(new GoMove(4, 4))).toBeTrue(); // Legal snapback
     });
     it('Phase.PLAYING + GoMove.PASS = Phase.PASSED', () => {
-        expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, "Initial phase should be 'PLAYING'");
+        expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, 'Initial phase should be \'PLAYING\'');
         expect(rules.choose(GoMove.PASS)).toBeTrue();
-        expect(rules.node.gamePartSlice.phase).toBe(Phase.PASSED, "Phase should have been switched to 'PASSED'");
+        expect(rules.node.gamePartSlice.phase).toBe(Phase.PASSED, 'Phase should have been switched to \'PASSED\'');
     });
     it('Phase.PASSED + GoMove/play = Phase.PLAYING', () => {
         expect(rules.choose(GoMove.PASS)).toBeTrue();
@@ -120,7 +119,7 @@ describe('GoRules:', () => {
             [b, b, O, X, _],
             [b, b, O, X, _],
             [b, b, O, X, X],
-            [b, b, O, X, w]
+            [b, b, O, X, w],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 0, null, Phase.PASSED);
         const move: GoMove = GoMove.PASS;
@@ -135,14 +134,14 @@ describe('GoRules:', () => {
             [b, O, X, w, w],
             [b, O, X, w, w],
             [b, O, X, w, w],
-            [b, O, X, w, w]
+            [b, O, X, w, w],
         ];
         const expectedBoard: GoPiece[][] = [
             [w, u, X, w, w],
             [w, u, X, w, w],
             [w, u, X, w, w],
             [w, u, X, w, w],
-            [w, u, X, w, w]
+            [w, u, X, w, w],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [5, 10], 0, null, Phase.COUNTING);
         const move: GoMove = new GoMove(1, 1);
@@ -158,14 +157,14 @@ describe('GoRules:', () => {
             [b, O, X, w, w],
             [b, O, X, w, w],
             [b, O, X, w, w],
-            [b, O, X, w, w]
+            [b, O, X, w, w],
         ];
         const expectedBoard: GoPiece[][] = [
             [b, O, k, b, b],
             [b, O, k, b, b],
             [b, O, k, b, b],
             [b, O, k, b, b],
-            [b, O, k, b, b]
+            [b, O, k, b, b],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [5, 10], 0, null, Phase.COUNTING);
         const move: GoMove = new GoMove(2, 2);
@@ -181,14 +180,14 @@ describe('GoRules:', () => {
             [b, b, O, X, _],
             [b, b, O, X, _],
             [b, b, O, X, X],
-            [b, b, O, X, w]
+            [b, b, O, X, w],
         ];
         const expectedBoard: GoPiece[][] = [
             [b, b, O, X, u],
             [b, b, O, X, w],
             [b, b, O, X, w],
             [b, b, O, X, X],
-            [b, b, O, X, w]
+            [b, b, O, X, w],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [10, 1], 0, null, Phase.COUNTING);
         const move: GoMove = new GoMove(4, 0);
@@ -203,14 +202,14 @@ describe('GoRules:', () => {
             [b, b, b, b, b],
             [b, b, b, b, b],
             [b, b, b, b, b],
-            [b, b, b, k, O]
+            [b, b, b, k, O],
         ];
         const expectedBoard: GoPiece[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, X],
-            [_, _, _, X, _]
+            [_, _, _, X, _],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [25, 0], 1, null, Phase.COUNTING);
         const move: GoMove = new GoMove(4, 3);
@@ -235,14 +234,14 @@ describe('GoRules:', () => {
             [b, k, b, O, b],
             [b, k, b, O, O],
             [O, k, b, O, b],
-            [b, k, b, O, b]
+            [b, k, b, O, b],
         ];
         const expectedBoard: GoPiece[][] = [
             [_, X, _, O, _],
             [_, X, _, O, _],
             [X, X, _, O, O],
             [O, X, _, O, _],
-            [_, X, _, O, _]
+            [_, X, _, O, _],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [23, 0], 1, null, Phase.COUNTING);
         const move: GoMove = new GoMove(0, 2);
@@ -258,14 +257,14 @@ describe('GoRules:', () => {
             [w, w, w, w, w],
             [w, w, w, w, X],
             [w, w, w, X, w],
-            [w, w, w, X, u]
+            [w, w, w, X, u],
         ];
         const expectedBoard: GoPiece[][] = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, X],
             [_, _, _, X, X],
-            [_, _, _, X, _]
+            [_, _, _, X, _],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [0, 23], 1, null, Phase.ACCEPT);
         const move: GoMove = new GoMove(4, 3);
@@ -296,7 +295,7 @@ describe('GoRules:', () => {
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
 
         expect(rules.node.isEndGame()).toBeTrue();
-        expect(rules.node.gamePartSlice.phase).toBe(Phase.FINISHED, "Phase should have been switched to 'FINISHED'")
+        expect(rules.node.gamePartSlice.phase).toBe(Phase.FINISHED, 'Phase should have been switched to \'FINISHED\'');
     });
     it('simply shared board should be simple to calculate', () => {
         const previousBoard: GoPiece[][] = [
@@ -311,13 +310,13 @@ describe('GoRules:', () => {
             [b, b, O, X, w],
             [b, b, O, X, w],
             [b, b, O, X, w],
-            [b, b, O, X, w]
+            [b, b, O, X, w],
         ];
         const slice: GoPartSlice = new GoPartSlice(previousBoard, [0, 0], 10, null, Phase.PASSED);
         const move: GoMove = GoMove.PASS;
         const legality: GoLegalityStatus = rules.isLegal(move, slice);
         const resultingSlice: GoPartSlice = rules.applyLegalMove(move, slice, legality).resultingSlice;
-        expect(resultingSlice.getCapturedCopy()).toEqual([10, 5], "Board score should be 10 against 5");
+        expect(resultingSlice.getCapturedCopy()).toEqual([10, 5], 'Board score should be 10 against 5');
         expect(resultingSlice.getCopiedBoardGoPiece()).toEqual(expectedBoard);
     });
     it('AddDeadToScore should be a simple counting method', () => {
@@ -330,7 +329,7 @@ describe('GoRules:', () => {
 
         const expectedScore: number[] = [7, 3];
         const score: number[] = GoRules.addDeadToScore(sliceWithDead);
-        expect(score).toEqual(expectedScore, "Score should be 7 vs 3")
+        expect(score).toEqual(expectedScore, 'Score should be 7 vs 3');
     });
     it('Should calculate correctly board with dead stones', () => {
         const board: GoPiece[][] = [
@@ -338,7 +337,7 @@ describe('GoRules:', () => {
             [_, _, X, O, _],
             [_, _, X, O, X],
             [X, X, X, O, _],
-            [_, O, O, O, _]
+            [_, O, O, O, _],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 0, null, Phase.PASSED);
         rules.node = new MGPNode(null, null, slice, -6);

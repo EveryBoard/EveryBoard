@@ -3,10 +3,9 @@ import { TablutCase } from './tablutrules/TablutCase';
 import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class TablutPartSlice extends GamePartSlice {
-
     // Statics Fields:
 
-    public static INVADER_START: boolean = true;
+    public static INVADER_START = true;
 
     // Statics Methods :
 

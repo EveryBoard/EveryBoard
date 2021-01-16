@@ -1,19 +1,18 @@
-import {Component} from '@angular/core';
-import {QuartoMove} from '../../../games/quarto/quartomove/QuartoMove';
-import {QuartoPartSlice} from '../../../games/quarto/QuartoPartSlice';
-import {QuartoRules} from '../../../games/quarto/quartorules/QuartoRules';
-import {QuartoEnum} from '../../../games/quarto/QuartoEnum';
-import {AbstractGameComponent} from '../AbstractGameComponent';
+import { Component } from '@angular/core';
+import { QuartoMove } from '../../../games/quarto/quartomove/QuartoMove';
+import { QuartoPartSlice } from '../../../games/quarto/QuartoPartSlice';
+import { QuartoRules } from '../../../games/quarto/quartorules/QuartoRules';
+import { QuartoEnum } from '../../../games/quarto/QuartoEnum';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
 
 @Component({
     selector: 'app-quarto',
-    templateUrl: './quarto.component.html'
+    templateUrl: './quarto.component.html',
 })
 export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice, LegalityStatus> {
-
     public rules = new QuartoRules(QuartoPartSlice);
 
     public chosen: Coord = new Coord(-1, -1);
@@ -39,7 +38,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
         this.cancelMove();
     }
-    /********************************** For Online Game **********************************/
+    /** ******************************** For Online Game **********************************/
 
     public decodeMove(encodedMove: number): QuartoMove {
         return QuartoMove.decode(encodedMove);
@@ -62,7 +61,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
                 const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoEnum.UNOCCUPIED);
-                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null)
+                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             }
             if (this.pieceToGive !== -1) {
                 // the user has already chosen his piece before his coord
@@ -72,7 +71,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             return MGPValidation.SUCCESS; // the user has just chosen his coord
         }
         // the user chose an occupied place of the board, so an illegal move, so we cancel all
-        return this.cancelMove("you cannot move from an empty case");
+        return this.cancelMove('you cannot move from an empty case');
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
         this.hideLastMove(); // now the user tried to choose something
@@ -88,7 +87,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             return MGPValidation.SUCCESS; // the user has just chosen his piece
         }
         // the user chose an empty piece, let's cancel this
-        return this.cancelMove("you can't choose an empty piece");
+        return this.cancelMove('you can\'t choose an empty piece');
     }
     public hideLastMove() {
         this.lastMove = new Coord(-1, -1);

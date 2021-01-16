@@ -8,11 +8,10 @@ import { display } from 'src/app/collectionlib/utils';
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
-    styleUrls: ['./chat.component.css']
+    styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-
-    public static VERBOSE: boolean = false;
+    public static VERBOSE = false;
 
     @Input() public chatId: string;
     @Input() public turn: number;
@@ -20,14 +19,14 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     public chat: IMessage[];
     public userMessage: string;
-    public readMessages: number = 0;
-    public unreadMessages: number = 0;
+    public readMessages = 0;
+    public unreadMessages = 0;
 
-    public visible: boolean = true;
+    public visible = true;
 
     constructor(private chatService: ChatService,
                 private authenticationService: AuthenticationService) {
-        display(ChatComponent.VERBOSE, "ChatComponent constructor");
+        display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
     public ngOnInit() {
         display(ChatComponent.VERBOSE, 'ChatComponent.ngOnInit');
@@ -35,13 +34,13 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
 
         this.authenticationService.getJoueurObs()
-            .subscribe(joueur => {
+            .subscribe((joueur) => {
                 if (this.isConnectedUser(joueur)) {
-                    display(ChatComponent.VERBOSE, JSON.stringify(joueur) + " just connected");
+                    display(ChatComponent.VERBOSE, JSON.stringify(joueur) + ' just connected');
                     this.userName = joueur.pseudo;
                     this.loadChatContent();
                 } else {
-                    display(ChatComponent.VERBOSE, "No User Logged");
+                    display(ChatComponent.VERBOSE, 'No User Logged');
                     this.showDisconnectedChat();
                 }
             });
@@ -68,7 +67,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         }
     }
     public showDisconnectedChat() {
-        const msg: IMessage = {sender: 'fake', content: 'vous devez être connecté pour voir le chat...', postedTime: Date.now(), lastTurnThen: null};
+        const msg: IMessage = { sender: 'fake', content: 'vous devez être connecté pour voir le chat...', postedTime: Date.now(), lastTurnThen: null };
         this.chat = [msg, msg, msg, msg, msg];
     }
     public sendMessage() {
@@ -79,8 +78,9 @@ export class ChatComponent implements OnInit, OnDestroy {
         this.userMessage = '';
     }
     public ngOnDestroy() {
-        if (this.chatService.isObserving())
+        if (this.chatService.isObserving()) {
             this.chatService.stopObserving();
+        }
     }
     public switchChatVisibility() {
         if (this.visible === true) {

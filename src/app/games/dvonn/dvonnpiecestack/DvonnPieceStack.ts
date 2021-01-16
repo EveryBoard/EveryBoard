@@ -1,5 +1,5 @@
-import { DvonnPiece } from "../DvonnPiece";
-import { Player } from "src/app/jscaip/player/Player";
+import { DvonnPiece } from '../DvonnPiece';
+import { Player } from 'src/app/jscaip/player/Player';
 
 export class DvonnPieceStack {
     public static of(v: number): DvonnPieceStack {
@@ -13,7 +13,7 @@ export class DvonnPieceStack {
         }
         return new DvonnPieceStack(pieces.reverse());
     }
-    public static MAX_SIZE: number = 49; // The maximal possible size for a stack
+    public static MAX_SIZE = 49; // The maximal possible size for a stack
     public static EMPTY: DvonnPieceStack = new DvonnPieceStack([]);
     public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO]);
     public static PLAYER_ONE: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ONE]);
@@ -52,10 +52,10 @@ export class DvonnPieceStack {
         return this.pieces.length;
     }
     public toString(): string {
-        let str = "[";
+        let str = '[';
         for (const piece of this.pieces) {
             str += piece.toString();
         }
-        return str + "]";
+        return str + ']';
     }
 }

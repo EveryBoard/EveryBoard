@@ -17,20 +17,21 @@ import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 const activatedRouteStub = {
     snapshot: {
         paramMap: {
-            get: (str: String) => {
-                return "Awale"
+            get: (str: string) => {
+                return 'Awale';
             },
         },
     },
-}
+};
 const authenticationServiceStub = {
 
-    getJoueurObs: () => of({ pseudo: null, verified: null}),
+    getJoueurObs: () => of({ pseudo: null, verified: null }),
 
-    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
+    getAuthenticatedUser: () => {
+        return { pseudo: null, verified: null };
+    },
 };
 describe('AwaleComponent', () => {
-
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
@@ -43,10 +44,10 @@ describe('AwaleComponent', () => {
                 RouterTestingModule,
                 AppModule,
             ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
@@ -56,30 +57,30 @@ describe('AwaleComponent', () => {
         tick(1);
         gameComponent = wrapper.gameComponent as AwaleComponent;
     }));
-    it('should create', async() => {
+    it('should create', async () => {
         expect(gameComponent).toBeTruthy();
         expect((await gameComponent.onClick(0, 0)).isSuccess()).toBeTrue();
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(AwaleMove, "decode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(AwaleMove, 'decode').and.callThrough();
         gameComponent.decodeMove(5);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(AwaleMove, "encode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(AwaleMove, 'encode').and.callThrough();
         gameComponent.encodeMove(new AwaleMove(1, 1));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
-    it('should tell to user he can\'t move empty house', async() => {
+    it('should tell to user he can\'t move empty house', async () => {
         const board: number[][] = [
             [0, 4, 4, 4, 4, 4],
-            [4, 4, 4, 4, 4, 4]
+            [4, 4, 4, 4, 4, 4],
         ];
         const slice: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         fixture.detectChanges();
-        spyOn(gameComponent, "message").and.callThrough();
+        spyOn(gameComponent, 'message').and.callThrough();
         expect((await gameComponent.onClick(0, 0)).isFailure()).toBeTrue();
-        expect(gameComponent.message).toHaveBeenCalledWith("You must choose a non-empty house to distribute.");
+        expect(gameComponent.message).toHaveBeenCalledWith('You must choose a non-empty house to distribute.');
     });
 });

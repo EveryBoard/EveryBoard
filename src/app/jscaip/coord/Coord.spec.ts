@@ -1,7 +1,6 @@
-import { Coord } from "./Coord";
+import { Coord } from './Coord';
 
 describe('Coord', () => {
-
     it('should compare correctly, y first', () => {
         const smallCoord: Coord = new Coord(2, 1);
         const bigCoord: Coord = new Coord(1, 2);
@@ -20,7 +19,7 @@ describe('Coord', () => {
     });
     it('Should override equals correctly', () => {
         const coord: Coord = new Coord(0, 0);
-        const android: { x: number, y: number } = { x: 0, y: 0};
+        const android: { x: number, y: number } = { x: 0, y: 0 };
         const horizontalNeighboors: Coord = new Coord(1, 0);
         const verticalNeighboors: Coord = new Coord(0, 1);
         expect(coord.equals(coord)).toBeTrue();

@@ -1,12 +1,11 @@
-import { NumberTable } from "src/app/collectionlib/arrayutils/ArrayUtils";
-import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
-import { Coord } from "src/app/jscaip/coord/Coord";
-import { Orthogonal } from "src/app/jscaip/DIRECTION";
-import { QuartoEnum } from "../QuartoEnum";
-import { CoordDir, QuartoHasher, QuartoHashInfo } from "./QuartoHasher";
+import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { QuartoEnum } from '../QuartoEnum';
+import { CoordDir, QuartoHasher, QuartoHashInfo } from './QuartoHasher';
 
 describe('QuartoHasher', () => {
-
     const _: number = QuartoEnum.UNOCCUPIED;
     const A: number = QuartoEnum.AAAA;
     const B: number = QuartoEnum.AAAB;
@@ -48,10 +47,10 @@ describe('QuartoHasher', () => {
         const remainingCoordDirs: QuartoHashInfo = QuartoHasher.filterSubLevel(board, 0, MGPOptional.empty(), QuartoHasher.coordDirs);
         expect(remainingCoordDirs).toEqual({
             coordDirs: [
-                {coord: new Coord(3, 0), dir: Orthogonal.LEFT},
-                {coord: new Coord(3, 0), dir: Orthogonal.DOWN}
+                { coord: new Coord(3, 0), dir: Orthogonal.LEFT },
+                { coord: new Coord(3, 0), dir: Orthogonal.DOWN },
             ],
-            firstPiece: MGPOptional.of(A)
+            firstPiece: MGPOptional.of(A),
         });
     });
     it('should filter correctly with only one corner occupied and one adjacent ridge', () => {
@@ -64,10 +63,10 @@ describe('QuartoHasher', () => {
         const remainingCoordDirs: QuartoHashInfo = QuartoHasher.filterSubLevel(board, 1, MGPOptional.empty(), QuartoHasher.coordDirs);
         expect(remainingCoordDirs).toEqual({
             coordDirs: [
-                {coord: new Coord(3, 0), dir: Orthogonal.LEFT},
-                {coord: new Coord(3, 0), dir: Orthogonal.DOWN}
+                { coord: new Coord(3, 0), dir: Orthogonal.LEFT },
+                { coord: new Coord(3, 0), dir: Orthogonal.DOWN },
             ],
-            firstPiece: MGPOptional.of(A)
+            firstPiece: MGPOptional.of(A),
         });
     });
 });

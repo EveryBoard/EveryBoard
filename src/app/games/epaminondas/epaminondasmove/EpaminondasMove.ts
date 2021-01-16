@@ -1,35 +1,40 @@
-import { Direction } from "src/app/jscaip/DIRECTION";
-import { MoveCoord } from "src/app/jscaip/MoveCoord";
+import { Direction } from 'src/app/jscaip/DIRECTION';
+import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class EpaminondasMove extends MoveCoord {
-
     public constructor(
         x: number, y: number,
         public readonly movedPieces: number,
         public readonly stepSize: number,
-        public readonly direction: Direction)
-    {
+        public readonly direction: Direction) {
         super(x, y);
-        if (this.coord.isNotInRange(14, 12))
+        if (this.coord.isNotInRange(14, 12)) {
             throw new Error('Illegal coord outside of board ' + this.coord.toString() + '.');
-        if (movedPieces == null)
+        }
+        if (movedPieces == null) {
             throw new Error('Number of moved pieces cannot be null.');
-        if (movedPieces < 1)
+        }
+        if (movedPieces < 1) {
             throw new Error('Must select minimum one piece (got ' + movedPieces + ').');
-        if (stepSize == null)
+        }
+        if (stepSize == null) {
             throw new Error('Step size cannot be null.');
-        if (stepSize < 1)
+        }
+        if (stepSize < 1) {
             throw new Error('Step size must be minimum one (got ' + stepSize + ').');
-        if (stepSize > movedPieces)
+        }
+        if (stepSize > movedPieces) {
             throw new Error('Cannot move a phalanx further than its size (got step size ' + stepSize + ' for ' + movedPieces+ ' pieces).');
-        if (direction == null)
+        }
+        if (direction == null) {
             throw new Error('Direction cannot be null.');
+        }
     }
-    public toString(): String {
-        return "EpaminondasMove(" + this.coord.toString() + ", m:"
-                                  + this.movedPieces + ", s:"
-                                  + this.stepSize + ", "
-                                  + this.direction.toString() + ")";
+    public toString(): string {
+        return 'EpaminondasMove(' + this.coord.toString() + ', m:' +
+                                  this.movedPieces + ', s:' +
+                                  this.stepSize + ', ' +
+                                  this.direction.toString() + ')';
     }
     public equals(o: any): boolean {
         if (this === o) return true;
@@ -57,7 +62,7 @@ export class EpaminondasMove extends MoveCoord {
     }
     public static decode(encodedMove: number): EpaminondasMove {
         // encoded as such : cx; cy; movedPiece; stepSize; direction
-        if (encodedMove % 1 !== 0) throw new Error("EncodedMove must be an integer.");
+        if (encodedMove % 1 !== 0) throw new Error('EncodedMove must be an integer.');
 
         const direction: number = encodedMove % 8;
         encodedMove -= direction;

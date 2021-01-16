@@ -15,19 +15,30 @@ module.exports = {
     plugins: [
         '@typescript-eslint'
     ],
+    extends: ['eslint:recommended', 'google', 'plugin:@typescript-eslint/recommended' ],
     rules: {
-        'semi': [WARN, 'always'],
-        'space-before-function-paren': [WARN, 'never'],
-        'quotes': [WARN, 'single'],
-        'indent': [WARN, 4],
-        'quote-props': [OFF],
-        'lines-between-class-members': [WARN, 'always'],
-        'object-curly-spacing': [WARN, 'always'],
-        'padded-blocks': [WARN, 'never'],
-        'array-bracket-spacing': [WARN, 'never'],
-        'comma-dangle': [WARN, 'never'],
-        'eol-last': [WARN, 'always'],
-        'quotes': [WARN, 'single'],
-        'no-multi-spaces': [WARN, {'ignoreEOLComments': true}]
+        '@typescript-eslint/typedef': ['warn', {'arrowParameter': true, 'memberVariableDeclaration': true, 'propertyDeclaration': true, 'variableDeclaration': true, 'parameter': true}],
+        '@typescript-eslint/no-empty-function': ['off'],
+        '@typescript-eslint/no-namespace': ['warn'],
+        '@typescript-eslint/ban-types': ['error', {'types': {'String': {'message': 'Use string instead', 'fixWith': 'string'}}}],
+        '@typescript-eslint/no-this-alias': ['warn'],
+        'max-len': ['warn', {'code': 80}],
+        'require-jsdoc': ['warn', {'require': {
+            "FunctionDeclaration": false,
+            "MethodDefinition": false,
+            "ClassDeclaration": false,
+            "ArrowFunctionExpression": false,
+            "FunctionExpression": false
+        }}],
+        'new-cap': ['off'], // Because there are false positives
+        'no-undef': ['off'], // Because there are false positives
+        'no-unused-vars': ['warn'],
+        'no-invalid-this': ['warn'],
+        'indent': ['error', 4],
+        'object-curly-spacing': ['warn', 'always'],
+        'no-redeclare': ['warn'], // TODO: add option ignoreDeclarationMerge: true and set to error
+        'camelcase': ['warn'],
+        'valid-jsdoc': ['warn'],
+        'no-case-declarations': ['warn'],
     }
 };

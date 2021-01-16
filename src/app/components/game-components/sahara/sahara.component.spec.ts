@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -18,20 +18,21 @@ import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
 const activatedRouteStub = {
     snapshot: {
         paramMap: {
-            get: (str: String) => {
-                return "Sahara"
+            get: (str: string) => {
+                return 'Sahara';
             },
         },
     },
-}
+};
 const authenticationServiceStub = {
 
-    getJoueurObs: () => of({ pseudo: null, verified: null}),
+    getJoueurObs: () => of({ pseudo: null, verified: null }),
 
-    getAuthenticatedUser: () => { return { pseudo: null, verified: null}; },
+    getAuthenticatedUser: () => {
+        return { pseudo: null, verified: null };
+    },
 };
 describe('SaharaComponent', () => {
-
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
@@ -40,7 +41,7 @@ describe('SaharaComponent', () => {
 
     let gameComponent: SaharaComponent;
 
-    let clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
+    const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
         const element: DebugElement = debugElement.query(By.css(elementName));
         if (element != null) {
             element.triggerEventHandler('click', null);
@@ -51,7 +52,7 @@ describe('SaharaComponent', () => {
             return false;
         }
     };
-    let onClick: (x: number, y: number) => Promise<boolean> = async(x: number, y: number) => {
+    const onClick: (x: number, y: number) => Promise<boolean> = async (x: number, y: number) => {
         return clickElement('#click_' + x + '_' + y);
     };
     beforeAll(() => {
@@ -63,10 +64,10 @@ describe('SaharaComponent', () => {
                 RouterTestingModule,
                 AppModule,
             ],
-            schemas: [ CUSTOM_ELEMENTS_SCHEMA ],
+            schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute,        useValue: activatedRouteStub },
-                { provide: JoueursDAO,            useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
@@ -78,20 +79,20 @@ describe('SaharaComponent', () => {
         gameComponent = wrapper.gameComponent as SaharaComponent;
     }));
     it('should create', () => {
-        expect(wrapper).toBeTruthy("Wrapper should be created");
-        expect(gameComponent).toBeTruthy("SaharaComponent should be created");
+        expect(wrapper).toBeTruthy('Wrapper should be created');
+        expect(gameComponent).toBeTruthy('SaharaComponent should be created');
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(SaharaMove, "decode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(SaharaMove, 'decode').and.callThrough();
         gameComponent.decodeMove(1);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(SaharaMove, "encode").and.callThrough();
+        const moveSpy: jasmine.Spy = spyOn(SaharaMove, 'encode').and.callThrough();
         gameComponent.encodeMove(new SaharaMove(new Coord(1, 1), new Coord(2, 1)));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
-    it('Should play correctly shortest victory', fakeAsync(async() => {
+    it('Should play correctly shortest victory', fakeAsync(async () => {
         expect(await onClick(0, 3)).toBeTrue();
         expect(await onClick(1, 4)).toBeTrue();
         expect(await onClick(3, 0)).toBeTrue();
@@ -101,34 +102,39 @@ describe('SaharaComponent', () => {
         fixture.detectChanges();
         expect(wrapper.endGame).toBeTrue();
     }));
-    it('should not allow to click on empty case when no pyramid selected', fakeAsync(async() => {
+    it('should not allow to click on empty case when no pyramid selected', fakeAsync(async () => {
         expect(gameComponent.chosenCoord).toEqual(new Coord(-2, -2));
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(2, 2);
+        flush();
         expect(gameComponent.chosenCoord).toEqual(new Coord(-2, -2));
-        expect(gameComponent.message).toHaveBeenCalledWith("You must first select a pyramid.");
+        expect(gameComponent.message).toHaveBeenCalledWith('You must first select a pyramid.');
     }));
-    it('should not allow to select ennemy pyramid', fakeAsync(async() => {
+    it('should not allow to select ennemy pyramid', fakeAsync(async () => {
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(0, 4);
-        expect(gameComponent.message).toHaveBeenCalledWith("You cannot select ennemy pyramid.");
+        flush();
+        expect(gameComponent.message).toHaveBeenCalledWith('You cannot select ennemy pyramid.');
     }));
-    it('should not allow to select ennemy pyramid', fakeAsync(async() => {
+    it('should not allow to select ennemy pyramid', fakeAsync(async () => {
         await onClick(0, 3);
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(0, 4);
-        expect(gameComponent.message).toHaveBeenCalledWith("You can't land your pyramid on the ennemy's.");
+        flush();
+        expect(gameComponent.message).toHaveBeenCalledWith('You can\'t land your pyramid on the ennemy\'s.');
     }));
-    it('should not allow to bounce on occupied brown case', fakeAsync(async() => {
+    it('should not allow to bounce on occupied brown case', fakeAsync(async () => {
         await onClick(7, 0);
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(8, 1);
-        expect(gameComponent.message).toHaveBeenCalledWith("You can only bounce on UNOCCUPIED brown case.");
+        flush();
+        expect(gameComponent.message).toHaveBeenCalledWith('You can only bounce on UNOCCUPIED brown case.');
     }));
-    it('should not allow to do invalid moves', fakeAsync(async() => {
+    it('should not allow to do invalid moves', fakeAsync(async () => {
         await onClick(0, 3);
         spyOn(gameComponent, 'message').and.callThrough();
         await onClick(2, 2);
-        expect(gameComponent.message).toHaveBeenCalledWith("Maximal |x| + |y| distance for SaharaMove is 2, got 3.");
+        flush();
+        expect(gameComponent.message).toHaveBeenCalledWith('Maximal |x| + |y| distance for SaharaMove is 2, got 3.');
     }));
 });

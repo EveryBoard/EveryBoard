@@ -1,17 +1,16 @@
 import { P4Node, P4Rules } from './P4Rules';
-import { MoveX } from '../../../jscaip/MoveX';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Player } from 'src/app/jscaip/player/Player';
 import { P4PartSlice } from '../P4PartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { P4Move } from '../P4Move';
 
 describe('P4Rules', () => {
-
     let rules: P4Rules;
-    let O: number = Player.ZERO.value;
-    let X: number = Player.ONE.value;
-    let _: number = Player.NONE.value;
+    const O: number = Player.ZERO.value;
+    const X: number = Player.ONE.value;
+    const _: number = Player.NONE.value;
 
     beforeAll(() => {
         P4Rules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || P4Rules.VERBOSE;
@@ -41,7 +40,7 @@ describe('P4Rules', () => {
             [_, _, _, O, _, _, _],
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 0);
-        const move: MoveX = MoveX.get(3);
+        const move: P4Move = P4Move.of(3);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: P4PartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -66,7 +65,7 @@ describe('P4Rules', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 0);
         rules.node = new MGPNode(null, null, slice, 0);
-        const move: MoveX = MoveX.get(3);
+        const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
         expect(rules.node.ownValue).toEqual(Number.MIN_SAFE_INTEGER);
@@ -91,7 +90,7 @@ describe('P4Rules', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 1);
         rules.node = new MGPNode(null, null, slice, 0);
-        const move: MoveX = MoveX.get(3);
+        const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
         expect(rules.node.ownValue).toEqual(Number.MAX_SAFE_INTEGER);
@@ -116,7 +115,7 @@ describe('P4Rules', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 41);
         rules.node = new MGPNode(null, null, slice, 0);
-        const move: MoveX = MoveX.get(3);
+        const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
         const resultingSlice: P4PartSlice = rules.node.gamePartSlice;
         expect(resultingSlice.board).toEqual(expectedBoard);
