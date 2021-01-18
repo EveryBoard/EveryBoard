@@ -119,7 +119,7 @@ describe('SiamComponent', () => {
         const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         expect(await doMove(move)).toBeTrue();
     }));
-    it('Should not allow to choose direction before choosing piece', async () => {
+    it('Should not allow to choose direction before choosing piece', async () => { // TODO: nany, "not allow" & "toBeTrue" ???
         let move: SiamMove = new SiamMove(5, 2, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         expect(await doMove(move)).toBeTrue();
         move = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
@@ -146,16 +146,14 @@ describe('SiamComponent', () => {
         spyOn(gameComponent, 'clickPiece').and.callThrough();
         expect(await clickPiece(new Coord(4, 4))).toBeTrue();
         flush();
-        expect(gameComponent.clickPiece).toHaveBeenCalledTimes(1);
-        expect(gameComponent.clickPiece).toHaveBeenCalledWith(4, 4);
+        expect(gameComponent.clickPiece).toHaveBeenCalledOnceWith(4, 4);
 
         // then insertion should not
         spyOn(gameComponent, 'message').and.callThrough();
         spyOn(gameComponent, 'insertAt').and.callThrough();
         expect(await insertAt(new Coord(-1, 2))).toBeTrue();
         flush();
-        expect(gameComponent.insertAt).toHaveBeenCalledTimes(1);
-        expect(gameComponent.insertAt).toHaveBeenCalledWith(-1, 2);
+        expect(gameComponent.insertAt).toHaveBeenCalledOnceWith(-1, 2);
         expect(gameComponent.message).toHaveBeenCalledWith('Can\'t insert when there is already a selected piece');
     }));
     it('should allow rotation', fakeAsync(async () => {

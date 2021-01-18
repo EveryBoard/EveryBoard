@@ -47,7 +47,7 @@ describe('QuixoComponent', () => {
 
     const doMove: (move: QuixoMove) => Promise<MGPValidation> = async (move: QuixoMove) => {
         return gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
-               await gameComponent.chooseDirection(move.direction.toString()); // TODO simulate clicks, not function call
+               await gameComponent.chooseDirection(move.direction.toString());
     };
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({

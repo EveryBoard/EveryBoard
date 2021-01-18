@@ -7,6 +7,7 @@ import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { display } from 'src/app/collectionlib/utils';
 
 @Component({
     selector: 'app-pylos',
@@ -21,11 +22,12 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     public lastLandingCoord: PylosCoord = null;
     public lastStartingCoord: PylosCoord = null;
+    public lastFirstCapture: PylosCoord = null;
+    public lastSecondCapture: PylosCoord = null;
+
     public chosenStartingCoord: PylosCoord = null;
     public chosenLandingCoord: PylosCoord = null;
     public chosenFirstCapture: PylosCoord = null;
-    public lastFirstCapture: PylosCoord = null;
-    public lastSecondCapture: PylosCoord = null;
 
     public lastMove: PylosMove = null;
 
@@ -40,14 +42,16 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         const coord: PylosCoord = new PylosCoord(x, y, z);
         if (this.slice.getBoardAt(coord) === Player.NONE.value) {
             return this.slice.isLandable(coord);
+        } else {
+            return true;
         }
-        return true;
     }
     public async onClick(x: number, y: number, z: number): Promise<MGPValidation> {
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
         const clickedPiece: number = this.slice.getBoardAt(clickedCoord);
-        if (clickedPiece === this.slice.getCurrentPlayer().value ||
-            clickedCoord.equals(this.chosenLandingCoord)) {
+        const coordIsAPiece: boolean = clickedPiece === this.slice.getCurrentPlayer().value;
+        const coordIsChosenLandingCoord: boolean = clickedCoord.equals(this.chosenLandingCoord);
+        if (coordIsAPiece || coordIsChosenLandingCoord) {
             return await this.onPieceClick(clickedCoord);
         } else if (clickedPiece === Player.NONE.value) {
             return await this.onEmptyCaseClick(clickedCoord);
@@ -101,15 +105,20 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             this.chosenLandingCoord = clickedCoord;
             return MGPValidation.SUCCESS; // now player can click on his captures
         } else {
-            const dropWithoutCapture: boolean = this.chosenStartingCoord == null;
-            const endClimbingWithoutCapture: boolean = clickedCoord.isUpperThan(this.chosenStartingCoord);
-            if (dropWithoutCapture || endClimbingWithoutCapture) {
+            if (this.isCapturelesMoveFinished(clickedCoord)) {
                 this.chosenLandingCoord = clickedCoord;
                 return this.concludeMoveWithCapture([]);
             } else {
                 return this.cancelMove('Must move pieces upward.');
             }
         }
+    }
+    private isCapturelesMoveFinished(clickedCoord: PylosCoord): boolean {
+        if (this.chosenStartingCoord == null) {
+            // Drop without capture
+            return true;
+        }
+        return clickedCoord.isUpperThan(this.chosenStartingCoord); // true if legal climbing (without capture)
     }
     public getPieceStyle(x: number, y: number, z: number): any {
         const c: PylosCoord = new PylosCoord(x, y, z);

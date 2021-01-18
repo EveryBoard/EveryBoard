@@ -19,7 +19,7 @@ import { display } from 'src/app/collectionlib/utils';
     providedIn: 'root',
 })
 export class GameService {
-    public static VERBOSE = true;
+    public static VERBOSE = false;
 
     private followedPartId: string;
 

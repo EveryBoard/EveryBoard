@@ -1,4 +1,4 @@
-import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
@@ -98,8 +98,10 @@ describe('ServerPageComponent', () => {
         console.log('1. should create');
         expect(component).toBeTruthy();
         fixture.detectChanges();
-        expect(component['userNameSub']).toBeDefined(); // This is inspecting a private field (not very clean)
-        component.ngOnInit();
+        expect(component['userNameSub']).toBeDefined(); // This is inspecting a private field (TODO: clean)
+        //console.log("about to flush");
+        flush();
+        //console.log("flushed");
     }));
     it('2. should subscribe to three observable on init', fakeAsync(async () => {
         console.log('2. should subscribe to three observable on init');
@@ -148,6 +150,7 @@ describe('ServerPageComponent', () => {
         // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
         AuthenticationServiceMock.IS_USER_LOGGED = true;
+        gameService.getActivesPartsObs(); // Call is here to avoid that unscrubscription throw error
         spyOn(gameService, 'getActivesPartsObs').and.returnValue(of([
             {
                 id: 'partId',
@@ -163,6 +166,7 @@ describe('ServerPageComponent', () => {
         console.log('ça suce ou bien ?');
 
         expect(component.canCreateGame()).toBeFalse();
+        flush();
     }));
     it('7. should be legal for unlogged user to create local game', fakeAsync(async () => {
         console.log('7. should be legal for unlogged user to create local game');
@@ -177,7 +181,10 @@ describe('ServerPageComponent', () => {
         expect(routerNavigateSpy).toHaveBeenCalledWith(['local/undefined']);
     }));
     afterAll(async () => {
+        console.log("afterAll");
         fixture.destroy();
+        console.log("fixtureDestroyed");
         await fixture.whenStable();
+        console.log("all test ended");
     });
 });
