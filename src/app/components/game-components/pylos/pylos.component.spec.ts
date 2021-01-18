@@ -57,7 +57,6 @@ describe('PylosComponent', () => {
             fixture.detectChanges();
             return true;
         } else {
-            console.log("l'élément", buttonName);
             return false;
         }
     };

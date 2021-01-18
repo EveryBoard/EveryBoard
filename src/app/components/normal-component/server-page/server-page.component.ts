@@ -24,7 +24,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     public activesUsers: IJoueurId[];
 
-    readonly gameNameList: string[] = ['Awale', // 2ème
+    public readonly gameNameList: string[] = ['Awale', // 2ème
         'Dvonn', // 13ème ?
         'Encapsule', //
         'Epaminondas', // 14ème
@@ -57,7 +57,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                 private authenticationService: AuthenticationService) {
     }
     public ngOnInit() {
-        display(ServerPageComponent.VERBOSE, { serverPageComponent_ngOnInit: true });
+        display(ServerPageComponent.VERBOSE, "serverPageComponent.ngOnInit");
         this.userNameSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur) => {
                 if (joueur == null) this.userName = null;
@@ -65,10 +65,12 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             });
         this.activesPartsSub = this.gameService.getActivesPartsObs()
             .subscribe((activesParts) => {
-                this.activesParts = activesParts; console.log('subscribed');
+                this.activesParts = activesParts;
             });
         this.activesUsersSub = this.userService.getActivesUsersObs()
-            .subscribe((activesUsers) => this.activesUsers = activesUsers);
+            .subscribe((activesUsers) => {
+                this.activesUsers = activesUsers;
+            });
     }
     public joinGame(partId: string, typeGame: string) {
         this.router.navigate(['/play/' + typeGame, partId]);
@@ -115,7 +117,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         return !found;
     }
     public ngOnDestroy() {
-        display(ServerPageComponent.VERBOSE, { serverPageComponent_ngOnDestroy: true });
+        display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
         if (this.userNameSub) {
             this.userNameSub.unsubscribe();
         }

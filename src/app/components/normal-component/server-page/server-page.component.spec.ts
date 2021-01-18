@@ -95,40 +95,36 @@ describe('ServerPageComponent', () => {
         AuthenticationServiceMock.IS_USER_LOGGED = null;
     });
     it('1. should create', fakeAsync(async () => {
-        console.log('1. should create');
         expect(component).toBeTruthy();
-        fixture.detectChanges();
+
+        component.ngOnInit();
+
         expect(component['userNameSub']).toBeDefined(); // This is inspecting a private field (TODO: clean)
-        //console.log("about to flush");
         flush();
-        //console.log("flushed");
     }));
     it('2. should subscribe to three observable on init', fakeAsync(async () => {
-        console.log('2. should subscribe to three observable on init');
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
         expect(component.userName).toBeUndefined();
-        const joueurObsSpy = spyOn(authenticationService, 'getJoueurObs').and.callThrough();
-        const activePartsObsSpy = spyOn(gameService, 'getActivesPartsObs').and.callThrough();
-        const activesUsersObsSpy = spyOn(userService, 'getActivesUsersObs').and.callThrough();
+        spyOn(authenticationService, 'getJoueurObs').and.callThrough();
+        spyOn(gameService, 'getActivesPartsObs').and.callThrough();
+        spyOn(userService, 'getActivesUsersObs').and.callThrough();
 
-        expect(joueurObsSpy).not.toHaveBeenCalled();
-        expect(activePartsObsSpy).not.toHaveBeenCalled();
-        expect(activesUsersObsSpy).not.toHaveBeenCalled();
+        expect(authenticationService.getJoueurObs).not.toHaveBeenCalled();
+        expect(gameService.getActivesPartsObs).not.toHaveBeenCalled();
+        expect(userService.getActivesUsersObs).not.toHaveBeenCalled();
 
         component.ngOnInit();
 
         expect(component.userName).toBe('Pseudo');
-        expect(joueurObsSpy).toHaveBeenCalledTimes(1);
-        expect(activePartsObsSpy).toHaveBeenCalledTimes(1);
-        expect(activesUsersObsSpy).toHaveBeenCalledTimes(1);
+        expect(authenticationService.getJoueurObs).toHaveBeenCalledTimes(1);
+        expect(gameService.getActivesPartsObs).toHaveBeenCalledTimes(1);
+        expect(userService.getActivesUsersObs).toHaveBeenCalledTimes(1);
     }));
     it('3. isUserLogged should delegate to authService', fakeAsync(async () => {
-        console.log('3. isUserLogged should delegate to authService');
         const isUserLogged: jasmine.Spy = spyOn(authenticationService, 'isUserLogged');
         // expect(isUserLogged).toHaveBeenCalledTimes(0); TODO
     }));
     it('4. should be legal for any logged user to create game when there is none', fakeAsync(async () => {
-        console.log('4. should be legal for any logged user to create game when there is none');
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
         AuthenticationServiceMock.IS_USER_LOGGED = true;
 
@@ -137,7 +133,6 @@ describe('ServerPageComponent', () => {
         expect(component.canCreateGame()).toBeTrue();
     }));
     it('5. should be illegal for unlogged user to create game', fakeAsync(async () => {
-        console.log('5. should be illegal for unlogged user to create game');
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null };
         AuthenticationServiceMock.IS_USER_LOGGED = false;
 
@@ -146,7 +141,6 @@ describe('ServerPageComponent', () => {
         expect(component.canCreateGame()).toBeFalse();
     }));
     it('6. should be illegal to create game for a player already in game', fakeAsync(async () => {
-        console.log('6. should be illegal to create game for a player already in game');
         // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
         AuthenticationServiceMock.IS_USER_LOGGED = true;
@@ -161,15 +155,12 @@ describe('ServerPageComponent', () => {
                     listMoves: [],
                 },
             }]));
-        console.log('salut les gagneuses! HAHAAAAAA');
-        fixture.detectChanges();
-        console.log('ça suce ou bien ?');
+        component.ngOnInit();
 
         expect(component.canCreateGame()).toBeFalse();
         flush();
     }));
     it('7. should be legal for unlogged user to create local game', fakeAsync(async () => {
-        console.log('7. should be legal for unlogged user to create local game');
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null };
         AuthenticationServiceMock.IS_USER_LOGGED = false;
         component.ngOnInit();
@@ -181,10 +172,7 @@ describe('ServerPageComponent', () => {
         expect(routerNavigateSpy).toHaveBeenCalledWith(['local/undefined']);
     }));
     afterAll(async () => {
-        console.log("afterAll");
         fixture.destroy();
-        console.log("fixtureDestroyed");
         await fixture.whenStable();
-        console.log("all test ended");
     });
 });
