@@ -107,6 +107,18 @@ export class Direction {
     public isDiagonal(): boolean {
         return (this.x !== 0) && (this.y !== 0);
     }
+    public isDown(): boolean {
+        return this.y === 1;
+    }
+    public isUp(): boolean {
+        return this.y === -1;
+    }
+    public isLeft(): boolean {
+        return this.x === -1;
+    }
+    public isRight(): boolean {
+        return this.x === 1;
+    }
     public toString(): string {
         switch (this) {
         case Direction.UP: return 'UP';
