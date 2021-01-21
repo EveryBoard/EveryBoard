@@ -10,7 +10,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
     // TODO: choose ONE commenting langage, for fuck's sake.
     // TODO: check for the proper use of LinkedList to optimise the stuff
-    // TODO: quand l'IA a tout ses choix � �galit� de bestHopedValue, elle doit d�partager par moyenne
+    // TODO: quand l'IA a tout ses choix à égalité de bestHopedValue, elle doit départager par moyenne
 
     // static fields
 

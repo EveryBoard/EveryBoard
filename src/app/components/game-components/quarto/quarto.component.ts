@@ -60,7 +60,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             if (this.rules.node.gamePartSlice.turn === 15) {
                 // on last turn user won't be able to click on a piece to give
                 // thereby we must put his piece in hand right
-                const chosenMove: QuartoMove = new QuartoMove(x, y, QuartoEnum.UNOCCUPIED);
+                const chosenMove: QuartoMove = new QuartoMove(x, y, null);
                 return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             }
             if (this.pieceToGive !== -1) {

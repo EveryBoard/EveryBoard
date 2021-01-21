@@ -122,7 +122,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return iJoinerId && iJoinerId.doc && (iJoinerId.doc.partStatus === 3);
     }
     private onGameStarted(iJoinerId: IJoinerId) {
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameStarted(' + JSON.stringify(iJoinerId) + ')');
+        display(PartCreationComponent.VERBOSE, { partCreationComponent_onGameStarted: { iJoinerId }});
 
         this.gameStartNotification.emit(iJoinerId.doc);
         this.gameStarted = true;

@@ -6,7 +6,7 @@ import { EpaminondasMove } from '../epaminondasmove/EpaminondasMove';
 import { EpaminondasPartSlice } from '../epaminondaspartslice/EpaminondasPartSlice';
 import { EpaminondasRules } from './EpaminondasRules';
 
-describe('Epaminondas Minimax:', () => {
+describe('EpaminondasRules - Minimax:', () => {
     let rules: EpaminondasRules;
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;

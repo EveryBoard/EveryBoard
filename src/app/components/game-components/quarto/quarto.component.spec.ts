@@ -105,7 +105,7 @@ describe('QuartoComponent', () => {
 
         spyOn(gameComponent, 'chooseMove').and.callThrough();
         expect(await clickElement('#chooseCoord_1_0')).toBeTrue();
-        expect(gameComponent.chooseMove).toHaveBeenCalledWith(new QuartoMove(1, 0, QuartoEnum.UNOCCUPIED), slice, null, null);
+        expect(gameComponent.chooseMove).toHaveBeenCalledWith(new QuartoMove(1, 0, null), slice, null, null);
         expect(gameComponent.rules.node.gamePartSlice.turn).toBe(16);
     }));
     it('should delegate decoding to move', () => {

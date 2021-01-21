@@ -22,4 +22,5 @@ describe('QuartoMove', () => {
 
         expect(QuartoMove.decode).toHaveBeenCalledTimes(1);
     });
+    it('should toString andEquals tmrrr');
 });

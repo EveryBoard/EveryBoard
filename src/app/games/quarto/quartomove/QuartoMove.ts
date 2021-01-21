@@ -28,8 +28,14 @@ export class QuartoMove extends MoveCoord {
          * piece is the quarto piece you give
          */
         super(x, y);
-        if (piece == null) throw new Error('Piece cannot be null');
-        this.piece = piece;
+        if (piece < 0) {
+            // nombre trop bas, ce n'est pas une pièce
+            throw new Error('Negative number are not valids pieces (should be betwwen 0 and 15), got ' + piece + '.');
+        }
+        if (piece > 16) {
+            // nombre trop grand, ce n'est pas une pièce
+            throw new Error('This number is too big to be a valid piece (should be between 0 and 15), got ' + piece + '.');
+        }
     }
     public encode(): number {
         return QuartoMove.encode(this);

@@ -11,7 +11,12 @@ import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { SCORE } from 'src/app/jscaip/SCORE';
 
+interface BoardStatus {
+    score: SCORE;
+    casesSensibles: CaseSensible[];
+}
 class CaseSensible {
     criteres: Critere[];
     // listes des crit�res qu'il faut remplir dans cette case pour gagner
@@ -59,7 +64,6 @@ class CaseSensible {
         return 4; // n'est pas contenu et il n'y as plus de place
     }
 }
-
 class Critere {
     /* Un crit�re est une liste sous-crit�res Boolean, donc trois valeurs possibles, True, False, Null
      * False veut dire qu'il faut avoir une valeur sp�cifique (Grand, par exemple), True son oppos� (Petit)
@@ -172,11 +176,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
 
     public static VERBOSE = false;
 
-    private static readonly INVALID_MOVE = -1; // TODO: mettre en commun avec Legality
-
-    private static readonly VALID_MOVE = 1;
-
-    static readonly lines: number[][] = [
+    public static readonly lines: NumberTable = [
         [0, 0, 0, 1], // les verticales
         [1, 0, 0, 1],
         [2, 0, 0, 1],
@@ -188,7 +188,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         [0, 3, 1, 0],
 
         [0, 0, 1, 1], // les diagonales
-        [0, 3, 1, -1]]; // {cx, cy, dx, dy}
+        [0, 3, 1, -1]
+    ]; // {cx, cy, dx, dy}
     // c (x, y) est la coordonnées de la première case
     // d (x, y) est la direction de la ligne en question
 
@@ -205,41 +206,33 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         }
         return result + ']';
     }
-    private static isLegal(move: QuartoMove, quartoPartSlice: QuartoPartSlice): MGPValidation {
+    private static isLegal(move: QuartoMove, slice: QuartoPartSlice): MGPValidation {
         /* pieceInHand is the one to be placed
          * move.piece is the one gave to the next players
          */
         const x: number = move.coord.x;
         const y: number = move.coord.y;
-        const chosenPiece: number = move.piece;
-        const board: number[][] = quartoPartSlice.getCopiedBoard();
-        const pieceInHand: number = quartoPartSlice.pieceInHand;
-        if (chosenPiece < 0) {
-            // nombre trop bas, ce n'est pas une pièce
-            return MGPValidation.failure('this is not a piece');
-        }
-        if (chosenPiece > 16) {
-            // nombre trop grand, ce n'est pas une pièce
-            return MGPValidation.failure('this is not a piece');
-        }
+        const pieceToGive: number = move.piece;
+        const board: number[][] = slice.getCopiedBoard();
+        const pieceInHand: number = slice.pieceInHand;
         if (QuartoRules.isOccupied(board[y][x])) {
             // on ne joue pas sur une case occupée
-            return MGPValidation.failure('this case is unoccupied');
+            return MGPValidation.failure('Cannot play on an occupied case.');
         }
-        if (chosenPiece === 16) {
-            if (quartoPartSlice.turn === 15) {
+        if (pieceToGive === null) {
+            if (slice.turn === 15) {
                 // on doit donner une pièce ! sauf au dernier tour
                 return MGPValidation.SUCCESS;
             }
-            return MGPValidation.failure('you must give a piece');
+            return MGPValidation.failure('You must give a piece.');
         }
-        if (!QuartoPartSlice.isPlacable(chosenPiece, board)) {
-            // la piece est d�jà sur le plateau
-            return MGPValidation.failure('piece is already on the board');
+        if (!QuartoPartSlice.isPlacable(pieceToGive, board)) {
+            // la piece est déjà sur le plateau
+            return MGPValidation.failure('That piece is already on the board.');
         }
-        if (pieceInHand === chosenPiece) {
+        if (pieceInHand === pieceToGive) {
             // la pièce donnée est la même que celle en main, c'est illégal
-            return MGPValidation.failure('illegal piece given: already in your hands');
+            return MGPValidation.failure('You cannot give the piece that was in your hands.');
         }
         return MGPValidation.SUCCESS;
     }
@@ -259,9 +252,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     }
     // Overrides :
 
-    public isLegal(move: QuartoMove): LegalityStatus {
-        const quartoPartSlice: QuartoPartSlice = this.node.gamePartSlice;
-        return { legal: QuartoRules.isLegal(move, quartoPartSlice) };
+    public isLegal(move: QuartoMove, slice: QuartoPartSlice): LegalityStatus {
+        return { legal: QuartoRules.isLegal(move, slice) };
     }
     public getListMoves(n: QuartoNode): MGPMap<QuartoMove, QuartoPartSlice> {
         const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = new MGPMap<QuartoMove, QuartoPartSlice>();
@@ -281,7 +273,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
                 if (board[y][x] === QuartoEnum.UNOCCUPIED) {
                     // Pour chaque cases vides
                     for (const remainingPiece of pawns) { // piece est la pièce qu'on va donner
-                        nextBoard = slice.getCopiedBoard(); // TODO: put higher to optimise
+                        nextBoard = slice.getCopiedBoard();
                         nextBoard[y][x] = inHand; // on place la pièce qu'on a en main en (x, y)
 
                         const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthèse du mouvement listé
@@ -295,94 +287,121 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         return listMoves;
     }
     public getBoardValue(move: QuartoMove, slice: QuartoPartSlice): number {
-        const board: number[][] = slice.getCopiedBoard();
-
-        let nbCasesVides: number;
-        let cx; let cy; let dx; let dy; let c: number;
-        const casesSensibles: Array<CaseSensible> = new Array<CaseSensible>(7);
-        let nbCasesSensibles = 0;
-        let cs: CaseSensible;
-        let commonCrit: Critere;
-        let score = 0; // valeur par d�faut
-        let preVictory = false; // nous permet d'�viter des v�rifications inutiles
-
+        let boardStatus: BoardStatus = {
+            score: SCORE.DEFAULT,
+            casesSensibles: []
+        };
         for (const line of QuartoRules.lines) {
-            // pour chaque ligne (les horizontales, verticales, puis diagonales
-            cx = line[0];
-            cy = line[1];
-            dx = line[2];
-            dy = line[3];
-            nbCasesVides = 0;
-            commonCrit = null; // null jusqu'à avoir trouv� une case, apr�s celle ci deviendra le crit�re
-            if (preVictory) {
-                // si on a trouv� une pr�-victoire
-                // la seule chose susceptible de changer le r�sultat total est une victoire
-                let i = 0; // index de la case test�e
-                c = board[cy][cx];
-                commonCrit = new Critere(c);
-                while (QuartoRules.isOccupied(c) && !commonCrit.isAllNull() && (i < 3)) {
-                    i++;
-                    cy += dy;
-                    cx += dx; // on regarde la case suivante
-                    c = board[cy][cx];
-                    commonCrit.mergeWithNumber(c);
-                }
-                if (QuartoRules.isOccupied(c) && !commonCrit.isAllNull()) {
-                    // the last case was occupied, and there was some common critere on all the four pieces
-                    // that's what victory is like in Quarto
-                    return (slice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
+            boardStatus = this.updateBoardStatus(line, slice, boardStatus);
+            if (boardStatus.score === SCORE.VICTORY) {
+                return this.scoreToBoardValue(boardStatus.score, slice.turn);
+            }
+        }
+        return this.scoreToBoardValue(boardStatus.score, slice.turn);
+    }
+    private updateBoardStatus(line: readonly number[], slice: QuartoPartSlice, boardStatus: BoardStatus): BoardStatus {
+        // pour chaque ligne (les horizontales, verticales, puis diagonales)
+        if (boardStatus.score === SCORE.PRE_VICTORY) {
+            if (this.isThereAVictoriousLine(line, slice)) {
+                return {
+                    score: SCORE.VICTORY,
+                    casesSensibles: null
+                };
+            } else {
+                return boardStatus; // Nothing changed exploring this line
+            }
+        } else {
+            const newStatus: BoardStatus = this.searchForVictoryOrPreVictoryInLine(line, slice, boardStatus);
+            return newStatus;
+        }
+    }
+    private isThereAVictoriousLine(line: readonly number[], slice: QuartoPartSlice): boolean {
+        // si on a trouvé une pré-victoire
+        // la seule chose susceptible de changer le résultat total est une victoire
+        let cx: number = line[0];
+        let cy: number = line[1];
+        let dx: number = line[2];
+        let dy: number = line[3];
+        let i = 0; // index de la case testée
+        let c: number = slice.getBoardByXY(cx, cy);
+        let commonCrit = new Critere(c);
+        while (QuartoRules.isOccupied(c) && !commonCrit.isAllNull() && (i < 3)) {
+            i++;
+            cy += dy;
+            cx += dx; // on regarde la case suivante
+            c = slice.getBoardByXY(cx, cy);
+            commonCrit.mergeWithNumber(c);
+        }
+        if (QuartoRules.isOccupied(c) && !commonCrit.isAllNull()) {
+            // the last case was occupied, and there was some common critere on all the four pieces
+            // that's what victory is like in Quarto
+            return true
+        } else {
+            return false;
+        }
+    }
+    private searchForVictoryOrPreVictoryInLine(line: readonly number[], slice: QuartoPartSlice, boardStatus: BoardStatus): BoardStatus {
+        // on cherche pour une victoire, pré victoire, ou un score normal
+        let cs: CaseSensible = null; // la première case vide
+        let commonCrit: Critere;
+
+        let cx: number = line[0];
+        let cy: number = line[1];
+        let dx: number = line[2];
+        let dy: number = line[3];
+        for (let i = 0; i < 4; i++, cy += dy, cx += dx) {
+            const c: number = slice.getBoardByXY(cx, cy);
+            // on analyse toute la ligne
+            if (c === QuartoEnum.UNOCCUPIED) {
+                // si la case C est inoccupée
+                if (cs == null) {
+                    cs = new CaseSensible(cx, cy);
+                } else {
+                    return boardStatus; // 2 empty case: no victory or pre-victory, or new criteria
                 }
             } else {
-                // on cherche pour une victoire, pr� victoire, ou un score normal
-                cs = null; // la premi�re case vide
-
-                for (let i = 0; i < 4; i++, cy += dy, cx += dx) {
-                    c = board[cy][cx];
-                    // on analyse toute la ligne
-                    if (c === QuartoEnum.UNOCCUPIED) {
-                        // si la case C est inoccup�e
-                        nbCasesVides++;
-                        if (cs == null) {
-                            cs = new CaseSensible(cx, cy);
-                        }
-                    } else {
-                        // si la case est occupée
-                        if (commonCrit == null) {
-                            commonCrit = new Critere(c);
-                            display(QuartoRules.VERBOSE, 'setcase vide en (' + cx + ', ' + cy + ') = ' + c +
-                                                                     ' = ' + commonCrit.toString() + '\n');
-                        } else {
-                            commonCrit.mergeWithNumber(c);
-                            display(QuartoRules.VERBOSE, 'merge (' + cx + ', ' + cy + ') = ' + c + ' with ' + commonCrit.toString() + ' = ' + commonCrit.toString() + '\n');
-                        }
-                    }
-                }
-                display(QuartoRules.VERBOSE, ' ' + line[0] + line[1] + line[2] + line[3] +
-                                                         'contient ' + nbCasesVides + ' case vides au tour ' + slice.turn);
-
-                // on a maintenant traité l'entierté de la ligne
-                // on en fait le bilan
-                if ((commonCrit !== null) && (!commonCrit.isAllNull())) {
-                    // NEW
-                    // Cette ligne n'est pas nulle et elle a un crit�re en commun entre toutes ses pi�ces
-                    if (nbCasesVides === 0) {
-                        return (slice.turn % 2 === 0) ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER; // max or min
-                    } else if (nbCasesVides === 1) {
-                        // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouv� et assign�
-                        // est dans ce cas bel et bien une case sensible
-                        if (commonCrit.matchInt(slice.pieceInHand)) {
-                            display(QuartoRules.VERBOSE, 'Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
-
-                            preVictory = true;
-                            score = (slice.turn % 2 === 0) ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;
-                        }
-                        cs.addCritere(commonCrit);
-                        casesSensibles[nbCasesSensibles] = cs;
-                        nbCasesSensibles++;
-                    }
+                // si la case est occupée
+                if (commonCrit == null) {
+                    commonCrit = new Critere(c);
+                    display(QuartoRules.VERBOSE, 'set commonCrit to ' + commonCrit.toString());
+                } else {
+                    commonCrit.mergeWithNumber(c);
+                    display(QuartoRules.VERBOSE, 'update commonCrit: ' + commonCrit.toString());
                 }
             }
         }
-        return score;
+
+        // on a maintenant traité l'entierté de la ligne
+        // on en fait le bilan
+        if ((commonCrit !== null) && (!commonCrit.isAllNull())) {
+            // NEW
+            // Cette ligne n'est pas nulle et elle a un critère en commun entre toutes ses pièces
+            if (cs == null) {
+                return { score: SCORE.VICTORY, casesSensibles: null };
+            } else {
+                // si il n'y a qu'une case vide, alors la case sensible qu'on avais trouvé et assigné
+                // est dans ce cas bel et bien une case sensible
+                if (commonCrit.matchInt(slice.pieceInHand)) {
+                    display(QuartoRules.VERBOSE, 'Pré-victoire! at line ' + +line[0] + line[1] + line[2] + line[3]);
+
+                    boardStatus.score = SCORE.PRE_VICTORY;
+                }
+                cs.addCritere(commonCrit);
+                boardStatus.casesSensibles.push(cs)
+            }
+        }
+        return boardStatus;
+    }
+    private scoreToBoardValue(score: SCORE, turn: number): number {
+        if (score === SCORE.DEFAULT) {
+            return 0;
+        } else {
+            const isPlayerZeroTurn: boolean = turn % 2 === 0;
+            if (score === SCORE.PRE_VICTORY) {
+                return isPlayerZeroTurn ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;
+            } else {
+                return isPlayerZeroTurn ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
+            }
+        }
     }
 }

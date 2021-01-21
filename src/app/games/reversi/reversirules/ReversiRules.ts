@@ -138,15 +138,14 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         }
         return listMoves;
     }
-    public isLegal(move: ReversiMove): ReversiLegalityStatus {
-        const reversiPartSlice: ReversiPartSlice = this.node.gamePartSlice;
-        const turn: number = this.node.gamePartSlice.turn;
-        const board: number[][] = reversiPartSlice.getCopiedBoard();
+    public isLegal(move: ReversiMove, slice: ReversiPartSlice): ReversiLegalityStatus {
+        const turn: number = slice.turn;
+        const board: number[][] = slice.getCopiedBoard();
         if (move.equals(ReversiMove.PASS)) { // if the player pass
             // let's check that pass is a legal move right now
             // if he had no choice but to pass, then passing is legal !
             // else, passing was illegal
-            return { legal: ReversiRules.playerCanOnlyPass(reversiPartSlice) ? MGPValidation.SUCCESS : MGPValidation.failure('player can only pass'), switched: null };
+            return { legal: ReversiRules.playerCanOnlyPass(slice) ? MGPValidation.SUCCESS : MGPValidation.failure('player can only pass'), switched: null };
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE.value) {
             display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée');
@@ -154,17 +153,24 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, turn, board);
         display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: '+ switched.length + ' element(s) switched');
-        return { legal: (switched.length !== 0) ? MGPValidation.SUCCESS : MGPValidation.failure('no elements switched'), switched };
+        return { legal: (switched.length === 0) ? MGPValidation.failure('no elements switched') : MGPValidation.SUCCESS, switched };
     }
     public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): number {
+        const gameIsEnded: boolean = ReversiRules.isGameEnded(slice);
         const board: number[][] = slice.getCopiedBoard();
         let player0Count = 0;
         let player1Count = 0;
         for (let y = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
             for (let x = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
-                const verticalBorder: boolean = (x === 0) || (x === ReversiPartSlice.BOARD_WIDTH - 1);
-                const horizontalBorder: boolean = (y === 0) || (y === ReversiPartSlice.BOARD_HEIGHT - 1);
-                const locationValue: number = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
+                let locationValue: number;
+                if (gameIsEnded) {
+                    locationValue = 1;
+                } else {
+                    const verticalBorder: boolean = (x === 0) || (x === ReversiPartSlice.BOARD_WIDTH - 1);
+                    const horizontalBorder: boolean = (y === 0) || (y === ReversiPartSlice.BOARD_HEIGHT - 1);
+                    locationValue = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
+                }
+
                 if (board[y][x] === Player.ZERO.value) {
                     player0Count += locationValue;
                 }

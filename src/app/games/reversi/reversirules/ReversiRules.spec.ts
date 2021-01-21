@@ -5,6 +5,8 @@ import { ReversiPartSlice } from '../ReversiPartSlice';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
 
 describe('ReversiRules', () => {
     const _: number = Player.NONE.value;
@@ -63,5 +65,35 @@ describe('ReversiRules', () => {
         expect(moves.size()).toBe(1);
         expect(moves.getByIndex(0).key).toBe(ReversiMove.PASS);
         expect(rules.choose(ReversiMove.PASS)).toBeTrue();
+    });
+    it('Should consider the player with the more point the winner at the end', () => {
+        const board: NumberTable = [
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 0, 0, 1, 1, 0],
+            [0, 1, 0, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 0, 0, 1, 0],
+            [0, 1, 1, 0, 0, 0, 1, 0],
+            [0, 0, 0, 0, 0, 0, 0, 0],
+            [2, 0, 0, 0, 0, 0, 1, 0]
+        ];
+        const expectedBoard: NumberTable = [
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 0, 0, 1, 1, 0],
+            [0, 1, 0, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 1, 1, 1, 0],
+            [0, 1, 1, 1, 0, 0, 1, 0],
+            [0, 1, 1, 0, 0, 0, 1, 0],
+            [0, 1, 0, 0, 0, 0, 0, 0],
+            [1, 1, 1, 1, 1, 1, 1, 0]
+        ];
+        const slice: ReversiPartSlice = new ReversiPartSlice(board, 59);
+        const move: ReversiMove = new ReversiMove(0, 7);
+        const status: ReversiLegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.isSuccess()).toBeTrue();
+        const resultingSlice: ReversiPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const expectedSlice: ReversiPartSlice = new ReversiPartSlice(expectedBoard, 60);
+        expect(resultingSlice).toEqual(expectedSlice);
+        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
 });

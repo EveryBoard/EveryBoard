@@ -65,7 +65,9 @@ describe('TablutComponent', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(gameComponent).toBeTruthy('TablutComponent should be created');
     });
-    it('Should enable same action as rules', async () => {
+    it('Should cancel move when clicking on opponent piece', () => {});
+    it('Should cancel move when clicking on opponent empty case as first click', () => {});
+    it('Should allow simple move', async () => {
         const isOccupied: MGPValidation = await gameComponent.onClick(4, 1);
         const isLegal: MGPValidation = await gameComponent.onClick(0, 1);
         expect(isOccupied.isSuccess()).toBeTrue();
