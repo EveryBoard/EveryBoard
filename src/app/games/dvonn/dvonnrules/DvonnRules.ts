@@ -94,7 +94,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         return [p0Score, p1Score];
     }
     public getBoardValue(move: DvonnMove, slice: DvonnPartSlice): number {
-        // Board values is the total number of pieces controlled by player 0 - by player 1
+        // Board value is the total number of pieces controlled by player 0 - by player 1
         const scores = this.getScores(slice);
         if (this.getMovablePieces(slice).length === 0) {
             // This is the end of the game, boost the score to clearly indicate it
