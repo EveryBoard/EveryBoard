@@ -1,35 +1,46 @@
-const OFF = 0;
-const WARN = 1;
-const ERROR = 2;
+// const WARN = 1;
+// const ERROR = 2;
 
 module.exports = {
     env: {
         browser: true,
-        es2021: true
+        es2021: true,
     },
     parser: '@typescript-eslint/parser',
     parserOptions: {
         ecmaVersion: 12,
-        sourceType: 'module'
+        sourceType: 'module',
     },
     plugins: [
-        '@typescript-eslint'
+        '@typescript-eslint',
     ],
-    extends: ['eslint:recommended', 'google', 'plugin:@typescript-eslint/recommended' ],
+    extends: ['eslint:recommended', 'google', 'plugin:@typescript-eslint/recommended'],
     rules: {
-        '@typescript-eslint/typedef': ['warn', {'arrowParameter': true, 'memberVariableDeclaration': true, 'propertyDeclaration': true, 'variableDeclaration': true, 'parameter': true}],
+        '@typescript-eslint/typedef': [
+            'warn',
+            {
+                'arrowParameter': true,
+                'memberVariableDeclaration': true,
+                'propertyDeclaration': true,
+                'variableDeclaration': true,
+                'parameter': true,
+            },
+        ],
         '@typescript-eslint/no-empty-function': ['off'],
         '@typescript-eslint/no-namespace': ['warn'],
-        '@typescript-eslint/ban-types': ['error', {'types': {'String': {'message': 'Use string instead', 'fixWith': 'string'}}}],
+        '@typescript-eslint/ban-types': [
+            'error',
+            { 'types': { 'String': { 'message': 'Use string instead', 'fixWith': 'string' } } },
+        ],
         '@typescript-eslint/no-this-alias': ['warn'],
-        'max-len': ['warn', {'code': 80}],
-        'require-jsdoc': ['warn', {'require': {
-            "FunctionDeclaration": false,
-            "MethodDefinition": false,
-            "ClassDeclaration": false,
-            "ArrowFunctionExpression": false,
-            "FunctionExpression": false
-        }}],
+        'max-len': ['warn', { 'code': 120 }],
+        'require-jsdoc': ['warn', { 'require': {
+            'FunctionDeclaration': false,
+            'MethodDefinition': false,
+            'ClassDeclaration': false,
+            'ArrowFunctionExpression': false,
+            'FunctionExpression': false,
+        } }],
         'new-cap': ['off'], // Because there are false positives
         'no-undef': ['off'], // Because there are false positives
         'no-unused-vars': ['warn'],
@@ -40,5 +51,7 @@ module.exports = {
         'camelcase': ['warn'],
         'valid-jsdoc': ['warn'],
         'no-case-declarations': ['warn'],
-    }
+        'no-inferrable-types': 'OFF',
+        'comma-dangle': 'OFF',
+    },
 };

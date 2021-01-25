@@ -373,7 +373,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
             ', depth = ' + this.depth + ']';
     }
     public isEndGame(): boolean {
-        const LOCAL_VERBOSE = false;
+        const LOCAL_VERBOSE: boolean = false;
         const scoreStatus: SCORE = MGPNode.getScoreStatus(this.ownValue);
 
         if (scoreStatus === SCORE.VICTORY) {

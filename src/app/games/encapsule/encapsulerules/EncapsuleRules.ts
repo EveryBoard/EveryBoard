@@ -46,15 +46,17 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         return (owner[0] === owner[1]) && (owner[1] === owner[2]);
     }
     public isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
-        const LOCAL_VERBOSE = false;
+        // TODO: rename, not returning boolean anymore
+        const LOCAL_VERBOSE: boolean = false;
         const boardCopy: number[][] = slice.getCopiedBoard();
         display(LOCAL_VERBOSE, move.toString());
         let movingPiece: EncapsulePiece;
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             if (!slice.isDropable(movingPiece)) {
-                display(LOCAL_VERBOSE, 'move illegal because: this piece is missing form the remaining pieces or do not belong to the current player');
-                return EncapsuleLegalityStatus.failure('move illegal because: this piece is missing form the remaining pieces or do not belong to the current player');
+                const reason: string = 'This piece is missing form the remaining pieces or do not belong to the current player';
+                // TODO: cannot be "a or b" make message more clear.
+                return EncapsuleLegalityStatus.failure(reason);
             }
         } else {
             const startingCoord: Coord = move.startingCoord.get();
@@ -122,7 +124,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         const slice: EncapsulePartSlice = n.gamePartSlice;
         const newBoard: EncapsuleCase[][] = slice.toCase();
         const currentPlayer: Player = slice.getCurrentPlayer();
-        const puttablePieces: EncapsulePiece[] = Sets.toImmutableSet(slice.getPlayerRemainingPieces(currentPlayer));
+        const puttablePieces: EncapsulePiece[] = Sets.toImmutableSet(slice.getPlayerRemainingPieces());
         for (let y=0; y<3; y++) {
             for (let x=0; x<3; x++) {
                 const coord: Coord = new Coord(x, y);

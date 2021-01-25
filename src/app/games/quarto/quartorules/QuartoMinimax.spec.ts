@@ -1,19 +1,15 @@
-import { QuartoEnum } from "../QuartoEnum";
-import { QuartoPartSlice } from "../QuartoPartSlice";
-import { QuartoRules } from "./QuartoRules";
+import { QuartoPiece } from '../QuartoPiece';
+import { QuartoPartSlice } from '../QuartoPartSlice';
+import { QuartoRules } from './QuartoRules';
 
 describe('QuartoRules - Minimax:', () => {
     let rules: QuartoRules;
 
-    const NULL: number = QuartoEnum.UNOCCUPIED;
-    const AAAA: number = QuartoEnum.AAAA;
-    const AAAB: number = QuartoEnum.AAAB;
-    const AABB: number = QuartoEnum.AABB;
-    const ABBB: number = QuartoEnum.ABBB;
-    const BAAA: number = QuartoEnum.BAAA;
-    const BBAA: number = QuartoEnum.BBAA;
-    const BBBA: number = QuartoEnum.BBBA;
-    const BBBB: number = QuartoEnum.BBBB;
+    const NULL: number = QuartoPiece.NONE.value;
+    const AAAA: number = QuartoPiece.AAAA.value;
+    const AAAB: number = QuartoPiece.AAAB.value;
+    const AABB: number = QuartoPiece.AABB.value;
+    const ABBB: number = QuartoPiece.ABBB.value;
 
     beforeEach(() => {
         rules = new QuartoRules(QuartoPartSlice);
@@ -25,19 +21,7 @@ describe('QuartoRules - Minimax:', () => {
             [NULL, NULL, NULL, NULL],
             [NULL, NULL, NULL, NULL],
         ];
-        const pieceInHand: QuartoEnum = AAAA;
-        const slice: QuartoPartSlice = new QuartoPartSlice(board, 3, pieceInHand);
-        expect(rules.getBoardValue(null, slice)).toEqual(Number.MAX_SAFE_INTEGER - 1);
-    });
-    it('Should avoid creating 3-3 (avoir creating PRE_VICTORY score status)', () => {
-        // To be a good test, there should be one move amongst many who is best
-        const board: number[][] = [
-            [NULL, ABBB, AAAA, AAAA],
-            [NULL, NULL, BAAA, BBBB],
-            [NULL, NULL, NULL, NULL],
-            [NULL, NULL, NULL, NULL],
-        ];
-        const pieceInHand: QuartoEnum = AAAA;
+        const pieceInHand: QuartoPiece = QuartoPiece.fromInt(AAAA);
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 3, pieceInHand);
         expect(rules.getBoardValue(null, slice)).toEqual(Number.MAX_SAFE_INTEGER - 1);
     });

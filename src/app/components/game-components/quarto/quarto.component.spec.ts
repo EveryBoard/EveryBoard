@@ -13,9 +13,10 @@ import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { QuartoRules } from 'src/app/games/quarto/quartorules/QuartoRules';
 import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
 import { By } from '@angular/platform-browser';
-import { QuartoEnum } from 'src/app/games/quarto/QuartoEnum';
+import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 const activatedRouteStub = {
     snapshot: {
@@ -43,6 +44,9 @@ describe('QuartoComponent', () => {
 
     let gameComponent: QuartoComponent;
 
+    const NULL: number = QuartoPiece.NONE.value;
+    const AAAA: number = QuartoPiece.AAAA.value;
+
     const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
         const element: DebugElement = debugElement.query(By.css(elementName));
         if (element == null) {
@@ -53,12 +57,6 @@ describe('QuartoComponent', () => {
             fixture.detectChanges();
             return true;
         }
-    };
-    const doMove: (move: QuartoMove) => Promise<boolean> = async (move: QuartoMove) => {
-        const chooseCoordElementName: string = '#chooseCoord_' + move.coord.x + '_' + move.coord.y;
-        const choosePieceElementName: string = '#choosePiece_' + move.piece;
-        return await clickElement(chooseCoordElementName) &&
-               await clickElement(choosePieceElementName);
     };
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
@@ -84,29 +82,58 @@ describe('QuartoComponent', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(gameComponent).toBeTruthy('QuartoComponent should be created');
     });
-    it('should accept simple move', fakeAsync(async () => {
-        const rules: QuartoRules = new QuartoRules(QuartoPartSlice);
-        const listMoves: QuartoMove[] = rules.getListMoves(rules.node).listKeys();
-        const currentMove: QuartoMove = listMoves[0];
+    it('should forbid clicking on occupied case', fakeAsync(async() => {
+        const board: number[][] = [
+            [AAAA, NULL, NULL, NULL],
+            [NULL, NULL, NULL, NULL],
+            [NULL, NULL, NULL, NULL],
+            [NULL, NULL, NULL, NULL],
+        ];
+        const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AAAB);
+        gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+        gameComponent.updateBoard();
+        fixture.detectChanges();
 
-        expect(await doMove(currentMove)).toBeTrue();
+        spyOn(gameComponent, 'cancelMove').and.callThrough();
+        expect(await clickElement('#chooseCoord_0_0')).toBeTrue();
+        expect(gameComponent.cancelMove).toHaveBeenCalledOnceWith('Choisissez une case vide.');
+    }));
+    it('should accept move when choosing piece then choosing coord', fakeAsync(async () => {
+        const oldSlice: QuartoPartSlice = QuartoPartSlice.getInitialSlice();
+        spyOn(gameComponent, 'chooseMove').and.callThrough();
+        expect(await clickElement('#choosePiece_1')).toBeTrue();
+        expect(await clickElement('#chooseCoord_0_0')).toBeTrue();
+        const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
+        expect(gameComponent.chooseMove).toHaveBeenCalledOnceWith(move, oldSlice, null, null);
+        flush();
+    }));
+    it('should accept move when choosing coord then choosing piece', fakeAsync(async () => {
+        const oldSlice: QuartoPartSlice = QuartoPartSlice.getInitialSlice();
+        spyOn(gameComponent, 'chooseMove').and.callThrough();
+        expect(await clickElement('#chooseCoord_0_0')).toBeTrue();
+        expect(await clickElement('#choosePiece_1')).toBeTrue();
+        const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
+        expect(gameComponent.chooseMove).toHaveBeenCalledOnceWith(move, oldSlice, null, null);
         flush();
     }));
     it('should allow to make last move', fakeAsync(async () => {
-        const board: number[][] = [
-            [QuartoEnum.AABB, QuartoEnum.UNOCCUPIED, QuartoEnum.ABBA, QuartoEnum.BBAA],
-            [QuartoEnum.BBAB, QuartoEnum.BAAA, QuartoEnum.BBBA, QuartoEnum.ABBB],
-            [QuartoEnum.BABA, QuartoEnum.BBBB, QuartoEnum.ABAA, QuartoEnum.AABA],
-            [QuartoEnum.AAAA, QuartoEnum.ABAB, QuartoEnum.BABB, QuartoEnum.BAAB],
-        ];
-        const pieceInHand: number = QuartoEnum.AAAB;
-        const slice: QuartoPartSlice = new QuartoPartSlice(board, 15, pieceInHand);
-        gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+        const board: number[][] = ArrayUtils.mapBiArray([
+            [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
+            [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],
+            [QuartoPiece.BABA, QuartoPiece.BBBB, QuartoPiece.ABAA, QuartoPiece.AABA],
+            [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.NONE],
+        ], QuartoPiece.toInt);
+        const pieceInHand: QuartoPiece = QuartoPiece.BAAB;
+        const initialSlice: QuartoPartSlice = new QuartoPartSlice(board, 15, pieceInHand);
+        gameComponent.rules.node = new MGPNode(null, null, initialSlice, 0);
+        gameComponent.updateBoard();
 
         spyOn(gameComponent, 'chooseMove').and.callThrough();
-        expect(await clickElement('#chooseCoord_1_0')).toBeTrue();
-        expect(gameComponent.chooseMove).toHaveBeenCalledWith(new QuartoMove(1, 0, null), slice, null, null);
-        expect(gameComponent.rules.node.gamePartSlice.turn).toBe(16);
+        expect(await clickElement('#chooseCoord_3_3')).toBeTrue();
+
+        const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
+        expect(gameComponent.chooseMove).toHaveBeenCalledOnceWith(move, initialSlice, null, null);
+        expect(gameComponent.rules.node.gamePartSlice.turn).toBe(initialSlice.turn + 1);
     }));
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(QuartoMove, 'decode').and.callThrough();
@@ -115,7 +142,7 @@ describe('QuartoComponent', () => {
     });
     it('should delegate encoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(QuartoMove, 'encode').and.callThrough();
-        gameComponent.encodeMove(new QuartoMove(2, 2, 2));
+        gameComponent.encodeMove(new QuartoMove(2, 2, QuartoPiece.AABA));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
 });

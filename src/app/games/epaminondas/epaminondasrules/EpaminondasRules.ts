@@ -69,7 +69,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         return moves;
     }
     public getBoardValue(move: EpaminondasMove, slice: EpaminondasPartSlice): number {
-        console.log('TODO: EpaminondasRules.getBoardValue');
+        // TODO: Teach EpaminondasRules to go forward ?
         const zerosInFirstLine: number = slice.count(Player.ZERO, 0);
         const onesInLastLine: number = slice.count(Player.ONE, 11);
         if (slice.turn % 2 === 0) {

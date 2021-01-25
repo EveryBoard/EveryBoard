@@ -29,12 +29,12 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
      * so that the AI can know what is best, according to you algorithm in there
      */
 
-    public readonly choose = (move: M): boolean => {
+    public readonly choose: (move: M) => boolean = (move: M): boolean => {
         /* used by the rules to update board
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
-        const LOCAL_VERBOSE = false;
+        const LOCAL_VERBOSE: boolean = false;
         display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
@@ -69,7 +69,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
     /* return a legality status about the move, allowing to return already calculated info
      * don't do any modification to the board
      */
-    public setInitialBoard() {
+    public setInitialBoard(): void {
         if (this.node == null) {
             const initialSlice: S = this.sliceType['getInitialSlice']();
             this.node = MGPNode.getFirstNode(initialSlice, this);
@@ -78,7 +78,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
         }
     }
     public applyMoves(encodedMoves: number[], slice: S, moveDecoder: (em: number) => M): S {
-        let i = 0;
+        let i: number = 0;
         for (const encodedMove of encodedMoves) {
             const move: M = moveDecoder(encodedMove);
             const status: L = this.isLegal(move, slice);

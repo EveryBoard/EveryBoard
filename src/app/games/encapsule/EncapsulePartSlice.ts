@@ -16,9 +16,11 @@ export class EncapsulePartSlice extends GamePartSlice {
         const emptyNumber: number = emptyCase.encode();
         const startingBoard: number[][] = ArrayUtils.createBiArray(3, 3, emptyNumber);
         const initialPieces: EncapsulePiece[] = [
-            EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_WHITE, EncapsulePiece.BIG_WHITE,
-            EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
-            EncapsulePiece.SMALL_BLACK, EncapsulePiece.SMALL_BLACK, EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE];
+            EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_WHITE,
+            EncapsulePiece.BIG_WHITE, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_BLACK,
+            EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.SMALL_BLACK,
+            EncapsulePiece.SMALL_BLACK, EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE
+        ];
         return new EncapsulePartSlice(startingBoard, 0, initialPieces);
     }
     public getRemainingPiecesCopy(): EncapsulePiece[] {
@@ -37,16 +39,17 @@ export class EncapsulePartSlice extends GamePartSlice {
         if (!this.pieceBelongToCurrentPlayer(piece)) {
             return false;
         }
-        return this.remainingPieces.some((p) => p === piece);
+        return this.remainingPieces.some((p: EncapsulePiece) => p === piece);
     }
     public toCase(): EncapsuleCase[][] {
-        return this.board.map((line) => line.map((n) => EncapsuleCase.decode(n))); // TODO: check no one do that twice
+        return this.board.map((line: number[]) =>
+            line.map((n: number) => EncapsuleCase.decode(n))); // TODO: check no one do that twice
     }
     public static toNumberBoard(board: EncapsuleCase[][]): number[][] {
-        return board.map((line) => line.map((c) => c.encode()));
+        return board.map((line: EncapsuleCase[]) => line.map((c: EncapsuleCase) => c.encode()));
     }
-    public getPlayerRemainingPieces(player: Player): EncapsulePiece[] {
-        return this.remainingPieces.filter((piece) => this.pieceBelongToCurrentPlayer(piece));
+    public getPlayerRemainingPieces(): EncapsulePiece[] {
+        return this.remainingPieces.filter((piece: EncapsulePiece) => this.pieceBelongToCurrentPlayer(piece));
     }
 }
 
@@ -69,7 +72,7 @@ export class EncapsuleCase {
     }
     public toString(): string {
         const pieceNames: string[] = this.toOrderedPieceNames();
-        return '('+pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';
+        return '(' + pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';
     }
     public toOrderedPieceNames(): string[] {
         const smallPiece: EncapsulePiece = EncapsuleMapper.toValidPiece(Size.SMALL, this.small);

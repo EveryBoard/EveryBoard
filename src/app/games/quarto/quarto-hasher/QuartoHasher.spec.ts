@@ -2,14 +2,14 @@ import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
-import { QuartoEnum } from '../QuartoEnum';
+import { QuartoPiece } from '../QuartoPiece';
 import { CoordDir, QuartoHasher, QuartoHashInfo } from './QuartoHasher';
 
 xdescribe('QuartoHasher', () => {
-    const NULL: number = QuartoEnum.UNOCCUPIED;
-    const AAAA: number = QuartoEnum.AAAA;
-    const AAAB: number = QuartoEnum.AAAB;
-    const BBBB: number = QuartoEnum.BBBB;
+    const NULL: number = QuartoPiece.NONE.value;
+    const AAAA: number = QuartoPiece.AAAA.value;
+    const AAAB: number = QuartoPiece.AAAB.value;
+    const BBBB: number = QuartoPiece.BBBB.value;
 
     it('should get the correct Coord', () => {
         const coordDir: CoordDir = { coord: new Coord(3, 3), dir: Orthogonal.UP };
@@ -17,9 +17,9 @@ xdescribe('QuartoHasher', () => {
         expect(QuartoHasher.get(coordDir, 4)).toEqual(new Coord(2, 3));
     });
     it('should match piece correctly', () => {
-        expect(QuartoHasher.matchPieceTo(QuartoEnum.BBBB, QuartoEnum.BBBB)).toBe(QuartoEnum.AAAA);
-        expect(QuartoHasher.matchPieceTo(QuartoEnum.BBAA, QuartoEnum.BBBB)).toBe(QuartoEnum.AABB);
-        expect(QuartoHasher.matchPieceTo(QuartoEnum.BBAA, QuartoEnum.AABB)).toBe(QuartoEnum.BBBB);
+        expect(QuartoHasher.matchPieceTo(QuartoPiece.BBBB, QuartoPiece.BBBB)).toBe(QuartoPiece.AAAA);
+        expect(QuartoHasher.matchPieceTo(QuartoPiece.BBAA, QuartoPiece.BBBB)).toBe(QuartoPiece.AABB);
+        expect(QuartoHasher.matchPieceTo(QuartoPiece.BBAA, QuartoPiece.AABB)).toBe(QuartoPiece.BBBB);
     });
     it('should filter correctly with only one corner occupied', () => {
         const board: NumberTable = [

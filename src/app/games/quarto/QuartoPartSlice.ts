@@ -1,54 +1,53 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
-import { QuartoEnum } from './QuartoEnum';
+import { QuartoPiece } from './QuartoPiece';
 import { ArrayUtils, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 
 export class QuartoPartSlice extends GamePartSlice {
-    constructor(b: number[][], turn: number, public readonly pieceInHand: number) {
+    constructor(b: number[][], turn: number, public readonly pieceInHand: QuartoPiece) {
         super(b, turn);
     }
     public static getInitialSlice(): QuartoPartSlice {
-        const board: number[][] = ArrayUtils.createBiArray(4, 4, QuartoEnum.UNOCCUPIED);
-        return new QuartoPartSlice(board, 0, QuartoEnum.AAAA);
+        const board: number[][] = ArrayUtils.createBiArray(4, 4, QuartoPiece.NONE.value);
+        return new QuartoPartSlice(board, 0, QuartoPiece.AAAA);
     }
-    public static getFullPawnsList(): Array<QuartoEnum> {
-        const all: QuartoEnum[] = QuartoEnum.values();
-        const filtered: Array<QuartoEnum> = [];
-        for (const q of all) {
-            if (q !== QuartoEnum.UNOCCUPIED) {
+    public static getFullPawnsList(): Array<QuartoPiece> {
+        const filtered: Array<QuartoPiece> = [];
+        for (const q of QuartoPiece.pieces) {
+            if (q !== QuartoPiece.NONE) {
                 filtered.push(q);
             }
         }
         return filtered;
     }
-    public static isGivable(pawn: number, board: NumberTable, pieceInHand: number): boolean {
-        if (pawn === pieceInHand) {
+    public static isGivable(piece: QuartoPiece, board: NumberTable, pieceInHand: QuartoPiece): boolean {
+        if (piece === pieceInHand) {
             return false;
         }
-        return QuartoPartSlice.isPlacable(pawn, board);
+        return QuartoPartSlice.isPlacable(piece, board);
     }
-    public static isPlacable(pawn: number, board: NumberTable): boolean {
+    public static isPlacable(piece: QuartoPiece, board: NumberTable): boolean {
         // return true if the pawn is not already placed on the board
-        let found = false;
-        let indexY = 0;
+        let found: boolean = false;
+        let indexY: number = 0;
         let indexX: number;
         while (!found && (indexY < 4)) {
             indexX = 0;
             while (!found && (indexX < 4)) {
-                found = board[indexY][indexX] === pawn;
+                found = board[indexY][indexX] === piece.value;
                 indexX++;
             }
             indexY++;
         }
         return !found;
     }
-    public getRemainingPawns(): Array<QuartoEnum> {
+    public getRemainingPawns(): Array<QuartoPiece> {
         // return the pawn that are nor on the board nor the one that you have in your hand
         // (hence, the one that your about to put on the board)
-        const allPawn: Array<QuartoEnum> = QuartoPartSlice.getFullPawnsList();
-        const remainingPawns: Array<QuartoEnum> = [];
-        for (const quartoEnum of allPawn) {
-            if (QuartoPartSlice.isGivable(quartoEnum, this.board, this.pieceInHand)) {
-                remainingPawns.push(quartoEnum);
+        const allPawn: Array<QuartoPiece> = QuartoPartSlice.getFullPawnsList();
+        const remainingPawns: Array<QuartoPiece> = [];
+        for (const piece of allPawn) {
+            if (QuartoPartSlice.isGivable(piece, this.board, this.pieceInHand)) {
+                remainingPawns.push(piece);
             }
         }
         return remainingPawns;

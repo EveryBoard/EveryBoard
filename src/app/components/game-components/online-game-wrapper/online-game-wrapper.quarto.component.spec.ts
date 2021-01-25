@@ -24,7 +24,7 @@ import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
-import { QuartoEnum } from 'src/app/games/quarto/QuartoEnum';
+import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { RequestCode } from 'src/app/domain/request';
 import { MGPResult } from 'src/app/domain/icurrentpart';
 import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
@@ -115,7 +115,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         fixture.detectChanges();
         return Promise.resolve();
     };
-    const FIRST_MOVE: QuartoMove = new QuartoMove(0, 3, QuartoEnum.BABB);
+    const FIRST_MOVE: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BABB);
 
     const FIRST_MOVE_ENCODED: number = FIRST_MOVE.encode();
 
@@ -250,7 +250,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(component.currentPart.copy().turn).toEqual(1);
 
         // Do second move
-        const move: QuartoMove = new QuartoMove(1, 1, QuartoEnum.BBBA);
+        const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBA);
         await doMove(move);
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED, move.encode()]);
         expect(component.currentPart.copy().turn).toEqual(2);
@@ -272,15 +272,15 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(component.maximalMoveDuration);
     }));
     it('Victory move from player should notifyVictory', fakeAsync(async () => {
-        const move0: QuartoMove = new QuartoMove(0, 3, QuartoEnum.AAAB);
-        const move1: QuartoMove = new QuartoMove(1, 3, QuartoEnum.AABA);
-        const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.BBBB);
-        const move3: QuartoMove = new QuartoMove(0, 0, QuartoEnum.AABB);
+        const move0: QuartoMove = new QuartoMove(0, 3, QuartoPiece.AAAB);
+        const move1: QuartoMove = new QuartoMove(1, 3, QuartoPiece.AABA);
+        const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBB);
+        const move3: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AABB);
         await prepareBoard([move0, move1, move2, move3]);
         expect(getElement('#winnerIndicator')).toBeFalsy('Element should not exist yet');
 
         spyOn(partDAO, 'update').and.callThrough();
-        const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoEnum.ABAA);
+        const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
         await doMove(winningMove);
 
         expect(component.gameComponent.rules.node.move.toString()).toBe(winningMove.toString());
@@ -333,7 +333,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // Doing another move
         spyOn(partDAO, 'update').and.callThrough();
-        const move1: QuartoMove = new QuartoMove(2, 2, QuartoEnum.AAAB);
+        const move1: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
         await doMove(move1);
 
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
@@ -346,8 +346,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
 
-        const move1: QuartoMove = new QuartoMove(3, 3, QuartoEnum.BABA);
-        const move2: QuartoMove = new QuartoMove(3, 0, QuartoEnum.ABBA);
+        const move1: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
+        const move2: QuartoMove = new QuartoMove(3, 0, QuartoPiece.ABBA);
 
         await doMove(FIRST_MOVE);
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1.encode()]);
@@ -365,7 +365,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
 
-        const move1Bis: QuartoMove = new QuartoMove(1, 1, QuartoEnum.BAAB);
+        const move1Bis: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAB);
         // Receiving alternative move of Player.ONE
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1Bis.encode()]);
 
@@ -388,7 +388,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(await askTakeBack()).toBeFalse();
         await receiveNewMoves([FIRST_MOVE_ENCODED]);
         expect(await askTakeBack()).toBeFalse();
-        await doMove(new QuartoMove(2, 2, QuartoEnum.BBAA));
+        await doMove(new QuartoMove(2, 2, QuartoPiece.BBAA));
         expect(await askTakeBack()).toBeTrue();
         expect(await askTakeBack()).toBeFalse();
 
@@ -397,7 +397,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should only propose to accept take back when opponent asked', fakeAsync(async () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
+        const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
         await doMove(FIRST_MOVE);
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         expect(await acceptTakeBack()).toBeFalse();
@@ -415,7 +415,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should only propose player to refuse take back when opponent asked', fakeAsync(async () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
+        const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
         await doMove(FIRST_MOVE);
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         expect(await refuseTakeBack()).toBeFalse();
@@ -433,12 +433,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         await doMove(FIRST_MOVE);
-        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
+        const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
 
         spyOn(partDAO, 'update').and.callThrough();
-        const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.ABBA);
+        const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
         await doMove(move2);
         expect(partDAO.update).not.toHaveBeenCalled();
 
@@ -447,8 +447,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should cancel take back request when take back requester do a move', fakeAsync(async () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
-        const move2: QuartoMove = new QuartoMove(2, 1, QuartoEnum.ABBA);
+        const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
+        const move2: QuartoMove = new QuartoMove(2, 1, QuartoPiece.ABBA);
         await doMove(FIRST_MOVE);
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         await askTakeBack();
@@ -477,12 +477,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         await doMove(FIRST_MOVE);
-        const move1: number = new QuartoMove(2, 2, QuartoEnum.BBBA).encode();
+        const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         expect(await clickElement('#resignButton')).toBeTruthy('Should be possible to resign');
 
         spyOn(partDAO, 'update').and.callThrough();
-        const move2: QuartoMove = new QuartoMove(2, 3, QuartoEnum.ABBA);
+        const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
         expect((await doMove(move2)).isSuccess()).toBeFalse();
         expect(partDAO.update).not.toHaveBeenCalled();
 

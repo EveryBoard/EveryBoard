@@ -1,4 +1,5 @@
 import { MoveCoord } from '../../../jscaip/MoveCoord';
+import { QuartoPiece } from '../QuartoPiece';
 
 export class QuartoMove extends MoveCoord {
     public static encode(move: QuartoMove): number {
@@ -8,7 +9,7 @@ export class QuartoMove extends MoveCoord {
          */
         const x: number = move.coord.x;
         const y: number = move.coord.y;
-        const p: number = move.piece;
+        const p: number = move.piece.value;
         return (x * 128) + (y * 32) + p;
     }
     public static decode(encodedMove: number): QuartoMove {
@@ -21,20 +22,15 @@ export class QuartoMove extends MoveCoord {
         encodedMove -= y;
         encodedMove /= 4;
         const x: number = encodedMove;
-        return new QuartoMove(x, y, piece);
+        return new QuartoMove(x, y, QuartoPiece.fromInt(piece));
     }
-    constructor(x: number, y: number, public readonly piece: number) {
+    constructor(x: number, y: number, public readonly piece: QuartoPiece) {
         /* (x, y) is the coord where you put the 'inHand' quarto piece
          * piece is the quarto piece you give
          */
         super(x, y);
-        if (piece < 0) {
-            // nombre trop bas, ce n'est pas une pièce
-            throw new Error('Negative number are not valids pieces (should be betwwen 0 and 15), got ' + piece + '.');
-        }
-        if (piece > 16) {
-            // nombre trop grand, ce n'est pas une pièce
-            throw new Error('This number is too big to be a valid piece (should be between 0 and 15), got ' + piece + '.');
+        if (piece == null) {
+            throw new Error('Piece to give can\'t be null.');
         }
     }
     public encode(): number {
@@ -46,15 +42,13 @@ export class QuartoMove extends MoveCoord {
     public toString(): string {
         return 'QuartoMove(' + this.coord.x + ', ' +
                              this.coord.y + ', ' +
-                             this.piece +
+                             this.piece.value +
                 ')';
     }
-    public equals(o: any): boolean {
+    public equals(o: QuartoMove): boolean {
         if (this === o) return true;
-        if (!(o instanceof QuartoMove)) return false;
         const other: QuartoMove = o as QuartoMove;
         if (!other.coord.equals(this.coord)) return false;
-        if (this.piece !== other.piece) return false;
-        return true;
+        return this.piece === other.piece;
     }
 }

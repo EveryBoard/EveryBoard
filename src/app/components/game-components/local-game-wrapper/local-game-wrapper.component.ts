@@ -13,7 +13,7 @@ import { display } from 'src/app/collectionlib/utils';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public playerZeroValue = '0';
     public playerOneValue = '0';

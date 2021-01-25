@@ -18,7 +18,7 @@
                 <img *ngIf="(chosen.x===x && chosen.y===y)"
                      width="50" height="50"
                      alt="piece in hand that you just put on the board"
-                     [src]="imagesLocation+'quarto/'+pieceInHand+'.svg'"
+                     [src]="imagesLocation+'quarto/'+pieceInHand.value+'.svg'"
                      style="position:absolute; top:0; left:0;"/>
             </td>
         </tr>
@@ -27,7 +27,7 @@
     <img *ngIf="chosen.x === -1"
          width="50" height="50"
          alt=":{{ pieceInHand }}:"
-         [src]='imagesLocation+"quarto/"+pieceInHand+".svg"'/>
+         [src]='imagesLocation+"quarto/"+pieceInHand.value+".svg"'/>
 </div>
 <div id="piece" style="float: right">
     <table>
@@ -40,7 +40,7 @@
                      width="50" height="50"
                      alt=":{{ ((4*y)+x) }}:"
                      [src]='imagesLocation+"quarto/"+((4*y)+x)+".svg"'/>
-                <img *ngIf="((4*y)+x) === pieceToGive"
+                <img *ngIf="((4*y)+x) === pieceToGive.value"
                      width="50" height="50"
                      alt="highlighted"
                      [src]="imagesLocation+'squared_highlight.svg'"

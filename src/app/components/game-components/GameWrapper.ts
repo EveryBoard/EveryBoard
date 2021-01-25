@@ -30,7 +30,7 @@ import { EpaminondasComponent } from './epaminondas/epaminondas.component';
 
 @Component({ template: '' })
 export abstract class GameWrapper {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     // component loading
     @ViewChild(GameIncluderComponent)
@@ -122,7 +122,7 @@ export abstract class GameWrapper {
         this.canPass = this.gameComponent.canPass;
     }
     public receiveChildData = async (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<MGPValidation> => {
-        const LOCAL_VERBOSE = false;
+        const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
             return MGPValidation.failure('not your turn');
         }
