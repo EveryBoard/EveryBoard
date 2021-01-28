@@ -34,7 +34,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
     public remainingPieces: string[][] = [];
 
     public ngOnInit() {
-        this.updateBoard();
+        this.updateBoard(); // TODO: check if this does not stink
     }
     public isVictory(): boolean {
         return EncapsuleRules.isVictory(this.rules.node.gamePartSlice);
@@ -45,7 +45,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         this.cancelMove();
         this.caseBoard = this.mapNumberBoard(slice.getCopiedBoard());
         this.mappedBoard = this.mapCaseBoard(this.caseBoard);
-        const pieceNames: string[] = slice.getRemainingPiecesCopy().map((piece) => EncapsuleMapper.getNameFromPiece(piece));
+        const pieceNames: string[] = slice.getRemainingPiecesCopy().map(EncapsuleMapper.getNameFromPiece);
         this.remainingPieces[0] = pieceNames.filter((piece) => EncapsuleMapper.toPlayerFromName(piece) === Player.ZERO);
         this.remainingPieces[1] = pieceNames.filter((piece) => EncapsuleMapper.toPlayerFromName(piece) === Player.ONE);
 

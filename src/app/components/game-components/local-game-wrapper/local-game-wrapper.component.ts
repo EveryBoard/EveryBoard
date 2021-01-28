@@ -81,7 +81,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
                         this.cdr.detectChanges();
                         this.proposeAIToPlay();
                     } else {
-                        display(true, aiMove);
                         throw new Error('AI choosed illegal move (' + aiMove.toString() + ')');
                     }
                 }

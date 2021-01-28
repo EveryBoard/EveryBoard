@@ -9,7 +9,7 @@ export interface CoordDir {
     readonly dir: Orthogonal
 }
 export interface QuartoHashInfo {
-    readonly coordDirs: ReadonlyArray<CoordDir>,
+    readonly coordDir: CoordDir,
     readonly firstPiece: MGPOptional<QuartoPiece>
 }
 export class QuartoHasher {
@@ -32,15 +32,17 @@ export class QuartoHasher {
     public static filterSubLevel(
         board: NumberTable,
         depth: number,
-        firstPiece: MGPOptional<QuartoPiece>,
-        coordDirs: CoordDir[],
-    ): QuartoHashInfo {
-        let remainingCoordDirs: CoordDir[] = [];
-        const min: number = QuartoPiece.NONE.value;
-        for (const coordDir of coordDirs) {
+        quartoHashInfos: QuartoHashInfo[]
+    ): QuartoHashInfo[]
+    {
+        let remainingHashInfos: QuartoHashInfo[] = [];
+        let min: number = QuartoPiece.NONE.value;
+        for (const quartoHashInfo of quartoHashInfos) {
+            let firstPiece: MGPOptional<QuartoPiece> = quartoHashInfo.firstPiece;
+            const coordDir: CoordDir = quartoHashInfo.coordDir;
             const c: Coord = QuartoHasher.get(coordDir, depth);
             let piece: QuartoPiece = QuartoPiece.fromInt(board[c.y][c.x]);
-            if (piece !== QuartoPiece.NONE) {
+            if (piece !== QuartoPiece.NONE && firstPiece.isAbsent()) {
                 firstPiece = MGPOptional.of(piece);
             }
             if (firstPiece.isPresent()) {
@@ -48,15 +50,16 @@ export class QuartoHasher {
             }
 
             if (piece.value === min) {
-                remainingCoordDirs.push(coordDir);
+                remainingHashInfos.push({ coordDir, firstPiece });
             } else if (piece.value < min) {
-                remainingCoordDirs = [coordDir];
+                remainingHashInfos = [{ coordDir, firstPiece }];
+                min = piece.value;
             }
         }
-        if (remainingCoordDirs.length === 0) {
-            return; // coordDirs;
+        if (remainingHashInfos.length === 0) {
+            return quartoHashInfos;
         } else {
-            return; // remainingCoordDirs;
+            return remainingHashInfos;
         }
     }
     public static get(coordDir: CoordDir, n: number): Coord {

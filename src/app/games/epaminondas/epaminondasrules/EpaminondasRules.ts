@@ -80,7 +80,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         return slice.countPiecesOnBoard();
     }
     public applyLegalMove(move: EpaminondasMove, slice: EpaminondasPartSlice, status: EpaminondasLegalityStatus): { resultingMove: EpaminondasMove; resultingSlice: EpaminondasPartSlice; } {
-        display(false, { called: 'EpaminondasRules.applyLegalMove', move, slice, status });
+        display(false, { epaminondasRules_applyLegalMove: { move, slice, status } });
         const resultingSlice: EpaminondasPartSlice = new EpaminondasPartSlice(status.newBoard, slice.turn + 1);
         return { resultingMove: move, resultingSlice };
     }

@@ -45,6 +45,8 @@ export class QuartoPiece {
     public static fromInt(piece: number): QuartoPiece {
         if (0 <= piece && piece <= 15) {
             return QuartoPiece.pieces[piece];
+        } else if ( piece === 16) {
+            return QuartoPiece.NONE;
         } else {
             throw new Error('Invalid piece (' + piece + ')');
         }

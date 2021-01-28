@@ -124,10 +124,10 @@ export abstract class GameWrapper {
     public receiveChildData = async (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number): Promise<MGPValidation> => {
         const LOCAL_VERBOSE: boolean = false;
         if (!this.isPlayerTurn()) {
-            return MGPValidation.failure('not your turn');
+            return MGPValidation.failure('It is not your turn.');
         }
         if (this.endGame) {
-            return MGPValidation.failure('game is finished your turn');
+            return MGPValidation.failure('Game is finished.');
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal.isFailure()) {
