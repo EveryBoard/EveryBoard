@@ -5,7 +5,7 @@ import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { QuartoPiece } from '../QuartoPiece';
 import { CoordDir, QuartoHasher, QuartoHashInfo } from './QuartoHasher';
 
-fdescribe('QuartoHasher', () => {
+xdescribe('QuartoHasher', () => {
     const NULL: number = QuartoPiece.NONE.value;
     const AAAA: number = QuartoPiece.AAAA.value;
     const AAAB: number = QuartoPiece.AAAB.value;
@@ -21,7 +21,7 @@ fdescribe('QuartoHasher', () => {
         expect(QuartoHasher.matchPieceTo(QuartoPiece.BBAA, QuartoPiece.BBBB)).toBe(QuartoPiece.AABB);
         expect(QuartoHasher.matchPieceTo(QuartoPiece.BBAA, QuartoPiece.AABB)).toBe(QuartoPiece.BBBB);
     });
-    fit('should filter correctly with only one corner occupied', () => {
+    it('should filter correctly with only one corner occupied', () => {
         const board: NumberTable = [
             [NULL, NULL, NULL, AAAA],
             [NULL, NULL, NULL, NULL],
@@ -34,7 +34,6 @@ fdescribe('QuartoHasher', () => {
                 firstPiece: MGPOptional.empty()
             };
         });
-        console.log(quartoHasherInfos)
         const remainingQuartoHashInfos: QuartoHashInfo[] = QuartoHasher.filterSubLevel(board, 0, quartoHasherInfos);
         expect(remainingQuartoHashInfos).toEqual([{
             coordDir: { coord: new Coord(3, 0), dir: Orthogonal.LEFT },
@@ -44,7 +43,7 @@ fdescribe('QuartoHasher', () => {
             firstPiece: MGPOptional.of(QuartoPiece.AAAA),
         }]);
     });
-    fit('should filter correctly with only one corner occupied and one adjacent ridge', () => {
+    it('should filter correctly with only one corner occupied and one adjacent ridge', () => {
         const board: NumberTable = [
             [NULL, NULL, NULL, AAAA],
             [NULL, NULL, NULL, AAAB],
@@ -64,6 +63,5 @@ fdescribe('QuartoHasher', () => {
                 firstPiece: MGPOptional.of(QuartoPiece.AAAA)
             }
         ]);
-        console.log(remainingQuartoHashInfos);
     });
 });
