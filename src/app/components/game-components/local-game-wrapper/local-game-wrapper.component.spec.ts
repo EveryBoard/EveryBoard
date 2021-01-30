@@ -13,8 +13,8 @@ import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { UserService } from 'src/app/services/user/UserService';
 import { By } from '@angular/platform-browser';
 import { Player } from 'src/app/jscaip/player/Player';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 
 const activatedRouteStub = {

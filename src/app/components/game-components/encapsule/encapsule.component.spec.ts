@@ -10,7 +10,7 @@ import { AppModule } from 'src/app/app.module';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { EncapsuleMove } from 'src/app/games/encapsule/encapsulemove/EncapsuleMove';
+import { EncapsuleMove } from 'src/app/games/encapsule/encapsule-move/EncapsuleMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { EncapsulePiece, EncapsuleMapper } from 'src/app/games/encapsule/EncapsuleEnums';
 

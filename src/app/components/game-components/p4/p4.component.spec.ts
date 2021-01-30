@@ -10,8 +10,8 @@ import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { P4Rules } from 'src/app/games/p4/p4rules/P4Rules';
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
+import { P4Rules } from 'src/app/games/p4/p4-rules/P4Rules';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { P4Move } from 'src/app/games/p4/P4Move';
 

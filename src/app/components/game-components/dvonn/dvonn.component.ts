@@ -2,13 +2,13 @@ import { AbstractGameComponent } from '../AbstractGameComponent';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
-import { DvonnMove } from 'src/app/games/dvonn/dvonnmove/DvonnMove';
+import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
-import { DvonnRules } from 'src/app/games/dvonn/dvonnrules/DvonnRules';
+import { DvonnRules } from 'src/app/games/dvonn/dvonn-rules/DvonnRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
-import { DvonnPieceStack } from 'src/app/games/dvonn/dvonnpiecestack/DvonnPieceStack';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({

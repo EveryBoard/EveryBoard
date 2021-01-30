@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { IJoiner, IJoinerId, PIJoiner } from '../../domain/ijoiner';
 import { JoinerDAO } from '../../dao/joiner/JoinerDAO';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable({
     providedIn: 'root',

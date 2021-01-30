@@ -4,8 +4,8 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -37,11 +37,14 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     public message: (msg: string) => void = (msg: string) => {
         this.snackBar.open(msg, 'Ok!', { duration: 3000 });
     };
-    public abstract updateBoard(): void;
+
+    public abstract cancelMove(reason?: string): void;
 
     public abstract decodeMove(encodedMove: number): Move;
 
     public abstract encodeMove(move: Move): number;
+
+    public abstract updateBoard(): void;
 
     public getTurn(): number {
         return this.rules.node.gamePartSlice.turn;

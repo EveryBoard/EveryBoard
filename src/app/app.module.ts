@@ -20,7 +20,7 @@ import { AuthenticationService } from './services/authentication/AuthenticationS
 import { GameService } from './services/game/GameService';
 import { JoinerService } from './services/joiner/JoinerService';
 
-import { EmailVerified } from './guard/emailverified/EmailVerified';
+import { EmailVerified } from './guard/email-verified/EmailVerified';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';

@@ -11,7 +11,7 @@ import { AppModule } from 'src/app/app.module';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { KamisadoMove } from 'src/app/games/kamisado/kamisadomove/KamisadoMove';
+import { KamisadoMove } from 'src/app/games/kamisado/kamisado-move/KamisadoMove';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 
 const activatedRouteStub = {

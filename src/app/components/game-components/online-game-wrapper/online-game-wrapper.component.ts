@@ -18,7 +18,7 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/player/Player';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-game-wrapper',

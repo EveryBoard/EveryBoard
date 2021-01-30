@@ -2,10 +2,10 @@ import { IChat, PIChat, IChatId } from '../../domain/ichat';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-import { FirebaseFirestoreDAO } from '../firebasefirestoredao/FirebaseFirestoreDAO';
+import { FirebaseFirestoreDAO } from '../firebase-firestore-dao/FirebaseFirestoreDAO';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable({
     providedIn: 'root',

@@ -1,7 +1,7 @@
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { QuixoPartSlice } from '../quixo-part-slice/QuixoPartSlice';
 import { QuixoNode, QuixoRules } from '../quixo-rules/QuixoRules';

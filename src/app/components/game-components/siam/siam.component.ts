@@ -1,17 +1,17 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
-import { SiamMove } from 'src/app/games/siam/siammove/SiamMove';
+import { SiamMove } from 'src/app/games/siam/siam-move/SiamMove';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
-import { SiamRules } from 'src/app/games/siam/siamrules/SiamRules';
+import { SiamRules } from 'src/app/games/siam/siam-rules/SiamRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { SiamPiece } from 'src/app/games/siam/siampiece/SiamPiece';
+import { SiamPiece } from 'src/app/games/siam/siam-piece/SiamPiece';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/player/Player';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GameComponentUtils } from '../GameComponentUtils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-siam',

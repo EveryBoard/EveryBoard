@@ -1,16 +1,16 @@
 import { Component } from '@angular/core';
 import { Move } from '../../../jscaip/Move';
 import { AbstractGameComponent } from '../AbstractGameComponent';
-import { EncapsuleRules } from 'src/app/games/encapsule/encapsulerules/EncapsuleRules';
+import { EncapsuleRules } from 'src/app/games/encapsule/encapsule-rules/EncapsuleRules';
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
-import { EncapsuleMove } from 'src/app/games/encapsule/encapsulemove/EncapsuleMove';
+import { EncapsuleMove } from 'src/app/games/encapsule/encapsule-move/EncapsuleMove';
 import { EncapsulePiece, EncapsuleMapper } from 'src/app/games/encapsule/EncapsuleEnums';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({
     selector: 'app-encapsule',
@@ -33,9 +33,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
 
     public remainingPieces: string[][] = [];
 
-    public ngOnInit() {
-        this.updateBoard(); // TODO: check if this does not stink
-    }
     public isVictory(): boolean {
         return EncapsuleRules.isVictory(this.rules.node.gamePartSlice);
     }
@@ -113,7 +110,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         this.lastLandingCoord = null;
         this.lastStartingCoord = MGPOptional.empty();
     }
-    private cancelMove(reason?: string): MGPValidation {
+    public cancelMove(reason?: string): MGPValidation {
         this.chosenCoord = null;
         this.chosenPiece = null;
         if (reason) {

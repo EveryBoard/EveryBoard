@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { GameService } from '../../../services/game/GameService';
 import { JoinerService } from '../../../services/joiner/JoinerService';
 import { ChatService } from '../../../services/chat/ChatService';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-part-creation',

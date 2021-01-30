@@ -24,8 +24,8 @@ import { SiamComponent } from './siam/siam.component';
 import { TablutComponent } from './tablut/tablut.component';
 
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { display } from 'src/app/utils/collection-lib/utils';
 import { EpaminondasComponent } from './epaminondas/epaminondas.component';
 
 @Component({ template: '' })

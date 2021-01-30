@@ -1,5 +1,5 @@
-import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { QuartoPiece } from '../QuartoPiece';

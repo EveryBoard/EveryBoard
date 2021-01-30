@@ -1,9 +1,9 @@
-import { ArrayUtils, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 export class KamisadoPartSlice extends GamePartSlice {
     public constructor(turn: number,

@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { Coord } from '../../../jscaip/coord/Coord';
-import { TablutMove } from 'src/app/games/tablut/tablutmove/TablutMove';
+import { TablutMove } from 'src/app/games/tablut/tablut-move/TablutMove';
 import { TablutPartSlice } from '../../../games/tablut/TablutPartSlice';
-import { TablutRules } from '../../../games/tablut/tablutrules/TablutRules';
+import { TablutRules } from '../../../games/tablut/tablut-rules/TablutRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { TablutCase } from 'src/app/games/tablut/tablutrules/TablutCase';
-import { display } from 'src/app/collectionlib/utils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { TablutCase } from 'src/app/games/tablut/tablut-rules/TablutCase';
+import { display } from 'src/app/utils/collection-lib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Player } from 'src/app/jscaip/player/Player';
 
 @Component({

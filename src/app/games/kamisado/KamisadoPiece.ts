@@ -1,4 +1,4 @@
-import { Comparable } from 'src/app/collectionlib/Comparable';
+import { Comparable } from 'src/app/utils/collection-lib/Comparable';
 import { KamisadoColor } from './KamisadoColor';
 import { Player } from 'src/app/jscaip/player/Player';
 

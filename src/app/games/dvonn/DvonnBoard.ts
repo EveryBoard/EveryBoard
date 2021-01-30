@@ -1,6 +1,6 @@
-import { Table, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { Table, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { DvonnPieceStack } from './dvonnpiecestack/DvonnPieceStack';
+import { DvonnPieceStack } from './dvonn-piece-stack/DvonnPieceStack';
 
 export class DvonnBoard {
     public static WIDTH = 11;

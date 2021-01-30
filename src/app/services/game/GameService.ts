@@ -11,9 +11,9 @@ import { ActivesPartsService } from '../actives-parts/ActivesPartsService';
 import { ChatService } from '../chat/ChatService';
 import { IChat } from '../../domain/ichat';
 import { IMGPRequest, RequestCode } from '../../domain/request';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable({
     providedIn: 'root',

@@ -1,7 +1,7 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { EncapsulePiece, Size, EncapsuleMapper } from './EncapsuleEnums';
 import { Player } from 'src/app/jscaip/player/Player';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class EncapsulePartSlice extends GamePartSlice {
     private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;

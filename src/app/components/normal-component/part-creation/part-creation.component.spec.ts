@@ -19,7 +19,7 @@ import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
-import { MGPStr } from 'src/app/collectionlib/mgpstr/MGPStr';
+import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { ICurrentPart } from 'src/app/domain/icurrentpart';
 
 class RouterMock {

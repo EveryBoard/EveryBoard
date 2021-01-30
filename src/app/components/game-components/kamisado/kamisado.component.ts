@@ -2,13 +2,13 @@ import { AbstractGameComponent } from '../AbstractGameComponent';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
-import { KamisadoMove } from 'src/app/games/kamisado/kamisadomove/KamisadoMove';
+import { KamisadoMove } from 'src/app/games/kamisado/kamisado-move/KamisadoMove';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoRules } from 'src/app/games/kamisado/kamisadorules/KamisadoRules';
+import { KamisadoRules } from 'src/app/games/kamisado/kamisado-rules/KamisadoRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({
     selector: 'app-kamisado',

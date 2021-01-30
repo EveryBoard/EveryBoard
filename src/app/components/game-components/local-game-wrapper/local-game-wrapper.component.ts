@@ -5,7 +5,7 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
 import { GameWrapper } from 'src/app/components/game-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/user/UserService';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-local-game-wrapper',

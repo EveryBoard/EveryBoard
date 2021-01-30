@@ -12,11 +12,11 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
-import { DvonnMove } from 'src/app/games/dvonn/dvonnmove/DvonnMove';
+import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
-import { DvonnPieceStack } from 'src/app/games/dvonn/dvonnpiecestack/DvonnPieceStack';
+import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 
 const activatedRouteStub = {
     snapshot: {

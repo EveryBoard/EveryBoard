@@ -6,8 +6,8 @@ import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSl
 import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { Player } from 'src/app/jscaip/player/Player';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-pylos',

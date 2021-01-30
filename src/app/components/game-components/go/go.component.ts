@@ -1,15 +1,15 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
-import { GoMove } from 'src/app/games/go/gomove/GoMove';
-import { GoRules } from 'src/app/games/go/gorules/GoRules';
+import { GoMove } from 'src/app/games/go/go-move/GoMove';
+import { GoRules } from 'src/app/games/go/go-rules/GoRules';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
-import { GroupDatas } from 'src/app/games/go/groupdatas/GroupDatas';
+import { GroupDatas } from 'src/app/games/go/group-datas/GroupDatas';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { display } from 'src/app/collectionlib/utils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { display } from 'src/app/utils/collection-lib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({
     selector: 'app-go',
@@ -40,6 +40,9 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
         return this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
+    }
+    public cancelMove(reason?: string): void {
+        // Empty because not needed.
     }
     public decodeMove(encodedMove: number): GoMove {
         return GoMove.decode(encodedMove);

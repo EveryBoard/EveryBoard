@@ -8,8 +8,8 @@ import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSl
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-quixo',

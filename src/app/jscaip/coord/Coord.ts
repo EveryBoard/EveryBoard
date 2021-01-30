@@ -1,5 +1,5 @@
 import { Direction } from '../DIRECTION';
-import { Comparable } from '../../collectionlib/Comparable';
+import { Comparable } from '../../utils/collection-lib/Comparable';
 
 export class Coord implements Comparable {
     public static getBinarised(n: number): -1 | 0 | 1 {

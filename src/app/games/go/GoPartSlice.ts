@@ -1,7 +1,7 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
-import { ArrayUtils, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class GoPiece {
     public static BLACK: GoPiece = new GoPiece(Player.ZERO.value);

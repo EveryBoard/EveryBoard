@@ -1,10 +1,10 @@
-import { FirebaseFirestoreDAO } from '../firebasefirestoredao/FirebaseFirestoreDAO';
+import { FirebaseFirestoreDAO } from '../firebase-firestore-dao/FirebaseFirestoreDAO';
 import { ICurrentPart, MGPResult, PICurrentPart } from '../../domain/icurrentpart';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { environment } from 'src/environments/environment';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable({
     providedIn: 'root',
