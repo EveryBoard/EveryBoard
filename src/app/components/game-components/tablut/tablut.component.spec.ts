@@ -33,7 +33,7 @@ const authenticationServiceStub = {
         return { pseudo: null, verified: null };
     },
 };
-describe('TablutComponent', () => {
+fdescribe('TablutComponent', () => {
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;

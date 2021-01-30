@@ -79,13 +79,15 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         }
         return slice.countPiecesOnBoard();
     }
-    public applyLegalMove(move: EpaminondasMove, slice: EpaminondasPartSlice, status: EpaminondasLegalityStatus): { resultingMove: EpaminondasMove; resultingSlice: EpaminondasPartSlice; } {
-        display(false, { epaminondasRules_applyLegalMove: { move, slice, status } });
+    public applyLegalMove(
+        move: EpaminondasMove,
+        slice: EpaminondasPartSlice,
+        status: EpaminondasLegalityStatus): { resultingMove: EpaminondasMove; resultingSlice: EpaminondasPartSlice; }
+    {
         const resultingSlice: EpaminondasPartSlice = new EpaminondasPartSlice(status.newBoard, slice.turn + 1);
         return { resultingMove: move, resultingSlice };
     }
     public isLegal(move: EpaminondasMove, slice: EpaminondasPartSlice): EpaminondasLegalityStatus {
-        display(false, { called: 'EpaminondasRules.isLegal', move, slice });
         const phalanxValidity: MGPValidation = this.getPhalanxValidity(slice, move);
         if (phalanxValidity.isFailure()) {
             return EpaminondasLegalityStatus.failure(phalanxValidity.reason);
@@ -104,7 +106,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
     }
     public getPhalanxValidity(slice: EpaminondasPartSlice, move: EpaminondasMove): MGPValidation {
         let coord: Coord = move.coord;
-        let soldierIndex = 0;
+        let soldierIndex: number = 0;
         let caseContent: number;
         const ENNEMY: number = slice.getCurrentEnnemy().value;
         while (soldierIndex < move.movedPieces) {
@@ -128,7 +130,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         const CURRENT_PLAYER: number = slice.getCurrentPlayer().value;
         let emptied: Coord = move.coord;
         let landingCoord: Coord = move.coord.getNext(move.direction, move.movedPieces);
-        let landingIndex = 0;
+        let landingIndex: number = 0;
         while (landingIndex + 1 < move.stepSize) {
             newBoard[emptied.y][emptied.x] = Player.NONE.value;
             newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;

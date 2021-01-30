@@ -13,15 +13,21 @@ import { Player } from 'src/app/jscaip/player/Player';
 
 @Component({
     selector: 'app-tablut',
-    templateUrl: './old-tablut.component.html',
+    templateUrl: './tablut.component.html',
 })
 export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;
 
     public rules: TablutRules = new TablutRules(TablutPartSlice);
 
-    public imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg'];
-
+    public imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg']; // TODO: kill that thang
+    public throneCoords: Coord[] = [
+        new Coord(0, 0),
+        new Coord(0, 8),
+        new Coord(4, 4),
+        new Coord(8, 0),
+        new Coord(8, 8),
+    ];
     public NONE: number = TablutCase.UNOCCUPIED.value;
 
     public NORMAL_FILL: string = 'lightgray';
@@ -36,7 +42,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public chosen: Coord = new Coord(-1, -1);
 
-    public updateBoard() {
+    public updateBoard(): void {
         const slice: TablutPartSlice = this.rules.node.gamePartSlice;
         const move: TablutMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
@@ -94,7 +100,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const coord: Coord = new Coord(x, y);
         return TablutRules.getRelativeOwner(player, coord, this.board) === TablutRules.PLAYER;
     }
-    public hideLastMove() {
+    public hideLastMove(): void {
         this.moving = new Coord(-1, -1);
         this.arriving = new Coord(-1, -1);
     }
@@ -110,7 +116,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     public isThrone(x: number, y: number): boolean {
         return TablutRules.isThrone(new Coord(x, y));
     }
-    public showSelectedPiece(x: number, y: number) {
+    public showSelectedPiece(x: number, y: number): void {
         this.chosen = new Coord(x, y);
     }
     public decodeMove(encodedMove: number): TablutMove {
@@ -151,9 +157,9 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         //     return this.MOVED_FILL;
         // } else {
         return this.NORMAL_FILL;
-        //}
+        // }
     }
-    public getRectStyle(x: number, y: number): any {
+    public getRectStyle(x: number, y: number): unknown {
         if (this.isClickable(x, y)) {
             return this.CLICKABLE_STYLE;
         } else {
@@ -163,9 +169,5 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     public isClickable(x: number, y: number): boolean {
         // Show if the piece can be clicked
         return this.pieceBelongToCurrentPlayer(x, y);
-    }
-    private isUserTurn(): boolean {
-        // TODO: must check if user is no observer, if it's not AI turn, should be nice to have that in common for all wrapper
-        return true;
     }
 }

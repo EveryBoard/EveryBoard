@@ -46,7 +46,7 @@ export abstract class GameWrapper {
 
     public canPass: boolean;
 
-    public endGame = false;
+    public endGame: boolean = false;
 
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
@@ -94,7 +94,7 @@ export abstract class GameWrapper {
             throw new Error('Unknown Games are unwrappable');
         }
     }
-    protected afterGameIncluderViewInit() {
+    protected afterGameIncluderViewInit(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
 
         this.createGameComponent();
@@ -104,7 +104,7 @@ export abstract class GameWrapper {
         this.gameComponent.rules.setInitialBoard();
         this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
     }
-    protected createGameComponent() {
+    protected createGameComponent(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
         display(GameWrapper.VERBOSE && this.gameIncluder == null, 'GameIncluder should be present');
 
@@ -115,7 +115,8 @@ export abstract class GameWrapper {
             this.componentFactoryResolver.resolveComponentFactory(component);
         const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
-        this.gameComponent = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance; // Shortent by T<S = Truc>
+        this.gameComponent = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance;
+        // Shortent by T<S = Truc>
         this.gameComponent.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
         this.gameComponent.observerRole = this.observerRole;
@@ -140,10 +141,13 @@ export abstract class GameWrapper {
     }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
-    public isPlayerTurn() {
+    public isPlayerTurn(): boolean {
+        if (this.observerRole > 1) {
+            return false;
+        }
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;
         const indexPlayer: number = turn % 2;
-        display(GameWrapper.VERBOSE, 'It is turn ' + turn + '(' + this.players[indexPlayer] + ') and you are ' + this.userName);
+        display(GameWrapper.VERBOSE, { turn, players: this.players, username: this.userName});
         return this.players[indexPlayer] === this.userName;
     }
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {

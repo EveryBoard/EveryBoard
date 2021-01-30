@@ -15,6 +15,20 @@
                   stroke-width="5"
                   stroke="black"
             />
+            <g *ngIf="board[y][x] === NONE && isThrone(x, y)">
+                <line [attr.x1]="x * 100"
+                      [attr.y1]="y * 100"
+                      [attr.x2]="100 + (x * 100)"
+                      [attr.y2]="100 + (y * 100)"
+                      stroke-width="10"
+                      stroke="black" />
+                <line [attr.x1]="100 + (x * 100)"
+                      [attr.y1]="y * 100"
+                      [attr.x2]="x * 100"
+                      [attr.y2]="100 + (y * 100)"
+                      stroke-width="10"
+                      stroke="black" />
+            </g>
             <circle *ngIf="board[y][x] !== NONE"
                     (click)="onClick(x, y)"
                     r="45"
