@@ -1,13 +1,14 @@
-import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
-import { Coord } from "src/app/jscaip/coord/Coord";
-import { GamePartSlice } from "src/app/jscaip/GamePartSlice";
-import { HexaBoard } from "src/app/jscaip/hexa/HexaBoard";
-import { Player } from "src/app/jscaip/player/Player";
-import { GipfPiece } from "../gipfpiece/GipfPiece";
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
+import { Player } from 'src/app/jscaip/player/Player';
+import { GipfPiece } from '../gipfpiece/GipfPiece';
 
 export class GipfPartSlice extends GamePartSlice {
     public static getInitialSlice(): GipfPartSlice {
-        return new GipfPartSlice(HexaBoard.empty(3, GipfPiece.EMPTY, GipfPiece.encoder), 0, 15, 15, true, true, 0, 0, MGPOptional.empty());
+        return new GipfPartSlice(HexaBoard.empty(3, GipfPiece.EMPTY, GipfPiece.encoder),
+                                 0,
+                                 [15, 15], [true, true], [0, 0]);
     }
     public constructor(public hexaBoard: HexaBoard<GipfPiece>,
                        turn: number,
@@ -38,5 +39,4 @@ export class GipfPartSlice extends GamePartSlice {
         });
         return doubles;
     }
-
 }

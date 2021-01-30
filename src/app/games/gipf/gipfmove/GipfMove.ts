@@ -8,6 +8,13 @@ export class GipfLine {
     public constructor(public readonly entrance: Coord,
                        public readonly direction: Direction) {
     }
+
+    public equals(other: GipfLine): boolean {
+        if (this === other) return true;
+        if (this.entrance.equals(other.entrance)) return false;
+        if (this.direction !== other.direction) return false;
+        return true;
+    }
 }
 
 export class GipfCapture {
@@ -21,7 +28,21 @@ export class GipfCapture {
         this.capturedPieces.forEach(callback);
     }
     public contains(coord: Coord): boolean {
-        return this.capturedPieces.includes(coord);
+        for (let i = 0; i < this.capturedPieces.length; i++) {
+            if (this.capturedPieces[i].equals(coord)) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public equals(other: GipfCapture): boolean {
+        if (this === other) return true;
+        if (this.line.equals(other.line) === false) return false;
+        if (this.capturedPieces.length !== other.capturedPieces.length) return false;
+        for (let i = 0; i < this.capturedPieces.length; i++) {
+            if (!this.capturedPieces[i].equals(other.capturedPieces[i])) return false;
+        }
+        return true;
     }
 }
 
@@ -29,6 +50,13 @@ export class GipfPlacement {
     public constructor(public readonly coord: Coord,
                        public readonly direction: Direction,
                        public readonly isDouble: boolean) {
+    }
+
+    public equals(other: GipfPlacement): boolean {
+        if (!this.coord.equals(other.coord)) return false;
+        if (this.direction !== other.direction) return false;
+        if (this.isDouble !== other.isDouble) return false;
+        return true;
     }
 }
 
@@ -56,25 +84,19 @@ export class GipfMove extends Move {
         if (this === o) return true;
         if (!(o instanceof GipfMove)) return false;
         const other: GipfMove = <GipfMove> o;
-        // TODO
-        if (this.x !== other.x) return false;
-        if (this.y !== other.y) return false;
-        if (this.direction !== other.direction) return false;
-        if (this.isDouble !== other.isDouble) return false;
-        if (this.initialCaptures.length !== other.initialCaptures.length) return false;
-        if (this.tableEquals(this.initialCaptures, other.initialCaptures) === false) return false;
-        if (this.tableEquals(this.finalCaptures, other.finalCaptures) === false) return false;
-        if (this.finalCaptures !== other.finalCaptures) return false;
+        if (this.placement.equals(other.placement) === false) return false;
+        if (this.captureEquals(this.initialCaptures, other.initialCaptures) === false) return false;
+        if (this.captureEquals(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
 
-    private tableEquals(t1: Table<Coord>, t2: Table<Coord>): boolean {
-        for (let i = 0; i < t1.length; i++) {
-            if (t1[i].length !== t2[i].length) return false
-            for (let j = 0; j < t1[i].length; j++) {
-                if (!t1[i][j].equals(t2[i][j])) return false;
-            }
+    private captureEquals(c1: ReadonlyArray<GipfCapture>, c2: ReadonlyArray<GipfCapture>): boolean {
+        if (c1 === c2) return true;
+        if (c1.length !== c2.length) return false;
+        for (let i = 0; i < c1.length; i++) {
+            if (c1[i].equals(c2[i]) === false) return false;
         }
+        return true;
     }
 
     public encode(): number {

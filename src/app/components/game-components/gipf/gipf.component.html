@@ -2,4 +2,42 @@
      width="700px" height="600px"
      viewBox="0 0 1400 1200"
      preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of board; index as y;">
+    <g *ngFor="let caseContent of line; index as x;">
+      <g *ngIf="isOnBoard(x, y)">
+        <g>
+        <!-- Background -->
+        <polyline [attr.points]="getHexaCoordinates(x, y)"
+                  fill="none"
+                  style="stroke:black"/>
+        <!-- Piece -->
+        <circle *ngIf="isPiece(caseContent)"
+                (click)="onClick(x, y)"
+                [attr.cx] = "getCenter(x, y).x"
+                [attr.cy] = "getCenter(x, y).y"
+                [attr.r]="getPieceSize()"
+                style="stroke-width: 5px;"
+                [ngStyle]="getPieceStyle(caseContent)"/>
+        <circle *ngIf="isDoublePiece(caseContent)"
+                (click)="onClick(x, y)"
+                [attr.cx] = "getCenter(x, y).x"
+                [attr.cy] = "getCenter(x, y).y"
+                [attr.r]="getPieceSize() * 0.85"
+                style="stroke-width: 5px;"
+                [ngStyle]="getPieceStyle(caseContent)"/>
+        </g>
+      </g>
+    </g>
+  </g>
+  <!-- Highlight last move -->
+  <g *ngIf="lastMove !== null">
+    <!-- Placed piece position -->
+    <polyline [attr.points]="getHexaCoordinates(center(lastMove.placement.x, lastMove.placement.y))"
+              style="fill:none; stroke:#00caca;stroke-width:5px;"/>
+    <!-- Captured pieces positions -->
+    <g *ngFor="let capture of capturedCases()">
+      <polyline [attr.points]="getHexaCoordinates(center(capture.x, capture.y))"
+                style="fill:none; stroke:#00caca;stroke-width:5px;"/>
+    </g>
+  </g>
 </svg>

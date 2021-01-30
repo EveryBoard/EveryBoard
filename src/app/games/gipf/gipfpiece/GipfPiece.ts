@@ -1,5 +1,5 @@
-import { Encoder } from "src/app/jscaip/encoder";
-import { Player } from "src/app/jscaip/player/Player";
+import { Encoder } from 'src/app/jscaip/encoder';
+import { Player } from 'src/app/jscaip/player/Player';
 
 export class GipfPiece {
     public static encoder: Encoder<GipfPiece> = new class extends Encoder<GipfPiece> {
@@ -33,17 +33,16 @@ export class GipfPiece {
                     } else {
                         return GipfPiece.PLAYER_ONE_SIMPLE;
                     }
-
                 case Player.NONE:
                     return GipfPiece.EMPTY;
             }
         }
     }
-    public static EMPTY = new GipfPiece(Player.NONE, false);
-    public static PLAYER_ZERO_SIMPLE = new GipfPiece(Player.ZERO, false);
-    public static PLAYER_ZERO_DOUBLE = new GipfPiece(Player.ZERO, true);
-    public static PLAYER_ONE_SIMPLE = new GipfPiece(Player.ONE, false);
-    public static PLAYER_ONE_DOUBLE = new GipfPiece(Player.ONE, true);
+    public static EMPTY: GipfPiece = new GipfPiece(Player.NONE, false);
+    public static PLAYER_ZERO_SIMPLE: GipfPiece = new GipfPiece(Player.ZERO, false);
+    public static PLAYER_ZERO_DOUBLE: GipfPiece = new GipfPiece(Player.ZERO, true);
+    public static PLAYER_ONE_SIMPLE: GipfPiece = new GipfPiece(Player.ONE, false);
+    public static PLAYER_ONE_DOUBLE: GipfPiece = new GipfPiece(Player.ONE, true);
     private constructor(public player: Player, public isDouble: boolean) {
     }
 }
