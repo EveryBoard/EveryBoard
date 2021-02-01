@@ -60,10 +60,6 @@ describe('EncapsuleComponent', () => {
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(gameComponent).toBeTruthy('EncapsuleComponent should be created');
-        const playerZeroPieces: string[] = gameComponent.remainingPieces[0];
-        const playerOnePieces: string[] = gameComponent.remainingPieces[1];
-        expect(playerZeroPieces).toEqual(['BIG_BLACK', 'BIG_BLACK', 'MEDIUM_BLACK', 'MEDIUM_BLACK', 'SMALL_BLACK', 'SMALL_BLACK']);
-        expect(playerOnePieces).toEqual(['BIG_WHITE', 'BIG_WHITE', 'MEDIUM_WHITE', 'MEDIUM_WHITE', 'SMALL_WHITE', 'SMALL_WHITE']);
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(EncapsuleMove, 'decode').and.callThrough();
@@ -82,6 +78,10 @@ describe('EncapsuleComponent', () => {
         const MEDIUM_BLACK: string = EncapsuleMapper.getNameFromPiece(EncapsulePiece.MEDIUM_BLACK);
         expect((await gameComponent.onPieceClick(SMALL_BLACK)).isSuccess()).toBeTrue();
         expect((await gameComponent.onBoardClick(0, 0)).isSuccess()).toBeTrue();
+        const playerZeroPieces: string[] = gameComponent.remainingPieces[0];
+        const playerOnePieces: string[] = gameComponent.remainingPieces[1];
+        expect(playerZeroPieces).toEqual(['BIG_BLACK', 'BIG_BLACK', 'MEDIUM_BLACK', 'MEDIUM_BLACK', 'SMALL_BLACK']);
+        expect(playerOnePieces).toEqual(['BIG_WHITE', 'BIG_WHITE', 'MEDIUM_WHITE', 'MEDIUM_WHITE', 'SMALL_WHITE', 'SMALL_WHITE']);
         expect((await gameComponent.onPieceClick(MEDIUM_WHITE)).isSuccess()).toBeTrue();
         expect((await gameComponent.onBoardClick(1, 0)).isSuccess()).toBeTrue();
         expect((await gameComponent.onPieceClick(SMALL_BLACK)).isSuccess()).toBeTrue();

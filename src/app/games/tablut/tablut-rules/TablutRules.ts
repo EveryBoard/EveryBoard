@@ -86,7 +86,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
                     return MGPValidation.failure('castle is left for good');
                 }
             } else {
-                return MGPValidation.failure('pawn landing on throne');
+                return MGPValidation.failure('Les soldats n\'ont pas le droit de se poser sur le throne.');
             }
         }
 
@@ -335,9 +335,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         return owner;
     }
     public static getRelativeOwner(player: Player, c: Coord, board: NumberTable): number {
-        if (!c.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
-            throw new Error('cannot call getRelativeOwner on Out Of Range Coord' + c);
-        }
         const caseC: number = board[c.y][c.x];
         const owner: Player = this.getAbsoluteOwner(c, board);
         let relativeOwner: number;

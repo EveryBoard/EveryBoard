@@ -7,6 +7,16 @@ import { GamePartSlice } from "../jscaip/GamePartSlice";
 import { LegalityStatus } from "../jscaip/LegalityStatus";
 import { Move } from "../jscaip/Move";
 
+export interface MoveExpectations {
+
+    move: Move,
+
+    slice: GamePartSlice,
+
+    scoreZero: number,
+
+    scoreOne: number,
+}
 export interface TestElements {
 
     fixture: ComponentFixture<LocalGameWrapperComponent>,
@@ -15,42 +25,49 @@ export interface TestElements {
 
     gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>,
 
-    cancelSpy: jasmine.Spy
+    cancelSpy: jasmine.Spy,
+
+    chooseMoveSpy: jasmine.Spy,
 }
-export const expectClickSuccess: (
-    elementName: string,
-    testElements: TestElements) => Promise<void> =
-async(elementName: string, testElements: TestElements) => {
-    const element: DebugElement = testElements.debugElement.query(By.css(elementName));
-    if (element == null) {
-        throw Error('Element "' + elementName + '"don\'t exists.')
-    } else {
-        console.log('element exist, will he success');
-        testElements.cancelSpy.and.throwError('Clicking on ' + elementName + ' called cancelMove.');
-        element.triggerEventHandler('click', null);
-        await testElements.fixture.whenStable();
-        testElements.fixture.detectChanges();
-        console.log(testElements.gameComponent.cancelMove.call);
-    }
-}
-const expectValidError: (receivedError: string, expectedError: string) => void = (receivedError: string, expectedError: string) => {
-    expect(receivedError).toEqual(expectedError);
-}
-export const expectClickFail: (
-    elementName: string,
-    testElements: TestElements,
-    reason: string) => Promise<void> =
-async(elementName: string, testElements: TestElements, reason: string) => {
-    const element: DebugElement = testElements.debugElement.query(By.css(elementName));
-    if (element == null) {
-        throw Error('Element "' + elementName + '"don\'t exists.')
-    } else {
-        console.log('element exist, will he faiiiil');
-        testElements.cancelSpy.and.callFake((message: string) => expectValidError(message, reason));
-        element.triggerEventHandler('click', null);
-        await testElements.fixture.whenStable();
-        testElements.fixture.detectChanges();
-        console.log({t: testElements.cancelSpy.calls})
-        throw new Error('Expected cancelMove to have been called with "' + reason + "' but it was not.");
-    }
-}
+export const expectClickSuccess: (elementName: string, testElements: TestElements) => Promise<void> =
+    async(elementName: string, testElements: TestElements) => {
+        const element: DebugElement = testElements.debugElement.query(By.css(elementName));
+        expect(element).toBeTruthy('Element "' + elementName + '"don\'t exists.')
+        if (element == null) {
+            return;
+        } else {
+            element.triggerEventHandler('click', null);
+            await testElements.fixture.whenStable();
+            testElements.fixture.detectChanges();
+            expect(testElements.cancelSpy).not.toHaveBeenCalled();
+            expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
+        }
+    };
+export const expectClickFail: (elementName: string, testElements: TestElements, reason: string) => Promise<void> =
+    async(elementName: string, testElements: TestElements, reason: string) => {
+        const element: DebugElement = testElements.debugElement.query(By.css(elementName));
+        expect(element).toBeTruthy('Element "' + elementName + '"don\'t exists.')
+        if (element == null) {
+            return;
+        } else {
+            element.triggerEventHandler('click', null);
+            await testElements.fixture.whenStable();
+            testElements.fixture.detectChanges();
+            expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
+            expect(testElements.cancelSpy).toHaveBeenCalledOnceWith(reason);
+        }
+    };
+export const expectMoveSubmission: (elementName: string, testElements: TestElements, expectations: MoveExpectations) => Promise<void> =
+    async(elementName: string, testElements: TestElements, expectations: MoveExpectations) => {
+        const element: DebugElement = testElements.debugElement.query(By.css(elementName));
+        expect(element).toBeTruthy('Element "' + elementName + '"don\'t exists.')
+        if (element == null) {
+            return;
+        } else {
+            element.triggerEventHandler('click', null);
+            await testElements.fixture.whenStable();
+            testElements.fixture.detectChanges();
+            const { move, slice, scoreZero, scoreOne} = { ...expectations };
+            expect(testElements.chooseMoveSpy).toHaveBeenCalledOnceWith(move, slice, scoreZero, scoreOne);
+        }
+    };

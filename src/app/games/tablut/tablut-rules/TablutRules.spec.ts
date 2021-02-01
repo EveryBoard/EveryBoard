@@ -291,4 +291,21 @@ describe('TablutRules', () => {
         const moveResult: TablutLegalityStatus = TablutRules.tryMove(Player.ONE, move, board);
         expect(moveResult.legal.isSuccess()).toBeTrue();
     });
+    it('Should forbid Soldier to land on the throne', () => {
+        const board: number[][] = [
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, x, _, _, _, _, _],
+            [_, _, _, _, A, _, _, _, _],
+            [i, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _],
+        ];
+        const slice: TablutPartSlice = new TablutPartSlice(board, 1);
+        const move: TablutMove = new TablutMove(new Coord(0, 4), new Coord(4, 4));
+        const status: TablutLegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.getReason()).toBe('Les soldats n\'ont pas le droit de se poser sur le throne.');
+    });
 });

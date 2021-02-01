@@ -10,6 +10,9 @@ import { TablutCase } from 'src/app/games/tablut/tablut-rules/TablutCase';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Player } from 'src/app/jscaip/player/Player';
+import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { TablutRulesConfig } from 'src/app/games/tablut/tablut-rules/TablutRulesConfig';
+import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 @Component({
     selector: 'app-tablut',
@@ -20,7 +23,6 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public rules: TablutRules = new TablutRules(TablutPartSlice);
 
-    public imagesNames: string[] = ['unoccupied.svg', 'king.svg', 'king.svg', 'invaders.svg', 'defender.svg']; // TODO: kill that thang
     public throneCoords: Coord[] = [
         new Coord(0, 0),
         new Coord(0, 8),
@@ -28,32 +30,44 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         new Coord(8, 0),
         new Coord(8, 8),
     ];
+    private captureds: Coord[] = [];
     public NONE: number = TablutCase.UNOCCUPIED.value;
-
+    public CAPTURED_FILL = 'red';
+    public MOVED_FILL = 'gray';
     public NORMAL_FILL: string = 'lightgray';
-
     public CLICKABLE_STYLE: any = {
         stroke: 'yellow',
     };
 
-    public moving: Coord = new Coord(-1, -1); // coord of the piece who left
-
-    public arriving: Coord = new Coord(-1, -1); // coord of the piece who arrived
-
     public chosen: Coord = new Coord(-1, -1);
 
-    public updateBoard(): void {
-        const slice: TablutPartSlice = this.rules.node.gamePartSlice;
-        const move: TablutMove = this.rules.node.move;
-        this.board = slice.getCopiedBoard();
+    public lastMove: TablutMove;
 
-        if (move) {
-            this.moving = move.coord;
-            this.arriving = move.end;
-        } else {
-            this.hideLastMove();
+    public updateBoard(): void {
+        display(TablutComponent.VERBOSE, 'tablutComponent.updateBoard');
+        this.lastMove = this.rules.node.move;
+        this.board = this.rules.node.gamePartSlice.getCopiedBoard();
+
+        if (this.lastMove) {
+            this.showPreviousMove();
         }
-        this.cancelMove();
+    }
+    private showPreviousMove(): void {
+        this.captureds = [];
+        const previousBoard: NumberTable = this.rules.node.mother.gamePartSlice.board;
+        const ENNEMY: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
+        for (let orthogonal of Orthogonal.ORTHOGONALS) {
+            const captured: Coord = this.lastMove.end.getNext(orthogonal, 1);
+            if (captured.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
+                const previously: number = TablutRules.getRelativeOwner(ENNEMY, captured, previousBoard)
+                const wasEnnemy: boolean = previously === TablutRules.ENNEMY;
+                const currently: number = this.rules.node.gamePartSlice.getBoardAt(captured);
+                const isEmpty: boolean = currently === TablutCase.UNOCCUPIED.value;
+                if (wasEnnemy && isEmpty) {
+                    this.captureds.push(captured);
+                }
+            }
+        }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         display(TablutComponent.VERBOSE, 'TablutComponent.onClick(' + x + ', ' + y + ')');
@@ -75,13 +89,11 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         } catch (error) {
             return this.cancelMove(error.message);
         }
+        this.cancelMove();
         return await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
     public choosePiece(x: number, y: number): MGPValidation {
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
-
-        this.hideLastMove(); // now the user tried to choose something
-        // so I guess he don't need to see what's the last move of the opponent
 
         if (this.board[y][x] === TablutCase.UNOCCUPIED.value) {
             return this.cancelMove('Pour votre premier clic, choisissez une de vos pièces.');
@@ -90,7 +102,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
             return this.cancelMove('Cette pièce ne vous appartient pas.');
         }
 
-        this.showSelectedPiece(x, y);
+        this.chosen = new Coord(x, y);
         display(TablutComponent.VERBOSE, 'selected piece = (' + x + ', ' + y + ')');
         return MGPValidation.SUCCESS;
     }
@@ -99,10 +111,6 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
         const coord: Coord = new Coord(x, y);
         return TablutRules.getRelativeOwner(player, coord, this.board) === TablutRules.PLAYER;
-    }
-    public hideLastMove(): void {
-        this.moving = new Coord(-1, -1);
-        this.arriving = new Coord(-1, -1);
     }
     public cancelMove(reason?: string): MGPValidation {
         this.chosen = new Coord(-1, -1);
@@ -115,9 +123,6 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     }
     public isThrone(x: number, y: number): boolean {
         return TablutRules.isThrone(new Coord(x, y));
-    }
-    public showSelectedPiece(x: number, y: number): void {
-        this.chosen = new Coord(x, y);
     }
     public decodeMove(encodedMove: number): TablutMove {
         return TablutMove.decode(encodedMove);
@@ -140,24 +145,24 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     }
     public getPieceStroke(x: number, y: number): string {
         const coord: Coord = new Coord(x, y);
-        if (coord.equals(this.moving) ||
-            coord.equals(this.arriving)) {
-            return 'blue';
-        } else if (this.chosen.equals(coord)) {
+        if (this.chosen.equals(coord)) {
             return 'yellow';
         } else {
             return null;
         }
     }
     public getRectFill(x: number, y: number): string {
-        // const clicked: Coord = new Coord(x, y);
-        // if (this.captureds.some((c: Coord) => c.equals(clicked))) {
-        //     return this.CAPTURED_FILL;
-        // } else if (this.moveds.some((c: Coord) => c.equals(clicked))) {
-        //     return this.MOVED_FILL;
-        // } else {
-        return this.NORMAL_FILL;
-        // }
+        const coord: Coord = new Coord(x, y);
+        const lastStart: Coord = this.lastMove ? this.lastMove.coord : null;
+        const lastEnd: Coord = this.lastMove ? this.lastMove.end : null;
+        if (this.captureds.some((c: Coord) => c.equals(coord))) {
+            return this.CAPTURED_FILL;
+        } else if (coord.equals(lastStart) ||
+                   coord.equals(lastEnd)) {
+            return this.MOVED_FILL;
+        } else {
+            return this.NORMAL_FILL;
+        }
     }
     public getRectStyle(x: number, y: number): unknown {
         if (this.isClickable(x, y)) {
