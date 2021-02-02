@@ -13,6 +13,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { TablutRulesConfig } from 'src/app/games/tablut/tablut-rules/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 
 @Component({
     selector: 'app-tablut',
@@ -59,8 +60,8 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         for (let orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.end.getNext(orthogonal, 1);
             if (captured.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
-                const previously: number = TablutRules.getRelativeOwner(ENNEMY, captured, previousBoard)
-                const wasEnnemy: boolean = previously === TablutRules.ENNEMY;
+                const previously: RelativePlayer = TablutRules.getRelativeOwner(ENNEMY, captured, previousBoard)
+                const wasEnnemy: boolean = previously === RelativePlayer.ENNEMY;
                 const currently: number = this.rules.node.gamePartSlice.getBoardAt(captured);
                 const isEmpty: boolean = currently === TablutCase.UNOCCUPIED.value;
                 if (wasEnnemy && isEmpty) {
@@ -110,7 +111,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         // TODO: see that verification is done and refactor this shit
         const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
         const coord: Coord = new Coord(x, y);
-        return TablutRules.getRelativeOwner(player, coord, this.board) === TablutRules.PLAYER;
+        return TablutRules.getRelativeOwner(player, coord, this.board) === RelativePlayer.PLAYER;
     }
     public cancelMove(reason?: string): MGPValidation {
         this.chosen = new Coord(-1, -1);

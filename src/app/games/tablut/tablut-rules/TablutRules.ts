@@ -13,6 +13,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { TablutLegalityStatus } from '../TablutLegalityStatus';
+import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 
 export abstract class TablutNode extends MGPNode<TablutRules, TablutMove, TablutPartSlice, TablutLegalityStatus> {}
 
@@ -31,11 +32,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
     // the throne is considered an ennemy to the pawn
     public static THREE_INVADER_AND_A_BORDER_CAN_CAPTURE_KING = true;
     // the king can be captured by only three invaders if he's against the corner
-
-    public static readonly NONE = 50;
-    public static readonly ENNEMY = 51;
-    public static readonly PLAYER = 52;
-
 
     // statics methods :
     private static applyLegalMove(move: TablutMove, slice: TablutPartSlice, status: TablutLegalityStatus): { resultingMove: TablutMove; resultingSlice: TablutPartSlice; } {
@@ -68,16 +64,16 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         return { legal: MGPValidation.SUCCESS, resultingBoard: board };
     }
     private static getMoveValidity(player: Player, move: TablutMove, board: number[][]): MGPValidation {
-        const cOwner: number = this.getRelativeOwner(player, move.coord, board);
-        if (cOwner === this.NONE) {
+        const cOwner: RelativePlayer = this.getRelativeOwner(player, move.coord, board);
+        if (cOwner === RelativePlayer.NONE) {
             return MGPValidation.failure('pawn coord unoccupied');
         }
-        if (cOwner === this.ENNEMY) { // TODO OwnerEnum/Type
+        if (cOwner === RelativePlayer.ENNEMY) { // TODO OwnerEnum/Type
             return MGPValidation.failure('moving opponent piece');
         }
 
-        const landingCoordOwner: number = this.getRelativeOwner(player, move.end, board);
-        if (landingCoordOwner !== this.NONE) {
+        const landingCoordOwner: RelativePlayer = this.getRelativeOwner(player, move.end, board);
+        if (landingCoordOwner !== RelativePlayer.NONE) {
             return MGPValidation.failure('landing on occupied case');
         }
         if (this.isThrone(move.end)) {
@@ -116,8 +112,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         if (!threatened.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
             return null; // 1: the threatened case dont exist, no capture
         }
-        const threatenedPawnOwner: number = this.getRelativeOwner(player, threatened, board);
-        if (threatenedPawnOwner !== this.ENNEMY) {
+        const threatenedPawnOwner: RelativePlayer = this.getRelativeOwner(player, threatened, board);
+        if (threatenedPawnOwner !== RelativePlayer.ENNEMY) {
             return null; // 2: the threatened case is not an ennemy
         }
         if (this.isKing(board[threatened.y][threatened.x])) {
@@ -164,8 +160,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         } = this.getSurroundings(kingCoord, d, player, board);
 
         if (!backInRange) { // ///////////////////// 1
-            let nbInvaders: number = (left === this.PLAYER ? 1 : 0);
-            nbInvaders += (right === this.PLAYER ? 1 : 0);
+            let nbInvaders: number = (left === RelativePlayer.PLAYER ? 1 : 0);
+            nbInvaders += (right === RelativePlayer.PLAYER ? 1 : 0);
             if (nbInvaders === 2 && this.THREE_INVADER_AND_A_BORDER_CAN_CAPTURE_KING) { // 2
                 // king captured by 3 invaders against 1 border
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 3 invaders against 1 border');
@@ -183,7 +179,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
             // those were the only two way to capture against the border
             return null;
         }
-        if (back === this.NONE) { // ////////////////////////////////////////////////////// 4
+        if (back === RelativePlayer.NONE) { // ////////////////////////////////////////////////////// 4
             if (!this.isThrone(backCoord)) { // /////////////////////////////////////////// 5
                 return null;
             } // here, back is an empty throne
@@ -194,17 +190,17 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 1 invader and 1 throne');
                 return kingCoord; // king captured by 1 invader and 1 throne
             }
-            if (left === this.PLAYER && right === this.PLAYER) {
+            if (left === RelativePlayer.PLAYER && right === RelativePlayer.PLAYER) {
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 3 invaders + 1 throne');
                 return kingCoord; // king captured by 3 invaders + 1 throne
             }
         }
-        if (back === this.PLAYER) {
+        if (back === RelativePlayer.PLAYER) {
             if (this.NORMAL_CAPTURE_WORK_ON_THE_KING) {
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE, 'king captured by two invaders');
                 return kingCoord; // king captured by two invaders
             }
-            if (left === this.PLAYER && right === this.PLAYER) {
+            if (left === RelativePlayer.PLAYER && right === RelativePlayer.PLAYER) {
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE, 'king captured by 4 invaders');
                 return kingCoord; // king captured by 4 invaders
             }
@@ -214,21 +210,21 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
     public static getSurroundings(c: Coord, d: Direction, player: Player, board: number[][]) {
         const backCoord: Coord = c.getNext(d); // the piece that just move came from the front direction (by definition)
         const backInRange: boolean = backCoord.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH);
-        const back: number = backInRange ?
+        const back: RelativePlayer = backInRange ?
             this.getRelativeOwner(player, backCoord, board) :
-            this.NONE;
+            RelativePlayer.NONE;
 
         const leftCoord: Coord = c.getLeft(d);
         const leftInRange: boolean = leftCoord.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH);
-        const left: number = leftInRange ?
+        const left: RelativePlayer = leftInRange ?
             this.getRelativeOwner(player, leftCoord, board) :
-            this.NONE;
+            RelativePlayer.NONE;
 
         const rightCoord: Coord = c.getRight(d);
         const rightInRange: boolean = rightCoord.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH);
-        const right: number = rightInRange ?
+        const right: RelativePlayer = rightInRange ?
             this.getRelativeOwner(player, rightCoord, board) :
-            this.NONE;
+            RelativePlayer.NONE;
         return {
             backCoord, back, backInRange,
             leftCoord, left,
@@ -256,8 +252,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
             return null; // no ally no sandwich (against pawn)
         }
 
-        const back: number = this.getRelativeOwner(player, backCoord, board);
-        if (back === this.NONE) {
+        const back: RelativePlayer = this.getRelativeOwner(player, backCoord, board);
+        if (back === RelativePlayer.NONE) {
             if (!this.isThrone(backCoord)) {
                 display(TablutRules.VERBOSE || LOCAL_VERBOSE,
                     'cannot capture a pawn without an ally; ' + threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c +
@@ -272,7 +268,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
                 return threatenedPieceCoord; // pawn captured by 1 ennemy and 1 throne
             }
         }
-        if (back === this.PLAYER) {
+        if (back === RelativePlayer.PLAYER) {
             display(TablutRules.VERBOSE || LOCAL_VERBOSE,
                 'pawn captured by 2 ennemies; ' + threatenedPieceCoord + 'threatened by ' + player + '\'s pawn in  ' + c +
                 ' coming from this direction (' + d.x + ', ' + d.y + ')');
@@ -334,32 +330,32 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         }
         return owner;
     }
-    public static getRelativeOwner(player: Player, c: Coord, board: NumberTable): number {
+    public static getRelativeOwner(player: Player, c: Coord, board: NumberTable): RelativePlayer {
         const caseC: number = board[c.y][c.x];
         const owner: Player = this.getAbsoluteOwner(c, board);
-        let relativeOwner: number;
+        let relativeOwner: RelativePlayer;
         if (owner === Player.NONE) {
-            relativeOwner = this.NONE;
+            relativeOwner = RelativePlayer.NONE;
         } else if (player === owner) {
-            relativeOwner = this.PLAYER;
+            relativeOwner = RelativePlayer.PLAYER;
         } else {
-            relativeOwner = this.ENNEMY;
+            relativeOwner = RelativePlayer.ENNEMY;
         }
         // TESTS
         if (caseC === TablutCase.UNOCCUPIED.value) {
-            if (relativeOwner !== this.NONE) {
+            if (relativeOwner !== RelativePlayer.NONE) {
                 display(TablutRules.VERBOSE, 'WTF, empty is on no one side but here is on ' + relativeOwner + ' :: ' + owner + ' :: ' + player);
             }
         } else if (player === Player.ZERO) {
             if (caseC === TablutCase.INVADERS.value) {
                 if (TablutPartSlice.INVADER_START) {
-                    if (relativeOwner !== this.PLAYER) {
+                    if (relativeOwner !== RelativePlayer.PLAYER) {
                         display(TablutRules.VERBOSE,
                             'player start, invader start, case is invader, but player don\'t own the case ' +
                             relativeOwner + ' :: ' + owner + ' :: ' + player);
                     }
                 } else {
-                    if (relativeOwner !== this.ENNEMY) {
+                    if (relativeOwner !== RelativePlayer.ENNEMY) {
                         display(TablutRules.VERBOSE, 'player start, defender start, case is invader, but is not ennemy ??? ' +
                             relativeOwner + ' :: ' + owner + ' :: ' + player);
                     }
@@ -370,14 +366,14 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         } else { // player follow
             if (TablutPartSlice.INVADER_START) {
                 if (caseC === TablutCase.INVADERS.value) {
-                    if (relativeOwner !== this.ENNEMY) {
+                    if (relativeOwner !== RelativePlayer.ENNEMY) {
                         display(TablutRules.VERBOSE, 'player follow, invader start, case is invader, but case is not ennemy ' +
                             relativeOwner + ' :: ' + owner + ' :: ' + player);
                     }
                 }
             } else { // invader follow
                 if (caseC === TablutCase.INVADERS.value) {
-                    if (relativeOwner !== this.PLAYER) {
+                    if (relativeOwner !== RelativePlayer.PLAYER) {
                         display(TablutRules.VERBOSE, 'player follow, invader follow, case is invader, but player don\t own it ??? ' +
                             relativeOwner + ' :: ' + owner + ' :: ' + player);
                     }
@@ -392,25 +388,26 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
     public static getPossibleDestinations(depart: Coord, board: number[][]): Coord[] {
         // search the possible destinations for the pawn at "depart"
         const destinations: Coord[] = [];
-        let endFound: boolean;
         let foundDestination: Coord;
         for (const dir of Orthogonal.ORTHOGONALS) {
             // we look for empty existing destinations in each direction as far as we can
-            foundDestination = depart;
-            endFound = false;
-            while (!endFound) {
-                foundDestination = foundDestination.getNext(dir);
-                endFound =
-                    foundDestination.isNotInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) ||
-                    this.getAbsoluteOwner(foundDestination, board) !== Player.NONE ||
-                    TablutRules.isThrone(foundDestination);
-                if (!endFound) {
-                    destinations.push(foundDestination);
-                } else if (TablutRules.isKing(board[depart.y][depart.x])) {
-                    if (TablutRules.isExternalThrone(foundDestination)) {
+            foundDestination = depart.getNext(dir, 1);
+            let obstacleFound: boolean = false;
+            while (foundDestination.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) &&
+                   obstacleFound === false) {
+                const destinationEmpty: boolean = this.getAbsoluteOwner(foundDestination, board) === Player.NONE;
+                if (destinationEmpty) {
+                    if (TablutRules.isThrone(foundDestination)) {
+                        if (TablutRules.isKing(board[depart.y][depart.x])) {
+                            destinations.push(foundDestination);
+                        }
+                    } else {
                         destinations.push(foundDestination);
                     }
+                } else {
+                    obstacleFound = true;
                 }
+                foundDestination = foundDestination.getNext(dir, 1);
             }
         }
         return destinations;
@@ -449,13 +446,13 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
     public static getPlayerListPawns(player: Player, board: number[][]): Coord[] {
         const listPawn: Coord[] = [];
         let pawn: Coord;
-        let owner: number;
+        let owner: Player;
         for (let y = 0; y < TablutRulesConfig.WIDTH; y++) {
             for (let x = 0; x < TablutRulesConfig.WIDTH; x++) {
                 // pour chaque case
                 pawn = new Coord(x, y);
-                owner = this.getRelativeOwner(player, pawn, board);
-                if (owner === this.PLAYER) {
+                owner = this.getAbsoluteOwner(pawn, board);
+                if (owner === player) {
                     listPawn.push(pawn);
                 }
             }
@@ -463,8 +460,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         return listPawn;
     }
     public static getPlayerListMoves(player: Player, board: number[][]): TablutMove[] {
-        // player : 0 for the current player
-        //          1 for his ennemy
         const LOCAL_VERBOSE: boolean = false;
         const listMoves: TablutMove[] = [];
         const listPawns: Coord[] = this.getPlayerListPawns(player, board);
@@ -517,14 +512,14 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         const slice: TablutPartSlice = node.gamePartSlice;
         const currentBoard: number[][] = slice.getCopiedBoard();
         let coord: Coord;
-        let owner: number;
+        let owner: RelativePlayer;
         const currentPlayer: Player = slice.getCurrentPlayer();
         for (let y = 0; y < TablutRulesConfig.WIDTH; y++) {
             for (let x = 0; x < TablutRulesConfig.WIDTH; x++) {
                 // pour chaque case
                 coord = new Coord(x, y);
                 owner = TablutRules.getRelativeOwner(currentPlayer, coord, currentBoard);
-                if (owner === TablutRules.PLAYER) {
+                if (owner === RelativePlayer.PLAYER) {
                     // pour l'envahisseur :
                     //     if the king is capturable : the only choice is the capturing
                     //     if the king is close to escape:  the only choice are the blocking one
@@ -557,10 +552,10 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
             return TablutRules.getDefenderVictoryValue();
         }
         if (TablutRules.isPlayerImmobilised(Player.ZERO, board)) {
-            return Number.MIN_SAFE_INTEGER;
+            return Number.MAX_SAFE_INTEGER;
         }
         if (TablutRules.isPlayerImmobilised(Player.ONE, board)) {
-            return Number.MAX_SAFE_INTEGER;
+            return Number.MIN_SAFE_INTEGER;
         }
         const nbPlayerZeroPawns: number = TablutRules.getPlayerListPawns(Player.ZERO, board).length;
         const nbPlayerOnePawns: number = TablutRules.getPlayerListPawns(Player.ONE, board).length;

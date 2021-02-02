@@ -37,16 +37,15 @@ export class TablutMove extends MoveCoordToCoord {
             throw new Error('Starting coord of TablutMove must be on the board, not at ' + start.toString() + '.');
         }
         if (!end.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) { // TODO: put that somewhere it does not say "mutual import"
-            throw new Error('Starting coord of TablutMove must be on the board, not at ' + end.toString() + '.');
+            throw new Error('Landing coord of TablutMove must be on the board, not at ' + end.toString() + '.');
         }
         const dir: Direction = start.getDirectionToward(end);
         if (dir.isDiagonal()) {
             throw new Error('TablutMove cannot be diagonal.');
         }
     }
-    public equals(o: any): boolean {
+    public equals(o: TablutMove): boolean {
         if (o === this) return true;
-        if (!(o instanceof TablutMove)) return false;
         const other: TablutMove = o as TablutMove;
         if (!other.coord.equals(this.coord)) return false;
         return (other.end.equals(this.end));
