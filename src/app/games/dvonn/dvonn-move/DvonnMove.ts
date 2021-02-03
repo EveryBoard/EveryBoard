@@ -72,12 +72,9 @@ export class DvonnMove extends MoveCoordToCoord {
     public decode(encodedMove: number): DvonnMove {
         return DvonnMove.decode(encodedMove);
     }
-    public equals(o: any): boolean {
+    public equals(o: DvonnMove): boolean {
         if (o === this) return true;
-        if (!(o instanceof DvonnMove)) return false;
-        const other: DvonnMove = o as DvonnMove;
-        if (!other.coord.equals(this.coord)) return false;
-        if (!other.end.equals(this.end)) return false;
-        return true;
+        if (!o.coord.equals(this.coord)) return false;
+        return o.end.equals(this.end);
     }
 }

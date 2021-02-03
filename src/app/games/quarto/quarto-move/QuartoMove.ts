@@ -47,8 +47,7 @@ export class QuartoMove extends MoveCoord {
     }
     public equals(o: QuartoMove): boolean {
         if (this === o) return true;
-        const other: QuartoMove = o as QuartoMove;
-        if (!other.coord.equals(this.coord)) return false;
-        return this.piece === other.piece;
+        if (!o.coord.equals(this.coord)) return false;
+        return this.piece === o.piece;
     }
 }

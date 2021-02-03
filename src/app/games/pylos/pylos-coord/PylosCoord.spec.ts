@@ -27,13 +27,11 @@ describe('PylosCoord:', () => {
 
     it('Should override equals correctly', () => {
         const coord: PylosCoord = new PylosCoord(0, 0, 0);
-        const android: Object = { x: 0, y: 0, z: 0 };
         const close1: PylosCoord = new PylosCoord(1, 0, 0);
         const close2: PylosCoord = new PylosCoord(0, 1, 0);
         const close3: PylosCoord = new PylosCoord(0, 0, 1);
         const twin: PylosCoord = new PylosCoord(0, 0, 0);
         expect(coord.equals(coord)).toBeTrue();
-        expect(coord.equals(android)).toBeFalse();
         expect(coord.equals(close1)).toBeFalse();
         expect(coord.equals(close2)).toBeFalse();
         expect(coord.equals(close3)).toBeFalse();

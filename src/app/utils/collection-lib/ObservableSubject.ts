@@ -6,7 +6,7 @@ export class ObservableSubject<T> implements Comparable {
         public subject: BehaviorSubject<T>,
         public observable: Observable<T>) {
     }
-    public equals(o: any): boolean {
+    public equals(o: ObservableSubject<T>): boolean {
         throw new Error('Not needed yet, blame the dev');
     }
 }

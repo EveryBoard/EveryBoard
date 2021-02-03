@@ -42,18 +42,14 @@ export class P4Move extends Move {
     public hashCode(): number {
         return this.x;
     }
-    public equals(o: any): boolean {
+    public equals(o: P4Move): boolean {
         if (this === o) {
             return true;
         }
         if (o === null) {
             return false;
         }
-        const other: P4Move = <P4Move> o;
-        if (this.x !== other.x) {
-            return false;
-        }
-        return true;
+        return this.x === o.x;
     }
     public toString(): string {
         return 'P4Move(' + this.x + ')';

@@ -6,7 +6,7 @@ export class Coord implements Comparable {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
         if (n < 0) return -1;
         if (n === 0) return 0;
-        if (n > 0) return 1;
+        return 1;
     }
     constructor(
         public readonly x: number,
@@ -152,11 +152,11 @@ export class Coord implements Comparable {
     }
     // Override
 
-    public equals(obj: any): boolean {
+    public equals(obj: Coord): boolean {
         if (this === obj) return true;
-        if (!(obj instanceof Coord)) return false;
+        if (obj == null) return false;
         if (obj.x !== this.x) return false;
-        return (obj.y === this.y);
+        return obj.y === this.y;
     }
     public compareTo(c: Coord): number {
         if (c.y === this.y) {

@@ -41,12 +41,10 @@ export class QuixoMove extends MoveCoord {
     public toString(): string {
         return 'QuixoMove(' + this.coord.x + ', ' + this.coord.y + ', ' + this.direction.toString() + ')';
     }
-    public equals(o: any): boolean {
+    public equals(o: QuixoMove): boolean {
         if (o === this) return true;
-        if (!(o instanceof QuixoMove)) return false;
-        const other: QuixoMove = <QuixoMove> o;
-        if (!other.coord.equals(this.coord)) return false;
-        return other.direction === this.direction;
+        if (!o.coord.equals(this.coord)) return false;
+        return o.direction === this.direction;
     }
     public encode(): number {
         const dir: number = this.direction.toInt();

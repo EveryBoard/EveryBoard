@@ -24,10 +24,8 @@ describe('AwaleMove', () => {
     });
     it('Should override equals correctly', () => {
         const move: AwaleMove = new AwaleMove(0, 0);
-        const android: { x: number, y: number } = { x: 0, y: 1 };
         const other: AwaleMove = new AwaleMove(0, 1);
         expect(move.equals(move)).toBeTrue();
-        expect(move.equals(android)).toBeFalse();
         expect(move.equals(other)).toBeFalse();
     });
 });

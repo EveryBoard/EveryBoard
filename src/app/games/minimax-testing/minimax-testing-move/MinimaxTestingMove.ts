@@ -23,14 +23,11 @@ export class MinimaxTestingMove extends Move {
     public encode(): number {
         return this.right ? 0 : 1;
     }
-    public equals(obj: any): boolean {
+    public equals(obj: MinimaxTestingMove): boolean {
         if (this === obj) {
             return true;
         }
         if (obj === null) {
-            return false;
-        }
-        if (!(obj instanceof MinimaxTestingMove)) {
             return false;
         }
         return this.right === obj.right;

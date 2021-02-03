@@ -69,16 +69,10 @@ describe('SiamMove', () => {
     it('Should override correctly equality', () => {
         const moveA: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
         const twin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
-        const android: Object = {
-            coord: new Coord(2, 2),
-            movingDirection: Orthogonal.UP,
-            landingOrientation: Orthogonal.RIGHT,
-        };
         const neighboor: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT);
         const cousin: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.DOWN), Orthogonal.RIGHT);
         const stranger: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
         expect(moveA.equals(moveA)).toBeTrue();
-        expect(moveA.equals(android)).toBeFalse();
         expect(moveA.equals(twin)).toBeTrue();
         expect(moveA.equals(neighboor)).toBeFalse();
         expect(moveA.equals(cousin)).toBeFalse();

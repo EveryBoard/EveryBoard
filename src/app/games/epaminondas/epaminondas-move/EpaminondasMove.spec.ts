@@ -43,19 +43,12 @@ describe('EpaminondasMove: ', () => {
     });
     it('Should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);
-        const android: Object = {
-            coord: new Coord(4, 3),
-            movedPieces: 2,
-            stepSize: 1,
-            direction: Direction.UP,
-        };
         const neighboor: EpaminondasMove = new EpaminondasMove(0, 0, 2, 1, Direction.UP);
         const twin: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);
         const firstCousin: EpaminondasMove = new EpaminondasMove(4, 3, 1, 1, Direction.UP);
         const secondCousin: EpaminondasMove = new EpaminondasMove(4, 3, 2, 2, Direction.UP);
         const thirdCousin: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.LEFT);
         expect(move.equals(move)).toBeTrue();
-        expect(move.equals(android)).toBeFalse();
         expect(move.equals(neighboor)).toBeFalse();
         expect(move.equals(firstCousin)).toBeFalse();
         expect(move.equals(secondCousin)).toBeFalse();

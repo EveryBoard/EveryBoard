@@ -5,6 +5,7 @@ describe('Coord', () => {
         const smallCoord: Coord = new Coord(2, 1);
         const bigCoord: Coord = new Coord(1, 2);
         expect(smallCoord.compareTo(bigCoord)).toBe(-1);
+        expect(smallCoord.compareTo(smallCoord)).toBe(0);
     });
     it('should compare correctly obvious case', () => {
         const smallCoord: Coord = new Coord(0, 0);
@@ -19,11 +20,9 @@ describe('Coord', () => {
     });
     it('Should override equals correctly', () => {
         const coord: Coord = new Coord(0, 0);
-        const android: { x: number, y: number } = { x: 0, y: 0 };
         const horizontalNeighboors: Coord = new Coord(1, 0);
         const verticalNeighboors: Coord = new Coord(0, 1);
         expect(coord.equals(coord)).toBeTrue();
-        expect(coord.equals(android)).toBeFalse();
         expect(coord.equals(horizontalNeighboors)).toBeFalse();
         expect(coord.equals(verticalNeighboors)).toBeFalse();
     });

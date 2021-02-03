@@ -1,5 +1,5 @@
 export interface Comparable {
-    equals(o: any): boolean;
+    equals(o: Comparable): boolean;
 
     toString(): string;
 }
