@@ -85,15 +85,10 @@ class Critere {
         // pour l'instant ça me permet de pouvoir v�rifier si il n'y a pas �crasement ou donn�e
         // mais je crois que c'est impossible vu l'usage que je compte en faire
     }
-    equals(o: any): boolean {
-        if (!(o instanceof Critere)) {
-            return false;
-        }
-        const c: Critere = o as Critere;
-
+    equals(o: Critere): boolean {
         let i = 0;
         do {
-            if (this.subCritere[i] !== c.subCritere[i]) {
+            if (this.subCritere[i] !== o.subCritere[i]) {
                 return false; // a!=b
             }
             i++;

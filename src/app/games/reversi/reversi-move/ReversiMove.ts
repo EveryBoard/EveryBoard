@@ -13,11 +13,9 @@ export class ReversiMove extends MoveCoord {
         const y = (encodedMove - x) / 8;
         return new ReversiMove(x, y);
     }
-    public equals(o: any): boolean {
+    public equals(o: ReversiMove): boolean {
         if (o === this) return true;
-        if (!(o instanceof ReversiMove)) return false;
-        const other: ReversiMove = o as ReversiMove;
-        return other.coord.equals(this.coord);
+        return o.coord.equals(this.coord);
     }
     public toString(): string {
         return 'ReversiMove(' + this.coord.x + ', ' + this.coord.y + ')';

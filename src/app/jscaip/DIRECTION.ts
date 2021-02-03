@@ -120,7 +120,7 @@ export class Direction {
         default: throw Error('Non-existant direction.');
         }
     }
-    public equals(o: any): boolean {
+    public equals(o: Direction): boolean {
         return this === o;
     }
     protected constructor(public readonly x: number, public readonly y: number) {}

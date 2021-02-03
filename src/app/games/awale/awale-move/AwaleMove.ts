@@ -1,11 +1,9 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class AwaleMove extends MoveCoord {
-    public equals(o: any): boolean {
+    public equals(o: AwaleMove): boolean {
         if (o === this) return true;
-        if (!(o instanceof AwaleMove)) return false;
-        const other: AwaleMove = o as AwaleMove;
-        return (other.coord.equals(this.coord));
+        return o.coord.equals(this.coord);
     }
     public toString(): string {
         return 'AwaleMove(' + this.coord.x + ', ' + this.coord.y + ')';

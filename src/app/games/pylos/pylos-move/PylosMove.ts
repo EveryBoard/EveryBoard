@@ -82,15 +82,13 @@ export class PylosMove extends Move {
                    secondCapture +
                ')';
     }
-    public equals(o: any): boolean {
+    public equals(o: PylosMove): boolean {
         const coordComparator: (a: PylosCoord, b: PylosCoord) => boolean = (a: PylosCoord, b: PylosCoord) => a.equals(b);
         if (o === this) return true;
-        if (!(o instanceof PylosMove)) return false;
-        const other: PylosMove = <PylosMove> o;
-        if (!other.startingCoord.equals(this.startingCoord, coordComparator)) return false;
-        if (!other.firstCapture.equals(this.firstCapture, coordComparator)) return false;
-        if (!other.secondCapture.equals(this.secondCapture, coordComparator)) return false;
-        return this.landingCoord.equals(other.landingCoord);
+        if (!o.startingCoord.equals(this.startingCoord, coordComparator)) return false;
+        if (!o.firstCapture.equals(this.firstCapture, coordComparator)) return false;
+        if (!o.secondCapture.equals(this.secondCapture, coordComparator)) return false;
+        return this.landingCoord.equals(o.landingCoord);
     }
     public encode(): number {
         // Encoded as second Capture then first then startingCoord then landingCoord

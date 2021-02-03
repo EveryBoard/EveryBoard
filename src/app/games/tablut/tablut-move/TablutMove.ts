@@ -46,9 +46,8 @@ export class TablutMove extends MoveCoordToCoord {
     }
     public equals(o: TablutMove): boolean {
         if (o === this) return true;
-        const other: TablutMove = o as TablutMove;
-        if (!other.coord.equals(this.coord)) return false;
-        return (other.end.equals(this.end));
+        if (!o.coord.equals(this.coord)) return false;
+        return o.end.equals(this.end);
     }
     public toString(): string {
         return 'TablutMove(' + this.coord + '->' + this.end + ')';

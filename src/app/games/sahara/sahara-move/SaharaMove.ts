@@ -46,13 +46,10 @@ export class SaharaMove extends MoveCoordToCoord {
         }
         SaharaMove.checkDistanceAndLocation(start, end);
     }
-    public equals(o: any): boolean {
+    public equals(o: SaharaMove): boolean {
         if (o === this) return true;
-        if (!(o instanceof SaharaMove)) return false;
-        const other: SaharaMove = o as SaharaMove;
-        if (!other.coord.equals(this.coord)) return false;
-        if (!other.end.equals(this.end)) return false;
-        return true;
+        if (!o.coord.equals(this.coord)) return false;
+        return o.end.equals(this.end);
     }
     public toString(): string {
         return 'SaharaMove(' + this.coord + '->' + this.end + ')';

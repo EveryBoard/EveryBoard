@@ -80,27 +80,20 @@ export class EncapsuleMove extends Move {
     public isDropping() {
         return this.startingCoord.isAbsent();
     }
-    public equals(o: any): boolean {
+    public equals(o: EncapsuleMove): boolean {
         if (this === o) {
             return true;
         }
         if (o === null) {
             return false;
         }
-        if (!(o instanceof EncapsuleMove)) {
+        if (!o.landingCoord.equals(this.landingCoord)) {
             return false;
         }
-        const other: EncapsuleMove = o as EncapsuleMove;
-        if (!other.landingCoord.equals(this.landingCoord)) {
+        if (!this.startingCoord.equals(o.startingCoord, ComparableEquals)) {
             return false;
         }
-        if (!this.startingCoord.equals(other.startingCoord, ComparableEquals)) {
-            return false;
-        }
-        if (!this.piece.equals(other.piece, ComparableEquals)) {
-            return false;
-        }
-        return true;
+        return this.piece.equals(o.piece, ComparableEquals);
     }
     public toString(): string {
         if (this.isDropping()) {

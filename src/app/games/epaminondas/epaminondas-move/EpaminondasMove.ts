@@ -36,14 +36,12 @@ export class EpaminondasMove extends MoveCoord {
                                   this.stepSize + ', ' +
                                   this.direction.toString() + ')';
     }
-    public equals(o: any): boolean {
+    public equals(o: EpaminondasMove): boolean {
         if (this === o) return true;
-        if (!(o instanceof EpaminondasMove)) return false;
-        const other: EpaminondasMove = <EpaminondasMove> o;
-        if (!this.coord.equals(other.coord)) return false;
-        if (this.movedPieces !== other.movedPieces) return false;
-        if (this.stepSize !== other.stepSize) return false;
-        return this.direction.equals(other.direction);
+        if (!this.coord.equals(o.coord)) return false;
+        if (this.movedPieces !== o.movedPieces) return false;
+        if (this.stepSize !== o.stepSize) return false;
+        return this.direction.equals(o.direction);
     }
     public encode(): number {
         const direction: number = this.direction.toInt(); // Between 0 and 7

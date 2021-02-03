@@ -83,7 +83,7 @@ describe('QuixoComponent', () => {
         expect(gameComponent.getPieceStyle(4, 4)).toEqual({ fill: 'lightgrey', stroke: 'orange' });
     });
     it('should give correct direction', () => {
-        let possibleDirections: any[][];
+        let possibleDirections: [number, number, string][];
 
         gameComponent.onBoardClick(0, 0);
         possibleDirections = gameComponent.getPossiblesDirections();

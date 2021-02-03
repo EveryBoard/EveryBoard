@@ -32,13 +32,10 @@ export class KamisadoMove extends MoveCoordToCoord {
         }
         return new KamisadoMove(start, end);
     }
-    public equals(o: any): boolean {
+    public equals(o: KamisadoMove): boolean {
         if (o === this) return true;
-        if (!(o instanceof KamisadoMove)) return false;
-        const other: KamisadoMove = o as KamisadoMove;
-        if (!other.coord.equals(this.coord)) return false;
-        if (!other.end.equals(this.end)) return false;
-        return true;
+        if (!o.coord.equals(this.coord)) return false;
+        return o.end.equals(this.end);
     }
     public toString(): string {
         if (this === KamisadoMove.PASS) {
