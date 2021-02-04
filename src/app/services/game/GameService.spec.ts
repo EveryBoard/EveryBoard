@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed, tick } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 
 import { GameService } from './GameService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
@@ -13,6 +13,7 @@ import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks';
 import { Player } from 'src/app/jscaip/player/Player';
 import { RequestCode } from 'src/app/domain/request';
+import { IJoiner } from 'src/app/domain/ijoiner';
 
 describe('GameService', () => {
     let service: GameService;
@@ -81,4 +82,38 @@ describe('GameService', () => {
         expect(firstError).toEqual('Illegal to accept your own request.');
         expect(secondError).toEqual('Illegal to accept your own request.');
     });
+    it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
+        const joiner: IJoiner = {
+            candidatesNames: [],
+            creator: 'creator',
+            chosenPlayer: 'hisFriend',
+            partStatus: 2,
+            whoStart: 'yes, I was an hidden todo :D'
+        };
+        spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
+        spyOn(partDao, 'update').and.returnValue(null);
+
+        await service.acceptConfig('partId', joiner);
+
+        expect(service.joinerService.acceptConfig).toHaveBeenCalled();
+    }));
+    xit('FUTURE_startGameWithConfig should throw when whoStart is not a value of FIRST_PLAYER enum', fakeAsync(async() => {
+        const joiner: IJoiner = {
+            candidatesNames: [],
+            creator: 'creator',
+            chosenPlayer: 'hisFriend',
+            partStatus: 2,
+            whoStart: 'somethingElse'
+        };
+        spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
+        spyOn(partDao, 'update').and.returnValue(null);
+
+        let errorMessage: string;
+        try {
+            await service.acceptConfig('somePart', joiner);
+        } catch (error) {
+            errorMessage = error.message;
+        }
+        expect(errorMessage).toEqual('Invalid value for FirstPlayer: somethingElse.');
+    }));
 });
