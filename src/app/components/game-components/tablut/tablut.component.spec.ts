@@ -41,7 +41,6 @@ describe('TablutComponent', () => {
 
     let testElements: TestElements;
 
-
     const _: number = TablutCase.UNOCCUPIED.value;
     const x: number = TablutCase.INVADERS.value;
     const i: number = TablutCase.DEFENDERS.value;

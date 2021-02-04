@@ -1,6 +1,5 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/DIRECTION';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
@@ -10,8 +9,7 @@ import { EpaminondasLegalityStatus } from '../epaminondaslegalitystatus';
 import { EpaminondasMove } from '../epaminondas-move/EpaminondasMove';
 import { EpaminondasPartSlice } from '../epaminondas-part-slice/EpaminondasPartSlice';
 
-export class EpaminondasNode extends MGPNode<Rules<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus>,
-                                            EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {}
+export class EpaminondasNode extends MGPNode<EpaminondasRules, EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {}
 
 export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
     public getListMoves(node: EpaminondasNode): MGPMap<EpaminondasMove, EpaminondasPartSlice> {
