@@ -1,4 +1,4 @@
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 

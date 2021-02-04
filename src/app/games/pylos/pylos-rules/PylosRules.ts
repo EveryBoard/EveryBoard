@@ -1,9 +1,9 @@
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from '../pylos-coord/PylosCoord';

@@ -1,4 +1,4 @@
-import { Comparable } from 'src/app/collectionlib/Comparable';
+import { Comparable } from 'src/app/utils/collection-lib/Comparable';
 
 export class KamisadoColor implements Comparable {
     public static readonly ANY: KamisadoColor = new KamisadoColor(0, 'any', '#000');

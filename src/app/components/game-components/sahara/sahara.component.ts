@@ -3,11 +3,11 @@ import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
+import { SaharaMove } from 'src/app/games/sahara/sahara-move/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
-import { SaharaRules } from 'src/app/games/sahara/sahararules/SaharaRules';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { display } from 'src/app/collectionlib/utils';
+import { SaharaRules } from 'src/app/games/sahara/sahara-rules/SaharaRules';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { display } from 'src/app/utils/collection-lib/utils';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 
 @Component({

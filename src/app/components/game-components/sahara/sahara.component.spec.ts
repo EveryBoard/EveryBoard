@@ -13,7 +13,7 @@ import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrap
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { SaharaMove } from 'src/app/games/sahara/saharamove/SaharaMove';
+import { SaharaMove } from 'src/app/games/sahara/sahara-move/SaharaMove';
 
 const activatedRouteStub = {
     snapshot: {

@@ -1,6 +1,6 @@
 import { Player } from 'src/app/jscaip/player/Player';
-import { Comparable } from 'src/app/collectionlib/Comparable';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { Comparable } from 'src/app/utils/collection-lib/Comparable';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class EncapsulePiece implements Comparable {
     public static readonly SMALL_BLACK: EncapsulePiece = new EncapsulePiece(0);

@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondaslegalitystatus';
-import { EpaminondasMove } from 'src/app/games/epaminondas/epaminondasmove/EpaminondasMove';
-import { EpaminondasPartSlice } from 'src/app/games/epaminondas/epaminondaspartslice/EpaminondasPartSlice';
-import { EpaminondasRules } from 'src/app/games/epaminondas/epaminondasrules/EpaminondasRules';
+import { EpaminondasMove } from 'src/app/games/epaminondas/epaminondas-move/EpaminondasMove';
+import { EpaminondasPartSlice } from 'src/app/games/epaminondas/epaminondas-part-slice/EpaminondasPartSlice';
+import { EpaminondasRules } from 'src/app/games/epaminondas/epaminondas-rules/EpaminondasRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/player/Player';

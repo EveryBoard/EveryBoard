@@ -22,12 +22,12 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
-import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
+import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { RequestCode } from 'src/app/domain/request';
 import { MGPResult } from 'src/app/domain/icurrentpart';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { RouterTestingModule } from '@angular/router/testing';
 
 const activatedRouteStub = {

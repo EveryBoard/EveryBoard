@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
-import { QuartoMove } from '../../../games/quarto/quartomove/QuartoMove';
+import { QuartoMove } from '../../../games/quarto/quarto-move/QuartoMove';
 import { QuartoPartSlice } from '../../../games/quarto/QuartoPartSlice';
-import { QuartoRules } from '../../../games/quarto/quartorules/QuartoRules';
+import { QuartoRules } from '../../../games/quarto/quarto-rules/QuartoRules';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({
     selector: 'app-quarto',

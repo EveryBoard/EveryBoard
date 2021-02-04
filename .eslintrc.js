@@ -33,6 +33,8 @@ module.exports = {
             { 'types': { 'String': { 'message': 'Use string instead', 'fixWith': 'string' } } },
         ],
         '@typescript-eslint/no-this-alias': ['warn'],
+        '@typescript-eslint/no-inferrable-types': ['off'],
+
         'max-len': ['warn', { 'code': 120 }],
         'require-jsdoc': ['warn', { 'require': {
             'FunctionDeclaration': false,
@@ -45,13 +47,18 @@ module.exports = {
         'no-undef': ['off'], // Because there are false positives
         'no-unused-vars': ['warn'],
         'no-invalid-this': ['warn'],
-        'indent': ['error', 4],
+        'indent': [
+            'error', 4,
+            {
+                'SwitchCase': 1,
+                'CallExpression': { 'argument': 'first'},
+                'FunctionDeclaration': {'parameters': 'first'}
+            },
+        ],
         'object-curly-spacing': ['warn', 'always'],
         'no-redeclare': ['warn'], // TODO: add option ignoreDeclarationMerge: true and set to error
         'camelcase': ['warn'],
         'valid-jsdoc': ['warn'],
         'no-case-declarations': ['warn'],
-        'no-inferrable-types': 'OFF',
-        'comma-dangle': 'OFF',
     },
 };

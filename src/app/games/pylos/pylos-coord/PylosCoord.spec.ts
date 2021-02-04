@@ -1,4 +1,4 @@
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { PylosCoord } from './PylosCoord';
 

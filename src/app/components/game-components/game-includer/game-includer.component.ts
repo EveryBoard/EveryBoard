@@ -1,5 +1,5 @@
 import { Component, ViewContainerRef } from '@angular/core';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-game-includer',

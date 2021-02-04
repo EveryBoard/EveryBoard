@@ -10,7 +10,7 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { PIJoueur } from '../../domain/iuser';
 import { environment } from 'src/environments/environment';
 
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable()
 export class AuthenticationService implements OnDestroy {

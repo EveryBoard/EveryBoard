@@ -1,6 +1,6 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { DvonnBoard } from './DvonnBoard';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class DvonnPartSlice extends GamePartSlice {
     public static getInitialSlice(): DvonnPartSlice {

@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
-import { AwaleRules } from '../../../games/awale/awalerules/AwaleRules';
-import { AwaleMove } from 'src/app/games/awale/awalemove/AwaleMove';
+import { AwaleRules } from '../../../games/awale/awale-rules/AwaleRules';
+import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
 import { AwalePartSlice } from '../../../games/awale/AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({
     selector: 'app-awale-new-component',
@@ -31,6 +31,9 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         const chosenMove: AwaleMove = new AwaleMove(x, y);
         // let's confirm on java-server-side that the move is legal
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
+    }
+    public cancelMove(reason?: string): void {
+        // Empty because not needed.
     }
     public decodeMove(encodedMove: number): AwaleMove {
         return AwaleMove.decode(encodedMove);

@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { IJoueur, PIJoueur } from '../../domain/iuser';
-import { FirebaseFirestoreDAO } from '../firebasefirestoredao/FirebaseFirestoreDAO';
+import { FirebaseFirestoreDAO } from '../firebase-firestore-dao/FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { environment } from 'src/environments/environment';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable({
     providedIn: 'root',

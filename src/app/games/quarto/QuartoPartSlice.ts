@@ -1,6 +1,6 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
 import { QuartoPiece } from './QuartoPiece';
-import { ArrayUtils, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class QuartoPartSlice extends GamePartSlice {
     constructor(b: number[][], turn: number, public readonly pieceInHand: QuartoPiece) {

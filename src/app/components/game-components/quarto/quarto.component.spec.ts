@@ -10,13 +10,13 @@ import { AppModule } from 'src/app/app.module';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { QuartoRules } from 'src/app/games/quarto/quartorules/QuartoRules';
-import { QuartoMove } from 'src/app/games/quarto/quartomove/QuartoMove';
+import { QuartoRules } from 'src/app/games/quarto/quarto-rules/QuartoRules';
+import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { By } from '@angular/platform-browser';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 const activatedRouteStub = {
     snapshot: {

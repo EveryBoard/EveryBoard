@@ -7,12 +7,12 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
 import { AppModule } from 'src/app/app.module';
-import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { EpaminondasMove } from 'src/app/games/epaminondas/epaminondasmove/EpaminondasMove';
-import { EpaminondasPartSlice } from 'src/app/games/epaminondas/epaminondaspartslice/EpaminondasPartSlice';
-import { EpaminondasNode } from 'src/app/games/epaminondas/epaminondasrules/EpaminondasRules';
+import { EpaminondasMove } from 'src/app/games/epaminondas/epaminondas-move/EpaminondasMove';
+import { EpaminondasPartSlice } from 'src/app/games/epaminondas/epaminondas-part-slice/EpaminondasPartSlice';
+import { EpaminondasNode } from 'src/app/games/epaminondas/epaminondas-rules/EpaminondasRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/player/Player';

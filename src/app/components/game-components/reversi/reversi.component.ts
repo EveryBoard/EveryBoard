@@ -1,12 +1,12 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../AbstractGameComponent';
-import { ReversiRules } from '../../../games/reversi/reversirules/ReversiRules';
+import { ReversiRules } from '../../../games/reversi/reversi-rules/ReversiRules';
 import { ReversiPartSlice } from '../../../games/reversi/ReversiPartSlice';
-import { ReversiMove } from 'src/app/games/reversi/reversimove/ReversiMove';
+import { ReversiMove } from 'src/app/games/reversi/reversi-move/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({
     selector: 'app-reversi',
@@ -29,6 +29,9 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         const chosenMove: ReversiMove = new ReversiMove(x, y);
 
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
+    }
+    public cancelMove(reason?: string): void {
+        // Empty because not needed.
     }
     public decodeMove(encodedMove: number): ReversiMove {
         return ReversiMove.decode(encodedMove);

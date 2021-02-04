@@ -1,9 +1,9 @@
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
-import { MGPMap } from '../collectionlib/mgpmap/MGPMap';
+import { MGPMap } from '../utils/mgp-map/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
-import { display } from '../collectionlib/utils';
+import { display } from '../utils/collection-lib/utils';
 import { Type } from '@angular/core';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
