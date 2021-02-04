@@ -98,8 +98,6 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');
 
         this.createGameComponent();
-        // this.resetGameDatas();
-        // should be some kind of session-scope
 
         this.gameComponent.rules.setInitialBoard();
         this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
