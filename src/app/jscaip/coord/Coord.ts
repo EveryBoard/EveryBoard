@@ -95,7 +95,7 @@ export class Coord implements Comparable {
     public getOrthogonalDistance(c: Coord): number {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
     }
-    public getDistance(c: Coord): number { // TODO: Rename, it's not really a distance
+    public getDistance(c: Coord): number {
         if (!c.isAlignedWith(this)) {
             throw new Error('Cannot calculate distance with non aligned coords.');
         }

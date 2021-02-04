@@ -3,7 +3,8 @@ export interface IJoiner {
     candidatesNames: string[]; // TODO: give default empty value
     creator: string;
     chosenPlayer: string; // TODO: make optional
-    firstPlayer: string;
+    whoStart?: string;
+    firstPlayer?: string;
     /* 0: the creator
      * 1: the chosenPlayer
      * 2: random
@@ -25,6 +26,25 @@ export interface IJoiner {
      * ranked part
      * friendly part
      */
+}
+export class FirstPlayer {
+
+    private constructor(public value: string) {}
+
+    public static readonly CREATOR: FirstPlayer = new FirstPlayer('CREATOR');
+
+    public static readonly RANDOM: FirstPlayer = new FirstPlayer('RANDOM');
+
+    public static readonly CHOSEN_PLAYER: FirstPlayer = new FirstPlayer('CHOSEN_PLAYER');
+
+    public static of(value: string): FirstPlayer {
+        switch(value) {
+            case 'CREATOR': return FirstPlayer.CREATOR;
+            case 'RANDOM': return FirstPlayer.RANDOM;
+            case 'CHOSEN_PLAYER': return FirstPlayer.CHOSEN_PLAYER;
+            default: throw new Error('Invalid value for FirstPlayer: ' + value + '.');
+        }
+    }
 }
 export class Joiner {
     public constructor(

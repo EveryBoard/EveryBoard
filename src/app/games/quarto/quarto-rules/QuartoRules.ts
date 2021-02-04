@@ -65,9 +65,10 @@ class CaseSensible {
     }
 }
 class Critere {
-    /* Un crit�re est une liste sous-crit�res Boolean, donc trois valeurs possibles, True, False, Null
-     * False veut dire qu'il faut avoir une valeur sp�cifique (Grand, par exemple), True son oppos� (Petit)
-     * Null veut dire que ce crit�re a d�jà �t� 'neutralis�'/'pacifi�' (si une ligne contient un Grand et un Petit pion, par exemple)
+    /* Un critère est une liste sous-critères booléens, donc trois valeurs possibles, True, False, Null
+     * False veut dire qu'il faut avoir une valeur spécifique (Grand, par exemple), True son opposé (Petit)
+     * Null veut dire que ce critère a déjà été 'neutralisé'/'pacifié'
+     * (si une ligne contient un Grand et un Petit pion, par exemple)
      */
 
     readonly subCritere: boolean[] = [null, null, null, null];
@@ -122,7 +123,7 @@ class Critere {
         const c: Critere = new Critere(ic);
         return this.mergeWith(c);
     }
-    public mergeWithQE(qe: QuartoPiece): boolean {
+    public mergeWithQuartoPiece(qe: QuartoPiece): boolean {
         return this.mergeWithNumber(qe.value);
     }
     public isAllNull(): boolean {

@@ -8,7 +8,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
     providedIn: 'root',
 })
 export class JoinerService {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public static readonly EMPTY_JOINER: IJoiner = {
         creator: null,
