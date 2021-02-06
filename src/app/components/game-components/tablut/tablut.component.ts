@@ -172,8 +172,26 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
             return null;
         }
     }
-    public isClickable(x: number, y: number): boolean {
+    private isClickable(x: number, y: number): boolean {
         // Show if the piece can be clicked
         return this.pieceBelongToCurrentPlayer(x, y);
+    }
+    public isInvader(x: number, y: number): boolean {
+        return this.board[y][x] === TablutCase.INVADERS.value;
+    }
+    public isKing(x: number, y: number): boolean {
+        return TablutRules.isKing(this.board[y][x]);
+    }
+    public getKingPolyline(x: number, y: number): string {
+        const ax: number = 85 + 100*x; const ay: number = 85 + 100*y;
+        const bx: number = 30 + 100*x; const by: number = 30 + 100*y;
+        const cx: number = 50 + 100*x; const cy: number = 10 + 100*y;
+        const dx: number = 70 + 100*x; const dy: number = 30 + 100*y;
+        const ex: number = 15 + 100*x; const ey: number = 85 + 100*y;
+        return ax + ' ' + ay + ' ' +
+               bx + ' ' + by + ' ' +
+               cx + ' ' + cy + ' ' +
+               dx + ' ' + dy + ' ' +
+               ex + ' ' + ey;
     }
 }
