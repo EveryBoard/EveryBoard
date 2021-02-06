@@ -51,8 +51,8 @@ module.exports = {
             'error', 4,
             {
                 'SwitchCase': 1,
-                'CallExpression': { 'argument': 'first'},
-                'FunctionDeclaration': {'parameters': 'first'}
+                'CallExpression': { 'arguments': 'first' },
+                'FunctionDeclaration': { 'parameters': 'first' },
             },
         ],
         'object-curly-spacing': ['warn', 'always'],

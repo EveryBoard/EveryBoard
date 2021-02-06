@@ -99,7 +99,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         return MGPValidation.SUCCESS;
     }
     private static tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, board: number[][]): Coord {
-        const LOCAL_VERBOSE: boolean = false;
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
          * return the captured coord, or null if no capture possible
@@ -121,7 +120,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         }
         return this.capturePawn(player, landingPawn, d, board);
     }
-    private static isKing(piece: number): boolean {
+    public static isKing(piece: number): boolean {
         return (piece === TablutCase.PLAYER_ZERO_KING.value) ||
                (piece === TablutCase.PLAYER_ONE_KING.value);
     }
