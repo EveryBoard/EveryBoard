@@ -10,13 +10,29 @@ export class HexaBoard<T> {
 
     public static fromNumberTable<T>(table: NumberTable, empty: T, encoder: Encoder<T>): HexaBoard<T> {
         const contents: Table<T> = ArrayUtils.mapBiArray(table, encoder.decode);
+        // TODO: could check that radius makes sense (e.g, contents.length is odd, contents[0].length is equal to contents.length
         return new HexaBoard(contents, (contents.length-1)/2, empty, encoder);
+    }
+
+    public static fromTable<T>(table: Table<T>, empty: T, encoder: Encoder<T>): HexaBoard<T> {
+        // TODO: see above TODO
+        return new HexaBoard(table, (table.length-1)/2, empty, encoder);
     }
 
     private constructor(public readonly contents: Table<T>,
                         public readonly radius: number,
                         public readonly empty: T,
                         public readonly encoder: Encoder<T>) {
+    }
+    public equals(other: HexaBoard<T>, equalT: (a: T, b: T) => boolean): boolean {
+        if (this === other) return true;
+        if (this.radius !== other.radius) return false;
+        if (equalT(this.empty, other.empty) === false) return false;
+        if (this.encoder !== other.encoder) return false;
+        this.forEachCoord((coord: Coord, content: T) => {
+            if (equalT(content, other.getAtUnsafe(coord)) === false) return false;
+        });
+        return true;
     }
 
     public getAtUnsafe(coord: Coord): T {
@@ -43,10 +59,10 @@ export class HexaBoard<T> {
 
     public forEachCoord(callback: (coord: Coord, content: T) => void): void {
         const radius: number = this.radius;
-        for (let q = -radius; q <= radius; q++) {
-            let r1: number = Math.max(-radius, -q - radius);
-            let r2: number = Math.min(radius, -q + radius);
-            for (let r = r1; r <= r2; r++) {
+        for (let q: number = -radius; q <= radius; q++) {
+            const r1: number = Math.max(-radius, -q - radius);
+            const r2: number = Math.min(radius, -q + radius);
+            for (let r: number = r1; r <= r2; r++) {
                 const coord: Coord = new Coord(q, r);
                 callback(coord, this.getAt(coord));
             }
@@ -54,9 +70,9 @@ export class HexaBoard<T> {
     }
 
     public getAllBorders(): Coord[] {
-        let coords: Coord[] = [];
+        const coords: Coord[] = [];
         const radius: number = this.radius;
-        for (let q = -radius; q <= radius; q++) {
+        for (let q: number = -radius; q <= radius; q++) {
             const r1: number = Math.max(-radius, -q - radius);
             const r2: number = Math.min(radius, -q + radius);
             coords.push(new Coord(q, r1));
@@ -74,7 +90,7 @@ export class HexaBoard<T> {
         const r2: number = Math.min(radius, -q + radius);
         const r: number = coord.y;
         if (r < r1 || r > r2) return false;
-        return true
+        return true;
     }
 
     public isOnBorder(coord: Coord): boolean {
@@ -106,7 +122,7 @@ export class HexaBoard<T> {
         return this.axialToCubeYCoordinate(coord) === this.radius;
     }
     private axialToCubeYCoordinate(coord: Coord): number {
-        return -coord.x-coord.y
+        return -coord.x-coord.y;
     }
 
     public isTopLeftCorner(coord: Coord): boolean {

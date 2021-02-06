@@ -32,10 +32,21 @@ describe('GipfPartSlice', () => {
 
     describe('initial slice', () => {
         let slice: GipfPartSlice = GipfPartSlice.getInitialSlice();
-        it('should be completely empty', () => {
+        it('should contain 3 simple pieces for each player', () => {
+            let p0: number = 0;
+            let p1: number = 0;
             slice.hexaBoard.forEachCoord((_: Coord, content: GipfPiece) => {
-                expect(content).toBe(GipfPiece.EMPTY);
+                if (content !== GipfPiece.EMPTY) {
+                    expect(content.isDouble).toBeFalse();
+                    if (content.player === Player.ZERO) {
+                        p0 += 1;
+                    } else {
+                        p1 += 1;
+                    }
+                }
             });
+            expect(p0).toBe(3);
+            expect(p1).toBe(3);
         });
         it('should start at turn 0', () => {
             expect(slice.turn).toBe(0);

@@ -1,39 +1,45 @@
-import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
-import { MGPNode } from "src/app/jscaip/mgpnode/MGPNode";
-import { Rules } from "src/app/jscaip/Rules";
-import { GipfPartSlice } from "../gipfpartslice/GipfPartSlice";
-import { MGPMap } from "src/app/collectionlib/mgpmap/MGPMap";
-import { GipfCapture, GipfLine, GipfMove, GipfPlacement } from "../gipfmove/GipfMove";
-import { HexaDirection } from "src/app/jscaip/hexa/HexaDirection";
-import { Coord } from "src/app/jscaip/coord/Coord";
-import { Player } from "src/app/jscaip/player/Player";
-import { MGPOptional } from "src/app/collectionlib/mgpoptional/MGPOptional";
-import { Table } from "src/app/collectionlib/arrayutils/ArrayUtils";
-import { GipfPiece } from "../gipfpiece/GipfPiece";
-import { Direction } from "src/app/jscaip/DIRECTION";
-import { HexaBoard } from "src/app/jscaip/hexa/HexaBoard";
-import { MGPValidation } from "src/app/collectionlib/mgpvalidation/MGPValidation";
-import { GipfLegalityStatus } from "../gipflegalitystatus/GipfLegalityStatus";
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { Rules } from 'src/app/jscaip/Rules';
+import { GipfPartSlice } from '../gipfpartslice/GipfPartSlice';
+import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
+import { GipfCapture, GipfLine, GipfMove, GipfPlacement } from '../gipfmove/GipfMove';
+import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Player } from 'src/app/jscaip/player/Player';
+import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { Table } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { GipfPiece } from '../gipfpiece/GipfPiece';
+import { Direction } from 'src/app/jscaip/DIRECTION';
+import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
+import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { GipfLegalityStatus } from '../gipflegalitystatus/GipfLegalityStatus';
 
 export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfPartSlice, LegalityStatus> {}
 
 export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus> {
-    public applyLegalMove(move: GipfMove, slice: GipfPartSlice, status: GipfLegalityStatus): { resultingMove: GipfMove; resultingSlice: GipfPartSlice; } {
+    public static VARIANT: 'basic' | 'standard' | 'tournament' = 'basic';
+
+    public applyLegalMove(move: GipfMove, slice: GipfPartSlice, status: GipfLegalityStatus):
+      { resultingMove: GipfMove; resultingSlice: GipfPartSlice; } {
         let sliceWithoutTurn: GipfPartSlice;
         if (status.computedSlice !== null) {
             sliceWithoutTurn = status.computedSlice;
         } else {
-            const player: Player = slice.getCurrentPlayer()
-            const sliceAfterInitialCapture: GipfPartSlice = this.applyCaptures(slice, move.initialCaptures, player);
-            const sliceAfterPlacement: GipfPartSlice = this.applyPlacement(sliceAfterInitialCapture, move.placement, player);
-            const sliceAfterFinalCapture: GipfPartSlice = this.applyCaptures(sliceAfterPlacement, move.finalCaptures, player);
+            const player: Player = slice.getCurrentPlayer();
+            const sliceAfterInitialCapture: GipfPartSlice =
+                this.applyCaptures(slice, move.initialCaptures, player);
+            const sliceAfterPlacement: GipfPartSlice =
+                this.applyPlacement(sliceAfterInitialCapture, move.placement, player);
+            const sliceAfterFinalCapture: GipfPartSlice =
+                this.applyCaptures(sliceAfterPlacement, move.finalCaptures, player);
             sliceWithoutTurn = sliceAfterFinalCapture;
         }
         return {
             resultingMove: move,
             resultingSlice: new GipfPartSlice(status.computedSlice.hexaBoard, sliceWithoutTurn.turn+1,
                                               sliceWithoutTurn.sidePieces, sliceWithoutTurn.canPlaceDouble,
-                                              sliceWithoutTurn.capturedPieces)
+                                              sliceWithoutTurn.capturedPieces),
         };
     }
 
@@ -55,7 +61,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             return MGPOptional.empty();
         }
         const doublePieces: number = slice.getDoublePiecesOnBoard(player);
-        const eachPlayerHasPlacedOnePiece = slice.turn > 1;
+        const eachPlayerHasPlacedOnePiece: boolean = slice.turn > 1;
         if (eachPlayerHasPlacedOnePiece && doublePieces === 0) {
             // No more double pieces on board, player loses
             return MGPOptional.empty();
@@ -80,53 +86,64 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             const sliceAfterCapture: GipfPartSlice = this.applyCaptures(slice, initialCaptures, player);
             this.getPlacements(sliceAfterCapture, player).forEach((placement: GipfPlacement) => {
                 const sliceAfterPlacement: GipfPartSlice = this.applyPlacement(sliceAfterCapture, placement, player);
-                this.getPossibleCaptureCombinations(sliceAfterPlacement, player).forEach((finalCaptures: ReadonlyArray<GipfCapture>) => {
-                    const finalSlice: GipfPartSlice = this.applyCaptures(sliceAfterPlacement, finalCaptures, player); // TODO: attach result of finalSlice to this.isLegal somehow?
-                    const moveSimple: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
-                    map.set(moveSimple, this.applyLegalMove(moveSimple, slice, { legal: MGPValidation.SUCCESS, computedSlice: finalSlice }).resultingSlice);
-                });
+                this.getPossibleCaptureCombinations(sliceAfterPlacement, player)
+                    .forEach((finalCaptures: ReadonlyArray<GipfCapture>) => {
+                        // TODO: attach result of finalSlice to this.isLegal somehow?
+                        const finalSlice: GipfPartSlice =
+                            this.applyCaptures(sliceAfterPlacement, finalCaptures, player);
+                        const moveSimple: GipfMove =
+                            new GipfMove(placement, initialCaptures, finalCaptures);
+                        map.set(moveSimple,
+                                this.applyLegalMove(moveSimple, slice,
+                                                    { legal: MGPValidation.SUCCESS, computedSlice: finalSlice })
+                                    .resultingSlice);
+                    });
             });
-        })
+        });
         return map;
     }
     private isVictory(slice: GipfPartSlice): boolean {
-        const player0Loses = this.getPlayerScore(slice, Player.ZERO).isAbsent();
-        const player1Loses = this.getPlayerScore(slice, Player.ONE).isAbsent();
+        const player0Loses: boolean = this.getPlayerScore(slice, Player.ZERO).isAbsent();
+        const player1Loses: boolean = this.getPlayerScore(slice, Player.ONE).isAbsent();
         return player0Loses || player1Loses;
     }
     private getPossibleCaptureCombinations(slice: GipfPartSlice, player: Player): Table<GipfCapture> {
         const captureCombinations: GipfCapture[][] = [];
         // Note: there can be at most one capture per line
-        this.getLinePortionsWithFourPiecesOfPlayer(slice, player).forEach((lineAndPortion: [GipfLine, [Coord, Coord, Direction]]) => {
-            const capturable: GipfCapture = this.getCapturable(slice, lineAndPortion[0], lineAndPortion[1]);
-            let captures: Coord[][] = [];
-            capturable.forEach((coord: Coord) => {
-                let newCaptures: Coord[][] = [];
-                captures.forEach((capture: Coord[]) => {
-                    newCaptures.push([...capture, coord]);
-                    if (slice.hexaBoard.getAt(coord).isDouble) {
-                        // Double pieces may stay on the board
-                        newCaptures.push(capture);
-                    }
+        this.getLinePortionsWithFourPiecesOfPlayer(slice, player)
+            .forEach((linePortion: [Coord, Coord, Direction]) => {
+                const capturable: GipfCapture = this.getCapturable(slice, linePortion);
+                const captures: Coord[][] = [];
+                capturable.forEach((coord: Coord) => {
+                    const newCaptures: Coord[][] = [];
+                    captures.forEach((capture: Coord[]) => {
+                        newCaptures.push([...capture, coord]);
+                        if (slice.hexaBoard.getAt(coord).isDouble) {
+                            // Double pieces may stay on the board
+                            newCaptures.push(capture);
+                        }
+                    });
                 });
             });
-        });
         return captureCombinations;
     }
-    private getLinePortionsWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player): ReadonlyArray<[GipfLine, [Coord, Coord, Direction]]> {
-        const lines: [GipfLine, [Coord, Coord, Direction]][] = [];
-        this.getLines(slice).forEach((line: GipfLine) => {
-            const linePortion: MGPOptional<[Coord, Coord, Direction]> = this.getLinePortionWithFourPiecesOfPlayer(slice, player, line);
+    private getLinePortionsWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player):
+    ReadonlyArray<[Coord, Coord, Direction]> {
+        const linePortions: [Coord, Coord, Direction][] = [];
+        GipfLine.allLines.forEach((line: GipfLine) => {
+            const linePortion: MGPOptional<[Coord, Coord, Direction]> =
+                this.getLinePortionWithFourPiecesOfPlayer(slice, player, line);
             if (linePortion.isPresent()) {
-                lines.push([line, linePortion.get()]);
+                linePortions.push(linePortion.get());
             }
         });
-        return lines;
+        return linePortions;
     }
-    private getLinePortionWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player, line: GipfLine): MGPOptional<[Coord, Coord, Direction]> {
+    private getLinePortionWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player, line: GipfLine):
+    MGPOptional<[Coord, Coord, Direction]> {
         let consecutives: number = 0;
-        const coord: Coord = line.entrance;
-        const dir: Direction = line.direction;
+        const coord: Coord = line.getEntrance();
+        const dir: Direction = line.getDirection();
         let start: Coord = coord;
         for (let cur: Coord = coord; slice.hexaBoard.isOnBoard(coord); cur = cur.getNext(dir)) {
             if (slice.hexaBoard.getAt(coord).player === player) {
@@ -143,26 +160,16 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
         return MGPOptional.empty();
     }
-    private getLines(slice: GipfPartSlice): ReadonlyArray<GipfLine> {
-        const lines: GipfLine[] = [];
-        slice.hexaBoard.getAllBorders().forEach((border: Coord) => {
-            this.getAllDirectionsForEntrance(slice, border).forEach((dir: Direction) => {
-                // To avoid duplicates, we look only for lines going downwards
-                if (dir.isDown()) {
-                    lines.push(new GipfLine(border, dir));
-                }
-            });
-        });
-        return lines;
-    }
-    private getCapturable(slice: GipfPartSlice, line: GipfLine, linePortion: [Coord, Coord, Direction]): GipfCapture {
+    private getCapturable(slice: GipfPartSlice, linePortion: [Coord, Coord, Direction]): GipfCapture {
         // Go into each direction and continue until there are pieces
-        let capturable: Coord[] = [];
+        const capturable: Coord[] = [];
         const start: Coord = linePortion[0];
         const end: Coord = linePortion[1];
         const dir: Direction = linePortion[2];
         const oppositeDir: Direction = dir.getOpposite();
-        for (let cur: Coord = start; slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY; cur = cur.getNext(oppositeDir)) {
+        for (let cur: Coord = start;
+            slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY;
+            cur = cur.getNext(oppositeDir)) {
             // Go backwards to identify capturable pieces before the 4 aligned pieces
             capturable.push(cur);
         }
@@ -170,13 +177,16 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             // The 4 pieces are capturable
             capturable.push(cur);
         }
-        for (let cur: Coord = end; slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY; cur = cur.getNext(dir)) {
+        for (let cur: Coord = end;
+            slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY;
+            cur = cur.getNext(dir)) {
             // Go forward to identify capturable pieces after the 4 aligned pieces
             capturable.push(cur);
         }
-        return new GipfCapture(line, capturable);
+        return new GipfCapture(capturable);
     }
-    private applyCaptures(slice: GipfPartSlice, captures: ReadonlyArray<GipfCapture>, playerCapturing: Player): GipfPartSlice {
+    private applyCaptures(slice: GipfPartSlice, captures: ReadonlyArray<GipfCapture>, playerCapturing: Player):
+    GipfPartSlice {
         const board: HexaBoard<GipfPiece> = slice.hexaBoard;
         const sidePieces: [number, number] = slice.sidePieces;
         const capturedPieces: [number, number] = slice.capturedPieces;
@@ -212,7 +222,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         return this.nextGapInLine(slice, start, dir).isAbsent();
     }
     private nextGapInLine(slice: GipfPartSlice, start: Coord, dir: Direction): MGPOptional<Coord> {
-        for (let cur = start; slice.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
+        for (let cur: Coord = start; slice.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
             if (slice.hexaBoard.getAt(cur) === GipfPiece.EMPTY) {
                 return MGPOptional.of(cur);
             }
@@ -222,16 +232,18 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     private applyPlacement(slice: GipfPartSlice, placement: GipfPlacement, player: Player): GipfPartSlice {
         let board: HexaBoard<GipfPiece> = slice.hexaBoard;
         let prevPiece: GipfPiece = GipfPiece.EMPTY;
-        for (let cur: Coord = placement.coord; board.isOnBoard(cur) && board.getAt(cur) !== GipfPiece.EMPTY; cur = cur.getNext(placement.direction)) {
+        for (let cur: Coord = placement.coord;
+            board.isOnBoard(cur) && board.getAt(cur) !== GipfPiece.EMPTY;
+            cur = cur.getNext(placement.direction)) {
             const curPiece: GipfPiece = board.getAt(cur);
             board = board.setAt(cur, prevPiece);
             prevPiece = curPiece;
         }
-        let sidePieces: [number, number] = slice.sidePieces;
-        sidePieces[player.value] -= 1; // TODO: make sure this does not mutate slice.sidePieces
-        let canPlaceDouble: [boolean, boolean] = slice.canPlaceDouble;
+        const sidePieces: [number, number] = [slice.sidePieces[0], slice.sidePieces[1]];
+        sidePieces[player.value] -= 1;
+        const canPlaceDouble: [boolean, boolean] = [slice.canPlaceDouble[0], slice.canPlaceDouble[1]];
         if (placement.isDouble === false) {
-            canPlaceDouble[player.value] = false; // TODO: make sure this does not mutate slice.canPlaceDouble
+            canPlaceDouble[player.value] = false;
         }
         return new GipfPartSlice(board, slice.turn, sidePieces, canPlaceDouble, slice.capturedPieces);
     }
@@ -261,9 +273,9 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         } else if (slice.hexaBoard.isOnRightBorder(entrance)) {
             return [HexaDirection.UP_LEFT, HexaDirection.DOWN_LEFT];
         } else if (slice.hexaBoard.isOnTopRightBorder(entrance)) {
-            return [HexaDirection.DOWN_LEFT, HexaDirection.DOWN]
+            return [HexaDirection.DOWN_LEFT, HexaDirection.DOWN];
         } else {
-            throw new Error("not a border");
+            throw new Error('not a border');
         }
     }
 
@@ -276,21 +288,31 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
         const sliceAfterInitialCaptures: GipfPartSlice = this.applyCaptures(slice, move.initialCaptures, player);
 
-        const placementValidity: MGPValidation = this.placementValidity(sliceAfterInitialCaptures, move.placement, player);
+        const noMoreCaptureAfterInitialValidity: MGPValidation = this.noMoreCapturesValidity(slice, player);
+        if (noMoreCaptureAfterInitialValidity.isFailure()) {
+            return { legal: noMoreCaptureAfterInitialValidity };
+        }
+
+        const placementValidity: MGPValidation =
+            this.placementValidity(sliceAfterInitialCaptures, move.placement, player);
         if (placementValidity.isFailure()) {
             return { legal: placementValidity };
         }
-        const sliceAfterPlacement: GipfPartSlice = this.applyPlacement(sliceAfterInitialCaptures, move.placement, player);
+        const sliceAfterPlacement: GipfPartSlice =
+            this.applyPlacement(sliceAfterInitialCaptures, move.placement, player);
 
-        const finalCapturesValidity: MGPValidation = this.capturesValidity(sliceAfterPlacement, move.finalCaptures, player);
+        const finalCapturesValidity: MGPValidation =
+            this.capturesValidity(sliceAfterPlacement, move.finalCaptures, player);
         if (finalCapturesValidity.isFailure()) {
             return { legal: finalCapturesValidity };
         }
-        const sliceAfterFinalCaptures: GipfPartSlice = this.applyCaptures(sliceAfterPlacement, move.finalCaptures, player);
+        const sliceAfterFinalCaptures: GipfPartSlice =
+            this.applyCaptures(sliceAfterPlacement, move.finalCaptures, player);
 
         return { legal: MGPValidation.SUCCESS, computedSlice: sliceAfterFinalCaptures };
     }
-    private capturesValidity(slice: GipfPartSlice, captures: ReadonlyArray<GipfCapture>, player: Player): MGPValidation {
+    private capturesValidity(slice: GipfPartSlice, captures: ReadonlyArray<GipfCapture>, player: Player):
+    MGPValidation {
         captures.forEach((capture: GipfCapture) => {
             const validity: MGPValidation = this.captureValidity(slice, capture, player);
             if (validity.isFailure()) {
@@ -300,48 +322,58 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         return MGPValidation.SUCCESS;
     }
     private captureValidity(slice: GipfPartSlice, capture: GipfCapture, player: Player): MGPValidation {
-        const linePortionOpt: MGPOptional<[Coord, Coord, Direction]> = this.getLinePortionWithFourPiecesOfPlayer(slice, player, capture.line);
+        const linePortionOpt: MGPOptional<[Coord, Coord, Direction]> =
+            this.getLinePortionWithFourPiecesOfPlayer(slice, player, capture.getLine());
         if (linePortionOpt.isAbsent()) {
-            return MGPValidation.failure("Une capture ne peut que se faire si 4 pièces de votre couleurs sont alignées");
+            return MGPValidation.failure(
+                'Une capture ne peut que se faire si 4 pièces de votre couleurs sont alignées');
         }
 
         const linePortion: [Coord, Coord, Direction] = linePortionOpt.get();
 
-        const capturable: GipfCapture = this.getCapturable(slice, capture.line, linePortion);
+        const capturable: GipfCapture = this.getCapturable(slice, linePortion);
         capturable.forEach((coord: Coord) => {
             const isDouble: boolean = slice.hexaBoard.getAt(coord).isDouble;
             if (isDouble == false) {
                 if (capture.contains(coord) === false) {
-                    return MGPValidation.failure("Vous devez capturer toutes les pièces simples de la ligne");
+                    return MGPValidation.failure('Vous devez capturer toutes les pièces simples de la ligne');
                 }
             }
         });
 
         capture.forEach((coord: Coord) => {
             if (capturable.contains(coord) === false) {
-                return MGPValidation.failure("Un des emplacements capturé n'est pas capturable");
+                return MGPValidation.failure('Un des emplacements capturé n\'est pas capturable');
             }
         });
 
         return MGPValidation.SUCCESS;
     }
+    private noMoreCapturesValidity(slice: GipfPartSlice, player: Player): MGPValidation {
+        const linePortions: ReadonlyArray<[Coord, Coord, Direction]> =
+            this.getLinePortionsWithFourPiecesOfPlayer(slice, player);
+        if (linePortions.length === 0) {
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('Toutes les captures nécessaires n\'ont pas été effectuées');
+        }
+    }
 
     private placementValidity(slice: GipfPartSlice, placement: GipfPlacement, player: Player): MGPValidation {
         if (slice.hexaBoard.isOnBoard(placement.coord) === false) {
-            return MGPValidation.failure("Une pièce doit être placée sur le plateau de jeu");
+            return MGPValidation.failure('Une pièce doit être placée sur le plateau de jeu');
         }
         if (slice.hexaBoard.isOnBorder(placement.coord) === false) {
-            return MGPValidation.failure("Une pièce doit être placée sur le bord du plateau de jeu");
+            return MGPValidation.failure('Une pièce doit être placée sur le bord du plateau de jeu');
         }
         if (this.isLineComplete(slice, placement.coord, placement.direction)) {
-            return MGPValidation.failure("Une pièce ne peut pas être placée sur une ligne complète");
+            return MGPValidation.failure('Une pièce ne peut pas être placée sur une ligne complète');
         }
-        for (let dir of this.getAllDirectionsForEntrance(slice, placement.coord)) {
+        for (const dir of this.getAllDirectionsForEntrance(slice, placement.coord)) {
             if (dir === placement.direction) {
                 return MGPValidation.SUCCESS;
             }
         }
-        return MGPValidation.failure("La direction du placement n'est pas valide");
+        return MGPValidation.failure('La direction du placement n\'est pas valide');
     }
-
 }
