@@ -289,7 +289,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const sliceAfterInitialCaptures: GipfPartSlice = this.applyCaptures(slice, move.initialCaptures, player);
 
         const noMoreCaptureAfterInitialValidity: MGPValidation = this.noMoreCapturesValidity(slice, player);
-        if (noMoreCaptureAfterInitialValidity.isFailure()) {
+        if (true || noMoreCaptureAfterInitialValidity.isFailure()) {
             return { legal: noMoreCaptureAfterInitialValidity };
         }
 
@@ -308,6 +308,11 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
         const sliceAfterFinalCaptures: GipfPartSlice =
             this.applyCaptures(sliceAfterPlacement, move.finalCaptures, player);
+
+        const noMoreCaptureAfterFinalValidity: MGPValidation = this.noMoreCapturesValidity(sliceAfterFinalCaptures, player);
+        if (noMoreCaptureAfterFinalValidity.isFailure()) {
+            return { legal: noMoreCaptureAfterInitialValidity };
+        }
 
         return { legal: MGPValidation.SUCCESS, computedSlice: sliceAfterFinalCaptures };
     }

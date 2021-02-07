@@ -3,6 +3,10 @@ import { Player } from 'src/app/jscaip/player/Player';
 
 export class GipfPiece {
     public static encoder: Encoder<GipfPiece> = new class extends Encoder<GipfPiece> {
+        public maxValue(): number {
+            // Double piece of player 1 is encoded into 3
+            return 3;
+        }
         public encode(piece: GipfPiece): number {
             if (piece.isDouble) {
                 return piece.player.value * 2 + 1;

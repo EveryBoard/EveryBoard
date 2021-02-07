@@ -34,7 +34,7 @@ describe('GipfRules:', () => {
         });
     });
 
-    it('should allow simple moves without captures when possible', () => {
+    xit('should allow simple moves without captures when possible', () => {
         // This is diagram 2a in the rules of Gipf
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
             [__, __, __, __, A1, __, __],
@@ -47,7 +47,6 @@ describe('GipfRules:', () => {
         ], __, GipfPiece.encoder);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
                                                        [5, 5], [false, false], [0, 0]);
-        console.log('turn of player: ' + slice.getCurrentPlayer().value);
         const placement: GipfPlacement = new GipfPlacement(new Coord(-2, +3), HexaDirection.UP_RIGHT, false);
         const move: GipfMove = new GipfMove(placement, [], []);
 
@@ -71,7 +70,7 @@ describe('GipfRules:', () => {
 
         expect(resultingSlice.equals(expectedSlice)).toBeTrue();
     });
-    it('should not allow placements on blocked lines', () => {
+    xit('should not allow placements on blocked lines', () => {
         // This is diagram 3
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
             [__, __, __, B1, B1, B1, A1],
@@ -98,7 +97,7 @@ describe('GipfRules:', () => {
             expect(legality.legal.isSuccess()).toBeFalse();
         }
     });
-    it('should force to capture consecutive pieces', () => {
+    xit('should force to capture consecutive pieces', () => {
         // This is diagram 4 in the rules of Gipf
         const linesAndCaptures: [GipfPiece[], number[]][] = [
             [[B1, B1, B1, B1, __, B1, A1], [0, 1, 2, 3]],
@@ -126,7 +125,7 @@ describe('GipfRules:', () => {
             expect(legality.legal.isSuccess()).toBeFalse();
         }
     });
-    it('should force to capture when possible', () => {
+    xit('should force to capture when possible', () => {
         // This is diagram 5a
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
             [__, __, __, B1, __, B1, B1],
@@ -158,7 +157,7 @@ describe('GipfRules:', () => {
         expect(captureLegality.legal.isSuccess()).toBeTrue();
     });
 
-    it('should let player  choose between intersecting captures', () => {
+    xit('should let player  choose between intersecting captures', () => {
         // This is diagram 6
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
             [__, __, __, __, __, __, __],
@@ -198,7 +197,7 @@ describe('GipfRules:', () => {
         const capturesLegality: GipfLegalityStatus = rules.isLegal(moveWithBothCaptures, slice);
         expect(capturesLegality.legal.isSuccess()).toBeTrue();
     });
-    it('should force both players to capture when possible', () => {
+    xit('should force both players to capture when possible', () => {
         // This is the board before diagram 7
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
             [__, __, __, __, __, __, A1],

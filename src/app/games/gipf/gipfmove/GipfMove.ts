@@ -7,6 +7,22 @@ import { Move } from 'src/app/jscaip/Move';
 
 export class GipfBoard {
     public static RADIUS: number = 3;
+    public static coordEncoder: Encoder<Coord> = new class extends Encoder<Coord> {
+        public maxValue(): number {
+            return (GipfBoard.RADIUS*2) * (GipfBoard.RADIUS*2+1) + (GipfBoard.RADIUS*2);
+        }
+        public encode(coord: Coord): number {
+            if (Math.abs(coord.x) > GipfBoard.RADIUS || Math.abs(coord.y) > GipfBoard.RADIUS) {
+                throw new Error('Invalid Gipf coord!');
+            }
+            return (coord.x+GipfBoard.RADIUS) * (GipfBoard.RADIUS*2+1) + (coord.y+GipfBoard.RADIUS);
+        }
+        public decode(encoded: number): Coord {
+            const y: number = encoded % (GipfBoard.RADIUS*2+1);
+            const x: number = (encoded - y) / (GipfBoard.RADIUS*2+1);
+            return new Coord(x-GipfBoard.RADIUS, y-GipfBoard.RADIUS);
+        }
+    }
 }
 
 export class GipfLine {
@@ -106,9 +122,11 @@ export class GipfLine {
 
 export class GipfCapture {
     private static coordsEncoder: Encoder<ReadonlyArray<Coord>> =
-        Encoder.arrayEncoder(Coord.encoder, 6);
+        Encoder.arrayEncoder(GipfBoard.coordEncoder, 6);
     public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
-        public readonly maxValue: number = GipfCapture.coordsEncoder.maxValue;
+        public maxValue(): number {
+            return GipfCapture.coordsEncoder.maxValue();
+        }
         public encode(capture: GipfCapture): number {
             return GipfCapture.coordsEncoder.encode(capture.capturedPieces);
         }
@@ -156,14 +174,13 @@ export class GipfCapture {
 
 export class GipfPlacement {
     public static encoder: Encoder<GipfPlacement> = new class extends Encoder<GipfPlacement> {
-        public readonly maxValue: number = (Coord.encoder.maxValue *
-            Direction.encoder.shift() + Direction.encoder.maxValue) *
-            Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.maxValue;
+        public maxValue(): number {
+            return (GipfBoard.coordEncoder.maxValue() *
+                Direction.encoder.shift() + Direction.encoder.maxValue()) *
+                Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.maxValue();
+        }
         public encode(placement: GipfPlacement): number {
-            // We shift the coord to non-negative values to avoid any encoding issue
-            const shiftedCoord: Coord = new Coord(placement.coord.x + GipfBoard.RADIUS,
-                                                  placement.coord.y + GipfBoard.RADIUS);
-            return (Coord.encoder.encode(shiftedCoord) *
+            return (GipfBoard.coordEncoder.encode(placement.coord) *
                 Direction.encoder.shift() + Direction.encoder.encode(placement.direction)) *
                 Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(placement.isDouble);
         }
@@ -172,8 +189,7 @@ export class GipfPlacement {
             encoded = (encoded - isDoubleN) / Encoder.booleanEncoder.shift();
             const directionN: number = encoded % Direction.encoder.shift();
             const coordN: number = (encoded - directionN) / Direction.encoder.shift();
-            const shiftedCoord: Coord = Coord.encoder.decode(coordN);
-            return new GipfPlacement(new Coord(shiftedCoord.x - GipfBoard.RADIUS, shiftedCoord.y - GipfBoard.RADIUS),
+            return new GipfPlacement(GipfBoard.coordEncoder.decode(coordN),
                                      Direction.encoder.decode(directionN),
                                      Encoder.booleanEncoder.decode(isDoubleN));
         }
@@ -195,9 +211,11 @@ export class GipfMove extends Move {
     private static capturesEncoder: Encoder<ReadonlyArray<GipfCapture>> =
         Encoder.arrayEncoder(GipfCapture.encoder, 7); // There can be 7 captures at most in one capture round
     public static encoder: Encoder<GipfMove> = new class extends Encoder<GipfMove> {
-        public readonly maxValue: number = (GipfPlacement.encoder.maxValue *
-            GipfMove.capturesEncoder.shift() + GipfMove.capturesEncoder.maxValue) *
-            GipfMove.capturesEncoder.shift() + GipfMove.capturesEncoder.maxValue;
+        public maxValue(): number {
+            return (GipfPlacement.encoder.maxValue() *
+                GipfMove.capturesEncoder.shift() + GipfMove.capturesEncoder.maxValue()) *
+                GipfMove.capturesEncoder.shift() + GipfMove.capturesEncoder.maxValue();
+        }
         public encode(move: GipfMove): number {
             return (GipfPlacement.encoder.encode(move.placement) *
                 GipfMove.capturesEncoder.shift() + GipfMove.capturesEncoder.encode(move.initialCaptures)) *

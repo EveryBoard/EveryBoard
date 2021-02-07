@@ -1,7 +1,7 @@
 export abstract class Encoder<T> {
-    public readonly maxValue: number
+    public abstract maxValue(): number
     public shift(): number {
-        return this.maxValue + 1;
+        return this.maxValue() + 1;
     }
     public abstract encode(t: T): number
     public abstract decode(n: number): T
@@ -9,7 +9,9 @@ export abstract class Encoder<T> {
 
 export namespace Encoder {
     export const booleanEncoder: Encoder<boolean> = new class extends Encoder<boolean> {
-        public readonly maxValue: number = 1;
+        public maxValue(): number {
+            return 1;
+        }
         public encode(b: boolean): number {
             if (b) {
                 return 1;
@@ -26,7 +28,14 @@ export namespace Encoder {
 
     export function arrayEncoder<T>(encoder: Encoder<T>, maxLength: number): Encoder<ReadonlyArray<T>> {
         return new class extends Encoder<ReadonlyArray<T>> {
-            public readonly maxValue: number = encoder.maxValue * maxLength;
+            public maxValue(): number {
+                let max: number = 0;
+                for (let i: number = 0; i <= maxLength; i++) {
+                    max = (max + encoder.maxValue()) * encoder.shift();
+                }
+                max += maxLength;
+                return max;
+            }
             public encode(array: ReadonlyArray<T>): number {
                 let encoded: number = 0;
                 array.forEach((v: T) => {
@@ -44,7 +53,7 @@ export namespace Encoder {
                     encoded = (encoded - valueN) / encoder.shift();
                     array.push(encoder.decode(valueN));
                 }
-                return array;
+                return array.reverse();
             }
         };
     }

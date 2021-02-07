@@ -35,7 +35,7 @@ export class HexaBoard<T> {
         return true;
     }
 
-    public getAtUnsafe(coord: Coord): T {
+    private getAtUnsafe(coord: Coord): T {
         return this.contents[coord.y+this.radius][coord.x+this.radius];
     }
 

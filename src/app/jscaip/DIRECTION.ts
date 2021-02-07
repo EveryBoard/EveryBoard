@@ -3,7 +3,9 @@ import { Encoder } from './encoder';
 
 export class Direction {
     public static encoder: Encoder<Direction> = new class extends Encoder<Direction> {
-        public readonly maxValue: number = 7;
+        public maxValue(): number {
+            return 7;
+        }
         public encode(dir: Direction): number {
             return dir.toInt();
         }
