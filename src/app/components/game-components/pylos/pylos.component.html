@@ -5,13 +5,25 @@
     <g *ngFor="let z of [0, 1, 2]">
         <g *ngFor="let y of getLevelRange(z)">
             <g *ngFor="let x of getLevelRange(z)">
-                <circle id="clickable_{{x}}_{{y}}_{{z}}"
-                        *ngIf="isDrawable(x, y, z)"
-                        (click)="onClick(x, y, z)"
-                        [ngStyle]="getPieceStyle(x, y, z)"
-                        [attr.r]="getPieceRay(z)"
-                        [attr.cx]="getPieceCx(x, y, z)"
-                        [attr.cy]="getPieceCy(x, y, z)" />
+                <ng-container *ngIf="isDrawable(x, y, z)">
+                    <circle id="click_{{x}}_{{y}}_{{z}}"
+                            (click)="onClick(x, y, z)"
+                            [attr.fill]="getCaseFill(x, y, z)"
+                            stroke="black"
+                            stroke-width='8'
+                            [attr.r]="getPieceRay(z)"
+                            [attr.cx]="getPieceCx(x, y, z)"
+                            [attr.cy]="getPieceCy(x, y, z)"
+                    />
+                    <circle *ngIf="isOccupied(x, y, z)"
+                            (click)="onClick(x, y, z)"
+                            [ngStyle]="getPieceStyle(x, y, z)"
+                            stroke-width='8'
+                            [attr.r]="getPieceRay(z) - 16"
+                            [attr.cx]="getPieceCx(x, y, z)"
+                            [attr.cy]="getPieceCy(x, y, z)"
+                    />
+                </ng-container>
             </g>
         </g>
     </g>

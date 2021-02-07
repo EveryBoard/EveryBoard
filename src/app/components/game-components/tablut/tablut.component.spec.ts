@@ -126,8 +126,8 @@ describe('TablutComponent', () => {
             move: new TablutMove(new Coord(1, 0), new Coord(2, 0)),
             slice: initialSlice,
             scoreOne: null,
-            scoreZero: null
-        }
+            scoreZero: null,
+        };
         await expectMoveSubmission('#click_2_0', testElements, expactions);
 
         const tablutGameComponent: TablutComponent = <TablutComponent> testElements.gameComponent;

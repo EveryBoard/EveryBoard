@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReversiComponent } from './reversi.component';
 
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
@@ -57,12 +57,12 @@ describe('ReversiComponent', () => {
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
-        const fixture = TestBed.createComponent(LocalGameWrapperComponent);
+        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
         wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
-        const debugElement = fixture.debugElement;
+        const debugElement: DebugElement = fixture.debugElement;
         tick(1);
-        const gameComponent = wrapper.gameComponent as ReversiComponent;
+        const gameComponent: ReversiComponent = wrapper.gameComponent as ReversiComponent;
         const cancelSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
         testElements = { fixture, debugElement, gameComponent, cancelSpy, chooseMoveSpy };
@@ -91,7 +91,7 @@ describe('ReversiComponent', () => {
             slice: initialSlice,
             scoreZero: 2,
             scoreOne: 7,
-        }
+        };
         await expectMoveSubmission('#click_0_4', testElements, expactions);
 
         const tablutGameComponent: ReversiComponent = <ReversiComponent> testElements.gameComponent;

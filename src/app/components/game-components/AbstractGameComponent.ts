@@ -6,6 +6,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { Player } from 'src/app/jscaip/player/Player';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -13,6 +14,15 @@ import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils
  */
 @Component({ template: '' })
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
+    public static readonly PLAYER_ZERO_FILL: string = '#994d00';
+    public static readonly PLAYER_ONE_FILL: string = '#ffc34d';
+    public readonly CAPTURED_FILL: string = 'red';
+    public readonly MOVED_FILL: string = 'gray';
+    public readonly NORMAL_FILL: string = 'lightgray';
+    public readonly CLICKABLE_STYLE: any = {
+        stroke: 'yellow',
+    };
+
     public rules: Rules<M, S, L>;
 
     public board: NumberTable;
@@ -21,7 +31,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public showScore: boolean;
 
-    public imagesLocation = 'assets/images/';
+    public imagesLocation: string = 'assets/images/';
 
     public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => Promise<MGPValidation>;
 
@@ -46,10 +56,17 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public abstract updateBoard(): void;
 
+    public getPlayerColor(player: number): string {
+        switch (player) {
+            case Player.ZERO.value: return AbstractGameComponent.PLAYER_ZERO_FILL;
+            case Player.ONE.value: return AbstractGameComponent.PLAYER_ONE_FILL;
+            case Player.NONE.value: return 'lightgrey';
+        }
+    }
     public getTurn(): number {
         return this.rules.node.gamePartSlice.turn;
     }
-    public pass() {
+    public async pass(): Promise<MGPValidation> {
         throw new Error('AbstractGameComponent.pass should be overriden before being used.');
     }
 }
