@@ -22,6 +22,8 @@ import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;
 
+    public NONE: number = TablutCase.UNOCCUPIED.value;
+
     public rules: TablutRules = new TablutRules(TablutPartSlice);
 
     public throneCoords: Coord[] = [
@@ -32,13 +34,6 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         new Coord(8, 8),
     ];
     private captureds: Coord[] = [];
-    public NONE: number = TablutCase.UNOCCUPIED.value;
-    public CAPTURED_FILL = 'red';
-    public MOVED_FILL = 'gray';
-    public NORMAL_FILL: string = 'lightgray';
-    public CLICKABLE_STYLE: any = {
-        stroke: 'yellow',
-    };
 
     public chosen: Coord = new Coord(-1, -1);
 
@@ -57,7 +52,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         this.captureds = [];
         const previousBoard: NumberTable = this.rules.node.mother.gamePartSlice.board;
         const ENNEMY: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
-        for (let orthogonal of Orthogonal.ORTHOGONALS) {
+        for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.end.getNext(orthogonal, 1);
             if (captured.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
                 const previously: RelativePlayer = TablutRules.getRelativeOwner(ENNEMY, captured, previousBoard)
@@ -136,14 +131,14 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const stroke: string = this.getPieceStroke(x, y);
         return { fill, stroke };
     }
-    private getPlayerColor(player: number): string {
-        switch (player) {
-        case TablutCase.DEFENDERS.value:
-        case TablutCase.PLAYER_ONE_KING.value:
-        case TablutCase.PLAYER_ZERO_KING.value: return '#ffc34d';
-        case TablutCase.INVADERS.value: return '#994d00';
-        }
-    }
+    // private getPlayerColor(player: number): string {
+    //     switch (player) {
+    //         case TablutCase.DEFENDERS.value:
+    //         case TablutCase.PLAYER_ONE_KING.value:
+    //         case TablutCase.PLAYER_ZERO_KING.value: return '#ffc34d';
+    //         case TablutCase.INVADERS.value: return '#994d00';
+    //     }
+    // }
     public getPieceStroke(x: number, y: number): string {
         const coord: Coord = new Coord(x, y);
         if (this.chosen.equals(coord)) {

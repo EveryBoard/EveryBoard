@@ -1,5 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -17,8 +16,11 @@ import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
 import { Player } from 'src/app/jscaip/player/Player';
 import { PylosNode } from 'src/app/games/pylos/pylos-rules/PylosRules';
+import {
+    expectClickFail, expectClickSuccess, expectMoveSubmission,
+    MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 
-const activatedRouteStub = {
+const activatedRouteStub: unknown = {
     snapshot: {
         paramMap: {
             get: (str: string) => {
@@ -27,7 +29,7 @@ const activatedRouteStub = {
         },
     },
 };
-const authenticationServiceStub = {
+const authenticationServiceStub: unknown = {
 
     getJoueurObs: () => of({ pseudo: null, verified: null }),
 
@@ -38,28 +40,12 @@ const authenticationServiceStub = {
 describe('PylosComponent', () => {
     let wrapper: LocalGameWrapperComponent;
 
-    let fixture: ComponentFixture<LocalGameWrapperComponent>;
-
-    let debugElement: DebugElement;
-
-    let gameComponent: PylosComponent;
+    let testElements: TestElements;
 
     const _: number = Player.NONE.value;
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
 
-    const onClick: (x: number, y: number, z: number) => Promise<boolean> = async (x: number, y: number, z: number) => {
-        const buttonName: string = '#clickable_' + x + '_' + y + '_' + z;
-        const element: DebugElement = debugElement.query(By.css(buttonName));
-        if (element != null) {
-            element.triggerEventHandler('click', null);
-            await fixture.whenStable();
-            fixture.detectChanges();
-            return true;
-        } else {
-            return false;
-        }
-    };
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -73,26 +59,30 @@ describe('PylosComponent', () => {
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
-        fixture = TestBed.createComponent(LocalGameWrapperComponent);
-        debugElement = fixture.debugElement;
+        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
         wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
+        const debugElement: DebugElement = fixture.debugElement;
         tick(1);
-        gameComponent = wrapper.gameComponent as PylosComponent;
+        const gameComponent: PylosComponent = wrapper.gameComponent as PylosComponent;
+        const cancelSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
+        const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
+        testElements = { fixture, debugElement, gameComponent, cancelSpy, chooseMoveSpy };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
-        expect(gameComponent).toBeTruthy('PylosComponent should be created');
+        expect(testElements.gameComponent).toBeTruthy('PylosComponent should be created');
     });
-    it('should allow droping piece on occupable case', fakeAsync(async () => {
-        spyOn(gameComponent, 'tryMove').and.callThrough();
-        expect(await onClick(0, 0, 0)).toBeTrue();
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
-        const previousSlice: PylosPartSlice = gameComponent.rules.node.mother.gamePartSlice;
-        flush();
-        expect(gameComponent.tryMove).toHaveBeenCalledOnceWith(move, previousSlice);
+    it('should allow droping piece on occupable case', fakeAsync(async() => {
+        const expectations: MoveExpectations = {
+            move: PylosMove.fromDrop(new PylosCoord(0, 0, 0), []),
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectMoveSubmission('#click_0_0_0', testElements, expectations);
     }));
-    it('should forbid clicking on ennemy piece', fakeAsync(async () => {
+    it('should forbid clicking on ennemy piece', fakeAsync(async() => {
         const initialBoard: number[][][] = [
             [
                 [X, _, _, _],
@@ -111,16 +101,13 @@ describe('PylosComponent', () => {
             ],
         ];
         const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
-        gameComponent.rules.node = new PylosNode(null, null, initialSlice, 0);
-        gameComponent.updateBoard();
-        fixture.detectChanges();
+        testElements.gameComponent.rules.node = new PylosNode(null, null, initialSlice, 0);
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
 
-        spyOn(gameComponent, 'message').and.callThrough();
-        expect(await onClick(0, 0, 0)).toBeTrue();
-        flush();
-        expect(gameComponent.message).toHaveBeenCalledOnceWith('Can\'t click on ennemy pieces.');
+        await expectClickFail('#click_0_0_0', testElements, 'Can\'t click on ennemy pieces.');
     }));
-    it('should allow climbing', fakeAsync(async () => {
+    it('should allow climbing', fakeAsync(async() => {
         const initialBoard: number[][][] = [
             [
                 [O, X, _, _],
@@ -139,16 +126,20 @@ describe('PylosComponent', () => {
             ],
         ];
         const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
-        gameComponent.rules.node = new PylosNode(null, null, initialSlice, 0);
-        gameComponent.updateBoard();
-        fixture.detectChanges();
+        testElements.gameComponent.rules.node = new PylosNode(null, null, initialSlice, 0);
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
 
-        spyOn(gameComponent, 'tryMove').and.callThrough();
-        expect(await onClick(3, 3, 0)).toBeTrue();
-        expect(await onClick(0, 0, 1)).toBeTrue();
-        expect(gameComponent.tryMove).toHaveBeenCalledTimes(1);
+        await expectClickSuccess('#click_3_3_0', testElements);
+        const expectations: MoveExpectations = {
+            move: PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), []),
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectMoveSubmission('#click_0_0_1', testElements, expectations);
     }));
-    it('should allow capturing unique piece by double clicking on it', fakeAsync(async () => {
+    it('should allow capturing unique piece by double clicking on it', fakeAsync(async() => {
         const initialBoard: number[][][] = [
             [
                 [O, O, _, _],
@@ -167,33 +158,60 @@ describe('PylosComponent', () => {
             ],
         ];
         const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
-        gameComponent.rules.node = new PylosNode(null, null, initialSlice, 0);
-        gameComponent.updateBoard();
-        fixture.detectChanges();
+        testElements.gameComponent.rules.node = new PylosNode(null, null, initialSlice, 0);
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
 
-        spyOn(gameComponent, 'tryMove').and.callThrough();
-        expect(await onClick(1, 1, 0)).toBeTrue();
-        expect(await onClick(0, 0, 0)).toBeTrue();
-        expect(await onClick(0, 0, 0)).toBeTrue();
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), [new PylosCoord(0, 0, 0)]);
-        const previousSlice: PylosPartSlice = gameComponent.rules.node.mother.gamePartSlice;
-        expect(gameComponent.tryMove).toHaveBeenCalledOnceWith(move, previousSlice);
+        await expectClickSuccess('#click_1_1_0', testElements);
+        await expectClickSuccess('#click_0_0_0', testElements);
+        const expectations: MoveExpectations = {
+            move: PylosMove.fromDrop(new PylosCoord(1, 1, 0), [new PylosCoord(0, 0, 0)]),
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectMoveSubmission('#click_0_0_0', testElements, expectations);
     }));
-    it('should allow capturing two pieces', fakeAsync(async () => {
-        expect(await onClick(0, 0, 0)).toBeTrue();
-        expect(await onClick(3, 0, 0)).toBeTrue();
-        expect(await onClick(0, 1, 0)).toBeTrue();
-        expect(await onClick(3, 1, 0)).toBeTrue();
-        expect(await onClick(1, 0, 0)).toBeTrue();
-        expect(await onClick(3, 2, 0)).toBeTrue();
+    it('should allow captured two pieces, and show capture during move and after', fakeAsync(async() => {
+        const initialBoard: number[][][] = [
+            [
+                [O, O, _, _],
+                [O, _, _, _],
+                [_, _, _, _],
+                [_, _, _, _],
+            ], [
+                [_, _, _],
+                [_, _, _],
+                [_, _, _],
+            ], [
+                [_, _],
+                [_, _],
+            ], [
+                [_],
+            ],
+        ];
+        const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
+        testElements.gameComponent.rules.node = new PylosNode(null, null, initialSlice, 0);
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
 
-        spyOn(gameComponent, 'concludeMoveWithCapture').and.callThrough();
-        expect(await onClick(1, 1, 0)).toBeTrue();
-        expect(await onClick(0, 0, 0)).toBeTrue();
-        expect(await onClick(0, 1, 0)).toBeTrue();
-        expect(gameComponent.concludeMoveWithCapture).toHaveBeenCalledWith([new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)]);
+        await expectClickSuccess('#click_1_1_0', testElements);
+        await expectClickSuccess('#click_0_0_0', testElements);
+        const pylosGameComponent: PylosComponent = testElements.gameComponent as PylosComponent;
+        expect(pylosGameComponent.getCaseFill(0, 0, 0)).toEqual(pylosGameComponent.PRE_CAPTURED_FILL);
+        const captures: PylosCoord[] = [new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)];
+        const expectations: MoveExpectations = {
+            move: PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures),
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectMoveSubmission('#click_0_1_0', testElements, expectations);
+        expect(pylosGameComponent.getCaseFill(1, 1, 0)).toEqual(pylosGameComponent.MOVED_FILL);
+        expect(pylosGameComponent.getCaseFill(0, 0, 0)).toEqual(pylosGameComponent.CAPTURED_FILL);
+        expect(pylosGameComponent.getCaseFill(0, 1, 0)).toEqual(pylosGameComponent.CAPTURED_FILL);
     }));
-    it('should forbid piece to land lower than they started', fakeAsync(async () => {
+    it('should forbid piece to land lower than they started', fakeAsync(async() => {
         const initialBoard: number[][][] = [
             [
                 [O, X, _, _],
@@ -212,24 +230,21 @@ describe('PylosComponent', () => {
             ],
         ];
         const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
-        gameComponent.rules.node = new PylosNode(null, null, initialSlice, 0);
-        gameComponent.updateBoard();
-        fixture.detectChanges();
+        testElements.gameComponent.rules.node = new PylosNode(null, null, initialSlice, 0);
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
 
-        spyOn(gameComponent, 'message').and.callThrough();
-        expect(await onClick(0, 0, 1)).toBeTrue();
-        expect(await onClick(2, 2, 0)).toBeTrue();
-        flush();
-        expect(gameComponent.message).toHaveBeenCalledWith('Must move pieces upward.');
+        await expectClickSuccess('#click_0_0_1', testElements);
+        await expectClickFail('#click_2_2_0', testElements, 'Must move pieces upward.');
     }));
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(PylosMove, 'decode').and.callThrough();
-        gameComponent.decodeMove(0);
+        testElements.gameComponent.decodeMove(0);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(PylosMove, 'encode').and.callThrough();
-        gameComponent.encodeMove(PylosMove.fromDrop(new PylosCoord(0, 0, 0), []));
+        testElements.gameComponent.encodeMove(PylosMove.fromDrop(new PylosCoord(0, 0, 0), []));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
 });

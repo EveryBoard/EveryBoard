@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 
 import { of } from 'rxjs';
@@ -80,7 +80,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     let partDAO: PartDAOMock;
 
-    const prepareComponent: (initialJoiner: IJoiner) => Promise<void> = async (initialJoiner: IJoiner) => {
+    const prepareComponent: (initialJoiner: IJoiner) => Promise<void> = async(initialJoiner: IJoiner) => {
         fixture = TestBed.createComponent(OnlineGameWrapperComponent);
         debugElement = fixture.debugElement;
         partDAO = TestBed.get(PartDAO);
@@ -92,7 +92,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await chatDAOMock.set('joinerId', { messages: [], status: 'I don\'t have a clue' });
         return Promise.resolve();
     };
-    const prepareStartedGameFor: (user: {pseudo: string, verified: boolean}) => Promise<void> = async (user: {pseudo: string, verified: boolean}) => {
+    const prepareStartedGameFor: (user: {pseudo: string, verified: boolean}) => Promise<void> = async(user: {pseudo: string, verified: boolean}) => {
         AuthenticationServiceMock.USER = user;
         await prepareComponent(JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -119,29 +119,29 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const FIRST_MOVE_ENCODED: number = FIRST_MOVE.encode();
 
-    const doMove: (move: QuartoMove) => Promise<MGPValidation> = async (move: QuartoMove) => {
+    const doMove: (move: QuartoMove) => Promise<MGPValidation> = async(move: QuartoMove) => {
         const slice: QuartoPartSlice = component.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
         const result: MGPValidation = await component.gameComponent.chooseMove(move, slice, null, null);
         fixture.detectChanges();
         tick(1);
         return result;
     };
-    const askTakeBack: () => Promise<boolean> = async () => {
+    const askTakeBack: () => Promise<boolean> = async() => {
         return await clickElement('#askTakeBackButton');
     };
-    const acceptTakeBack: () => Promise<boolean> = async () => {
+    const acceptTakeBack: () => Promise<boolean> = async() => {
         return await clickElement('#acceptTakeBackButton');
     };
-    const refuseTakeBack: () => Promise<boolean> = async () => {
+    const refuseTakeBack: () => Promise<boolean> = async() => {
         return await clickElement('#refuseTakeBackButton');
     };
-    const receiveRequest: (request: RequestCode) => Promise<void> = async (request: RequestCode) => {
+    const receiveRequest: (request: RequestCode) => Promise<void> = async(request: RequestCode) => {
         await partDAO.update('joinerId', {
             request: request.toInterface(),
         });
         fixture.detectChanges(); tick(1);
     };
-    const receiveNewMoves: (moves: number[]) => Promise<void> = async (moves: number[]) => {
+    const receiveNewMoves: (moves: number[]) => Promise<void> = async(moves: number[]) => {
         await partDAO.update('joinerId', {
             listMoves: moves,
             turn: moves.length,
@@ -156,7 +156,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     const getElement: (elementName: string) => DebugElement = (elementName: string) => {
         return debugElement.query(By.css(elementName));
     };
-    const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
+    const clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
         const element: DebugElement = getElement(elementName);
         if (element == null) {
             return false;
@@ -167,11 +167,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             return true;
         }
     };
-    const prepareBoard: (moves: QuartoMove[]) => Promise<void> = async (moves: QuartoMove[]) => {
+    const prepareBoard: (moves: QuartoMove[]) => Promise<void> = async(moves: QuartoMove[]) => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         const receivedMoves: number[] = [];
-        for (let i = 0; i < moves.length; i+=2) {
+        for (let i: number = 0; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
             await doMove(moves[i]);
             receivedMoves.push(move.encode(), moves[i+1].encode());
@@ -181,7 +181,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     beforeAll(() => {
         OnlineGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || OnlineGameWrapperComponent.VERBOSE;
     });
-    beforeEach(fakeAsync(async () => {
+    beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -199,14 +199,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             ],
         }).compileComponents();
     }));
-    it('Should be able to prepare a started game for creator', fakeAsync(async () => {
+    it('Should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         expect(component.currentPart.copy().listMoves).toEqual([]);
         expect(component.currentPlayer).toEqual('creator');
         tick(component.maximalMoveDuration);
     }));
-    it('Prepared Game for creator should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async () => {
+    it('Prepared Game for creator should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
 
         const partCreationId: DebugElement = getElement('#partCreation');
@@ -223,7 +223,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(component.gameComponent).toBeTruthy('gameComponent field should also be present after config accepted and async millisec finished');
         tick(component.maximalMoveDuration);
     }));
-    it('Prepared Game for creator should allow simple move', fakeAsync(async () => {
+    it('Prepared Game for creator should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
 
@@ -239,7 +239,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
         tick(component.maximalMoveDuration);
     }));
-    it('Prepared Game for joiner should allow simple move', fakeAsync(async () => {
+    it('Prepared Game for joiner should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
         tick(1);
 
@@ -257,7 +257,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Move should trigger db change', fakeAsync(async () => {
+    it('Move should trigger db change', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         spyOn(partDAO, 'update').and.callThrough();
@@ -271,7 +271,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', expectedUpdate );
         tick(component.maximalMoveDuration);
     }));
-    it('Victory move from player should notifyVictory', fakeAsync(async () => {
+    it('Victory move from player should notifyVictory', fakeAsync(async() => {
         const move0: QuartoMove = new QuartoMove(0, 3, QuartoPiece.AAAB);
         const move1: QuartoMove = new QuartoMove(1, 3, QuartoPiece.AABA);
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBB);
@@ -293,7 +293,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await fixture.whenStable();
         expect(getElement('#youWonIndicator')).toBeTruthy('Component should show who is the winner.');
     }));
-    it('Should send take back request when player ask to', fakeAsync(async () => {
+    it('Should send take back request when player ask to', fakeAsync(async() => {
         // Doing a first move so take back make sens
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -310,7 +310,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Opponent accepting take back should move player board backward (one move)', fakeAsync(async () => {
+    it('Opponent accepting take back should move player board backward (one move)', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         // Doing a first move so take back make sens
@@ -342,7 +342,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         });
         tick(component.maximalMoveDuration);
     }));
-    it('Player accepting take back should move player board backward (two moves)', fakeAsync(async () => {
+    it('Player accepting take back should move player board backward (two moves)', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
 
@@ -371,7 +371,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async () => {
+    it('Should forbid to propose to take back while take back request is waiting', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         expect(await askTakeBack()).toBeFalse();
@@ -382,7 +382,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should not propose to Player.ONE to take back before his first move', fakeAsync(async () => {
+    it('Should not propose to Player.ONE to take back before his first move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'firstCandidate', verified: true });
         tick(1);
         expect(await askTakeBack()).toBeFalse();
@@ -394,7 +394,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should only propose to accept take back when opponent asked', fakeAsync(async () => {
+    it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
@@ -412,7 +412,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should only propose player to refuse take back when opponent asked', fakeAsync(async () => {
+    it('Should only propose player to refuse take back when opponent asked', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
@@ -429,7 +429,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should not allow player to play while take back request is waiting for him', fakeAsync(async () => {
+    it('Should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         await doMove(FIRST_MOVE);
@@ -444,7 +444,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should cancel take back request when take back requester do a move', fakeAsync(async () => {
+    it('Should cancel take back request when take back requester do a move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
@@ -462,7 +462,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should forbid player to ask take back again after refusal', fakeAsync(async () => {
+    it('Should forbid player to ask take back again after refusal', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         await doMove(FIRST_MOVE);
@@ -473,7 +473,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should not allow player to move after resigning', fakeAsync(async () => {
+    it('Should not allow player to move after resigning', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         await doMove(FIRST_MOVE);
@@ -488,20 +488,22 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should allow player to pass when gameComponent allows it', fakeAsync(async () => {
+    it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         expect(await clickElement('#passButton')).toBeFalse();
 
         component.gameComponent.canPass = true;
-        component.gameComponent.pass = () => {};
+        component.gameComponent.pass = async() => {
+            return MGPValidation.SUCCESS;
+        };
         fixture.detectChanges();
 
         expect(await clickElement('#passButton')).toBeTruthy();
 
         tick(component.maximalMoveDuration);
     }));
-    afterEach(fakeAsync(async () => {
+    afterEach(fakeAsync(async() => {
         fixture.destroy();
         await fixture.whenStable();
         tick();
