@@ -1,6 +1,16 @@
 import { Coord } from './coord/Coord';
+import { Encoder } from './encoder';
 
 export class Direction {
+    public static encoder: Encoder<Direction> = new class extends Encoder<Direction> {
+        public readonly maxValue: number = 7;
+        public encode(dir: Direction): number {
+            return dir.toInt();
+        }
+        public decode(encoded: number): Direction {
+            return Direction.fromInt(encoded);
+        }
+    }
     public static readonly UP: Direction = new Direction(0, -1);
 
     public static readonly UP_RIGHT: Direction = new Direction(1, -1);

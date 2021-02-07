@@ -1,7 +1,24 @@
 import { Direction } from '../DIRECTION';
 import { Comparable } from '../../collectionlib/Comparable';
+import { Encoder } from '../encoder';
 
 export class Coord implements Comparable {
+    public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {
+        // TODO: temporary value until we don't encode to numbers anymore, assuming max board size is 20x20
+        private readonly dummyMax: number = 20;
+        public readonly maxValue: number = 20 * 21 + 20;
+        public encode(coord: Coord): number {
+            if (coord.x > this.dummyMax || coord.y > this.dummyMax) {
+                throw new Error('Coord.encoder dummy value is too small!');
+            }
+            return coord.x * (this.dummyMax+1) + coord.y;
+        }
+        public decode(encoded: number): Coord {
+            const y: number = encoded % (this.dummyMax+1);
+            const x: number = (encoded - y) / (this.dummyMax+1);
+            return new Coord(x, y);
+        }
+    }
     public static getBinarised(n: number): -1 | 0 | 1 {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
         if (n < 0) return -1;

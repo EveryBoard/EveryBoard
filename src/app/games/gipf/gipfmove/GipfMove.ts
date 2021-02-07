@@ -5,6 +5,10 @@ import { Encoder } from 'src/app/jscaip/encoder';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
 
+export class GipfBoard {
+    public static RADIUS: number = 3;
+}
+
 export class GipfLine {
     public static fromTwoCoords(coord1: Coord, coord2: Coord): MGPOptional<GipfLine> {
         // Finds the line from the cube coordinates
@@ -22,14 +26,15 @@ export class GipfLine {
 
         return MGPOptional.empty();
     }
-    public static allLines: ReadonlyArray<GipfLine> = [
-        GipfLine.constantQ(-3), GipfLine.constantQ(-2), GipfLine.constantQ(-1), GipfLine.constantQ(-0),
-        GipfLine.constantQ(1), GipfLine.constantQ(2), GipfLine.constantQ(3),
-        GipfLine.constantR(-3), GipfLine.constantR(-2), GipfLine.constantR(-1), GipfLine.constantR(0),
-        GipfLine.constantR(1), GipfLine.constantR(2), GipfLine.constantR(3),
-        GipfLine.constantS(-3), GipfLine.constantS(-2), GipfLine.constantS(-1), GipfLine.constantS(0),
-        GipfLine.constantS(1), GipfLine.constantS(2), GipfLine.constantS(3),
-    ];
+    public static allLines(): ReadonlyArray<GipfLine> {
+        const lines: GipfLine[] = [];
+        for (let i: number = -GipfBoard.RADIUS; i <= GipfBoard.RADIUS; i++) {
+            lines.push(GipfLine.constantQ(i));
+            lines.push(GipfLine.constantR(i));
+            lines.push(GipfLine.constantS(i));
+        }
+        return lines;
+    }
 
     public static constantQ(offset: number): GipfLine {
         return new GipfLine(offset, 'q');
@@ -50,7 +55,6 @@ export class GipfLine {
         const line: GipfLine = lineOpt.get();
 
         for (const coord of coords.slice(2)) {
-            console.log({x: coord.x, y: coord.y});
             if (line.contains(coord) === false) return false;
         }
         return true;
@@ -101,6 +105,18 @@ export class GipfLine {
 }
 
 export class GipfCapture {
+    private static coordsEncoder: Encoder<ReadonlyArray<Coord>> =
+        Encoder.arrayEncoder(Coord.encoder, 6);
+    public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
+        public readonly maxValue: number = GipfCapture.coordsEncoder.maxValue;
+        public encode(capture: GipfCapture): number {
+            return GipfCapture.coordsEncoder.encode(capture.capturedPieces);
+        }
+        public decode(encoded: number): GipfCapture {
+            return new GipfCapture(GipfCapture.coordsEncoder.decode(encoded));
+        }
+    }
+
     public constructor(public readonly capturedPieces: ReadonlyArray<Coord>) {
         if (capturedPieces.length < 4) {
             throw new Error('Cannot create a GipfCapture with less than 4 captured pieces');
@@ -139,6 +155,29 @@ export class GipfCapture {
 }
 
 export class GipfPlacement {
+    public static encoder: Encoder<GipfPlacement> = new class extends Encoder<GipfPlacement> {
+        public readonly maxValue: number = (Coord.encoder.maxValue *
+            Direction.encoder.shift() + Direction.encoder.maxValue) *
+            Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.maxValue;
+        public encode(placement: GipfPlacement): number {
+            // We shift the coord to non-negative values to avoid any encoding issue
+            const shiftedCoord: Coord = new Coord(placement.coord.x + GipfBoard.RADIUS,
+                                                  placement.coord.y + GipfBoard.RADIUS);
+            return (Coord.encoder.encode(shiftedCoord) *
+                Direction.encoder.shift() + Direction.encoder.encode(placement.direction)) *
+                Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(placement.isDouble);
+        }
+        public decode(encoded: number): GipfPlacement {
+            const isDoubleN: number = encoded % Encoder.booleanEncoder.shift();
+            encoded = (encoded - isDoubleN) / Encoder.booleanEncoder.shift();
+            const directionN: number = encoded % Direction.encoder.shift();
+            const coordN: number = (encoded - directionN) / Direction.encoder.shift();
+            const shiftedCoord: Coord = Coord.encoder.decode(coordN);
+            return new GipfPlacement(new Coord(shiftedCoord.x - GipfBoard.RADIUS, shiftedCoord.y - GipfBoard.RADIUS),
+                                     Direction.encoder.decode(directionN),
+                                     Encoder.booleanEncoder.decode(isDoubleN));
+        }
+    }
     public constructor(public readonly coord: Coord,
                        public readonly direction: Direction,
                        public readonly isDouble: boolean) {
@@ -153,12 +192,26 @@ export class GipfPlacement {
 }
 
 export class GipfMove extends Move {
+    private static capturesEncoder: Encoder<ReadonlyArray<GipfCapture>> =
+        Encoder.arrayEncoder(GipfCapture.encoder, 7); // There can be 7 captures at most in one capture round
     public static encoder: Encoder<GipfMove> = new class extends Encoder<GipfMove> {
+        public readonly maxValue: number = (GipfPlacement.encoder.maxValue *
+            GipfMove.capturesEncoder.shift() + GipfMove.capturesEncoder.maxValue) *
+            GipfMove.capturesEncoder.shift() + GipfMove.capturesEncoder.maxValue;
         public encode(move: GipfMove): number {
-            throw new Error('NYI');
+            return (GipfPlacement.encoder.encode(move.placement) *
+                GipfMove.capturesEncoder.shift() + GipfMove.capturesEncoder.encode(move.initialCaptures)) *
+                GipfMove.capturesEncoder.shift() + GipfMove.capturesEncoder.encode(move.finalCaptures);
         }
         public decode(encoded: number): GipfMove {
-            throw new Error('NYI');
+            const finalCapturesN: number = encoded % GipfMove.capturesEncoder.shift();
+            encoded = (encoded - finalCapturesN) / GipfMove.capturesEncoder.shift();
+            const initialCapturesN: number = encoded % GipfMove.capturesEncoder.shift();
+            encoded = (encoded - initialCapturesN) / GipfMove.capturesEncoder.shift();
+            const placementN: number = encoded;
+            return new GipfMove(GipfPlacement.encoder.decode(placementN),
+                                GipfMove.capturesEncoder.decode(initialCapturesN),
+                                GipfMove.capturesEncoder.decode(finalCapturesN));
         }
     }
 

@@ -130,7 +130,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     private getLinePortionsWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player):
     ReadonlyArray<[Coord, Coord, Direction]> {
         const linePortions: [Coord, Coord, Direction][] = [];
-        GipfLine.allLines.forEach((line: GipfLine) => {
+        GipfLine.allLines().forEach((line: GipfLine) => {
             const linePortion: MGPOptional<[Coord, Coord, Direction]> =
                 this.getLinePortionWithFourPiecesOfPlayer(slice, player, line);
             if (linePortion.isPresent()) {

@@ -62,7 +62,7 @@ describe('GipfLine', () => {
 describe('GipfCapture', () => {
     it('should not allow construction of captures smaller than 4', () => {
         const coords: Coord[] = [new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1)];
-        expect(new GipfCapture(coords)).toThrow();
+        expect(() => new GipfCapture(coords)).toThrow();
     });
     describe('size', () => {
         it('should return the size of the capture', () => {
@@ -95,7 +95,7 @@ describe('GipfCapture', () => {
             const capture: GipfCapture = new GipfCapture([
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
             ]);
-            expect(capture.contains(new Coord(-3, 1))).toBeTrue();
+            expect(capture.contains(new Coord(-3, 1))).toBeFalse();
         });
     });
     describe('getLine', () => {
@@ -109,11 +109,13 @@ describe('GipfCapture', () => {
     });
 });
 
-describe('GipfMove', () => {
+fdescribe('GipfMove', () => {
     describe('encoder', () => {
         it('should correctly encode and decode simple moves with only a placement', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), HexaDirection.DOWN, false);
+            console.log({encoded: GipfPlacement.encoder.encode(placement)});
             const move: GipfMove = new GipfMove(placement, [], []);
+            console.log({encoded: GipfMove.encoder.encode(move)});
             expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
         });
         it('should correctly encode and decode double moves with only a placement', () => {
