@@ -7,13 +7,16 @@ import { EpaminondasRules } from 'src/app/games/epaminondas/epaminondas-rules/Ep
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/player/Player';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 
 @Component({
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
 })
-export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
+export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
+                                                                EpaminondasPartSlice,
+                                                                EpaminondasLegalityStatus>
+{
     public NONE: number = Player.NONE.value;
     public rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
 
@@ -332,7 +335,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return this.chooseMove(move, slice, null, null);
     }
     public getPieceStyle(x: number, y: number): any {
-        const fill: string = this.getPlayerColor(this.board[y][x]);
+        const fill: string = this.getPlayerColor(Player.of(this.board[y][x]));
         const stroke: string = this.getPieceStroke(x, y);
         return { fill, stroke };
     }

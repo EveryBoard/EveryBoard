@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { ReversiRules } from '../../../games/reversi/reversi-rules/ReversiRules';
 import { ReversiPartSlice } from '../../../games/reversi/ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/reversi-move/ReversiMove';
@@ -85,7 +85,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         }
     }
     public getPieceStyle(x: number, y: number): any {
-        const fill: string = this.getPlayerColor(this.board[y][x]);
+        const fill: string = this.getPlayerColor(Player.of(this.board[y][x]));
         return { fill };
     }
     public async pass(): Promise<MGPValidation> {

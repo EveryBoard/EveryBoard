@@ -14,8 +14,8 @@ import { Player } from 'src/app/jscaip/player/Player';
  */
 @Component({ template: '' })
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
-    public static readonly PLAYER_ZERO_FILL: string = '#994d00';
-    public static readonly PLAYER_ONE_FILL: string = '#ffc34d';
+    public readonly PLAYER_ZERO_FILL: string = '#994d00';
+    public readonly PLAYER_ONE_FILL: string = '#ffc34d';
     public readonly CAPTURED_FILL: string = 'red';
     public readonly MOVED_FILL: string = 'gray';
     public readonly NORMAL_FILL: string = 'lightgray';
@@ -56,11 +56,11 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public abstract updateBoard(): void;
 
-    public getPlayerColor(player: number): string {
+    public getPlayerColor(player: Player): string {
         switch (player) {
-            case Player.ZERO.value: return AbstractGameComponent.PLAYER_ZERO_FILL;
-            case Player.ONE.value: return AbstractGameComponent.PLAYER_ONE_FILL;
-            case Player.NONE.value: return 'lightgrey';
+            case Player.ZERO: return this.PLAYER_ZERO_FILL;
+            case Player.ONE: return this.PLAYER_ONE_FILL;
+            case Player.NONE: return 'lightgrey';
         }
     }
     public getTurn(): number {
