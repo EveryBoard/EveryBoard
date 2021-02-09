@@ -8,7 +8,8 @@ import { GipfRules } from '../gipfrules/GipfRules';
 
 export class GipfPartSlice extends GamePartSlice {
     public static getInitialSlice(): GipfPartSlice {
-        if (GipfRules.VARIANT === 'basic') {
+        const variant: 'basic' | 'standard' | 'tournament' = 'basic'; // TODO
+        if (variant === 'basic') {
             const __: GipfPiece = GipfPiece.EMPTY;
             const A1: GipfPiece = GipfPiece.PLAYER_ZERO_SIMPLE;
             const B1: GipfPiece = GipfPiece.PLAYER_ONE_SIMPLE;
@@ -25,7 +26,7 @@ export class GipfPartSlice extends GamePartSlice {
             return new GipfPartSlice(board,
                                      0,
                                      [12, 12], [false, false], [0, 0]);
-        } else if (GipfRules.VARIANT === 'standard') {
+        } else if (variant === 'standard') {
             const __: GipfPiece = GipfPiece.EMPTY;
             const A2: GipfPiece = GipfPiece.PLAYER_ZERO_SIMPLE;
             const B2: GipfPiece = GipfPiece.PLAYER_ONE_SIMPLE;
@@ -42,7 +43,7 @@ export class GipfPartSlice extends GamePartSlice {
             return new GipfPartSlice(board,
                                      0,
                                      [12, 12], [false, false], [0, 0]);
-        } else if (GipfRules.VARIANT === 'tournament') {
+        } else if (variant === 'tournament') {
             const __: GipfPiece = GipfPiece.EMPTY;
             const numberedBoard: Table<number> = ArrayUtils.mapBiArray([
                 [__, __, __, __, __, __, __],

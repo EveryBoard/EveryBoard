@@ -30,15 +30,16 @@ export class GipfLine {
         // Finds the line from the cube coordinates
         const q1: number = coord1.x;
         const q2: number = coord2.x;
-        if (q1 === q2) return MGPOptional.of(GipfLine.constantQ(q1));
 
         const r1: number = coord1.y;
         const r2: number = coord2.y;
-        if (r1 === r2) return MGPOptional.of(GipfLine.constantR(r1));
 
         const s1: number = -q1 - r1;
         const s2: number = -q2 - r2;
-        if (s1 === s2) return MGPOptional.of(GipfLine.constantS(s1));
+
+        if (q1 === q2 && r1 !== r2 && s1 !== s2) return MGPOptional.of(GipfLine.constantQ(q1));
+        if (q1 !== q2 && r1 === r2 && s1 !== s2) return MGPOptional.of(GipfLine.constantR(r1));
+        if (q1 !== q2 && r1 !== r2 && s1 === s2) return MGPOptional.of(GipfLine.constantS(s1));
 
         return MGPOptional.empty();
     }
@@ -136,10 +137,12 @@ export class GipfCapture {
     }
 
     public constructor(public readonly capturedPieces: ReadonlyArray<Coord>) {
+        console.log('Constructing capture');
         if (capturedPieces.length < 4) {
             throw new Error('Cannot create a GipfCapture with less than 4 captured pieces');
         }
         if (GipfLine.areOnSameLine(capturedPieces) === false) {
+            capturedPieces.forEach(c => console.log({c}));
             throw new Error('Cannot create a GipfCapture with pieces that are not on the same line');
         }
     }

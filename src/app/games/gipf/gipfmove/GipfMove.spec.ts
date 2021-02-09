@@ -17,6 +17,10 @@ describe('GipfLine', () => {
             const line: MGPOptional<GipfLine> = GipfLine.fromTwoCoords(new Coord(-3, 1), new Coord(-1, 0));
             expect(line.isPresent()).toBeFalse();
         });
+        it('should not create a line if the two coordinates are the same', () => {
+            const line: MGPOptional<GipfLine> = GipfLine.fromTwoCoords(new Coord(-3, 1), new Coord(-3, 1));
+            expect(line.isPresent()).toBeFalse();
+        });
     });
 
     describe('areOnSameLine', () => {
@@ -63,6 +67,16 @@ describe('GipfCapture', () => {
     it('should not allow construction of captures smaller than 4', () => {
         const coords: Coord[] = [new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1)];
         expect(() => new GipfCapture(coords)).toThrow();
+    });
+    it('should not allow construction with pieces not on the same line', () => {
+        const coords: Coord[] = [new Coord(-1, 0), new Coord(0, 1), new Coord(1, 0), new Coord(2, 0)];
+        expect(() => new GipfCapture(coords)).toThrow();
+    });
+    it('should allow construction of valid capture', () => {
+        const coords: Coord[] = [
+            new Coord(-1, 0), new Coord(0, 0), new Coord(1, 0), new Coord(2, 0), new Coord(3, 0),
+        ];
+        expect(() => new GipfCapture(coords)).not.toThrow();
     });
     describe('encoder', () => {
         it('should correctly encode and decode captures of length 4', () => {

@@ -25,10 +25,6 @@ describe('HexaBoard', () => {
         });
     });
 
-    // TODO: fromTable
-    // TODO: isOnBoard
-    // TODO: isOnBorder
-
     describe('getAt', () => {
         it('should fail when accessing coords not on board', () => {
             expect(() => board.getAt(new Coord(10, 5))).toThrow();
@@ -50,6 +46,33 @@ describe('HexaBoard', () => {
                 count += 1;
             });
             expect(count).toEqual(37);
+        });
+    });
+
+    describe('isOnBoard', () => {
+        it('should detect when a coord is on the board', () => {
+            expect(board.isOnBoard(new Coord(0, 0))).toBeTrue();
+            expect(board.isOnBoard(new Coord(3, -3))).toBeTrue();
+            expect(board.isOnBoard(new Coord(-2, -1))).toBeTrue();
+        });
+        it('should detect when a coord is not on the board', () => {
+            expect(board.isOnBoard(new Coord(-4, 0))).toBeFalse();
+            expect(board.isOnBoard(new Coord(0, 4))).toBeFalse();
+            expect(board.isOnBoard(new Coord(3, 3))).toBeFalse();
+            expect(board.isOnBoard(new Coord(10, -10))).toBeFalse();
+        });
+    });
+
+    describe('isOnBorder', () => {
+        it('should detect when a coord is on the border', () => {
+            expect(board.isOnBorder(new Coord(-3, 1))).toBeTrue();
+            expect(board.isOnBorder(new Coord(0, -3))).toBeTrue();
+            expect(board.isOnBorder(new Coord(-2, -1))).toBeTrue();
+        });
+        it('should detect when a coord is not on the border', () => {
+            expect(board.isOnBorder(new Coord(-2, 0))).toBeFalse();
+            expect(board.isOnBorder(new Coord(0, 0))).toBeFalse();
+            expect(board.isOnBorder(new Coord(2, -2))).toBeFalse();
         });
     });
 

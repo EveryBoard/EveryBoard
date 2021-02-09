@@ -18,7 +18,7 @@ import { GipfLegalityStatus } from '../gipflegalitystatus/GipfLegalityStatus';
 export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfPartSlice, LegalityStatus> {}
 
 export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus> {
-    public static VARIANT: 'basic' | 'standard' | 'tournament' = 'basic';
+    public variant: 'basic' | 'standard' | 'tournament' = 'basic';
 
     public applyLegalMove(move: GipfMove, slice: GipfPartSlice, status: GipfLegalityStatus):
       { resultingMove: GipfMove; resultingSlice: GipfPartSlice; } {
@@ -60,14 +60,19 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             // No more pieces to play, player loses
             return MGPOptional.empty();
         }
-        const doublePieces: number = slice.getDoublePiecesOnBoard(player);
-        const eachPlayerHasPlacedOnePiece: boolean = slice.turn > 1;
-        if (eachPlayerHasPlacedOnePiece && doublePieces === 0) {
-            // No more double pieces on board, player loses
-            return MGPOptional.empty();
-        }
         const captured: number = slice.getNumberOfPiecesCaptured(player);
-        return MGPOptional.of(doublePieces * 10 + piecesToPlay + captured * 3);
+        if (this.variant === 'standard' || this.variant === 'tournament') {
+            const doublePieces: number = slice.getDoublePiecesOnBoard(player);
+            const eachPlayerHasPlacedOnePiece: boolean = slice.turn > 1;
+            if (eachPlayerHasPlacedOnePiece && doublePieces === 0) {
+                // No more double pieces on board, player loses
+                return MGPOptional.empty();
+            } else {
+                return MGPOptional.of(doublePieces * 10 + piecesToPlay + captured * 3);
+            }
+        } else {
+            return MGPOptional.of(piecesToPlay + captured * 3);
+        }
     }
 
     public getListMoves(node: GipfNode): MGPMap<GipfMove, GipfPartSlice> {
@@ -119,7 +124,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
                     captures.forEach((capture: Coord[]) => {
                         newCaptures.push([...capture, coord]);
                         if (slice.hexaBoard.getAt(coord).isDouble) {
-                            // Double pieces may stay on the board
+                            // Double pieces may stay on the board (standard and tournament variants)
                             newCaptures.push(capture);
                         }
                     });
@@ -145,8 +150,8 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const coord: Coord = line.getEntrance();
         const dir: Direction = line.getDirection();
         let start: Coord = coord;
-        for (let cur: Coord = coord; slice.hexaBoard.isOnBoard(coord); cur = cur.getNext(dir)) {
-            if (slice.hexaBoard.getAt(coord).player === player) {
+        for (let cur: Coord = coord; slice.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
+            if (slice.hexaBoard.getAt(cur).player === player) {
                 if (consecutives === 0) {
                     start = cur;
                 }
@@ -167,7 +172,8 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const end: Coord = linePortion[1];
         const dir: Direction = linePortion[2];
         const oppositeDir: Direction = dir.getOpposite();
-        for (let cur: Coord = start;
+        console.log({dir, oppositeDir});
+        for (let cur: Coord = start.getNext(oppositeDir);
             slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY;
             cur = cur.getNext(oppositeDir)) {
             // Go backwards to identify capturable pieces before the 4 aligned pieces
@@ -210,7 +216,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             this.getAllDirectionsForEntrance(slice, entrance).forEach((dir: Direction) => {
                 if (this.isLineComplete(slice, entrance, dir) === false) {
                     placements.push(new GipfPlacement(entrance, dir, false));
-                    if (slice.playerCanStillPlaceDouble(player)) {
+                    if (this.variant === 'tournament' && slice.playerCanStillPlaceDouble(player)) {
                         placements.push(new GipfPlacement(entrance, dir, false));
                     }
                 }
@@ -289,7 +295,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const sliceAfterInitialCaptures: GipfPartSlice = this.applyCaptures(slice, move.initialCaptures, player);
 
         const noMoreCaptureAfterInitialValidity: MGPValidation = this.noMoreCapturesValidity(slice, player);
-        if (true || noMoreCaptureAfterInitialValidity.isFailure()) {
+        if (noMoreCaptureAfterInitialValidity.isFailure()) {
             return { legal: noMoreCaptureAfterInitialValidity };
         }
 
@@ -306,12 +312,14 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         if (finalCapturesValidity.isFailure()) {
             return { legal: finalCapturesValidity };
         }
+
         const sliceAfterFinalCaptures: GipfPartSlice =
             this.applyCaptures(sliceAfterPlacement, move.finalCaptures, player);
 
-        const noMoreCaptureAfterFinalValidity: MGPValidation = this.noMoreCapturesValidity(sliceAfterFinalCaptures, player);
+        const noMoreCaptureAfterFinalValidity: MGPValidation =
+            this.noMoreCapturesValidity(sliceAfterFinalCaptures, player);
         if (noMoreCaptureAfterFinalValidity.isFailure()) {
-            return { legal: noMoreCaptureAfterInitialValidity };
+            return { legal: noMoreCaptureAfterFinalValidity };
         }
 
         return { legal: MGPValidation.SUCCESS, computedSlice: sliceAfterFinalCaptures };
