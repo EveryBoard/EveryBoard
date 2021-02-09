@@ -56,8 +56,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                 private gameService: GameService,
                 private authenticationService: AuthenticationService) {
     }
-    public ngOnInit() {
-        display(ServerPageComponent.VERBOSE, "serverPageComponent.ngOnInit");
+    public ngOnInit(): void {
+        display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
         this.userNameSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur) => {
                 if (joueur == null) this.userName = null;
@@ -72,16 +72,19 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                 this.activesUsers = activesUsers;
             });
     }
-    public joinGame(partId: string, typeGame: string) {
+    public joinGame(partId: string, typeGame: string): void {
         this.router.navigate(['/play/' + typeGame, partId]);
     }
     public isUserLogged(): boolean {
         return this.authenticationService.isUserLogged();
     }
-    public playLocally() {
+    public playLocally(): void {
         this.router.navigate(['local/' + this.selectedGame]);
     }
-    public messageInfo(msg: string) {
+    public startTutorial(): void {
+        this.router.navigate(['didacticial/' + this.selectedGame]);
+    }
+    public messageInfo(msg: string): void {
         // TODO: generalise this calculation method (sorry, it's out of sprint scope)
         // 200 word by minute is the average reading speed, so:
         // const words: number = StringUtils.count(" ") + 1;
@@ -89,10 +92,10 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         // const toastTime: number = Math.max(readingTime, 3000); // so at least 3 sec the toast is there
         this.snackBar.open(msg, 'Ok!', { duration: 3000 });
     }
-    public messageError(msg: string) {
+    public messageError(msg: string): void {
         this.snackBar.open(msg, 'Ok!', { duration: 3000 });
     }
-    public async createGame() {
+    public async createGame(): Promise<void> {
         if (this.canCreateGame()) {
             const gameId: string = await this.gameService.createGame(this.userName, this.selectedGame, '');
             // create Part and Joiner
@@ -105,8 +108,8 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         if (!this.isUserLogged()) {
             return false;
         }
-        let i = 0;
-        let found = false;
+        let i: number = 0;
+        let found: boolean = false;
         let playerZero: string;
         let playerOne: string;
         while ((i < this.activesParts.length) && (!found)) {
@@ -116,7 +119,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         }
         return !found;
     }
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
         if (this.userNameSub) {
             this.userNameSub.unsubscribe();

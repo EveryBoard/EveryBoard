@@ -27,7 +27,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         router: Router,
         userService: UserService,
         authenticationService: AuthenticationService,
-                public cdr: ChangeDetectorRef) {
+        public cdr: ChangeDetectorRef)
+    {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }

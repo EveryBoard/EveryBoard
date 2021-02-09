@@ -7,6 +7,7 @@ import { LocalGameWrapperComponent }
 import { GamePartSlice } from '../jscaip/GamePartSlice';
 import { LegalityStatus } from '../jscaip/LegalityStatus';
 import { Move } from '../jscaip/Move';
+import { DidacticialGameWrapperComponent } from '../components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
 
 export interface MoveExpectations {
 
@@ -20,7 +21,7 @@ export interface MoveExpectations {
 }
 export interface TestElements {
 
-    fixture: ComponentFixture<LocalGameWrapperComponent>,
+    fixture: ComponentFixture<LocalGameWrapperComponent | DidacticialGameWrapperComponent>,
 
     debugElement: DebugElement,
 
