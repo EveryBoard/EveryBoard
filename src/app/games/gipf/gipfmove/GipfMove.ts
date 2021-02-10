@@ -137,12 +137,10 @@ export class GipfCapture {
     }
 
     public constructor(public readonly capturedPieces: ReadonlyArray<Coord>) {
-        console.log('Constructing capture');
         if (capturedPieces.length < 4) {
             throw new Error('Cannot create a GipfCapture with less than 4 captured pieces');
         }
         if (GipfLine.areOnSameLine(capturedPieces) === false) {
-            capturedPieces.forEach(c => console.log({c}));
             throw new Error('Cannot create a GipfCapture with pieces that are not on the same line');
         }
     }

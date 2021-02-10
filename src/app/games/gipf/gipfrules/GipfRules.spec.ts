@@ -134,7 +134,7 @@ describe('GipfRules:', () => {
                                                     [capture],
                                                     []);
                 const legality: GipfLegalityStatus = rules.isLegal(move, slice);
-                expect(legality.legal.isSuccess()).toBeFalse();
+                expect(legality.legal.isSuccess()).toBeTrue();
             }
         });
         it('should force to capture when possible', () => {

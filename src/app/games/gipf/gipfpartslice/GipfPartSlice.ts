@@ -4,7 +4,6 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { Player } from 'src/app/jscaip/player/Player';
 import { GipfPiece } from '../gipfpiece/GipfPiece';
-import { GipfRules } from '../gipfrules/GipfRules';
 
 export class GipfPartSlice extends GamePartSlice {
     public static getInitialSlice(): GipfPartSlice {
