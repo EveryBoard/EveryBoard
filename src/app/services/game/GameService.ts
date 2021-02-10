@@ -11,9 +11,9 @@ import { ActivesPartsService } from '../actives-parts/ActivesPartsService';
 import { ChatService } from '../chat/ChatService';
 import { IChat } from '../../domain/ichat';
 import { IMGPRequest, RequestCode } from '../../domain/request';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable({
     providedIn: 'root',
@@ -107,6 +107,34 @@ export class GameService {
         const modification = {
             playerZero: firstPlayer,
             playerOne: secondPlayer,
+            turn: 0,
+            beginning: Date.now(),
+        };
+        return this.partDao.update(partId, modification);
+    }
+    private FUTURE_startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
+        display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
+
+        let whoStart: 'RANDOM' | 'CREATOR' | 'CHOSEN_PLAYER' = joiner['whoStart'];
+        if (whoStart === 'RANDOM') {
+            if (Math.random() < 0.5) {
+                whoStart = 'CREATOR';
+            } else {
+                whoStart = 'CHOSEN_PLAYER';
+            }
+        }
+        let playerZero: string;
+        let playerOne: string;
+        if (whoStart === 'CREATOR') {
+            playerZero = joiner.creator;
+            playerOne = joiner.chosenPlayer;
+        } else {
+            playerZero = joiner.creator;
+            playerOne = joiner.chosenPlayer;
+        }
+        const modification = {
+            playerZero,
+            playerOne,
             turn: 0,
             beginning: Date.now(),
         };

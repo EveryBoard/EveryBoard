@@ -8,8 +8,8 @@ import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSl
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { display } from 'src/app/collectionlib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-quixo',
@@ -80,8 +80,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
             return MGPValidation.SUCCESS;
         }
     }
-    public getPossiblesDirections(): any[][] {
-        const infos: any[][] = [];
+    public getPossiblesDirections(): [number, number, string][] {
+        const infos: [number, number, string][] = [];
         if (this.chosenCoord.x !== 4) infos.push([2, 1, 'RIGHT']);
         if (this.chosenCoord.x !== 0) infos.push([0, 1, 'LEFT']);
         if (this.chosenCoord.y !== 4) infos.push([1, 2, 'DOWN']);

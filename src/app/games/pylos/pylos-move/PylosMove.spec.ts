@@ -1,4 +1,4 @@
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { PylosCoord } from '../pylos-coord/PylosCoord';
 import { PylosMove } from './PylosMove';
 
@@ -62,18 +62,11 @@ describe('PylosMove', () => {
     it('Should override equals correctly', () => {
         const badCoord: PylosCoord = new PylosCoord(1, 1, 1);
         const move: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, highCoord]);
-        const android: Object = {
-            startingCoord: MGPOptional.of(coord),
-            landingCoord: highCoord,
-            firstCapture: MGPOptional.of(coord),
-            secondCapture: MGPOptional.of(highCoord),
-        };
         const otherMove1: PylosMove = PylosMove.fromClimb(badCoord, highCoord, [coord, highCoord]);
         const otherMove2: PylosMove = PylosMove.fromClimb(coord, badCoord, [coord, highCoord]);
         const otherMove3: PylosMove = PylosMove.fromClimb(coord, highCoord, [badCoord, highCoord]);
         const otherMove4: PylosMove = PylosMove.fromClimb(coord, highCoord, [coord, badCoord]);
         expect(move.equals(move)).toBeTrue();
-        expect(move.equals(android)).toBeFalse();
         expect(move.equals(otherMove1)).toBeFalse();
         expect(move.equals(otherMove2)).toBeFalse();
         expect(move.equals(otherMove3)).toBeFalse();

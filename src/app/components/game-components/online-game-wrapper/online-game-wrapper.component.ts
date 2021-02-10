@@ -18,7 +18,7 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/player/Player';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-game-wrapper',
@@ -391,12 +391,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             this.observerRole = 2;
         }
         if (opponentName !== '') {
-            const onDocumentCreated: (foundUser: IJoueurId[]) => void =
-                (foundUser: IJoueurId[]) => {
+            const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUser: IJoueurId[]) => {
                     this.opponent = foundUser[0];
-                };
+            };
             const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
-                throw new Error('OnlineGameWrapper: Opponent was modified, what sorcery is this: ' + JSON.stringify(modifiedUsers));
+                console.log({ modifiedUsers })
+                this.opponent = modifiedUsers[0];
             };
             const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
                 throw new Error('OnlineGameWrapper: Opponent was deleted, what sorcery is this: ' + JSON.stringify(deletedUsers));

@@ -1,9 +1,9 @@
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { MGPStr } from 'src/app/collectionlib/mgpstr/MGPStr';
-import { ObservableSubject } from 'src/app/collectionlib/ObservableSubject';
-import { FirebaseFirestoreDAOMock } from '../firebasefirestoredao/FirebaseFirestoreDAOMock';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
+import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
+import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock';
 import { IChat, PIChat, IChatId } from 'src/app/domain/ichat';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 type ChatOS = ObservableSubject<IChatId>
 

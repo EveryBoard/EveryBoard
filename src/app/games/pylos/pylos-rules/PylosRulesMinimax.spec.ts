@@ -1,4 +1,4 @@
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { PylosCoord } from '../pylos-coord/PylosCoord';
 import { PylosMove } from '../pylos-move/PylosMove';

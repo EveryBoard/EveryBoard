@@ -10,9 +10,9 @@ import { AppModule } from 'src/app/app.module';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { ReversiRules } from 'src/app/games/reversi/reversirules/ReversiRules';
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { ReversiMove } from 'src/app/games/reversi/reversimove/ReversiMove';
+import { ReversiRules } from 'src/app/games/reversi/reversi-rules/ReversiRules';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { ReversiMove } from 'src/app/games/reversi/reversi-move/ReversiMove';
 import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
 
 const activatedRouteStub = {

@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { P4PartSlice } from '../../../games/p4/P4PartSlice';
-import { P4Rules } from '../../../games/p4/p4rules/P4Rules';
+import { P4Rules } from '../../../games/p4/p4-rules/P4Rules';
 import { Move } from '../../../jscaip/Move';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 
 @Component({
@@ -25,6 +25,9 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
     public async onClick(x: number): Promise<MGPValidation> {
         const chosenMove = P4Move.of(x);
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+    }
+    public cancelMove(reason?: string): void {
+        // Empty because not needed.
     }
     public updateBoard() {
         const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;

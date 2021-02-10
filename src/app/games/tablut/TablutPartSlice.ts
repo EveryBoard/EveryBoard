@@ -1,11 +1,11 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
-import { TablutCase } from './tablutrules/TablutCase';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { TablutCase } from './tablut-rules/TablutCase';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class TablutPartSlice extends GamePartSlice {
     // Statics Fields:
 
-    public static INVADER_START = true;
+    public static INVADER_START: boolean = true;
 
     // Statics Methods :
 
@@ -35,8 +35,5 @@ export class TablutPartSlice extends GamePartSlice {
         // the other side
 
         return new TablutPartSlice(board, 0);
-    }
-    constructor(b: number[][], turn: number) {
-        super(b, turn);
     }
 }

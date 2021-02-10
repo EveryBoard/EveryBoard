@@ -1,6 +1,6 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { SiamPiece } from './siampiece/SiamPiece';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { SiamPiece } from './siam-piece/SiamPiece';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class SiamPartSlice extends GamePartSlice {
     public static getInitialSlice(): SiamPartSlice {

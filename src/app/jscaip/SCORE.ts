@@ -1,16 +1,16 @@
 export enum SCORE {
 
-    VICTORY,
-    /* VICTORY is the status of a game that is finished (independent of the turn);
-     *   so a board with a ownValue of VICTORY mean that the game is finished
+    VICTORY = 'VICTORY',
+    /* VICTORY is the status of a game that is won (independent of the turn);
+     *     so a GamePartSlice with ownValue of MAX_SAFE_INTEGER or MIN_SAFE_INTEGER
      */
 
-    PRE_VICTORY,
-    /* PRE_VICTORY pre - victory is the status of a game where the actual player could win this turn (turn dependant)
+    PRE_VICTORY = 'PRE_VICTORY',
+    /* PRE_VICTORYis the status of a game where the actual player could win this turn (turn dependant)
      *   so if a human don't see it the game aint over, but the AI will surely see it
      */
 
-    DEFAULT
+    DEFAULT = 'DEFAULT'
     // In all other case
 
 }

@@ -1,9 +1,9 @@
-import { FirebaseFirestoreDAO } from '../firebasefirestoredao/FirebaseFirestoreDAO';
+import { FirebaseFirestoreDAO } from '../firebase-firestore-dao/FirebaseFirestoreDAO';
 import { IJoiner, PIJoiner } from '../../domain/ijoiner';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable({
     providedIn: 'root',

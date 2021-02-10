@@ -3,7 +3,7 @@ import { BehaviorSubject } from 'rxjs';
 import { IJoueurId, IJoueur } from '../../domain/iuser';
 import { JoueursDAO } from '../../dao/joueurs/JoueursDAO';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable({
     providedIn: 'root',

@@ -6,7 +6,7 @@ import { Router } from '@angular/router';
 import { GameService } from '../../../services/game/GameService';
 import { JoinerService } from '../../../services/joiner/JoinerService';
 import { ChatService } from '../../../services/chat/ChatService';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-part-creation',
@@ -122,7 +122,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return iJoinerId && iJoinerId.doc && (iJoinerId.doc.partStatus === 3);
     }
     private onGameStarted(iJoinerId: IJoinerId) {
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameStarted(' + JSON.stringify(iJoinerId) + ')');
+        display(PartCreationComponent.VERBOSE, { partCreationComponent_onGameStarted: { iJoinerId }});
 
         this.gameStartNotification.emit(iJoinerId.doc);
         this.gameStarted = true;

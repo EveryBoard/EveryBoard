@@ -12,9 +12,9 @@ import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrap
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { SiamComponent } from './siam.component';
-import { SiamMove } from 'src/app/games/siam/siammove/SiamMove';
+import { SiamMove } from 'src/app/games/siam/siam-move/SiamMove';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 
 const activatedRouteStub = {

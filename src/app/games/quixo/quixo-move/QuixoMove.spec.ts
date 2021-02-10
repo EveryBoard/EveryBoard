@@ -1,7 +1,7 @@
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { QuixoPartSlice } from '../quixo-part-slice/QuixoPartSlice';
 import { QuixoNode, QuixoRules } from '../quixo-rules/QuixoRules';
@@ -55,15 +55,10 @@ describe('QuixoMove:', () => {
     });
     it('Should override correctly equals and toString', () => {
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
-        const android: Object = {
-            coord: new Coord(0, 0),
-            direction: Orthogonal.RIGHT,
-        };
         const neighboor: QuixoMove = new QuixoMove(0, 1, Orthogonal.RIGHT);
         const twin: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
         const cousin: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         expect(move.equals(move)).toBeTrue();
-        expect(move.equals(android)).toBeFalse();
         expect(move.equals(neighboor)).toBeFalse();
         expect(move.equals(cousin)).toBeFalse();
         expect(move.equals(twin)).toBeTrue();

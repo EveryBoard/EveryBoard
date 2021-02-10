@@ -1,6 +1,6 @@
 import { IJoinerId } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 export class JoinerServiceMock {
     public static VERBOSE = false;

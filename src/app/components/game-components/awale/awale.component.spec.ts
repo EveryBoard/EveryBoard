@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 
 import { AwaleComponent } from './awale.component';
-import { AwaleMove } from 'src/app/games/awale/awalemove/AwaleMove';
+import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
 import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
@@ -11,7 +11,7 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { of } from 'rxjs';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 
 const activatedRouteStub = {

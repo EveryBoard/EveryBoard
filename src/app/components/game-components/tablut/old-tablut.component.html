@@ -1,0 +1,26 @@
+<table>
+    <tr *ngFor="let line of board; index as y;">
+        <td *ngFor="let caseContent of line; index as x;"
+            style="position:relative;"
+            id="click_{{x}}_{{y}}"
+            (click)="onClick(x, y);">
+            <img
+                *ngIf="(arriving.x===x && arriving.y===y) || (chosen.x===x && chosen.y===y) || (moving.x===x && moving.y===y)"
+                width="50" height="50"
+                id="{{'t'+y+x}}"
+                alt="highlighted"
+                [src]="imagesLocation+'highlight.svg'"
+                style="position:absolute; top:0; left:0;"/>
+            <img *ngIf="caseContent !== UNOCCUPIED || !isThrone(x, y)"
+                 width="50" height="50"
+                 id="{{'u'+y+x}}"
+                 alt=":{{ caseContent }}:"
+                 [src]="imagesLocation+'tablut/'+imagesNames[caseContent]"/>
+            <img *ngIf="caseContent === UNOCCUPIED && isThrone(x, y)"
+                 width="50" height="50"
+                 id="{{'v'+y+x}}"
+                 alt=": unoccupied case"
+                 [src]="imagesLocation+'tablut/thrones.svg'" />
+        </td>
+    </tr>
+</table>

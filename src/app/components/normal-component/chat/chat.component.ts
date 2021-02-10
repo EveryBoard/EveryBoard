@@ -3,7 +3,7 @@ import { ChatService } from '../../../services/chat/ChatService';
 import { IMessage } from '../../../domain/imessage';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { IChatId } from 'src/app/domain/ichat';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-chat',

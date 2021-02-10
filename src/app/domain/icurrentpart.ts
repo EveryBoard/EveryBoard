@@ -1,5 +1,5 @@
 import { IMGPRequest } from './request';
-import { ArrayUtils } from '../collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils } from '../utils/collection-lib/array-utils/ArrayUtils';
 
 export interface ICurrentPart {
 

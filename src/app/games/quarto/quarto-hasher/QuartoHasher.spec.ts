@@ -1,31 +1,15 @@
-import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
-import { QuartoEnum } from '../QuartoEnum';
+import { QuartoPiece } from '../QuartoPiece';
 import { CoordDir, QuartoHasher, QuartoHashInfo } from './QuartoHasher';
 
 xdescribe('QuartoHasher', () => {
-    const _: number = QuartoEnum.UNOCCUPIED;
-    const A: number = QuartoEnum.AAAA;
-    const B: number = QuartoEnum.AAAB;
-    const C: number = QuartoEnum.AABA;
-    const D: number = QuartoEnum.AABB;
-
-    const E: number = QuartoEnum.ABAA;
-    const F: number = QuartoEnum.ABAB;
-    const G: number = QuartoEnum.ABBA;
-    const H: number = QuartoEnum.ABBB;
-
-    const I: number = QuartoEnum.BAAA;
-    const J: number = QuartoEnum.BAAB;
-    const K: number = QuartoEnum.BABA;
-    const L: number = QuartoEnum.BABB;
-
-    const M: number = QuartoEnum.BBAA;
-    const N: number = QuartoEnum.BBAB;
-    const O: number = QuartoEnum.BBBA;
-    const P: number = QuartoEnum.BBBB;
+    const NULL: number = QuartoPiece.NONE.value;
+    const AAAA: number = QuartoPiece.AAAA.value;
+    const AAAB: number = QuartoPiece.AAAB.value;
+    const BBBB: number = QuartoPiece.BBBB.value;
 
     it('should get the correct Coord', () => {
         const coordDir: CoordDir = { coord: new Coord(3, 3), dir: Orthogonal.UP };
@@ -33,40 +17,51 @@ xdescribe('QuartoHasher', () => {
         expect(QuartoHasher.get(coordDir, 4)).toEqual(new Coord(2, 3));
     });
     it('should match piece correctly', () => {
-        expect(QuartoHasher.matchPieceTo(QuartoEnum.BBBB, QuartoEnum.BBBB)).toBe(QuartoEnum.AAAA);
-        expect(QuartoHasher.matchPieceTo(QuartoEnum.BBAA, QuartoEnum.BBBB)).toBe(QuartoEnum.AABB);
-        expect(QuartoHasher.matchPieceTo(QuartoEnum.BBAA, QuartoEnum.AABB)).toBe(QuartoEnum.BBBB);
+        expect(QuartoHasher.matchPieceTo(QuartoPiece.BBBB, QuartoPiece.BBBB)).toBe(QuartoPiece.AAAA);
+        expect(QuartoHasher.matchPieceTo(QuartoPiece.BBAA, QuartoPiece.BBBB)).toBe(QuartoPiece.AABB);
+        expect(QuartoHasher.matchPieceTo(QuartoPiece.BBAA, QuartoPiece.AABB)).toBe(QuartoPiece.BBBB);
     });
     it('should filter correctly with only one corner occupied', () => {
         const board: NumberTable = [
-            [_, _, _, A],
-            [_, _, _, _],
-            [_, _, _, _],
-            [_, _, _, _],
+            [NULL, NULL, NULL, AAAA],
+            [NULL, NULL, NULL, NULL],
+            [NULL, NULL, NULL, NULL],
+            [NULL, NULL, NULL, NULL],
         ];
-        const remainingCoordDirs: QuartoHashInfo = QuartoHasher.filterSubLevel(board, 0, MGPOptional.empty(), QuartoHasher.coordDirs);
-        expect(remainingCoordDirs).toEqual({
-            coordDirs: [
-                { coord: new Coord(3, 0), dir: Orthogonal.LEFT },
-                { coord: new Coord(3, 0), dir: Orthogonal.DOWN },
-            ],
-            firstPiece: MGPOptional.of(A),
+        const quartoHasherInfos: QuartoHashInfo[] = QuartoHasher.coordDirs.map((coordDir: CoordDir) => {
+            return {
+                coordDir,
+                firstPiece: MGPOptional.empty()
+            };
         });
+        const remainingQuartoHashInfos: QuartoHashInfo[] = QuartoHasher.filterSubLevel(board, 0, quartoHasherInfos);
+        expect(remainingQuartoHashInfos).toEqual([{
+            coordDir: { coord: new Coord(3, 0), dir: Orthogonal.LEFT },
+            firstPiece: MGPOptional.of(QuartoPiece.AAAA),
+        }, {
+            coordDir: { coord: new Coord(3, 0), dir: Orthogonal.DOWN },
+            firstPiece: MGPOptional.of(QuartoPiece.AAAA),
+        }]);
     });
     it('should filter correctly with only one corner occupied and one adjacent ridge', () => {
         const board: NumberTable = [
-            [_, _, _, P],
-            [_, _, _, B],
-            [_, _, _, _],
-            [_, _, _, _],
+            [NULL, NULL, NULL, AAAA],
+            [NULL, NULL, NULL, AAAB],
+            [NULL, NULL, NULL, NULL],
+            [NULL, NULL, NULL, NULL],
         ];
-        const remainingCoordDirs: QuartoHashInfo = QuartoHasher.filterSubLevel(board, 1, MGPOptional.empty(), QuartoHasher.coordDirs);
-        expect(remainingCoordDirs).toEqual({
-            coordDirs: [
-                { coord: new Coord(3, 0), dir: Orthogonal.LEFT },
-                { coord: new Coord(3, 0), dir: Orthogonal.DOWN },
-            ],
-            firstPiece: MGPOptional.of(A),
+        const quartoHasherInfos: QuartoHashInfo[] = QuartoHasher.coordDirs.map((coordDir: CoordDir) => {
+            return {
+                coordDir,
+                firstPiece: MGPOptional.empty()
+            };
         });
+        const remainingQuartoHashInfos: QuartoHashInfo[] = QuartoHasher.filterSubLevel(board, 1, quartoHasherInfos);
+        expect(remainingQuartoHashInfos).toEqual([
+            {
+                coordDir: { coord: new Coord(3, 0), dir: Orthogonal.DOWN },
+                firstPiece: MGPOptional.of(QuartoPiece.AAAA)
+            }
+        ]);
     });
 });

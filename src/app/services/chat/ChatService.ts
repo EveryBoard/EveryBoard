@@ -3,7 +3,7 @@ import { Observable, Subscription } from 'rxjs';
 import { IChat, IChatId } from '../../domain/ichat';
 import { ChatDAO } from '../../dao/chat/ChatDAO';
 import { IMessage } from '../../domain/imessage';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 @Injectable({
     providedIn: 'root',

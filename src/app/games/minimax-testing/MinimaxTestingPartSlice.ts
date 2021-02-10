@@ -1,6 +1,6 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { ArrayUtils, NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class MinimaxTestingPartSlice extends GamePartSlice {
     public static readonly BOARD_0: NumberTable = [ // le premier joueur gagne, même minimax avec depth=1

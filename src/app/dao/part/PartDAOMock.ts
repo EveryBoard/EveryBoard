@@ -1,10 +1,10 @@
 import { ICurrentPart, PICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { FirebaseFirestoreDAOMock } from '../firebasefirestoredao/FirebaseFirestoreDAOMock';
-import { MGPStr } from 'src/app/collectionlib/mgpstr/MGPStr';
-import { ObservableSubject } from 'src/app/collectionlib/ObservableSubject';
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
+import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock';
+import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
+import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
-import { display } from 'src/app/collectionlib/utils';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 type PartOS = ObservableSubject<ICurrentPartId>
 

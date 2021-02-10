@@ -1,4 +1,4 @@
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 
@@ -51,13 +51,12 @@ export class PylosCoord extends Coord {
     public toShortString(): string {
         return '(' + this.x + ', ' + this.y + ', ' + this.z + ')';
     }
-    public equals(obj: any): boolean {
+    public equals(obj: PylosCoord): boolean {
         if (this === obj) return true;
-        if (!(obj instanceof PylosCoord)) return false;
+        if (obj == null) return false;
         if (obj.x !== this.x) return false;
         if (obj.y !== this.y) return false;
-        if (obj.z !== this.z) return false;
-        return true;
+        return obj.z === this.z;
     }
     public isUpperThan(p: PylosCoord): boolean {
         return this.z > p.z;

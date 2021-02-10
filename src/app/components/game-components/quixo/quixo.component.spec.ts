@@ -15,7 +15,7 @@ import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GameComponentUtils } from '../GameComponentUtils';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 const activatedRouteStub = {
     snapshot: {
@@ -83,7 +83,7 @@ describe('QuixoComponent', () => {
         expect(gameComponent.getPieceStyle(4, 4)).toEqual({ fill: 'lightgrey', stroke: 'orange' });
     });
     it('should give correct direction', () => {
-        let possibleDirections: any[][];
+        let possibleDirections: [number, number, string][];
 
         gameComponent.onBoardClick(0, 0);
         possibleDirections = gameComponent.getPossiblesDirections();

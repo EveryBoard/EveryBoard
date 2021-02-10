@@ -1,9 +1,9 @@
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
-import { MGPMap } from '../collectionlib/mgpmap/MGPMap';
+import { MGPMap } from '../utils/mgp-map/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
-import { display } from '../collectionlib/utils';
+import { display } from '../utils/collection-lib/utils';
 import { Type } from '@angular/core';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
@@ -29,12 +29,12 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
      * so that the AI can know what is best, according to you algorithm in there
      */
 
-    public readonly choose = (move: M): boolean => {
+    public readonly choose: (move: M) => boolean = (move: M): boolean => {
         /* used by the rules to update board
          * return true if the move was legal, and the node updated
          * return false otherwise
          */
-        const LOCAL_VERBOSE = false;
+        const LOCAL_VERBOSE: boolean = false;
         display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
@@ -65,20 +65,29 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
     };
     public abstract applyLegalMove(move: M, slice: S, status: L): {resultingMove: M, resultingSlice: S};
 
-    public abstract isLegal(move: M, slice: S): L;
+    public abstract isLegal(move: M, slice: S): L; // TODO: rename, isBlbl should return a boolean
     /* return a legality status about the move, allowing to return already calculated info
      * don't do any modification to the board
      */
-    public setInitialBoard() {
+    public setInitialBoard(): void {
         if (this.node == null) {
-            if (this.sliceType['getInitialSlice']) {
-                const initialSlice: S = this.sliceType['getInitialSlice']();
-                this.node = MGPNode.getFirstNode(initialSlice, this);
-            } else {
-                throw new Error('Should implement static method getInitialSlice on ' + this.sliceType.name + '.');
-            }
+            const initialSlice: S = this.sliceType['getInitialSlice']();
+            this.node = MGPNode.getFirstNode(initialSlice, this);
         } else {
             this.node = this.node.getInitialNode();
         }
+    }
+    public applyMoves(encodedMoves: number[], slice: S, moveDecoder: (em: number) => M): S {
+        let i: number = 0;
+        for (const encodedMove of encodedMoves) {
+            const move: M = moveDecoder(encodedMove);
+            const status: L = this.isLegal(move, slice);
+            if (status.legal.isFailure()) {
+                throw new Error('Can\'t create slice from invalid moves (' + i + '): ' + status.legal.reason + '.');
+            }
+            slice = this.applyLegalMove(move, slice, status).resultingSlice;
+            i++;
+        }
+        return slice;
     }
 }

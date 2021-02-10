@@ -1,5 +1,5 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
-import { ArrayUtils } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class AwalePartSlice extends GamePartSlice {
     constructor(b: number[][], turn: number, public readonly captured: ReadonlyArray<number>) {

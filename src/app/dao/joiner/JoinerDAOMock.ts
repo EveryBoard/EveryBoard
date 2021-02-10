@@ -1,9 +1,9 @@
 import { IJoinerId, IJoiner, PIJoiner } from 'src/app/domain/ijoiner';
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { MGPStr } from 'src/app/collectionlib/mgpstr/MGPStr';
-import { ObservableSubject } from 'src/app/collectionlib/ObservableSubject';
-import { FirebaseFirestoreDAOMock } from '../firebasefirestoredao/FirebaseFirestoreDAOMock';
-import { display } from 'src/app/collectionlib/utils';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
+import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
+import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 type JoinerOS = ObservableSubject<IJoinerId>
 

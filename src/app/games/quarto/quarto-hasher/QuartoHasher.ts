@@ -1,16 +1,16 @@
-import { NumberTable } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
-import { QuartoEnum } from '../QuartoEnum';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { QuartoPiece } from '../QuartoPiece';
 
 export interface CoordDir {
     readonly coord: Coord,
     readonly dir: Orthogonal
 }
 export interface QuartoHashInfo {
-    readonly coordDirs: ReadonlyArray<CoordDir>,
-    readonly firstPiece: MGPOptional<QuartoEnum>
+    readonly coordDir: CoordDir,
+    readonly firstPiece: MGPOptional<QuartoPiece>
 }
 export class QuartoHasher {
     public static readonly coordDirs: CoordDir[] = [
@@ -32,31 +32,34 @@ export class QuartoHasher {
     public static filterSubLevel(
         board: NumberTable,
         depth: number,
-        firstPiece: MGPOptional<QuartoEnum>,
-        coordDirs: CoordDir[],
-    ): QuartoHashInfo {
-        let remainingCoordDirs: CoordDir[] = [];
-        const min: number = QuartoEnum.UNOCCUPIED;
-        for (const coordDir of coordDirs) {
+        quartoHashInfos: QuartoHashInfo[]
+    ): QuartoHashInfo[]
+    {
+        let remainingHashInfos: QuartoHashInfo[] = [];
+        let min: number = QuartoPiece.NONE.value;
+        for (const quartoHashInfo of quartoHashInfos) {
+            let firstPiece: MGPOptional<QuartoPiece> = quartoHashInfo.firstPiece;
+            const coordDir: CoordDir = quartoHashInfo.coordDir;
             const c: Coord = QuartoHasher.get(coordDir, depth);
-            let piece: number = board[c.y][c.x];
-            if (piece !== QuartoEnum.UNOCCUPIED) {
+            let piece: QuartoPiece = QuartoPiece.fromInt(board[c.y][c.x]);
+            if (piece !== QuartoPiece.NONE && firstPiece.isAbsent()) {
                 firstPiece = MGPOptional.of(piece);
             }
             if (firstPiece.isPresent()) {
                 piece = QuartoHasher.matchPieceTo(piece, firstPiece.get());
             }
 
-            if (piece === min) {
-                remainingCoordDirs.push(coordDir);
-            } else if (piece < min) {
-                remainingCoordDirs = [coordDir];
+            if (piece.value === min) {
+                remainingHashInfos.push({ coordDir, firstPiece });
+            } else if (piece.value < min) {
+                remainingHashInfos = [{ coordDir, firstPiece }];
+                min = piece.value;
             }
         }
-        if (remainingCoordDirs.length === 0) {
-            return; // coordDirs;
+        if (remainingHashInfos.length === 0) {
+            return quartoHashInfos;
         } else {
-            return; // remainingCoordDirs;
+            return remainingHashInfos;
         }
     }
     public static get(coordDir: CoordDir, n: number): Coord {
@@ -72,19 +75,19 @@ export class QuartoHasher {
         coord = coord.getNext(firstDir, n);
         return coord;
     }
-    public static matchPieceTo(piece: QuartoEnum, mapper: QuartoEnum): QuartoEnum {
-        if (piece === QuartoEnum.UNOCCUPIED) {
-            return QuartoEnum.UNOCCUPIED;
+    public static matchPieceTo(piece: QuartoPiece, mapper: QuartoPiece): QuartoPiece {
+        if (piece === QuartoPiece.NONE) {
+            return QuartoPiece.NONE;
         } else {
-            let result = 0;
-            let n = 1;
-            for (let i = 0; i < 4; i++) {
-                if ((piece & n) !== (mapper & n)) {
+            let result: number = 0;
+            let n: number = 1;
+            for (let i: number = 0; i < 4; i++) {
+                if ((piece.value & n) !== (mapper.value & n)) {
                     result += n;
                 }
                 n *= 2;
             }
-            return result;
+            return QuartoPiece.fromInt(result);
         }
     }
 }
