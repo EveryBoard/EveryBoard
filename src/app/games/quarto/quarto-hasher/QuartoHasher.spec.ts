@@ -5,7 +5,7 @@ import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { QuartoEnum } from '../QuartoEnum';
 import { CoordDir, QuartoHasher, QuartoHashInfo } from './QuartoHasher';
 
-describe('QuartoHasher', () => {
+xdescribe('QuartoHasher', () => {
     const _: number = QuartoEnum.UNOCCUPIED;
     const A: number = QuartoEnum.AAAA;
     const B: number = QuartoEnum.AAAB;

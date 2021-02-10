@@ -18,27 +18,27 @@ import { display } from 'src/app/collectionlib/utils';
     styleUrls: ['./server-page.component.css'],
 })
 export class ServerPageComponent implements OnInit, OnDestroy {
-    public static VERBOSE = true;
+    public static VERBOSE = false;
 
     public activesParts: ICurrentPartId[];
 
     public activesUsers: IJoueurId[];
 
-    readonly gameNameList: string[] = ['Awale', // 1
-        'Dvonn', // 2
-        'Encapsule', // 3
-        'Epaminondas', // 4
-        'Go', // 5
-        'Kamisado', // 6
+    public readonly gameNameList: string[] = ['Awale', // 2ème
+        'Dvonn', // 13ème ?
+        'Encapsule', //
+        'Epaminondas', // 14ème
+        'Go', //
+        'Kamisado', // 12ème ??
         // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
-        'P4', // 7
-        'Pylos', // 8
-        'Quarto', // 9
-        'Quixo', // 10
-        'Reversi', // 11
-        'Sahara', // 12
-        'Siam', // 13
-        'Tablut']; // 14
+        'P4', // 1er
+        'Pylos', // 11 ème ?
+        'Quarto', //
+        'Quixo', // 10 ème ?
+        'Reversi', //
+        'Sahara', //
+        'Siam', //
+        'Tablut']; // Total: 14
 
     public selectedGame: string;
 
@@ -57,7 +57,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
                 private authenticationService: AuthenticationService) {
     }
     public ngOnInit() {
-        display(ServerPageComponent.VERBOSE, { serverPageComponent_ngOnInit: true });
+        display(ServerPageComponent.VERBOSE, "serverPageComponent.ngOnInit");
         this.userNameSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur) => {
                 if (joueur == null) this.userName = null;
@@ -65,10 +65,12 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             });
         this.activesPartsSub = this.gameService.getActivesPartsObs()
             .subscribe((activesParts) => {
-                this.activesParts = activesParts; console.log('OBSERVAID');
+                this.activesParts = activesParts;
             });
         this.activesUsersSub = this.userService.getActivesUsersObs()
-            .subscribe((activesUsers) => this.activesUsers = activesUsers);
+            .subscribe((activesUsers) => {
+                this.activesUsers = activesUsers;
+            });
     }
     public joinGame(partId: string, typeGame: string) {
         this.router.navigate(['/play/' + typeGame, partId]);
@@ -115,7 +117,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         return !found;
     }
     public ngOnDestroy() {
-        display(ServerPageComponent.VERBOSE, { serverPageComponent_ngOnDestroy: true });
+        display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
         if (this.userNameSub) {
             this.userNameSub.unsubscribe();
         }
