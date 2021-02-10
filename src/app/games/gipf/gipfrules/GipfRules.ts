@@ -172,7 +172,6 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const end: Coord = linePortion[1];
         const dir: Direction = linePortion[2];
         const oppositeDir: Direction = dir.getOpposite();
-        console.log({dir, oppositeDir});
         for (let cur: Coord = start.getNext(oppositeDir);
             slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY;
             cur = cur.getNext(oppositeDir)) {
@@ -193,13 +192,13 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
     private applyCaptures(slice: GipfPartSlice, captures: ReadonlyArray<GipfCapture>, playerCapturing: Player):
     GipfPartSlice {
-        const board: HexaBoard<GipfPiece> = slice.hexaBoard;
+        let board: HexaBoard<GipfPiece> = slice.hexaBoard;
         const sidePieces: [number, number] = slice.sidePieces;
         const capturedPieces: [number, number] = slice.capturedPieces;
         captures.forEach((capture: GipfCapture) => {
             capture.forEach((coord: Coord) => {
                 const piece: GipfPiece = board.getAt(coord);
-                board.setAt(coord, GipfPiece.EMPTY);
+                board = board.setAt(coord, GipfPiece.EMPTY);
                 if (piece.player === playerCapturing) {
                     sidePieces[playerCapturing.value] += 1;
                 } else {
@@ -271,7 +270,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         } else if (slice.hexaBoard.isOnTopLeftBorder(entrance)) {
             return [HexaDirection.DOWN_RIGHT, HexaDirection.DOWN];
         } else if (slice.hexaBoard.isOnLeftBorder(entrance)) {
-            return [HexaDirection.UP_RIGHT, HexaDirection.UP_LEFT];
+            return [HexaDirection.UP_RIGHT, HexaDirection.DOWN_RIGHT];
         } else if (slice.hexaBoard.isOnBottomLeftBorder(entrance)) {
             return [HexaDirection.UP, HexaDirection.UP_RIGHT];
         } else if (slice.hexaBoard.isOnBottomRightBorder(entrance)) {
@@ -294,7 +293,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
         const sliceAfterInitialCaptures: GipfPartSlice = this.applyCaptures(slice, move.initialCaptures, player);
 
-        const noMoreCaptureAfterInitialValidity: MGPValidation = this.noMoreCapturesValidity(slice, player);
+        const noMoreCaptureAfterInitialValidity: MGPValidation = this.noMoreCapturesValidity(sliceAfterInitialCaptures, player);
         if (noMoreCaptureAfterInitialValidity.isFailure()) {
             return { legal: noMoreCaptureAfterInitialValidity };
         }
@@ -315,7 +314,6 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
 
         const sliceAfterFinalCaptures: GipfPartSlice =
             this.applyCaptures(sliceAfterPlacement, move.finalCaptures, player);
-
         const noMoreCaptureAfterFinalValidity: MGPValidation =
             this.noMoreCapturesValidity(sliceAfterFinalCaptures, player);
         if (noMoreCaptureAfterFinalValidity.isFailure()) {

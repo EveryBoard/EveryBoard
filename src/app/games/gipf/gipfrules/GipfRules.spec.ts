@@ -137,7 +137,7 @@ describe('GipfRules:', () => {
                 expect(legality.legal.isSuccess()).toBeFalse();
             }
         });
-        fit('should force to capture when possible', () => {
+        it('should force to capture when possible', () => {
             // This is diagram 5a
             const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
                 [__, __, __, B1, __, B1, B1],
@@ -157,6 +157,7 @@ describe('GipfRules:', () => {
 
             const resultingSlice: GipfPartSlice = rules.applyLegalMove(move, slice, firstLegality).resultingSlice;
             const placement: GipfPlacement = new GipfPlacement(new Coord(-1, 3), HexaDirection.UP_RIGHT, false);
+
             const moveWithoutCapture: GipfMove = new GipfMove(placement, [], []);
             const noCaptureLegality: GipfLegalityStatus = rules.isLegal(moveWithoutCapture, resultingSlice);
             expect(noCaptureLegality.legal.isSuccess()).toBeFalse();
@@ -169,7 +170,7 @@ describe('GipfRules:', () => {
             expect(captureLegality.legal.isSuccess()).toBeTrue();
         });
 
-        xit('should let player choose between intersecting captures', () => {
+        it('should let player choose between intersecting captures', () => {
             // This is diagram 6
             const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
                 [__, __, __, __, __, __, __],
@@ -209,7 +210,7 @@ describe('GipfRules:', () => {
             const capturesLegality: GipfLegalityStatus = rules.isLegal(moveWithBothCaptures, slice);
             expect(capturesLegality.legal.isSuccess()).toBeTrue();
         });
-        xit('should force both players to capture when possible', () => {
+        it('should force both players to capture when possible', () => {
             // This is the board before diagram 7
             const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
                 [__, __, __, __, __, __, A1],
