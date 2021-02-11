@@ -41,7 +41,6 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
     public isDrawable(x: number, y: number, z: number): boolean {
         const coord: PylosCoord = new PylosCoord(x, y, z);
         if (this.slice.getBoardAt(coord) === Player.NONE.value) {
-            if (coord.equals(new PylosCoord(0,0,0))) console.log({ isLandable: this.slice.isLandable(coord) })
             return this.slice.isLandable(coord);
         } else {
             return true;
@@ -151,7 +150,6 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         const coord: PylosCoord = new PylosCoord(x, y, z);
         const reallyOccupied: boolean = this.rules.node.gamePartSlice.getBoardAt(coord) !== Player.NONE.value;
         const landingCoord: boolean = coord.equals(this.chosenLandingCoord);
-        if (coord.equals(new PylosCoord(0,0,0))) console.log({ reallyOccupied, landingCoord })
         return reallyOccupied || landingCoord;
     }
     public getPieceStyle(x: number, y: number, z: number): any {
