@@ -98,13 +98,17 @@ describe('QuartoComponent', () => {
         expect(await clickElement('#chooseCoord_0_0')).toBeTrue();
         expect(gameComponent.cancelMove).toHaveBeenCalledOnceWith('Choisissez une case vide.');
     }));
-    it('should accept move when choosing piece then choosing coord', fakeAsync(async () => {
+    it('should accept move when choosing piece then choosing coord', fakeAsync(async() => {
         const oldSlice: QuartoPartSlice = QuartoPartSlice.getInitialSlice();
         spyOn(gameComponent, 'chooseMove').and.callThrough();
+        spyOn(gameComponent, 'cancelMoveAttempt').and.callThrough();
+
         expect(await clickElement('#choosePiece_1')).toBeTrue();
         expect(await clickElement('#chooseCoord_0_0')).toBeTrue();
+
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
         expect(gameComponent.chooseMove).toHaveBeenCalledOnceWith(move, oldSlice, null, null);
+        expect(gameComponent.cancelMoveAttempt).toHaveBeenCalledTimes(1);
         flush();
     }));
     it('should accept move when choosing coord then choosing piece', fakeAsync(async () => {

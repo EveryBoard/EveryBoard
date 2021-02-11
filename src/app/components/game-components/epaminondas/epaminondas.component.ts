@@ -77,7 +77,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
-        this.hidePreviousMove();
+        this.hidePreviousMove(); // TODO check if must be deleted
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         switch (this.board[y][x]) {

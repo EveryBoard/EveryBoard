@@ -27,6 +27,8 @@ export interface TestElements {
 
     gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>,
 
+    clickSpy: jasmine.Spy,
+
     cancelMoveSpy: jasmine.Spy,
 
     chooseMoveSpy: jasmine.Spy,
@@ -41,8 +43,12 @@ export const expectClickSuccess: (elementName: string, testElements: TestElement
             return;
         } else {
             element.triggerEventHandler('click', null);
+            console.log('click just called');
             await testElements.fixture.whenStable();
+            console.log('thing now stable');
             testElements.fixture.detectChanges();
+            console.log('now changed are detected but we kind of dont care amarite ?');
+            expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
             expect(testElements.cancelMoveSpy).not.toHaveBeenCalled();
             expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
         }
@@ -57,6 +63,7 @@ export const expectClickFail: (elementName: string, testElements: TestElements, 
             element.triggerEventHandler('click', null);
             await testElements.fixture.whenStable();
             testElements.fixture.detectChanges();
+            expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
             expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
             expect(testElements.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
         }
@@ -75,6 +82,7 @@ export const expectMoveSuccess: (
             await testElements.fixture.whenStable();
             testElements.fixture.detectChanges();
             const { move, slice, scoreZero, scoreOne } = { ...expectations };
+            expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
             expect(testElements.chooseMoveSpy).toHaveBeenCalledOnceWith(move, slice, scoreZero, scoreOne);
             expect(testElements.onValidUserMoveSpy).toHaveBeenCalledOnceWith(move, scoreZero, scoreOne);
         }
@@ -94,8 +102,21 @@ export const expectMoveFailure: (
             await testElements.fixture.whenStable();
             testElements.fixture.detectChanges();
             const { move, slice, scoreZero, scoreOne } = { ...expectations };
+            expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
             expect(testElements.chooseMoveSpy).toHaveBeenCalledOnceWith(move, slice, scoreZero, scoreOne);
             expect(testElements.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             expect(testElements.onValidUserMoveSpy).not.toHaveBeenCalled();
         }
     };
+export const clickElement: (elementName: string, testElements: TestElements) => Promise<boolean> =
+async(elementName: string, testElements: TestElements) => {
+    const element: DebugElement = testElements.debugElement.query(By.css(elementName));
+    if (element == null) {
+        return null;
+    } else {
+        element.triggerEventHandler('click', null);
+        await testElements.fixture.whenStable();
+        testElements.fixture.detectChanges();
+        return true;
+    }
+};

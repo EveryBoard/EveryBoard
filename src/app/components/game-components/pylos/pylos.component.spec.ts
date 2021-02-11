@@ -70,7 +70,16 @@ describe('PylosComponent', () => {
         const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
         const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
-        testElements = { fixture, debugElement, gameComponent, cancelMoveSpy, chooseMoveSpy, onValidUserMoveSpy };
+        const clickSpy: jasmine.Spy = spyOn(gameComponent, 'click').and.callThrough();
+        testElements = {
+            fixture,
+            debugElement,
+            gameComponent,
+            clickSpy,
+            cancelMoveSpy,
+            chooseMoveSpy,
+            onValidUserMoveSpy,
+        };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');

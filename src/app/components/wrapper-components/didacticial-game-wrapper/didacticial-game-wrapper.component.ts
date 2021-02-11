@@ -71,12 +71,13 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.mustRetry = false;
         this.showStep(this.stepIndex);
     }
-    public onUserClick(clickedElement: string): boolean {
+    public onUserClick: (elementName: string) => boolean = (elementName: string) => {
+        console.log('didacticial-game-wrapper onUserClick on ' + elementName);
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
             console.log('didacticial was indeed awaiting a click');
             this.gameComponent.updateBoard();
-            if (currentStep.acceptedClicks.some((m: string) => m === clickedElement)) {
+            if (currentStep.acceptedClicks.some((m: string) => m === elementName)) {
                 console.log('accepted click was done');
                 this.currentMessage = currentStep.successMessage;
             } else {

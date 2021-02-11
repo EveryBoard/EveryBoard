@@ -16,10 +16,11 @@ import { Player } from 'src/app/jscaip/player/Player';
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
     public readonly PLAYER_ZERO_FILL: string = '#994d00';
     public readonly PLAYER_ONE_FILL: string = '#ffc34d';
+    public readonly EMPTY_CASE_FILL: string = 'lightgrey';
     public readonly CAPTURED_FILL: string = 'red';
     public readonly MOVED_FILL: string = 'gray';
-    public readonly NORMAL_FILL: string = 'lightgray';
-    public readonly CLICKABLE_STYLE: any = {
+    public readonly NORMAL_FILL: string = 'lightgrey';
+    public readonly CLICKABLE_STYLE: unknown = {
         stroke: 'yellow',
     };
 
@@ -35,6 +36,8 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => Promise<MGPValidation>;
 
+    public click: (element: string) => boolean;
+
     public observerRole: number;
     /* all game rules should be able to call the game-wrapper
      * the aim is that the game-wrapper will take care of manage what follow
@@ -47,7 +50,6 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     public message: (msg: string) => void = (msg: string) => {
         this.snackBar.open(msg, 'Ok!', { duration: 3000 });
     };
-
     public abstract cancelMove(reason?: string): void;
 
     public abstract decodeMove(encodedMove: number): Move;
@@ -60,7 +62,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
         switch (player) {
             case Player.ZERO: return this.PLAYER_ZERO_FILL;
             case Player.ONE: return this.PLAYER_ONE_FILL;
-            case Player.NONE: return 'lightgrey';
+            case Player.NONE: return this.EMPTY_CASE_FILL;
         }
     }
     public getTurn(): number {

@@ -25,6 +25,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user want to give to the opponent
 
     public updateBoard(): void {
+        console.log('board updated');
         const slice: QuartoPartSlice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
@@ -35,7 +36,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         } else {
             this.lastMove = null;
         }
-        this.cancelMove();
+        this.cancelMoveAttempt();
     }
     /** ******************************** For Online Game **********************************/
 
@@ -49,7 +50,12 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
-
+        console.log('quarto component click on ' + x + ', ' + y);
+        if (this.click('#chooseCoord_' + x + '_' + y) === false) {
+            console.log('chooseCoord_  click refused');
+            return;
+        }
+        console.log('chooseCoord_ click allowed');
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
@@ -74,6 +80,12 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
+        if (this.click('#choosePiece_' + givenPiece) === false) {
+            console.log("choosePiece click was refused");
+            return;
+        }
+        console.log('choose piece click allowed');
+
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
@@ -86,13 +98,13 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
         }
     }
-    public hideLastMove() {
+    private hideLastMove(): void {
         this.lastMove = new Coord(-1, -1);
     }
     public cancelMove(reason?: string): MGPValidation {
+        console.log('cancel quarto move because "' + reason + '"');
         // called when the user do a wrong move, then, we unselect his pieceToGive and/or the chosen coord
-        this.chosen = new Coord(-1, -1);
-        this.pieceToGive = QuartoPiece.NONE;
+        this.cancelMoveAttempt();
         if (reason) {
             this.message(reason);
             return MGPValidation.failure(reason);
@@ -100,7 +112,11 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             return MGPValidation.SUCCESS;
         }
     }
-    public showPieceInHandOnBoard(x: number, y: number) {
+    public cancelMoveAttempt(): void {
+        this.chosen = new Coord(-1, -1);
+        this.pieceToGive = QuartoPiece.NONE;
+    }
+    private showPieceInHandOnBoard(x: number, y: number): void {
         this.chosen = new Coord(x, y);
     }
     public isRemaining(pawn: number): boolean {

@@ -30,7 +30,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({ template: '' })
 export abstract class GameWrapper {
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     // component loading
     @ViewChild(GameIncluderComponent)
@@ -117,6 +117,8 @@ export abstract class GameWrapper {
         // Shortent by T<S = Truc>
         this.gameComponent.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
+        this.gameComponent.click = this.onUserClick; // So that when the game component click
+        // the game wrapper can act accordly
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
     }
@@ -157,7 +159,8 @@ export abstract class GameWrapper {
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public onUserClick(elementName: string): boolean {
+    public onUserClick: (elementName: string) => boolean = (elementName: string) => {
+        console.log('onUserClick on ' + elementName);
         return this.isPlayerTurn();
     }
     public isPlayerTurn(): boolean {
