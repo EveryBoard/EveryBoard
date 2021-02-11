@@ -1,19 +1,19 @@
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPNode } from 'src/app/jscaip/mgpnode/MGPNode';
-import { Rules } from 'src/app/jscaip/Rules';
-import { GipfPartSlice } from '../gipfpartslice/GipfPartSlice';
-import { MGPMap } from 'src/app/collectionlib/mgpmap/MGPMap';
-import { GipfCapture, GipfLine, GipfMove, GipfPlacement } from '../gipfmove/GipfMove';
-import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/player/Player';
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
-import { Table } from 'src/app/collectionlib/arrayutils/ArrayUtils';
-import { GipfPiece } from '../gipfpiece/GipfPiece';
-import { Direction } from 'src/app/jscaip/DIRECTION';
-import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { GipfLegalityStatus } from '../gipflegalitystatus/GipfLegalityStatus';
+import { Coord } from "src/app/jscaip/coord/Coord";
+import { Direction } from "src/app/jscaip/DIRECTION";
+import { HexaBoard } from "src/app/jscaip/hexa/HexaBoard";
+import { HexaDirection } from "src/app/jscaip/hexa/HexaDirection";
+import { LegalityStatus } from "src/app/jscaip/LegalityStatus";
+import { MGPNode } from "src/app/jscaip/mgp-node/MGPNode";
+import { Player } from "src/app/jscaip/player/Player";
+import { Rules } from "src/app/jscaip/Rules";
+import { Table } from "src/app/utils/collection-lib/array-utils/ArrayUtils";
+import { MGPMap } from "src/app/utils/mgp-map/MGPMap";
+import { MGPOptional } from "src/app/utils/mgp-optional/MGPOptional";
+import { MGPValidation } from "src/app/utils/mgp-validation/MGPValidation";
+import { GipfLegalityStatus } from "../gipf-legality-status/GipfLegalityStatus";
+import { GipfCapture, GipfLine, GipfMove, GipfPlacement } from "../gipf-move/GipfMove";
+import { GipfPartSlice } from "../gipf-part-slice/GipfPartSlice";
+import { GipfPiece } from "../gipf-piece/GipfPiece";
 
 export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfPartSlice, LegalityStatus> {}
 
@@ -43,7 +43,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         };
     }
 
-    public getBoardValue(move: GipfMove, slice: GipfPartSlice): number {
+    public getBoardValue(_move: GipfMove, slice: GipfPartSlice): number {
         const score0: MGPOptional<number> = this.getPlayerScore(slice, Player.ZERO);
         const score1: MGPOptional<number> = this.getPlayerScore(slice, Player.ONE);
         if (score0.isAbsent()) {
@@ -76,9 +76,9 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
 
     public getListMoves(node: GipfNode): MGPMap<GipfMove, GipfPartSlice> {
-        return this.getListMoveFromSlice(node.move, node.gamePartSlice);
+        return this.getListMoveFromSlice(node.gamePartSlice);
     }
-    private getListMoveFromSlice(move: GipfMove, slice: GipfPartSlice): MGPMap<GipfMove, GipfPartSlice> {
+    private getListMoveFromSlice(slice: GipfPartSlice): MGPMap<GipfMove, GipfPartSlice> {
         const map: MGPMap<GipfMove, GipfPartSlice> = new MGPMap();
 
         if (this.isVictory(slice)) {
@@ -299,7 +299,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
 
         const placementValidity: MGPValidation =
-            this.placementValidity(sliceAfterInitialCaptures, move.placement, player);
+            this.placementValidity(sliceAfterInitialCaptures, move.placement);
         if (placementValidity.isFailure()) {
             return { legal: placementValidity };
         }
@@ -370,7 +370,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
     }
 
-    private placementValidity(slice: GipfPartSlice, placement: GipfPlacement, player: Player): MGPValidation {
+    private placementValidity(slice: GipfPartSlice, placement: GipfPlacement): MGPValidation {
         if (slice.hexaBoard.isOnBoard(placement.coord) === false) {
             return MGPValidation.failure('Une pièce doit être placée sur le plateau de jeu');
         }

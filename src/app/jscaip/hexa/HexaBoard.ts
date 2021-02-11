@@ -1,4 +1,4 @@
-import { ArrayUtils, NumberTable, Table } from 'src/app/collectionlib/arrayutils/ArrayUtils';
+import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from '../coord/Coord';
 import { Encoder } from '../encoder';
 

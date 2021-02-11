@@ -1,10 +1,10 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
-import { GipfLegalityStatus } from '../gipflegalitystatus/GipfLegalityStatus';
-import { GipfCapture, GipfMove, GipfPlacement } from '../gipfmove/GipfMove';
-import { GipfPartSlice } from '../gipfpartslice/GipfPartSlice';
-import { GipfPiece } from '../gipfpiece/GipfPiece';
+import { GipfLegalityStatus } from '../gipf-legality-status/GipfLegalityStatus';
+import { GipfCapture, GipfMove, GipfPlacement } from '../gipf-move/GipfMove';
+import { GipfPartSlice } from '../gipf-part-slice/GipfPartSlice';
+import { GipfPiece } from '../gipf-piece/GipfPiece';
 import { GipfRules } from './GipfRules';
 
 describe('GipfRules:', () => {

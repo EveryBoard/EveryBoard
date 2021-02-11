@@ -1,8 +1,8 @@
-import { ArrayUtils, Table } from 'src/app/collectionlib/arrayutils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { Player } from 'src/app/jscaip/player/Player';
-import { GipfPiece } from '../gipfpiece/GipfPiece';
+import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { GipfPiece } from '../gipf-piece/GipfPiece';
 import { GipfPartSlice } from './GipfPartSlice';
 
 describe('GipfPartSlice', () => {

@@ -1,9 +1,9 @@
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/DIRECTION';
 import { Encoder } from 'src/app/jscaip/encoder';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 export class GipfBoard {
     public static RADIUS: number = 3;

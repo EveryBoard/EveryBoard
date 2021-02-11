@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/collectionlib/mgpvalidation/MGPValidation';
-import { GipfLegalityStatus } from 'src/app/games/gipf/gipflegalitystatus';
-import { GipfMove } from 'src/app/games/gipf/gipfmove/GipfMove';
-import { GipfPartSlice } from 'src/app/games/gipf/gipfpartslice/GipfPartSlice';
-import { GipfPiece } from 'src/app/games/gipf/gipfpiece/GipfPiece';
-import { GipfRules } from 'src/app/games/gipf/gipfrules/GipfRules';
+import { GipfLegalityStatus } from 'src/app/games/gipf/gipf-legality-status/GipfLegalityStatus';
+import { GipfMove } from 'src/app/games/gipf/gipf-move/GipfMove';
+import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice';
+import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
+import { GipfRules } from 'src/app/games/gipf/gipf-rules/GipfRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
-import { HexaBoard, HexaLayout, HexaOrientation } from 'src/app/jscaip/hexa/HexaBoard';
+import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
+import { HexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { Player } from 'src/app/jscaip/player/Player';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { AbstractGameComponent } from '../AbstractGameComponent';
 
 @Component({
@@ -79,5 +79,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
             stroke: 'black',
         }
     }
-
+    public cancelMove(reason?: string): void {
+        throw new Error('Method not implemented.');
+    }
 }

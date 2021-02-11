@@ -1,6 +1,6 @@
-import { MGPOptional } from 'src/app/collectionlib/mgpoptional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GipfCapture, GipfLine, GipfMove, GipfPlacement } from './GipfMove';
 
 describe('GipfLine', () => {
@@ -100,7 +100,7 @@ describe('GipfCapture', () => {
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
             ]);
             let count: number = 0;
-            capture.forEach((c: Coord) => {
+            capture.forEach((_c: Coord) => {
                 count += 1;
             });
             expect(count).toEqual(4);
