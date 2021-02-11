@@ -156,6 +156,10 @@ export abstract class GameWrapper {
         }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
+    public onUserClick(elementName: string): boolean {
+        return this.isPlayerTurn();
+    }
     public isPlayerTurn(): boolean {
         if (this.observerRole > 1) {
             return false;

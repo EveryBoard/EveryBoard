@@ -1,7 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { UserService } from 'src/app/services/user/UserService';
@@ -20,6 +20,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public steps: DidacticialStep[] = awaleDidacticial; // TODO: OF FUCK NOT THAT
     public stepIndex: number = 0;
     public currentMessage: string;
+    public mustRetry: boolean = false;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
         actRoute: ActivatedRoute,
@@ -38,17 +39,57 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.currentMessage = currentStep.instruction;
         this.cdr.detectChanges();
     }
-    public async onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
+    private showStep(stepIndex: number): void {
+        console.log('showStep ' + stepIndex);
+        this.stepIndex = stepIndex;
+        const currentStep: DidacticialStep = this.steps[this.stepIndex];
+        this.currentMessage = currentStep.instruction;
+        this.gameComponent.rules.node = new MGPNode(null, null, currentStep.slice, 0);
+        this.gameComponent.updateBoard();
+        this.cdr.detectChanges();
+    }
+    public async onValidUserMove(move: Move): Promise<void> {
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isMove()) {
+            console.log('didacticial was indeed awaiting a move');
+            this.gameComponent.rules.choose(move);
+            this.gameComponent.updateBoard();
             if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+                console.log('accepted move was given');
                 this.currentMessage = currentStep.successMessage;
-                this.gameComponent.rules.choose(move);
-                this.gameComponent.updateBoard();
-                this.cdr.detectChanges();
             } else {
                 this.currentMessage = currentStep.failureMessage;
+                this.mustRetry = true;
+                console.log('not accepted move was given');
             }
+            this.cdr.detectChanges();
+        } else {
+            console.log('didacticial was not awaiting a move');
         }
+    }
+    public retry(): void {
+        this.mustRetry = false;
+        this.showStep(this.stepIndex);
+    }
+    public onUserClick(clickedElement: string): boolean {
+        const currentStep: DidacticialStep = this.steps[this.stepIndex];
+        if (currentStep.isClick()) {
+            console.log('didacticial was indeed awaiting a click');
+            this.gameComponent.updateBoard();
+            if (currentStep.acceptedClicks.some((m: string) => m === clickedElement)) {
+                console.log('accepted click was done');
+                this.currentMessage = currentStep.successMessage;
+            } else {
+                this.currentMessage = currentStep.failureMessage;
+                this.mustRetry = true;
+                console.log('not accepted click was made');
+            }
+        } else {
+            console.log('didacticial is not awaiting a click');
+        }
+        return true;
+    }
+    public next(): void {
+        this.showStep(this.stepIndex + 1);
     }
 }

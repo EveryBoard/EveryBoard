@@ -3,6 +3,17 @@
 >
     <div id="infos" class="flex-container circled col-sm-4">
         <h1 id='currentMessage'>{{ currentMessage }}</h1>
+        <button id="retryButton"
+                *ngIf="mustRetry"
+                (click)="retry()"
+        >
+            Essayez à nouveau
+        </button>
+        <button id="nextButton"
+                (click)="next()"
+        >
+            Suivant
+        </button>
     </div>
 
     <div id="board" class="flex-container circled col-sm-8">

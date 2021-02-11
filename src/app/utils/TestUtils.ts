@@ -36,7 +36,7 @@ export interface TestElements {
 export const expectClickSuccess: (elementName: string, testElements: TestElements) => Promise<void> =
     async(elementName: string, testElements: TestElements) => {
         const element: DebugElement = testElements.debugElement.query(By.css(elementName));
-        expect(element).toBeTruthy('Element "' + elementName + '"don\'t exists.');
+        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
         } else {
@@ -50,7 +50,7 @@ export const expectClickSuccess: (elementName: string, testElements: TestElement
 export const expectClickFail: (elementName: string, testElements: TestElements, reason: string) => Promise<void> =
     async(elementName: string, testElements: TestElements, reason: string) => {
         const element: DebugElement = testElements.debugElement.query(By.css(elementName));
-        expect(element).toBeTruthy('Element "' + elementName + '"don\'t exists.');
+        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
         } else {
@@ -67,7 +67,7 @@ export const expectMoveSuccess: (
     expectations: MoveExpectations) => Promise<void> =
     async(elementName: string, testElements: TestElements, expectations: MoveExpectations) => {
         const element: DebugElement = testElements.debugElement.query(By.css(elementName));
-        expect(element).toBeTruthy('Element "' + elementName + '"don\'t exists.');
+        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
         } else {
@@ -86,7 +86,7 @@ export const expectMoveFailure: (
     reason: string) => Promise<void> =
     async(elementName: string, testElements: TestElements, expectations: MoveExpectations, reason: string) => {
         const element: DebugElement = testElements.debugElement.query(By.css(elementName));
-        expect(element).toBeTruthy('Element "' + elementName + '"don\'t exists.');
+        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
         } else {
