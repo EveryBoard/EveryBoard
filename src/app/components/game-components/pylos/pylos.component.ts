@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { PylosMove } from 'src/app/games/pylos/pylos-move/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
@@ -170,8 +170,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         if (c.equals(this.chosenLandingCoord)) {
             owner = this.slice.getCurrentPlayer().value;
         }
-        if (c.equals(new PylosCoord(0,0,0))){ console.log(this.getPlayerColor(owner))}
-        return this.getPlayerColor(owner);
+        return this.getPlayerColor(Player.of(owner));
     }
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;

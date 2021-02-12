@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { AwaleRules } from '../../../games/awale/awale-rules/AwaleRules';
 import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
 import { AwalePartSlice } from '../../../games/awale/AwalePartSlice';
@@ -9,19 +9,54 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({
-    selector: 'app-awale-new-component',
+    selector: 'app-awale-component',
     templateUrl: './awale.component.html',
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
-    public rules = new AwaleRules(AwalePartSlice);
+    public rules: AwaleRules = new AwaleRules(AwalePartSlice);
 
     public scores: number[] = [0, 0];
 
     public last: Coord = new Coord(-1, -1);
 
+    private captured: Coord[] = [];
+
+    private moved: Coord[] = [];
+
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
         this.showScore = true;
+        this.updateBoard();
+    }
+    public updateBoard(): void {
+        const slice: AwalePartSlice = this.rules.node.gamePartSlice;
+        this.scores = slice.getCapturedCopy();
+        const awaleMove: AwaleMove = this.rules.node.move;
+
+        this.board = slice.getCopiedBoard();
+        if (awaleMove != null) {
+            this.last = awaleMove.coord;
+            this.showPreviousMove();
+        }
+    }
+    private showPreviousMove(): void {
+        this.captured = [];
+        this.moved = [];
+        const previousSlice: AwalePartSlice = this.rules.node.mother.gamePartSlice;
+        for (let y: number = 0; y <= 1; y++) {
+            for (let x: number = 0; x <= 5; x++) {
+                const coord: Coord = new Coord(x, y);
+                const currentValue: number = this.board[y][x];
+                const oldValue: number = previousSlice.getBoardAt(coord);
+                if (!coord.equals(this.last)) {
+                    if (currentValue < oldValue) {
+                        this.captured.push(coord);
+                    } else if (currentValue > oldValue) {
+                        this.moved.push(coord);
+                    }
+                }
+            }
+        }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         // TODO : option de clonage revision commentage
@@ -32,31 +67,34 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         // let's confirm on java-server-side that the move is legal
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
     }
-    public cancelMove(reason?: string): void {
-        // Empty because not needed.
+    public getCircleFill(x: number, y: number): string {
+        const coord: Coord = new Coord(x, y);
+        if (this.captured.some((c: Coord) => c.equals(coord))) {
+            return this.CAPTURED_FILL;
+        } else if (coord.equals(this.last)) {
+            return this.MOVED_FILL;
+        } else if (this.moved.some((c: Coord) => c.equals(coord))) {
+            return this.MOVED_FILL;
+        } else {
+            return this.NORMAL_FILL;
+        }
+    }
+    public getPieceStroke(x: number, y: number): string {
+        const coord: Coord = new Coord(x, y);
+        if (coord.equals(this.last)) {
+            return 'yellow';
+        } else {
+            return 'black';
+        }
+    }
+    public cancelMove(reason?: string): MGPValidation {
+        this.message(reason);
+        return MGPValidation.failure(reason);
     }
     public decodeMove(encodedMove: number): AwaleMove {
         return AwaleMove.decode(encodedMove);
     }
     public encodeMove(move: AwaleMove): number {
         return AwaleMove.encode(move);
-    }
-    public updateBoard(): void {
-        const awalePartSlice: AwalePartSlice = this.rules.node.gamePartSlice;
-        this.scores = awalePartSlice.getCapturedCopy();
-        const awaleMove: AwaleMove = this.rules.node.move;
-
-        if (this.observerRole === 1) {
-            const orientedBoard: number[][] = [];
-            awalePartSlice.getCopiedBoard().forEach(
-                (line) => orientedBoard.push(line.reverse()));
-            this.board = orientedBoard;
-        } else {
-            this.board = awalePartSlice.getCopiedBoard().reverse();
-        }
-
-        if (awaleMove != null) {
-            this.last = awaleMove.coord;
-        }
     }
 }
