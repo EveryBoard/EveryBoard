@@ -132,7 +132,7 @@ describe('TablutComponent', () => {
             scoreOne: null,
             scoreZero: null,
         };
-        await expectMoveSuccess('#click_2_0', testElements, expactions);
+        await expectMoveSubmission('#click_2_0', testElements, expactions);
 
         const tablutGameComponent: TablutComponent = <TablutComponent> testElements.gameComponent;
         expect(tablutGameComponent.getRectFill(2, 1)).toEqual(tablutGameComponent.CAPTURED_FILL);

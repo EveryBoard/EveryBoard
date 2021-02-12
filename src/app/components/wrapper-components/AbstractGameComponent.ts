@@ -16,9 +16,10 @@ import { Player } from 'src/app/jscaip/player/Player';
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
     public readonly PLAYER_ZERO_FILL: string = '#994d00';
     public readonly PLAYER_ONE_FILL: string = '#ffc34d';
+    public readonly EMPTY_CASE_FILL: string = 'lightbrey';
     public readonly CAPTURED_FILL: string = 'red';
     public readonly MOVED_FILL: string = 'gray';
-    public readonly NORMAL_FILL: string = 'lightgray';
+    public readonly NORMAL_FILL: string = 'lightgrey';
     public readonly CLICKABLE_STYLE: any = {
         stroke: 'yellow',
     };
@@ -60,7 +61,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
         switch (player) {
             case Player.ZERO: return this.PLAYER_ZERO_FILL;
             case Player.ONE: return this.PLAYER_ONE_FILL;
-            case Player.NONE: return 'lightgrey';
+            case Player.NONE: return this.EMPTY_CASE_FILL;
         }
     }
     public getTurn(): number {

@@ -18,8 +18,7 @@ import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSl
 import { Player } from 'src/app/jscaip/player/Player';
 import { PylosNode } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import {
-    expectClickFail, expectClickSuccess,
-    expectMoveSuccess,
+    expectClickFail, expectClickSuccess, expectMoveSubmission,
     MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 
 const activatedRouteStub: unknown = {
@@ -67,10 +66,9 @@ describe('PylosComponent', () => {
         const debugElement: DebugElement = fixture.debugElement;
         tick(1);
         const gameComponent: PylosComponent = wrapper.gameComponent as PylosComponent;
-        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
+        const cancelSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
-        const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
-        testElements = { fixture, debugElement, gameComponent, cancelMoveSpy, chooseMoveSpy, onValidUserMoveSpy };
+        testElements = { fixture, debugElement, gameComponent, cancelSpy, chooseMoveSpy };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
@@ -83,7 +81,7 @@ describe('PylosComponent', () => {
             scoreZero: null,
             scoreOne: null,
         };
-        await expectMoveSuccess('#click_0_0_0', testElements, expectations);
+        await expectMoveSubmission('#click_0_0_0', testElements, expectations);
     }));
     it('should forbid clicking on ennemy piece', fakeAsync(async() => {
         const initialBoard: number[][][] = [
@@ -140,7 +138,7 @@ describe('PylosComponent', () => {
             scoreZero: null,
             scoreOne: null,
         };
-        await expectMoveSuccess('#click_0_0_1', testElements, expectations);
+        await expectMoveSubmission('#click_0_0_1', testElements, expectations);
     }));
     it('should allow capturing unique piece by double clicking on it', fakeAsync(async() => {
         const initialBoard: number[][][] = [
@@ -173,7 +171,7 @@ describe('PylosComponent', () => {
             scoreZero: null,
             scoreOne: null,
         };
-        await expectMoveSuccess('#click_0_0_0', testElements, expectations);
+        await expectMoveSubmission('#click_0_0_0', testElements, expectations);
     }));
     it('should allow captured two pieces, and show capture during move and after', fakeAsync(async() => {
         const initialBoard: number[][][] = [
@@ -209,7 +207,7 @@ describe('PylosComponent', () => {
             scoreZero: null,
             scoreOne: null,
         };
-        await expectMoveSuccess('#click_0_1_0', testElements, expectations);
+        await expectMoveSubmission('#click_0_1_0', testElements, expectations);
         expect(pylosGameComponent.getCaseFill(1, 1, 0)).toEqual(pylosGameComponent.MOVED_FILL);
         expect(pylosGameComponent.getCaseFill(0, 0, 0)).toEqual(pylosGameComponent.CAPTURED_FILL);
         expect(pylosGameComponent.getCaseFill(0, 1, 0)).toEqual(pylosGameComponent.CAPTURED_FILL);

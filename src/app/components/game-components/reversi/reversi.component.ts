@@ -85,7 +85,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         }
     }
     public getPieceStyle(x: number, y: number): any {
-        const fill: string = this.getPlayerColor(Player.of(this.board[y][x]));
+        const fill: string = this.getPlayerColor(this.board[y][x]);
         return { fill };
     }
     public async pass(): Promise<MGPValidation> {

@@ -16,7 +16,7 @@ import { ReversiMove } from 'src/app/games/reversi/reversi-move/ReversiMove';
 import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
 import { Player } from 'src/app/jscaip/player/Player';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import { expectMoveSubmission, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 
 const activatedRouteStub = {
     snapshot: {
@@ -64,10 +64,9 @@ describe('ReversiComponent', () => {
         const debugElement: DebugElement = fixture.debugElement;
         tick(1);
         const gameComponent: ReversiComponent = wrapper.gameComponent as ReversiComponent;
-        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
+        const cancelSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
-        const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
-        testElements = { fixture, debugElement, gameComponent, cancelMoveSpy, chooseMoveSpy, onValidUserMoveSpy };
+        testElements = { fixture, debugElement, gameComponent, cancelSpy, chooseMoveSpy };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
@@ -94,7 +93,7 @@ describe('ReversiComponent', () => {
             scoreZero: 2,
             scoreOne: 7,
         };
-        await expectMoveSuccess('#click_0_4', testElements, expactions);
+        await expectMoveSubmission('#click_0_4', testElements, expactions);
 
         const tablutGameComponent: ReversiComponent = <ReversiComponent> testElements.gameComponent;
         expect(tablutGameComponent.getRectFill(1, 3)).not.toEqual(tablutGameComponent.CAPTURED_FILL);

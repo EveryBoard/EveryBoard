@@ -133,6 +133,14 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const stroke: string = this.getPieceStroke(x, y);
         return { fill, stroke };
     }
+    // private getPlayerColor(player: number): string {
+    //     switch (player) {
+    //         case TablutCase.DEFENDERS.value:
+    //         case TablutCase.PLAYER_ONE_KING.value:
+    //         case TablutCase.PLAYER_ZERO_KING.value: return '#ffc34d';
+    //         case TablutCase.INVADERS.value: return '#994d00';
+    //     }
+    // }
     public getPieceStroke(x: number, y: number): string {
         const coord: Coord = new Coord(x, y);
         if (this.chosen.equals(coord)) {
