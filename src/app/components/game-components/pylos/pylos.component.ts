@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { PylosMove } from 'src/app/games/pylos/pylos-move/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
@@ -7,14 +7,14 @@ import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
 })
 export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSlice, LegalityStatus> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
+    public readonly PRE_CAPTURED_FILL: string = 'pink';
 
     public rules: PylosRules = new PylosRules(PylosPartSlice);
 
@@ -33,9 +33,9 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     public getLevelRange(z: number): number[] {
         switch (z) {
-        case 0: return [0, 1, 2, 3];
-        case 1: return [0, 1, 2];
-        case 2: return [0, 1];
+            case 0: return [0, 1, 2, 3];
+            case 1: return [0, 1, 2];
+            case 2: return [0, 1];
         }
     }
     public isDrawable(x: number, y: number, z: number): boolean {
@@ -76,7 +76,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             }
         }
     }
-    public async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
+    private async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
         let move: PylosMove;
         if (this.chosenStartingCoord == null) {
             move = PylosMove.fromDrop(this.chosenLandingCoord, captures);
@@ -85,7 +85,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         }
         return this.tryMove(move, this.slice);
     }
-    public async tryMove(move: PylosMove, slice: PylosPartSlice): Promise<MGPValidation> {
+    private async tryMove(move: PylosMove, slice: PylosPartSlice): Promise<MGPValidation> {
         this.cancelMove();
         return this.chooseMove(move, slice, null, null);
     }
@@ -120,28 +120,21 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         }
         return clickedCoord.isUpperThan(this.chosenStartingCoord); // true if legal climbing (without capture)
     }
-    public getPieceStyle(x: number, y: number, z: number): any {
-        const c: PylosCoord = new PylosCoord(x, y, z);
-        const fill: string = this.getPieceFill(c);
-        let stroke = 'black';
-
-        if (c.equals(this.lastLandingCoord) ||
-            c.equals(this.lastStartingCoord)) stroke = 'yellow';
-        else if (c.equals(this.chosenStartingCoord) ||
-                 c.equals(this.chosenLandingCoord)) stroke = 'grey';
-        else if (c.equals(this.lastFirstCapture) ||
-                 c.equals(this.lastSecondCapture)) stroke = 'orange';
-        return { fill, stroke, 'stroke-width': '10px' }; // TODO: stoke-width go in html if not dynamic
-    }
-    public getPieceFill(c: PylosCoord): string {
-        let owner: number = this.slice.getBoardAt(c);
-        if (c.equals(this.chosenLandingCoord)) {
-            owner = this.slice.getCurrentPlayer().value;
+    public getCaseFill(x: number, y: number, z: number): string {
+        const coord: PylosCoord = new PylosCoord(x, y, z);
+        if (this.lastMove) {
+            if (coord.equals(this.lastMove.firstCapture.getOrNull()) ||
+                coord.equals(this.lastMove.secondCapture.getOrNull())) {
+                return this.CAPTURED_FILL;
+            } else if (coord.equals(this.lastMove.landingCoord) ||
+                       coord.equals(this.lastMove.startingCoord.getOrNull())) {
+                return this.MOVED_FILL;
+            }
         }
-        switch (owner) {
-        case Player.NONE.value: return 'lightgrey';
-        case Player.ZERO.value: return 'blue';
-        case Player.ONE.value: return 'red';
+        if (coord.equals(this.chosenFirstCapture)) {
+            return this.PRE_CAPTURED_FILL;
+        } else {
+            return this.NORMAL_FILL;
         }
     }
     public getPieceRay(z: number): number {
@@ -152,6 +145,32 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
     }
     public getPieceCy(x: number, y: number, z: number): number {
         return 100 + (z * 100) + (y * 200);
+    }
+    public isOccupied(x: number, y: number, z: number): boolean {
+        const coord: PylosCoord = new PylosCoord(x, y, z);
+        const reallyOccupied: boolean = this.rules.node.gamePartSlice.getBoardAt(coord) !== Player.NONE.value;
+        const landingCoord: boolean = coord.equals(this.chosenLandingCoord);
+        return reallyOccupied || landingCoord;
+    }
+    public getPieceStyle(x: number, y: number, z: number): any {
+        const c: PylosCoord = new PylosCoord(x, y, z);
+        const fill: string = this.getPieceFill(c);
+        let stroke: string = 'black';
+
+        if (c.equals(this.lastLandingCoord) ||
+            c.equals(this.lastStartingCoord)) stroke = 'yellow';
+        else if (c.equals(this.chosenStartingCoord) ||
+                 c.equals(this.chosenLandingCoord)) stroke = 'grey';
+        else if (c.equals(this.lastFirstCapture) ||
+                 c.equals(this.lastSecondCapture)) stroke = 'orange';
+        return { fill, stroke };
+    }
+    private getPieceFill(c: PylosCoord): string {
+        let owner: number = this.slice.getBoardAt(c);
+        if (c.equals(this.chosenLandingCoord)) {
+            owner = this.slice.getCurrentPlayer().value;
+        }
+        return this.getPlayerColor(Player.of(owner));
     }
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;

@@ -45,20 +45,26 @@ module.exports = {
         } }],
         'new-cap': ['off'], // Because there are false positives
         'no-undef': ['off'], // Because there are false positives
-        'no-unused-vars': ['warn'],
+        'no-unused-vars': ['error'],
         'no-invalid-this': ['warn'],
         'indent': [
             'error', 4,
             {
                 'SwitchCase': 1,
-                'CallExpression': { 'argument': 'first'},
-                'FunctionDeclaration': {'parameters': 'first'}
+                'CallExpression': { 'arguments': 'first' },
+                'FunctionDeclaration': { 'parameters': 'first' },
             },
         ],
         'object-curly-spacing': ['warn', 'always'],
         'no-redeclare': ['warn'], // TODO: add option ignoreDeclarationMerge: true and set to error
         'camelcase': ['warn'],
         'valid-jsdoc': ['warn'],
-        'no-case-declarations': ['warn'],
+        'no-case-declarations': ['off'],
+        'padded-blocks': ['off'],
+        'space-before-function-paren': ['error', {
+            'anonymous': 'never',
+            'named': 'never',
+            'asyncArrow': 'never',
+        }],
     },
 };

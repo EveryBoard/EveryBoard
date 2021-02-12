@@ -1,10 +1,11 @@
-import { TestBed, tick, fakeAsync } from '@angular/core/testing';
+import { TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 
 import { TablutComponent } from './tablut.component';
 import { INCLUDE_VERBOSE_LINE_IN_TEST, AppModule } from 'src/app/app.module';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent }
+    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { RouterTestingModule } from '@angular/router/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { of } from 'rxjs';
@@ -12,7 +13,9 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { TablutMove } from 'src/app/games/tablut/tablut-move/TablutMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { expectClickFail, expectClickSuccess, expectMoveSubmission, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import {
+    expectClickFail, expectClickSuccess, expectMoveSuccess,
+    MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { TablutCase } from 'src/app/games/tablut/tablut-rules/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
@@ -41,7 +44,6 @@ describe('TablutComponent', () => {
 
     let testElements: TestElements;
 
-
     const _: number = TablutCase.UNOCCUPIED.value;
     const x: number = TablutCase.INVADERS.value;
     const i: number = TablutCase.DEFENDERS.value;
@@ -63,15 +65,16 @@ describe('TablutComponent', () => {
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
-        const fixture = TestBed.createComponent(LocalGameWrapperComponent);
+        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
         wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
-        const debugElement = fixture.debugElement;
+        const debugElement: DebugElement = fixture.debugElement;
         tick(1);
-        const gameComponent = wrapper.gameComponent as TablutComponent;
-        const cancelSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
+        const gameComponent: TablutComponent = wrapper.gameComponent as TablutComponent;
+        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
-        testElements = { fixture, debugElement, gameComponent, cancelSpy, chooseMoveSpy };
+        const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
+        testElements = { fixture, debugElement, gameComponent, cancelMoveSpy, chooseMoveSpy, onValidUserMoveSpy };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
@@ -84,17 +87,17 @@ describe('TablutComponent', () => {
         const message: string = 'Pour votre premier clic, choisissez une de vos pièces.';
         await expectClickFail('#click_0_0', testElements, message);
     }));
-    it('Should allow simple move', async () => {
+    it('Should allow simple move', async() => {
         await expectClickSuccess('#click_4_1', testElements);
         const moveExpectations: MoveExpectations = {
             move: new TablutMove(new Coord(4, 1), new Coord(0, 1)),
             slice: testElements.gameComponent.rules.node.gamePartSlice,
             scoreZero: null,
-            scoreOne: null
-        }
-        await expectMoveSubmission('#click_0_1', testElements, moveExpectations);
+            scoreOne: null,
+        };
+        await expectMoveSuccess('#click_0_1', testElements, moveExpectations);
     });
-    it('Diagonal move attempt should not throw', async () => {
+    it('Diagonal move attempt should not throw', async() => {
         await expectClickSuccess('#click_3_0', testElements);
         let threw = false;
         try {
@@ -127,8 +130,8 @@ describe('TablutComponent', () => {
             move: new TablutMove(new Coord(1, 0), new Coord(2, 0)),
             slice: initialSlice,
             scoreOne: null,
-            scoreZero: null
-        }
+            scoreZero: null,
+        };
         await expectMoveSubmission('#click_2_0', testElements, expactions);
 
         const tablutGameComponent: TablutComponent = <TablutComponent> testElements.gameComponent;

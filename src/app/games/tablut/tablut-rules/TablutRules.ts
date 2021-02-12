@@ -99,7 +99,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         return MGPValidation.SUCCESS;
     }
     private static tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, board: number[][]): Coord {
-        const LOCAL_VERBOSE: boolean = false;
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
          * return the captured coord, or null if no capture possible
@@ -121,7 +120,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         }
         return this.capturePawn(player, landingPawn, d, board);
     }
-    private static isKing(piece: number): boolean {
+    public static isKing(piece: number): boolean {
         return (piece === TablutCase.PLAYER_ZERO_KING.value) ||
                (piece === TablutCase.PLAYER_ONE_KING.value);
     }
@@ -306,27 +305,27 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         center -= center % 2;
         return (c.x === center && c.y === center);
     }
-    private static getAbsoluteOwner(c: Coord, board: NumberTable): Player {
+    public static getAbsoluteOwner(c: Coord, board: NumberTable): Player {
         const caseC: number = board[c.y][c.x];
         let owner: Player;
         switch (caseC) {
-        case TablutCase.PLAYER_ZERO_KING.value:
-            owner = Player.ZERO;
-            break;
-        case TablutCase.PLAYER_ONE_KING.value:
-            owner = Player.ONE;
-            break;
-        case TablutCase.INVADERS.value:
-            owner = TablutPartSlice.INVADER_START ? Player.ZERO : Player.ONE;
-            break;
-        case TablutCase.DEFENDERS.value:
-            owner = TablutPartSlice.INVADER_START ? Player.ONE : Player.ZERO;
-            break;
-        case TablutCase.UNOCCUPIED.value:
-            owner = Player.NONE;
-            break;
-        default:
-            throw new Error('Invalid value on the board');
+            case TablutCase.PLAYER_ZERO_KING.value:
+                owner = Player.ZERO;
+                break;
+            case TablutCase.PLAYER_ONE_KING.value:
+                owner = Player.ONE;
+                break;
+            case TablutCase.INVADERS.value:
+                owner = TablutPartSlice.INVADER_START ? Player.ZERO : Player.ONE;
+                break;
+            case TablutCase.DEFENDERS.value:
+                owner = TablutPartSlice.INVADER_START ? Player.ONE : Player.ZERO;
+                break;
+            case TablutCase.UNOCCUPIED.value:
+                owner = Player.NONE;
+                break;
+            default:
+                throw new Error('Invalid value on the board');
         }
         return owner;
     }

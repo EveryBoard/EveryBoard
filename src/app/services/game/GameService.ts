@@ -4,7 +4,7 @@ import { Observable, Subscription } from 'rxjs';
 import { PartDAO } from '../../dao/part/PartDAO';
 
 import { ICurrentPart, ICurrentPartId, MGPResult, PICurrentPart } from '../../domain/icurrentpart';
-import { IJoiner } from '../../domain/ijoiner';
+import { FirstPlayer, IJoiner } from '../../domain/ijoiner';
 
 import { JoinerService } from '../joiner/JoinerService';
 import { ActivesPartsService } from '../actives-parts/ActivesPartsService';
@@ -19,7 +19,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
     providedIn: 'root',
 })
 export class GameService {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     private followedPartId: string;
 
@@ -29,7 +29,7 @@ export class GameService {
 
     constructor(private partDao: PartDAO,
                 private activesPartsService: ActivesPartsService,
-                private joinerService: JoinerService,
+                public joinerService: JoinerService,
                 private chatService: ChatService) {
         display(GameService.VERBOSE, 'GameService.constructor');
     }
@@ -115,17 +115,17 @@ export class GameService {
     private FUTURE_startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
 
-        let whoStart: 'RANDOM' | 'CREATOR' | 'CHOSEN_PLAYER' = joiner['whoStart'];
-        if (whoStart === 'RANDOM') {
+        let whoStart: FirstPlayer = FirstPlayer.of(joiner['whoStart']);
+        if (whoStart === FirstPlayer.RANDOM) {
             if (Math.random() < 0.5) {
-                whoStart = 'CREATOR';
+                whoStart = FirstPlayer.CREATOR;
             } else {
-                whoStart = 'CHOSEN_PLAYER';
+                whoStart = FirstPlayer.CHOSEN_PLAYER;
             }
         }
         let playerZero: string;
         let playerOne: string;
-        if (whoStart === 'CREATOR') {
+        if (whoStart === FirstPlayer.CREATOR) {
             playerZero = joiner.creator;
             playerOne = joiner.chosenPlayer;
         } else {

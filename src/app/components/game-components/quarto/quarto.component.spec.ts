@@ -7,10 +7,10 @@ import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule } from 'src/app/app.module';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent }
+    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { QuartoRules } from 'src/app/games/quarto/quarto-rules/QuartoRules';
 import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { By } from '@angular/platform-browser';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';

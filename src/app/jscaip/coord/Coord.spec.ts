@@ -46,4 +46,9 @@ describe('Coord', () => {
         expect(coord.getCoordsToward(neighboors)).toEqual([]);
         expect(coord.getCoordsToward(alignedFar)).toEqual([new Coord(1, 1)]);
     });
+    it('Should throw when asked distance toward an unaligned coord', () => {
+        const coord = new Coord(0, 0);
+        const unalignedCoord = new Coord(1,2);
+        expect(() => coord.getDistance(unalignedCoord)).toThrowError('Cannot calculate distance with non aligned coords.');
+    });
 });

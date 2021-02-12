@@ -26,8 +26,19 @@ export class QuartoHasher {
         { coord: new Coord(0, 3), dir: Orthogonal.RIGHT },
         { coord: new Coord(0, 3), dir: Orthogonal.UP },
     ];
-    public filter(board: NumberTable): QuartoHashInfo {
-        throw new Error('todo');
+    public static filter(board: NumberTable): QuartoHashInfo {
+        let quartoHasherInfos: QuartoHashInfo[] = QuartoHasher.coordDirs.map((coordDir: CoordDir) => {
+            return {
+                coordDir,
+                firstPiece: MGPOptional.empty()
+            };
+        });
+        let level: number = 0;
+        while (level < 15) {
+            quartoHasherInfos = QuartoHasher.filterSubLevel(board, level, quartoHasherInfos);
+            level++;
+        }
+        return quartoHasherInfos[0];
     }
     public static filterSubLevel(
         board: NumberTable,
