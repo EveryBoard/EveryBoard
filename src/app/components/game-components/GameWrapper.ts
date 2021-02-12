@@ -11,6 +11,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { AwaleComponent } from './awale/awale.component';
 import { DvonnComponent } from './dvonn/dvonn.component';
 import { EncapsuleComponent } from './encapsule/encapsule.component';
+import { GipfComponent } from './gipf/gipf.component';
 import { GoComponent } from './go/go.component';
 import { KamisadoComponent } from './kamisado/kamisado.component';
 import { MinimaxTestingComponent } from './minimax-testing/minimax-testing.component';
@@ -68,6 +69,8 @@ export abstract class GameWrapper {
             return EncapsuleComponent;
         case 'Epaminondas':
             return EpaminondasComponent;
+        case 'Gipf':
+            return GipfComponent;
         case 'Go':
             return GoComponent;
         case 'MinimaxTesting':

@@ -32,13 +32,13 @@ describe('GipfRules:', () => {
             const slice: GipfPartSlice = rules.node.gamePartSlice;
             const board: HexaBoard<GipfPiece> = slice.hexaBoard;
             const expectedBoard: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-                [__, __, __, A1, __, __, B1],
+                [__, __, __, B1, __, __, A1],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [B1, __, __, __, __, __, A1],
+                [A1, __, __, __, __, __, B1],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [A1, __, __, B1, __, __, __],
+                [B1, __, __, A1, __, __, __],
             ], __, GipfPiece.encoder);
             board.forEachCoord((c: Coord, content: GipfPiece) => {
                 expect(content).toEqual(expectedBoard.getAt(c));

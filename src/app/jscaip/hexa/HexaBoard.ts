@@ -9,13 +9,21 @@ export class HexaBoard<T> {
     }
 
     public static fromNumberTable<T>(table: NumberTable, empty: T, encoder: Encoder<T>): HexaBoard<T> {
+        HexaBoard.checkTableFormat(table);
         const contents: Table<T> = ArrayUtils.mapBiArray(table, encoder.decode);
-        // TODO: could check that radius makes sense (e.g, contents.length is odd, contents[0].length is equal to contents.length
         return new HexaBoard(contents, (contents.length-1)/2, empty, encoder);
+    }
+    private static checkTableFormat<T>(table: ReadonlyArray<ReadonlyArray<T>>) {
+        if (table.length % 2 == 0) {
+            throw new Error('Cannot create an HexaBoard from a even-length table');
+        }
+        if (table[0].length !== table.length) {
+            throw new Error('Cannot create an HexaBoard from a non-square table');
+        }
     }
 
     public static fromTable<T>(table: Table<T>, empty: T, encoder: Encoder<T>): HexaBoard<T> {
-        // TODO: see above TODO
+        HexaBoard.checkTableFormat(table)
         return new HexaBoard(table, (table.length-1)/2, empty, encoder);
     }
 

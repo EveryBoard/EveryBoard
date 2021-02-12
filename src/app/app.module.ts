@@ -39,6 +39,7 @@ import { AwaleComponent } from './components/game-components/awale/awale.compone
 import { DvonnComponent } from './components/game-components/dvonn/dvonn.component';
 import { EncapsuleComponent } from './components/game-components/encapsule/encapsule.component';
 import { EpaminondasComponent } from './components/game-components/epaminondas/epaminondas.component';
+import { GipfComponent } from './components/game-components/gipf/gipf.component';
 import { GoComponent } from './components/game-components/go/go.component';
 import { KamisadoComponent } from './components/game-components/kamisado/kamisado.component';
 import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
@@ -85,6 +86,7 @@ const routes: Route [] = [
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,
+        GipfComponent,
         GoComponent,
         KamisadoComponent,
         MinimaxTestingComponent,
@@ -102,6 +104,7 @@ const routes: Route [] = [
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,
+        GipfComponent,
         GoComponent,
         KamisadoComponent,
         MinimaxTestingComponent,

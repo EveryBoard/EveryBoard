@@ -28,6 +28,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         'Dvonn', // 13ème ?
         'Encapsule', //
         'Epaminondas', // 14ème
+        'Gipf', // 15ème
         'Go', //
         'Kamisado', // 12ème ??
         // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached

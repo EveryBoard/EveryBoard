@@ -13,13 +13,13 @@ export class GipfPartSlice extends GamePartSlice {
             const A1: GipfPiece = GipfPiece.PLAYER_ZERO_SIMPLE;
             const B1: GipfPiece = GipfPiece.PLAYER_ONE_SIMPLE;
             const numberedBoard: Table<number> = ArrayUtils.mapBiArray([
-                [__, __, __, A1, __, __, B1],
+                [__, __, __, B1, __, __, A1],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [B1, __, __, __, __, __, A1],
+                [A1, __, __, __, __, __, B1],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [A1, __, __, B1, __, __, __],
+                [B1, __, __, A1, __, __, __],
             ], GipfPiece.encoder.encode);
             const board: HexaBoard<GipfPiece> = HexaBoard.fromNumberTable(numberedBoard, __, GipfPiece.encoder);
             return new GipfPartSlice(board,
@@ -30,13 +30,13 @@ export class GipfPartSlice extends GamePartSlice {
             const A2: GipfPiece = GipfPiece.PLAYER_ZERO_SIMPLE;
             const B2: GipfPiece = GipfPiece.PLAYER_ONE_SIMPLE;
             const numberedBoard: Table<number> = ArrayUtils.mapBiArray([
-                [__, __, __, A2, __, __, B2],
+                [__, __, __, B2, __, __, A2],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [B2, __, __, __, __, __, A2],
+                [A2, __, __, __, __, __, B2],
                 [__, __, __, __, __, __, __],
                 [__, __, __, __, __, __, __],
-                [A2, __, __, B2, __, __, __],
+                [B2, __, __, A2, __, __, __],
             ], GipfPiece.encoder.encode);
             const board: HexaBoard<GipfPiece> = HexaBoard.fromNumberTable(numberedBoard, __, GipfPiece.encoder);
             return new GipfPartSlice(board,
