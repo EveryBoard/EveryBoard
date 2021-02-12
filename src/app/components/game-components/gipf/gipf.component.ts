@@ -7,9 +7,8 @@ import { GipfRules } from 'src/app/games/gipf/gipf-rules/GipfRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
 import { HexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
-import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 
 @Component({
     selector: 'app-gipf',
@@ -98,7 +97,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     public getPieceStyle(x: number, y: number): any {
         const piece: GipfPiece = this.getPiece(x, y);
         return {
-            fill: piece.player === Player.ZERO ? 'white' : 'black',
+            fill: this.getPlayerColor(piece.player),
             stroke: 'black',
         }
     }
