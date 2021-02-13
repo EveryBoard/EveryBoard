@@ -24,6 +24,6 @@ jobs:
       if: repo = MartinREMY42/multi-game-project AND branch = master
       script:
         - 'if [ "$TRAVIS_PULL_REQUEST" = "false" ]; then sh ./.travis/deploy.sh; fi'
-    - stage: Linter
-      script: npx eslint --ext .ts ./
+#    - stage: Linter
+#      script: npx eslint --ext .ts ./
 

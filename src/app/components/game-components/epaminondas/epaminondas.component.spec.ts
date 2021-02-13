@@ -17,8 +17,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/player/Player';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { EpaminondasComponent } from './epaminondas.component';
 
 const activatedRouteStub = {

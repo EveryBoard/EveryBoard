@@ -1,4 +1,4 @@
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';

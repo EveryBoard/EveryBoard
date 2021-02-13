@@ -305,27 +305,27 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         center -= center % 2;
         return (c.x === center && c.y === center);
     }
-    public static getAbsoluteOwner(c: Coord, board: NumberTable): Player {
+    private static getAbsoluteOwner(c: Coord, board: NumberTable): Player {
         const caseC: number = board[c.y][c.x];
         let owner: Player;
         switch (caseC) {
-            case TablutCase.PLAYER_ZERO_KING.value:
-                owner = Player.ZERO;
-                break;
-            case TablutCase.PLAYER_ONE_KING.value:
-                owner = Player.ONE;
-                break;
-            case TablutCase.INVADERS.value:
-                owner = TablutPartSlice.INVADER_START ? Player.ZERO : Player.ONE;
-                break;
-            case TablutCase.DEFENDERS.value:
-                owner = TablutPartSlice.INVADER_START ? Player.ONE : Player.ZERO;
-                break;
-            case TablutCase.UNOCCUPIED.value:
-                owner = Player.NONE;
-                break;
-            default:
-                throw new Error('Invalid value on the board');
+        case TablutCase.PLAYER_ZERO_KING.value:
+            owner = Player.ZERO;
+            break;
+        case TablutCase.PLAYER_ONE_KING.value:
+            owner = Player.ONE;
+            break;
+        case TablutCase.INVADERS.value:
+            owner = TablutPartSlice.INVADER_START ? Player.ZERO : Player.ONE;
+            break;
+        case TablutCase.DEFENDERS.value:
+            owner = TablutPartSlice.INVADER_START ? Player.ONE : Player.ZERO;
+            break;
+        case TablutCase.UNOCCUPIED.value:
+            owner = Player.NONE;
+            break;
+        default:
+            throw new Error('Invalid value on the board');
         }
         return owner;
     }

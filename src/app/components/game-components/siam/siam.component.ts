@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { SiamMove } from 'src/app/games/siam/siam-move/SiamMove';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';

@@ -7,8 +7,7 @@ import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { GoMove } from 'src/app/games/go/go-move/GoMove';
