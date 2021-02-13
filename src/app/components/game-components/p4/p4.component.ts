@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { P4PartSlice } from '../../../games/p4/P4PartSlice';
 import { P4Rules } from '../../../games/p4/p4-rules/P4Rules';
 import { Move } from '../../../jscaip/Move';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';

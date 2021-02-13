@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { GoMove } from 'src/app/games/go/go-move/GoMove';
 import { GoRules } from 'src/app/games/go/go-rules/GoRules';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';

@@ -12,8 +12,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { KamisadoMove } from 'src/app/games/kamisado/kamisado-move/KamisadoMove';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 
 const activatedRouteStub = {
     snapshot: {

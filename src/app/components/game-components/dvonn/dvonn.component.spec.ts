@@ -13,8 +13,7 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
 import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';

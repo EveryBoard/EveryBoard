@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Move } from '../../../jscaip/Move';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { EncapsuleRules } from 'src/app/games/encapsule/encapsule-rules/EncapsuleRules';
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleMove } from 'src/app/games/encapsule/encapsule-move/EncapsuleMove';

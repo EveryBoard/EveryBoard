@@ -29,9 +29,8 @@ import { ServerPageComponent } from './components/normal-component/server-page/s
 import { PartCreationComponent } from './components/normal-component/part-creation/part-creation.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
-import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { OnlineGameWrapperComponent } from './components/game-components/online-game-wrapper/online-game-wrapper.component';
+import { LocalGameWrapperComponent } from './components/game-components/local-game-wrapper/local-game-wrapper.component';
 import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
 import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { ReversiRules } from '../../../games/reversi/reversi-rules/ReversiRules';
 import { ReversiPartSlice } from '../../../games/reversi/ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/reversi-move/ReversiMove';

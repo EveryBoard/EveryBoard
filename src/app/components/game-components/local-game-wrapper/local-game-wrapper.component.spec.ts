@@ -1,7 +1,6 @@
 import { ComponentFixture, TestBed, tick, fakeAsync } from '@angular/core/testing';
 
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, Observable } from 'rxjs';

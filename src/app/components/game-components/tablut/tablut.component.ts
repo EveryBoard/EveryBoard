@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../AbstractGameComponent';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { TablutMove } from 'src/app/games/tablut/tablut-move/TablutMove';
 import { TablutPartSlice } from '../../../games/tablut/TablutPartSlice';
@@ -127,9 +127,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         return move.encode();
     }
     public getPieceStyle(x: number, y: number): any {
-        const coord: Coord = new Coord(x, y);
-        const owner: Player = TablutRules.getAbsoluteOwner(coord, this.board);
-        const fill: string = this.getPlayerColor(owner);
+        const fill: string = this.getPlayerColor(this.board[y][x]);
         const stroke: string = this.getPieceStroke(x, y);
         return { fill, stroke };
     }

@@ -2,8 +2,7 @@ import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testin
 
 import { MinimaxTestingComponent } from './minimax-testing.component';
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/minimax-testing-move/MinimaxTestingMove';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
