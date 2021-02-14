@@ -47,6 +47,9 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         }
     }
     public async onClick(x: number, y: number, z: number): Promise<MGPValidation> {
+        if (this.click('#click_' + x + '_' + y + '_' + z) === false) {
+            return; // SAME  TODO AS THE OTHER ONE, SHOULD FAILURE ?
+        }
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
         const clickedPiece: number = this.slice.getBoardAt(clickedCoord);
         const coordIsAPiece: boolean = clickedPiece === this.slice.getCurrentPlayer().value;

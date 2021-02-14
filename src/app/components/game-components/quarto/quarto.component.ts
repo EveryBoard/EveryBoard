@@ -25,7 +25,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user want to give to the opponent
 
     public updateBoard(): void {
-        console.log('board updated');
         const slice: QuartoPartSlice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
@@ -50,12 +49,9 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
-        console.log('quarto component click on ' + x + ', ' + y);
         if (this.click('#chooseCoord_' + x + '_' + y) === false) {
-            console.log('chooseCoord_  click refused');
             return;
         }
-        console.log('chooseCoord_ click allowed');
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
@@ -81,8 +77,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
         if (this.click('#choosePiece_' + givenPiece) === false) {
-            console.log("choosePiece click was refused");
-            return;
+            return; // TODO: shouldn't it return a kind of failure ?
         }
         console.log('choose piece click allowed');
 
@@ -102,7 +97,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         this.lastMove = new Coord(-1, -1);
     }
     public cancelMove(reason?: string): MGPValidation {
-        console.log('cancel quarto move because "' + reason + '"');
         // called when the user do a wrong move, then, we unselect his pieceToGive and/or the chosen coord
         this.cancelMoveAttempt();
         if (reason) {

@@ -1,6 +1,7 @@
 import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
+import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
@@ -17,10 +18,14 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
 
     public static VERBOSE: boolean = true;
 
-    public steps: DidacticialStep[] = awaleDidacticial; // TODO: OF FUCK NOT THAT
+    public COMPLETED_TUTORIAL_MESSAGE: string = 'Félicitation, vous avez fini le tutoriel.'
+
+    public steps: DidacticialStep[];
     public stepIndex: number = 0;
     public currentMessage: string;
-    public mustRetry: boolean = false;
+    public stepAttemptMade: boolean = false;
+    public stepFinished: boolean[];
+    public tutorialOver: boolean = false;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
         actRoute: ActivatedRoute,
@@ -32,15 +37,38 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         display(DidacticialGameWrapperComponent.VERBOSE, 'DidacticialGameWrapperComponent.constructor');
     }
+    private getCompletionArray(): boolean[] {
+        return awaleDidacticial.map(() => {
+            return false;
+        });
+    }
     public ngAfterViewInit(): void {
         display(DidacticialGameWrapperComponent.VERBOSE, 'DidacticialGameWrapperComponent.ngAfterViewInit');
         this.afterGameIncluderViewInit();
-        const currentStep: DidacticialStep = this.steps[this.stepIndex];
-        this.currentMessage = currentStep.instruction;
-        this.cdr.detectChanges();
+        let didacticial: DidacticialStep[];
+        const game: string = this.actRoute.snapshot.paramMap.get('compo');
+        switch (game) {
+            case 'Awale':
+                didacticial = awaleDidacticial;
+                break;
+            case 'Quarto':
+                didacticial = [
+                    new DidacticialStep('title', 'instruction', QuartoPartSlice.getInitialSlice(), [], [], null, null),
+                ];
+                break;
+            default:
+                throw new Error('TODO: name that shit');
+        }
+        this.startDidacticial(didacticial);
+    }
+    public startDidacticial(didacticial: DidacticialStep[]): void {
+        this.steps = didacticial;
+        this.stepFinished = this.getCompletionArray();
+        this.showStep(0);
     }
     private showStep(stepIndex: number): void {
         console.log('showStep ' + stepIndex);
+        this.stepAttemptMade = false;
         this.stepIndex = stepIndex;
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
@@ -56,41 +84,60 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             this.gameComponent.updateBoard();
             if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
                 console.log('accepted move was given');
-                this.currentMessage = currentStep.successMessage;
+                this.showStepSuccess();
             } else {
                 this.currentMessage = currentStep.failureMessage;
-                this.mustRetry = true;
                 console.log('not accepted move was given');
             }
+            this.stepAttemptMade = true;
             this.cdr.detectChanges();
         } else {
             console.log('didacticial was not awaiting a move');
         }
     }
     public retry(): void {
-        this.mustRetry = false;
+        console.log('retry');
+        this.stepAttemptMade = false;
         this.showStep(this.stepIndex);
     }
     public onUserClick: (elementName: string) => boolean = (elementName: string) => {
         console.log('didacticial-game-wrapper onUserClick on ' + elementName);
+        if (this.stepAttemptMade) {
+            console.log('step finished, don\'t click');
+            return false;
+        }
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
             console.log('didacticial was indeed awaiting a click');
             this.gameComponent.updateBoard();
             if (currentStep.acceptedClicks.some((m: string) => m === elementName)) {
                 console.log('accepted click was done');
-                this.currentMessage = currentStep.successMessage;
+                this.showStepSuccess();
             } else {
                 this.currentMessage = currentStep.failureMessage;
-                this.mustRetry = true;
                 console.log('not accepted click was made');
             }
-        } else {
-            console.log('didacticial is not awaiting a click');
+            this.stepAttemptMade = true;
         }
         return true;
     }
+    private showStepSuccess(): void {
+        console.log('show step success');
+        const currentStep: DidacticialStep = this.steps[this.stepIndex];
+        this.currentMessage = currentStep.successMessage;
+        this.stepFinished[this.stepIndex] = true;
+    }
     public next(): void {
-        this.showStep(this.stepIndex + 1);
+        console.log('next')
+        if (this.stepFinished.every((value: boolean) => value === true)) {
+            console.log('finisehd');
+            this.currentMessage = this.COMPLETED_TUTORIAL_MESSAGE;
+            this.tutorialOver = true;
+        } else if (this.stepIndex < this.steps.length) {
+            console.log('can go next');
+            this.showStep(this.stepIndex + 1);
+        } else {
+            throw new Error('what the hell');
+        }
     }
 }

@@ -43,12 +43,10 @@ export const expectClickSuccess: (elementName: string, testElements: TestElement
             return;
         } else {
             element.triggerEventHandler('click', null);
-            console.log('click just called');
             await testElements.fixture.whenStable();
-            console.log('thing now stable');
             testElements.fixture.detectChanges();
-            console.log('now changed are detected but we kind of dont care amarite ?');
             expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
+            testElements.clickSpy.calls.reset();
             expect(testElements.cancelMoveSpy).not.toHaveBeenCalled();
             expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
         }
@@ -64,10 +62,30 @@ export const expectClickFail: (elementName: string, testElements: TestElements, 
             await testElements.fixture.whenStable();
             testElements.fixture.detectChanges();
             expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
+            testElements.clickSpy.calls.reset();
             expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
             expect(testElements.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+            testElements.cancelMoveSpy.calls.reset();
         }
     };
+export const expectClickForbidden: (elementName: string, testElements: TestElements) => Promise<void> =
+async(elementName: string, testElements: TestElements) => {
+    const element: DebugElement = testElements.debugElement.query(By.css(elementName));
+    expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+    if (element == null) {
+        return;
+    } else {
+        expect(testElements.gameComponent.click(elementName)).toBeFalse();
+        testElements.clickSpy.calls.reset();
+        element.triggerEventHandler('click', null);
+        await testElements.fixture.whenStable();
+        testElements.fixture.detectChanges();
+        expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
+        testElements.clickSpy.calls.reset();
+        expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
+        expect(testElements.cancelMoveSpy).not.toHaveBeenCalled();
+    }
+};
 export const expectMoveSuccess: (
     elementName: string,
     testElements: TestElements,
@@ -83,8 +101,11 @@ export const expectMoveSuccess: (
             testElements.fixture.detectChanges();
             const { move, slice, scoreZero, scoreOne } = { ...expectations };
             expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
+            testElements.clickSpy.calls.reset();
             expect(testElements.chooseMoveSpy).toHaveBeenCalledOnceWith(move, slice, scoreZero, scoreOne);
+            testElements.chooseMoveSpy.calls.reset();
             expect(testElements.onValidUserMoveSpy).toHaveBeenCalledOnceWith(move, scoreZero, scoreOne);
+            testElements.onValidUserMoveSpy.calls.reset();
         }
     };
 export const expectMoveFailure: (
@@ -103,8 +124,11 @@ export const expectMoveFailure: (
             testElements.fixture.detectChanges();
             const { move, slice, scoreZero, scoreOne } = { ...expectations };
             expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
+            testElements.clickSpy.calls.reset();
             expect(testElements.chooseMoveSpy).toHaveBeenCalledOnceWith(move, slice, scoreZero, scoreOne);
+            testElements.chooseMoveSpy.calls.reset();
             expect(testElements.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
+            testElements.cancelMoveSpy.calls.reset();
             expect(testElements.onValidUserMoveSpy).not.toHaveBeenCalled();
         }
     };
