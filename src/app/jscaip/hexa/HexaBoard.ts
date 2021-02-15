@@ -27,7 +27,7 @@ export class HexaBoard<T> {
         return new HexaBoard(table, (table.length-1)/2, empty, encoder);
     }
 
-    private constructor(public readonly contents: Table<T>,
+    public constructor(public readonly contents: Table<T>,
                         public readonly radius: number,
                         public readonly empty: T,
                         public readonly encoder: Encoder<T>) {

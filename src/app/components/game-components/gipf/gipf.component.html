@@ -5,25 +5,22 @@
   <g *ngFor="let y of boardIndices;" [attr.y]="y">
     <g *ngFor="let x of boardIndices;" [attr.x]="x">
       <g *ngIf="isOnBoard(x, y)">
-        <g>
+        <g (click)="onClick(x, y)">
         <!-- Background -->
         <polyline [attr.points]="getHexaCoordinatesForXY(x, y)"
-                  fill="none"
-                  style="stroke:black"/>
+                  style="stroke:black; stroke-width: 8px;"
+                  [attr.fill]="getHighlightFill(x, y)"
+                  stroke-linecap="round"/>
         <!-- Piece -->
         <circle *ngIf="isPiece(x, y)"
-                (click)="onClick(x, y)"
                 [attr.cx] = "getCenter(x, y).x"
                 [attr.cy] = "getCenter(x, y).y"
                 [attr.r]="getPieceSize()"
-                style="stroke-width: 5px;"
                 [ngStyle]="getPieceStyle(x, y)"/>
         <circle *ngIf="isDoublePiece(x, y)"
-                (click)="onClick(x, y)"
                 [attr.cx] = "getCenter(x, y).x"
                 [attr.cy] = "getCenter(x, y).y"
                 [attr.r]="getPieceSize() * 0.85"
-                style="stroke-width: 5px;"
                 [ngStyle]="getPieceStyle(x, y)"/>
         </g>
       </g>
