@@ -115,53 +115,56 @@ export abstract class GameWrapper {
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
         this.gameComponent = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance;
         // Shortent by T<S = Truc>
+
         this.gameComponent.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
         this.gameComponent.click = this.onUserClick; // So that when the game component click
         // the game wrapper can act accordly
+        this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by DidacticialGameWrapper
+
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
     }
-    public receiveChildData: (move: Move,
-                              slice: GamePartSlice,
-                              scorePlayerZero: number,
-                              scorePlayerOne: number) => Promise<MGPValidation> =
-        async(
-            move: Move,
-            slice: GamePartSlice,
-            scorePlayerZero: number,
-            scorePlayerOne: number): Promise<MGPValidation> =>
-        {
-            const LOCAL_VERBOSE: boolean = false;
-            display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
-                gameWrapper_receiveChildData_AKA_chooseMove: {
-                    move,
-                    slice,
-                    scorePlayerZero,
-                    scorePlayerOne,
-                },
-            });
-            if (!this.isPlayerTurn()) {
-                return MGPValidation.failure('It is not your turn.');
-            }
-            if (this.endGame) {
-                return MGPValidation.failure('Game is finished.');
-            }
-            const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
-            if (legality.legal.isFailure()) {
-                this.gameComponent.cancelMove(legality.legal.getReason());
-                return legality.legal;
-            }
-            await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
-            display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: valid move legal');
-            return MGPValidation.SUCCESS;
+    public receiveChildData: (m: Move, s: GamePartSlice, s0: number, s1: number) => Promise<MGPValidation> =
+    async(
+        move: Move,
+        slice: GamePartSlice,
+        scorePlayerZero: number,
+        scorePlayerOne: number): Promise<MGPValidation> =>
+    {
+        const LOCAL_VERBOSE: boolean = false;
+        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
+            gameWrapper_receiveChildData_AKA_chooseMove: {
+                move,
+                slice,
+                scorePlayerZero,
+                scorePlayerOne,
+            },
+        });
+        if (!this.isPlayerTurn()) {
+            return MGPValidation.failure('It is not your turn.');
         }
+        if (this.endGame) {
+            return MGPValidation.failure('Game is finished.');
+        }
+        const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
+        if (legality.legal.isFailure()) {
+            this.gameComponent.cancelMove(legality.legal.getReason());
+            return legality.legal;
+        }
+        await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
+        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: valid move legal');
+        return MGPValidation.SUCCESS;
+    }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onUserClick: (elementName: string) => boolean = (elementName: string) => {
         console.log('onUserClick on ' + elementName);
-        return this.isPlayerTurn();
+        return this.isPlayerTurn(); // Not the same logic to use in Online and Local, make abstract
+    }
+    public onCancelMove(): void {
+        // Non needed by default'
     }
     public isPlayerTurn(): boolean {
         if (this.observerRole > 1) {

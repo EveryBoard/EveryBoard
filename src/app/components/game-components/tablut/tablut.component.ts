@@ -111,14 +111,8 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const coord: Coord = new Coord(x, y);
         return TablutRules.getRelativeOwner(player, coord, this.board) === RelativePlayer.PLAYER;
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosen = new Coord(-1, -1);
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     public isThrone(x: number, y: number): boolean {
         return TablutRules.isThrone(new Coord(x, y));

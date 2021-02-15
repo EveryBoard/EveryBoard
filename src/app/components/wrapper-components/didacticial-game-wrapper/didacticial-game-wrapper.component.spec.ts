@@ -12,7 +12,7 @@ import { UserService } from 'src/app/services/user/UserService';
 import { By } from '@angular/platform-browser';
 import { DidacticialGameWrapperComponent } from './didacticial-game-wrapper.component';
 import {
-    clickElement, expectClickForbidden, expectClickSuccess,
+    clickElement, expectClickFail, expectClickForbidden, expectClickSuccess,
     expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { DidacticialStep } from './DidacticialStep';
 import { QuartoComponent } from '../../game-components/quarto/quarto.component';
@@ -378,7 +378,7 @@ fdescribe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
     }));
-    it('Should not allow to click again on the board after success', fakeAsync(async() => {
+    it('Should forbid clicking again on the board after success', fakeAsync(async() => {
         // Given a DidacticialStep on which a valid move has been done.
         component.steps = [
             new DidacticialStep(
@@ -413,6 +413,28 @@ fdescribe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
     }));
+    it('Should forbid clicking on the board when step don\'t await anything', fakeAsync(async() => {
+        // Given a DidacticialStep on which nothing is awaited
+        component.steps = [
+            new DidacticialStep(
+                'title',
+                'instruction',
+                QuartoPartSlice.getInitialSlice(),
+                [],
+                [],
+                'Bravo.',
+                'Perdu.',
+            ),
+        ];
+        // when clicking
+        await expectClickForbidden('#chooseCoord_2_2', testElements);
+
+        // expect to see still the steps success message on component
+        const expectedMessage: string = 'instruction';
+        const currentMessage: string =
+            testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
+        expect(currentMessage).toBe(expectedMessage);
+    }));
     it('Should show congratulation at the end of the didacticial', fakeAsync(async() => {
         // Given a DidacticialStep whose last step has been done
         component.steps = [
@@ -437,8 +459,93 @@ fdescribe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
     }));
-    it('Should show title of the learning steps and make them clickage to go to chosen next step');
-    it('If cancelMove has been called, it must be the automatic message of didacticial');
+    it('Should show title of the steps', fakeAsync(async() => {
+        // Given a DidacticialStep with 3 steps
+        const didacticial: DidacticialStep[] = [
+            new DidacticialStep(
+                'title 0', 'instruction',
+                QuartoPartSlice.getInitialSlice(),
+                [], [], 'Bravo.', 'Perdu.',
+            ),
+            new DidacticialStep(
+                'title 1', 'instruction',
+                QuartoPartSlice.getInitialSlice(),
+                [], [], 'Bravo.', 'Perdu.',
+            ),
+            new DidacticialStep(
+                'title 2', 'instruction',
+                QuartoPartSlice.getInitialSlice(),
+                [], [], 'Bravo.', 'Perdu.',
+            ),
+        ];
+        // when page rendered
+        component.startDidacticial(didacticial);
+
+        // expect to see three "li" with step title
+        const expectedTitle: string = '<span style="color: black;">title 2</span>';
+        const currentTitle: string =
+            testElements.debugElement.query(By.css('#step_2')).nativeElement.innerHTML;
+        expect(currentTitle).toBe(expectedTitle);
+    }));
+    it('Should go to specific step when clicking on it', fakeAsync(async() => {
+        // Given a DidacticialStep with 3 steps
+        const didacticial: DidacticialStep[] = [
+            new DidacticialStep(
+                'title 0', 'instruction 0',
+                QuartoPartSlice.getInitialSlice(),
+                [], [], 'Bravo.', 'Perdu.',
+            ),
+            new DidacticialStep(
+                'title 1', 'instruction 1',
+                QuartoPartSlice.getInitialSlice(),
+                [], [], 'Bravo.', 'Perdu.',
+            ),
+            new DidacticialStep(
+                'title 2', 'instruction 2',
+                QuartoPartSlice.getInitialSlice(),
+                [], [], 'Bravo.', 'Perdu.',
+            ),
+        ];
+        component.startDidacticial(didacticial);
+
+        // when clicking on step 2
+        expect(await clickElement('#step_2', testElements)).toBeTruthy();
+
+        // expect to have the step 2 shown
+        const expectedMessage: string = 'instruction 2';
+        const currentMessage: string =
+            testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
+        expect(currentMessage).toBe(expectedMessage);
+    }));
+    it('When invalid move is done, in addition to the toast, message should become the reason', fakeAsync(async() => {
+        // Given a DidacticialStep with possible invalid clicks
+        const didacticial: DidacticialStep[] = [
+            new DidacticialStep(
+                'title 0', 'instruction 0',
+                new QuartoPartSlice([
+                    [0, 16, 16, 16],
+                    [16, 16, 16, 16],
+                    [16, 16, 16, 16],
+                    [16, 16, 16, 16],
+                ], 0, QuartoPiece.ABBA),
+                [new QuartoMove(3, 3, QuartoPiece.BBBB)],
+                [], 'Bravo.', 'Perdu.',
+            ),
+        ];
+        component.startDidacticial(didacticial);
+
+        // When doing invalid click
+        await expectClickFail('#chooseCoord_0_0', testElements, 'Choisissez une case vide.');
+
+        // expect to see cancelMove reason as message
+        const expectedMessage: string = 'Choisissez une case vide.';
+        const currentMessage: string =
+            testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
+        expect(currentMessage).toBe(expectedMessage);
+    }));
     it('cliquer sur "suivant" n\'apparait qu\'après avoir réussi, cliquer sur "passer" permet à tout moment de skipper sans réussite');
-    it('Should have a ""');
+    it('Should not show button \'next\' on last step when no previous one is unfinished');
+    it('Should propose to restart the whole didacticial when last step finished');
+    it('Should move to the next unfinished step when next step is finished');
+    it('Should move to the first unfinished step when all next steps are finished');
 });

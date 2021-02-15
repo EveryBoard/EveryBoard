@@ -4,12 +4,14 @@ import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils'
 
 export class DvonnPartSlice extends GamePartSlice {
     public static getInitialSlice(): DvonnPartSlice {
-        return new DvonnPartSlice(0, ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(), (p) => p.getValue()), false);
+        return new DvonnPartSlice(ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(), (p) => p.getValue()), 0, false);
     }
-    public constructor(turn: number,
+    public constructor(
         board: number[][],
-                       // Did a PASS move have been performed on the last turn?
-                       public readonly alreadyPassed: boolean) {
+        turn: number,
+        // Did a PASS move have been performed on the last turn?
+        public readonly alreadyPassed: boolean)
+    {
         super(ArrayUtils.copyBiArray(board), turn);
     }
 }

@@ -1,13 +1,22 @@
-import { AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef, Component, ComponentFactoryResolver } from '@angular/core';
+import {
+    AfterViewInit, ChangeDetectionStrategy, ChangeDetectorRef,
+    Component, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { UserService } from 'src/app/services/user/UserService';
 import { display } from 'src/app/utils/collection-lib/utils';
-import { awaleDidacticial, DidacticialStep } from './DidacticialStep';
+import { awaleDidacticial } from './didacticials/awale-didacticial';
+import { p4Didacticial } from './didacticials/p4-didacticial';
+import { DidacticialStep } from './DidacticialStep';
+
+
+
+
+import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
+import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -37,31 +46,43 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         display(DidacticialGameWrapperComponent.VERBOSE, 'DidacticialGameWrapperComponent.constructor');
     }
+    public getStepColor(index: number): string {
+        if (this.stepFinished[index]) {
+            return 'green';
+        } else {
+            return 'red';
+        }
+    }
     private getCompletionArray(): boolean[] {
-        return awaleDidacticial.map(() => {
+        return this.steps.map(() => {
             return false;
         });
     }
     public ngAfterViewInit(): void {
         display(DidacticialGameWrapperComponent.VERBOSE, 'DidacticialGameWrapperComponent.ngAfterViewInit');
         this.afterGameIncluderViewInit();
-        let didacticial: DidacticialStep[];
+        const didacticial: DidacticialStep[] = this.getDidacticial();
+        this.startDidacticial(didacticial);
+    }
+    private getDidacticial(): DidacticialStep[] {
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
         switch (game) {
             case 'Awale':
-                didacticial = awaleDidacticial;
-                break;
+                return awaleDidacticial;
+            case 'Dvonn':
+                return dvonnDidacticial;
+            case 'P4':
+                return p4Didacticial;
             case 'Quarto':
-                didacticial = [
+                return [
                     new DidacticialStep('title', 'instruction', QuartoPartSlice.getInitialSlice(), [], [], null, null),
                 ];
-                break;
             default:
                 throw new Error('TODO: name that shit');
         }
-        this.startDidacticial(didacticial);
     }
     public startDidacticial(didacticial: DidacticialStep[]): void {
+        console.log('start didacticial indeed called');
         this.steps = didacticial;
         this.stepFinished = this.getCompletionArray();
         this.showStep(0);
@@ -118,8 +139,16 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
                 console.log('not accepted click was made');
             }
             this.stepAttemptMade = true;
+            return true;
+        } else {
+            return currentStep.isMove();
         }
-        return true;
+    }
+    public onCancelMove: (reason?: string) => void = (reason?: string) => {
+        console.log("currentMessage is now: " + reason);
+        this.stepAttemptMade = true;
+        this.currentMessage = reason;
+        this.cdr.detectChanges();
     }
     private showStepSuccess(): void {
         console.log('show step success');
@@ -130,11 +159,11 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public next(): void {
         console.log('next')
         if (this.stepFinished.every((value: boolean) => value === true)) {
-            console.log('finisehd');
+            console.log('finished, don\'t need to go next');
             this.currentMessage = this.COMPLETED_TUTORIAL_MESSAGE;
             this.tutorialOver = true;
         } else if (this.stepIndex < this.steps.length) {
-            console.log('can go next');
+            console.log('can go next cause ' + this.stepIndex + ' < ' + this.steps.length);
             this.showStep(this.stepIndex + 1);
         } else {
             throw new Error('what the hell');

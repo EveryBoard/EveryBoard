@@ -2,7 +2,17 @@
      style="height: 100%; max-height: 88%"
 >
     <div id="infos" class="flex-container circled col-sm-4">
-        <h1 id='currentMessage'>{{ currentMessage }}</h1>
+        <ul>
+            <ng-container *ngFor="let step of this.steps; index as i;">
+                <li id="step_{{ i }}"
+                    [style.color]="getStepColor(i)"
+                    (click)="showStep(i)"
+                >
+                    <span style="color: black">{{ step.title }}</span>
+                </li>
+            </ng-container>
+        </ul>
+        <h3 id='currentMessage'>{{ currentMessage }}</h3>
         <button id="retryButton"
                 *ngIf="stepAttemptMade"
                 (click)="retry()"

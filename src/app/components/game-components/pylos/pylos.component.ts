@@ -92,16 +92,10 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         this.cancelMove();
         return this.chooseMove(move, slice, null, null);
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosenStartingCoord = null;
         this.chosenLandingCoord = null;
         this.chosenFirstCapture = null;
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     private async onEmptyCaseClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         if (PylosRules.canCapture(this.slice, clickedCoord)) {

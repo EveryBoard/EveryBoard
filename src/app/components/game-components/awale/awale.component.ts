@@ -89,9 +89,8 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
             return 'black';
         }
     }
-    public cancelMove(reason?: string): MGPValidation {
-        this.message(reason);
-        return MGPValidation.failure(reason);
+    public cancelMoveAttempt(): void {
+        // Empty because not needed.
     }
     public decodeMove(encodedMove: number): AwaleMove {
         return AwaleMove.decode(encodedMove);

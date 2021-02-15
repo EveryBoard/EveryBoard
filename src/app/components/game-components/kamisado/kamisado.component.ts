@@ -87,15 +87,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
-    public async cancelMove(reason?: string): Promise<MGPValidation> {
+    public cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {
             this.chosen = new Coord(-1, -1);
-        }
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
         }
     }
     public decodeMove(encodedMove: number): KamisadoMove {

@@ -96,16 +96,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     private hideLastMove(): void {
         this.lastMove = new Coord(-1, -1);
     }
-    public cancelMove(reason?: string): MGPValidation {
-        // called when the user do a wrong move, then, we unselect his pieceToGive and/or the chosen coord
-        this.cancelMoveAttempt();
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
-    }
     public cancelMoveAttempt(): void {
         this.chosen = new Coord(-1, -1);
         this.pieceToGive = QuartoPiece.NONE;

@@ -191,19 +191,13 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
         return length;
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.firstPiece = new Coord(-15, -1);
         this.validExtensions = [];
         this.phalanxValidLandings = [];
         this.lastPiece = new Coord(-15, -1);
         this.phalanxMiddles = [];
         this.hidePreviousMove();
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     private async secondClick(x: number, y: number): Promise<MGPValidation> {
         const clicked: Coord = new Coord(x, y);

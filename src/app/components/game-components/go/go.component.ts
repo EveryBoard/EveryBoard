@@ -16,11 +16,11 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
     templateUrl: './go.component.html',
 })
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public scores: number[] = [0, 0];
 
-    public rules = new GoRules(GoPartSlice);
+    public rules: GoRules = new GoRules(GoPartSlice);
 
     public boardInfo: GroupDatas;
 
@@ -41,7 +41,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         const resultlessMove: GoMove = new GoMove(x, y);
         return this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
     }
-    public cancelMove(reason?: string): void {
+    public cancelMoveAttempt(): void {
         // Empty because not needed.
     }
     public decodeMove(encodedMove: number): GoMove {

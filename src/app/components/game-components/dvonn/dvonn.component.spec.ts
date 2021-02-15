@@ -88,7 +88,7 @@ describe('DvonnComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _]];
-        const slice: DvonnPartSlice = new DvonnPartSlice(0, board, false);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
         expect(gameComponent.canPass).toBeTrue();
@@ -112,7 +112,7 @@ describe('DvonnComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _]];
-        const slice: DvonnPartSlice = new DvonnPartSlice(0, board, false);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
         expect((await gameComponent.pass()).isSuccess()).toBeTrue();

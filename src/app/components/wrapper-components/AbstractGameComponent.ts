@@ -38,6 +38,8 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public click: (element: string) => boolean;
 
+    public cancelMoveOnWrapper: (reason?: string) => void;
+
     public observerRole: number;
     /* all game rules should be able to call the game-wrapper
      * the aim is that the game-wrapper will take care of manage what follow
@@ -50,7 +52,18 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     public message: (msg: string) => void = (msg: string) => {
         this.snackBar.open(msg, 'Ok!', { duration: 3000 });
     };
-    public abstract cancelMove(reason?: string): void;
+    public cancelMove(reason?: string): MGPValidation {
+        console.log('cancelMove ' + reason);
+        this.cancelMoveAttempt();
+        this.cancelMoveOnWrapper(reason);
+        if (reason) {
+            this.message(reason);
+            return MGPValidation.failure(reason);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
+    }
+    public abstract cancelMoveAttempt(): void;
 
     public abstract decodeMove(encodedMove: number): Move;
 

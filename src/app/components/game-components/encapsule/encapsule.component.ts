@@ -110,15 +110,9 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         this.lastLandingCoord = null;
         this.lastStartingCoord = MGPOptional.empty();
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosenCoord = null;
         this.chosenPiece = null;
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     public async onPieceClick(pieceString: string): Promise<MGPValidation> {
         this.hideLastMove();

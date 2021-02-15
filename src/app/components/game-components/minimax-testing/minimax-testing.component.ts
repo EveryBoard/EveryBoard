@@ -12,13 +12,18 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
     templateUrl: './minimax-testing.component.html',
     styleUrls: [],
 })
-export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {
+export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove,
+                                                                   MinimaxTestingPartSlice,
+                                                                   LegalityStatus> {
     /** ************************* Common Fields **************************/
 
     public rules = new MinimaxTestingRules(MinimaxTestingPartSlice);
 
     public coord: Coord = new Coord(-1, -1);
 
+    public cancelMoveAttempt(): void {
+        // Empty because not needed.
+    }
     public chooseRight(): Promise<MGPValidation> {
         const chosenMove = MinimaxTestingMove.RIGHT;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
@@ -26,9 +31,6 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
     public chooseDown(): Promise<MGPValidation> {
         const chosenMove = MinimaxTestingMove.DOWN;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
-    }
-    public cancelMove(reason?: string): void {
-        // Empty because not needed.
     }
     public updateBoard() {
         const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice;

@@ -9,7 +9,6 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-quixo',
@@ -35,14 +34,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         if (move) this.lastMoveCoord = move.coord;
         else this.lastMoveCoord = null;
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosenCoord = null;
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     public decodeMove(encodedMove: number): QuixoMove {
         return QuixoMove.decode(encodedMove);

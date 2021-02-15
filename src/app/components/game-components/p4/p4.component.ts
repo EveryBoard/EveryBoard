@@ -14,22 +14,25 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, LegalityStatus> {
     /** ************************* Common Fields **************************/
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
-    public rules = new P4Rules(P4PartSlice);
+    public rules: P4Rules = new P4Rules(P4PartSlice);
 
     public imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg'];
 
     public lastX: number;
 
     public async onClick(x: number): Promise<MGPValidation> {
-        const chosenMove = P4Move.of(x);
+        if (this.click('#click_' + x) === false) {
+            return; // Same 'old' TODO: should return failure ?
+        }
+        const chosenMove: P4Move = P4Move.of(x);
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
-    public cancelMove(reason?: string): void {
+    public cancelMoveAttempt(): void {
         // Empty because not needed.
     }
-    public updateBoard() {
+    public updateBoard(): void {
         const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
         const lastMove: P4Move = this.rules.node.move;
 

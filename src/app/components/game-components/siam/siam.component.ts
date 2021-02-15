@@ -18,7 +18,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
     templateUrl: './siam.component.html',
 })
 export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice, SiamLegalityStatus> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public rules: SiamRules = new SiamRules(SiamPartSlice);
 
@@ -38,17 +38,11 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         this.board = slice.board;
         this.lastMove = this.rules.node.move;
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosenCoord = null;
         this.chosenDirection = null;
         this.landingCoord = null;
         this.chosenOrientation = null;
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     public decodeMove(encodedMove: number): SiamMove {
         return SiamMove.decode(encodedMove);
