@@ -9,6 +9,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/DIRECTION';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
 import { HexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
+import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { AbstractGameComponent } from '../AbstractGameComponent';
@@ -53,6 +54,22 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         super(snackBar);
         this.showScore = true;
         this.constructedSlice = this.rules.node.gamePartSlice;
+    }
+
+    public getPlayerSidePieces(player: number): number[] {
+        const nPieces: number = this.constructedSlice.getNumberOfPiecesToPlace(Player.of(player));
+        const pieces: number[] = [];
+        for (let i: number = 0; i < nPieces; i += 1) {
+            pieces.push(i);
+        }
+        return pieces;
+    }
+    public getPlayerPieceStyle(player: number): {[key:string]: string} {
+        return {
+            'fill': this.getPlayerColor(player),
+            'stroke': 'black',
+            'stroke-width': '8px',
+        };
     }
 
     public getPieceSize(): number {
@@ -263,11 +280,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     }
     public getPieceStyle(x: number, y: number): {[key:string]: string} {
         const piece: GipfPiece = this.getPiece(x, y);
-        return {
-            'fill': this.getPlayerColor(piece.player.value),
-            'stroke': 'black',
-            'stroke-width': '8px',
-        };
+        return this.getPlayerPieceStyle(piece.player.value);
     }
     public async cancelMove(reason?: string): Promise<MGPValidation> {
         this.moveToInitialCaptureOrPlacementPhase();
