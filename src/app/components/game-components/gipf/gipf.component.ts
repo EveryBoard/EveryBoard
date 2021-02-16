@@ -195,7 +195,21 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
             return this.cancelMove(validity.getReason());
         }
         this.placementEntrance = MGPOptional.of(coord);
-        this.movePhase = GipfComponent.PHASE_PLACEMENT_DIRECTION;
+        if (this.constructedSlice.hexaBoard.getAt(coord) === GipfPiece.EMPTY) {
+            // Because the coord of insertion is empty, there is no need for the user to choose a direction.
+            // We directly move to the capture phase or apply the move
+            const direction: Direction = this.rules.getAllDirectionsForEntrance(this.constructedSlice, coord)[0];
+            const placement: GipfPlacement = new GipfPlacement(coord, direction, false);
+            this.placement = MGPOptional.of(placement);
+            const validity: MGPValidation = this.rules.placementValidity(this.constructedSlice, placement);
+            if (validity.isFailure()) {
+                return this.cancelMove(validity.getReason());
+            }
+            this.constructedSlice = this.rules.applyPlacement(this.constructedSlice, placement);
+            return this.moveToFinalCapturePhaseOrTryMove();
+        } else {
+            this.movePhase = GipfComponent.PHASE_PLACEMENT_DIRECTION;
+        }
         return MGPValidation.SUCCESS;
     }
     private selectPlacementDirection(dir: Direction): Promise<MGPValidation> {
@@ -229,6 +243,10 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
             case GipfComponent.PHASE_PLACEMENT_DIRECTION:
                 const entrance: Coord = this.placementEntrance.get();
                 try {
+                    const dest: Coord = new Coord(x, y);
+                    if (entrance.getDistance(dest) !== 1) {
+                        return this.cancelMove('Veuillez sélectionner une destination à une distance de 1 de l\'entrée');
+                    }
                     const direction: Direction = Direction.fromMove(entrance, new Coord(x, y));
                     return this.selectPlacementDirection(direction);
                 } catch (error) {

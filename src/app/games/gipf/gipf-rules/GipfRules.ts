@@ -272,7 +272,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         } else if (slice.hexaBoard.isOnBottomLeftBorder(entrance)) {
             return [HexaDirection.UP, HexaDirection.UP_RIGHT];
         } else if (slice.hexaBoard.isOnBottomRightBorder(entrance)) {
-            return [HexaDirection.UP_LEFT, HexaDirection.UP_RIGHT];
+            return [HexaDirection.UP_LEFT, HexaDirection.UP];
         } else if (slice.hexaBoard.isOnRightBorder(entrance)) {
             return [HexaDirection.UP_LEFT, HexaDirection.DOWN_LEFT];
         } else if (slice.hexaBoard.isOnTopRightBorder(entrance)) {
@@ -393,4 +393,5 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             return MGPValidation.failure('Les pièces doivent être placée sur une case du bord du plateau');
         }
     }
+
 }
