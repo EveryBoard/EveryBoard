@@ -84,4 +84,19 @@ describe('HexaBoard', () => {
             });
         });
     });
+
+    describe('equals', () => {
+        it('should detect when two boards are equal', () => {
+            expect(board.equals(board, (x: number, y: number) => {
+                return x == y;
+            })).toBeTrue();
+        });
+        it('should distinguish different boards', () => {
+            const board1: HexaBoard<number> = board;
+            const board2: HexaBoard<number> = board.setAt(new Coord(-3, 1), 1);
+            expect(board1.equals(board2, (x: number, y: number) => {
+                return x == y;
+            })).toBeFalse();
+        });
+    });
 });

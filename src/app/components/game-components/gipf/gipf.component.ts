@@ -41,7 +41,6 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     public constructedSlice: GipfPartSlice = null;
 
     private possibleCaptures: ReadonlyArray<GipfCapture> = [];
-    private selectedCapture: MGPOptional<GipfCapture> = MGPOptional.empty();
 
     private initialCaptures: GipfCapture[] = [];
 
@@ -130,7 +129,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
-        this.constructedSlice = this.rules.applyCapture(this.constructedSlice, this.selectedCapture.get());
+        this.constructedSlice = this.rules.applyCapture(this.constructedSlice, capture);
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
             switch (this.movePhase) {

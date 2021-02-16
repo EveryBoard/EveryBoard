@@ -90,7 +90,6 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
                 const sliceAfterPlacement: GipfPartSlice = this.applyPlacement(sliceAfterCapture, placement);
                 this.getPossibleCaptureCombinations(sliceAfterPlacement)
                     .forEach((finalCaptures: ReadonlyArray<GipfCapture>) => {
-                        // TODO: attach result of finalSlice to this.isLegal somehow?
                         const finalSlice: GipfPartSlice =
                             this.applyCaptures(sliceAfterPlacement, finalCaptures);
                         const moveSimple: GipfMove =
@@ -235,10 +234,10 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     public applyPlacement(slice: GipfPartSlice, placement: GipfPlacement): GipfPartSlice {
         const player: Player = slice.getCurrentPlayer();
         let board: HexaBoard<GipfPiece> = slice.hexaBoard;
-        let prevPiece: GipfPiece = GipfPiece.EMPTY;
+        let prevPiece: GipfPiece = GipfPiece.ofPlayer(slice.getCurrentPlayer(), placement.isDouble);
         for (let cur: Coord = placement.coord;
-            board.isOnBoard(cur) && board.getAt(cur) !== GipfPiece.EMPTY;
-            cur = cur.getNext(placement.direction)) {
+             board.isOnBoard(cur) && prevPiece !== GipfPiece.EMPTY;
+             cur = cur.getNext(placement.direction)) {
             const curPiece: GipfPiece = board.getAt(cur);
             board = board.setAt(cur, prevPiece);
             prevPiece = curPiece;

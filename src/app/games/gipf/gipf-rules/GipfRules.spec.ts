@@ -221,7 +221,7 @@ describe('GipfRules:', () => {
                 [__, __, A1, __, __, __, __],
                 [__, A1, A1, __, __, __, __],
             ], __, GipfPiece.encoder);
-            const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn,
+            const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
                                                            [5, 5], [false, false], [0, 0]);
 
             const placementA: GipfPlacement = new GipfPlacement(new Coord(-3, 1), HexaDirection.DOWN_RIGHT, false);

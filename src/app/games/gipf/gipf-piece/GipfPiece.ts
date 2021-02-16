@@ -47,6 +47,17 @@ export class GipfPiece {
     public static PLAYER_ZERO_DOUBLE: GipfPiece = new GipfPiece(Player.ZERO, true);
     public static PLAYER_ONE_SIMPLE: GipfPiece = new GipfPiece(Player.ONE, false);
     public static PLAYER_ONE_DOUBLE: GipfPiece = new GipfPiece(Player.ONE, true);
+    public static ofPlayer(player: Player, isDouble: boolean): GipfPiece {
+        if (player === Player.ZERO) {
+            if (isDouble) return GipfPiece.PLAYER_ZERO_DOUBLE;
+            else return GipfPiece.PLAYER_ZERO_SIMPLE;
+        } else if (player === Player.ONE) {
+            if (isDouble) return GipfPiece.PLAYER_ONE_DOUBLE;
+            else return GipfPiece.PLAYER_ONE_SIMPLE;
+        } else {
+            return GipfPiece.EMPTY;
+        }
+    }
     private constructor(public player: Player, public isDouble: boolean) {
     }
 }

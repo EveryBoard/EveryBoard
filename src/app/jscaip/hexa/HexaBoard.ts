@@ -23,7 +23,7 @@ export class HexaBoard<T> {
     }
 
     public static fromTable<T>(table: Table<T>, empty: T, encoder: Encoder<T>): HexaBoard<T> {
-        HexaBoard.checkTableFormat(table)
+        HexaBoard.checkTableFormat(table);
         return new HexaBoard(table, (table.length-1)/2, empty, encoder);
     }
 
@@ -37,9 +37,9 @@ export class HexaBoard<T> {
         if (this.radius !== other.radius) return false;
         if (equalT(this.empty, other.empty) === false) return false;
         if (this.encoder !== other.encoder) return false;
-        this.forEachCoord((coord: Coord, content: T) => {
-            if (equalT(content, other.getAtUnsafe(coord)) === false) return false;
-        });
+        for (const coord of this.allCoords()) {
+            if (equalT(this.getAtUnsafe(coord), other.getAtUnsafe(coord)) === false) return false;
+        }
         return true;
     }
 
@@ -75,6 +75,14 @@ export class HexaBoard<T> {
                 callback(coord, this.getAt(coord));
             }
         }
+    }
+
+    public allCoords(): Coord[] {
+        const coords: Coord[] = [];
+        this.forEachCoord((coord: Coord, _content: T) => {
+            coords.push(coord);
+        });
+        return coords;
     }
 
     public getAllBorders(): Coord[] {
