@@ -14,7 +14,7 @@
         </ul>
         <h3 id='currentMessage'>{{ currentMessage }}</h3>
         <button id="retryButton"
-                *ngIf="stepAttemptMade"
+                *ngIf="stepAttemptMade && tutorialOver === false"
                 (click)="retry()"
         >
             Essayez à nouveau
@@ -24,6 +24,12 @@
                 (click)="next()"
         >
             Suivant
+        </button>
+        <button id="restartButton"
+                *ngIf="tutorialOver"
+                (click)="start()"
+        >
+            Recommencer
         </button>
     </div>
 

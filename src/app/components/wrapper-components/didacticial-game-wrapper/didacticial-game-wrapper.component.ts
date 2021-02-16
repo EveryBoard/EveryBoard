@@ -61,6 +61,9 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public ngAfterViewInit(): void {
         display(DidacticialGameWrapperComponent.VERBOSE, 'DidacticialGameWrapperComponent.ngAfterViewInit');
         this.afterGameIncluderViewInit();
+        this.start();
+    }
+    private start(): void {
         const didacticial: DidacticialStep[] = this.getDidacticial();
         this.startDidacticial(didacticial);
     }
@@ -75,7 +78,8 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
                 return p4Didacticial;
             case 'Quarto':
                 return [
-                    new DidacticialStep('title', 'instruction', QuartoPartSlice.getInitialSlice(), [], [], null, null),
+                    new DidacticialStep('title 0', 'instruction 0', QuartoPartSlice.getInitialSlice(), [], [], null, null),
+                    new DidacticialStep('title 1', 'instruction 1', QuartoPartSlice.getInitialSlice(), [], [], null, null),
                 ];
             default:
                 throw new Error('TODO: name that shit');
@@ -84,6 +88,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public startDidacticial(didacticial: DidacticialStep[]): void {
         console.log('start didacticial indeed called');
         this.steps = didacticial;
+        this.tutorialOver = false;
         this.stepFinished = this.getCompletionArray();
         this.showStep(0);
     }
@@ -158,11 +163,16 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     }
     public next(): void {
         console.log('next')
+        if (this.steps[this.stepIndex].isNothing()) {
+            console.log('info checked');
+            this.stepFinished[this.stepIndex] = true;
+        }
+        console.log({ step: this.steps, finished: this.stepFinished })
         if (this.stepFinished.every((value: boolean) => value === true)) {
             console.log('finished, don\'t need to go next');
             this.currentMessage = this.COMPLETED_TUTORIAL_MESSAGE;
             this.tutorialOver = true;
-        } else if (this.stepIndex < this.steps.length) {
+        } else if (this.stepIndex + 1 < this.steps.length) {
             console.log('can go next cause ' + this.stepIndex + ' < ' + this.steps.length);
             this.showStep(this.stepIndex + 1);
         } else {
