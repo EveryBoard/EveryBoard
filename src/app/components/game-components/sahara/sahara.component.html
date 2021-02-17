@@ -24,10 +24,12 @@
             </g>
         </g>
     </g>
-    <polyline [attr.points]="getCoordinate(lastCoord.x, lastCoord.y)"
-              style="fill: none; stroke: yellow; stroke-width: 5" />
-    <polyline [attr.points]="getCoordinate(lastMoved.x, lastMoved.y)"
-              style="fill: none; stroke: yellow; stroke-width: 5" />
-    <polyline [attr.points]="getCoordinate(chosenCoord.x, chosenCoord.y)"
-              style="fill: none; stroke: blue; stroke-width: 5" />
+    <ng-container *ngIf="lastMoved">
+        <polyline [attr.points]="getCoordinate(lastCoord.x, lastCoord.y)"
+                  style="fill: none; stroke: yellow; stroke-width: 5" />
+        <polyline [attr.points]="getCoordinate(lastMoved.x, lastMoved.y)"
+                  style="fill: none; stroke: yellow; stroke-width: 5" />
+        <polyline [attr.points]="getCoordinate(chosenCoord.x, chosenCoord.y)"
+                  style="fill: none; stroke: blue; stroke-width: 5" />
+    </ng-container>
 </svg>

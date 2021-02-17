@@ -53,7 +53,6 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
         this.snackBar.open(msg, 'Ok!', { duration: 3000 });
     };
     public cancelMove(reason?: string): MGPValidation {
-        console.log('cancelMove ' + reason);
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
         if (reason) {

@@ -160,7 +160,6 @@ export abstract class GameWrapper {
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onUserClick: (elementName: string) => boolean = (elementName: string) => {
-        console.log('onUserClick on ' + elementName);
         return this.isPlayerTurn(); // Not the same logic to use in Online and Local, make abstract
     }
     public onCancelMove(): void {

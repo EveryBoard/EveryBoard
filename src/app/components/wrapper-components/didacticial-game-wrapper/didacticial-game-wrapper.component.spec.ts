@@ -39,7 +39,7 @@ class AuthenticationServiceMock {
         return AuthenticationServiceMock.USER;
     }
 }
-fdescribe('DidacticialGameWrapperComponent', () => {
+describe('DidacticialGameWrapperComponent', () => {
     let component: DidacticialGameWrapperComponent;
 
     let testElements: TestElements;
@@ -285,10 +285,10 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     }));
     it('Should forbid clicking on the board when step don\'t await anything', fakeAsync(async() => {
         // Given a DidacticialStep on which nothing is awaited
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
-                'title',
-                'instruction',
+                'title 0',
+                'instruction 0',
                 QuartoPartSlice.getInitialSlice(),
                 [],
                 [],
@@ -296,11 +296,12 @@ fdescribe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
         // when clicking
         await expectClickForbidden('#chooseCoord_2_2', testElements);
 
         // expect to see still the steps success message on component
-        const expectedMessage: string = 'instruction';
+        const expectedMessage: string = 'instruction 0';
         const currentMessage: string =
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
@@ -518,14 +519,103 @@ fdescribe('DidacticialGameWrapperComponent', () => {
         expect(currentMessage).toBe(expectedMessage);
         expect(component.stepFinished[0]).toBeTrue();
     }));
-    it('Should move to the next unfinished step when next step is finished');
-    it('Should move to the first unfinished step when all next steps are finished');
-    fit('Should show congratulation at the end of the didacticial, hide next button', fakeAsync(async() => {
-        // Given a DidacticialStep whose last step has been done
-        component.steps = [
+    it('Should move to the next unfinished step when next step is finished', fakeAsync(async() => {
+        // Given a didacticial on which the two first steps have been skipped
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
-                'title',
-                'Put your piece in a corner and give the opposite one.',
+                'title 0',
+                'instruction 0',
+                QuartoPartSlice.getInitialSlice(),
+                [],
+                ['#chooseCoord_0_0'],
+                'Bravo.',
+                'Perdu.',
+            ),
+            new DidacticialStep(
+                'title 1',
+                'instruction 1',
+                QuartoPartSlice.getInitialSlice(),
+                [],
+                ['#chooseCoord_1_1'],
+                'Bravo.',
+                'Perdu.',
+            ),
+            new DidacticialStep(
+                'title 2',
+                'instruction 2',
+                QuartoPartSlice.getInitialSlice(),
+                [],
+                ['#chooseCoord_2_2'],
+                'Bravo.',
+                'Perdu.',
+            ),
+        ];
+        component.startDidacticial(didacticial);
+        expect(await clickElement('#nextButton', testElements)).toBeTrue();
+        expect(await clickElement('#nextButton', testElements)).toBeTrue();
+        await expectClickSuccess('#chooseCoord_2_2', testElements);
+
+        // When clicking next
+        expect(await clickElement('#nextButton', testElements)).toBeTrue();
+
+        // expect to be back at first step
+        const expectedMessage: string = 'instruction 0';
+        const currentMessage: string =
+            testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
+        expect(currentMessage).toBe(expectedMessage);
+    }));
+    it('Should move to the first unfinished step when all next steps are finished', fakeAsync(async() => {
+        // Given a didacticial on which the middle steps have been skipped
+        const didacticial: DidacticialStep[] = [
+            new DidacticialStep(
+                'title 0',
+                'instruction 0',
+                QuartoPartSlice.getInitialSlice(),
+                [],
+                ['#chooseCoord_0_0'],
+                'Bravo.',
+                'Perdu.',
+            ),
+            new DidacticialStep(
+                'title 1',
+                'instruction 1',
+                QuartoPartSlice.getInitialSlice(),
+                [],
+                ['#chooseCoord_1_1'],
+                'Bravo.',
+                'Perdu.',
+            ),
+            new DidacticialStep(
+                'title 2',
+                'instruction 2',
+                QuartoPartSlice.getInitialSlice(),
+                [],
+                ['#chooseCoord_2_2'],
+                'Bravo.',
+                'Perdu.',
+            ),
+        ];
+        component.startDidacticial(didacticial);
+        expect(await clickElement('#nextButton', testElements)).toBeTrue(); // Go to 1
+        await expectClickSuccess('#chooseCoord_1_1', testElements); // Do 1
+        expect(await clickElement('#nextButton', testElements)).toBeTrue(); // Go to 2
+        expect(await clickElement('#nextButton', testElements)).toBeTrue(); // Go to 0
+
+        // When clicking next
+        expect(await clickElement('#nextButton', testElements)).toBeTrue(); // Should go to 2
+
+        // expect to be back at first step
+        const expectedMessage: string = 'instruction 2';
+        const currentMessage: string =
+            testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
+        expect(currentMessage).toBe(expectedMessage);
+    }));
+    it('Should show congratulation at the end of the didacticial, hide next button', fakeAsync(async() => {
+        // Given a DidacticialStep whose last step has been done
+        const didacticial: DidacticialStep[] = [
+            new DidacticialStep(
+                'title 0',
+                'instruction 0',
                 QuartoPartSlice.getInitialSlice(),
                 [],
                 ['#chooseCoord_0_0'],
@@ -533,6 +623,7 @@ fdescribe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
         await expectClickSuccess('#chooseCoord_0_0', testElements);
 
         // when clicking next button
@@ -578,11 +669,10 @@ fdescribe('DidacticialGameWrapperComponent', () => {
         testElements.fixture.detectChanges();
 
         // expect to be back on first step
-        const expectedMessage: string = 'instruction 0';
         const currentMessage: string =
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
-        expect(currentMessage).toBe(expectedMessage);
-        expect(component.stepFinished).toEqual([false, false]);
+        expect(currentMessage).toBe(component.steps[0].instruction);
+        expect(component.stepFinished.every((v: boolean) => v === false)).toBeTrue();
         expect(component.stepIndex).toEqual(0);
     }));
 });

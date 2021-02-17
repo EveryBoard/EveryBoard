@@ -31,17 +31,22 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
     public updateBoard(): void {
         const slice: AwalePartSlice = this.rules.node.gamePartSlice;
         this.scores = slice.getCapturedCopy();
-        const awaleMove: AwaleMove = this.rules.node.move;
+        this.hidePreviousMove();
+        const lastMove: AwaleMove = this.rules.node.move;
 
         this.board = slice.getCopiedBoard();
-        if (awaleMove != null) {
-            this.last = awaleMove.coord;
+        if (lastMove != null) {
+            this.last = lastMove.coord;
             this.showPreviousMove();
+        } else {
+            this.last = null;
         }
     }
-    private showPreviousMove(): void {
+    private hidePreviousMove(): void {
         this.captured = [];
         this.moved = [];
+    }
+    private showPreviousMove(): void {
         const previousSlice: AwalePartSlice = this.rules.node.mother.gamePartSlice;
         for (let y: number = 0; y <= 1; y++) {
             for (let x: number = 0; x <= 5; x++) {

@@ -51,8 +51,10 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         const slice: ReversiPartSlice = this.rules.node.gamePartSlice;
 
         this.board = slice.getCopiedBoard();
+        this.captureds = [];
 
         if (this.rules.node.move) {
+            this.lastMove = this.rules.node.move.coord;
             this.showPreviousMove();
         } else {
             this.lastMove = new Coord(-2, -2);
@@ -62,8 +64,6 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.canPass = ReversiRules.playerCanOnlyPass(slice);
     }
     private showPreviousMove() {
-        this.lastMove = this.rules.node.move.coord;
-        this.captureds = [];
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         for (const dir of Direction.DIRECTIONS) {

@@ -25,7 +25,7 @@ import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
 })
 export class DidacticialGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public COMPLETED_TUTORIAL_MESSAGE: string = 'Félicitation, vous avez fini le tutoriel.'
 
@@ -69,31 +69,27 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     }
     private getDidacticial(): DidacticialStep[] {
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
-        switch (game) {
-            case 'Awale':
-                return awaleDidacticial;
-            case 'Dvonn':
-                return dvonnDidacticial;
-            case 'P4':
-                return p4Didacticial;
-            case 'Quarto':
-                return [
-                    new DidacticialStep('title 0', 'instruction 0', QuartoPartSlice.getInitialSlice(), [], [], null, null),
-                    new DidacticialStep('title 1', 'instruction 1', QuartoPartSlice.getInitialSlice(), [], [], null, null),
-                ];
-            default:
-                throw new Error('TODO: name that shit');
+        const didacticials: { [key: string]: DidacticialStep[] } = {
+            Awale: awaleDidacticial,
+            Dvonn: dvonnDidacticial,
+            P4: p4Didacticial,
+            Quarto: [
+                new DidacticialStep('title zero', 'instruction zero', QuartoPartSlice.getInitialSlice(), [], [], null, null),
+                new DidacticialStep('title one', 'instruction one', QuartoPartSlice.getInitialSlice(), [], [], null, null),
+            ],
+        };
+        if (didacticials[game] == null) {
+            throw new Error('Unknown Game ' + game);
         }
+        return didacticials[game];
     }
     public startDidacticial(didacticial: DidacticialStep[]): void {
-        console.log('start didacticial indeed called');
         this.steps = didacticial;
         this.tutorialOver = false;
         this.stepFinished = this.getCompletionArray();
         this.showStep(0);
     }
     private showStep(stepIndex: number): void {
-        console.log('showStep ' + stepIndex);
         this.stepAttemptMade = false;
         this.stepIndex = stepIndex;
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
@@ -104,44 +100,31 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     }
     public async onValidUserMove(move: Move): Promise<void> {
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
-        if (currentStep.isMove()) {
-            console.log('didacticial was indeed awaiting a move');
-            this.gameComponent.rules.choose(move);
-            this.gameComponent.updateBoard();
-            if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
-                console.log('accepted move was given');
-                this.showStepSuccess();
-            } else {
-                this.currentMessage = currentStep.failureMessage;
-                console.log('not accepted move was given');
-            }
-            this.stepAttemptMade = true;
-            this.cdr.detectChanges();
+        this.gameComponent.rules.choose(move);
+        this.gameComponent.updateBoard();
+        if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+            this.showStepSuccess();
         } else {
-            console.log('didacticial was not awaiting a move');
+            this.currentMessage = currentStep.failureMessage;
         }
+        this.stepAttemptMade = true;
+        this.cdr.detectChanges();
     }
     public retry(): void {
-        console.log('retry');
         this.stepAttemptMade = false;
         this.showStep(this.stepIndex);
     }
     public onUserClick: (elementName: string) => boolean = (elementName: string) => {
-        console.log('didacticial-game-wrapper onUserClick on ' + elementName);
         if (this.stepAttemptMade) {
-            console.log('step finished, don\'t click');
             return false;
         }
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
-            console.log('didacticial was indeed awaiting a click');
             this.gameComponent.updateBoard();
             if (currentStep.acceptedClicks.some((m: string) => m === elementName)) {
-                console.log('accepted click was done');
                 this.showStepSuccess();
             } else {
                 this.currentMessage = currentStep.failureMessage;
-                console.log('not accepted click was made');
             }
             this.stepAttemptMade = true;
             return true;
@@ -150,33 +133,28 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         }
     }
     public onCancelMove: (reason?: string) => void = (reason?: string) => {
-        console.log("currentMessage is now: " + reason);
         this.stepAttemptMade = true;
         this.currentMessage = reason;
         this.cdr.detectChanges();
     }
     private showStepSuccess(): void {
-        console.log('show step success');
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.successMessage;
         this.stepFinished[this.stepIndex] = true;
     }
     public next(): void {
-        console.log('next')
         if (this.steps[this.stepIndex].isNothing()) {
-            console.log('info checked');
             this.stepFinished[this.stepIndex] = true;
         }
-        console.log({ step: this.steps, finished: this.stepFinished })
         if (this.stepFinished.every((value: boolean) => value === true)) {
-            console.log('finished, don\'t need to go next');
             this.currentMessage = this.COMPLETED_TUTORIAL_MESSAGE;
             this.tutorialOver = true;
-        } else if (this.stepIndex + 1 < this.steps.length) {
-            console.log('can go next cause ' + this.stepIndex + ' < ' + this.steps.length);
-            this.showStep(this.stepIndex + 1);
         } else {
-            throw new Error('what the hell');
+            let indexUndone: number = (this.stepIndex + 1) % this.steps.length;
+            while (this.stepFinished[indexUndone] === true) {
+                indexUndone = (indexUndone + 1) % this.steps.length;
+            }
+            this.showStep(indexUndone);
         }
     }
 }

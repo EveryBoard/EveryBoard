@@ -79,7 +79,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         if (this.click('#choosePiece_' + givenPiece) === false) {
             return; // TODO: shouldn't it return a kind of failure ?
         }
-        console.log('choose piece click allowed');
 
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent

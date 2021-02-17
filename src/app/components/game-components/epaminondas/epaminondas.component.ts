@@ -39,6 +39,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     public updateBoard(): void {
         this.firstPiece = new Coord(-15, -1);
         this.lastPiece = new Coord(-15, -1);
+        this.hidePreviousMove();
         if (this.rules.node.move) {
             this.showPreviousMove();
         }
@@ -52,8 +53,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
-
-        this.captureds = [];
         const PREVIOUS_ENNEMY: number = this.rules.node.mother.gamePartSlice.getCurrentEnnemy().value;
         while (moved.isInRange(14, 12) &&
                this.rules.node.mother.gamePartSlice.getBoardAt(moved) === PREVIOUS_ENNEMY) {
