@@ -7,7 +7,8 @@ import { of } from 'rxjs';
 
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { AppModule } from 'src/app/app.module';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent }
+    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { PylosComponent } from './pylos.component';
@@ -17,7 +18,8 @@ import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSl
 import { Player } from 'src/app/jscaip/player/Player';
 import { PylosNode } from 'src/app/games/pylos/pylos-rules/PylosRules';
 import {
-    expectClickFail, expectClickSuccess, expectMoveSubmission,
+    expectClickFail, expectClickSuccess,
+    expectMoveSuccess,
     MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 
 const activatedRouteStub: unknown = {
@@ -65,9 +67,19 @@ describe('PylosComponent', () => {
         const debugElement: DebugElement = fixture.debugElement;
         tick(1);
         const gameComponent: PylosComponent = wrapper.gameComponent as PylosComponent;
-        const cancelSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
+        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
-        testElements = { fixture, debugElement, gameComponent, cancelSpy, chooseMoveSpy };
+        const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
+        const clickSpy: jasmine.Spy = spyOn(gameComponent, 'click').and.callThrough();
+        testElements = {
+            fixture,
+            debugElement,
+            gameComponent,
+            clickSpy,
+            cancelMoveSpy,
+            chooseMoveSpy,
+            onValidUserMoveSpy,
+        };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
@@ -80,7 +92,7 @@ describe('PylosComponent', () => {
             scoreZero: null,
             scoreOne: null,
         };
-        await expectMoveSubmission('#click_0_0_0', testElements, expectations);
+        await expectMoveSuccess('#click_0_0_0', testElements, expectations);
     }));
     it('should forbid clicking on ennemy piece', fakeAsync(async() => {
         const initialBoard: number[][][] = [
@@ -137,7 +149,7 @@ describe('PylosComponent', () => {
             scoreZero: null,
             scoreOne: null,
         };
-        await expectMoveSubmission('#click_0_0_1', testElements, expectations);
+        await expectMoveSuccess('#click_0_0_1', testElements, expectations);
     }));
     it('should allow capturing unique piece by double clicking on it', fakeAsync(async() => {
         const initialBoard: number[][][] = [
@@ -170,7 +182,7 @@ describe('PylosComponent', () => {
             scoreZero: null,
             scoreOne: null,
         };
-        await expectMoveSubmission('#click_0_0_0', testElements, expectations);
+        await expectMoveSuccess('#click_0_0_0', testElements, expectations);
     }));
     it('should allow captured two pieces, and show capture during move and after', fakeAsync(async() => {
         const initialBoard: number[][][] = [
@@ -206,7 +218,7 @@ describe('PylosComponent', () => {
             scoreZero: null,
             scoreOne: null,
         };
-        await expectMoveSubmission('#click_0_1_0', testElements, expectations);
+        await expectMoveSuccess('#click_0_1_0', testElements, expectations);
         expect(pylosGameComponent.getCaseFill(1, 1, 0)).toEqual(pylosGameComponent.MOVED_FILL);
         expect(pylosGameComponent.getCaseFill(0, 0, 0)).toEqual(pylosGameComponent.CAPTURED_FILL);
         expect(pylosGameComponent.getCaseFill(0, 1, 0)).toEqual(pylosGameComponent.CAPTURED_FILL);

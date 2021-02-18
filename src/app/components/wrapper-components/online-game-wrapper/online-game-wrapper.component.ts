@@ -26,7 +26,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
     styleUrls: ['./online-game-wrapper.component.css'],
 })
 export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, AfterViewInit, OnDestroy {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -43,7 +43,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     // link between GameWrapping's template and remote opponent
     public currentPart: Part;
     public currentPartId: string;
-    public gameStarted = false;
+    public gameStarted: boolean = false;
     public opponent: IJoueurId = null;
     public currentPlayer: string;
 
@@ -90,8 +90,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.currentPartId = this.extractPartIdFromURL();
         await this.redirectIfPartIsInvalid();
     }
-
-    public async ngOnInit() {
+    public async ngOnInit(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.ngOnInit');
 
         this.routerEventsSub = this.router.events.subscribe(async (ev) => {
@@ -103,7 +102,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.userSub = this.authenticationService.getJoueurObs()
             .subscribe((user) => this.userName = user.pseudo);
     }
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         /* this.chat.changes.subscribe((comps: QueryList<ElementRef>) => {
             this.chatVisibility = comps.first.nativeElement.firstChild.visible;
         });*/
@@ -116,7 +115,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         if (this.chatComponent == null || this.chatComponent.visible === true) return '60%';
         else return '90%';
     }
-    public resetGameDatas() {
+    public resetGameDatas(): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGame.resetGameDatas');
 
         this.players = null; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPart
@@ -130,7 +129,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.opponentProposedRematch = null;
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
     }
-    public startGame(iJoiner: IJoiner) {
+    public startGame(iJoiner: IJoiner): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
         if (iJoiner == null) throw new Error('Cannot start Game of empty joiner doc');
@@ -157,7 +156,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         });
         return Promise.resolve();
     }
-    protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId) {
+    protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId): void {
         const part: ICurrentPart = updatedICurrentPart.doc;
         display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
@@ -204,7 +203,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     private isUpdateMove(update: ICurrentPart): boolean {
-        let previousTurn = 0;
+        let previousTurn: number = 0;
         if (this.currentPart != null) previousTurn = this.currentPart.copy().turn;
         return previousTurn < update.turn;
     }

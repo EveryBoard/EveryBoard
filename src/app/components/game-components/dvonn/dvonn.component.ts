@@ -1,4 +1,4 @@
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
@@ -43,14 +43,8 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         this.chosen = null;
         this.scores = this.rules.getScores(slice);
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosen = null;
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     public async pass(): Promise<MGPValidation> {
         if (this.canPass) {

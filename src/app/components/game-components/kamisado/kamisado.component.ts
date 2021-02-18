@@ -1,4 +1,4 @@
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
@@ -51,7 +51,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             this.chosenAutomatically = false;
         } else {
             this.chosenAutomatically = true;
-            this.chosen = slice.coordToPlay.get();
+            this.chosen = slice.coordToPlay.getOrNull();
         }
     }
     public async pass(): Promise<MGPValidation> {
@@ -87,15 +87,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
-    public async cancelMove(reason?: string): Promise<MGPValidation> {
+    public cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {
             this.chosen = new Coord(-1, -1);
-        }
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
         }
     }
     public decodeMove(encodedMove: number): KamisadoMove {

@@ -2,7 +2,7 @@ import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { GameWrapper } from 'src/app/components/game-components/GameWrapper';
+import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/user/UserService';
 import { display } from 'src/app/utils/collection-lib/utils';
@@ -15,23 +15,24 @@ import { display } from 'src/app/utils/collection-lib/utils';
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
     public static VERBOSE: boolean = false;
 
-    public playerZeroValue = '0';
-    public playerOneValue = '0';
-    public aiDepth = 5;
+    public playerZeroValue: string = '0';
+    public playerOneValue: string = '0';
+    public aiDepth: number = 5;
     public winner: string = null;
 
-    public botTimeOut = 1000; // this.aiDepth * 500;
+    public botTimeOut: number = 1000; // this.aiDepth * 500;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
         actRoute: ActivatedRoute,
         router: Router,
         userService: UserService,
         authenticationService: AuthenticationService,
-                public cdr: ChangeDetectorRef) {
+        public cdr: ChangeDetectorRef)
+    {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
-    public ngAfterViewInit() {
+    public ngAfterViewInit(): void {
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.ngAfterViewInit');
         setTimeout(() => {
             display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.ngAfterViewInit inside timeout');
@@ -57,7 +58,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.proposeAIToPlay();
         return Promise.resolve();
     }
-    public updateBoard() {
+    public updateBoard(): void {
         this.gameComponent.updateBoard();
         if (this.gameComponent.rules.node.isEndGame()) {
             this.endGame = true;
@@ -68,7 +69,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             }
         }
     }
-    public proposeAIToPlay() {
+    public proposeAIToPlay(): void {
         // check if ai's turn has come, if so, make her start after a delay
         if (this.isAITurn()) {
             // bot's turn
@@ -88,17 +89,17 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }
     }
     private isAITurn(): boolean {
-        const turn = this.gameComponent.rules.node.gamePartSlice.turn % 2;
+        const turn: number = this.gameComponent.rules.node.gamePartSlice.turn % 2;
         const currentPlayer: string = this.players[turn];
         return this.isAI(currentPlayer);
     }
-    public switchPlayerOne() { // totally adaptable to other Rules
+    public switchPlayerOne(): void { // totally adaptable to other Rules
         this.switchPlayer(0, this.playerZeroValue);
     }
-    public switchPlayerTwo() { // totally adaptable to other Rules
+    public switchPlayerTwo(): void { // totally adaptable to other Rules
         this.switchPlayer(1, this.playerOneValue);
     }
-    public switchPlayer(n: 0|1, value: string) {
+    public switchPlayer(n: 0|1, value: string): void {
         const numberValue: number = Number.parseInt(value);
         if (numberValue === 0) {
             this.players[n] = this.authenticationService.getAuthenticatedUser().pseudo;
@@ -108,7 +109,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }
         this.proposeAIToPlay();
     }
-    public takeBack() {
+    public takeBack(): void {
         if (this.gameComponent.rules.node.gamePartSlice.turn > 0) {
             this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
             this.gameComponent.updateBoard();

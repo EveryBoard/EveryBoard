@@ -33,22 +33,22 @@ export class GoPiece {
     }
     public static of(value: number): GoPiece {
         switch (value) {
-        case Player.ZERO.value:
-            return GoPiece.BLACK;
-        case Player.ONE.value:
-            return GoPiece.WHITE;
-        case Player.NONE.value:
-            return GoPiece.EMPTY;
-        case 3:
-            return GoPiece.DEAD_BLACK;
-        case 4:
-            return GoPiece.DEAD_WHITE;
-        case 5:
-            return GoPiece.BLACK_TERRITORY;
-        case 6:
-            return GoPiece.WHITE_TERRITORY;
-        default:
-            throw new Error('Unknwon GoPiece.value ' + value);
+            case Player.ZERO.value:
+                return GoPiece.BLACK;
+            case Player.ONE.value:
+                return GoPiece.WHITE;
+            case Player.NONE.value:
+                return GoPiece.EMPTY;
+            case 3:
+                return GoPiece.DEAD_BLACK;
+            case 4:
+                return GoPiece.DEAD_WHITE;
+            case 5:
+                return GoPiece.BLACK_TERRITORY;
+            case 6:
+                return GoPiece.WHITE_TERRITORY;
+            default:
+                throw new Error('Unknwon GoPiece.value ' + value);
         }
     }
     public isOccupied(): boolean {
@@ -79,9 +79,9 @@ export enum Phase {
 }
 
 export class GoPartSlice extends GamePartSlice {
-    public static WIDTH = 9;
+    public static WIDTH: number = 9;
 
-    public static HEIGHT = 9;
+    public static HEIGHT: number = 9;
 
     public readonly koCoord: Coord | null; // TODO: MGPOptional this
 
@@ -126,13 +126,13 @@ export class GoPartSlice extends GamePartSlice {
     }
     public copy(): GoPartSlice {
         return new GoPartSlice(this.getCopiedBoardGoPiece(),
-            this.getCapturedCopy(),
-            this.turn,
-            this.koCoord,
-            this.phase);
+                               this.getCapturedCopy(),
+                               this.turn,
+                               this.koCoord,
+                               this.phase);
     }
     public toString(): string {
-        let result = '';
+        let result: string = '';
         for (const lines of this.board) {
             for (const piece of lines) {
                 result += piece + ' ';
@@ -140,5 +140,8 @@ export class GoPartSlice extends GamePartSlice {
             result += '\n';
         }
         return result;
+    }
+    public isDead(coord: Coord): boolean {
+        return this.getBoardAtGoPiece(coord).isDead();
     }
 }

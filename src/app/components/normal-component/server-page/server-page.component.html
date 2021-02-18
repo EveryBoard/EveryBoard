@@ -57,7 +57,7 @@
                 </select>
                 <br />
                 <input type="button"
-                       value="online game"
+                       value="Create Online Game"
                        [disabled]="!selectedGame"
                        (click)="createGame()"
                        class="btn btn-primary btn-block">
@@ -65,8 +65,15 @@
                 <input id="playLocally"
                        type="button"
                        [disabled]="!selectedGame"
-                       value="local game"
+                       value="Play Locally"
                        (click)="playLocally()"
+                       class="btn btn-primary btn-block">
+                <br />
+                <input id="startDidacticial"
+                       type="button"
+                       [disabled]="!selectedGame"
+                       value="Learn Game"
+                       (click)="startTutorial()"
                        class="btn btn-primary btn-block">
             </div>
         </mat-tab>

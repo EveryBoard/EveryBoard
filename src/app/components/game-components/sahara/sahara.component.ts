@@ -1,13 +1,12 @@
 import { Component } from '@angular/core';
 
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SaharaMove } from 'src/app/games/sahara/sahara-move/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaRules } from 'src/app/games/sahara/sahara-rules/SaharaRules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 
 @Component({
@@ -15,7 +14,7 @@ import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
     templateUrl: './sahara.component.html',
 })
 export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPartSlice, LegalityStatus> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public rules: SaharaRules = new SaharaRules(SaharaPartSlice);
 
@@ -25,19 +24,14 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
 
     public chosenCoord: Coord = new Coord(-2, -2);
 
-    public imagesNames: string[][] = [['upward_black_pyramid', 'upward_white_pyramid', 'upward_black'],
-        ['downward_black_pyramid', 'downward_white_pyramid', 'downward_white']];
-
+    public imagesNames: string[][] = [
+        ['upward_black_pyramid', 'upward_white_pyramid', 'upward_black'],
+        ['downward_black_pyramid', 'downward_white_pyramid', 'downward_white']
+    ];
     public highlightNames: string[] = ['upward_highlight.svg', 'downward_highlight.svg'];
 
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosenCoord = new Coord(-2, -2);
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     public getCoordinate(x: number, y: number) : string {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);

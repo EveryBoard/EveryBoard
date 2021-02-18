@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GipfLegalityStatus } from 'src/app/games/gipf/gipf-legality-status/GipfLegalityStatus';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-move/GipfMove';
@@ -12,7 +13,6 @@ import { HexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { AbstractGameComponent } from '../AbstractGameComponent';
 
 @Component({
     selector: 'app-gipf',
@@ -66,7 +66,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     }
     public getPlayerPieceStyle(player: number): {[key:string]: string} {
         return {
-            'fill': this.getPlayerColor(player),
+            'fill': this.getPlayerColor(Player.of(player)),
             'stroke': 'black',
             'stroke-width': '8px',
         };
@@ -212,7 +212,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         }
         return MGPValidation.SUCCESS;
     }
-    private selectPlacementDirection(dir: Direction): Promise<MGPValidation> {
+    private async selectPlacementDirection(dir: Direction): Promise<MGPValidation> {
         this.placement = MGPOptional.of(new GipfPlacement(this.placementEntrance.get(), dir, false));
         const validity: MGPValidation = this.rules.placementValidity(this.constructedSlice, this.placement.get());
         if (validity.isFailure()) {
@@ -222,7 +222,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         return this.moveToFinalCapturePhaseOrTryMove();
     }
 
-    private tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
+    private async tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
                     placement: GipfPlacement,
                     finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
         try {
@@ -300,13 +300,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         const piece: GipfPiece = this.getPiece(x, y);
         return this.getPlayerPieceStyle(piece.player.value);
     }
-    public async cancelMove(reason?: string): Promise<MGPValidation> {
+    public cancelMoveAttempt(): void {
         this.moveToInitialCaptureOrPlacementPhase();
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
 }

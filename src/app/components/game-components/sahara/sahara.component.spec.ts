@@ -9,7 +9,8 @@ import { of } from 'rxjs';
 import { SaharaComponent } from './sahara.component';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent }
+    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { Coord } from 'src/app/jscaip/coord/Coord';

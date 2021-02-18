@@ -1,0 +1,39 @@
+<div class="container-fluid"
+     style="height: 100%; max-height: 88%"
+>
+    <div id="infos" class="flex-container circled col-sm-4">
+        <ul>
+            <ng-container *ngFor="let step of this.steps; index as i;">
+                <li id="step_{{ i }}"
+                    [style.color]="getStepColor(i)"
+                    (click)="showStep(i)"
+                >
+                    <span style="color: black">{{ step.title }}</span>
+                </li>
+            </ng-container>
+        </ul>
+        <h3 id='currentMessage'>{{ currentMessage }}</h3>
+        <button id="retryButton"
+                *ngIf="stepAttemptMade && tutorialOver === false"
+                (click)="retry()"
+        >
+            Essayez à nouveau
+        </button>
+        <button id="nextButton"
+                *ngIf="tutorialOver === false"
+                (click)="next()"
+        >
+            Suivant
+        </button>
+        <button id="restartButton"
+                *ngIf="tutorialOver"
+                (click)="start()"
+        >
+            Recommencer
+        </button>
+    </div>
+
+    <div id="board" class="flex-container circled col-sm-8">
+        <app-game-includer></app-game-includer>
+    </div>
+</div>

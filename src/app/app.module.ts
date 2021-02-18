@@ -29,8 +29,9 @@ import { ServerPageComponent } from './components/normal-component/server-page/s
 import { PartCreationComponent } from './components/normal-component/part-creation/part-creation.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
-import { OnlineGameWrapperComponent } from './components/game-components/online-game-wrapper/online-game-wrapper.component';
-import { LocalGameWrapperComponent } from './components/game-components/local-game-wrapper/local-game-wrapper.component';
+import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { DidacticialGameWrapperComponent } from './components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
 import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
 import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
@@ -52,7 +53,7 @@ import { SaharaComponent } from './components/game-components/sahara/sahara.comp
 import { SiamComponent } from './components/game-components/siam/siam.component';
 import { TablutComponent } from './components/game-components/tablut/tablut.component';
 
-export const INCLUDE_VERBOSE_LINE_IN_TEST = false;
+export const INCLUDE_VERBOSE_LINE_IN_TEST: boolean = false;
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
 const routes: Route [] = [
@@ -63,6 +64,7 @@ const routes: Route [] = [
 
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
+    { path: 'didacticial/:compo', component: DidacticialGameWrapperComponent },
     { path: '', redirectTo: 'server', pathMatch: 'full' },
     { path: '**', component: ServerPageComponent },
 ];
@@ -78,8 +80,9 @@ const routes: Route [] = [
         InscriptionComponent,
         CountDownComponent,
         OnlineGameWrapperComponent,
-        GameIncluderComponent,
         LocalGameWrapperComponent,
+        DidacticialGameWrapperComponent,
+        GameIncluderComponent,
         ConfirmInscriptionComponent,
 
         AwaleComponent,

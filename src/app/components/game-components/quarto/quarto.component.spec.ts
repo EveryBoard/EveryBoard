@@ -7,10 +7,10 @@ import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule } from 'src/app/app.module';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent }
+    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { QuartoRules } from 'src/app/games/quarto/quarto-rules/QuartoRules';
 import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { By } from '@angular/platform-browser';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -98,13 +98,17 @@ describe('QuartoComponent', () => {
         expect(await clickElement('#chooseCoord_0_0')).toBeTrue();
         expect(gameComponent.cancelMove).toHaveBeenCalledOnceWith('Choisissez une case vide.');
     }));
-    it('should accept move when choosing piece then choosing coord', fakeAsync(async () => {
+    it('should accept move when choosing piece then choosing coord', fakeAsync(async() => {
         const oldSlice: QuartoPartSlice = QuartoPartSlice.getInitialSlice();
         spyOn(gameComponent, 'chooseMove').and.callThrough();
+        spyOn(gameComponent, 'cancelMoveAttempt').and.callThrough();
+
         expect(await clickElement('#choosePiece_1')).toBeTrue();
         expect(await clickElement('#chooseCoord_0_0')).toBeTrue();
+
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);
         expect(gameComponent.chooseMove).toHaveBeenCalledOnceWith(move, oldSlice, null, null);
+        expect(gameComponent.cancelMoveAttempt).toHaveBeenCalledTimes(1);
         flush();
     }));
     it('should accept move when choosing coord then choosing piece', fakeAsync(async () => {
