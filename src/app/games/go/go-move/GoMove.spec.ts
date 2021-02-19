@@ -1,7 +1,7 @@
 import { GoRules } from '../go-rules/GoRules';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { GoMove } from './GoMove';
-import { GoPartSlice } from '../GoPartSlice';
+import { GoPartSlice } from '../go-part-slice/GoPartSlice';
 
 describe('GoMove', () => {
     it('GoMove.encode and GoMove.decode should be reversible', () => {

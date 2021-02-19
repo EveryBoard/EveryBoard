@@ -1,7 +1,7 @@
 import { GoRules } from './GoRules';
 import { GoMove } from '../go-move/GoMove';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
-import { Phase, GoPartSlice, GoPiece } from '../GoPartSlice';
+import { Phase, GoPartSlice, GoPiece } from '../go-part-slice/GoPartSlice';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
@@ -30,9 +30,27 @@ describe('GoRules:', () => {
         expect(rules).toBeTruthy();
     });
     it('simple capture should be legal', () => {
-        expect(rules.choose(new GoMove(0, 1))).toBeTrue();
-        expect(rules.choose(new GoMove(0, 0))).toBeTrue();
-        expect(rules.choose(new GoMove(1, 1))).toBeTrue();
+        const board: GoPiece[][] = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [X, _, _, _, _],
+            [O, _, _, _, _],
+        ];
+        const expectedBoard: GoPiece[][] = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [X, _, _, _, _],
+            [_, X, _, _, _],
+        ];
+        const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 1, null, Phase.PLAYING);
+        const move: GoMove = new GoMove(1, 4);
+        const status: GoLegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.isSuccess()).toBeTrue();
+        const resultingSlice: GoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const expectedSlice: GoPartSlice = new GoPartSlice(expectedBoard, [0, 1], 2, null, Phase.PLAYING);
+        expect(resultingSlice).toEqual(expectedSlice);
     });
     it('complex capture should be legal', () => {
         const board: GoPiece[][] = [

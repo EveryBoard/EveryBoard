@@ -1,7 +1,7 @@
 import { Rules } from '../../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Coord } from '../../../jscaip/coord/Coord';
-import { GoPartSlice, Phase, GoPiece } from '../GoPartSlice';
+import { GoPartSlice, Phase, GoPiece } from '../go-part-slice/GoPartSlice';
 import { Direction, Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { GoMove } from '../go-move/GoMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
@@ -180,9 +180,11 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const markAllAsDead: (pawn: GoPiece) => GoPiece = (pawn: GoPiece) => {
             if (pawn === GoPiece.BLACK) return GoPiece.DEAD_BLACK;
             if (pawn === GoPiece.WHITE) return GoPiece.DEAD_WHITE;
-            if (pawn === GoPiece.BLACK_TERRITORY || pawn === GoPiece.WHITE_TERRITORY) {
+            if (pawn.isTerritory()) {
                 return GoPiece.EMPTY;
-            } else return pawn;
+            } else {
+                return pawn;
+            }
         };
         const allDeadBoard: GoPiece[][] = GoRules.mapBoard(currentSlice.getCopiedBoardGoPiece(), markAllAsDead);
         const allDeadSlice: GoPartSlice = new GoPartSlice(allDeadBoard,
@@ -391,7 +393,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         if (captures.length === 1) {
             const captured: Coord = captures[0];
             const capturerCoord: Coord = move.coord;
-            const capturer: number = newBoard[capturerCoord.y][capturerCoord.x].value;
+            const capturer: GoPiece = newBoard[capturerCoord.y][capturerCoord.x];
             const capturersInfo: GroupDatas = GroupDatas.getGroupDatas(capturerCoord, newBoard);
             const capturersFreedoms: Coord[] = capturersInfo.emptyCoords;
             const capturersGroup: Coord[] =

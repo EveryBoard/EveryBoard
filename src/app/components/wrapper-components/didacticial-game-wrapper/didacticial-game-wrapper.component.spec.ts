@@ -112,7 +112,7 @@ describe('DidacticialGameWrapperComponent', () => {
         const actualSlice: QuartoPartSlice = component.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
         expect(actualSlice).toEqual(slice);
     }));
-    it('Should show title of the steps', fakeAsync(async() => {
+    it('Should show title of the steps, the selected one in bold', fakeAsync(async() => {
         // Given a DidacticialStep with 3 steps
         const didacticial: DidacticialStep[] = [
             new DidacticialStep(
@@ -135,9 +135,13 @@ describe('DidacticialGameWrapperComponent', () => {
         component.startDidacticial(didacticial);
 
         // expect to see three "li" with step title
-        const expectedTitle: string = '<span style="color: black;">title 2</span>';
-        const currentTitle: string =
-            testElements.debugElement.query(By.css('#step_2')).nativeElement.innerHTML;
+        let expectedTitle: string = '<span style="color: black;"><b>title 0</b></span>';
+        let currentTitle: string =
+            testElements.debugElement.query(By.css('#step_0')).nativeElement.innerHTML;
+        expect(currentTitle).toBe(expectedTitle);
+        expectedTitle = '<span style="color: black;">title 1</span>';
+        currentTitle =
+            testElements.debugElement.query(By.css('#step_1')).nativeElement.innerHTML;
         expect(currentTitle).toBe(expectedTitle);
     }));
     it('Should go to specific step when clicking on it', fakeAsync(async() => {
@@ -306,11 +310,11 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
     }));
-    it('When invalid move is done, in addition to the toast, message should become the reason', fakeAsync(async() => {
+    it('When invalid click/move is done, in addition to the toast, message should become the reason', fakeAsync(async() => {
         // Given a DidacticialStep with possible invalid clicks
         const didacticial: DidacticialStep[] = [
             new DidacticialStep(
-                'title 0', 'instruction 0',
+                'title 0', 'instruction 0.',
                 new QuartoPartSlice([
                     [0, 16, 16, 16],
                     [16, 16, 16, 16],
@@ -327,10 +331,11 @@ describe('DidacticialGameWrapperComponent', () => {
         await expectClickFail('#chooseCoord_0_0', testElements, 'Choisissez une case vide.');
 
         // expect to see cancelMove reason as message
-        const expectedMessage: string = 'Choisissez une case vide.';
+        const expectedMessage: string = 'instruction 0. <br/>Choisissez une case vide.';
         const currentMessage: string =
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
+        expect('but I cannot').toEqual('I want to be able to click again');
     }));
     // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
     it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {

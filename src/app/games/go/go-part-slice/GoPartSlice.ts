@@ -1,4 +1,4 @@
-import { GamePartSlice } from '../../jscaip/GamePartSlice';
+import { GamePartSlice } from '../../../jscaip/GamePartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
 import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
@@ -20,16 +20,16 @@ export class GoPiece {
 
     private constructor(readonly value: number) {}
 
-    public static pieceBelongTo(piece: number, owner: Player): boolean {
+    public static pieceBelongTo(piece: GoPiece, owner: Player): boolean {
         if (owner === Player.ZERO) {
-            return piece === GoPiece.BLACK.value ||
-                   piece === GoPiece.DEAD_BLACK.value;
+            return piece === GoPiece.BLACK ||
+                   piece === GoPiece.DEAD_BLACK;
         }
         if (owner === Player.ONE) {
-            return piece === GoPiece.WHITE.value ||
-                   piece === GoPiece.DEAD_WHITE.value;
+            return piece === GoPiece.WHITE ||
+                   piece === GoPiece.DEAD_WHITE;
         }
-        throw new Error('Owner must be 0 or 1, got ' + owner);
+        throw new Error('Owner must be Player.ZERO or Player.ONE, got Player.NONE.');
     }
     public static of(value: number): GoPiece {
         switch (value) {
@@ -48,7 +48,7 @@ export class GoPiece {
             case 6:
                 return GoPiece.WHITE_TERRITORY;
             default:
-                throw new Error('Unknwon GoPiece.value ' + value);
+                throw new Error('Invalid value for GoPiece: ' + value + '.');
         }
     }
     public isOccupied(): boolean {
@@ -60,10 +60,17 @@ export class GoPiece {
     public isDead(): boolean {
         return [GoPiece.DEAD_BLACK, GoPiece.DEAD_WHITE].includes(this);
     }
-    public getAliveOpposite(): GoPiece {
-        if (this === GoPiece.DEAD_BLACK) return GoPiece.WHITE;
-        if (this === GoPiece.DEAD_WHITE) return GoPiece.BLACK;
-        else throw new Error('Only dead piece have an alive opposite');
+    public isTerritory(): boolean {
+        return [GoPiece.BLACK_TERRITORY, GoPiece.WHITE_TERRITORY].includes(this);
+    }
+    public getOwner(): Player {
+        if (this.isEmpty()) {
+            return Player.NONE;
+        } else if (this === GoPiece.BLACK || this === GoPiece.DEAD_BLACK) {
+            return Player.ZERO;
+        } else {
+            return Player.ONE;
+        }
     }
     public nonTerritory(): GoPiece {
         if (this.isEmpty()) return GoPiece.EMPTY;
@@ -77,11 +84,10 @@ export enum Phase {
     ACCEPT = 'ACCEPT',
     FINISHED = 'FINISHED'
 }
-
 export class GoPartSlice extends GamePartSlice {
-    public static WIDTH: number = 9;
+    public static WIDTH: number = 13;
 
-    public static HEIGHT: number = 9;
+    public static HEIGHT: number = 13;
 
     public readonly koCoord: Coord | null; // TODO: MGPOptional this
 
@@ -98,8 +104,8 @@ export class GoPartSlice extends GamePartSlice {
     public constructor(board: GoPiece[][], captured: number[], turn: number, koCoord: Coord, phase: Phase) {
         const intBoard: number[][] = GoPartSlice.mapGoPieceBoard(board);
         super(intBoard, turn);
-        if (captured == null) throw new Error('Captured cannot be null');
-        if (phase == null) throw new Error('Phase cannot be null');
+        if (captured == null) throw new Error('Captured cannot be null.');
+        if (phase == null) throw new Error('Phase cannot be null.');
         this.captured = captured;
         this.koCoord = koCoord;
         this.phase = phase;
@@ -131,17 +137,10 @@ export class GoPartSlice extends GamePartSlice {
                                this.koCoord,
                                this.phase);
     }
-    public toString(): string {
-        let result: string = '';
-        for (const lines of this.board) {
-            for (const piece of lines) {
-                result += piece + ' ';
-            }
-            result += '\n';
-        }
-        return result;
-    }
     public isDead(coord: Coord): boolean {
         return this.getBoardAtGoPiece(coord).isDead();
+    }
+    public isTerritory(coord: Coord): boolean {
+        return this.getBoardAtGoPiece(coord).isTerritory();
     }
 }

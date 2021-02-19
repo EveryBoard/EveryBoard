@@ -21,7 +21,7 @@ export class DvonnMove extends MoveCoordToCoord {
     private constructor(start: Coord, end: Coord) {
         super(start, end);
     }
-    public static of(start: Coord, end: Coord) {
+    public static of(start: Coord, end: Coord): DvonnMove {
         if (start.x === -1 && start.y === -1 && end.x === -2 && end.y === -2) {
             // PASS move
             return DvonnMove.PASS;
@@ -49,7 +49,7 @@ export class DvonnMove extends MoveCoordToCoord {
     }
     public toString(): string {
         if (this === DvonnMove.PASS) {
-            return 'DvonnMove(PASS)';
+            return 'DvonnMove.PASS';
         }
         return 'DvonnMove(' + this.coord + '->' + this.end + ')';
     }

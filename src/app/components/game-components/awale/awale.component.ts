@@ -94,9 +94,6 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
             return 'black';
         }
     }
-    public cancelMoveAttempt(): void {
-        // Empty because not needed.
-    }
     public decodeMove(encodedMove: number): AwaleMove {
         return AwaleMove.decode(encodedMove);
     }

@@ -21,9 +21,6 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
 
     public coord: Coord = new Coord(-1, -1);
 
-    public cancelMoveAttempt(): void {
-        // Empty because not needed.
-    }
     public chooseRight(): Promise<MGPValidation> {
         const chosenMove = MinimaxTestingMove.RIGHT;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);

@@ -62,8 +62,9 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
             return MGPValidation.SUCCESS;
         }
     }
-    public abstract cancelMoveAttempt(): void;
-
+    public cancelMoveAttempt(): void {
+        // Override if need be
+    }
     public abstract decodeMove(encodedMove: number): Move;
 
     public abstract encodeMove(move: Move): number;

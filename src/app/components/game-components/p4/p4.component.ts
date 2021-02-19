@@ -29,9 +29,6 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
         const chosenMove: P4Move = P4Move.of(x);
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
-    public cancelMoveAttempt(): void {
-        // Empty because not needed.
-    }
     public updateBoard(): void {
         const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
         const lastMove: P4Move = this.rules.node.move;

@@ -4,7 +4,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 describe('DvonnMove', () => {
     it('should toString in a readable way', () => {
         expect((DvonnMove.of(new Coord(3, 2), new Coord(3, 3))).toString()).toEqual('DvonnMove((3, 2)->(3, 3))');
-        expect(DvonnMove.PASS.toString()).toEqual('DvonnMove(PASS)');
+        expect(DvonnMove.PASS.toString()).toEqual('DvonnMove.PASS');
     });
     it('should correctly encode and decode coord to coord moves', () => {
         const move1: DvonnMove = DvonnMove.of(new Coord(3, 2), new Coord(3, 3));

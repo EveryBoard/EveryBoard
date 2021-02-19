@@ -4,12 +4,21 @@
     <div id="infos" class="flex-container circled col-sm-4">
         <ul>
             <ng-container *ngFor="let step of this.steps; index as i;">
-                <li id="step_{{ i }}"
+                <li *ngIf="i !== stepIndex else title"
+                    id="step_{{ i }}"
                     [style.color]="getStepColor(i)"
                     (click)="showStep(i)"
                 >
                     <span style="color: black">{{ step.title }}</span>
                 </li>
+                <ng-template #title>
+                    <li id="step_{{ i }}"
+                        [style.color]="getStepColor(i)"
+                        (click)="showStep(i)"
+                    >
+                        <span style="color: black"><b>{{ step.title }}</b></span>
+                    </li>
+                </ng-template>
             </ng-container>
         </ul>
         <h3 id='currentMessage'>{{ currentMessage }}</h3>

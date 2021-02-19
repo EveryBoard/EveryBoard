@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { GoPiece, GoPartSlice } from '../GoPartSlice';
+import { GoPiece, GoPartSlice } from '../go-part-slice/GoPartSlice';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { display } from 'src/app/utils/collection-lib/utils';
 
@@ -110,18 +110,17 @@ export class GroupDatas {
         // empty, [  0(2),     0,     4,         2,         0 ] => WHITE
         // empty, [  0(2),     2,     2,         0,         0 ] => throw
         // empty, [  0(2),     0,     0,         6,         0 ] => WHITE
-        const wrapperSizes: number[] = [];
-        wrapperSizes[GoPiece.EMPTY.value] = this.emptyCoords.length;
+        const wrapperSizes: number[] = [];wrapperSizes[GoPiece.EMPTY.value] = this.emptyCoords.length;
         wrapperSizes[GoPiece.BLACK.value] = this.blackCoords.length + this.deadWhiteCoords.length;
         wrapperSizes[GoPiece.WHITE.value] = this.whiteCoords.length + this.deadBlackCoords.length;
         wrapperSizes[this.color.nonTerritory().value] = 0;
 
-        const nbWrapper: number = wrapperSizes.filter((wrapperSize) => wrapperSize > 0).length;
+        const nbWrapper: number = wrapperSizes.filter((wrapperSize: number) => wrapperSize > 0).length;
         if (nbWrapper === 1) {
-            const wrapper: number = wrapperSizes.findIndex((wrapperSize) => wrapperSize > 0);
+            const wrapper: number = wrapperSizes.findIndex((wrapperSize: number) => wrapperSize > 0);
             return GoPiece.of(wrapper);
         } else {
-            throw new Error('Incorrect number of wrapper: ' + nbWrapper);
+            throw new Error('Can\'t call getWrapper on non-mono-wrapped group');
         }
     }
     public getNeighboorsEntryPoint(): Coord[] {

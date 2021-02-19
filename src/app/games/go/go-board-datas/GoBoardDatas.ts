@@ -1,5 +1,5 @@
 import { GroupInfos } from '../go-rules/GoRules';
-import { GoPiece, GoPartSlice } from '../GoPartSlice';
+import { GoPiece, GoPartSlice } from '../go-part-slice/GoPartSlice';
 import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GroupDatas } from '../group-datas/GroupDatas';
