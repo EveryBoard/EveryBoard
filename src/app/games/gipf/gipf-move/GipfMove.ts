@@ -182,7 +182,7 @@ export class GipfPlacement {
         }
         public encode(placement: GipfPlacement): number {
             return (GipfBoard.coordEncoder.encode(placement.coord) *
-                Direction.encoder.shift() + Direction.encoder.encode(placement.direction)) *
+                Direction.encoder.shift() + Direction.encoder.encode(placement.direction.get())) *
                 Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(placement.isDouble);
         }
         public decode(encoded: number): GipfPlacement {
@@ -191,18 +191,21 @@ export class GipfPlacement {
             const directionN: number = encoded % Direction.encoder.shift();
             const coordN: number = (encoded - directionN) / Direction.encoder.shift();
             return new GipfPlacement(GipfBoard.coordEncoder.decode(coordN),
-                                     Direction.encoder.decode(directionN),
+                                     MGPOptional.of(Direction.encoder.decode(directionN)),
                                      Encoder.booleanEncoder.decode(isDoubleN));
         }
     }
     public constructor(public readonly coord: Coord,
-                       public readonly direction: Direction,
+                       public readonly direction: MGPOptional<Direction>,
                        public readonly isDouble: boolean) {
     }
 
     public equals(other: GipfPlacement): boolean {
         if (!this.coord.equals(other.coord)) return false;
-        if (this.direction !== other.direction) return false;
+        const cmpDir: (x: Direction, y: Direction) => boolean = (x: Direction, y: Direction): boolean => {
+            return x === y;
+        };
+        if (this.direction.equals(other.direction, cmpDir) === false) return false;
         if (this.isDouble !== other.isDouble) return false;
         return true;
     }

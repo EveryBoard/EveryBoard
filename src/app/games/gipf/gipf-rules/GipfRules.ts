@@ -211,9 +211,9 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         slice.hexaBoard.getAllBorders().forEach((entrance: Coord) => {
             this.getAllDirectionsForEntrance(slice, entrance).forEach((dir: Direction) => {
                 if (this.isLineComplete(slice, entrance, dir) === false) {
-                    placements.push(new GipfPlacement(entrance, dir, false));
+                    placements.push(new GipfPlacement(entrance, MGPOptional.of(dir), false));
                     if (this.variant === 'tournament' && slice.playerCanStillPlaceDouble(player)) {
-                        placements.push(new GipfPlacement(entrance, dir, false));
+                        placements.push(new GipfPlacement(entrance, MGPOptional.of(dir), false));
                     }
                 }
             });
@@ -235,12 +235,21 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const player: Player = slice.getCurrentPlayer();
         let board: HexaBoard<GipfPiece> = slice.hexaBoard;
         let prevPiece: GipfPiece = GipfPiece.ofPlayer(slice.getCurrentPlayer(), placement.isDouble);
-        for (let cur: Coord = placement.coord;
-             board.isOnBoard(cur) && prevPiece !== GipfPiece.EMPTY;
-             cur = cur.getNext(placement.direction)) {
-            const curPiece: GipfPiece = board.getAt(cur);
-            board = board.setAt(cur, prevPiece);
-            prevPiece = curPiece;
+        if (placement.direction.isAbsent()) {
+            // Only valid if there is an empty spot
+            const coord: Coord = placement.coord;
+            if (board.getAt(coord) !== GipfPiece.EMPTY) {
+                throw new Error('Apply placement called without direction while the coord is occupied');
+            }
+            board = board.setAt(coord, prevPiece);
+        } else {
+            for (let cur: Coord = placement.coord;
+                board.isOnBoard(cur) && prevPiece !== GipfPiece.EMPTY;
+                cur = cur.getNext(placement.direction.get())) {
+                const curPiece: GipfPiece = board.getAt(cur);
+                board = board.setAt(cur, prevPiece);
+                prevPiece = curPiece;
+            }
         }
         const sidePieces: [number, number] = [slice.sidePieces[0], slice.sidePieces[1]];
         sidePieces[player.value] -= 1;
@@ -375,15 +384,21 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         if (slice.hexaBoard.isOnBorder(placement.coord) === false) {
             return MGPValidation.failure('Une pièce doit être placée sur le bord du plateau de jeu');
         }
-        if (this.isLineComplete(slice, placement.coord, placement.direction)) {
-            return MGPValidation.failure('Une pièce ne peut pas être placée sur une ligne complète');
-        }
-        for (const dir of this.getAllDirectionsForEntrance(slice, placement.coord)) {
-            if (dir === placement.direction) {
-                return MGPValidation.SUCCESS;
+        if (slice.hexaBoard.getAt(placement.coord) !== GipfPiece.EMPTY) {
+            if (placement.direction.isAbsent()) {
+                return MGPValidation.failure('Un placement a lieu sans direction');
             }
+            if (this.isLineComplete(slice, placement.coord, placement.direction.get())) {
+                return MGPValidation.failure('Une pièce ne peut pas être placée sur une ligne complète');
+            }
+            for (const dir of this.getAllDirectionsForEntrance(slice, placement.coord)) {
+                if (dir === placement.direction.get()) {
+                    return MGPValidation.SUCCESS;
+                }
+            }
+            return MGPValidation.failure('La direction du placement n\'est pas valide');
         }
-        return MGPValidation.failure('La direction du placement n\'est pas valide');
+        return MGPValidation.SUCCESS;
     }
 
     public placementCoordValidity(slice: GipfPartSlice, coord: Coord): MGPValidation {

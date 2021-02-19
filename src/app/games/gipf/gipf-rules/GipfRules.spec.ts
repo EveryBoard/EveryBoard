@@ -1,6 +1,7 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GipfLegalityStatus } from '../gipf-legality-status/GipfLegalityStatus';
 import { GipfCapture, GipfMove, GipfPlacement } from '../gipf-move/GipfMove';
 import { GipfPartSlice } from '../gipf-part-slice/GipfPartSlice';
@@ -12,9 +13,7 @@ describe('GipfRules:', () => {
     // We are using the tournament rules
     const __: GipfPiece = GipfPiece.EMPTY;
     const A1: GipfPiece = GipfPiece.PLAYER_ZERO_SIMPLE;
-    const A2: GipfPiece = GipfPiece.PLAYER_ZERO_DOUBLE;
     const B1: GipfPiece = GipfPiece.PLAYER_ONE_SIMPLE;
-    const B2: GipfPiece = GipfPiece.PLAYER_ONE_DOUBLE;
     const P0Turn: number = 6;
     const P1Turn: number = P0Turn+1;
 
@@ -58,7 +57,8 @@ describe('GipfRules:', () => {
             ], __, GipfPiece.encoder);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
                                                            [5, 5], [false, false], [0, 0]);
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-2, +3), HexaDirection.UP_RIGHT, false);
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-2, +3),
+                                                               MGPOptional.of(HexaDirection.UP_RIGHT), false);
             const move: GipfMove = new GipfMove(placement, [], []);
 
             const legality: GipfLegalityStatus = rules.isLegal(move, slice);
@@ -95,12 +95,12 @@ describe('GipfRules:', () => {
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
                                                            [5, 5], [false, false], [0, 0]);
             const invalidPlacements: GipfPlacement[] = [
-                new GipfPlacement(new Coord(0, -3), HexaDirection.DOWN_RIGHT, false),
-                new GipfPlacement(new Coord(-3, 3), HexaDirection.UP_LEFT, false),
-                new GipfPlacement(new Coord(-3, 3), HexaDirection.DOWN_LEFT, false),
-                new GipfPlacement(new Coord(-3, 0), HexaDirection.DOWN_RIGHT, false),
-                new GipfPlacement(new Coord(3, 0), HexaDirection.UP_RIGHT, false),
-                new GipfPlacement(new Coord(-2, 3), HexaDirection.UP_RIGHT, false),
+                new GipfPlacement(new Coord(0, -3), MGPOptional.of(HexaDirection.DOWN_RIGHT), false),
+                new GipfPlacement(new Coord(-3, 3), MGPOptional.of(HexaDirection.UP_LEFT), false),
+                new GipfPlacement(new Coord(-3, 3), MGPOptional.of(HexaDirection.DOWN_LEFT), false),
+                new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT), false),
+                new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.UP_RIGHT), false),
+                new GipfPlacement(new Coord(-2, 3), MGPOptional.of(HexaDirection.UP_RIGHT), false),
             ];
             for (const placement of invalidPlacements) {
                 const move: GipfMove = new GipfMove(placement, [], []);
@@ -130,7 +130,7 @@ describe('GipfRules:', () => {
                                                                [5, 5], [false, false], [0, 0]);
                 const capture: GipfCapture = new GipfCapture(capturePositions.map((q: number) => new Coord(-3+q, 0)));
                 const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, -3),
-                                                                      HexaDirection.DOWN_RIGHT, false),
+                                                                      MGPOptional.of(HexaDirection.DOWN_RIGHT), false),
                                                     [capture],
                                                     []);
                 const legality: GipfLegalityStatus = rules.isLegal(move, slice);
@@ -150,13 +150,15 @@ describe('GipfRules:', () => {
             ], __, GipfPiece.encoder);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
                                                            [5, 5], [false, false], [0, 0]);
-            const firstPlacement: GipfPlacement = new GipfPlacement(new Coord(-2, 3), HexaDirection.UP_RIGHT, false);
+            const firstPlacement: GipfPlacement = new GipfPlacement(new Coord(-2, 3),
+                                                                    MGPOptional.of(HexaDirection.UP_RIGHT), false);
             const move: GipfMove = new GipfMove(firstPlacement, [], []);
             const firstLegality: GipfLegalityStatus = rules.isLegal(move, slice);
             expect(firstLegality.legal.isSuccess()).toBeTrue();
 
             const resultingSlice: GipfPartSlice = rules.applyLegalMove(move, slice, firstLegality).resultingSlice;
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-1, 3), HexaDirection.UP_RIGHT, false);
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-1, 3),
+                                                               MGPOptional.of(HexaDirection.UP_RIGHT), false);
 
             const moveWithoutCapture: GipfMove = new GipfMove(placement, [], []);
             const noCaptureLegality: GipfLegalityStatus = rules.isLegal(moveWithoutCapture, resultingSlice);
@@ -184,7 +186,8 @@ describe('GipfRules:', () => {
             const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn,
                                                            [5, 5], [false, false], [0, 0]);
 
-            const placement: GipfPlacement = new GipfPlacement(new Coord(0, -3), HexaDirection.DOWN, false);
+            const placement: GipfPlacement = new GipfPlacement(new Coord(0, -3),
+                                                               MGPOptional.of(HexaDirection.DOWN), false);
 
 
             const capture1: GipfCapture = new GipfCapture([
@@ -224,7 +227,8 @@ describe('GipfRules:', () => {
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
                                                            [5, 5], [false, false], [0, 0]);
 
-            const placementA: GipfPlacement = new GipfPlacement(new Coord(-3, 1), HexaDirection.DOWN_RIGHT, false);
+            const placementA: GipfPlacement = new GipfPlacement(new Coord(-3, 1),
+                                                                MGPOptional.of(HexaDirection.DOWN_RIGHT), false);
             const captureA: GipfCapture = new GipfCapture([
                 new Coord(-1, 3), new Coord(-1, 2), new Coord(-1, 0), new Coord(-1, 1),
             ]);
@@ -235,7 +239,8 @@ describe('GipfRules:', () => {
 
             const resultingSlice: GipfPartSlice = rules.applyLegalMove(moveA, slice, legalityA).resultingSlice;
 
-            const placementB: GipfPlacement = new GipfPlacement(new Coord(0, -3), HexaDirection.DOWN_RIGHT, false);
+            const placementB: GipfPlacement = new GipfPlacement(new Coord(0, -3),
+                                                                MGPOptional.of(HexaDirection.DOWN_RIGHT), false);
             const captureB: GipfCapture = new GipfCapture([
                 new Coord(0, 1), new Coord(1, 0), new Coord(2, -1), new Coord(3, -2),
             ]);

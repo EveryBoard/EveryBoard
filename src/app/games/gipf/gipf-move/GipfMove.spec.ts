@@ -134,17 +134,20 @@ describe('GipfCapture', () => {
 describe('GipfMove', () => {
     xdescribe('encoder', () => {
         it('should correctly encode and decode simple moves with only a placement', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), HexaDirection.DOWN, false);
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
+                                                               MGPOptional.of(HexaDirection.DOWN), false);
             const move: GipfMove = new GipfMove(placement, [], []);
             expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
         });
         it('should correctly encode and decode double moves with only a placement', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-1, 2), HexaDirection.DOWN_RIGHT, true);
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-1, 2),
+                                                               MGPOptional.of(HexaDirection.DOWN_RIGHT), true);
             const move: GipfMove = new GipfMove(placement, [], []);
             expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
         });
         it('should correctly encode and decode simple moves with captures before and after', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(1, -3), HexaDirection.DOWN_LEFT, false);
+            const placement: GipfPlacement = new GipfPlacement(new Coord(1, -3),
+                                                               MGPOptional.of(HexaDirection.DOWN_LEFT), false);
             const initialCapture: GipfCapture = new GipfCapture([
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
             ]);
@@ -155,7 +158,8 @@ describe('GipfMove', () => {
             expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
         });
         it('should correctly encode and decode simple moves with multiple captures before', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(1, -3), HexaDirection.DOWN_LEFT, false);
+            const placement: GipfPlacement = new GipfPlacement(new Coord(1, -3),
+                                                               MGPOptional.of(HexaDirection.DOWN_LEFT), false);
             const capture1: GipfCapture = new GipfCapture([
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
             ]);
