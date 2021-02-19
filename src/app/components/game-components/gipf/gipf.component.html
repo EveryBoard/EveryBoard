@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="700px" height="600px"
+     viewBox="0 0 700 700"
+     preserveAspectRatio="xMidYMid meet">
+
+  <g *ngFor="let y of boardIndices;" [attr.y]="y">
+    <g *ngFor="let x of boardIndices;" [attr.x]="x">
+      <g *ngIf="isOnBoard(x, y)">
+        <g (click)="onClick(x, y)" id="click_{{ x }}_{{ y }}">
+        <!-- Background -->
+        <polyline [attr.points]="getHexaCoordinatesForXY(x, y)"
+                  [ngStyle]="getCaseStyle(x, y)"
+                  stroke-linecap="round"/>
+        <!-- Piece -->
+        <circle *ngIf="isPiece(x, y)"
+                [attr.cx] = "getCenter(x, y).x"
+                [attr.cy] = "getCenter(x, y).y"
+                [attr.r]="getPieceSize()"
+                [ngStyle]="getPieceStyle(x, y)"/>
+        <circle *ngIf="isDoublePiece(x, y)"
+                [attr.cx] = "getCenter(x, y).x"
+                [attr.cy] = "getCenter(x, y).y"
+                [attr.r]="getPieceSize() * 0.85"
+                [ngStyle]="getPieceStyle(x, y)"/>
+        </g>
+      </g>
+    </g>
+  </g>
+
+  <g *ngFor="let y of boardIndices;" [attr.y]="y">
+    <g *ngFor="let x of boardIndices;" [attr.x]="x">
+      <g *ngIf="isOnBoard(x, y)">
+          <polyline [attr.points]="getHexaCoordinatesForXY(x, y)"
+                  [ngStyle]="getHighlightStyle(x, y)"
+                    stroke-linecap="round"/>
+      </g>
+    </g>
+  </g>
+
+
+  <!-- Highlight last move -->
+  <g *ngIf="lastMove !== null">
+    <!-- Placed piece position -->
+    <polyline [attr.points]="getHexaCoordinates(center(lastMove.placement.x, lastMove.placement.y))"
+              style="fill:none; stroke:#00caca;stroke-width:5px;"/>
+    <!-- Captured pieces positions -->
+    <g *ngFor="let capture of capturedCases()">
+      <polyline [attr.points]="getHexaCoordinates(center(capture.x, capture.y))"
+                style="fill:none; stroke:#00caca;stroke-width:5px;"/>
+    </g>
+  </g>
+
+  <style>.text { font: 20px sans-serif; }</style>
+  <g *ngFor="let player of [0, 1];">
+    <text x="400" [attr.y]="30+(getPieceSize()+20)*player" class="text">Pièces du joueur {{player+1}}</text>
+    <g *ngFor="let p of getPlayerSidePieces(player);">
+      <circle id="piece_{{ player }}_{{ p }}"
+              [attr.cx] = "620+(p * getPieceSize()/3)"
+              [attr.cy]="30+(getPieceSize()+20)*player-5"
+              [attr.r]="getPieceSize()/3"
+              [ngStyle]="getPlayerPieceStyle(player)"/>
+    </g>
+  </g>
+</svg>

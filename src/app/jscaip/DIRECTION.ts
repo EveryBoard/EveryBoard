@@ -1,6 +1,18 @@
 import { Coord } from './coord/Coord';
+import { Encoder } from './encoder';
 
 export class Direction {
+    public static encoder: Encoder<Direction> = new class extends Encoder<Direction> {
+        public maxValue(): number {
+            return 7;
+        }
+        public encode(dir: Direction): number {
+            return dir.toInt();
+        }
+        public decode(encoded: number): Direction {
+            return Direction.fromInt(encoded);
+        }
+    }
     public static readonly UP: Direction = new Direction(0, -1);
 
     public static readonly UP_RIGHT: Direction = new Direction(1, -1);
@@ -106,6 +118,18 @@ export class Direction {
     }
     public isDiagonal(): boolean {
         return (this.x !== 0) && (this.y !== 0);
+    }
+    public isDown(): boolean {
+        return this.y === 1;
+    }
+    public isUp(): boolean {
+        return this.y === -1;
+    }
+    public isLeft(): boolean {
+        return this.x === -1;
+    }
+    public isRight(): boolean {
+        return this.x === 1;
     }
     public toString(): string {
         switch (this) {

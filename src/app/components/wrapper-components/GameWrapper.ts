@@ -13,6 +13,7 @@ import { AwaleComponent } from '../game-components/awale/awale.component';
 import { DvonnComponent } from '../game-components/dvonn/dvonn.component';
 import { EncapsuleComponent } from '../game-components/encapsule/encapsule.component';
 import { EpaminondasComponent } from '../game-components/epaminondas/epaminondas.component';
+import { GipfComponent } from '../game-components/gipf/gipf.component';
 import { GoComponent } from '../game-components/go/go.component';
 import { KamisadoComponent } from '../game-components/kamisado/kamisado.component';
 import { MinimaxTestingComponent } from '../game-components/minimax-testing/minimax-testing.component';
@@ -70,6 +71,8 @@ export abstract class GameWrapper {
                 return EpaminondasComponent;
             case 'Go':
                 return GoComponent;
+            case 'Gipf':
+                return GipfComponent;
             case 'MinimaxTesting':
                 return MinimaxTestingComponent;
             case 'P4':
