@@ -2,18 +2,19 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { GipfLegalityStatus } from '../gipf-legality-status/GipfLegalityStatus';
 import { GipfCapture, GipfMove, GipfPlacement } from '../gipf-move/GipfMove';
 import { GipfPartSlice } from '../gipf-part-slice/GipfPartSlice';
 import { GipfPiece } from '../gipf-piece/GipfPiece';
 import { GipfRules } from './GipfRules';
 
-fdescribe('GipfRules:', () => {
+describe('GipfRules:', () => {
     // Rules of gipf with the diagrams used in these tests: http://www.gipf.com/gipf/rules/complete_rules.html
     // We are using the tournament rules
-    const __: GipfPiece = GipfPiece.EMPTY;
-    const A1: GipfPiece = GipfPiece.PLAYER_ZERO_SIMPLE;
-    const B1: GipfPiece = GipfPiece.PLAYER_ONE_SIMPLE;
+    const _: GipfPiece = GipfPiece.EMPTY;
+    const A: GipfPiece = GipfPiece.PLAYER_ZERO;
+    const B: GipfPiece = GipfPiece.PLAYER_ONE;
     const P0Turn: number = 6;
     const P1Turn: number = P0Turn+1;
 
@@ -30,22 +31,21 @@ fdescribe('GipfRules:', () => {
         const slice: GipfPartSlice = rules.node.gamePartSlice;
         const board: HexaBoard<GipfPiece> = slice.hexaBoard;
         const expectedBoard: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-            [__, __, __, B1, __, __, A1],
-            [__, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __],
-            [A1, __, __, __, __, __, B1],
-            [__, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __],
-            [B1, __, __, A1, __, __, __],
-        ], __, GipfPiece.encoder);
+            [_, _, _, B, _, _, A],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [A, _, _, _, _, _, B],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [B, _, _, A, _, _, _],
+        ], _, GipfPiece.encoder);
         board.forEachCoord((c: Coord, content: GipfPiece) => {
             expect(content).toEqual(expectedBoard.getAt(c));
         });
     });
-    fit('should allow simple move without direction when target coord is empty', () => {
+    it('should allow simple move without direction when target coord is empty', () => {
         const slice: GipfPartSlice = rules.node.gamePartSlice;
-        const placement: GipfPlacement = new GipfPlacement(new Coord(3, -2),
-                                                           MGPOptional.empty(), false);
+        const placement: GipfPlacement = new GipfPlacement(new Coord(3, -2), MGPOptional.empty());
         const move: GipfMove = new GipfMove(placement, [], []);
 
         const legality: GipfLegalityStatus = rules.isLegal(move, slice);
@@ -55,14 +55,14 @@ fdescribe('GipfRules:', () => {
 
         // This is diagram 2b in the rules of Gipf
         const expectedBoard: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-            [__, __, __, B1, __, __, A1],
-            [__, __, __, __, __, __, A1],
-            [__, __, __, __, __, __, __],
-            [A1, __, __, __, __, __, B1],
-            [__, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __],
-            [B1, __, __, A1, __, __, __],
-        ], __, GipfPiece.encoder);
+            [_, _, _, B, _, _, A],
+            [_, _, _, _, _, _, A],
+            [_, _, _, _, _, _, _],
+            [A, _, _, _, _, _, B],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [B, _, _, A, _, _, _],
+        ], _, GipfPiece.encoder);
         resultingSlice.hexaBoard.forEachCoord((c: Coord, content: GipfPiece) => {
             expect(content).toEqual(expectedBoard.getAt(c));
         });
@@ -71,18 +71,16 @@ fdescribe('GipfRules:', () => {
     it('should allow simple moves without captures when possible', () => {
         // This is diagram 2a in the rules of Gipf
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-            [__, __, __, __, A1, __, __],
-            [__, __, __, __, A1, __, __],
-            [__, __, __, __, __, A1, __],
-            [A1, B1, A1, __, B1, __, __],
-            [A1, __, __, A1, B1, B1, __],
-            [B1, __, B1, __, __, __, __],
-            [__, B1, __, __, __, __, __],
-        ], __, GipfPiece.encoder);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
-                                                       [5, 5], [false, false], [0, 0]);
-        const placement: GipfPlacement = new GipfPlacement(new Coord(-2, +3),
-                                                           MGPOptional.of(HexaDirection.UP_RIGHT), false);
+            [_, _, _, _, A, _, _],
+            [_, _, _, _, A, _, _],
+            [_, _, _, _, _, A, _],
+            [A, B, A, _, B, _, _],
+            [A, _, _, A, B, B, _],
+            [B, _, B, _, _, _, _],
+            [_, B, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        const placement: GipfPlacement = new GipfPlacement(new Coord(-2, +3), MGPOptional.of(HexaDirection.UP_RIGHT));
         const move: GipfMove = new GipfMove(placement, [], []);
 
         const legality: GipfLegalityStatus = rules.isLegal(move, slice);
@@ -92,39 +90,37 @@ fdescribe('GipfRules:', () => {
 
         // This is diagram 2b in the rules of Gipf
         const expectedBoard: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-            [__, __, __, __, A1, __, __],
-            [__, __, __, __, A1, __, A1],
-            [__, __, __, __, __, B1, __],
-            [A1, B1, A1, __, A1, __, __],
-            [A1, __, __, B1, B1, B1, __],
-            [B1, __, B1, __, __, __, __],
-            [__, A1, __, __, __, __, __],
-        ], __, GipfPiece.encoder);
-        const expectedSlice: GipfPartSlice = new GipfPartSlice(expectedBoard, P1Turn,
-                                                               [4, 5], [false, false], [0, 0]);
+            [_, _, _, _, A, _, _],
+            [_, _, _, _, A, _, A],
+            [_, _, _, _, _, B, _],
+            [A, B, A, _, A, _, _],
+            [A, _, _, B, B, B, _],
+            [B, _, B, _, _, _, _],
+            [_, A, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const expectedSlice: GipfPartSlice = new GipfPartSlice(expectedBoard, P1Turn, [4, 5], [0, 0]);
 
         expect(resultingSlice.equals(expectedSlice)).toBeTrue();
     });
     it('should not allow placements on blocked lines', () => {
         // This is diagram 3
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-            [__, __, __, B1, B1, B1, A1],
-            [__, __, __, __, __, __, A1],
-            [__, __, __, __, __, A1, __],
-            [A1, B1, A1, A1, B1, B1, A1],
-            [__, B1, __, A1, __, __, __],
-            [B1, A1, B1, B1, __, __, __],
-            [__, A1, __, __, __, __, __],
-        ], __, GipfPiece.encoder);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
-                                                       [5, 5], [false, false], [0, 0]);
+            [_, _, _, B, B, B, A],
+            [_, _, _, _, _, _, A],
+            [_, _, _, _, _, A, _],
+            [A, B, A, A, B, B, A],
+            [_, B, _, A, _, _, _],
+            [B, A, B, B, _, _, _],
+            [_, A, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
         const invalidPlacements: GipfPlacement[] = [
-            new GipfPlacement(new Coord(0, -3), MGPOptional.of(HexaDirection.DOWN_RIGHT), false),
-            new GipfPlacement(new Coord(-2, 3), MGPOptional.of(HexaDirection.UP_LEFT), false),
-            new GipfPlacement(new Coord(3, -2), MGPOptional.of(HexaDirection.DOWN_LEFT), false),
-            new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT), false),
-            new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.UP_RIGHT), false),
-            new GipfPlacement(new Coord(-2, 3), MGPOptional.of(HexaDirection.UP_RIGHT), false),
+            new GipfPlacement(new Coord(0, -3), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
+            new GipfPlacement(new Coord(-2, 3), MGPOptional.of(HexaDirection.UP_LEFT)),
+            new GipfPlacement(new Coord(3, -2), MGPOptional.of(HexaDirection.DOWN_LEFT)),
+            new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
+            new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.UP_RIGHT)),
+            new GipfPlacement(new Coord(-2, 3), MGPOptional.of(HexaDirection.UP_RIGHT)),
         ];
         for (const placement of invalidPlacements) {
             const move: GipfMove = new GipfMove(placement, [], []);
@@ -135,28 +131,26 @@ fdescribe('GipfRules:', () => {
     it('should force to capture consecutive pieces', () => {
         // This is diagram 4 in the rules of Gipf
         const linesAndCaptures: [GipfPiece[], number[]][] = [
-            [[B1, B1, B1, B1, __, B1, A1], [0, 1, 2, 3]],
-            [[B1, B1, B1, B1, A1, __, A1], [0, 1, 2, 3, 4]],
-            [[B1, A1, B1, B1, B1, B1, __], [0, 1, 2, 3, 4, 5]],
-            [[A1, B1, B1, B1, B1, A1, B1], [0, 1, 2, 3, 4, 5, 6]],
+            [[B, B, B, B, _, B, A], [0, 1, 2, 3]],
+            [[B, B, B, B, A, _, A], [0, 1, 2, 3, 4]],
+            [[B, A, B, B, B, B, _], [0, 1, 2, 3, 4, 5]],
+            [[A, B, B, B, B, A, B], [0, 1, 2, 3, 4, 5, 6]],
         ];
         for (const [line, capturePositions] of linesAndCaptures) {
             const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-                [__, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
                 line,
-                [__, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __],
-                [__, __, __, __, __, __, __],
-            ], __, GipfPiece.encoder);
-            const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn,
-                                                           [5, 5], [false, false], [0, 0]);
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+            ], _, GipfPiece.encoder);
+            const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 5], [0, 0]);
             const capture: GipfCapture = new GipfCapture(capturePositions.map((q: number) => new Coord(-3+q, 0)));
-            const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, -3),
-                                                                  MGPOptional.of(HexaDirection.DOWN_RIGHT), false),
-                                                [capture],
-                                                []);
+            const placement: GipfPlacement = new GipfPlacement(new Coord(0, -3),
+                                                               MGPOptional.of(HexaDirection.DOWN_RIGHT));
+            const move: GipfMove = new GipfMove(placement, [capture], []);
             const legality: GipfLegalityStatus = rules.isLegal(move, slice);
             expect(legality.legal.isSuccess()).toBeTrue();
         }
@@ -164,25 +158,24 @@ fdescribe('GipfRules:', () => {
     it('should force to capture when possible', () => {
         // This is diagram 5a
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-            [__, __, __, B1, __, B1, B1],
-            [__, __, __, __, B1, A1, __],
-            [__, __, __, __, B1, B1, __],
-            [B1, __, B1, B1, A1, B1, B1],
-            [__, __, A1, B1, __, __, __],
-            [__, B1, A1, __, __, __, __],
-            [A1, A1, __, __, __, __, __],
-        ], __, GipfPiece.encoder);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
-                                                       [5, 5], [false, false], [0, 0]);
+            [_, _, _, B, _, B, B],
+            [_, _, _, _, B, A, _],
+            [_, _, _, _, B, B, _],
+            [B, _, B, B, A, B, B],
+            [_, _, A, B, _, _, _],
+            [_, B, A, _, _, _, _],
+            [A, A, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
         const firstPlacement: GipfPlacement = new GipfPlacement(new Coord(-2, 3),
-                                                                MGPOptional.of(HexaDirection.UP_RIGHT), false);
+                                                                MGPOptional.of(HexaDirection.UP_RIGHT));
         const move: GipfMove = new GipfMove(firstPlacement, [], []);
         const firstLegality: GipfLegalityStatus = rules.isLegal(move, slice);
         expect(firstLegality.legal.isSuccess()).toBeTrue();
 
         const resultingSlice: GipfPartSlice = rules.applyLegalMove(move, slice, firstLegality).resultingSlice;
         const placement: GipfPlacement = new GipfPlacement(new Coord(-1, 3),
-                                                           MGPOptional.of(HexaDirection.UP_RIGHT), false);
+                                                           MGPOptional.of(HexaDirection.UP_RIGHT));
 
         const moveWithoutCapture: GipfMove = new GipfMove(placement, [], []);
         const noCaptureLegality: GipfLegalityStatus = rules.isLegal(moveWithoutCapture, resultingSlice);
@@ -199,19 +192,18 @@ fdescribe('GipfRules:', () => {
     it('should let player choose between intersecting captures', () => {
         // This is diagram 6
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-            [__, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __],
-            [__, __, __, A1, __, A1, __],
-            [B1, B1, B1, B1, B1, __, __],
-            [__, A1, B1, __, __, __, __],
-            [A1, __, B1, __, __, __, __],
-            [__, __, B1, __, __, __, __],
-        ], __, GipfPiece.encoder);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn,
-                                                       [5, 5], [false, false], [0, 0]);
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, A, _, A, _],
+            [B, B, B, B, B, _, _],
+            [_, A, B, _, _, _, _],
+            [A, _, B, _, _, _, _],
+            [_, _, B, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 5], [0, 0]);
 
         const placement: GipfPlacement = new GipfPlacement(new Coord(0, -3),
-                                                           MGPOptional.of(HexaDirection.DOWN), false);
+                                                           MGPOptional.of(HexaDirection.DOWN));
 
 
         const capture1: GipfCapture = new GipfCapture([
@@ -240,19 +232,18 @@ fdescribe('GipfRules:', () => {
     it('should force both players to capture when possible', () => {
         // This is the board before diagram 7
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
-            [__, __, __, __, __, __, A1],
-            [__, __, __, __, __, B1, B1],
-            [__, __, B1, __, __, B1, __],
-            [__, __, A1, __, B1, __, __],
-            [B1, A1, B1, __, __, __, __],
-            [__, __, A1, __, __, __, __],
-            [__, A1, A1, __, __, __, __],
-        ], __, GipfPiece.encoder);
-        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn,
-                                                       [5, 5], [false, false], [0, 0]);
+            [_, _, _, _, _, _, A],
+            [_, _, _, _, _, B, B],
+            [_, _, B, _, _, B, _],
+            [_, _, A, _, B, _, _],
+            [B, A, B, _, _, _, _],
+            [_, _, A, _, _, _, _],
+            [_, A, A, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
 
         const placementA: GipfPlacement = new GipfPlacement(new Coord(-3, 1),
-                                                            MGPOptional.of(HexaDirection.DOWN_RIGHT), false);
+                                                            MGPOptional.of(HexaDirection.DOWN_RIGHT));
         const captureA: GipfCapture = new GipfCapture([
             new Coord(-1, 3), new Coord(-1, 2), new Coord(-1, 0), new Coord(-1, 1),
         ]);
@@ -264,7 +255,7 @@ fdescribe('GipfRules:', () => {
         const resultingSlice: GipfPartSlice = rules.applyLegalMove(moveA, slice, legalityA).resultingSlice;
 
         const placementB: GipfPlacement = new GipfPlacement(new Coord(0, -3),
-                                                            MGPOptional.of(HexaDirection.DOWN_RIGHT), false);
+                                                            MGPOptional.of(HexaDirection.DOWN_RIGHT));
         const captureB: GipfCapture = new GipfCapture([
             new Coord(0, 1), new Coord(1, 0), new Coord(2, -1), new Coord(3, -2),
         ]);
@@ -274,8 +265,38 @@ fdescribe('GipfRules:', () => {
         expect(legalityB.legal.isSuccess()).toBeTrue();
     });
     it('should correctly apply move even if the results are not cached in the legality status', () => {
-        // TODO
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, A, _, _],
+            [_, _, _, _, A, _, _],
+            [_, _, _, _, _, A, _],
+            [A, B, A, _, B, _, _],
+            [A, _, _, A, B, B, _],
+            [B, _, B, _, _, _, _],
+            [_, B, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        const placement: GipfPlacement = new GipfPlacement(new Coord(-2, +3),
+                                                           MGPOptional.of(HexaDirection.UP_RIGHT));
+        const move: GipfMove = new GipfMove(placement, [], []);
+
+        const legality: GipfLegalityStatus = rules.isLegal(move, slice);
+        expect(legality.legal.isSuccess()).toBeTrue();
+
+        const resultingSlice: GipfPartSlice =
+            rules.applyLegalMove(move, slice, new GipfLegalityStatus(MGPValidation.SUCCESS, null)).resultingSlice;
+
+        // This is diagram 2b in the rules of Gipf
+        const expectedBoard: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, A, _, _],
+            [_, _, _, _, A, _, A],
+            [_, _, _, _, _, B, _],
+            [A, B, A, _, A, _, _],
+            [A, _, _, B, B, B, _],
+            [B, _, B, _, _, _, _],
+            [_, A, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const expectedSlice: GipfPartSlice = new GipfPartSlice(expectedBoard, P1Turn, [4, 5], [0, 0]);
+
+        expect(resultingSlice.equals(expectedSlice)).toBeTrue();
     });
-    it('should 
-  });
 });

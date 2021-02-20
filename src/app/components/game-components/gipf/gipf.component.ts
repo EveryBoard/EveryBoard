@@ -106,11 +106,6 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         return piece !== GipfPiece.EMPTY;
     }
 
-    public isDoublePiece(x: number, y: number): boolean {
-        const piece: GipfPiece = this.getPiece(x, y);
-        return piece.isDouble;
-    }
-
     public getCenter(x: number, y: number): Coord {
         return this.hexaLayout.getCenter(new Coord(x, y));
     }
@@ -206,7 +201,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         return MGPValidation.SUCCESS;
     }
     private async selectPlacementDirection(dir: MGPOptional<Direction>): Promise<MGPValidation> {
-        this.placement = MGPOptional.of(new GipfPlacement(this.placementEntrance.get(), dir, false));
+        this.placement = MGPOptional.of(new GipfPlacement(this.placementEntrance.get(), dir));
         const validity: MGPValidation = this.rules.placementValidity(this.constructedSlice, this.placement.get());
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());

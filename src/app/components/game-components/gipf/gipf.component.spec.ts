@@ -86,7 +86,7 @@ xdescribe('GipfComponent:', () => {
     it('should allow placement directly resulting in a move if there is no initial capture', fakeAsync(async() => {
         spyOn(gameComponent, 'chooseMove');
         const oldSlice: GipfPartSlice = gameComponent.rules.node.gamePartSlice;
-        const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(-3, 1), MGPOptional.empty(), false), [], []);
+        const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(-3, 1), MGPOptional.empty()), [], []);
         expect(await clickElement('#click_-3_1')).toBeTrue();
         expect(gameComponent.chooseMove).toHaveBeenCalledWith(move, oldSlice, null, null);
     }));

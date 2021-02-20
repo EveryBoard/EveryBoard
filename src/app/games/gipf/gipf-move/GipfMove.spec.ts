@@ -22,8 +22,27 @@ describe('GipfLine', () => {
             expect(line.isPresent()).toBeFalse();
         });
     });
+    describe('allLines', () => {
+        it('should countain X different lines', () => {
+            const lines: ReadonlyArray<GipfLine> = GipfLine.allLines();
+            expect(lines.length).toEqual(21);
+            for (const line1 of lines) {
+                let eq: number = 0;
+                for (const line2 of lines) {
+                    if (line1.equals(line2)) {
+                        eq += 1;
+                    }
+                }
+                // Line should be unique
+                expect(eq).toEqual(1);
+            }
+        });
+    });
 
     describe('areOnSameLine', () => {
+        it('should consider a single coord to be on the same line as itself', () => {
+            expect(GipfLine.areOnSameLine([new Coord(0, -3)])).toBeTrue();
+        });
         it('should detect when coords are on the same line', () => {
             const coords: Coord[] = [new Coord(0, -3), new Coord(0, -1), new Coord(0, 2), new Coord(0, 1)];
             expect(GipfLine.areOnSameLine(coords)).toBeTrue();
@@ -50,15 +69,27 @@ describe('GipfLine', () => {
     describe('getEntrance', () => {
         it('should return the correct entrance for lines with a constant q', () => {
             const line: GipfLine = GipfLine.constantQ(-3);
-            expect(line.getEntrance().equals(new Coord(-3, 0)));
+            expect(line.getEntrance().equals(new Coord(-3, 0))).toBeTrue();
         });
         it('should return the correct entrance for lines with a constant r', () => {
             const line: GipfLine = GipfLine.constantR(-2);
-            expect(line.getEntrance().equals(new Coord(-1, -2)));
+            expect(line.getEntrance().equals(new Coord(-1, -2))).toBeTrue();
         });
         it('should return the correct entrance for lines with a constant s', () => {
             const line: GipfLine = GipfLine.constantS(1);
-            expect(line.getEntrance().equals(new Coord(2, -3)));
+            expect(line.getEntrance().equals(new Coord(2, -3))).toBeTrue();
+        });
+    });
+
+    describe('getDirection', () => {
+        it('should consider lines with constant q going down', () => {
+            expect(GipfLine.constantQ(-3).getDirection()).toEqual(HexaDirection.DOWN);
+        });
+        it('should consider lines with constant r going down right', () => {
+            expect(GipfLine.constantR(-3).getDirection()).toEqual(HexaDirection.DOWN_RIGHT);
+        });
+        it('should consider lines with constant s going down left', () => {
+            expect(GipfLine.constantS(-3).getDirection()).toEqual(HexaDirection.DOWN_LEFT);
         });
     });
 });
@@ -131,23 +162,45 @@ describe('GipfCapture', () => {
     });
 });
 
+describe('GipfPlacement', () => {
+    describe('encoder', () => {
+        it('should correctly encode and decode placements with a direction', () => {
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN));
+            expect(GipfPlacement.encoder.decode(GipfPlacement.encoder.encode(placement)).equals(placement)).toBeTrue();
+        });
+        it('should correctly encode and decode placements without a direction', () => {
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.empty());
+            expect(GipfPlacement.encoder.decode(GipfPlacement.encoder.encode(placement)).equals(placement)).toBeTrue();
+        });
+    });
+    describe('equals', () => {
+        it('should detect equal placements', () => {
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN));
+            expect(placement.equals(placement)).toBeTrue();
+        });
+        it('should detect different placements', () => {
+            const placement1: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN));
+            const placement2: GipfPlacement = new GipfPlacement(new Coord(1, -3), MGPOptional.of(HexaDirection.DOWN));
+            const placement3: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
+                                                                MGPOptional.of(HexaDirection.DOWN_RIGHT));
+            expect(placement1.equals(placement2)).toBeFalse();
+            expect(placement1.equals(placement3)).toBeFalse();
+        });
+    });
+});
+
 describe('GipfMove', () => {
     xdescribe('encoder', () => {
-        it('should correctly encode and decode simple moves with only a placement', () => {
+        it('should correctly encode and decode moves with only a placement', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
-                                                               MGPOptional.of(HexaDirection.DOWN), false);
+                                                               MGPOptional.of(HexaDirection.DOWN));
             const move: GipfMove = new GipfMove(placement, [], []);
             expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
         });
-        it('should correctly encode and decode double moves with only a placement', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-1, 2),
-                                                               MGPOptional.of(HexaDirection.DOWN_RIGHT), true);
-            const move: GipfMove = new GipfMove(placement, [], []);
-            expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
-        });
-        it('should correctly encode and decode simple moves with captures before and after', () => {
+
+        it('should correctly encode and decode moves with captures before and after', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(1, -3),
-                                                               MGPOptional.of(HexaDirection.DOWN_LEFT), false);
+                                                               MGPOptional.of(HexaDirection.DOWN_LEFT));
             const initialCapture: GipfCapture = new GipfCapture([
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
             ]);
@@ -157,9 +210,9 @@ describe('GipfMove', () => {
             const move: GipfMove = new GipfMove(placement, [initialCapture], [finalCapture]);
             expect(GipfMove.encoder.decode(GipfMove.encoder.encode(move)).equals(move)).toBeTrue();
         });
-        it('should correctly encode and decode simple moves with multiple captures before', () => {
+        it('should correctly encode and decode moves with multiple captures before', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(1, -3),
-                                                               MGPOptional.of(HexaDirection.DOWN_LEFT), false);
+                                                               MGPOptional.of(HexaDirection.DOWN_LEFT));
             const capture1: GipfCapture = new GipfCapture([
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
             ]);

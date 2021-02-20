@@ -12,9 +12,7 @@ export class GipfBoard {
             return (GipfBoard.RADIUS*2) * (GipfBoard.RADIUS*2+1) + (GipfBoard.RADIUS*2);
         }
         public encode(coord: Coord): number {
-            if (Math.abs(coord.x) > GipfBoard.RADIUS || Math.abs(coord.y) > GipfBoard.RADIUS) {
-                throw new Error('Invalid Gipf coord!');
-            }
+            // assertion: (Math.abs(coord.x) > GipfBoard.RADIUS || Math.abs(coord.y) > GipfBoard.RADIUS) {
             return (coord.x+GipfBoard.RADIUS) * (GipfBoard.RADIUS*2+1) + (coord.y+GipfBoard.RADIUS);
         }
         public decode(encoded: number): Coord {
@@ -104,7 +102,7 @@ export class GipfLine {
             case 'q':
                 return new Coord(this.offset, Math.max(-radius, -this.offset - radius));
             case 'r':
-                return new Coord(Math.max(-radius, -this.offset - radius), -this.offset);
+                return new Coord(Math.max(-radius, -this.offset - radius), this.offset);
             case 's':
                 return new Coord(Math.min(radius, -this.offset + radius), Math.max(-radius, -this.offset - radius));
         }
@@ -181,23 +179,31 @@ export class GipfPlacement {
                 Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.maxValue();
         }
         public encode(placement: GipfPlacement): number {
-            return (GipfBoard.coordEncoder.encode(placement.coord) *
-                Direction.encoder.shift() + Direction.encoder.encode(placement.direction.get())) *
-                Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(placement.isDouble);
+            if (placement.direction.isPresent()) {
+                return (GipfBoard.coordEncoder.encode(placement.coord) *
+                    Direction.encoder.shift() + Direction.encoder.encode(placement.direction.get())) *
+                    Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(true);
+            } else {
+                return (GipfBoard.coordEncoder.encode(placement.coord) *
+                    Direction.encoder.shift()) *
+                    Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(false);
+            }
         }
         public decode(encoded: number): GipfPlacement {
-            const isDoubleN: number = encoded % Encoder.booleanEncoder.shift();
-            encoded = (encoded - isDoubleN) / Encoder.booleanEncoder.shift();
+            const hasDirectionN: number = encoded % Encoder.booleanEncoder.shift();
+            encoded = (encoded - hasDirectionN) / Encoder.booleanEncoder.shift();
             const directionN: number = encoded % Direction.encoder.shift();
             const coordN: number = (encoded - directionN) / Direction.encoder.shift();
-            return new GipfPlacement(GipfBoard.coordEncoder.decode(coordN),
-                                     MGPOptional.of(Direction.encoder.decode(directionN)),
-                                     Encoder.booleanEncoder.decode(isDoubleN));
+            if (Encoder.booleanEncoder.decode(hasDirectionN)) {
+                return new GipfPlacement(GipfBoard.coordEncoder.decode(coordN),
+                                         MGPOptional.of(Direction.encoder.decode(directionN)));
+            } else {
+                return new GipfPlacement(GipfBoard.coordEncoder.decode(coordN), MGPOptional.empty());
+            }
         }
     }
     public constructor(public readonly coord: Coord,
-                       public readonly direction: MGPOptional<Direction>,
-                       public readonly isDouble: boolean) {
+                       public readonly direction: MGPOptional<Direction>) {
     }
 
     public equals(other: GipfPlacement): boolean {
@@ -206,7 +212,6 @@ export class GipfPlacement {
             return x === y;
         };
         if (this.direction.equals(other.direction, cmpDir) === false) return false;
-        if (this.isDouble !== other.isDouble) return false;
         return true;
     }
 }
