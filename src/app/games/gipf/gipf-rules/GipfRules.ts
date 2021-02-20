@@ -18,7 +18,7 @@ import { GipfPiece } from '../gipf-piece/GipfPiece';
 export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfPartSlice, LegalityStatus> {}
 
 export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus> {
-    public variant: 'basic' | 'standard' | 'tournament' = 'basic';
+    public variant: 'basic' | 'standard' | 'tournament' = 'basic'; // TODO: only basic variant
 
     public applyLegalMove(move: GipfMove, slice: GipfPartSlice, status: GipfLegalityStatus):
       { resultingMove: GipfMove; resultingSlice: GipfPartSlice; } {
@@ -378,7 +378,8 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
 
     public placementValidity(slice: GipfPartSlice, placement: GipfPlacement): MGPValidation {
-        if (slice.hexaBoard.isOnBoard(placement.coord) === false) {
+        const coordValidity: MGPValidation = this.placementCoordValidity(slice, placement.coord);
+        if (coordValidity.isFailure()) {
             return MGPValidation.failure('Une pièce doit être placée sur le plateau de jeu');
         }
         if (slice.hexaBoard.isOnBorder(placement.coord) === false) {
