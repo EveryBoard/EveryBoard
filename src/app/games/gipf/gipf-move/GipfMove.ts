@@ -261,7 +261,6 @@ export class GipfMove extends Move {
     }
 
     private captureEquals(c1: ReadonlyArray<GipfCapture>, c2: ReadonlyArray<GipfCapture>): boolean {
-        if (c1 === c2) return true;
         if (c1.length !== c2.length) return false;
         for (let i: number = 0; i < c1.length; i++) {
             if (c1[i].equals(c2[i]) === false) return false;

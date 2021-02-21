@@ -193,12 +193,20 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
 
     private getPlacements(slice: GipfPartSlice): GipfPlacement[] {
         const placements: GipfPlacement[] = [];
-        slice.hexaBoard.getAllBorders().forEach((entrance: Coord) => {
-            this.getAllDirectionsForEntrance(slice, entrance).forEach((dir: Direction) => {
-                if (this.isLineComplete(slice, entrance, dir) === false) {
-                    placements.push(new GipfPlacement(entrance, MGPOptional.of(dir)));
-                }
-            });
+        const borders = slice.hexaBoard.getAllBorders();
+        console.log({nborders: borders.length});
+        borders.forEach((entrance: Coord) => {
+            if (slice.hexaBoard.getAt(entrance) === GipfPiece.EMPTY) {
+                console.log({entrance});
+                placements.push(new GipfPlacement(entrance, MGPOptional.empty()));
+            } else {
+                this.getAllDirectionsForEntrance(slice, entrance).forEach((dir: Direction) => {
+                    if (this.isLineComplete(slice, entrance, dir) === false) {
+                        console.log({entrance, dir});
+                        placements.push(new GipfPlacement(entrance, MGPOptional.of(dir)));
+                    }
+                });
+            }
         });
         return placements;
     }

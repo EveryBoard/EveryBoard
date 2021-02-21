@@ -91,8 +91,15 @@ export class HexaBoard<T> {
         for (let q: number = -radius; q <= radius; q++) {
             const r1: number = Math.max(-radius, -q - radius);
             const r2: number = Math.min(radius, -q + radius);
-            coords.push(new Coord(q, r1));
-            coords.push(new Coord(q, r2));
+            if (q === this.radius || q === -this.radius) {
+                // This is the border with constant q, we need to add all cases
+                for (let r: number = r1; r <= r2; r++) {
+                    coords.push(new Coord(q, r));
+                }
+            } else {
+                coords.push(new Coord(q, r1));
+                coords.push(new Coord(q, r2));
+            }
         }
         return coords;
     }

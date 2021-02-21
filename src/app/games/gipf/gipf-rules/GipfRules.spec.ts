@@ -9,7 +9,7 @@ import { GipfPartSlice } from '../gipf-part-slice/GipfPartSlice';
 import { GipfPiece } from '../gipf-piece/GipfPiece';
 import { GipfRules } from './GipfRules';
 
-describe('GipfRules:', () => {
+fdescribe('GipfRules:', () => {
     // Rules of gipf with the diagrams used in these tests: http://www.gipf.com/gipf/rules/complete_rules.html
     // We are using the tournament rules
     const _: GipfPiece = GipfPiece.EMPTY;
@@ -285,7 +285,6 @@ describe('GipfRules:', () => {
         const resultingSlice: GipfPartSlice =
             rules.applyLegalMove(move, slice, new GipfLegalityStatus(MGPValidation.SUCCESS, null)).resultingSlice;
 
-        // This is diagram 2b in the rules of Gipf
         const expectedBoard: HexaBoard<GipfPiece> = HexaBoard.fromTable([
             [_, _, _, _, A, _, _],
             [_, _, _, _, A, _, A],
@@ -298,5 +297,61 @@ describe('GipfRules:', () => {
         const expectedSlice: GipfPartSlice = new GipfPartSlice(expectedBoard, P1Turn, [4, 5], [0, 0]);
 
         expect(resultingSlice.equals(expectedSlice)).toBeTrue();
+    });
+    it('should not allow applying placements where a piece already is no direction is given', () => {
+        const slice: GipfPartSlice = rules.node.gamePartSlice;
+        const placement: GipfPlacement = new GipfPlacement(new Coord(3, -3), MGPOptional.empty());
+        expect(() => rules.applyPlacement(slice, placement)).toThrow();
+    });
+    fit('should have 30 moves on the initial slice', () => {
+        expect(rules.getListMoves(rules.node).size()).toBe(30);
+    });
+    describe('getBoardValue', () => {
+        const placement: GipfPlacement = new GipfPlacement(new Coord(-2, +3),
+                                                           MGPOptional.of(HexaDirection.UP_RIGHT));
+        const dummyMove: GipfMove = new GipfMove(placement, [], []);
+        it('should declare victory when one player does not have any piece left', () => {
+            const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+                [_, _, _, _, A, _, _],
+                [_, _, _, _, A, _, _],
+                [_, _, _, _, _, A, _],
+                [A, B, A, _, B, _, _],
+                [A, _, _, A, B, B, _],
+                [B, _, B, _, _, _, _],
+                [_, B, _, _, _, _, _],
+            ], _, GipfPiece.encoder);
+            const slice1: GipfPartSlice = new GipfPartSlice(board, P0Turn, [0, 5], [0, 0]);
+            expect(rules.getBoardValue(dummyMove, slice1)).toEqual(Number.MAX_SAFE_INTEGER,
+                                                                   'This should be a victory for player 1');
+            const slice2: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 0], [0, 0]);
+            expect(rules.getBoardValue(dummyMove, slice2)).toEqual(Number.MIN_SAFE_INTEGER,
+                                                                   'This should be a victory for player 0');
+        });
+        it('should favor having captured pieces', () => {
+            const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+                [_, _, _, _, A, _, _],
+                [_, _, _, _, A, _, _],
+                [_, _, _, _, _, A, _],
+                [A, B, A, _, B, _, _],
+                [A, _, _, A, B, B, _],
+                [B, _, B, _, _, _, _],
+                [_, B, _, _, _, _, _],
+            ], _, GipfPiece.encoder);
+            const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 7]);
+            expect(rules.getBoardValue(dummyMove, slice)).toBeLessThan(0);
+        });
+        it('should favor having pieces to play pieces', () => {
+            const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+                [_, _, _, _, A, _, _],
+                [_, _, _, _, A, _, _],
+                [_, _, _, _, _, A, _],
+                [A, B, A, _, B, _, _],
+                [A, _, _, A, B, B, _],
+                [B, _, B, _, _, _, _],
+                [_, B, _, _, _, _, _],
+            ], _, GipfPiece.encoder);
+            const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 7], [0, 0]);
+            expect(rules.getBoardValue(dummyMove, slice)).toBeLessThan(0);
+        });
     });
 });

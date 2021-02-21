@@ -76,6 +76,12 @@ describe('HexaBoard', () => {
         });
     });
 
+    fdescribe('getAllBorders', () => {
+        it('should return 18 borders for a radius of 3', () => {
+            expect(board.getAllBorders().length).toEqual(18);
+        });
+    });
+
     describe('fromNumberTable and toNumberTable', () => {
         it('should convert to and from NumberTable', () => {
             const board2: HexaBoard<number> = HexaBoard.fromNumberTable(board.toNumberTable(), 0, numEncoder);
