@@ -8,7 +8,7 @@ import { GipfPartSlice } from '../gipf-part-slice/GipfPartSlice';
 import { GipfPiece } from '../gipf-piece/GipfPiece';
 import { GipfRules } from './GipfRules';
 
-describe('GipfRules:', () => {
+xdescribe('GipfRules:', () => {
     // Rules of gipf with the diagrams used in these tests: http://www.gipf.com/gipf/rules/complete_rules.html
     // We are using the tournament rules
     const __: GipfPiece = GipfPiece.EMPTY;

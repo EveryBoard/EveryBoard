@@ -1,6 +1,6 @@
 import { GoBoardDatas } from './GoBoardDatas';
 import { GoPartSlice, GoPiece } from '../go-part-slice/GoPartSlice';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { GroupInfos } from '../go-rules/GoRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 
@@ -16,7 +16,7 @@ describe('GoBoardDatas', () => {
         GoPartSlice.WIDTH = 5;
     });
     it('should create one big group for initial board', () => {
-        const board: GoPiece[][] = GoPartSlice.getStartingBoard();
+        const board: Table<GoPiece> = GoPartSlice.getStartingBoard();
         const datas: GoBoardDatas = GoBoardDatas.ofGoPiece(board);
         const allZeroBoard: number[][] = ArrayUtils.createBiArray<number>(GoPartSlice.WIDTH, GoPartSlice.HEIGHT, 0);
         expect(datas.groupIndexes).toEqual(allZeroBoard);
@@ -26,7 +26,7 @@ describe('GoBoardDatas', () => {
         expect(groupInfos.neighboorsEP.length).toBe(0);
     });
     it('should create three neighboor group', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, X, X, _],

@@ -59,6 +59,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return Promise.resolve();
     }
     public updateBoard(): void {
+        this.gameComponent.isPlayerTurn = this.isPlayerTurn();
         this.gameComponent.updateBoard();
         if (this.gameComponent.rules.node.isEndGame()) {
             this.endGame = true;

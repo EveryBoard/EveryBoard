@@ -49,8 +49,9 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
-        if (this.click('#chooseCoord_' + x + '_' + y) === false) {
-            return;
+        const clickValidity: MGPValidation = this.canUserPlay('#chooseCoord_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
         }
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
@@ -76,10 +77,10 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
-        if (this.click('#choosePiece_' + givenPiece) === false) {
-            return; // TODO: shouldn't it return a kind of failure ?
+        const clickValidity: MGPValidation = this.canUserPlay('#choosePiece_' + givenPiece);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
         }
-
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 

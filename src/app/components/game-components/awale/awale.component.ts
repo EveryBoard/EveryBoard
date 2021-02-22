@@ -64,9 +64,9 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        // TODO : option de clonage revision commentage
-        if (this.click('#click_' + x + '_' + y) === false) {
-            return; // SAME  TODO AS THE OTHER ONE, SHOULD FAILURE ?
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
         }
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move

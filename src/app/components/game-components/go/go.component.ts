@@ -5,12 +5,11 @@ import { GoRules } from 'src/app/games/go/go-rules/GoRules';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/go-part-slice/GoPartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
-import { Player } from 'src/app/jscaip/player/Player';
 import { GroupDatas } from 'src/app/games/go/group-datas/GroupDatas';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 @Component({
     selector: 'app-go',
@@ -39,6 +38,10 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.showScore = true;
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
@@ -76,7 +79,6 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
                 if (previousBoard[y][x].isEmpty() === false &&
                     this.board[y][x] === GoPiece.EMPTY.value)
                 {
-                    console.log(x, y, ' captured')
                     this.captures.push(new Coord(x, y));
                 }
             }

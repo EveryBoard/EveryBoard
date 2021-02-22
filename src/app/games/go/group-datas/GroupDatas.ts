@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoPiece, GoPartSlice } from '../go-part-slice/GoPartSlice';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { display } from 'src/app/utils/collection-lib/utils';
+import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class GroupDatas {
     public static VERBOSE = false;
@@ -13,13 +14,13 @@ export class GroupDatas {
                 public deadBlackCoords: Coord[],
                 public deadWhiteCoords: Coord[]) {
     }
-    public static getGroupDatas(coord: Coord, board: GoPiece[][]): GroupDatas {
+    public static getGroupDatas(coord: Coord, board: Table<GoPiece>): GroupDatas {
         display(GroupDatas.VERBOSE, 'GroupDatas.getGroupDatas('+coord+', '+board+')');
         const color: GoPiece = board[coord.y][coord.x];
         const groupDatas: GroupDatas = new GroupDatas(color, [], [], [], [], []);
         return GroupDatas._getGroupDatas(coord, board, groupDatas);
     }
-    private static _getGroupDatas(coord: Coord, board: GoPiece[][], groupDatas: GroupDatas): GroupDatas {
+    private static _getGroupDatas(coord: Coord, board: Table<GoPiece>, groupDatas: GroupDatas): GroupDatas {
         display(GroupDatas.VERBOSE, { GroupDatas_getGroupDatas: { groupDatas, coord } });
         const color: GoPiece = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
@@ -110,7 +111,8 @@ export class GroupDatas {
         // empty, [  0(2),     0,     4,         2,         0 ] => WHITE
         // empty, [  0(2),     2,     2,         0,         0 ] => throw
         // empty, [  0(2),     0,     0,         6,         0 ] => WHITE
-        const wrapperSizes: number[] = [];wrapperSizes[GoPiece.EMPTY.value] = this.emptyCoords.length;
+        const wrapperSizes: number[] = [];
+        wrapperSizes[GoPiece.EMPTY.value] = this.emptyCoords.length;
         wrapperSizes[GoPiece.BLACK.value] = this.blackCoords.length + this.deadWhiteCoords.length;
         wrapperSizes[GoPiece.WHITE.value] = this.whiteCoords.length + this.deadBlackCoords.length;
         wrapperSizes[this.color.nonTerritory().value] = 0;

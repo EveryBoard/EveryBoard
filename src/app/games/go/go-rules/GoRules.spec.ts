@@ -2,7 +2,7 @@ import { GoRules } from './GoRules';
 import { GoMove } from '../go-move/GoMove';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Phase, GoPartSlice, GoPiece } from '../go-part-slice/GoPartSlice';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
@@ -30,14 +30,14 @@ describe('GoRules:', () => {
         expect(rules).toBeTruthy();
     });
     it('simple capture should be legal', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
             [X, _, _, _, _],
             [O, _, _, _, _],
         ];
-        const expectedBoard: GoPiece[][] = [
+        const expectedBoard: Table<GoPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -53,14 +53,14 @@ describe('GoRules:', () => {
         expect(resultingSlice).toEqual(expectedSlice);
     });
     it('complex capture should be legal', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [_, _, _, _, _],
             [_, _, X, X, _],
             [_, X, O, O, X],
             [_, _, _, O, X],
             [_, _, _, X, _],
         ];
-        const expectedBoard: GoPiece[][] = [
+        const expectedBoard: Table<GoPiece> = [
             [_, _, _, _, _],
             [_, _, X, X, _],
             [_, X, _, _, X],
@@ -80,14 +80,14 @@ describe('GoRules:', () => {
         expect(rules.choose(new GoMove(0, 1))).toBeFalse();
     });
     it('ko should be illegal', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [_, X, O, _, _],
             [X, O, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const expectedBoard: GoPiece[][] = [
+        const expectedBoard: Table<GoPiece> = [
             [O, _, O, _, _],
             [X, O, _, _, _],
             [_, _, _, _, _],
@@ -125,14 +125,14 @@ describe('GoRules:', () => {
         expect(rules.node.gamePartSlice.phase).toBe(Phase.PLAYING, 'Phase should have been switched to PLAYING');
     });
     it('Phase.PASSED + GoMove.PASS = Phase.COUNTING', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [_, _, O, X, O],
             [_, _, O, X, _],
             [_, _, O, X, _],
             [_, _, O, X, X],
             [_, _, O, X, _],
         ];
-        const expectedBoard: GoPiece[][] = [
+        const expectedBoard: Table<GoPiece> = [
             [b, b, O, X, O],
             [b, b, O, X, _],
             [b, b, O, X, _],
@@ -147,14 +147,14 @@ describe('GoRules:', () => {
         expect(resultingSlice).toEqual(expectedSlice);
     });
     it('Phase.COUNTING + GoMove/markAsDead = Phase.COUNTING (without shared territory)', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [b, O, X, w, w],
             [b, O, X, w, w],
             [b, O, X, w, w],
             [b, O, X, w, w],
             [b, O, X, w, w],
         ];
-        const expectedBoard: GoPiece[][] = [
+        const expectedBoard: Table<GoPiece> = [
             [w, u, X, w, w],
             [w, u, X, w, w],
             [w, u, X, w, w],
@@ -170,7 +170,7 @@ describe('GoRules:', () => {
         expect(resultingSlice).toEqual(expectedSlice);
     });
     it('should markAndCountTerritory correctly, bis', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [b, O, X, w, w],
             [b, O, X, w, w],
             [b, O, X, w, w],
@@ -193,14 +193,14 @@ describe('GoRules:', () => {
         expect(resultingSlice.getCapturedCopy()).toEqual([25, 0]);
     });
     it('Phase.COUNTING + GoMove/markAsDead = Phase.COUNTING (with shared territory)', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [b, b, O, X, O],
             [b, b, O, X, _],
             [b, b, O, X, _],
             [b, b, O, X, X],
             [b, b, O, X, w],
         ];
-        const expectedBoard: GoPiece[][] = [
+        const expectedBoard: Table<GoPiece> = [
             [b, b, O, X, u],
             [b, b, O, X, w],
             [b, b, O, X, w],
@@ -215,14 +215,14 @@ describe('GoRules:', () => {
         expect(resultingSlice).toEqual(expectedSlice);
     });
     it('Phase.COUNTING + GoMove/play = Phase.PLAYING', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [b, b, b, b, b],
             [b, b, b, b, b],
             [b, b, b, b, b],
             [b, b, b, b, b],
             [b, b, b, k, O],
         ];
-        const expectedBoard: GoPiece[][] = [
+        const expectedBoard: Table<GoPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -247,14 +247,14 @@ describe('GoRules:', () => {
         expect(rules.node.gamePartSlice.phase).toBe(Phase.ACCEPT, 'Phase should have been switched to ACCEPT');
     });
     it('Phase.ACCEPT + GoMove/play = Phase.PLAYING', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [b, k, b, O, b],
             [b, k, b, O, b],
             [b, k, b, O, O],
             [O, k, b, O, b],
             [b, k, b, O, b],
         ];
-        const expectedBoard: GoPiece[][] = [
+        const expectedBoard: Table<GoPiece> = [
             [_, X, _, O, _],
             [_, X, _, O, _],
             [X, X, _, O, O],
@@ -270,14 +270,14 @@ describe('GoRules:', () => {
         expect(resultingSlice).toEqual(expectedSlice);
     });
     it('Phase.ACCEPT + GoMove/play should capture', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [w, w, w, w, w],
             [w, w, w, w, w],
             [w, w, w, w, X],
             [w, w, w, X, w],
             [w, w, w, X, u],
         ];
-        const expectedBoard: GoPiece[][] = [
+        const expectedBoard: Table<GoPiece> = [
             [_, _, _, _, _],
             [_, _, _, _, _],
             [_, _, _, _, X],
@@ -316,7 +316,7 @@ describe('GoRules:', () => {
         expect(rules.node.gamePartSlice.phase).toBe(Phase.FINISHED, 'Phase should have been switched to \'FINISHED\'');
     });
     it('simply shared board should be simple to calculate', () => {
-        const previousBoard: GoPiece[][] = [
+        const previousBoard: Table<GoPiece> = [
             [_, _, O, X, _],
             [_, _, O, X, _],
             [_, _, O, X, _],
@@ -338,10 +338,13 @@ describe('GoRules:', () => {
         expect(resultingSlice.getCopiedBoardGoPiece()).toEqual(expectedBoard);
     });
     it('AddDeadToScore should be a simple counting method', () => {
-        const board: GoPiece[][] = ArrayUtils.createBiArray(5, 5, GoPiece.EMPTY);
-        board[0][0] = GoPiece.DEAD_BLACK;
-        board[1][1] = GoPiece.DEAD_BLACK;
-        board[2][2] = GoPiece.DEAD_WHITE;
+        const board: Table<GoPiece> = [
+            [u, _, _, _, _],
+            [_, u, _, _, _],
+            [_, _, k, _, _],
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+        ];
         const captured: number[] = [6, 1];
         const sliceWithDead: GoPartSlice = new GoPartSlice(board, captured, 0, null, Phase.PLAYING);
 
@@ -350,7 +353,7 @@ describe('GoRules:', () => {
         expect(score).toEqual(expectedScore, 'Score should be 7 vs 3');
     });
     it('Should calculate correctly board with dead stones', () => {
-        const board: GoPiece[][] = [
+        const board: Table<GoPiece> = [
             [_, _, X, O, _],
             [_, _, X, O, _],
             [_, _, X, O, X],

@@ -34,9 +34,11 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public imagesLocation: string = 'assets/images/';
 
+    public isPlayerTurn: boolean;
+
     public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => Promise<MGPValidation>;
 
-    public click: (element: string) => boolean;
+    public canUserPlay: (element: string) => MGPValidation;
 
     public cancelMoveOnWrapper: (reason?: string) => void;
 

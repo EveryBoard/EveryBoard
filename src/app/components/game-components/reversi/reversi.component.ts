@@ -29,8 +29,9 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.rules = new ReversiRules(ReversiPartSlice);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
-        if (this.click('#click_' + x + '_' + y) === false) {
-            return; // SAME  TODO AS THE OTHER ONE, SHOULD FAILURE ?
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
         }
         this.lastMove = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move

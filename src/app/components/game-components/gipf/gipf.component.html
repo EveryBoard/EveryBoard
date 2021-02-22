@@ -1,4 +1,4 @@
-<svg xmlns="http://www.w3.org/2000/svg"
+<!-- <svg xmlns="http://www.w3.org/2000/svg"
      width="700px" height="600px"
      viewBox="0 0 700 700"
      preserveAspectRatio="xMidYMid meet">
@@ -6,13 +6,13 @@
   <g *ngFor="let y of boardIndices;" [attr.y]="y">
     <g *ngFor="let x of boardIndices;" [attr.x]="x">
       <g *ngIf="isOnBoard(x, y)">
-        <g (click)="onClick(x, y)" id="click_{{ x }}_{{ y }}">
+        <g (click)="onClick(x, y)" id="click_{{ x }}_{{ y }}"> -->
         <!-- Background -->
-        <polyline [attr.points]="getHexaCoordinatesForXY(x, y)"
+        <!-- <polyline [attr.points]="getHexaCoordinatesForXY(x, y)"
                   [ngStyle]="getCaseStyle(x, y)"
-                  stroke-linecap="round"/>
+                  stroke-linecap="round"/> -->
         <!-- Piece -->
-        <circle *ngIf="isPiece(x, y)"
+        <!-- <circle *ngIf="isPiece(x, y)"
                 [attr.cx] = "getCenter(x, y).x"
                 [attr.cy] = "getCenter(x, y).y"
                 [attr.r]="getPieceSize()"
@@ -35,16 +35,16 @@
                     stroke-linecap="round"/>
       </g>
     </g>
-  </g>
+  </g> -->
 
 
   <!-- Highlight last move -->
-  <g *ngIf="lastMove !== null">
+  <!-- <g *ngIf="lastMove !== null"> -->
     <!-- Placed piece position -->
-    <polyline [attr.points]="getHexaCoordinates(center(lastMove.placement.x, lastMove.placement.y))"
-              style="fill:none; stroke:#00caca;stroke-width:5px;"/>
+    <!-- <polyline [attr.points]="getHexaCoordinates(center(lastMove.placement.x, lastMove.placement.y))"
+              style="fill:none; stroke:#00caca;stroke-width:5px;"/> -->
     <!-- Captured pieces positions -->
-    <g *ngFor="let capture of capturedCases()">
+    <!-- <g *ngFor="let capture of capturedCases()">
       <polyline [attr.points]="getHexaCoordinates(center(capture.x, capture.y))"
                 style="fill:none; stroke:#00caca;stroke-width:5px;"/>
     </g>
@@ -61,4 +61,4 @@
               [ngStyle]="getPlayerPieceStyle(player)"/>
     </g>
   </g>
-</svg>
+</svg> -->

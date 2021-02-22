@@ -8,6 +8,7 @@ import { GamePartSlice } from '../jscaip/GamePartSlice';
 import { LegalityStatus } from '../jscaip/LegalityStatus';
 import { Move } from '../jscaip/Move';
 import { DidacticialGameWrapperComponent } from '../components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
+import { MGPValidation } from './mgp-validation/MGPValidation';
 
 export interface MoveExpectations {
 
@@ -27,7 +28,7 @@ export interface TestElements {
 
     gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>,
 
-    clickSpy: jasmine.Spy,
+    canUserPlaySpy: jasmine.Spy,
 
     cancelMoveSpy: jasmine.Spy,
 
@@ -35,7 +36,7 @@ export interface TestElements {
 
     onValidUserMoveSpy: jasmine.Spy,
 }
-export const expectClickSuccess: (el: string, t: TestElements) => Promise<void> =
+export const expectClickSuccess: (elementName: string, testElements: TestElements) => Promise<void> =
 async(elementName: string, testElements: TestElements) => {
     const element: DebugElement = testElements.debugElement.query(By.css(elementName));
     expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
@@ -45,13 +46,14 @@ async(elementName: string, testElements: TestElements) => {
         element.triggerEventHandler('click', null);
         await testElements.fixture.whenStable();
         testElements.fixture.detectChanges();
-        expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
-        testElements.clickSpy.calls.reset();
+        expect(testElements.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        testElements.canUserPlaySpy.calls.reset();
         expect(testElements.cancelMoveSpy).not.toHaveBeenCalled();
         expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
+        expect(testElements.onValidUserMoveSpy).not.toHaveBeenCalled();
     }
 };
-export const expectClickFail: (el: string, t: TestElements, r: string) => Promise<void> =
+export const expectClickFail: (elementName: string, testElements: TestElements, reason: string) => Promise<void> =
 async(elementName: string, testElements: TestElements, reason: string) => {
     const element: DebugElement = testElements.debugElement.query(By.css(elementName));
     expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
@@ -61,8 +63,8 @@ async(elementName: string, testElements: TestElements, reason: string) => {
         element.triggerEventHandler('click', null);
         await testElements.fixture.whenStable();
         testElements.fixture.detectChanges();
-        expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
-        testElements.clickSpy.calls.reset();
+        expect(testElements.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        testElements.canUserPlaySpy.calls.reset();
         expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
         expect(testElements.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
         testElements.cancelMoveSpy.calls.reset();
@@ -75,18 +77,19 @@ async(elementName: string, testElements: TestElements) => {
     if (element == null) {
         return;
     } else {
-        expect(testElements.gameComponent.click(elementName)).toBeFalse();
-        testElements.clickSpy.calls.reset();
+        const clickValidity: MGPValidation = testElements.gameComponent.canUserPlay(elementName);
+        expect(clickValidity.isSuccess()).toBeFalse();
+        testElements.canUserPlaySpy.calls.reset();
         element.triggerEventHandler('click', null);
         await testElements.fixture.whenStable();
         testElements.fixture.detectChanges();
-        expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
-        testElements.clickSpy.calls.reset();
+        expect(testElements.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        testElements.canUserPlaySpy.calls.reset();
         expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
-        expect(testElements.cancelMoveSpy).not.toHaveBeenCalled();
+        expect(testElements.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
     }
 };
-export const expectMoveSuccess: (el: string, t: TestElements, ex: MoveExpectations) => Promise<void> =
+export const expectMoveSuccess: (elementName: string, testElements: TestElements, expectations: MoveExpectations) => Promise<void> =
 async(elementName: string, testElements: TestElements, expectations: MoveExpectations) => {
     const element: DebugElement = testElements.debugElement.query(By.css(elementName));
     expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
@@ -97,15 +100,15 @@ async(elementName: string, testElements: TestElements, expectations: MoveExpecta
         await testElements.fixture.whenStable();
         testElements.fixture.detectChanges();
         const { move, slice, scoreZero, scoreOne } = { ...expectations };
-        expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
-        testElements.clickSpy.calls.reset();
+        expect(testElements.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        testElements.canUserPlaySpy.calls.reset();
         expect(testElements.chooseMoveSpy).toHaveBeenCalledOnceWith(move, slice, scoreZero, scoreOne);
         testElements.chooseMoveSpy.calls.reset();
         expect(testElements.onValidUserMoveSpy).toHaveBeenCalledOnceWith(move, scoreZero, scoreOne);
         testElements.onValidUserMoveSpy.calls.reset();
     }
 };
-export const expectMoveFailure: (el: string, t: TestElements, ex: MoveExpectations, r: string) => Promise<void> =
+export const expectMoveFailure: (elementName: string, testElements: TestElements, expectations: MoveExpectations, reason: string) => Promise<void> =
 async(elementName: string, testElements: TestElements, expectations: MoveExpectations, reason: string) => {
     const element: DebugElement = testElements.debugElement.query(By.css(elementName));
     expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
@@ -116,8 +119,8 @@ async(elementName: string, testElements: TestElements, expectations: MoveExpecta
         await testElements.fixture.whenStable();
         testElements.fixture.detectChanges();
         const { move, slice, scoreZero, scoreOne } = { ...expectations };
-        expect(testElements.clickSpy).toHaveBeenCalledOnceWith(elementName);
-        testElements.clickSpy.calls.reset();
+        expect(testElements.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        testElements.canUserPlaySpy.calls.reset();
         expect(testElements.chooseMoveSpy).toHaveBeenCalledOnceWith(move, slice, scoreZero, scoreOne);
         testElements.chooseMoveSpy.calls.reset();
         expect(testElements.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
@@ -125,7 +128,7 @@ async(elementName: string, testElements: TestElements, expectations: MoveExpecta
         expect(testElements.onValidUserMoveSpy).not.toHaveBeenCalled();
     }
 };
-export const clickElement: (e: string, t: TestElements) => Promise<boolean> =
+export const clickElement: (elementName: string, testElements: TestElements) => Promise<boolean> =
 async(elementName: string, testElements: TestElements) => {
     const element: DebugElement = testElements.debugElement.query(By.css(elementName));
     if (element == null) {

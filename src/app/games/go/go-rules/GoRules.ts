@@ -10,6 +10,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { GroupDatas } from '../group-datas/GroupDatas';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
 
@@ -97,7 +98,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             }
         }
     }
-    private static isOccupied(coord: Coord, board: GoPiece[][]): boolean {
+    private static isOccupied(coord: Coord, board: Table<GoPiece>): boolean {
         return board[coord.y][coord.x].isOccupied();
     }
     public static isKo(move: GoMove, slice: GoPartSlice): boolean {

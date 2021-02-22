@@ -24,11 +24,12 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     public activesUsers: IJoueurId[];
 
-    public readonly gameNameList: string[] = ['Awale', // 2ème
+    public readonly gameNameList: string[] = [
+        'Awale', // 2ème
         'Dvonn', // 13ème ?
         'Encapsule', //
         'Epaminondas', // 14ème
-        'Gipf',
+        'Gipf', // 15ème
         'Go', //
         'Kamisado', // 12ème ??
         // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached

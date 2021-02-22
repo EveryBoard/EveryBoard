@@ -67,10 +67,10 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         display(TablutComponent.VERBOSE, 'TablutComponent.onClick(' + x + ', ' + y + ')');
-        if (this.click('#click_' + x + '_' + y) === false) {
-            return; // SAME  TODO AS THE OTHER ONE, SHOULD FAILURE ?
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
         }
-
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);
         } else {

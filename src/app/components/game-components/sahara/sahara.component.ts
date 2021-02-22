@@ -93,11 +93,9 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickedCoord: Coord = new Coord(x, y);
-        if (this.observerRole === 2) {
-            this.message('cloning feature will be added soon');
-            // TODO: Gav: generalize this for each game (might be complicated)
-            // Car: generalize what? The toasts?
-            // Gav: generalize the "non-player cannot click" thing
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            this.cancelMove(clickValidity.reason);
         }
         if (this.chosenCoord.equals(new Coord(-2, -2))) { // Must select pyramid
             if (this.board[y][x] === SaharaPawn.EMPTY) { // Did not select pyramid

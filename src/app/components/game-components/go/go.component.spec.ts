@@ -12,7 +12,11 @@ import { LocalGameWrapperComponent }
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { GoMove } from 'src/app/games/go/go-move/GoMove';
-import { By } from '@angular/platform-browser';
+import { expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/go-part-slice/GoPartSlice';
+import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
 const activatedRouteStub = {
     snapshot: {
@@ -32,27 +36,19 @@ const authenticationServiceStub = {
     },
 };
 describe('GoComponent', () => {
+
     let wrapper: LocalGameWrapperComponent;
 
-    let fixture: ComponentFixture<LocalGameWrapperComponent>;
+    let testElements: TestElements;
 
-    let debugElement: DebugElement;
+    const _: GoPiece = GoPiece.EMPTY;
+    const O: GoPiece = GoPiece.BLACK;
+    const X: GoPiece = GoPiece.WHITE;
 
-    let gameComponent: GoComponent;
-
-    const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
-        const element: DebugElement = debugElement.query(By.css(elementName));
-        if (element == null) {
-            return null;
-        } else {
-            element.triggerEventHandler('click', null);
-            await fixture.whenStable();
-            fixture.detectChanges();
-            return true; // TODO: would be nice to return wether or not cancelMove has been called for illegal/invalid move reason
-        }
-    };
     beforeAll(() => {
         GoComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GoComponent.VERBOSE;
+        GoPartSlice.HEIGHT = 5;
+        GoPartSlice.WIDTH = 5;
     });
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
@@ -67,38 +63,82 @@ describe('GoComponent', () => {
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
-        fixture = TestBed.createComponent(LocalGameWrapperComponent);
+        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
         wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
-        debugElement = fixture.debugElement;
+        const debugElement: DebugElement = fixture.debugElement;
         tick(1);
-        gameComponent = wrapper.gameComponent as GoComponent;
+        const gameComponent: GoComponent = wrapper.gameComponent as GoComponent;
+        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
+        const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
+        const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
+        const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
+        testElements = {
+            fixture,
+            debugElement,
+            gameComponent,
+            canUserPlaySpy,
+            cancelMoveSpy,
+            chooseMoveSpy,
+            onValidUserMoveSpy,
+        };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
-        expect(gameComponent).toBeTruthy('GoComponent should be created');
+        expect(testElements.gameComponent).toBeTruthy('GoComponent should be created');
     });
-    it('should allow to pass twice, then use "pass" as the method to "accept"', async () => {
-        expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Passed
-        expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Counting
-        expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Accept
+    it('Should allow to pass twice, then use "pass" as the method to "accept"', async() => {
+        expect((await testElements.gameComponent.pass()).isSuccess()).toBeTrue(); // Passed
+        expect((await testElements.gameComponent.pass()).isSuccess()).toBeTrue(); // Counting
+        expect((await testElements.gameComponent.pass()).isSuccess()).toBeTrue(); // Accept
 
-        expect((await gameComponent.pass()).isSuccess()).toBeTrue(); // Finished
+        expect((await testElements.gameComponent.pass()).isSuccess()).toBeTrue(); // Finished
 
-        expect((await gameComponent.pass()).isSuccess()).toBeFalse();
+        expect((await testElements.gameComponent.pass()).isSuccess()).toBeFalse();
     });
-    it('Should allow simple clicks', fakeAsync(async () => {
-        expect(await clickElement('#click_1_1')).toBeTrue();
-        expect(await clickElement('#click_2_2')).toBeTrue();
+    it('Should show captures', fakeAsync(async() => {
+        const board: Table<GoPiece> = [
+            [O, X, _, _, _],
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+        ];
+        const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 1, null, Phase.PLAYING);
+        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+        testElements.fixture.detectChanges();
+
+        const expectations: MoveExpectations = {
+            move: new GoMove(0, 1),
+            slice: slice,
+            scoreZero: 0, scoreOne: 0,
+        };
+        await expectMoveSuccess('#click_0_1', testElements, expectations);
+        const goComponent: GoComponent = testElements.gameComponent as GoComponent;
+        expect(goComponent.captures).toEqual([new Coord(0, 0)]);
+    }));
+    it('Should allow simple clicks', fakeAsync(async() => {
+        const firstExpectations: MoveExpectations = {
+            move: new GoMove(1, 1),
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: 0, scoreOne: 0,
+        };
+        await expectMoveSuccess('#click_1_1', testElements, firstExpectations);
+        const secondExpectations: MoveExpectations = {
+            move: new GoMove(2, 2),
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: 0, scoreOne: 0,
+        };
+        await expectMoveSuccess('#click_2_2', testElements, secondExpectations);
     }));
     it('should delegate decoding to move', () => {
         spyOn(GoMove, 'decode').and.callThrough();
-        gameComponent.decodeMove(5);
+        testElements.gameComponent.decodeMove(5);
         expect(GoMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
         spyOn(GoMove, 'encode').and.callThrough();
-        gameComponent.encodeMove(new GoMove(1, 1));
+        testElements.gameComponent.encodeMove(new GoMove(1, 1));
         expect(GoMove.encode).toHaveBeenCalledTimes(1);
     });
 });
