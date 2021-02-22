@@ -17,11 +17,6 @@
                 [attr.cy] = "getCenter(x, y).y"
                 [attr.r]="getPieceSize()"
                 [ngStyle]="getPieceStyle(x, y)"/>
-        <circle *ngIf="isDoublePiece(x, y)"
-                [attr.cx] = "getCenter(x, y).x"
-                [attr.cy] = "getCenter(x, y).y"
-                [attr.r]="getPieceSize() * 0.85"
-                [ngStyle]="getPieceStyle(x, y)"/>
         </g>
       </g>
     </g>

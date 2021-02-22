@@ -5,59 +5,28 @@ export class GipfPiece {
     public static encoder: Encoder<GipfPiece> = new class extends Encoder<GipfPiece> {
         public maxValue(): number {
             // Double piece of player 1 is encoded into 3
-            return 3;
+            return 2;
         }
         public encode(piece: GipfPiece): number {
-            if (piece.isDouble) {
-                return piece.player.value * 2 + 1;
-            } else {
-                return piece.player.value * 2;
-            }
+            return piece.player.value;
         }
         public decode(encoded: number): GipfPiece {
-            let player: Player;
-            let isDouble: boolean;
-            if (encoded % 2 === 1) {
-                isDouble = true;
-                player = Player.of((encoded-1)/2);
-            } else {
-                isDouble = false;
-                player = Player.of(encoded/2);
-            }
-            switch (player) {
-                case Player.ZERO:
-                    if (isDouble) {
-                        return GipfPiece.PLAYER_ZERO_DOUBLE;
-                    } else {
-                        return GipfPiece.PLAYER_ZERO_SIMPLE;
-                    }
-                case Player.ONE:
-                    if (isDouble) {
-                        return GipfPiece.PLAYER_ONE_DOUBLE;
-                    } else {
-                        return GipfPiece.PLAYER_ONE_SIMPLE;
-                    }
-                case Player.NONE:
-                    return GipfPiece.EMPTY;
-            }
+            const player: Player = Player.of(encoded);
+            return GipfPiece.ofPlayer(player);
         }
     }
-    public static EMPTY: GipfPiece = new GipfPiece(Player.NONE, false);
-    public static PLAYER_ZERO_SIMPLE: GipfPiece = new GipfPiece(Player.ZERO, false);
-    public static PLAYER_ZERO_DOUBLE: GipfPiece = new GipfPiece(Player.ZERO, true);
-    public static PLAYER_ONE_SIMPLE: GipfPiece = new GipfPiece(Player.ONE, false);
-    public static PLAYER_ONE_DOUBLE: GipfPiece = new GipfPiece(Player.ONE, true);
-    public static ofPlayer(player: Player, isDouble: boolean): GipfPiece {
+    public static EMPTY: GipfPiece = new GipfPiece(Player.NONE);
+    public static PLAYER_ZERO: GipfPiece = new GipfPiece(Player.ZERO);
+    public static PLAYER_ONE: GipfPiece = new GipfPiece(Player.ONE);
+    public static ofPlayer(player: Player): GipfPiece {
         if (player === Player.ZERO) {
-            if (isDouble) return GipfPiece.PLAYER_ZERO_DOUBLE;
-            else return GipfPiece.PLAYER_ZERO_SIMPLE;
+            return GipfPiece.PLAYER_ZERO;
         } else if (player === Player.ONE) {
-            if (isDouble) return GipfPiece.PLAYER_ONE_DOUBLE;
-            else return GipfPiece.PLAYER_ONE_SIMPLE;
+            return GipfPiece.PLAYER_ONE;
         } else {
             return GipfPiece.EMPTY;
         }
     }
-    private constructor(public player: Player, public isDouble: boolean) {
+    private constructor(public player: Player) {
     }
 }
