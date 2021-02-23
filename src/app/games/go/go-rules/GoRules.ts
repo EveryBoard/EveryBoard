@@ -11,6 +11,7 @@ import { GroupDatas } from '../group-datas/GroupDatas';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
 
@@ -102,7 +103,11 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         return board[coord.y][coord.x].isOccupied();
     }
     public static isKo(move: GoMove, slice: GoPartSlice): boolean {
-        return move.coord.equals(slice.koCoord);
+        if (slice.koCoord.isPresent()) {
+            return move.coord.equals(slice.koCoord.get());
+        } else {
+            return false;
+        }
     }
     public static getCaptureState(move: GoMove, slice: GoPartSlice): CaptureState {
         const LOCAL_VERBOSE: boolean = false;
@@ -127,7 +132,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === ennemi) {
                 display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'un groupe pourrait être capturé');
                 const neightbooringGroup: GroupDatas = GroupDatas.getGroupDatas(neightbooringCoord, copiedBoard);
-                const koCoord: Coord = slice.koCoord;
+                const koCoord: MGPOptional<Coord> = slice.koCoord;
                 if (GoRules.isCapturableGroup(neightbooringGroup, koCoord)) {
                     display(GoRules.VERBOSE || LOCAL_VERBOSE, {
                         neightbooringGroupCoord: neightbooringGroup.getCoords(),
@@ -139,9 +144,9 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return [];
     }
-    public static isCapturableGroup(groupDatas: GroupDatas, koCoord: Coord): boolean {
+    public static isCapturableGroup(groupDatas: GroupDatas, koCoord: MGPOptional<Coord>): boolean {
         if (groupDatas.color.isOccupied() && groupDatas.emptyCoords.length === 1) {
-            return !groupDatas.emptyCoords[0].equals(koCoord); // Ko Rules Block Capture
+            return !groupDatas.emptyCoords[0].equals(koCoord.getOrNull()); // Ko Rules Block Capture
         } else {
             return false;
         }
@@ -286,11 +291,11 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         let resultingSlice: GoPartSlice;
         if (slice.phase === Phase.PASSED) {
             newPhase = Phase.COUNTING;
-            resultingSlice = new GoPartSlice(oldBoard, oldCaptured, oldTurn + 1, null, newPhase);
+            resultingSlice = new GoPartSlice(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
             resultingSlice = GoRules.markTerritoryAndCount(resultingSlice);
         } else if (slice.phase === Phase.PLAYING) {
             newPhase = Phase.PASSED;
-            resultingSlice = new GoPartSlice(oldBoard, oldCaptured, oldTurn + 1, null, newPhase);
+            resultingSlice = new GoPartSlice(oldBoard, oldCaptured, oldTurn + 1, MGPOptional.empty(), newPhase);
         } else {
             throw new Error('Cannot pass in counting phase!');
         }
@@ -309,14 +314,14 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             const resultingSlice: GoPartSlice = new GoPartSlice(countingBoard,
                                                                 slice.getCapturedCopy(),
                                                                 slice.turn + 1,
-                                                                null,
+                                                                MGPOptional.empty(),
                                                                 Phase.ACCEPT);
             return { resultingMove, resultingSlice };
         } else if (slice.phase === Phase.ACCEPT) {
             const resultingSlice: GoPartSlice = new GoPartSlice(slice.getCopiedBoardGoPiece(),
                                                                 slice.getCapturedCopy(),
                                                                 slice.turn + 1,
-                                                                null,
+                                                                MGPOptional.empty(),
                                                                 Phase.FINISHED);
             return { resultingMove, resultingSlice };
         }
@@ -346,7 +351,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             newBoard[capturedCoord.y][capturedCoord.x] = GoPiece.EMPTY;
         }
         const resultingMove: GoMove = new GoMove(x, y);
-        const newKoCoord: Coord = GoRules.getNewKo(resultingMove, newBoard, capturedCoords);
+        const newKoCoord: MGPOptional<Coord> = GoRules.getNewKo(resultingMove, newBoard, capturedCoords);
         const newCaptured: number[] = slice.getCapturedCopy();
         newCaptured[currentPlayer] += capturedCoords.length;
         const resultingSlice: GoPartSlice = new GoPartSlice(newBoard, newCaptured, newTurn, newKoCoord, Phase.PLAYING);
@@ -373,7 +378,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             new GoPartSlice(switchedSlice.getCopiedBoardGoPiece(),
                             switchedSlice.getCapturedCopy(),
                             switchedSlice.turn + 1,
-                            null,
+                            MGPOptional.empty(),
                             Phase.COUNTING);
         resultingSlice = GoRules.markTerritoryAndCount(resultingSlice);
         return { resultingMove: legalMove, resultingSlice };
@@ -390,7 +395,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         // TODO: add counted territory here
         return (goScore[1] + (2*goKilled[0])) - (goScore[0] + (2*goKilled[1]));
     }
-    public static getNewKo(move: GoMove, newBoard: GoPiece[][], captures: Coord[]): Coord {
+    public static getNewKo(move: GoMove, newBoard: GoPiece[][], captures: Coord[]): MGPOptional<Coord> {
         if (captures.length === 1) {
             const captured: Coord = captures[0];
             const capturerCoord: Coord = move.coord;
@@ -402,13 +407,10 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             if (capturersFreedoms.length === 1 &&
                 capturersFreedoms[0].equals(captured) &&
                 capturersGroup.length === 1) {
-                return captured;
-            } else {
-                return null;
+                return MGPOptional.of(captured);
             }
-        } else {
-            return null;
         }
+        return MGPOptional.empty();
     }
     public static markTerritoryAndCount(slice: GoPartSlice): GoPartSlice {
         display(GoRules.VERBOSE, { markTerritoryAndCount: { slice } });

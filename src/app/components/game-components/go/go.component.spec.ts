@@ -17,6 +17,7 @@ import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/go-part-slice/GoPartSlice';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 const activatedRouteStub = {
     snapshot: {
@@ -104,7 +105,7 @@ describe('GoComponent', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 1, null, Phase.PLAYING);
+        const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 1, MGPOptional.empty(), Phase.PLAYING);
         testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         testElements.fixture.detectChanges();
 

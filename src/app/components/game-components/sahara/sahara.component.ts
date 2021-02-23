@@ -95,7 +95,7 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
         const clickedCoord: Coord = new Coord(x, y);
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
-            this.cancelMove(clickValidity.reason);
+            return this.cancelMove(clickValidity.reason);
         }
         if (this.chosenCoord.equals(new Coord(-2, -2))) { // Must select pyramid
             if (this.board[y][x] === SaharaPawn.EMPTY) { // Did not select pyramid

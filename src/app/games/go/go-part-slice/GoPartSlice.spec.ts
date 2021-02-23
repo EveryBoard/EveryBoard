@@ -1,4 +1,7 @@
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
+import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GoPartSlice, GoPiece, Phase } from './GoPartSlice';
 
 describe('GoPartSlice', () => {
@@ -12,7 +15,14 @@ describe('GoPartSlice', () => {
         expect(() => GoPiece.of(123)).toThrowError(error);
     });
     it('Should throw when constructor called with capture or phase as null', () => {
-        expect(() => new GoPartSlice([], null, 1, null, Phase.ACCEPT)).toThrowError('Captured cannot be null.');
-        expect(() => new GoPartSlice([], [], 1, null, null)).toThrowError('Phase cannot be null.');
+        const board: Table<GoPiece> = [];
+        const captured: number[] = [];
+        const turn: number = 1;
+        const koCoord: MGPOptional<Coord> = MGPOptional.empty();
+        const phase: Phase = Phase.ACCEPT;
+        expect(() => new GoPartSlice(board, null, turn, koCoord, phase)).toThrowError('Captured cannot be null.');
+        expect(() => new GoPartSlice(board, captured, turn, null, phase))
+            .toThrowError('Ko Coord cannot be null, use MGPOptional.empty() instead.');
+        expect(() => new GoPartSlice(board, captured, turn, koCoord, null)).toThrowError('Phase cannot be null.');
     });
 });

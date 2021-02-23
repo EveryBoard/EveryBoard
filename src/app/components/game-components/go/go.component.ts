@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 @Component({
     selector: 'app-go',
@@ -58,7 +59,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
         const slice: GoPartSlice = this.rules.node.gamePartSlice;
         const move: GoMove = this.rules.node.move;
-        const koCoord: Coord = slice.koCoord;
+        const koCoord: MGPOptional<Coord> = slice.koCoord;
         const phase: Phase = slice.phase;
 
         this.board = slice.getCopiedBoard();
@@ -68,7 +69,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
             this.last = move.coord;
             this.showCaptures();
         }
-        this.ko = koCoord;
+        this.ko = koCoord.getOrNull();
         this.canPass = phase !== Phase.FINISHED;
     }
     private showCaptures(): void {
