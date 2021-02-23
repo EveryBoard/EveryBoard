@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { PylosMove } from 'src/app/games/pylos/pylos-move/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
@@ -47,6 +47,10 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         }
     }
     public async onClick(x: number, y: number, z: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y + '_' + z);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
         const clickedPiece: number = this.slice.getBoardAt(clickedCoord);
         const coordIsAPiece: boolean = clickedPiece === this.slice.getCurrentPlayer().value;
@@ -89,16 +93,10 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         this.cancelMove();
         return this.chooseMove(move, slice, null, null);
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosenStartingCoord = null;
         this.chosenLandingCoord = null;
         this.chosenFirstCapture = null;
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     private async onEmptyCaseClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
         if (PylosRules.canCapture(this.slice, clickedCoord)) {
@@ -170,8 +168,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         if (c.equals(this.chosenLandingCoord)) {
             owner = this.slice.getCurrentPlayer().value;
         }
-        if (c.equals(new PylosCoord(0,0,0))){ console.log(this.getPlayerColor(owner))}
-        return this.getPlayerColor(owner);
+        return this.getPlayerColor(Player.of(owner));
     }
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;

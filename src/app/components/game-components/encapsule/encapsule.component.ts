@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Move } from '../../../jscaip/Move';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { EncapsuleRules } from 'src/app/games/encapsule/encapsule-rules/EncapsuleRules';
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleMove } from 'src/app/games/encapsule/encapsule-move/EncapsuleMove';
@@ -110,15 +110,9 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         this.lastLandingCoord = null;
         this.lastStartingCoord = MGPOptional.empty();
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosenCoord = null;
         this.chosenPiece = null;
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     public async onPieceClick(pieceString: string): Promise<MGPValidation> {
         this.hideLastMove();

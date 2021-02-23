@@ -1,7 +1,8 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { GoPiece, GoPartSlice } from '../GoPartSlice';
+import { GoPiece, GoPartSlice } from '../go-part-slice/GoPartSlice';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { display } from 'src/app/utils/collection-lib/utils';
+import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class GroupDatas {
     public static VERBOSE = false;
@@ -13,13 +14,13 @@ export class GroupDatas {
                 public deadBlackCoords: Coord[],
                 public deadWhiteCoords: Coord[]) {
     }
-    public static getGroupDatas(coord: Coord, board: GoPiece[][]): GroupDatas {
+    public static getGroupDatas(coord: Coord, board: Table<GoPiece>): GroupDatas {
         display(GroupDatas.VERBOSE, 'GroupDatas.getGroupDatas('+coord+', '+board+')');
         const color: GoPiece = board[coord.y][coord.x];
         const groupDatas: GroupDatas = new GroupDatas(color, [], [], [], [], []);
         return GroupDatas._getGroupDatas(coord, board, groupDatas);
     }
-    private static _getGroupDatas(coord: Coord, board: GoPiece[][], groupDatas: GroupDatas): GroupDatas {
+    private static _getGroupDatas(coord: Coord, board: Table<GoPiece>, groupDatas: GroupDatas): GroupDatas {
         display(GroupDatas.VERBOSE, { GroupDatas_getGroupDatas: { groupDatas, coord } });
         const color: GoPiece = board[coord.y][coord.x];
         groupDatas.addPawn(coord, color);
@@ -116,12 +117,12 @@ export class GroupDatas {
         wrapperSizes[GoPiece.WHITE.value] = this.whiteCoords.length + this.deadBlackCoords.length;
         wrapperSizes[this.color.nonTerritory().value] = 0;
 
-        const nbWrapper: number = wrapperSizes.filter((wrapperSize) => wrapperSize > 0).length;
+        const nbWrapper: number = wrapperSizes.filter((wrapperSize: number) => wrapperSize > 0).length;
         if (nbWrapper === 1) {
-            const wrapper: number = wrapperSizes.findIndex((wrapperSize) => wrapperSize > 0);
+            const wrapper: number = wrapperSizes.findIndex((wrapperSize: number) => wrapperSize > 0);
             return GoPiece.of(wrapper);
         } else {
-            throw new Error('Incorrect number of wrapper: ' + nbWrapper);
+            throw new Error('Can\'t call getWrapper on non-mono-wrapped group');
         }
     }
     public getNeighboorsEntryPoint(): Coord[] {

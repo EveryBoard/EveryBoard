@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/player/Player';
@@ -9,7 +9,6 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({
     selector: 'app-quixo',
@@ -35,14 +34,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         if (move) this.lastMoveCoord = move.coord;
         else this.lastMoveCoord = null;
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosenCoord = null;
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     public decodeMove(encodedMove: number): QuixoMove {
         return QuixoMove.decode(encodedMove);
@@ -94,8 +87,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     }
     public async tryMove(): Promise<MGPValidation> {
         const move: QuixoMove = new QuixoMove(this.chosenCoord.x,
-            this.chosenCoord.y,
-            this.chosenDirection);
+                                              this.chosenCoord.y,
+                                              this.chosenDirection);
         this.cancelMove();
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }

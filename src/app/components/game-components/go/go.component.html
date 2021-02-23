@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="500px" height="500px"
-     viewBox="0 0 500 500"
+     width="650px" height="650px"
+     viewBox="0 0 650 650"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let caseContent of line; index as x;">
@@ -34,10 +34,6 @@
                       [attr.x2]="25 + 50*x" [attr.y2]="50 + 50*y"
                       style="fill:#ffffff; stroke:black; stroke-width: 5px;"
                       (click)="onClick(x, y);"/>
-                <rect *ngIf="isKo(x, y);"
-                      width="30" height="30"
-                      [attr.x]="10 + 50*x" [attr.y]="10 + 50*y"
-                      style="fill:none; stroke:red; stroke-width: 5px;" />
                 <circle *ngIf="isTerritory(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="10"
@@ -46,4 +42,14 @@
             </ng-template>
         </g>
     </g>
+    <rect *ngIf="isThereAKo();"
+          width="30" height="30"
+          [attr.x]="10 + 50*ko.x" [attr.y]="10 + 50*ko.y"
+          style="fill:none; stroke:red; stroke-width: 5px;"
+    />
+    <circle *ngFor="let capture of captures"
+            [attr.cx]="25 + 50*capture.x" [attr.cy]="25 + 50*capture.y"
+            [attr.r]="5"
+            style="fill: red; stroke: red; stroke-width: 10;"
+    />
 </svg>

@@ -13,7 +13,8 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
 import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
-import { LocalGameWrapperComponent } from '../local-game-wrapper/local-game-wrapper.component';
+import { LocalGameWrapperComponent }
+    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
@@ -87,7 +88,7 @@ describe('DvonnComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _]];
-        const slice: DvonnPartSlice = new DvonnPartSlice(0, board, false);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
         expect(gameComponent.canPass).toBeTrue();
@@ -111,7 +112,7 @@ describe('DvonnComponent', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _]];
-        const slice: DvonnPartSlice = new DvonnPartSlice(0, board, false);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         gameComponent.updateBoard();
         expect((await gameComponent.pass()).isSuccess()).toBeTrue();

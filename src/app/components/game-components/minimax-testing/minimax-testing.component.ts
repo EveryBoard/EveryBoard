@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { MinimaxTestingRules } from 'src/app/games/minimax-testing/minimax-testing-rules/MinimaxTestingRules';
 import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTestingPartSlice';
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/minimax-testing-move/MinimaxTestingMove';
@@ -12,7 +12,9 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
     templateUrl: './minimax-testing.component.html',
     styleUrls: [],
 })
-export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove, MinimaxTestingPartSlice, LegalityStatus> {
+export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove,
+                                                                   MinimaxTestingPartSlice,
+                                                                   LegalityStatus> {
     /** ************************* Common Fields **************************/
 
     public rules = new MinimaxTestingRules(MinimaxTestingPartSlice);
@@ -26,9 +28,6 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
     public chooseDown(): Promise<MGPValidation> {
         const chosenMove = MinimaxTestingMove.DOWN;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
-    }
-    public cancelMove(reason?: string): void {
-        // Empty because not needed.
     }
     public updateBoard() {
         const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice;

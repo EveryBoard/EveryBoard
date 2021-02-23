@@ -1,0 +1,32 @@
+import { Encoder } from 'src/app/jscaip/encoder';
+import { Player } from 'src/app/jscaip/player/Player';
+
+export class GipfPiece {
+    public static encoder: Encoder<GipfPiece> = new class extends Encoder<GipfPiece> {
+        public maxValue(): number {
+            // Double piece of player 1 is encoded into 3
+            return 2;
+        }
+        public encode(piece: GipfPiece): number {
+            return piece.player.value;
+        }
+        public decode(encoded: number): GipfPiece {
+            const player: Player = Player.of(encoded);
+            return GipfPiece.ofPlayer(player);
+        }
+    }
+    public static EMPTY: GipfPiece = new GipfPiece(Player.NONE);
+    public static PLAYER_ZERO: GipfPiece = new GipfPiece(Player.ZERO);
+    public static PLAYER_ONE: GipfPiece = new GipfPiece(Player.ONE);
+    public static ofPlayer(player: Player): GipfPiece {
+        if (player === Player.ZERO) {
+            return GipfPiece.PLAYER_ZERO;
+        } else if (player === Player.ONE) {
+            return GipfPiece.PLAYER_ONE;
+        } else {
+            return GipfPiece.EMPTY;
+        }
+    }
+    private constructor(public player: Player) {
+    }
+}

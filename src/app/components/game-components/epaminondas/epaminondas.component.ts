@@ -7,13 +7,16 @@ import { EpaminondasRules } from 'src/app/games/epaminondas/epaminondas-rules/Ep
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/DIRECTION';
 import { Player } from 'src/app/jscaip/player/Player';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 
 @Component({
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
 })
-export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
+export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
+                                                                EpaminondasPartSlice,
+                                                                EpaminondasLegalityStatus>
+{
     public NONE: number = Player.NONE.value;
     public rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
 
@@ -36,6 +39,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     public updateBoard(): void {
         this.firstPiece = new Coord(-15, -1);
         this.lastPiece = new Coord(-15, -1);
+        this.hidePreviousMove();
         if (this.rules.node.move) {
             this.showPreviousMove();
         }
@@ -49,8 +53,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             moved = moved.getNext(move.direction, 1);
             this.moveds.push(moved);
         }
-
-        this.captureds = [];
         const PREVIOUS_ENNEMY: number = this.rules.node.mother.gamePartSlice.getCurrentEnnemy().value;
         while (moved.isInRange(14, 12) &&
                this.rules.node.mother.gamePartSlice.getBoardAt(moved) === PREVIOUS_ENNEMY) {
@@ -65,6 +67,10 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return EpaminondasMove.encode(move);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         if (this.firstPiece.x === -15) {
             return this.firstClick(x, y);
         } else if (this.lastPiece.x === -15) {
@@ -74,7 +80,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
     }
     private async firstClick(x: number, y: number): Promise<MGPValidation> {
-        this.hidePreviousMove();
+        this.hidePreviousMove(); // TODO check if must be deleted
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         switch (this.board[y][x]) {
@@ -188,24 +194,19 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
         return length;
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.firstPiece = new Coord(-15, -1);
         this.validExtensions = [];
         this.phalanxValidLandings = [];
         this.lastPiece = new Coord(-15, -1);
         this.phalanxMiddles = [];
         this.hidePreviousMove();
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     private async secondClick(x: number, y: number): Promise<MGPValidation> {
         const clicked: Coord = new Coord(x, y);
         if (clicked.equals(this.firstPiece)) {
-            return this.cancelMove();
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
         }
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
@@ -217,8 +218,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         switch (this.board[y][x]) {
             case Player.NONE.value:
                 if (distance === 1) {
-                    const move: EpaminondasMove = new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction);
-                    return this.tryMove(move);
+                    return this.tryMove(new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction));
                 } else {
                     return this.cancelMove('Une pièce seule ne peut se déplacer que d\'une case.');
                 }
@@ -332,7 +332,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return this.chooseMove(move, slice, null, null);
     }
     public getPieceStyle(x: number, y: number): any {
-        const fill: string = this.getPlayerColor(this.board[y][x]);
+        const fill: string = this.getPlayerColor(Player.of(this.board[y][x]));
         const stroke: string = this.getPieceStroke(x, y);
         return { fill, stroke };
     }
@@ -372,16 +372,11 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         if (this.firstPiece.x === -15) {
             const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
             const PLAYER: number = slice.getCurrentPlayer().value;
-            return (this.board[y][x] === PLAYER &&
-                    this.isUserTurn());
+            return this.board[y][x] === PLAYER && this.isPlayerTurn;
         } else {
             const clicked: Coord = new Coord(x, y);
             return this.phalanxValidLandings.some((c: Coord) => c.equals(clicked)) ||
                    this.validExtensions.some((c: Coord) => c.equals(clicked));
         }
-    }
-    private isUserTurn(): boolean {
-        // TODO: must check if user is no observer, if it's not AI turn, should be nice to have that in common for all wrapper
-        return true;
     }
 }

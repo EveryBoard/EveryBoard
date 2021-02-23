@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { TablutMove } from 'src/app/games/tablut/tablut-move/TablutMove';
 import { TablutPartSlice } from '../../../games/tablut/TablutPartSlice';
@@ -67,7 +67,10 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         display(TablutComponent.VERBOSE, 'TablutComponent.onClick(' + x + ', ' + y + ')');
-
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);
         } else {
@@ -108,14 +111,8 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         const coord: Coord = new Coord(x, y);
         return TablutRules.getRelativeOwner(player, coord, this.board) === RelativePlayer.PLAYER;
     }
-    public cancelMove(reason?: string): MGPValidation {
+    public cancelMoveAttempt(): void {
         this.chosen = new Coord(-1, -1);
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
     public isThrone(x: number, y: number): boolean {
         return TablutRules.isThrone(new Coord(x, y));
@@ -127,18 +124,12 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         return move.encode();
     }
     public getPieceStyle(x: number, y: number): any {
-        const fill: string = this.getPlayerColor(this.board[y][x]);
+        const coord: Coord = new Coord(x, y);
+        const owner: Player = TablutRules.getAbsoluteOwner(coord, this.board);
+        const fill: string = this.getPlayerColor(owner);
         const stroke: string = this.getPieceStroke(x, y);
         return { fill, stroke };
     }
-    // private getPlayerColor(player: number): string {
-    //     switch (player) {
-    //         case TablutCase.DEFENDERS.value:
-    //         case TablutCase.PLAYER_ONE_KING.value:
-    //         case TablutCase.PLAYER_ZERO_KING.value: return '#ffc34d';
-    //         case TablutCase.INVADERS.value: return '#994d00';
-    //     }
-    // }
     public getPieceStroke(x: number, y: number): string {
         const coord: Coord = new Coord(x, y);
         if (this.chosen.equals(coord)) {

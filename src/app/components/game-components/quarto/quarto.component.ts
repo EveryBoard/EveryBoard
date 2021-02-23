@@ -3,7 +3,7 @@ import { QuartoMove } from '../../../games/quarto/quarto-move/QuartoMove';
 import { QuartoPartSlice } from '../../../games/quarto/QuartoPartSlice';
 import { QuartoRules } from '../../../games/quarto/quarto-rules/QuartoRules';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
@@ -35,7 +35,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         } else {
             this.lastMove = null;
         }
-        this.cancelMove();
+        this.cancelMoveAttempt();
     }
     /** ******************************** For Online Game **********************************/
 
@@ -49,7 +49,10 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
-
+        const clickValidity: MGPValidation = this.canUserPlay('#chooseCoord_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
@@ -74,6 +77,10 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#choosePiece_' + givenPiece);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         this.hideLastMove(); // now the user tried to choose something
         // so I guess he don't need to see what's the last move of the opponent
 
@@ -86,21 +93,14 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
         }
     }
-    public hideLastMove() {
+    private hideLastMove(): void {
         this.lastMove = new Coord(-1, -1);
     }
-    public cancelMove(reason?: string): MGPValidation {
-        // called when the user do a wrong move, then, we unselect his pieceToGive and/or the chosen coord
+    public cancelMoveAttempt(): void {
         this.chosen = new Coord(-1, -1);
         this.pieceToGive = QuartoPiece.NONE;
-        if (reason) {
-            this.message(reason);
-            return MGPValidation.failure(reason);
-        } else {
-            return MGPValidation.SUCCESS;
-        }
     }
-    public showPieceInHandOnBoard(x: number, y: number) {
+    private showPieceInHandOnBoard(x: number, y: number): void {
         this.chosen = new Coord(x, y);
     }
     public isRemaining(pawn: number): boolean {

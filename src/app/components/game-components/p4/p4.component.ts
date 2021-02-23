@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { P4PartSlice } from '../../../games/p4/P4PartSlice';
 import { P4Rules } from '../../../games/p4/p4-rules/P4Rules';
 import { Move } from '../../../jscaip/Move';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
@@ -14,22 +14,23 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, LegalityStatus> {
     /** ************************* Common Fields **************************/
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
-    public rules = new P4Rules(P4PartSlice);
+    public rules: P4Rules = new P4Rules(P4PartSlice);
 
     public imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg'];
 
     public lastX: number;
 
     public async onClick(x: number): Promise<MGPValidation> {
-        const chosenMove = P4Move.of(x);
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+        const chosenMove: P4Move = P4Move.of(x);
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
-    public cancelMove(reason?: string): void {
-        // Empty because not needed.
-    }
-    public updateBoard() {
+    public updateBoard(): void {
         const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
         const lastMove: P4Move = this.rules.node.move;
 

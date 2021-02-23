@@ -16,13 +16,15 @@
                   stroke="black"
             />
             <g *ngIf="board[y][x] === NONE && isThrone(x, y)">
-                <line [attr.x1]="x * 100"
+                <line (click)="onClick(x, y)"
+                      [attr.x1]="x * 100"
                       [attr.y1]="y * 100"
                       [attr.x2]="100 + (x * 100)"
                       [attr.y2]="100 + (y * 100)"
                       stroke-width="10"
                       stroke="black" />
-                <line [attr.x1]="100 + (x * 100)"
+                <line (click)="onClick(x, y)"
+                      [attr.x1]="100 + (x * 100)"
                       [attr.y1]="y * 100"
                       [attr.x2]="x * 100"
                       [attr.y2]="100 + (y * 100)"
@@ -39,27 +41,32 @@
                         [ngStyle]="getPieceStyle(x, y)"
                 />
                 <g *ngIf="isInvader(x, y) else defender">
-                    <line [attr.x1]="50 + 100*x" [attr.y1]="4 + 100*y"
+                    <line (click)="onClick(x, y)"
+                          [attr.x1]="50 + 100*x" [attr.y1]="4 + 100*y"
                           [attr.x2]="50 + 100*x" [attr.y2]="96 + 100*y"
                           stroke-width="8"
                           stroke="black"
                     />
-                    <line [attr.x1]="50 + 100*x" [attr.y1]="20 + 100*y"
+                    <line (click)="onClick(x, y)"
+                          [attr.x1]="50 + 100*x" [attr.y1]="20 + 100*y"
                           [attr.x2]="5 + 100*x" [attr.y2]="65 + 100*y"
                           stroke-width="8"
                           stroke="black"
                     />
-                    <line [attr.x1]="50 + 100*x" [attr.y1]="20 + 100*y"
+                    <line (click)="onClick(x, y)"
+                          [attr.x1]="50 + 100*x" [attr.y1]="20 + 100*y"
                           [attr.x2]="95 + 100*x" [attr.y2]="65 + 100*y"
                           stroke-width="8"
                           stroke="black"
                     />
-                    <line [attr.x1]="50 + 100*x" [attr.y1]="40 + 100*y"
+                    <line (click)="onClick(x, y)"
+                          [attr.x1]="50 + 100*x" [attr.y1]="40 + 100*y"
                           [attr.x2]="15 + 100*x" [attr.y2]="75 + 100*y"
                           stroke-width="8"
                           stroke="black"
                     />
-                    <line [attr.x1]="50 + 100*x" [attr.y1]="40 + 100*y"
+                    <line (click)="onClick(x, y)"
+                          [attr.x1]="50 + 100*x" [attr.y1]="40 + 100*y"
                           [attr.x2]="85 + 100*x" [attr.y2]="75 + 100*y"
                           stroke-width="8"
                           stroke="black"
@@ -67,29 +74,34 @@
                 </g>
                 <ng-template #defender>
                     <g *ngIf="isKing(x, y) else soldierDefender">
-                        <polyline [attr.points]="getKingPolyline(x, y)"
+                        <polyline (click)="onClick(x, y)"
+                                  [attr.points]="getKingPolyline(x, y)"
                                   fill="none"
                                   stroke-width="8"
                                   stroke="black"
                         />
                     </g>
                     <ng-template #soldierDefender>
-                        <line [attr.x1]="50 + 100*x" [attr.y1]="4 + 100*y"
+                        <line (click)="onClick(x, y)"
+                              [attr.x1]="50 + 100*x" [attr.y1]="4 + 100*y"
                               [attr.x2]="50 + 100*x" [attr.y2]="96 + 100*y"
                               stroke-width="8"
                               stroke="black"
                         />
-                        <line [attr.x1]="4 + 100*x"  [attr.y1]="50 + 100*y"
+                        <line (click)="onClick(x, y)"
+                              [attr.x1]="4 + 100*x"  [attr.y1]="50 + 100*y"
                               [attr.x2]="96 + 100*x" [attr.y2]="50 + 100*y"
                               stroke-width="8"
                               stroke="black"
                         />
-                        <line [attr.x1]="15 + 100*x" [attr.y1]="15 + 100*y"
+                        <line (click)="onClick(x, y)"
+                              [attr.x1]="15 + 100*x" [attr.y1]="15 + 100*y"
                               [attr.x2]="85 + 100*x" [attr.y2]="85 + 100*y"
                               stroke-width="8"
                               stroke="black"
                         />
-                        <line [attr.x1]="85 + 100*x" [attr.y1]="15 + 100*y"
+                        <line (click)="onClick(x, y)"
+                              [attr.x1]="85 + 100*x" [attr.y1]="15 + 100*y"
                               [attr.x2]="15 + 100*x" [attr.y2]="85 + 100*y"
                               stroke-width="8"
                               stroke="black"

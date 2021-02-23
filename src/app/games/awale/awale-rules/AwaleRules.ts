@@ -15,22 +15,19 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
     public static GET_LIST_MOVES_CALL_COUNT = 0; // TODO: Remove, useless
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): { resultingMove: AwaleMove; resultingSlice: AwalePartSlice; } {
         display(AwaleRules.VERBOSE, 'applyLegalMove');
         const turn: number = slice.turn;
-        const player = turn % 2;
-        const ennemy = (turn + 1) % 2;
-
-        const x: number = move.coord.x;
-        const y: number = move.coord.y;
+        const PLAYER: number = slice.getCurrentPlayer().value;
+        const ENNEMY: number = slice.getCurrentEnnemy().value;
 
         const awalePartSlice: AwalePartSlice = this.node.gamePartSlice;
         const captured: number[] = awalePartSlice.getCapturedCopy();
 
-        captured[player] += status.captured[player];
-        captured[ennemy] += status.captured[ennemy];
+        captured[PLAYER] += status.captured[PLAYER];
+        captured[ENNEMY] += status.captured[ENNEMY];
 
         const resultingSlice: AwalePartSlice = new AwalePartSlice(status.resultingBoard, turn + 1, captured);
         return { resultingSlice, resultingMove: move };
@@ -55,18 +52,18 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
          * return -1 if it's not legal, if so, the board should not be affected
          * return the number captured otherwise
          */
-
         const turn: number = slice.turn;
         let resultingBoard: number[][] = slice.getCopiedBoard();
 
-        let captured = [0, 0];
+        let captured: [number, number] = [0, 0];
 
         const y: number = move.coord.y;
         const player: number = turn % 2;
         const ennemi: number = (turn + 1) % 2;
 
         if (y !== player) {
-            return AwaleLegalityStatus.failure('you cannot distribute from the ennemy\'s home'); // on ne distribue que ses maisons
+            return AwaleLegalityStatus.failure('you cannot distribute from the ennemy\'s home');
+            // on ne distribue que ses maisons
         }
         const x: number = move.coord.x;
         if (resultingBoard[y][x] === 0) {
@@ -79,7 +76,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         // arrived here you can distribute this house
         // but we'll have to check if you can capture
-        const lastCase: number[] = AwaleRules.distribute(x, y, resultingBoard); // do the distribution and retrieve the landing part
+        const lastCase: number[] = AwaleRules.distribute(x, y, resultingBoard);
+        // do the distribution and retrieve the landing part
         // of the last stone
         const landingCamp: number = lastCase[1];
         if (landingCamp === player) {

@@ -31,9 +31,11 @@
                           (click)="clickPiece(x, y)"
                           [attr.points]="getArrowCoordinate(x + 1, y + 1)"
                           [attr.transform]="rotateOf(x, y)"
-                          [ngStyle]="stylePiece(x, y, c)"/>
+                          [ngStyle]="stylePiece(x, y, c)"
+                          style="stroke-width: 5"
+                />
                 <g *ngIf="choosingDirection(x, y)">
-                    <polyline id="chooseDirection_{{x}}_{{y}}_{{direction[2]}}"
+                    <polyline id="chooseDirection_{{direction[2]}}"
                               *ngFor="let direction of [[1, 1, ''], [2, 1, 'RIGHT'], [1, 2, 'DOWN'], [0, 1, 'LEFT'], [1, 0, 'UP']]"
                               (click)="chooseDirection(direction[2])"
                               [attr.points]="getTriangleCoordinate(x + 1, y + 1, direction[0], direction[1])"/>
@@ -42,7 +44,7 @@
             <polyline *ngIf="isMountain(c)"
                       [attr.points]="getMountainCoordinate(x + 1, y + 1)" />
             <g *ngIf="choosingOrientation(x, y)">
-                <polyline id="chooseOrientation_{{x}}_{{y}}_{{orientation[2]}}"
+                <polyline id="chooseOrientation_{{orientation[2]}}"
                           *ngFor="let orientation of [[2, 1, 'RIGHT'], [1, 2, 'DOWN'], [0, 1, 'LEFT'], [1, 0, 'UP']]"
                           (click)="chooseOrientation(orientation[2])"
                           [attr.points]="getTriangleCoordinate(x + 1, y + 1, orientation[0], orientation[1])"/>

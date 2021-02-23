@@ -16,11 +16,11 @@ import { Player } from 'src/app/jscaip/player/Player';
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
     public readonly PLAYER_ZERO_FILL: string = '#994d00';
     public readonly PLAYER_ONE_FILL: string = '#ffc34d';
-    public readonly EMPTY_CASE_FILL: string = 'lightbrey';
+    public readonly EMPTY_CASE_FILL: string = 'lightgrey';
     public readonly CAPTURED_FILL: string = 'red';
     public readonly MOVED_FILL: string = 'gray';
     public readonly NORMAL_FILL: string = 'lightgrey';
-    public readonly CLICKABLE_STYLE: any = {
+    public readonly CLICKABLE_STYLE: unknown = {
         stroke: 'yellow',
     };
 
@@ -34,7 +34,13 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public imagesLocation: string = 'assets/images/';
 
+    public isPlayerTurn: boolean;
+
     public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => Promise<MGPValidation>;
+
+    public canUserPlay: (element: string) => MGPValidation;
+
+    public cancelMoveOnWrapper: (reason?: string) => void;
 
     public observerRole: number;
     /* all game rules should be able to call the game-wrapper
@@ -48,9 +54,19 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     public message: (msg: string) => void = (msg: string) => {
         this.snackBar.open(msg, 'Ok!', { duration: 3000 });
     };
-
-    public abstract cancelMove(reason?: string): void;
-
+    public cancelMove(reason?: string): MGPValidation {
+        this.cancelMoveAttempt();
+        this.cancelMoveOnWrapper(reason);
+        if (reason) {
+            this.message(reason);
+            return MGPValidation.failure(reason);
+        } else {
+            return MGPValidation.SUCCESS;
+        }
+    }
+    public cancelMoveAttempt(): void {
+        // Override if need be
+    }
     public abstract decodeMove(encodedMove: number): Move;
 
     public abstract encodeMove(move: Move): number;

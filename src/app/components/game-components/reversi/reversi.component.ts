@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../AbstractGameComponent';
+import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { ReversiRules } from '../../../games/reversi/reversi-rules/ReversiRules';
 import { ReversiPartSlice } from '../../../games/reversi/ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/reversi-move/ReversiMove';
@@ -29,14 +29,15 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.rules = new ReversiRules(ReversiPartSlice);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         this.lastMove = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
         const chosenMove: ReversiMove = new ReversiMove(x, y);
 
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
-    }
-    public cancelMove(reason?: string): void {
-        // Empty because not needed.
     }
     public decodeMove(encodedMove: number): ReversiMove {
         return ReversiMove.decode(encodedMove);
@@ -48,8 +49,10 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         const slice: ReversiPartSlice = this.rules.node.gamePartSlice;
 
         this.board = slice.getCopiedBoard();
+        this.captureds = [];
 
         if (this.rules.node.move) {
+            this.lastMove = this.rules.node.move.coord;
             this.showPreviousMove();
         } else {
             this.lastMove = new Coord(-2, -2);
@@ -59,8 +62,6 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.canPass = ReversiRules.playerCanOnlyPass(slice);
     }
     private showPreviousMove() {
-        this.lastMove = this.rules.node.move.coord;
-        this.captureds = [];
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         for (const dir of Direction.DIRECTIONS) {
@@ -85,7 +86,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         }
     }
     public getPieceStyle(x: number, y: number): any {
-        const fill: string = this.getPlayerColor(this.board[y][x]);
+        const fill: string = this.getPlayerColor(Player.of(this.board[y][x]));
         return { fill };
     }
     public async pass(): Promise<MGPValidation> {
