@@ -87,8 +87,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     }
     public async tryMove(): Promise<MGPValidation> {
         const move: QuixoMove = new QuixoMove(this.chosenCoord.x,
-            this.chosenCoord.y,
-            this.chosenDirection);
+                                              this.chosenCoord.y,
+                                              this.chosenDirection);
         this.cancelMove();
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }

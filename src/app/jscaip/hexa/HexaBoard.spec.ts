@@ -76,7 +76,7 @@ describe('HexaBoard', () => {
         });
     });
 
-    fdescribe('getAllBorders', () => {
+    describe('getAllBorders', () => {
         it('should return 18 borders for a radius of 3', () => {
             expect(board.getAllBorders().length).toEqual(18);
         });

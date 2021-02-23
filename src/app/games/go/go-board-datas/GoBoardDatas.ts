@@ -1,6 +1,6 @@
 import { GroupInfos } from '../go-rules/GoRules';
 import { GoPiece, GoPartSlice } from '../go-part-slice/GoPartSlice';
-import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GroupDatas } from '../group-datas/GroupDatas';
 
@@ -9,7 +9,7 @@ export class GoBoardDatas {
         readonly groupIndexes: NumberTable,
         readonly groups: ReadonlyArray<GroupInfos>,
     ) { }
-    public static ofGoPiece(board: GoPiece[][]): GoBoardDatas {
+    public static ofGoPiece(board: Table<GoPiece>): GoBoardDatas {
         const groupIndexes: number[][] = ArrayUtils.createBiArray<number>(GoPartSlice.WIDTH, GoPartSlice.HEIGHT, -1);
         const groupsDatas: GroupDatas[] = [];
         for (let y = 0; y < GoPartSlice.HEIGHT; y++) {
@@ -36,7 +36,7 @@ export class GoBoardDatas {
         return new GoBoardDatas(groupIndexes, groupsInfos);
     }
     public static ofBoard(board: number[][]): GoBoardDatas {
-        const pieceBoard: GoPiece[][] = GoPartSlice.mapNumberBoard(board);
+        const pieceBoard: Table<GoPiece> = GoPartSlice.mapNumberBoard(board);
         return GoBoardDatas.ofGoPiece(pieceBoard);
     }
 }

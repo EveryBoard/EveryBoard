@@ -12,7 +12,7 @@ export interface ICurrentPart {
     lastMove?: number; // should/could? be a date; is a timestamp
 
     typePart?: number|string; // amicale, comptabilisée, pédagogique
-    result?: IMGPResult; // todo : voir à mettre unachieved par défaut
+    result?: IMGPResult; // TODO : voir à mettre unachieved par défaut
     winner?: string; // joueur 1, joueur 2, null
     scorePlayerZero?: number|string; // TODO : implémenter ça
     scorePlayerOne?: number|string; // TODO : implémenter ça aussi en même temps

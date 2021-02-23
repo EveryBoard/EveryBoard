@@ -70,12 +70,12 @@ describe('PylosComponent', () => {
         const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
         const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
-        const clickSpy: jasmine.Spy = spyOn(gameComponent, 'click').and.callThrough();
+        const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
         testElements = {
             fixture,
             debugElement,
             gameComponent,
-            clickSpy,
+            canUserPlaySpy,
             cancelMoveSpy,
             chooseMoveSpy,
             onValidUserMoveSpy,

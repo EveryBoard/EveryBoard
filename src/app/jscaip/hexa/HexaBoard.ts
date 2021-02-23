@@ -7,7 +7,6 @@ export class HexaBoard<T> {
     public static empty<T>(radius: number, empty: T, encoder: Encoder<T>): HexaBoard<T> {
         return new HexaBoard(ArrayUtils.createBiArray(radius*2+1, radius*2+1, empty), radius, empty, encoder);
     }
-
     public static fromNumberTable<T>(table: NumberTable, empty: T, encoder: Encoder<T>): HexaBoard<T> {
         HexaBoard.checkTableFormat(table);
         const contents: Table<T> = ArrayUtils.mapBiArray(table, encoder.decode);
@@ -21,12 +20,10 @@ export class HexaBoard<T> {
             throw new Error('Cannot create an HexaBoard from a non-square table');
         }
     }
-
     public static fromTable<T>(table: Table<T>, empty: T, encoder: Encoder<T>): HexaBoard<T> {
         HexaBoard.checkTableFormat(table);
         return new HexaBoard(table, (table.length-1)/2, empty, encoder);
     }
-
     public constructor(public readonly contents: Table<T>,
                         public readonly radius: number,
                         public readonly empty: T,
@@ -42,7 +39,6 @@ export class HexaBoard<T> {
         }
         return true;
     }
-
     private getAtUnsafe(coord: Coord): T {
         return this.contents[coord.y+this.radius][coord.x+this.radius];
     }
@@ -54,17 +50,14 @@ export class HexaBoard<T> {
             throw new Error('Accessing coord not on hexa board: ' + coord);
         }
     }
-
     public setAt(coord: Coord, v: T): HexaBoard<T> {
         const contents: T[][] = ArrayUtils.copyBiArray(this.contents);
         contents[coord.y+this.radius][coord.x+this.radius] = v;
         return new HexaBoard(contents, this.radius, this.empty, this.encoder);
     }
-
     public toNumberTable(): NumberTable {
         return ArrayUtils.mapBiArray(this.contents, this.encoder.encode);
     }
-
     public forEachCoord(callback: (coord: Coord, content: T) => void): void {
         const radius: number = this.radius;
         for (let q: number = -radius; q <= radius; q++) {
@@ -76,7 +69,6 @@ export class HexaBoard<T> {
             }
         }
     }
-
     public allCoords(): Coord[] {
         const coords: Coord[] = [];
         this.forEachCoord((coord: Coord, _content: T) => {
@@ -84,7 +76,6 @@ export class HexaBoard<T> {
         });
         return coords;
     }
-
     public getAllBorders(): Coord[] {
         const coords: Coord[] = [];
         const radius: number = this.radius;
@@ -123,7 +114,6 @@ export class HexaBoard<T> {
             this.isOnLeftBorder(coord) ||
             this.isOnTopLeftBorder(coord);
     }
-
     public isOnTopRightBorder(coord: Coord): boolean {
         return coord.y === -this.radius;
     }
@@ -145,7 +135,6 @@ export class HexaBoard<T> {
     private axialToCubeYCoordinate(coord: Coord): number {
         return -coord.x-coord.y;
     }
-
     public isTopLeftCorner(coord: Coord): boolean {
         return coord.x === -this.radius && coord.y === 0;
     }

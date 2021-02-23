@@ -1,7 +1,8 @@
 import { GamePartSlice } from '../../../jscaip/GamePartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
-import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 export class GoPiece {
     public static BLACK: GoPiece = new GoPiece(Player.ZERO.value);
@@ -89,35 +90,42 @@ export class GoPartSlice extends GamePartSlice {
 
     public static HEIGHT: number = 13;
 
-    public readonly koCoord: Coord | null; // TODO: MGPOptional this
+    public readonly koCoord: MGPOptional<Coord>;
 
     public readonly captured: ReadonlyArray<number>;
 
     public readonly phase: Phase;
 
-    public static mapGoPieceBoard(board: GoPiece[][]): number[][] {
+    public static mapGoPieceBoard(board: Table<GoPiece>): number[][] {
         return ArrayUtils.mapBiArray<GoPiece, number>(board, (goPiece: GoPiece) => goPiece.value);
     }
     public static mapNumberBoard(board: NumberTable): GoPiece[][] {
         return ArrayUtils.mapBiArray<number, GoPiece>(board, GoPiece.of);
     }
-    public constructor(board: GoPiece[][], captured: number[], turn: number, koCoord: Coord, phase: Phase) {
+    public constructor(
+        board: Table<GoPiece>,
+        captured: number[],
+        turn: number,
+        koCoord: MGPOptional<Coord>,
+        phase: Phase)
+    {
         const intBoard: number[][] = GoPartSlice.mapGoPieceBoard(board);
         super(intBoard, turn);
         if (captured == null) throw new Error('Captured cannot be null.');
+        if (koCoord == null) throw new Error('Ko Coord cannot be null, use MGPOptional.empty() instead.');
         if (phase == null) throw new Error('Phase cannot be null.');
         this.captured = captured;
         this.koCoord = koCoord;
         this.phase = phase;
     }
     public static getInitialSlice(): GoPartSlice {
-        const board: GoPiece[][] = GoPartSlice.getStartingBoard();
-        return new GoPartSlice(board, [0, 0], 0, null, Phase.PLAYING);
+        const board: Table<GoPiece> = GoPartSlice.getStartingBoard();
+        return new GoPartSlice(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
     }
     public getCapturedCopy(): number[] {
         return [this.captured[0], this.captured[1]];
     }
-    public static getStartingBoard(): GoPiece[][] {
+    public static getStartingBoard(): Table<GoPiece> {
         return ArrayUtils.createBiArray(GoPartSlice.WIDTH, GoPartSlice.HEIGHT, GoPiece.EMPTY);
     }
     public getBoardByXYGoPiece(x: number, y: number): GoPiece {

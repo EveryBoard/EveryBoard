@@ -6,7 +6,7 @@
         <g *ngFor="let c of line; index as x">
             <rect id="click_{{ x }}_{{ y }}"
                   (click)="onClick(x, y)"
-                  [attr.fill]="getRectFill(x, y)"Z
+                  [attr.fill]="getRectFill(x, y)"
                   [ngStyle]="getRectStyle(x, y)"
                   [attr.x] = "100*x"
                   [attr.y] = "100*y"

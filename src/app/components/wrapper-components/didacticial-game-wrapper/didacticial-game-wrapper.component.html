@@ -22,6 +22,7 @@
             </ng-container>
         </ul>
         <h3 id='currentMessage'>{{ currentMessage }}</h3>
+        <h3 id='currentReason' style='color: red'>{{ currentReason }}</h3>
         <button id="retryButton"
                 *ngIf="stepAttemptMade && tutorialOver === false"
                 (click)="retry()"

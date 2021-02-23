@@ -11,12 +11,9 @@ import { display } from 'src/app/utils/collection-lib/utils';
 import { awaleDidacticial } from './didacticials/awale-didacticial';
 import { p4Didacticial } from './didacticials/p4-didacticial';
 import { DidacticialStep } from './DidacticialStep';
-
-
-
-
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -32,6 +29,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public steps: DidacticialStep[];
     public stepIndex: number = 0;
     public currentMessage: string;
+    public currentReason: string;
     public stepAttemptMade: boolean = false;
     public stepFinished: boolean[];
     public tutorialOver: boolean = false;
@@ -114,9 +112,10 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.stepAttemptMade = false;
         this.showStep(this.stepIndex);
     }
-    public onUserClick: (elementName: string) => boolean = (elementName: string) => {
+    public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
+        this.currentReason = null;
         if (this.stepAttemptMade) {
-            return false;
+            return MGPValidation.failure('Step attemps already made.');
         }
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
@@ -127,14 +126,14 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
                 this.currentMessage = currentStep.failureMessage;
             }
             this.stepAttemptMade = true;
-            return true;
+            return MGPValidation.SUCCESS;
         } else {
-            return currentStep.isMove();
+            return currentStep.isMove() ? MGPValidation.SUCCESS : MGPValidation.failure('Step is not awaiting a move.');
         }
     }
     public onCancelMove: (reason?: string) => void = (reason?: string) => {
         this.stepAttemptMade = true;
-        this.currentMessage = reason;
+        this.currentReason = reason;
         this.cdr.detectChanges();
     }
     private showStepSuccess(): void {

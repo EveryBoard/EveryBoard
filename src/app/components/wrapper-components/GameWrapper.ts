@@ -121,8 +121,9 @@ export abstract class GameWrapper {
 
         this.gameComponent.chooseMove = this.receiveChildData; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
-        this.gameComponent.click = this.onUserClick; // So that when the game component click
+        this.gameComponent.canUserPlay = this.onUserClick; // So that when the game component click
         // the game wrapper can act accordly
+        this.gameComponent.isPlayerTurn = this.isPlayerTurn();
         this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by DidacticialGameWrapper
 
         this.gameComponent.observerRole = this.observerRole;
@@ -162,8 +163,17 @@ export abstract class GameWrapper {
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public onUserClick: (elementName: string) => boolean = (elementName: string) => {
-        return this.isPlayerTurn(); // Not the same logic to use in Online and Local, make abstract
+    public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
+        // TODO: Not the same logic to use in Online and Local, make abstract
+        if (this.observerRole > 1) {
+            const message: string = 'cloning feature will be added soon. Meanwhile, you can\'t click on the board';
+            return MGPValidation.failure(message);
+        }
+        if (this.isPlayerTurn()) {
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('It is not your turn');
+        }
     }
     public onCancelMove(): void {
         // Non needed by default'

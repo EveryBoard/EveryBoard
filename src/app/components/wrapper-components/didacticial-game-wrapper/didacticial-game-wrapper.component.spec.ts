@@ -68,12 +68,12 @@ describe('DidacticialGameWrapperComponent', () => {
         const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
         const onValidUserMoveSpy: jasmine.Spy = spyOn(component, 'onValidUserMove').and.callThrough();
-        const clickSpy: jasmine.Spy = spyOn(gameComponent, 'click').and.callThrough();
+        const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
         testElements = {
             fixture,
             debugElement,
             gameComponent,
-            clickSpy,
+            canUserPlaySpy,
             cancelMoveSpy,
             chooseMoveSpy,
             onValidUserMoveSpy,
@@ -310,7 +310,7 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
     }));
-    it('When invalid click/move is done, in addition to the toast, message should become the reason', fakeAsync(async() => {
+    it('When invalid click/move is done, in addition to the toast, reason should be shown', fakeAsync(async() => {
         // Given a DidacticialStep with possible invalid clicks
         const didacticial: DidacticialStep[] = [
             new DidacticialStep(
@@ -331,11 +331,14 @@ describe('DidacticialGameWrapperComponent', () => {
         await expectClickFail('#chooseCoord_0_0', testElements, 'Choisissez une case vide.');
 
         // expect to see cancelMove reason as message
-        const expectedMessage: string = 'instruction 0. <br/>Choisissez une case vide.';
+        const expectedMessage: string = 'instruction 0.';
         const currentMessage: string =
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
-        expect('but I cannot').toEqual('I want to be able to click again');
+        const expectedReason: string = 'Choisissez une case vide.';
+        const currentReason: string =
+            testElements.debugElement.query(By.css('#currentReason')).nativeElement.innerHTML;
+        expect(currentReason).toBe(expectedReason);
     }));
     // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
     it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {

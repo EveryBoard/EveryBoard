@@ -67,6 +67,10 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return EpaminondasMove.encode(move);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         if (this.firstPiece.x === -15) {
             return this.firstClick(x, y);
         } else if (this.lastPiece.x === -15) {
@@ -201,7 +205,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     private async secondClick(x: number, y: number): Promise<MGPValidation> {
         const clicked: Coord = new Coord(x, y);
         if (clicked.equals(this.firstPiece)) {
-            return this.cancelMove();
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
         }
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
@@ -213,8 +218,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         switch (this.board[y][x]) {
             case Player.NONE.value:
                 if (distance === 1) {
-                    const move: EpaminondasMove = new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction);
-                    return this.tryMove(move);
+                    return this.tryMove(new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction));
                 } else {
                     return this.cancelMove('Une pièce seule ne peut se déplacer que d\'une case.');
                 }
@@ -368,16 +372,11 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         if (this.firstPiece.x === -15) {
             const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
             const PLAYER: number = slice.getCurrentPlayer().value;
-            return (this.board[y][x] === PLAYER &&
-                    this.isUserTurn());
+            return this.board[y][x] === PLAYER && this.isPlayerTurn;
         } else {
             const clicked: Coord = new Coord(x, y);
             return this.phalanxValidLandings.some((c: Coord) => c.equals(clicked)) ||
                    this.validExtensions.some((c: Coord) => c.equals(clicked));
         }
-    }
-    private isUserTurn(): boolean {
-        // TODO: must check if user is no observer, if it's not AI turn, should be nice to have that in common for all wrapper
-        return true;
     }
 }
