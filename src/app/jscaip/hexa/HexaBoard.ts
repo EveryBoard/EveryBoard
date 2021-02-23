@@ -103,7 +103,6 @@ export class HexaBoard<T> {
         }
         return coords;
     }
-
     public isOnBoard(coord: Coord): boolean {
         const q: number = coord.x;
         const radius: number = this.radius;
@@ -115,7 +114,6 @@ export class HexaBoard<T> {
         if (r < r1 || r > r2) return false;
         return true;
     }
-
     public isOnBorder(coord: Coord): boolean {
         return this.isOnTopRightBorder(coord) ||
             this.isOnRightBorder(coord) ||

@@ -156,6 +156,11 @@ export class GipfCapture {
         }
         return false;
     }
+    public intersectsWith(capture: GipfCapture): boolean {
+        return this.capturedPieces.some((coord: Coord) => {
+            return capture.contains(coord);
+        });
+    }
     public getLine(): GipfLine {
         const line: MGPOptional<GipfLine> = GipfLine.fromTwoCoords(this.capturedPieces[0], this.capturedPieces[1]);
         // Invariant: all captured pieces are on the same line, hence we can safely call .get()
