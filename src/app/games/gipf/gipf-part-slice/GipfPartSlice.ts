@@ -1,4 +1,3 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { Player } from 'src/app/jscaip/player/Player';
@@ -22,8 +21,7 @@ export class GipfPartSlice extends GamePartSlice {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromNumberTable(numberedBoard, __, GipfPiece.encoder);
         return new GipfPartSlice(board, 0, [12, 12], [0, 0]);
     }
-    public constructor(public hexaBoard: HexaBoard<GipfPiece>,
-                       turn: number,
+    public constructor(public hexaBoard: HexaBoard<GipfPiece>, turn: number,
                        public sidePieces: [number, number],
                        public capturedPieces: [number, number]) {
         super(hexaBoard.toNumberTable(), turn);

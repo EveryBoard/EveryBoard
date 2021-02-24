@@ -3,6 +3,7 @@ import { Direction } from 'src/app/jscaip/DIRECTION';
 import { Encoder } from 'src/app/jscaip/encoder';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
+import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 export class GipfBoard {
@@ -127,50 +128,61 @@ export class GipfCapture {
             return GipfCapture.coordsEncoder.maxValue();
         }
         public encode(capture: GipfCapture): number {
-            return GipfCapture.coordsEncoder.encode(capture.capturedPieces);
+            return GipfCapture.coordsEncoder.encode(capture.capturedCases);
         }
         public decode(encoded: number): GipfCapture {
             return new GipfCapture(GipfCapture.coordsEncoder.decode(encoded));
         }
     }
 
-    public constructor(public readonly capturedPieces: ReadonlyArray<Coord>) {
-        if (capturedPieces.length < 4) {
+    public readonly capturedCases: ReadonlyArray<Coord>;
+    public constructor(captured: ReadonlyArray<Coord>) {
+        if (captured.length < 4) {
             throw new Error('Cannot create a GipfCapture with less than 4 captured pieces');
         }
-        if (GipfLine.areOnSameLine(capturedPieces) === false) {
+        if (GipfLine.areOnSameLine(captured) === false) {
             throw new Error('Cannot create a GipfCapture with pieces that are not on the same line');
         }
+        this.capturedCases = ArrayUtils.copyArray(captured).sort((coord1: Coord, coord2: Coord) => {
+            if (coord1.x === coord2.x) {
+                if (coord1.y === coord2.y) {
+                    throw new Error('Cannot create a GipfCapture with duplicate cases');
+                }
+                return coord1.y > coord2.y ? 1 : -1;
+            } else {
+                return coord1.x > coord2.x ? 1 : -1;
+            }
+        });
     }
     public size(): number {
-        return this.capturedPieces.length;
+        return this.capturedCases.length;
     }
     public forEach(callback: (coord: Coord) => void): void {
-        this.capturedPieces.forEach(callback);
+        this.capturedCases.forEach(callback);
     }
     public contains(coord: Coord): boolean {
-        for (let i: number = 0; i < this.capturedPieces.length; i++) {
-            if (this.capturedPieces[i].equals(coord)) {
+        for (let i: number = 0; i < this.capturedCases.length; i++) {
+            if (this.capturedCases[i].equals(coord)) {
                 return true;
             }
         }
         return false;
     }
     public intersectsWith(capture: GipfCapture): boolean {
-        return this.capturedPieces.some((coord: Coord) => {
+        return this.capturedCases.some((coord: Coord) => {
             return capture.contains(coord);
         });
     }
     public getLine(): GipfLine {
-        const line: MGPOptional<GipfLine> = GipfLine.fromTwoCoords(this.capturedPieces[0], this.capturedPieces[1]);
+        const line: MGPOptional<GipfLine> = GipfLine.fromTwoCoords(this.capturedCases[0], this.capturedCases[1]);
         // Invariant: all captured pieces are on the same line, hence we can safely call .get()
         return line.get();
     }
     public equals(other: GipfCapture): boolean {
         if (this === other) return true;
-        if (this.capturedPieces.length !== other.capturedPieces.length) return false;
-        for (let i: number = 0; i < this.capturedPieces.length; i++) {
-            if (!this.capturedPieces[i].equals(other.capturedPieces[i])) return false;
+        if (this.capturedCases.length !== other.capturedCases.length) return false;
+        for (let i: number = 0; i < this.capturedCases.length; i++) {
+            if (!this.capturedCases[i].equals(other.capturedCases[i])) return false;
         }
         return true;
     }
