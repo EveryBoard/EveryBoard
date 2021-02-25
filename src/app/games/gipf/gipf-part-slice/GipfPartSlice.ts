@@ -28,7 +28,6 @@ export class GipfPartSlice extends GamePartSlice {
     }
 
     public equals(other: GipfPartSlice): boolean {
-        if (this === other) return true;
         if (this.turn !== other.turn) return false;
         if (this.sidePieces[0] !== other.sidePieces[0]) return false;
         if (this.sidePieces[1] !== other.sidePieces[1]) return false;
