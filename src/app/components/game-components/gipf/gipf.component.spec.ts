@@ -1,26 +1,23 @@
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
-import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
-import { By } from '@angular/platform-browser';
-import { ActivatedRoute } from '@angular/router';
-import { RouterTestingModule } from '@angular/router/testing';
+import { TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 
-import { of } from 'rxjs';
-
-import { AppModule } from 'src/app/app.module';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-move/GipfMove';
-import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice';
-import { GipfNode } from 'src/app/games/gipf/gipf-rules/GipfRules';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
-import { Player } from 'src/app/jscaip/player/Player';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { GipfComponent } from './gipf.component';
+import { INCLUDE_VERBOSE_LINE_IN_TEST, AppModule } from 'src/app/app.module';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { GipfComponent } from './gipf.component';
+import { RouterTestingModule } from '@angular/router/testing';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { of } from 'rxjs';
+import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import {
+    expectClickFail, expectClickSuccess, expectMoveSuccess,
+    MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import { GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-move/GipfMove';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+
 
 const activatedRouteStub = {
     snapshot: {
@@ -39,27 +36,17 @@ const authenticationServiceStub = {
         return { pseudo: null, verified: null };
     },
 };
-xdescribe('GipfComponent:', () => {
+xdescribe('GipfComponent', () => {
+
     let wrapper: LocalGameWrapperComponent;
 
-    let fixture: ComponentFixture<LocalGameWrapperComponent>;
+    let testElements: TestElements;
 
-    let debugElement: DebugElement;
+    function getComponent(): GipfComponent {
+        return testElements.gameComponent as GipfComponent;
+    }
 
-    let gameComponent: GipfComponent;
-
-    const clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
-        const element: DebugElement = debugElement.query(By.css(elementName));
-        if (element == null) {
-            return null;
-        } else {
-            element.triggerEventHandler('click', null);
-            await fixture.whenStable();
-            fixture.detectChanges();
-            return true; // TODO: would be nice to return wether or not cancelMove has been called for illegal/invalid move reason
-        }
-    };
-    beforeEach(fakeAsync(() => {
+    beforeEach(fakeAsync(async() => {
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
@@ -72,42 +59,54 @@ xdescribe('GipfComponent:', () => {
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
-        fixture = TestBed.createComponent(LocalGameWrapperComponent);
+        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
         wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
-        debugElement = fixture.debugElement;
+        const debugElement: DebugElement = fixture.debugElement;
         tick(1);
-        gameComponent = wrapper.gameComponent as GipfComponent;
+        const gameComponent: GipfComponent = wrapper.gameComponent as GipfComponent;
+        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
+        const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
+        const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
+        const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
+        testElements = {
+            fixture,
+            debugElement,
+            gameComponent,
+            canUserPlaySpy,
+            cancelMoveSpy,
+            chooseMoveSpy,
+            onValidUserMoveSpy,
+        };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
-        expect(gameComponent).toBeTruthy('GipfComponent should be created');
+        expect(testElements.gameComponent).toBeTruthy('GipfComponent should be created');
     });
     it('should allow placement directly resulting in a move if there is no initial capture', fakeAsync(async() => {
-        spyOn(gameComponent, 'chooseMove');
-        const oldSlice: GipfPartSlice = gameComponent.rules.node.gamePartSlice;
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(-3, 1), MGPOptional.empty()), [], []);
-        expect(await clickElement('#click_-3_1')).toBeTrue();
-        expect(gameComponent.chooseMove).toHaveBeenCalledWith(move, oldSlice, null, null);
+        const expectation: MoveExpectations = {
+            move,
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectMoveSuccess('#click_-3_1', testElements, expectation);
     }));
     it('should not accept selecting a non-border coord for placement', fakeAsync(async() => {
-        spyOn(gameComponent, 'message');
-        expect(await clickElement('#click_0_0')).toBeTrue();
-        expect(gameComponent.message)
-            .toHaveBeenCalledWith('Les pièces doivent être placée sur une case du bord du plateau');
+        await expectClickFail('#click_0_0', testElements,
+                              'Les pièces doivent être placée sur une case du bord du plateau');
     }));
     it('should show possible directions after selecting an occupied placement coord', fakeAsync(async() => {
-        expect(await clickElement('#click_3_0')).toBeTrue();
-        //expect(gameComponent.getHighlightStyle(2, 0)).toEqual(gameComponent.CLICKABLE_STYLE);
-        //expect(gameComponent.getHighlightStyle(2, 1)).toEqual(gameComponent.CLICKABLE_STYLE);
-        //expect(gameComponent.getHighlightStyle(3, -1)).toEqual(gameComponent.CLICKABLE_STYLE);
+        await expectClickSuccess('#click_3_0', testElements);
+        expect(getComponent().getHighlightStyle(2, 0)) .toEqual(getComponent().CLICKABLE_HIGHLIGHT_STYLE);
+        expect(getComponent().getHighlightStyle(2, 1)).toEqual(getComponent().CLICKABLE_HIGHLIGHT_STYLE);
+        expect(getComponent().getHighlightStyle(3, -1)).toEqual(getComponent().CLICKABLE_HIGHLIGHT_STYLE);
     }));
     it('should not accept selecting something else than one of the proposed direction', fakeAsync(async() => {
-        spyOn(gameComponent, 'message');
-        expect(await clickElement('#click_3_0')).toBeTrue();
-        expect(await clickElement('#click_0_0')).toBeTrue();
-        expect(gameComponent.message)
-            .toHaveBeenCalledWith('Veuillez sélectionner une destination à une distance de 1 de l\'entrée');
+        await expectClickSuccess('#click_3_0', testElements);
+        await expectClickFail('#click_0_0', testElements,
+                              'Veuillez sélectionner une destination à une distance de 1 de l\'entrée');
     }));
     it('should cancel move when clicking on anything else than a capture if there is one in the initial captures', fakeAsync(async() => {
         // TODO: setup initial board with an initial capture
