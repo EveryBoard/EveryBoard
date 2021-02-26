@@ -151,6 +151,26 @@ describe('GipfCapture', () => {
             expect(capture.contains(new Coord(-3, 1))).toBeFalse();
         });
     });
+    describe('intersects', () => {
+        it('should detect when captures intersect', () => {
+            const capture1: GipfCapture = new GipfCapture([
+                new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
+            ]);
+            const capture2: GipfCapture = new GipfCapture([
+                new Coord(0, -3), new Coord(1, -3), new Coord(2, -3), new Coord(3, -3),
+            ]);
+            expect(capture1.intersectsWith(capture2)).toBeTrue();
+        });
+        it('should detect when captures do not intersect', () => {
+            const capture1: GipfCapture = new GipfCapture([
+                new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
+            ]);
+            const capture2: GipfCapture = new GipfCapture([
+                new Coord(3, -3), new Coord(3, -2), new Coord(3, -1), new Coord(3, 0),
+            ]);
+            expect(capture1.intersectsWith(capture2)).toBeFalse();
+        });
+    });
     describe('getLine', () => {
         it('should return the line of the capture', () => {
             const capture: GipfCapture = new GipfCapture([
