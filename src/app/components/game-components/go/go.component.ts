@@ -65,22 +65,26 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         this.board = slice.getCopiedBoard();
         this.scores = slice.getCapturedCopy();
 
-        if (move != null) {
-            this.last = move.coord;
+        this.last = move ? move.coord : null;
+        this.ko = koCoord.getOrNull();
+        if (move == null) {
+            this.captures = [];
+        } else {
             this.showCaptures();
         }
-        this.ko = koCoord.getOrNull();
         this.canPass = phase !== Phase.FINISHED;
     }
     private showCaptures(): void {
-        const previousBoard: Table<GoPiece> = this.rules.node.mother.gamePartSlice.getCopiedBoardGoPiece();
+        const previousSlice: GoPartSlice = this.rules.node.mother.gamePartSlice;
         this.captures = [];
-        for (let y: number = 0; y < GoPartSlice.HEIGHT; y++) {
-            for (let x: number = 0; x < GoPartSlice.WIDTH; x++) {
-                if (previousBoard[y][x].isEmpty() === false &&
-                    this.board[y][x] === GoPiece.EMPTY.value)
-                {
-                    this.captures.push(new Coord(x, y));
+        for (let y: number = 0; y < this.board.length; y++) {
+            for (let x: number = 0; x < this.board[0].length; x++) {
+                const coord: Coord = new Coord(x, y);
+                const wasOccupied: boolean = previousSlice.getBoardAtGoPiece(coord).isEmpty() === false;
+                const isEmpty: boolean = this.board[y][x] === GoPiece.EMPTY.value;
+                const isNotKo: boolean = !coord.equals(this.ko);
+                if (wasOccupied && isEmpty && isNotKo) {
+                    this.captures.push(coord);
                 }
             }
         }
@@ -106,7 +110,11 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         return piece !== GoPiece.EMPTY && !this.isTerritory(x, y);
     }
     public isLastCase(x: number, y: number): boolean {
-        return x === this.last.x && y === this.last.y;
+        if (this.last == null) {
+            return false;
+        } else {
+            return x === this.last.x && y === this.last.y;
+        }
     }
     public isThereAKo(): boolean {
         return this.ko != null;

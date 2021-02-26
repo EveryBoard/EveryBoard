@@ -10,15 +10,15 @@ export class GoBoardDatas {
         readonly groups: ReadonlyArray<GroupInfos>,
     ) { }
     public static ofGoPiece(board: Table<GoPiece>): GoBoardDatas {
-        const groupIndexes: number[][] = ArrayUtils.createBiArray<number>(GoPartSlice.WIDTH, GoPartSlice.HEIGHT, -1);
+        const groupIndexes: number[][] = ArrayUtils.createBiArray<number>(board[0].length, board.length, -1);
         const groupsDatas: GroupDatas[] = [];
-        for (let y = 0; y < GoPartSlice.HEIGHT; y++) {
-            for (let x = 0; x < GoPartSlice.WIDTH; x++) {
+        for (let y: number = 0; y < board.length; y++) {
+            for (let x: number = 0; x < board[0].length; x++) {
                 if (groupIndexes[y][x] === -1) {
                     const newGroupEntryPoint: Coord = new Coord(x, y);
                     const newGroupDatas: GroupDatas = GroupDatas.getGroupDatas(newGroupEntryPoint, board);
                     const groupCoords: Coord[] = newGroupDatas.getCoords();
-                    const newGroupIndex = groupsDatas.length;
+                    const newGroupIndex: number = groupsDatas.length;
                     for (const coord of groupCoords) {
                         groupIndexes[coord.y][coord.x] = newGroupIndex;
                     }

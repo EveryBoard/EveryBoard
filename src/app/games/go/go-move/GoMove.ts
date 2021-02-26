@@ -13,8 +13,8 @@ export class GoMove extends MoveCoord {
         if (encodedMove === GoMove.PASS_NUMBER) {
             return GoMove.PASS;
         }
-        const x = encodedMove % 19;
-        const y = (encodedMove - x) / 19;
+        const x: number = encodedMove % 19;
+        const y: number = (encodedMove - x) / 19;
         return new GoMove(x, y);
     }
     public static encode(move: GoMove): number {
@@ -29,7 +29,13 @@ export class GoMove extends MoveCoord {
         return this.coord.equals(o.coord);
     }
     public toString(): string {
-        return 'GoMove(' + this.coord.x + ', ' + this.coord.y + ')';
+        if (this === GoMove.PASS) {
+            return 'GoMove.PASS';
+        } else if (this === GoMove.ACCEPT) {
+            return 'GoMove.ACCEPT';
+        } else {
+            return 'GoMove(' + this.coord.x + ', ' + this.coord.y + ')';
+        }
     }
     public decode(encodedMove: number): GoMove {
         return GoMove.decode(encodedMove);

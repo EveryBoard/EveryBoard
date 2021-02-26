@@ -5,8 +5,13 @@ import { MGPMap } from '../utils/mgp-map/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
 import { display } from '../utils/collection-lib/utils';
 import { Type } from '@angular/core';
+import { MGPValidation } from '../utils/mgp-validation/MGPValidation';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
+
+    public static readonly MUST_CLICK_ON_EMPTY_CASE: MGPValidation =
+        MGPValidation.failure('You must click on empty case.');
+
     public constructor(public readonly sliceType: Type<S>) { // TODO: Make singleton ?
         this.setInitialBoard();
     }

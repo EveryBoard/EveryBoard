@@ -2,6 +2,7 @@
 import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
+import { SimpleChange } from '@angular/core';
 export const awaleDidacticial: DidacticialStep[] = [
     new DidacticialStep(
         'Distribuer',
@@ -17,7 +18,7 @@ export const awaleDidacticial: DidacticialStep[] = [
         ],
         [],
         'Voilà, regardez les 4 maisons suivant la maison choisie dans l’ordre horlogé, elle comptent maintenant 5 graines, c’est comme celà que les graines se distribuent: une à une à partir de la maison suivante dans l’ordre horlogé de la maison d’où elles viennent!',
-        'Vous ne pouvez pas distribuer les maison de votre adversaire.',
+        '...',
     ),
     new DidacticialStep(
         'Grosse distribution',
@@ -40,8 +41,8 @@ export const awaleDidacticial: DidacticialStep[] = [
         ], 1, [0, 0]),
         [new AwaleMove(0, 1)],
         [],
-        'Bravo. Ça aurait également marché si cette maison en contenait 2 (3 en comptant la vôtre)! Tout autre ',
-        'Perdu. Recommencez.',
+        'Bravo. Il s\'agissait içi d\'une capture simple, voyons maintenant une capture composée.',
+        'Perdu. Recommencez et distribuez la maison la plus à gauche.',
     ),
     new DidacticialStep(
         'Capture composée possible',

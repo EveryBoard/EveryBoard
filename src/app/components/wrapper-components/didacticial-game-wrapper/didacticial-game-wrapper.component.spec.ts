@@ -310,7 +310,7 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
     }));
-    it('When invalid click/move is done, in addition to the toast, reason should be shown', fakeAsync(async() => {
+    it('When non wanted move is done, in addition to the toast, reason should be shown and restart needed', fakeAsync(async() => {
         // Given a DidacticialStep with possible invalid clicks
         const didacticial: DidacticialStep[] = [
             new DidacticialStep(
@@ -340,6 +340,7 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentReason')).nativeElement.innerHTML;
         expect(currentReason).toBe(expectedReason);
     }));
+    it('When invalid click, and no move submitted, restart should not be needed');
     // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
     it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {
         // Given any DidacticialStep
@@ -683,4 +684,5 @@ describe('DidacticialGameWrapperComponent', () => {
         expect(component.stepFinished.every((v: boolean) => v === false)).toBeTrue();
         expect(component.stepIndex).toEqual(0);
     }));
+    it('Should not show "next" but "continue" for action-less steps');
 });
