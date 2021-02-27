@@ -1,11 +1,11 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { GoPiece, GoPartSlice } from '../go-part-slice/GoPartSlice';
+import { GoPiece } from '../go-part-slice/GoPartSlice';
 import { Orthogonal } from 'src/app/jscaip/DIRECTION';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class GroupDatas {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     constructor(public color: GoPiece,
                 public emptyCoords: Coord[],
@@ -27,7 +27,7 @@ export class GroupDatas {
         if (color === groupDatas.color) {
             for (const direction of Orthogonal.ORTHOGONALS) {
                 const nextCoord: Coord = coord.getNext(direction);
-                if (nextCoord.isInRange(GoPartSlice.WIDTH, GoPartSlice.HEIGHT)) {
+                if (nextCoord.isInRange(board[0].length, board.length)) {
                     if (!groupDatas.countains(nextCoord)) {
                         groupDatas = GroupDatas._getGroupDatas(nextCoord, board, groupDatas);
                     }
@@ -61,7 +61,7 @@ export class GroupDatas {
         const ownCoords: Coord[] = this.getCoords();
         return ownCoords.some((c) => c.equals(coord));
     }
-    public addPawn(coord: Coord, color: GoPiece) {
+    public addPawn(coord: Coord, color: GoPiece): void {
         if (this.countains(coord)) {
             throw new Error('Ce groupe contient déjà ' + coord);
         }
