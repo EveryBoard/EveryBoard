@@ -13,6 +13,7 @@ import { p4Didacticial } from './didacticials/p4-didacticial';
 import { DidacticialStep } from './DidacticialStep';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
+import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({
@@ -70,6 +71,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         const didacticials: { [key: string]: DidacticialStep[] } = {
             Awale: awaleDidacticial,
             Dvonn: dvonnDidacticial,
+            Kamisado: kamisadoDidacticial,
             P4: p4Didacticial,
             Quarto: [
                 new DidacticialStep('title zero', 'instruction zero', QuartoPartSlice.getInitialSlice(), [], [], null, null),
