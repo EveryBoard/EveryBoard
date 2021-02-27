@@ -128,7 +128,6 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
                 captureCombinations = newCombinations;
             }
         });
-        console.log('number of captures:' + captureCombinations.length);
         return captureCombinations.map((combination: number[]) => {
             return combination.map((index: number) => {
                 return possibleCaptures[index];

@@ -21,7 +21,8 @@ export class GipfPartSlice extends GamePartSlice {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromNumberTable(numberedBoard, __, GipfPiece.encoder);
         return new GipfPartSlice(board, 0, [12, 12], [0, 0]);
     }
-    public constructor(public hexaBoard: HexaBoard<GipfPiece>, turn: number,
+    public constructor(public hexaBoard: HexaBoard<GipfPiece>,
+                       turn: number,
                        public sidePieces: [number, number],
                        public capturedPieces: [number, number]) {
         super(hexaBoard.toNumberTable(), turn);
