@@ -123,10 +123,10 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         if (captures.length > 1) {
             // Two captures contain this coordinate
             // We don't let the user choose it as it is ambiguous
-            return MGPValidation.failure(
-                'Cette case fait partie de deux captures possibles, veuillez en choisir une autre');
+            return this.cancelMove(
+                `Cette case fait partie de deux captures possibles, veuillez en choisir une autre`);
         } else if (captures.length === 0) {
-            return MGPValidation.failure('Cette case ne fait partie d\'aucune capture');
+            return this.cancelMove(`Cette case ne fait partie d'aucune capture`);
         }
         const capture: GipfCapture = captures[0];
 
@@ -201,8 +201,8 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         return this.moveToFinalCapturePhaseOrTryMove();
     }
     private async tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
-                    placement: GipfPlacement,
-                    finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
+                          placement: GipfPlacement,
+                          finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
         try {
             const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
             return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
@@ -211,9 +211,12 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         switch (this.movePhase) {
             case GipfComponent.PHASE_INITIAL_CAPTURE:
-                return this.selectCapture(new Coord(x, y));
             case GipfComponent.PHASE_FINAL_CAPTURE:
                 return this.selectCapture(new Coord(x, y));
             case GipfComponent.PHASE_PLACEMENT_COORD:
@@ -223,7 +226,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
                 try {
                     const dest: Coord = new Coord(x, y);
                     if (entrance.getDistance(dest) !== 1) {
-                        return this.cancelMove('Veuillez sélectionner une destination à une distance de 1 de l\'entrée');
+                        return this.cancelMove(`Veuillez sélectionner une destination à une distance de 1 de l'entrée`);
                     }
                     const direction: Direction = Direction.fromMove(entrance, new Coord(x, y));
                     return this.selectPlacementDirection(MGPOptional.of(direction));
@@ -231,7 +234,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
                     return this.cancelMove(error.message);
                 }
             default:
-                return MGPValidation.failure('Vous ne pouvez pas sélectionner de pièce pour le moment');
+                return this.cancelMove('Vous ne pouvez pas sélectionner de pièce pour le moment');
         }
     }
     public isInCapture(coord: Coord): boolean {
@@ -245,6 +248,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     public indicatesPossibleDirection(coord: Coord): boolean {
         const entrance: Coord = this.placementEntrance.get();
         for (const dir of this.rules.getAllDirectionsForEntrance(this.constructedSlice, entrance)) {
+            // TODO: should check that line is not complete
             if (entrance.getNext(dir).equals(coord)) {
                 return true;
             }

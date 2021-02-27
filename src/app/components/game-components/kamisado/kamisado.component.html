@@ -9,14 +9,14 @@
                 <rect [attr.x]="x * 75"
                       [attr.y]="y * 75"
                       width="75" height="75"
-                      style="stroke: 'black'; stroke-width: 1px;"
+                      style="stroke: 'black'; stroke-width: 8;"
                       [ngStyle]="styleBackground(x, y)"/>
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== UNOCCUPIED"
                         [attr.cx]="37.5 + (x * 75)"
                         [attr.cy]="37.5 + (y * 75)"
                         r="25"
-                        style="stroke-width: 15px"
+                        style="stroke-width: 15"
                         [ngStyle]="stylePiece(caseContent)"/>
             </g>
         </g>
@@ -26,16 +26,16 @@
         <rect [attr.x]="lastMove.coord.x * 75"
               [attr.y]="lastMove.coord.y * 75"
               width="75" height="75"
-              style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
+              style="fill:none;stroke:#e6e600;stroke-width:5;"/>
         <rect [attr.x]="lastMove.end.x * 75"
               [attr.y]="lastMove.end.y * 75"
               width="75" height="75"
-              style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
+              style="fill:none;stroke:#e6e600;stroke-width:5;"/>
     </g>
     <!-- Highlight selected piece -->
     <circle *ngIf="chosen !== null"
             [attr.cx]="37.5 + (chosen.x * 75)"
             [attr.cy]="37.5 + (chosen.y * 75)"
             r="30"
-            style="fill:none;stroke:#e6e600;stroke-width:5px;"/>
+            style="fill:none;stroke:#e6e600;stroke-width:5;"/>
 </svg>
