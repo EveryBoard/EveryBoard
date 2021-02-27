@@ -17,10 +17,10 @@ abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalitySt
 
 export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
-    public static readonly BLBL: string = // TODO: rename
-        'We are nor in playing nor in passed phase, you must mark stone as dead or alive or accept current board.';
-    public static readonly BLBL1: string =
-        'not countig or not accept';
+    public static readonly CANNOT_PASS_AFTER_PASSED_PHASE: MGPValidation = MGPValidation.failure(
+        'We are nor in playing nor in passed phase, you must mark stone as dead or alive or accept current board.');
+    public static readonly CANNOT_ACCEPT_BEFORE_COUNTING_PHRASE: MGPValidation = MGPValidation.failure(
+        'not countig or not accept');
 
     public static VERBOSE: boolean = false;
 
@@ -36,7 +36,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                 'GoRules.isLegal at ' + slice.phase + ((playing || passed) ? ' forbid' : ' allowed') +
                 ' passing on ' + slice.getCopiedBoard());
             return {
-                legal: (playing || passed) ? MGPValidation.SUCCESS : MGPValidation.failure(GoRules.BLBL),
+                legal: (playing || passed) ? MGPValidation.SUCCESS : GoRules.CANNOT_PASS_AFTER_PASSED_PHASE,
                 capturedCoords: [],
             };
         } else if (GoRules.isAccept(move)) {
@@ -44,14 +44,14 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             const accept: boolean = slice.phase === Phase.ACCEPT;
             display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.isLegal: move is GoMove.ACCEPT, hence, it is ' + ((counting || accept) ? ' legal' : 'illegal'));
             return {
-                legal: (counting || accept) ? MGPValidation.SUCCESS : MGPValidation.failure(GoRules.BLBL1),
+                legal: (counting || accept) ? MGPValidation.SUCCESS : GoRules.CANNOT_ACCEPT_BEFORE_COUNTING_PHRASE,
                 capturedCoords: [],
             };
         }
         if (GoRules.isOccupied(move.coord, slice.getCopiedBoardGoPiece())) {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is marking');
             const legal: boolean = GoRules.isLegalDeadMarking(move, slice);
-            return { legal: legal ? MGPValidation.SUCCESS : MGPValidation.failure('You must click on empty case.'), capturedCoords: [] };
+            return { legal: legal ? MGPValidation.SUCCESS : Rules.MUST_CLICK_ON_EMPTY_CASE, capturedCoords: [] };
         } else {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is normal stuff: ' + move.toString());
             return GoRules.isLegalNormalMove(move, slice);
@@ -127,7 +127,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const LOCAL_VERBOSE: boolean = false;
         const copiedBoard: GoPiece[][] = slice.getCopiedBoardGoPiece();
         const neightbooringCoord: Coord = coord.getNext(direction);
-        if (neightbooringCoord.isInRange(GoPartSlice.WIDTH, GoPartSlice.HEIGHT)) {
+        if (neightbooringCoord.isInRange(slice.board[0].length, slice.board.length)) {
             const ennemi: GoPiece = slice.turn%2 === 0 ? GoPiece.WHITE : GoPiece.BLACK;
             if (copiedBoard[neightbooringCoord.y][neightbooringCoord.x] === ennemi) {
                 display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'un groupe pourrait être capturé');
@@ -223,8 +223,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         return emptyGroups.filter((currentGroup) => currentGroup.isMonoWrapped());
     }
     public static mapBoard(board: GoPiece[][], mapper: (pawn: GoPiece) => GoPiece): GoPiece[][] {
-        for (let y: number = 0; y < GoPartSlice.HEIGHT; y++) {
-            for (let x: number = 0; x < GoPartSlice.WIDTH; x++) {
+        for (let y: number = 0; y < board.length; y++) {
+            for (let x: number = 0; x < board[0].length; x++) {
                 board[y][x] = mapper(board[y][x]);
             }
         }
@@ -243,18 +243,18 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return resultSlice.getCopiedBoardGoPiece();
     }
-    public getPlayingMovesList(currentSlice: GoPartSlice): MGPMap<GoMove, GoPartSlice> {
+    public getPlayingMovesList(slice: GoPartSlice): MGPMap<GoMove, GoPartSlice> {
         const choices: MGPMap<GoMove, GoPartSlice> = new MGPMap<GoMove, GoPartSlice>();
         let newMove: GoMove;
 
-        for (let y: number = 0; y<GoPartSlice.HEIGHT; y++) {
-            for (let x: number = 0; x<GoPartSlice.WIDTH; x++) {
+        for (let y: number = 0; y < slice.board.length; y++) {
+            for (let x: number = 0; x < slice.board[0].length; x++) {
                 newMove = new GoMove(x, y);
-                if (currentSlice.getBoardAtGoPiece(newMove.coord) === GoPiece.EMPTY) {
-                    const legality: GoLegalityStatus = this.isLegal(newMove, currentSlice);
+                if (slice.getBoardAtGoPiece(newMove.coord) === GoPiece.EMPTY) {
+                    const legality: GoLegalityStatus = this.isLegal(newMove, slice);
                     if (legality.legal.isSuccess()) {
                         const result: {resultingMove: GoMove, resultingSlice: GoPartSlice} =
-                            this.applyLegalMove(newMove, currentSlice, legality);
+                            this.applyLegalMove(newMove, slice, legality);
                         choices.set(result.resultingMove, result.resultingSlice);
                     }
                 }
@@ -358,8 +358,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         return { resultingMove, resultingSlice };
     }
     public static resurectStones(slice: GoPartSlice): GoPartSlice {
-        for (let y: number = 0; y<GoPartSlice.HEIGHT; y++) {
-            for (let x: number = 0; x<GoPartSlice.WIDTH; x++) {
+        for (let y: number = 0; y < slice.board.length; y++) {
+            for (let x: number = 0; x < slice.board[0].length; x++) {
                 if (slice.getBoardByXYGoPiece(x, y).isDead()) {
                     slice = GoRules.switchAliveness(new Coord(x, y), slice);
                 }
@@ -438,8 +438,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
     }
     public static getDeadStones(slice: GoPartSlice): number[] {
         const killed: number[] = [0, 0];
-        for (let y: number = 0; y < GoPartSlice.HEIGHT; y++) {
-            for (let x: number = 0; x < GoPartSlice.WIDTH; x++) {
+        for (let y: number = 0; y < slice.board.length; y++) {
+            for (let x: number = 0; x < slice.board[0].length; x++) {
                 const piece: number = slice.getBoardByXY(x, y);
                 if (piece === GoPiece.DEAD_BLACK.value) {
                     killed[0] = killed[0] + 1;
@@ -454,8 +454,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const resultingBoard: GoPiece[][] = slice.getCopiedBoardGoPiece();
         const captured: number[] = slice.getCapturedCopy();
         let currentPiece: GoPiece;
-        for (let y: number = 0; y<GoPartSlice.HEIGHT; y++) {
-            for (let x: number = 0; x<GoPartSlice.HEIGHT; x++) {
+        for (let y: number = 0; y < slice.board.length; y++) {
+            for (let x: number = 0; x < slice.board[0].length; x++) {
                 currentPiece = resultingBoard[y][x];
                 if (currentPiece === GoPiece.BLACK_TERRITORY) {
                     resultingBoard[y][x] = GoPiece.EMPTY;
@@ -476,8 +476,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         let coord: Coord;
         let group: GroupDatas;
         let currentCase: GoPiece;
-        for (let y: number = 0; y < GoPartSlice.WIDTH; y++) {
-            for (let x: number = 0; x < GoPartSlice.HEIGHT; x++) {
+        for (let y: number = 0; y < board.length; y++) {
+            for (let x: number = 0; x < board[0].length; x++) {
                 coord = new Coord(x, y);
                 currentCase = board[y][x];
                 if (condition(currentCase)) {
@@ -495,8 +495,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         let whiteScore: number = captured[1];
         let blackScore: number = captured[0];
         let currentCase: GoPiece;
-        for (let y: number = 0; y < GoPartSlice.WIDTH; y++) {
-            for (let x: number = 0; x < GoPartSlice.HEIGHT; x++) {
+        for (let y: number = 0; y < slice.board.length; y++) {
+            for (let x: number = 0; x < slice.board[0].length; x++) {
                 currentCase = slice.getBoardByXYGoPiece(x, y);
                 if (currentCase === GoPiece.DEAD_BLACK) {
                     whiteScore++;

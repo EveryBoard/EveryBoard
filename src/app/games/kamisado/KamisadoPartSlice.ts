@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';

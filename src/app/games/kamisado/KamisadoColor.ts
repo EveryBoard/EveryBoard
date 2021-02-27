@@ -13,16 +13,16 @@ export class KamisadoColor implements Comparable {
 
     public static of(value: number): KamisadoColor {
         switch (value) {
-        case 0: return KamisadoColor.ANY;
-        case 1: return KamisadoColor.ORANGE;
-        case 2: return KamisadoColor.BLUE;
-        case 3: return KamisadoColor.PURPLE;
-        case 4: return KamisadoColor.PINK;
-        case 5: return KamisadoColor.YELLOW;
-        case 6: return KamisadoColor.RED;
-        case 7: return KamisadoColor.GREEN;
-        case 8: return KamisadoColor.BROWN;
-        default: throw new Error('Invalid value ' + value + ' for KamisadoColor');
+            case 0: return KamisadoColor.ANY;
+            case 1: return KamisadoColor.ORANGE;
+            case 2: return KamisadoColor.BLUE;
+            case 3: return KamisadoColor.PURPLE;
+            case 4: return KamisadoColor.PINK;
+            case 5: return KamisadoColor.YELLOW;
+            case 6: return KamisadoColor.RED;
+            case 7: return KamisadoColor.GREEN;
+            case 8: return KamisadoColor.BROWN;
+            default: throw new Error('Invalid value ' + value + ' for KamisadoColor');
         }
     }
     private constructor(public readonly value: number, public readonly name: string, public readonly rgb: string) {
