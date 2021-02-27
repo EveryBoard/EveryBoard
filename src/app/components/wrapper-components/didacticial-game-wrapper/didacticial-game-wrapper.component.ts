@@ -16,6 +16,7 @@ import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { goDidacticial } from './didacticials/go-didacticial';
 import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
+import { reversiDidacticial } from './didacticials/reversi-didacticial';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -32,7 +33,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public stepIndex: number = 0;
     public currentMessage: string;
     public currentReason: string;
-    public stepAttemptMade: boolean = false;
+    public moveAttemptMade: boolean = false;
     public stepFinished: boolean[];
     public tutorialOver: boolean = false;
 
@@ -79,6 +80,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
                 new DidacticialStep('title zero', 'instruction zero', QuartoPartSlice.getInitialSlice(), [], [], null, null),
                 new DidacticialStep('title one', 'instruction one', QuartoPartSlice.getInitialSlice(), [], [], null, null),
             ],
+            Reversi: reversiDidacticial,
         };
         if (didacticials[game] == null) {
             throw new Error('Unknown Game ' + game);
@@ -92,7 +94,8 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.showStep(0);
     }
     private showStep(stepIndex: number): void {
-        this.stepAttemptMade = false;
+        this.moveAttemptMade = false;
+        this.stepFinished[stepIndex] = false;
         this.stepIndex = stepIndex;
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
@@ -110,17 +113,17 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         } else {
             this.currentMessage = currentStep.failureMessage;
         }
-        this.stepAttemptMade = true;
+        this.moveAttemptMade = true;
         this.cdr.detectChanges();
     }
     public retry(): void {
-        this.stepAttemptMade = false;
+        this.moveAttemptMade = false;
         this.showStep(this.stepIndex);
     }
     public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
         this.currentReason = null;
-        if (this.stepAttemptMade) {
-            return MGPValidation.failure('Step attemps already made.');
+        if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
+            return MGPValidation.failure('Step finished.');
         }
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
@@ -130,14 +133,15 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             } else {
                 this.currentMessage = currentStep.failureMessage;
             }
-            this.stepAttemptMade = true;
+            return MGPValidation.SUCCESS;
+        } else if (currentStep.isMove()) {
             return MGPValidation.SUCCESS;
         } else {
-            return currentStep.isMove() ? MGPValidation.SUCCESS : MGPValidation.failure('Step is not awaiting a move.');
+            return MGPValidation.failure('Step is not awaiting actions.');
         }
     }
     public onCancelMove: (reason?: string) => void = (reason?: string) => {
-        this.stepAttemptMade = true;
+        this.moveAttemptMade = true;
         this.currentReason = reason;
         this.cdr.detectChanges();
     }

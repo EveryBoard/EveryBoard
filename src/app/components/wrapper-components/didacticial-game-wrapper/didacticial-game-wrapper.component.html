@@ -24,7 +24,7 @@
         <h3 id='currentMessage'>{{ currentMessage }}</h3>
         <h3 id='currentReason' style='color: red'>{{ currentReason }}</h3>
         <button id="retryButton"
-                *ngIf="stepAttemptMade && tutorialOver === false"
+                *ngIf="moveAttemptMade && tutorialOver === false"
                 (click)="retry()"
         >
             Essayez à nouveau

@@ -39,7 +39,7 @@ class AuthenticationServiceMock {
         return AuthenticationServiceMock.USER;
     }
 }
-describe('DidacticialGameWrapperComponent', () => {
+fdescribe('DidacticialGameWrapperComponent', () => {
     let component: DidacticialGameWrapperComponent;
 
     let testElements: TestElements;
@@ -294,10 +294,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 'title 0',
                 'instruction 0',
                 QuartoPartSlice.getInitialSlice(),
-                [],
-                [],
-                'Bravo.',
-                'Perdu.',
+                [], [], null, null,
             ),
         ];
         component.startDidacticial(didacticial);
@@ -310,7 +307,7 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
     }));
-    it('When non wanted move is done, in addition to the toast, reason should be shown and restart needed', fakeAsync(async() => {
+    it('When unwanted move is done, toast message should be shown and restart needed', fakeAsync(async() => {
         // Given a DidacticialStep with possible invalid clicks
         const didacticial: DidacticialStep[] = [
             new DidacticialStep(
@@ -340,7 +337,39 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentReason')).nativeElement.innerHTML;
         expect(currentReason).toBe(expectedReason);
     }));
-    it('When invalid click, and no move submitted, restart should not be needed');
+    it('When invalid click, and no move submitted, restart should not be needed', fakeAsync(async() => {
+        // Given a DidacticialStep with possible invalid clicks
+        const didacticial: DidacticialStep[] = [
+            new DidacticialStep(
+                'title 0', 'instruction 0.',
+                new QuartoPartSlice([
+                    [0, 16, 16, 16],
+                    [16, 16, 16, 16],
+                    [16, 16, 16, 16],
+                    [16, 16, 16, 16],
+                ], 0, QuartoPiece.ABBA),
+                [],
+                ['#chooseCoord_3_3'],
+                'Bravo.',
+                'Perdu.',
+            ),
+        ];
+        component.startDidacticial(didacticial);
+
+        // When doing invalid click
+        await expectClickFail('#chooseCoord_0_0', testElements, 'Choisissez une case vide.');
+
+        // expect to see cancelMove reason as message
+        const expectedMessage: string = 'Perdu.';
+        const currentMessage: string =
+            testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
+        expect(currentMessage).toBe(expectedMessage);
+        const expectedReason: string = 'Choisissez une case vide.';
+        const currentReason: string =
+            testElements.debugElement.query(By.css('#currentReason')).nativeElement.innerHTML;
+        expect(currentReason).toBe(expectedReason);
+        expect(testElements.gameComponent.canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
+    }));
     // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
     it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {
         // Given any DidacticialStep
