@@ -46,7 +46,11 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             this.chosenAutomatically = false;
         } else {
             this.chosenAutomatically = true;
-            this.chosen = slice.coordToPlay.getOrNull();
+            if (slice.coordToPlay.isPresent()) {
+                this.chosen = slice.coordToPlay.get();
+            } else {
+                this.chosen = new Coord(-1, -1);
+            }
         }
     }
     public async pass(): Promise<MGPValidation> {
