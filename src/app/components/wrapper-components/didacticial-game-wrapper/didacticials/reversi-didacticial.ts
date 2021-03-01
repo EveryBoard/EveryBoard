@@ -10,7 +10,10 @@ const X: number = Player.ONE.value;
 export const reversiDidacticial: DidacticialStep[] = [
     new DidacticialStep(
         'But du jeu',
-        'Les pièces du Reversi sont double face, une face foncée pour le premier joueur, une face claire pour le deuxième. Quand une pièce est retournée, elle change de propriétaire. Le joueur possédant le plus de pièces en fin de partie gagne. Ici, le joueur foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.',
+        `Les pièces du Reversi sont double face, une face foncée pour le premier joueur, une face claire pour le deuxième.
+         Quand une pièce est retournée, elle change de propriétaire.
+         Le joueur possédant le plus de pièces en fin de partie gagne.
+         Ici, le joueur foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.`,
         new ReversiPartSlice([
             [O, O, O, O, O, O, O, O],
             [O, X, X, X, X, X, X, O],
@@ -25,7 +28,7 @@ export const reversiDidacticial: DidacticialStep[] = [
     ),
     new DidacticialStep(
         'Capture (1/2)',
-        'Au début de la partie, voici la configuration des pièces, pour qu\'un coup soit légal il faut qu\'il prenne en sandwich une pièce adverse entre la pièce que vous posez et une de vos pièces.',
+        `Au début de la partie, voici la configuration des pièces, pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.`,
         ReversiPartSlice.getInitialSlice(),
         [new ReversiMove(2, 4), new ReversiMove(3, 5), new ReversiMove(4, 2), new ReversiMove(5, 3)],
         [],
@@ -52,7 +55,8 @@ export const reversiDidacticial: DidacticialStep[] = [
     ),
     new DidacticialStep(
         'Passer son tour',
-        'Si à son tour de jeu, un joueur n\'as aucuns mouvement lui permettant de capturer une pièces, il est obligé de passer son tour. Si d\'aventure le joueur suivant ne savais pas jouer non plus, la partie terminerait avant que la plateau soit rempli, et les points seraient décomptés de la même façon.',
+        `Si, à son tour de jeu, un joueur n'as aucun mouvement lui permettant de capturer une pièce, il est obligé de passer son tour.
+         Si d'aventure le joueur suivant ne savais pas jouer non plus, la partie terminerait avant que la plateau soit rempli, et les points seraient décomptés de la même façon.`,
         new ReversiPartSlice([
             [X, O, O, O, O, O, X, O],
             [O, X, X, X, X, X, X, O],

@@ -39,7 +39,7 @@ class AuthenticationServiceMock {
         return AuthenticationServiceMock.USER;
     }
 }
-fdescribe('DidacticialGameWrapperComponent', () => {
+describe('DidacticialGameWrapperComponent', () => {
     let component: DidacticialGameWrapperComponent;
 
     let testElements: TestElements;
@@ -337,7 +337,7 @@ fdescribe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentReason')).nativeElement.innerHTML;
         expect(currentReason).toBe(expectedReason);
     }));
-    it('When invalid click, and no move submitted, restart should not be needed', fakeAsync(async() => {
+    it('When unwanted click, and no move done, restart should not be needed', fakeAsync(async() => {
         // Given a DidacticialStep with possible invalid clicks
         const didacticial: DidacticialStep[] = [
             new DidacticialStep(
@@ -350,8 +350,7 @@ fdescribe('DidacticialGameWrapperComponent', () => {
                 ], 0, QuartoPiece.ABBA),
                 [],
                 ['#chooseCoord_3_3'],
-                'Bravo.',
-                'Perdu.',
+                'Bravo.', 'Perdu.',
             ),
         ];
         component.startDidacticial(didacticial);
@@ -372,7 +371,7 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     }));
     // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
     it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {
-        // Given any DidacticialStep
+        // Given any DidacticialStep where an invalid move has been done
         component.steps = [
             new DidacticialStep(
                 'title',
@@ -384,8 +383,6 @@ fdescribe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
-
-        // when doing another move, then clicking retry
         await expectClickSuccess('#choosePiece_8', testElements);
         const expectations: MoveExpectations = {
             move: new QuartoMove(1, 1, QuartoPiece.BAAA),
@@ -394,6 +391,8 @@ fdescribe('DidacticialGameWrapperComponent', () => {
             scoreOne: null,
         };
         await expectMoveSuccess('#chooseCoord_1_1', testElements, expectations);
+
+        // when clicking retry
         expect(await clickElement('#retryButton', testElements)).toBeTrue();
 
         // expect to see steps instruction message on component and board restarted
@@ -548,6 +547,9 @@ fdescribe('DidacticialGameWrapperComponent', () => {
             ),
         ];
         // when clicking "Next Button"
+        const nextButtonMessage: string =
+            testElements.debugElement.query(By.css('#nextButton')).nativeElement.innerHTML;
+        expect(nextButtonMessage).toBe('Continuer');
         expect(await clickElement('#nextButton', testElements)).toBeTrue();
 
         // expect to see next step on component
@@ -674,6 +676,8 @@ fdescribe('DidacticialGameWrapperComponent', () => {
         expect(currentMessage).toBe(expectedMessage);
         // expect next button to be hidden
         expect(await clickElement('#nextButton', testElements)).toBeNull();
+        // expect retry button to be hidden
+        expect(await clickElement('#retryButton', testElements)).toBeNull();
         // expect restart button to be here
         expect(await clickElement('#restartButton', testElements)).toBeTrue();
     }));
@@ -713,5 +717,4 @@ fdescribe('DidacticialGameWrapperComponent', () => {
         expect(component.stepFinished.every((v: boolean) => v === false)).toBeTrue();
         expect(component.stepIndex).toEqual(0);
     }));
-    it('Should not show "next" but "continue" for action-less steps');
 });

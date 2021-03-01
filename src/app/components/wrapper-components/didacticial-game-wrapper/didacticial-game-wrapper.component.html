@@ -3,7 +3,7 @@
 >
     <div id="infos" class="flex-container circled col-sm-4">
         <ul>
-            <ng-container *ngFor="let step of this.steps; index as i;">
+            <ng-container *ngFor="let step of steps; index as i;">
                 <li *ngIf="i !== stepIndex else title"
                     id="step_{{ i }}"
                     [style.color]="getStepColor(i)"
@@ -24,7 +24,7 @@
         <h3 id='currentMessage'>{{ currentMessage }}</h3>
         <h3 id='currentReason' style='color: red'>{{ currentReason }}</h3>
         <button id="retryButton"
-                *ngIf="moveAttemptMade && tutorialOver === false"
+                *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex] === true) || moveAttemptMade)"
                 (click)="retry()"
         >
             Essayez à nouveau
@@ -32,9 +32,7 @@
         <button id="nextButton"
                 *ngIf="tutorialOver === false"
                 (click)="next()"
-        >
-            Suivant
-        </button>
+        >{{ steps && steps[stepIndex].isInformation() ? 'Continuer' : 'Suivant' }}</button>
         <button id="restartButton"
                 *ngIf="tutorialOver"
                 (click)="start()"
