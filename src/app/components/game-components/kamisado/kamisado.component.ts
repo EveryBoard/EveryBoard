@@ -32,7 +32,13 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
         return {
             fill: piece.color.rgb,
-            stroke: piece.belongsTo(Player.ONE) ? 'white' : 'black',
+        };
+    }
+    public stylePieceBorder(pieceValue: number): {[key:string]: string} {
+        const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
+        return {
+            fill: this.getPlayerColor(piece.player),
+            stroke: 'black',
         };
     }
     public updateBoard(): void {

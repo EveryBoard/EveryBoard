@@ -11,7 +11,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 
-describe('KamisadoRules:', () => {
+fdescribe('KamisadoRules:', () => {
     let rules: KamisadoRules;
 
     const _: number = KamisadoPiece.NONE.getValue();
@@ -212,6 +212,23 @@ describe('KamisadoRules:', () => {
         const expectedSlice: KamisadoPartSlice = new KamisadoPartSlice(7, KamisadoColor.RED, MGPOptional.of(new Coord(1, 6)), true, board);
         const resultingSlice: KamisadoPartSlice = rules.applyLegalMove(onlyMove, slice, status).resultingSlice;
         expect(resultingSlice).toEqual(expectedSlice);
+    });
+    it('should not allow to pass if player can play', () => {
+        const board: number[][] = [
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, r, _, _, _, _, _, _],
+            [R, _, _, _, _, _, _, _],
+        ];
+        const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        rules.node = new MGPNode(null, null, slice, 0);
+        const move: KamisadoMove = KamisadoMove.PASS;
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.isSuccess()).toBeFalse();
     });
     it('should detect victory', () => {
         const board: number[][] = [

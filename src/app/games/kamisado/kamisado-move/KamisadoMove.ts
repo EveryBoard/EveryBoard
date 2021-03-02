@@ -20,10 +20,6 @@ export class KamisadoMove extends MoveCoordToCoord {
         super(start, end);
     }
     public static of(start: Coord, end: Coord): KamisadoMove {
-        if (start.equals(new Coord(-1, -1)) && end.equals(new Coord(-2, -2))) {
-            // Valid move, it is PASS
-            return KamisadoMove.PASS;
-        }
         if (start.isNotInRange(KamisadoBoard.SIZE, KamisadoBoard.SIZE)) {
             throw new Error('Starting coord of KamisadoMove must be on the board, not at ' + start.toString());
         }

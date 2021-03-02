@@ -1,6 +1,4 @@
-import { Comparable } from 'src/app/utils/collection-lib/Comparable';
-
-export class KamisadoColor implements Comparable {
+export class KamisadoColor {
     public static readonly ANY: KamisadoColor = new KamisadoColor(0, 'any', '#000');
     public static readonly ORANGE: KamisadoColor = new KamisadoColor(1, 'orange', '#d67421');
     public static readonly BLUE : KamisadoColor = new KamisadoColor(2, 'blue', '#006bac');
@@ -26,8 +24,5 @@ export class KamisadoColor implements Comparable {
         }
     }
     private constructor(public readonly value: number, public readonly name: string, public readonly rgb: string) {
-    }
-    public equals(color: KamisadoColor): boolean {
-        return color.value === this.value;
     }
 }
