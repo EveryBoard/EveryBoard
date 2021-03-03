@@ -17,6 +17,7 @@ import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { goDidacticial } from './didacticials/go-didacticial';
 import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
+import { reversiDidacticial } from './didacticials/reversi-didacticial';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -33,7 +34,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public stepIndex: number = 0;
     public currentMessage: string;
     public currentReason: string;
-    public stepAttemptMade: boolean = false;
+    public moveAttemptMade: boolean = false;
     public stepFinished: boolean[];
     public tutorialOver: boolean = false;
 
@@ -81,6 +82,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
                 new DidacticialStep('title zero', 'instruction zero', QuartoPartSlice.getInitialSlice(), [], [], null, null),
                 new DidacticialStep('title one', 'instruction one', QuartoPartSlice.getInitialSlice(), [], [], null, null),
             ],
+            Reversi: reversiDidacticial,
         };
         if (didacticials[game] == null) {
             throw new Error('Unknown Game ' + game);
@@ -88,13 +90,18 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         return didacticials[game];
     }
     public startDidacticial(didacticial: DidacticialStep[]): void {
+        display(
+            DidacticialGameWrapperComponent.VERBOSE,
+            { didacticialGameWrapperComponent_startDidacticial: { didacticial }});
         this.steps = didacticial;
         this.tutorialOver = false;
         this.stepFinished = this.getCompletionArray();
         this.showStep(0);
     }
     private showStep(stepIndex: number): void {
-        this.stepAttemptMade = false;
+        display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapperComponent.showStep(' + stepIndex + ')');
+        this.moveAttemptMade = false;
+        this.stepFinished[stepIndex] = false;
         this.stepIndex = stepIndex;
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
@@ -104,25 +111,36 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.cdr.detectChanges();
     }
     public async onValidUserMove(move: Move): Promise<void> {
+        display(DidacticialGameWrapperComponent.VERBOSE, { didacticialGameWrapper_onValidUserMove: { move }});
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
-        this.gameComponent.rules.choose(move);
-        this.gameComponent.updateBoard();
-        if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
-            this.showStepSuccess();
+        const isLegalMove: boolean = this.gameComponent.rules.choose(move);
+        if (isLegalMove) {
+            display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onValidUserMove: legal move');
+            this.gameComponent.updateBoard();
+            this.moveAttemptMade = true;
+            if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+                display(
+                    DidacticialGameWrapperComponent.VERBOSE,
+                    'didacticialGameWrapper.onValidUserMove: awaited move!');
+                this.showStepSuccess();
+            } else {
+                this.currentMessage = currentStep.failureMessage;
+            }
         } else {
             this.currentMessage = currentStep.failureMessage;
         }
-        this.stepAttemptMade = true;
         this.cdr.detectChanges();
     }
     public retry(): void {
-        this.stepAttemptMade = false;
+        display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.retry');
+        this.moveAttemptMade = false;
         this.showStep(this.stepIndex);
     }
     public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
+        display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = null;
-        if (this.stepAttemptMade) {
-            return MGPValidation.failure('Step attemps already made.');
+        if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
+            return MGPValidation.failure('Step finished.');
         }
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
@@ -132,24 +150,29 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             } else {
                 this.currentMessage = currentStep.failureMessage;
             }
-            this.stepAttemptMade = true;
+            return MGPValidation.SUCCESS;
+        } else if (currentStep.isMove()) {
             return MGPValidation.SUCCESS;
         } else {
-            return currentStep.isMove() ? MGPValidation.SUCCESS : MGPValidation.failure('Step is not awaiting a move.');
+            return MGPValidation.failure('Step is not awaiting actions.');
         }
     }
     public onCancelMove: (reason?: string) => void = (reason?: string) => {
-        this.stepAttemptMade = true;
+        display(
+            DidacticialGameWrapperComponent.VERBOSE,
+            'didacticialGameWrapperComponent.onCancelMove(' + reason + ')');
+        // this.moveAttemptMade = true;
         this.currentReason = reason;
         this.cdr.detectChanges();
     }
     private showStepSuccess(): void {
+        display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapperComponent.showStepSuccess()');
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.successMessage;
         this.stepFinished[this.stepIndex] = true;
     }
     public next(): void {
-        if (this.steps[this.stepIndex].isNothing()) {
+        if (this.steps[this.stepIndex].isInformation()) {
             this.stepFinished[this.stepIndex] = true;
         }
         if (this.stepFinished.every((value: boolean) => value === true)) {

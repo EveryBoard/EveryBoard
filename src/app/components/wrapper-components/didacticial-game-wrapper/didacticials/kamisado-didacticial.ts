@@ -30,7 +30,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
         `Au Kamisado, il y a deux façons de gagner: soit en plaçant une de vos pièces sur la ligne de départ de
          l'adversaire, soit en forçant l'adversaire à faire un coup qui bloque la partie.
          Ici, le joueur noir gagne car il a sa pièce rouge sur la ligne de départ du joueur blanc, en haut à gauche.`,
-        new KamisadoPartSlice(5, KamisadoColor.ORANGE, MGPOptional.of(), false, [
+        new KamisadoPartSlice(5, KamisadoColor.ORANGE, MGPOptional.empty(), false, [
             [br, Bl, Pu, Pi, Ye, Re, Gr, Br],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
