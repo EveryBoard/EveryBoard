@@ -174,6 +174,32 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
     }));
+    it('Should show highlight of first click when awaiting a move on multiclick game component', fakeAsync(async() => {
+        // Given a DidacticialStep with several moves
+        component.steps = [
+            new DidacticialStep(
+                'title',
+                'Put your piece in a corner and give the opposite one.',
+                QuartoPartSlice.getInitialSlice(),
+                [
+                    new QuartoMove(0, 0, QuartoPiece.BBBB),
+                    new QuartoMove(0, 3, QuartoPiece.BBBB),
+                    new QuartoMove(3, 3, QuartoPiece.BBBB),
+                    new QuartoMove(3, 0, QuartoPiece.BBBB),
+                ],
+                [],
+                'Bravo.',
+                'Perdu.',
+            ),
+        ];
+        // when doing that move
+        await expectClickSuccess('#chooseCoord_3_3', testElements);
+        tick(11);
+
+        // expect highlight to be present
+        const element: DebugElement = testElements.debugElement.query(By.css('#highlight'));
+        expect(element).toBeTruthy('Highlight should be present');
+    }));
     it('Should show success message after step success (one of several moves)', fakeAsync(async() => {
         // Given a DidacticialStep with several moves
         component.steps = [
@@ -194,12 +220,14 @@ describe('DidacticialGameWrapperComponent', () => {
         ];
         // when doing that move
         await expectClickSuccess('#chooseCoord_0_0', testElements);
+        tick(10);
         const expectations: MoveExpectations = {
             move: new QuartoMove(0, 0, QuartoPiece.BBBB),
             slice: QuartoPartSlice.getInitialSlice(),
             scoreZero: null, scoreOne: null,
         };
         await expectMoveSuccess('#choosePiece_15', testElements, expectations);
+        tick(10);
 
         // expect to see steps success message on component
         const expectedMessage: string = 'Bravo.';
@@ -228,12 +256,14 @@ describe('DidacticialGameWrapperComponent', () => {
 
         // when doing another move
         await expectClickSuccess('#chooseCoord_1_1', testElements);
+        tick(10);
         const expectations: MoveExpectations = {
             move: new QuartoMove(1, 1, QuartoPiece.BBBB),
             slice: QuartoPartSlice.getInitialSlice(),
             scoreZero: null, scoreOne: null,
         };
         await expectMoveSuccess('#choosePiece_15', testElements, expectations);
+        tick(10);
 
         // expect to see steps success message on component
         const expectedMessage: string = 'Perdu.';
@@ -326,6 +356,7 @@ describe('DidacticialGameWrapperComponent', () => {
 
         // When doing invalid click
         await expectClickFail('#chooseCoord_0_0', testElements, 'Choisissez une case vide.');
+        tick(10);
 
         // expect to see cancelMove reason as message
         const expectedMessage: string = 'instruction 0.';
@@ -384,6 +415,7 @@ describe('DidacticialGameWrapperComponent', () => {
             ),
         ];
         await expectClickSuccess('#choosePiece_8', testElements);
+        tick(10);
         const expectations: MoveExpectations = {
             move: new QuartoMove(1, 1, QuartoPiece.BAAA),
             slice: QuartoPartSlice.getInitialSlice(),
@@ -391,6 +423,7 @@ describe('DidacticialGameWrapperComponent', () => {
             scoreOne: null,
         };
         await expectMoveSuccess('#chooseCoord_1_1', testElements, expectations);
+        tick(10);
 
         // when clicking retry
         expect(await clickElement('#retryButton', testElements)).toBeTrue();
@@ -416,6 +449,7 @@ describe('DidacticialGameWrapperComponent', () => {
         ];
         // when doing another move, then clicking retry
         await expectClickSuccess('#choosePiece_15', testElements);
+        tick(10);
         const expectations: MoveExpectations = {
             move: new QuartoMove(0, 0, QuartoPiece.BBBB),
             slice: QuartoPartSlice.getInitialSlice(),
@@ -423,6 +457,7 @@ describe('DidacticialGameWrapperComponent', () => {
             scoreOne: null,
         };
         await expectMoveSuccess('#chooseCoord_0_0', testElements, expectations);
+        tick(10);
         expect(await clickElement('#retryButton', testElements)).toBeTrue();
 
         // expect to see steps instruction message on component and board restarted
@@ -450,15 +485,18 @@ describe('DidacticialGameWrapperComponent', () => {
             ),
         ];
         await expectClickSuccess('#chooseCoord_0_0', testElements);
+        tick(10);
         const expectations: MoveExpectations = {
             move: new QuartoMove(0, 0, QuartoPiece.BBBB),
             slice: QuartoPartSlice.getInitialSlice(),
             scoreZero: null, scoreOne: null,
         };
         await expectMoveSuccess('#choosePiece_15', testElements, expectations);
+        tick(10);
 
         // when clicking again
         await expectClickForbidden('#chooseCoord_2_2', testElements);
+        tick(10);
 
         // expect to see still the steps success message on component
         const expectedMessage: string = 'Bravo.';
@@ -526,7 +564,7 @@ describe('DidacticialGameWrapperComponent', () => {
     }));
     it('Should mark "infos-step" as finished when skipped', fakeAsync(async() => {
         // Given a DidacticialStep with no action to do
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
                 'title',
                 'Explanation Explanation Explanation.',
@@ -546,6 +584,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 null,
             ),
         ];
+        component.startDidacticial(didacticial);
         // when clicking "Next Button"
         const nextButtonMessage: string =
             testElements.debugElement.query(By.css('#nextButton')).nativeElement.innerHTML;

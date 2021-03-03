@@ -49,7 +49,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
     ),
     new DidacticialStep(
         'Déplacement de pièce',
-        `Voici le plateau de départ, c\'est à Foncé de commencer.
+        `Voici le plateau de départ, c'est à Foncé de commencer.
          Commençons simplement par un déplacement d'une seule pièce.
          1. Cliquez la pièce sur la colonne la plus à gauche et sur la deuxième rangée en commençant par le bas.
          2. Cliquez une case plus haut.`,

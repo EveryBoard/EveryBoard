@@ -44,12 +44,12 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         this.lastMove = this.rules.node.move;
         this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
+        this.captureds = [];
         if (this.lastMove) {
             this.showPreviousMove();
         }
     }
     private showPreviousMove(): void {
-        this.captureds = [];
         const previousBoard: NumberTable = this.rules.node.mother.gamePartSlice.board;
         const ENNEMY: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
