@@ -18,6 +18,11 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { goDidacticial } from './didacticials/go-didacticial';
 import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
 import { reversiDidacticial } from './didacticials/reversi-didacticial';
+import { saharaDidacticial } from './didacticials/sahara-didacticial';
+import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
+import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
+import { tablutDidacticial } from './didacticials/tablut-didacticial';
+import { siamDidacticial } from './didacticials/siam-didacticial';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -79,10 +84,13 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Go: goDidacticial,
             P4: p4Didacticial,
             Quarto: [
-                new DidacticialStep('title zero', 'instruction zero', QuartoPartSlice.getInitialSlice(), [], [], null, null),
-                new DidacticialStep('title one', 'instruction one', QuartoPartSlice.getInitialSlice(), [], [], null, null),
+                new DidacticialStep('title zero', 'instruction zero', QuartoPartSlice.getInitialSlice(), [], ['#chooseCoord_0_0'], 'bravo', 'bouh'),
+                new DidacticialStep('title one', 'instruction one', QuartoPartSlice.getInitialSlice(), [new QuartoMove(0, 0, QuartoPiece.BBBB)], [], 'bravo', 'bouh'),
             ],
             Reversi: reversiDidacticial,
+            Sahara: saharaDidacticial,
+            Siam: siamDidacticial,
+            Tablut: tablutDidacticial,
         };
         if (didacticials[game] == null) {
             throw new Error('Unknown Game ' + game);
@@ -152,6 +160,9 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             }
             return MGPValidation.SUCCESS;
         } else if (currentStep.isMove()) {
+            setTimeout(() => {
+                this.cdr.detectChanges();
+            }, 10);
             return MGPValidation.SUCCESS;
         } else {
             return MGPValidation.failure('Step is not awaiting actions.');

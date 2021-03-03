@@ -8,6 +8,7 @@
                 id="chooseCoord_{{x}}_{{y}}"
                 (click)="chooseCoord(x, y);">
                 <img *ngIf="isHighlighted(x, y)"
+                     id="highlight"
                      width="50" height="50"
                      alt="highlighted"
                      [src]="imagesLocation+'squared_highlight.svg'"

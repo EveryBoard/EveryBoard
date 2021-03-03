@@ -21,18 +21,20 @@ describe('TablutRules', () => {
     beforeEach(() => {
         rules = new TablutRules(TablutPartSlice);
     });
-    it('TablutRules should be created', () => {
+    it('Should be created', () => {
         expect(rules).toBeTruthy();
         expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start a turn 0');
     });
-    it('TablutRules.getSurroundings should return neighboorings cases', () => {
-        const startingBoard: number[][] = rules.node.gamePartSlice.getCopiedBoard();
-        const {
-            backCoord, back, backInRange,
-            leftCoord, left,
-            rightCoord, right,
-        } = TablutRules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingBoard);
-        expect(backCoord).toEqual(new Coord(4, 1));
+    describe('getSurroundings', () => {
+        it('Should return neighboorings cases', () => {
+            const startingBoard: number[][] = rules.node.gamePartSlice.getCopiedBoard();
+            const {
+                backCoord, back, backInRange,
+                leftCoord, left,
+                rightCoord, right,
+            } = TablutRules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingBoard);
+            expect(backCoord).toEqual(new Coord(4, 1));
+        });
     });
     it('Capture should work', () => {
         const board: number[][] = [
