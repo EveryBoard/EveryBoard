@@ -213,6 +213,23 @@ describe('KamisadoRules:', () => {
         const resultingSlice: KamisadoPartSlice = rules.applyLegalMove(onlyMove, slice, status).resultingSlice;
         expect(resultingSlice).toEqual(expectedSlice);
     });
+    it('should not allow to pass if player can play', () => {
+        const board: number[][] = [
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, r, _, _, _, _, _, _],
+            [R, _, _, _, _, _, _, _],
+        ];
+        const slice: KamisadoPartSlice = new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        rules.node = new MGPNode(null, null, slice, 0);
+        const move: KamisadoMove = KamisadoMove.PASS;
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.isSuccess()).toBeFalse();
+    });
     it('should detect victory', () => {
         const board: number[][] = [
             [_, _, _, _, _, _, _, _],

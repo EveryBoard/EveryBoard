@@ -1,6 +1,5 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { KamisadoBoard } from '../KamisadoBoard';
 import { KamisadoPartSlice } from '../KamisadoPartSlice';
 import { KamisadoRules } from '../kamisado-rules/KamisadoRules';
 import { KamisadoMove } from './KamisadoMove';

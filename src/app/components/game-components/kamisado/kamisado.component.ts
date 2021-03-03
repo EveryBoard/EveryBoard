@@ -5,7 +5,7 @@ import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
 import { KamisadoMove } from 'src/app/games/kamisado/kamisado-move/KamisadoMove';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoRules } from 'src/app/games/kamisado/kamisado-rules/KamisadoRules';
+import { KamisadoFailure, KamisadoRules } from 'src/app/games/kamisado/kamisado-rules/KamisadoRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
@@ -32,7 +32,13 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
         return {
             fill: piece.color.rgb,
-            stroke: piece.belongsTo(Player.ONE) ? 'white' : 'black',
+        };
+    }
+    public stylePieceBorder(pieceValue: number): {[key:string]: string} {
+        const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
+        return {
+            fill: this.getPlayerColor(piece.player),
+            stroke: 'black',
         };
     }
     public updateBoard(): void {
@@ -42,23 +48,19 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
         this.canPass = this.rules.canOnlyPass(slice);
         this.cancelMove();
-        if (this.canPass) {
+        if (this.canPass || slice.coordToPlay.isAbsent()) {
             this.chosenAutomatically = false;
+            this.chosen = new Coord(-1, -1);
         } else {
             this.chosenAutomatically = true;
-            if (slice.coordToPlay.isPresent()) {
-                this.chosen = slice.coordToPlay.get();
-            } else {
-                this.chosen = new Coord(-1, -1);
-            }
+            this.chosen = slice.coordToPlay.get();
         }
     }
     public async pass(): Promise<MGPValidation> {
         if (this.canPass) {
             return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
-            // TODO: check use
-            return this.cancelMove('Cannot pass.');
+            return this.cancelMove(KamisadoFailure.CANT_PASS);
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
@@ -70,12 +72,12 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     }
     public choosePiece(x: number, y: number): MGPValidation {
         if (this.rules.node.isEndGame()) {
-            return this.cancelMove('game is ended');
+            return this.cancelMove(KamisadoFailure.GAME_ENDED);
         }
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
         const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
         if (!piece.belongsTo(player)) {
-            return this.cancelMove('piece does not belong to player');
+            return this.cancelMove(KamisadoFailure.NOT_PIECE_OF_PLAYER);
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;

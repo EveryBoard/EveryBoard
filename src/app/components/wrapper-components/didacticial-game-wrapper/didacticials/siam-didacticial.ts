@@ -96,7 +96,7 @@ export const siamDidacticial: DidacticialStep[] = [
          soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).
          3. Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.
          Vos pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
-         Votre pièce tout en bas à droite, elle, peut pousser. Faite-le.`,
+         Votre pièce tout en bas à droite, elle, peut pousser. Faites-le.`,
         new SiamPartSlice([
             [R, M, M, l, L],
             [_, _, _, _, _],

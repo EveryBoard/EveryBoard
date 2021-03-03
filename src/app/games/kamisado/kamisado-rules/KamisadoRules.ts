@@ -13,11 +13,22 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
+export class KamisadoFailure {
+    public static CANT_PASS: string = `Vous n'êtes pas autorisé à passer, vous pouvez toujours vous déplacer`;
+    public static NOT_PIECE_OF_PLAYER: string = `Ce n'est pas une de vos pièces`;
+    public static NOT_RIGHT_COLOR: string = `La pièce n'est pas de la couleur à jouer`;
+    public static END_CASE_NOT_EMPTY: string = `La case de fin du déplacement n'est pas vide`;
+    public static DIRECTION_NOT_ALLOWED: string = `Vous ne pouvez pas vous déplacer dans cette direction`;
+    public static MOVE_BLOCKED: string = `Ce mouvement est obstrué`;
+    public static INVALID_DIRECTION: string = `La direction de ce déplacement est invalide`;
+    public static GAME_ENDED: string = `La partie est finie`
+}
+
 abstract class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> { }
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
     public getColorMatchingPiece(slice: KamisadoPartSlice): Array<Coord> {
-        if (slice.colorToPlay !== KamisadoColor.ANY) {
+        if (slice.coordToPlay.isPresent()) {
             // Only one piece can move, and its coord is stored in slice.coordToPlay
             return [slice.coordToPlay.get()];
         }
@@ -31,10 +42,10 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             .filter((startCoord: Coord): boolean => {
                 // For each direction, create a move of 1 in that direction
                 for (const dir of this.playerDirections(slice.getCurrentPlayer())) {
-                    const endCoord = startCoord.getNext(dir);
+                    const endCoord: Coord = startCoord.getNext(dir);
                     if (KamisadoBoard.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(slice.board, endCoord)) {
                         // Move is valid, check legality
-                        const move = KamisadoMove.of(startCoord, endCoord);
+                        const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);
                         if (this.isLegal(move, slice)) {
                             // Move is legal
                             return true;
@@ -72,7 +83,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             // No move, player can only pass
             if (!slice.alreadyPassed) {
                 const move: KamisadoMove = KamisadoMove.PASS;
-                const legality = this.isLegal(move, slice);
+                const legality: LegalityStatus = this.isLegal(move, slice);
                 if (legality.legal.isSuccess()) {
                     const result = this.applyLegalMove(move, slice, legality);
                     moves.set(result.resultingMove, result.resultingSlice);
@@ -84,11 +95,11 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             // Get all the pieces that can play
             for (const startCoord of movablePieces) {
                 // For each piece, look at all positions where it can go
-                for (let i = 1; i < KamisadoBoard.SIZE; i++) {
+                for (let i: number = 1; i < KamisadoBoard.SIZE; i++) {
                     // For each direction, create a move of i in that direction
                     for (const dir of this.playerDirections(player)) {
-                        let endCoord = startCoord;
-                        for (let j = 0; j < i; j++) {
+                        let endCoord: Coord = startCoord;
+                        for (let j: number = 0; j < i; j++) {
                             endCoord = endCoord.getNext(dir);
                             if (!KamisadoBoard.isOnBoard(endCoord) || !KamisadoBoard.isEmptyAt(slice.board, endCoord)) {
                                 // Way is obstructed, don't continue
@@ -96,9 +107,10 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                             }
                         }
                         if (KamisadoBoard.isOnBoard(endCoord) && KamisadoBoard.isEmptyAt(slice.board, endCoord)) {
-                            // Check if the move can be done, and if so, add the resulting slice to the map to be returned
-                            const move = KamisadoMove.of(startCoord, endCoord);
-                            const legality = this.isLegal(move, slice);
+                            // Check if the move can be done, and if so,
+                            // add the resulting slice to the map to be returned
+                            const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);
+                            const legality: LegalityStatus = this.isLegal(move, slice);
                             if (legality.legal.isSuccess()) {
                                 const result = this.applyLegalMove(move, slice, legality);
                                 moves.set(result.resultingMove, result.resultingSlice);
@@ -123,10 +135,10 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         if (this.canOnlyPass(slice) && slice.alreadyPassed) {
             return player === Player.ZERO ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
         }
-        let furthest0 = 7; // player 0 goes from bottom (7) to top (0)
-        let furthest1 = 0; // player 1 goes from top (0) to bottom (7)
+        let furthest0: number = 7; // player 0 goes from bottom (7) to top (0)
+        let furthest1: number = 0; // player 1 goes from top (0) to bottom (7)
         KamisadoBoard.allPieceCoords(slice.board).forEach((c: Coord) => {
-            const piece = KamisadoBoard.getPieceAt(slice.board, c);
+            const piece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, c);
             if (piece !== KamisadoPiece.NONE) {
                 if (piece.player === Player.ONE) { // player 1, top (0) to bottom (7) so we want the max
                     furthest1 = Math.max(furthest1, c.y);
@@ -156,7 +168,8 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     : { resultingMove: KamisadoMove, resultingSlice: KamisadoPartSlice } {
         if (move === KamisadoMove.PASS) {
             const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(slice, slice.colorToPlay);
-            const resultingSlice = new KamisadoPartSlice(slice.turn + 1, slice.colorToPlay, nextCoord, true, slice.board);
+            const resultingSlice: KamisadoPartSlice =
+                new KamisadoPartSlice(slice.turn + 1, slice.colorToPlay, nextCoord, true, slice.board);
             return { resultingSlice, resultingMove: move };
         }
         const start: Coord = move.coord;
@@ -171,7 +184,8 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(slice, newColorToPlay);
 
         // Construct the next slice
-        const resultingSlice = new KamisadoPartSlice(slice.turn + 1, newColorToPlay, nextCoord, false, newBoard);
+        const resultingSlice: KamisadoPartSlice =
+            new KamisadoPartSlice(slice.turn + 1, newColorToPlay, nextCoord, false, newBoard);
 
         return { resultingSlice, resultingMove: move };
     }
@@ -184,7 +198,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             if (this.canOnlyPass(slice) && !slice.alreadyPassed) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure('you cannot pass, you can still move') };
+                return { legal: MGPValidation.failure(KamisadoFailure.CANT_PASS) };
             }
         }
 
@@ -193,32 +207,32 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         //   - start piece should be owned by the current player
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, start);
         if (!piece.belongsTo(slice.getCurrentPlayer())) {
-            return { legal: MGPValidation.failure('not a piece of the current player') };
+            return { legal: MGPValidation.failure(KamisadoFailure.NOT_PIECE_OF_PLAYER) };
         }
         //  - start case should contain a piece of the right color (or any color can be played)
         if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {
-            return { legal: MGPValidation.failure('not the right color') };
+            return { legal: MGPValidation.failure(KamisadoFailure.NOT_RIGHT_COLOR) };
         }
         //  - end case should be empty
         const endPiece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, end);
         if (!endPiece.isEmpty()) {
-            return { legal: MGPValidation.failure('end case is not empty') };
+            return { legal: MGPValidation.failure(KamisadoFailure.END_CASE_NOT_EMPTY) };
         }
         //  - all steps between start and end should be empty
         try {
             const dir: Direction = Direction.fromMove(start, end);
             if (!this.directionAllowedForPlayer(dir, slice.getCurrentPlayer())) {
-                return { legal: MGPValidation.failure('direction not allowed for player') };
+                return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
             }
             let currentCoord: Coord = start;
             while (!currentCoord.equals(end)) {
                 currentCoord = currentCoord.getNext(dir);
                 if (!KamisadoBoard.getPieceAt(slice.board, currentCoord).isEmpty()) {
-                    return { legal: MGPValidation.failure('move is blocked') };
+                    return { legal: MGPValidation.failure(KamisadoFailure.MOVE_BLOCKED) };
                 }
             }
         } catch (e) {
-            return { legal: MGPValidation.failure('invalid direction') };
+            return { legal: MGPValidation.failure(KamisadoFailure.INVALID_DIRECTION) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

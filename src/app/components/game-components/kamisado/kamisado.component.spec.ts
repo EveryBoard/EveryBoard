@@ -62,10 +62,14 @@ describe('KamisadoComponent', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(gameComponent).toBeTruthy('KamisadoComponent should be created');
     });
-    it('should not allow to pass initially', async () => {
+    it('should chose -1,-1 as chosen coord when calling updateBoard without move', () => {
+        gameComponent.updateBoard();
+        expect(gameComponent.chosen.equals(new Coord(-1, -1))).toBeTrue();
+    });
+    it('should not allow to pass initially', async() => {
         expect((await gameComponent.pass()).isSuccess()).toBeFalse();
     });
-    it('should allow to pass if stuck position', async () => {
+    it('should allow to pass if stuck position', async() => {
         expect((await gameComponent.onClick(0, 7)).isSuccess()).toBeTrue(); // select brown piece
         expect((await gameComponent.pass()).isSuccess()).toBeFalse(); // can't pass now
         expect((await gameComponent.onClick(0, 7)).isSuccess()).toBeTrue(); // must reselect brown piece
@@ -75,14 +79,14 @@ describe('KamisadoComponent', () => {
         expect(gameComponent.canPass).toBeTrue();
         expect((await gameComponent.pass()).isSuccess()).toBeTrue();
     });
-    it('should disallow moving to invalid location', async () => {
+    it('should disallow moving to invalid location', async() => {
         expect((await gameComponent.onClick(0, 7)).isSuccess()).toBeTrue();
         expect((await gameComponent.onClick(5, 4)).isSuccess()).toBeFalse();
     });
-    it('should disallow choosing an incorrect piece', async () => {
+    it('should disallow choosing an incorrect piece', async() => {
         expect((await gameComponent.onClick(0, 0)).isSuccess()).toBeFalse();
     });
-    it('should disallow choosing a piece at end of the game', async () => {
+    it('should disallow choosing a piece at end of the game', async() => {
         expect((await gameComponent.onClick(0, 7)).isSuccess()).toBeTrue(); // select brown piece
         expect((await gameComponent.onClick(0, 1)).isSuccess()).toBeTrue(); // move it to the red
         expect((await gameComponent.onClick(4, 1)).isSuccess()).toBeTrue(); // move it to the blue
@@ -90,7 +94,7 @@ describe('KamisadoComponent', () => {
         expect((await gameComponent.onClick(4, 2)).isSuccess()).toBeTrue(); // move it to the purple
         expect((await gameComponent.onClick(5, 0)).isSuccess()).toBeTrue(); // move it to the winning position
         expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeFalse();
-        expect((await gameComponent.choosePiece(2, 0)).isSuccess()).toBeFalse(); // can't select a piece either
+        expect((gameComponent.choosePiece(2, 0)).isSuccess()).toBeFalse(); // can't select a piece either
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(KamisadoMove, 'decode').and.callThrough();

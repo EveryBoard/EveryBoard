@@ -10,13 +10,20 @@
                       [attr.y]="y * 75"
                       width="75" height="75"
                       style="stroke: 'black'; stroke-width: 8;"
-                      [ngStyle]="styleBackground(x, y)"/>
+                      [ngStyle]="styleBackground(x, y)"
+                      fill-opacity="0.6"/>
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== UNOCCUPIED"
                         [attr.cx]="37.5 + (x * 75)"
                         [attr.cy]="37.5 + (y * 75)"
                         r="25"
-                        style="stroke-width: 15"
+                        style="stroke-width: 8"
+                        [ngStyle]="stylePieceBorder(caseContent)"/>
+                <circle *ngIf="caseContent !== UNOCCUPIED"
+                        [attr.cx]="37.5 + (x * 75)"
+                        [attr.cy]="37.5 + (y * 75)"
+                        r="8"
+                        style="stroke-width: 0"
                         [ngStyle]="stylePiece(caseContent)"/>
             </g>
         </g>

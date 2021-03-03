@@ -54,8 +54,4 @@ export class KamisadoBoard {
         }
         return l;
     }
-    public static allPieces(board: NumberTable): KamisadoPiece[] {
-        return KamisadoBoard.allPieceCoords(board).map((c: Coord): KamisadoPiece =>
-            KamisadoBoard.getPieceAt(board, c));
-    }
 }
