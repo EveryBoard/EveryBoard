@@ -27,26 +27,26 @@ const Br: number = KamisadoPiece.ONE.BROWN.getValue();
 export const kamisadoDidacticial: DidacticialStep[] = [
     new DidacticialStep(
         'But du jeu',
-        `À Kamisado, il y a deux façons de gagner: soit en plaçant une de vos pièces sur la ligne de départ de
-         l'adversaire, soit en forçant l'adversaire à faire un coup qui empêche tout déplacement futur dans le jeu.
-         Ici, le joueur noir gagne car il a sa pièce rouge sur la ligne de départ du joueur blanc.`,
-        new KamisadoPartSlice(5, KamisadoColor.ORANGE, MGPOptional.of(new Coord(1, 3)), false, [
-            [__, re, __, __, __, __, __, __],
+        `Au Kamisado, il y a deux façons de gagner: soit en plaçant une de vos pièces sur la ligne de départ de
+         l'adversaire, soit en forçant l'adversaire à faire un coup qui bloque la partie.
+         Ici, le joueur noir gagne car il a sa pièce rouge sur la ligne de départ du joueur blanc, en haut à gauche.`,
+        new KamisadoPartSlice(5, KamisadoColor.ORANGE, MGPOptional.of(), false, [
+            [br, Bl, Pu, Pi, Ye, Re, Gr, Br],
             [__, __, __, __, __, __, __, __],
-            [__, __, __, Ye, Gr, or, Or, __],
-            [bl, __, __, Bl, __, __, __, pi],
-            [pu, __, Pu, __, ye, __, __, Pi],
-            [__, __, __, __, __, __, Re, gr],
-            [__, __, __, __, br, __, Br, __],
             [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, Or, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __],
+            [__, gr, re, ye, pi, pu, bl, or],
         ]),
         [], [], '', ''),
     new DidacticialStep(
         'Plateau de départ et déplacement initial',
         `Voici le plateau de départ.
-         À Kamisado, les pièces ne peuvent se déplacer que vers l'avant, orthogonalement ou diagonalement.
+         Au Kamisado, les pièces ne peuvent se déplacer que vers l'avant, verticalement ou diagonalement.
          Vous jouez avec les pièces noires, vous pouvez faire votre premier déplacement:
-         avancez votre pièce bleue de deux cases.`,
+         déplacez votre pièce bleue de deux cases verticalement.`,
         KamisadoPartSlice.getInitialSlice(),
         [KamisadoMove.of(new Coord(6, 7), new Coord(6, 5))],
         [],
@@ -78,7 +78,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
         `Noir s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
          Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
          Noir devra jouer son prochain tour en déplaçant lui-même sa pièce rose.`,
-        new KamisadoPartSlice(1, KamisadoColor.PINK, MGPOptional.empty(), false, [
+        new KamisadoPartSlice(1, KamisadoColor.PINK, MGPOptional.of(new Coord(3, 6)), false, [
             [Or, Bl, Pu, __, Ye, Re, Gr, Br],
             [__, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __],
@@ -88,7 +88,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [__, __, __, Pi, __, __, __, __],
             [br, gr, re, ye, pi, pu, __, or],
         ]),
-        [KamisadoMove.PASS],
+        [],
         [],
         'Parfait!',
         `Vous n'avez pas avancé votre pièce rose sur la case bleue`),
@@ -113,7 +113,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
         `Parfait! Blanc est obligé d'avancer son pion vert sur la case orange, vous obligeant à joueur avec
          votre pion orange. Hors, votre pion orange est bloqué et vous devez donc passer votre tour. Blanc
          devra ensuite aussi passer son tour car son pion orange est aussi bloqué : la partie est totalement
-         bloquée. Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie. Ici, blanc a déplacé
+         bloquée. Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie. Ici, blanc aura déplacé
          sa pièce verte en dernier, vous êtes donc vainqueurs !`,
         `Raté !`),
 ];

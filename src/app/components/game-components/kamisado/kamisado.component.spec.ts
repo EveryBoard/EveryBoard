@@ -32,7 +32,7 @@ const authenticationServiceStub = {
         return { pseudo: null, verified: null };
     },
 };
-fdescribe('KamisadoComponent', () => {
+describe('KamisadoComponent', () => {
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;

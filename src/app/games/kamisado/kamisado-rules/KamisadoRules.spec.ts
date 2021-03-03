@@ -11,7 +11,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 
-fdescribe('KamisadoRules:', () => {
+describe('KamisadoRules:', () => {
     let rules: KamisadoRules;
 
     const _: number = KamisadoPiece.NONE.getValue();

@@ -21,13 +21,14 @@ export class KamisadoFailure {
     public static DIRECTION_NOT_ALLOWED: string = `Vous ne pouvez pas vous déplacer dans cette direction`;
     public static MOVE_BLOCKED: string = `Ce mouvement est obstrué`;
     public static INVALID_DIRECTION: string = `La direction de ce déplacement est invalide`;
+    public static GAME_ENDED: string = `La partie est finie`
 }
 
 abstract class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> { }
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
     public getColorMatchingPiece(slice: KamisadoPartSlice): Array<Coord> {
-        if (slice.colorToPlay !== KamisadoColor.ANY) {
+        if (slice.coordToPlay.isPresent()) {
             // Only one piece can move, and its coord is stored in slice.coordToPlay
             return [slice.coordToPlay.get()];
         }
