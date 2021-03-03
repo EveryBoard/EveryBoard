@@ -22,25 +22,21 @@
         </g>
     </g>
 
-    <g *ngFor="let y of boardIndices;" [attr.y]="y">
-        <g *ngFor="let x of boardIndices;" [attr.x]="x">
-            <g *ngIf="isOnBoard(x, y)">
-                <polyline [attr.points]="getHexaCoordinatesForXY(x, y)"
-                          [ngStyle]="getHighlightStyle(x, y)"
-                          stroke-linecap="round"/>
-            </g>
-        </g>
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7"
+                refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" />
+        </marker>
+    </defs>
+    <g *ngFor="let arrow of arrows;">
+        <line [attr.x1]="arrow.x1"
+              [attr.y1]="arrow.y1"
+              [attr.x2]="arrow.x2"
+              [attr.y2]="arrow.y2"
+              stroke="#000"
+              stroke-width="3"
+              marker-end="url(#arrowhead)" />
     </g>
-
-    <!-- Highlight last move -->
-    <!-- <g *ngIf="lastMove !== null">
-        <polyline [attr.points]="getHexaCoordinates(center(lastMove.placement.x, lastMove.placement.y))"
-                  style="fill:none; stroke:#00caca;stroke-width:5;"/>
-        <g *ngFor="let capture of capturedCases()">
-            <polyline [attr.points]="getHexaCoordinates(center(capture.x, capture.y))"
-                      style="fill:none; stroke:#00caca;stroke-width:5;"/>
-        </g>
-    </g> -->
 
     <style>.text { font: 20 sans-serif; }</style>
     <g *ngFor="let player of [0, 1];">
