@@ -10,7 +10,8 @@ const X: number = Player.ONE.value;
 export const epaminondasDidacticial: DidacticialStep[] = [
     new DidacticialStep(
         'But du jeu (1/2)',
-        'Si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l\'adversaire que l\'adversaire n\'en a sur la ligne de départ du joueur, ce joueur gagne. Ici, c\'est au tour du joueur noir de jouer, il a donc gagné.',
+        `Si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l'adversaire que l'adversaire n'en a sur la ligne de départ du joueur, ce joueur gagne.
+         Ici, c'est au tour du joueur foncé de jouer, il a donc gagné.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, O, _, _, _, _, X, X, X, X],
             [_, _, _, _, _, O, _, _, _, _, _, _, _, _],
@@ -29,7 +30,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
     ),
     new DidacticialStep(
         'But du jeu (2/2)',
-        'Dans ce cas ci, c\'est au tour du joueur blanc, et celui-ci gagne, car il a deux pièces sur la ligne de départ du joueur noir, et noir n\'en a qu\'une sur la ligne de départ du joueur blanc.',
+        `Dans ce cas ci, c'est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n'en a qu'une sur la ligne de départ de Clair.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, O, _, _, _, _, X, X, X, X],
             [_, _, _, _, _, O, _, _, _, _, _, _, _, _],
@@ -47,26 +48,40 @@ export const epaminondasDidacticial: DidacticialStep[] = [
         [], [], null, null,
     ),
     new DidacticialStep(
-        'Déplacement simple',
-        'Voici le plateau de départ, c\'est au joueur noir de commencer, commençons simplement par un déplacement d\'une seule pièce, cliquez la pièce sur la colonne la plus à gauche et sur la deuxième rangée en commençant par le bas, puis cliquez une case plus haut',
+        'Déplacement de pièce',
+        `Voici le plateau de départ, c'est à Foncé de commencer.
+         Commençons simplement par un déplacement d'une seule pièce.
+         1. Cliquez la pièce sur la colonne la plus à gauche et sur la deuxième rangée en commençant par le bas.
+         2. Cliquez une case plus haut.`,
         EpaminondasPartSlice.getInitialSlice(),
         [new EpaminondasMove(0, 10, 1, 1, Direction.UP)],
         [],
-        'Voilà, rien de bien compliqué',
+        'Voilà, c\'est comme ça qu\'on déplace une seule pièce',
         'Raté, recommencez.',
     ),
     new DidacticialStep(
-        'Déplacement compliqué',
-        'Maintenant, pour déplacer plusieurs pièces sur une seule ligne (une phalange), cliquez sur la première pièce (la plus en bas à gauche) puis sur la dernière pièce de la phalange (celle juste au dessus pour l\'exemple), puis une ou deux cases plus haut, pour déplacer toute la phalange de deux cases, soit de la distance maximale possible qui vaut le nombre de pièce déplacées.',
+        'Déplacement de phalange',
+        `Maintenant, comment pour déplacer plusieurs pièces sur une seule ligne (une phalange)?
+         1. Cliquez sur la première pièce (la plus en bas à gauche).
+         2. Cliquez sur la dernière pièce de la phalange (celle juste au dessus pour l'exemple).
+         3. Cliquez une ou deux cases plus haut, pour déplacer toute la phalange de deux cases
+         (soit de la distance maximale légale qui vaut le nombre de pièce déplacées).`,
         EpaminondasPartSlice.getInitialSlice(),
         [new EpaminondasMove(0, 11, 2, 1, Direction.UP), new EpaminondasMove(0, 11, 2, 2, Direction.UP)],
         [],
-        'Bravo, les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées, et le déplacement doit se faire le long de cette ligne, en avant ou en arrière, il ne peut y avoir ni ennemis ni trous dans la phalange.',
+        `Bravo.
+         Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
+         Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
+         Il ne peut y avoir ni ennemis ni trous dans la phalange.`,
         'Raté',
     ),
     new DidacticialStep(
         'Capture',
-        'Pour capturer une phalange ennemie, il faut que celle-ci soit alignée avec la phalange en déplacement, qu\'elle soit plus courte, et que la première pièce de votre phalange aterrisse sur la première pièce de la phalange capturée. Capturez la phalange.',
+        `Pour capturer une phalange ennemie:
+         1. Il faut que celle-ci soit alignée avec la phalange en déplacement.
+         2. Qu'elle soit strictement plus courte.
+         3. Que la première pièce de votre phalange aterrisse sur la première pièce de la phalange capturée.
+         Capturez la phalange.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, _, _, _, X, X, X, X, X, X],
             [_, _, _, X, _, _, _, _, _, _, _, _, _, _],

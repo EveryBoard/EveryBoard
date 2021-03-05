@@ -12,7 +12,7 @@ export class HexaBoard<T> {
         const contents: Table<T> = ArrayUtils.mapBiArray(table, encoder.decode);
         return new HexaBoard(contents, (contents.length-1)/2, empty, encoder);
     }
-    private static checkTableFormat<T>(table: ReadonlyArray<ReadonlyArray<T>>) {
+    private static checkTableFormat<T>(table: Table<T>) {
         if (table.length % 2 == 0) {
             throw new Error('Cannot create an HexaBoard from a even-length table');
         }
@@ -25,9 +25,9 @@ export class HexaBoard<T> {
         return new HexaBoard(table, (table.length-1)/2, empty, encoder);
     }
     public constructor(public readonly contents: Table<T>,
-                        public readonly radius: number,
-                        public readonly empty: T,
-                        public readonly encoder: Encoder<T>) {
+                       public readonly radius: number,
+                       public readonly empty: T,
+                       public readonly encoder: Encoder<T>) {
     }
     public equals(other: HexaBoard<T>, equalT: (a: T, b: T) => boolean): boolean {
         if (this === other) return true;

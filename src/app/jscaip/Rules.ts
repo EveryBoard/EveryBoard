@@ -9,8 +9,10 @@ import { MGPValidation } from '../utils/mgp-validation/MGPValidation';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 
+    public static readonly CANNOT_CHOOSE_ENNEMY_PIECE: string =
+        'Vous ne pouvez pas choisir une pièce de l\'ennemi.';
     public static readonly MUST_CLICK_ON_EMPTY_CASE: MGPValidation =
-        MGPValidation.failure('You must click on empty case.');
+        MGPValidation.failure('Vous devez cliquer sur une case vide.');
 
     public constructor(public readonly sliceType: Type<S>) { // TODO: Make singleton ?
         this.setInitialBoard();

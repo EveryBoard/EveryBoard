@@ -18,7 +18,7 @@ export class DidacticialStep {
     public isClick(): boolean {
         return this.acceptedClicks.length > 0;
     }
-    public isNothing(): boolean {
+    public isInformation(): boolean {
         return this.acceptedClicks.length === 0 &&
                this.acceptedMoves.length === 0;
     }

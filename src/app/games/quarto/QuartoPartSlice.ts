@@ -10,15 +10,6 @@ export class QuartoPartSlice extends GamePartSlice {
         const board: number[][] = ArrayUtils.createBiArray(4, 4, QuartoPiece.NONE.value);
         return new QuartoPartSlice(board, 0, QuartoPiece.AAAA);
     }
-    public static getFullPawnsList(): Array<QuartoPiece> {
-        const filtered: Array<QuartoPiece> = [];
-        for (const q of QuartoPiece.pieces) {
-            if (q !== QuartoPiece.NONE) {
-                filtered.push(q);
-            }
-        }
-        return filtered;
-    }
     public static isGivable(piece: QuartoPiece, board: NumberTable, pieceInHand: QuartoPiece): boolean {
         if (piece === pieceInHand) {
             return false;
@@ -43,7 +34,7 @@ export class QuartoPartSlice extends GamePartSlice {
     public getRemainingPawns(): Array<QuartoPiece> {
         // return the pawn that are nor on the board nor the one that you have in your hand
         // (hence, the one that your about to put on the board)
-        const allPawn: Array<QuartoPiece> = QuartoPartSlice.getFullPawnsList();
+        const allPawn: ReadonlyArray<QuartoPiece> = QuartoPiece.pieces;
         const remainingPawns: Array<QuartoPiece> = [];
         for (const piece of allPawn) {
             if (QuartoPartSlice.isGivable(piece, this.board, this.pieceInHand)) {

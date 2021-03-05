@@ -36,7 +36,7 @@ export class QuartoPiece {
         QuartoPiece.BBAA,
         QuartoPiece.BBAB,
         QuartoPiece.BBBA,
-        QuartoPiece.BBBB
+        QuartoPiece.BBBB,
     ];
 
     public static toInt(piece: QuartoPiece): number {

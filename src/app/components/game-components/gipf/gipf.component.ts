@@ -14,22 +14,33 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
+export class Arrow {
+    public constructor(public readonly src: Coord,
+                       public readonly dst: Coord,
+                       public readonly x1: number,
+                       public readonly y1: number,
+                       public readonly x2: number,
+                       public readonly y2: number) {}
+}
+
 @Component({
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
 })
 export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice, GipfLegalityStatus> {
-    public rules: GipfRules = new GipfRules(GipfPartSlice);
-
     private static PIECE_SIZE: number = 30;
+
+    public rules: GipfRules = new GipfRules(GipfPartSlice);
 
     public scores: number[] = [0, 0];
 
     public readonly boardIndices: number[] = [-3, -2, -1, 0, 1, 2, 3];
 
-    public highlighted: Coord[] = [];
+    public arrows: Arrow[] = [];
     public captured: Coord[] = [];
     public moved: Coord[] = [];
+    public currentlyCaptured: Coord[] = [];
+    public currentlyMoved: Coord[] = [];
 
     public hexaLayout: HexaLayout =
         new HexaLayout(GipfComponent.PIECE_SIZE * 1.50, new Coord(300, 300), HexaOrientation.FLAT);
@@ -43,13 +54,10 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     // This slice contains the board that is actually displayed
     public constructedSlice: GipfPartSlice = null;
 
-    private possibleCaptures: ReadonlyArray<GipfCapture> = [];
-
+    public possibleCaptures: ReadonlyArray<GipfCapture> = [];
     private initialCaptures: GipfCapture[] = [];
-
     private placement: MGPOptional<GipfPlacement> = MGPOptional.empty();
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
-
     private finalCaptures: GipfCapture[] = [];
 
     constructor(snackBar: MatSnackBar) {
@@ -95,8 +103,12 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         return piece;
     }
     public isPiece(x: number, y: number): boolean {
-        const piece: GipfPiece = this.getPiece(x, y);
-        return piece !== GipfPiece.EMPTY;
+        if (this.constructedSlice.hexaBoard.isOnBoard(new Coord(x, y))) {
+            const piece: GipfPiece = this.getPiece(x, y);
+            return piece !== GipfPiece.EMPTY;
+        } else {
+            return false;
+        }
     }
     public getCenter(x: number, y: number): Coord {
         return this.hexaLayout.getCenter(new Coord(x, y));
@@ -113,6 +125,12 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     public getHexaCoordinatesForXY(x: number, y: number): string {
         return this.getHexaCoordinates(new Coord(x, y));
     }
+    private markCaptured(capture: GipfCapture): void {
+        capture.forEach((c: Coord) => {
+            console.log({markCaptured: c.toString()});
+            this.currentlyCaptured.push(c);
+        });
+    }
     private async selectCapture(coord: Coord): Promise<MGPValidation> {
         const captures: GipfCapture[] = [];
         this.possibleCaptures.forEach((candidate: GipfCapture) => {
@@ -123,10 +141,10 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         if (captures.length > 1) {
             // Two captures contain this coordinate
             // We don't let the user choose it as it is ambiguous
-            return MGPValidation.failure(
-                'Cette case fait partie de deux captures possibles, veuillez en choisir une autre');
+            return this.cancelMove(
+                `Cette case fait partie de deux captures possibles, veuillez en choisir une autre`);
         } else if (captures.length === 0) {
-            return MGPValidation.failure('Cette case ne fait partie d\'aucune capture');
+            return this.cancelMove(`Cette case ne fait partie d'aucune capture`);
         }
         const capture: GipfCapture = captures[0];
 
@@ -134,6 +152,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
+        this.markCaptured(capture);
         this.constructedSlice = this.rules.applyCapture(this.constructedSlice, capture);
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
@@ -152,12 +171,14 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         }
     }
     private moveToPlacementPhase(): MGPValidation {
+        this.arrows = [];
         this.movePhase = GipfComponent.PHASE_PLACEMENT_COORD;
         this.placementEntrance = MGPOptional.empty();
         this.placement = MGPOptional.empty();
         return MGPValidation.SUCCESS;
     }
     private moveToInitialCaptureOrPlacementPhase(): MGPValidation {
+        this.arrows = [];
         this.initialCaptures = [];
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
@@ -167,8 +188,21 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         }
         return MGPValidation.SUCCESS;
     }
+    private markMove(placement: GipfPlacement): void {
+        if (placement.direction.isPresent()) {
+            const dir: Direction = placement.direction.get();
+            for (let cur: Coord = placement.coord; this.isPiece(cur.x, cur.y); cur = cur.getNext(dir)) {
+                console.log({markMove: cur.toString()});
+                this.currentlyMoved.push(cur);
+            }
+        } else {
+            this.currentlyMoved.push(placement.coord);
+        }
+    }
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
+        this.arrows = [];
         this.finalCaptures = [];
+        this.markMove(this.placement.get());
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
             return this.tryMove(this.initialCaptures, this.placement.get(), this.finalCaptures);
@@ -176,6 +210,15 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
             this.movePhase = GipfComponent.PHASE_FINAL_CAPTURE;
         }
         return MGPValidation.SUCCESS;
+    }
+    private computeArrows(placement: Coord): void {
+        this.arrows = [];
+        for (const dir of this.rules.getAllDirectionsForEntrance(this.constructedSlice, placement)) {
+            const nextCase: Coord = placement.getNext(dir);
+            const center1: Coord = this.getCenter(placement.x, placement.y);
+            const center2: Coord = this.getCenter(nextCase.x, nextCase.y);
+            this.arrows.push(new Arrow(placement, nextCase, center1.x, center1.y, center2.x, center2.y));
+        }
     }
     private async selectPlacementCoord(coord: Coord): Promise<MGPValidation> {
         const validity: MGPValidation = this.rules.placementCoordValidity(this.constructedSlice, coord);
@@ -188,6 +231,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
             return this.selectPlacementDirection(MGPOptional.empty());
         } else {
             this.movePhase = GipfComponent.PHASE_PLACEMENT_DIRECTION;
+            this.computeArrows(coord);
         }
         return MGPValidation.SUCCESS;
     }
@@ -201,19 +245,29 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         return this.moveToFinalCapturePhaseOrTryMove();
     }
     private async tryMove(initialCaptures: ReadonlyArray<GipfCapture>,
-                    placement: GipfPlacement,
-                    finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
+                          placement: GipfPlacement,
+                          finalCaptures: ReadonlyArray<GipfCapture>): Promise<MGPValidation> {
         try {
             const move: GipfMove = new GipfMove(placement, initialCaptures, finalCaptures);
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+            const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+            if (validity.isSuccess()) {
+                this.captured = this.currentlyCaptured;
+                this.currentlyCaptured = [];
+                this.moved = this.currentlyMoved;
+                this.currentlyMoved = [];
+            }
+            return validity;
         } catch (error) {
             return this.cancelMove(error.message);
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         switch (this.movePhase) {
             case GipfComponent.PHASE_INITIAL_CAPTURE:
-                return this.selectCapture(new Coord(x, y));
             case GipfComponent.PHASE_FINAL_CAPTURE:
                 return this.selectCapture(new Coord(x, y));
             case GipfComponent.PHASE_PLACEMENT_COORD:
@@ -223,7 +277,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
                 try {
                     const dest: Coord = new Coord(x, y);
                     if (entrance.getDistance(dest) !== 1) {
-                        return this.cancelMove('Veuillez sélectionner une destination à une distance de 1 de l\'entrée');
+                        return this.cancelMove(`Veuillez sélectionner une destination à une distance de 1 de l'entrée`);
                     }
                     const direction: Direction = Direction.fromMove(entrance, new Coord(x, y));
                     return this.selectPlacementDirection(MGPOptional.of(direction));
@@ -231,7 +285,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
                     return this.cancelMove(error.message);
                 }
             default:
-                return MGPValidation.failure('Vous ne pouvez pas sélectionner de pièce pour le moment');
+                return this.cancelMove('Vous ne pouvez pas sélectionner de pièce pour le moment');
         }
     }
     public isInCapture(coord: Coord): boolean {
@@ -245,6 +299,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     public indicatesPossibleDirection(coord: Coord): boolean {
         const entrance: Coord = this.placementEntrance.get();
         for (const dir of this.rules.getAllDirectionsForEntrance(this.constructedSlice, entrance)) {
+            // TODO: should check that line is not complete
             if (entrance.getNext(dir).equals(coord)) {
                 return true;
             }
@@ -254,6 +309,16 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     public readonly NORMAL_STYLE: {[key: string]: string} = {
         'stroke-width': '8px',
         'fill': 'lightgrey',
+        'stroke': 'black',
+    };
+    public readonly MOVED_STYLE: {[key: string]: string} = {
+        'stroke-width': '8px',
+        'fill': 'grey',
+        'stroke': 'black',
+    };
+    public readonly CAPTURED_STYLE: {[key: string]: string} = {
+        'stroke-width': '8px',
+        'fill': 'red',
         'stroke': 'black',
     };
     public readonly CLICKABLE_HIGHLIGHT_STYLE: {[key: string]: string} = {
@@ -266,28 +331,13 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         'stroke-width': '0px',
     }
     public getCaseStyle(x: number, y: number): {[key: string]: string} {
-        return this.NORMAL_STYLE;
-    }
-    // TODO: store highlighted + captured + moved in a list
-    public getHighlightStyle(x: number, y: number): {[key: string]: string} {
-        switch (this.movePhase) {
-            case GipfComponent.PHASE_INITIAL_CAPTURE:
-            case GipfComponent.PHASE_FINAL_CAPTURE:
-                if (this.isInCapture(new Coord(x, y))) {
-                    return this.CLICKABLE_HIGHLIGHT_STYLE;
-                } else {
-                    return this.NO_HIGHLIGHT_STYLE;
-                }
-            case GipfComponent.PHASE_PLACEMENT_COORD:
-                return this.NO_HIGHLIGHT_STYLE;
-            case GipfComponent.PHASE_PLACEMENT_DIRECTION:
-                if (this.indicatesPossibleDirection(new Coord(x, y))) {
-                    return this.CLICKABLE_HIGHLIGHT_STYLE;
-                } else {
-                    return this.NO_HIGHLIGHT_STYLE;
-                }
-            default:
-                return this.NO_HIGHLIGHT_STYLE;
+        const coord: Coord = new Coord(x, y);
+        if (this.captured.some((c: Coord) => c.equals(coord))) {
+            return this.CAPTURED_STYLE;
+        } else if (this.moved.some((c: Coord) => c.equals(coord))) {
+            return this.MOVED_STYLE;
+        } else {
+            return this.NORMAL_STYLE;
         }
     }
     public getPieceStyle(x: number, y: number): {[key:string]: string} {

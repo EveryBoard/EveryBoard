@@ -4,47 +4,68 @@ import { PylosCoord } from '../pylos-coord/PylosCoord';
 
 export class PylosMove extends Move {
     public static fromClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
-        if (startingCoord == null) throw new Error('PylosMove: Starting Coord can\'t be null  if it\'s when created fromClimb.');
+        if (startingCoord == null) {
+            throw new Error('PylosMove: Starting Coord can\'t be null  if it\'s when created fromClimb.');
+        }
         const startingCoordOpt: MGPOptional<PylosCoord> = MGPOptional.of(startingCoord);
-        const capturesOptionals = PylosMove.checkCaptures(captures);
+        const capturesOptionals: {
+            firstCapture: MGPOptional<PylosCoord>,
+            secondCapture: MGPOptional<PylosCoord>
+        } = PylosMove.checkCaptures(captures);
         const newMove: PylosMove = new PylosMove(startingCoordOpt,
-            landingCoord,
-            capturesOptionals.firstCapture,
-            capturesOptionals.secondCapture);
+                                                 landingCoord,
+                                                 capturesOptionals.firstCapture,
+                                                 capturesOptionals.secondCapture);
         if (!landingCoord.isUpperThan(startingCoord)) {
             throw new Error('PylosMove: When piece move it must move upward.');
         }
         return newMove;
     }
-    public static checkCaptures(captures: PylosCoord[]): { firstCapture: MGPOptional<PylosCoord>, secondCapture: MGPOptional<PylosCoord> } {
+    public static checkCaptures(captures: PylosCoord[]):
+        { firstCapture: MGPOptional<PylosCoord>, secondCapture: MGPOptional<PylosCoord> }
+    {
         let firstCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
         let secondCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
         if (captures.length > 0) {
-            if (captures[0] == null) throw new Error('PylosMove: first capture cannot be null, use empty list instead.');
+            if (captures[0] == null) {
+                throw new Error('PylosMove: first capture cannot be null, use empty list instead.');
+            }
             firstCapture = MGPOptional.of(captures[0]);
             if (captures.length > 1) {
-                if (captures[1] == null) throw new Error('PylosMove: second capture cannot be null, use 1 sized list instead.');
-                if (captures[1].equals(captures[0])) throw new Error('PylosMove: should not capture twice same piece.');
+                if (captures[1] == null) {
+                    throw new Error('PylosMove: second capture cannot be null, use 1 sized list instead.');
+                }
+                if (captures[1].equals(captures[0])) {
+                    throw new Error('PylosMove: should not capture twice same piece.');
+                }
                 secondCapture = MGPOptional.of(captures[1]);
-                if (captures.length > 2) throw new Error('PylosMove: can\'t capture that much piece.');
+                if (captures.length > 2) {
+                    throw new Error('PylosMove: can\'t capture that much piece.');
+                }
             }
         }
         return { firstCapture, secondCapture };
     }
     public static fromDrop(landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         const startingCoord: MGPOptional<PylosCoord> = MGPOptional.empty();
-        const capturesOptionals = PylosMove.checkCaptures(captures);
+        const capturesOptionals: {
+            firstCapture: MGPOptional<PylosCoord>,
+            secondCapture: MGPOptional<PylosCoord>
+        } = PylosMove.checkCaptures(captures);
         return new PylosMove(startingCoord,
-            landingCoord,
-            capturesOptionals.firstCapture,
-            capturesOptionals.secondCapture);
+                             landingCoord,
+                             capturesOptionals.firstCapture,
+                             capturesOptionals.secondCapture);
     }
     public static changeCapture(move: PylosMove, captures: PylosCoord[]): PylosMove {
-        const capturesOptionals = PylosMove.checkCaptures(captures);
+        const capturesOptionals: {
+            firstCapture: MGPOptional<PylosCoord>,
+            secondCapture: MGPOptional<PylosCoord>
+        } = PylosMove.checkCaptures(captures);
         return new PylosMove(move.startingCoord,
-            move.landingCoord,
-            capturesOptionals.firstCapture,
-            capturesOptionals.secondCapture);
+                             move.landingCoord,
+                             capturesOptionals.firstCapture,
+                             capturesOptionals.secondCapture);
     }
     public static encode(move: PylosMove): number {
         return move.encode();
@@ -76,19 +97,29 @@ export class PylosMove extends Move {
         const firstCapture: string = this.firstCapture.isAbsent() ? '-' : this.firstCapture.get().toShortString();
         const secondCapture: string = this.secondCapture.isAbsent() ? '-' : this.secondCapture.get().toShortString();
         return 'PylosMove(' +
-                   startingCoord + ', ' +
-                   this.landingCoord.toShortString() + ', ' +
-                   firstCapture + ', ' +
-                   secondCapture +
+               startingCoord + ', ' +
+               this.landingCoord.toShortString() + ', ' +
+               firstCapture + ', ' +
+               secondCapture +
                ')';
     }
     public equals(o: PylosMove): boolean {
-        const coordComparator: (a: PylosCoord, b: PylosCoord) => boolean = (a: PylosCoord, b: PylosCoord) => a.equals(b);
+        const coordComparator: (a: PylosCoord, b: PylosCoord) => boolean =
+            (a: PylosCoord, b: PylosCoord) => a.equals(b);
         if (o === this) return true;
         if (!o.startingCoord.equals(this.startingCoord, coordComparator)) return false;
-        if (!o.firstCapture.equals(this.firstCapture, coordComparator)) return false;
-        if (!o.secondCapture.equals(this.secondCapture, coordComparator)) return false;
-        return this.landingCoord.equals(o.landingCoord);
+        if (!this.landingCoord.equals(o.landingCoord)) return false;
+        const firstEquals: boolean =
+            o.firstCapture.equals(this.firstCapture, coordComparator);
+        const secondEquals: boolean =
+            o.secondCapture.equals(this.secondCapture, coordComparator);
+        const firstCrossedEquals: boolean =
+            o.firstCapture.equals(this.secondCapture, coordComparator);
+        const secondCrossedEquals: boolean =
+            o.secondCapture.equals(this.firstCapture, coordComparator);
+        if (firstEquals && secondEquals) return true;
+        if (firstCrossedEquals && secondCrossedEquals) return true;
+        return false;
     }
     public encode(): number {
         // Encoded as second Capture then first then startingCoord then landingCoord

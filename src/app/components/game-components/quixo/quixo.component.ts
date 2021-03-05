@@ -9,6 +9,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { Rules } from 'src/app/jscaip/Rules';
 
 @Component({
     selector: 'app-quixo',
@@ -43,22 +44,15 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     public encodeMove(move: QuixoMove): number {
         return QuixoMove.encode(move);
     }
-    public getPieceStyle(x: number, y: number): any {
+    public getPieceStyle(x: number, y: number): { [key: string]: string } {
         const coord: Coord = new Coord(x, y);
-        const c: number = this.board[y][x];
-        const fill: string = this.getPieceFill(c);
-        let stroke = 'black';
+        const c: Player = Player.of(this.board[y][x]);
+        const fill: string = this.getPlayerColor(c);
+        let stroke: string = 'black';
 
         if (coord.equals(this.chosenCoord)) stroke = 'grey';
         else if (coord.equals(this.lastMoveCoord)) stroke = 'orange';
         return { fill, stroke };
-    }
-    public getPieceFill(c: number): string {
-        switch (c) {
-        case Player.NONE.value: return 'lightgrey';
-        case Player.ZERO.value: return 'blue';
-        case Player.ONE.value: return 'red';
-        }
     }
     public onBoardClick(x: number, y: number): MGPValidation {
         const clickedCoord: Coord = new Coord(x, y);
@@ -67,7 +61,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
             return this.cancelMove('Unvalid coord ' + clickedCoord.toString());
         }
         if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove('Cannot click on an ennemy piece ' + clickedCoord.toString());
+            return this.cancelMove(Rules.CANNOT_CHOOSE_ENNEMY_PIECE + clickedCoord.toString());
         } else {
             this.chosenCoord = clickedCoord;
             return MGPValidation.SUCCESS;

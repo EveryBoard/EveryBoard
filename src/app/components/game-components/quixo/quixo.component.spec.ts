@@ -17,6 +17,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { Rules } from 'src/app/jscaip/Rules';
 
 const activatedRouteStub = {
     snapshot: {
@@ -74,8 +75,8 @@ describe('QuixoComponent', () => {
         expect(gameComponent).toBeTruthy('QuixoComponent should be created');
     });
     it('should style piece correctly', () => {
-        expect(gameComponent.getPieceFill(Player.ZERO.value)).toBe('blue');
-        expect(gameComponent.getPieceFill(Player.ONE.value)).toBe('red');
+        expect(gameComponent.getPlayerColor(Player.ZERO)).toBe('#994d00');
+        expect(gameComponent.getPlayerColor(Player.ONE)).toBe('#ffc34d');
 
         gameComponent.chosenCoord = new Coord(0, 0);
         expect(gameComponent.getPieceStyle(0, 0)).toEqual({ fill: 'lightgrey', stroke: 'grey' });
@@ -102,7 +103,7 @@ describe('QuixoComponent', () => {
         expect(legal.isSuccess()).toBeTrue();
 
         expect(gameComponent.onBoardClick(4, 0).isFailure()).toBeTrue();
-        expect(gameComponent.message).toHaveBeenCalledWith('Cannot click on an ennemy piece (4, 0)');
+        expect(gameComponent.message).toHaveBeenCalledWith(Rules.CANNOT_CHOOSE_ENNEMY_PIECE + '(4, 0)');
 
         expect(gameComponent.onBoardClick(1, 1).isFailure()).toBeTrue();
         expect(gameComponent.message).toHaveBeenCalledWith('Unvalid coord (1, 1)');
