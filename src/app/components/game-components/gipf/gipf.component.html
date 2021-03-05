@@ -3,8 +3,8 @@
      viewBox="0 0 700 700"
      preserveAspectRatio="xMidYMid meet">
 
-    <g *ngFor="let y of boardIndices;" [attr.y]="y">
-        <g *ngFor="let x of boardIndices;" [attr.x]="x">
+    <g *ngFor="let y of boardIndices;">
+        <g *ngFor="let x of boardIndices;">
             <g *ngIf="isOnBoard(x, y)">
                 <g (click)="onClick(x, y)" id="click_{{ x }}_{{ y }}"> -->
                     <!-- Background -->
@@ -22,6 +22,15 @@
         </g>
     </g>
 
+    <g *ngFor="let capture of possibleCaptures;">
+        <g *ngFor="let case of capture.capturedCases;">
+            <polyline [attr.points]="getHexaCoordinatesForXY(case.x, case.y)"
+                      [ngStyle]="CLICKABLE_HIGHLIGHT_STYLE"
+                      stroke-linecap="round"/>
+        </g>
+    </g>
+
+
     <defs>
         <marker id="arrowhead" markerWidth="10" markerHeight="7"
                 refX="5" refY="3.5" orient="auto">
@@ -35,15 +44,16 @@
               [attr.y2]="arrow.y2"
               stroke="#000"
               stroke-width="3"
-              marker-end="url(#arrowhead)" />
+              marker-end="url(#arrowhead)"
+              (click)="onClick(arrow.dst.x, arrow.dst.y)"/>
     </g>
 
     <style>.text { font: 20 sans-serif; }</style>
     <g *ngFor="let player of [0, 1];">
-        <text x="400" [attr.y]="30+(getPieceSize()+20)*player" class="text">Pièces du joueur {{player+1}}</text>
+        <text x="410" [attr.y]="30+(getPieceSize()+20)*player" class="text">Pièces du joueur {{player+1}}</text>
         <g *ngFor="let p of getPlayerSidePieces(player);">
             <circle id="piece_{{ player }}_{{ p }}"
-                    [attr.cx] = "620+(p * getPieceSize()/3)"
+                    [attr.cx] = "550+(p * getPieceSize()/3)"
                     [attr.cy]="30+(getPieceSize()+20)*player-5"
                     [attr.r]="getPieceSize()/3"
                     [ngStyle]="getPlayerPieceStyle(player)"/>

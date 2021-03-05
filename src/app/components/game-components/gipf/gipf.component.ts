@@ -15,7 +15,9 @@ import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 export class Arrow {
-    public constructor(public readonly x1: number,
+    public constructor(public readonly src: Coord,
+                       public readonly dst: Coord,
+                       public readonly x1: number,
                        public readonly y1: number,
                        public readonly x2: number,
                        public readonly y2: number) {}
@@ -52,7 +54,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     // This slice contains the board that is actually displayed
     public constructedSlice: GipfPartSlice = null;
 
-    private possibleCaptures: ReadonlyArray<GipfCapture> = [];
+    public possibleCaptures: ReadonlyArray<GipfCapture> = [];
     private initialCaptures: GipfCapture[] = [];
     private placement: MGPOptional<GipfPlacement> = MGPOptional.empty();
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
@@ -101,8 +103,12 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         return piece;
     }
     public isPiece(x: number, y: number): boolean {
-        const piece: GipfPiece = this.getPiece(x, y);
-        return piece !== GipfPiece.EMPTY;
+        if (this.constructedSlice.hexaBoard.isOnBoard(new Coord(x, y))) {
+            const piece: GipfPiece = this.getPiece(x, y);
+            return piece !== GipfPiece.EMPTY;
+        } else {
+            return false;
+        }
     }
     public getCenter(x: number, y: number): Coord {
         return this.hexaLayout.getCenter(new Coord(x, y));
@@ -118,6 +124,12 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     }
     public getHexaCoordinatesForXY(x: number, y: number): string {
         return this.getHexaCoordinates(new Coord(x, y));
+    }
+    private markCaptured(capture: GipfCapture): void {
+        capture.forEach((c: Coord) => {
+            console.log({markCaptured: c.toString()});
+            this.currentlyCaptured.push(c);
+        });
     }
     private async selectCapture(coord: Coord): Promise<MGPValidation> {
         const captures: GipfCapture[] = [];
@@ -140,6 +152,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
+        this.markCaptured(capture);
         this.constructedSlice = this.rules.applyCapture(this.constructedSlice, capture);
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
@@ -157,16 +170,8 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
             return MGPValidation.SUCCESS;
         }
     }
-    private markCaptured(capture: GipfCapture): void {
-        capture.forEach((c: Coord) => {
-            this.currentlyCaptured.push(c);
-        });
-    }
     private moveToPlacementPhase(): MGPValidation {
         this.arrows = [];
-        this.initialCaptures.forEach((c: GipfCapture) => {
-            this.markCaptured(c);
-        });
         this.movePhase = GipfComponent.PHASE_PLACEMENT_COORD;
         this.placementEntrance = MGPOptional.empty();
         this.placement = MGPOptional.empty();
@@ -187,6 +192,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         if (placement.direction.isPresent()) {
             const dir: Direction = placement.direction.get();
             for (let cur: Coord = placement.coord; this.isPiece(cur.x, cur.y); cur = cur.getNext(dir)) {
+                console.log({markMove: cur.toString()});
                 this.currentlyMoved.push(cur);
             }
         } else {
@@ -209,11 +215,9 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         this.arrows = [];
         for (const dir of this.rules.getAllDirectionsForEntrance(this.constructedSlice, placement)) {
             const nextCase: Coord = placement.getNext(dir);
-            console.log({arrowFromX: placement.x, arrowFromY: placement.y, arrowToX: nextCase.x, arrowToY: nextCase.y});
             const center1: Coord = this.getCenter(placement.x, placement.y);
             const center2: Coord = this.getCenter(nextCase.x, nextCase.y);
-            console.log({x: center2.x, y: center2.y});
-            this.arrows.push(new Arrow(center1.x, center1.y, center2.x, center2.y));
+            this.arrows.push(new Arrow(placement, nextCase, center1.x, center1.y, center2.x, center2.y));
         }
     }
     private async selectPlacementCoord(coord: Coord): Promise<MGPValidation> {
@@ -328,33 +332,12 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     }
     public getCaseStyle(x: number, y: number): {[key: string]: string} {
         const coord: Coord = new Coord(x, y);
-        if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return this.MOVED_STYLE;
-        } else if (this.captured.some((c: Coord) => c.equals(coord))) {
+        if (this.captured.some((c: Coord) => c.equals(coord))) {
             return this.CAPTURED_STYLE;
+        } else if (this.moved.some((c: Coord) => c.equals(coord))) {
+            return this.MOVED_STYLE;
         } else {
             return this.NORMAL_STYLE;
-        }
-    }
-    public getHighlightStyle(x: number, y: number): {[key: string]: string} {
-        switch (this.movePhase) {
-            case GipfComponent.PHASE_INITIAL_CAPTURE:
-            case GipfComponent.PHASE_FINAL_CAPTURE:
-                if (this.isInCapture(new Coord(x, y))) {
-                    return this.CLICKABLE_HIGHLIGHT_STYLE;
-                } else {
-                    return this.NO_HIGHLIGHT_STYLE;
-                }
-            case GipfComponent.PHASE_PLACEMENT_COORD:
-                return this.NO_HIGHLIGHT_STYLE;
-            case GipfComponent.PHASE_PLACEMENT_DIRECTION:
-                if (this.indicatesPossibleDirection(new Coord(x, y))) {
-                    return this.CLICKABLE_HIGHLIGHT_STYLE;
-                } else {
-                    return this.NO_HIGHLIGHT_STYLE;
-                }
-            default:
-                return this.NO_HIGHLIGHT_STYLE;
         }
     }
     public getPieceStyle(x: number, y: number): {[key:string]: string} {
