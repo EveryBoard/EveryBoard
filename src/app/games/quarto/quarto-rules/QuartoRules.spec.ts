@@ -57,7 +57,7 @@ describe('QuartoRules', () => {
             [16, 16, 16, 16],
             [16, 16, 16, 16],
             [16, 16, 16, 16],
-            [0, 16, 16, 16]
+            [0, 16, 16, 16],
         ];
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AABA);
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAA);
@@ -75,7 +75,7 @@ describe('QuartoRules', () => {
             [16, 16, 16, 16],
             [16, 16, 16, 16],
             [16, 16, 16, 16],
-            [0, 16, 16, 16]
+            [0, 16, 16, 16],
         ];
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AABA);
         const move: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BBAA);
@@ -92,13 +92,13 @@ describe('QuartoRules', () => {
             [15, 14, 13, 16],
             [16, 16, 16, 16],
             [16, 16, 16, 16],
-            [0, 16, 16, 16]
+            [0, 16, 16, 16],
         ];
         const expectedBoard: number[][] = [
             [15, 14, 13, 12],
             [16, 16, 16, 16],
             [16, 16, 16, 16],
-            [0, 16, 16, 16]
+            [0, 16, 16, 16],
         ];
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 4, QuartoPiece.BBAA);
         const move: QuartoMove = new QuartoMove(3, 0, QuartoPiece.AAAB);
@@ -115,13 +115,13 @@ describe('QuartoRules', () => {
             [5, 16, 3, 16],
             [16, 1, 11, 16],
             [16, 0, 12, 14],
-            [7, 16, 9, 16]
+            [7, 16, 9, 16],
         ];
         const expectedBoard: number[][] = [
             [5, 16, 3, 16],
             [16, 1, 11, 16],
             [16, 0, 12, 14],
-            [7, 16, 9, 13]
+            [7, 16, 9, 13],
         ];
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 9, QuartoPiece.BBAB);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.AABA);

@@ -1,6 +1,6 @@
 import { TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 
-import { GipfComponent } from './gipf.component';
+import { Arrow, GipfComponent } from './gipf.component';
 import { AppModule } from 'src/app/app.module';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
@@ -109,9 +109,16 @@ describe('GipfComponent', () => {
     }));
     it('should show possible directions after selecting an occupied placement coord', fakeAsync(async() => {
         await expectClickSuccess('#click_3_0', testElements);
-        expect(getComponent().getHighlightStyle(2, 0)) .toEqual(getComponent().CLICKABLE_HIGHLIGHT_STYLE);
-        expect(getComponent().getHighlightStyle(2, 1)).toEqual(getComponent().CLICKABLE_HIGHLIGHT_STYLE);
-        expect(getComponent().getHighlightStyle(3, -1)).toEqual(getComponent().CLICKABLE_HIGHLIGHT_STYLE);
+        expect(getComponent().arrows.length).toBe(3);
+        expect(getComponent().arrows.some((arrow: Arrow) => {
+            return arrow.src.equals(new Coord(3, 0)) && arrow.dst.equals(new Coord(2, 0));
+        }));
+        expect(getComponent().arrows.some((arrow: Arrow) => {
+            return arrow.src.equals(new Coord(3, 0)) && arrow.dst.equals(new Coord(2, 1));
+        }));
+        expect(getComponent().arrows.some((arrow: Arrow) => {
+            return arrow.src.equals(new Coord(3, 0)) && arrow.dst.equals(new Coord(3, -1));
+        }));
     }));
     it('should not accept selecting something else than one of the proposed direction', fakeAsync(async() => {
         await expectClickSuccess('#click_3_0', testElements);

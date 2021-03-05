@@ -8,23 +8,22 @@ import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { UserService } from 'src/app/services/user/UserService';
 import { display } from 'src/app/utils/collection-lib/utils';
-import { awaleDidacticial } from './didacticials/awale-didacticial';
-import { p4Didacticial } from './didacticials/p4-didacticial';
 import { DidacticialStep } from './DidacticialStep';
-import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
-import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
-import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { goDidacticial } from './didacticials/go-didacticial';
+
+import { awaleDidacticial } from './didacticials/awale-didacticial';
+import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
 import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
+import { goDidacticial } from './didacticials/go-didacticial';
+import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
+import { p4Didacticial } from './didacticials/p4-didacticial';
+import { pylosDidacticial } from './didacticials/pylos-didacticial';
+import { quartoDidacticial } from './didacticials/quarto-didacticial';
+import { quixoDidacticial } from './didacticials/quixo-didacticial';
 import { reversiDidacticial } from './didacticials/reversi-didacticial';
 import { saharaDidacticial } from './didacticials/sahara-didacticial';
-import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
-import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { tablutDidacticial } from './didacticials/tablut-didacticial';
 import { siamDidacticial } from './didacticials/siam-didacticial';
-import { quixoDidacticial } from './didacticials/quixo-didacticial';
-import { pylosDidacticial } from './didacticials/pylos-didacticial';
+import { tablutDidacticial } from './didacticials/tablut-didacticial';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -81,15 +80,12 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         const didacticials: { [key: string]: DidacticialStep[] } = {
             Awale: awaleDidacticial,
             Dvonn: dvonnDidacticial,
-            Kamisado: kamisadoDidacticial,
             Epaminondas: epaminondasDidacticial,
             Go: goDidacticial,
+            Kamisado: kamisadoDidacticial,
             P4: p4Didacticial,
             Pylos: pylosDidacticial,
-            Quarto: [
-                new DidacticialStep('title zero', 'instruction zero', QuartoPartSlice.getInitialSlice(), [], ['#chooseCoord_0_0'], 'bravo', 'bouh'),
-                new DidacticialStep('title one', 'instruction one', QuartoPartSlice.getInitialSlice(), [new QuartoMove(0, 0, QuartoPiece.BBBB)], [], 'bravo', 'bouh'),
-            ],
+            Quarto: quartoDidacticial,
             Quixo: quixoDidacticial,
             Reversi: reversiDidacticial,
             Sahara: saharaDidacticial,

@@ -176,7 +176,7 @@ describe('DidacticialGameWrapperComponent', () => {
     }));
     it('Should show highlight of first click when awaiting a move on multiclick game component', fakeAsync(async() => {
         // Given a DidacticialStep with several moves
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
                 'title',
                 'Put your piece in a corner and give the opposite one.',
@@ -192,6 +192,8 @@ describe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
+
         // when doing that move
         await expectClickSuccess('#chooseCoord_3_3', testElements);
         tick(11);
@@ -202,7 +204,7 @@ describe('DidacticialGameWrapperComponent', () => {
     }));
     it('Should show success message after step success (one of several moves)', fakeAsync(async() => {
         // Given a DidacticialStep with several moves
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
                 'title',
                 'Put your piece in a corner and give the opposite one.',
@@ -218,6 +220,8 @@ describe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
+
         // when doing that move
         await expectClickSuccess('#chooseCoord_0_0', testElements);
         tick(10);
@@ -237,7 +241,7 @@ describe('DidacticialGameWrapperComponent', () => {
     }));
     it('Should show failure message after step failure (one of several moves)', fakeAsync(async() => {
         // Given a DidacticialStep with several move
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
                 'title',
                 'Put your piece in a corner and give the opposite one.',
@@ -253,6 +257,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
 
         // when doing another move
         await expectClickSuccess('#chooseCoord_1_1', testElements);
@@ -273,7 +278,7 @@ describe('DidacticialGameWrapperComponent', () => {
     }));
     it('Should show success message after step success (one of several clics)', fakeAsync(async() => {
         // Given a DidacticialStep with several clics
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
                 'title',
                 'Click on (0, 0) or (3, 3)',
@@ -284,6 +289,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
 
         // when doing that move
         await expectClickSuccess('#chooseCoord_0_0', testElements);
@@ -296,7 +302,7 @@ describe('DidacticialGameWrapperComponent', () => {
     }));
     it('Should show failure message after step failure (one of several clics)', fakeAsync(async() => {
         // Given a DidacticialStep with several clics
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
                 'title',
                 'Click on (0, 0) or (3, 3)',
@@ -307,6 +313,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
 
         // when doing another move
         await expectClickSuccess('#chooseCoord_1_1', testElements);
@@ -403,7 +410,7 @@ describe('DidacticialGameWrapperComponent', () => {
     // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
     it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {
         // Given any DidacticialStep where an invalid move has been done
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
                 'title',
                 'instruction',
@@ -414,6 +421,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
         await expectClickSuccess('#choosePiece_8', testElements);
         tick(10);
         const expectations: MoveExpectations = {
@@ -436,7 +444,7 @@ describe('DidacticialGameWrapperComponent', () => {
     }));
     it('Should start step again after clicking "retry" on step success', fakeAsync(async() => {
         // Given any DidacticialStep
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
                 'title',
                 'instruction',
@@ -447,6 +455,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
         // when doing another move, then clicking retry
         await expectClickSuccess('#choosePiece_15', testElements);
         tick(10);
@@ -468,7 +477,7 @@ describe('DidacticialGameWrapperComponent', () => {
     }));
     it('Should forbid clicking again on the board after success', fakeAsync(async() => {
         // Given a DidacticialStep on which a valid move has been done.
-        component.steps = [
+        const didacticial: DidacticialStep[] = [
             new DidacticialStep(
                 'title',
                 'Put your piece in a corner and give the opposite one.',
@@ -484,6 +493,8 @@ describe('DidacticialGameWrapperComponent', () => {
                 'Perdu.',
             ),
         ];
+        component.startDidacticial(didacticial);
+
         await expectClickSuccess('#chooseCoord_0_0', testElements);
         tick(10);
         const expectations: MoveExpectations = {
