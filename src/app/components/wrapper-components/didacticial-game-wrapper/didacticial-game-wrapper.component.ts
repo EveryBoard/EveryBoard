@@ -23,6 +23,8 @@ import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { tablutDidacticial } from './didacticials/tablut-didacticial';
 import { siamDidacticial } from './didacticials/siam-didacticial';
+import { quixoDidacticial } from './didacticials/quixo-didacticial';
+import { pylosDidacticial } from './didacticials/pylos-didacticial';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -83,10 +85,12 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Epaminondas: epaminondasDidacticial,
             Go: goDidacticial,
             P4: p4Didacticial,
+            Pylos: pylosDidacticial,
             Quarto: [
                 new DidacticialStep('title zero', 'instruction zero', QuartoPartSlice.getInitialSlice(), [], ['#chooseCoord_0_0'], 'bravo', 'bouh'),
                 new DidacticialStep('title one', 'instruction one', QuartoPartSlice.getInitialSlice(), [new QuartoMove(0, 0, QuartoPiece.BBBB)], [], 'bravo', 'bouh'),
             ],
+            Quixo: quixoDidacticial,
             Reversi: reversiDidacticial,
             Sahara: saharaDidacticial,
             Siam: siamDidacticial,
