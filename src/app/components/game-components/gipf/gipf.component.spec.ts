@@ -94,6 +94,10 @@ describe('GipfComponent', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(testElements.gameComponent).toBeTruthy('GipfComponent should be created');
     });
+    it('should fail on selecting an invalid direction', fakeAsync(async() => {
+        await expectClickSuccess('#click_0_3', testElements);
+        await expectClickFail('#click_1_1', testElements, 'Direction du mouvement invalide');
+    }));
     it('should allow placement directly resulting in a move if there is no initial capture', fakeAsync(async() => {
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(-3, 1), MGPOptional.empty()), [], []);
         const expectation: MoveExpectations = {
@@ -339,12 +343,11 @@ describe('GipfComponent', () => {
         await expectMoveSuccess('#click_-3_1', testElements, expectation);
 
         const expectToBeRed: (x: number, y: number) => void = (x: number, y: number) => {
-            // This works
             expect(getComponent().getCaseStyle(x, y).fill).toBe('red');
-            // But not this... TODO
-            // const element: DebugElement = testElements.debugElement.query(By.css('#click_' + x + '_' + y));
-            // expect(element).toBeTruthy();
-            // expect(element.children[0].attributes.style).toContain('fill: red;');
+            const element: DebugElement = testElements.debugElement.query(By.css('#click_' + x + '_' + y));
+            expect(element).toBeTruthy();
+            // In a regexp, \s means any non-word character
+            expect(element.children[0].attributes.style).toMatch(/\sfill: red;/);
         };
         expectToBeRed(0, -1);
         expectToBeRed(0, 0);
@@ -381,5 +384,98 @@ describe('GipfComponent', () => {
 
         expect(getComponent().getPlayerSidePieces(0).length).toBe(8);
         expect(getComponent().getPlayerSidePieces(1).length).toBe(5);
+    }));
+    it('should not accept placement on a complete line', fakeAsync(async() => {
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, A, _, B],
+            [_, _, _, _, _, A, _],
+            [_, _, _, _, B, _, _],
+            [_, _, _, A, _, _, _],
+            [_, _, B, _, _, _, _],
+            [_, B, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
+
+        await expectClickSuccess('#click_-2_3', testElements);
+        await expectClickFail('#click_-1_2', testElements, 'Une pièce ne peut pas être placée sur une ligne complète');
+    }));
+    it('should accept moves with two initial captures', fakeAsync(async() => {
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, _, _, _],
+            [_, _, A, _, A, _, _],
+            [_, _, A, _, A, _, _],
+            [_, _, A, _, A, _, _],
+            [_, _, A, _, A, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
+
+        const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(3, 0),
+                                                              MGPOptional.empty()),
+                                            [
+                                                new GipfCapture([
+                                                    new Coord(1, 1), new Coord(1, 0),
+                                                    new Coord(1, -1), new Coord(1, -2),
+                                                ]),
+                                                new GipfCapture([
+                                                    new Coord(-1, 1), new Coord(-1, 0),
+                                                    new Coord(-1, -1), new Coord(-1, -2),
+                                                ]),
+                                            ], []);
+
+        const expectation: MoveExpectations = {
+            move,
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectClickSuccess('#click_1_1', testElements);
+        await expectClickSuccess('#click_-1_1', testElements);
+        await expectMoveSuccess('#click_3_0', testElements, expectation);
+    }));
+    it('should accept moves with two final captures', fakeAsync(async() => {
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, _, _, _],
+            [_, _, A, _, A, _, _],
+            [_, _, A, _, A, _, _],
+            [_, _, A, _, A, _, _],
+            [_, _, _, A, B, A, A],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
+
+        const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(2, 1),
+                                                              MGPOptional.of(HexaDirection.UP_LEFT)),
+                                            [],
+                                            [
+                                                new GipfCapture([
+                                                    new Coord(1, 1), new Coord(1, 0),
+                                                    new Coord(1, -1), new Coord(1, -2),
+                                                ]),
+                                                new GipfCapture([
+                                                    new Coord(-1, 1), new Coord(-1, 0),
+                                                    new Coord(-1, -1), new Coord(-1, -2),
+                                                ]),
+                                            ]);
+
+        const expectation: MoveExpectations = {
+            move,
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectClickSuccess('#click_2_1', testElements); // select placement coord
+        await expectClickSuccess('#click_1_1', testElements); // select direction
+        await expectClickSuccess('#click_1_1', testElements); // select first capture
+        await expectMoveSuccess('#click_-1_1', testElements, expectation); // select second capture
     }));
 });

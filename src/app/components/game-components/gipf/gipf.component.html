@@ -6,12 +6,11 @@
     <g *ngFor="let y of boardIndices;">
         <g *ngFor="let x of boardIndices;">
             <g *ngIf="isOnBoard(x, y)">
-                <g (click)="onClick(x, y)" id="click_{{ x }}_{{ y }}"> -->
-                    <!-- Background -->
+                <g (click)="onClick(x, y)"
+                   id="click_{{ x }}_{{ y }}">
                     <polyline [attr.points]="getHexaCoordinatesForXY(x, y)"
                               [ngStyle]="getCaseStyle(x, y)"
                               stroke-linecap="round"/>
-                    <!-- Piece -->
                     <circle *ngIf="isPiece(x, y)"
                             [attr.cx]="getCenter(x, y).x"
                             [attr.cy]="getCenter(x, y).y"
@@ -29,7 +28,6 @@
                       stroke-linecap="round"/>
         </g>
     </g>
-
 
     <defs>
         <marker id="arrowhead" markerWidth="10" markerHeight="7"

@@ -291,7 +291,10 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         sidePieces[player.value] -= 1;
         return new GipfPartSlice(board, slice.turn, sidePieces, slice.capturedPieces);
     }
-    public getPiecesMoved(slice: GipfPartSlice, placement: GipfPlacement): Coord[] {
+    public getPiecesMoved(slice: GipfPartSlice,
+                          initialCaptures: ReadonlyArray<GipfCapture>,
+                          placement: GipfPlacement): Coord[] {
+        const sliceAfterCapture: GipfPartSlice = this.applyCaptures(slice, initialCaptures);
         if (placement.direction.isAbsent()) {
             return [placement.coord];
         } else {
@@ -299,11 +302,13 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             const moved: Coord[] = [];
             moved.push(placement.coord);
             let cur: Coord = placement.coord.getNext(dir);
-            while (slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY) {
+            while (sliceAfterCapture.hexaBoard.isOnBoard(cur) &&
+                sliceAfterCapture.hexaBoard.getAt(cur) !== GipfPiece.EMPTY) {
                 moved.push(cur);
                 cur = cur.getNext(dir);
             }
-            if (slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) === GipfPiece.EMPTY) {
+            if (sliceAfterCapture.hexaBoard.isOnBoard(cur) &&
+                sliceAfterCapture.hexaBoard.getAt(cur) === GipfPiece.EMPTY) {
                 // This is the case filled by the last pushed piece
                 moved.push(cur);
             }
