@@ -17,7 +17,8 @@ export class KamisadoPartSlice extends GamePartSlice {
         super(ArrayUtils.copyBiArray(board), turn);
     }
     public static getInitialSlice(): KamisadoPartSlice {
-        return new KamisadoPartSlice(0, KamisadoColor.ANY,
+        return new KamisadoPartSlice(0,
+                                     KamisadoColor.ANY,
                                      MGPOptional.empty(),
                                      false,
                                      ArrayUtils.mapBiArray(KamisadoBoard.INITIAL, (p) => p.getValue()));
