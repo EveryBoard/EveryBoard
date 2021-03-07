@@ -18,29 +18,29 @@ import { display } from 'src/app/utils/collection-lib/utils';
     styleUrls: ['./server-page.component.css'],
 })
 export class ServerPageComponent implements OnInit, OnDestroy {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public activesParts: ICurrentPartId[];
 
     public activesUsers: IJoueurId[];
 
     public readonly gameNameList: string[] = [
-        'Awale', // 2ème
-        'Dvonn', // 13ème ?
-        'Encapsule', //
-        'Epaminondas', // 14ème
-        'Gipf', // 15ème
-        'Go', //
-        'Kamisado', // 12ème ??
+        'Awale', // /////  2ème: 2018.11.29 ( 3  mois après Awalé)
+        'Dvonn', // ///// 13ème: 2020.10.21 (18 jours après Kamisado) *Quentin
+        'Encapsule', // /  7ème: 2019.12.30 ( 9 jours après Go)
+        'Epaminondas', // 14ème: 2021.01.06 (22 jours après Quixo)
+        'Gipf', // ////// 15ème:
+        'Go', // ////////  6ème: 2019.12.21 (11  mois après Reversi)
+        'Kamisado', // // 11ème: 2020.10.03       (après 26j de dev) *Quentin
         // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
-        'P4', // 1er
-        'Pylos', // 11 ème ?
-        'Quarto', //
-        'Quixo', // 10 ème ?
-        'Reversi', //
-        'Sahara', //
-        'Siam', //
-        'Tablut']; // Total: 14
+        'P4', // ////////  1 er: 2018.08.28  (????????????????????)
+        'Pylos', // ///// 10ème: 2020.10.02 ( 7  mois après Sahara)
+        'Quarto', // ////  3ème: 2018.12.09 (10 jours après P4)
+        'Quixo', // ///// 12ème: 2020.10.15 (13 jours après Pylos)
+        'Reversi', // ///  5ème: 2019.01.16 (20 jours après Tablut)
+        'Sahara', // ////  9ème: 2020.02.29 (49 jours après Siam)
+        'Siam', // //////  8ème: 2020.01.11 (12 jours après Encapsule)
+        'Tablut']; // ///  4ème: 2018.12.27 (26 jours après Quarto)
 
     public selectedGame: string;
 

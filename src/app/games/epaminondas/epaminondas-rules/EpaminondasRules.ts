@@ -9,7 +9,10 @@ import { EpaminondasLegalityStatus } from '../epaminondaslegalitystatus';
 import { EpaminondasMove } from '../epaminondas-move/EpaminondasMove';
 import { EpaminondasPartSlice } from '../epaminondas-part-slice/EpaminondasPartSlice';
 
-export class EpaminondasNode extends MGPNode<EpaminondasRules, EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {}
+export class EpaminondasNode extends MGPNode<EpaminondasRules,
+                                             EpaminondasMove,
+                                             EpaminondasPartSlice,
+                                             EpaminondasLegalityStatus> {}
 
 export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
     public getListMoves(node: EpaminondasNode): MGPMap<EpaminondasMove, EpaminondasPartSlice> {

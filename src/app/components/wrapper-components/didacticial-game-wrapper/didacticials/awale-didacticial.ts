@@ -5,7 +5,10 @@ import { DidacticialStep } from 'src/app/components/wrapper-components/didactici
 export const awaleDidacticial: DidacticialStep[] = [
     new DidacticialStep(
         'Distribuer',
-        'L’awalé est un jeu de distribution et capture, le but est de capturer le plus de graines possible en les distribuant. Laissez moi vous montrer comment se distribuent les graines. Choisissez une maison à vous. Vous êtes le premier joueur, donc ce sont celles d’en haut!',
+        `L’awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
+         Laissez moi vous montrer comment se distribuent les graines.
+         Comme vous jouez en premier, les 6 maisons du haut vous appartiennent.
+         Cliquez sur l'une d'entre elles pour en distribuer les graines`,
         AwalePartSlice.getInitialSlice(),
         [
             new AwaleMove(0, 0),
@@ -16,8 +19,10 @@ export const awaleDidacticial: DidacticialStep[] = [
             new AwaleMove(5, 0),
         ],
         [],
-        'Voilà, regardez les 4 maisons suivant la maison choisie dans l’ordre horlogé, elle comptent maintenant 5 graines, c’est comme celà que les graines se distribuent: une à une à partir de la maison suivante dans l’ordre horlogé de la maison d’où elles viennent!',
-        '...',
+        `Voilà, regardez les 4 maisons suivant la maison choisie dans l’ordre horlogé, elle comptent maintenant 5 graines.
+         C’est comme cela que les graines se distribuent:
+         une à une à partir de la maison suivante dans l’ordre horlogé de la maison d’où elles viennent!`,
+        null,
     ),
     new DidacticialStep(
         'Grosse distribution',
@@ -28,24 +33,29 @@ export const awaleDidacticial: DidacticialStep[] = [
         ], 1, [0, 0]),
         [new AwaleMove(1, 1)],
         [],
-        'Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux)!',
-        'Perdu. Recommencez.',
+        'Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines)!',
+        null,
     ),
     new DidacticialStep(
         'Capture simple',
-        'Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu\'il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines. Ensuite il regarde la case précédente: si elle est dans le camp adverse et contient deux ou trois graines, il les capture aussi, et ainsi de suite jusqu\'à ce qu\'il arrive à son camp ou jusqu\'à ce qu\'il y ait un nombre de graines différent de deux ou trois.',
+        `Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu'il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.
+         Ensuite il regarde la case précédente:
+         si elle est dans le camp adverse et contient deux ou trois graines, il les capture aussi, et ainsi de suite jusqu'à ce qu'il arrive à son camp ou jusqu'à ce qu'il y ait un nombre de graines différent de deux ou trois.
+         Vous êtes le deuxième joueur, faites une capture!`,
         new AwalePartSlice([
             [1, 0, 0, 0, 1, 0],
             [1, 0, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [new AwaleMove(0, 1)],
         [],
-        'Bravo. Il s\'agissait içi d\'une capture simple, voyons maintenant une capture composée.',
+        `Bravo. Il s'agissait ici d'une capture simple, voyons maintenant une capture composée.`,
         'Perdu. Recommencez et distribuez la maison la plus à gauche.',
     ),
     new DidacticialStep(
         'Capture composée possible',
-        'En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2, ces deux maisons, étant consécutives, seront donc toutes les deux capturables. Capturez-les.',
+        `En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2.
+         Ces deux maisons, étant consécutives, seront donc toutes les deux capturables.
+         Capturez-les.`,
         new AwalePartSlice([
             [2, 1, 0, 0, 1, 0],
             [2, 0, 0, 0, 1, 0],
@@ -56,7 +66,7 @@ export const awaleDidacticial: DidacticialStep[] = [
         'Perdu. Recommencez.',
     ),
     new DidacticialStep(
-        'Une capture doit être ininterrompue',
+        'Capture interrompue',
         'En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable. Faites-le.',
         new AwalePartSlice([
             [1, 0, 1, 0, 0, 1],
@@ -64,7 +74,7 @@ export const awaleDidacticial: DidacticialStep[] = [
         ], 1, [0, 0]),
         [new AwaleMove(0, 1)],
         [],
-        'Constatez que la 2ème maison n’étant pas capturable, la capture a été interrompue et vous n’avez pas pu capturer la 2ème maison.',
+        'Constatez que la 2ème maison n’étant pas capturable, la capture a été interrompue et vous n’avez pas pu capturer la 1ère maison.',
         'Perdu. Recommencez.',
     ),
     new DidacticialStep(
@@ -105,14 +115,16 @@ export const awaleDidacticial: DidacticialStep[] = [
     ),
     new DidacticialStep(
         'Fin de partie',
-        'Une partie est gagnée dès qu’un des deux joueurs atteint les 25 graines, car il a plus de la moitié. Distribuez la maison en haut à droite.',
+        `Une partie est gagnée dès qu’un des deux joueurs a capturé 25 graines, car il a plus de la moitié de leur total.
+         Distribuez la maison en haut à droite.`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 1],
             [0, 1, 2, 3, 4, 4],
         ], 0, [0, 0]),
         [new AwaleMove(5, 0)],
         [],
-        'Aussi, dès qu\'un joueur ne peux plus jouer, l’autre joueurs capture toutes les graines dans son camps. Ici, c\'est au premier joueur de jouer et joueur deux récoltera toutes les graines restantes.',
-        'WTF.',
+        `Aussi, dès qu'un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son camp.
+         Ici, c'était au premier joueur de jouer et joueur deux a récolté toutes les graines restantes.`,
+        null,
     ),
 ];

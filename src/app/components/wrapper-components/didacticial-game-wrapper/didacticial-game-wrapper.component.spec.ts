@@ -79,6 +79,7 @@ describe('DidacticialGameWrapperComponent', () => {
             onValidUserMoveSpy,
         };
     }));
+    // ///////////////////////// BEFORE ///////////////////////////////////////
     it('should create', () => {
         expect(component).toBeTruthy();
     });
@@ -144,6 +145,11 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#step_1')).nativeElement.innerHTML;
         expect(currentTitle).toBe(expectedTitle);
     }));
+    it('It should throw when trying to reach unexisting game', fakeAsync(async() => {
+        spyOn(activatedRouteStub.snapshot.paramMap, 'get').and.returnValue('IDontExist');
+        expect(() => component.getDidacticial()).toThrowError('Unknown Game IDontExist.');
+    }));
+    // ///////////////////////// ATTEMPTING ///////////////////////////////////
     it('Should go to specific step when clicking on it', fakeAsync(async() => {
         // Given a DidacticialStep with 3 steps
         const didacticial: DidacticialStep[] = [

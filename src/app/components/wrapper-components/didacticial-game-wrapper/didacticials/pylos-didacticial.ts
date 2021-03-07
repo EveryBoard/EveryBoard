@@ -10,9 +10,9 @@ const X: number = Player.ONE.value;
 export const pylosDidacticial: DidacticialStep[] = [
     new DidacticialStep(
         'But du jeu',
-        `Au Pylos, le but du jeu est d'être le dernier à jouer en économisant ses pièces.
-         Là où sont affichés des ronds gris, sont des cases vides.
-         Vous pouvez déposez vos pièces dessus, tant qu'il vous en reste.
+        `Au Pylos, le but est d'être le dernier à jouer.
+         Pour cela, il faut économiser ses pièces.
+         Les ronds gris sont les cases sur lesquelles vous pouvez déposez vos pièces.
          Dès qu'un joueur dépose sa dernière pièce, il perd immédiatement la partie.`,
         PylosPartSlice.getInitialSlice(),
         [], [], null, null,
@@ -46,16 +46,17 @@ export const pylosDidacticial: DidacticialStep[] = [
         `Bravo.
          Notes importantes:
          1. On ne peut déplacer une pièce qui est en dessus d'une autre.
-         2. Naturellement, on ne peux pas déplacer les pièces adverses.`,
+         2. Naturellement, on ne peux pas déplacer les pièces adverses.
+         3. Un déplacement ne peut se faire que quand la case d'arrivée est plus haute que la case de départ.`,
         'Raté',
     ),
     new DidacticialStep(
-        'Carré (1/2)',
+        'Carré (1/3)',
         `Quand la pièce que vous posez est la quatrième d'un carré de pièces de votre couleur,
-         vous pouvez choisir alors n'importe où sur le plateau, une ou deux pièces à vous.
+         vous pouvez choisir alors n'importe où sur le plateau, une à deux de vos pièces.
          Cette(ces) pièce(s) sera(seront) enlevée(s) du plateau, vous permettant d'économiser 1 ou 2 pièces.
          Une pièce choisie pour être enlevée ne peut pas être en dessous d'autres pièces.
-         Une pièce choisi peut être la pièce que vous venez de placer.
+         Une pièce choisie peut être la pièce que vous venez de placer.
          Vous jouez Foncé.
          Formez un carré, puis cliquez deux fois sur l'une des quatre pièce pour n'enlever que celle là.`,
         new PylosPartSlice([
@@ -86,7 +87,7 @@ export const pylosDidacticial: DidacticialStep[] = [
         'Raté.',
     ),
     new DidacticialStep(
-        'Carré (2/2)',
+        'Carré (2/3)',
         `Vous jouez Foncé.
          Faites comme à l'étape précédente, mais cliquez cette fois sur les deux pièces du haut.`,
         new PylosPartSlice([
@@ -109,6 +110,34 @@ export const pylosDidacticial: DidacticialStep[] = [
         [PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)])],
         [],
         'Bravo, vous avez économisé deux pièces.',
+        'Raté.',
+    ),
+    new DidacticialStep(
+        'Carré (3/3)',
+        `Vous jouez Foncé.
+         Faites comme à l'étape précédente, mais cette fois:
+         Vous devrez, naturellement, capturer en premier votre pièce la plus haute,
+         et ensuite seulement capturer celle qui vient d'être enlevable à nouveau.`,
+        new PylosPartSlice([
+            [
+                [O, X, X, O],
+                [X, O, O, X],
+                [X, X, O, X],
+                [O, X, O, _],
+            ], [
+                [_, O, X],
+                [O, O, X],
+                [O, X, _],
+            ], [
+                [_, X],
+                [X, _],
+            ], [
+                [_],
+            ],
+        ], 0),
+        [PylosMove.fromDrop(new PylosCoord(0, 0, 1), [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)])],
+        [],
+        'Bravo, vous avez économisé deux pièces. Vous êtes maintenant prêt à y jouer.',
         'Raté.',
     ),
 ];
