@@ -62,7 +62,7 @@ describe('KamisadoComponent', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(gameComponent).toBeTruthy('KamisadoComponent should be created');
     });
-    it('should chose -1,-1 as chosen coord when calling updateBoard without move', () => {
+    it('should choose (-1,-1) as chosen coord when calling updateBoard without move', () => {
         gameComponent.updateBoard();
         expect(gameComponent.chosen.equals(new Coord(-1, -1))).toBeTrue();
     });

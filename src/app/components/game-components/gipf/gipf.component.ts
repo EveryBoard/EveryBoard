@@ -15,8 +15,8 @@ import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 export class Arrow {
-    public constructor(public readonly src: Coord,
-                       public readonly dst: Coord,
+    public constructor(public readonly source: Coord,
+                       public readonly destination: Coord,
                        public readonly x1: number,
                        public readonly y1: number,
                        public readonly x2: number,
@@ -127,7 +127,6 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     }
     private markCaptured(capture: GipfCapture): void {
         capture.forEach((c: Coord) => {
-            console.log({markCaptured: c.toString()});
             this.currentlyCaptured.push(c);
         });
     }
@@ -188,21 +187,9 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         }
         return MGPValidation.SUCCESS;
     }
-    private markMove(placement: GipfPlacement): void {
-        if (placement.direction.isPresent()) {
-            const dir: Direction = placement.direction.get();
-            for (let cur: Coord = placement.coord; this.isPiece(cur.x, cur.y); cur = cur.getNext(dir)) {
-                console.log({markMove: cur.toString()});
-                this.currentlyMoved.push(cur);
-            }
-        } else {
-            this.currentlyMoved.push(placement.coord);
-        }
-    }
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
         this.arrows = [];
         this.finalCaptures = [];
-        this.markMove(this.placement.get());
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
             return this.tryMove(this.initialCaptures, this.placement.get(), this.finalCaptures);
@@ -241,6 +228,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
+        this.currentlyMoved = this.rules.getPiecesMoved(this.constructedSlice, this.placement.get());
         this.constructedSlice = this.rules.applyPlacement(this.constructedSlice, this.placement.get());
         return this.moveToFinalCapturePhaseOrTryMove();
     }

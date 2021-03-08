@@ -22,6 +22,7 @@ import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
 import { GipfNode } from 'src/app/games/gipf/gipf-rules/GipfRules';
 import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { By } from '@angular/platform-browser';
 
 
 const activatedRouteStub = {
@@ -111,13 +112,13 @@ describe('GipfComponent', () => {
         await expectClickSuccess('#click_3_0', testElements);
         expect(getComponent().arrows.length).toBe(3);
         expect(getComponent().arrows.some((arrow: Arrow) => {
-            return arrow.src.equals(new Coord(3, 0)) && arrow.dst.equals(new Coord(2, 0));
+            return arrow.source.equals(new Coord(3, 0)) && arrow.destination.equals(new Coord(2, 0));
         }));
         expect(getComponent().arrows.some((arrow: Arrow) => {
-            return arrow.src.equals(new Coord(3, 0)) && arrow.dst.equals(new Coord(2, 1));
+            return arrow.source.equals(new Coord(3, 0)) && arrow.destination.equals(new Coord(2, 1));
         }));
         expect(getComponent().arrows.some((arrow: Arrow) => {
-            return arrow.src.equals(new Coord(3, 0)) && arrow.dst.equals(new Coord(3, -1));
+            return arrow.source.equals(new Coord(3, 0)) && arrow.destination.equals(new Coord(3, -1));
         }));
     }));
     it('should not accept selecting something else than one of the proposed direction', fakeAsync(async() => {
@@ -259,7 +260,126 @@ describe('GipfComponent', () => {
         };
         await expectMoveSuccess('#click_-1_0', testElements, expectation);
     }));
-    it('should update the number of pieces available upon placement');
-    it('should update the number of pieces available upon capture');
+    it('should highlight moved pieces only', fakeAsync(async() => {
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, A, _, _],
+            [_, _, _, _, _, A, _],
+            [_, _, _, _, B, _, _],
+            [_, _, _, A, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, B, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
 
+        const placement: GipfPlacement = new GipfPlacement(new Coord(-2, +3), MGPOptional.of(HexaDirection.UP_RIGHT));
+        const move: GipfMove = new GipfMove(placement, [], []);
+        const expectation: MoveExpectations = {
+            move,
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectClickSuccess('#click_-2_3', testElements);
+        await expectMoveSuccess('#click_-1_2', testElements, expectation);
+
+        expect(getComponent().getCaseStyle(-2, 3)).toEqual(getComponent().MOVED_STYLE);
+        expect(getComponent().getCaseStyle(-1, 2)).toEqual(getComponent().MOVED_STYLE);
+        expect(getComponent().getCaseStyle(0, 1)).not.toEqual(getComponent().MOVED_STYLE);
+    }));
+    it('should highlight capturable pieces', fakeAsync(async() => {
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, A, _, _],
+            [_, _, _, A, _, A, _],
+            [_, _, _, A, A, _, _],
+            [_, _, _, A, B, B, _],
+            [_, _, B, A, _, _, _],
+            [_, _, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
+
+        expect(getComponent().possibleCaptures).toContain(new GipfCapture([
+            new Coord(0, -1),
+            new Coord(0, 0),
+            new Coord(0, 1),
+            new Coord(0, 2),
+        ]));
+    }));
+    it('should highlight captured pieces positions', fakeAsync(async() => {
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, A, _, _],
+            [_, _, _, A, _, A, _],
+            [_, _, _, A, A, _, _],
+            [_, _, _, A, B, B, _],
+            [_, _, B, A, _, _, _],
+            [_, _, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
+
+        await expectClickSuccess('#click_0_0', testElements);
+        const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(-3, 1), MGPOptional.empty()),
+                                            [new GipfCapture([
+                                                new Coord(0, -1), new Coord(0, 0), new Coord(0, 1), new Coord(0, 2),
+                                            ])], []);
+
+        const expectation: MoveExpectations = {
+            move,
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectMoveSuccess('#click_-3_1', testElements, expectation);
+
+        const expectToBeRed: (x: number, y: number) => void = (x: number, y: number) => {
+            // This works
+            expect(getComponent().getCaseStyle(x, y).fill).toBe('red');
+            // But not this... TODO
+            // const element: DebugElement = testElements.debugElement.query(By.css('#click_' + x + '_' + y));
+            // expect(element).toBeTruthy();
+            // expect(element.children[0].attributes.style).toContain('fill: red;');
+        };
+        expectToBeRed(0, -1);
+        expectToBeRed(0, 0);
+        expectToBeRed(0, 1);
+        expectToBeRed(0, 2);
+    }));
+    it('should update the number of pieces available', fakeAsync(async() => {
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, A, _, _],
+            [_, _, _, A, _, A, _],
+            [_, _, _, A, A, _, _],
+            [_, _, _, A, B, B, _],
+            [_, _, B, A, _, _, _],
+            [_, _, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
+
+        await expectClickSuccess('#click_0_0', testElements);
+        const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(-3, 1), MGPOptional.empty()),
+                                            [new GipfCapture([
+                                                new Coord(0, -1), new Coord(0, 0), new Coord(0, 1), new Coord(0, 2),
+                                            ])], []);
+
+        const expectation: MoveExpectations = {
+            move,
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectMoveSuccess('#click_-3_1', testElements, expectation);
+
+        expect(getComponent().getPlayerSidePieces(0).length).toBe(8);
+        expect(getComponent().getPlayerSidePieces(1).length).toBe(5);
+    }));
 });

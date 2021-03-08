@@ -227,8 +227,8 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     public applyCapture(slice: GipfPartSlice, capture: GipfCapture): GipfPartSlice {
         const player: Player = slice.getCurrentPlayer();
         let board: HexaBoard<GipfPiece> = slice.hexaBoard;
-        const sidePieces: [number, number] = slice.sidePieces;
-        const capturedPieces: [number, number] = slice.capturedPieces;
+        const sidePieces: [number, number] = [slice.sidePieces[0], slice.sidePieces[1]];
+        const capturedPieces: [number, number] = [slice.capturedPieces[0], slice.capturedPieces[1]];
         capture.forEach((coord: Coord) => {
             const piece: GipfPiece = board.getAt(coord);
             board = board.setAt(coord, GipfPiece.EMPTY);
@@ -290,6 +290,25 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const sidePieces: [number, number] = [slice.sidePieces[0], slice.sidePieces[1]];
         sidePieces[player.value] -= 1;
         return new GipfPartSlice(board, slice.turn, sidePieces, slice.capturedPieces);
+    }
+    public getPiecesMoved(slice: GipfPartSlice, placement: GipfPlacement): Coord[] {
+        if (placement.direction.isAbsent()) {
+            return [placement.coord];
+        } else {
+            const dir: Direction = placement.direction.get();
+            const moved: Coord[] = [];
+            moved.push(placement.coord);
+            let cur: Coord = placement.coord.getNext(dir);
+            while (slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY) {
+                moved.push(cur);
+                cur = cur.getNext(dir);
+            }
+            if (slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) === GipfPiece.EMPTY) {
+                // This is the case filled by the last pushed piece
+                moved.push(cur);
+            }
+            return moved;
+        }
     }
     public getAllDirectionsForEntrance(slice: GipfPartSlice, entrance: Coord): Direction[] {
         if (slice.hexaBoard.isTopLeftCorner(entrance)) {
@@ -416,7 +435,6 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
         return MGPValidation.SUCCESS;
     }
-
     public placementCoordValidity(slice: GipfPartSlice, coord: Coord): MGPValidation {
         if (slice.hexaBoard.isOnBorder(coord)) {
             return MGPValidation.SUCCESS;
@@ -424,5 +442,4 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             return MGPValidation.failure('Les pièces doivent être placée sur une case du bord du plateau');
         }
     }
-
 }
