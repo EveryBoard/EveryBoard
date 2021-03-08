@@ -24,6 +24,7 @@ import { reversiDidacticial } from './didacticials/reversi-didacticial';
 import { saharaDidacticial } from './didacticials/sahara-didacticial';
 import { siamDidacticial } from './didacticials/siam-didacticial';
 import { tablutDidacticial } from './didacticials/tablut-didacticial';
+import { gipfDidacticial } from './didacticials/gipf-didacticial';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -75,12 +76,13 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         const didacticial: DidacticialStep[] = this.getDidacticial();
         this.startDidacticial(didacticial);
     }
-    private getDidacticial(): DidacticialStep[] {
+    public getDidacticial(): DidacticialStep[] {
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
         const didacticials: { [key: string]: DidacticialStep[] } = {
             Awale: awaleDidacticial,
             Dvonn: dvonnDidacticial,
             Epaminondas: epaminondasDidacticial,
+            Gipf: gipfDidacticial,
             Go: goDidacticial,
             Kamisado: kamisadoDidacticial,
             P4: p4Didacticial,
@@ -93,7 +95,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Tablut: tablutDidacticial,
         };
         if (didacticials[game] == null) {
-            throw new Error('Unknown Game ' + game);
+            throw new Error('Unknown Game ' + game + '.');
         }
         return didacticials[game];
     }

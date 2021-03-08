@@ -13,10 +13,10 @@ import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils'
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { display } from 'src/app/utils/collection-lib/utils';
 
-abstract class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
+export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
 
 export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStatus> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public getListMoves(node: SaharaNode): MGPMap<SaharaMove, SaharaPartSlice> {
         const moves: MGPMap<SaharaMove, SaharaPartSlice> = new MGPMap<SaharaMove, SaharaPartSlice>();
@@ -114,14 +114,14 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         }
         const landingCase: SaharaPawn = slice.getBoardAt(move.end);
         if (landingCase !== SaharaPawn.EMPTY) {
-            return { legal: MGPValidation.failure('landing case is not empty') };
+            return { legal: MGPValidation.failure('Vous devez arriver sur une case vide.') };
         }
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
         if (commonNeighboor.isPresent()) {
             if (slice.getBoardAt(commonNeighboor.get()) === SaharaPawn.EMPTY) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure('You can only bounce on UNOCCUPIED brown case.') };
+                return { legal: MGPValidation.failure('Vous ne pouvez rebondir que sur les cases rouges!') };
             }
         } else {
             return { legal: MGPValidation.SUCCESS };

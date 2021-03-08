@@ -4,8 +4,16 @@ import { DidacticialStep } from 'src/app/components/wrapper-components/didactici
 
 export const p4Didacticial: DidacticialStep[] = [
     new DidacticialStep(
+        'But du jeu',
+        `Le plateau du Puissance 4 fait 7 colonnes et 6 rangées et est initialement vide.
+         Le premier joueur joue Foncé, le deuxième joue Clair.
+         Le but du du jeu est d'être le premier joueur à aligner 4 de ses pièces (horizontalement, verticalement, ou diagonalement).`,
+        P4PartSlice.getInitialSlice(),
+        [], [], null, null,
+    ),
+    new DidacticialStep(
         'Déposez une pièce',
-        'Cliquez sur n’importe quelle case d’une colonne',
+        'Cliquez sur n’importe quelle case d’une colonne.',
         P4PartSlice.getInitialSlice(),
         [
             P4Move.of(0),
@@ -17,12 +25,13 @@ export const p4Didacticial: DidacticialStep[] = [
             P4Move.of(6),
         ],
         [],
-        'Comme vous voyez, la pièce va toujours tomber tout en bas de la colonne',
+        'Comme vous voyez, la pièce va toujours tomber tout en bas de la colonne.',
         null,
     ),
     new DidacticialStep(
         'Victoire',
-        'Placez votre pion de façon à aligner horizontalement 4 de vos pièces.',
+        `Vous jouez Foncé.
+         Placez votre pion de façon à aligner horizontalement 4 de vos pièces.`,
         new P4PartSlice([
             [2, 2, 2, 2, 2, 2, 2],
             [2, 2, 2, 2, 2, 2, 2],

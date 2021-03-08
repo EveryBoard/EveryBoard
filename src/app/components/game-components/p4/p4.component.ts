@@ -18,7 +18,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
 
     public rules: P4Rules = new P4Rules(P4PartSlice);
 
-    public imagesNames: string[] = ['yellow_circle.svg.png', 'brown_circle.svg.png', 'empty_circle.svg'];
+    public imagesNames: string[] = ['brown_circle.svg.png', 'yellow_circle.svg.png', 'empty_circle.svg'];
 
     public lastX: number;
 

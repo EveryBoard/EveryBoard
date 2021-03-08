@@ -10,7 +10,7 @@ describe('SaharaMoves', () => {
         expect(rules).toBeTruthy();
         const moves: MGPMap<SaharaMove, SaharaPartSlice> = rules.getListMoves(rules.node);
         expect(moves.size()).toEqual(12);
-        for (let i=0; i<moves.size(); i++) {
+        for (let i: number = 0; i < moves.size(); i++) {
             const initialMove: SaharaMove = moves.getByIndex(i).key;
             const encodedMove: number = initialMove.encode();
             const decodedMove: SaharaMove = SaharaMove.decode(encodedMove);
@@ -40,7 +40,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when start and end are too far away', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(0, 3);
-        const expectedError = 'Maximal |x| + |y| distance for SaharaMove is 2, got 3.';
+        const expectedError: string = 'Vous pouvez vous déplacer maximum de 2 cases, pas de 3.';
         expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
     });
     it('Should throw error when distance is 1 but start and end arent neighboors', () => {
@@ -52,7 +52,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when trying to bounce on white triangle', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
-        const expectedError = 'Can only bounce twice when started on a white triangle.';
+        const expectedError: string = 'Can only bounce twice when started on a white triangle.';
         expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
     });
     it('Should throw error when distance is 2 but common neighboors is the fake neighboors', () => {

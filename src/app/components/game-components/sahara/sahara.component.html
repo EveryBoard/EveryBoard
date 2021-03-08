@@ -8,19 +8,21 @@
            (click)="onClick(x, y);">
             <g *ngIf="caseContent === 0">
                 <polyline [attr.points]="getPyramidCoordinate(x, y)"
-                          style="fill: grey; stroke: black; stroke-width: 5" />
+                          [attr.fill]="getPlayerFill(x, y)"
+                          style="stroke: black; stroke-width: 5" />
             </g>
             <g *ngIf="caseContent === 1">
                 <polyline [attr.points]="getPyramidCoordinate(x, y)"
-                          style="fill: darkred; stroke: black; stroke-width: 5" />
+                          [attr.fill]="getPlayerFill(x, y)"
+                          style="stroke: black; stroke-width: 5" />
             </g>
             <g *ngIf="caseContent === 2">
                 <polyline *ngIf="(x+y)%2 === 1"
                           [attr.points]="getCoordinate(x, y)"
-                          style="fill: #ffc34d; stroke: black; stroke-width: 5" />
+                          style="fill: lightgrey; stroke: black; stroke-width: 5" />
                 <polyline *ngIf="(x+y)%2 === 0"
                           [attr.points]="getCoordinate(x, y)"
-                          style="fill: #994d00; stroke:black; stroke-width: 5" />
+                          style="fill: dimgray; stroke:black; stroke-width: 5" />
             </g>
         </g>
     </g>
@@ -29,7 +31,8 @@
                   style="fill: none; stroke: yellow; stroke-width: 5" />
         <polyline [attr.points]="getCoordinate(lastMoved.x, lastMoved.y)"
                   style="fill: none; stroke: yellow; stroke-width: 5" />
-        <polyline [attr.points]="getCoordinate(chosenCoord.x, chosenCoord.y)"
-                  style="fill: none; stroke: blue; stroke-width: 5" />
     </ng-container>
+    <polyline *ngIf="chosenCoord.isPresent()"
+              [attr.points]="getCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
+              style="fill: none; stroke: blue; stroke-width: 5" />
 </svg>
