@@ -21,11 +21,25 @@
         </g>
     </g>
 
-    <g *ngFor="let capture of possibleCaptures;">
+    <style type="text/css">
+        .capture {
+            stroke-width: 2;
+            stroke: yellow;
+            fill: none;
+        }
+        .capture:hover {
+            stroke-width: 8;
+            stroke: yellow;
+            fill: none;
+        }
+    </style>
+    <g *ngFor="let capture of possibleCaptures; index as i;"
+       pointer-events="fill"
+       class="capture">
         <g *ngFor="let case of capture.capturedCases;">
             <polyline [attr.points]="getHexaCoordinatesForXY(case.x, case.y)"
-                      [ngStyle]="CLICKABLE_HIGHLIGHT_STYLE"
-                      stroke-linecap="round"/>
+                      (click)="onClick(case.x, case.y)"
+                      stroke-linecap="round" />
         </g>
     </g>
 

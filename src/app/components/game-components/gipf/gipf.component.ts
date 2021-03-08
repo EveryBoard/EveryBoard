@@ -147,7 +147,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
             // Two captures contain this coordinate
             // We don't let the user choose it as it is ambiguous
             return this.cancelMove(
-                `Cette case fait partie de deux captures possibles, veuillez en choisir une autre`);
+                `Cette case fait partie de deux captures possibles, veuillez une autre case de la capture que vous souhaitez prendre`);
         } else if (captures.length === 0) {
             return this.cancelMove(`Cette case ne fait partie d'aucune capture`);
         }
@@ -286,11 +286,6 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         'fill': 'red',
         'stroke': 'black',
     };
-    public readonly CLICKABLE_HIGHLIGHT_STYLE: {[key: string]: string} = {
-        'stroke-width': '8px',
-        'stroke': 'yellow',
-        'fill': 'none',
-    }
     public readonly NO_HIGHLIGHT_STYLE: {[key: string]: string} = {
         'fill': 'none',
         'stroke-width': '0px',
