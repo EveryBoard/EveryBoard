@@ -209,7 +209,7 @@ describe('GipfComponent', () => {
         testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
         testElements.gameComponent.updateBoard();
 
-        const reason: string = `Cette case fait partie de deux captures possibles, veuillez en choisir une autre`;
+        const reason: string = `Cette case fait partie de deux captures possibles, veuillez une autre case de la capture que vous souhaitez prendre`;
         await expectClickFail('#click_-1_0', testElements, reason);
     }));
     it('should not allow clicking on anything else than a capture if there is one in the final captures', fakeAsync(async() => {
