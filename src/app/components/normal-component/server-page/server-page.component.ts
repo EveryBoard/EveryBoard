@@ -24,14 +24,14 @@ export class ServerPageComponent implements OnInit, OnDestroy {
 
     public activesUsers: IJoueurId[];
 
-    public readonly gameNameList: string[] = [
-        'Awale', // /////  2ème: 2018.11.29 ( 3  mois après Awalé)
+    public readonly gameNameList: string[] = [ // After Gipf: median = 24j; average = 65j
+        'Awale', // /////  2ème: 2018.11.29 ( 3  mois après P4)
         'Dvonn', // ///// 13ème: 2020.10.21 (18 jours après Kamisado) *Quentin
         'Encapsule', // /  7ème: 2019.12.30 ( 9 jours après Go)
         'Epaminondas', // 14ème: 2021.01.06 (22 jours après Quixo)
-        'Gipf', // ////// 15ème:
+        'Gipf', // ////// 15ème: 2021.02.22 ( 4  mois après Dvonn) *Quentin
         'Go', // ////////  6ème: 2019.12.21 (11  mois après Reversi)
-        'Kamisado', // // 11ème: 2020.10.03       (après 26j de dev) *Quentin
+        'Kamisado', // // 11ème: 2020.10.03 (26 jours après arrivée) *Quentin
         // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
         'P4', // ////////  1 er: 2018.08.28  (????????????????????)
         'Pylos', // ///// 10ème: 2020.10.02 ( 7  mois après Sahara)
