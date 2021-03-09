@@ -170,6 +170,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
 
         // Capture validity is not checked because by construction the user can only select valid captures
         this.constructedSlice = this.rules.applyCapture(this.constructedSlice, capture);
+        this.markCapture(capture);
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
         switch (this.movePhase) {
             case GipfComponent.PHASE_INITIAL_CAPTURE:
