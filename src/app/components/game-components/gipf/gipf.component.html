@@ -3,21 +3,17 @@
      viewBox="0 0 700 700"
      preserveAspectRatio="xMidYMid meet">
 
-    <g *ngFor="let y of boardIndices;">
-        <g *ngFor="let x of boardIndices;">
-            <g *ngIf="isOnBoard(x, y)">
-                <g (click)="onClick(x, y)"
-                   id="click_{{ x }}_{{ y }}">
-                    <polyline [attr.points]="getHexaCoordinatesForXY(x, y)"
-                              [ngStyle]="getCaseStyle(x, y)"
-                              stroke-linecap="round"/>
-                    <circle *ngIf="isPiece(x, y)"
-                            [attr.cx]="getCenter(x, y).x"
-                            [attr.cy]="getCenter(x, y).y"
-                            [attr.r]="getPieceSize()"
-                            [ngStyle]="getPieceStyle(x, y)"/>
-                </g>
-            </g>
+    <g *ngFor="let case of getAllCoords();">
+        <g (click)="onClick(case)"
+           id="click_{{ case.x }}_{{ case.y }}">
+            <polyline [attr.points]="getHexaCoordinates(case)"
+                      [ngStyle]="getCaseStyle(case)"
+                      stroke-linecap="round"/>
+            <circle *ngIf="isPiece(case)"
+                    [attr.cx]="getCenter(case).x"
+                    [attr.cy]="getCenter(case).y"
+                    [attr.r]="getPieceSize()"
+                    [ngStyle]="getPieceStyle(case)"/>
         </g>
     </g>
 
@@ -37,8 +33,8 @@
        pointer-events="fill"
        class="capture">
         <g *ngFor="let case of capture.capturedCases;">
-            <polyline [attr.points]="getHexaCoordinatesForXY(case.x, case.y)"
-                      (click)="onClick(case.x, case.y)"
+            <polyline [attr.points]="getHexaCoordinates(case)"
+                      (click)="onClick(case)"
                       stroke-linecap="round" />
         </g>
     </g>
@@ -57,7 +53,7 @@
               stroke="#000"
               stroke-width="3"
               marker-end="url(#arrowhead)"
-              (click)="onClick(arrow.destination.x, arrow.destination.y)"/>
+              (click)="onClick(arrow.destination)"/>
     </g>
 
     <style>.text { font: 20 sans-serif; }</style>

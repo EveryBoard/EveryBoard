@@ -159,10 +159,10 @@ describe('GipfComponent', () => {
         testElements.gameComponent.updateBoard();
 
         await expectClickSuccess('#click_0_0', testElements);
-        expect(getComponent().isPiece(0, -1)).toBeFalse();
-        expect(getComponent().isPiece(0, 0)).toBeFalse();
-        expect(getComponent().isPiece(0, 1)).toBeFalse();
-        expect(getComponent().isPiece(0, 2)).toBeFalse();
+        expect(getComponent().isPiece(new Coord(0, -1))).toBeFalse();
+        expect(getComponent().isPiece(new Coord(0, 0))).toBeFalse();
+        expect(getComponent().isPiece(new Coord(0, 1))).toBeFalse();
+        expect(getComponent().isPiece(new Coord(0, 2))).toBeFalse();
     }));
     it('should accept placing after performing initial captures', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -284,9 +284,9 @@ describe('GipfComponent', () => {
         await expectClickSuccess('#click_-2_3', testElements);
         await expectMoveSuccess('#click_-1_2', testElements, expectation);
 
-        expect(getComponent().getCaseStyle(-2, 3).fill).toEqual(getComponent().MOVED_FILL);
-        expect(getComponent().getCaseStyle(-1, 2).fill).toEqual(getComponent().MOVED_FILL);
-        expect(getComponent().getCaseStyle(0, 1).fill).not.toEqual(getComponent().MOVED_FILL);
+        expect(getComponent().getCaseStyle(new Coord(-2, 3)).fill).toEqual(getComponent().MOVED_FILL);
+        expect(getComponent().getCaseStyle(new Coord(-1, 2)).fill).toEqual(getComponent().MOVED_FILL);
+        expect(getComponent().getCaseStyle(new Coord(0, 1)).fill).not.toEqual(getComponent().MOVED_FILL);
     }));
     it('should highlight capturable pieces', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -338,7 +338,7 @@ describe('GipfComponent', () => {
         await expectMoveSuccess('#click_-3_1', testElements, expectation);
 
         const expectToBeRed: (x: number, y: number) => void = (x: number, y: number) => {
-            expect(getComponent().getCaseStyle(x, y).fill).toBe('red');
+            expect(getComponent().getCaseStyle(new Coord(x, y)).fill).toBe('red');
             const element: DebugElement = testElements.debugElement.query(By.css('#click_' + x + '_' + y));
             expect(element).toBeTruthy();
             // In a regexp, \s means any non-word character

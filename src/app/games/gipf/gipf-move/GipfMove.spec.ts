@@ -99,6 +99,10 @@ describe('GipfCapture', () => {
         const coords: Coord[] = [new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1)];
         expect(() => new GipfCapture(coords)).toThrow();
     });
+    it('should not allow construction of captures with duplicate cases', () => {
+        const coords: Coord[] = [new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(1, -3)];
+        expect(() => new GipfCapture(coords)).toThrow();
+    });
     it('should not allow construction with pieces not on the same line', () => {
         const coords: Coord[] = [new Coord(-1, 0), new Coord(0, 1), new Coord(1, 0), new Coord(2, 0)];
         expect(() => new GipfCapture(coords)).toThrow();
@@ -261,6 +265,13 @@ describe('GipfMove', () => {
             const placement2: GipfPlacement = new GipfPlacement(new Coord(1, -2),
                                                                 MGPOptional.of(HexaDirection.DOWN_LEFT));
             const move2: GipfMove = new GipfMove(placement2, [initialCapture], [finalCapture]);
+            expect(move.equals(move2)).toBeFalse();
+        });
+        it('should detect different moves due to different capture sizes', () => {
+            const initialCapture2: GipfCapture = new GipfCapture([
+                new Coord(1, -2), new Coord(0, -1), new Coord(-1, 0), new Coord(-2, 1),
+            ]);
+            const move2: GipfMove = new GipfMove(placement, [initialCapture, initialCapture2], [finalCapture]);
             expect(move.equals(move2)).toBeFalse();
         });
         it('should detect different moves due to different initial capture', () => {
