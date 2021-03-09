@@ -3,17 +3,17 @@ import { Player } from 'src/app/jscaip/player/Player';
 
 export class DvonnPieceStack {
     public static of(v: number): DvonnPieceStack {
-        const pieces = [];
-        const size = v % DvonnPieceStack.MAX_SIZE;
-        let value = (v / DvonnPieceStack.MAX_SIZE) | 0;
-        for (let i = 0; i < size; i++) {
-            const pieceValue = value % DvonnPiece.MAX_VALUE;
+        const pieces: DvonnPiece[] = [];
+        const size: number = v % DvonnPieceStack.MAX_SIZE;
+        let value: number = (v / DvonnPieceStack.MAX_SIZE) | 0;
+        for (let i: number = 0; i < size; i++) {
+            const pieceValue: number = value % DvonnPiece.MAX_VALUE;
             value = (value / DvonnPiece.MAX_VALUE) | 0;
             pieces.push(DvonnPiece.of(pieceValue));
         }
         return new DvonnPieceStack(pieces.reverse());
     }
-    public static MAX_SIZE = 49; // The maximal possible size for a stack
+    public static MAX_SIZE: number = 49; // The maximal possible size for a stack
     public static EMPTY: DvonnPieceStack = new DvonnPieceStack([]);
     public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO]);
     public static PLAYER_ONE: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ONE]);
@@ -26,12 +26,19 @@ export class DvonnPieceStack {
     constructor(public readonly pieces: ReadonlyArray<DvonnPiece>) {
     }
     public getValue(): number {
-        let value = 0;
+        let value: number = 0;
         for (const piece of this.pieces) {
             value = (value * DvonnPiece.MAX_VALUE) + piece.getValue();
         }
         value = (value * DvonnPieceStack.MAX_SIZE) + this.pieces.length;
         return value;
+    }
+    public getOwner(): Player {
+        if (this.pieces.length === 0) {
+            return Player.NONE;
+        } else {
+            return this.pieces[0].player;
+        }
     }
     public belongsTo(player: Player): boolean {
         // A stack belongs to a player if the top piece belongs to that player
@@ -52,7 +59,7 @@ export class DvonnPieceStack {
         return this.pieces.length;
     }
     public toString(): string {
-        let str = '[';
+        let str: string = '[';
         for (const piece of this.pieces) {
             str += piece.toString();
         }
