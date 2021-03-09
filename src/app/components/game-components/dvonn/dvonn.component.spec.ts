@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DvonnComponent } from './dvonn.component';
 
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 
@@ -18,6 +18,7 @@ import { LocalGameWrapperComponent }
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { expectClickSuccess, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 
 const activatedRouteStub = {
     snapshot: {
@@ -39,12 +40,11 @@ const authenticationServiceStub = {
 describe('DvonnComponent', () => {
     let wrapper: LocalGameWrapperComponent;
 
-    let fixture: ComponentFixture<LocalGameWrapperComponent>;
+    let testElements: TestElements;
 
-    let gameComponent: DvonnComponent;
-
-    const _ : number = DvonnPieceStack.EMPTY.getValue();
-    const D : number = DvonnPieceStack.SOURCE.getValue();
+    const __ : number = DvonnPieceStack.EMPTY.getValue();
+    const D1 : number = DvonnPieceStack.SOURCE.getValue();
+    const W1: number = DvonnPieceStack.PLAYER_ZERO.getValue();
     const WW : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
 
     beforeEach(fakeAsync(() => {
@@ -60,73 +60,119 @@ describe('DvonnComponent', () => {
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
-        fixture = TestBed.createComponent(LocalGameWrapperComponent);
+        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
         wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
+        const debugElement: DebugElement = fixture.debugElement;
         tick(1);
-        gameComponent = wrapper.gameComponent as DvonnComponent;
+        const gameComponent: DvonnComponent = wrapper.gameComponent as DvonnComponent;
+        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
+        const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
+        const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
+        const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
+        testElements = {
+            fixture,
+            debugElement,
+            gameComponent,
+            canUserPlaySpy,
+            cancelMoveSpy,
+            chooseMoveSpy,
+            onValidUserMoveSpy,
+        };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
-        expect(gameComponent).toBeTruthy('DvonnComponent should be created');
+        expect(testElements.gameComponent).toBeTruthy('DvonnComponent should be created');
     });
-    it('should not allow to pass initially', async () => {
-        expect((await gameComponent.pass()).isFailure()).toBeTrue();
+    it('should not allow to pass initially', async() => {
+        expect((await testElements.gameComponent.pass()).isFailure()).toBeTrue();
     });
-    it('should allow valid moves', fakeAsync(async () => {
+    it('should allow valid moves', fakeAsync(async() => {
+        const gameComponent: DvonnComponent = testElements.gameComponent as DvonnComponent;
         expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeTrue();
         expect((await gameComponent.onClick(2, 1)).isSuccess()).toBeTrue();
         expect((await gameComponent.onClick(1, 1)).isSuccess()).toBeTrue();
         expect((await gameComponent.onClick(2, 1)).isSuccess()).toBeTrue();
-        await fixture.whenStable();
-        fixture.detectChanges();
+        await testElements.fixture.whenStable();
+        testElements.fixture.detectChanges();
     }));
-    it('should allow to pass if stuck position', async () => {
-        const board = [
-            [_, _, WW, _, _, _, _, _, _, _, _],
-            [_, _, D, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _]];
+    it('should allow to pass if stuck position', async() => {
+        const board: number[][] = [
+            [__, __, WW, __, __, __, __, __, __, __, __],
+            [__, __, D1, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __]];
         const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
-        gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        gameComponent.updateBoard();
-        expect(gameComponent.canPass).toBeTrue();
-        expect((await gameComponent.pass()).isSuccess()).toBeTrue();
+        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
+        expect(testElements.gameComponent.canPass).toBeTrue();
+        expect((await testElements.gameComponent.pass()).isSuccess()).toBeTrue();
     });
-    it('should disallow moving from an invalid location', async () => {
+    it('should disallow moving from an invalid location', async() => {
+        const gameComponent: DvonnComponent = testElements.gameComponent as DvonnComponent;
         expect((await gameComponent.onClick(0, 0)).isSuccess()).toBeFalse();
     });
-    it('should disallow moving to invalid location', async () => {
+    it('should disallow moving to invalid location', async() => {
+        const gameComponent: DvonnComponent = testElements.gameComponent as DvonnComponent;
         expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeTrue();
         expect((await gameComponent.onClick(1, 0)).isSuccess()).toBeFalse();
     });
-    it('should disallow choosing an incorrect piece', async () => {
-        expect((await gameComponent.onClick(1, 1)).isSuccess()).toBeFalse(); // select black piece (but white plays first)
+    it('should disallow choosing an incorrect piece', async() => {
+        const gameComponent: DvonnComponent = testElements.gameComponent as DvonnComponent;
+        expect((await gameComponent.onClick(1, 1)).isSuccess()).toBeFalse();
+        // select black piece (but white plays first)
     });
-
-    it('should disallow choosing a piece at end of the game', async () => {
-        const board = [
-            [_, _, WW, _, _, _, _, _, _, _, _],
-            [_, _, D, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _]];
+    it('should disallow choosing a piece at end of the game', async() => {
+        const board: number[][] = [
+            [__, __, WW, __, __, __, __, __, __, __, __],
+            [__, __, D1, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __]];
         const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
-        gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        gameComponent.updateBoard();
-        expect((await gameComponent.pass()).isSuccess()).toBeTrue();
+        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
+        expect((await testElements.gameComponent.pass()).isSuccess()).toBeTrue();
+        const gameComponent: DvonnComponent = testElements.gameComponent as DvonnComponent;
         expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeFalse();
     });
+    it('should show disconnection/captures precisely', fakeAsync(async() => {
+        // given board with ready disconnection
+        const board: number[][] = [
+            [__, __, WW, __, __, __, __, __, __, __, __],
+            [__, __, D1, W1, W1, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __]];
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+
+        // When doing that disconnection
+        await expectClickSuccess('#click_3_1', testElements);
+        const expectations: MoveExpectations = {
+            slice,
+            move: DvonnMove.of(new Coord(3, 1), new Coord(2, 1)),
+            scoreZero: null,
+            scoreOne: null,
+        };
+        await expectMoveSuccess('#click_2_1', testElements, expectations);
+        const gameComponent: DvonnComponent = testElements.gameComponent as DvonnComponent;
+        // expect board to show it
+        expect(gameComponent.disconnecteds).toEqual([
+            { x: 4, y: 1, caseContent: W1 },
+        ]);
+    }));
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(DvonnMove, 'decode').and.callThrough();
-        const encoded = gameComponent.encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
-        gameComponent.decodeMove(encoded);
+        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
+        const encoded: number = testElements.gameComponent.encodeMove(move);
+        testElements.gameComponent.decodeMove(encoded);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
         spyOn(DvonnMove, 'encode').and.callThrough();
-        gameComponent.encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
+        testElements.gameComponent.encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
         expect(DvonnMove.encode).toHaveBeenCalledTimes(1);
     });
 });

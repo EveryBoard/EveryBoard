@@ -6,7 +6,6 @@ import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { DvonnRules } from 'src/app/games/dvonn/dvonn-rules/DvonnRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Player } from 'src/app/jscaip/player/Player';
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -21,27 +20,50 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
 
     public scores: number[] = [0, 0];
 
-    public CASE_SIZE = 70;
+    public CASE_SIZE: number = 70;
 
     public lastMove: DvonnMove = null;
 
     public chosen: Coord = null;
 
-    public canPass = false;
+    public canPass: boolean = false;
+
+    public disconnecteds = [];
 
     constructor(public snackBar: MatSnackBar) {
         super(snackBar);
         this.showScore = true;
         this.scores = this.rules.getScores(this.rules.node.gamePartSlice);
     }
-
-    public updateBoard() {
+    public updateBoard(): void {
         const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
         this.lastMove = this.rules.node.move;
+        if (this.lastMove) {
+            this.calculateDisconnecteds();
+        }
         this.canPass = this.rules.canOnlyPass(slice);
         this.chosen = null;
         this.scores = this.rules.getScores(slice);
+    }
+    private calculateDisconnecteds(): void {
+        this.disconnecteds = [];
+        const previousSlice: DvonnPartSlice = this.rules.node.mother.gamePartSlice;
+        const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
+        for (let y: number = 0; y < slice.board.length; y++) {
+            for (let x: number = 0; x < slice.board[0].length; x++) {
+                const coord: Coord = new Coord(x, y);
+                if (coord.equals(this.lastMove.coord) === false) {
+                    const stack: DvonnPieceStack = DvonnPieceStack.of(slice.getBoardAt(coord));
+                    const caseContent: number = previousSlice.getBoardAt(coord);
+                    const previousStack: DvonnPieceStack = DvonnPieceStack.of(caseContent);
+                    if (stack.isEmpty() && !previousStack.isEmpty()) {
+                        const disconnected: { x: number, y: number, caseContent: number } = { x, y, caseContent };
+                        this.disconnecteds.push(disconnected);
+                    }
+                }
+            }
+        }
     }
     public cancelMoveAttempt(): void {
         this.chosen = null;
@@ -55,6 +77,10 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         if (this.chosen === null) {
             return this.choosePiece(x, y);
         } else {
@@ -94,55 +120,44 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         return DvonnBoard.isOnBoard(new Coord(x, y));
     }
     public center(x: number, y: number): Coord {
-        let xshift = 0;
-        switch (y) {
-        case 0:
-            xshift = 0;
-            break;
-        case 1:
-            xshift = this.CASE_SIZE/2;
-            break;
-        case 2:
-            xshift = this.CASE_SIZE;
-            break;
-        case 3:
-            xshift = 3 * this.CASE_SIZE/2;
-            break;
-        case 4:
-            xshift = 2 * this.CASE_SIZE;
-            break;
-        }
+        const xshift: number = y * this.CASE_SIZE/2;
         return new Coord(xshift + this.CASE_SIZE / 2 + (x * this.CASE_SIZE),
-            this.CASE_SIZE / 2 + (y * (this.CASE_SIZE * 0.75)));
+                         this.CASE_SIZE / 2 + (y * (this.CASE_SIZE * 0.75)));
     }
-    public source(stackValue: number): boolean {
+    public isSource(stackValue: number): boolean {
         return DvonnPieceStack.of(stackValue).containsSource();
     }
     public size(stackValue: number): number {
         return DvonnPieceStack.of(stackValue).size();
     }
-    public stylePiece(stackValue: number, hasSource: boolean): any {
-        const stack = DvonnPieceStack.of(stackValue);
+    public stylePiece(stackValue: number, hasSource: boolean): { [key: string]: string } {
+        const stack: DvonnPieceStack = DvonnPieceStack.of(stackValue);
+        const playerColor: string = this.getPlayerColor(stack.getOwner());
         return {
-            fill: (hasSource && stack.size() === 1) ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
-            stroke: hasSource ? 'red' : (stack.belongsTo(Player.ZERO) ? 'gray' : 'black'),
+            fill: (hasSource && stack.size() === 1) ? 'red' : playerColor,
+            stroke: hasSource ? 'red' : playerColor,
         };
     }
     public pieceText(stackValue: number): string {
         return '' + DvonnPieceStack.of(stackValue).size();
     }
     public getHexaCoordinates(center: Coord): string {
-        const x = center.x;
-        const y = center.y;
-        const size = this.CASE_SIZE/2;
-        const halfsize = size / 2;
+        const x: number = center.x;
+        const y: number = center.y;
+        const size: number = this.CASE_SIZE/2;
+        const halfsize: number = size / 2;
         const a: Coord = new Coord(x, y + size);
         const b: Coord = new Coord(x + size, y + halfsize);
         const c: Coord = new Coord(x + size, y - halfsize);
         const d: Coord = new Coord(x, y - size);
         const e: Coord = new Coord(x - size, y - halfsize);
         const f: Coord = new Coord(x - size, y + halfsize);
-        return a.x + ' ' + a.y + ' ' + b.x + ' ' + b.y + ' ' + c.x + ' ' + c.y + ' ' +
-            d.x + ' ' + d.y + ' ' + e.x + ' ' + e.y + ' ' + f.x + ' ' + f.y + ' ' + a.x + ' ' + a.y;
+        return a.x + ' ' + a.y + ' ' +
+               b.x + ' ' + b.y + ' ' +
+               c.x + ' ' + c.y + ' ' +
+               d.x + ' ' + d.y + ' ' +
+               e.x + ' ' + e.y + ' ' +
+               f.x + ' ' + f.y + ' ' +
+               a.x + ' ' + a.y;
     }
 }

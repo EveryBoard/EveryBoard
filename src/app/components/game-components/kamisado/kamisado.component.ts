@@ -64,6 +64,10 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);
         } else {
