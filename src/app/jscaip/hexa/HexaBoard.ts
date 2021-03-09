@@ -8,9 +8,12 @@ export class HexaBoard<T> {
         return new HexaBoard(ArrayUtils.createBiArray(radius*2+1, radius*2+1, empty), radius, empty, encoder);
     }
     public static fromNumberTable<T>(table: NumberTable, empty: T, encoder: Encoder<T>): HexaBoard<T> {
-        HexaBoard.checkTableFormat(table);
         const contents: Table<T> = ArrayUtils.mapBiArray(table, encoder.decode);
-        return new HexaBoard(contents, (contents.length-1)/2, empty, encoder);
+        return HexaBoard.fromTable(contents, empty, encoder);
+    }
+    public static fromTable<T>(table: Table<T>, empty: T, encoder: Encoder<T>): HexaBoard<T> {
+        HexaBoard.checkTableFormat(table);
+        return new HexaBoard(table, (table.length-1)/2, empty, encoder);
     }
     private static checkTableFormat<T>(table: Table<T>) {
         if (table.length % 2 == 0) {
@@ -19,10 +22,6 @@ export class HexaBoard<T> {
         if (table[0].length !== table.length) {
             throw new Error('Cannot create an HexaBoard from a non-square table');
         }
-    }
-    public static fromTable<T>(table: Table<T>, empty: T, encoder: Encoder<T>): HexaBoard<T> {
-        HexaBoard.checkTableFormat(table);
-        return new HexaBoard(table, (table.length-1)/2, empty, encoder);
     }
     public constructor(public readonly contents: Table<T>,
                        public readonly radius: number,

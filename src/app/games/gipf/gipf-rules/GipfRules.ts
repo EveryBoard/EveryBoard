@@ -17,6 +17,18 @@ import { GipfPiece } from '../gipf-piece/GipfPiece';
 
 export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfPartSlice, LegalityStatus> {}
 
+export class GipfFailure {
+    static CAPTURE_MUST_BE_ALIGNED: string =
+        `Une capture ne peut que se faire si 4 pièces de votre couleurs sont alignées, ce n'est pas le cas`;
+    static INVALID_CAPTURED_PIECES: string =
+        `La capture n'est pas valide: trop de pièces sont capturées, ou bien trop peu`;
+    static MISSING_CAPTURES: string = `Toutes les captures nécessaires n'ont pas été effectuées`;
+    static PLACEMENT_NOT_ON_BORDER: string = 'Les pièces doivent être placée sur une case du bord du plateau';
+    static INVALID_PLACEMENT_DIRECTION: string = `La direction du placement n'est pas valide`;
+    static PLACEMENT_WITHOUT_DIRECTION: string = 'Un placement a lieu sans direction';
+    static PLACEMENT_ON_COMPLETE_LINE: string = 'Une pièce ne peut pas être placée sur une ligne complète';
+}
+
 export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus> {
     public applyLegalMove(move: GipfMove, slice: GipfPartSlice, status: GipfLegalityStatus):
       { resultingMove: GipfMove; resultingSlice: GipfPartSlice; } {
@@ -395,8 +407,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const linePortionOpt: MGPOptional<[Coord, Coord, Direction]> =
             this.getLinePortionWithFourPiecesOfPlayer(slice, player, capture.getLine());
         if (linePortionOpt.isAbsent()) {
-            return MGPValidation.failure(
-                'Une capture ne peut que se faire si 4 pièces de votre couleurs sont alignées, ce n\'est pas le cas');
+            return MGPValidation.failure(GipfFailure.CAPTURE_MUST_BE_ALIGNED);
         }
 
         const linePortion: [Coord, Coord, Direction] = linePortionOpt.get();
@@ -405,8 +416,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         if (capturable.equals(capture)) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure(
-                'La capture n\'est pas valide: trop de pièces sont capturées, ou bien trop peu');
+            return MGPValidation.failure(GipfFailure.INVALID_CAPTURED_PIECES);
         }
     }
     private noMoreCapturesValidity(slice: GipfPartSlice): MGPValidation {
@@ -416,7 +426,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure('Toutes les captures nécessaires n\'ont pas été effectuées');
+            return MGPValidation.failure(GipfFailure.MISSING_CAPTURES);
         }
     }
     public placementValidity(slice: GipfPartSlice, placement: GipfPlacement): MGPValidation {
@@ -426,17 +436,17 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
         if (slice.hexaBoard.getAt(placement.coord) !== GipfPiece.EMPTY) {
             if (placement.direction.isAbsent()) {
-                return MGPValidation.failure('Un placement a lieu sans direction');
+                return MGPValidation.failure(GipfFailure.PLACEMENT_WITHOUT_DIRECTION);
             }
             if (this.isLineComplete(slice, placement.coord, placement.direction.get())) {
-                return MGPValidation.failure('Une pièce ne peut pas être placée sur une ligne complète');
+                return MGPValidation.failure(GipfFailure.PLACEMENT_ON_COMPLETE_LINE);
             }
             for (const dir of this.getAllDirectionsForEntrance(slice, placement.coord)) {
                 if (dir === placement.direction.get()) {
                     return MGPValidation.SUCCESS;
                 }
             }
-            return MGPValidation.failure('La direction du placement n\'est pas valide');
+            return MGPValidation.failure(GipfFailure.INVALID_PLACEMENT_DIRECTION);
         }
         return MGPValidation.SUCCESS;
     }
@@ -444,7 +454,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         if (slice.hexaBoard.isOnBorder(coord)) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure('Les pièces doivent être placée sur une case du bord du plateau');
+            return MGPValidation.failure(GipfFailure.PLACEMENT_NOT_ON_BORDER);
         }
     }
 }

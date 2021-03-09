@@ -1,6 +1,6 @@
 import { TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 
-import { Arrow, GipfComponent } from './gipf.component';
+import { Arrow, GipfComponent, GipfComponentFailure } from './gipf.component';
 import { AppModule } from 'src/app/app.module';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
@@ -19,7 +19,7 @@ import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-mo
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
-import { GipfNode } from 'src/app/games/gipf/gipf-rules/GipfRules';
+import { GipfFailure, GipfNode } from 'src/app/games/gipf/gipf-rules/GipfRules';
 import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { By } from '@angular/platform-browser';
@@ -96,7 +96,7 @@ describe('GipfComponent', () => {
     });
     it('should fail on selecting an invalid direction', fakeAsync(async() => {
         await expectClickSuccess('#click_0_3', testElements);
-        await expectClickFail('#click_1_1', testElements, 'Direction du mouvement invalide');
+        await expectClickFail('#click_1_1', testElements, GipfFailure.INVALID_PLACEMENT_DIRECTION);
     }));
     it('should allow placement directly resulting in a move if there is no initial capture', fakeAsync(async() => {
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(-3, 1), MGPOptional.empty()), [], []);
@@ -109,8 +109,7 @@ describe('GipfComponent', () => {
         await expectMoveSuccess('#click_-3_1', testElements, expectation);
     }));
     it('should not accept selecting a non-border coord for placement', fakeAsync(async() => {
-        await expectClickFail('#click_0_0', testElements,
-                              'Les pièces doivent être placée sur une case du bord du plateau');
+        await expectClickFail('#click_0_0', testElements, GipfFailure.PLACEMENT_NOT_ON_BORDER);
     }));
     it('should show possible directions after selecting an occupied placement coord', fakeAsync(async() => {
         await expectClickSuccess('#click_3_0', testElements);
@@ -127,8 +126,7 @@ describe('GipfComponent', () => {
     }));
     it('should not accept selecting something else than one of the proposed direction', fakeAsync(async() => {
         await expectClickSuccess('#click_3_0', testElements);
-        await expectClickFail('#click_0_0', testElements,
-                              `Veuillez sélectionner une destination à une distance de 1 de l'entrée`);
+        await expectClickFail('#click_0_0', testElements, GipfComponentFailure.CLICK_FURTHER_THAN_ONE_COORD);
     }));
     it('should not allow clicking on anything else than a capture if there is one in the initial captures', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -144,8 +142,7 @@ describe('GipfComponent', () => {
         testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
         testElements.gameComponent.updateBoard();
 
-        const reason: string = `Cette case ne fait partie d'aucune capture`;
-        await expectClickFail('#click_3_0', testElements, reason);
+        await expectClickFail('#click_3_0', testElements, GipfComponentFailure.NOT_PART_OF_CAPTURE);
     }));
     it('should make pieces disappear upon selection of a capture', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -209,8 +206,7 @@ describe('GipfComponent', () => {
         testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
         testElements.gameComponent.updateBoard();
 
-        const reason: string = `Cette case fait partie de deux captures possibles, veuillez une autre case de la capture que vous souhaitez prendre`;
-        await expectClickFail('#click_-1_0', testElements, reason);
+        await expectClickFail('#click_-1_0', testElements, GipfComponentFailure.AMBIGUOUS_CAPTURE_COORD);
     }));
     it('should not allow clicking on anything else than a capture if there is one in the final captures', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -229,8 +225,7 @@ describe('GipfComponent', () => {
         // Perform the placement to prepare for final capture
         await expectClickSuccess('#click_-3_0', testElements);
         await expectClickSuccess('#click_-2_0', testElements);
-        const reason: string = `Cette case ne fait partie d'aucune capture`;
-        await expectClickFail('#click_0_0', testElements, reason);
+        await expectClickFail('#click_0_0', testElements, GipfComponentFailure.NOT_PART_OF_CAPTURE);
     }));
     it('should perform move after final captures has been done', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -289,9 +284,9 @@ describe('GipfComponent', () => {
         await expectClickSuccess('#click_-2_3', testElements);
         await expectMoveSuccess('#click_-1_2', testElements, expectation);
 
-        expect(getComponent().getCaseStyle(-2, 3)).toEqual(getComponent().MOVED_STYLE);
-        expect(getComponent().getCaseStyle(-1, 2)).toEqual(getComponent().MOVED_STYLE);
-        expect(getComponent().getCaseStyle(0, 1)).not.toEqual(getComponent().MOVED_STYLE);
+        expect(getComponent().getCaseStyle(-2, 3).fill).toEqual(getComponent().MOVED_FILL);
+        expect(getComponent().getCaseStyle(-1, 2).fill).toEqual(getComponent().MOVED_FILL);
+        expect(getComponent().getCaseStyle(0, 1).fill).not.toEqual(getComponent().MOVED_FILL);
     }));
     it('should highlight capturable pieces', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -400,7 +395,7 @@ describe('GipfComponent', () => {
         testElements.gameComponent.updateBoard();
 
         await expectClickSuccess('#click_-2_3', testElements);
-        await expectClickFail('#click_-1_2', testElements, 'Une pièce ne peut pas être placée sur une ligne complète');
+        await expectClickFail('#click_-1_2', testElements, GipfFailure.PLACEMENT_ON_COMPLETE_LINE);
     }));
     it('should accept moves with two initial captures', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
