@@ -74,6 +74,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         this.constructedSlice = slice;
         this.captured = [];
         this.currentlyMoved = [];
+        this.moved = [];
 
         const move: GipfMove = this.rules.node.move;
         if (move != null) {
