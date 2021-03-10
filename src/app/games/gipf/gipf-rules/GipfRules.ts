@@ -161,7 +161,6 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         return intersections;
     }
     public getPossibleCaptures(slice: GipfPartSlice): GipfCapture[] {
-        // Simplification of getPossibleCaptureCombinations for the basic variant
         const player: Player = slice.getCurrentPlayer();
         const captures: GipfCapture[] = [];
         this.getLinePortionsWithFourPiecesOfPlayer(slice, player)
@@ -252,7 +251,6 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         });
         return new GipfPartSlice(board, slice.turn, sidePieces, capturedPieces);
     }
-
     private getPlacements(slice: GipfPartSlice): GipfPlacement[] {
         const placements: GipfPlacement[] = [];
         slice.hexaBoard.getAllBorders().forEach((entrance: Coord) => {
