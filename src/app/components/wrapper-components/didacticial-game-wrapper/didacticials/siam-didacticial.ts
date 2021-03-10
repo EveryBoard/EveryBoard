@@ -19,7 +19,7 @@ const r: number = SiamPiece.BLACK_RIGHT.value;
 const d: number = SiamPiece.BLACK_DOWN.value;
 
 export const siamDidacticial: DidacticialStep[] = [
-    new DidacticialStep(
+    DidacticialStep.informational(
         'But du jeu',
         `Le but du Siam est d'être le premier à pousser une montagne hors du plateau.
          Le plateau de départ en contient trois, au centre, et aucuns pions ne sont initialement sur le plateau.
@@ -28,9 +28,8 @@ export const siamDidacticial: DidacticialStep[] = [
          2. Changer l'orientation d'une de ses pièces et optionnellement la déplacer.
          3. Sortir un de ses pions du plateau.`,
         SiamPartSlice.getInitialSlice(),
-        [], [], null, null,
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Insérer une pièce',
         `Chaque joueur a en tout 5 pièces.
          Tant qu'il n'en as pas 5 sur le plateau, il peut en insérer une, pour ce faire:
@@ -44,11 +43,10 @@ export const siamDidacticial: DidacticialStep[] = [
             new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN),
             new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT),
         ],
-        [],
         'Bravo',
         'Raté, vous n\'avez pas inséré au bon endroit.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Déplacer une pièce',
         `Nous distinguerons içi "déplacer" et "pousser".
          Un déplacement de pièce se fait de sa case à une case vide voisine horizontalement ou verticalement.
@@ -67,11 +65,10 @@ export const siamDidacticial: DidacticialStep[] = [
             [_, _, U, _, _],
         ], 0),
         [new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN)],
-        [],
         'Bravo, vous avez fait un dérapage!',
         'Raté.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Sortir une pièce',
         `Sortir une pièce du plateau est plus simple, préciser son orientation d'arrivée n'est pas nécessaire.
          Sortez cette pièce du plateau!`,
@@ -83,11 +80,10 @@ export const siamDidacticial: DidacticialStep[] = [
             [_, _, U, _, _],
         ], 0),
         [new SiamMove(2, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN)],
-        [],
         `Bravo, même si dans le contexte c'était plutôt un mouvement inutile.`,
         'Raté, elle est encore sur le plateau.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Pousser',
         `Quand la case d'arrivée de votre déplacement est occupée, on parle de "pousser".
          Pour pousser il faut plusieurs critères:
@@ -105,11 +101,10 @@ export const siamDidacticial: DidacticialStep[] = [
             [_, _, r, l, L],
         ], 0),
         [new SiamMove(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT)],
-        [],
         'Bravo',
         'Raté',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Victoire',
         `Si personne ne vous barre la route, il est simple de déterminer que vous êtes le vainqueur.
          Cependant, si vous poussez un adversaire orienté dans la même direction que vous, il sera considéré vainqueur.
@@ -123,7 +118,6 @@ export const siamDidacticial: DidacticialStep[] = [
             [_, _, _, _, M],
         ], 0),
         [new SiamMove(2, 2, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT)],
-        [],
         'Bravo, vous avez gagné!',
         'Raté, vous avez perdu.',
     ),

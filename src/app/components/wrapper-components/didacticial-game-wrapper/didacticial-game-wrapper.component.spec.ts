@@ -13,14 +13,12 @@ import { By } from '@angular/platform-browser';
 import { DidacticialGameWrapperComponent } from './didacticial-game-wrapper.component';
 import {
     clickElement, expectClickFail, expectClickForbidden, expectClickSuccess,
-    expectMoveFailure,
     expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { DidacticialStep } from './DidacticialStep';
 import { QuartoComponent } from '../../game-components/quarto/quarto.component';
 import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { Move } from 'src/app/jscaip/Move';
 
 const activatedRouteStub = {
     snapshot: {
@@ -41,7 +39,7 @@ class AuthenticationServiceMock {
         return AuthenticationServiceMock.USER;
     }
 }
-fdescribe('DidacticialGameWrapperComponent', () => {
+describe('DidacticialGameWrapperComponent', () => {
     let component: DidacticialGameWrapperComponent;
 
     let testElements: TestElements;
@@ -94,11 +92,10 @@ fdescribe('DidacticialGameWrapperComponent', () => {
             [0, 1, 2, 3],
         ], 0, QuartoPiece.BBAA);
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title',
                 'instruction',
                 slice,
-                [],
                 ['#click_0_0'],
                 'Bravo.',
                 'Perdu.',
@@ -118,20 +115,20 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should show title of the steps, the selected one in bold', fakeAsync(async() => {
         // Given a DidacticialStep with 3 steps
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
-                'title 0', 'instruction',
+            DidacticialStep.informational(
+                'title 0',
+                'instruction',
                 QuartoPartSlice.getInitialSlice(),
-                [], [], 'Bravo.', 'Perdu.',
             ),
-            new DidacticialStep(
-                'title 1', 'instruction',
+            DidacticialStep.informational(
+                'title 1',
+                'instruction',
                 QuartoPartSlice.getInitialSlice(),
-                [], [], 'Bravo.', 'Perdu.',
             ),
-            new DidacticialStep(
-                'title 2', 'instruction',
+            DidacticialStep.informational(
+                'title 2',
+                'instruction',
                 QuartoPartSlice.getInitialSlice(),
-                [], [], 'Bravo.', 'Perdu.',
             ),
         ];
         // when page rendered
@@ -155,20 +152,20 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should go to specific step when clicking on it', fakeAsync(async() => {
         // Given a DidacticialStep with 3 steps
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
-                'title 0', 'instruction 0',
+            DidacticialStep.informational(
+                'title 0',
+                'instruction 0',
                 QuartoPartSlice.getInitialSlice(),
-                [], [], 'Bravo.', 'Perdu.',
             ),
-            new DidacticialStep(
-                'title 1', 'instruction 1',
+            DidacticialStep.informational(
+                'title 1',
+                'instruction 1',
                 QuartoPartSlice.getInitialSlice(),
-                [], [], 'Bravo.', 'Perdu.',
             ),
-            new DidacticialStep(
-                'title 2', 'instruction 2',
+            DidacticialStep.informational(
+                'title 2',
+                'instruction 2',
                 QuartoPartSlice.getInitialSlice(),
-                [], [], 'Bravo.', 'Perdu.',
             ),
         ];
         component.startDidacticial(didacticial);
@@ -185,7 +182,7 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should show highlight of first click when awaiting a move on multiclick game component', fakeAsync(async() => {
         // Given a DidacticialStep with several moves
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forMove(
                 'title',
                 'Put your piece in a corner and give the opposite one.',
                 QuartoPartSlice.getInitialSlice(),
@@ -195,7 +192,6 @@ fdescribe('DidacticialGameWrapperComponent', () => {
                     new QuartoMove(3, 3, QuartoPiece.BBBB),
                     new QuartoMove(3, 0, QuartoPiece.BBBB),
                 ],
-                [],
                 'Bravo.',
                 'Perdu.',
             ),
@@ -213,7 +209,7 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should show success message after step success (one of several moves)', fakeAsync(async() => {
         // Given a DidacticialStep with several moves
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forMove(
                 'title',
                 'Put your piece in a corner and give the opposite one.',
                 QuartoPartSlice.getInitialSlice(),
@@ -223,7 +219,6 @@ fdescribe('DidacticialGameWrapperComponent', () => {
                     new QuartoMove(3, 3, QuartoPiece.BBBB),
                     new QuartoMove(3, 0, QuartoPiece.BBBB),
                 ],
-                [],
                 'Bravo.',
                 'Perdu.',
             ),
@@ -250,7 +245,7 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should show failure message after step failure (one of several moves)', fakeAsync(async() => {
         // Given a DidacticialStep with several move
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forMove(
                 'title',
                 'Put your piece in a corner and give the opposite one.',
                 QuartoPartSlice.getInitialSlice(),
@@ -260,7 +255,6 @@ fdescribe('DidacticialGameWrapperComponent', () => {
                     new QuartoMove(3, 3, QuartoPiece.BBBB),
                     new QuartoMove(3, 0, QuartoPiece.BBBB),
                 ],
-                [],
                 'Bravo.',
                 'Perdu.',
             ),
@@ -287,11 +281,10 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should show success message after step success (one of several clics)', fakeAsync(async() => {
         // Given a DidacticialStep with several clics
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title',
                 'Click on (0, 0) or (3, 3)',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_0_0', '#chooseCoord_3_3'],
                 'Bravo.',
                 'Perdu.',
@@ -311,11 +304,10 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should show failure message after step failure (one of several clics)', fakeAsync(async() => {
         // Given a DidacticialStep with several clics
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title',
                 'Click on (0, 0) or (3, 3)',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_0_0', '#chooseCoord_3_3'],
                 'Bravo.',
                 'Perdu.',
@@ -335,11 +327,10 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should forbid clicking on the board when step don\'t await anything', fakeAsync(async() => {
         // Given a DidacticialStep on which nothing is awaited
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.informational(
                 'title 0',
                 'instruction 0',
                 QuartoPartSlice.getInitialSlice(),
-                [], [], null, null,
             ),
         ];
         component.startDidacticial(didacticial);
@@ -355,8 +346,9 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('When unwanted move is done, toast message should be shown and restart needed', fakeAsync(async() => {
         // Given a DidacticialStep with possible invalid clicks
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
-                'title 0', 'instruction 0.',
+            DidacticialStep.forMove(
+                'title 0',
+                'instruction 0.',
                 new QuartoPartSlice([
                     [0, 16, 16, 16],
                     [16, 16, 16, 16],
@@ -364,7 +356,8 @@ fdescribe('DidacticialGameWrapperComponent', () => {
                     [16, 16, 16, 16],
                 ], 0, QuartoPiece.ABBA),
                 [new QuartoMove(3, 3, QuartoPiece.BBBB)],
-                [], 'Bravo.', 'Perdu.',
+                'Bravo.',
+                'Perdu.',
             ),
         ];
         component.startDidacticial(didacticial);
@@ -386,17 +379,18 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('When unwanted click, and no move done, restart should not be needed', fakeAsync(async() => {
         // Given a DidacticialStep with possible invalid clicks
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
-                'title 0', 'instruction 0.',
+            DidacticialStep.forClick(
+                'title 0',
+                'instruction 0.',
                 new QuartoPartSlice([
                     [0, 16, 16, 16],
                     [16, 16, 16, 16],
                     [16, 16, 16, 16],
                     [16, 16, 16, 16],
                 ], 0, QuartoPiece.ABBA),
-                [],
                 ['#chooseCoord_3_3'],
-                'Bravo.', 'Perdu.',
+                'Bravo.',
+                'Perdu.',
             ),
         ];
         component.startDidacticial(didacticial);
@@ -415,21 +409,23 @@ fdescribe('DidacticialGameWrapperComponent', () => {
         expect(currentReason).toBe(expectedReason);
         expect(testElements.gameComponent.canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
     }));
-    fit('Should propose to see the solution When move attempt done', fakeAsync(async() => {
-        // Given a didacticial on which a wrong move has been done
+    it('Should propose to see the solution When move attempt done', fakeAsync(async() => {
+        // Given a didacticial on which a non-awaited move has been done
         const awaitedMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BBAA);
+        const stepInitialTurn: number = 0;
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
-                'title 0', 'instruction 0.',
+            DidacticialStep.forMove(
+                'title 0',
+                'instruction 0.',
                 new QuartoPartSlice([
                     [0, 16, 16, 16],
                     [16, 16, 16, 16],
                     [16, 16, 16, 16],
                     [16, 16, 16, 16],
-                ], 0, QuartoPiece.ABBA),
+                ], stepInitialTurn, QuartoPiece.ABBA),
                 [awaitedMove],
-                [],
-                'Bravo.', 'Perdu.',
+                'Bravo.',
+                'Perdu.',
             ),
         ];
         component.startDidacticial(didacticial);
@@ -445,19 +441,28 @@ fdescribe('DidacticialGameWrapperComponent', () => {
         expect(component.moveAttemptMade).toBeTrue();
         expect(component.stepFinished[component.stepIndex]).toBeFalse();
 
+        // When clicking "Show Solution"
         expect(await clickElement('#showSolutionButton', testElements)).toBeTrue();
+
+        // Expect the first awaited move to have been done
         expect(component.gameComponent.rules.node.move).toEqual(awaitedMove);
+        expect(component.gameComponent.rules.node.gamePartSlice.turn).toEqual(stepInitialTurn + 1);
+        // expect 'solution' message to be shown
+        const currentMessage: string =
+            testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
+        expect(currentMessage).toBe('Bravo.');
+        // expect step not to be considered a success
+        expect(component.stepFinished[component.stepIndex]).toBeFalse();
     }));
     // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
     it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {
         // Given any DidacticialStep where an invalid move has been done
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forMove(
                 'title',
                 'instruction',
                 QuartoPartSlice.getInitialSlice(),
                 [new QuartoMove(0, 0, QuartoPiece.BBBB)],
-                [],
                 'Bravo.',
                 'Perdu.',
             ),
@@ -486,12 +491,11 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should start step again after clicking "retry" on step success', fakeAsync(async() => {
         // Given any DidacticialStep
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forMove(
                 'title',
                 'instruction',
                 QuartoPartSlice.getInitialSlice(),
                 [new QuartoMove(0, 0, QuartoPiece.BBBB)],
-                [],
                 'Bravo.',
                 'Perdu.',
             ),
@@ -519,7 +523,7 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should forbid clicking again on the board after success', fakeAsync(async() => {
         // Given a DidacticialStep on which a valid move has been done.
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forMove(
                 'title',
                 'Put your piece in a corner and give the opposite one.',
                 QuartoPartSlice.getInitialSlice(),
@@ -529,7 +533,6 @@ fdescribe('DidacticialGameWrapperComponent', () => {
                     new QuartoMove(3, 3, QuartoPiece.BBBB),
                     new QuartoMove(3, 0, QuartoPiece.BBBB),
                 ],
-                [],
                 'Bravo.',
                 'Perdu.',
             ),
@@ -559,11 +562,10 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should allow clicking again after restarting succeeded steps', fakeAsync(async() => {
         // Given any DidacticialStep whose step has been succeeded and restarted
         component.steps = [
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title',
                 'instruction',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#choosePiece_15'],
                 'Bravo.',
                 'Perdu.',
@@ -585,20 +587,18 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should allow to skip step', fakeAsync(async() => {
         // Given a DidacticialStep with one clic
         component.steps = [
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title',
                 'Explanation Explanation Explanation.',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['chooseCoord_0_0'],
                 'Bravo.',
                 'Perdu.',
             ),
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title',
                 'Following Following Following.',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_0_0'],
                 'Fini.',
                 'Reperdu.',
@@ -617,23 +617,15 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should mark "infos-step" as finished when skipped', fakeAsync(async() => {
         // Given a DidacticialStep with no action to do
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.informational(
                 'title',
                 'Explanation Explanation Explanation.',
                 QuartoPartSlice.getInitialSlice(),
-                [],
-                [],
-                null,
-                null,
             ),
-            new DidacticialStep(
+            DidacticialStep.informational(
                 'title',
                 'Suite suite.',
                 QuartoPartSlice.getInitialSlice(),
-                [],
-                [],
-                null,
-                null,
             ),
         ];
         component.startDidacticial(didacticial);
@@ -653,29 +645,26 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should move to the next unfinished step when next step is finished', fakeAsync(async() => {
         // Given a didacticial on which the two first steps have been skipped
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title 0',
                 'instruction 0',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_0_0'],
                 'Bravo.',
                 'Perdu.',
             ),
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title 1',
                 'instruction 1',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_1_1'],
                 'Bravo.',
                 'Perdu.',
             ),
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title 2',
                 'instruction 2',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_2_2'],
                 'Bravo.',
                 'Perdu.',
@@ -698,29 +687,26 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should move to the first unfinished step when all next steps are finished', fakeAsync(async() => {
         // Given a didacticial on which the middle steps have been skipped
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title 0',
                 'instruction 0',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_0_0'],
                 'Bravo.',
                 'Perdu.',
             ),
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title 1',
                 'instruction 1',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_1_1'],
                 'Bravo.',
                 'Perdu.',
             ),
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title 2',
                 'instruction 2',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_2_2'],
                 'Bravo.',
                 'Perdu.',
@@ -744,11 +730,10 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should show congratulation at the end of the didacticial, hide next button', fakeAsync(async() => {
         // Given a DidacticialStep whose last step has been done
         const didacticial: DidacticialStep[] = [
-            new DidacticialStep(
+            DidacticialStep.forClick(
                 'title 0',
                 'instruction 0',
                 QuartoPartSlice.getInitialSlice(),
-                [],
                 ['#chooseCoord_0_0'],
                 'Bravo.',
                 'Perdu.',
@@ -775,23 +760,15 @@ fdescribe('DidacticialGameWrapperComponent', () => {
     it('Should allow to restart the whole didacticial when finished', fakeAsync(async() => {
         // Given a finish tutorial
         component.startDidacticial([
-            new DidacticialStep(
+            DidacticialStep.informational(
                 'title 0',
                 'instruction 0',
                 QuartoPartSlice.getInitialSlice(),
-                [],
-                [],
-                'Bravo.',
-                'Perdu.',
             ),
-            new DidacticialStep(
+            DidacticialStep.informational(
                 'title 1',
                 'instruction 1',
                 QuartoPartSlice.getInitialSlice(),
-                [],
-                [],
-                'Bravo.',
-                'Perdu.',
             ),
         ]);
         expect(await clickElement('#nextButton', testElements)).toBeTrue();

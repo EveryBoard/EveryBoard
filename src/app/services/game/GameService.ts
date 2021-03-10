@@ -230,7 +230,7 @@ export class GameService {
 
         const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
-        const listMoves: number[] = ArrayUtils.copyArray(part.listMoves);
+        const listMoves: number[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
         const update: PICurrentPart = {
             listMoves,

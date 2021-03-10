@@ -25,6 +25,7 @@ import { saharaDidacticial } from './didacticials/sahara-didacticial';
 import { siamDidacticial } from './didacticials/siam-didacticial';
 import { tablutDidacticial } from './didacticials/tablut-didacticial';
 import { gipfDidacticial } from './didacticials/gipf-didacticial';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -33,7 +34,7 @@ import { gipfDidacticial } from './didacticials/gipf-didacticial';
 })
 export class DidacticialGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     public COMPLETED_TUTORIAL_MESSAGE: string = 'Félicitation, vous avez fini le tutoriel.'
 
@@ -134,6 +135,9 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
                     'didacticialGameWrapper.onValidUserMove: awaited move!');
                 this.showStepSuccess();
             } else {
+                display(
+                    DidacticialGameWrapperComponent.VERBOSE,
+                    'didacticialGameWrapper.onValidUserMove: not the move that was awaited.');
                 this.currentMessage = currentStep.failureMessage;
             }
         } else {
@@ -199,7 +203,15 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             this.showStep(indexUndone);
         }
     }
-    public showSolution(): void {
-        console.log("bluppy poop");
+    public async showSolution(): Promise<void> {
+        display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.showSolution()');
+        const step: DidacticialStep = this.steps[this.stepIndex];
+        const awaitedMove: Move = step.acceptedMoves[0];
+        this.showStep(this.stepIndex);
+        this.gameComponent.rules.choose(awaitedMove);
+        this.gameComponent.updateBoard();
+        this.moveAttemptMade = true;
+        this.currentMessage = step.successMessage;
+        this.cdr.detectChanges();
     }
 }

@@ -125,16 +125,16 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
                         combination.some((c: number) => intersections[index].some((c2: number) => c == c2));
                     if (combinationIntersectsWithIndex === true) {
                         // Don't add it if there is an intersection
-                        newCombinations.push(ArrayUtils.copyArray(combination));
+                        newCombinations.push(ArrayUtils.copyImmutableArray(combination));
                     } else if (intersectsWithFutureIndex) {
                         // duplicate before adding index to a combination where there is no intersection
-                        newCombinations.push(ArrayUtils.copyArray(combination));
+                        newCombinations.push(ArrayUtils.copyImmutableArray(combination));
                         combination.push(index);
-                        newCombinations.push(ArrayUtils.copyArray(combination));
+                        newCombinations.push(ArrayUtils.copyImmutableArray(combination));
                     } else {
                         // No intersection whatsoever, add the capture
                         combination.push(index);
-                        newCombinations.push(ArrayUtils.copyArray(combination));
+                        newCombinations.push(ArrayUtils.copyImmutableArray(combination));
                     }
                 }
                 captureCombinations = newCombinations;

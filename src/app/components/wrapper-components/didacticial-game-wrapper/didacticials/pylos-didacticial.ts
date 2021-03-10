@@ -8,16 +8,15 @@ const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 export const pylosDidacticial: DidacticialStep[] = [
-    new DidacticialStep(
+    DidacticialStep.informational(
         'But du jeu',
         `Au Pylos, le but est d'être le dernier à jouer.
          Pour cela, il faut économiser ses pièces.
          Les ronds gris sont les cases sur lesquelles vous pouvez déposez vos pièces.
          Dès qu'un joueur dépose sa dernière pièce, il perd immédiatement la partie.`,
         PylosPartSlice.getInitialSlice(),
-        [], [], null, null,
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Grimper',
         `Quand 4 pièces forment un carré, il est possible de placer une cinquième pièce dessus.
          Cependant, à ce moment là, se crée une opportunité d'économiser une pièce.
@@ -42,7 +41,6 @@ export const pylosDidacticial: DidacticialStep[] = [
             ],
         ], 0),
         [PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), [])],
-        [],
         `Bravo.
          Notes importantes:
          1. On ne peut déplacer une pièce qui est en dessus d'une autre.
@@ -50,7 +48,7 @@ export const pylosDidacticial: DidacticialStep[] = [
          3. Un déplacement ne peut se faire que quand la case d'arrivée est plus haute que la case de départ.`,
         'Raté',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Carré (1/3)',
         `Quand la pièce que vous posez est la quatrième d'un carré de pièces de votre couleur,
          vous pouvez choisir alors n'importe où sur le plateau, une à deux de vos pièces.
@@ -82,11 +80,10 @@ export const pylosDidacticial: DidacticialStep[] = [
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 0, 0)]),
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
         ],
-        [],
         'Bravo, vous avez économisé une pièce.',
         'Raté.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Carré (2/3)',
         `Vous jouez Foncé.
          Faites comme à l'étape précédente, mais cliquez cette fois sur les deux pièces du haut.`,
@@ -108,11 +105,10 @@ export const pylosDidacticial: DidacticialStep[] = [
             ],
         ], 0),
         [PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)])],
-        [],
         'Bravo, vous avez économisé deux pièces.',
         'Raté.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Carré (3/3)',
         `Vous jouez Foncé.
          Faites comme à l'étape précédente, mais cette fois:
@@ -136,7 +132,6 @@ export const pylosDidacticial: DidacticialStep[] = [
             ],
         ], 0),
         [PylosMove.fromDrop(new PylosCoord(0, 0, 1), [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)])],
-        [],
         'Bravo, vous avez économisé deux pièces. Vous êtes maintenant prêt à y jouer.',
         'Raté.',
     ),

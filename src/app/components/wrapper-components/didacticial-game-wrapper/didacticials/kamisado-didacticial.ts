@@ -25,7 +25,7 @@ const br: number = KamisadoPiece.ZERO.BROWN.getValue();
 const Br: number = KamisadoPiece.ONE.BROWN.getValue();
 
 export const kamisadoDidacticial: DidacticialStep[] = [
-    new DidacticialStep(
+    DidacticialStep.informational(
         'But du jeu',
         `Au Kamisado, il y a deux façons de gagner: soit en plaçant une de vos pièces sur la ligne de départ de
          l'adversaire, soit en forçant l'adversaire à faire un coup qui bloque la partie.
@@ -40,8 +40,8 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [__, __, __, __, __, __, __, __],
             [__, gr, re, ye, pi, pu, bl, or],
         ]),
-        [], [], '', ''),
-    new DidacticialStep(
+    ),
+    DidacticialStep.forMove(
         'Plateau de départ et déplacement initial',
         `Voici le plateau de départ.
          Au Kamisado, les pièces ne peuvent se déplacer que vers l'avant, verticalement ou diagonalement.
@@ -49,10 +49,10 @@ export const kamisadoDidacticial: DidacticialStep[] = [
          déplacez votre pièce bleue de deux cases verticalement.`,
         KamisadoPartSlice.getInitialSlice(),
         [KamisadoMove.of(new Coord(6, 7), new Coord(6, 5))],
-        [],
         `Parfait! Notez bien que chacune de vos pièces a une couleur différente.`,
-        `Vous n'avez pas avancé votre pièce bleue de deux cases!`),
-    new DidacticialStep(
+        `Vous n'avez pas avancé votre pièce bleue de deux cases!`,
+    ),
+    DidacticialStep.forMove(
         'Déplacement',
         `Considérons maintenant le coup du joueur clair, après le déplacement de la pièce bleue.
          Tous les déplacements après le déplacement initial se font obligatoirement à partir de la pièce correspondant
@@ -71,10 +71,10 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [br, gr, re, ye, pi, pu, __, or],
         ]),
         [KamisadoMove.of(new Coord(3, 0), new Coord(3, 6))],
-        [],
         'Parfait!',
-        `Vous n'avez pas avancé votre pièce rose sur la case bleue!`),
-    new DidacticialStep(
+        `Vous n'avez pas avancé votre pièce rose sur la case bleue!`,
+    ),
+    DidacticialStep.forMove(
         'Blocage',
         `Foncé s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
          Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
@@ -89,11 +89,11 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [__, __, __, Pi, __, __, __, __],
             [br, gr, re, ye, pi, pu, __, or],
         ]),
-        [],
-        [],
+        [], // TODO put a move
         'Parfait!',
-        `Vous n'avez pas avancé votre pièce rose sur la case bleue`),
-    new DidacticialStep(
+        `Vous n'avez pas avancé votre pièce rose sur la case bleue`,
+    ),
+    DidacticialStep.forMove(
         'Victoire par blocage',
         `À tout moment, si un joueur provoque un blocage total du jeu, il perd.
          C'est-à-dire que si un joueur oblige son adversaire à déplacer une pièce que l'adversaire ne peut bouger,
@@ -112,11 +112,11 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [br, gr, __, __, __, __, bl, or],
         ]),
         [KamisadoMove.of(new Coord(2, 4), new Coord(0, 2))],
-        [],
         `Parfait! Clair est obligé d'avancer son pion vert sur la case orange, vous obligeant à joueur avec
          votre pion orange. Hors, votre pion orange est bloqué et vous devez donc passer votre tour. Clair
          devra ensuite aussi passer son tour car son pion orange est aussi bloqué : la partie est totalement
          bloquée. Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie. Ici, Clair aura déplacé
          sa pièce verte en dernier, vous êtes donc vainqueurs !`,
-        `Raté !`),
+        `Raté !`,
+    ),
 ];

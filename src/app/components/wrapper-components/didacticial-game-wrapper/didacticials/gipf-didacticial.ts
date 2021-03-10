@@ -11,7 +11,7 @@ const _: GipfPiece = GipfPiece.EMPTY;
 const O: GipfPiece = GipfPiece.PLAYER_ZERO;
 const X: GipfPiece = GipfPiece.PLAYER_ONE;
 export const gipfDidacticial: DidacticialStep[] = [
-    new DidacticialStep(
+    DidacticialStep.informational(
         'But du jeu',
         `Le but du jeu est de capturer les pièces de l'adversaire afin qu'il ne puisse plus jouer.
          Voici la configuration initial du plateau.
@@ -19,9 +19,8 @@ export const gipfDidacticial: DidacticialStep[] = [
          Dès qu'à son tour, un joueur n'as plus de pièces dans sa réserve, il ne sais pas jouer, et perds.
          Le premier joueur possède les pièces foncées, le deuxième les pièces claires.`,
         GipfPartSlice.getInitialSlice(),
-        [], [], null, null,
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Insertion',
         `Tout les tours contiennent une insertion:
          1. vous choisissez la case où vous voulez insérer votre pièce.
@@ -36,11 +35,10 @@ export const gipfDidacticial: DidacticialStep[] = [
                 [],
             ),
         ],
-        [],
         'Bravo.',
         'Raté',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Capture (1/3)',
         `Pour faire une capture, il faut aligner 4 de ses pièces.
          Il y a plusieurs choses à savoir sur une capture:
@@ -73,12 +71,11 @@ export const gipfDidacticial: DidacticialStep[] = [
                 new Coord(0, 0),
             ])],
         )],
-        [],
         `Bravo, vous avez récupéré 4 de vos pièces, mais ce n'est pas la capture la plus utile.
          Voyons maintenant la vraie utilité d'une capture.`,
         'Raté.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Capture (2/3)',
         `Ici, trois captures sont faisables.
          L'une ne permet aucunes capture de pièce adverse.
@@ -105,12 +102,11 @@ export const gipfDidacticial: DidacticialStep[] = [
                 new Coord(0, 3),
             ])],
         )],
-        [],
         `Bravo, vous avez récupéré 4 de vos pièces et capturé 2 pièces de l'adversaire.
          Le maximum possible étant 3 par captures.`,
         'Raté, la capture optimale capture 2 pièces adverses.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Capture (3/3)',
         `Ici, vous aurez une capture à faire au début de votre tour.
          Elle a été provoqué par un mouvement de votre adversaire lors de son tour de jeu
@@ -178,18 +174,8 @@ export const gipfDidacticial: DidacticialStep[] = [
                 ],
             ),
         ],
-        [],
         `Bravo, vous avez récupéré 4 de vos pièces et capturé 2 pièces de l'adversaire.
          Le maximum possible étant 3 par captures.`,
         'Raté, la capture optimale capture 2 pièces adverses.',
     ),
-/*    new DidacticialStep(
-        'Fin de partie',
-        `Il ne reste qu'une pièce à capturer à Foncé, capturez la.`,
-        slice,
-        moves,
-        [],
-        success,
-        failure
-    ),*/
 ];

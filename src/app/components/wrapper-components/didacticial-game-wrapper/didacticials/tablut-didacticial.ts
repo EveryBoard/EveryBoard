@@ -10,7 +10,7 @@ const i: number = TablutCase.DEFENDERS.value;
 const A: number = TablutCase.PLAYER_ONE_KING.value;
 
 export const tablutDidacticial: DidacticialStep[] = [
-    new DidacticialStep(
+    DidacticialStep.informational(
         'But du jeu',
         `Le Tablut est un jeu de stratégie auquel jouaient les Vikings.
          Le but du jeu pour les deux joueurs n'est pas le même.
@@ -20,9 +20,8 @@ export const tablutDidacticial: DidacticialStep[] = [
          Son but est de placer le roi sur l'un des 4 trônes situés dans les coins.
          Note, la case où est le roi au début du jeu, au centre du plateau, est également un trône.`,
         TablutPartSlice.getInitialSlice(),
-        [], [], null, null,
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Déplacement',
         `Au Tablut, toutes les pièces se déplacent de la même façon.
          De façon équivalente aux tours aux échecs, une pièce se déplace:
@@ -37,11 +36,10 @@ export const tablutDidacticial: DidacticialStep[] = [
             new TablutMove(new Coord(0, 3), new Coord(3, 3)),
             new TablutMove(new Coord(0, 5), new Coord(3, 5)),
         ],
-        [],
         'Bravo',
         'Raté',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Comment capturer un simple soldat (1/2)',
         `Toutes les pièces, attaquantes comme défenseur, sont des soldats, à l'exception du roi.
          Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats.
@@ -61,11 +59,10 @@ export const tablutDidacticial: DidacticialStep[] = [
             new TablutMove(new Coord(2, 4), new Coord(2, 3)),
             new TablutMove(new Coord(4, 2), new Coord(3, 2)),
         ],
-        [],
         'Bravo, ça lui apprendra!',
         'Raté, vous avez raté l\'occasion de capturer un adversaire',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Comment capturer un simple soldat (2/2)',
         `Un deuxième moyen de capturer un soldat, est contre un trône vide.
          Le Roi a quitté son poste, et mis en danger un de ses soldats.
@@ -82,11 +79,10 @@ export const tablutDidacticial: DidacticialStep[] = [
             [_, _, _, x, x, x, _, _, _],
         ], 12),
         [new TablutMove(new Coord(1, 4), new Coord(2, 4))],
-        [],
         'Bravo, un de plus en moins, mais gardez quand même un oeil sur le roi, c\'est le plus important.',
         'Raté, vous n\'avez pas fait le mouvement demandé',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Comment capturer le roi (1/2)',
         `Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus.
          Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats.`,
@@ -102,11 +98,10 @@ export const tablutDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _, _],
         ], 72),
         [new TablutMove(new Coord(3, 4), new Coord(2, 4))],
-        [],
         'Bravo, vous avez gagné la partie.',
         'Raté, vous avez laissé fuir le roi.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Comment capturer le roi (2/2)',
         `Un autre moyen de capturer le roi est de l'immobiliser à 3 contre un bord.
          Note, un roi n'est pas capturable sur une case voisine à un trône.`,
@@ -122,7 +117,6 @@ export const tablutDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _, _],
         ], 72),
         [new TablutMove(new Coord(4, 4), new Coord(4, 1))],
-        [],
         'Bravo, vous avez gagné la partie.',
         'Raté.',
     ),
