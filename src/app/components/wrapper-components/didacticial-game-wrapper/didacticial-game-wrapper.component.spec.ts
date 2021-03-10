@@ -13,12 +13,14 @@ import { By } from '@angular/platform-browser';
 import { DidacticialGameWrapperComponent } from './didacticial-game-wrapper.component';
 import {
     clickElement, expectClickFail, expectClickForbidden, expectClickSuccess,
+    expectMoveFailure,
     expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { DidacticialStep } from './DidacticialStep';
 import { QuartoComponent } from '../../game-components/quarto/quarto.component';
 import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
+import { Move } from 'src/app/jscaip/Move';
 
 const activatedRouteStub = {
     snapshot: {
@@ -39,7 +41,7 @@ class AuthenticationServiceMock {
         return AuthenticationServiceMock.USER;
     }
 }
-describe('DidacticialGameWrapperComponent', () => {
+fdescribe('DidacticialGameWrapperComponent', () => {
     let component: DidacticialGameWrapperComponent;
 
     let testElements: TestElements;
@@ -412,6 +414,39 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentReason')).nativeElement.innerHTML;
         expect(currentReason).toBe(expectedReason);
         expect(testElements.gameComponent.canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
+    }));
+    fit('Should propose to see the solution When move attempt done', fakeAsync(async() => {
+        // Given a didacticial on which a wrong move has been done
+        const awaitedMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BBAA);
+        const didacticial: DidacticialStep[] = [
+            new DidacticialStep(
+                'title 0', 'instruction 0.',
+                new QuartoPartSlice([
+                    [0, 16, 16, 16],
+                    [16, 16, 16, 16],
+                    [16, 16, 16, 16],
+                    [16, 16, 16, 16],
+                ], 0, QuartoPiece.ABBA),
+                [awaitedMove],
+                [],
+                'Bravo.', 'Perdu.',
+            ),
+        ];
+        component.startDidacticial(didacticial);
+        await expectClickSuccess('#chooseCoord_1_1', testElements);
+        tick(10);
+        const expectations: MoveExpectations = {
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            move: new QuartoMove(1, 1, QuartoPiece.BAAA),
+            scoreZero: null, scoreOne: null,
+        };
+        await expectMoveSuccess('#choosePiece_8', testElements, expectations);
+        tick(10);
+        expect(component.moveAttemptMade).toBeTrue();
+        expect(component.stepFinished[component.stepIndex]).toBeFalse();
+
+        expect(await clickElement('#showSolutionButton', testElements)).toBeTrue();
+        expect(component.gameComponent.rules.node.move).toEqual(awaitedMove);
     }));
     // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
     it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {

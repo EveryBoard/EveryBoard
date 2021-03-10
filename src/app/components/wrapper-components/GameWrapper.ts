@@ -136,6 +136,7 @@ export abstract class GameWrapper {
         scorePlayerZero: number,
         scorePlayerOne: number): Promise<MGPValidation> =>
     {
+        // TODO: receiveChildData must be renamed receiveLegalMove
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
             gameWrapper_receiveChildData_AKA_chooseMove: {
@@ -161,6 +162,7 @@ export abstract class GameWrapper {
         return MGPValidation.SUCCESS;
     }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
+    // TODO rename: onLegalUserMove
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {

@@ -199,4 +199,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             this.showStep(indexUndone);
         }
     }
+    public showSolution(): void {
+        console.log("bluppy poop");
+    }
 }
