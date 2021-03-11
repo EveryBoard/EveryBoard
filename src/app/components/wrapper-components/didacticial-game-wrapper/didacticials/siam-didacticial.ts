@@ -22,7 +22,7 @@ export const siamDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         'But du jeu',
         `Le but du Siam est d'être le premier à pousser une montagne hors du plateau.
-         Le plateau de départ en contient trois, au centre, et aucuns pions ne sont initialement sur le plateau.
+         Le plateau de départ en contient trois, au centre, et aucun pion n'est initialement sur le plateau.
          Durant son tour de jeu un joueur peut effectuer l'une des trois actions suivantes:
          1. Faire entrer une pièce sur le plateau.
          2. Changer l'orientation d'une de ses pièces et optionnellement la déplacer.
@@ -32,7 +32,7 @@ export const siamDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         'Insérer une pièce',
         `Chaque joueur a en tout 5 pièces.
-         Tant qu'il n'en as pas 5 sur le plateau, il peut en insérer une, pour ce faire:
+         Tant qu'il n'en a pas 5 sur le plateau, il peut en insérer une. Pour ce faire:
          1. Appuyez sur une des grosses flèches autour du plateau.
          2. Cliquez sur une des 4 petites flèches apparues sur la case d'arrivée de la pièce insérée.
          Cela indiquera la direction dans laquelle sera orientée votre pièce.`,
@@ -41,7 +41,7 @@ export const siamDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.forMove(
         'Déplacer une pièce',
-        `Nous distinguerons içi "déplacer" et "pousser".
+        `Nous distinguerons ici "déplacer" et "pousser".
          Un déplacement de pièce se fait de sa case à une case vide voisine horizontalement ou verticalement.
          Lors de ce déplacement on peut aussi faire sortir la pièce du plateau.
          Pour déplacer la pièce:
@@ -81,10 +81,10 @@ export const siamDidacticial: DidacticialStep[] = [
         `Quand la case d'arrivée de votre déplacement est occupée, on parle de "pousser".
          Pour pousser il faut plusieurs critères:
          1. Être déjà orienté dans le sens de la poussée.
-         2. Que le nombre de pièces (ennemies ou non) qui font face à la votre (les resistants)
+         2. Que le nombre de pièces (ennemies ou non) qui font face à la votre (les résistants)
          soit plus petit que le nombre de pièces qui vont dans la même direction, votre y compris (les pousseurs).
          3. Le nombre de montagne doit être inférieur ou égal à la différence entre pousseurs et résistant.
-         Vos pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
+         Votre pièce tout en haut à droite ne peut pas pousser car il y a une montagne de trop.
          Votre pièce tout en bas à droite, elle, peut pousser. Faites-le.`,
         new SiamPartSlice([
             [R, M, M, l, L],
@@ -99,7 +99,8 @@ export const siamDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.forMove(
         'Victoire',
-        `Si personne ne vous barre la route, il est simple de déterminer que vous êtes le vainqueur.
+        `Pour rappel, la partie se termine quand une montagne est poussée hors du plateau.
+         Si vous l'avez poussé et que personne ne vous barre la route, vous êtes le vainqueur.
          Cependant, si vous poussez un adversaire orienté dans la même direction que vous, il sera considéré vainqueur.
          En revanche, si un adversaire est plus proche de la montagne, mais mal orienté, la victoire sera vôtre.
          Vous avez deux moyen de finir la partie, un gagnant, un perdant, choisissez!`,

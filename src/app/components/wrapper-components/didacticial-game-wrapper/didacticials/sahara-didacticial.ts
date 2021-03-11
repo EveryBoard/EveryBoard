@@ -12,7 +12,7 @@ const c: Coord = new Coord(5, 2);
 export const saharaDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         'Plateau initial',
-        `Le Sâhârâ se joue sur un plateau hexagonal dont chaque case est triangulaire.
+        `Le Sâhârâ se joue sur un plateau dont chaque case est triangulaire.
          Chaque joueur contrôle six pyramides.`,
         SaharaPartSlice.getInitialSlice(),
     ),

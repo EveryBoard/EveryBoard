@@ -13,7 +13,7 @@ export const quixoDidacticial: DidacticialStep[] = [
         'But du jeu',
         `Au Quixo, le but du jeu est d'aligner 5 de vos pièces.
          Le premier joueur joue la couleur foncée, le deuxième la claire.
-         Donc les pièces affichant la couleur du joueur lui appartiennent.
+         Les pièces affichant la couleur du joueur lui appartiennent.
          Le plateau est constitué de 25 pièces réparties en un carré de 5x5.
          Chaque pièce a un face neutre, une face claire et une face foncée.`,
         QuixoPartSlice.getInitialSlice(),
@@ -22,7 +22,7 @@ export const quixoDidacticial: DidacticialStep[] = [
         'A quoi ressemble un mouvement (sans animation)',
         `Quand c'est à votre tour de jouer:
          1. Cliquez sur une de vos pièces ou une pièce neutre, il est interdit de choisir une pièce de l'adversaire.
-         Note, vous ne pouvez choisir qu'une pièce sur les bords du plateau, pas les 9 au centre.
+         Notez que vous ne pouvez choisir qu'une pièce sur un bord du plateaué.
          2. Choisissez une direction dans laquelle l'envoyer (en cliquant sur la flèche).
          Il faudra imaginer que la pièce que vous avez choisie a été déplacée jusqu'au bout du plateau dans la direction choisie.
          Une fois arrivée au bout, toutes les pièces vont se glisser d'une case dans la direction inverse à celle qu'a pris votre pièce.

@@ -14,11 +14,11 @@ export const tablutDidacticial: DidacticialStep[] = [
         'But du jeu',
         `Le Tablut est un jeu de stratégie auquel jouaient les Vikings.
          Le but du jeu pour les deux joueurs n'est pas le même.
-         L'attaquant joue en premier, ses pièces sont placées proches des bords.
+         L'attaquant joue en premier, ses pièces (foncées) sont placées proches des bords.
          Son but est de capturer le roi, qui est tout au centre du plateau.
-         Le défenseur joue en deuxième, ses pièces sont au centre.
+         Le défenseur joue en deuxième, ses pièces (claires) sont au centre.
          Son but est de placer le roi sur l'un des 4 trônes situés dans les coins.
-         Note, la case où est le roi au début du jeu, au centre du plateau, est également un trône.`,
+         Notez que la case où est le roi au début du jeu, au centre du plateau, est également un trône.`,
         TablutPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
@@ -29,13 +29,14 @@ export const tablutDidacticial: DidacticialStep[] = [
         2. Sans passer à travers ou s'arrêter sur une autre pièce.
         3. Horizontalement ou verticalement.
         4. Seul le roi peut s'arrêter sur un trône.
-        Pour déplacer une pièce, cliquer dessus, puis sur sa destination.`,
+        Pour déplacer une pièce, cliquez dessus, puis sur sa destination.
+        Effectuez un déplacement avec une pièce foncée.`,
         TablutPartSlice.getInitialSlice(),
         'Bravo',
     ),
     DidacticialStep.forMove(
         'Comment capturer un simple soldat (1/2)',
-        `Toutes les pièces, attaquantes comme défenseur, sont des soldats, à l'exception du roi.
+        `Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l'exception du roi.
          Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats.
          En s'approchant trop, un pion de l'envahisseur s'est mis en danger.
          Capturez-le.`,
@@ -74,7 +75,7 @@ export const tablutDidacticial: DidacticialStep[] = [
             [_, _, _, x, x, x, _, _, _],
         ], 12),
         [new TablutMove(new Coord(1, 4), new Coord(2, 4))],
-        'Bravo, un de plus en moins, mais gardez quand même un oeil sur le roi, c\'est le plus important.',
+        'Bravo, un défenseur en moins, mais gardez quand même un oeil sur le roi, c\'est le plus important.',
         'Raté, vous n\'avez pas fait le mouvement demandé',
     ),
     DidacticialStep.forMove(
@@ -99,7 +100,7 @@ export const tablutDidacticial: DidacticialStep[] = [
     DidacticialStep.forMove(
         'Comment capturer le roi (2/2)',
         `Un autre moyen de capturer le roi est de l'immobiliser à 3 contre un bord.
-         Note, un roi n'est pas capturable sur une case voisine à un trône.`,
+         Notez qu'un roi n'est pas capturable sur une case voisine à un trône.`,
         new TablutPartSlice([
             [_, _, x, A, x, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
