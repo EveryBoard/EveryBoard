@@ -64,8 +64,11 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     private getPlayerScore(slice: GipfPartSlice, player: Player): MGPOptional<number> {
         const piecesToPlay: number = slice.getNumberOfPiecesToPlace(player);
         if (piecesToPlay === 0) {
-            // No more pieces to play, player loses
-            return MGPOptional.empty();
+            const captures: GipfCapture[] = this.getPossibleCaptures(slice);
+            if (captures.length === 0) {
+                // No more pieces to play and no possible capture, player loses
+                return MGPOptional.empty();
+            }
         }
         const captured: number = slice.getNumberOfPiecesCaptured(player);
         return MGPOptional.of(piecesToPlay + captured * 3);
