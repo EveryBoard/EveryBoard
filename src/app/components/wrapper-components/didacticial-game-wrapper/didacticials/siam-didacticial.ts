@@ -29,22 +29,15 @@ export const siamDidacticial: DidacticialStep[] = [
          3. Sortir un de ses pions du plateau.`,
         SiamPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.anyMove(
         'Insérer une pièce',
         `Chaque joueur a en tout 5 pièces.
          Tant qu'il n'en as pas 5 sur le plateau, il peut en insérer une, pour ce faire:
-         1. Appuyez sur une des grosses flèches autour du plateau (choisissez celle en bas au milieu).
+         1. Appuyez sur une des grosses flèches autour du plateau.
          2. Cliquez sur une des 4 petites flèches apparues sur la case d'arrivée de la pièce insérée.
          Cela indiquera la direction dans laquelle sera orientée votre pièce.`,
         SiamPartSlice.getInitialSlice(),
-        [
-            new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP),
-            new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.RIGHT),
-            new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN),
-            new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT),
-        ],
         'Bravo',
-        'Raté, vous n\'avez pas inséré au bon endroit.',
     ),
     DidacticialStep.forMove(
         'Déplacer une pièce',

@@ -10,21 +10,11 @@ export const p4Didacticial: DidacticialStep[] = [
          Le but du du jeu est d'être le premier joueur à aligner 4 de ses pièces (horizontalement, verticalement, ou diagonalement).`,
         P4PartSlice.getInitialSlice(),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.anyMove(
         'Déposez une pièce',
         'Cliquez sur n’importe quelle case d’une colonne.',
         P4PartSlice.getInitialSlice(),
-        [
-            P4Move.of(0),
-            P4Move.of(1),
-            P4Move.of(2),
-            P4Move.of(3),
-            P4Move.of(4),
-            P4Move.of(5),
-            P4Move.of(6),
-        ],
         'Comme vous voyez, la pièce va toujours tomber tout en bas de la colonne.',
-        null,
     ),
     DidacticialStep.forMove(
         'Victoire',

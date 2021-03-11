@@ -28,7 +28,7 @@ export interface IFirebaseFirestoreDAO<T, PT> {
 }
 
 export abstract class FirebaseFirestoreDAO<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = true;
 
     // T is a full element
 

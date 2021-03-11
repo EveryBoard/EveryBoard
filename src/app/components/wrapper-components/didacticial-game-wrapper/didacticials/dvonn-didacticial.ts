@@ -6,55 +6,72 @@ import { DidacticialStep } from 'src/app/components/wrapper-components/didactici
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
 import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
 
-const _: number = DvonnPieceStack.EMPTY.getValue();
+const __: number = DvonnPieceStack.EMPTY.getValue();
 
-const D: number = DvonnPieceStack.SOURCE.getValue();
+const SO: number = DvonnPieceStack.SOURCE.getValue();
 
-const W: number = DvonnPieceStack.PLAYER_ZERO.getValue();
+const O1: number = DvonnPieceStack.PLAYER_ZERO.getValue();
 
-const W4: number = new DvonnPieceStack([
+const X1 : number = DvonnPieceStack.PLAYER_ONE.getValue();
+
+const O4: number = new DvonnPieceStack([
     DvonnPiece.PLAYER_ZERO,
     DvonnPiece.PLAYER_ZERO,
     DvonnPiece.PLAYER_ZERO,
     DvonnPiece.PLAYER_ZERO]).getValue();
-
-const B : number = DvonnPieceStack.PLAYER_ONE.getValue();
+const X4: number = new DvonnPieceStack([
+    DvonnPiece.PLAYER_ONE,
+    DvonnPiece.PLAYER_ONE,
+    DvonnPiece.PLAYER_ONE,
+    DvonnPiece.PLAYER_ONE]).getValue();
 
 export const dvonnDidacticial: DidacticialStep[] = [
-    DidacticialStep.forMove(
+    DidacticialStep.anyMove(
         'Déplacement',
-        'Au Dvonn, ce que vous voyez sont les tours. Le numéro écrit dessus est la hauteur de la tour et le nombre de points qu’elle rapporte à son propriétaire. Son propriétaire est celui dont une pièce est au sommet de la tour. Seul son propriétaire peut la déplacer. Elle ne peut pas se déplacer si elle est entourée par 6 autres pièces. Elle se déplace d’autant de cases que sa hauteur en ligne droite. Cliquez sur la tour la plus à droite, et déplacez la d\'une case en haut à gauche.',
+        `Au Dvonn, ce que vous voyez sont des piles de pièces.
+         Le numéro écrit dessus est la hauteur de la pile et le nombre de points qu’elle rapporte à son propriétaire.
+         Si aucun nombre n'est indiqué sur une pile, c'est qu'elle ne comporte qu'une pièce.
+         Son propriétaire est celui dont une pièce est au sommet de la pile.
+         Seul son propriétaire peut la déplacer.
+         Elle ne peut pas se déplacer si elle est entourée par 6 autres piles.
+         Elle se déplace d’autant de cases que sa hauteur en ligne droite.
+         Cette ligne droite doit passer par le centre des autres piles, comme la ligne horizontale,
+         et pas le long d'un arête, comme le serait un déplacement vertical.
+         Il y a donc six directions possibles.
+         Le joueur avec les piles foncées commence.
+         Cliquez sur une pile puis déplacez la d'une case.`,
         DvonnPartSlice.getInitialSlice(),
-        [DvonnMove.of(new Coord(10, 2), new Coord(10, 1))],
-        'Bravo. Vous avez gagné un point et l’adversaire en a perdu un.',
-        'Raté.',
+        'Bravo.',
     ),
     DidacticialStep.forMove(
         'Déconnection',
-        'Les pièces rouges sont appelées “sources”. Quand une tour n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau. Déplacez votre pièce pour voir.',
+        `Les pièces rouges sont appelées “sources”.
+         Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.
+         Vous jouez Foncé, déplacez votre pièce sur la source.`,
         new DvonnPartSlice([
-            [_, _, D, _, _, _, _, _, _, _, _],
-            [_, _, W, _, _, _, _, _, _, _, _],
-            [_, _, B, _, _, _, _, B, D, _, _],
-            [_, _, W4, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
+            [__, __, SO, __, __, __, __, __, __, __, __],
+            [__, __, O1, __, __, __, __, __, __, __, __],
+            [__, __, X4, __, __, __, __, X1, SO, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
         ], 0, false),
         [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
-        'Voilà, tous ses pions là sont perdus, les votre et ceux de l’adversaire!',
-        'Raté.',
+        'Bravo, vous avez déconnecté 4 pièces de l’adversaire! Il a donc perdu 4 points.',
+        `Mauvais choix! En le déplaçant sur la source vous déconnectiez l'adversaire et lui faisiez perdre ces 4 points. Ici, il gagne 2 à 0.`,
     ),
     DidacticialStep.forMove(
         'Fin de partie',
-        'Quand plus aucun mouvement n’est possible, la partie est finie et le joueur avec le plus de points gagne. Faites votre dernier mouvement!',
+        `Quand plus aucun mouvement n’est possible, la partie est finie et le joueur avec le plus de points gagne.
+         Faites votre dernier mouvement!`,
         new DvonnPartSlice([
-            [_, _, D, _, _, _, _, _, _, _, _],
-            [_, _, W, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, D, W4, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
+            [__, __, SO, __, __, __, __, __, __, __, __],
+            [__, __, O1, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, SO, O4, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
         ], 0, false),
         [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
         'Bravo, vous avez même gagné (6 - 0)',
-        'Mauvais idée, en la déplaçant sur la source, vous auriez gagné votre pièce et gagné un point.',
+        'Mauvaise idée, en la déplaçant sur la source, vous auriez gagné votre pièce et gagné un point.',
     ),
 ];

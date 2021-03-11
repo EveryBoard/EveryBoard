@@ -21,7 +21,7 @@ export const tablutDidacticial: DidacticialStep[] = [
          Note, la case où est le roi au début du jeu, au centre du plateau, est également un trône.`,
         TablutPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.anyMove(
         'Déplacement',
         `Au Tablut, toutes les pièces se déplacent de la même façon.
          De façon équivalente aux tours aux échecs, une pièce se déplace:
@@ -29,21 +29,16 @@ export const tablutDidacticial: DidacticialStep[] = [
         2. Sans passer à travers ou s'arrêter sur une autre pièce.
         3. Horizontalement ou verticalement.
         4. Seul le roi peut s'arrêter sur un trône.
-        Parmis les 4 pièces à gauches du plateau, déplacez de 3 cases à droite l'une d'elle.
-        Pour se faire, cliquer sur la pièce, puis sur sa destination.`,
+        Pour déplacer une pièce, cliquer dessus, puis sur sa destination.`,
         TablutPartSlice.getInitialSlice(),
-        [
-            new TablutMove(new Coord(0, 3), new Coord(3, 3)),
-            new TablutMove(new Coord(0, 5), new Coord(3, 5)),
-        ],
         'Bravo',
-        'Raté',
     ),
     DidacticialStep.forMove(
         'Comment capturer un simple soldat (1/2)',
         `Toutes les pièces, attaquantes comme défenseur, sont des soldats, à l'exception du roi.
          Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats.
-         En s'approchant trop, un pion de l'envahisseur s'est mis en danger, capturez-le.`,
+         En s'approchant trop, un pion de l'envahisseur s'est mis en danger.
+         Capturez-le.`,
         new TablutPartSlice([
             [_, _, _, x, x, x, _, _, _],
             [_, _, _, _, x, _, _, _, _],
@@ -117,7 +112,7 @@ export const tablutDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _, _],
         ], 72),
         [new TablutMove(new Coord(4, 4), new Coord(4, 1))],
-        'Bravo, vous avez gagné la partie.',
+        'Le Roi est mort, longue vie au Roi. Bravo, vous avez gagné la partie.',
         'Raté.',
     ),
 ];

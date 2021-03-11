@@ -12,9 +12,19 @@ export const pylosDidacticial: DidacticialStep[] = [
         'But du jeu',
         `Au Pylos, le but est d'être le dernier à jouer.
          Pour cela, il faut économiser ses pièces.
-         Les ronds gris sont les cases sur lesquelles vous pouvez déposez vos pièces.
-         Dès qu'un joueur dépose sa dernière pièce, il perd immédiatement la partie.`,
+         Dès qu'un joueur dépose sa dernière pièce, il perd immédiatement la partie.
+         Voici à quoi ressemble le plateauy initial, un plateau de 4 x 4 cases.
+         Celui-ci deviendra une pyramide petit à petit.
+         Ce plateau sera rempli par les pièces dans votre réserve, au nombre de 15 chacun.
+         `,
         PylosPartSlice.getInitialSlice(),
+    ),
+    DidacticialStep.anyMove(
+        'Déposer une pièce',
+        `Quand c'est votre tour, vous avez toujours l'option de déposer une de vos pièce sur une case vide.
+         Les ronds gris sont les cases sur lesquelles vous pouvez déposez vos pièces.`,
+        PylosPartSlice.getInitialSlice(),
+        'Voilà, aussi simplement que ça.',
     ),
     DidacticialStep.forMove(
         'Grimper',
@@ -112,7 +122,7 @@ export const pylosDidacticial: DidacticialStep[] = [
         'Carré (3/3)',
         `Vous jouez Foncé.
          Faites comme à l'étape précédente, mais cette fois:
-         Vous devrez, naturellement, capturer en premier votre pièce la plus haute,
+         vous devrez, naturellement, capturer en premier votre pièce la plus haute,
          et ensuite seulement capturer celle qui vient d'être enlevable à nouveau.`,
         new PylosPartSlice([
             [
