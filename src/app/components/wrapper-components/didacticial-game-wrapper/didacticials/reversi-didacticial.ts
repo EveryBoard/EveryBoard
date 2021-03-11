@@ -8,7 +8,7 @@ const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 export const reversiDidacticial: DidacticialStep[] = [
-    new DidacticialStep(
+    DidacticialStep.informational(
         'But du jeu',
         `Les pièces du Reversi sont double face, une face foncée pour le premier joueur, une face claire pour le deuxième.
          Quand une pièce est retournée, elle change de propriétaire.
@@ -24,18 +24,16 @@ export const reversiDidacticial: DidacticialStep[] = [
             [O, X, X, X, X, X, X, O],
             [O, O, O, O, O, O, O, O],
         ], 60),
-        [], [], null, null,
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Capture (1/2)',
         `Au début de la partie, voici la configuration des pièces, pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.`,
         ReversiPartSlice.getInitialSlice(),
         [new ReversiMove(2, 4), new ReversiMove(3, 5), new ReversiMove(4, 2), new ReversiMove(5, 3)],
-        [],
         'Bravo',
         null,
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Capture (2/2)',
         'Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois. Jouez en bas à gauche.',
         new ReversiPartSlice([
@@ -49,11 +47,10 @@ export const reversiDidacticial: DidacticialStep[] = [
             [_, O, X, O, X, O, _, _],
         ], 1),
         [new ReversiMove(0, 7)],
-        [],
         'Bravo',
         'Un peu plus en bas et un peu plus à gauche, s\'il vous plai.',
     ),
-    new DidacticialStep(
+    DidacticialStep.informational(
         'Passer son tour',
         `Si, à son tour de jeu, un joueur n'as aucun mouvement lui permettant de capturer une pièce, il est obligé de passer son tour.
          Si d'aventure le joueur suivant ne savais pas jouer non plus, la partie terminerait avant que la plateau soit rempli, et les points seraient décomptés de la même façon.`,
@@ -67,6 +64,5 @@ export const reversiDidacticial: DidacticialStep[] = [
             [X, X, X, X, X, X, _, _],
             [O, O, O, O, O, O, _, _],
         ], 60),
-        [], [], null, null,
     ),
 ];

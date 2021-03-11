@@ -21,16 +21,15 @@ const W4: number = new DvonnPieceStack([
 const B : number = DvonnPieceStack.PLAYER_ONE.getValue();
 
 export const dvonnDidacticial: DidacticialStep[] = [
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Déplacement',
         'Au Dvonn, ce que vous voyez sont les tours. Le numéro écrit dessus est la hauteur de la tour et le nombre de points qu’elle rapporte à son propriétaire. Son propriétaire est celui dont une pièce est au sommet de la tour. Seul son propriétaire peut la déplacer. Elle ne peut pas se déplacer si elle est entourée par 6 autres pièces. Elle se déplace d’autant de cases que sa hauteur en ligne droite. Cliquez sur la tour la plus à droite, et déplacez la d\'une case en haut à gauche.',
         DvonnPartSlice.getInitialSlice(),
         [DvonnMove.of(new Coord(10, 2), new Coord(10, 1))],
-        [],
         'Bravo. Vous avez gagné un point et l’adversaire en a perdu un.',
         'Raté.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Déconnection',
         'Les pièces rouges sont appelées “sources”. Quand une tour n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau. Déplacez votre pièce pour voir.',
         new DvonnPartSlice([
@@ -41,11 +40,10 @@ export const dvonnDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _, _, _, _],
         ], 0, false),
         [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
-        [],
         'Voilà, tous ses pions là sont perdus, les votre et ceux de l’adversaire!',
         'Raté.',
     ),
-    new DidacticialStep(
+    DidacticialStep.forMove(
         'Fin de partie',
         'Quand plus aucun mouvement n’est possible, la partie est finie et le joueur avec le plus de points gagne. Faites votre dernier mouvement!',
         new DvonnPartSlice([
@@ -56,7 +54,6 @@ export const dvonnDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _, _, _, _],
         ], 0, false),
         [DvonnMove.of(new Coord(2, 1), new Coord(2, 0))],
-        [],
         'Bravo, vous avez même gagné (6 - 0)',
         'Mauvais idée, en la déplaçant sur la source, vous auriez gagné votre pièce et gagné un point.',
     ),

@@ -148,7 +148,7 @@ export class GipfCapture {
         if (GipfLine.areOnSameLine(captured) === false) {
             throw new Error('Cannot create a GipfCapture with pieces that are not on the same line');
         }
-        this.capturedCases = ArrayUtils.copyArray(captured).sort((coord1: Coord, coord2: Coord) => {
+        this.capturedCases = ArrayUtils.copyImmutableArray(captured).sort((coord1: Coord, coord2: Coord) => {
             if (coord1.x === coord2.x) {
                 if (coord1.y === coord2.y) {
                     throw new Error('Cannot create a GipfCapture with duplicate cases');

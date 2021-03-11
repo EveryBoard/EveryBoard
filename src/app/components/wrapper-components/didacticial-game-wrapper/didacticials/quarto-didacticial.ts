@@ -4,11 +4,11 @@ import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { DidacticialStep } from '../DidacticialStep';
 
 export const quartoDidacticial: DidacticialStep[] = [
-    new DidacticialStep(
+    DidacticialStep.informational(
         'But du jeu',
         `Quarto est un jeu d'alignement.
          Le but d'aligner quatre pièces qui possèdent un point commun :
-         leur couleur (noire ou blanche),
+         leur couleur (claire ou foncée),
          leur taille (grande ou petite),
          leur motif (vide ou à point),
          leur forme (ronde ou carrée).
@@ -19,10 +19,10 @@ export const quartoDidacticial: DidacticialStep[] = [
             [16, 16, 16, 16],
             [16, 16, 16, 16],
         ], 7, QuartoPiece.NONE),
-        [], [], '', ''),
-    new DidacticialStep(
+    ),
+    DidacticialStep.anyMove(
         'Placement',
-        `Chaque placement se fait en deux étapes : placer la pièce qu'on a en main en cliquant sur une case du plateau,
+        `Chaque placement se fait en deux étapes: placer la pièce qu'on a en main en cliquant sur une case du plateau,
          et choisir une pièce que l'adversaire devra placer, en cliquant sur une des pièces affichées à droite.
          Effectuez un mouvement.`,
         new QuartoPartSlice([
@@ -31,8 +31,9 @@ export const quartoDidacticial: DidacticialStep[] = [
             [16, 8, 16, 16],
             [16, 16, 16, 16],
         ], 7, QuartoPiece.ABAA),
-        [], [], 'Parfait!', ''), // TODO: any move can be legal
-    new DidacticialStep(
+        'Parfait!',
+    ),
+    DidacticialStep.forMove(
         'Situation',
         `Nous avons ici une situation délicate. Analysez bien le plateau et jouer votre coup,
          en faisant particulièrement attention de ne pas permettre à l'adversaire de l'emporter au prochain coup.`,
@@ -42,5 +43,8 @@ export const quartoDidacticial: DidacticialStep[] = [
             [5, 8, 9, 16],
             [16, 16, 16, 16],
         ], 7, QuartoPiece.AABA),
-        [new QuartoMove(3, 3, QuartoPiece.AABB)], [], 'Bien joué!', 'Raté!'),
+        [new QuartoMove(3, 3, QuartoPiece.AABB)],
+        'Bien joué!',
+        'Raté!',
+    ),
 ];

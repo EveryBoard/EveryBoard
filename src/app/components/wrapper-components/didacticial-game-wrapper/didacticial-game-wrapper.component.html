@@ -39,6 +39,12 @@
         >
             Recommencer
         </button>
+        <button id="showSolutionButton"
+                *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
+                (click)="showSolution()"
+        >
+            Voir la solution
+        </button>
     </div>
 
     <div id="board" class="flex-container circled col-sm-8">
