@@ -71,19 +71,6 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     public updateBoard(): void {
         const slice: GipfPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
-        this.constructedSlice = slice;
-        this.captured = [];
-        this.currentlyMoved = [];
-        this.moved = [];
-
-        const move: GipfMove = this.rules.node.move;
-        if (move != null) {
-            const previousSlice: GipfPartSlice = this.rules.node.mother.gamePartSlice;
-            move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c));
-            move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c));
-            this.moved = this.rules.getPiecesMoved(previousSlice, move.initialCaptures, move.placement);
-        }
-
         this.cancelMoveAttempt();
         this.moveToInitialCaptureOrPlacementPhase();
     }
@@ -191,15 +178,10 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         }
     }
     private moveToPlacementPhase(): MGPValidation {
-        this.arrows = [];
         this.movePhase = GipfComponent.PHASE_PLACEMENT_COORD;
-        this.placementEntrance = MGPOptional.empty();
-        this.placement = MGPOptional.empty();
         return MGPValidation.SUCCESS;
     }
     private moveToInitialCaptureOrPlacementPhase(): MGPValidation {
-        this.arrows = [];
-        this.initialCaptures = [];
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
             this.movePhase = GipfComponent.PHASE_PLACEMENT_COORD;
@@ -209,8 +191,6 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         return MGPValidation.SUCCESS;
     }
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
-        this.arrows = [];
-        this.finalCaptures = [];
         this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
             return this.tryMove(this.initialCaptures, this.placement.get(), this.finalCaptures);
@@ -249,6 +229,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
+        this.arrows = [];
         this.currentlyMoved = this.rules.getPiecesMoved(this.constructedSlice, [], this.placement.get());
         this.constructedSlice = this.rules.applyPlacement(this.constructedSlice, this.placement.get());
         return this.moveToFinalCapturePhaseOrTryMove();
@@ -261,6 +242,27 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         return validity;
     }
     public cancelMoveAttempt(): void {
+        this.constructedSlice = this.rules.node.gamePartSlice;
+        this.captured = [];
+        this.moved = [];
+
+        const move: GipfMove = this.rules.node.move;
+        if (move != null) {
+            const previousSlice: GipfPartSlice = this.rules.node.mother.gamePartSlice;
+            move.initialCaptures.forEach((c: GipfCapture) => this.markCapture(c));
+            move.finalCaptures.forEach((c: GipfCapture) => this.markCapture(c));
+            this.moved = this.rules.getPiecesMoved(previousSlice, move.initialCaptures, move.placement);
+        }
+
+        this.initialCaptures = [];
+        this.finalCaptures = [];
+        this.placementEntrance = MGPOptional.empty();
+        this.placement = MGPOptional.empty();
+
+        this.currentlyMoved = [];
+        this.arrows = [];
+
+
         this.moveToInitialCaptureOrPlacementPhase();
     }
     public getCaseStyle(coord: Coord): {[key: string]: string} {

@@ -54,12 +54,13 @@ describe('GipfComponent', () => {
         return testElements.gameComponent as GipfComponent;
     }
 
-    function expectToBeRed(x: number, y: number): void {
-        expect(getComponent().getCaseStyle(new Coord(x, y)).fill).toBe('red');
+    function expectToHaveFill(x: number, y: number, color: string): void {
+        expect(getComponent().getCaseStyle(new Coord(x, y)).fill).toBe(color);
         const element: DebugElement = testElements.debugElement.query(By.css('#click_' + x + '_' + y));
         expect(element).toBeTruthy();
         // In a regexp, \s means any non-word character
-        expect(element.children[0].attributes.style).toMatch(/\sfill: red;/);
+        const regex: RegExp = new RegExp('\\sfill: ' + color + ';');
+        expect(element.children[0].attributes.style).toMatch(regex);
     }
 
     beforeEach(fakeAsync(async() => {
@@ -165,10 +166,10 @@ describe('GipfComponent', () => {
 
         await expectClickSuccess('#click_0_0', testElements);
 
-        expectToBeRed(0, -1);
-        expectToBeRed(0, 0);
-        expectToBeRed(0, 1);
-        expectToBeRed(0, 2);
+        expectToHaveFill(0, -1, getComponent().CAPTURED_FILL);
+        expectToHaveFill(0, 0, getComponent().CAPTURED_FILL);
+        expectToHaveFill(0, 1, getComponent().CAPTURED_FILL);
+        expectToHaveFill(0, 2, getComponent().CAPTURED_FILL);
     }));
     it('should make pieces disappear upon selection of a capture', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -363,10 +364,10 @@ describe('GipfComponent', () => {
         };
         await expectMoveSuccess('#click_-3_1', testElements, expectation);
 
-        expectToBeRed(0, -1);
-        expectToBeRed(0, 0);
-        expectToBeRed(0, 1);
-        expectToBeRed(0, 2);
+        expectToHaveFill(0, -1, 'red');
+        expectToHaveFill(0, 0, 'red');
+        expectToHaveFill(0, 1, 'red');
+        expectToHaveFill(0, 2, 'red');
     }));
     it('should update the number of pieces available', fakeAsync(async() => {
         const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -491,5 +492,28 @@ describe('GipfComponent', () => {
         await expectClickSuccess('#click_1_1', testElements); // select direction
         await expectClickSuccess('#click_1_1', testElements); // select first capture
         await expectMoveSuccess('#click_-1_1', testElements, expectation); // select second capture
+    }));
+    it('should remove highlights and arrows upon move cancellation', fakeAsync(async() => {
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, A, _, _, _],
+            [_, _, _, A, A, _, _],
+            [_, _, _, A, A, _, _],
+            [_, _, _, A, A, _, _],
+            [_, _, _, _, _, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
+
+        await expectClickSuccess('#click_0_0', testElements);
+        await expectClickSuccess('#click_1_2', testElements);
+        await expectClickSuccess('#click_1_1', testElements);
+        await expectClickFail('#click_0_0', testElements, GipfComponentFailure.NOT_PART_OF_CAPTURE);
+
+        expectToHaveFill(1, 2, getComponent().NORMAL_FILL);
+        expectToHaveFill(0, 0, getComponent().NORMAL_FILL);
+        expect(getComponent().arrows.length).toBe(0);
     }));
 });

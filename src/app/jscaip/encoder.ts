@@ -26,6 +26,23 @@ export namespace Encoder {
         }
     };
 
+    export function numberEncoder(max: number): Encoder<number> {
+        return new class extends Encoder<number> {
+            public maxValue(): number {
+                return max;
+            }
+            public encode(n: number): number {
+                if (n > max) {
+                    throw new Error('Cannot encode number bigger than the max with numberEncoder');
+                }
+                return n;
+            }
+            public decode(encoded: number): number {
+                return encoded % max;
+            }
+        };
+    }
+
     export function arrayEncoder<T>(encoder: Encoder<T>, maxLength: number): Encoder<ReadonlyArray<T>> {
         return new class extends Encoder<ReadonlyArray<T>> {
             public maxValue(): number {
