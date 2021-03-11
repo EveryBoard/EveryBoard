@@ -18,15 +18,15 @@ import { GipfPiece } from '../gipf-piece/GipfPiece';
 export class GipfNode extends MGPNode<GipfRules, GipfMove, GipfPartSlice, LegalityStatus> {}
 
 export class GipfFailure {
-    static CAPTURE_MUST_BE_ALIGNED: string =
+    public static CAPTURE_MUST_BE_ALIGNED: string =
         `Une capture ne peut que se faire si 4 pièces de votre couleurs sont alignées, ce n'est pas le cas`;
-    static INVALID_CAPTURED_PIECES: string =
+    public static INVALID_CAPTURED_PIECES: string =
         `La capture n'est pas valide: trop de pièces sont capturées, ou bien trop peu`;
-    static MISSING_CAPTURES: string = `Toutes les captures nécessaires n'ont pas été effectuées`;
-    static PLACEMENT_NOT_ON_BORDER: string = 'Les pièces doivent être placée sur une case du bord du plateau';
-    static INVALID_PLACEMENT_DIRECTION: string = `La direction du placement n'est pas valide`;
-    static PLACEMENT_WITHOUT_DIRECTION: string = 'Un placement a lieu sans direction';
-    static PLACEMENT_ON_COMPLETE_LINE: string = 'Une pièce ne peut pas être placée sur une ligne complète';
+    public static MISSING_CAPTURES: string = `Toutes les captures nécessaires n'ont pas été effectuées`;
+    public static PLACEMENT_NOT_ON_BORDER: string = 'Les pièces doivent être placée sur une case du bord du plateau';
+    public static INVALID_PLACEMENT_DIRECTION: string = `La direction du placement n'est pas valide`;
+    public static PLACEMENT_WITHOUT_DIRECTION: string = 'Un placement a lieu sans direction';
+    public static PLACEMENT_ON_COMPLETE_LINE: string = 'Une pièce ne peut pas être placée sur une ligne complète';
 }
 
 export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus> {
