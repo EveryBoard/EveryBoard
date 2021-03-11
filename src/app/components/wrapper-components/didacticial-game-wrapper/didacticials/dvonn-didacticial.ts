@@ -34,12 +34,12 @@ export const dvonnDidacticial: DidacticialStep[] = [
          Son propriétaire est celui dont une pièce est au sommet de la pile.
          Seul son propriétaire peut la déplacer.
          Elle ne peut pas se déplacer si elle est entourée par 6 autres piles.
-         Elle se déplace d’autant de cases que sa hauteur en ligne droite.
+         Elle se déplace d’autant de cases que sa hauteur en ligne droite, et doit aterrir sur une case occupée.
          Cette ligne droite doit passer par le centre des autres piles, comme la ligne horizontale,
          et pas le long d'un arête, comme le serait un déplacement vertical.
          Il y a donc six directions possibles.
          Le joueur avec les piles foncées commence.
-         Cliquez sur une pile puis déplacez la d'une case.`,
+         Vous jouez avec Foncé, cliquez sur une pile puis déplacez la d'une case.`,
         DvonnPartSlice.getInitialSlice(),
         'Bravo.',
     ),

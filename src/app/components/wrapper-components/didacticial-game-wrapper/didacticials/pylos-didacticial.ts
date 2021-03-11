@@ -13,7 +13,7 @@ export const pylosDidacticial: DidacticialStep[] = [
         `Au Pylos, le but est d'être le dernier à jouer.
          Pour cela, il faut économiser ses pièces.
          Dès qu'un joueur dépose sa dernière pièce, il perd immédiatement la partie.
-         Voici à quoi ressemble le plateauy initial, un plateau de 4 x 4 cases.
+         Voici à quoi ressemble le plateau initial, un plateau de 4 x 4 cases.
          Celui-ci deviendra une pyramide petit à petit.
          Ce plateau sera rempli par les pièces dans votre réserve, au nombre de 15 chacun.
          `,
@@ -22,7 +22,8 @@ export const pylosDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         'Déposer une pièce',
         `Quand c'est votre tour, vous avez toujours l'option de déposer une de vos pièce sur une case vide.
-         Les ronds gris sont les cases sur lesquelles vous pouvez déposez vos pièces.`,
+         Les ronds gris sont les cases sur lesquelles vous pouvez déposez vos pièces.
+         Cliquez sur une de ces cases pour déposer une pièce.`,
         PylosPartSlice.getInitialSlice(),
         'Voilà, aussi simplement que ça.',
     ),
@@ -53,8 +54,8 @@ export const pylosDidacticial: DidacticialStep[] = [
         [PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), [])],
         `Bravo.
          Notes importantes:
-         1. On ne peut déplacer une pièce qui est en dessus d'une autre.
-         2. Naturellement, on ne peux pas déplacer les pièces adverses.
+         1. On ne peut déplacer une pièce qui est en dessous d'une autre.
+         2. Naturellement, on ne peut pas déplacer les pièces adverses.
          3. Un déplacement ne peut se faire que quand la case d'arrivée est plus haute que la case de départ.`,
         'Raté',
     ),
@@ -123,7 +124,7 @@ export const pylosDidacticial: DidacticialStep[] = [
         `Vous jouez Foncé.
          Faites comme à l'étape précédente, mais cette fois:
          vous devrez, naturellement, capturer en premier votre pièce la plus haute,
-         et ensuite seulement capturer celle qui vient d'être enlevable à nouveau.`,
+         et ensuite seulement capturer celle du dessous, qui vient d'être enlevable à nouveau.`,
         new PylosPartSlice([
             [
                 [O, X, X, O],

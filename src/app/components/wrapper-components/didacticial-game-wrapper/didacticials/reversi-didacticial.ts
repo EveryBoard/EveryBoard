@@ -36,6 +36,7 @@ export const reversiDidacticial: DidacticialStep[] = [
     DidacticialStep.forMove(
         'Capture (2/2)',
         `Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.
+         Vous êtes le joueur clair ici.
          Jouez en bas à gauche pour voir un exemple.`,
         new ReversiPartSlice([
             [_, _, _, _, _, _, _, _],
@@ -54,7 +55,7 @@ export const reversiDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         'Passer son tour',
         `Si, à son tour de jeu, un joueur n'as aucun mouvement lui permettant de capturer une pièce, il est obligé de passer son tour.
-         Si d'aventure le joueur suivant ne savais pas jouer non plus, la partie terminerait avant que la plateau soit rempli, et les points seraient décomptés de la même façon.`,
+         Si d'aventure le joueur suivant ne savait pas jouer non plus, la partie terminerait avant que la plateau ne soit rempli, et les points seraient décomptés de la façon habituelle.`,
         new ReversiPartSlice([
             [X, O, O, O, O, O, X, O],
             [O, X, X, X, X, X, X, O],
