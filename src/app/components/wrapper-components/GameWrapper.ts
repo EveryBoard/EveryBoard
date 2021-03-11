@@ -31,7 +31,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({ template: '' })
 export abstract class GameWrapper {
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     // component loading
     @ViewChild(GameIncluderComponent)
@@ -138,7 +138,7 @@ export abstract class GameWrapper {
     {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
-            gameWrapper_receiveChildData_AKA_chooseMove: {
+            gameWrapper_receiveValidMove_AKA_chooseMove: {
                 move,
                 slice,
                 scorePlayerZero,
@@ -161,7 +161,6 @@ export abstract class GameWrapper {
         return MGPValidation.SUCCESS;
     }
     public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
-    // TODO rename: onLegalUserMove
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
@@ -190,8 +189,14 @@ export abstract class GameWrapper {
             players: this.players,
             username: this.userName,
             observer: this.observerRole,
+            areYouPlayer: (this.players[indexPlayer] && this.players[indexPlayer] === this.userName),
+            isThereAPlayer: this.players[indexPlayer],
         } });
-        return this.players[indexPlayer] === this.userName;
+        if (this.players[indexPlayer]) {
+            return this.players[indexPlayer] === this.userName;
+        } else {
+            return true;
+        }
     }
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
         return this.gameComponent;

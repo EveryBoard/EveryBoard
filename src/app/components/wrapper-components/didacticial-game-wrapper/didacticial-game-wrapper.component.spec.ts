@@ -343,7 +343,7 @@ describe('DidacticialGameWrapperComponent', () => {
             testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
         expect(currentMessage).toBe(expectedMessage);
     }));
-    it('When unwanted move is done, toast message should be shown and restart needed', fakeAsync(async() => {
+    it('When unwanted click is done, toast message should be shown and restart not needed // TODO: that what is said', fakeAsync(async() => {
         // Given a DidacticialStep with possible invalid clicks
         const didacticial: DidacticialStep[] = [
             DidacticialStep.forMove(
@@ -453,6 +453,35 @@ describe('DidacticialGameWrapperComponent', () => {
         expect(currentMessage).toBe('Bravo.');
         // expect step not to be considered a success
         expect(component.stepFinished[component.stepIndex]).toBeFalse();
+    }));
+    it('Should consider any move legal when step is anyMove', fakeAsync(async() => {
+        // given didacticial step fo type "anyMove"
+        const didacticial: DidacticialStep[] = [
+            DidacticialStep.anyMove(
+                'title',
+                'instruction',
+                QuartoPartSlice.getInitialSlice(),
+                'Bravo.',
+            ),
+        ];
+        component.startDidacticial(didacticial);
+
+        // when doing any move
+        await expectClickSuccess('#chooseCoord_0_0', testElements);
+        tick(10);
+        const expectations: MoveExpectations = {
+            move: new QuartoMove(0, 0, QuartoPiece.BBBB),
+            slice: QuartoPartSlice.getInitialSlice(),
+            scoreZero: null, scoreOne: null,
+        };
+        await expectMoveSuccess('#choosePiece_15', testElements, expectations);
+        tick(10);
+
+        // expect to see steps success message on component
+        const expectedMessage: string = 'Bravo.';
+        const currentMessage: string =
+            testElements.debugElement.query(By.css('#currentMessage')).nativeElement.innerHTML;
+        expect(currentMessage).toBe(expectedMessage);
     }));
     // ///////////////////// Retry ///////////////////////////////////////////////////////////////////
     it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {

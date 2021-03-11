@@ -41,16 +41,14 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [__, gr, re, ye, pi, pu, bl, or],
         ]),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.anyMove(
         'Plateau de départ et déplacement initial',
         `Voici le plateau de départ.
          Au Kamisado, les pièces ne peuvent se déplacer que vers l'avant, verticalement ou diagonalement.
          Vous jouez en premier, donc avec les pièces foncées, vous pouvez faire votre premier déplacement:
-         déplacez votre pièce bleue de deux cases verticalement.`,
+         Cliquez sur la pièce de votre choix, et cliquez sur sa case d'arrivée.`,
         KamisadoPartSlice.getInitialSlice(),
-        [KamisadoMove.of(new Coord(6, 7), new Coord(6, 5))],
         `Parfait! Notez bien que chacune de vos pièces a une couleur différente.`,
-        `Vous n'avez pas avancé votre pièce bleue de deux cases!`,
     ),
     DidacticialStep.forMove(
         'Déplacement',
@@ -74,7 +72,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
         'Parfait!',
         `Vous n'avez pas avancé votre pièce rose sur la case bleue!`,
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.informational(
         'Blocage',
         `Foncé s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
          Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
@@ -89,9 +87,6 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [__, __, __, Pi, __, __, __, __],
             [br, gr, re, ye, pi, pu, __, or],
         ]),
-        [], // TODO put a move
-        'Parfait!',
-        `Vous n'avez pas avancé votre pièce rose sur la case bleue`,
     ),
     DidacticialStep.forMove(
         'Victoire par blocage',

@@ -25,17 +25,18 @@ export const reversiDidacticial: DidacticialStep[] = [
             [O, O, O, O, O, O, O, O],
         ], 60),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.anyMove(
         'Capture (1/2)',
-        `Au début de la partie, voici la configuration des pièces, pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.`,
+        `Au début de la partie, voici la configuration des pièces.
+         Pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.
+         Faites n'importe quel mouvement.`,
         ReversiPartSlice.getInitialSlice(),
-        [new ReversiMove(2, 4), new ReversiMove(3, 5), new ReversiMove(4, 2), new ReversiMove(5, 3)],
         'Bravo',
-        null,
     ),
     DidacticialStep.forMove(
         'Capture (2/2)',
-        'Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois. Jouez en bas à gauche.',
+        `Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.
+         Jouez en bas à gauche pour voir un exemple.`,
         new ReversiPartSlice([
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],

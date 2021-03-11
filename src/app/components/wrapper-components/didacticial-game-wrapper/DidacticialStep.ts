@@ -71,7 +71,10 @@ export class DidacticialStep {
         public readonly failureMessage: string,
     ) { }
     public isMove(): boolean {
-        return this.acceptedMoves && this.acceptedMoves.length > 0;
+        return this.acceptedMoves != null;
+    }
+    public isAnyMove(): boolean {
+        return this.acceptedMoves && this.acceptedMoves.length === 0;
     }
     public isClick(): boolean {
         return this.acceptedClicks && this.acceptedClicks.length > 0;

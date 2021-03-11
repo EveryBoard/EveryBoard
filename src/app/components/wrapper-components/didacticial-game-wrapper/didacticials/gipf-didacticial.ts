@@ -20,23 +20,15 @@ export const gipfDidacticial: DidacticialStep[] = [
          Le premier joueur possède les pièces foncées, le deuxième les pièces claires.`,
         GipfPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.anyMove(
         'Insertion',
         `Tout les tours contiennent une insertion:
-         1. vous choisissez la case où vous voulez insérer votre pièce.
-         2. vous choisissez la direction dans laquelle pousser les éventuelles pièces déjà présentes dans la rangée.
+         1. Cliquez sur la case où vous voulez insérer votre pièce.
+         2. Cliquez sur la flèche représentant la direction dans laquelle pousser les éventuelles pièces déjà présentes dans la rangée.
          Une insertion est interdite dans une rangée complète.
-         Vous jouez Foncé, insérez une pièce de bas en haut, en entrant par la case la plus basse.`,
+         Vous jouez Foncé, insérez une pièce.`,
         GipfPartSlice.getInitialSlice(),
-        [
-            new GipfMove(
-                new GipfPlacement(new Coord(0, 3), MGPOptional.of(Direction.UP)),
-                [],
-                [],
-            ),
-        ],
         'Bravo.',
-        'Raté',
     ),
     DidacticialStep.forMove(
         'Capture (1/3)',
@@ -51,7 +43,7 @@ export const gipfDidacticial: DidacticialStep[] = [
          A. Choisir la/les capture(s) crée(s) par le dernier mouvement de votre adversaire.
          B. Faire votre insertion.
          C. Choisir la/les ligne(s) à capturer que vous venez de créer.
-         Vous jouez Clair, une capture est faisable, faites là.`,
+         Vous jouez Foncé, une capture est faisable, faites là.`,
         new GipfPartSlice(HexaBoard.fromTable([
             [_, _, _, O, X, _, _],
             [_, _, _, _, _, _, _],
@@ -146,31 +138,6 @@ export const gipfDidacticial: DidacticialStep[] = [
                         new Coord(1, -1),
                         new Coord(2, -1),
                     ]),
-                ],
-            ),
-            new GipfMove(
-                new GipfPlacement(new Coord(0, 3), MGPOptional.of(Direction.UP)),
-                [new GipfCapture([
-                    new Coord(3, -3),
-                    new Coord(3, -2),
-                    new Coord(3, -1),
-                    new Coord(3, 0),
-                ])],
-                [
-                    new GipfCapture([
-                        new Coord(-2, -1),
-                        new Coord(-1, -1),
-                        new Coord(0, -1),
-                        new Coord(1, -1),
-                        new Coord(2, -1),
-                    ]),
-                    new GipfCapture([
-                        new Coord(-3, 2),
-                        new Coord(-2, 2),
-                        new Coord(-1, 2),
-                        new Coord(0, 2),
-                        new Coord(1, 2),
-                    ]), // TODO, remove once gipfMove.equal has been refactored
                 ],
             ),
         ],

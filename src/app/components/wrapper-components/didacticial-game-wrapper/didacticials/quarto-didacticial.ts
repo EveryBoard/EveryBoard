@@ -7,7 +7,7 @@ export const quartoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         'But du jeu',
         `Quarto est un jeu d'alignement.
-         Le but d'aligner quatre pièces qui possèdent un point commun :
+         Le but d'aligner quatre pièces qui possèdent au moins un point commun:
          leur couleur (claire ou foncée),
          leur taille (grande ou petite),
          leur motif (vide ou à point),
@@ -18,12 +18,14 @@ export const quartoDidacticial: DidacticialStep[] = [
             [16, 16, 16, 16],
             [16, 16, 16, 16],
             [16, 16, 16, 16],
-        ], 7, QuartoPiece.NONE),
+        ], 7, QuartoPiece.ABAB),
     ),
     DidacticialStep.anyMove(
         'Placement',
         `Chaque placement se fait en deux étapes: placer la pièce qu'on a en main en cliquant sur une case du plateau,
          et choisir une pièce que l'adversaire devra placer, en cliquant sur une des pièces affichées à droite.
+         Si vous préférez, l'ordre inverse est également possible.
+         Gardez juste à l'esprit que le deuxième clic valide le mouvement.
          Effectuez un mouvement.`,
         new QuartoPartSlice([
             [14, 3, 6, 16],

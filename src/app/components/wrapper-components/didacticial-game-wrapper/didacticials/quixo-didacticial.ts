@@ -46,7 +46,7 @@ export const quixoDidacticial: DidacticialStep[] = [
          Si vous créez une ligne de 5 pièces vous appartenant, vous gagnez.
          Si vous créez une ligne de 5 pièces ennemies, vous perdez.
          Si vous créez les deux, vous perdez aussi!
-         Ce plateau permet de gagnez, essayez.
+         Ce plateau permet de gagner, essayez.
          Vous jouez foncé.`,
         new QuixoPartSlice([
             [_, X, _, X, X],

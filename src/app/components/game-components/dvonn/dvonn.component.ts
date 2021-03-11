@@ -28,7 +28,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
 
     public canPass: boolean = false;
 
-    public disconnecteds = [];
+    public disconnecteds: { x: number, y: number, caseContent: number }[] = [];
 
     constructor(public snackBar: MatSnackBar) {
         super(snackBar);
@@ -39,6 +39,7 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
         this.lastMove = this.rules.node.move;
+        this.disconnecteds = [];
         if (this.lastMove) {
             this.calculateDisconnecteds();
         }
@@ -47,7 +48,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         this.scores = this.rules.getScores(slice);
     }
     private calculateDisconnecteds(): void {
-        this.disconnecteds = [];
         const previousSlice: DvonnPartSlice = this.rules.node.mother.gamePartSlice;
         const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
         for (let y: number = 0; y < slice.board.length; y++) {

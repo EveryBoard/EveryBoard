@@ -14,6 +14,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { awaleDidacticial } from './didacticials/awale-didacticial';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
 import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
+import { gipfDidacticial } from './didacticials/gipf-didacticial';
 import { goDidacticial } from './didacticials/go-didacticial';
 import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
 import { p4Didacticial } from './didacticials/p4-didacticial';
@@ -24,8 +25,6 @@ import { reversiDidacticial } from './didacticials/reversi-didacticial';
 import { saharaDidacticial } from './didacticials/sahara-didacticial';
 import { siamDidacticial } from './didacticials/siam-didacticial';
 import { tablutDidacticial } from './didacticials/tablut-didacticial';
-import { gipfDidacticial } from './didacticials/gipf-didacticial';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -129,7 +128,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onValidUserMove: legal move');
             this.gameComponent.updateBoard();
             this.moveAttemptMade = true;
-            if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+            if (currentStep.isAnyMove() || currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
                 display(
                     DidacticialGameWrapperComponent.VERBOSE,
                     'didacticialGameWrapper.onValidUserMove: awaited move!');

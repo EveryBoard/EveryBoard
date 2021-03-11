@@ -83,16 +83,15 @@ export const awaleDidacticial: DidacticialStep[] = [
         'Malheureusement, c’est interdit, car sinon l’adversaire ne pourrait pas jouer après vous. À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée!',
         'Perdu. Recommencez',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.anyMove(
         'Nourir est obligatoire',
-        '"Affamer" est interdit, c\'est-à-dire: si votre adversaire n\'a plus de graines et que vous savez lui en donner une ou plusieurs, vous êtes obligé de le faire. Allez-y!',
+        `"Affamer" est interdit, c'est-à-dire: si votre adversaire n\'a plus de graines et que vous savez lui en donner une ou plusieurs, vous êtes obligé de le faire.
+         Allez-y!`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],
             [0, 1, 2, 4, 4, 5],
         ], 1, [0, 0]),
-        [new AwaleMove(3, 1)],
         'Bravo. Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux! C’est souvent un bon moyen d’avoir des captures faciles!',
-        'Raté, ce mouvement n\'as distrubué aucune graine à l\'adversaire, hors l\'un de vos mouvement permet de le faire, c\'est donc obligatoire.',
     ),
     DidacticialStep.anyMove(
         'Fin de partie',
