@@ -15,7 +15,11 @@ import { P4Move } from '../P4Move';
 export abstract class P4Node extends MGPNode<P4Rules, P4Move, P4PartSlice, LegalityStatus> {}
 
 export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
-    public applyLegalMove(move: P4Move, slice: P4PartSlice, status: LegalityStatus): { resultingMove: P4Move; resultingSlice: P4PartSlice; } {
+    public applyLegalMove(move: P4Move,
+                          slice: P4PartSlice,
+                          status: LegalityStatus):
+    { resultingMove: P4Move; resultingSlice: P4PartSlice; }
+    {
         const x: number = move.x;
         const board: number[][] = slice.getCopiedBoard();
         const y: number = P4Rules.getLowestUnoccupiedCase(board, x);

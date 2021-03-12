@@ -53,6 +53,7 @@ module.exports = {
                 'SwitchCase': 1,
                 'CallExpression': { 'arguments': 'first' },
                 'FunctionDeclaration': { 'parameters': 'first' },
+                'FunctionExpression': { 'parameters': 'first' },
             },
         ],
         'object-curly-spacing': ['warn', 'always'],
