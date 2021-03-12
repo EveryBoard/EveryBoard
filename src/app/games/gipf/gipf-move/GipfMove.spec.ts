@@ -261,6 +261,9 @@ describe('GipfMove', () => {
         it('should consider move equal to itself', () => {
             expect(move.equals(move)).toBeTrue();
         });
+        it('should consider same move equal', () => {
+            expect(move.equals(new GipfMove(placement, [initialCapture], [finalCapture]))).toBeTrue();
+        });
         it('should consider different moves due to different placement', () => {
             const placement2: GipfPlacement = new GipfPlacement(new Coord(1, -2),
                                                                 MGPOptional.of(HexaDirection.DOWN_LEFT));
@@ -288,13 +291,13 @@ describe('GipfMove', () => {
             const move2: GipfMove = new GipfMove(placement, [initialCapture], [finalCapture2]);
             expect(move.equals(move2)).toBeFalse();
         });
-        it('should consider move equal to the move with a different order of capture', () => {
+        it('should consider move different to the move with a different order of capture', () => {
             const initialCapture2: GipfCapture = new GipfCapture([
                 new Coord(1, -2), new Coord(1, -1), new Coord(1, 0), new Coord(1, 1),
             ]);
             const move1: GipfMove = new GipfMove(placement, [initialCapture, initialCapture2], []);
             const move2: GipfMove = new GipfMove(placement, [initialCapture2, initialCapture], []);
-            expect(move1.equals(move2)).toBeTrue();
+            expect(move1.equals(move2)).toBeFalse();
         });
     });
     describe('toString', () => {

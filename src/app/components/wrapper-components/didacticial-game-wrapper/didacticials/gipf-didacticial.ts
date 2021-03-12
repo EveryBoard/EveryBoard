@@ -2,8 +2,8 @@ import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-mo
 import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice';
 import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
+import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { DidacticialStep } from '../DidacticialStep';
 
@@ -54,7 +54,7 @@ export const gipfDidacticial: DidacticialStep[] = [
             [_, _, _, X, _, _, _],
         ], GipfPiece.EMPTY, GipfPiece.encoder), 42, [8, 8], [0, 0]),
         [new GipfMove(
-            new GipfPlacement(new Coord(-3, 0), MGPOptional.of(Direction.RIGHT)),
+            new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
             [],
             [new GipfCapture([
                 new Coord(-3, 0),
@@ -83,7 +83,7 @@ export const gipfDidacticial: DidacticialStep[] = [
             [_, _, _, X, _, _, _],
         ], GipfPiece.EMPTY, GipfPiece.encoder), 42, [8, 4], [2, 3]),
         [new GipfMove(
-            new GipfPlacement(new Coord(-3, 0), MGPOptional.of(Direction.RIGHT)),
+            new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
             [],
             [new GipfCapture([
                 new Coord(0, -2),
@@ -116,7 +116,7 @@ export const gipfDidacticial: DidacticialStep[] = [
         ], GipfPiece.EMPTY, GipfPiece.encoder), 42, [8, 4], [2, 3]),
         [
             new GipfMove(
-                new GipfPlacement(new Coord(0, 3), MGPOptional.of(Direction.UP)),
+                new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.UP)),
                 [new GipfCapture([
                     new Coord(3, -3),
                     new Coord(3, -2),
@@ -137,6 +137,31 @@ export const gipfDidacticial: DidacticialStep[] = [
                         new Coord(0, -1),
                         new Coord(1, -1),
                         new Coord(2, -1),
+                    ]),
+                ],
+            ),
+            new GipfMove(
+                new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.UP)),
+                [new GipfCapture([
+                    new Coord(3, -3),
+                    new Coord(3, -2),
+                    new Coord(3, -1),
+                    new Coord(3, 0),
+                ])],
+                [
+                    new GipfCapture([
+                        new Coord(-3, 2),
+                        new Coord(-2, 2),
+                        new Coord(-1, 2),
+                        new Coord(0, 2),
+                        new Coord(1, 2),
+                    ]),
+                    new GipfCapture([
+                        new Coord(0, -3),
+                        new Coord(0, -2),
+                        new Coord(0, -1),
+                        new Coord(0, 0),
+                        new Coord(0, 1),
                     ]),
                 ],
             ),

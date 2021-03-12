@@ -265,25 +265,10 @@ export class GipfMove extends Move {
         }
     }
 
-    public readonly initialCaptures: ReadonlyArray<GipfCapture>;
-    public readonly finalCaptures: ReadonlyArray<GipfCapture>;
     public constructor(public readonly placement: GipfPlacement,
-                       initial: ReadonlyArray<GipfCapture>,
-                       final: ReadonlyArray<GipfCapture>) {
+                       public readonly initialCaptures: ReadonlyArray<GipfCapture>,
+                       public readonly finalCaptures: ReadonlyArray<GipfCapture>) {
         super();
-        const cmp: (c1: GipfCapture, c2: GipfCapture) => number = (c1: GipfCapture, c2: GipfCapture): number => {
-            const x1: number = c1.capturedCases[0].x;
-            const x2: number = c2.capturedCases[0].x;
-            const y1: number = c1.capturedCases[0].y;
-            const y2: number = c2.capturedCases[0].y;
-            if (x1 === x2) {
-                return y1 > y2 ? 1 : -1;
-            } else {
-                return x1 > x2 ? 1 : -1;
-            }
-        };
-        this.initialCaptures = ArrayUtils.copyArray(initial).sort(cmp);
-        this.finalCaptures = ArrayUtils.copyArray(final).sort(cmp);
     }
     public toString(): string {
         return 'GipfMove'; // TODO

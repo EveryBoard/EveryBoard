@@ -2,6 +2,27 @@
      width="700px" height="700px"
      viewBox="0 0 700 700"
      preserveAspectRatio="xMidYMid meet">
+    <style type="text/css">
+        .text {
+            font: 20 sans-serif;
+        }
+        .capture {
+            stroke-width: 2;
+            stroke: yellow;
+            fill: none;
+        }
+        .capture:hover {
+            stroke-width: 8;
+            stroke: yellow;
+            fill: none;
+        }
+    </style>
+    <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7"
+                refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" />
+        </marker>
+    </defs>
 
     <g *ngFor="let case of getAllCoords();">
         <g (click)="onClick(case)"
@@ -17,18 +38,7 @@
         </g>
     </g>
 
-    <style type="text/css">
-        .capture {
-            stroke-width: 2;
-            stroke: yellow;
-            fill: none;
-        }
-        .capture:hover {
-            stroke-width: 8;
-            stroke: yellow;
-            fill: none;
-        }
-    </style>
+
     <g *ngFor="let capture of possibleCaptures; index as i;"
        pointer-events="fill"
        class="capture">
@@ -39,12 +49,6 @@
         </g>
     </g>
 
-    <defs>
-        <marker id="arrowhead" markerWidth="10" markerHeight="7"
-                refX="5" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" />
-        </marker>
-    </defs>
     <g *ngFor="let arrow of arrows;">
         <line [attr.x1]="arrow.x1"
               [attr.y1]="arrow.y1"
@@ -56,7 +60,6 @@
               (click)="onClick(arrow.destination)"/>
     </g>
 
-    <style>.text { font: 20 sans-serif; }</style>
     <g *ngFor="let player of [0, 1];">
         <text x="410" [attr.y]="30+(getPieceSize()+20)*player" class="text">Pièces du joueur {{player+1}}</text>
         <g *ngFor="let p of getPlayerSidePieces(player);">

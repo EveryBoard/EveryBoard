@@ -244,7 +244,7 @@ describe('GipfRules:', () => {
 
             const moveWithBothCaptures: GipfMove = new GipfMove(placement, [capture1, capture2], []);
             const capturesLegality: GipfLegalityStatus = rules.isLegal(moveWithBothCaptures, slice);
-            expect(capturesLegality.legal.isSuccess()).toBeTrue();
+            expect(capturesLegality.legal.isSuccess()).toBeFalse();
         });
         it('should force both players to capture when possible', () => {
             // This is the board before diagram 7
