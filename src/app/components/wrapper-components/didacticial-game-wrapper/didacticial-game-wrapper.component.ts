@@ -120,23 +120,23 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.gameComponent.updateBoard();
         this.cdr.detectChanges();
     }
-    public async onValidUserMove(move: Move): Promise<void> {
-        display(DidacticialGameWrapperComponent.VERBOSE, { didacticialGameWrapper_onValidUserMove: { move }});
+    public async onLegalUserMove(move: Move): Promise<void> {
+        display(DidacticialGameWrapperComponent.VERBOSE, { didacticialGameWrapper_onLegalUserMove: { move }});
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         const isLegalMove: boolean = this.gameComponent.rules.choose(move);
         if (isLegalMove) {
-            display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onValidUserMove: legal move');
+            display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onLegalUserMove: legal move');
             this.gameComponent.updateBoard();
             this.moveAttemptMade = true;
             if (currentStep.isAnyMove() || currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
                 display(
                     DidacticialGameWrapperComponent.VERBOSE,
-                    'didacticialGameWrapper.onValidUserMove: awaited move!');
+                    'didacticialGameWrapper.onLegalUserMove: awaited move!');
                 this.showStepSuccess();
             } else {
                 display(
                     DidacticialGameWrapperComponent.VERBOSE,
-                    'didacticialGameWrapper.onValidUserMove: not the move that was awaited.');
+                    'didacticialGameWrapper.onLegalUserMove: not the move that was awaited.');
                 this.currentMessage = currentStep.failureMessage;
             }
         } else {

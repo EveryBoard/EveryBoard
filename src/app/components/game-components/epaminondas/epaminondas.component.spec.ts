@@ -70,7 +70,7 @@ describe('EpaminondasComponent:', () => {
         const gameComponent: EpaminondasComponent = wrapper.gameComponent as EpaminondasComponent;
         const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
-        const onValidUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onValidUserMove').and.callThrough();
+        const onLegalUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onLegalUserMove').and.callThrough();
         const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
         testElements = {
             fixture,
@@ -79,7 +79,7 @@ describe('EpaminondasComponent:', () => {
             canUserPlaySpy,
             cancelMoveSpy,
             chooseMoveSpy,
-            onValidUserMoveSpy,
+            onLegalUserMoveSpy,
         };
     }));
     it('should create', () => {

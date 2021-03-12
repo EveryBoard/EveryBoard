@@ -50,8 +50,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (player == null) return false;
         return player.substr(0, 3) === 'bot';
     }
-    public async onValidUserMove(move: Move): Promise<void> {
-        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onValidUserMove');
+    public async onLegalUserMove(move: Move): Promise<void> {
+        display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.onLegalUserMove');
 
         this.gameComponent.rules.choose(move);
         this.updateBoard();
