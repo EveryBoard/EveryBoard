@@ -25,12 +25,12 @@ export const tablutDidacticial: DidacticialStep[] = [
         'Déplacement',
         `Au Tablut, toutes les pièces se déplacent de la même façon.
          De façon équivalente aux tours aux échecs, une pièce se déplace:
-        1. D'autant de case qu'elle veut.
-        2. Sans passer à travers ou s'arrêter sur une autre pièce.
-        3. Horizontalement ou verticalement.
-        4. Seul le roi peut s'arrêter sur un trône.
-        Pour déplacer une pièce, cliquez dessus, puis sur sa destination.
-        Effectuez un déplacement avec une pièce foncée.`,
+         1. D'autant de case qu'elle veut.
+         2. Sans passer à travers ou s'arrêter sur une autre pièce.
+         3. Horizontalement ou verticalement.
+         4. Seul le roi peut s'arrêter sur un trône.
+         Pour déplacer une pièce, cliquez dessus, puis sur sa destination.
+         Ceci est le plateau initial, faites le premier mouvement.`,
         TablutPartSlice.getInitialSlice(),
         'Bravo',
     ),
@@ -76,12 +76,13 @@ export const tablutDidacticial: DidacticialStep[] = [
         ], 12),
         [new TablutMove(new Coord(1, 4), new Coord(2, 4))],
         'Bravo, un défenseur en moins, mais gardez quand même un oeil sur le roi, c\'est le plus important.',
-        'Raté, vous n\'avez pas fait le mouvement demandé',
+        'Raté, vous n\'avez pas fait le mouvement demandé.',
     ),
     DidacticialStep.forMove(
         'Comment capturer le roi (1/2)',
         `Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus.
-         Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats.`,
+         Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats.
+         Ceci fonctionne également si le roi est assis sur son trône.`,
         new TablutPartSlice([
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],

@@ -12,8 +12,7 @@ export const quixoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         'But du jeu',
         `Au Quixo, le but du jeu est d'aligner 5 de vos pièces.
-         Le premier joueur joue la couleur foncée, le deuxième la claire.
-         Les pièces affichant la couleur du joueur lui appartiennent.
+         Le premier joueur contrôle les pièces foncées, le deuxième les claires.
          Le plateau est constitué de 25 pièces réparties en un carré de 5x5.
          Chaque pièce a un face neutre, une face claire et une face foncée.`,
         QuixoPartSlice.getInitialSlice(),
@@ -22,7 +21,7 @@ export const quixoDidacticial: DidacticialStep[] = [
         'A quoi ressemble un mouvement (sans animation)',
         `Quand c'est à votre tour de jouer:
          1. Cliquez sur une de vos pièces ou une pièce neutre, il est interdit de choisir une pièce de l'adversaire.
-         Notez que vous ne pouvez choisir qu'une pièce sur un bord du plateaué.
+         Notez que vous ne pouvez choisir qu'une pièce sur le bord du plateau.
          2. Choisissez une direction dans laquelle l'envoyer (en cliquant sur la flèche).
          Il faudra imaginer que la pièce que vous avez choisie a été déplacée jusqu'au bout du plateau dans la direction choisie.
          Une fois arrivée au bout, toutes les pièces vont se glisser d'une case dans la direction inverse à celle qu'a pris votre pièce.
@@ -47,14 +46,14 @@ export const quixoDidacticial: DidacticialStep[] = [
          Si vous créez une ligne de 5 pièces ennemies, vous perdez.
          Si vous créez les deux, vous perdez aussi!
          Ce plateau permet de gagner, essayez.
-         Vous jouez foncé.`,
+         Vous jouez Clair.`,
         new QuixoPartSlice([
             [_, X, _, X, X],
             [_, O, O, _, O],
             [X, X, X, O, X],
             [O, _, O, X, X],
             [X, O, _, X, O],
-        ], 30),
+        ], 31),
         [new QuixoMove(3, 0, Orthogonal.DOWN)],
         'Bravo, vous avez gagné!',
         'Perdu.',
