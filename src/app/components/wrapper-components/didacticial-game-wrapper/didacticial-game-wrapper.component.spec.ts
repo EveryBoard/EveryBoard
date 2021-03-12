@@ -67,7 +67,7 @@ describe('DidacticialGameWrapperComponent', () => {
         const gameComponent: QuartoComponent = component.gameComponent as QuartoComponent;
         const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
         const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
-        const onValidUserMoveSpy: jasmine.Spy = spyOn(component, 'onValidUserMove').and.callThrough();
+        const onLegalUserMoveSpy: jasmine.Spy = spyOn(component, 'onLegalUserMove').and.callThrough();
         const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
         testElements = {
             fixture,
@@ -76,7 +76,7 @@ describe('DidacticialGameWrapperComponent', () => {
             canUserPlaySpy,
             cancelMoveSpy,
             chooseMoveSpy,
-            onValidUserMoveSpy,
+            onLegalUserMoveSpy,
         };
     }));
     // ///////////////////////// BEFORE ///////////////////////////////////////

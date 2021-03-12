@@ -156,11 +156,11 @@ export abstract class GameWrapper {
             this.gameComponent.cancelMove(legality.legal.getReason());
             return legality.legal;
         }
-        await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
+        await this.onLegalUserMove(move, scorePlayerZero, scorePlayerOne);
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;
     }
-    public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
+    public abstract onLegalUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
