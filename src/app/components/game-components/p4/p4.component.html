@@ -1,18 +1,20 @@
-<table>
-    <tr *ngFor="let y of [5, 4, 3, 2, 1, 0]">
-        <td *ngFor="let currentCase of board[y]; index as x;"
-            style="position:relative;"
-            (click)="onClick(x);">
-             <img width="50" height="50"
-                 id="{{'t'+y+x}}"
-                 alt=":{{ currentCase }}:"
-                 [src]='imagesLocation+imagesNames[currentCase]'/>
-            <img *ngIf="lastX===x"
-                 width="50" height="50"
-                 id="{{'u'+y+x}}"
-                 alt="highlighted"
-                 [src]="imagesLocation+'highlight.svg'"
-                 style="position:absolute; top:0; left:0;"/>
-        </td>
-    </tr>
-</table>
+<svg  xmlns="http://www.w3.org/2000/svg"
+      width="600px" height="600px"
+      viewBox="0 0 700 700"
+      preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let y of [0, 1, 2, 3, 4, 5]">
+        <g *ngFor="let currentCase of board[y]; index as x;">
+            <circle [attr.cx]="50 * x + 25"
+                    [attr.cy]="250 - 50 * y + 25"
+                    r="20"
+                    [ngStyle]="getCaseStyle(x)"
+                    pointer-events="fill"
+                    (click)="onClick(x)" />
+            <circle *ngIf="currentCase !== EMPTY_CASE"
+                    [attr.cx]="50 * x + 25"
+                    [attr.cy]="250 - 50 * y + 25"
+                    r="20"
+                    [ngStyle]="getPieceStyle(currentCase)" />
+        </g>
+    </g>
+</svg>
