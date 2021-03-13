@@ -34,6 +34,10 @@ module.exports = {
         ],
         '@typescript-eslint/no-this-alias': ['warn'],
         '@typescript-eslint/no-inferrable-types': ['off'],
+        '@typescript-eslint/no-redeclare': [
+            'error',
+            { 'ignoreDeclarationMerge': true },
+        ],
 
         'max-len': ['warn', { 'code': 120 }],
         'require-jsdoc': ['warn', { 'require': {
@@ -57,7 +61,7 @@ module.exports = {
             },
         ],
         'object-curly-spacing': ['warn', 'always'],
-        'no-redeclare': ['warn'], // TODO: add option ignoreDeclarationMerge: true and set to error
+        'no-redeclare': ['error'],
         'camelcase': ['warn'],
         'valid-jsdoc': ['warn'],
         'no-case-declarations': ['off'],
@@ -67,5 +71,6 @@ module.exports = {
             'named': 'never',
             'asyncArrow': 'never',
         }],
+        'brace-style': ['warn'],
     },
 };

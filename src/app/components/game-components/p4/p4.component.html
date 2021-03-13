@@ -3,6 +3,8 @@
         <td *ngFor="let currentCase of board[y]; index as x;"
             style="position:relative;"
             (click)="onClick(x);">
+            {{getScore(x, y)}}
+
             <img width="50" height="50"
                  id="{{'t'+y+x}}"
                  alt=":{{ currentCase }}:"
