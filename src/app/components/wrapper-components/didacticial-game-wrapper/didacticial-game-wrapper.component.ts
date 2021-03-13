@@ -14,6 +14,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { awaleDidacticial } from './didacticials/awale-didacticial';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
 import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
+import { gipfDidacticial } from './didacticials/gipf-didacticial';
 import { goDidacticial } from './didacticials/go-didacticial';
 import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
 import { p4Didacticial } from './didacticials/p4-didacticial';
@@ -32,7 +33,7 @@ import { tablutDidacticial } from './didacticials/tablut-didacticial';
 })
 export class DidacticialGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     public COMPLETED_TUTORIAL_MESSAGE: string = 'Félicitation, vous avez fini le tutoriel.'
 
@@ -75,12 +76,13 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         const didacticial: DidacticialStep[] = this.getDidacticial();
         this.startDidacticial(didacticial);
     }
-    private getDidacticial(): DidacticialStep[] {
+    public getDidacticial(): DidacticialStep[] {
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
         const didacticials: { [key: string]: DidacticialStep[] } = {
             Awale: awaleDidacticial,
             Dvonn: dvonnDidacticial,
             Epaminondas: epaminondasDidacticial,
+            Gipf: gipfDidacticial,
             Go: goDidacticial,
             Kamisado: kamisadoDidacticial,
             P4: p4Didacticial,
@@ -93,7 +95,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Tablut: tablutDidacticial,
         };
         if (didacticials[game] == null) {
-            throw new Error('Unknown Game ' + game);
+            throw new Error('Unknown Game ' + game + '.');
         }
         return didacticials[game];
     }
@@ -118,20 +120,23 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.gameComponent.updateBoard();
         this.cdr.detectChanges();
     }
-    public async onValidUserMove(move: Move): Promise<void> {
-        display(DidacticialGameWrapperComponent.VERBOSE, { didacticialGameWrapper_onValidUserMove: { move }});
+    public async onLegalUserMove(move: Move): Promise<void> {
+        display(DidacticialGameWrapperComponent.VERBOSE, { didacticialGameWrapper_onLegalUserMove: { move }});
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         const isLegalMove: boolean = this.gameComponent.rules.choose(move);
         if (isLegalMove) {
-            display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onValidUserMove: legal move');
+            display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onLegalUserMove: legal move');
             this.gameComponent.updateBoard();
             this.moveAttemptMade = true;
-            if (currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+            if (currentStep.isAnyMove() || currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
                 display(
                     DidacticialGameWrapperComponent.VERBOSE,
-                    'didacticialGameWrapper.onValidUserMove: awaited move!');
+                    'didacticialGameWrapper.onLegalUserMove: awaited move!');
                 this.showStepSuccess();
             } else {
+                display(
+                    DidacticialGameWrapperComponent.VERBOSE,
+                    'didacticialGameWrapper.onLegalUserMove: not the move that was awaited.');
                 this.currentMessage = currentStep.failureMessage;
             }
         } else {
@@ -196,5 +201,16 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             }
             this.showStep(indexUndone);
         }
+    }
+    public async showSolution(): Promise<void> {
+        display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.showSolution()');
+        const step: DidacticialStep = this.steps[this.stepIndex];
+        const awaitedMove: Move = step.acceptedMoves[0];
+        this.showStep(this.stepIndex);
+        this.gameComponent.rules.choose(awaitedMove);
+        this.gameComponent.updateBoard();
+        this.moveAttemptMade = true;
+        this.currentMessage = step.successMessage;
+        this.cdr.detectChanges();
     }
 }

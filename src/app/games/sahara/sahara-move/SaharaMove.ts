@@ -20,7 +20,7 @@ export class SaharaMove extends MoveCoordToCoord {
         const sx: number = encodedMove;
         return new SaharaMove(new Coord(sx, sy), new Coord(ex, ey));
     }
-    public static checkDistanceAndLocation(start: Coord, end: Coord) {
+    public static checkDistanceAndLocation(start: Coord, end: Coord): void {
         const dx: number = Math.abs(start.x - end.x);
         const dy: number = Math.abs(start.y - end.y);
         const distance: number = dx+dy;
@@ -28,12 +28,18 @@ export class SaharaMove extends MoveCoordToCoord {
             throw new Error('Move cannot be static.');
         } else if (distance === 1) {
             const fakeNeighboors: Coord = TriangularCheckerBoard.getFakeNeighboors(start);
-            if (end.equals(fakeNeighboors)) throw new Error(start.toString() + ' and ' + end.toString() + ' are not neighboors.');
+            if (end.equals(fakeNeighboors)) {
+                throw new Error(start.toString() + ' and ' + end.toString() + ' are not neighboors.');
+            }
         } else if (distance === 2) {
-            if ((start.x + start.y)%2 === 0) throw new Error('Can only bounce twice when started on a white triangle.');
-            if (start.x === end.x) throw new Error(start.toString() + ' and ' + end.toString() + ' have no intermediary neighboors.');
+            if ((start.x + start.y)%2 === 0) {
+                throw new Error('Can only bounce twice when started on a white triangle.');
+            }
+            if (start.x === end.x) {
+                throw new Error(start.toString() + ' and ' + end.toString() + ' have no intermediary neighboors.');
+            }
         } else {
-            throw new Error('Maximal |x| + |y| distance for SaharaMove is 2, got ' + distance + '.');
+            throw new Error('Vous pouvez vous déplacer maximum de 2 cases, pas de ' + distance + '.');
         }
     }
     constructor(start: Coord, end: Coord) {

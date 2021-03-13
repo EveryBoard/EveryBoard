@@ -34,7 +34,7 @@ export interface TestElements {
 
     chooseMoveSpy: jasmine.Spy,
 
-    onValidUserMoveSpy: jasmine.Spy,
+    onLegalUserMoveSpy: jasmine.Spy,
 }
 export const expectClickSuccess: (elementName: string, testElements: TestElements) => Promise<void> =
 async(elementName: string, testElements: TestElements) => {
@@ -50,7 +50,7 @@ async(elementName: string, testElements: TestElements) => {
         testElements.canUserPlaySpy.calls.reset();
         expect(testElements.cancelMoveSpy).not.toHaveBeenCalled();
         expect(testElements.chooseMoveSpy).not.toHaveBeenCalled();
-        expect(testElements.onValidUserMoveSpy).not.toHaveBeenCalled();
+        expect(testElements.onLegalUserMoveSpy).not.toHaveBeenCalled();
     }
 };
 export const expectClickFail: (elementName: string, testElements: TestElements, reason: string) => Promise<void> =
@@ -104,8 +104,8 @@ async(elementName: string, testElements: TestElements, expectations: MoveExpecta
         testElements.canUserPlaySpy.calls.reset();
         expect(testElements.chooseMoveSpy).toHaveBeenCalledOnceWith(move, slice, scoreZero, scoreOne);
         testElements.chooseMoveSpy.calls.reset();
-        expect(testElements.onValidUserMoveSpy).toHaveBeenCalledOnceWith(move, scoreZero, scoreOne);
-        testElements.onValidUserMoveSpy.calls.reset();
+        expect(testElements.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move, scoreZero, scoreOne);
+        testElements.onLegalUserMoveSpy.calls.reset();
     }
 };
 export const expectMoveFailure: (elementName: string, testElements: TestElements, expectations: MoveExpectations, reason: string) => Promise<void> =
@@ -125,7 +125,7 @@ async(elementName: string, testElements: TestElements, expectations: MoveExpecta
         testElements.chooseMoveSpy.calls.reset();
         expect(testElements.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
         testElements.cancelMoveSpy.calls.reset();
-        expect(testElements.onValidUserMoveSpy).not.toHaveBeenCalled();
+        expect(testElements.onLegalUserMoveSpy).not.toHaveBeenCalled();
     }
 };
 export const clickElement: (elementName: string, testElements: TestElements) => Promise<boolean> =

@@ -37,7 +37,7 @@ export class ArrayUtils {
         const retour: Array<Array<T>> = [];
         let y: number = 0;
         while (y < biArray.length) {
-            retour[y] = ArrayUtils.copyArray<T>(biArray[y]);
+            retour[y] = ArrayUtils.copyImmutableArray<T>(biArray[y]);
             y++;
         }
         return retour;

@@ -31,7 +31,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({ template: '' })
 export abstract class GameWrapper {
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     // component loading
     @ViewChild(GameIncluderComponent)
@@ -119,7 +119,7 @@ export abstract class GameWrapper {
         this.gameComponent = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance;
         // Shortent by T<S = Truc>
 
-        this.gameComponent.chooseMove = this.receiveChildData; // so that when the game component do a move
+        this.gameComponent.chooseMove = this.receiveValidMove; // so that when the game component do a move
         // the game wrapper can then act accordingly to the chosen move.
         this.gameComponent.canUserPlay = this.onUserClick; // So that when the game component click
         // the game wrapper can act accordly
@@ -129,7 +129,7 @@ export abstract class GameWrapper {
         this.gameComponent.observerRole = this.observerRole;
         this.canPass = this.gameComponent.canPass;
     }
-    public receiveChildData: (m: Move, s: GamePartSlice, s0: number, s1: number) => Promise<MGPValidation> =
+    public receiveValidMove: (m: Move, s: GamePartSlice, s0: number, s1: number) => Promise<MGPValidation> =
     async(
         move: Move,
         slice: GamePartSlice,
@@ -138,7 +138,7 @@ export abstract class GameWrapper {
     {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {
-            gameWrapper_receiveChildData_AKA_chooseMove: {
+            gameWrapper_receiveValidMove_AKA_chooseMove: {
                 move,
                 slice,
                 scorePlayerZero,
@@ -156,11 +156,11 @@ export abstract class GameWrapper {
             this.gameComponent.cancelMove(legality.legal.getReason());
             return legality.legal;
         }
-        await this.onValidUserMove(move, scorePlayerZero, scorePlayerOne);
-        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveChildData says: valid move legal');
+        await this.onLegalUserMove(move, scorePlayerZero, scorePlayerOne);
+        display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;
     }
-    public abstract onValidUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
+    public abstract onLegalUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
@@ -189,8 +189,14 @@ export abstract class GameWrapper {
             players: this.players,
             username: this.userName,
             observer: this.observerRole,
+            areYouPlayer: (this.players[indexPlayer] && this.players[indexPlayer] === this.userName),
+            isThereAPlayer: this.players[indexPlayer],
         } });
-        return this.players[indexPlayer] === this.userName;
+        if (this.players[indexPlayer]) {
+            return this.players[indexPlayer] === this.userName;
+        } else {
+            return true;
+        }
     }
     get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
         return this.gameComponent;

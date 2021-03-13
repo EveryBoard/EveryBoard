@@ -123,9 +123,14 @@ export class GipfLine {
 export class GipfCapture {
     private static coordsEncoder: Encoder<ReadonlyArray<Coord>> =
         Encoder.arrayEncoder(GipfBoard.coordEncoder, 6);
+    private static sizeEncoder: Encoder<number> =
+        Encoder.numberEncoder(6);
+    // Encodes a capture as: initial case, direction, length
     public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
         public maxValue(): number {
-            return GipfCapture.coordsEncoder.maxValue();
+            return (GipfBoard.coordEncoder.maxValue() *
+                Direction.encoder.shift() + Direction.encoder.maxValue()) *
+                GipfCapture.sizeEncoder.shift() + GipfCapture.sizeEncoder.maxValue();
         }
         public encode(capture: GipfCapture): number {
             return GipfCapture.coordsEncoder.encode(capture.capturedCases);
@@ -143,7 +148,7 @@ export class GipfCapture {
         if (GipfLine.areOnSameLine(captured) === false) {
             throw new Error('Cannot create a GipfCapture with pieces that are not on the same line');
         }
-        this.capturedCases = ArrayUtils.copyArray(captured).sort((coord1: Coord, coord2: Coord) => {
+        this.capturedCases = ArrayUtils.copyImmutableArray(captured).sort((coord1: Coord, coord2: Coord) => {
             if (coord1.x === coord2.x) {
                 if (coord1.y === coord2.y) {
                     throw new Error('Cannot create a GipfCapture with duplicate cases');
@@ -235,7 +240,8 @@ export class GipfPlacement {
 
 export class GipfMove extends Move {
     private static capturesEncoder: Encoder<ReadonlyArray<GipfCapture>> =
-        Encoder.arrayEncoder(GipfCapture.encoder, 7); // There can be 7 captures at most in one capture round
+         // There can be 7 captures at most in one capture round, but we only support 6
+        Encoder.arrayEncoder(GipfCapture.encoder, 2);
     public static encoder: Encoder<GipfMove> = new class extends Encoder<GipfMove> {
         public maxValue(): number {
             return (GipfPlacement.encoder.maxValue() *
@@ -264,11 +270,9 @@ export class GipfMove extends Move {
                        public readonly finalCaptures: ReadonlyArray<GipfCapture>) {
         super();
     }
-
     public toString(): string {
         return 'GipfMove'; // TODO
     }
-
     public equals(other: GipfMove): boolean {
         if (this === other) return true;
         if (this.placement.equals(other.placement) === false) return false;
@@ -276,7 +280,6 @@ export class GipfMove extends Move {
         if (this.captureEquals(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
-
     private captureEquals(c1: ReadonlyArray<GipfCapture>, c2: ReadonlyArray<GipfCapture>): boolean {
         if (c1.length !== c2.length) return false;
         for (let i: number = 0; i < c1.length; i++) {
@@ -284,7 +287,6 @@ export class GipfMove extends Move {
         }
         return true;
     }
-
     public encode(): number {
         return GipfMove.encoder.encode(this);
     }

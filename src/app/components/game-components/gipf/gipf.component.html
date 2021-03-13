@@ -2,41 +2,53 @@
      width="700px" height="700px"
      viewBox="0 0 700 700"
      preserveAspectRatio="xMidYMid meet">
-
-    <g *ngFor="let y of boardIndices;">
-        <g *ngFor="let x of boardIndices;">
-            <g *ngIf="isOnBoard(x, y)">
-                <g (click)="onClick(x, y)" id="click_{{ x }}_{{ y }}"> -->
-                    <!-- Background -->
-                    <polyline [attr.points]="getHexaCoordinatesForXY(x, y)"
-                              [ngStyle]="getCaseStyle(x, y)"
-                              stroke-linecap="round"/>
-                    <!-- Piece -->
-                    <circle *ngIf="isPiece(x, y)"
-                            [attr.cx]="getCenter(x, y).x"
-                            [attr.cy]="getCenter(x, y).y"
-                            [attr.r]="getPieceSize()"
-                            [ngStyle]="getPieceStyle(x, y)"/>
-                </g>
-            </g>
-        </g>
-    </g>
-
-    <g *ngFor="let capture of possibleCaptures;">
-        <g *ngFor="let case of capture.capturedCases;">
-            <polyline [attr.points]="getHexaCoordinatesForXY(case.x, case.y)"
-                      [ngStyle]="CLICKABLE_HIGHLIGHT_STYLE"
-                      stroke-linecap="round"/>
-        </g>
-    </g>
-
-
+    <style type="text/css">
+        .text {
+            font: 20 sans-serif;
+        }
+        .capture {
+            stroke-width: 2;
+            stroke: yellow;
+            fill: none;
+        }
+        .capture:hover {
+            stroke-width: 8;
+            stroke: yellow;
+            fill: none;
+        }
+    </style>
     <defs>
         <marker id="arrowhead" markerWidth="10" markerHeight="7"
                 refX="5" refY="3.5" orient="auto">
             <polygon points="0 0, 10 3.5, 0 7" />
         </marker>
     </defs>
+
+    <g *ngFor="let case of getAllCoords();">
+        <g (click)="onClick(case)"
+           id="click_{{ case.x }}_{{ case.y }}">
+            <polyline [attr.points]="getHexaCoordinates(case)"
+                      [ngStyle]="getCaseStyle(case)"
+                      stroke-linecap="round"/>
+            <circle *ngIf="isPiece(case)"
+                    [attr.cx]="getCenter(case).x"
+                    [attr.cy]="getCenter(case).y"
+                    [attr.r]="getPieceSize()"
+                    [ngStyle]="getPieceStyle(case)"/>
+        </g>
+    </g>
+
+
+    <g *ngFor="let capture of possibleCaptures; index as i;"
+       pointer-events="fill"
+       class="capture">
+        <g *ngFor="let case of capture.capturedCases;">
+            <polyline [attr.points]="getHexaCoordinates(case)"
+                      (click)="onClick(case)"
+                      stroke-linecap="round" />
+        </g>
+    </g>
+
     <g *ngFor="let arrow of arrows;">
         <line [attr.x1]="arrow.x1"
               [attr.y1]="arrow.y1"
@@ -45,10 +57,9 @@
               stroke="#000"
               stroke-width="3"
               marker-end="url(#arrowhead)"
-              (click)="onClick(arrow.dst.x, arrow.dst.y)"/>
+              (click)="onClick(arrow.destination)"/>
     </g>
 
-    <style>.text { font: 20 sans-serif; }</style>
     <g *ngFor="let player of [0, 1];">
         <text x="410" [attr.y]="30+(getPieceSize()+20)*player" class="text">Pièces du joueur {{player+1}}</text>
         <g *ngFor="let p of getPlayerSidePieces(player);">

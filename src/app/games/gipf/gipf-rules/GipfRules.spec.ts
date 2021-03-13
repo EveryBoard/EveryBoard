@@ -244,7 +244,7 @@ describe('GipfRules:', () => {
 
             const moveWithBothCaptures: GipfMove = new GipfMove(placement, [capture1, capture2], []);
             const capturesLegality: GipfLegalityStatus = rules.isLegal(moveWithBothCaptures, slice);
-            expect(capturesLegality.legal.isSuccess()).toBeTrue();
+            expect(capturesLegality.legal.isSuccess()).toBeFalse();
         });
         it('should force both players to capture when possible', () => {
             // This is the board before diagram 7
@@ -504,6 +504,20 @@ describe('GipfRules:', () => {
             ], _, GipfPiece.encoder);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 7], [0, 0]);
             expect(rules.getBoardValue(dummyMove, slice)).toBeLessThan(0);
+        });
+        it('should not declare victory when one player does not have pieces left but still has an initial capture', () => {
+            const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+                [_, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _],
+                [_, _, _, A, _, _, _],
+                [_, _, _, A, _, _, _],
+                [_, _, _, A, _, _, _],
+                [_, _, _, A, _, _, _],
+                [_, _, _, _, _, _, _],
+            ], _, GipfPiece.encoder);
+            const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [0, 5], [0, 0]);
+            expect(rules.getBoardValue(dummyMove, slice)).toBeLessThan(Number.MAX_SAFE_INTEGER);
+            expect(rules.getBoardValue(dummyMove, slice)).toBeGreaterThan(Number.MIN_SAFE_INTEGER);
         });
     });
     describe('getAllDirectionsForEntrance', () => {

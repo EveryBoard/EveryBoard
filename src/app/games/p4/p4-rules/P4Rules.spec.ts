@@ -135,4 +135,26 @@ describe('P4Rules', () => {
         const node: P4Node = new MGPNode(null, null, slice, 0);
         expect(rules.getListMoves(node).size()).toBe(6);
     });
+    it('should assign greater score to center column', () => {
+        const board1: number[][] = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, O, _, _, _],
+        ];
+        const slice1: P4PartSlice = new P4PartSlice(board1, 12);
+        const board2: number[][] = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, O],
+        ];
+        const slice2: P4PartSlice = new P4PartSlice(board2, 12);
+
+        expect(P4Rules.getBoardValue(slice1)).toBeLessThan(P4Rules.getBoardValue(slice2));
+    });
 });

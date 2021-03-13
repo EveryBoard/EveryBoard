@@ -8,6 +8,8 @@ import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaRules } from 'src/app/games/sahara/sahara-rules/SaharaRules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
+import { Player } from 'src/app/jscaip/player/Player';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 @Component({
     selector: 'app-sahara',
@@ -22,16 +24,10 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
 
     public lastMoved: Coord = new Coord(-2, -2);
 
-    public chosenCoord: Coord = new Coord(-2, -2);
-
-    public imagesNames: string[][] = [
-        ['upward_black_pyramid', 'upward_white_pyramid', 'upward_black'],
-        ['downward_black_pyramid', 'downward_white_pyramid', 'downward_white']
-    ];
-    public highlightNames: string[] = ['upward_highlight.svg', 'downward_highlight.svg'];
+    public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public cancelMoveAttempt(): void {
-        this.chosenCoord = new Coord(-2, -2);
+        this.chosenCoord = MGPOptional.empty();
     }
     public getCoordinate(x: number, y: number) : string {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
@@ -97,30 +93,30 @@ export class SaharaComponent extends AbstractGameComponent<SaharaMove, SaharaPar
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.reason);
         }
-        if (this.chosenCoord.equals(new Coord(-2, -2))) { // Must select pyramid
+        if (this.chosenCoord.isAbsent()) { // Must select pyramid
             if (this.board[y][x] === SaharaPawn.EMPTY) { // Did not select pyramid
-                return this.cancelMove('You must first select a pyramid.');
+                return this.cancelMove('Vous devez d\'abord choisir une de vos pyramides!');
             } else if (this.getTurn() % 2 === this.board[y][x]) { // selected his own pyramid
-                this.chosenCoord = clickedCoord;
+                this.chosenCoord = MGPOptional.of(clickedCoord);
+                return MGPValidation.SUCCESS;
             } else { // Selected ennemy pyramid
-                return this.cancelMove('You cannot select ennemy pyramid.');
+                return this.cancelMove('Vous devez choisir une de vos pyramides!');
             }
         } else { // Must choose empty landing case
-            if (this.board[y][x] === SaharaPawn.EMPTY) { // Selected empty landing coord
-                let newMove: SaharaMove;
-                try {
-                    newMove = new SaharaMove(this.chosenCoord, clickedCoord);
-                } catch (error) {
-                    return this.cancelMove(error.message);
-                }
-                return await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
-            } else {
-                return this.cancelMove('You can\'t land your pyramid on the ennemy\'s.');
+            let newMove: SaharaMove;
+            try {
+                newMove = new SaharaMove(this.chosenCoord.get(), clickedCoord);
+            } catch (error) {
+                return this.cancelMove(error.message);
             }
+            return await this.chooseMove(newMove, this.rules.node.gamePartSlice, null, null);
         }
     }
+    private getPlayerFill(x: number, y: number): string {
+        return this.getPlayerColor(Player.of(this.board[y][x]));
+    }
     public updateBoard(): void {
-        this.chosenCoord = new Coord(-2, -2);
+        this.chosenCoord = MGPOptional.empty();
         const move: SaharaMove = this.rules.node.move;
         if (move) {
             this.lastCoord = move.coord;

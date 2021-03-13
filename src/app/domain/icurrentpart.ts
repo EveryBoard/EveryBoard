@@ -56,7 +56,7 @@ export class Part {
             typeGame: this.typeGame,
             playerZero: this.playerZero,
             turn: this.turn,
-            listMoves: ArrayUtils.copyArray(this.listMoves),
+            listMoves: ArrayUtils.copyImmutableArray(this.listMoves),
             result: { value: this.result.value },
         };
         if (this.playerOne != null) copied.playerOne = this.playerOne;
@@ -75,7 +75,7 @@ export class Part {
             original.typeGame,
             original.playerZero,
             original.turn,
-            ArrayUtils.copyArray(original.listMoves),
+            ArrayUtils.copyImmutableArray(original.listMoves),
             original.result,
             original.playerOne,
             original.beginning,

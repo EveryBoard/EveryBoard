@@ -1,8 +1,7 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { By } from '@angular/platform-browser';
 
 import { of } from 'rxjs';
 
@@ -15,6 +14,13 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SaharaMove } from 'src/app/games/sahara/sahara-move/SaharaMove';
+import {
+    expectClickFail, expectClickSuccess, expectMoveFailure,
+    expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
+import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
+import { SaharaNode } from 'src/app/games/sahara/sahara-rules/SaharaRules';
 
 const activatedRouteStub = {
     snapshot: {
@@ -34,28 +40,15 @@ const authenticationServiceStub = {
     },
 };
 describe('SaharaComponent', () => {
+    const N: number = SaharaPawn.NONE;
+    const O: number = SaharaPawn.BLACK;
+    const X: number = SaharaPawn.WHITE;
+    const _: number = SaharaPawn.EMPTY;
+
     let wrapper: LocalGameWrapperComponent;
 
-    let fixture: ComponentFixture<LocalGameWrapperComponent>;
+    let testElements: TestElements;
 
-    let debugElement: DebugElement;
-
-    let gameComponent: SaharaComponent;
-
-    const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
-        const element: DebugElement = debugElement.query(By.css(elementName));
-        if (element != null) {
-            element.triggerEventHandler('click', null);
-            await fixture.whenStable();
-            fixture.detectChanges();
-            return true;
-        } else {
-            return false;
-        }
-    };
-    const onClick: (x: number, y: number) => Promise<boolean> = async (x: number, y: number) => {
-        return clickElement('#click_' + x + '_' + y);
-    };
     beforeAll(() => {
         SaharaComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SaharaComponent.VERBOSE;
     });
@@ -72,70 +65,98 @@ describe('SaharaComponent', () => {
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
-        fixture = TestBed.createComponent(LocalGameWrapperComponent);
-        debugElement = fixture.debugElement;
+        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
         wrapper = fixture.debugElement.componentInstance;
         fixture.detectChanges();
+        const debugElement: DebugElement = fixture.debugElement;
         tick(1);
-        gameComponent = wrapper.gameComponent as SaharaComponent;
+        const gameComponent: SaharaComponent = wrapper.gameComponent as SaharaComponent;
+        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
+        const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
+        const onLegalUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onLegalUserMove').and.callThrough();
+        const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
+        testElements = {
+            fixture,
+            debugElement,
+            gameComponent,
+            canUserPlaySpy,
+            cancelMoveSpy,
+            chooseMoveSpy,
+            onLegalUserMoveSpy,
+        };
     }));
     it('should create', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
-        expect(gameComponent).toBeTruthy('SaharaComponent should be created');
+        expect(testElements.gameComponent).toBeTruthy('SaharaComponent should be created');
     });
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(SaharaMove, 'decode').and.callThrough();
-        gameComponent.decodeMove(1);
+        testElements.gameComponent.decodeMove(1);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(SaharaMove, 'encode').and.callThrough();
-        gameComponent.encodeMove(new SaharaMove(new Coord(1, 1), new Coord(2, 1)));
+        testElements.gameComponent.encodeMove(new SaharaMove(new Coord(1, 1), new Coord(2, 1)));
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });
-    it('Should play correctly shortest victory', fakeAsync(async () => {
-        expect(await onClick(0, 3)).toBeTrue();
-        expect(await onClick(1, 4)).toBeTrue();
-        expect(await onClick(3, 0)).toBeTrue();
-        expect(await onClick(4, 0)).toBeTrue();
-        expect(await onClick(1, 4)).toBeTrue();
-        expect(await onClick(2, 4)).toBeTrue();
-        fixture.detectChanges();
+    it('Should play correctly shortest victory', fakeAsync(async() => {
+        const board: NumberTable = [
+            [N, N, _, X, _, _, _, O, X, N, N],
+            [N, _, O, _, _, _, _, _, _, _, N],
+            [X, _, _, _, _, _, _, _, _, _, O],
+            [O, _, _, _, _, _, _, _, _, _, X],
+            [N, _, _, _, _, _, _, X, _, _, N],
+            [N, N, X, O, _, _, _, _, O, N, N],
+        ];
+        const initialSlice: SaharaPartSlice = new SaharaPartSlice(board, 2);
+        testElements.gameComponent.rules.node = new SaharaNode(null, null, initialSlice, 0);
+        testElements.gameComponent.updateBoard();
+
+        await expectClickSuccess('#click_2_1', testElements); // select first piece
+        const expectations: MoveExpectations = {
+            move: new SaharaMove(new Coord(2, 1), new Coord(1, 2)),
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null, scoreOne: null,
+        };
+        await expectMoveSuccess('#click_1_2', testElements, expectations); // select landing
+
         expect(wrapper.endGame).toBeTrue();
     }));
-    it('should not allow to click on empty case when no pyramid selected', fakeAsync(async () => {
-        expect(gameComponent.chosenCoord).toEqual(new Coord(-2, -2));
-        spyOn(gameComponent, 'message').and.callThrough();
-        await onClick(2, 2);
-        flush();
-        expect(gameComponent.chosenCoord).toEqual(new Coord(-2, -2));
-        expect(gameComponent.message).toHaveBeenCalledWith('You must first select a pyramid.');
+    it('should not allow to click on empty case when no pyramid selected', fakeAsync(async() => {
+        // given initial board
+        // when clicking on empty case, expect move to be refused
+        await expectClickFail('#click_2_2', testElements, 'Vous devez d\'abord choisir une de vos pyramides!');
     }));
-    it('should not allow to select ennemy pyramid', fakeAsync(async () => {
-        spyOn(gameComponent, 'message').and.callThrough();
-        await onClick(0, 4);
-        flush();
-        expect(gameComponent.message).toHaveBeenCalledWith('You cannot select ennemy pyramid.');
+    it('should not allow to select ennemy pyramid', fakeAsync(async() => {
+        // given initial board
+        // when clicking on empty case, expect move to be refused
+        await expectClickFail('#click_0_4', testElements, 'Vous devez choisir une de vos pyramides!');
     }));
-    it('should not allow to select ennemy pyramid', fakeAsync(async () => {
-        await onClick(0, 3);
-        spyOn(gameComponent, 'message').and.callThrough();
-        await onClick(0, 4);
-        flush();
-        expect(gameComponent.message).toHaveBeenCalledWith('You can\'t land your pyramid on the ennemy\'s.');
+    it('should not allow to land on ennemy pyramid', fakeAsync(async () => {
+        // given initial board
+        await expectClickSuccess('#click_2_0', testElements);
+        const expectations: MoveExpectations = {
+            move: new SaharaMove(new Coord(2, 0), new Coord(3, 0)),
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null, scoreOne: null,
+        };
+        await expectMoveFailure('#click_3_0', testElements, expectations, 'Vous devez arriver sur une case vide.');
     }));
-    it('should not allow to bounce on occupied brown case', fakeAsync(async () => {
-        await onClick(7, 0);
-        spyOn(gameComponent, 'message').and.callThrough();
-        await onClick(8, 1);
-        flush();
-        expect(gameComponent.message).toHaveBeenCalledWith('You can only bounce on UNOCCUPIED brown case.');
+    it('should not allow to bounce on occupied brown case', fakeAsync(async() => {
+        // given initial board
+        await expectClickSuccess('#click_7_0', testElements);
+        const expectations: MoveExpectations = {
+            move: new SaharaMove(new Coord(7, 0), new Coord(8, 1)),
+            slice: testElements.gameComponent.rules.node.gamePartSlice,
+            scoreZero: null, scoreOne: null,
+        };
+        const reason: string = 'Vous ne pouvez rebondir que sur les cases rouges!';
+        await expectMoveFailure('#click_8_1', testElements, expectations, reason);
     }));
-    it('should not allow to do invalid moves', fakeAsync(async () => {
-        await onClick(0, 3);
-        spyOn(gameComponent, 'message').and.callThrough();
-        await onClick(2, 2);
-        flush();
-        expect(gameComponent.message).toHaveBeenCalledWith('Maximal |x| + |y| distance for SaharaMove is 2, got 3.');
+    it('should not allow invalid moves', fakeAsync(async() => {
+        // given initial board
+        await expectClickSuccess('#click_0_3', testElements);
+        const reason: string = 'Vous pouvez vous déplacer maximum de 2 cases, pas de 3.';
+        await expectClickFail('#click_2_2', testElements, reason);
     }));
 });

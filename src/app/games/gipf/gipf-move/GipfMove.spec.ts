@@ -99,6 +99,10 @@ describe('GipfCapture', () => {
         const coords: Coord[] = [new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1)];
         expect(() => new GipfCapture(coords)).toThrow();
     });
+    it('should not allow construction of captures with duplicate cases', () => {
+        const coords: Coord[] = [new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(1, -3)];
+        expect(() => new GipfCapture(coords)).toThrow();
+    });
     it('should not allow construction with pieces not on the same line', () => {
         const coords: Coord[] = [new Coord(-1, 0), new Coord(0, 1), new Coord(1, 0), new Coord(2, 0)];
         expect(() => new GipfCapture(coords)).toThrow();
@@ -211,7 +215,7 @@ describe('GipfPlacement', () => {
 
 describe('GipfMove', () => {
     describe('encoder', () => {
-        it('should correctly encode and decode moves with only a placement', () => {
+        xit('should correctly encode and decode moves with only a placement', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
                                                                MGPOptional.of(HexaDirection.DOWN));
             const move: GipfMove = new GipfMove(placement, [], []);
@@ -254,28 +258,46 @@ describe('GipfMove', () => {
             new Coord(0, -3), new Coord(0, -2), new Coord(0, -1), new Coord(0, 0), new Coord(0, 1),
         ]);
         const move: GipfMove = new GipfMove(placement, [initialCapture], [finalCapture]);
-        it('should detect equal moves', () => {
+        it('should consider move equal to itself', () => {
             expect(move.equals(move)).toBeTrue();
         });
-        it('should detect different moves due to different placement', () => {
+        it('should consider same move equal', () => {
+            expect(move.equals(new GipfMove(placement, [initialCapture], [finalCapture]))).toBeTrue();
+        });
+        it('should consider different moves due to different placement', () => {
             const placement2: GipfPlacement = new GipfPlacement(new Coord(1, -2),
                                                                 MGPOptional.of(HexaDirection.DOWN_LEFT));
             const move2: GipfMove = new GipfMove(placement2, [initialCapture], [finalCapture]);
             expect(move.equals(move2)).toBeFalse();
         });
-        it('should detect different moves due to different initial capture', () => {
+        it('should consider moves different due to different capture sizes', () => {
+            const initialCapture2: GipfCapture = new GipfCapture([
+                new Coord(1, -2), new Coord(0, -1), new Coord(-1, 0), new Coord(-2, 1),
+            ]);
+            const move2: GipfMove = new GipfMove(placement, [initialCapture, initialCapture2], [finalCapture]);
+            expect(move.equals(move2)).toBeFalse();
+        });
+        it('should consider moves different due to different initial capture', () => {
             const initialCapture2: GipfCapture = new GipfCapture([
                 new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0), new Coord(-3, 1),
             ]);
             const move2: GipfMove = new GipfMove(placement, [initialCapture2], [finalCapture]);
             expect(move.equals(move2)).toBeFalse();
         });
-        it('should detect different moves due to different final capture', () => {
+        it('should consider moves different due to different final capture', () => {
             const finalCapture2: GipfCapture = new GipfCapture([
                 new Coord(0, -3), new Coord(0, -2), new Coord(0, -1), new Coord(0, 0), new Coord(0, 1), new Coord(0, 2),
             ]);
             const move2: GipfMove = new GipfMove(placement, [initialCapture], [finalCapture2]);
             expect(move.equals(move2)).toBeFalse();
+        });
+        it('should consider move different to the move with a different order of capture', () => {
+            const initialCapture2: GipfCapture = new GipfCapture([
+                new Coord(1, -2), new Coord(1, -1), new Coord(1, 0), new Coord(1, 1),
+            ]);
+            const move1: GipfMove = new GipfMove(placement, [initialCapture, initialCapture2], []);
+            const move2: GipfMove = new GipfMove(placement, [initialCapture2, initialCapture], []);
+            expect(move1.equals(move2)).toBeFalse();
         });
     });
     describe('toString', () => {
