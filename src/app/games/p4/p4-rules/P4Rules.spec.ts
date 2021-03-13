@@ -148,7 +148,7 @@ describe('P4Rules', () => {
         const move: P4Move = P4Move.of(0);
         expect(rules.isLegal(move, slice).legal.isFailure()).toBeTrue();
     });
-y    it('should assign greater score to center column', () => {
+    it('should assign greater score to center column', () => {
         const board1: number[][] = [
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
