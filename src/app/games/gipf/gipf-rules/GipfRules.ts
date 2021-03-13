@@ -21,12 +21,12 @@ export class GipfFailure {
     public static CAPTURE_MUST_BE_ALIGNED: string =
         `Une capture ne peut que se faire si 4 pièces de votre couleurs sont alignées, ce n'est pas le cas.`;
     public static INVALID_CAPTURED_PIECES: string =
-        `La capture n'est pas valide: trop de pièces sont capturées, ou bien trop peu.`;
-    public static MISSING_CAPTURES: string = `Toutes les captures nécessaires n'ont pas été effectuées.`;
+        `Veuillez choisir une capture valide qui contient 4 pièces ou plus.`;
+    public static MISSING_CAPTURES: string = `Il vous reste des captures à effectuer.`;
     public static PLACEMENT_NOT_ON_BORDER: string = 'Les pièces doivent être placée sur une case du bord du plateau.';
-    public static INVALID_PLACEMENT_DIRECTION: string = `La direction du placement n'est pas valide.`;
-    public static PLACEMENT_WITHOUT_DIRECTION: string = 'Un placement a lieu sans direction.';
-    public static PLACEMENT_ON_COMPLETE_LINE: string = 'Une pièce ne peut pas être placée sur une ligne complète.';
+    public static INVALID_PLACEMENT_DIRECTION: string = `Veuillez choisir une direction valide pour le déplacement.`;
+    public static PLACEMENT_WITHOUT_DIRECTION: string = 'Veuillez choisir un placement avec une direction.';
+    public static PLACEMENT_ON_COMPLETE_LINE: string = 'Veuillez effectuer un placement sur une ligne non complète.';
 }
 
 export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus> {

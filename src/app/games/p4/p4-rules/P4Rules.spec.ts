@@ -135,4 +135,39 @@ describe('P4Rules', () => {
         const node: P4Node = new MGPNode(null, null, slice, 0);
         expect(rules.getListMoves(node).size()).toBe(6);
     });
+    it('should forbid placing a piece on a full column', () => {
+        const board: number[][] = [
+            [X, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _],
+            [O, _, _, _, _, _, _],
+            [X, _, _, _, _, _, _],
+            [O, O, X, O, X, O, X],
+        ];
+        const slice: P4PartSlice = new P4PartSlice(board, 12);
+        const move: P4Move = P4Move.of(0);
+        expect(rules.isLegal(move, slice).legal.isFailure()).toBeTrue();
+    });
+    it('should assign greater score to center column', () => {
+        const board1: number[][] = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, O, _, _, _],
+        ];
+        const slice1: P4PartSlice = new P4PartSlice(board1, 12);
+        const board2: number[][] = [
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _],
+            [_, _, _, _, _, _, O],
+        ];
+        const slice2: P4PartSlice = new P4PartSlice(board2, 12);
+
+        expect(P4Rules.getBoardValue(slice1)).toBeLessThan(P4Rules.getBoardValue(slice2));
+    });
 });

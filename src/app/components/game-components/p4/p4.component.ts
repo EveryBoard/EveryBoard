@@ -6,6 +6,7 @@ import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComp
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
 @Component({
     selector: 'app-p4',
@@ -40,6 +41,9 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
         } else {
             this.lastX = null;
         }
+    }
+    public getScore(x: number, y: number): number {
+        return P4Rules.getCaseScore(this.board, new Coord(x, y));
     }
     public decodeMove(encodedMove: number): Move {
         return P4Move.decode(encodedMove);

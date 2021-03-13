@@ -25,9 +25,10 @@ export class Arrow {
 
 export class GipfComponentFailure {
     public static AMBIGUOUS_CAPTURE_COORD: string =
-        `Cette case fait partie de deux captures possibles,
-         veuillez une autre case de la capture que vous souhaitez prendre.`
-    public static NOT_PART_OF_CAPTURE: string = `Cette case ne fait partie d'aucune capture.`;
+        `Veuillez sélectionner une autre case de la capture que vous souhaitez prendre,
+         celle-ci appartient à deux captures.`
+    public static NOT_PART_OF_CAPTURE: string =
+        `Veuillez sélectionner une capture.`;
     public static CLICK_FURTHER_THAN_ONE_COORD: string =
         `Veuillez sélectionner une destination à une distance de 1 de l'entrée.`;
 }
