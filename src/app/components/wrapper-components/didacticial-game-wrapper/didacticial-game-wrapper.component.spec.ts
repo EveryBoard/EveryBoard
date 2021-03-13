@@ -618,6 +618,7 @@ describe('DidacticialGameWrapperComponent', () => {
             expect(currentReason).toBe(expectedReason);
             // expect click to be still possible
             expect(testElements.gameComponent.canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
+            tick(10);
         }));
         it('Should propose to see the solution When move attempt done', fakeAsync(async() => {
             // Given a didacticial on which a non-awaited move has been done
