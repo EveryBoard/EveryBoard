@@ -8,10 +8,6 @@ export class HexaBoard<T> {
     public static empty<T>(width: number, height: number, empty: T, encoder: Encoder<T>): HexaBoard<T> {
         return new HexaBoard(ArrayUtils.createBiArray(width, height, empty), width, height, empty, encoder);
     }
-    public static fromNumberTable<T>(table: NumberTable, empty: T, encoder: Encoder<T>): HexaBoard<T> {
-        const contents: Table<T> = ArrayUtils.mapBiArray(table, encoder.decode);
-        return HexaBoard.fromTable(contents, empty, encoder);
-    }
     public static fromTable<T>(table: Table<T>, empty: T, encoder: Encoder<T>): HexaBoard<T> {
         const height: number = table.length;
         if (height === 0) {
@@ -20,6 +16,7 @@ export class HexaBoard<T> {
         const width: number = table[0].length;
         return new HexaBoard(table, width, height, empty, encoder);
     }
+
     private readonly widthRadius: number;
     private readonly heightRadius: number;
     public constructor(public readonly contents: Table<T>,

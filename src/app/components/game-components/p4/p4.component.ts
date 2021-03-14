@@ -16,12 +16,9 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
     public static VERBOSE: boolean = false;
 
     public EMPTY_CASE: number = Player.NONE.value;
-
+    public CASE_SIZE: number = 50;
     public rules: P4Rules = new P4Rules(P4PartSlice);
-
-    public imagesNames: string[] = ['brown_circle.svg.png', 'yellow_circle.svg.png', 'empty_circle.svg'];
-
-    public lastX: number;
+    private lastX: number;
 
     public async onClick(x: number): Promise<MGPValidation> {
         console.log(x);
@@ -43,17 +40,19 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
             this.lastX = null;
         }
     }
-    public getPieceStyle(player: number): {[key:string]: string} {
+    public getCaseStyle(x: number, y: number): {[key:string]: string} {
         return {
-            'fill': this.getPlayerColor(Player.of(player)),
-        };
-    }
-    public getCaseStyle(x: number): {[key:string]: string} {
-        return {
-            'stroke-width': '8',
-            'fill': 'none',
+            'stroke-width': '2',
+            'fill': this.getCaseFill(this.board[y][x]),
             'stroke': this.lastX === x ? 'yellow' : 'black',
         };
+    }
+    private getCaseFill(content: number): string {
+        if (content === Player.NONE.value) {
+            return 'none';
+        } else {
+            return this.getPlayerColor(Player.of(content));
+        }
     }
     public decodeMove(encodedMove: number): Move {
         return P4Move.decode(encodedMove);
