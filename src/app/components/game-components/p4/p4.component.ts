@@ -6,16 +6,16 @@ import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComp
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Player } from 'src/app/jscaip/player/Player';
 
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html',
 })
 export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, LegalityStatus> {
-    /** ************************* Common Fields **************************/
-
     public static VERBOSE: boolean = false;
+
+    public EMPTY_CASE: number = Player.NONE.value;
 
     public rules: P4Rules = new P4Rules(P4PartSlice);
 
@@ -24,6 +24,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
     public lastX: number;
 
     public async onClick(x: number): Promise<MGPValidation> {
+        console.log(x);
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -42,8 +43,17 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
             this.lastX = null;
         }
     }
-    public getScore(x: number, y: number): number {
-        return P4Rules.getCaseScore(this.board, new Coord(x, y));
+    public getPieceStyle(player: number): {[key:string]: string} {
+        return {
+            'fill': this.getPlayerColor(Player.of(player)),
+        };
+    }
+    public getCaseStyle(x: number): {[key:string]: string} {
+        return {
+            'stroke-width': '8',
+            'fill': 'none',
+            'stroke': this.lastX === x ? 'yellow' : 'black',
+        };
     }
     public decodeMove(encodedMove: number): Move {
         return P4Move.decode(encodedMove);

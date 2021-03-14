@@ -2,16 +2,18 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/DIRECTION';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { assert } from 'src/app/utils/collection-lib/utils';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { GipfLegalityStatus } from '../gipf-legality-status/GipfLegalityStatus';
-import { GipfCapture, GipfLine, GipfMove, GipfPlacement } from '../gipf-move/GipfMove';
+import { GipfBoard, GipfCapture, GipfMove, GipfPlacement } from '../gipf-move/GipfMove';
 import { GipfPartSlice } from '../gipf-part-slice/GipfPartSlice';
 import { GipfPiece } from '../gipf-piece/GipfPiece';
 
@@ -175,7 +177,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     private getLinePortionsWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player):
     ReadonlyArray<[Coord, Coord, Direction]> {
         const linePortions: [Coord, Coord, Direction][] = [];
-        GipfLine.allLines().forEach((line: GipfLine) => {
+        HexaLine.allLines(GipfBoard.RADIUS).forEach((line: HexaLine) => {
             const linePortion: MGPOptional<[Coord, Coord, Direction]> =
                 this.getLinePortionWithFourPiecesOfPlayer(slice, player, line);
             if (linePortion.isPresent()) {
@@ -184,7 +186,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         });
         return linePortions;
     }
-    private getLinePortionWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player, line: GipfLine):
+    private getLinePortionWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player, line: HexaLine):
     MGPOptional<[Coord, Coord, Direction]> {
         let consecutives: number = 0;
         const coord: Coord = line.getEntrance();
@@ -269,7 +271,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         });
         return placements;
     }
-    private isLineComplete(slice: GipfPartSlice, start: Coord, dir: Direction): boolean {
+    public isLineComplete(slice: GipfPartSlice, start: Coord, dir: Direction): boolean {
         return this.nextGapInLine(slice, start, dir).isAbsent();
     }
     private nextGapInLine(slice: GipfPartSlice, start: Coord, dir: Direction): MGPOptional<Coord> {
@@ -320,11 +322,11 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
                 moved.push(cur);
                 cur = cur.getNext(dir);
             }
-            if (sliceAfterCapture.hexaBoard.isOnBoard(cur) &&
-                sliceAfterCapture.hexaBoard.getAt(cur) === GipfPiece.EMPTY) {
-                // This is the case filled by the last pushed piece
-                moved.push(cur);
-            }
+            assert(sliceAfterCapture.hexaBoard.isOnBoard(cur) &&
+                sliceAfterCapture.hexaBoard.getAt(cur) === GipfPiece.EMPTY,
+                   'getPiecesMoved called with an invalid placement performed on a full line');
+            // This is the case filled by the last pushed piece
+            moved.push(cur);
             return moved;
         }
     }

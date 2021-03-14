@@ -2,7 +2,8 @@ import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/arr
 import { Coord } from '../coord/Coord';
 import { Encoder } from '../encoder';
 
-/** An hexagonal board encoding, following the description on this page: https://www.redblobgames.com/grids/hexagons/#map-storage */
+/** An hexagonal board encoding,
+    inspired by the description on this page: https://www.redblobgames.com/grids/hexagons/#map-storage */
 export class HexaBoard<T> {
     public static empty<T>(radius: number, empty: T, encoder: Encoder<T>): HexaBoard<T> {
         return new HexaBoard(ArrayUtils.createBiArray(radius*2+1, radius*2+1, empty), radius, empty, encoder);
@@ -23,6 +24,7 @@ export class HexaBoard<T> {
             throw new Error('Cannot create an HexaBoard from a non-square table');
         }
     }
+
     public constructor(public readonly contents: Table<T>,
                        public readonly radius: number,
                        public readonly empty: T,
@@ -41,7 +43,6 @@ export class HexaBoard<T> {
     private getAtUnsafe(coord: Coord): T {
         return this.contents[coord.y+this.radius][coord.x+this.radius];
     }
-
     public getAt(coord: Coord): T {
         if (this.isOnBoard(coord)) {
             return this.getAtUnsafe(coord);
@@ -153,3 +154,4 @@ export class HexaBoard<T> {
         return coord.x === -this.radius && coord.y === this.radius;
     }
 }
+
