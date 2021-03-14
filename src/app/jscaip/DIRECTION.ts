@@ -67,53 +67,53 @@ export class Direction {
     }
     public static fromInt(int: number): Direction {
         switch (int) {
-        case 0: return Direction.UP;
-        case 1: return Direction.RIGHT;
-        case 2: return Direction.DOWN;
-        case 3: return Direction.LEFT;
-        case 4: return Direction.UP_LEFT;
-        case 5: return Direction.UP_RIGHT;
-        case 6: return Direction.DOWN_LEFT;
-        case 7: return Direction.DOWN_RIGHT;
-        default: throw new Error('No Direction matching int ' + int);
+            case 0: return Direction.UP;
+            case 1: return Direction.RIGHT;
+            case 2: return Direction.DOWN;
+            case 3: return Direction.LEFT;
+            case 4: return Direction.UP_LEFT;
+            case 5: return Direction.UP_RIGHT;
+            case 6: return Direction.DOWN_LEFT;
+            case 7: return Direction.DOWN_RIGHT;
+            default: throw new Error('No Direction matching int ' + int);
         }
     }
     public static fromString(str: string): Direction {
         switch (str) {
-        case 'UP': return Direction.UP;
-        case 'RIGHT': return Direction.RIGHT;
-        case 'DOWN': return Direction.DOWN;
-        case 'LEFT': return Direction.LEFT;
-        case 'UP_LEFT': return Direction.UP;
-        case 'UP_RIGHT': return Direction.RIGHT;
-        case 'DOWN_LEFT': return Direction.DOWN;
-        case 'DOWN_RIGHT': return Direction.LEFT;
-        default: throw new Error('Unknown direction ' + str);
+            case 'UP': return Direction.UP;
+            case 'RIGHT': return Direction.RIGHT;
+            case 'DOWN': return Direction.DOWN;
+            case 'LEFT': return Direction.LEFT;
+            case 'UP_LEFT': return Direction.UP;
+            case 'UP_RIGHT': return Direction.RIGHT;
+            case 'DOWN_LEFT': return Direction.DOWN;
+            case 'DOWN_RIGHT': return Direction.LEFT;
+            default: throw new Error('Unknown direction ' + str);
         }
     }
     public toInt(): number {
         switch (this) {
-        case Direction.UP: return 0;
-        case Direction.RIGHT: return 1;
-        case Direction.DOWN: return 2;
-        case Direction.LEFT: return 3;
-        case Direction.UP_LEFT: return 4;
-        case Direction.UP_RIGHT: return 5;
-        case Direction.DOWN_LEFT: return 6;
-        case Direction.DOWN_RIGHT: return 7;
+            case Direction.UP: return 0;
+            case Direction.RIGHT: return 1;
+            case Direction.DOWN: return 2;
+            case Direction.LEFT: return 3;
+            case Direction.UP_LEFT: return 4;
+            case Direction.UP_RIGHT: return 5;
+            case Direction.DOWN_LEFT: return 6;
+            case Direction.DOWN_RIGHT: return 7;
         }
     }
     public getOpposite(): Direction {
         switch (this) {
-        case Direction.UP: return Direction.DOWN;
-        case Direction.UP_RIGHT: return Direction.DOWN_LEFT;
-        case Direction.RIGHT: return Direction.LEFT;
-        case Direction.DOWN_RIGHT: return Direction.UP_LEFT;
-        case Direction.DOWN: return Direction.UP;
-        case Direction.DOWN_LEFT: return Direction.UP_RIGHT;
-        case Direction.LEFT: return Direction.RIGHT;
-        case Direction.UP_LEFT: return Direction.DOWN_RIGHT;
-        default: throw new Error('Unknown direction: ' + this.toString());
+            case Direction.UP: return Direction.DOWN;
+            case Direction.UP_RIGHT: return Direction.DOWN_LEFT;
+            case Direction.RIGHT: return Direction.LEFT;
+            case Direction.DOWN_RIGHT: return Direction.UP_LEFT;
+            case Direction.DOWN: return Direction.UP;
+            case Direction.DOWN_LEFT: return Direction.UP_RIGHT;
+            case Direction.LEFT: return Direction.RIGHT;
+            case Direction.UP_LEFT: return Direction.DOWN_RIGHT;
+            default: throw new Error('Unknown direction: ' + this.toString());
         }
     }
     public isDiagonal(): boolean {
@@ -133,15 +133,15 @@ export class Direction {
     }
     public toString(): string {
         switch (this) {
-        case Direction.UP: return 'UP';
-        case Direction.RIGHT: return 'RIGHT';
-        case Direction.DOWN: return 'DOWN';
-        case Direction.LEFT: return 'LEFT';
-        case Direction.UP_LEFT: return 'UP_LEFT';
-        case Direction.UP_RIGHT: return 'UP_RIGHT';
-        case Direction.DOWN_LEFT: return 'DOWN_LEFT';
-        case Direction.DOWN_RIGHT: return 'DOWN_RIGHT';
-        default: throw Error('Non-existant direction.');
+            case Direction.UP: return 'UP';
+            case Direction.RIGHT: return 'RIGHT';
+            case Direction.DOWN: return 'DOWN';
+            case Direction.LEFT: return 'LEFT';
+            case Direction.UP_LEFT: return 'UP_LEFT';
+            case Direction.UP_RIGHT: return 'UP_RIGHT';
+            case Direction.DOWN_LEFT: return 'DOWN_LEFT';
+            case Direction.DOWN_RIGHT: return 'DOWN_RIGHT';
+            default: throw Error('Non-existant direction.');
         }
     }
     public equals(o: Direction): boolean {
