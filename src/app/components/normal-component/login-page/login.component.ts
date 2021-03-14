@@ -12,7 +12,7 @@ import { FormGroup, FormControl } from '@angular/forms';
 export class LoginComponent {
     public errorMessage: string;
 
-    public loginForm = new FormGroup({
+    public loginForm: FormGroup = new FormGroup({
         email: new FormControl(),
         password: new FormControl(),
     });
@@ -20,19 +20,22 @@ export class LoginComponent {
     constructor(private router: Router,
                 private authenticationService: AuthenticationService) {
     }
-    public loginWithEmail(value: {email: string, password: string}) {
+    public loginWithEmail(value: {email: string, password: string}): void {
         this.authenticationService
             .doEmailLogin(value.email, value.password)
             .then(this.redirect)
-            .catch((err) => this.errorMessage = err.message);
+            .catch((err) => {
+                console.log(err.message)
+                this.errorMessage = err.message;
+            });
     }
-    public loginWithGoogle() {
+    public loginWithGoogle(): void {
         this.authenticationService
             .doGoogleLogin()
             .then(this.redirect)
             .catch((err) => this.errorMessage = err.message);
     }
-    private redirect = () => {
+    private redirect: () => void = () => {
         this.router.navigate(['/server']);
     }
 }

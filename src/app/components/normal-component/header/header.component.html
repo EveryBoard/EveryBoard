@@ -1,13 +1,15 @@
 <div style="height: 10%;">
     <nav class="navbar navbar-expand navbar-light bg-light">
-        <a class="navbar-brand" (click)="backToServer()"> Welcome to Pantheon's Game </a>
+        <a class="navbar-brand" [routerLink]="['/']"> Bienvenu sur Pantheon's Game/MultiGameProject (MGP)</a>
         <ul class="nav nav-pills">
-            <li>
-                <a class="nav-link" [routerLink]="['/server']"> Voir les parties en cours </a>
-            </li>
-            <li *ngIf="userName else connect">
-                <a class="nav-link" (click)="logout()">{{ userName }} (se déconnecter) </a>
-            </li>
+            <ng-container *ngIf="userName else connect">
+                <li>
+                    <a class="nav-link" [routerLink]="['/server']"> Voir les parties en cours </a>
+                </li>
+                <li *ngIf="userName else connect">
+                    <a class="nav-link" (click)="logout()">{{ userName }} (se déconnecter) </a>
+                </li>
+            </ng-container>
             <ng-template #connect>
                 <li>
                     <a class="nav-link" [routerLink]="['/login']">Connecte toi!</a>
