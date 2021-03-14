@@ -8,7 +8,8 @@ import { AuthenticationService } from 'src/app/services/authentication/Authentic
     templateUrl: './inscription.component.html',
 })
 export class InscriptionComponent {
-    constructor(private authService: AuthenticationService, private router : Router) {}
+    constructor(public authService: AuthenticationService,
+                public router: Router) {}
 
     public errorMessage: string;
 

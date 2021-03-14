@@ -10,19 +10,11 @@ export class ConfirmInscriptionComponent implements OnInit {
 
     public static VERBOSE: boolean = false;
 
-    constructor(private authService: AuthenticationService) {}
+    constructor(public authService: AuthenticationService) {}
 
     public ngOnInit(): Promise<void> {
         display(ConfirmInscriptionComponent.VERBOSE, 'ConfirmInscriptionComponent.onInit()');
 
-        const user: { pseudo: string; verified: boolean } = this.authService.getAuthenticatedUser();
-        if (!user) {
-            throw new Error('Unlogged users can\'t access this component');
-        }
-        if (user.verified === true) {
-            throw new Error('Verified users shouldn\'t access this component');
-        } else {
-            return this.authService.sendEmailVerification();
-        }
+        return this.authService.sendEmailVerification();
     }
 }

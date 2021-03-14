@@ -12,10 +12,11 @@
                placeholder="Password"
                type="password" />
 
-        <button id="loginButton"
+        <button id="registerButton"
                 type="submit"
                 class="btn btn-lg btn-primary btn-block"
                 (click)="tryRegister(inscriptionForm.value)"> Recevoir un e-mail de confirmation </button>
-        <span style="color:red"> {{ errorMessage }}</span><br />
+        <span id="errorMessage"
+              style="color:red">{{ errorMessage }}</span><br />
     </form>
 </div>

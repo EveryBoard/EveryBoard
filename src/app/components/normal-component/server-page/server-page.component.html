@@ -47,14 +47,7 @@
         <mat-tab id="createGameTab"
                  label="Create New Game">
             <div id="gameCreator" class="circled form-group">
-                <label for="gameType">Créer un jeu</label>
-                <select id="gameType" class="form-control" [(ngModel)]='selectedGame'>
-                    <option *ngFor="let gameName of gameNameList"
-                            value={{gameName}}
-                            class="form-control">
-                        {{ gameName }}
-                    </option>
-                </select>
+                <app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
                 <br />
                 <input type="button"
                        value="Create Online Game"

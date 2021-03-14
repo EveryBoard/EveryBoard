@@ -1,0 +1,14 @@
+<label for="gameType">Choisissez un jeu</label>
+<select id="gameType"
+        class="form-control"
+        (change)="onChange($event)">
+    <option value=""
+            class="form-control">
+        -
+    </option>
+    <option *ngFor="let gameName of gameNameList"
+            [value]="gameName"
+            class="form-control">
+        {{ gameName }}
+    </option>
+</select>
