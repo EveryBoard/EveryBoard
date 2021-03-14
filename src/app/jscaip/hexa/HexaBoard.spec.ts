@@ -2,7 +2,6 @@ import { Coord } from '../coord/Coord';
 import { Encoder } from '../encoder';
 import { HexaBoard } from './HexaBoard';
 
-
 describe('HexaBoard', () => {
     const numEncoder: Encoder<number> = new class extends Encoder<number> {
         public maxValue() {
@@ -17,7 +16,7 @@ describe('HexaBoard', () => {
     };
     let board: HexaBoard<number>;
     beforeEach(() => {
-        board = HexaBoard.empty(3, 0, numEncoder);
+        board = HexaBoard.empty(7, 7, 0, numEncoder);
     });
     describe('empty', () => {
         it('should create empty boards with empty cells', () => {
