@@ -31,6 +31,8 @@ export class GipfComponentFailure {
         `Veuillez sélectionner une capture.`;
     public static CLICK_FURTHER_THAN_ONE_COORD: string =
         `Veuillez sélectionner une destination à une distance de 1 de l'entrée.`;
+    public static NO_DIRECTIONS_AVAILABLE: string =
+        `Veuillez sélectionner une autre case, toutes les lignes pour ce placement sont complètes.`
 }
 
 @Component({
@@ -206,10 +208,12 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     private computeArrows(placement: Coord): void {
         this.arrows = [];
         for (const dir of this.rules.getAllDirectionsForEntrance(this.constructedSlice, placement)) {
-            const nextCase: Coord = placement.getNext(dir);
-            const center1: Coord = this.getCenter(placement);
-            const center2: Coord = this.getCenter(nextCase);
-            this.arrows.push(new Arrow(placement, nextCase, center1.x, center1.y, center2.x, center2.y));
+            if (this.rules.isLineComplete(this.constructedSlice, placement, dir) === false) {
+                const nextCase: Coord = placement.getNext(dir);
+                const center1: Coord = this.getCenter(placement);
+                const center2: Coord = this.getCenter(nextCase);
+                this.arrows.push(new Arrow(placement, nextCase, center1.x, center1.y, center2.x, center2.y));
+            }
         }
     }
     private async selectPlacementCoord(coord: Coord): Promise<MGPValidation> {
@@ -224,6 +228,9 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         } else {
             this.movePhase = GipfComponent.PHASE_PLACEMENT_DIRECTION;
             this.computeArrows(coord);
+            if (this.arrows.length === 0) {
+                this.cancelMove(GipfComponentFailure.NO_DIRECTIONS_AVAILABLE);
+            }
         }
         return MGPValidation.SUCCESS;
     }

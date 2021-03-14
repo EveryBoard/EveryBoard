@@ -383,6 +383,7 @@ describe('GipfComponent', () => {
         setupSlice(slice);
 
         await expectClickSuccess('#click_-2_3', testElements);
+        expect(getComponent().arrows.length).toBe(1);
         await expectClickFail('#click_-1_2', testElements, GipfFailure.PLACEMENT_ON_COMPLETE_LINE);
     }));
     it('should accept moves with two initial captures', fakeAsync(async() => {
@@ -512,5 +513,19 @@ describe('GipfComponent', () => {
         await expectClickSuccess('#click_0_2', testElements); // Placement direction
         await expectClickSuccess('#click_-3_2', testElements); // Final capture 1
         await expectMoveSuccess('#click_0_-3', testElements, expectationFromMove(move)); // Final capture 2
+    }));
+    it('should not allow selecting placement when no direction is valid', fakeAsync(async() => {
+        const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            [_, _, _, _, _, _, B],
+            [_, _, _, _, _, A, _],
+            [B, _, _, _, B, _, _],
+            [A, _, _, A, _, _, _],
+            [B, _, B, _, _, _, _],
+            [A, A, _, _, _, _, _],
+            [B, A, B, A, B, _, _],
+        ], _, GipfPiece.encoder);
+        const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+        setupSlice(slice);
+        await expectClickFail('#click_-3_3', testElements, GipfComponentFailure.NO_DIRECTIONS_AVAILABLE);
     }));
 });

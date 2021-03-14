@@ -269,7 +269,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         });
         return placements;
     }
-    private isLineComplete(slice: GipfPartSlice, start: Coord, dir: Direction): boolean {
+    public isLineComplete(slice: GipfPartSlice, start: Coord, dir: Direction): boolean {
         return this.nextGapInLine(slice, start, dir).isAbsent();
     }
     private nextGapInLine(slice: GipfPartSlice, start: Coord, dir: Direction): MGPOptional<Coord> {
