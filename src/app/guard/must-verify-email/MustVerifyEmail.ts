@@ -5,16 +5,13 @@ import { AuthenticationService } from '../../services/authentication/Authenticat
 @Injectable({
     providedIn: 'root',
 })
-export class EmailVerified implements CanActivate {
+export class MustVerifyEmail implements CanActivate {
     constructor(private authService: AuthenticationService, private router : Router) {
     }
     public canActivate(): boolean {
         const user: {pseudo: string, verified: boolean} = this.authService.getAuthenticatedUser();
-        if (user == null || user.pseudo == null) {
+        if (user == null || user.pseudo == null || user.verified === true) {
             this.router.navigate(['/login']);
-            return false;
-        } else if (user.verified === false) {
-            this.router.navigate(['/confirm-inscription']);
             return false;
         } else {
             return true;

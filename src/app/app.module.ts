@@ -21,11 +21,14 @@ import { GameService } from './services/game/GameService';
 import { JoinerService } from './services/joiner/JoinerService';
 
 import { EmailVerified } from './guard/email-verified/EmailVerified';
+import { MustVerifyEmail } from './guard/must-verify-email/MustVerifyEmail';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
+import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
 import { LoginComponent } from './components/normal-component/login-page/login.component';
 import { ServerPageComponent } from './components/normal-component/server-page/server-page.component';
+import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { PartCreationComponent } from './components/normal-component/part-creation/part-creation.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
@@ -58,23 +61,25 @@ export const INCLUDE_VERBOSE_LINE_IN_TEST: boolean = false;
 
 const routes: Route [] = [
     { path: 'login', component: LoginComponent },
-    { path: 'server', component: ServerPageComponent },
+    { path: 'server', component: ServerPageComponent, canActivate: [EmailVerified] },
     { path: 'inscription', component: InscriptionComponent },
-    { path: 'confirm-inscription', component: ConfirmInscriptionComponent },
+    { path: 'confirm-inscription', component: ConfirmInscriptionComponent, canActivate: [MustVerifyEmail] },
 
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
     { path: 'didacticial/:compo', component: DidacticialGameWrapperComponent },
-    { path: '', redirectTo: 'server', pathMatch: 'full' },
-    { path: '**', component: ServerPageComponent },
+    { path: '', component: WelcomeComponent },
+    { path: '**', component: WelcomeComponent },
 ];
 
 @NgModule({
     declarations: [
         AppComponent,
         HeaderComponent,
+        WelcomeComponent,
         LoginComponent,
         ServerPageComponent,
+        PickGameComponent,
         ChatComponent,
         PartCreationComponent,
         InscriptionComponent,
