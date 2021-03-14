@@ -76,7 +76,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
     let router: Router;
 
-    const prepareComponent: (initialJoiner: IJoiner) => Promise<void> = async (initialJoiner: IJoiner) => {
+    const prepareComponent: (initialJoiner: IJoiner) => Promise<void> = async(initialJoiner: IJoiner) => {
         fixture = TestBed.createComponent(OnlineGameWrapperComponent);
         const partDAOMock: PartDAOMock = TestBed.get(PartDAO);
         const joinerDAOMock: JoinerDAOMock = TestBed.get(JoinerDAO);
@@ -91,7 +91,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     beforeAll(() => {
         OnlineGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || OnlineGameWrapperComponent.VERBOSE;
     });
-    beforeEach(async () => {
+    beforeEach(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -112,7 +112,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         }).compileComponents();
         router = TestBed.inject(Router);
     });
-    it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async () => {
+    it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'creator', verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
         const joinGame: jasmine.Spy = spyOn(joinerService, 'joinGame').and.callThrough();
@@ -128,7 +128,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         expect(joinGame).toHaveBeenCalledTimes(1);
         expect(startObserving).toHaveBeenCalledTimes(1);
     }));
-    it('Initialisation on accepted config should lead to PartCreationComponent to call startGame ', fakeAsync(async () => {
+    it('Initialisation on accepted config should lead to PartCreationComponent to call startGame ', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'creator', verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();
@@ -143,15 +143,15 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         tick(1);
         tick(component.maximalMoveDuration);
     }));
-    it('Some tags are needed before initialisation', fakeAsync(async () => {
+    it('Some tags are needed before initialisation', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'creator', verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
         expect(component).toBeTruthy();
         const compiled = fixture.debugElement.nativeElement;
-        const partCreationTag = compiled.querySelector('app-part-creation');
-        const gameIncluderTag = compiled.querySelector('app-game-includer');
-        const p4Tag = compiled.querySelector('app-p4');
-        const chatTag = compiled.querySelector('app-chat');
+        const partCreationTag: unknown = compiled.querySelector('app-part-creation');
+        const gameIncluderTag: unknown = compiled.querySelector('app-game-includer');
+        const p4Tag: unknown = compiled.querySelector('app-p4');
+        const chatTag: unknown = compiled.querySelector('app-chat');
 
         expect(component.gameStarted).toBeFalse();
         expect(partCreationTag).toBeFalsy('app-part-creation tag should be present at start');
@@ -162,12 +162,12 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         fixture.detectChanges();
         tick(1);
     }));
-    it('Some ids are needed before initialisation', fakeAsync(async () => {
+    it('Some ids are needed before initialisation', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'creator', verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
-        const partCreationId = fixture.debugElement.query(By.css('#partCreation'));
-        const gameId = fixture.debugElement.query(By.css('#game'));
-        const chatId = fixture.debugElement.query(By.css('#chat'));
+        const partCreationId: unknown = fixture.debugElement.query(By.css('#partCreation'));
+        const gameId: unknown = fixture.debugElement.query(By.css('#game'));
+        const chatId: unknown = fixture.debugElement.query(By.css('#chat'));
 
         expect(component.gameStarted).toBeFalse();
         expect(partCreationId).toBeFalsy('partCreation id should be present at start');
@@ -177,7 +177,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         fixture.detectChanges();
         tick(1);
     }));
-    it('Initialisation should make appear PartCreationComponent', fakeAsync(async () => {
+    it('Initialisation should make appear PartCreationComponent', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'creator', verified: true };
         await prepareComponent(JoinerMocks.INITIAL.copy());
         let partCreationId: DebugElement = fixture.debugElement.query(By.css('#partCreation'));
@@ -189,7 +189,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         partCreationId = fixture.debugElement.query(By.css('#partCreation'));
         expect(partCreationId).toBeTruthy('partCreation id should be present after ngOnInit');
     }));
-    it('StartGame should replace PartCreationComponent by GameIncluderComponent for creator', fakeAsync(async () => {
+    it('StartGame should replace PartCreationComponent by GameIncluderComponent for creator', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'creator', verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();
@@ -197,10 +197,9 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         fixture.detectChanges();
 
-        const partCreationId = fixture.debugElement.query(By.css('#partCreation'));
-        const gameId = fixture.debugElement.query(By.css('#game'));
-        const compiled = fixture.debugElement.nativeElement;
-        const p4Tag = compiled.querySelector('app-p4');
+        const partCreationId: unknown = fixture.debugElement.query(By.css('#partCreation'));
+        const gameId: unknown = fixture.debugElement.query(By.css('#game'));
+        const p4Tag: unknown = fixture.debugElement.nativeElement.querySelector('app-p4');
 
         expect(component.gameStarted).toBeTrue();
         expect(partCreationId).toBeFalsy('partCreation id should be absent after startGame call');
@@ -209,7 +208,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         tick(1);
         tick(component.maximalMoveDuration);
     }));
-    it('StartGame should replace PartCreationComponent by GameIncluderComponent for chosenPlayer', fakeAsync(async () => {
+    it('StartGame should replace PartCreationComponent by GameIncluderComponent for chosenPlayer', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'chosenPlayer', verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();
@@ -219,8 +218,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
 
         const partCreationId: DebugElement = fixture.debugElement.query(By.css('#partCreation'));
         const gameId: DebugElement = fixture.debugElement.query(By.css('#game'));
-        const compiled = fixture.debugElement.nativeElement;
-        const p4Tag = compiled.querySelector('app-p4');
+        const p4Tag: unknown = fixture.debugElement.nativeElement.querySelector('app-p4');
 
         expect(component.gameStarted).toBeTrue();
         expect(partCreationId).toBeFalsy('partCreation id should be absent after startGame call');
@@ -229,35 +227,36 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         tick(1);
         tick(component.maximalMoveDuration);
     }));
-    it('stage three should make the game component appear at last', fakeAsync(async () => {
+    it('stage three should make the game component appear at last', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'creator', verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();
         tick();
 
         fixture.detectChanges();
-        expect(fixture.debugElement.nativeElement.querySelector('app-p4')).toBeNull('p4Tag id should be absent before startGame\'s async method has complete');
+        expect(fixture.debugElement.nativeElement.querySelector('app-p4'))
+            .toBeNull('p4Tag id should be absent before startGame\'s async method has complete');
 
         tick(1);
 
-        expect(fixture.debugElement.nativeElement.querySelector('app-p4')).toBeTruthy('p4Tag id should be present after startGame\'s async method has complete');
+        expect(fixture.debugElement.nativeElement.querySelector('app-p4'))
+            .toBeTruthy('p4Tag id should be present after startGame\'s async method has complete');
         tick(component.maximalMoveDuration);
     }));
-    it('should redirect to index page if part does not exist', fakeAsync(async () => {
+    it('should redirect to index page if part does not exist', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'player', verified: true };
         await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         fixture.detectChanges();
         tick();
 
-        fixture.ngZone.run(async () => {
+        fixture.ngZone.run(async() => {
             await router.navigate(['/play', 'P4', 'invalid-part-id']);
             fixture.detectChanges();
             flush();
         });
         expect(router.url).toBe('/server');
     }));
-
-    afterEach(fakeAsync(async () => {
+    afterEach(fakeAsync(async() => {
         fixture.destroy();
         await fixture.whenStable();
         tick();

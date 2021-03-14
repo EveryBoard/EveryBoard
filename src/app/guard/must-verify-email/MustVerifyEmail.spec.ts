@@ -1,6 +1,6 @@
-import { EmailVerified } from './EmailVerified';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { Router } from '@angular/router';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { MustVerifyEmail } from './MustVerifyEmail';
 
 class RouterMock {
     public async navigate(to: string[]): Promise<boolean> {
@@ -8,7 +8,7 @@ class RouterMock {
     }
 }
 describe('EmailVerified', () => {
-    let guard: EmailVerified;
+    let guard: MustVerifyEmail;
 
     let authService: AuthenticationService;
 
@@ -17,7 +17,7 @@ describe('EmailVerified', () => {
     beforeEach(() => {
         authService = {} as AuthenticationService;
         router = new RouterMock() as Router;
-        guard = new EmailVerified(authService, router);
+        guard = new MustVerifyEmail(authService, router);
     });
     it('should create', () => {
         expect(guard).toBeTruthy();
@@ -33,20 +33,20 @@ describe('EmailVerified', () => {
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
         expect(authorisation).toBeFalse();
     });
-    it('should move unverified user to confirm-inscription page and refuse them', () => {
+    it('should move verified user to login page and refuse them', () => {
         authService.getAuthenticatedUser = () => {
-            return { pseudo: 'JeanMichelNouveau user', verified: false };
+            return { pseudo: 'JeanMichelNouveau user', verified: true };
         };
         spyOn(router, 'navigate');
 
         const authorisation: boolean = guard.canActivate();
 
-        expect(router.navigate).toHaveBeenCalledWith(['/confirm-inscription']);
+        expect(router.navigate).toHaveBeenCalledWith(['/login']);
         expect(authorisation).toBeFalse();
     });
-    it('should accept logged user', () => {
+    it('should accept logged unverified user', () => {
         authService.getAuthenticatedUser = () => {
-            return { pseudo: 'JeanJaJa Toujours là', verified: true };
+            return { pseudo: 'JeanJaJa Toujours là', verified: false };
         };
 
         const authorisation: boolean = guard.canActivate();

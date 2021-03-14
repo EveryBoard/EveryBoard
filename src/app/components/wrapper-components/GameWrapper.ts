@@ -31,7 +31,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
 
 @Component({ template: '' })
 export abstract class GameWrapper {
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     // component loading
     @ViewChild(GameIncluderComponent)
