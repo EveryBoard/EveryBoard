@@ -26,7 +26,7 @@ import { MustVerifyEmail } from './guard/must-verify-email/MustVerifyEmail';
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
 import { WelcomeComponent } from './components/normal-component/welcome/welcome.component';
-import { LoginComponent } from './components/normal-component/login-page/login.component';
+import { LoginComponent } from './components/normal-component/login/login.component';
 import { ServerPageComponent } from './components/normal-component/server-page/server-page.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { PartCreationComponent } from './components/normal-component/part-creation/part-creation.component';
