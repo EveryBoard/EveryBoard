@@ -27,6 +27,7 @@
                 (click)="loginWithGoogle()"
                 class="btn btn-lg btn-primary btn-block">Se connecter avec Google</button>
         <a class="nav-link" [routerLink]="['/inscription']">Pas encore inscrit? Crée un compte.</a><br/>
-        <span style="color:red"> {{ errorMessage }}</span><br/>
+        <span id="errorSpan"
+              style="color:red">{{ errorMessage }}</span><br/>
     </form>
 </div>
