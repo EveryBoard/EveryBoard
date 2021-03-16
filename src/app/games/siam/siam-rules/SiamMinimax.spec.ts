@@ -5,7 +5,7 @@ import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { SiamMove } from '../siam-move/SiamMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';

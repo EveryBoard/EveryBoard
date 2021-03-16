@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class QuixoMove extends MoveCoord {
@@ -22,7 +22,7 @@ export class QuixoMove extends MoveCoord {
         return move.encode();
     }
     public static decode(encodedMove: number): QuixoMove {
-        const direction: Orthogonal = Orthogonal.fromInt(encodedMove % 4);
+        const direction: Orthogonal = Orthogonal.factory.fromInt(encodedMove % 4);
         encodedMove -= encodedMove % 4; encodedMove /= 4;
         const y: number = encodedMove % 5;
         encodedMove -= encodedMove % 5; encodedMove /= 5;

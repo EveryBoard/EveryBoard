@@ -1,4 +1,4 @@
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class EpaminondasMove extends MoveCoord {
@@ -79,6 +79,6 @@ export class EpaminondasMove extends MoveCoord {
         encodedMove /= 12;
 
         const cx: number = encodedMove;
-        return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, Direction.fromInt(direction));
+        return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, Direction.factory.fromInt(direction));
     }
 }

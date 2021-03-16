@@ -1,6 +1,6 @@
 import { EpaminondasMove } from 'src/app/games/epaminondas/epaminondas-move/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/epaminondas-part-slice/EpaminondasPartSlice';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
 import { DidacticialStep } from '../DidacticialStep';
 

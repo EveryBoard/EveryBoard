@@ -5,7 +5,7 @@ import { EpaminondasMove } from 'src/app/games/epaminondas/epaminondas-move/Epam
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/epaminondas-part-slice/EpaminondasPartSlice';
 import { EpaminondasRules } from 'src/app/games/epaminondas/epaminondas-rules/EpaminondasRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
 import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 
@@ -119,11 +119,11 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return extensions;
     }
     private getPhalanxValidExtensions(PLAYER: number): Coord[] {
-        let direction: Direction = Direction.fromMove(this.firstPiece, this.lastPiece);
+        let direction: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece);
         const forward: Coord = this.lastPiece.getNext(direction, 1);
         const extensionForward: Coord[] = this.getExtensionsToward(forward, direction, PLAYER);
 
-        direction = direction.getOpposite();
+        direction = Direction.factory.oppositeOf(direction);
         const backWard: Coord = this.firstPiece.getNext(direction, 1);
         const extensionsBackward: Coord[] = this.getExtensionsToward(backWard, direction, PLAYER);
         return extensionForward.concat(extensionsBackward);
@@ -145,11 +145,11 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             const dy: number = Math.abs(this.firstPiece.y - this.lastPiece.y);
             const phalanxSize: number = Math.max(dx, dy) + 1;
 
-            let direction: Direction = Direction.fromMove(this.firstPiece, this.lastPiece);
+            let direction: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece);
             const landingForward: Coord = this.lastPiece.getNext(direction, 1);
             const landingsForward: Coord[] = this.getLandingsToward(landingForward, direction, phalanxSize);
 
-            direction = direction.getOpposite();
+            direction = Direction.factory.oppositeOf(direction);
             const landingBackward: Coord = this.firstPiece.getNext(direction, 1);
             const landingsBackward: Coord[] = this.getLandingsToward(landingBackward, direction, phalanxSize);
             return landingsBackward.concat(landingsForward);
@@ -256,9 +256,9 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         if (!clicked.isAlignedWith(this.firstPiece)) {
             return this.cancelMove('Cette case n\'est pas alignée avec la direction de la phalange.');
         }
-        let phalanxDirection: Direction = Direction.fromMove(this.firstPiece, this.lastPiece);
-        const phalanxLanding: Direction = Direction.fromMove(this.firstPiece, clicked);
-        if (phalanxDirection === phalanxLanding.getOpposite()) {
+        let phalanxDirection: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece);
+        const phalanxLanding: Direction = Direction.factory.fromMove(this.firstPiece, clicked);
+        if (phalanxDirection === Direction.factory.oppositeOf(phalanxLanding)) {
             const firstPiece: Coord = this.firstPiece;
             this.firstPiece = this.lastPiece;
             this.lastPiece = firstPiece;

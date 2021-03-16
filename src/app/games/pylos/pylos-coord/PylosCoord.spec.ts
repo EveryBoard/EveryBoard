@@ -1,5 +1,5 @@
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { PylosCoord } from './PylosCoord';
 
 describe('PylosCoord:', () => {

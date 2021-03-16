@@ -1,5 +1,5 @@
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
 import { EpaminondasLegalityStatus } from '../epaminondaslegalitystatus';
 import { EpaminondasMove } from '../epaminondas-move/EpaminondasMove';

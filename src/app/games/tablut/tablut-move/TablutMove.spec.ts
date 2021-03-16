@@ -50,6 +50,6 @@ describe('TablutMove', () => {
         expect(move.equals(cousin)).toBeFalse();
         expect(move.equals(twin)).toBeTrue();
 
-        expect(move.toString()).toEqual("TablutMove((0, 0)->(0, 1))");
+        expect(move.toString()).toEqual('TablutMove((0, 0)->(0, 1))');
     });
 });

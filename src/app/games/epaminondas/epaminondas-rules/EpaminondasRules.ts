@@ -1,7 +1,7 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -23,19 +23,19 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         let moves: MGPMap<EpaminondasMove, EpaminondasPartSlice> = new MGPMap<EpaminondasMove, EpaminondasPartSlice>();
         const slice: EpaminondasPartSlice = node.gamePartSlice;
         let move: EpaminondasMove;
-        for (let y = 0; y < 12; y++) {
-            for (let x = 0; x < 14; x++) {
+        for (let y: number = 0; y < 12; y++) {
+            for (let x: number = 0; x < 14; x++) {
                 const firstCoord: Coord = new Coord(x, y);
                 if (slice.getBoardAt(firstCoord) === PLAYER) {
                     for (const direction of Direction.DIRECTIONS) {
-                        let movedPieces = 1;
+                        let movedPieces: number = 1;
                         let nextCoord: Coord = firstCoord.getNext(direction, 1);
                         while (nextCoord.isInRange(14, 12) &&
                                slice.getBoardAt(nextCoord) === PLAYER) {
                             movedPieces += 1;
                             nextCoord = nextCoord.getNext(direction, 1);
                         }
-                        let stepSize = 1;
+                        let stepSize: number = 1;
                         while (nextCoord.isInRange(14, 12) &&
                                stepSize <= movedPieces &&
                                slice.getBoardAt(nextCoord) === EMPTY) {
@@ -158,7 +158,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
     public getCaptureValidity(oldSlice: EpaminondasPartSlice, board: number[][], move: EpaminondasMove, ENNEMY: number): EpaminondasLegalityStatus {
         let capturedSoldier: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
         const EMPTY: number = Player.NONE.value;
-        let captured = 0;
+        let captured: number = 0;
         while (capturedSoldier.isInRange(14, 12) &&
                oldSlice.getBoardAt(capturedSoldier) === ENNEMY
         ) {

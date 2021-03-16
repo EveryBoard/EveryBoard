@@ -1,4 +1,4 @@
-import { Direction } from '../../../jscaip/DIRECTION';
+import { Direction } from '../../../jscaip/Direction';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { Rules } from '../../../jscaip/Rules';
 import { SCORE } from '../../../jscaip/SCORE';
@@ -113,7 +113,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
 
         for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
             // for each pair of opposite directions
-            const lineAllies: number = alliesByDirs.get(dir) + alliesByDirs.get(dir.getOpposite());
+            const lineAllies: number = alliesByDirs.get(dir) + alliesByDirs.get(Direction.factory.oppositeOf(dir));
             if (lineAllies > 2) {
                 display(P4Rules.VERBOSE, { text:
                     'there is some kind of victory here (' + c.x + ', ' + c.y + ')' + '\n' +
@@ -123,7 +123,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
                 return P4Rules.winForPlayer(ally);
             }
 
-            const lineDist: number = distByDirs.get(dir) + distByDirs.get(dir.getOpposite());
+            const lineDist: number = distByDirs.get(dir) + distByDirs.get(Direction.factory.oppositeOf(dir));
             if (lineDist >= 3) {
                 score += lineDist - 2;
             }

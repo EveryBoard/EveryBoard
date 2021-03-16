@@ -6,7 +6,7 @@ import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
 import { SiamRules } from 'src/app/games/siam/siam-rules/SiamRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SiamPiece } from 'src/app/games/siam/siam-piece/SiamPiece';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GameComponentUtils } from '../GameComponentUtils';
@@ -32,7 +32,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
 
     public chosenOrientation: Orthogonal;
 
-    public updateBoard() {
+    public updateBoard(): void {
         display(SiamComponent.VERBOSE, 'updateBoard');
         const slice: SiamPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.board;
@@ -73,7 +73,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
             this.chosenDirection = MGPOptional.empty();
             this.landingCoord = this.chosenCoord;
         } else {
-            const dir: Orthogonal = Orthogonal.fromString(direction);
+            const dir: Orthogonal = Orthogonal.factory.fromString(direction);
             this.chosenDirection = MGPOptional.of(dir);
             this.landingCoord = this.chosenCoord.getNext(dir);
             if (this.landingCoord.isNotInRange(5, 5)) {
@@ -90,7 +90,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.reason);
         }
-        this.chosenOrientation = Orthogonal.fromString(orientation);
+        this.chosenOrientation = Orthogonal.factory.fromString(orientation);
         return await this.tryMove();
     }
     public async insertAt(x: number, y: number): Promise<MGPValidation> {
@@ -133,7 +133,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                x7 + ' ' + y7 + ' ' + x8 + ' ' + y8;
     }
     public rotate(x: number, y: number, o: string): string {
-        const orientation: number = Orthogonal.fromString(o).toInt() - 2;
+        const orientation: number = Orthogonal.factory.fromString(o).toInt() - 2;
         return 'rotate(' + (90*orientation) + ' ' + ((100*x) + 50) + ' ' + ((100*y) + 50) + ')';
     }
     public isPiece(c: number): boolean {

@@ -9,7 +9,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction, Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { SCORE } from 'src/app/jscaip/SCORE';
 
@@ -87,7 +87,7 @@ class Critere {
         // mais je crois que c'est impossible vu l'usage que je compte en faire
     }
     equals(o: Critere): boolean {
-        let i = 0;
+        let i: number = 0;
         do {
             if (this.subCritere[i] !== o.subCritere[i]) {
                 return false; // a!=b
@@ -138,7 +138,7 @@ class Critere {
     }
     match(c: Critere): boolean {
         // return true if there is at least one sub-critere in common between the two
-        let i = 0;
+        let i: number = 0;
         do {
             if (this.subCritere[i] === c.subCritere[i]) {
                 return true;
@@ -190,7 +190,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
         { initialCoord: new Coord(0, 2), direction: Direction.RIGHT },
         { initialCoord: new Coord(0, 3), direction: Direction.RIGHT },
         { initialCoord: new Coord(0, 0), direction: Direction.DOWN_RIGHT }, // les diagonales
-        { initialCoord: new Coord(0, 3), direction: Direction.UP_RIGHT }
+        { initialCoord: new Coord(0, 3), direction: Direction.UP_RIGHT },
     ];
 
     public node: MGPNode<QuartoRules, QuartoMove, QuartoPartSlice, LegalityStatus>;
@@ -294,7 +294,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
     public getBoardValue(move: QuartoMove, slice: QuartoPartSlice): number {
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
-            casesSensibles: []
+            casesSensibles: [],
         };
         for (const line of QuartoRules.lines) {
             boardStatus = this.updateBoardStatus(line, slice, boardStatus);
@@ -310,7 +310,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
             if (this.isThereAVictoriousLine(line, slice)) {
                 return {
                     score: SCORE.VICTORY,
-                    casesSensibles: null
+                    casesSensibles: null,
                 };
             } else {
                 return boardStatus; // Nothing changed exploring this line

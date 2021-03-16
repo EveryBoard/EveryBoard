@@ -1,6 +1,6 @@
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from '../coord/Coord';
-import { Direction } from '../DIRECTION';
+import { Direction } from '../Direction';
 import { HexaDirection } from './HexaDirection';
 
 export class HexaLine {

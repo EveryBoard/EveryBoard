@@ -7,7 +7,7 @@ import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice'
 import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
 import { GipfRules, GipfFailure } from 'src/app/games/gipf/gipf-rules/GipfRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
 import { HexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { Player } from 'src/app/jscaip/player/Player';
@@ -139,7 +139,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
                     if (entrance.getDistance(coord) !== 1) {
                         return this.cancelMove(GipfComponentFailure.CLICK_FURTHER_THAN_ONE_COORD);
                     }
-                    const direction: Direction = Direction.fromMove(entrance, coord);
+                    const direction: Direction = Direction.factory.fromMove(entrance, coord);
                     return this.selectPlacementDirection(MGPOptional.of(direction));
                 } catch (error) {
                     return this.cancelMove(GipfFailure.INVALID_PLACEMENT_DIRECTION);

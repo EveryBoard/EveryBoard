@@ -1,4 +1,4 @@
-import { Direction } from '../DIRECTION';
+import { Direction } from '../Direction';
 import { Comparable } from '../../utils/collection-lib/Comparable';
 
 export class Coord implements Comparable {
@@ -40,15 +40,15 @@ export class Coord implements Comparable {
         // (-+) -> (++)
         // (-0) -> (0+)
         // ...
-        const newX = this.x + dir.y;
-        const newY = this.y + -dir.x; // (this.x, thix.y) + (dir.y, -dir.x)
+        const newX: number = this.x + dir.y;
+        const newY: number = this.y + -dir.x; // (this.x, thix.y) + (dir.y, -dir.x)
         return new Coord(newX, newY);
     }
     public getRight(dir: Direction): Coord {
         // looking in the direction "dir", we just go one step right
         // see getLeft's logic, it's the opposite
-        const newX = this.x + -dir.y;
-        const newY = this.y + dir.x; // (this.x, thix.y) + (-dir.y, dir.x)
+        const newX: number = this.x + -dir.y;
+        const newY: number = this.y + dir.x; // (this.x, thix.y) + (-dir.y, dir.x)
         return new Coord(newX, newY);
     }
     public getOpposite(): Coord {
@@ -90,7 +90,7 @@ export class Coord implements Comparable {
     public getDirectionToward(c: Coord): Direction {
         const dx: number = Coord.getBinarised(c.x - this.x);
         const dy: number = Coord.getBinarised(c.y - this.y);
-        return Direction.of(dx, dy); // TODO: method might have to be deleted in favor of Direction.fromMove
+        return Direction.factory.of(dx, dy); // TODO: method might have to be deleted in favor of Direction.fromMove
     }
     public getOrthogonalDistance(c: Coord): number {
         return Math.abs(this.x - c.x) + Math.abs(this.y - c.y);
@@ -134,7 +134,7 @@ export class Coord implements Comparable {
         const minAbs: number = Math.max(absX, absY);
         let vx: number = this.x;
         let vy: number = this.y;
-        let divider = 2;
+        let divider: number = 2;
         while (divider <= minAbs) {
             if (vx % divider === 0 && vy % divider === 0) {
                 vx /= divider;
