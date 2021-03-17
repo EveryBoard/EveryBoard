@@ -2,7 +2,7 @@ import { Rules } from '../../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { GoPartSlice, Phase, GoPiece } from '../go-part-slice/GoPartSlice';
-import { Direction, Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from '../go-move/GoMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { GoLegalityStatus } from '../GoLegalityStatus';

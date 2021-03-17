@@ -1,4 +1,4 @@
-import { Direction } from '../DIRECTION';
+import { Direction } from '../Direction';
 
 /** Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons */
 export class HexaDirection {

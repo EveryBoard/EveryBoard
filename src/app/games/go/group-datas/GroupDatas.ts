@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoPiece } from '../go-part-slice/GoPartSlice';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 

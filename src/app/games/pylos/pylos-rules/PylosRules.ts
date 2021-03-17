@@ -1,7 +1,7 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
@@ -25,8 +25,8 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
             let possiblesCaptures: PylosCoord[][] = [[]];
             if (PylosRules.canCapture(slice, move.landingCoord)) {
                 possiblesCaptures = PylosRules.getPossibleCaptures(sliceInfo.freeToMove,
-                    move.startingCoord,
-                    move.landingCoord);
+                                                                   move.startingCoord,
+                                                                   move.landingCoord);
             }
             for (const possiblesCapture of possiblesCaptures) {
                 const newMove: PylosMove = PylosMove.changeCapture(move, possiblesCapture);
@@ -39,9 +39,9 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
     public static getSliceInfo(slice: PylosPartSlice): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
         const freeToMove: PylosCoord[] = [];
         const landable: PylosCoord[] = [];
-        for (let z = 0; z < 3; z++) {
-            for (let y = 0; y < (4 - z); y++) {
-                for (let x = 0; x < (4 - z); x++) {
+        for (let z: number = 0; z < 3; z++) {
+            for (let y: number = 0; y < (4 - z); y++) {
+                for (let x: number = 0; x < (4 - z); x++) {
                     const c: PylosCoord = new PylosCoord(x, y, z);
                     if (slice.getBoardAt(c) === slice.getCurrentPlayer().value &&
                         slice.isSupporting(c) === false) {
@@ -87,7 +87,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
                         .getNextValid(horizontal)
                         .getOrNull();
                     if (secondNeighboors && slice.getBoardAt(secondNeighboors) === currentPlayer) {
-                        const thirdDirection = vertical.getOpposite();
+                        const thirdDirection: Orthogonal = Orthogonal.factory.oppositeOf(vertical);
                         const thirdNeighboors: PylosCoord = secondNeighboors.getNextValid(thirdDirection).get();
                         if (slice.getBoardAt(thirdNeighboors) === currentPlayer) return true;
                     }
@@ -97,14 +97,14 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
         return false;
     }
     public static getPossibleCaptures(freeToMoves: PylosCoord[],
-        startingCoord: MGPOptional<PylosCoord>,
-        landingCoord: PylosCoord): PylosCoord[][] {
+                                      startingCoord: MGPOptional<PylosCoord>,
+                                      landingCoord: PylosCoord): PylosCoord[][] {
         const possiblesCapturesSet: PylosCoord[][] = [];
 
         freeToMoves = freeToMoves.filter((c: PylosCoord) => c.equals(startingCoord.getOrNull()) === false);
 
         const capturables: PylosCoord[] = freeToMoves.concat(landingCoord);
-        for (let i = 0; i < capturables.length; i++) {
+        for (let i: number = 0; i < capturables.length; i++) {
             const firstCapture: PylosCoord = capturables[i];
             possiblesCapturesSet.push([firstCapture]);
             for (let j: number = i + 1; j < capturables.length; j++) {

@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction, Vector } from 'src/app/jscaip/DIRECTION';
+import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { CoerceoFailure } from '../coerceo-rules/CoerceoRules';

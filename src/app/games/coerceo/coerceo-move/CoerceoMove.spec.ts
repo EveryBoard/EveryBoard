@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Vector } from 'src/app/jscaip/DIRECTION';
+import { Vector } from 'src/app/jscaip/Direction';
 import { CoerceoFailure } from '../coerceo-rules/CoerceoRules';
 import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 

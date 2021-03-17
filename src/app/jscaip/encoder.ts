@@ -8,6 +8,20 @@ export abstract class Encoder<T> {
 }
 
 export namespace Encoder {
+    export function of<T>(max: number, encode: (t: T) => number, decode: (n: number) => T): Encoder<T> {
+        return new class extends Encoder<T> {
+            public maxValue(): number {
+                return max;
+            }
+            public encode(t: T): number {
+                return encode(t);
+            }
+            public decode(n: number): T {
+                return decode(n);
+            }
+        };
+    }
+
     export const booleanEncoder: Encoder<boolean> = new class extends Encoder<boolean> {
         public maxValue(): number {
             return 1;

@@ -2,7 +2,7 @@ import { Rules } from '../../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { ReversiPartSlice } from '../ReversiPartSlice';
 import { Coord } from '../../../jscaip/coord/Coord';
-import { Direction } from '../../../jscaip/DIRECTION';
+import { Direction } from '../../../jscaip/Direction';
 import { ReversiMove } from '../reversi-move/ReversiMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
@@ -104,12 +104,12 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         const player: number = slice.getCurrentPlayer().value;
         const ennemy: number = slice.getCurrentEnnemy().value;
 
-        for (let y = 0; y < 8; y++) {
-            for (let x = 0; x < 8; x++) {
+        for (let y: number = 0; y < 8; y++) {
+            for (let x: number = 0; x < 8; x++) {
                 if (slice.getBoardByXY(x, y) === Player.NONE.value) {
                     // For each empty cases
                     nextBoard = slice.getCopiedBoard();
-                    const ennemyNeighboors = ReversiPartSlice.getNeighbooringPawnLike(nextBoard, ennemy, x, y);
+                    const ennemyNeighboors: Coord[] = ReversiPartSlice.getNeighbooringPawnLike(nextBoard, ennemy, x, y);
                     if (ennemyNeighboors.length > 0) {
                         // if one of the 8 neighbooring case is an ennemy then, there could be a switch, and hence a legal move
                         const move: ReversiMove = new ReversiMove(x, y);
@@ -158,10 +158,10 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
     public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): number {
         const gameIsEnded: boolean = ReversiRules.isGameEnded(slice);
         const board: number[][] = slice.getCopiedBoard();
-        let player0Count = 0;
-        let player1Count = 0;
-        for (let y = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
-            for (let x = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
+        let player0Count: number = 0;
+        let player1Count: number = 0;
+        for (let y: number = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
+            for (let x: number = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
                 let locationValue: number;
                 if (gameIsEnded) {
                     locationValue = 1;

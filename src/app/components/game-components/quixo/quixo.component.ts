@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSlice';
@@ -16,7 +16,7 @@ import { Rules } from 'src/app/jscaip/Rules';
     templateUrl: './quixo.component.html',
 })
 export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice, LegalityStatus> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public rules: QuixoRules = new QuixoRules(QuixoPartSlice);
 
@@ -28,7 +28,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public chosenDirection: Orthogonal;
 
-    public updateBoard() {
+    public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;
         this.board = this.slice.board;
         const move: QuixoMove = this.rules.node.move;
@@ -76,7 +76,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         return infos;
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
-        this.chosenDirection = Orthogonal.fromString(direction);
+        this.chosenDirection = Orthogonal.factory.fromString(direction);
         return await this.tryMove();
     }
     public async tryMove(): Promise<MGPValidation> {

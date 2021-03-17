@@ -1,6 +1,6 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { QuixoPartSlice } from '../quixo-part-slice/QuixoPartSlice';

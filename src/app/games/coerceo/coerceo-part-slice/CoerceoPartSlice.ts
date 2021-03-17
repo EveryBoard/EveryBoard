@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Vector } from 'src/app/jscaip/DIRECTION';
+import { Vector } from 'src/app/jscaip/Direction';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Player } from 'src/app/jscaip/player/Player';
 import { NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';

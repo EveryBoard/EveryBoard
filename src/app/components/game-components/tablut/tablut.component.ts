@@ -10,7 +10,7 @@ import { TablutCase } from 'src/app/games/tablut/tablut-rules/TablutCase';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Player } from 'src/app/jscaip/player/Player';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutRulesConfig } from 'src/app/games/tablut/tablut-rules/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
@@ -55,7 +55,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         for (const orthogonal of Orthogonal.ORTHOGONALS) {
             const captured: Coord = this.lastMove.end.getNext(orthogonal, 1);
             if (captured.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
-                const previously: RelativePlayer = TablutRules.getRelativeOwner(ENNEMY, captured, previousBoard)
+                const previously: RelativePlayer = TablutRules.getRelativeOwner(ENNEMY, captured, previousBoard);
                 const wasEnnemy: boolean = previously === RelativePlayer.ENNEMY;
                 const currently: number = this.rules.node.gamePartSlice.getBoardAt(captured);
                 const isEmpty: boolean = currently === TablutCase.UNOCCUPIED.value;

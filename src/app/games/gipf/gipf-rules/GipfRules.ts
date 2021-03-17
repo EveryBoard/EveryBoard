@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
@@ -213,7 +213,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const start: Coord = linePortion[0];
         const end: Coord = linePortion[1];
         const dir: Direction = linePortion[2];
-        const oppositeDir: Direction = dir.getOpposite();
+        const oppositeDir: Direction = Direction.factory.oppositeOf(dir);
         for (let cur: Coord = start.getNext(oppositeDir);
             slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY;
             cur = cur.getNext(oppositeDir)) {

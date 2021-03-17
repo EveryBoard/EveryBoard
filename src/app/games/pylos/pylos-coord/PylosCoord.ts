@@ -1,6 +1,6 @@
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 
 export class PylosCoord extends Coord {
     public static encodeOptional(optionalCoord: MGPOptional<PylosCoord>): number {

@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { KamisadoBoard } from '../KamisadoBoard';
 import { KamisadoColor } from '../KamisadoColor';
 import { KamisadoMove } from '../kamisado-move/KamisadoMove';
@@ -220,7 +220,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         }
         //  - all steps between start and end should be empty
         try {
-            const dir: Direction = Direction.fromMove(start, end);
+            const dir: Direction = Direction.factory.fromMove(start, end);
             if (!this.directionAllowedForPlayer(dir, slice.getCurrentPlayer())) {
                 return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
             }

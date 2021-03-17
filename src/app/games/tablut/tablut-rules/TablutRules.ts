@@ -1,4 +1,4 @@
-import { Orthogonal, Direction } from '../../../jscaip/DIRECTION';
+import { Orthogonal, Direction } from '../../../jscaip/Direction';
 import { Rules } from '../../../jscaip/Rules';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
@@ -22,15 +22,15 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
 
     // statics fields :
 
-    public static CASTLE_IS_LEFT_FOR_GOOD = false;
+    public static CASTLE_IS_LEFT_FOR_GOOD: boolean = false;
     // once the king leave the castle he cannot re-station there
-    public static NORMAL_CAPTURE_WORK_ON_THE_KING = false;
+    public static NORMAL_CAPTURE_WORK_ON_THE_KING: boolean = false;
     // king can be capture by only two opposed invaders
-    public static CAPTURE_KING_AGAINST_THRONE_RULES = false;
+    public static CAPTURE_KING_AGAINST_THRONE_RULES: boolean = false;
     // the throne is considered an ennemy to the king
-    public static CAPTURE_PAWN_AGAINST_THRONE_RULES = true;
+    public static CAPTURE_PAWN_AGAINST_THRONE_RULES: boolean = true;
     // the throne is considered an ennemy to the pawn
-    public static THREE_INVADER_AND_A_BORDER_CAN_CAPTURE_KING = true;
+    public static THREE_INVADER_AND_A_BORDER_CAN_CAPTURE_KING: boolean = true;
     // the king can be captured by only three invaders if he's against the corner
 
     // statics methods :
@@ -90,7 +90,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
 
         const dist: number = move.coord.getOrthogonalDistance(move.end);
         let c: Coord = move.coord.getNext(dir); // the inspected coord
-        for (let i = 1; i < dist; i++) {
+        for (let i: number = 1; i < dist; i++) {
             if (board[c.y][c.x] !== TablutCase.UNOCCUPIED.value) {
                 return MGPValidation.failure('something in the way');
             }
@@ -149,7 +149,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
          * - 3 invaders 1 border
          * - 4 invaders
          */
-        const LOCAL_VERBOSE = false;
+        const LOCAL_VERBOSE: boolean = false;
         const kingCoord: Coord = landingPiece.getNext(d);
 
         const {
@@ -238,7 +238,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
          * - 2 ennemies
          * - 1 ennemies 1 empty-throne
          */
-        const LOCAL_VERBOSE = false;
+        const LOCAL_VERBOSE: boolean = false;
 
         const threatenedPieceCoord: Coord = c.getNext(d);
 
@@ -292,7 +292,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         }
     }
     private static isExternalThrone(c: Coord): boolean {
-        const fin = TablutRulesConfig.WIDTH - 1;
+        const fin: number = TablutRulesConfig.WIDTH - 1;
         if (c.x === 0) {
             return (c.y === 0) || (c.y === fin);
         } else if (c.x === fin) {
