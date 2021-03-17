@@ -89,8 +89,12 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
-        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        try {
+            const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
+            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
+        } catch (error) {
+            return this.cancelMove('Votre pièce est déjà sélectionnée, choisissez la case où vous déplacer.');
+        }
     }
     public cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {
