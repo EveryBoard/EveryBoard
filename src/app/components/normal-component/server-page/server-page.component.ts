@@ -77,10 +77,10 @@ export class ServerPageComponent implements OnInit, OnDestroy {
         // const words: number = StringUtils.count(" ") + 1;
         // const readingTime: number = (words*60*1000)/150; // (150 for slow reader facility)
         // const toastTime: number = Math.max(readingTime, 3000); // so at least 3 sec the toast is there
-        this.snackBar.open(msg, 'Ok!', { duration: 3000 });
+        this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
     }
     public messageError(msg: string): void {
-        this.snackBar.open(msg, 'Ok!', { duration: 3000 });
+        this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
     }
     public async createGame(): Promise<void> {
         if (this.canCreateGame()) {
