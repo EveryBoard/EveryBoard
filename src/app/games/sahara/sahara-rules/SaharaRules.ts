@@ -12,6 +12,7 @@ import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { display } from 'src/app/utils/collection-lib/utils';
+import { TriangularGameState } from 'src/app/jscaip/game-state/triangular-game-state/TriangularGameState';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}
 
@@ -25,7 +26,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         const player: Player = node.gamePartSlice.getCurrentPlayer();
         const startingCoords: Coord[] = this.getStartingCoords(board, player);
         for (const start of startingCoords) {
-            const neighboors: Coord[] = this.getEmptyNeighboors(board, start);
+            const neighboors: Coord[] = TriangularGameState.getEmptyNeighboors(board, start, SaharaPawn.EMPTY);
             for (const neighboor of neighboors) {
                 const newMove: SaharaMove = new SaharaMove(start, neighboor);
                 board[neighboor.y][neighboor.x] = board[start.y][start.x];
@@ -36,7 +37,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
 
                 const upwardTriangle: boolean = (neighboor.y + neighboor.x)%2 === 0;
                 if (upwardTriangle) {
-                    const farNeighboors: Coord[] = this.getEmptyNeighboors(board, neighboor);
+                    const farNeighboors: Coord[] =
+                        TriangularGameState.getEmptyNeighboors(board, neighboor, SaharaPawn.EMPTY);
                     for (const farNeighboor of farNeighboors) {
                         if (!farNeighboor.equals(start)) {
                             const farMove: SaharaMove = new SaharaMove(start, farNeighboor);
@@ -59,8 +61,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
     }
     public getStartingCoords(board: SaharaPawn[][], player: Player): Coord[] {
         const startingCoords: Coord[] = [];
-        for (let y = 0; y<SaharaPartSlice.HEIGHT; y++) {
-            for (let x = 0; x<SaharaPartSlice.WIDTH; x++) {
+        for (let y: number = 0; y<SaharaPartSlice.HEIGHT; y++) {
+            for (let x: number = 0; x<SaharaPartSlice.WIDTH; x++) {
                 if (board[y][x] === player.value) {
                     startingCoords.push(new Coord(x, y));
                 }
@@ -68,23 +70,13 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
         }
         return startingCoords;
     }
-    public getEmptyNeighboors(board: SaharaPawn[][], coord: Coord): Coord[] {
-        const neighboors: Coord[] = [];
-        for (const neighboor of TriangularCheckerBoard.getNeighboors(coord)) {
-            if (neighboor.isInRange(SaharaPartSlice.WIDTH, SaharaPartSlice.HEIGHT) &&
-                (board[neighboor.y][neighboor.x] === SaharaPawn.EMPTY)) {
-                neighboors.push(neighboor);
-            }
-        }
-        return neighboors;
-    }
     public getBoardValue(move: SaharaMove, slice: SaharaPartSlice): number {
         const board: SaharaPawn[][] = slice.getCopiedBoard();
         const zeroFreedoms: number[] = this.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = this.getBoardValuesFor(board, Player.ONE);
         if (zeroFreedoms[0] === 0) return Number.MAX_SAFE_INTEGER;
         if (oneFreedoms[0] === 0) return Number.MIN_SAFE_INTEGER;
-        let i = 0;
+        let i: number = 0;
         while (i<6 && zeroFreedoms[i]===oneFreedoms[i]) {
             i++;
         }
@@ -92,13 +84,16 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
     }
     public getBoardValuesFor(board: SaharaPawn[][], player: Player): number[] {
         const playersPiece: Coord[] = this.getStartingCoords(board, player);
-        const playerFreedoms = [];
+        const playerFreedoms: number[] = [];
         for (const piece of playersPiece) {
-            playerFreedoms.push(this.getEmptyNeighboors(board, piece).length);
+            playerFreedoms.push(TriangularGameState.getEmptyNeighboors(board, piece, SaharaPawn.EMPTY).length);
         }
         return playerFreedoms.sort((a: number, b: number) => a-b);
     }
-    public applyLegalMove(move: SaharaMove, slice: SaharaPartSlice, status: LegalityStatus): { resultingMove: SaharaMove; resultingSlice: SaharaPartSlice; } {
+    public applyLegalMove(move: SaharaMove,
+                          slice: SaharaPartSlice,
+                          status: LegalityStatus): { resultingMove: SaharaMove; resultingSlice: SaharaPartSlice; }
+    {
         display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
         const board: SaharaPawn[][] = slice.getCopiedBoard();
         board[move.end.y][move.end.x] = board[move.coord.y][move.coord.x];
