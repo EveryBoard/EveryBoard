@@ -52,7 +52,7 @@ export const gipfDidacticial: DidacticialStep[] = [
             [X, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
             [_, _, _, X, _, _, _],
-        ], GipfPiece.EMPTY, GipfPiece.encoder), 42, [8, 8], [0, 0]),
+        ], [1], _, GipfPiece.encoder), 42, [8, 8], [0, 0]),
         [new GipfMove(
             new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
             [],
@@ -81,7 +81,7 @@ export const gipfDidacticial: DidacticialStep[] = [
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
             [_, _, _, X, _, _, _],
-        ], GipfPiece.EMPTY, GipfPiece.encoder), 42, [8, 4], [2, 3]),
+        ], [1], _, GipfPiece.encoder), 42, [8, 4], [2, 3]),
         [new GipfMove(
             new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
             [],
@@ -113,7 +113,7 @@ export const gipfDidacticial: DidacticialStep[] = [
             [_, _, _, O, _, _, _],
             [O, O, O, X, X, _, _],
             [_, _, _, O, _, _, _],
-        ], GipfPiece.EMPTY, GipfPiece.encoder), 42, [8, 4], [2, 3]),
+        ], [1], _, GipfPiece.encoder), 42, [8, 4], [2, 3]),
         [
             new GipfMove(
                 new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.UP)),

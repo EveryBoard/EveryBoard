@@ -72,5 +72,8 @@ module.exports = {
             'asyncArrow': 'never',
         }],
         'brace-style': ['warn'],
+        'eqeqeq': ['error', 'always', {
+            'null': 'ignore',
+        }],
     },
 };

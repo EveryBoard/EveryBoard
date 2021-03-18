@@ -18,7 +18,7 @@ export class GipfPartSlice extends GamePartSlice {
             [_, _, _, _, _, _, _],
             [X, _, _, O, _, _, _],
         ];
-        const hexaBoard: HexaBoard<GipfPiece> = HexaBoard.fromTable(board, _, GipfPiece.encoder);
+        const hexaBoard: HexaBoard<GipfPiece> = HexaBoard.fromTable(board, [3, 2, 1], _, GipfPiece.encoder);
         return new GipfPartSlice(hexaBoard, 0, [12, 12], [0, 0]);
     }
     public constructor(public hexaBoard: HexaBoard<GipfPiece>,

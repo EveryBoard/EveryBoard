@@ -1,5 +1,5 @@
-import { Coord } from "../coord/Coord";
-import { HexaOrientation } from "./HexaOrientation";
+import { Coord } from '../coord/Coord';
+import { HexaOrientation } from './HexaOrientation';
 
 export class HexaLayout {
     public constructor(public readonly size: number,

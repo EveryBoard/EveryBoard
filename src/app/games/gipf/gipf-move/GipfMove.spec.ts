@@ -31,7 +31,7 @@ describe('GipfCapture', () => {
             expect(capture.toString()).toBe('(-2, 0),(-1, -1),(0, -2),(1, -3)');
         });
     });
-    describe('encoder', () => {
+    xdescribe('encoder', () => {
         it('should correctly encode and decode captures of length 4', () => {
             const capture: GipfCapture = new GipfCapture([
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
@@ -96,9 +96,9 @@ describe('GipfCapture', () => {
     describe('getLine', () => {
         it('should return the line of the capture', () => {
             const capture: GipfCapture = new GipfCapture([
-                new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
+                new Coord(4, 0), new Coord(3, 1), new Coord(2, 2), new Coord(1, 3),
             ]);
-            const line: HexaLine = HexaLine.constantS(2);
+            const line: HexaLine = HexaLine.constantS(4);
             expect(capture.getLine().equals(line)).toBeTrue();
         });
     });
@@ -115,7 +115,7 @@ describe('GipfPlacement', () => {
             expect(placement.toString()).toBe('(-3, 0)@DOWN');
         });
     });
-    describe('encoder', () => {
+    xdescribe('encoder', () => {
         it('should correctly encode and decode placements with a direction', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN));
             expect(GipfPlacement.encoder.decode(GipfPlacement.encoder.encode(placement)).equals(placement)).toBeTrue();
@@ -162,7 +162,7 @@ describe('GipfMove', () => {
             expect(move.toString()).toBe('GipfMove([[(-2, 0),(-1, -1),(0, -2),(1, -3)],[(0, -3),(0, -2),(0, -1),(0, 0),(0, 1)]], (-3, 0)@DOWN, [])');
         });
     });
-    describe('encoder', () => {
+    xdescribe('encoder', () => {
         xit('should correctly encode and decode moves with only a placement', () => {
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
                                                                MGPOptional.of(HexaDirection.DOWN));
