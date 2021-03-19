@@ -1,8 +1,7 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { TablutRules } from '../tablut-rules/TablutRules';
 import { TablutRulesConfig } from '../tablut-rules/TablutRulesConfig';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 
 export class TablutMove extends MoveCoordToCoord {
     public static encode(move: TablutMove): number {
@@ -17,17 +16,17 @@ export class TablutMove extends MoveCoordToCoord {
     }
     public static decode(encodedMove: number): TablutMove {
         // encoded as such : dx; dy; ax; ay
-        const ay = encodedMove % 16;
+        const ay: number = encodedMove % 16;
         encodedMove = encodedMove / 16;
         encodedMove -= encodedMove % 1;
-        const ax = encodedMove % 16;
+        const ax: number = encodedMove % 16;
         const arrive: Coord = new Coord(ax, ay);
         encodedMove = encodedMove / 16;
         encodedMove -= encodedMove % 1;
-        const dy = encodedMove % 16;
+        const dy: number = encodedMove % 16;
         encodedMove = encodedMove / 16;
         encodedMove -= encodedMove % 1;
-        const dx = encodedMove % 16;
+        const dx: number = encodedMove % 16;
         const depart: Coord = new Coord(dx, dy);
         return new TablutMove(depart, arrive);
     }

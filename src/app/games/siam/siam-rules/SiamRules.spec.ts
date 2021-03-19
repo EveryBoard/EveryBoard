@@ -5,7 +5,7 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { SiamLegalityStatus } from '../SiamLegalityStatus';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 describe('SiamRules:', () => {

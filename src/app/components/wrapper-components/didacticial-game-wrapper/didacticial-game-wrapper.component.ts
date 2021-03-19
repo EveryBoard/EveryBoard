@@ -33,7 +33,7 @@ import { tablutDidacticial } from './didacticials/tablut-didacticial';
 })
 export class DidacticialGameWrapperComponent extends GameWrapper implements AfterViewInit {
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public COMPLETED_TUTORIAL_MESSAGE: string = 'Félicitation, vous avez fini le tutoriel.'
 

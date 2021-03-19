@@ -52,7 +52,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     constructor(public snackBar: MatSnackBar) {
     }
     public message: (msg: string) => void = (msg: string) => {
-        this.snackBar.open(msg, 'Ok!', { duration: 3000 });
+        this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
     };
     public cancelMove(reason?: string): MGPValidation {
         this.cancelMoveAttempt();

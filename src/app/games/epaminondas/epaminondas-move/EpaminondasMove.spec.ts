@@ -1,6 +1,5 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { EpaminondasPartSlice } from '../epaminondas-part-slice/EpaminondasPartSlice';
 import { EpaminondasRules } from '../epaminondas-rules/EpaminondasRules';
 import { EpaminondasMove } from './EpaminondasMove';

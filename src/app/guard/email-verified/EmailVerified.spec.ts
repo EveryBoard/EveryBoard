@@ -28,7 +28,7 @@ describe('EmailVerified', () => {
         };
         spyOn(router, 'navigate');
 
-        const authorisation: boolean = guard.canActivate(null, null);
+        const authorisation: boolean = guard.canActivate();
 
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
         expect(authorisation).toBeFalse();
@@ -39,7 +39,7 @@ describe('EmailVerified', () => {
         };
         spyOn(router, 'navigate');
 
-        const authorisation: boolean = guard.canActivate(null, null);
+        const authorisation: boolean = guard.canActivate();
 
         expect(router.navigate).toHaveBeenCalledWith(['/confirm-inscription']);
         expect(authorisation).toBeFalse();
@@ -49,7 +49,7 @@ describe('EmailVerified', () => {
             return { pseudo: 'JeanJaJa Toujours là', verified: true };
         };
 
-        const authorisation: boolean = guard.canActivate(null, null);
+        const authorisation: boolean = guard.canActivate();
 
         expect(authorisation).toBeTrue();
     });

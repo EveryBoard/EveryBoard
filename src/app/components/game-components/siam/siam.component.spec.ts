@@ -13,7 +13,7 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { SiamComponent } from './siam.component';
 import { SiamMove } from 'src/app/games/siam/siam-move/SiamMove';
-import { Direction, Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import {
     expectClickFail, expectClickSuccess, expectMoveSuccess,
@@ -195,7 +195,7 @@ describe('SiamComponent', () => {
 
         await expectClickSuccess('#clickPiece_4_4', testElements);
         const expectations: MoveExpectations = {
-            move: new SiamMove(4, 4, MGPOptional.of(Direction.DOWN), Direction.DOWN),
+            move: new SiamMove(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
             slice: testElements.gameComponent.rules.node.gamePartSlice,
             scoreZero: null, scoreOne: null,
         };

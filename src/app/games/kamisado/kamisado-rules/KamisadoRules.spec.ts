@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { KamisadoColor } from '../KamisadoColor';
 import { KamisadoMove } from '../kamisado-move/KamisadoMove';
 import { KamisadoPartSlice } from '../KamisadoPartSlice';

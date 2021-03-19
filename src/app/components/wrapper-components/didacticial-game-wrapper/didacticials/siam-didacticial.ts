@@ -1,7 +1,7 @@
 import { SiamMove } from 'src/app/games/siam/siam-move/SiamMove';
 import { SiamPiece } from 'src/app/games/siam/siam-piece/SiamPiece';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { DidacticialStep } from '../DidacticialStep';
 

@@ -1,7 +1,7 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
@@ -31,7 +31,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentEnnemy: number = node.gamePartSlice.getCurrentEnnemy().value;
         const verticalCoords: Coord[] = [];
-        for (let y = 0; y < 5; y++) {
+        for (let y: number = 0; y < 5; y++) {
             if (node.gamePartSlice.getBoardByXY(0, y) !== currentEnnemy) {
                 verticalCoords.push(new Coord(0, y));
             }
@@ -44,7 +44,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
     public static getHorizontalCenterCoords(node: QuixoNode): Coord[] {
         const currentEnnemy: number = node.gamePartSlice.getCurrentEnnemy().value;
         const horizontalCenterCoords: Coord[] = [];
-        for (let x = 1; x < 4; x++) {
+        for (let x: number = 1; x < 4; x++) {
             if (node.gamePartSlice.getBoardByXY(x, 0) !== currentEnnemy) {
                 horizontalCenterCoords.push(new Coord(x, 0));
             }
@@ -90,8 +90,8 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
             rows: [0, 0, 0, 0, 0],
             diagonals: [0, 0],
         };
-        for (let y = 0; y < 5; y++) {
-            for (let x = 0; x < 5; x++) {
+        for (let y: number = 0; y < 5; y++) {
+            for (let x: number = 0; x < 5; x++) {
                 const c: number = slice.getBoardByXY(x, y);
                 if (c != Player.NONE.value) {
                     sums[c].columns[x] = sums[c].columns[x] + 1;

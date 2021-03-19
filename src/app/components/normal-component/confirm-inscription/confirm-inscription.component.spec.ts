@@ -25,13 +25,13 @@ describe('ConfirmInscriptionComponent', () => {
                 { provide: AuthenticationService, useValue: authenticationServiceStub },
             ],
         }).compileComponents();
-    });
-    beforeEach(() => {
         fixture = TestBed.createComponent(ConfirmInscriptionComponent);
         component = fixture.componentInstance;
-        fixture.detectChanges();
     });
-    it('should create', () => {
+    it('should create and send notification', () => {
+        spyOn(component.authService, 'sendEmailVerification').and.callFake(async() => {});
+        fixture.detectChanges();
         expect(component).toBeTruthy();
+        expect(component.authService.sendEmailVerification).toHaveBeenCalled();
     });
 });

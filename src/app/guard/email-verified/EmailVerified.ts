@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router } from '@angular/router';
+import { CanActivate, Router } from '@angular/router';
 import { AuthenticationService } from '../../services/authentication/AuthenticationService';
 
 @Injectable({
@@ -8,7 +8,7 @@ import { AuthenticationService } from '../../services/authentication/Authenticat
 export class EmailVerified implements CanActivate {
     constructor(private authService: AuthenticationService, private router : Router) {
     }
-    public canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    public canActivate(): boolean {
         const user: {pseudo: string, verified: boolean} = this.authService.getAuthenticatedUser();
         if (user == null || user.pseudo == null) {
             this.router.navigate(['/login']);

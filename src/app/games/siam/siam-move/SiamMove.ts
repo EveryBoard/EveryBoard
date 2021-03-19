@@ -1,5 +1,5 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 export class SiamMove extends MoveCoord {
@@ -20,10 +20,10 @@ export class SiamMove extends MoveCoord {
         const moveDirectionInt: number = encodedMove % 5;
         const moveDirection: MGPOptional<Orthogonal> = moveDirectionInt === 4 ?
             MGPOptional.empty() :
-            MGPOptional.of(Orthogonal.fromInt(moveDirectionInt));
+            MGPOptional.of(Orthogonal.factory.fromInt(moveDirectionInt));
         encodedMove -= moveDirectionInt;
         encodedMove /= 5;
-        const landingOrientation: Orthogonal = Orthogonal.fromInt(encodedMove);
+        const landingOrientation: Orthogonal = Orthogonal.factory.fromInt(encodedMove);
         return new SiamMove(x - 1, y - 1, moveDirection, landingOrientation);
     }
     constructor(
@@ -36,7 +36,7 @@ export class SiamMove extends MoveCoord {
         if (landingOrientation == null) throw new Error('Landing orientation must be set.');
         this.checkValidity();
     }
-    public checkValidity() {
+    public checkValidity(): void {
         const startedInside: boolean = this.coord.isInRange(5, 5);
         if (this.isRotation()) {
             if (!startedInside) {

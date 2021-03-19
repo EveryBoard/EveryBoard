@@ -12,7 +12,7 @@ import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { EpaminondasMove } from 'src/app/games/epaminondas/epaminondas-move/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/epaminondas-part-slice/EpaminondasPartSlice';
 import { EpaminondasNode } from 'src/app/games/epaminondas/epaminondas-rules/EpaminondasRules';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { LocalGameWrapperComponent }

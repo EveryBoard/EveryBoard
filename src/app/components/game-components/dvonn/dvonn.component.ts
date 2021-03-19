@@ -88,10 +88,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
         }
     }
     public choosePiece(x: number, y: number): MGPValidation {
-        if (this.rules.node.isEndGame()) {
-            // TODO: wtf, should not be needed
-            return this.cancelMove('Cannot choose a piece at the end of the game');
-        }
         const coord: Coord = new Coord(x, y);
         const legal: MGPValidation = this.rules.isMovablePiece(this.rules.node.gamePartSlice, coord);
         if (legal.isSuccess()) {

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 import { Encoder } from 'src/app/jscaip/encoder';
-import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
@@ -20,102 +20,6 @@ export class GipfBoard {
             const y: number = encoded % (GipfBoard.RADIUS*2+1);
             const x: number = (encoded - y) / (GipfBoard.RADIUS*2+1);
             return new Coord(x-GipfBoard.RADIUS, y-GipfBoard.RADIUS);
-        }
-    }
-}
-
-export class GipfLine {
-    public static fromTwoCoords(coord1: Coord, coord2: Coord): MGPOptional<GipfLine> {
-        // Finds the line from the cube coordinates
-        const q1: number = coord1.x;
-        const q2: number = coord2.x;
-
-        const r1: number = coord1.y;
-        const r2: number = coord2.y;
-
-        const s1: number = -q1 - r1;
-        const s2: number = -q2 - r2;
-
-        if (q1 === q2 && r1 !== r2 && s1 !== s2) return MGPOptional.of(GipfLine.constantQ(q1));
-        if (q1 !== q2 && r1 === r2 && s1 !== s2) return MGPOptional.of(GipfLine.constantR(r1));
-        if (q1 !== q2 && r1 !== r2 && s1 === s2) return MGPOptional.of(GipfLine.constantS(s1));
-
-        return MGPOptional.empty();
-    }
-    public static allLines(): ReadonlyArray<GipfLine> {
-        const lines: GipfLine[] = [];
-        for (let i: number = -GipfBoard.RADIUS; i <= GipfBoard.RADIUS; i++) {
-            lines.push(GipfLine.constantQ(i));
-            lines.push(GipfLine.constantR(i));
-            lines.push(GipfLine.constantS(i));
-        }
-        return lines;
-    }
-
-    public static constantQ(offset: number): GipfLine {
-        return new GipfLine(offset, 'q');
-    }
-
-    public static constantR(offset: number): GipfLine {
-        return new GipfLine(offset, 'r');
-    }
-
-    public static constantS(offset: number): GipfLine {
-        return new GipfLine(offset, 's');
-    }
-
-    public static areOnSameLine(coords: ReadonlyArray<Coord>): boolean {
-        if (coords.length < 2) return true;
-        const lineOpt: MGPOptional<GipfLine> = GipfLine.fromTwoCoords(coords[0], coords[1]);
-        if (lineOpt.isAbsent()) return false;
-        const line: GipfLine = lineOpt.get();
-
-        for (const coord of coords.slice(2)) {
-            if (line.contains(coord) === false) return false;
-        }
-        return true;
-    }
-
-    private constructor(private readonly offset: number,
-                       private readonly constant: 'q' | 'r' | 's') {
-    }
-
-    public equals(other: GipfLine): boolean {
-        if (this === other) return true;
-        if (this.offset !== other.offset) return false;
-        if (this.constant !== other.constant) return false;
-        return true;
-    }
-
-    public contains(coord: Coord): boolean {
-        switch (this.constant) {
-            case 'q':
-                return coord.x === this.offset;
-            case 'r':
-                return coord.y === this.offset;
-            case 's':
-                return -coord.x - coord.y === this.offset;
-        }
-    }
-    public getEntrance(): Coord {
-        const radius: number = 3;
-        switch (this.constant) {
-            case 'q':
-                return new Coord(this.offset, Math.max(-radius, -this.offset - radius));
-            case 'r':
-                return new Coord(Math.max(-radius, -this.offset - radius), this.offset);
-            case 's':
-                return new Coord(Math.min(radius, -this.offset + radius), Math.max(-radius, -this.offset - radius));
-        }
-    }
-    public getDirection(): Direction {
-        switch (this.constant) {
-            case 'q':
-                return HexaDirection.DOWN;
-            case 'r':
-                return HexaDirection.DOWN_RIGHT;
-            case 's':
-                return HexaDirection.DOWN_LEFT;
         }
     }
 }
@@ -145,7 +49,7 @@ export class GipfCapture {
         if (captured.length < 4) {
             throw new Error('Cannot create a GipfCapture with less than 4 captured pieces');
         }
-        if (GipfLine.areOnSameLine(captured) === false) {
+        if (HexaLine.areOnSameLine(captured) === false) {
             throw new Error('Cannot create a GipfCapture with pieces that are not on the same line');
         }
         this.capturedCases = ArrayUtils.copyImmutableArray(captured).sort((coord1: Coord, coord2: Coord) => {
@@ -158,6 +62,16 @@ export class GipfCapture {
                 return coord1.x > coord2.x ? 1 : -1;
             }
         });
+    }
+    public toString(): string {
+        let str: string = '';
+        for (const coord of this.capturedCases) {
+            if (str !== '') {
+                str += ',';
+            }
+            str += coord.toString();
+        }
+        return str;
     }
     public size(): number {
         return this.capturedCases.length;
@@ -178,8 +92,8 @@ export class GipfCapture {
             return capture.contains(coord);
         });
     }
-    public getLine(): GipfLine {
-        const line: MGPOptional<GipfLine> = GipfLine.fromTwoCoords(this.capturedCases[0], this.capturedCases[1]);
+    public getLine(): HexaLine {
+        const line: MGPOptional<HexaLine> = HexaLine.fromTwoCoords(this.capturedCases[0], this.capturedCases[1]);
         // Invariant: all captured pieces are on the same line, hence we can safely call .get()
         return line.get();
     }
@@ -227,7 +141,13 @@ export class GipfPlacement {
     public constructor(public readonly coord: Coord,
                        public readonly direction: MGPOptional<Direction>) {
     }
-
+    public toString(): string {
+        if (this.direction.isPresent()) {
+            return this.coord.toString() + '@' + this.direction.get().toString();
+        } else {
+            return this.coord.toString();
+        }
+    }
     public equals(other: GipfPlacement): boolean {
         if (!this.coord.equals(other.coord)) return false;
         const cmpDir: (x: Direction, y: Direction) => boolean = (x: Direction, y: Direction): boolean => {
@@ -271,7 +191,20 @@ export class GipfMove extends Move {
         super();
     }
     public toString(): string {
-        return 'GipfMove'; // TODO
+        return 'GipfMove([' +
+            this.capturesToString(this.initialCaptures) + '], ' +
+            this.placement.toString() + ', [' +
+            this.capturesToString(this.finalCaptures) + '])';
+    }
+    private capturesToString(captures: ReadonlyArray<GipfCapture>): string {
+        let str: string = '';
+        for (const capture of captures) {
+            if (str !== '') {
+                str += ',';
+            }
+            str += '[' + capture.toString() + ']';
+        }
+        return str;
     }
     public equals(other: GipfMove): boolean {
         if (this === other) return true;

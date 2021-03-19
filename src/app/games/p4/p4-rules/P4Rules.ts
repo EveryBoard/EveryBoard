@@ -1,4 +1,4 @@
-import { Direction } from '../../../jscaip/DIRECTION';
+import { Direction } from '../../../jscaip/Direction';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { Rules } from '../../../jscaip/Rules';
 import { SCORE } from '../../../jscaip/SCORE';
@@ -8,7 +8,7 @@ import { P4PartSlice } from '../P4PartSlice';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { assert, display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from '../P4Move';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
@@ -87,19 +87,15 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
         }
         return [freeSpaces, allies];
     }
-    public static getEnnemy(board: NumberTable, coord: Coord): number {
+    private static getEnnemy(board: NumberTable, coord: Coord): number {
         const c: number = board[coord.y][coord.x];
-        return (c === Player.NONE.value) ? Player.NONE.value :
-            ((c === Player.ONE.value) ? Player.ZERO.value :
-                Player.ONE.value);
+        assert(c !== Player.NONE.value, 'getEnnemy should not be called with Player.NONE');
+        return (c === Player.ONE.value) ? Player.ZERO.value : Player.ONE.value;
     }
     public static getCaseScore(board: NumberTable, c: Coord): number {
         display(P4Rules.VERBOSE, 'getCaseScore(board, ' + c.x + ', ' + c.y + ') appellée');
         display(P4Rules.VERBOSE, board);
-
-        if (board[c.y][c.x] === Player.NONE.value) {
-            throw new Error('cannot call getCaseScore on empty case');
-        }
+        assert(board[c.y][c.x] !== Player.NONE.value, 'getCaseScore should not be called on an empty case');
 
         let score: number = 0; // final result, count the theoretical victorys possibility
 
@@ -117,7 +113,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
 
         for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
             // for each pair of opposite directions
-            const lineAllies: number = alliesByDirs.get(dir) + alliesByDirs.get(dir.getOpposite());
+            const lineAllies: number = alliesByDirs.get(dir) + alliesByDirs.get(Direction.factory.oppositeOf(dir));
             if (lineAllies > 2) {
                 display(P4Rules.VERBOSE, { text:
                     'there is some kind of victory here (' + c.x + ', ' + c.y + ')' + '\n' +
@@ -127,7 +123,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
                 return P4Rules.winForPlayer(ally);
             }
 
-            const lineDist: number = distByDirs.get(dir) + distByDirs.get(dir.getOpposite());
+            const lineDist: number = distByDirs.get(dir) + distByDirs.get(Direction.factory.oppositeOf(dir));
             if (lineDist >= 3) {
                 score += lineDist - 2;
             }

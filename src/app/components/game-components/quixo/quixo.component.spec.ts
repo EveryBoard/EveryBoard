@@ -12,7 +12,7 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { QuixoComponent } from './quixo.component';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
-import { Orthogonal } from 'src/app/jscaip/DIRECTION';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GameComponentUtils } from '../GameComponentUtils';

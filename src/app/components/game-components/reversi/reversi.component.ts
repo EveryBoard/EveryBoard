@@ -8,7 +8,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Player } from 'src/app/jscaip/player/Player';
-import { Direction } from 'src/app/jscaip/DIRECTION';
+import { Direction } from 'src/app/jscaip/Direction';
 
 @Component({
     selector: 'app-reversi',
