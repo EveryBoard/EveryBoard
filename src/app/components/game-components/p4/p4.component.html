@@ -4,12 +4,14 @@
       preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let y of [0, 1, 2, 3, 4, 5]">
         <g *ngFor="let currentCase of board[y]; index as x;">
-            <circle [attr.cx]="5 + CASE_SIZE * x + (CASE_SIZE/2)"
-                    [attr.cy]="5 + 5*CASE_SIZE - CASE_SIZE * y + (CASE_SIZE/2)"
-                    [attr.r]="(CASE_SIZE-2)/2"
+            <circle [attr.cx]="(CASE_SIZE * x) + (CASE_SIZE / 2)"
+                    [attr.cy]="(CASE_SIZE * y) + (CASE_SIZE / 2)"
+                    [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
                     [ngStyle]="getCaseStyle(x, y)"
+                    [attr.stroke-width]="STROKE_WIDTH"
                     pointer-events="fill"
-                    (click)="onClick(x)" />
+                    (click)="onClick(x)"
+            />
         </g>
     </g>
 </svg>

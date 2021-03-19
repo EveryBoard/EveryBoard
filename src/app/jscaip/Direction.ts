@@ -16,11 +16,10 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
     public fromDelta(dx: number, dy: number): T {
         if (dx === 0 && dy === 0) {
             throw new Error('Invalid direction from static move');
-        } else if (dx === 0) {
-            return this.of(0, Math.sign(dy));
-        } else if (dy === 0) {
-            return this.of(Math.sign(dx), 0);
-        } else if (Math.abs(dx) === Math.abs(dy)) {
+        } else if (Math.abs(dx) === Math.abs(dy) ||
+                   dx === 0 ||
+                   dy === 0)
+        {
             return this.of(Math.sign(dx), Math.sign(dy));
         }
         throw new Error('Invalid direction from delta dx:' + dx + ', dy:' + dy);

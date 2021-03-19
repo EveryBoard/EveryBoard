@@ -16,7 +16,8 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
     public static VERBOSE: boolean = false;
 
     public EMPTY_CASE: number = Player.NONE.value;
-    public CASE_SIZE: number = 50;
+    public CASE_SIZE: number = 100;
+    public STROKE_WIDTH: number = 8;
     public rules: P4Rules = new P4Rules(P4PartSlice);
     private lastX: number;
 
@@ -41,7 +42,6 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
     }
     public getCaseStyle(x: number, y: number): {[key:string]: string} {
         return {
-            'stroke-width': '2',
             'fill': this.getCaseFill(this.board[y][x]),
             'stroke': this.lastX === x ? 'yellow' : 'black',
         };
