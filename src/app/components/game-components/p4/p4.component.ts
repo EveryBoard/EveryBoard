@@ -21,7 +21,6 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
     private lastX: number;
 
     public async onClick(x: number): Promise<MGPValidation> {
-        console.log(x);
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());

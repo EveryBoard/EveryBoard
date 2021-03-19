@@ -33,7 +33,6 @@ class AuthenticationServiceMock {
         }
     }
     public async doRegister(): Promise<void> {
-        console.log('did register');
         return;
     }
 }

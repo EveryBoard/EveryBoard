@@ -29,6 +29,5 @@ describe('CoerceoMove', () => {
         });
     });
     describe('fromTilesExchange', () => {
-
     });
 });
