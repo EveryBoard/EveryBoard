@@ -11,9 +11,9 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
 export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
-    public static GET_BOARD_VALUE_CALL_COUNT = 0; // TODO: Remove, useless
+    public static GET_BOARD_VALUE_CALL_COUNT: number = 0;
 
-    public static GET_LIST_MOVES_CALL_COUNT = 0; // TODO: Remove, useless
+    public static GET_LIST_MOVES_CALL_COUNT: number = 0;
 
     public static VERBOSE: boolean = false;
 

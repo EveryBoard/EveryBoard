@@ -1,20 +1,21 @@
-import { Direction } from '../Direction';
+import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { Comparable } from '../../utils/collection-lib/Comparable';
 
 export class Coord implements Comparable {
+
     public static getBinarised(n: number): -1 | 0 | 1 {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
         if (n < 0) return -1;
         if (n === 0) return 0;
         return 1;
     }
-    constructor(
-        public readonly x: number,
-        public readonly y: number) {
+    constructor(public readonly x: number,
+                public readonly y: number)
+    {
         if (x == null) throw new Error('X cannot be null.');
         if (y == null) throw new Error('Y cannot be null.');
     }
-    public getNext(dir: Direction, distance?: number): Coord {
+    public getNext(dir: Vector, distance?: number): Coord {
         // return the next coord in the direction 'dir'
         distance = distance == null ? 1 : distance;
         const newX: number = this.x + (distance * dir.x);

@@ -8,6 +8,7 @@ import { SaharaPawn } from '../SaharaPawn';
 import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 describe('SaharaRules', () => {
+
     let rules: SaharaRules;
 
     beforeAll(() => {
@@ -35,16 +36,18 @@ describe('SaharaRules', () => {
         expect(moves.size()).toBe(12);
     });
     it('TriangularCheckerBoard should always give 3 neighboors', () => {
-        for (let y=0; y<SaharaPartSlice.HEIGHT; y++) {
-            for (let x=0; x<SaharaPartSlice.WIDTH; x++) {
+        for (let y: number = 0; y < SaharaPartSlice.HEIGHT; y++) {
+            for (let x: number = 0; x < SaharaPartSlice.WIDTH; x++) {
                 expect(TriangularCheckerBoard.getNeighboors(new Coord(x, y)).length).toBe(3);
             }
         }
     });
     it('Shortest victory simulation', () => {
         expect(rules.choose(new SaharaMove(new Coord(0, 3), new Coord(1, 4)))).toBeTrue();
-        expect(rules.node.gamePartSlice.getBoardAt(new Coord(1, 4))).toBe(SaharaPawn.BLACK, 'Just moved black piece should be in her landing spot');
-        expect(rules.node.gamePartSlice.getBoardAt(new Coord(0, 3))).toBe(SaharaPawn.EMPTY, 'Just moved black piece should have left her initial spot');
+        expect(rules.node.gamePartSlice.getBoardAt(new Coord(1, 4)))
+            .toBe(SaharaPawn.BLACK, 'Just moved black piece should be in her landing spot');
+        expect(rules.node.gamePartSlice.getBoardAt(new Coord(0, 3)))
+            .toBe(SaharaPawn.EMPTY, 'Just moved black piece should have left her initial spot');
         expect(rules.choose(new SaharaMove(new Coord(3, 0), new Coord(4, 0)))).toBeTrue();
         expect(rules.choose(new SaharaMove(new Coord(1, 4), new Coord(2, 4)))).toBeTrue();
         expect(rules.node.ownValue).toBe(Number.MIN_SAFE_INTEGER, 'Should be victory');

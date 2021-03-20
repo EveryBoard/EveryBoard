@@ -1,6 +1,11 @@
 import { Coord } from './coord/Coord';
 import { Encoder } from './encoder';
 
+export class Vector {
+    // Since it's not a coord and not a direction, what should we do to name thing correctly and avoid code overlap ?
+    public constructor(public readonly x: number,
+                       public readonly y: number) {}
+}
 abstract class AbstractDirection {
     public readonly x: -1|0|1;
     public readonly y: -1|0|1;
@@ -11,11 +16,10 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
     public fromDelta(dx: number, dy: number): T {
         if (dx === 0 && dy === 0) {
             throw new Error('Invalid direction from static move');
-        } else if (dx === 0) {
-            return this.of(0, Math.sign(dy));
-        } else if (dy === 0) {
-            return this.of(Math.sign(dx), 0);
-        } else if (Math.abs(dx) === Math.abs(dy)) {
+        } else if (Math.abs(dx) === Math.abs(dy) ||
+                   dx === 0 ||
+                   dy === 0)
+        {
             return this.of(Math.sign(dx), Math.sign(dy));
         }
         throw new Error('Invalid direction from delta dx:' + dx + ', dy:' + dy);
