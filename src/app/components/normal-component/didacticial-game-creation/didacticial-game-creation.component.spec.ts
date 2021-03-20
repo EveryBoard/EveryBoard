@@ -1,4 +1,4 @@
-import { DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { Router } from '@angular/router';
@@ -27,7 +27,12 @@ describe('DidacticialGameCreationComponent', () => {
     };
     beforeEach(async() => {
         await TestBed.configureTestingModule({
-            declarations: [DidacticialGameCreationComponent],
+            declarations: [
+                DidacticialGameCreationComponent,
+            ],
+            schemas: [
+                CUSTOM_ELEMENTS_SCHEMA,
+            ],
             providers: [
                 { provide: Router, useClass: RouterMock },
             ],

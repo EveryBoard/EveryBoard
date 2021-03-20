@@ -103,6 +103,7 @@ const routes: Route [] = [
         GameIncluderComponent,
         ConfirmInscriptionComponent,
         LocalGameCreationComponent,
+        OnlineGameCreationComponent,
         DidacticialGameCreationComponent,
 
         AwaleComponent,
