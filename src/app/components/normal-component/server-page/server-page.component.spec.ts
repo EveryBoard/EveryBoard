@@ -46,7 +46,6 @@ class RouterMock {
         return true;
     }
 }
-
 describe('ServerPageComponent', () => {
     let component: ServerPageComponent;
 
@@ -90,7 +89,7 @@ describe('ServerPageComponent', () => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null };
         AuthenticationServiceMock.IS_USER_LOGGED = null;
     });
-    it('1. should create', fakeAsync(async() => {
+    it('should create', fakeAsync(async() => {
         expect(component).toBeTruthy();
 
         component.ngOnInit();
@@ -98,7 +97,7 @@ describe('ServerPageComponent', () => {
         expect(component['userNameSub']).toBeDefined(); // This is inspecting a private field (TODO: clean)
         flush();
     }));
-    it('2. should subscribe to three observable on init', fakeAsync(async() => {
+    it('should subscribe to three observable on init', fakeAsync(async() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
         expect(component.userName).toBeUndefined();
         spyOn(authenticationService, 'getJoueurObs').and.callThrough();
@@ -116,12 +115,12 @@ describe('ServerPageComponent', () => {
         expect(gameService.getActivesPartsObs).toHaveBeenCalledTimes(1);
         expect(userService.getActivesUsersObs).toHaveBeenCalledTimes(1);
     }));
-    it('3. isUserLogged should delegate to authService', fakeAsync(async() => {
+    it('isUserLogged should delegate to authService', fakeAsync(async() => {
         const isUserLogged: jasmine.Spy = spyOn(authenticationService, 'isUserLogged');
         component.isUserLogged();
         expect(isUserLogged).toHaveBeenCalledTimes(1);
     }));
-    it('4. should be legal for any logged user to create game when there is none', fakeAsync(async() => {
+    it('should be legal for any logged user to create game when there is none', fakeAsync(async() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
         AuthenticationServiceMock.IS_USER_LOGGED = true;
 
@@ -129,15 +128,7 @@ describe('ServerPageComponent', () => {
 
         expect(component.canCreateGame()).toBeTrue();
     }));
-    it('5. should be illegal for unlogged user to create game', fakeAsync(async() => {
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null };
-        AuthenticationServiceMock.IS_USER_LOGGED = false;
-
-        component.ngOnInit();
-
-        expect(component.canCreateGame()).toBeFalse();
-    }));
-    it('6. should be illegal to create game for a player already in game', fakeAsync(async() => {
+    it('should be illegal to create game for a player already in game', fakeAsync(async() => {
         // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
         AuthenticationServiceMock.IS_USER_LOGGED = true;
@@ -157,7 +148,7 @@ describe('ServerPageComponent', () => {
         expect(component.canCreateGame()).toBeFalse();
         flush();
     }));
-    it('7. Should be legal for unlogged user to create local game', fakeAsync(async() => {
+    it('Should be legal for unlogged user to create local game', fakeAsync(async() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null };
         AuthenticationServiceMock.IS_USER_LOGGED = false;
         spyOn(component.router, 'navigate').and.callThrough();

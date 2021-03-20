@@ -1,0 +1,8 @@
+<app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
+<input id="playOnline"
+       type="button"
+       [disabled]="!selectedGame"
+       value="Créer partie en ligne"
+       (click)="createGame()"
+       class="btn btn-primary btn-block"
+>

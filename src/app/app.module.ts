@@ -32,12 +32,22 @@ import { PickGameComponent } from './components/normal-component/pick-game/pick-
 import { PartCreationComponent } from './components/normal-component/part-creation/part-creation.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
-import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { DidacticialGameWrapperComponent } from './components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
+import { OnlineGameWrapperComponent }
+    from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { LocalGameWrapperComponent }
+    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { DidacticialGameWrapperComponent }
+    from './components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
 import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
-import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
+import { ConfirmInscriptionComponent }
+    from './components/normal-component/confirm-inscription/confirm-inscription.component';
+import { LocalGameCreationComponent }
+    from './components/normal-component/local-game-creation/local-game-creation.component';
+import { OnlineGameCreationComponent }
+    from './components/normal-component/online-game-creation/online-game-creation.component';
+import { DidacticialGameCreationComponent }
+    from './components/normal-component/didacticial-game-creation/didacticial-game-creation.component';
 
 import { AwaleComponent } from './components/game-components/awale/awale.component';
 import { DvonnComponent } from './components/game-components/dvonn/dvonn.component';
@@ -65,8 +75,11 @@ const routes: Route [] = [
     { path: 'inscription', component: InscriptionComponent },
     { path: 'confirm-inscription', component: ConfirmInscriptionComponent, canActivate: [MustVerifyEmail] },
 
+    { path: 'play', component: OnlineGameCreationComponent, canActivate: [EmailVerified] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
+    { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
+    { path: 'didacticial', component: DidacticialGameCreationComponent },
     { path: 'didacticial/:compo', component: DidacticialGameWrapperComponent },
     { path: '', component: WelcomeComponent },
     { path: '**', component: WelcomeComponent },
@@ -89,6 +102,8 @@ const routes: Route [] = [
         DidacticialGameWrapperComponent,
         GameIncluderComponent,
         ConfirmInscriptionComponent,
+        LocalGameCreationComponent,
+        DidacticialGameCreationComponent,
 
         AwaleComponent,
         DvonnComponent,

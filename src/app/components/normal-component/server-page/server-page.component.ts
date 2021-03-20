@@ -43,16 +43,16 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
         this.userNameSub = this.authenticationService.getJoueurObs()
-            .subscribe((joueur) => {
+            .subscribe((joueur: { pseudo: string, verified: boolean }) => {
                 if (joueur == null) this.userName = null;
                 else this.userName = joueur.pseudo;
             });
         this.activesPartsSub = this.gameService.getActivesPartsObs()
-            .subscribe((activesParts) => {
+            .subscribe((activesParts: ICurrentPartId[]) => {
                 this.activesParts = activesParts;
             });
         this.activesUsersSub = this.userService.getActivesUsersObs()
-            .subscribe((activesUsers) => {
+            .subscribe((activesUsers: IJoueurId[]) => {
                 this.activesUsers = activesUsers;
             });
     }
@@ -88,13 +88,11 @@ export class ServerPageComponent implements OnInit, OnDestroy {
             // create Part and Joiner
             this.router.navigate(['/play/' + this.selectedGame, gameId]);
         } else {
-            this.messageError('Vous devez vous connecter pour créer une partie'); // TODO: redirect vers la connexion
+            this.messageError('Vous avez déjà une partie en cours. Terminez là ou annulez là d\'abord!');
+            this.router.navigate(['/server']);
         }
     }
     public canCreateGame(): boolean {
-        if (!this.isUserLogged()) {
-            return false;
-        }
         let i: number = 0;
         let found: boolean = false;
         let playerZero: string;
