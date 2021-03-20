@@ -41,7 +41,8 @@ export class GameService {
     }
 
     protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
-        display(GameService.VERBOSE, 'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer);
+        display(GameService.VERBOSE,
+                'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer + ')');
 
         const newPart: ICurrentPart = {
             listMoves: [],
@@ -77,7 +78,7 @@ export class GameService {
         this.activesPartsService.startObserving();
         return this.activesPartsService.activesPartsObs;
     }
-    public unSubFromActivesPartsObs() {
+    public unSubFromActivesPartsObs(): void {
         display(GameService.VERBOSE, 'GameService.unSubFromActivesPartsObs()');
 
         this.activesPartsService.stopObserving();
@@ -104,7 +105,7 @@ export class GameService {
             firstPlayer = joiner.creator;
             secondPlayer = joiner.chosenPlayer;
         }
-        const modification = {
+        const modification: PICurrentPart = {
             playerZero: firstPlayer,
             playerOne: secondPlayer,
             turn: 0,
@@ -132,7 +133,7 @@ export class GameService {
             playerZero = joiner.creator;
             playerOne = joiner.chosenPlayer;
         }
-        const modification = {
+        const modification: PICurrentPart = {
             playerZero,
             playerOne,
             turn: 0,
@@ -149,21 +150,21 @@ export class GameService {
         return this.partDao.delete(partId);
     }
     public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.acceptConfig(' + partId + ', ' + JSON.stringify(joiner) + ') + tmp partStatus: ' + joiner.partStatus);
+        display(GameService.VERBOSE, { gameService_acceptConfig: { partId, joiner } });
 
         await this.joinerService.acceptConfig();
         return this.startGameWithConfig(partId, joiner);
     }
     // on OnlineGame Component
 
-    public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void) {
+    public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void): void {
         if (this.followedPartId == null) {
             display(GameService.VERBOSE, '[start watching part ' + partId);
 
             this.followedPartId = partId;
             this.followedPartObs = this.partDao.getObsById(partId);
             this.followedPartSub = this.followedPartObs
-                .subscribe((onFullFilled) => callback(onFullFilled));
+                .subscribe((onFullFilled: ICurrentPartId) => callback(onFullFilled));
         } else {
             throw new Error('GameService.startObserving should not be called while already observing a game');
         }
@@ -183,7 +184,8 @@ export class GameService {
         });
     }
     public proposeRematch(partId: string, observerRole: 0 | 1): Promise<void> {
-        const code: RequestCode = observerRole === 0 ? RequestCode.ZERO_PROPOSED_REMATCH : RequestCode.ONE_PROPOSED_REMATCH;
+        const code: RequestCode =
+            observerRole === 0 ? RequestCode.ZERO_PROPOSED_REMATCH : RequestCode.ONE_PROPOSED_REMATCH;
         return this.partDao.update(partId, code.toInterface());
     }
     public async acceptRematch(part: ICurrentPartId): Promise<void> {
@@ -226,7 +228,8 @@ export class GameService {
         notifyDraw?: boolean,
         winner?: string,
     ): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.updateDBBoard(' + encodedMove + ', ' + scorePlayerZero + ', ' + scorePlayerOne + ', ' + partId + ')');
+        display(GameService.VERBOSE, { gameService_updateDBBoard: {
+            partId, encodedMove, scorePlayerZero, scorePlayerOne, notifyDraw, winner } });
 
         const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
@@ -293,7 +296,7 @@ export class GameService {
             request,
         });
     }
-    public stopObserving() {
+    public stopObserving(): void {
         display(GameService.VERBOSE, 'GameService.stopObserving();');
 
         if (this.followedPartId == null) {
