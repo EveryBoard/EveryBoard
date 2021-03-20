@@ -9,7 +9,7 @@ import { GipfRules, GipfFailure } from 'src/app/games/gipf/gipf-rules/GipfRules'
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
-import { HexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
+import { FlatHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
@@ -52,7 +52,8 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     public currentlyMoved: Coord[] = [];
 
     public hexaLayout: HexaLayout =
-        new HexaLayout(GipfComponent.PIECE_SIZE * 1.50, new Coord(300, 300), HexaOrientation.FLAT);
+        new HexaLayout(GipfComponent.PIECE_SIZE * 1.50,
+                       new Coord(GipfComponent.PIECE_SIZE * 2, 0), FlatHexaOrientation.INSTANCE);
 
     private static PHASE_INITIAL_CAPTURE: number = 0;
     private static PHASE_PLACEMENT_COORD: number = 1;

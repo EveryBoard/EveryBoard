@@ -5,24 +5,7 @@ import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-
-export class GipfBoard {
-    public static RADIUS: number = 3;
-    public static coordEncoder: Encoder<Coord> = new class extends Encoder<Coord> {
-        public maxValue(): number {
-            return (GipfBoard.RADIUS*2) * (GipfBoard.RADIUS*2+1) + (GipfBoard.RADIUS*2);
-        }
-        public encode(coord: Coord): number {
-            // assertion: (Math.abs(coord.x) > GipfBoard.RADIUS || Math.abs(coord.y) > GipfBoard.RADIUS) {
-            return (coord.x+GipfBoard.RADIUS) * (GipfBoard.RADIUS*2+1) + (coord.y+GipfBoard.RADIUS);
-        }
-        public decode(encoded: number): Coord {
-            const y: number = encoded % (GipfBoard.RADIUS*2+1);
-            const x: number = (encoded - y) / (GipfBoard.RADIUS*2+1);
-            return new Coord(x-GipfBoard.RADIUS, y-GipfBoard.RADIUS);
-        }
-    }
-}
+import { GipfBoard } from './GipfBoard';
 
 export class GipfCapture {
     private static coordsEncoder: Encoder<ReadonlyArray<Coord>> =

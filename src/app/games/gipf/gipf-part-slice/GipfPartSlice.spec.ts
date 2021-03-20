@@ -50,7 +50,7 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ], [1], _, GipfPiece.encoder);
             const slice: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 0]);
             expect(slice.equals(slice)).toBeTrue();
         });
@@ -63,7 +63,7 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ], [1], _, GipfPiece.encoder);
             const slice1: GipfPartSlice = new GipfPartSlice(board1, 6, [5, 5], [0, 0]);
 
             const board2: HexaBoard<GipfPiece> = HexaBoard.fromTable([
@@ -74,7 +74,7 @@ describe('GipfPartSlice', () => {
                 [A, _, _, B, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, A, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ], [1], _, GipfPiece.encoder);
             const slice2: GipfPartSlice = new GipfPartSlice(board2, 6, [5, 5], [0, 0]);
             expect(slice1.equals(slice2)).toBeFalse();
         });
@@ -87,7 +87,7 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ], [1], _, GipfPiece.encoder);
             const slice1: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 0]);
             const slice2: GipfPartSlice = new GipfPartSlice(board, 6, [5, 5], [0, 0]);
             expect(slice1.equals(slice2)).toBeFalse();
@@ -101,7 +101,7 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ], [1], _, GipfPiece.encoder);
             const slice1: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 0]);
             const slice2: GipfPartSlice = new GipfPartSlice(board, 5, [5, 6], [0, 0]);
             expect(slice1.equals(slice2)).toBeFalse();
@@ -117,7 +117,7 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ], [1], _, GipfPiece.encoder);
             const slice1: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 0]);
             const slice2: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 1]);
             expect(slice1.equals(slice2)).toBeFalse();
