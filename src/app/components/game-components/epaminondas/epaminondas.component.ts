@@ -123,7 +123,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         const forward: Coord = this.lastPiece.getNext(direction, 1);
         const extensionForward: Coord[] = this.getExtensionsToward(forward, direction, PLAYER);
 
-        direction = Direction.factory.oppositeOf(direction);
+        direction = direction.getOpposite();
         const backWard: Coord = this.firstPiece.getNext(direction, 1);
         const extensionsBackward: Coord[] = this.getExtensionsToward(backWard, direction, PLAYER);
         return extensionForward.concat(extensionsBackward);
@@ -149,7 +149,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             const landingForward: Coord = this.lastPiece.getNext(direction, 1);
             const landingsForward: Coord[] = this.getLandingsToward(landingForward, direction, phalanxSize);
 
-            direction = Direction.factory.oppositeOf(direction);
+            direction = direction.getOpposite();
             const landingBackward: Coord = this.firstPiece.getNext(direction, 1);
             const landingsBackward: Coord[] = this.getLandingsToward(landingBackward, direction, phalanxSize);
             return landingsBackward.concat(landingsForward);
@@ -258,7 +258,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         }
         let phalanxDirection: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece);
         const phalanxLanding: Direction = Direction.factory.fromMove(this.firstPiece, clicked);
-        if (phalanxDirection === Direction.factory.oppositeOf(phalanxLanding)) {
+        if (phalanxDirection === phalanxLanding.getOpposite()) {
             const firstPiece: Coord = this.firstPiece;
             this.firstPiece = this.lastPiece;
             this.lastPiece = firstPiece;

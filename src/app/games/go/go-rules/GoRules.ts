@@ -123,7 +123,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         return captureState;
     }
-    public static getCapturedInDirection(coord: Coord, direction: Direction, slice: GoPartSlice): Coord[] {
+    public static getCapturedInDirection(coord: Coord, direction: Orthogonal, slice: GoPartSlice): Coord[] {
         const LOCAL_VERBOSE: boolean = false;
         const copiedBoard: GoPiece[][] = slice.getCopiedBoardGoPiece();
         const neightbooringCoord: Coord = coord.getNext(direction);

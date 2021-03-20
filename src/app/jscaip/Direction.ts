@@ -6,13 +6,21 @@ export class Vector {
     public constructor(public readonly x: number,
                        public readonly y: number) {}
 }
-abstract class AbstractDirection {
+
+abstract class AbstractDirection extends Vector {
     public readonly x: -1|0|1;
     public readonly y: -1|0|1;
 }
 
 export abstract class DirectionFactory<T extends AbstractDirection> {
-    public abstract of(x: number, y: number): T;
+    public abstract all: ReadonlyArray<T>;
+    public of(x: number, y: number): T {
+        for (const dir of this.all) {
+            if (dir.x === x && dir.y === y) return dir;
+        }
+        throw new Error('Invalid direction');
+    }
+
     public fromDelta(dx: number, dy: number): T {
         if (dx === 0 && dy === 0) {
             throw new Error('Invalid direction from static move');
@@ -53,17 +61,11 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
             default: throw new Error('No Direction matching int ' + int);
         }
     }
-    public oppositeOf(dir: T): T {
-        return this.of(-dir.x, -dir.y);
-    }
 }
 
 export abstract class BaseDirection {
     public readonly x: 0|1|-1;
     public readonly y: 0|1|-1;
-    public isDiagonal(): boolean {
-        return (this.x !== 0) && (this.y !== 0);
-    }
     public isDown(): boolean {
         return this.y === 1;
     }
@@ -112,30 +114,20 @@ export class Direction extends BaseDirection {
     public static readonly DOWN_LEFT: Direction = new Direction(-1, 1);
     public static readonly LEFT: Direction = new Direction(-1, 0);
     public static readonly UP_LEFT: Direction = new Direction(-1, -1);
-    public static readonly DIRECTIONS: ReadonlyArray<Direction> = [
-        Direction.UP,
-        Direction.UP_RIGHT,
-        Direction.RIGHT,
-        Direction.DOWN_RIGHT,
-        Direction.DOWN,
-        Direction.DOWN_LEFT,
-        Direction.LEFT,
-        Direction.UP_LEFT,
-    ];
     public static readonly factory: DirectionFactory<Direction> =
         new class extends DirectionFactory<Direction> {
-            public of(x: number, y: number): Direction {
-                if (x === 0 && y === -1) return Direction.UP;
-                if (x === 1 && y === 0) return Direction.RIGHT;
-                if (x === 0 && y === 1) return Direction.DOWN;
-                if (x === -1 && y === 0) return Direction.LEFT;
-                if (x === -1 && y === -1) return Direction.UP_LEFT;
-                if (x === 1 && y === -1) return Direction.UP_RIGHT;
-                if (x === -1 && y === 1) return Direction.DOWN_LEFT;
-                if (x === 1 && y === 1) return Direction.DOWN_RIGHT;
-                throw new Error('Invalid direction');
-            }
+            public all: ReadonlyArray<Direction> = [
+                Direction.UP,
+                Direction.UP_RIGHT,
+                Direction.RIGHT,
+                Direction.DOWN_RIGHT,
+                Direction.DOWN,
+                Direction.DOWN_LEFT,
+                Direction.LEFT,
+                Direction.UP_LEFT,
+            ];
         };
+    public static readonly DIRECTIONS: ReadonlyArray<Direction> = Direction.factory.all;
     public static readonly encoder: Encoder<Direction> =
         Encoder.of(7, (dir: Direction) => {
             return dir.toInt();
@@ -145,6 +137,12 @@ export class Direction extends BaseDirection {
     private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
         super();
     }
+    public isDiagonal(): boolean {
+        return (this.x !== 0) && (this.y !== 0);
+    }
+    public getOpposite(): Direction {
+        return Direction.factory.of(-this.x, -this.y);
+    }
 }
 
 export class Orthogonal extends BaseDirection {
@@ -152,14 +150,15 @@ export class Orthogonal extends BaseDirection {
     public static readonly RIGHT: Orthogonal = new Orthogonal(1, 0);
     public static readonly DOWN: Orthogonal = new Orthogonal(0, 1);
     public static readonly LEFT: Orthogonal = new Orthogonal(-1, 0);
-    public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = [
-        Orthogonal.UP,
-        Orthogonal.RIGHT,
-        Orthogonal.DOWN,
-        Orthogonal.LEFT,
-    ];
     public static readonly factory: DirectionFactory<Orthogonal> =
         new class extends DirectionFactory<Orthogonal> {
+            public all: ReadonlyArray<Orthogonal> = [
+                Orthogonal.UP,
+                Orthogonal.RIGHT,
+                Orthogonal.DOWN,
+                Orthogonal.LEFT,
+            ];
+
             public of(x: number, y: number): Orthogonal {
                 if (x === 0 && y === -1) return Orthogonal.UP;
                 if (x === 1 && y === 0) return Orthogonal.RIGHT;
@@ -168,13 +167,18 @@ export class Orthogonal extends BaseDirection {
                 throw new Error('Invalid direction');
             }
         };
+    public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = Orthogonal.factory.all;
     public static readonly encoder: Encoder<Orthogonal> =
         Encoder.of(7, (dir: Orthogonal) => {
             return dir.toInt();
         }, (n: number) => {
             return Orthogonal.factory.fromInt(n);
         });
+
     private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
         super();
+    }
+    public getOpposite(): Orthogonal {
+        return Orthogonal.factory.of(-this.x, -this.y);
     }
 }

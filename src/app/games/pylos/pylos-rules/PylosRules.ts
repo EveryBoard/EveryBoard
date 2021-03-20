@@ -87,7 +87,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice, LegalityStatus>
                         .getNextValid(horizontal)
                         .getOrNull();
                     if (secondNeighboors && slice.getBoardAt(secondNeighboors) === currentPlayer) {
-                        const thirdDirection: Orthogonal = Orthogonal.factory.oppositeOf(vertical);
+                        const thirdDirection: Orthogonal = vertical.getOpposite();
                         const thirdNeighboors: PylosCoord = secondNeighboors.getNextValid(thirdDirection).get();
                         if (slice.getBoardAt(thirdNeighboors) === currentPlayer) return true;
                     }

@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
@@ -170,16 +169,16 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const player: Player = slice.getCurrentPlayer();
         const captures: GipfCapture[] = [];
         this.getLinePortionsWithFourPiecesOfPlayer(slice, player)
-            .forEach((linePortion: [Coord, Coord, Direction]) => {
+            .forEach((linePortion: [Coord, Coord, HexaDirection]) => {
                 captures.push(this.getCapturable(slice, linePortion));
             });
         return captures;
     }
     private getLinePortionsWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player):
-    ReadonlyArray<[Coord, Coord, Direction]> {
-        const linePortions: [Coord, Coord, Direction][] = [];
+    ReadonlyArray<[Coord, Coord, HexaDirection]> {
+        const linePortions: [Coord, Coord, HexaDirection][] = [];
         slice.hexaBoard.allLines().forEach((line: HexaLine) => {
-            const linePortion: MGPOptional<[Coord, Coord, Direction]> =
+            const linePortion: MGPOptional<[Coord, Coord, HexaDirection]> =
                 this.getLinePortionWithFourPiecesOfPlayer(slice, player, line);
             if (linePortion.isPresent()) {
                 linePortions.push(linePortion.get());
@@ -188,10 +187,10 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         return linePortions;
     }
     private getLinePortionWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player, line: HexaLine):
-    MGPOptional<[Coord, Coord, Direction]> {
+    MGPOptional<[Coord, Coord, HexaDirection]> {
         let consecutives: number = 0;
         const coord: Coord = line.getEntrance(slice.hexaBoard);
-        const dir: Direction = line.getDirection();
+        const dir: HexaDirection = line.getDirection();
         let start: Coord = coord;
         for (let cur: Coord = coord; slice.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
             if (slice.hexaBoard.getAt(cur).player === player) {
@@ -208,13 +207,13 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         }
         return MGPOptional.empty();
     }
-    private getCapturable(slice: GipfPartSlice, linePortion: [Coord, Coord, Direction]): GipfCapture {
+    private getCapturable(slice: GipfPartSlice, linePortion: [Coord, Coord, HexaDirection]): GipfCapture {
         // Go into each direction and continue until there are pieces
         const capturable: Coord[] = [];
         const start: Coord = linePortion[0];
         const end: Coord = linePortion[1];
-        const dir: Direction = linePortion[2];
-        const oppositeDir: Direction = Direction.factory.oppositeOf(dir);
+        const dir: HexaDirection = linePortion[2];
+        const oppositeDir: HexaDirection = dir.getOpposite();
         for (let cur: Coord = start.getNext(oppositeDir);
             slice.hexaBoard.isOnBoard(cur) && slice.hexaBoard.getAt(cur) !== GipfPiece.EMPTY;
             cur = cur.getNext(oppositeDir)) {
@@ -263,7 +262,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             if (slice.hexaBoard.getAt(entrance) === GipfPiece.EMPTY) {
                 placements.push(new GipfPlacement(entrance, MGPOptional.empty()));
             } else {
-                this.getAllDirectionsForEntrance(slice, entrance).forEach((dir: Direction) => {
+                this.getAllDirectionsForEntrance(slice, entrance).forEach((dir: HexaDirection) => {
                     if (this.isLineComplete(slice, entrance, dir) === false) {
                         placements.push(new GipfPlacement(entrance, MGPOptional.of(dir)));
                     }
@@ -272,10 +271,10 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         });
         return placements;
     }
-    public isLineComplete(slice: GipfPartSlice, start: Coord, dir: Direction): boolean {
+    public isLineComplete(slice: GipfPartSlice, start: Coord, dir: HexaDirection): boolean {
         return this.nextGapInLine(slice, start, dir).isAbsent();
     }
-    private nextGapInLine(slice: GipfPartSlice, start: Coord, dir: Direction): MGPOptional<Coord> {
+    private nextGapInLine(slice: GipfPartSlice, start: Coord, dir: HexaDirection): MGPOptional<Coord> {
         for (let cur: Coord = start; slice.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
             if (slice.hexaBoard.getAt(cur) === GipfPiece.EMPTY) {
                 return MGPOptional.of(cur);
@@ -314,7 +313,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         if (placement.direction.isAbsent()) {
             return [placement.coord];
         } else {
-            const dir: Direction = placement.direction.get();
+            const dir: HexaDirection = placement.direction.get();
             const moved: Coord[] = [];
             moved.push(placement.coord);
             let cur: Coord = placement.coord.getNext(dir);
@@ -331,7 +330,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
             return moved;
         }
     }
-    public getAllDirectionsForEntrance(slice: GipfPartSlice, entrance: Coord): Direction[] {
+    public getAllDirectionsForEntrance(slice: GipfPartSlice, entrance: Coord): HexaDirection[] {
         if (FlatHexaOrientation.INSTANCE.isTopLeftCorner(slice.hexaBoard, entrance)) {
             return [HexaDirection.DOWN_RIGHT, HexaDirection.DOWN, HexaDirection.UP_RIGHT];
         } else if (FlatHexaOrientation.INSTANCE.isTopCorner(slice.hexaBoard, entrance)) {
@@ -410,13 +409,13 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
     public captureValidity(slice: GipfPartSlice, capture: GipfCapture): MGPValidation {
         const player: Player = slice.getCurrentPlayer();
-        const linePortionOpt: MGPOptional<[Coord, Coord, Direction]> =
+        const linePortionOpt: MGPOptional<[Coord, Coord, HexaDirection]> =
             this.getLinePortionWithFourPiecesOfPlayer(slice, player, capture.getLine());
         if (linePortionOpt.isAbsent()) {
             return MGPValidation.failure(GipfFailure.CAPTURE_MUST_BE_ALIGNED);
         }
 
-        const linePortion: [Coord, Coord, Direction] = linePortionOpt.get();
+        const linePortion: [Coord, Coord, HexaDirection] = linePortionOpt.get();
 
         const capturable: GipfCapture = this.getCapturable(slice, linePortion);
         if (capturable.equals(capture)) {
@@ -427,7 +426,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
     private noMoreCapturesValidity(slice: GipfPartSlice): MGPValidation {
         const player: Player = slice.getCurrentPlayer();
-        const linePortions: ReadonlyArray<[Coord, Coord, Direction]> =
+        const linePortions: ReadonlyArray<[Coord, Coord, HexaDirection]> =
             this.getLinePortionsWithFourPiecesOfPlayer(slice, player);
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;

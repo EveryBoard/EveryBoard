@@ -1,6 +1,7 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Encoder } from 'src/app/jscaip/encoder';
+import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
@@ -93,36 +94,17 @@ export class GipfCapture {
 export class GipfPlacement {
     public static encoder: Encoder<GipfPlacement> = new class extends Encoder<GipfPlacement> {
         public maxValue(): number {
-            return (GipfBoard.coordEncoder.maxValue() *
-                Direction.encoder.shift() + Direction.encoder.maxValue()) *
-                Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.maxValue();
+            return 0;
         }
         public encode(placement: GipfPlacement): number {
-            if (placement.direction.isPresent()) {
-                return (GipfBoard.coordEncoder.encode(placement.coord) *
-                    Direction.encoder.shift() + Direction.encoder.encode(placement.direction.get())) *
-                    Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(true);
-            } else {
-                return (GipfBoard.coordEncoder.encode(placement.coord) *
-                    Direction.encoder.shift()) *
-                    Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(false);
-            }
+            return 0;
         }
         public decode(encoded: number): GipfPlacement {
-            const hasDirectionN: number = encoded % Encoder.booleanEncoder.shift();
-            encoded = (encoded - hasDirectionN) / Encoder.booleanEncoder.shift();
-            const directionN: number = encoded % Direction.encoder.shift();
-            const coordN: number = (encoded - directionN) / Direction.encoder.shift();
-            if (Encoder.booleanEncoder.decode(hasDirectionN)) {
-                return new GipfPlacement(GipfBoard.coordEncoder.decode(coordN),
-                                         MGPOptional.of(Direction.encoder.decode(directionN)));
-            } else {
-                return new GipfPlacement(GipfBoard.coordEncoder.decode(coordN), MGPOptional.empty());
-            }
+            throw new Error('NYI');
         }
     }
     public constructor(public readonly coord: Coord,
-                       public readonly direction: MGPOptional<Direction>) {
+                       public readonly direction: MGPOptional<HexaDirection>) {
     }
     public toString(): string {
         if (this.direction.isPresent()) {
@@ -133,9 +115,10 @@ export class GipfPlacement {
     }
     public equals(other: GipfPlacement): boolean {
         if (!this.coord.equals(other.coord)) return false;
-        const cmpDir: (x: Direction, y: Direction) => boolean = (x: Direction, y: Direction): boolean => {
-            return x === y;
-        };
+        const cmpDir: (x: HexaDirection, y: HexaDirection) => boolean =
+            (x: HexaDirection, y: HexaDirection): boolean => {
+                return x === y;
+            };
         if (this.direction.equals(other.direction, cmpDir) === false) return false;
         return true;
     }

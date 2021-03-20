@@ -25,6 +25,9 @@ describe('HexaBoard', () => {
             const board: HexaBoard<number> = HexaBoard.empty(4, 8, [1], 0, numEncoder);
             expect(board).toBeTruthy();
         });
+        it('should throw when excluded case specification is incorrect', () => {
+            expect(() => HexaBoard.empty(7, 7, [1, 1, 1, 1, 1], 0, numEncoder)).toThrow();
+        });
     });
     describe('fromTable', () => {
         it('should throw when called with an empty table', () => {
@@ -50,6 +53,11 @@ describe('HexaBoard', () => {
         it('should distinguish different boards due to different width', () => {
             const board1: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0, numEncoder);
             const board2: HexaBoard<number> = HexaBoard.empty(5, 3, [1], 0, numEncoder);
+            expect(board1.equals(board2, numCompare)).toBeFalse();
+        });
+        it('should distinguish different boards due to different width', () => {
+            const board1: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0, numEncoder);
+            const board2: HexaBoard<number> = HexaBoard.empty(3, 5, [1], 0, numEncoder);
             expect(board1.equals(board2, numCompare)).toBeFalse();
         });
         it('should distinguish different boards due to different encoders', () => {
