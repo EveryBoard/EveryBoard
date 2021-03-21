@@ -1,31 +1,45 @@
-<h1>
-    <a class="nav-link">
-        Futurement joli: Voir les jeux disponibles!
-    </a>
-</h1>
-<h1>
-    <a class="nav-link"
-       [routerLink]="['/local']">
-        Futurement joli: Jouer hors ligne
-    </a>
-</h1>
-<h1>
-    <a class="nav-link"
-       [routerLink]="['/didacticial']">
-        Futurement joli: Apprendre les règles d'un jeu.
-    </a>
-</h1>
-<h1>
-    <a class="nav-link"
-        [routerLink]="['/play']"
-    >
-        Futurement joli: Créer une partie en ligne
-    </a>
-</h1>
-<h1>
-    <a class="nav-link"
-       [routerLink]="['/server']"
-    >
-        Futurement joli: Voir les parties en cours
-    </a>
-</h1>
+<div class="container">
+    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
+    <h1 class="display-4">Pantheon's Game</h1>
+    <p class="lead">Pantheon's Game est un site qui permet de jouer et d'apprendre les règles de plus de 15 jeux de stratégie combinatoire à information parfaite.</p>
+  </div>
+
+  <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
+    <div class="col">
+      <div class="card mb-4 shadow-sm">
+      <div class="card-header">
+        <h4 class="my-0 fw-normal">Liste des jeux</h4>
+      </div>
+      <div class="card-body">
+        <h1 class="card-title pricing-card-title">Plus de 15 jeux disponibles</h1>
+        <button type="button" class="w-100 btn btn-lg btn-primary">Voir les jeux disponibles</button><br/><br/>
+        <button type="button" class="w-100 btn btn-lg btn-primary">Contribuer au code</button><br/><br/>
+      </div>
+    </div>
+    </div>
+    <div class="col">
+      <div class="card mb-4 shadow-sm">
+      <div class="card-header">
+        <h4 class="my-0 fw-normal">Jouer en ligne</h4>
+      </div>
+      <div class="card-body">
+        <h1 class="card-title pricing-card-title">Jouer contre des opposants en ligne</h1>
+        <button type="button" class="w-100 btn btn-lg btn-primary" [routerLink]="['/play']">Créer une partie</button><br/><br/>
+        <button type="button" class="w-100 btn btn-lg btn-primary" [routerLink]="['/server']">Voir la liste des parties</button>
+      </div>
+    </div>
+    </div>
+    <div class="col">
+      <div class="card mb-4 shadow-sm">
+      <div class="card-header">
+        <h4 class="my-0 fw-normal">Jouer hors ligne</h4>
+      </div>
+      <div class="card-body">
+        <h1 class="card-title pricing-card-title">Jouer contre une IA et apprendre les règles</h1>
+        <button type="button" class="w-100 btn btn-lg btn-primary" [routerLink]="['/local']">Jouer</button><br/><br/>
+        <button type="button" class="w-100 btn btn-lg btn-primary" [routerLink]="['/didacticial']">Apprendre</button>
+      </div>
+    </div>
+    </div>
+  </div>
+</div>

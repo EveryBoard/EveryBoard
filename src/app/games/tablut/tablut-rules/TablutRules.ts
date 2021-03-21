@@ -206,7 +206,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         }
         return null;
     }
-    public static getSurroundings(c: Coord, d: Direction, player: Player, board: number[][]) {
+    public static getSurroundings(c: Coord, d: Orthogonal, player: Player, board: number[][]) {
         const backCoord: Coord = c.getNext(d); // the piece that just move came from the front direction (by definition)
         const backInRange: boolean = backCoord.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH);
         const back: RelativePlayer = backInRange ?

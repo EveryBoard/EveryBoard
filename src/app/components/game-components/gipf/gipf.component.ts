@@ -7,12 +7,12 @@ import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice'
 import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
 import { GipfRules, GipfFailure } from 'src/app/games/gipf/gipf-rules/GipfRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 
 export class Arrow {
     public constructor(public readonly source: Coord,
@@ -140,7 +140,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
                     if (entrance.getDistance(coord) !== 1) {
                         return this.cancelMove(GipfComponentFailure.CLICK_FURTHER_THAN_ONE_COORD);
                     }
-                    const direction: Direction = Direction.factory.fromMove(entrance, coord);
+                    const direction: HexaDirection = HexaDirection.factory.fromMove(entrance, coord);
                     return this.selectPlacementDirection(MGPOptional.of(direction));
                 } catch (error) {
                     return this.cancelMove(GipfFailure.INVALID_PLACEMENT_DIRECTION);
@@ -235,7 +235,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         }
         return MGPValidation.SUCCESS;
     }
-    private async selectPlacementDirection(dir: MGPOptional<Direction>): Promise<MGPValidation> {
+    private async selectPlacementDirection(dir: MGPOptional<HexaDirection>): Promise<MGPValidation> {
         this.placement = MGPOptional.of(new GipfPlacement(this.placementEntrance.get(), dir));
         const validity: MGPValidation = this.rules.placementValidity(this.constructedSlice, this.placement.get());
         if (validity.isFailure()) {

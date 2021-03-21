@@ -25,11 +25,11 @@ export class Coord implements Comparable {
         const newY: number = this.y + (distance * dir.y);
         return new Coord(newX, newY);
     }
-    public getPrevious(dir: Direction, distance?: number): Coord {
+    public getPrevious(dir: Vector, distance?: number): Coord {
         distance = distance == null ? 1 : distance;
         return this.getNext(dir, -distance);
     }
-    public getLeft(dir: Direction): Coord {
+    public getLeft(dir: Vector): Coord {
         // looking in the direction "dir", we just go one step left
         // since the directions in DIRECTIONS are sorted in horlogic order,
         // we just need to take the one before the previous (-2/8 = -90°)
@@ -48,7 +48,7 @@ export class Coord implements Comparable {
         const newY: number = this.y + -dir.x; // (this.x, thix.y) + (dir.y, -dir.x)
         return new Coord(newX, newY);
     }
-    public getRight(dir: Direction): Coord {
+    public getRight(dir: Vector): Coord {
         // looking in the direction "dir", we just go one step right
         // see getLeft's logic, it's the opposite
         const newX: number = this.x + -dir.y;

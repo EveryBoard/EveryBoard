@@ -73,7 +73,7 @@ export class SiamRules extends _SiamRules {
             return SiamLegalityStatus.failure('Illegal push because not straight or not pushing anything or leaving the board');
         }
         let currentDirection: Orthogonal = pushingDir;
-        const resistingDir: Orthogonal = Orthogonal.factory.oppositeOf(pushingDir);
+        const resistingDir: Orthogonal = pushingDir.getOpposite();
         let totalForce: number = 0;
         const resultingBoard: number[][] = slice.getCopiedBoard();
         if (move.coord.isInRange(5, 5)) {
@@ -331,7 +331,7 @@ export class SiamRules extends _SiamRules {
         direction: Orthogonal)
         : MGPOptional<{ distance: number, coord: Coord }> {
         display(SiamRules.VERBOSE, { getDirectionClosestPusher: { slice, fallingCoord, direction: direction.toString() } });
-        const resistance: Orthogonal = Orthogonal.factory.oppositeOf(direction);
+        const resistance: Orthogonal = direction.getOpposite();
         let currentDistance: number = 1;
         let previousPiece: number = slice.getBoardAt(fallingCoord);
         let testedCoord: Coord = fallingCoord.getCopy();

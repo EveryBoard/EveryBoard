@@ -103,14 +103,12 @@ export class HexaBoard<T> {
             } else {
                 return true;
             }
-        } else if (coord.y) {
+        } else {
             if (this.excludedCases[this.height-1 - coord.y] != null) {
                 return (this.width-1-coord.x) > this.excludedCases[this.height-1 - coord.y]-1;
             } else {
                 return true;
             }
-        } else {
-            return false;
         }
     }
     public allLines(): ReadonlyArray<HexaLine> {

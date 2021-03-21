@@ -1,6 +1,5 @@
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from '../coord/Coord';
-import { Direction } from '../Direction';
 import { HexaBoard } from './HexaBoard';
 import { HexaDirection } from './HexaDirection';
 
@@ -92,7 +91,7 @@ export class HexaLine {
                 }
         }
     }
-    public getDirection(): Direction {
+    public getDirection(): HexaDirection {
         switch (this.constant) {
             case 'q':
                 return HexaDirection.DOWN;

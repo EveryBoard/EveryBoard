@@ -70,6 +70,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         }
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);
+        } else if (x === this.chosen.x && y === this.chosen.y) {
+            // Do nothing, the user selected the already-selected piece
+            return MGPValidation.SUCCESS;
         } else {
             return await this.chooseDestination(x, y);
         }
@@ -89,12 +92,8 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        try {
-            const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-        } catch (error) {
-            return this.cancelMove('Votre pièce est déjà sélectionnée, choisissez la case où vous déplacer.');
-        }
+        const move: KamisadoMove = KamisadoMove.of(chosenPiece, chosenDestination);
+        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
     public cancelMoveAttempt(): void {
         if (!this.chosenAutomatically) {
