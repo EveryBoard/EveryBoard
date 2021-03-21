@@ -6,7 +6,7 @@ import { CoerceoMove, CoerceoStep } from '../coerceo-move/CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from '../coerceo-part-slice/CoerceoPartSlice';
 import { CoerceoFailure, CoerceoRules } from './CoerceoRules';
 
-describe('CoerceoRules', () => {
+fdescribe('CoerceoRules', () => {
     let rules: CoerceoRules;
 
     const _: number = CoerceoPiece.EMPTY.value;
@@ -32,7 +32,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 0], [0, 0]);
-            const move: CoerceoMove = CoerceoMove.fromMove(new Coord(0, 0), CoerceoStep.RIGHT);
+            const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(0, 0), CoerceoStep.RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.getReason()).toBe('Cannot start with a coord outside the board (0, 0).');
         });
@@ -50,7 +50,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 0], [0, 0]);
-            const move: CoerceoMove = CoerceoMove.fromMove(new Coord(6, 6), CoerceoStep.LEFT);
+            const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.LEFT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.getReason()).toBe('Cannot end with a coord outside the board (4, 6).');
         });
@@ -68,7 +68,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [0, 0]);
-            const move: CoerceoMove = CoerceoMove.fromMove(new Coord(6, 6), CoerceoStep.RIGHT);
+            const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.getReason()).toBe(Rules.CANNOT_CHOOSE_ENNEMY_PIECE);
         });
@@ -86,7 +86,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [0, 0]);
-            const move: CoerceoMove = CoerceoMove.fromMove(new Coord(7, 7), CoerceoStep.UP_RIGHT);
+            const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(7, 7), CoerceoStep.UP_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.getReason()).toBe(CoerceoFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
         });
@@ -104,7 +104,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 0], [0, 0]);
-            const move: CoerceoMove = CoerceoMove.fromMove(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
+            const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_LAND_ON_ALLY);
         });
@@ -134,7 +134,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 0], [0, 0]);
-            const move: CoerceoMove = CoerceoMove.fromMove(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
+            const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
             const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -168,7 +168,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, O, _, _, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 0], [0, 0]);
-            const move: CoerceoMove = CoerceoMove.fromMove(new Coord(7, 5), CoerceoStep.DOWN_RIGHT);
+            const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(7, 5), CoerceoStep.DOWN_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
             const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -202,7 +202,7 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 0], [0, 0]);
-            const move: CoerceoMove = CoerceoMove.fromMove(new Coord(8, 6), CoerceoStep.DOWN_RIGHT);
+            const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(8, 6), CoerceoStep.DOWN_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
             const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
@@ -228,7 +228,7 @@ describe('CoerceoRules', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 6));
             const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe('Not enough tiles to exchanges.');
+            expect(status.legal.getReason()).toBe(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE);
         });
         it('Should forbid capturing one own piece', () => {
             const board: NumberTable = [

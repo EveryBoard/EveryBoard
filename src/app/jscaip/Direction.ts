@@ -3,6 +3,10 @@ import { Encoder } from './encoder';
 
 export class Vector {
     // Since it's not a coord and not a direction, what should we do to name thing correctly and avoid code overlap ?
+
+    public static equals(a: Vector, b: Vector): boolean {
+        return a.x === b.x && a.y === b.y;
+    }
     public constructor(public readonly x: number,
                        public readonly y: number) {}
 }

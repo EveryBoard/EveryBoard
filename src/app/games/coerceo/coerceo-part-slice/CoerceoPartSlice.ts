@@ -5,7 +5,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { assert, display } from 'src/app/utils/collection-lib/utils';
-import { CoerceoMove } from '../coerceo-move/CoerceoMove';
+import { CoerceoMove, CoerceoStep } from '../coerceo-move/CoerceoMove';
 
 export class CoerceoPiece {
 
@@ -69,16 +69,16 @@ export class CoerceoPartSlice extends TriangularGameState {
         const O: number = CoerceoPiece.ZERO.value;
         const X: number = CoerceoPiece.ONE.value;
         const board: NumberTable = [
-            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
-            [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
-            [_, O, _, O, _, _, X, _, X, _, _, O, _, O, _],
-            [O, _, _, _, O, _, _, _, _, _, O, _, _, _, O],
-            [_, O, _, O, _, _, _, _, _, _, _, O, _, O, _],
-            [_, X, _, X, _, _, _, _, _, _, _, X, _, X, _],
-            [X, _, _, _, X, _, _, _, _, _, X, _, _, _, X],
-            [_, X, _, X, _, _, O, _, O, _, _, X, _, X, _],
-            [N, N, N, _, _, O, _, _, _, O, _, _, N, N, N],
             [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],
+            [N, N, N, _, _, O, _, _, _, O, _, _, N, N, N],
+            [_, X, _, X, _, _, O, _, O, _, _, X, _, X, _],
+            [X, _, _, _, X, _, _, _, _, _, X, _, _, _, X],
+            [_, X, _, X, _, _, _, _, _, _, _, X, _, X, _],
+            [_, O, _, O, _, _, _, _, _, _, _, O, _, O, _],
+            [O, _, _, _, O, _, _, _, _, _, O, _, _, _, O],
+            [_, O, _, O, _, _, X, _, X, _, _, O, _, O, _],
+            [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
+            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
         ];
         return new CoerceoPartSlice(board, 0, [0, 0], [0, 0]);
     }
@@ -104,12 +104,14 @@ export class CoerceoPartSlice extends TriangularGameState {
         const threatenedCoords: Coord[] = TriangularCheckerBoard.getNeighboors(move.landingCoord.get());
         let resultingSlice: CoerceoPartSlice = this;
         for (const threatened of threatenedCoords) {
-            resultingSlice = resultingSlice.captureIfNeeded(threatened);
+            if (threatened.isInRange(15, 10)) {
+                resultingSlice = resultingSlice.captureIfNeeded(threatened);
+            }
         }
         return resultingSlice;
     }
     public captureIfNeeded(coord: Coord): CoerceoPartSlice {
-        display(CoerceoPartSlice.VERBOSE, { coerceoPartSlice_captureIfNeeded: { object: this, coord } });
+        display(CoerceoPartSlice.VERBOSE || true, { coerceoPartSlice_captureIfNeeded: { object: this, coord } });
         if (this.getBoardAt(coord) === this.getCurrentEnnemy().value) {
             const newBoard: number[][] = this.getCopiedBoard();
             const newCaptures: [number, number] = [this.captures[0], this.captures[1]];
@@ -213,5 +215,15 @@ export class CoerceoPartSlice extends TriangularGameState {
                                     this.turn,
                                     newTiles,
                                     this.captures);
+    }
+    public getLegalLandings(coord: Coord): Coord[] {
+        const legalLandings: Coord[] = [];
+        for (const step of CoerceoStep.STEPS) {
+            const landing: Coord = coord.getNext(step.direction, 1);
+            if (landing.isInRange(15, 10) && this.getBoardAt(landing) === CoerceoPiece.EMPTY.value) {
+                legalLandings.push(landing);
+            }
+        }
+        return legalLandings;
     }
 }

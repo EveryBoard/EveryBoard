@@ -3,6 +3,9 @@ import { Comparable } from '../../utils/collection-lib/Comparable';
 
 export class Coord implements Comparable {
 
+    public static equals(a: Coord, b: Coord): boolean {
+        return a.equals(b);
+    }
     public static getBinarised(n: number): -1 | 0 | 1 {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
         if (n < 0) return -1;
@@ -114,7 +117,10 @@ export class Coord implements Comparable {
     public getVectorToward(c: Coord): Coord {
         const dx: number = c.x - this.x;
         const dy: number = c.y - this.y;
-        const undividedVector: Coord = new Coord(dx, dy);
+        return new Coord(dx, dy);
+    }
+    public getMinimalVectorToward(c: Coord): Coord {
+        const undividedVector: Coord = this.getVectorToward(c);
         return undividedVector.toVector();
     }
     public getCoordsToward(c: Coord): Coord[] {
@@ -147,8 +153,8 @@ export class Coord implements Comparable {
         return new Coord(vx, vy);
     }
     public isBetween(a: Coord, b: Coord): boolean {
-        const aToThis: Coord = a.getVectorToward(this);
-        const bToThis: Coord = b.getVectorToward(this);
+        const aToThis: Coord = a.getMinimalVectorToward(this);
+        const bToThis: Coord = b.getMinimalVectorToward(this);
         return aToThis.equals(bToThis.getOpposite());
     }
     // Override

@@ -10,6 +10,7 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 import { AwaleComponent } from '../game-components/awale/awale.component';
+import { CoerceoComponent } from '../game-components/coerceo/coerceo.component';
 import { DvonnComponent } from '../game-components/dvonn/dvonn.component';
 import { EncapsuleComponent } from '../game-components/encapsule/encapsule.component';
 import { EpaminondasComponent } from '../game-components/epaminondas/epaminondas.component';
@@ -63,6 +64,8 @@ export abstract class GameWrapper {
         switch (compoString) {
             case 'Awale':
                 return AwaleComponent;
+            case 'Coerceo':
+                return CoerceoComponent;
             case 'Dvonn':
                 return DvonnComponent;
             case 'Encapsule':

@@ -3,7 +3,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { CoerceoPartSlice, CoerceoPiece } from './CoerceoPartSlice';
 
-describe('CoerceoPartSlice', () => {
+fdescribe('CoerceoPartSlice', () => {
     describe('CoerceoPiece', () => {
         describe('playerOf', () => {
             it('Should throw when called with anything else than Player.ONE or Player.ZERO', () => {

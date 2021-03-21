@@ -65,6 +65,7 @@ import { ReversiComponent } from './components/game-components/reversi/reversi.c
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
 import { TablutComponent } from './components/game-components/tablut/tablut.component';
+import { CoerceoComponent } from './components/game-components/coerceo/coerceo.component';
 
 export const INCLUDE_VERBOSE_LINE_IN_TEST: boolean = false;
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
@@ -122,6 +123,7 @@ const routes: Route [] = [
         SaharaComponent,
         SiamComponent,
         TablutComponent,
+        CoerceoComponent,
     ],
     entryComponents: [
         AwaleComponent,
