@@ -1,20 +1,46 @@
-<div style="height: 10%;">
-    <nav class="navbar navbar-expand navbar-light bg-light">
-        <a class="navbar-brand" [routerLink]="['/']"> Bienvenu sur Pantheon's Game/MultiGameProject (MGP)</a>
-        <ul class="nav nav-pills">
-            <ng-container *ngIf="userName else connect">
-                <li>
-                    <a class="nav-link" [routerLink]="['/server']"> Voir les parties en cours </a>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <a class="navbar-brand" [routerLink]="['/']">Pantheon's Game</a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav me-auto mb-8 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" [routerLink]="['/']">Accueil</a>
                 </li>
-                <li *ngIf="userName else connect">
-                    <a class="nav-link" (click)="logout()">{{ userName }} (se déconnecter) </a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">En ligne</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" [routerLink]="['/server']">Parties en cours</a></li>
+                        <li><a class="dropdown-item" [routerLink]="['/play']">Créer une partie</a></li>
+                    </ul>
                 </li>
-            </ng-container>
-            <ng-template #connect>
-                <li>
-                    <a class="nav-link" [routerLink]="['/login']">Connecte toi!</a>
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Hors ligne</a>
+                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <li><a class="dropdown-item" [routerLink]="['/local']">Jouer</a></li>
+                        <li><a class="dropdown-item" [routerLink]="['/didacticial']">Apprendre les règles</a></li>
+                    </ul>
                 </li>
-            </ng-template>
-        </ul>
-    </nav>
-</div>
+            </ul>
+            <ul class="navbar-nav">
+                <ng-container *ngIf="userName else connect">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                            {{userName}}
+                        </a>
+                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <li><a class="dropdown-item" (click)="logout()">Se déconnecter</a></li>
+                        </ul>
+                    </li>
+                </ng-container>
+                <ng-template #connect>
+                    <li>
+                        <a class="nav-link" [routerLink]="['/login']">Se connecter</a>
+                    </li>
+                </ng-template>
+            </ul>
+        </div>
+    </div>
+</nav>
