@@ -1,8 +1,12 @@
-<app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
-<input id="playLocally"
-       type="button"
-       [disabled]="!selectedGame"
-       value="Jouer localement"
-       (click)="playLocally()"
-       class="btn btn-primary btn-block"
->
+<div class="d-flex align-items-center h-100">
+    <div class="container">
+        <app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
+        <input id="playLocally"
+               type="button"
+               [disabled]="!selectedGame"
+               value="Jouer localement"
+               (click)="playLocally()"
+               class="btn btn-primary btn-block"
+               >
+    </div>
+</div>
