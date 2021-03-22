@@ -6,11 +6,11 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { CoerceoFailure, CoerceoRules } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
+import { CoerceoRules } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { assert } from 'src/app/utils/collection-lib/utils';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 
 @Component({
     selector: 'app-coerceo',
@@ -25,7 +25,10 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
 
     private slice: CoerceoPartSlice;
 
-    public scores: [number, number] = [0, 0];
+    public CASE_SIZE: number = 100;
+
+    public scores: { readonly 0: number; readonly 1: number; } = [0, 0];
+    public tiles: { readonly 0: number; readonly 1: number; } = [0, 0];
 
     public EMPTY: number = CoerceoPiece.EMPTY.value;
     public NONE: number = CoerceoPiece.NONE.value;
@@ -44,6 +47,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         this.slice = this.rules.node.gamePartSlice;
+        this.scores = this.slice.captures;
+        this.tiles = this.slice.tiles;
         const move: CoerceoMove = this.rules.node.move;
         this.cancelMoveAttempt();
         if (move) {
@@ -114,13 +119,32 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             return false;
         }
     }
-    public getCaptureFill(x: number, y: number): string {
-        const previousContent: number = this.rules.node.mother.gamePartSlice.getBoardByXY(x, y);
-        const wasEmpty: boolean = previousContent === CoerceoPiece.EMPTY.value;
-        if (wasEmpty) {
-            return 'lightred';
+    public getEmptyFill(x: number, y: number): string {
+        if ((x+y)%2 === 1) {
+            return 'lightgrey';
         } else {
-            return 'red';
+            return 'dimgray';
         }
+    }
+    public wasOccupied(x: number, y: number): boolean {
+        console.log('wasOccupied(' + x + ', ' + y + ')');
+        const previousContent: number = this.rules.node.mother.gamePartSlice.getBoardByXY(x, y);
+        return previousContent === CoerceoPiece.EMPTY.value;
+    }
+    public getTilesCountCoordinate(x: number, y: number): string {
+        const bx: number = x * 100; const by: number = y * 100;
+        const coin0x: number = bx + 33; const coin0y: number = by;
+        const coin1x: number = bx + 66; const coin1y: number = by;
+        const coin2x: number = bx + 100; const coin2y: number = by + 50;
+        const coin3x: number = bx + 66; const coin3y: number = by + 100;
+        const coin4x: number = bx + 33; const coin4y: number = by + 100;
+        const coin5x: number = bx + 0; const coin5y: number = by + 50;
+        return '' + coin0x + ', ' + coin0y + ', ' +
+                    coin1x + ', ' + coin1y + ', ' +
+                    coin2x + ', ' + coin2y + ', ' +
+                    coin3x + ', ' + coin3y + ', ' +
+                    coin4x + ', ' + coin4y + ', ' +
+                    coin5x + ', ' + coin5y + ', ' +
+                    coin0x + ', ' + coin0y;
     }
 }

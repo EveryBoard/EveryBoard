@@ -15,10 +15,7 @@ import { CoerceoComponent } from './coerceo.component';
 import { expectClickSuccess, expectMoveFailure, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { CoerceoMove } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { CoerceoFailure } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
-import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/coerceo-part-slice/CoerceoPartSlice';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 
 const activatedRouteStub = {
     snapshot: {
@@ -37,16 +34,11 @@ const authenticationServiceStub = {
         return { pseudo: null, verified: null };
     },
 };
-fdescribe('CoerceoComponent:', () => {
+describe('CoerceoComponent:', () => {
 
     let wrapper: LocalGameWrapperComponent;
 
     let testElements: TestElements;
-
-    const _: number = CoerceoPiece.EMPTY.value;
-    const N: number = CoerceoPiece.NONE.value;
-    const O: number = CoerceoPiece.ZERO.value;
-    const X: number = CoerceoPiece.ONE.value;
 
     function getMoveExpectation(move: CoerceoMove, scoreZero: number, scoreOne: number): MoveExpectations {
         return {
@@ -112,26 +104,5 @@ fdescribe('CoerceoComponent:', () => {
         await expectClickSuccess('#click_6_2', testElements);
         const component: CoerceoComponent = testElements.gameComponent as CoerceoComponent;
         expect(component.highlights).toEqual([]);
-    }));
-    it('Should show removed tiles, captured pieces, and score', fakeAsync(async() => {
-        const board: NumberTable = [
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
-            [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
-            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
-            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
-        ];
-        const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 2], [0, 0]);
-        const lastMove: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(10, 7));
-        testElements.gameComponent.rules.node = new MGPNode(null, lastMove, slice, 0);
-        testElements.gameComponent.updateBoard();
-
-        const component: CoerceoComponent = testElements.gameComponent as CoerceoComponent;
-        expect("TODO").toBe("DONE");
     }));
 });

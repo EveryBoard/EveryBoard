@@ -4,9 +4,10 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { CoerceoMove, CoerceoStep } from '../coerceo-move/CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from '../coerceo-part-slice/CoerceoPartSlice';
-import { CoerceoFailure, CoerceoRules } from './CoerceoRules';
+import { CoerceoFailure } from '../CoerceoFailure';
+import { CoerceoRules } from './CoerceoRules';
 
-fdescribe('CoerceoRules', () => {
+describe('CoerceoRules', () => {
     let rules: CoerceoRules;
 
     const _: number = CoerceoPiece.EMPTY.value;
@@ -301,5 +302,38 @@ fdescribe('CoerceoRules', () => {
             expect(resultingSlice).toEqual(expectedSlice);
         });
     });
-    it('Should not remove tiles left by current player, when connected by 3 separated sides');
+    it('Should not remove tiles emptied, when connected by 3 separated sides', () => {
+        const board: NumberTable = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, X, _, _],
+            [N, N, N, N, N, N, N, N, N, _, O, _, O, _, _],
+            [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+        ];
+        const expectedBoard: NumberTable = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, X, _, _],
+            [N, N, N, N, N, N, N, N, N, _, _, _, O, _, _],
+            [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+        ];
+        const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 2], [0, 0]);
+        const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(10, 7));
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.isSuccess()).toBeTrue();
+        const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const expectedSlice: CoerceoPartSlice =
+            new CoerceoPartSlice(expectedBoard, 2, [0, 0], [0, 1]);
+        expect(resultingSlice).toEqual(expectedSlice);
+    });
 });

@@ -39,7 +39,6 @@ export class GameService {
         const part: ICurrentPart = await this.partDao.read(partId);
         return part != null && part.typeGame === gameType;
     }
-
     protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
         display(GameService.VERBOSE,
                 'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer + ')');
@@ -110,7 +109,7 @@ export class GameService {
             playerOne: secondPlayer,
             turn: 0,
             beginning: Date.now(),
-        };
+        }; console.log('lllllllllllllllloooooooooooooooooogggggggg')
         return this.partDao.update(partId, modification);
     }
     private FUTURE_startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
@@ -153,7 +152,9 @@ export class GameService {
         display(GameService.VERBOSE, { gameService_acceptConfig: { partId, joiner } });
 
         await this.joinerService.acceptConfig();
-        return this.startGameWithConfig(partId, joiner);
+        return this.startGameWithConfig(partId, joiner);  //  OLDLY DU CUL
+        // await this.startGameWithConfig(partId, joiner);
+        // return this.joinerService.acceptConfig();
     }
     // on OnlineGame Component
 

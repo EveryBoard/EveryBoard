@@ -9,7 +9,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
 type PartOS = ObservableSubject<ICurrentPartId>
 
 export class PartDAOMock extends FirebaseFirestoreDAOMock<ICurrentPart, PICurrentPart> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     private static partDB: MGPMap<MGPStr, PartOS>;
 
@@ -20,7 +20,7 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<ICurrentPart, PICurren
     public getStaticDB(): MGPMap<MGPStr, PartOS> {
         return PartDAOMock.partDB;
     }
-    public resetStaticDB() {
+    public resetStaticDB(): void {
         PartDAOMock.partDB = new MGPMap();
     }
     public observeActivesParts(callback: FirebaseCollectionObserver<ICurrentPart>): () => void {

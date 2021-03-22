@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { CoerceoFailure } from '../coerceo-rules/CoerceoRules';
+import { CoerceoFailure } from '../CoerceoFailure';
 
 export class CoerceoStep {
 
@@ -40,6 +40,16 @@ export class CoerceoStep {
     public toInt(): number {
         return CoerceoStep.STEPS.findIndex((s: CoerceoStep) => Vector.equals(s.direction, this.direction));
     }
+    public toString(): string {
+        switch (this) {
+            case CoerceoStep.LEFT: return 'LEFT';
+            case CoerceoStep.UP_LEFT: return 'UP_LEFT';
+            case CoerceoStep.UP_RIGHT: return 'UP_RIGHT';
+            case CoerceoStep.RIGHT: return 'RIGHT';
+            case CoerceoStep.DOWN_LEFT: return 'DOWN_LEFT';
+            case CoerceoStep.DOWN_RIGHT: return 'DOWN_RIGHT';
+        }
+    }
 }
 
 export class CoerceoMove extends Move {
@@ -48,10 +58,10 @@ export class CoerceoMove extends Move {
         if (encodedMove % 1 !== 0) {
             throw new Error('EncodedMove must be an integer.');
         }
-        const cy: number = encodedMove % 15;
-        encodedMove = (encodedMove - cy) / 15;
-        const cx: number = encodedMove % 10;
-        encodedMove = (encodedMove - cx) / 10;
+        const cy: number = encodedMove % 10;
+        encodedMove = (encodedMove - cy) / 10;
+        const cx: number = encodedMove % 15;
+        encodedMove = (encodedMove - cx) / 15;
         if (encodedMove === 0) {
             return CoerceoMove.fromTilesExchange(new Coord(cx, cy));
         } else {
@@ -106,7 +116,9 @@ export class CoerceoMove extends Move {
         if (this.isTileExchange()) {
             return 'CoerceoMove(' + this.capture.get().toString() + ')';
         } else {
-            return 'CoerceoMove(' + this.start.get().toString() + ' > ' + this.landingCoord.get().toString() + ')';
+            return 'CoerceoMove(' + this.start.get().toString() + ' > ' +
+                   this.step.get().toString() + ' > ' +
+                   this.landingCoord.get().toString() + ')';
         }
     }
     public equals(o: CoerceoMove): boolean {
@@ -125,14 +137,14 @@ export class CoerceoMove extends Move {
         // tileExchange: cx, cy
         // deplacements: step, cx, cy
         if (this.isTileExchange()) {
-            const cy: number = this.capture.get().y; // [0, 14]
-            const cx: number = this.capture.get().x; // [0, 9]
-            return (cx * 15) + cy;
+            const cy: number = this.capture.get().y; // [0, 9]
+            const cx: number = this.capture.get().x; // [0, 14]
+            return (cx * 10) + cy;
         } else {
-            const cy: number = this.start.get().y; // [0, 14]
-            const cx: number = this.start.get().x; // [0, 9]
+            const cy: number = this.start.get().y; // [0, 9]
+            const cx: number = this.start.get().x; // [0, 14]
             const step: number = this.step.get().toInt() + 1; // [1, 6]
-            return (step * 150) + (cx * 15) + cy;
+            return (step * 150) + (cx * 10) + cy;
         }
     }
     public decode(encodedMove: number): Move {

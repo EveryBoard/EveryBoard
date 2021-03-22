@@ -21,7 +21,9 @@
                         <option value="6"> IA LEVEL 6 </option>
                         <option value="7"> IA LEVEL 7 </option>
                     </select>
-                    <p class="text-left"> {{ compo.scores[0] }} points </p>
+                    <p id="scoreOne"
+                       *ngIf="compo.scores"
+                       class="text-left"> {{ compo.scores[0] }} points </p>
                 </div>
                 <div class="col-sm-6">
                     <select class="form-select"
@@ -36,7 +38,9 @@
                             <option value="6"> IA LEVEL 6 </option>
                             <option value="7"> IA LEVEL 7 </option>
                     </select>
-                    <p class="text-right"> {{ compo.scores[0] }} points </p>
+                    <p id="scoreOne"
+                       *ngIf="compo.scores"
+                       class="text-right"> {{ compo.scores[1] }} points </p>
                 </div>
             </div>
             <div class="inforow" id="gameResult" *ngIf="endGame">

@@ -26,7 +26,7 @@ export class JoinerService {
     constructor(private joinerDao: JoinerDAO) {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
-    public startObserving(joinerId: string, callback: (iJoinerId: IJoinerId) => void) {
+    public startObserving(joinerId: string, callback: (iJoinerId: IJoinerId) => void): void {
         display(JoinerService.VERBOSE, 'JoinerService.startObserving ' + joinerId);
 
         if (this.observedJoinerId == null) {
@@ -35,7 +35,7 @@ export class JoinerService {
             this.observedJoinerId = joinerId;
             this.observedJoinerObs = this.joinerDao.getObsById(joinerId);
             this.observedJoinerSub = this.observedJoinerObs
-                .subscribe((onFullFilled) => callback(onFullFilled));
+                .subscribe((joinerId: IJoinerId) => callback(joinerId));
         } else {
             throw new Error('JoinerService.startObserving should not be called while already observing a joiner');
         }
@@ -67,7 +67,8 @@ export class JoinerService {
         }
     }
     public async cancelJoining(userName: string): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.cancelJoining(' + userName + '); this.observedJoinerId =' + this.observedJoinerId);
+        display(JoinerService.VERBOSE,
+                'JoinerService.cancelJoining(' + userName + '); this.observedJoinerId =' + this.observedJoinerId);
 
         if (this.observedJoinerId == null) {
             throw new Error('cannot cancel joining when not observing a joiner');
@@ -98,7 +99,8 @@ export class JoinerService {
         }
     }
     public async deleteJoiner(): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.deleteJoiner(); this.observedJoinerId = ' + this.observedJoinerId);
+        display(JoinerService.VERBOSE,
+                'JoinerService.deleteJoiner(); this.observedJoinerId = ' + this.observedJoinerId);
 
         if (this.observedJoinerId == null) {
             throw new Error('observed joiner id is null');
@@ -110,8 +112,10 @@ export class JoinerService {
 
         const joiner: IJoiner = await this.joinerDao.read(this.observedJoinerId);
         const candidatesNames: string[] = joiner.candidatesNames;
-        const chosenPlayerIndex = candidatesNames.indexOf(chosenPlayerPseudo);
-        if (chosenPlayerIndex < 0 ) throw new Error('Cannot choose player, ' + chosenPlayerPseudo + ' is not in the room');
+        const chosenPlayerIndex: number = candidatesNames.indexOf(chosenPlayerPseudo);
+        if (chosenPlayerIndex < 0 ) {
+            throw new Error('Cannot choose player, ' + chosenPlayerPseudo + ' is not in the room');
+        }
 
         // if user is still present, take him off the candidate list
         candidatesNames.splice(chosenPlayerIndex, 1);
@@ -127,11 +131,12 @@ export class JoinerService {
             chosenPlayer: chosenPlayerPseudo,
         });
     }
-    public unselectChosenPlayer() {
+    public unselectChosenPlayer(): void {
         throw new Error('JoinerService.unselectChosenPlayer: TODO');
     }
     public proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.proposeConfig(' + maximalMoveDuration + ', ' + firstPlayer + ', ' + totalPartDuration + ')');
+        display(JoinerService.VERBOSE,
+                { joinerService_proposeConfig: { maximalMoveDuration, firstPlayer, totalPartDuration } });
         display(JoinerService.VERBOSE, 'this.followedJoinerId: ' + this.observedJoinerId);
 
         return this.joinerDao.update(this.observedJoinerId, {
@@ -151,8 +156,9 @@ export class JoinerService {
 
         return this.joinerDao.update(this.observedJoinerId, { partStatus: 3 });
     }
-    public stopObserving() {
-        display(JoinerService.VERBOSE, 'JoinerService.stopObserving(); // this.observedJoinerId = ' + this.observedJoinerId);
+    public stopObserving(): void {
+        display(JoinerService.VERBOSE,
+                'JoinerService.stopObserving(); // this.observedJoinerId = ' + this.observedJoinerId);
 
         if (this.observedJoinerId == null) {
             throw new Error('!!! JoinerService.stopObserving: we already stop watching doc');
@@ -175,7 +181,7 @@ export class JoinerService {
         return this.joinerDao.set(partId, joiner);
     }
     public updateJoinerById(partId: string, update: PIJoiner): Promise<void> {
-        display(JoinerService.VERBOSE, 'JoinerService.updateJoinerById(' + partId + ', ' + JSON.stringify(update) + ')');
+        display(JoinerService.VERBOSE, { joinerService_updateJoinerById: { partId, update } });
 
         return this.joinerDao.update(partId, update);
     }

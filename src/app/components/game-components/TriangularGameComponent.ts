@@ -11,33 +11,36 @@ export abstract class TriangularGameComponent<M extends Move,
                                               L extends LegalityStatus>
     extends AbstractGameComponent<M, S, L>
 {
+
+    public CASE_SIZE: number = 50;
+
     public getCoordinate(x: number, y: number) : string {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
         else return this.getUpwardCoordinate(x, y);
     }
     public getDownwardCoordinate(x: number, y: number): string {
-        return (x*25) + ',' + (50*y) + ',' +
-               (25 + (25*x)) + ',' + (50*(y+1)) + ',' +
-               (25*(x+2)) + ',' + (50*y) + ',' +
-               (x*25) + ',' + (50*y);
+        return (x * this.CASE_SIZE / 2) + ',' + (this.CASE_SIZE * y) + ',' +
+               ((this.CASE_SIZE / 2) * (x + 1)) + ',' + (this.CASE_SIZE*(y+1)) + ',' +
+               ((this.CASE_SIZE / 2) * (x + 2)) + ',' + (this.CASE_SIZE*y) + ',' +
+               (x*this.CASE_SIZE / 2) + ',' + (this.CASE_SIZE*y);
     }
     public getUpwardCoordinate(x: number, y: number): string {
-        return (x*25) + ',' + (50*(y+1)) + ',' +
-               (25 + (25*x)) + ',' + (50*y) + ',' +
-               (25*(x+2)) + ',' + (50*(y+1)) + ',' +
-               (x*25) + ',' + (50*(y+1));
+        return (x * this.CASE_SIZE / 2) + ',' + (this.CASE_SIZE*(y+1)) + ',' +
+               ((this.CASE_SIZE / 2) * (x + 1)) + ',' + (this.CASE_SIZE*y) + ',' +
+               ((this.CASE_SIZE / 2) * (x+2)) + ',' + (this.CASE_SIZE*(y+1)) + ',' +
+               (x*this.CASE_SIZE / 2) + ',' + (this.CASE_SIZE*(y+1));
     }
     public getPyramidCoordinate(x: number, y: number) : string {
         if ((x+y)%2 === 1) return this.getDownwardPyramidCoordinate(x, y);
         else return this.getUpwardPyramidCoordinate(x, y);
     }
     public getDownwardPyramidCoordinate(x: number, y: number): string {
-        const zx: number = 25*x;
-        const zy: number = 50*y;
+        const zx: number = this.CASE_SIZE * x / 2;
+        const zy: number = this.CASE_SIZE * y;
         const UP_LEFT: string = zx + ', ' + zy;
-        const UP_RIGHT: string = (zx+50) + ', ' + zy;
-        const DOWN_CENTER: string = (zx+25) + ', ' + (zy+50);
-        const CENTER: string = (zx+25) + ', ' + (zy+25);
+        const UP_RIGHT: string = (zx+this.CASE_SIZE) + ', ' + zy;
+        const DOWN_CENTER: string = (zx+(this.CASE_SIZE/2)) + ', ' + (zy+this.CASE_SIZE);
+        const CENTER: string = (zx+(this.CASE_SIZE / 2)) + ', ' + (zy+(this.CASE_SIZE / 2));
         return UP_LEFT + ',' +
                DOWN_CENTER + ',' +
                CENTER + ',' +
@@ -51,12 +54,12 @@ export abstract class TriangularGameComponent<M extends Move,
                UP_RIGHT;
     }
     public getUpwardPyramidCoordinate(x: number, y: number): string {
-        const zx: number = 25*x;
-        const zy: number = (50*y) + 50;
+        const zx: number = this.CASE_SIZE * x / 2;
+        const zy: number = (y + 1) * this.CASE_SIZE;
         const DOWN_LEFT: string = zx + ', ' + zy;
-        const DOWN_RIGHT: string = (zx+50) + ', ' + zy;
-        const UP_CENTER: string = (zx+25) + ', ' + (zy-50);
-        const CENTER: string = (zx+25) + ', ' + (zy-25);
+        const DOWN_RIGHT: string = (zx + this.CASE_SIZE) + ', ' + zy;
+        const UP_CENTER: string = (zx + (this.CASE_SIZE / 2)) + ', ' + (zy - this.CASE_SIZE);
+        const CENTER: string = (zx + (this.CASE_SIZE / 2)) + ', ' + (zy- (this.CASE_SIZE / 2));
         return DOWN_LEFT + ',' +
                UP_CENTER + ',' +
                CENTER + ',' +

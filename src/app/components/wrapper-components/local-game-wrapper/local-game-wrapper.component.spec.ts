@@ -151,7 +151,7 @@ describe('LocalGameWrapperComponent', () => {
         const drawIndicator: DebugElement = debugElement.query(By.css('#draw'));
         expect(drawIndicator).toBeTruthy('Draw indicator should be present');
     }));
-    it('should show score if needed', fakeAsync(async () => {
+    it('should show score if needed', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
         fixture.detectChanges();
         tick(1);
@@ -159,6 +159,7 @@ describe('LocalGameWrapperComponent', () => {
         component.gameComponent.showScore = true;
         component.gameComponent['scores'] = [0, 0];
         fixture.detectChanges();
-        expect(await clickElement('#scoreIndicator')).toBeTrue();
+        expect(await clickElement('#scoreZero')).toBeTrue();
+        expect(await clickElement('#scoreOne')).toBeTrue();
     }));
 });

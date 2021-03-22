@@ -111,7 +111,7 @@ export class CoerceoPartSlice extends TriangularGameState {
         return resultingSlice;
     }
     public captureIfNeeded(coord: Coord): CoerceoPartSlice {
-        display(CoerceoPartSlice.VERBOSE || true, { coerceoPartSlice_captureIfNeeded: { object: this, coord } });
+        display(CoerceoPartSlice.VERBOSE, { coerceoPartSlice_captureIfNeeded: { object: this, coord } });
         if (this.getBoardAt(coord) === this.getCurrentEnnemy().value) {
             const newBoard: number[][] = this.getCopiedBoard();
             const newCaptures: [number, number] = [this.captures[0], this.captures[1]];

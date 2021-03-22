@@ -8,7 +8,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
 type JoinerOS = ObservableSubject<IJoinerId>
 
 export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner, PIJoiner> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     private static joinerDB: MGPMap<MGPStr, JoinerOS>;
 
@@ -19,7 +19,7 @@ export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner, PIJoiner> {
     public getStaticDB(): MGPMap<MGPStr, JoinerOS> {
         return JoinerDAOMock.joinerDB;
     }
-    public resetStaticDB() {
+    public resetStaticDB(): void {
         JoinerDAOMock.joinerDB = new MGPMap();
     }
 }

@@ -1,10 +1,11 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { CoerceoPartSlice } from '../coerceo-part-slice/CoerceoPartSlice';
-import { CoerceoFailure, CoerceoRules } from '../coerceo-rules/CoerceoRules';
+import { CoerceoRules } from '../coerceo-rules/CoerceoRules';
+import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 
-fdescribe('CoerceoMove', () => {
+describe('CoerceoMove', () => {
     it('Should distinguish move and capture based on presence or not of capture', () => {
         const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(5, 5), CoerceoStep.UP_RIGHT);
         expect(move.isTileExchange()).toBeFalse();
@@ -64,7 +65,7 @@ fdescribe('CoerceoMove', () => {
             const tileExchange: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 5));
             const deplacement: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(5, 5), new Coord(7, 5));
             expect(tileExchange.toString()).toBe('CoerceoMove((5, 5))');
-            expect(deplacement.toString()).toBe('CoerceoMove((5, 5) > (7, 5))');
+            expect(deplacement.toString()).toBe('CoerceoMove((5, 5) > RIGHT > (7, 5))');
         });
         it('CoerceoMove.encode and CoerceoMove.decode should be reversible', () => {
             const rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
