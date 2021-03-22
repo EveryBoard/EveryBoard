@@ -1,4 +1,4 @@
-<div class="container-fluid">
+<div class="container container-fluid">
     <div id="game" class="row">
         <div id="board" class="circled col-sm-8">
             <app-game-includer></app-game-includer>
@@ -8,11 +8,11 @@
                 <h4>Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }}</h4>
             </div>
             <div class="container row inforow" id="playerSelector">
-                <div class="col-sm-6">
-                    <!-- TODO: this is using angular material, while we could simply use Bootstrap's select (and form-select class), but then it breaks some tests -->
-                    <mat-select class="text-left"
-                                [(value)]="playerZeroValue"
-                                (selectionChange)="switchPlayerOne()">
+                <div class="col-sm-6 float-sm-left">
+                    Joueur 1
+                    <!-- TODO: this is using angular material, while we could simply use Bootstrap's select (and form-select class), but then it breaks some tests --> 
+                    <mat-select [(value)]="playerZeroValue"
+                            (selectionChange)="switchPlayerOne()">
                         <mat-option selected value="0"> Humain </mat-option>
                         <mat-option value="1"> IA LEVEL 1 </mat-option>
                         <mat-option value="2"> IA LEVEL 2 </mat-option>
@@ -22,10 +22,11 @@
                         <mat-option value="6"> IA LEVEL 6 </mat-option>
                         <mat-option value="7"> IA LEVEL 7 </mat-option>
                     </mat-select>
+                    <span id="scoreIndicatorP0" *ngIf="compo && compo.showScore"> {{ compo.scores[0] }} pts </span>
                 </div>
-                <div class="col-sm-6">
-                    <mat-select class="text-right"
-                                [(value)]="playerOneValue"
+                <div class="col-sm-6 float-sm-right">
+                    Joueur 2
+                    <mat-select [(value)]="playerOneValue"
                                 (selectionChange)="switchPlayerTwo()">
                         <mat-option selected value="0"> Humain </mat-option>
                         <mat-option value="1"> IA LEVEL 1 </mat-option>
@@ -36,14 +37,7 @@
                         <mat-option value="6"> IA LEVEL 6 </mat-option>
                         <mat-option value="7"> IA LEVEL 7 </mat-option>
                     </mat-select>
-                </div>
-            </div>
-            <div class="row" id="scoreIndicator" *ngIf="compo && compo.showScore">
-                <div class="col-sm-6">
-                    <p class="text-left"> {{ compo.scores[0] }} pts </p>
-                </div>
-                <div  class="col-sm-6">
-                    <p class="text-right"> {{ compo.scores[1] }} pts </p>
+                    <span id="scoreIndicatorP1" *ngIf="compo && compo.showScore"> {{ compo.scores[1] }} pts </span>
                 </div>
             </div>
             <div class="inforow" id="gameResult" *ngIf="endGame">
