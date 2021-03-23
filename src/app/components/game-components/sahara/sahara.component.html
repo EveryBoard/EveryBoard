@@ -1,17 +1,12 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 500 500"
+     viewBox="0 0 300 300"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let caseContent of line; index as x;"
            id="click_{{x}}_{{y}}"
            (click)="onClick(x, y);">
-            <g *ngIf="caseContent === 0">
-                <polyline [attr.points]="getPyramidCoordinate(x, y)"
-                          [attr.fill]="getPlayerFill(x, y)"
-                          style="stroke: black; stroke-width: 5" />
-            </g>
-            <g *ngIf="caseContent === 1">
+            <g *ngIf="caseContent === 0 || caseContent === 1">
                 <polyline [attr.points]="getPyramidCoordinate(x, y)"
                           [attr.fill]="getPlayerFill(x, y)"
                           style="stroke: black; stroke-width: 5" />

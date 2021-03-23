@@ -1,0 +1,61 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="0 0 800 1000"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of board; index as y;">
+        <g *ngFor="let caseContent of line; index as x;"
+           id="click_{{x}}_{{y}}"
+           (click)="onClick(x, y)">
+            <polyline *ngIf="caseContent === 0 || caseContent === 1"
+                      [attr.points]="getPyramidCoordinate(x, y)"
+                      [attr.fill]="getPlayerFill(x, y)"
+                      style="stroke: black; stroke-width: 5" />
+            <polyline *ngIf="caseContent === EMPTY"
+                      [attr.points]="getCoordinate(x, y)"
+                      [attr.fill]="getEmptyFill(x, y)"
+                      style="stroke:black; stroke-width: 5" />
+            <g *ngIf="caseContent === NONE && isRemoved(x, y)">
+                <polyline *ngIf="wasOccupied(x, y)"
+                          [attr.points]="getCoordinate(x, y)"
+                          fill="#F00"
+                          style="stroke: black; stroke-width: 5" />
+                <polyline *ngIf="wasOccupied(x, y) === false"
+                          [attr.points]="getPyramidCoordinate(x, y)"
+                          fill="#990000"
+                          style="stroke: black; stroke-width: 5" />
+            </g>
+        </g>
+    </g>
+    <polyline *ngFor="let hl of highlights"
+              [attr.points]="getCoordinate(hl.x, hl.y)"
+              style="fill: none; stroke: yellow; stroke-width: 5" />
+    <polyline *ngIf="lastStart.isPresent()"
+              [attr.points]="getCoordinate(lastStart.get().x, lastStart.get().y)"
+              style="fill: none; stroke: yellow; stroke-width: 5" />
+    <polyline *ngIf="lastEnd.isPresent()"
+              [attr.points]="getCoordinate(lastEnd.get().x, lastEnd.get().y)"
+              style="fill: none; stroke: yellow; stroke-width: 5" />
+    <polyline *ngIf="chosenCoord.isPresent()"
+              [attr.points]="getCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
+              style="fill: none; stroke: blue; stroke-width: 5" />
+    <g *ngIf="tiles[0] > 0">
+        <polyline [attr.points]="getTilesCountCoordinate(8, 0)"
+                  [attr.fill]="PLAYER_ZERO_FILL" />
+        <text [attr.x]="(CASE_SIZE / 2) + CASE_SIZE * 8"
+              [attr.y]="16 + (CASE_SIZE / 2) + CASE_SIZE * 0"
+              text-anchor="middle"
+              stroke="black"
+              [attr.font-size]="CASE_SIZE / 2"
+        >{{ tiles[0] }}</text>
+    </g>
+    <g *ngIf="tiles[1] > 0">
+        <polyline [attr.points]="getTilesCountCoordinate(8, 9)"
+                  [attr.fill]="PLAYER_ONE_FILL" />
+        <text [attr.x]="(CASE_SIZE / 2) + CASE_SIZE * 8"
+              [attr.y]="16 + (CASE_SIZE / 2) + CASE_SIZE * 9"
+              text-anchor="middle"
+              stroke="black"
+              [attr.font-size]="CASE_SIZE / 2"
+        >{{ tiles[1] }}</text>
+    </g>
+</svg>

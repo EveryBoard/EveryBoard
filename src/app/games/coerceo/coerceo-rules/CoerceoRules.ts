@@ -7,16 +7,7 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { CoerceoMove } from '../coerceo-move/CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from '../coerceo-part-slice/CoerceoPartSlice';
-
-/* eslint-disable max-len */
-export class CoerceoFailure {
-
-    public static INVALID_DISTANCE: string = 'Distance de déplacement illégal, votre pion doit atterir sur l\'un des six triangles de même couleur les plus proches';
-
-    public static CANNOT_LAND_ON_ALLY: string = 'Vous ne pouvez pas déplacer vos pièces sur vos propres pièces.';
-
-    public static MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = 'vous avez sélectionné une case vide, vous devez sélectionner l\'une de vos pièces.'
-}
+import { CoerceoFailure } from '../CoerceoFailure';
 
 abstract class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoPartSlice, LegalityStatus> {}
 
@@ -25,10 +16,52 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
     public static VERBOSE: boolean = false;
 
     public getListMoves(node: CoerceoNode): MGPMap<CoerceoMove, CoerceoPartSlice> {
-        throw new Error('Method not implemented.');
+        const results: MGPMap<CoerceoMove, CoerceoPartSlice> = this.getListDeplacement(node);
+        results.putAll(this.getListExchanges(node));
+        return results;
+    }
+    public getListDeplacement(node: CoerceoNode): MGPMap<CoerceoMove, CoerceoPartSlice> {
+        const deplacements: MGPMap<CoerceoMove, CoerceoPartSlice> = new MGPMap();
+        const slice: CoerceoPartSlice = node.gamePartSlice;
+        for (let y: number = 0; y < 10; y++) {
+            for (let x: number = 0; x < 15; x++) {
+                const start: Coord = new Coord(x, y);
+                if (slice.getBoardAt(start) === slice.getCurrentPlayer().value) {
+                    const legalLandings: Coord[] = slice.getLegalLandings(start);
+                    for (const end of legalLandings) {
+                        const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);
+                        const resultingSlice: CoerceoPartSlice =
+                            this.applyLegalDeplacement(move, slice, null).resultingSlice;
+                        deplacements.put(move, resultingSlice);
+                    }
+                }
+            }
+        }
+        return deplacements;
+    }
+    public getListExchanges(node: CoerceoNode): MGPMap<CoerceoMove, CoerceoPartSlice> {
+        const exchanges: MGPMap<CoerceoMove, CoerceoPartSlice> = new MGPMap();
+        const slice: CoerceoPartSlice = node.gamePartSlice;
+        const ENNEMY: number = slice.getCurrentEnnemy().value;
+        if (slice.tiles[ENNEMY] < 2) {
+            return exchanges;
+        }
+        for (let y: number = 0; y < 10; y++) {
+            for (let x: number = 0; x < 15; x++) {
+                const captured: Coord = new Coord(x, y);
+                if (slice.getBoardAt(captured) === ENNEMY) {
+                    const move: CoerceoMove = CoerceoMove.fromTilesExchange(captured);
+                    const resultingSlice: CoerceoPartSlice = this.applyLegalTileExchange(move, slice, null).resultingSlice;
+                    exchanges.put(move, resultingSlice);
+                }
+            }
+        }
+        return exchanges;
     }
     public getBoardValue(move: CoerceoMove, slice: CoerceoPartSlice): number {
-        throw new Error('Method not implemented.');
+        const scoreZero: number = (2 * slice.captures[0]) + slice.tiles[0];
+        const scoreOne: number = (2 * slice.captures[1]) + slice.tiles[1];
+        return scoreOne - scoreZero;
     }
     public applyLegalMove(move: CoerceoMove,
                           slice: CoerceoPartSlice,
@@ -96,7 +129,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
     }
     public isLegalTileExchange(move: CoerceoMove, slice: CoerceoPartSlice): LegalityStatus {
         if (slice.tiles[slice.getCurrentPlayer().value] < 2) {
-            return { legal: MGPValidation.failure('Not enough tiles to exchanges.') };
+            return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE) };
         }
         if (slice.getBoardAt(move.capture.get()) === CoerceoPiece.NONE.value) {
             return { legal: MGPValidation.failure('Cannot capture coord of removed tile!') };
