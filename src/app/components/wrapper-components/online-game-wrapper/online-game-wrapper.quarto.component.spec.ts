@@ -57,7 +57,7 @@ class AuthenticationServiceMock {
     }
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0
@@ -119,9 +119,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     const FIRST_MOVE_ENCODED: number = FIRST_MOVE.encode();
 
-    const doMove: (move: QuartoMove) => Promise<MGPValidation> = async(move: QuartoMove) => {
+    const doLegalMove: (move: QuartoMove) => Promise<MGPValidation> = async(move: QuartoMove) => {
         const slice: QuartoPartSlice = component.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
         const result: MGPValidation = await component.gameComponent.chooseMove(move, slice, null, null);
+        expect(result.isSuccess()).toBeTrue();
+        if (result.isFailure()) { console.log(result.getReason() + ' !!! ') }
         fixture.detectChanges();
         tick(1);
         return result;
@@ -173,7 +175,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const receivedMoves: number[] = [];
         for (let i: number = 0; i < moves.length; i+=2) {
             const move: QuartoMove = moves[i];
-            await doMove(moves[i]);
+            await doLegalMove(moves[i]);
             receivedMoves.push(move.encode(), moves[i+1].encode());
             await receiveNewMoves(receivedMoves);
         }
@@ -227,7 +229,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
 
-        expect((await doMove(FIRST_MOVE)).isSuccess()).toBeTrue();
+        expect((await doLegalMove(FIRST_MOVE)).isSuccess()).toBeTrue();
 
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED]);
         expect(component.currentPart.copy().turn).toEqual(1);
@@ -251,7 +253,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         // Do second move
         const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BBBA);
-        await doMove(move);
+        await doLegalMove(move);
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED, move.encode()]);
         expect(component.currentPart.copy().turn).toEqual(2);
 
@@ -261,7 +263,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         spyOn(partDAO, 'update').and.callThrough();
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE.encode()]);
         const expectedUpdate = {
             listMoves: [FIRST_MOVE.encode()], turn: 1,
@@ -281,7 +283,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
         spyOn(partDAO, 'update').and.callThrough();
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
-        await doMove(winningMove);
+        await doLegalMove(winningMove);
 
         expect(component.gameComponent.rules.node.move.toString()).toBe(winningMove.toString());
         expect(partDAO.update).toHaveBeenCalledTimes(1);
@@ -298,7 +300,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
 
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
 
         // Asking take back
         spyOn(partDAO, 'update').and.callThrough();
@@ -314,7 +316,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         // Doing a first move so take back make sens
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
 
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
 
@@ -334,7 +336,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // Doing another move
         spyOn(partDAO, 'update').and.callThrough();
         const move1: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
-        await doMove(move1);
+        await doLegalMove(move1);
 
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
             listMoves: [move1.encode()], turn: 1,
@@ -349,9 +351,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const move1: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BABA);
         const move2: QuartoMove = new QuartoMove(3, 0, QuartoPiece.ABBA);
 
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1.encode()]);
-        await doMove(move2);
+        await doLegalMove(move2);
         await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(3);
 
@@ -375,7 +377,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         expect(await askTakeBack()).toBeFalse();
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
         expect(await askTakeBack()).toBeTrue();
         fixture.detectChanges();
         expect(await askTakeBack()).toBeFalse();
@@ -388,7 +390,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(await askTakeBack()).toBeFalse();
         await receiveNewMoves([FIRST_MOVE_ENCODED]);
         expect(await askTakeBack()).toBeFalse();
-        await doMove(new QuartoMove(2, 2, QuartoPiece.BBAA));
+        await doLegalMove(new QuartoMove(2, 2, QuartoPiece.BBAA));
         expect(await askTakeBack()).toBeTrue();
         expect(await askTakeBack()).toBeFalse();
 
@@ -398,7 +400,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         expect(await acceptTakeBack()).toBeFalse();
         await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
@@ -416,7 +418,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         expect(await refuseTakeBack()).toBeFalse();
         await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
@@ -432,14 +434,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should not allow player to play while take back request is waiting for him', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
 
         spyOn(partDAO, 'update').and.callThrough();
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
-        await doMove(move2);
+        await doLegalMove(move2);
         expect(partDAO.update).not.toHaveBeenCalled();
 
         tick(component.maximalMoveDuration);
@@ -449,12 +451,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         tick(1);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
         const move2: QuartoMove = new QuartoMove(2, 1, QuartoPiece.ABBA);
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         await askTakeBack();
 
         spyOn(partDAO, 'update').and.callThrough();
-        await doMove(move2);
+        await doLegalMove(move2);
         expect(partDAO.update).not.toHaveBeenCalledWith('joinerId', {
             listMoves: [FIRST_MOVE_ENCODED, move1, move2.encode()], turn: 3,
             playerZero: null, playerOne: null, request: null,
@@ -465,7 +467,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should forbid player to ask take back again after refusal', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
         await askTakeBack();
         await receiveRequest(RequestCode.ONE_REFUSED_TAKE_BACK);
 
@@ -476,14 +478,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should not allow player to move after resigning', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        await doMove(FIRST_MOVE);
+        await doLegalMove(FIRST_MOVE);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         expect(await clickElement('#resignButton')).toBeTruthy('Should be possible to resign');
 
         spyOn(partDAO, 'update').and.callThrough();
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
-        expect((await doMove(move2)).isSuccess()).toBeFalse();
+        expect((await doLegalMove(move2)).isSuccess()).toBeFalse();
         expect(partDAO.update).not.toHaveBeenCalled();
 
         tick(component.maximalMoveDuration);

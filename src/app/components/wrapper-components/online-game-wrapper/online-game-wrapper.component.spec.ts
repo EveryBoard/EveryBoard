@@ -5,7 +5,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 
 import { of } from 'rxjs';
 
-import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { AppModule } from 'src/app/app.module';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
@@ -55,7 +55,7 @@ class AuthenticationServiceMock {
 @Component({})
 class BlankComponent {}
 
-describe('OnlineGameWrapperComponent Lifecycle', () => {
+fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0
