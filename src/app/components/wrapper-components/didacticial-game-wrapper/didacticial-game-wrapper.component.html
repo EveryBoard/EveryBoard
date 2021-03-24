@@ -23,7 +23,7 @@
                 </ul>
                 <p class="lead" id='currentMessage'>{{ currentMessage }}</p>
                 <div *ngIf="currentReason" class="alert alert-danger" role="alert">
-                    {{ currentReason }}
+                    <p id="currentReason">{{ currentReason }}</p>
                 </div>
                 <div class="btn-toolbar">
                     <button id="retryButton"
