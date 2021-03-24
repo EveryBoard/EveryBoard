@@ -1,53 +1,64 @@
-<div class="container-fluid"
-     style="height: 100%; max-height: 88%"
->
-    <div id="infos" class="flex-container circled col-sm-4">
-        <ul>
-            <ng-container *ngFor="let step of steps; index as i;">
-                <li *ngIf="i !== stepIndex else title"
-                    id="step_{{ i }}"
-                    [style.color]="getStepColor(i)"
-                    (click)="showStep(i)"
-                >
-                    <span style="color: black">{{ step.title }}</span>
-                </li>
-                <ng-template #title>
-                    <li id="step_{{ i }}"
-                        [style.color]="getStepColor(i)"
-                        (click)="showStep(i)"
-                    >
-                        <span style="color: black"><b>{{ step.title }}</b></span>
-                    </li>
-                </ng-template>
-            </ng-container>
-        </ul>
-        <h3 id='currentMessage'>{{ currentMessage }}</h3>
-        <h3 id='currentReason' style='color: red'>{{ currentReason }}</h3>
-        <button id="retryButton"
-                *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex] === true) || moveAttemptMade)"
-                (click)="retry()"
-        >
-            Essayez à nouveau
-        </button>
-        <button id="nextButton"
-                *ngIf="tutorialOver === false"
-                (click)="next()"
-        >{{ steps && steps[stepIndex].isInformation() ? 'Continuer' : 'Suivant' }}</button>
-        <button id="restartButton"
-                *ngIf="tutorialOver"
-                (click)="start()"
-        >
-            Recommencer
-        </button>
-        <button id="showSolutionButton"
-                *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
-                (click)="showSolution()"
-        >
-            Voir la solution
-        </button>
-    </div>
-
-    <div id="board" class="flex-container circled col-sm-8">
-        <app-game-includer></app-game-includer>
+<div class="d-flex align-items-center h-100">
+    <div class="container">
+        <div class="row">
+            <div id="infos" class="flex-container circled">
+                <ul>
+                    <ng-container *ngFor="let step of steps; index as i;">
+                        <li *ngIf="i !== stepIndex else title"
+                            id="step_{{ i }}"
+                            [style.color]="getStepColor(i)"
+                            (click)="showStep(i)"
+                            >
+                            <span style="color: black">{{ step.title }}</span>
+                        </li>
+                        <ng-template #title>
+                            <li id="step_{{ i }}"
+                                [style.color]="getStepColor(i)"
+                                (click)="showStep(i)"
+                                >
+                                <span style="color: black"><b>{{ step.title }}</b></span>
+                            </li>
+                        </ng-template>
+                    </ng-container>
+                </ul>
+                <p class="lead" id='currentMessage'>{{ currentMessage }}</p>
+                <div *ngIf="currentReason" class="alert alert-danger" role="alert">
+                    {{ currentReason }}
+                </div>
+                <div class="btn-toolbar">
+                    <button id="retryButton"
+                            class="btn btn-lg btn-primary mr-3"
+                            *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex] === true) || moveAttemptMade)"
+                            (click)="retry()"
+                            >
+                        Essayez à nouveau
+                    </button>
+                    <button id="nextButton"
+                            class="btn btn-lg btn-primary mr-3"
+                            *ngIf="tutorialOver === false"
+                            (click)="next()"
+                            >{{ steps && steps[stepIndex].isInformation() ? 'Continuer' : 'Suivant' }}</button>
+                    <button id="restartButton"
+                            class="btn btn-lg btn-primary"
+                            *ngIf="tutorialOver"
+                            (click)="start()"
+                            >
+                        Recommencer
+                    </button>
+                    <button id="showSolutionButton"
+                            class="btn btn-lg btn-primary"
+                            *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
+                            (click)="showSolution()"
+                            >
+                        Voir la solution
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div id="board" class="flex-container circled col-sm-8 mx-auto">
+                <app-game-includer></app-game-includer>
+            </div>
+        </div>
     </div>
 </div>
