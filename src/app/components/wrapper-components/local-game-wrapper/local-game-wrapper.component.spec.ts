@@ -155,7 +155,8 @@ describe('LocalGameWrapperComponent', () => {
         AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
         fixture.detectChanges();
         tick(1);
-        expect(await clickElement('#scoreIndicator')).toBeFalsy();
+        expect(await clickElement('#scoreZero')).toBeFalsy();
+        expect(await clickElement('#scoreOne')).toBeFalsy();
         component.gameComponent.showScore = true;
         component.gameComponent['scores'] = [0, 0];
         fixture.detectChanges();
