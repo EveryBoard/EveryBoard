@@ -1,12 +1,9 @@
-<div *ngIf="currentJoiner" style="height: 60%;">
-
-    <div id="gameConfig" class="circled col-sm-10" style="height: 100%; max-height: 100%">
-
+<div *ngIf="currentJoiner" class="container">
+    <div class="row">
+    <div id="gameConfig" class="circled col-sm-10">
         <mat-horizontal-stepper id="creatorDiv" linear #stepper *ngIf="userIsCreator">
-
             <mat-step [stepControl]="opponentFormGroup" editable="false">
                 <ng-template matStepLabel>Selection d'un adversaire</ng-template>
-
                 <div *ngIf="currentJoiner.candidatesNames.length === 0 else chooseCandidate">
                     Attendez qu'un utilisateur vous rejoigne!
                 </div>
@@ -124,7 +121,7 @@
 
     </div>
 
-    <div id="joiners" class="circled col-sm-2" style="height: 100%; max-height: 100%">
+    <div id="joiners" class="circled col-sm-2 flex-grow-1">
         <h4> Joueurs présents : </h4>
         <ul>
             <li *ngIf="currentJoiner.chosenPlayer"
@@ -136,5 +133,6 @@
                 <p> {{ joinerName }} </p>
             </li>
         </ul>
+    </div>
     </div>
 </div>
