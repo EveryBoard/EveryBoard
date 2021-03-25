@@ -18,7 +18,8 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/player/Player';
-import { assert, display } from 'src/app/utils/collection-lib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { display } from 'src/app/utils/collection-lib/utils';
 
 enum UpdateType {
     PRE_START_DOC = 'PRE_START_DOC',
@@ -42,7 +43,7 @@ interface UpdateDiff {
     styleUrls: ['./online-game-wrapper.component.css'],
 })
 export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, AfterViewInit, OnDestroy {
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     @ViewChild('partCreation')
     public partCreation: PartCreationComponent;
@@ -96,11 +97,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     private async redirectIfPartIsInvalid(): Promise<void> {
         const gameType: string = this.extractGameTypeFromURL();
-        const partExistsAndIsOfRightType: boolean =
-            await this.gameService.partExistsAndIsOfType(this.currentPartId, gameType);
-        if (!partExistsAndIsOfRightType) {
+        const partValidity: MGPValidation =
+            await this.gameService.getPartValidity(this.currentPartId, gameType);
+        if (partValidity.isFailure()) {
+            let page: string;
+            if (partValidity.reason === 'WRONG_GAME_TYPE') {
+                page = '/enfantDCul';
+            } else {
+                page = '/notFound';
+            }
             this.routerEventsSub.unsubscribe();
-            this.router.navigate(['/server']);
+            this.router.navigate([page]);
         }
     }
     private async setCurrentPartIdOrRedirect(): Promise<void> {
@@ -166,7 +173,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     protected async startPart(): Promise<void> {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
 
-        this.startCountDownFor(this.totalPartDuration, this.totalPartDuration, 0); // TODO: KILL THIS :  // TODO: ZERO SEEMS TO BE A MISTAKE
+        // TODO: CONFIRM KILL this.startCountDownFor(this.totalPartDuration, this.totalPartDuration, 0); // TODO: ZERO SEEMS TO BE A MISTAKE
         // TODO: recharger une page dont les deux joueurs étaient partis
         this.gameService.startObserving(this.currentPartId, (iPart: ICurrentPartId) => {
             this.onCurrentPartUpdate(iPart);
@@ -261,7 +268,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             before_slice_turn: this.gameComponent.rules.node.gamePartSlice.turn,
             nbPlayedMoves: part.listMoves.length,
         } });
-        // const updateType: UpdateType = this.getUpdateType(updatedICurrentPart.doc);
+        const updateType: UpdateType = this.getUpdateType(updatedICurrentPart.doc);
         // switch (updateType) {
         //     case UpdateType.REQUEST:
         //         return this.onRequest(part.request);
@@ -312,6 +319,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public getUpdateType(update: ICurrentPart): UpdateType {
         const currentPart: ICurrentPart = this.currentPart ? this.currentPart.copy() : null;
         const diff: UpdateDiff = this.getDiff(currentPart, update);
+        console.log({ diff })
         const nbDiffs: number = this.getUpdateChangesNumber(diff);
         if (diff == null || nbDiffs === 0) {
             return UpdateType.DOUBLON;
@@ -397,6 +405,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, true);
     }
     public notifyTimeoutVictory(victoriousPlayer: string): void {
+        console.log('TIMEOUT IN FAVOR OF ' + victoriousPlayer)
         this.endGame = true;
 
         const wonPart: ICurrentPart = this.currentPart.copy();

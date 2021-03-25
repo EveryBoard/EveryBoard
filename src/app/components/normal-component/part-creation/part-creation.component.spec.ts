@@ -10,7 +10,6 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/joiner/JoinerService';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks';
@@ -27,7 +26,7 @@ class RouterMock {
         return Promise.resolve(true);
     }
 }
-describe('PartCreationComponent with fixture:', () => {
+fdescribe('PartCreationComponent with fixture:', () => {
     let fixture: ComponentFixture<PartCreationComponent>;
 
     let component: PartCreationComponent;
@@ -36,7 +35,7 @@ describe('PartCreationComponent with fixture:', () => {
 
     let partDAOMock: PartDAOMock;
 
-    beforeEach(async() => {
+    beforeEach(async() => { console.log('==================')
         await TestBed.configureTestingModule({
             imports: [
                 MatStepperModule, MatRadioModule, MatSliderModule,
