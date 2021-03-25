@@ -18,8 +18,25 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/player/Player';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { display } from 'src/app/utils/collection-lib/utils';
 
+enum UpdateType {
+    PRE_START_DOC = 'PRE_START_DOC',
+    STARTING_DOC = 'STARTING_DOC',
+    DOUBLON = 'DOUBLON',
+    MOVE = 'MOVE',
+    REQUEST = 'REQUEST',
+    END_GAME = 'END_GAME',
+}
+interface UpdateDiff {
+
+    removed: { [key: string]: unknown };
+
+    modified: { [key: string]: unknown };
+
+    added: { [key: string]: unknown };
+}
 @Component({
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
@@ -80,11 +97,17 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     private async redirectIfPartIsInvalid(): Promise<void> {
         const gameType: string = this.extractGameTypeFromURL();
-        const partExistsAndIsOfRightType: boolean =
-            await this.gameService.partExistsAndIsOfType(this.currentPartId, gameType);
-        if (!partExistsAndIsOfRightType) {
+        const partValidity: MGPValidation =
+            await this.gameService.getPartValidity(this.currentPartId, gameType);
+        if (partValidity.isFailure()) {
+            let page: string;
+            if (partValidity.reason === 'WRONG_GAME_TYPE') {
+                page = '/enfantDCul';
+            } else {
+                page = '/notFound';
+            }
             this.routerEventsSub.unsubscribe();
-            this.router.navigate(['/server']);
+            this.router.navigate([page]);
         }
     }
     private async setCurrentPartIdOrRedirect(): Promise<void> {
@@ -131,7 +154,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
     }
     public startGame(iJoiner: IJoiner): void {
-        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.startGame');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startGame');
 
         if (iJoiner == null) throw new Error('Cannot start Game of empty joiner doc');
         this.maximalMoveDuration = iJoiner.maximalMoveDuration * 1000;
@@ -148,26 +171,111 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }, 1);
     }
     protected async startPart(): Promise<void> {
-        display(OnlineGameWrapperComponent.VERBOSE || true, 'OnlineGameWrapperComponent.startPart');
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.startPart');
 
-        // TODO: CONFIRM KILLING : this.startCountDownFor(this.totalPartDuration, this.totalPartDuration, 0); // TODO: ZERO SEEMS TO BE A MISTAKE
+        // TODO: CONFIRM KILL this.startCountDownFor(this.totalPartDuration, this.totalPartDuration, 0); // TODO: ZERO SEEMS TO BE A MISTAKE
         // TODO: recharger une page dont les deux joueurs étaient partis
         this.gameService.startObserving(this.currentPartId, (iPart: ICurrentPartId) => {
             this.onCurrentPartUpdate(iPart);
         });
         return Promise.resolve();
     }
+    public getDiff(before: { [key: string]: any }, after: { [key: string]: any }): UpdateDiff {
+        const changes: UpdateDiff = {
+            removed: {},
+            modified: {},
+            added: {},
+        };
+        if (before == null) {
+            changes.added = { ...after };
+            return changes;
+        }
+        if (after == null) {
+            changes.removed = { ...before };
+            return changes;
+        }
+        const beforeKeys: string[] = Object.keys(before);
+        const afterKeys: string[] = Object.keys(after);
+        const removedKeys: string[] = beforeKeys.filter((k: string) => afterKeys.includes(k) === false);
+        const commonKeys: string[] = beforeKeys.filter((k: string) => afterKeys.includes(k));
+        const addedKeys: string[] = afterKeys.filter((k: string) => beforeKeys.includes(k) === false);
+        for (const addedKey of addedKeys) {
+            if (after[addedKey] != null) {
+                changes.added[addedKey] = after[addedKey];
+            }
+        }
+        for (const commonKey of commonKeys) {
+            if (after[commonKey] == null) {
+                if (before[commonKey] == null) {
+                    throw new Error('t nul pt1');
+                }
+                changes.removed[commonKey] = before[commonKey];
+            } else if (typeof before[commonKey] === 'function' ||
+                       typeof before[commonKey] === 'symbol' ||
+                       typeof before[commonKey] === 'bigint')
+            {
+                throw new Error('Not implemented yet');
+            } else if (typeof before[commonKey] === 'undefined') {
+                throw new Error('YOU RE NOT A REAL VALUE ' + commonKey);
+            } else if (typeof before[commonKey] === 'string' ||
+                       typeof before[commonKey] === 'boolean' ||
+                       typeof before[commonKey] === 'number')
+            {
+                if (before[commonKey] !== after[commonKey]) {
+                    changes.modified[commonKey] = after[commonKey];
+                }
+            } else if (typeof before[commonKey]['length'] === 'number') { // LIST
+                if (typeof after[commonKey]['length'] === 'number') {
+                    if (before[commonKey].length === after[commonKey].length) {
+                        let equal: boolean = true;
+                        for (let i: number = 0; equal && i < before[commonKey]['length']; i++) {
+                            if (after[commonKey][i] !== before[commonKey][i]) {
+                                equal = false;
+                                changes.modified[commonKey] = after ? after[commonKey] : after;
+                            }
+                        }
+                    } else {
+                        changes.modified[commonKey] = after[commonKey];
+                    }
+                } else {
+                    throw new Error('Thing should not change type');
+                }
+            } else { // JSON
+                const newDiff: UpdateDiff = this.getDiff(before[commonKey], after[commonKey]);
+                const nbChanges: number = this.getUpdateChangesNumber(newDiff);
+                if (nbChanges > 0) {
+                    changes.modified[commonKey] = newDiff;
+                }
+            }
+        }
+        for (const removedKey of removedKeys) {
+            changes.removed[removedKey] = before[removedKey];
+        }
+        return changes;
+    }
+    public getUpdateChangesNumber(newDiff: UpdateDiff): number {
+        const diffRemoval: number = Object.keys(newDiff.removed).length;
+        const diffModified: number = Object.keys(newDiff.modified).length;
+        const diffAdd: number = Object.keys(newDiff.added).length;
+        return diffAdd + diffModified + diffRemoval;
+    }
     protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId): void {
         const part: ICurrentPart = updatedICurrentPart.doc;
-        display(OnlineGameWrapperComponent.VERBOSE || true, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
+        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
             then: updatedICurrentPart.doc,
             before_part_turn: part.turn,
             before_slice_turn: this.gameComponent.rules.node.gamePartSlice.turn,
             nbPlayedMoves: part.listMoves.length,
         } });
+        const updateType: UpdateType = this.getUpdateType(updatedICurrentPart.doc);
+        // switch (updateType) {
+        //     case UpdateType.REQUEST:
+        //         return this.onRequest(part.request);
+        // }
         if (part.beginning == null) {
-            this.gameComponent.message('En attente de la validation de config');
+            console.log('En attente de la validation de config et de données complètes');
+            this.gameComponent.message('En attente de la validation de config et de données complètes');
             return;
         }
         const updateIsMove: boolean = this.isUpdateMove(part);
@@ -193,10 +301,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                 nbPlayedMoves: part.listMoves.length,
             });
 
-            if (this.isUpdateFirstPlayerMove()) {
+            if (this.isUpdateFirstPlayedMoves(part.turn)) {
                 display(OnlineGameWrapperComponent.VERBOSE,
-                        'OnlineGameWrapperComponent.onCurrentPartUpdate: FIRST UPDATE TO BE A MOVE');
-                this.firstPlayedTurn = part.turn - 1;
+                        'OnlineGameWrapperComponent.onCurrentPartUpdate: FIRST/SECOND UPDATE TO BE A MOVE');
                 this.startCountDownFor(this.totalPartDuration, this.totalPartDuration, part.turn % 2 === 0 ? 0 : 1);
             } else {
                 display(OnlineGameWrapperComponent.VERBOSE,
@@ -209,16 +316,51 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                     'OnlineGameWrapperComponent.onCurrentPartUpdate: cette update n\'est pas un mouvement !');
         }
     }
+    public getUpdateType(update: ICurrentPart): UpdateType {
+        const currentPart: ICurrentPart = this.currentPart ? this.currentPart.copy() : null;
+        const diff: UpdateDiff = this.getDiff(currentPart, update);
+        console.log({ diff })
+        const nbDiffs: number = this.getUpdateChangesNumber(diff);
+        if (diff == null || nbDiffs === 0) {
+            return UpdateType.DOUBLON;
+        }
+        if (update.request) {
+            return UpdateType.REQUEST;
+        }
+        if (nbDiffs === 2 && diff.modified['listMoves'] && diff.modified['turn']) {
+            return UpdateType.MOVE;
+        }
+        if (update.beginning == null) {
+            return UpdateType.PRE_START_DOC;
+        }
+        if (update.beginning != null && update.listMoves.length === 0) {
+            return UpdateType.STARTING_DOC;
+        }
+        if (update['result'] != null) {
+            return UpdateType.END_GAME;
+        }
+        throw new Error('Unexpected update: ' + JSON.stringify(diff));
+    }
     private isUpdateMove(update: ICurrentPart): boolean {
         let previousTurn: number = 0;
         if (this.currentPart != null) previousTurn = this.currentPart.copy().turn;
         return previousTurn < update.turn;
     }
-    private isUpdateFirstPlayerMove(): boolean {
+    private isUpdateFirstPlayedMoves(turn: number): boolean {
         const firstPlayedTurn: number = this.firstPlayedTurn;
         display(OnlineGameWrapperComponent.VERBOSE,
-                'dans isUpdateFirstPlayerMove: firstPlayedTurn: ' + firstPlayedTurn);
-        return firstPlayedTurn == null;
+                'isUpdateFirstPlayedMove: ' + firstPlayedTurn + ' received ' + turn);
+        if (firstPlayedTurn == null) {
+            console.log('it is the first turn of 0');
+            this.firstPlayedTurn = turn;
+            return true;
+        } else if (turn === firstPlayedTurn + 1) {
+            console.log('it is the first turn of 1');
+            return true;
+        } else {
+            console.log('just another turn');
+            return false;
+        }
     }
     private doNewMoves(part: ICurrentPart) {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.doNewMoves');
@@ -263,6 +405,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, true);
     }
     public notifyTimeoutVictory(victoriousPlayer: string): void {
+        console.log('TIMEOUT IN FAVOR OF ' + victoriousPlayer)
         this.endGame = true;
 
         const wonPart: ICurrentPart = this.currentPart.copy();

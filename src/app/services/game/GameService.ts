@@ -14,6 +14,7 @@ import { IMGPRequest, RequestCode } from '../../domain/request';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
 import { display } from 'src/app/utils/collection-lib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Injectable({
     providedIn: 'root',
@@ -35,9 +36,16 @@ export class GameService {
     }
     // on Server Component
 
-    public async partExistsAndIsOfType(partId: string, gameType: string): Promise<boolean> {
+    public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: ICurrentPart = await this.partDao.read(partId);
-        return part != null && part.typeGame === gameType;
+        if (part == null) {
+            return MGPValidation.failure('UNEXISTANT_PART');
+        }
+        if (part.typeGame === gameType) {
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('WRONG_GAME_TYPE');
+        }
     }
     protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
         display(GameService.VERBOSE,

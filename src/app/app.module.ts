@@ -30,6 +30,7 @@ import { LoginComponent } from './components/normal-component/login/login.compon
 import { ServerPageComponent } from './components/normal-component/server-page/server-page.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { PartCreationComponent } from './components/normal-component/part-creation/part-creation.component';
+import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
 import { OnlineGameWrapperComponent }
@@ -50,6 +51,7 @@ import { DidacticialGameCreationComponent }
     from './components/normal-component/didacticial-game-creation/didacticial-game-creation.component';
 
 import { AwaleComponent } from './components/game-components/awale/awale.component';
+import { CoerceoComponent } from './components/game-components/coerceo/coerceo.component';
 import { DvonnComponent } from './components/game-components/dvonn/dvonn.component';
 import { EncapsuleComponent } from './components/game-components/encapsule/encapsule.component';
 import { EpaminondasComponent } from './components/game-components/epaminondas/epaminondas.component';
@@ -65,7 +67,6 @@ import { ReversiComponent } from './components/game-components/reversi/reversi.c
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
 import { TablutComponent } from './components/game-components/tablut/tablut.component';
-import { CoerceoComponent } from './components/game-components/coerceo/coerceo.component';
 
 export const INCLUDE_VERBOSE_LINE_IN_TEST: boolean = false;
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
@@ -75,6 +76,7 @@ const routes: Route [] = [
     { path: 'server', component: ServerPageComponent, canActivate: [EmailVerified] },
     { path: 'inscription', component: InscriptionComponent },
     { path: 'confirm-inscription', component: ConfirmInscriptionComponent, canActivate: [MustVerifyEmail] },
+    { path: 'notFound', component: NotFoundComponent, canActivate: [EmailVerified] },
 
     { path: 'play', component: OnlineGameCreationComponent, canActivate: [EmailVerified] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
@@ -97,6 +99,7 @@ const routes: Route [] = [
         ChatComponent,
         PartCreationComponent,
         InscriptionComponent,
+        NotFoundComponent,
         CountDownComponent,
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,

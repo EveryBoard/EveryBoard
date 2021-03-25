@@ -24,7 +24,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      * they need common data so mother calculate/retrieve then share them with her child
      */
 
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     @Input() partId: string;
     @Input() userName: string;
@@ -67,7 +67,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         this.checkEntry();
         this.createForms();
-        await this.joinerService.joinGame(this.partId, this.userName);
+        try {
+            await this.joinerService.joinGame(this.partId, this.userName);
+        } catch (error) {
+            // ABORT JoinerObserving and page construction, OnlineGameWrapperComponent will soon enough redirect
+            return;
+        }
         this.joinerService.startObserving(this.partId, (iJoinerId: IJoinerId) =>
             this.onCurrentJoinerUpdate(iJoinerId));
         // PEUT ETRE PAS this.gameService.startObserving(this.partId, (iPart: ICurrentPartId) =>
@@ -234,9 +239,15 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                         'PartCreationComponent.ngOnDestroy: you(creator) about to cancel creation.');
                 await this.cancelGameCreation();
             } else {
-                display(PartCreationComponent.VERBOSE,
-                        'PartCreationComponent.ngOnDestroy: you(joiner) about to cancel game joining');
-                await this.joinerService.cancelJoining(this.userName);
+                if (this.currentJoiner === null) {
+                    display(PartCreationComponent.VERBOSE,
+                            'PartCreationComponent.ngOnDestroy: there is no part here');
+                    return;
+                } else {
+                    display(PartCreationComponent.VERBOSE,
+                            'PartCreationComponent.ngOnDestroy: you(joiner) about to cancel game joining');
+                    await this.joinerService.cancelJoining(this.userName);
+                }
             }
             this.joinerService.stopObserving();
             display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnDestroy: you stopped observing joiner');
