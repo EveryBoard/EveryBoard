@@ -185,7 +185,6 @@ fdescribe('PartCreationComponent with fixture:', () => {
         await fixture.whenStable();
         fixture.detectChanges();
         spyOn(component.gameStartNotification, 'emit');
-        expect(component.gameStartNotification.emit).not.toHaveBeenCalled();
 
         console.log('loooooooooooooooooooooooooog')
         await component.acceptConfig();

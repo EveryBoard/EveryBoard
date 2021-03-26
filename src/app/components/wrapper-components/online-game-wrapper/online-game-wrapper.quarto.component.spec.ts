@@ -26,7 +26,7 @@ import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { RequestCode } from 'src/app/domain/request';
-import { MGPResult } from 'src/app/domain/icurrentpart';
+import { MGPResult, PICurrentPart } from 'src/app/domain/icurrentpart';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { RouterTestingModule } from '@angular/router/testing';
 
@@ -181,9 +181,6 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveNewMoves(receivedMoves);
         }
     };
-    beforeAll(() => {
-        OnlineGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || OnlineGameWrapperComponent.VERBOSE;
-    });
     beforeEach(fakeAsync(async() => { console.log('==================')
         await TestBed.configureTestingModule({
             imports: [
@@ -213,7 +210,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
 
         const partCreationId: DebugElement = getElement('#partCreation');
-        let quartoTag = fixture.debugElement.nativeElement.querySelector('app-quarto');
+        let quartoTag: DebugElement = fixture.debugElement.nativeElement.querySelector('app-quarto');
         expect(partCreationId).toBeFalsy('partCreation id should be absent after config accepted');
         expect(quartoTag).toBeFalsy('quarto tag should be absent before config accepted and async millisec finished');
         expect(component.partCreation).toBeFalsy('partCreation field should also be absent after config accepted');
@@ -266,7 +263,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         spyOn(partDAO, 'update').and.callThrough();
         await doMove(FIRST_MOVE, true);
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE.encode()]);
-        const expectedUpdate = {
+        const expectedUpdate: PICurrentPart = {
             listMoves: [FIRST_MOVE.encode()], turn: 1,
             scorePlayerZero: null, scorePlayerOne: null, request: null,
         };
@@ -313,7 +310,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('FAILED Opponent accepting take back should move player board backward (one move)', fakeAsync(async() => {
+    it('FAILED Opponent accepting take back should move player board backward (one move)', fakeAsync(async() => {console.clear()
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         console.log('>>>>>>> component prepared like americain')
         tick(1);
@@ -340,7 +337,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         const move1: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
         await doMove(move1, true);
 
-        expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+        expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
             listMoves: [move1.encode()], turn: 1,
             scorePlayerZero: null, scorePlayerOne: null, request: null,
         });
@@ -477,9 +474,8 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
-    it('Should not allow player to move after resigning', fakeAsync(async() => {console.clear();
+    it('Should not allow player to move after resigning', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        console.clear();
         console.log('COMPOSANT PREPARE')
         tick(1);
         await doMove(FIRST_MOVE, true);

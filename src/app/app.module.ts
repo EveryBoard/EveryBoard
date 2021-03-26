@@ -111,6 +111,7 @@ const routes: Route [] = [
         DidacticialGameCreationComponent,
 
         AwaleComponent,
+        CoerceoComponent,
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,
@@ -126,7 +127,6 @@ const routes: Route [] = [
         SaharaComponent,
         SiamComponent,
         TablutComponent,
-        CoerceoComponent,
     ],
     entryComponents: [
         AwaleComponent,

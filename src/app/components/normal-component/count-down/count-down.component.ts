@@ -21,19 +21,27 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
     }
-    public start(duration: number): void {
+    public set(duration: number): void {
+        if (this.isStarted) {
+            throw new Error('Why would I want to set it while started!');
+        }
+        this.remainingTime = duration;
+    }
+    public start(): void {
         // duration is in ms
-        display(CountDownComponent.VERBOSE, this.debugName + '.start(' + (duration/1000) + 's);');
+        display(CountDownComponent.VERBOSE, this.debugName + '.start(' + (this.remainingTime/1000) + 's);');
 
         if (this.isStarted) {
             throw new Error('CountDownComponent.start should not be called while already started (' + this.debugName + ')');
         }
+        if (this.remainingTime == null) {
+            throw new Error('CountDownComponent.start should be called after being set!');
+        }
         this.isStarted = true;
-        this.remainingTime = duration;
         this.resume();
     }
     public pause(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.pause');
+        display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + (this.remainingTime/1000) + ')');
 
         if (this.isPaused) {
             display(CountDownComponent.VERBOSE, this.debugName + '.pause: it is already paused');
@@ -51,13 +59,13 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.updateShownTime();
     }
     public stop(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.stop');
+        display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + (this.remainingTime/1000) + ')');
 
         this.pause();
         this.isStarted = false;
     }
     public resume(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.resume');
+        display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + (this.remainingTime/1000) + ')');
 
         if (!this.isPaused) {
             display(CountDownComponent.VERBOSE,
