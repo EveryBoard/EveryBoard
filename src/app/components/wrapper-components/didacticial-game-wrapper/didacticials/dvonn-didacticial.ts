@@ -4,7 +4,7 @@ import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
-import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
+import { Player } from 'src/app/jscaip/player/Player';
 
 const __: number = DvonnPieceStack.EMPTY.getValue();
 
@@ -14,16 +14,9 @@ const O1: number = DvonnPieceStack.PLAYER_ZERO.getValue();
 
 const X1 : number = DvonnPieceStack.PLAYER_ONE.getValue();
 
-const O4: number = new DvonnPieceStack([
-    DvonnPiece.PLAYER_ZERO,
-    DvonnPiece.PLAYER_ZERO,
-    DvonnPiece.PLAYER_ZERO,
-    DvonnPiece.PLAYER_ZERO]).getValue();
-const X4: number = new DvonnPieceStack([
-    DvonnPiece.PLAYER_ONE,
-    DvonnPiece.PLAYER_ONE,
-    DvonnPiece.PLAYER_ONE,
-    DvonnPiece.PLAYER_ONE]).getValue();
+const O4: number = new DvonnPieceStack(Player.ZERO, 4, false).getValue();
+
+const X4: number = new DvonnPieceStack(Player.ONE, 4, false).getValue();
 
 export const dvonnDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(

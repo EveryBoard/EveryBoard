@@ -1,68 +1,61 @@
-import { DvonnPiece } from '../DvonnPiece';
 import { Player } from 'src/app/jscaip/player/Player';
+import { Encoder } from 'src/app/jscaip/encoder';
 
 export class DvonnPieceStack {
-    public static of(v: number): DvonnPieceStack {
-        const pieces: DvonnPiece[] = [];
-        const size: number = v % DvonnPieceStack.MAX_SIZE;
-        let value: number = (v / DvonnPieceStack.MAX_SIZE) | 0;
-        for (let i: number = 0; i < size; i++) {
-            const pieceValue: number = value % DvonnPiece.MAX_VALUE;
-            value = (value / DvonnPiece.MAX_VALUE) | 0;
-            pieces.push(DvonnPiece.of(pieceValue));
+    public static sizeEncoder: Encoder<number> = Encoder.numberEncoder(49);
+    public static encoder: Encoder<DvonnPieceStack> = new class extends Encoder<DvonnPieceStack> {
+        public maxValue(): number {
+            return (DvonnPieceStack.sizeEncoder.maxValue() *
+                Player.encoder.shift() * Player.encoder.maxValue() *
+                Encoder.booleanEncoder.shift() * Encoder.booleanEncoder.maxValue());
         }
-        return new DvonnPieceStack(pieces.reverse());
+        public encode(stack: DvonnPieceStack): number {
+            return ((DvonnPieceStack.sizeEncoder.encode(stack.size) *
+                Player.encoder.shift() + Player.encoder.encode(stack.owner)) *
+                Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(stack.source));
+        }
+        public decode(encoded: number): DvonnPieceStack {
+            const sourceN: number = encoded % Encoder.booleanEncoder.shift();
+            encoded = (encoded - sourceN) / Encoder.booleanEncoder.shift();
+            const playerN: number = encoded % Player.encoder.shift();
+            encoded = (encoded - playerN) / Player.encoder.shift();
+            const size: number = encoded;
+            return new DvonnPieceStack(Player.of(playerN), size, Encoder.booleanEncoder.decode(sourceN));
+        }
     }
     public static MAX_SIZE: number = 49; // The maximal possible size for a stack
-    public static EMPTY: DvonnPieceStack = new DvonnPieceStack([]);
-    public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO]);
-    public static PLAYER_ONE: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.PLAYER_ONE]);
-    public static SOURCE: DvonnPieceStack = new DvonnPieceStack([DvonnPiece.SOURCE]);
+    public static EMPTY: DvonnPieceStack = new DvonnPieceStack(Player.NONE, 0, false);
+    public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 1, false);
+    public static PLAYER_ONE: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 1, false);
+    public static SOURCE: DvonnPieceStack = new DvonnPieceStack(Player.NONE, 1, true);
 
     public static append(stack1: DvonnPieceStack, stack2: DvonnPieceStack): DvonnPieceStack {
-        return new DvonnPieceStack(stack1.pieces.concat(stack2.pieces));
+        return new DvonnPieceStack(stack1.owner, stack1.size + stack2.size, stack1.source || stack2.source);
     }
 
-    constructor(public readonly pieces: ReadonlyArray<DvonnPiece>) {
+    constructor(public readonly owner: Player,
+                public readonly size: number,
+                public readonly source: boolean) {
     }
     public getValue(): number {
-        let value: number = 0;
-        for (const piece of this.pieces) {
-            value = (value * DvonnPiece.MAX_VALUE) + piece.getValue();
-        }
-        value = (value * DvonnPieceStack.MAX_SIZE) + this.pieces.length;
-        return value;
+        return DvonnPieceStack.encoder.encode(this);
     }
     public getOwner(): Player {
-        if (this.pieces.length === 0) {
-            return Player.NONE;
-        } else {
-            return this.pieces[0].player;
-        }
+        return this.owner;
     }
     public belongsTo(player: Player): boolean {
-        // A stack belongs to a player if the top piece belongs to that player
-        return this.pieces.length > 0 && this.pieces[0].belongsTo(player);
+        return this.owner === player;
     }
     public containsSource(): boolean {
-        for (const piece of this.pieces) {
-            if (piece.isSource()) {
-                return true;
-            }
-        }
-        return false;
+        return this.source;
     }
     public isEmpty(): boolean {
-        return this.pieces.length === 0;
+        return this.size === 0;
     }
-    public size(): number {
-        return this.pieces.length;
+    public getSize(): number {
+        return this.size;
     }
     public toString(): string {
-        let str: string = '[';
-        for (const piece of this.pieces) {
-            str += piece.toString();
-        }
-        return str + ']';
+        return 'DvonnPieceStack(' + this.owner.toString() + ', ' + this.size + ', ' + this.source + ')';
     }
 }

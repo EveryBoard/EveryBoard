@@ -6,7 +6,6 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { DvonnMove } from '../dvonn-move/DvonnMove';
 import { Player } from 'src/app/jscaip/player/Player';
 import { DvonnBoard } from '../DvonnBoard';
-import { DvonnPiece } from '../DvonnPiece';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
@@ -16,30 +15,19 @@ describe('DvonnRules:', () => {
     const _: number = DvonnPieceStack.EMPTY.getValue();
     const D: number = DvonnPieceStack.SOURCE.getValue();
     const W: number = DvonnPieceStack.PLAYER_ZERO.getValue();
-    const WB: number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ONE]).getValue();
-    const WW: number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
-    const WD: number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.SOURCE]).getValue();
-    const WWW: number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
+    const WB: number = new DvonnPieceStack(Player.ZERO, 2, false).getValue();
+    const WW: number = new DvonnPieceStack(Player.ZERO, 2, false).getValue();
+    const WD: number = new DvonnPieceStack(Player.ZERO, 2, true).getValue();
+    const WWW: number = new DvonnPieceStack(Player.ZERO, 3, false).getValue();
     const B: number = DvonnPieceStack.PLAYER_ONE.getValue();
-    const BD: number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.SOURCE]).getValue();
-    const BB: number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE]).getValue();
-    const BDB: number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.SOURCE, DvonnPiece.PLAYER_ONE]).getValue();
-    const B5: number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-        DvonnPiece.PLAYER_ONE]).getValue();
-    const B6: number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE]).getValue();
-    const BD6: number = new DvonnPieceStack([DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-        DvonnPiece.PLAYER_ONE, DvonnPiece.PLAYER_ONE,
-        DvonnPiece.SOURCE, DvonnPiece.PLAYER_ONE]).getValue();
-    const W2: number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
-    const W6: number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
-        DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
-        DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
-    const WD6: number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
-        DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO,
-        DvonnPiece.SOURCE, DvonnPiece.PLAYER_ZERO]).getValue();
+    const BD: number = new DvonnPieceStack(Player.ONE, 2, true).getValue();
+    const BB: number = new DvonnPieceStack(Player.ONE, 2, false).getValue();
+    const BDB: number = new DvonnPieceStack(Player.ONE, 3, true).getValue();
+    const B5: number = new DvonnPieceStack(Player.ONE, 5, false).getValue();
+    const B6: number = new DvonnPieceStack(Player.ONE, 6, false).getValue();
+    const BD6: number = new DvonnPieceStack(Player.ONE, 6, true).getValue();
+    const W6: number = new DvonnPieceStack(Player.ZERO, 6, false).getValue();
+    const WD6: number = new DvonnPieceStack(Player.ZERO, 6, true).getValue();
 
     beforeEach(() => {
         rules = new DvonnRules(DvonnPartSlice);
@@ -55,7 +43,7 @@ describe('DvonnRules:', () => {
                 const coord: Coord = new Coord(x, y);
                 if (DvonnBoard.isOnBoard(coord)) {
                     const stack: DvonnPieceStack = DvonnBoard.getStackAt(slice.board, coord);
-                    expect(stack.size()).toEqual(1);
+                    expect(stack.getSize()).toEqual(1);
                     expect(stack.isEmpty()).toBeFalse();
                 }
             }
@@ -139,7 +127,7 @@ describe('DvonnRules:', () => {
         const slice : DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
-            expect(move.length()).toEqual(DvonnBoard.getStackAt(board, move.coord).size());
+            expect(move.length()).toEqual(DvonnBoard.getStackAt(board, move.coord).getSize());
         }
         expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(3, 0)), slice).legal.isSuccess()).toBeFalse();
     });
@@ -169,8 +157,6 @@ describe('DvonnRules:', () => {
             const stack: DvonnPieceStack = DvonnBoard.getStackAt(board, move.coord);
             // every movable piece should belong to the current player
             expect(stack.belongsTo(slice.getCurrentPlayer())).toBeTrue();
-            // extra check: look at the stack internals for the top piece
-            expect(stack.pieces[0].belongsTo(slice.getCurrentPlayer())).toBeTrue();
         }
         expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(2, 4)), slice).legal.isSuccess()).toBeFalse();
     });
@@ -229,7 +215,7 @@ describe('DvonnRules:', () => {
     it('should not end if moves can be done', () => {
         const board: number[][] = [
             [_, _, _, _, _, _, _, _, _, BD6, _],
-            [_, _, _, B6, W2, _, B5, _, _, _, _],
+            [_, _, _, B6, WW, _, B5, _, _, _, _],
             [_, _, _, _, W, BD6, W6, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, WD6, _, _, _, _, _, _, _, _, _]];

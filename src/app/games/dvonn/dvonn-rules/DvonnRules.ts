@@ -22,15 +22,15 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
                 DvonnBoard.numberOfNeighbors(slice.board, c) < 6);
     }
     private pieceTargets(slice: DvonnPartSlice, coord: Coord): Coord[] {
-        const stackSize: number = DvonnBoard.getStackAt(slice.board, coord).size();
-        const possibleTargets = DvonnBoard.neighbors(coord, stackSize);
+        const stackSize: number = DvonnBoard.getStackAt(slice.board, coord).getSize();
+        const possibleTargets: Coord[] = DvonnBoard.neighbors(coord, stackSize);
         return possibleTargets.filter((c: Coord): boolean =>
             DvonnBoard.isOnBoard(c) && !DvonnBoard.getStackAt(slice.board, c).isEmpty());
     }
     private pieceHasTarget(slice: DvonnPartSlice, coord: Coord): boolean {
         // A piece has a target if it can move to an occupied space at a distance equal to its length
-        const stackSize: number = DvonnBoard.getStackAt(slice.board, coord).size();
-        const possibleTargets = DvonnBoard.neighbors(coord, stackSize);
+        const stackSize: number = DvonnBoard.getStackAt(slice.board, coord).getSize();
+        const possibleTargets: Coord[] = DvonnBoard.neighbors(coord, stackSize);
         return possibleTargets.find((c: Coord): boolean =>
             DvonnBoard.isOnBoard(c) && !DvonnBoard.getStackAt(slice.board, c).isEmpty()) !== undefined;
     }
@@ -47,7 +47,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         if (!DvonnBoard.getStackAt(slice.board, coord).belongsTo(slice.getCurrentPlayer())) {
             return MGPValidation.failure('Cannot choose a piece that does not belong to the current player');
         }
-        const stackSize: number = DvonnBoard.getStackAt(slice.board, coord).size();
+        const stackSize: number = DvonnBoard.getStackAt(slice.board, coord).getSize();
         if (stackSize < 1) {
             return MGPValidation.failure('Stack can\'t move because it is empty');
         }
@@ -65,14 +65,16 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     public getListMovesFromSlice(move: DvonnMove, slice: DvonnPartSlice): MGPMap<DvonnMove, DvonnPartSlice> {
         const map: MGPMap<DvonnMove, DvonnPartSlice> = new MGPMap();
         // For each movable piece, look at its possible targets
-        this.getMovablePieces(slice).forEach((start) =>
-            this.pieceTargets(slice, start).forEach((end) => {
-                const move = DvonnMove.of(start, end);
-                const legalityStatus = this.isLegal(move, slice); // the move should be legal by construction, hence we don't check it
+        this.getMovablePieces(slice).forEach((start: Coord) =>
+            this.pieceTargets(slice, start).forEach((end: Coord) => {
+                const move: DvonnMove = DvonnMove.of(start, end);
+                const legalityStatus: LegalityStatus = this.isLegal(move, slice);
+                // the move should be legal by construction, hence we don't check it
                 map.set(move, this.applyLegalMove(move, slice, legalityStatus).resultingSlice);
             }));
         if (map.size() === 0 && move !== DvonnMove.PASS) {
-            map.set(DvonnMove.PASS, this.applyLegalMove(DvonnMove.PASS, slice, { legal: MGPValidation.SUCCESS }).resultingSlice);
+            map.set(DvonnMove.PASS, this.applyLegalMove(DvonnMove.PASS, slice,
+                                                        { legal: MGPValidation.SUCCESS }).resultingSlice);
         }
         return map;
     }
@@ -81,21 +83,21 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     }
     public getScores(slice: DvonnPartSlice): number[] {
         // Board value is the total number of pieces controlled by player 0 - by player 1
-        let p0Score = 0;
-        let p1Score = 0;
+        let p0Score: number = 0;
+        let p1Score: number = 0;
         DvonnBoard.getAllPieces(slice.board).map((c: Coord) => {
-            const stack = DvonnBoard.getStackAt(slice.board, c);
+            const stack: DvonnPieceStack = DvonnBoard.getStackAt(slice.board, c);
             if (stack.belongsTo(Player.ZERO)) {
-                p0Score += stack.size();
+                p0Score += stack.getSize();
             } else if (stack.belongsTo(Player.ONE)) {
-                p1Score += stack.size();
+                p1Score += stack.getSize();
             }
         });
         return [p0Score, p1Score];
     }
     public getBoardValue(move: DvonnMove, slice: DvonnPartSlice): number {
         // Board value is the total number of pieces controlled by player 0 - by player 1
-        const scores = this.getScores(slice);
+        const scores: number[] = this.getScores(slice);
         if (this.getMovablePieces(slice).length === 0) {
             // This is the end of the game, boost the score to clearly indicate it
             if (scores[0] > scores[1]) {
@@ -115,7 +117,8 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
                 DvonnBoard.getStackAt(slice.board, c).containsSource());
     }
     private markPiecesConnectedTo(slice: DvonnPartSlice, coord: Coord, markBoard: boolean[][]) {
-        // For each neighbor, mark it as connected (if it contains something), and recurse from there (only if it was not already marked)
+        // For each neighbor, mark it as connected (if it contains something),
+        // and recurse from there (only if it was not already marked)
         DvonnBoard.neighbors(coord, 1).forEach((c: Coord) => {
             if (DvonnBoard.isOnBoard(c) && !markBoard[c.y][c.x] && !DvonnBoard.getStackAt(slice.board, c).isEmpty()) {
                 // This piece has not been marked as connected, but it is connected, and not empty
@@ -126,12 +129,13 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     }
     private removeDisconnectedPieces(slice: DvonnPartSlice): DvonnPartSlice {
         // This will contain true for each piece connected to a source
-        const markBoard: boolean[][] = ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(), (_) => false);
+        const markBoard: boolean[][] = ArrayUtils.mapBiArray(DvonnBoard.getBalancedBoard(),
+                                                             (_: DvonnPieceStack) => false);
         this.sourceCoords(slice).forEach((c: Coord) => {
             markBoard[c.y][c.x] = true; // marks the source as true in the markBoard
             this.markPiecesConnectedTo(slice, c, markBoard);
         });
-        const newBoard = ArrayUtils.copyBiArray(slice.board);
+        const newBoard: number[][] = ArrayUtils.copyBiArray(slice.board);
         DvonnBoard.getAllPieces(slice.board).forEach((c: Coord) => {
             if (!markBoard[c.y][c.x]) {
                 newBoard[c.y][c.x] = DvonnPieceStack.EMPTY.getValue();
@@ -142,15 +146,20 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
     public applyLegalMove(move: DvonnMove, slice: DvonnPartSlice, status: LegalityStatus)
     : { resultingMove: DvonnMove, resultingSlice: DvonnPartSlice } {
         if (move === DvonnMove.PASS) {
-            return { resultingSlice: new DvonnPartSlice(ArrayUtils.copyBiArray(slice.board), slice.turn + 1, true), resultingMove: move };
+            return {
+                resultingSlice: new DvonnPartSlice(ArrayUtils.copyBiArray(slice.board), slice.turn + 1, true),
+                resultingMove: move,
+            };
         } else {
-            // To apply a legal move, the stack is added in the front of its end coordinate (and removed from its start coordinate)
-            const stack = DvonnBoard.getStackAt(slice.board, move.coord);
-            const targetStack = DvonnBoard.getStackAt(slice.board, move.end);
-            const newBoard = ArrayUtils.copyBiArray(slice.board);
+            // To apply a legal move, the stack is added in the front of its end coordinate
+            // (and removed from its start coordinate)
+            const stack: DvonnPieceStack = DvonnBoard.getStackAt(slice.board, move.coord);
+            const targetStack: DvonnPieceStack = DvonnBoard.getStackAt(slice.board, move.end);
+            const newBoard: number[][] = ArrayUtils.copyBiArray(slice.board);
             newBoard[move.coord.y][move.coord.x] = DvonnPieceStack.EMPTY.getValue();
             newBoard[move.end.y][move.end.x] = DvonnPieceStack.append(stack, targetStack).getValue();
-            const resultingSlice: DvonnPartSlice = this.removeDisconnectedPieces(new DvonnPartSlice(newBoard, slice.turn+1, false));
+            const resultingSlice: DvonnPartSlice =
+                this.removeDisconnectedPieces(new DvonnPartSlice(newBoard, slice.turn+1, false));
             return { resultingSlice, resultingMove: move };
         }
     }
@@ -174,18 +183,18 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         if (DvonnBoard.numberOfNeighbors(slice.board, move.coord) === 6) {
             return { legal: MGPValidation.failure('too many neighbors at start position') };
         }
-        const stack = DvonnBoard.getStackAt(slice.board, move.coord);
+        const stack: DvonnPieceStack = DvonnBoard.getStackAt(slice.board, move.coord);
         // - the stack that moves is owned by the player
         if (!stack.belongsTo(slice.getCurrentPlayer())) {
             return { legal: MGPValidation.failure('stack does not belong to current player') };
         }
         // - the stack moves in a direction allowed (ensured by DvonnMove)
         // - the stack moves by its size
-        if (move.length() !== stack.size()) {
+        if (move.length() !== stack.getSize()) {
             return { legal: MGPValidation.failure('move length is not the same as stack size') };
         }
         // - the stack ends up on an non-empty stack
-        const targetStack = DvonnBoard.getStackAt(slice.board, move.end);
+        const targetStack: DvonnPieceStack = DvonnBoard.getStackAt(slice.board, move.end);
         if (targetStack.isEmpty()) {
             return { legal: MGPValidation.failure('move finishes on an empty stack') };
         }

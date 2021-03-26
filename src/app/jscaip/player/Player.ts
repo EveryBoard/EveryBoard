@@ -1,4 +1,17 @@
+import { Encoder } from '../encoder';
+
 export class Player {
+    public static encoder: Encoder<Player> = new class extends Encoder<Player> {
+        public maxValue(): number {
+            return 2;
+        }
+        public encode(player: Player): number {
+            return player.value;
+        }
+        public decode(encoded: number): Player {
+            return Player.of(encoded);
+        }
+    }
     public static readonly ZERO: Player = new Player(0);
     public static readonly ONE: Player = new Player(1);
     public static readonly NONE: Player = new Player(2);

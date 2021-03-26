@@ -11,7 +11,6 @@ import { AppModule } from 'src/app/app.module';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { DvonnPiece } from 'src/app/games/dvonn/DvonnPiece';
 import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
@@ -19,6 +18,7 @@ import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPiec
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { expectClickSuccess, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import { Player } from 'src/app/jscaip/player/Player';
 
 const activatedRouteStub = {
     snapshot: {
@@ -45,7 +45,7 @@ describe('DvonnComponent', () => {
     const __ : number = DvonnPieceStack.EMPTY.getValue();
     const D1 : number = DvonnPieceStack.SOURCE.getValue();
     const W1: number = DvonnPieceStack.PLAYER_ZERO.getValue();
-    const WW : number = new DvonnPieceStack([DvonnPiece.PLAYER_ZERO, DvonnPiece.PLAYER_ZERO]).getValue();
+    const WW : number = new DvonnPieceStack(Player.ZERO, 2, false).getValue();
 
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({

@@ -57,7 +57,7 @@ class AuthenticationServiceMock {
     }
 }
 
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0
