@@ -21,21 +21,24 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
     }
-    public set(duration: number): void {
+    public setDuration(duration: number): void {
+        display(CountDownComponent.VERBOSE, this.debugName + '.set(' + duration + 'ms)');
+        // duration is in ms
         if (this.isStarted) {
-            throw new Error('Why would I want to set it while started!');
+            console.log("Should not set a chrono that has already been started!")
+            throw new Error('Should not set a chrono that has already been started!');
         }
         this.remainingTime = duration;
     }
     public start(): void {
         // duration is in ms
-        display(CountDownComponent.VERBOSE, this.debugName + '.start(' + (this.remainingTime/1000) + 's);');
+        display(CountDownComponent.VERBOSE, this.debugName + '.start(' + 1000 + 'ms);');
 
-        if (this.isStarted) {
-            throw new Error('CountDownComponent.start should not be called while already started (' + this.debugName + ')');
-        }
         if (this.remainingTime == null) {
-            throw new Error('CountDownComponent.start should be called after being set!');
+            throw new Error('Should not start a chrono that has not been set!');
+        }
+        if (this.isStarted) {
+            throw new Error('Should not start chrono that has already been started (' + this.debugName + ')');
         }
         this.isStarted = true;
         this.resume();
@@ -43,80 +46,72 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public pause(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + (this.remainingTime/1000) + ')');
 
-        if (this.isPaused) {
-            display(CountDownComponent.VERBOSE, this.debugName + '.pause: it is already paused');
-            return;
-        }
         if (!this.isStarted) {
-            display(CountDownComponent.VERBOSE, this.debugName + '.pause: it is not started yet');
-            return;
+            throw new Error('Should not pause not started chrono (' + this.debugName + ')');
         }
-        const started: boolean = this.clearTimeouts();
-        if (!started) {
-            throw new Error('Cannot pause unstarted CountDown (' + this.debugName + ')');
+        if (this.isPaused) {
+            throw new Error('Should not pause already paused chrono (' + this.debugName + ')');
         }
+
+        this.clearTimeouts();
         this.isPaused = true;
         this.updateShownTime();
     }
     public stop(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + (this.remainingTime/1000) + ')');
+        display(CountDownComponent.VERBOSE, this.debugName + '.stop(' + this.remainingTime + 'ms)');
 
+        if (this.isStarted === false) {
+            throw new Error('Should only stop chrono that are started!');
+        }
         this.pause();
         this.isStarted = false;
+        this.remainingTime = null;
     }
     public resume(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + (this.remainingTime/1000) + ')');
+        display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + this.remainingTime + 'ms)');
 
-        if (!this.isPaused) {
-            display(CountDownComponent.VERBOSE,
-                    '!!!cdc::' + this.debugName + '::resume it is not paused, how to resume?');
-            return;
+        if (this.isPaused === false || this.isStarted === false) {
+            throw new Error('Should only resume chrono that are started and paused!');
         }
         this.startTime = Date.now();
         this.isPaused = false;
         this.timeoutHandleGlobal = window.setTimeout(() => {
+            console.log('END REACHED OF ' + this.debugName);
             this.onEndReached();
         }, this.remainingTime);
+
+        this.countSeconds();
+    }
+    private countSeconds(): void {
         this.timeoutHandleSec = window.setTimeout(() => {
             this.updateShownTime();
         }, 1000);
     }
-    public onEndReached(): void {
+    private onEndReached(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.onEndReached');
 
         this.isPaused = true;
         this.isStarted = false;
         this.clearTimeouts();
         this.remainingTime = 0;
-        if (CountDownComponent.VERBOSE) {
-            console.log('cdc::' + this.debugName + '::fini');
-            alert('cdc::' + this.debugName + '::fini');
-        }
         this.outOfTimeAction.emit();
     }
-    public updateShownTime(): void {
+    private updateShownTime(): void {
         const now: number = Date.now();
         this.remainingTime -= (now - this.startTime);
         this.startTime = now;
         if (!this.isPaused) {
-            this.timeoutHandleSec = window.setTimeout(() => this.updateShownTime(), 1000);
+            this.countSeconds();
         }
     }
-    public clearTimeouts(): boolean {
+    public clearTimeouts(): void {
         display(CountDownComponent.VERBOSE, this.debugName + '.clearTimeouts');
 
-        let useFull: boolean = false;
-        if (this.timeoutHandleSec) {
-            clearTimeout(this.timeoutHandleSec);
-            this.timeoutHandleSec = null;
-            useFull = true;
-        }
-        if (this.timeoutHandleGlobal) {
-            clearTimeout(this.timeoutHandleGlobal);
-            this.timeoutHandleGlobal = null;
-            useFull = true;
-        }
-        return useFull;
+        clearTimeout(this.timeoutHandleSec);
+        this.timeoutHandleSec = null;
+
+        clearTimeout(this.timeoutHandleGlobal);
+        this.timeoutHandleGlobal = null;
     }
     public ngOnDestroy(): void {
         this.clearTimeouts();

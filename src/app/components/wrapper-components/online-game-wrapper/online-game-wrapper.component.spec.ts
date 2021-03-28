@@ -56,7 +56,7 @@ class AuthenticationServiceMock {
 @Component({})
 class BlankComponent {}
 
-fdescribe('OnlineGameWrapperComponent Lifecycle', () => {
+describe('OnlineGameWrapperComponent Lifecycle', () => {
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0

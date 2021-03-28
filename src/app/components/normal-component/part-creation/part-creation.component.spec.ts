@@ -26,7 +26,7 @@ class RouterMock {
         return Promise.resolve(true);
     }
 }
-fdescribe('PartCreationComponent with fixture:', () => {
+describe('PartCreationComponent:', () => {
     let fixture: ComponentFixture<PartCreationComponent>;
 
     let component: PartCreationComponent;

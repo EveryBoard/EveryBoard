@@ -1,0 +1,15 @@
+<app-count-down #testChrono
+                debugName="testChrono"
+                (outOfTimeAction)="reachedOutOfTime()">
+</app-count-down>
+<br/>
+<button (click)="set(10000)"> set </button> allows: start
+<br/>
+<button (click)="start()"> start </button> allows: pause, stop
+<br/>
+<button (click)="pause()"> pause </button> allows: start
+<br/>
+<button (click)="resume()"> resume </button> allows: pause, stop
+<br/>
+<button (click)="stop()"> stop </button> allows: set
+<br/>

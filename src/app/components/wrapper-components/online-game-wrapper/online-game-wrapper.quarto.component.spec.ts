@@ -5,8 +5,8 @@ import { By } from '@angular/platform-browser';
 
 import { of } from 'rxjs';
 
-import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
-import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
+import { AppModule } from 'src/app/app.module';
+import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
 
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 
@@ -25,10 +25,11 @@ import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { RequestCode } from 'src/app/domain/request';
-import { MGPResult, PICurrentPart } from 'src/app/domain/icurrentpart';
+import { MGPRequest, RequestCode } from 'src/app/domain/request';
+import { ICurrentPart, MGPResult, Part, PICurrentPart } from 'src/app/domain/icurrentpart';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { RouterTestingModule } from '@angular/router/testing';
+import { Player } from 'src/app/jscaip/player/Player';
 
 const activatedRouteStub = {
     snapshot: {
@@ -57,7 +58,7 @@ class AuthenticationServiceMock {
     }
 }
 
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => { console.log('online quarto start');
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0
@@ -92,20 +93,20 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         await chatDAOMock.set('joinerId', { messages: [], status: 'I don\'t have a clue' });
         return Promise.resolve();
     };
-    const prepareStartedGameFor: (user: {pseudo: string, verified: boolean}) => Promise<void> = async(user: {pseudo: string, verified: boolean}) => {
+    const prepareStartedGameFor: (user: {pseudo: string, verified: boolean}) => Promise<void> =
+    async(user: {pseudo: string, verified: boolean}) => {
         AuthenticationServiceMock.USER = user;
         await prepareComponent(JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
         tick(1);
 
-        const partCreationId = fixture.debugElement.query(By.css('#partCreation'));
+        const partCreationId: DebugElement = fixture.debugElement.query(By.css('#partCreation'));
         expect(partCreationId).toBeTruthy('partCreation id should be present after ngOnInit');
         expect(component.partCreation).toBeTruthy('partCreation field should also be present');
         await joinerDAO.update('joinerId', { candidatesNames: ['firstCandidate'] });
         fixture.detectChanges();
         await fixture.whenStable();
-        await joinerDAO.update('joinerId',
-            { partStatus: 1, candidatesNames: [], chosenPlayer: 'firstCandidate' });
+        await joinerDAO.update('joinerId', { partStatus: 1, candidatesNames: [], chosenPlayer: 'firstCandidate' });
         // TODO: replace by real actor action (chooseCandidate)
         fixture.detectChanges();
         await component.partCreation.proposeConfig();
@@ -181,7 +182,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveNewMoves(receivedMoves);
         }
     };
-    beforeEach(fakeAsync(async() => { console.log('==================')
+    beforeEach(fakeAsync(async() => {console.log("chrono")
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -201,20 +202,23 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        spyOn(component, 'reachedOutOfTime').and.callFake(() => {});
+        // Should not even been called but:
+        // reachedOutOfTime is called (in test) after tick(1) even though there is still remainingTime
         tick(1);
         expect(component.currentPart.copy().listMoves).toEqual([]);
+        expect(component.currentPart.copy().listMoves).toEqual([]);
         expect(component.currentPlayer).toEqual('creator');
-        tick(component.maximalMoveDuration);
+        component.pauseCountDownsFor(Player.ZERO);
     }));
-    it('Prepared Game for creator should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
+    it('Should no longer have PartCreationComponent and QuartoComponent instead', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-
         const partCreationId: DebugElement = getElement('#partCreation');
         let quartoTag: DebugElement = fixture.debugElement.nativeElement.querySelector('app-quarto');
         expect(partCreationId).toBeFalsy('partCreation id should be absent after config accepted');
-        expect(quartoTag).toBeFalsy('quarto tag should be absent before config accepted and async millisec finished');
-        expect(component.partCreation).toBeFalsy('partCreation field should also be absent after config accepted');
-        expect(component.gameComponent).toBeFalsy('gameComponent field should also be absent after config accepted and async millisec finished');
+        expect(quartoTag).toBeFalsy('quarto tag should be absent before config accepted and async ms finished');
+        expect(component.partCreation).toBeFalsy('partCreation field should be absent after config accepted');
+        expect(component.gameComponent).toBeFalsy('gameComponent field should be absent after config accepted and async ms finished');
 
         tick(1);
 
@@ -223,7 +227,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(component.gameComponent).toBeTruthy('gameComponent field should also be present after config accepted and async millisec finished');
         tick(component.maximalMoveDuration);
     }));
-    it('Prepared Game for creator should allow simple move', fakeAsync(async() => {
+    it('Should allow simple move', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
 
@@ -237,6 +241,44 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
         expect(component.currentPart.copy().turn).toEqual(2);
         expect(component.currentPart.copy().listMoves).toEqual([FIRST_MOVE_ENCODED, 166]);
+        tick(component.maximalMoveDuration);
+    }));
+    it('Opponent accepting take back should move player board backward (one move)', fakeAsync(async() => {
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        console.log('>>>>>>>>>>>>>> about to tick 1ms');
+        tick(1);
+        console.log('>>>>>>>>>>>>>> about to do move');
+        // Doing a first move so take back make sens
+        await doMove(FIRST_MOVE, true);
+
+        expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
+
+        // Asking take back
+        console.log('>>>>>>>>>>>>>> about to ask take back');
+        await askTakeBack();
+
+        // Opponent accept take back
+        console.log('>>>>>>>>>>>>>> opponent will now agree');
+        await partDAO.update('joinerId', {
+            request: RequestCode.ONE_ACCEPTED_TAKE_BACK.toInterface(),
+            listMoves: [],
+            turn: 0,
+        });
+        fixture.detectChanges();
+        tick(1);
+
+        expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
+
+        // Doing another move
+        spyOn(partDAO, 'update').and.callThrough();
+        const move1: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
+        console.log('>>>>>>>>>>>>>> we will now play again');
+        await doMove(move1, true);
+
+        expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
+            listMoves: [move1.encode()], turn: 1,
+            scorePlayerZero: null, scorePlayerOne: null, request: null,
+        });
         tick(component.maximalMoveDuration);
     }));
     it('Prepared Game for joiner should allow simple move', fakeAsync(async() => {
@@ -277,10 +319,12 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBB);
         const move3: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AABB);
         await prepareBoard([move0, move1, move2, move3]);
+        console.log('>>>>>>>>>>>>>>>>>> BOARD PREPARED');
         expect(getElement('#winnerIndicator')).toBeFalsy('Element should not exist yet');
 
         spyOn(partDAO, 'update').and.callThrough();
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
+        console.log('>>>>>>>>>>>>>>>>>> VICTORY MOVE INCOMING');
         await doMove(winningMove, true);
 
         expect(component.gameComponent.rules.node.move.toString()).toBe(winningMove.toString());
@@ -308,39 +352,6 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
             request: RequestCode.ZERO_ASKED_TAKE_BACK.toInterface(),
         });
 
-        tick(component.maximalMoveDuration);
-    }));
-    it('FAILED Opponent accepting take back should move player board backward (one move)', fakeAsync(async() => {console.clear()
-        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        console.log('>>>>>>> component prepared like americain')
-        tick(1);
-        // Doing a first move so take back make sens
-        await doMove(FIRST_MOVE, true);
-
-        expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
-
-        // Asking take back
-        await askTakeBack();
-
-        // Opponent accept take back
-        await partDAO.update('joinerId', {
-            request: RequestCode.ONE_ACCEPTED_TAKE_BACK.toInterface(),
-            listMoves: [],
-            turn: 0,
-        });
-        fixture.detectChanges(); tick(1);
-
-        expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
-
-        // Doing another move
-        spyOn(partDAO, 'update').and.callThrough();
-        const move1: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
-        await doMove(move1, true);
-
-        expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
-            listMoves: [move1.encode()], turn: 1,
-            scorePlayerZero: null, scorePlayerOne: null, request: null,
-        });
         tick(component.maximalMoveDuration);
     }));
     it('Player accepting take back should move player board backward (two moves)', fakeAsync(async() => {
@@ -397,9 +408,13 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        console.log('>>>>>>>>>>>> component prepared')
         tick(1);
+        console.log('>>>>>>>>>>>> ticked 1ms')
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
+        console.log('>>>>>>>>>>>> user will do the move')
         await doMove(FIRST_MOVE, true);
+        console.log('>>>>>>>>>>>> user will receive opponent move')
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         expect(await acceptTakeBack()).toBeFalse();
         await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
@@ -481,6 +496,7 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(FIRST_MOVE, true);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
+        console.log(">>>>>>>>>>>>>>>> ABOUT TO RESIGN")
         expect(await clickElement('#resignButton')).toBeTruthy('Should be possible to resign');
 
         spyOn(partDAO, 'update').and.callThrough();
@@ -505,6 +521,34 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
 
         tick(component.maximalMoveDuration);
     }));
+    describe('getUpdateType', () => {
+        it('Should recognize move as move, even when after a request removal', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            component.currentPart = new Part(
+                'P4',
+                'who is it from who cares',
+                3,
+                [1, 2, 3],
+                { value: MGPResult.UNACHIEVED.toInterface().value },
+                'Sir Meryn Trant',
+                1234,
+                null, null, null, null, null, null,
+                { code: RequestCode.ZERO_ACCEPTED_TAKE_BACK.toInterface().code },
+            );
+            const update: ICurrentPart = {
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 4,
+                listMoves: [1, 2, 3, 4],
+                result: { value: MGPResult.UNACHIEVED.toInterface().value },
+                playerOne: 'Sir Meryn Trant',
+                beginning: 1234,
+                // And obviously, no longer the previous request code
+            };
+            expect(component.getUpdateType(update)).toBe(UpdateType.MOVE);
+            tick(component.maximalMoveDuration + 1);
+        }));
+    });
     afterEach(fakeAsync(async() => {
         fixture.destroy();
         await fixture.whenStable();
