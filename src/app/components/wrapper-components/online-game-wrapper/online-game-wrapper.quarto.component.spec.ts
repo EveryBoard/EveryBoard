@@ -58,7 +58,7 @@ class AuthenticationServiceMock {
     }
 }
 
-describe('OnlineGameWrapperComponent of Quarto:', () => { console.log('online quarto start');
+describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0
@@ -182,7 +182,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => { console.log('online qu
             await receiveNewMoves(receivedMoves);
         }
     };
-    beforeEach(fakeAsync(async() => {console.log("chrono")
+    beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -544,6 +544,33 @@ describe('OnlineGameWrapperComponent of Quarto:', () => { console.log('online qu
                 playerOne: 'Sir Meryn Trant',
                 beginning: 1234,
                 // And obviously, no longer the previous request code
+            };
+            expect(component.getUpdateType(update)).toBe(UpdateType.MOVE);
+            tick(component.maximalMoveDuration + 1);
+        }));
+        it('Should recognize update as move, even if score just added itself', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            component.currentPart = new Part(
+                'P4',
+                'who is it from who cares',
+                0,
+                [],
+                { value: MGPResult.UNACHIEVED.toInterface().value },
+                'Sir Meryn Trant',
+                1234,
+                null, null, null, null, null, null, null,
+            );
+            const update: ICurrentPart = {
+                typeGame: 'P4',
+                playerZero: 'who is it from who cares',
+                turn: 1,
+                listMoves: [1],
+                result: { value: MGPResult.UNACHIEVED.toInterface().value },
+                playerOne: 'Sir Meryn Trant',
+                beginning: 1234,
+                // And obviously, the added score
+                scorePlayerZero: 0,
+                scorePlayerOne: 0,
             };
             expect(component.getUpdateType(update)).toBe(UpdateType.MOVE);
             tick(component.maximalMoveDuration + 1);

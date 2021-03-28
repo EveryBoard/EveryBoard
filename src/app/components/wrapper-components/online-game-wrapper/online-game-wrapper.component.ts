@@ -230,6 +230,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             if (nbDiffs === 3 && diff.removed['request']) {
                 return UpdateType.MOVE;
             }
+            if (nbDiffs === 4 && diff.added['scorePlayerOne'] != null && diff.added['scorePlayerZero'] != null) {
+                return UpdateType.MOVE;
+            }
         }
         if (update.beginning == null) {
             return UpdateType.PRE_START_DOC;
