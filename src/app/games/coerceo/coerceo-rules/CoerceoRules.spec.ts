@@ -1,11 +1,12 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Rules } from 'src/app/jscaip/Rules';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { CoerceoMove, CoerceoStep } from '../coerceo-move/CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from '../coerceo-part-slice/CoerceoPartSlice';
 import { CoerceoFailure } from '../CoerceoFailure';
-import { CoerceoRules } from './CoerceoRules';
+import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 
 describe('CoerceoRules', () => {
     let rules: CoerceoRules;
@@ -335,5 +336,74 @@ describe('CoerceoRules', () => {
         const expectedSlice: CoerceoPartSlice =
             new CoerceoPartSlice(expectedBoard, 2, [0, 0], [0, 1]);
         expect(resultingSlice).toEqual(expectedSlice);
+    });
+    describe('GetListMoves', () => {
+        it('Should count correct number of moves', () => {
+            const board: NumberTable = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            ];
+            const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [2, 0], [0, 0]);
+            const node: CoerceoNode = new MGPNode(null, null, slice, 0);
+            expect(rules.getListMoves(node).listKeys().length).toBe(3);
+        });
+    });
+    describe('GetBoardValue', () => {
+        it('Should set minimal value to victory of Player.ZERO', () => {
+            const board: NumberTable = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            ];
+            const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [18, 17]);
+            expect(rules.getBoardValue(null, slice)).toBe(Number.MIN_SAFE_INTEGER);
+        });
+        it('Should set minimal value to victory of Player.ONE', () => {
+            const board: NumberTable = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, X, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            ];
+            const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [17, 18]);
+            expect(rules.getBoardValue(null, slice)).toBe(Number.MAX_SAFE_INTEGER);
+        });
+        it('Should sum captures *2 and tiles to evaluate board value', () => {
+            const board: NumberTable = [
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+                [N, N, N, N, N, N, _, X, O, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+                [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            ];
+            const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [1, 2], [3, 4]);
+            expect(rules.getBoardValue(null, slice)).toBe(-1+2-6+8);
+        });
     });
 });

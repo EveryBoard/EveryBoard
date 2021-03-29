@@ -32,7 +32,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     }
     public start(): void {
         // duration is in ms
-        display(CountDownComponent.VERBOSE, this.debugName + '.start(' + 1000 + 'ms);');
+        display(CountDownComponent.VERBOSE, this.debugName + '.start(' + this.remainingTime + 'ms);');
 
         if (this.remainingTime == null) {
             throw new Error('Should not start a chrono that has not been set!');
@@ -43,8 +43,39 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.isStarted = true;
         this.resume();
     }
+    public resume(): void {
+        display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + this.remainingTime + 'ms)');
+
+        if (this.isPaused === false || this.isStarted === false) {
+            throw new Error('Should only resume chrono that are started and paused!');
+        }
+        this.startTime = Date.now();
+        this.isPaused = false;
+        this.timeoutHandleGlobal = window.setTimeout(() => {
+            const failedTime: number = Date.now();
+            console.log('END REACHED OF ' + this.debugName +
+                        ' at ' + failedTime +
+                        ' after ' + (failedTime - this.startTime) + 'ms');
+            this.onEndReached();
+        }, this.remainingTime);
+        this.countSeconds();
+    }
+    private onEndReached(): void {
+        display(CountDownComponent.VERBOSE, this.debugName + '.onEndReached');
+
+        this.isPaused = true;
+        this.isStarted = false;
+        this.clearTimeouts();
+        this.remainingTime = 0;
+        this.outOfTimeAction.emit();
+    }
+    private countSeconds(): void {
+        this.timeoutHandleSec = window.setTimeout(() => {
+            this.updateShownTime();
+        }, 1000);
+    }
     public pause(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + (this.remainingTime/1000) + ')');
+        display(CountDownComponent.VERBOSE, this.debugName + '.pause(' + this.remainingTime + 'ms)');
 
         if (!this.isStarted) {
             throw new Error('Should not pause not started chrono (' + this.debugName + ')');
@@ -66,35 +97,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         this.pause();
         this.isStarted = false;
         this.remainingTime = null;
-    }
-    public resume(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.resume(' + this.remainingTime + 'ms)');
-
-        if (this.isPaused === false || this.isStarted === false) {
-            throw new Error('Should only resume chrono that are started and paused!');
-        }
-        this.startTime = Date.now();
-        this.isPaused = false;
-        this.timeoutHandleGlobal = window.setTimeout(() => {
-            console.log('END REACHED OF ' + this.debugName);
-            this.onEndReached();
-        }, this.remainingTime);
-
-        this.countSeconds();
-    }
-    private countSeconds(): void {
-        this.timeoutHandleSec = window.setTimeout(() => {
-            this.updateShownTime();
-        }, 1000);
-    }
-    private onEndReached(): void {
-        display(CountDownComponent.VERBOSE, this.debugName + '.onEndReached');
-
-        this.isPaused = true;
-        this.isStarted = false;
-        this.clearTimeouts();
-        this.remainingTime = 0;
-        this.outOfTimeAction.emit();
     }
     private updateShownTime(): void {
         const now: number = Date.now();
