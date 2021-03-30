@@ -1,15 +1,21 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { EncapsulePiece, Size, EncapsuleMapper } from './EncapsuleEnums';
 import { Player } from 'src/app/jscaip/player/Player';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { assert } from 'src/app/utils/collection-lib/utils';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
 export class EncapsulePartSlice extends GamePartSlice {
     private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;
+    private readonly caseBoard: Table<EncapsuleCase>;
 
     constructor(board: number[][], turn: number, remainingPieces: EncapsulePiece[]) {
         super(board, turn);
         if (remainingPieces == null) throw new Error('RemainingPieces cannot be null');
         this.remainingPieces = remainingPieces;
+        this.caseBoard = this.board.map((line: number[]) =>
+            line.map((n: number) => EncapsuleCase.decode(n)));
     }
     public static getInitialSlice(): EncapsulePartSlice {
         const emptyCase: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
@@ -19,37 +25,36 @@ export class EncapsulePartSlice extends GamePartSlice {
             EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_BLACK, EncapsulePiece.BIG_WHITE,
             EncapsulePiece.BIG_WHITE, EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.MEDIUM_BLACK,
             EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.SMALL_BLACK,
-            EncapsulePiece.SMALL_BLACK, EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE
+            EncapsulePiece.SMALL_BLACK, EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE,
         ];
         return new EncapsulePartSlice(startingBoard, 0, initialPieces);
     }
-    public getRemainingPiecesCopy(): EncapsulePiece[] {
+    public getAt(coord: Coord): EncapsuleCase {
+        return this.caseBoard[coord.y][coord.x];
+    }
+    public getRemainingPieces(): EncapsulePiece[] {
         return ArrayUtils.copyImmutableArray(this.remainingPieces);
     }
-    public static pieceBelongToCurrentPlayer(piece: EncapsulePiece, turn: number): boolean {
-        const pieceOwner: Player = EncapsuleMapper.toPlayer(piece);
-        if (pieceOwner === Player.ZERO) return turn%2 === 0;
-        if (pieceOwner === Player.ONE) return turn%2 === 1;
-        return false;
+    public getRemainingPiecesOfPlayer(player: Player): EncapsulePiece[] {
+        return this.getRemainingPieces().filter((piece: EncapsulePiece) => piece.getPlayer() === player);
     }
-    public pieceBelongToCurrentPlayer(piece: EncapsulePiece): boolean {
-        return EncapsulePartSlice.pieceBelongToCurrentPlayer(piece, this.turn);
+    public pieceBelongsToCurrentPlayer(piece: EncapsulePiece): boolean {
+        return piece.belongsTo(this.getCurrentPlayer());
     }
-    public isDropable(piece: EncapsulePiece): boolean {
-        if (!this.pieceBelongToCurrentPlayer(piece)) {
+    public isDroppable(piece: EncapsulePiece): boolean {
+        if (!this.pieceBelongsToCurrentPlayer(piece)) {
             return false;
         }
+        return this.isInRemainingPieces(piece);
+    }
+    public isInRemainingPieces(piece: EncapsulePiece): boolean {
         return this.remainingPieces.some((p: EncapsulePiece) => p === piece);
     }
-    public toCase(): EncapsuleCase[][] {
-        return this.board.map((line: number[]) =>
-            line.map((n: number) => EncapsuleCase.decode(n))); // TODO: check no one do that twice
-    }
-    public static toNumberBoard(board: EncapsuleCase[][]): number[][] {
-        return board.map((line: EncapsuleCase[]) => line.map((c: EncapsuleCase) => c.encode()));
+    public toCaseBoard(): Table<EncapsuleCase> {
+        return this.caseBoard;
     }
     public getPlayerRemainingPieces(): EncapsulePiece[] {
-        return this.remainingPieces.filter((piece: EncapsulePiece) => this.pieceBelongToCurrentPlayer(piece));
+        return this.remainingPieces.filter((piece: EncapsulePiece) => this.pieceBelongsToCurrentPlayer(piece));
     }
 }
 
@@ -70,14 +75,24 @@ export class EncapsuleCase {
         this.medium = medium;
         this.big = big;
     }
+    public isEmpty(): boolean {
+        return this.small === Player.NONE && this.medium === Player.NONE && this.big === Player.NONE;
+    }
     public toString(): string {
         const pieceNames: string[] = this.toOrderedPieceNames();
         return '(' + pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';
     }
+    public toList(): EncapsulePiece[] {
+        const l: EncapsulePiece[] = [];
+        if (this.small !== Player.NONE) l.push(EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small));
+        if (this.medium !== Player.NONE) l.push(EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium));
+        if (this.big !== Player.NONE) l.push(EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big));
+        return l;
+    }
     public toOrderedPieceNames(): string[] {
-        const smallPiece: EncapsulePiece = EncapsuleMapper.toValidPiece(Size.SMALL, this.small);
-        const mediumPiece: EncapsulePiece = EncapsuleMapper.toValidPiece(Size.MEDIUM, this.medium);
-        const bigPiece: EncapsulePiece = EncapsuleMapper.toValidPiece(Size.BIG, this.big);
+        const smallPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small);
+        const mediumPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium);
+        const bigPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big);
         return [EncapsuleMapper.getNameFromPiece(smallPiece),
             EncapsuleMapper.getNameFromPiece(mediumPiece),
             EncapsuleMapper.getNameFromPiece(bigPiece)];
@@ -91,16 +106,15 @@ export class EncapsuleCase {
         if (this.small === Player.ONE) return EncapsulePiece.SMALL_WHITE;
         return EncapsulePiece.NONE;
     }
-    public tryToSuperposePiece(piece: EncapsulePiece): {success: boolean; result: EncapsuleCase} {
-        const biggestPresent: Size = EncapsuleMapper.toSize(this.getBiggest());
+    public tryToSuperposePiece(piece: EncapsulePiece): MGPOptional<EncapsuleCase> {
+        const biggestPresent: Size = this.getBiggest().getSize();
         if (piece === EncapsulePiece.NONE) {
             throw new Error('Cannot move NONE on a case');
         }
-        const pieceSize: Size = EncapsuleMapper.toSize(piece);
-        if (pieceSize > biggestPresent) {
-            return { success: true, result: this.put(piece) };
+        if (piece.getSize() > biggestPresent) {
+            return MGPOptional.of(this.put(piece));
         } else {
-            return { success: false, result: null };
+            return MGPOptional.empty();
         }
     }
     public removeBiggest(): {removedCase: EncapsuleCase, removedPiece: EncapsulePiece} {
@@ -108,29 +122,33 @@ export class EncapsuleCase {
         if (removedPiece === EncapsulePiece.NONE) {
             throw new Error('Cannot removed piece from empty case');
         }
-        const removedSize: Size = EncapsuleMapper.toSize(removedPiece);
         let removedCase: EncapsuleCase;
-        if (removedSize === Size.BIG) {
-            removedCase = new EncapsuleCase(this.small, this.medium, Player.NONE);
-        } else if (removedSize === Size.MEDIUM) {
-            removedCase = new EncapsuleCase(this.small, Player.NONE, Player.NONE);
-        } else if (removedSize === Size.SMALL) {
-            removedCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+        switch (removedPiece.getSize()) {
+            case Size.BIG:
+                removedCase = new EncapsuleCase(this.small, this.medium, Player.NONE);
+                break;
+            case Size.MEDIUM:
+                removedCase = new EncapsuleCase(this.small, Player.NONE, Player.NONE);
+                break;
+            case Size.SMALL:
+                removedCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
+                break;
         }
         return { removedCase, removedPiece };
     }
     public put(piece: EncapsulePiece): EncapsuleCase {
         if (piece === EncapsulePiece.NONE) throw new Error('Cannot put NONE on case');
-        const pieceSize: Size = EncapsuleMapper.toSize(piece);
-        const piecePlayer: Player = EncapsuleMapper.toPlayer(piece);
-        if (pieceSize === Size.BIG) {
-            return new EncapsuleCase(this.small, this.medium, piecePlayer);
-        }
-        if (pieceSize === Size.MEDIUM) {
-            return new EncapsuleCase(this.small, piecePlayer, this.big);
-        }
-        if (pieceSize === Size.SMALL) {
-            return new EncapsuleCase(piecePlayer, this.medium, this.big);
+        const piecePlayer: Player = piece.getPlayer();
+        switch (piece.getSize()) {
+            case Size.BIG:
+                return new EncapsuleCase(this.small, this.medium, piecePlayer);
+            case Size.MEDIUM:
+                assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
+                return new EncapsuleCase(this.small, piecePlayer, this.big);
+            case Size.SMALL:
+                assert(this.big === Player.NONE, 'Cannot put a piece on top of a bigger one');
+                assert(this.medium === Player.NONE, 'Cannot put a piece on top of a bigger one');
+                return new EncapsuleCase(piecePlayer, this.medium, this.big);
         }
     }
     public encode(): number {
@@ -139,9 +157,9 @@ export class EncapsuleCase {
                this.big.value*9;
     }
     public static decode(encapsuleCase: number): EncapsuleCase {
-        if (encapsuleCase%1 !== 0) throw new Error('EncapsuleCase must be encoded as integer: ' + encapsuleCase);
-        if (encapsuleCase < 0) throw new Error('To small representation for EncapsuleCase: ' + encapsuleCase);
-        if (encapsuleCase > 26) throw new Error('To big representation for EncapsuleCase: ' + encapsuleCase);
+        assert(encapsuleCase%1 === 0, 'EncapsuleCase must be encoded as integer: ' + encapsuleCase);
+        assert(encapsuleCase >= 0, 'To small representation for EncapsuleCase: ' + encapsuleCase);
+        assert(encapsuleCase <= 26, 'To big representation for EncapsuleCase: ' + encapsuleCase);
         const small: Player = Player.of(encapsuleCase%3);
         encapsuleCase -= small.value;
         encapsuleCase/=3;
@@ -151,9 +169,7 @@ export class EncapsuleCase {
         const big: Player = Player.of(encapsuleCase);
         return new EncapsuleCase(small, medium, big);
     }
-    public belongToCurrentPlayer(currentPlayer: Player): boolean {
-        const biggest: EncapsulePiece = this.getBiggest();
-        const owner: Player = EncapsuleMapper.toPlayer(biggest);
-        return owner === currentPlayer;
+    public belongsTo(player: Player): boolean {
+        return this.getBiggest().getPlayer() === player;
     }
 }
