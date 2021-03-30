@@ -26,7 +26,7 @@ class RouterMock {
         return Promise.resolve(true);
     }
 }
-describe('PartCreationComponent with fixture:', () => {
+describe('PartCreationComponent:', () => {
     let fixture: ComponentFixture<PartCreationComponent>;
 
     let component: PartCreationComponent;
@@ -185,7 +185,6 @@ describe('PartCreationComponent with fixture:', () => {
         await fixture.whenStable();
         fixture.detectChanges();
         spyOn(component.gameStartNotification, 'emit');
-        expect(component.gameStartNotification.emit).not.toHaveBeenCalled();
 
         console.log('loooooooooooooooooooooooooog')
         await component.acceptConfig();

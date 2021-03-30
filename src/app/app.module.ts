@@ -67,6 +67,7 @@ import { ReversiComponent } from './components/game-components/reversi/reversi.c
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
 import { TablutComponent } from './components/game-components/tablut/tablut.component';
+import { TestCountDownComponent } from './components/normal-component/test-count-down/test-count-down.component';
 
 export const INCLUDE_VERBOSE_LINE_IN_TEST: boolean = false;
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
@@ -77,6 +78,8 @@ const routes: Route [] = [
     { path: 'inscription', component: InscriptionComponent },
     { path: 'confirm-inscription', component: ConfirmInscriptionComponent, canActivate: [MustVerifyEmail] },
     { path: 'notFound', component: NotFoundComponent, canActivate: [EmailVerified] },
+
+    { path: 'testCountDown', component: TestCountDownComponent },
 
     { path: 'play', component: OnlineGameCreationComponent, canActivate: [EmailVerified] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
@@ -101,6 +104,7 @@ const routes: Route [] = [
         InscriptionComponent,
         NotFoundComponent,
         CountDownComponent,
+        TestCountDownComponent,
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,
         DidacticialGameWrapperComponent,
@@ -111,6 +115,7 @@ const routes: Route [] = [
         DidacticialGameCreationComponent,
 
         AwaleComponent,
+        CoerceoComponent,
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,
@@ -126,7 +131,6 @@ const routes: Route [] = [
         SaharaComponent,
         SiamComponent,
         TablutComponent,
-        CoerceoComponent,
     ],
     entryComponents: [
         AwaleComponent,

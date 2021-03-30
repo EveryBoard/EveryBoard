@@ -63,7 +63,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
      * ngOnInit (triggered by detectChanges)
      * stage 1: PartCreationComponent appear
      * startGame, launched by user if game was not started yet, or automatically (via partCreationComponent)
-     * stage 2: PartCreationComponent disaPpear, GameIncluderComponent appear
+     * stage 2: PartCreationComponent disappear, GameIncluderComponent appear
      * tick(1): the async part of startGame is now finished
      * stage 3: P4Component appear
      * differents scenarios
