@@ -6,17 +6,17 @@ import { CoerceoFailure } from '../CoerceoFailure';
 
 export class CoerceoStep {
 
-    public static LEFT: CoerceoStep = new CoerceoStep(new Vector(-2, 0));
+    public static LEFT: CoerceoStep = new CoerceoStep(new Vector(-2, 0), 'LEFT');
 
-    public static UP_LEFT: CoerceoStep = new CoerceoStep(Direction.UP_LEFT);
+    public static UP_LEFT: CoerceoStep = new CoerceoStep(Direction.UP_LEFT, 'UP_LEFT');
 
-    public static UP_RIGHT: CoerceoStep = new CoerceoStep(Direction.UP_RIGHT);
+    public static UP_RIGHT: CoerceoStep = new CoerceoStep(Direction.UP_RIGHT, 'UP_RIGHT');
 
-    public static RIGHT: CoerceoStep = new CoerceoStep(new Vector(2, 0));
+    public static RIGHT: CoerceoStep = new CoerceoStep(new Vector(2, 0), 'RIGHT');
 
-    public static DOWN_LEFT: CoerceoStep = new CoerceoStep(Direction.DOWN_LEFT);
+    public static DOWN_LEFT: CoerceoStep = new CoerceoStep(Direction.DOWN_LEFT, 'DOWN_LEFT');
 
-    public static DOWN_RIGHT: CoerceoStep = new CoerceoStep(Direction.DOWN_RIGHT);
+    public static DOWN_RIGHT: CoerceoStep = new CoerceoStep(Direction.DOWN_RIGHT, 'DOWN_RIGHT');
 
     public static readonly STEPS: CoerceoStep[] = [
         CoerceoStep.LEFT,
@@ -35,25 +35,21 @@ export class CoerceoStep {
             return CoerceoStep.STEPS[stepIndex];
         }
     }
-    private constructor(public readonly direction: Vector) {}
+    private constructor(public readonly direction: Vector, public readonly str: string) {}
 
     public toInt(): number {
         return CoerceoStep.STEPS.findIndex((s: CoerceoStep) => Vector.equals(s.direction, this.direction));
     }
     public toString(): string {
-        switch (this) {
-            case CoerceoStep.LEFT: return 'LEFT';
-            case CoerceoStep.UP_LEFT: return 'UP_LEFT';
-            case CoerceoStep.UP_RIGHT: return 'UP_RIGHT';
-            case CoerceoStep.RIGHT: return 'RIGHT';
-            case CoerceoStep.DOWN_LEFT: return 'DOWN_LEFT';
-            case CoerceoStep.DOWN_RIGHT: return 'DOWN_RIGHT';
-        }
+        return this.str;
     }
 }
 
 export class CoerceoMove extends Move {
 
+    public static encode(move: CoerceoMove): number {
+        return move.encode();
+    }
     public static decode(encodedMove: number): CoerceoMove {
         if (encodedMove % 1 !== 0) {
             throw new Error('EncodedMove must be an integer.');
@@ -76,9 +72,6 @@ export class CoerceoMove extends Move {
         }
         if (step == null) {
             throw new Error('Step cannot be null.');
-        }
-        if (!(step instanceof CoerceoStep)) {
-            throw new Error(CoerceoFailure.INVALID_DISTANCE);
         }
         const landingCoord: Coord = new Coord(start.x + step.direction.x, start.y + step.direction.y);
         if (landingCoord.isNotInRange(15, 10)) {

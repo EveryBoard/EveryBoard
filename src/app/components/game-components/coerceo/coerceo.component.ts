@@ -15,7 +15,6 @@ import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 @Component({
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
-    styleUrls: ['./coerceo.component.css'],
 })
 export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
                                                               CoerceoPartSlice,
@@ -79,7 +78,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             return this.secondClick(coord);
         }
     }
-    private firstClick(coord: Coord): Promise<MGPValidation> {
+    private async firstClick(coord: Coord): Promise<MGPValidation> {
         const clickedPiece: number = this.slice.getBoardAt(coord);
         if (clickedPiece === this.slice.getCurrentEnnemy().value) {
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(coord);
@@ -87,6 +86,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         } else if (clickedPiece === this.slice.getCurrentPlayer().value) {
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
+        } else {
+            return this.cancelMove(CoerceoFailure.FIRST_CLICK_SHOULD_NOT_BE_NULL);
         }
     }
     private async secondClick(coord: Coord): Promise<MGPValidation> {
@@ -103,8 +104,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
     public decodeMove(encodedMove: number): Move {
         return CoerceoMove.decode(encodedMove);
     }
-    public encodeMove(move: Move): number {
-        return move.encode();
+    public encodeMove(move: CoerceoMove): number {
+        return CoerceoMove.encode(move);
     }
     public isRemoved(x: number, y: number): boolean {
         assert(this.board[y][x] === CoerceoPiece.NONE.value, 'Should only be called on removed tiles');
@@ -127,7 +128,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         }
     }
     public wasOccupied(x: number, y: number): boolean {
-        console.log('wasOccupied(' + x + ', ' + y + ')');
         const previousContent: number = this.rules.node.mother.gamePartSlice.getBoardByXY(x, y);
         return previousContent === CoerceoPiece.EMPTY.value;
     }

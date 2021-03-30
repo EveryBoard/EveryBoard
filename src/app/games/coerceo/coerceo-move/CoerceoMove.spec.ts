@@ -21,16 +21,20 @@ describe('CoerceoMove', () => {
             expect(() => CoerceoMove.fromCoordToCoord(new Coord(2, 2), new Coord(9, 9)))
                 .toThrowError(CoerceoFailure.INVALID_DISTANCE);
         });
-        it('Should not allow out-of range starting coord', () => {
+        it('Should not allow out of range starting coord', () => {
             expect(() => CoerceoMove.fromDeplacement(new Coord(-1, 0), CoerceoStep.LEFT))
                 .toThrowError('Starting coord cannot be out of range (width: 15, height: 10).');
         });
-        it('Should not allow out-of range landing coord', () => {
+        it('Should not allow out of range landing coord', () => {
             expect(() => CoerceoMove.fromDeplacement(new Coord(0, 0), CoerceoStep.LEFT))
                 .toThrowError('Landing coord cannot be out of range (width: 15, height: 10).');
         });
     });
     describe('fromTilesExchange', () => {
+        it('Should not allow out of range capture coord', () => {
+            const reason: string = 'Captured coord cannot be out of range (width: 15, height: 10).';
+            expect(() => CoerceoMove.fromTilesExchange(new Coord(-1, 16))).toThrowError(reason);
+        });
     });
     describe('Overrides', () => {
         it('should have functionnal equals', () => {
