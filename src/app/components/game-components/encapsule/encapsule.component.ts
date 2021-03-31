@@ -64,7 +64,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         return this.rules.node.gamePartSlice.getRemainingPiecesOfPlayer(Player.of(player));
     }
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
-        console.log({x, y});
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -77,7 +76,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             if (this.chosenPiece != null) {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
-                console.log('calling chooseMove');
                 return this.tryMove(chosenMove);
             } else if (slice.getAt(clickedCoord).belongsTo(slice.getCurrentPlayer()) === false) {
                 return this.cancelMove(EncapsuleComponentFailure.INVALID_PIECE_SELECTED);
@@ -109,7 +107,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         this.chosenPieceIndex = -1;
     }
     public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
-        console.log({player, piece, index});
         const clickValidity: MGPValidation = this.canUserPlay('#piece_' + player + '_' + piece.toString());
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
