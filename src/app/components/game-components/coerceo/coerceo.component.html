@@ -39,9 +39,10 @@
               [attr.points]="getCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
               style="fill: none; stroke: blue; stroke-width: 5" />
     <g *ngIf="tiles[0] > 0">
-        <polyline [attr.points]="getTilesCountCoordinate(8, 0)"
+        <polyline [attr.points]="getTilesCountCoordinate(0, 0)"
                   [attr.fill]="PLAYER_ZERO_FILL" />
-        <text [attr.x]="(CASE_SIZE / 2) + CASE_SIZE * 8"
+        <text id="playerZeroTilesCount"
+              [attr.x]="(CASE_SIZE / 2) + CASE_SIZE * 0"
               [attr.y]="16 + (CASE_SIZE / 2) + CASE_SIZE * 0"
               text-anchor="middle"
               stroke="black"
@@ -49,9 +50,10 @@
         >{{ tiles[0] }}</text>
     </g>
     <g *ngIf="tiles[1] > 0">
-        <polyline [attr.points]="getTilesCountCoordinate(8, 9)"
+        <polyline [attr.points]="getTilesCountCoordinate(0, 9)"
                   [attr.fill]="PLAYER_ONE_FILL" />
-        <text [attr.x]="(CASE_SIZE / 2) + CASE_SIZE * 8"
+        <text id="playerOneTilesCount"
+              [attr.x]="(CASE_SIZE / 2) + CASE_SIZE * 0"
               [attr.y]="16 + (CASE_SIZE / 2) + CASE_SIZE * 9"
               text-anchor="middle"
               stroke="black"

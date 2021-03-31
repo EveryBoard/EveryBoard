@@ -35,7 +35,7 @@ describe('PartCreationComponent:', () => {
 
     let partDAOMock: PartDAOMock;
 
-    beforeEach(async() => { console.log('==================')
+    beforeEach(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 MatStepperModule, MatRadioModule, MatSliderModule,
@@ -186,7 +186,6 @@ describe('PartCreationComponent:', () => {
         fixture.detectChanges();
         spyOn(component.gameStartNotification, 'emit');
 
-        console.log('loooooooooooooooooooooooooog')
         await component.acceptConfig();
         await fixture.whenStable();
         fixture.detectChanges();

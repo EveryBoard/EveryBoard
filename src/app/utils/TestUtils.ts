@@ -140,3 +140,14 @@ async(elementName: string, testElements: TestElements) => {
         return true;
     }
 };
+export const expectElementNotToExist: (elementName: string, testElements: TestElements) => void =
+(elementName: string, testElements: TestElements) => {
+    const element: DebugElement = testElements.debugElement.query(By.css(elementName));
+    expect(element).toBeNull();
+};
+
+export const expectElementToExist: (elementName: string, testElements: TestElements) => void =
+(elementName: string, testElements: TestElements) => {
+    const element: DebugElement = testElements.debugElement.query(By.css(elementName));
+    expect(element).toBeTruthy();
+};

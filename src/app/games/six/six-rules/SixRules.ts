@@ -1,3 +1,4 @@
+import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
@@ -27,20 +28,28 @@ export class SixRules extends Rules<SixMove, SixGameState, LegalityStatus> {
         }
     }
     public isLegalDrop(move: SixMove, slice: SixGameState): LegalityStatus {
-        if (move.landing.isPresent() || move.captured.isPresent()) {
+        if (move.landing.isPresent() || move.keep.isPresent()) {
             return { legal: MGPValidation.failure('Can not do deplacement before 42th turn!') };
+        }
+        const landingLegality: MGPValidation = slice.isIllegalLandingZone(move.coord);
+        if (landingLegality.isFailure()) {
+            return { legal: landingLegality };
         }
     }
     public isLegalDeplacement(move: SixMove, slice: SixGameState): LegalityStatus {
-        if (move.landing.isAbsent()) {
+        const landing: Coord = move.landing.getOrNull();
+        if (landing == null) {
             return { legal: MGPValidation.failure('Can no longer drop after 40th turn!') };
         }
-        if (slice.pieces.containsKey(move.coord)) {
-            const playerAtCoord: Player = slice.pieces.get(move.coord) ? Player.ZERO : Player.ONE;
-            const currentPlayer: Player = slice.getCurrentPlayer();
-            if (playerAtCoord !== currentPlayer) {
+        switch (slice.getPieceAt(move.coord)) {
+            case Player.NONE:
+                return { legal: MGPValidation.failure('Cannot move empty coord!') };
+            case slice.getCurrentEnnemy():
                 return { legal: MGPValidation.failure('Cannot move ennemy piece!') };
-            }
+        }
+        const landingLegality: MGPValidation = slice.isIllegalLandingZone(landing);
+        if (landingLegality.isFailure()) {
+            return { legal: landingLegality };
         }
     }
 }

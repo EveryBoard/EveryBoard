@@ -27,40 +27,6 @@ describe('SixRules', () => {
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.getReason()).toBe('Can no longer drop after 40th turn!');
     });
-    // it('Should not remove tiles emptied, when connected by 3 separated sides', () => {
-    //     const board: NumberTable = [
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, X, _, _],
-    //         [N, N, N, N, N, N, N, N, N, _, O, _, O, _, _],
-    //         [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
-    //         [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
-    //     ];
-    //     const expectedBoard: NumberTable = [
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-    //         [N, N, N, N, N, N, N, N, N, N, N, N, X, _, _],
-    //         [N, N, N, N, N, N, N, N, N, _, _, _, O, _, _],
-    //         [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
-    //         [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
-    //     ];
-    //     const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 2], [0, 0]);
-    //     const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(10, 7));
-    //     const status: LegalityStatus = rules.isLegal(move, slice);
-    //     expect(status.legal.isSuccess()).toBeTrue();
-    //     const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
-    //     const expectedSlice: CoerceoPartSlice =
-    //         new CoerceoPartSlice(expectedBoard, 2, [0, 0], [0, 1]);
-    //     expect(resultingSlice).toEqual(expectedSlice);
-    // });
     it('Should forbid deplacement before 40th turn', () => {
         const board: NumberTable = [
             [_, _, O],
@@ -81,7 +47,7 @@ describe('SixRules', () => {
         const slice: SixGameState = SixGameState.fromRepresentation(board, 5);
         const move: SixMove = SixMove.fromDrop(new Coord(0, 0));
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe('Piece is not connected to any other pieces.');
+        expect(status.legal.getReason()).toBe('Piece must be connected to other pieces!');
     });
     it('Should forbid landing/dropping on existing piece', () => {
         const board: NumberTable = [
@@ -92,7 +58,7 @@ describe('SixRules', () => {
         const slice: SixGameState = SixGameState.fromRepresentation(board, 4);
         const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe('Can not drop on another piece!');
+        expect(status.legal.getReason()).toBe('Cannot land on occupied coord!');
     });
     it('Should forbid moving ennemy piece', () => {
         const board: NumberTable = [
@@ -105,8 +71,69 @@ describe('SixRules', () => {
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.getReason()).toBe('Cannot move ennemy piece!');
     });
-    it('Should deconnect smaller group automatically');
-    it('Should refuse deconnection of same sized group when no group is mentionned');
-    it('Should refuse deconnection of different sized group with mentionned group');
-    it('Should refuse deconnection where captured coord is empty');
+    xit('Should deconnect smaller group automatically', () => {
+        const board: NumberTable = [
+            [X, X, O, _, _],
+            [X, X, O, _, _],
+            [_, X, O, _, _],
+            [_, X, O, _, X],
+            [_, X, O, O, X],
+        ];
+        const expectedBoard: NumberTable = [
+            [X, X, O, O],
+            [X, X, O, _],
+            [_, X, O, _],
+            [_, X, O, _],
+            [_, X, O, _],
+        ];
+        const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+        const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.isSuccess()).toBeTrue();
+        const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const expectedSlice: SixGameState =
+            SixGameState.fromRepresentation(expectedBoard, 43);
+        expect(resultingSlice).toEqual(expectedSlice);
+    });
+    xit('Should refuse deconnection of same sized group when no group is mentionned', () => {
+        const board: NumberTable = [
+            [X, X, _, O, _],
+            [X, X, _, O, _],
+            [_, X, O, O, _],
+            [_, X, _, O, _],
+            [_, X, _, O, O],
+        ];
+        const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+        const move: SixMove = SixMove.fromDeplacement(new Coord(2, 2), new Coord(4, 3));
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.getReason()).toBe('Board was split in two equal part, you must mention which one to keep!');
+    });
+    xit('Should refuse deconnection of different sized group with mentionned group', () => {
+        const board: NumberTable = [
+            [X, X, _, _, _],
+            [X, X, _, _, _],
+            [_, X, O, O, _],
+            [_, X, _, O, _],
+            [_, X, _, O, O],
+        ];
+        const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+        const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(2, 2), new Coord(4, 3), new Coord(0, 0));
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        const reason: string = 'You cannot choose which part to keep when one is smaller than the other!';
+        expect(status.legal.getReason()).toBe(reason);
+    });
+    xit('Should refuse deconnection where captured coord is empty', () => {
+        const board: NumberTable = [
+            [X, X, _, O, _],
+            [X, X, _, O, _],
+            [_, X, O, O, _],
+            [_, X, _, O, _],
+            [_, X, _, O, O],
+        ];
+        const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+        const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(2, 2), new Coord(4, 3), new Coord(4, 0));
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        const reason: string = 'Cannot keep empty coord!';
+        expect(status.legal.getReason()).toBe(reason);
+    });
 });

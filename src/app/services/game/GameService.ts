@@ -117,7 +117,7 @@ export class GameService {
             playerOne: secondPlayer,
             turn: 0,
             beginning: Date.now(),
-        }; console.log('lllllllllllllllloooooooooooooooooogggggggg')
+        };
         return this.partDao.update(partId, modification);
     }
     private FUTURE_startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {

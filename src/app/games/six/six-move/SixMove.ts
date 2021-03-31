@@ -11,19 +11,19 @@ export class SixMove extends MoveCoord {
     public static fromDeplacement(start: Coord, landing: Coord): SixMove {
         return new SixMove(start, MGPOptional.of(landing), MGPOptional.empty());
     }
-    public static fromCuttingDeplacement(start: Coord, landing: Coord, captured: Coord): SixMove {
-        return new SixMove(start, MGPOptional.of(landing), MGPOptional.of(captured));
+    public static fromCuttingDeplacement(start: Coord, landing: Coord, keep: Coord): SixMove {
+        return new SixMove(start, MGPOptional.of(landing), MGPOptional.of(keep));
     }
     private constructor(start: Coord,
                         public readonly landing: MGPOptional<Coord>,
-                        public readonly captured: MGPOptional<Coord>)
+                        public readonly keep: MGPOptional<Coord>)
     {
         super(start.x, start.y);
         if (start.equals(landing.getOrNull())) {
             throw new Error('Deplacement cannot be static!');
         }
-        if (start.equals(captured.getOrNull())) {
-            throw new Error('Cannot capture starting coord, since it will always be empty after move!');
+        if (start.equals(keep.getOrNull())) {
+            throw new Error('Cannot keep starting coord, since it will always be empty after move!');
         }
     }
     public toString(): string {
