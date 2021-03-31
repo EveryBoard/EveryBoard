@@ -29,8 +29,8 @@
     </g>
     <g *ngFor="let player of [0, 1]">
         <g *ngFor="let piece of getRemainingPieces(player); index as pieceIdx">
-            <circle id="piece_{{ pieceIdx }}"
-                    (click)="onPieceClick(piece, pieceIdx)"
+            <circle id="piece_{{ player }}_{{ piece.toString() }}"
+                    (click)="onPieceClick(player, piece, pieceIdx)"
                     [attr.r]="getPieceRadius(piece)"
                     [attr.stroke-width]="CIRCLE_STROKE_WIDTH"
                     stroke="black"

@@ -1,5 +1,5 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { EncapsulePiece, Size, EncapsuleMapper } from './EncapsuleEnums';
+import { EncapsulePiece, Size } from 'src/app/games/encapsule/encapsule-piece/EncapsulePiece';
 import { Player } from 'src/app/jscaip/player/Player';
 import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
@@ -42,10 +42,7 @@ export class EncapsulePartSlice extends GamePartSlice {
         return piece.belongsTo(this.getCurrentPlayer());
     }
     public isDroppable(piece: EncapsulePiece): boolean {
-        if (!this.pieceBelongsToCurrentPlayer(piece)) {
-            return false;
-        }
-        return this.isInRemainingPieces(piece);
+        return this.pieceBelongsToCurrentPlayer(piece) && this.isInRemainingPieces(piece);
     }
     public isInRemainingPieces(piece: EncapsulePiece): boolean {
         return this.remainingPieces.some((p: EncapsulePiece) => p === piece);
@@ -93,9 +90,7 @@ export class EncapsuleCase {
         const smallPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.SMALL, this.small);
         const mediumPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.MEDIUM, this.medium);
         const bigPiece: EncapsulePiece = EncapsulePiece.ofSizeAndPlayer(Size.BIG, this.big);
-        return [EncapsuleMapper.getNameFromPiece(smallPiece),
-            EncapsuleMapper.getNameFromPiece(mediumPiece),
-            EncapsuleMapper.getNameFromPiece(bigPiece)];
+        return [smallPiece.toString(), mediumPiece.toString(), bigPiece.toString()];
     }
     public getBiggest(): EncapsulePiece {
         if (this.big === Player.ZERO) return EncapsulePiece.BIG_BLACK;

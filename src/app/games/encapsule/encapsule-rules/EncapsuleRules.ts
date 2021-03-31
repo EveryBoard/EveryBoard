@@ -2,7 +2,6 @@ import { Rules } from '../../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { EncapsulePartSlice, EncapsuleCase } from '../EncapsulePartSlice';
 import { EncapsuleMove } from '../encapsule-move/EncapsuleMove';
-import { EncapsulePiece, EncapsuleMapper } from '../EncapsuleEnums';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { Sets } from 'src/app/utils/collection-lib/sets/Sets';
@@ -12,9 +11,17 @@ import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/Arra
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { EncapsulePiece } from '../encapsule-piece/EncapsulePiece';
 
 export class EncapsuleNode
     extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
+
+export class EncapsuleFailure {
+    public static WRONG_COLOR: string = `Veuillez utiliser une pièce à votre couleur.`;
+    public static NOT_REMAINING_PIECE: string = 'Veuillez utiliser une des pièces restantes.'
+    public static INVALID_PLACEMENT: string =
+        'Vous devez placer votre pièce sur une case vide ou sur une pièce plus petite.'
+}
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
     public static readonly LINES: Coord[][] = [
@@ -56,12 +63,10 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (move.isDropping()) {
             movingPiece = move.piece.get();
             if (slice.pieceBelongsToCurrentPlayer(movingPiece) === false) {
-                const reason: string = `Veuillez utiliser une pièce à votre couleur.`;
-                return EncapsuleLegalityStatus.failure(reason);
+                return EncapsuleLegalityStatus.failure(EncapsuleFailure.WRONG_COLOR);
             }
             if (slice.isInRemainingPieces(movingPiece) === false) {
-                const reason: string = 'Veuillez utiliser une des pièces restantes.';
-                return EncapsuleLegalityStatus.failure(reason);
+                return EncapsuleLegalityStatus.failure(EncapsuleFailure.NOT_REMAINING_PIECE);
             }
         } else {
             const startingCoord: Coord = move.startingCoord.get();
@@ -71,9 +76,9 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                 display(LOCAL_VERBOSE,
                     'at ' + startingCoord.toString() + '\n' +
                     'there is ' + startingCase.toString() + '\n' +
-                    'whose bigger is ' + EncapsuleMapper.getNameFromPiece(movingPiece) + '\n' +
+                    'whose bigger is ' + movingPiece.toString() + '\n' +
                     'move illegal because: piece does not belong to current player');
-                return EncapsuleLegalityStatus.failure('Veuillez utiliser une pièce à votre couleur.');
+                return EncapsuleLegalityStatus.failure(EncapsuleFailure.WRONG_COLOR);
             }
         }
         const landingNumber: number = boardCopy[move.landingCoord.y][move.landingCoord.x];
@@ -82,8 +87,8 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (superpositionResult.isPresent()) {
             return { legal: MGPValidation.SUCCESS, newLandingCase: superpositionResult.get() };
         }
-        display(LOCAL_VERBOSE, 'move illegal because: Impossible Superposition ('+ EncapsuleMapper.getNameFromPiece(movingPiece) + ' on ' + landingCase.toString() + ')');
-        return EncapsuleLegalityStatus.failure('Vous devez placer votre pièce sur une case vide ou sur une pièce plus petite.');
+        display(LOCAL_VERBOSE, 'move illegal because: Impossible Superposition ('+ movingPiece.toString() + ' on ' + landingCase.toString() + ')');
+        return EncapsuleLegalityStatus.failure(EncapsuleFailure.INVALID_PLACEMENT);
     }
     public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus):
     { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; }

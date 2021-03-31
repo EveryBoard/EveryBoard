@@ -4,14 +4,22 @@ import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComp
 import { EncapsuleRules } from 'src/app/games/encapsule/encapsule-rules/EncapsuleRules';
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleMove } from 'src/app/games/encapsule/encapsule-move/EncapsuleMove';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsuleEnums';
+import { EncapsulePiece, Size } from 'src/app/games/encapsule/encapsule-piece/EncapsulePiece';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MatSnackBar } from '@angular/material/snack-bar';
+
+export class EncapsuleComponentFailure {
+    public static NOT_DROPPABLE: string =`Veuillez choisir une de vos pièces parmi les pièces restantes.`;
+    public static INVALID_PIECE_SELECTED: string =
+        `Veuillez sélectionner une de vos pièces ou une case où vous avez la pièce la plus grande.`;
+    public static SAME_DEST_AS_ORIGIN: string =
+        `Veuillez sélectionner une case différente de la case d'origine du mouvement.`;
+    public static END_YOUR_MOVE: string =
+        `Vous effectuez un déplacement, choisissez votre case de destination.`;
+}
 
 @Component({
     selector: 'app-encapsule',
@@ -56,6 +64,12 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         return this.rules.node.gamePartSlice.getRemainingPiecesOfPlayer(Player.of(player));
     }
     public async onBoardClick(x: number, y: number): Promise<MGPValidation> {
+        console.log({x, y});
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
         const clickedCoord: Coord = new Coord(x, y);
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (this.chosenCoord == null) {
@@ -63,18 +77,30 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             if (this.chosenPiece != null) {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
-                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+                console.log('calling chooseMove');
+                return this.tryMove(chosenMove);
             } else if (slice.getAt(clickedCoord).belongsTo(slice.getCurrentPlayer()) === false) {
-                return this.cancelMove(`Veuillez sélectionner une de vos pièces ou une case où vous avez la pièce la plus grande.`);
+                return this.cancelMove(EncapsuleComponentFailure.INVALID_PIECE_SELECTED);
             }
         } else {
             if (this.chosenCoord.equals(clickedCoord)) {
-                return this.cancelMove(`Veuillez sélectionner une case différente de la case d'origine du mouvement.`);
+                return this.cancelMove(EncapsuleComponentFailure.SAME_DEST_AS_ORIGIN);
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
-                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+                return this.tryMove(chosenMove);
+
             }
+        }
+    }
+    public async tryMove(move: EncapsuleMove): Promise<MGPValidation> {
+        // TODO: shouldn't this be checked already by chooseMove? Tests
+        // complain that chooseMove is called if we do not check it.
+        const result = this.rules.isLegal(move, this.rules.node.gamePartSlice);
+        if (result.legal.isFailure()) {
+            return this.cancelMove(result.legal.getReason());
+        } else {
+            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         }
     }
     public cancelMoveAttempt(): void {
@@ -82,17 +108,22 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         this.chosenPiece = null;
         this.chosenPieceIndex = -1;
     }
-    public async onPieceClick(piece: EncapsulePiece, index: number): Promise<MGPValidation> {
+    public async onPieceClick(player: number, piece: EncapsulePiece, index: number): Promise<MGPValidation> {
+        console.log({player, piece, index});
+        const clickValidity: MGPValidation = this.canUserPlay('#piece_' + player + '_' + piece.toString());
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (slice.isDroppable(piece) === false) {
-            return this.cancelMove(`Veuillez choisir une de vos pièces.`);
+            return this.cancelMove(EncapsuleComponentFailure.NOT_DROPPABLE);
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
             this.chosenPieceIndex = index;
             return MGPValidation.SUCCESS;
         } else {
-            const chosenMove: EncapsuleMove = EncapsuleMove.fromDrop(piece, this.chosenCoord);
-            return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
+            return this.cancelMove(EncapsuleComponentFailure.END_YOUR_MOVE);
         }
     }
     public getRectFill(x: number, y: number): string {

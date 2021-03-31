@@ -1,4 +1,12 @@
 import { Player } from 'src/app/jscaip/player/Player';
+import { assert } from 'src/app/utils/collection-lib/utils';
+
+export enum Size {
+    NONE = 0,
+    SMALL = 1,
+    MEDIUM = 2,
+    BIG = 3,
+}
 
 export class EncapsulePiece {
     public static readonly SMALL_BLACK: EncapsulePiece = new EncapsulePiece(0);
@@ -28,9 +36,9 @@ export class EncapsulePiece {
         if (player === Player.ONE && size === Size.BIG) return EncapsulePiece.BIG_WHITE;
         if (player === Player.ONE && size === Size.MEDIUM) return EncapsulePiece.MEDIUM_WHITE;
         if (player === Player.ONE && size === Size.SMALL) return EncapsulePiece.SMALL_WHITE;
-        if (player === Player.NONE || size === Size.NONE) return EncapsulePiece.NONE;
-        throw new Error('Unknown combinaison (' + size + ', ' + player + ')');
+        return EncapsulePiece.NONE;
     }
+
     private constructor(public readonly value: number) {
     }
     public getPlayer(): Player {
@@ -65,17 +73,8 @@ export class EncapsulePiece {
     public belongsTo(player: Player): boolean {
         return this.getPlayer() === player;
     }
-}
-export enum Size {
-    NONE = 0,
-    SMALL = 1,
-    MEDIUM = 2,
-    BIG = 3,
-}
-// TODO: move used methods to EncapsulePiece
-export class EncapsuleMapper {
-    public static getNameFromPiece(piece: EncapsulePiece): string {
-        switch (piece) {
+    public toString(): string {
+        switch (this) {
             case EncapsulePiece.BIG_BLACK: return 'BIG_BLACK';
             case EncapsulePiece.BIG_WHITE: return 'BIG_WHITE';
             case EncapsulePiece.MEDIUM_BLACK: return 'MEDIUM_BLACK';
@@ -83,30 +82,6 @@ export class EncapsuleMapper {
             case EncapsulePiece.SMALL_BLACK: return 'SMALL_BLACK';
             case EncapsulePiece.SMALL_WHITE: return 'SMALL_WHITE';
             case EncapsulePiece.NONE: return 'NONE';
-            default: throw new Error('Unknown EncapsulePiece: ' + piece);
         }
-    }
-    public static toPlayerFromName(pieceName: string): Player {
-        const piece: EncapsulePiece = EncapsuleMapper.getPieceFromName(pieceName);
-        return piece.getPlayer();
-    }
-    public static getPieceFromName(pieceName: string): EncapsulePiece {
-        switch (pieceName) {
-            case 'BIG_BLACK': return EncapsulePiece.BIG_BLACK;
-            case 'BIG_WHITE': return EncapsulePiece.BIG_WHITE;
-            case 'MEDIUM_BLACK': return EncapsulePiece.MEDIUM_BLACK;
-            case 'MEDIUM_WHITE': return EncapsulePiece.MEDIUM_WHITE;
-            case 'SMALL_BLACK': return EncapsulePiece.SMALL_BLACK;
-            case 'SMALL_WHITE': return EncapsulePiece.SMALL_WHITE;
-            case 'NONE': return EncapsulePiece.NONE;
-            default: throw new Error('Unknown EncapsulePiece: ' + pieceName);
-        }
-    }
-
-    public static fromPiecesToNumbers(pieces: EncapsulePiece[]): number[] {
-        return pieces.map((piece: EncapsulePiece) => piece.value);
-    }
-    public static fromPieceBiArrayToBoard(pieceBoard: EncapsulePiece[][]): number[][] {
-        return pieceBoard.map((array: EncapsulePiece[]) => EncapsuleMapper.fromPiecesToNumbers(array));
     }
 }

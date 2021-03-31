@@ -1,11 +1,11 @@
 import { EncapsuleRules } from './EncapsuleRules';
 import { EncapsuleMove } from '../encapsule-move/EncapsuleMove';
-import { EncapsulePiece } from '../EncapsuleEnums';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { EncapsuleCase, EncapsulePartSlice } from '../EncapsulePartSlice';
 import { Player } from 'src/app/jscaip/player/Player';
+import { EncapsulePiece } from '../encapsule-piece/EncapsulePiece';
 
-fdescribe('EncapsuleRules', () => {
+describe('EncapsuleRules', () => {
     let rules: EncapsuleRules;
 
     const drop: (piece: EncapsulePiece, coord: Coord) => boolean = (piece: EncapsulePiece, coord: Coord) => {
@@ -21,8 +21,6 @@ fdescribe('EncapsuleRules', () => {
     const B2: number = new EncapsuleCase(Player.NONE, Player.ONE, Player.NONE).encode();
     const B3: number = new EncapsuleCase(Player.NONE, Player.NONE, Player.ONE).encode();
     const W1: number = new EncapsuleCase(Player.ZERO, Player.NONE, Player.NONE).encode();
-    const W2: number = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE).encode();
-    const W3: number = new EncapsuleCase(Player.NONE, Player.NONE, Player.ZERO).encode();
 
     beforeEach(() => {
         rules = new EncapsuleRules(EncapsulePartSlice);
@@ -93,6 +91,22 @@ fdescribe('EncapsuleRules', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 0))).toBeTrue();
         expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(2, 1))).toBeTrue();
         expect(move(new Coord(2, 0), new Coord(2, 1))).toBeFalse();
+    });
+    it('should forbid dropping a piece on a bigger piece', () => {
+        const board: number[][] = [
+            [B3, __, __],
+            [__, __, __],
+            [__, __, __],
+        ];
+        const slice: EncapsulePartSlice = new EncapsulePartSlice(board, 2, [
+            EncapsulePiece.SMALL_WHITE, EncapsulePiece.SMALL_WHITE,
+            EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.MEDIUM_WHITE,
+            EncapsulePiece.BIG_WHITE, EncapsulePiece.BIG_WHITE,
+            EncapsulePiece.SMALL_BLACK, EncapsulePiece.MEDIUM_BLACK,
+            EncapsulePiece.BIG_BLACK,
+        ]);
+        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0));
+        expect(rules.isLegal(move, slice).legal.isFailure()).toBeTrue();
     });
     it('should refuse to put three identical piece on the board', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0))).toBeTrue();

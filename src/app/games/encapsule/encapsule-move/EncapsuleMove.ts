@@ -1,8 +1,8 @@
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { EncapsulePiece, EncapsuleMapper } from '../EncapsuleEnums';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { ComparableEquals, StrictEquals } from 'src/app/utils/collection-lib/Comparable';
+import { EncapsulePiece } from '../encapsule-piece/EncapsulePiece';
 
 export class EncapsuleMove extends Move {
     public static decode(encodedMove: number): EncapsuleMove {
@@ -36,13 +36,13 @@ export class EncapsuleMove extends Move {
     }
     public encode(): number {
         /* d: 0|1
-         *     - 0: c'est un drop
-         *     - 1: c'est un move
+         *     - 0: it's a drop
+         *     - 1: it's a move
          * ly: 0|1|2
          * lx: 0|1|2
-         * si c'�tait un drop
+         * if it's a drop
          *     - piece: [0: 5]
-         * si c'�tait un move
+         * if it's a move
          *     - sy: 0, 1, 2
          *     - sx: 0, 1, 2
          * donc :
@@ -89,8 +89,7 @@ export class EncapsuleMove extends Move {
     }
     public toString(): string {
         if (this.isDropping()) {
-            return 'EncapsuleMove(' +
-                EncapsuleMapper.getNameFromPiece(this.piece.get()) + ' -> ' + this.landingCoord + ')';
+            return 'EncapsuleMove(' + this.piece.get().toString() + ' -> ' + this.landingCoord + ')';
         } else {
             return 'EncapsuleMove(' + this.startingCoord.get() + '->' + this.landingCoord + ')';
         }

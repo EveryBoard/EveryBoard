@@ -3,9 +3,9 @@ import { EncapsuleRules } from '../encapsule-rules/EncapsuleRules';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePartSlice } from '../EncapsulePartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { EncapsulePiece } from '../EncapsuleEnums';
+import { EncapsulePiece } from '../encapsule-piece/EncapsulePiece';
 
-fdescribe('EncapsuleMove', () => {
+describe('EncapsuleMove', () => {
     it('should construct valid moves with success', () => {
         expect(EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(2, 1))).toBeTruthy();
         expect(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 1))).toBeTruthy();
