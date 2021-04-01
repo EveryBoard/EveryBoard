@@ -125,7 +125,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const slice: QuartoPartSlice = component.gameComponent.rules.node.gamePartSlice as QuartoPartSlice;
         const result: MGPValidation = await component.gameComponent.chooseMove(move, slice, null, null);
         expect(result.isSuccess()).toEqual(legal);
-        if (result.isFailure()) { console.log(result.getReason() + ' !!! ') }
         fixture.detectChanges();
         tick(1);
         return result;
@@ -245,20 +244,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Opponent accepting take back should move player board backward (one move)', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        console.log('>>>>>>>>>>>>>> about to tick 1ms');
         tick(1);
-        console.log('>>>>>>>>>>>>>> about to do move');
         // Doing a first move so take back make sens
         await doMove(FIRST_MOVE, true);
 
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(1);
 
         // Asking take back
-        console.log('>>>>>>>>>>>>>> about to ask take back');
         await askTakeBack();
 
         // Opponent accept take back
-        console.log('>>>>>>>>>>>>>> opponent will now agree');
         await partDAO.update('joinerId', {
             request: RequestCode.ONE_ACCEPTED_TAKE_BACK.toInterface(),
             listMoves: [],
@@ -272,7 +267,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         // Doing another move
         spyOn(partDAO, 'update').and.callThrough();
         const move1: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
-        console.log('>>>>>>>>>>>>>> we will now play again');
         await doMove(move1, true);
 
         expect(partDAO.update).toHaveBeenCalledOnceWith('joinerId', {
@@ -319,12 +313,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.BBBB);
         const move3: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AABB);
         await prepareBoard([move0, move1, move2, move3]);
-        console.log('>>>>>>>>>>>>>>>>>> BOARD PREPARED');
         expect(getElement('#winnerIndicator')).toBeFalsy('Element should not exist yet');
 
         spyOn(partDAO, 'update').and.callThrough();
         const winningMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.ABAA);
-        console.log('>>>>>>>>>>>>>>>>>> VICTORY MOVE INCOMING');
         await doMove(winningMove, true);
 
         expect(component.gameComponent.rules.node.move.toString()).toBe(winningMove.toString());
@@ -408,13 +400,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should only propose to accept take back when opponent asked', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        console.log('>>>>>>>>>>>> component prepared')
         tick(1);
-        console.log('>>>>>>>>>>>> ticked 1ms')
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
-        console.log('>>>>>>>>>>>> user will do the move')
         await doMove(FIRST_MOVE, true);
-        console.log('>>>>>>>>>>>> user will receive opponent move')
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
         expect(await acceptTakeBack()).toBeFalse();
         await receiveRequest(RequestCode.ONE_ASKED_TAKE_BACK);
@@ -491,12 +479,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     }));
     it('Should not allow player to move after resigning', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-        console.log('COMPOSANT PREPARE')
         tick(1);
         await doMove(FIRST_MOVE, true);
         const move1: number = new QuartoMove(2, 2, QuartoPiece.BBBA).encode();
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
-        console.log(">>>>>>>>>>>>>>>> ABOUT TO RESIGN")
         expect(await clickElement('#resignButton')).toBeTruthy('Should be possible to resign');
 
         spyOn(partDAO, 'update').and.callThrough();

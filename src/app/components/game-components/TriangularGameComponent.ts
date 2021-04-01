@@ -14,7 +14,7 @@ export abstract class TriangularGameComponent<M extends Move,
 
     public CASE_SIZE: number = 50;
 
-    public getCoordinate(x: number, y: number) : string {
+    public getTriangleCoordinate(x: number, y: number) : string {
         if ((x+y)%2 === 1) return this.getDownwardCoordinate(x, y);
         else return this.getUpwardCoordinate(x, y);
     }

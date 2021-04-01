@@ -90,7 +90,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         await chatDAOMock.set('joinerId', { messages: [], status: 'I don\'t have a clue' });
         return Promise.resolve();
     };
-    beforeEach(async() => { console.log('==================')
+    beforeEach(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 AppModule,

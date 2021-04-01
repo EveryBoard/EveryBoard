@@ -6,7 +6,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { CoerceoRules } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
+import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { assert } from 'src/app/utils/collection-lib/utils';
@@ -37,6 +37,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
     public lastEnd: MGPOptional<Coord> = MGPOptional.empty();
 
     public highlights: Coord[] = [];
+
+    public REMOVED_FILL: string = '#990000';
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
@@ -107,29 +109,48 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
     public encodeMove(move: CoerceoMove): number {
         return CoerceoMove.encode(move);
     }
-    public isRemoved(x: number, y: number): boolean {
-        assert(this.board[y][x] === CoerceoPiece.NONE.value, 'Should only be called on removed tiles');
-        if (this.rules.node.mother) {
-            const previousContent: number = this.rules.node.mother.gamePartSlice.getBoardByXY(x, y);
-            const wasEmpty: boolean =
-                previousContent === CoerceoPiece.EMPTY.value;
-            const wasEnnemy: boolean =
-                previousContent === this.slice.getCurrentPlayer().value;
-            return wasEmpty || wasEnnemy;
+    public isPyramid(x: number, y: number, caseContent: number): boolean {
+        return caseContent === CoerceoPiece.ZERO.value ||
+               caseContent === CoerceoPiece.ONE.value ||
+               this.wasEnnemy(x, y);
+    }
+    private wasEnnemy(x: number, y: number): boolean {
+        const mother: CoerceoNode = this.rules.node.mother;
+        return mother && mother.gamePartSlice.getBoardByXY(x, y) === mother.gamePartSlice.getCurrentEnnemy().value;
+    }
+    public getPyramidFill(caseContent: number): string {
+        if (caseContent === CoerceoPiece.ZERO.value) {
+            return this.PLAYER_ZERO_FILL;
+        } else if (caseContent === CoerceoPiece.ONE.value) {
+            return this.PLAYER_ONE_FILL;
+        } else {
+            return this.CAPTURED_FILL;
+        }
+    }
+    public isEmptyCase(x: number, y: number, caseContent: number): boolean {
+        return caseContent === CoerceoPiece.EMPTY.value ||
+               this.wasRemoved(x, y, caseContent);
+    }
+    private wasRemoved(x: number, y: number, caseContent: number): boolean {
+        const mother: CoerceoNode = this.rules.node.mother;
+        if (caseContent === CoerceoPiece.NONE.value && mother) {
+            const previousContent: number = mother.gamePartSlice.getBoardByXY(x, y);
+            return previousContent === CoerceoPiece.EMPTY.value ||
+                   previousContent === mother.gamePartSlice.getCurrentPlayer().value;
         } else {
             return false;
         }
     }
-    public getEmptyFill(x: number, y: number): string {
-        if ((x+y)%2 === 1) {
-            return 'lightgrey';
+    public getEmptyFill(x: number, y: number, caseContent: number): string {
+        if (caseContent === CoerceoPiece.EMPTY.value) {
+            if ((x+y)%2 === 1) {
+                return 'lightgrey';
+            } else {
+                return 'dimgray';
+            }
         } else {
-            return 'dimgray';
+            return this.REMOVED_FILL;
         }
-    }
-    public wasOccupied(x: number, y: number): boolean {
-        const previousContent: number = this.rules.node.mother.gamePartSlice.getBoardByXY(x, y);
-        return previousContent === CoerceoPiece.EMPTY.value;
     }
     public getTilesCountCoordinate(x: number, y: number): string {
         const bx: number = x * 100; const by: number = y * 100;

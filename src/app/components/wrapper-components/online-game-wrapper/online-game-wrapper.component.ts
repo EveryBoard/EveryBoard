@@ -444,9 +444,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.players = [
             updatedICurrentPart.playerZero,
             updatedICurrentPart.playerOne];
-        // if (updatedICurrentPart.playerOne == null) {
-        //     throw new Error('caca putain');
-        // } TODO BIDOU TODO BIDOUDOU
+        assert(updatedICurrentPart.playerOne != null, 'should not setPlayersDatas when players data is not received');
         this.currentPlayer = this.players[updatedICurrentPart.turn % 2];
         this.gameBeginningTime = updatedICurrentPart.beginning;
         let opponentName: string = '';
@@ -537,7 +535,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             this.gameService.proposeRematch(this.currentPartId, this.observerRole);
         }
     }
-    public askTakeBack(): void { console.log({ askTakeBack: this.observerRole })
+    public askTakeBack(): void {
         const player: Player = Player.of(this.observerRole);
         this.gameService.askTakeBack(this.currentPartId, player);
     }

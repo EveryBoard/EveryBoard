@@ -5,38 +5,33 @@
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let caseContent of line; index as x;"
            id="click_{{x}}_{{y}}"
-           (click)="onClick(x, y)">
-            <polyline *ngIf="caseContent === 0 || caseContent === 1"
+           (click)="onClick(x, y)"
+        >
+            <polyline *ngIf="isPyramid(x, y, caseContent) else emptyCase"
                       [attr.points]="getPyramidCoordinate(x, y)"
-                      [attr.fill]="getPlayerFill(x, y)"
-                      style="stroke: black; stroke-width: 5" />
-            <polyline *ngIf="caseContent === EMPTY"
-                      [attr.points]="getCoordinate(x, y)"
-                      [attr.fill]="getEmptyFill(x, y)"
-                      style="stroke:black; stroke-width: 5" />
-            <g *ngIf="caseContent === NONE && isRemoved(x, y)">
-                <polyline *ngIf="wasOccupied(x, y)"
-                          [attr.points]="getCoordinate(x, y)"
-                          fill="#F00"
-                          style="stroke: black; stroke-width: 5" />
-                <polyline *ngIf="wasOccupied(x, y) === false"
-                          [attr.points]="getPyramidCoordinate(x, y)"
-                          fill="#990000"
-                          style="stroke: black; stroke-width: 5" />
-            </g>
+                      [attr.fill]="getPyramidFill(caseContent)"
+                      style="stroke: black; stroke-width: 5"
+            />
+            <ng-template #emptyCase>
+                <polyline *ngIf="isEmptyCase(x, y, caseContent)"
+                          [attr.points]="getTriangleCoordinate(x, y)"
+                          [attr.fill]="getEmptyFill(x, y, caseContent)"
+                          style="stroke:black; stroke-width: 5"
+                />
+            </ng-template>
         </g>
     </g>
     <polyline *ngFor="let hl of highlights"
-              [attr.points]="getCoordinate(hl.x, hl.y)"
+              [attr.points]="getTriangleCoordinate(hl.x, hl.y)"
               style="fill: none; stroke: yellow; stroke-width: 5" />
     <polyline *ngIf="lastStart.isPresent()"
-              [attr.points]="getCoordinate(lastStart.get().x, lastStart.get().y)"
+              [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
               style="fill: none; stroke: yellow; stroke-width: 5" />
     <polyline *ngIf="lastEnd.isPresent()"
-              [attr.points]="getCoordinate(lastEnd.get().x, lastEnd.get().y)"
+              [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
               style="fill: none; stroke: yellow; stroke-width: 5" />
     <polyline *ngIf="chosenCoord.isPresent()"
-              [attr.points]="getCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
+              [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
               style="fill: none; stroke: blue; stroke-width: 5" />
     <g *ngIf="tiles[0] > 0">
         <polyline [attr.points]="getTilesCountCoordinate(0, 0)"

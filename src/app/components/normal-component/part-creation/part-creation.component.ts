@@ -75,8 +75,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         this.joinerService.startObserving(this.partId, (iJoinerId: IJoinerId) =>
             this.onCurrentJoinerUpdate(iJoinerId));
-        // PEUT ETRE PAS this.gameService.startObserving(this.partId, (iPart: ICurrentPartId) =>
-        //    this.onCurrentPartUpdate(iPart));
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnInit asynchronouseries finisheds');
         return Promise.resolve();
     }

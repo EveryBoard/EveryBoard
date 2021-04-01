@@ -25,7 +25,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         display(CountDownComponent.VERBOSE, this.debugName + '.set(' + duration + 'ms)');
         // duration is in ms
         if (this.isStarted) {
-            console.log("Should not set a chrono that has already been started!")
             throw new Error('Should not set a chrono that has already been started!');
         }
         this.remainingTime = duration;
