@@ -1,8 +1,8 @@
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { EncapsulePiece, EncapsuleMapper } from '../EncapsuleEnums';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { ComparableEquals } from 'src/app/utils/collection-lib/Comparable';
+import { ComparableEquals, StrictEquals } from 'src/app/utils/collection-lib/Comparable';
+import { EncapsulePiece } from '../encapsule-piece/EncapsulePiece';
 
 export class EncapsuleMove extends Move {
     public static decode(encodedMove: number): EncapsuleMove {
@@ -36,13 +36,13 @@ export class EncapsuleMove extends Move {
     }
     public encode(): number {
         /* d: 0|1
-         *     - 0: c'est un drop
-         *     - 1: c'est un move
+         *     - 0: it's a drop
+         *     - 1: it's a move
          * ly: 0|1|2
          * lx: 0|1|2
-         * si c'�tait un drop
+         * if it's a drop
          *     - piece: [0: 5]
-         * si c'�tait un move
+         * if it's a move
          *     - sy: 0, 1, 2
          *     - sx: 0, 1, 2
          * donc :
@@ -52,11 +52,11 @@ export class EncapsuleMove extends Move {
         const lx: number = this.landingCoord.x;
         const ly: number = this.landingCoord.y;
         if (this.isDropping()) {
-            const d = 0;
+            const d: number = 0;
             const piece: number = this.piece.get().value;
             return (piece*18) + (lx*6) + (ly*2) + d;
         } else {
-            const d = 1;
+            const d: number = 1;
             const sy: number = this.startingCoord.get().y;
             const sx: number = this.startingCoord.get().x;
             return (sx*54) + (sy*18) + (lx*6) + (ly*2) + d;
@@ -66,38 +66,30 @@ export class EncapsuleMove extends Move {
                         public readonly landingCoord: Coord,
                         public readonly piece: MGPOptional<EncapsulePiece>) {
         super();
-        if (startingCoord == null) throw new Error('Starting Coord\'s optional can\'t be null');
         if (landingCoord == null) throw new Error('Landing Coord can\'t be null');
-        if (piece == null) throw new Error('Piece\'s optional can\'t be null');
     }
     public static fromMove(startingCoord: Coord, landingCoord: Coord): EncapsuleMove {
-        if (startingCoord.equals(landingCoord)) throw new Error('Starting coord and landing coord must be separate coords');
+        if (startingCoord.equals(landingCoord)) {
+            throw new Error('Starting coord and landing coord must be separate coords');
+        }
         return new EncapsuleMove(MGPOptional.of(startingCoord), landingCoord, MGPOptional.empty());
     }
     public static fromDrop(piece: EncapsulePiece, landingCoord: Coord): EncapsuleMove {
         return new EncapsuleMove(MGPOptional.empty(), landingCoord, MGPOptional.of(piece));
     }
-    public isDropping() {
+    public isDropping(): boolean {
         return this.startingCoord.isAbsent();
     }
     public equals(o: EncapsuleMove): boolean {
-        if (this === o) {
-            return true;
-        }
-        if (o === null) {
-            return false;
-        }
-        if (!o.landingCoord.equals(this.landingCoord)) {
-            return false;
-        }
-        if (!this.startingCoord.equals(o.startingCoord, ComparableEquals)) {
-            return false;
-        }
-        return this.piece.equals(o.piece, ComparableEquals);
+        if (this === o) return true;
+        if (o.landingCoord.equals(this.landingCoord) === false) return false;
+        if (this.startingCoord.equals(o.startingCoord, ComparableEquals) === false) return false;
+        if (this.piece.equals(o.piece, StrictEquals) === false) return false;
+        return true;
     }
     public toString(): string {
         if (this.isDropping()) {
-            return 'EncapsuleMove(' + EncapsuleMapper.getNameFromPiece(this.piece.get()) + ' -> ' + this.landingCoord + ')';
+            return 'EncapsuleMove(' + this.piece.get().toString() + ' -> ' + this.landingCoord + ')';
         } else {
             return 'EncapsuleMove(' + this.startingCoord.get() + '->' + this.landingCoord + ')';
         }

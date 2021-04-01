@@ -3,8 +3,8 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DvonnPieceStack } from './dvonn-piece-stack/DvonnPieceStack';
 
 export class DvonnBoard {
-    public static WIDTH = 11;
-    public static HEIGHT = 5;
+    public static WIDTH: number = 11;
+    public static HEIGHT: number = 5;
 
     public static isOnBoard(coord: Coord): boolean {
         if (coord.isNotInRange(DvonnBoard.WIDTH, DvonnBoard.HEIGHT)) {
@@ -30,7 +30,7 @@ export class DvonnBoard {
         if (!DvonnBoard.isOnBoard(coord)) {
             throw new Error('Position is not within the board');
         }
-        return DvonnPieceStack.of(board[coord.y][coord.x]);
+        return DvonnPieceStack.encoder.decode(board[coord.y][coord.x]);
     }
 
     public static neighbors(coord: Coord, distance: number): Coord[] {
@@ -48,9 +48,9 @@ export class DvonnBoard {
 
     public static getAllPieces(board: NumberTable): Coord[] {
         const pieces: Coord[] = [];
-        for (let y = 0; y < DvonnBoard.HEIGHT; y++) {
-            for (let x = 0; x < DvonnBoard.WIDTH; x++) {
-                const coord = new Coord(x, y);
+        for (let y: number = 0; y < DvonnBoard.HEIGHT; y++) {
+            for (let x: number = 0; x < DvonnBoard.WIDTH; x++) {
+                const coord: Coord = new Coord(x, y);
                 if (DvonnBoard.isOnBoard(coord) &&
                     !DvonnBoard.getStackAt(board, coord).isEmpty()) {
                     pieces.push(coord);
@@ -68,10 +68,10 @@ export class DvonnBoard {
     W D W B B W W W B
     */
     public static getBalancedBoard(): Table<DvonnPieceStack> {
-        const _ = DvonnPieceStack.EMPTY;
-        const W = DvonnPieceStack.PLAYER_ZERO;
-        const B = DvonnPieceStack.PLAYER_ONE;
-        const D = DvonnPieceStack.SOURCE;
+        const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
+        const W: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
+        const B: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
+        const D: DvonnPieceStack = DvonnPieceStack.SOURCE;
         return [
             [_, _, W, B, B, B, W, W, B, D, B],
             [_, B, B, W, W, W, B, B, W, B, B],
