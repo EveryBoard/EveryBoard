@@ -14,11 +14,11 @@ export class HexaDirection extends BaseDirection {
         new class extends DirectionFactory<HexaDirection> {
             public all: ReadonlyArray<HexaDirection> = [
                 HexaDirection.UP,
-                HexaDirection.UP_LEFT,
                 HexaDirection.UP_RIGHT,
-                HexaDirection.DOWN_LEFT,
                 HexaDirection.DOWN_RIGHT,
                 HexaDirection.DOWN,
+                HexaDirection.DOWN_LEFT,
+                HexaDirection.UP_LEFT,
             ];
         };
     public static readonly encoder: Encoder<HexaDirection> =

@@ -1,10 +1,11 @@
 import { Comparable } from '../Comparable';
 
 export class Sets {
+
     public static toImmutableSet<T>(list: T[]): T[] {
         const result: T[] = [];
-        list.forEach((o) => {
-            if (!result.some((el) => el === o)) {
+        list.forEach((o: T) => {
+            if (!result.some((el: T) => el === o)) {
                 result.push(o);
             }
         });
@@ -12,8 +13,8 @@ export class Sets {
     }
     public static toNumberSet(list: number[]): number[] { // TODO: remove smartly for toImmutableSet
         const result: number[] = [];
-        list.forEach((o) => {
-            if (!result.some((el) => el === o)) {
+        list.forEach((o: number) => {
+            if (!result.some((el: number) => el === o)) {
                 result.push(o);
             }
         });
@@ -21,8 +22,8 @@ export class Sets {
     }
     public static toSet<O extends Comparable>(list: O[]): O[] {
         const result: O[] = [];
-        list.forEach((o) => {
-            if (!result.some((el) => el.equals(o))) {
+        list.forEach((o: O) => {
+            if (!result.some((el: O) => el.equals(o))) {
                 result.push(o);
             }
         });

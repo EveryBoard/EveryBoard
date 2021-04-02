@@ -1,4 +1,5 @@
 import { NumberEncoder } from '../encoder';
+import { assert } from 'src/app/utils/collection-lib/utils';
 
 export class Player {
     public static numberEncoder: NumberEncoder<Player> = NumberEncoder.ofN(2, (player: Player) => {
@@ -20,6 +21,7 @@ export class Player {
     }
 
     private constructor(public readonly value: number) {}
+
     public toString(): string {
         return 'Player ' + this.value;
     }
@@ -28,6 +30,22 @@ export class Player {
             case 0: return -1;
             case 1: return 1;
             default: throw new Error('No score modifier');
+        }
+    }
+    public getDefeatValue(): number {
+        assert(this !== Player.NONE, 'Should not call getDefeatValue on Player.NONE!');
+        if (this === Player.ZERO) {
+            return Number.MIN_SAFE_INTEGER;
+        } else {
+            return Number.MAX_SAFE_INTEGER;
+        }
+    }
+    public getVictoryValue(): number {
+        assert(this !== Player.NONE, 'Should not call getVictoryValue on Player.NONE!');
+        if (this === Player.ZERO) {
+            return Number.MAX_SAFE_INTEGER;
+        } else {
+            return Number.MIN_SAFE_INTEGER;
         }
     }
 }

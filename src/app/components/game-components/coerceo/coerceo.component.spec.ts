@@ -15,12 +15,14 @@ import { CoerceoComponent } from './coerceo.component';
 import {
     expectClickFail, expectClickSuccess, expectElementNotToExist, expectElementToExist, expectMoveFailure,
     expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
-import { CoerceoMove } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
+import { CoerceoMove, CoerceoStep } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
-import { CoerceoPartSlice } from 'src/app/games/coerceo/coerceo-part-slice/CoerceoPartSlice';
+import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/coerceo-part-slice/CoerceoPartSlice';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { CoerceoNode } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 const activatedRouteStub = {
     snapshot: {
@@ -45,6 +47,11 @@ describe('CoerceoComponent:', () => {
 
     let testElements: TestElements;
 
+    const _: number = CoerceoPiece.EMPTY.value;
+    const N: number = CoerceoPiece.NONE.value;
+    const O: number = CoerceoPiece.ZERO.value;
+    const X: number = CoerceoPiece.ONE.value;
+
     function getMoveExpectation(move: CoerceoMove): MoveExpectations {
         return {
             move,
@@ -52,6 +59,24 @@ describe('CoerceoComponent:', () => {
             scoreZero: testElements.gameComponent.rules.node.gamePartSlice['captures'][0],
             scoreOne: testElements.gameComponent.rules.node.gamePartSlice['captures'][1],
         };
+    }
+    function expectCoordToBeOfRemovedFill(x: number,
+                                          y: number,
+                                          testElements: TestElements): void
+    {
+        const gameComponent: CoerceoComponent = testElements.gameComponent as CoerceoComponent;
+        const caseContent: number = gameComponent.rules.node.gamePartSlice.getBoardByXY(x, y);
+        expect(gameComponent.isEmptyCase(x, y, caseContent)).toBeTrue();
+        expect(gameComponent.getEmptyFill(x, y, caseContent)).toBe(gameComponent.REMOVED_FILL);
+    }
+    function expectCoordToBeOfCapturedFill(x: number,
+                                           y: number,
+                                           testElements: TestElements): void
+    {
+        const gameComponent: CoerceoComponent = testElements.gameComponent as CoerceoComponent;
+        const caseContent: number = gameComponent.rules.node.gamePartSlice.getBoardByXY(x, y);
+        expect(gameComponent.isPyramid(x, y, caseContent)).toBeTrue();
+        expect(gameComponent.getPyramidFill(caseContent)).toBe(gameComponent.CAPTURED_FILL);
     }
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
@@ -133,8 +158,90 @@ describe('CoerceoComponent:', () => {
         testElements.fixture.detectChanges();
         expectElementToExist('#playerZeroTilesCount', testElements);
     }));
-    it('Should show removed tiles, and captured piece', fakeAsync(async() => {
-        const previousBoard: NumberTable = []
+    xit('Should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
+        // given a board with just removed pieces
+        const previousBoard: NumberTable = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, X, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, _, _, O, _, N, N, N],
+            [N, N, N, N, N, N, X, O, X, _, _, _, N, N, N],
+            [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+        ];
+        const board: NumberTable = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, X, O, _, N, N, N],
+            [N, N, N, N, N, N, X, _, X, _, _, _, N, N, N],
+            [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+        ];
+        const previousState: CoerceoPartSlice = new CoerceoPartSlice(previousBoard, 2, [2, 0], [0, 0]);
+        const previousNode: CoerceoNode = new MGPNode(null, null, previousState, 0);
+        const state: CoerceoPartSlice = new CoerceoPartSlice(board, 3, [0, 0], [1, 0]);
+        const previousMove: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(8, 6));
+        testElements.gameComponent.rules.node = new MGPNode(previousNode, previousMove, state, 0);
+
+        // when drawing board
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
+
+        // then we should see removed tiles
+        expectCoordToBeOfCapturedFill(8, 6, testElements);
+        expectCoordToBeOfRemovedFill(7, 6, testElements);
+        expectCoordToBeOfRemovedFill(6, 6, testElements);
+        expectCoordToBeOfRemovedFill(8, 7, testElements);
+        expectCoordToBeOfRemovedFill(7, 7, testElements);
+        expectCoordToBeOfRemovedFill(6, 7, testElements);
+        expect('tiles exchanged').toBe('visible somehow');
+    }));
+    it('Should show removed tiles, and captured piece (after deplacement)', fakeAsync(async() => {
+        // given a board with just removed pieces
+        const previousBoard: NumberTable = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, O, X, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, _, _, O, _, N, N, N],
+            [N, N, N, N, N, N, X, _, _, _, _, _, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+        ];
+        const board: NumberTable = [
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+        ];
+        const previousState: CoerceoPartSlice = new CoerceoPartSlice(previousBoard, 2, [0, 0], [0, 0]);
+        const previousNode: CoerceoNode = new MGPNode(null, null, previousState, 0);
+        const state: CoerceoPartSlice = new CoerceoPartSlice(board, 3, [0, 0], [1, 0]);
+        const previousMove: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(8, 6));
+        testElements.gameComponent.rules.node = new MGPNode(previousNode, previousMove, state, 0);
+
+        // when drawing board
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
+
+        // then we should see removed tiles
+        expectCoordToBeOfCapturedFill(8, 6, testElements);
+        expectCoordToBeOfRemovedFill(10, 7, testElements);
     }));
     describe('encode/decode', () => {
         it('should delegate decoding to move', () => {
