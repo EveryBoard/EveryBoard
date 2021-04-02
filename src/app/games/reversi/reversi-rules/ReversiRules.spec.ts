@@ -2,7 +2,6 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { ReversiRules } from './ReversiRules';
 import { ReversiMove } from '../reversi-move/ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
@@ -15,9 +14,6 @@ describe('ReversiRules', () => {
 
     let rules: ReversiRules;
 
-    beforeAll(() => {
-        ReversiRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ReversiRules.VERBOSE;
-    });
     beforeEach(() => {
         rules = new ReversiRules(ReversiPartSlice);
     });
@@ -75,7 +71,7 @@ describe('ReversiRules', () => {
             [0, 1, 1, 1, 0, 0, 1, 0],
             [0, 1, 1, 0, 0, 0, 1, 0],
             [0, 0, 0, 0, 0, 0, 0, 0],
-            [2, 0, 0, 0, 0, 0, 1, 0]
+            [2, 0, 0, 0, 0, 0, 1, 0],
         ];
         const expectedBoard: NumberTable = [
             [0, 1, 1, 1, 1, 1, 1, 0],
@@ -85,7 +81,7 @@ describe('ReversiRules', () => {
             [0, 1, 1, 1, 0, 0, 1, 0],
             [0, 1, 1, 0, 0, 0, 1, 0],
             [0, 1, 0, 0, 0, 0, 0, 0],
-            [1, 1, 1, 1, 1, 1, 1, 0]
+            [1, 1, 1, 1, 1, 1, 1, 0],
         ];
         const slice: ReversiPartSlice = new ReversiPartSlice(board, 59);
         const move: ReversiMove = new ReversiMove(0, 7);
@@ -94,6 +90,7 @@ describe('ReversiRules', () => {
         const resultingSlice: ReversiPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: ReversiPartSlice = new ReversiPartSlice(expectedBoard, 60);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
+        expect(rules.getBoardValue(move, expectedSlice))
+            .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
 });

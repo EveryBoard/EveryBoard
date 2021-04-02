@@ -7,7 +7,7 @@ import { of } from 'rxjs';
 
 import { SaharaComponent } from './sahara.component';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { AppModule } from 'src/app/app.module';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
@@ -49,9 +49,6 @@ describe('SaharaComponent', () => {
 
     let testElements: TestElements;
 
-    beforeAll(() => {
-        SaharaComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SaharaComponent.VERBOSE;
-    });
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -132,7 +129,7 @@ describe('SaharaComponent', () => {
         // when clicking on empty case, expect move to be refused
         await expectClickFail('#click_0_4', testElements, 'Vous devez choisir une de vos pyramides!');
     }));
-    it('should not allow to land on ennemy pyramid', fakeAsync(async () => {
+    it('should not allow to land on ennemy pyramid', fakeAsync(async() => {
         // given initial board
         await expectClickSuccess('#click_2_0', testElements);
         const expectations: MoveExpectations = {

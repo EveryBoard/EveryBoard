@@ -1,7 +1,7 @@
 import { TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
 
 import { TablutComponent } from './tablut.component';
-import { INCLUDE_VERBOSE_LINE_IN_TEST, AppModule } from 'src/app/app.module';
+import { AppModule } from 'src/app/app.module';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -49,9 +49,6 @@ describe('TablutComponent', () => {
     const i: number = TablutCase.DEFENDERS.value;
     const A: number = TablutCase.PLAYER_ONE_KING.value;
 
-    beforeAll(() => {
-        TablutComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || TablutComponent.VERBOSE;
-    });
     beforeEach(fakeAsync(async() => {
         TestBed.configureTestingModule({
             imports: [

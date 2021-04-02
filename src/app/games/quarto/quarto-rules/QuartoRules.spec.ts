@@ -1,7 +1,6 @@
 import { QuartoRules } from './QuartoRules';
 import { QuartoMove } from '../quarto-move/QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { QuartoPartSlice } from '../QuartoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
@@ -11,9 +10,6 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 describe('QuartoRules', () => {
     let rules: QuartoRules;
 
-    beforeAll(() => {
-        QuartoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || QuartoRules.VERBOSE;
-    });
     beforeEach(() => {
         rules = new QuartoRules(QuartoPartSlice);
     });

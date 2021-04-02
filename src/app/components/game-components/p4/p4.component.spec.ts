@@ -6,7 +6,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { ActivatedRoute } from '@angular/router';
-import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { AppModule } from 'src/app/app.module';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
@@ -40,9 +40,6 @@ describe('P4Component', () => {
 
     let gameComponent: P4Component;
 
-    beforeAll(() => {
-        P4Component.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || P4Component.VERBOSE;
-    });
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -66,7 +63,7 @@ describe('P4Component', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(gameComponent).toBeTruthy('GoComponent should be created');
     });
-    it('should accept simple move', async () => {
+    it('should accept simple move', async() => {
         const rules: P4Rules = new P4Rules(P4PartSlice);
         const listMoves: MGPMap<P4Move, P4PartSlice> = rules.getListMoves(rules.node);
         const currentMove: P4Move = listMoves.getByIndex(0).key;

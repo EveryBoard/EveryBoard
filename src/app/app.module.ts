@@ -69,7 +69,6 @@ import { SiamComponent } from './components/game-components/siam/siam.component'
 import { TablutComponent } from './components/game-components/tablut/tablut.component';
 import { TestCountDownComponent } from './components/normal-component/test-count-down/test-count-down.component';
 
-export const INCLUDE_VERBOSE_LINE_IN_TEST: boolean = false;
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
 const routes: Route [] = [
