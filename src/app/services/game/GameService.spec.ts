@@ -45,7 +45,7 @@ describe('GameService', () => {
         service.startObserving('partId', myCallback);
         expect(partDao.getObsById).toHaveBeenCalled();
     });
-    it('startObserving should throw exception when called while observing ', async () => {
+    it('startObserving should throw exception when called while observing ', async() => {
         await partDao.set('myJoinerId', PartMocks.INITIAL.copy());
 
         expect(() => {
@@ -67,7 +67,7 @@ describe('GameService', () => {
             listMoves: [107, 161],
             request: { code: RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code },
         };
-        const getError: (player: Player) => Promise<string> = async (player: Player) => {
+        const getError: (player: Player) => Promise<string> = async(player: Player) => {
             let errorMessage: string;
             try {
                 await service.acceptTakeBack('joinerId', part, player);
@@ -97,13 +97,13 @@ describe('GameService', () => {
 
         expect(service.joinerService.acceptConfig).toHaveBeenCalled();
     }));
-    xit('FUTURE_startGameWithConfig should throw when whoStart is not a value of FIRST_PLAYER enum', fakeAsync(async() => {
+    it('startGameWithConfig should throw when firstPlayer is not a value of FIRST_PLAYER enum', fakeAsync(async() => {
         const joiner: IJoiner = {
             candidatesNames: [],
             creator: 'creator',
             chosenPlayer: 'hisFriend',
             partStatus: 2,
-            whoStart: 'somethingElse',
+            firstPlayer: 'somethingElse',
         };
         spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);

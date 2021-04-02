@@ -33,10 +33,9 @@ export const getDiff: (before: { [key: string]: any }, after: { [key: string]: a
     }
     for (const commonKey of commonKeys) {
         if (after[commonKey] == null) {
-            if (before[commonKey] == null) {
-                throw new Error('t nul pt1');
+            if (before[commonKey] != null) {
+                changes.removed[commonKey] = before[commonKey];
             }
-            changes.removed[commonKey] = before[commonKey];
         } else if (typeof before[commonKey] === 'function' ||
                    typeof before[commonKey] === 'symbol' ||
                    typeof before[commonKey] === 'bigint')
