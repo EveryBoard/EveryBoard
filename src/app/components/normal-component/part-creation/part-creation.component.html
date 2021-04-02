@@ -42,9 +42,9 @@
                     <ng-template matStepLabel>Configurez la partie</ng-template>
 
                     <mat-radio-group class="example-radio-group" formControlName="firstPlayer" required>
-                        <mat-radio-button class="example-radio-button" value="0"> Vous commencez </mat-radio-button>
-                        <mat-radio-button class="example-radio-button" value="1"> {{ currentJoiner.chosenPlayer }} commence </mat-radio-button>
-                        <mat-radio-button class="example-radio-button" value="2"> Premier joueur au hasard </mat-radio-button>
+                        <mat-radio-button class="example-radio-button" value="CREATOR"> Vous commencez </mat-radio-button>
+                        <mat-radio-button class="example-radio-button" value="CHOSEN_PLAYER"> {{ currentJoiner.chosenPlayer }} commence </mat-radio-button>
+                        <mat-radio-button class="example-radio-button" value="RANDOM"> Premier joueur au hasard </mat-radio-button>
                     </mat-radio-group>
                     <div> Durée maximum d'un tour :
                         <mat-slider
@@ -92,13 +92,13 @@
                     {{ currentJoiner.creator }} est en train de choisir la configuration de la partie
                 </h4>
                 <div id="acceptConfig" *ngIf="proposalSent">
-                    <h4 *ngIf="currentJoiner.firstPlayer === '0'">
-                        {{ currentJoiner.creator }} propose que tu commence
+                    <h4 *ngIf="currentJoiner.firstPlayer === 'CREATOR'">
+                        {{ currentJoiner.creator }} propose que tu commences
                     </h4>
-                    <h4 *ngIf="currentJoiner.firstPlayer === '1'">
+                    <h4 *ngIf="currentJoiner.firstPlayer === 'CHOSEN_PLAYER'">
                         {{ currentJoiner.creator }} propose qu'il commence
                     </h4>
-                    <h4 *ngIf="currentJoiner.firstPlayer === '2'">
+                    <h4 *ngIf="currentJoiner.firstPlayer === 'RANDOM'">
                         {{ currentJoiner.creator }} propose que le premier joueur soit choisi au hasard
                     </h4>
                     <h4> Il propose : {{ currentJoiner.maximalMoveDuration }}s/tour maximum </h4>

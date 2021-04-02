@@ -45,7 +45,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
     // Game Configuration Values
     // timeout = 60;
-    public firstPlayer: string = '0';
+    public firstPlayer: string = 'CREATOR';
     public maximalMoveDuration: number = 30;
 
     // Subscription
@@ -101,7 +101,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             chosenOpponent: ['', Validators.required],
         });
         this.configFormGroup = this.formBuilder.group({
-            firstPlayer: ['0', Validators.required],
+            firstPlayer: ['CREATOR', Validators.required],
             maximalMoveDuration: [10, Validators.required],
             totalPartDuration: [60, Validators.required],
         });

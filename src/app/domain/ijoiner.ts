@@ -38,13 +38,22 @@ export class FirstPlayer {
     public static readonly CHOSEN_PLAYER: FirstPlayer = new FirstPlayer('CHOSEN_PLAYER');
 
     public static of(value: string): FirstPlayer {
-        switch(value) {
+        switch (value) {
             case 'CREATOR': return FirstPlayer.CREATOR;
             case 'RANDOM': return FirstPlayer.RANDOM;
             case 'CHOSEN_PLAYER': return FirstPlayer.CHOSEN_PLAYER;
             default: throw new Error('Invalid value for FirstPlayer: ' + value + '.');
         }
     }
+
+    public getOpponent(): FirstPlayer {
+        switch (this) {
+            case FirstPlayer.CREATOR: return FirstPlayer.CHOSEN_PLAYER;
+            case FirstPlayer.CHOSEN_PLAYER: return FirstPlayer.CREATOR;
+            default: throw new Error('getOpponent called on invalid first player');
+        }
+    }
+
 }
 export class Joiner {
     public constructor(

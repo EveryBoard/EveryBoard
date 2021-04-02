@@ -88,7 +88,7 @@ describe('GameService', () => {
             creator: 'creator',
             chosenPlayer: 'hisFriend',
             partStatus: 2,
-            whoStart: 'yes, I was an hidden todo :D'
+            firstPlayer: 'CREATOR',
         };
         spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);
@@ -103,7 +103,7 @@ describe('GameService', () => {
             creator: 'creator',
             chosenPlayer: 'hisFriend',
             partStatus: 2,
-            whoStart: 'somethingElse'
+            whoStart: 'somethingElse',
         };
         spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);

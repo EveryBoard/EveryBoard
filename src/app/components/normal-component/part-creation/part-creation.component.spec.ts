@@ -148,7 +148,7 @@ describe('PartCreationComponent:', () => {
         expect(fixture.debugElement.query(By.css('#acceptConfig')))
             .toBeFalsy('Config acceptation should not be possible before config proposal');
         await joinerDAOMock.update('joinerId',
-                                   { partStatus: 2, maximalMoveDuration: 10, totalPartDuration: 60, firstPlayer: '' });
+                                   { partStatus: 2, maximalMoveDuration: 10, totalPartDuration: 60, firstPlayer: 'CREATOR' });
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.css('#acceptConfig')))
@@ -181,7 +181,7 @@ describe('PartCreationComponent:', () => {
                                    { partStatus: 1, candidatesNames: [], chosenPlayer: 'firstCandidate' });
         await fixture.whenStable();
         await joinerDAOMock.update('joinerId',
-                                   { partStatus: 2, maximalMoveDuration: 10, totalPartDuration: 60, firstPlayer: '0' });
+                                   { partStatus: 2, maximalMoveDuration: 10, totalPartDuration: 60, firstPlayer: 'CREATOR' });
         await fixture.whenStable();
         fixture.detectChanges();
         spyOn(component.gameStartNotification, 'emit');

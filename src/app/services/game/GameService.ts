@@ -95,45 +95,17 @@ export class GameService {
     private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
 
-        let firstPlayer: string;
-        let secondPlayer: string;
-        if (joiner.firstPlayer === '2') {
-            // '2' = random first player
+        let whoStarts: FirstPlayer = FirstPlayer.of(joiner.firstPlayer);
+        if (whoStarts === FirstPlayer.RANDOM) {
             if (Math.random() < 0.5) {
-                joiner.firstPlayer = '1';
+                whoStarts = FirstPlayer.CREATOR;
             } else {
-                joiner.firstPlayer = '0';
-            }
-        } else if (joiner.firstPlayer === '1') {
-            // the opposite config is planned
-            secondPlayer = joiner.creator;
-            firstPlayer = joiner.chosenPlayer;
-        } else {
-            firstPlayer = joiner.creator;
-            secondPlayer = joiner.chosenPlayer;
-        }
-        const modification: PICurrentPart = {
-            playerZero: firstPlayer,
-            playerOne: secondPlayer,
-            turn: 0,
-            beginning: Date.now(),
-        };
-        return this.partDao.update(partId, modification);
-    }
-    private FUTURE_startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
-
-        let whoStart: FirstPlayer = FirstPlayer.of(joiner['whoStart']);
-        if (whoStart === FirstPlayer.RANDOM) {
-            if (Math.random() < 0.5) {
-                whoStart = FirstPlayer.CREATOR;
-            } else {
-                whoStart = FirstPlayer.CHOSEN_PLAYER;
+                whoStarts = FirstPlayer.CHOSEN_PLAYER;
             }
         }
         let playerZero: string;
         let playerOne: string;
-        if (whoStart === FirstPlayer.CREATOR) {
+        if (whoStarts === FirstPlayer.CREATOR) {
             playerZero = joiner.creator;
             playerOne = joiner.chosenPlayer;
         } else {
@@ -202,22 +174,22 @@ export class GameService {
 
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
         const rematchId: string = await this.createGame(iJoiner.creator, part.doc.typeGame, iJoiner.chosenPlayer);
-        let firstPlayer: string = iJoiner.firstPlayer;
-        if (firstPlayer === '2') {
+        let firstPlayer: FirstPlayer = FirstPlayer.of(iJoiner.firstPlayer);
+        if (firstPlayer === FirstPlayer.RANDOM) {
             if (part.doc.playerZero === iJoiner.creator) {
                 // the creator started the previous game thank to hazard
-                firstPlayer = '1'; // so he won't start this one
+                firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
             } else {
-                firstPlayer = '0';
+                firstPlayer = FirstPlayer.CREATOR;
             }
         } else {
-            firstPlayer = firstPlayer === '0' ? '1' : '0';
+            firstPlayer = firstPlayer.getOpponent();
         }
         const newJoiner: IJoiner = {
             candidatesNames: iJoiner.candidatesNames,
             creator: iJoiner.creator,
             chosenPlayer: iJoiner.chosenPlayer,
-            firstPlayer: firstPlayer,
+            firstPlayer: firstPlayer.value,
             partStatus: 3, // already started
             maximalMoveDuration: iJoiner.maximalMoveDuration,
             totalPartDuration: iJoiner.totalPartDuration,
