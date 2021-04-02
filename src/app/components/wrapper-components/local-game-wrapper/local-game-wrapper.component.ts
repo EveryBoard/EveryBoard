@@ -23,11 +23,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     public botTimeOut: number = 1000; // this.aiDepth * 500;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
-        actRoute: ActivatedRoute,
-        router: Router,
-        userService: UserService,
-        authenticationService: AuthenticationService,
-        public cdr: ChangeDetectorRef)
+                actRoute: ActivatedRoute,
+                router: Router,
+                userService: UserService,
+                authenticationService: AuthenticationService,
+                public cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');

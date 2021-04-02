@@ -1,8 +1,24 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
+import { assert, JSONObject, JSONValue } from 'src/app/utils/collection-lib/utils';
 import { Comparable } from '../../utils/collection-lib/Comparable';
+import { Encoder } from '../encoder';
 
 export class Coord implements Comparable {
+    public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {
+        public encode(coord: Coord): JSONValue {
+            return { x: coord.x, y: coord.y };
+        }
+        public decode(encoded: JSONValue): Coord {
+            const casted: JSONObject = encoded as JSONObject;
+            assert(casted.x != null && typeof casted.x === 'number' &&
+                casted.y != null && typeof casted.y === 'number', 'Invalid encoded coord');
+            return new Coord(casted.x as number, casted.y as number);
+        }
+    }
 
+    public static equals(a: Coord, b: Coord): boolean {
+        return a.equals(b);
+    }
     public static getBinarised(n: number): -1 | 0 | 1 {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
         if (n < 0) return -1;
@@ -22,11 +38,11 @@ export class Coord implements Comparable {
         const newY: number = this.y + (distance * dir.y);
         return new Coord(newX, newY);
     }
-    public getPrevious(dir: Direction, distance?: number): Coord {
+    public getPrevious(dir: Vector, distance?: number): Coord {
         distance = distance == null ? 1 : distance;
         return this.getNext(dir, -distance);
     }
-    public getLeft(dir: Direction): Coord {
+    public getLeft(dir: Vector): Coord {
         // looking in the direction "dir", we just go one step left
         // since the directions in DIRECTIONS are sorted in horlogic order,
         // we just need to take the one before the previous (-2/8 = -90°)
@@ -45,7 +61,7 @@ export class Coord implements Comparable {
         const newY: number = this.y + -dir.x; // (this.x, thix.y) + (dir.y, -dir.x)
         return new Coord(newX, newY);
     }
-    public getRight(dir: Direction): Coord {
+    public getRight(dir: Vector): Coord {
         // looking in the direction "dir", we just go one step right
         // see getLeft's logic, it's the opposite
         const newX: number = this.x + -dir.y;
@@ -114,7 +130,10 @@ export class Coord implements Comparable {
     public getVectorToward(c: Coord): Coord {
         const dx: number = c.x - this.x;
         const dy: number = c.y - this.y;
-        const undividedVector: Coord = new Coord(dx, dy);
+        return new Coord(dx, dy);
+    }
+    public getMinimalVectorToward(c: Coord): Coord {
+        const undividedVector: Coord = this.getVectorToward(c);
         return undividedVector.toVector();
     }
     public getCoordsToward(c: Coord): Coord[] {
@@ -147,8 +166,8 @@ export class Coord implements Comparable {
         return new Coord(vx, vy);
     }
     public isBetween(a: Coord, b: Coord): boolean {
-        const aToThis: Coord = a.getVectorToward(this);
-        const bToThis: Coord = b.getVectorToward(this);
+        const aToThis: Coord = a.getMinimalVectorToward(this);
+        const bToThis: Coord = b.getMinimalVectorToward(this);
         return aToThis.equals(bToThis.getOpposite());
     }
     // Override

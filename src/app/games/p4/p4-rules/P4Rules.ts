@@ -44,7 +44,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
         }
         return score;
     }
-    public static getLowestUnoccupiedCase(board: number[][], x: number): number {
+    public static getLowestUnoccupiedCase(board: NumberTable, x: number): number {
         let y: number = 0;
         while (y < 5 && board[y + 1][x] === Player.NONE.value) {
             y++;
@@ -113,7 +113,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
 
         for (const dir of [Direction.UP, Direction.UP_RIGHT, Direction.RIGHT, Direction.DOWN_RIGHT]) {
             // for each pair of opposite directions
-            const lineAllies: number = alliesByDirs.get(dir) + alliesByDirs.get(Direction.factory.oppositeOf(dir));
+            const lineAllies: number = alliesByDirs.get(dir) + alliesByDirs.get(dir.getOpposite());
             if (lineAllies > 2) {
                 display(P4Rules.VERBOSE, { text:
                     'there is some kind of victory here (' + c.x + ', ' + c.y + ')' + '\n' +
@@ -123,7 +123,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
                 return P4Rules.winForPlayer(ally);
             }
 
-            const lineDist: number = distByDirs.get(dir) + distByDirs.get(Direction.factory.oppositeOf(dir));
+            const lineDist: number = distByDirs.get(dir) + distByDirs.get(dir.getOpposite());
             if (lineDist >= 3) {
                 score += lineDist - 2;
             }

@@ -5,15 +5,11 @@ import { SaharaMove } from '../sahara-move/SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { SaharaPawn } from '../SaharaPawn';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 
 describe('SaharaRules', () => {
 
     let rules: SaharaRules;
 
-    beforeAll(() => {
-        SaharaRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SaharaRules.VERBOSE;
-    });
     beforeEach(() => {
         rules = new SaharaRules(SaharaPartSlice);
     });

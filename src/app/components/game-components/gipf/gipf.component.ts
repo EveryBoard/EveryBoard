@@ -7,12 +7,13 @@ import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice'
 import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
 import { GipfRules, GipfFailure } from 'src/app/games/gipf/gipf-rules/GipfRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction } from 'src/app/jscaip/Direction';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
-import { HexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
+import { FlatHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { JSONValue } from 'src/app/utils/collection-lib/utils';
 
 export class Arrow {
     public constructor(public readonly source: Coord,
@@ -52,7 +53,8 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     public currentlyMoved: Coord[] = [];
 
     public hexaLayout: HexaLayout =
-        new HexaLayout(GipfComponent.PIECE_SIZE * 1.50, new Coord(300, 300), HexaOrientation.FLAT);
+        new HexaLayout(GipfComponent.PIECE_SIZE * 1.50,
+                       new Coord(GipfComponent.PIECE_SIZE * 2, 0), FlatHexaOrientation.INSTANCE);
 
     private static PHASE_INITIAL_CAPTURE: number = 0;
     private static PHASE_PLACEMENT_COORD: number = 1;
@@ -85,10 +87,10 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
             this.captured.push(c);
         });
     }
-    public decodeMove(encodedMove: number): GipfMove {
+    public decodeMove(encodedMove: JSONValue): GipfMove {
         return GipfMove.encoder.decode(encodedMove);
     }
-    public encodeMove(move: GipfMove): number {
+    public encodeMove(move: GipfMove): JSONValue {
         return GipfMove.encoder.encode(move);
     }
     public getAllCoords(): Coord[] {
@@ -139,7 +141,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
                     if (entrance.getDistance(coord) !== 1) {
                         return this.cancelMove(GipfComponentFailure.CLICK_FURTHER_THAN_ONE_COORD);
                     }
-                    const direction: Direction = Direction.factory.fromMove(entrance, coord);
+                    const direction: HexaDirection = HexaDirection.factory.fromMove(entrance, coord);
                     return this.selectPlacementDirection(MGPOptional.of(direction));
                 } catch (error) {
                     return this.cancelMove(GipfFailure.INVALID_PLACEMENT_DIRECTION);
@@ -234,7 +236,7 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         }
         return MGPValidation.SUCCESS;
     }
-    private async selectPlacementDirection(dir: MGPOptional<Direction>): Promise<MGPValidation> {
+    private async selectPlacementDirection(dir: MGPOptional<HexaDirection>): Promise<MGPValidation> {
         this.placement = MGPOptional.of(new GipfPlacement(this.placementEntrance.get(), dir));
         const validity: MGPValidation = this.rules.placementValidity(this.constructedSlice, this.placement.get());
         if (validity.isFailure()) {

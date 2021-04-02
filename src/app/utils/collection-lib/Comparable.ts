@@ -4,6 +4,10 @@ export interface Comparable {
     toString(): string;
 }
 
-export const ComparableEquals = (a: Comparable, b: Comparable) => {
+export function ComparableEquals(a: Comparable, b: Comparable): boolean {
     return a.equals(b);
-};
+}
+
+export function StrictEquals<T>(a: T, b: T): boolean {
+    return a === b;
+}

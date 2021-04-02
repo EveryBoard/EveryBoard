@@ -1,20 +1,18 @@
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from "src/app/app.module";
-import { Coord } from "src/app/jscaip/coord/Coord";
-import { MGPNode } from "src/app/jscaip/mgp-node/MGPNode";
-import { TablutMove } from "../tablut-move/TablutMove";
-import { TablutPartSlice } from "../TablutPartSlice";
-import { TablutCase } from "./TablutCase";
-import { TablutNode, TablutRules } from "./TablutRules";
+import { Coord } from 'src/app/jscaip/coord/Coord';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { TablutMove } from '../tablut-move/TablutMove';
+import { TablutPartSlice } from '../TablutPartSlice';
+import { TablutCase } from './TablutCase';
+import { TablutNode, TablutRules } from './TablutRules';
 
 describe('TablutRules - Minimax:', () => {
+
     let rules: TablutRules;
     const _: number = TablutCase.UNOCCUPIED.value;
     const x: number = TablutCase.INVADERS.value;
     const i: number = TablutCase.DEFENDERS.value;
     const A: number = TablutCase.PLAYER_ONE_KING.value;
-    beforeAll(() => {
-        TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || TablutRules.VERBOSE;
-    });
+
     beforeEach(() => {
         rules = new TablutRules(TablutPartSlice);
     });

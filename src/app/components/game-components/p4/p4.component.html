@@ -1,9 +1,9 @@
 <svg  xmlns="http://www.w3.org/2000/svg"
-      width="600px" height="600px"
-      viewBox="0 0 700 700"
+      width="100%" height="auto"
+      viewBox="0 0 700 600"
       preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let y of [0, 1, 2, 3, 4, 5]">
-        <g *ngFor="let currentCase of board[y]; index as x;">
+    <g *ngFor="let line of board; index as y;">
+        <g *ngFor="let currentCase of line; index as x;">
             <circle [attr.cx]="(CASE_SIZE * x) + (CASE_SIZE / 2)"
                     [attr.cy]="(CASE_SIZE * y) + (CASE_SIZE / 2)"
                     [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"

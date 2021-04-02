@@ -14,6 +14,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { awaleDidacticial } from './didacticials/awale-didacticial';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
 import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
+import { encapsuleDidacticial } from './didacticials/encapsule-didacticial';
 import { gipfDidacticial } from './didacticials/gipf-didacticial';
 import { goDidacticial } from './didacticials/go-didacticial';
 import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
@@ -46,10 +47,10 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public tutorialOver: boolean = false;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
-        actRoute: ActivatedRoute,
-        router: Router,
-        userService: UserService,
-        authenticationService: AuthenticationService,
+                actRoute: ActivatedRoute,
+                router: Router,
+                userService: UserService,
+                authenticationService: AuthenticationService,
         public cdr: ChangeDetectorRef)
     {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
@@ -81,6 +82,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         const didacticials: { [key: string]: DidacticialStep[] } = {
             Awale: awaleDidacticial,
             Dvonn: dvonnDidacticial,
+            Encapsule: encapsuleDidacticial,
             Epaminondas: epaminondasDidacticial,
             Gipf: gipfDidacticial,
             Go: goDidacticial,

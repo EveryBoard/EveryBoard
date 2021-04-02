@@ -3,7 +3,7 @@
     <button id="switchChatVisibilityButton"
             mat-button
             (click)="switchChatVisibility()">
-            {{ visible ? "Hide chat" : "Show chat" }} ({{ this.unreadMessages }} new messages)
+            {{ visible ? "Réduire le chat" : "Afficher chat" }} ({{ this.unreadMessages }} nouveau(x) message(s))
     </button>
 
     <form id="chatForm" *ngIf="visible" class="example-form" >

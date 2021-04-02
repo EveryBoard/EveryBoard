@@ -8,23 +8,29 @@ describe('EpaminondasMove: ', () => {
     it('Should forbid null values', () => {
         expect(() => new EpaminondasMove(null, 1, 1, 1, Direction.UP)).toThrowError('X cannot be null.');
         expect(() => new EpaminondasMove(1, null, 1, 1, Direction.UP)).toThrowError('Y cannot be null.');
-        expect(() => new EpaminondasMove(1, 1, null, 1, Direction.UP)).toThrowError('Number of moved pieces cannot be null.');
+        expect(() => new EpaminondasMove(1, 1, null, 1, Direction.UP))
+            .toThrowError('Number of moved pieces cannot be null.');
         expect(() => new EpaminondasMove(1, 1, 1, null, Direction.UP)).toThrowError('Step size cannot be null.');
         expect(() => new EpaminondasMove(1, 1, 1, 1, null)).toThrowError('Direction cannot be null.');
     });
     it('Should forbid out of range coords', () => {
-        expect(() => new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT)).toThrowError('Illegal coord outside of board (-1, 0).');
-        expect(() => new EpaminondasMove(0, 13, 1, 1, Direction.UP_RIGHT)).toThrowError('Illegal coord outside of board (0, 13).');
+        expect(() => new EpaminondasMove(-1, 0, 1, 1, Direction.DOWN_LEFT))
+            .toThrowError('Illegal coord outside of board (-1, 0).');
+        expect(() => new EpaminondasMove(0, 13, 1, 1, Direction.UP_RIGHT))
+            .toThrowError('Illegal coord outside of board (0, 13).');
     });
     it('Should forbid invalid step size and number of selected piece', () => {
-        expect(() => new EpaminondasMove(0, 0, 2, 3, Direction.UP)).toThrowError('Cannot move a phalanx further than its size (got step size 3 for 2 pieces).');
-        expect(() => new EpaminondasMove(0, 0, -1, 0, Direction.UP)).toThrowError('Must select minimum one piece (got -1).');
-        expect(() => new EpaminondasMove(2, 2, 1, 0, Direction.UP)).toThrowError('Step size must be minimum one (got 0).');
+        expect(() => new EpaminondasMove(0, 0, 2, 3, Direction.UP))
+            .toThrowError('Cannot move a phalanx further than its size (got step size 3 for 2 pieces).');
+        expect(() => new EpaminondasMove(0, 0, -1, 0, Direction.UP))
+            .toThrowError('Must select minimum one piece (got -1).');
+        expect(() => new EpaminondasMove(2, 2, 1, 0, Direction.UP))
+            .toThrowError('Step size must be minimum one (got 0).');
     });
     it('EpaminondasMove.encode and EpaminondasMove.decode should be reversible', () => {
         const rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
         const moves: MGPMap<EpaminondasMove, EpaminondasPartSlice> = rules.getListMoves(rules.node);
-        for (let i = 0; i < moves.size(); i++) {
+        for (let i: number = 0; i < moves.size(); i++) {
             const move: EpaminondasMove = moves.getByIndex(i).key;
             const encodedMove: number = move.encode();
             const decodedMove: EpaminondasMove = EpaminondasMove.decode(encodedMove);

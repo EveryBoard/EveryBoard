@@ -7,28 +7,71 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { CoerceoMove } from '../coerceo-move/CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from '../coerceo-part-slice/CoerceoPartSlice';
+import { CoerceoFailure } from '../CoerceoFailure';
 
-/* eslint-disable max-len */
-export class CoerceoFailure {
-
-    public static INVALID_DISTANCE: string = 'Distance de déplacement illégal, votre pion doit atterir sur l\'un des six triangles de même couleur les plus proches';
-
-    public static CANNOT_LAND_ON_ALLY: string = 'Vous ne pouvez pas déplacer vos pièces sur vos propres pièces.';
-
-    public static MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = 'vous avez sélectionné une case vide, vous devez sélectionner l\'une de vos pièces.'
-}
-
-abstract class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoPartSlice, LegalityStatus> {}
+export abstract class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoPartSlice, LegalityStatus> {}
 
 export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
     public getListMoves(node: CoerceoNode): MGPMap<CoerceoMove, CoerceoPartSlice> {
-        throw new Error('Method not implemented.');
+        const results: MGPMap<CoerceoMove, CoerceoPartSlice> = this.getListDeplacement(node);
+        results.putAll(this.getListExchanges(node));
+        return results;
+    }
+    public getListDeplacement(node: CoerceoNode): MGPMap<CoerceoMove, CoerceoPartSlice> {
+        const deplacements: MGPMap<CoerceoMove, CoerceoPartSlice> = new MGPMap();
+        const slice: CoerceoPartSlice = node.gamePartSlice;
+        for (let y: number = 0; y < 10; y++) {
+            for (let x: number = 0; x < 15; x++) {
+                const start: Coord = new Coord(x, y);
+                if (slice.getBoardAt(start) === slice.getCurrentPlayer().value) {
+                    const legalLandings: Coord[] = slice.getLegalLandings(start);
+                    for (const end of legalLandings) {
+                        const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);
+                        const resultingSlice: CoerceoPartSlice =
+                            this.applyLegalDeplacement(move, slice, null).resultingSlice;
+                        deplacements.put(move, resultingSlice);
+                    }
+                }
+            }
+        }
+        return deplacements;
+    }
+    public getListExchanges(node: CoerceoNode): MGPMap<CoerceoMove, CoerceoPartSlice> {
+        const exchanges: MGPMap<CoerceoMove, CoerceoPartSlice> = new MGPMap();
+        const slice: CoerceoPartSlice = node.gamePartSlice;
+        const PLAYER: number = slice.getCurrentPlayer().value;
+        const ENNEMY: number = slice.getCurrentEnnemy().value;
+        if (slice.tiles[PLAYER] < 2) {
+            return exchanges;
+        }
+        for (let y: number = 0; y < 10; y++) {
+            for (let x: number = 0; x < 15; x++) {
+                const captured: Coord = new Coord(x, y);
+                if (slice.getBoardAt(captured) === ENNEMY) {
+                    const move: CoerceoMove = CoerceoMove.fromTilesExchange(captured);
+                    const resultingSlice: CoerceoPartSlice =
+                        this.applyLegalTileExchange(move, slice, null).resultingSlice;
+                    exchanges.put(move, resultingSlice);
+                }
+            }
+        }
+        return exchanges;
     }
     public getBoardValue(move: CoerceoMove, slice: CoerceoPartSlice): number {
-        throw new Error('Method not implemented.');
+        const scoreZero: number = (2 * slice.captures[0]) + slice.tiles[0];
+        const scoreOne: number = (2 * slice.captures[1]) + slice.tiles[1];
+        if (slice.captures[0] === 18) {
+            // Everything captured, victory
+            return Number.MIN_SAFE_INTEGER;
+        }
+        if (slice.captures[1] === 18) {
+            // Everything captured, victory
+            return Number.MAX_SAFE_INTEGER;
+        }
+        return scoreOne - scoreZero;
     }
     public applyLegalMove(move: CoerceoMove,
                           slice: CoerceoPartSlice,
@@ -40,9 +83,10 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
             return this.applyLegalDeplacement(move, slice, status);
         }
     }
-    public applyLegalTileExchange(move: CoerceoMove,
-                                  slice: CoerceoPartSlice,
-                                  status: LegalityStatus): { resultingMove: CoerceoMove, resultingSlice: CoerceoPartSlice; }
+    public applyLegalTileExchange(
+        move: CoerceoMove,
+        slice: CoerceoPartSlice,
+        status: LegalityStatus): { resultingMove: CoerceoMove, resultingSlice: CoerceoPartSlice; }
     {
         const newBoard: number[][] = slice.getCopiedBoard();
         const captured: Coord = move.capture.get();
@@ -65,9 +109,10 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
                     { a_initialSlice: slice, afterCapture, afterTileRemoval, resultingSlice } });
         return { resultingMove: null, resultingSlice };
     }
-    public applyLegalDeplacement(move: CoerceoMove,
-                                 slice: CoerceoPartSlice,
-                                 status: LegalityStatus): { resultingMove: CoerceoMove, resultingSlice: CoerceoPartSlice; }
+    public applyLegalDeplacement(
+        move: CoerceoMove,
+        slice: CoerceoPartSlice,
+        status: LegalityStatus): { resultingMove: CoerceoMove, resultingSlice: CoerceoPartSlice; }
     {
         // Move the piece
         const afterDeplacement: CoerceoPartSlice = slice.applyLegalDeplacement(move);
@@ -96,7 +141,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
     }
     public isLegalTileExchange(move: CoerceoMove, slice: CoerceoPartSlice): LegalityStatus {
         if (slice.tiles[slice.getCurrentPlayer().value] < 2) {
-            return { legal: MGPValidation.failure('Not enough tiles to exchanges.') };
+            return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE) };
         }
         if (slice.getBoardAt(move.capture.get()) === CoerceoPiece.NONE.value) {
             return { legal: MGPValidation.failure('Cannot capture coord of removed tile!') };
@@ -111,10 +156,13 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
     }
     public isLegalDeplacement(move: CoerceoMove, slice: CoerceoPartSlice): LegalityStatus {
         if (slice.getBoardAt(move.start.get()) === CoerceoPiece.NONE.value) {
-            return { legal: MGPValidation.failure('Cannot start with a coord outside the board ' + move.start.get().toString() + '.') };
+            const reason: string = 'Cannot start with a coord outside the board ' + move.start.get().toString() + '.';
+            return { legal: MGPValidation.failure(reason) };
         }
         if (slice.getBoardAt(move.landingCoord.get()) === CoerceoPiece.NONE.value) {
-            return { legal: MGPValidation.failure('Cannot end with a coord outside the board ' + move.landingCoord.get().toString() + '.') };
+            const reason: string =
+                'Cannot end with a coord outside the board ' + move.landingCoord.get().toString() + '.';
+            return { legal: MGPValidation.failure(reason) };
         }
         if (slice.getBoardAt(move.start.get()) === CoerceoPiece.EMPTY.value) {
             return { legal: MGPValidation.failure(CoerceoFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };

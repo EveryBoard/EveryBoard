@@ -30,16 +30,28 @@ import { LoginComponent } from './components/normal-component/login/login.compon
 import { ServerPageComponent } from './components/normal-component/server-page/server-page.component';
 import { PickGameComponent } from './components/normal-component/pick-game/pick-game.component';
 import { PartCreationComponent } from './components/normal-component/part-creation/part-creation.component';
+import { NotFoundComponent } from './components/normal-component/not-found/not-found.component';
 import { ChatComponent } from './components/normal-component/chat/chat.component';
 import { CountDownComponent } from './components/normal-component/count-down/count-down.component';
-import { OnlineGameWrapperComponent } from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
-import { LocalGameWrapperComponent } from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { DidacticialGameWrapperComponent } from './components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
+import { OnlineGameWrapperComponent }
+    from './components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
+import { LocalGameWrapperComponent }
+    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { DidacticialGameWrapperComponent }
+    from './components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
 import { GameIncluderComponent } from './components/game-components/game-includer/game-includer.component';
 import { InscriptionComponent } from './components/normal-component/inscription/inscription.component';
-import { ConfirmInscriptionComponent } from './components/normal-component/confirm-inscription/confirm-inscription.component';
+import { ConfirmInscriptionComponent }
+    from './components/normal-component/confirm-inscription/confirm-inscription.component';
+import { LocalGameCreationComponent }
+    from './components/normal-component/local-game-creation/local-game-creation.component';
+import { OnlineGameCreationComponent }
+    from './components/normal-component/online-game-creation/online-game-creation.component';
+import { DidacticialGameCreationComponent }
+    from './components/normal-component/didacticial-game-creation/didacticial-game-creation.component';
 
 import { AwaleComponent } from './components/game-components/awale/awale.component';
+import { CoerceoComponent } from './components/game-components/coerceo/coerceo.component';
 import { DvonnComponent } from './components/game-components/dvonn/dvonn.component';
 import { EncapsuleComponent } from './components/game-components/encapsule/encapsule.component';
 import { EpaminondasComponent } from './components/game-components/epaminondas/epaminondas.component';
@@ -55,8 +67,8 @@ import { ReversiComponent } from './components/game-components/reversi/reversi.c
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
 import { TablutComponent } from './components/game-components/tablut/tablut.component';
+import { TestCountDownComponent } from './components/normal-component/test-count-down/test-count-down.component';
 
-export const INCLUDE_VERBOSE_LINE_IN_TEST: boolean = false;
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
 const routes: Route [] = [
@@ -64,9 +76,15 @@ const routes: Route [] = [
     { path: 'server', component: ServerPageComponent, canActivate: [EmailVerified] },
     { path: 'inscription', component: InscriptionComponent },
     { path: 'confirm-inscription', component: ConfirmInscriptionComponent, canActivate: [MustVerifyEmail] },
+    { path: 'notFound', component: NotFoundComponent, canActivate: [EmailVerified] },
 
+    { path: 'testCountDown', component: TestCountDownComponent },
+
+    { path: 'play', component: OnlineGameCreationComponent, canActivate: [EmailVerified] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
+    { path: 'local', component: LocalGameCreationComponent },
     { path: 'local/:compo', component: LocalGameWrapperComponent },
+    { path: 'didacticial', component: DidacticialGameCreationComponent },
     { path: 'didacticial/:compo', component: DidacticialGameWrapperComponent },
     { path: '', component: WelcomeComponent },
     { path: '**', component: WelcomeComponent },
@@ -83,14 +101,20 @@ const routes: Route [] = [
         ChatComponent,
         PartCreationComponent,
         InscriptionComponent,
+        NotFoundComponent,
         CountDownComponent,
+        TestCountDownComponent,
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,
         DidacticialGameWrapperComponent,
         GameIncluderComponent,
         ConfirmInscriptionComponent,
+        LocalGameCreationComponent,
+        OnlineGameCreationComponent,
+        DidacticialGameCreationComponent,
 
         AwaleComponent,
+        CoerceoComponent,
         DvonnComponent,
         EncapsuleComponent,
         EpaminondasComponent,

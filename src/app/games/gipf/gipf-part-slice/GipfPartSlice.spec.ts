@@ -1,6 +1,7 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { Player } from 'src/app/jscaip/player/Player';
+import { GipfBoard } from '../gipf-move/GipfBoard';
 import { GipfPiece } from '../gipf-piece/GipfPiece';
 import { GipfPartSlice } from './GipfPartSlice';
 
@@ -42,7 +43,7 @@ describe('GipfPartSlice', () => {
 
     describe('equals', () => {
         it('should detect that a slice is equal to itself', () => {
-            const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            const board: GipfBoard = GipfBoard.of([
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, _, A, _],
@@ -50,12 +51,12 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 0]);
             expect(slice.equals(slice)).toBeTrue();
         });
         it('should distinguish slices that are different due to a different board', () => {
-            const board1: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            const board1: GipfBoard = GipfBoard.of([
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, _, A, _],
@@ -63,10 +64,10 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ]);
             const slice1: GipfPartSlice = new GipfPartSlice(board1, 6, [5, 5], [0, 0]);
 
-            const board2: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            const board2: GipfBoard = GipfBoard.of([
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, A, _, A],
                 [_, _, _, _, _, B, _],
@@ -74,12 +75,12 @@ describe('GipfPartSlice', () => {
                 [A, _, _, B, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, A, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ]);
             const slice2: GipfPartSlice = new GipfPartSlice(board2, 6, [5, 5], [0, 0]);
             expect(slice1.equals(slice2)).toBeFalse();
         });
         it('should distinguish slices that are different due to a different turn', () => {
-            const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            const board: GipfBoard = GipfBoard.of([
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, _, A, _],
@@ -87,13 +88,13 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ]);
             const slice1: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 0]);
             const slice2: GipfPartSlice = new GipfPartSlice(board, 6, [5, 5], [0, 0]);
             expect(slice1.equals(slice2)).toBeFalse();
         });
         it('should distinguish slices that are different due to different side pieces', () => {
-            const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            const board: GipfBoard = GipfBoard.of([
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, _, A, _],
@@ -101,7 +102,7 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ]);
             const slice1: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 0]);
             const slice2: GipfPartSlice = new GipfPartSlice(board, 5, [5, 6], [0, 0]);
             expect(slice1.equals(slice2)).toBeFalse();
@@ -109,7 +110,7 @@ describe('GipfPartSlice', () => {
             expect(slice1.equals(slice3)).toBeFalse();
         });
         it('should distinguish slices that are different due to different captured pieces', () => {
-            const board: HexaBoard<GipfPiece> = HexaBoard.fromTable([
+            const board: GipfBoard = GipfBoard.of([
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, A, _, _],
                 [_, _, _, _, _, A, _],
@@ -117,7 +118,7 @@ describe('GipfPartSlice', () => {
                 [A, _, _, A, B, B, _],
                 [B, _, B, _, _, _, _],
                 [_, B, _, _, _, _, _],
-            ], _, GipfPiece.encoder);
+            ]);
             const slice1: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 0]);
             const slice2: GipfPartSlice = new GipfPartSlice(board, 5, [5, 5], [0, 1]);
             expect(slice1.equals(slice2)).toBeFalse();

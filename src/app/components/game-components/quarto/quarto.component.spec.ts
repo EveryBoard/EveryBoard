@@ -47,7 +47,7 @@ describe('QuartoComponent', () => {
     const NULL: number = QuartoPiece.NONE.value;
     const AAAA: number = QuartoPiece.AAAA.value;
 
-    const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
+    const clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
         const element: DebugElement = debugElement.query(By.css(elementName));
         if (element == null) {
             return false;
@@ -111,7 +111,7 @@ describe('QuartoComponent', () => {
         expect(gameComponent.cancelMoveAttempt).toHaveBeenCalledTimes(1);
         flush();
     }));
-    it('should accept move when choosing coord then choosing piece', fakeAsync(async () => {
+    it('should accept move when choosing coord then choosing piece', fakeAsync(async() => {
         const oldSlice: QuartoPartSlice = QuartoPartSlice.getInitialSlice();
         spyOn(gameComponent, 'chooseMove').and.callThrough();
         expect(await clickElement('#chooseCoord_0_0')).toBeTrue();
@@ -120,7 +120,7 @@ describe('QuartoComponent', () => {
         expect(gameComponent.chooseMove).toHaveBeenCalledOnceWith(move, oldSlice, null, null);
         flush();
     }));
-    it('should allow to make last move', fakeAsync(async () => {
+    it('should allow to make last move', fakeAsync(async() => {
         const board: number[][] = ArrayUtils.mapBiArray([
             [QuartoPiece.AABB, QuartoPiece.AAAB, QuartoPiece.ABBA, QuartoPiece.BBAA],
             [QuartoPiece.BBAB, QuartoPiece.BAAA, QuartoPiece.BBBA, QuartoPiece.ABBB],

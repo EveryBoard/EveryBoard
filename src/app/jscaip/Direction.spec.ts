@@ -66,17 +66,17 @@ describe('Direction', () => {
                 expect(() => Direction.factory.fromInt(42)).toThrow();
             });
         });
-        describe('oppositeOf', () => {
-            it('should return the opposite direction', () => {
-                expect(Direction.factory.oppositeOf(Direction.RIGHT)).toBe(Direction.LEFT);
-                expect(Direction.factory.oppositeOf(Direction.LEFT)).toBe(Direction.RIGHT);
-                expect(Direction.factory.oppositeOf(Direction.DOWN)).toBe(Direction.UP);
-                expect(Direction.factory.oppositeOf(Direction.UP)).toBe(Direction.DOWN);
-                expect(Direction.factory.oppositeOf(Direction.UP_RIGHT)).toBe(Direction.DOWN_LEFT);
-                expect(Direction.factory.oppositeOf(Direction.UP_LEFT)).toBe(Direction.DOWN_RIGHT);
-                expect(Direction.factory.oppositeOf(Direction.DOWN_LEFT)).toBe(Direction.UP_RIGHT);
-                expect(Direction.factory.oppositeOf(Direction.DOWN_RIGHT)).toBe(Direction.UP_LEFT);
-            });
+    });
+    describe('getOpposite', () => {
+        it('should return the opposite direction', () => {
+            expect(Direction.RIGHT.getOpposite()).toBe(Direction.LEFT);
+            expect(Direction.LEFT.getOpposite()).toBe(Direction.RIGHT);
+            expect(Direction.DOWN.getOpposite()).toBe(Direction.UP);
+            expect(Direction.UP.getOpposite()).toBe(Direction.DOWN);
+            expect(Direction.UP_RIGHT.getOpposite()).toBe(Direction.DOWN_LEFT);
+            expect(Direction.UP_LEFT.getOpposite()).toBe(Direction.DOWN_RIGHT);
+            expect(Direction.DOWN_LEFT.getOpposite()).toBe(Direction.UP_RIGHT);
+            expect(Direction.DOWN_RIGHT.getOpposite()).toBe(Direction.UP_LEFT);
         });
     });
     describe('isDown', () => {

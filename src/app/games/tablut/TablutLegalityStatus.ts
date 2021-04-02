@@ -5,4 +5,4 @@ export class TablutLegalityStatus implements LegalityStatus {
     legal: MGPValidation;
 
     resultingBoard: number[][];
-};
+}

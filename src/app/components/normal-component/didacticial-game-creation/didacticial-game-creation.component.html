@@ -1,0 +1,12 @@
+<div class="d-flex align-items-center">
+    <div class="container">
+        <app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
+        <input id="launchDidacticial"
+               type="button"
+               [disabled]="!selectedGame"
+               value="Apprendre les règles"
+               (click)="launchDidacticial()"
+               class="btn btn-primary btn-block"
+               >
+    </div>
+</div>

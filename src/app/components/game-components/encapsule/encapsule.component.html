@@ -1,41 +1,46 @@
-<div id="gameboard">
-    <table>
-        <tr *ngFor="let line of mappedBoard; index as y;">
-            <td *ngFor="let caseContent of line; index as x;"
-                style="position:relative;"
-                (click)="onBoardClick(x, y);">
-                <img width="50" height="50"
-                     alt=":{{ caseContent }}:"
-                     [src]='imagesLocation+"encapsule/NONE.svg"'/>
-                <img *ngFor="let piece of caseContent"
-                     width="50" height="50"
-                     alt=":{{ piece }}:"
-                     style="position:absolute; top:0; left:0;"
-                     [src]='imagesLocation+"encapsule/"+piece+".svg"'/>
-                <img *ngIf="isHighlightedCoord(x, y);"
-                     width="50" height="50"
-                     alt="highlighted"
-                     [src]="imagesLocation+'squared_highlight.svg'"
-                     style="position:absolute; top:0; left:0;"/>
-            </td>
-        </tr>
-    </table>
-</div>
-<div id="piece">
-    <table>
-        <tr *ngFor="let pieces of remainingPieces;">
-            <td *ngFor="let piece of pieces"
-                (click)="onPieceClick(piece);"
-                style="position:relative">
-                <img width="50" height="50"
-                     alt=":{{ piece }}:"
-                     [src]='imagesLocation+"encapsule/"+piece+".svg"'/>
-                <img *ngIf="isSelectedPiece(piece)"
-                     width="50" height="50"
-                     alt="highlighted"
-                     [src]="imagesLocation+'squared_highlight.svg'"
-                     style="position:absolute; top:0; left:0;"/>
-            </td>
-        </tr>
-    </table>
-</div>
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="0 0 1000 300"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of board; index as y;">
+        <g *ngFor="let caseContent of line; index as x;">
+            <rect id="click_{{ x }}_{{ y }}"
+                  (click)="onBoardClick(x, y)"
+                  [ngStyle]="getRectStyle(x, y)"
+                  [attr.fill]="getRectFill(x, y)"
+                  [attr.x]="CASE_SIZE*x"
+                  [attr.y]="CASE_SIZE*y"
+                  [attr.width]="CASE_SIZE-STROKE_WIDTH"
+                  [attr.height]="CASE_SIZE-STROKE_WIDTH"
+                  [attr.stroke-width]="STROKE_WIDTH"
+                  stroke="black"
+                  />
+            <circle *ngFor="let piece of getListPieces(caseContent);"
+                    (click)="onBoardClick(x, y)"
+                    [attr.r]="getPieceRadius(piece)"
+                    [attr.stroke-width]="CIRCLE_STROKE_WIDTH"
+                    stroke="black"
+                    fill="none"
+                    [attr.cx]="CASE_SIZE*x + CASE_SIZE/2"
+                    [attr.cy]="CASE_SIZE*y + CASE_SIZE/2"
+                    [attr.stroke]="getPieceStroke(piece)"
+                    />
+        </g>
+    </g>
+    <g *ngFor="let player of [0, 1]">
+        <g *ngFor="let piece of getRemainingPieces(player); index as pieceIdx">
+            <circle id="piece_{{ player }}_{{ piece.toString() }}"
+                    (click)="onPieceClick(player, piece, pieceIdx)"
+                    [attr.r]="getPieceRadius(piece)"
+                    [attr.stroke-width]="CIRCLE_STROKE_WIDTH"
+                    stroke="black"
+                    fill="none"
+                    pointer-events="fill"
+                    [attr.cx]="CASE_SIZE*4 + CASE_SIZE/2 + CASE_SIZE*pieceIdx"
+                    [attr.cy]="CASE_SIZE/2 + CASE_SIZE*player"
+                    [attr.stroke]="getPieceStroke(piece)"
+                    [ngStyle]="getSidePieceStyle(piece, pieceIdx)"
+                    />
+        </g>
+    </g>
+</svg>

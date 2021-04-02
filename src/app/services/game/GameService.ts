@@ -13,7 +13,8 @@ import { IChat } from '../../domain/ichat';
 import { IMGPRequest, RequestCode } from '../../domain/request';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display, JSONValue } from 'src/app/utils/collection-lib/utils';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Injectable({
     providedIn: 'root',
@@ -35,13 +36,20 @@ export class GameService {
     }
     // on Server Component
 
-    public async partExistsAndIsOfType(partId: string, gameType: string): Promise<boolean> {
+    public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: ICurrentPart = await this.partDao.read(partId);
-        return part != null && part.typeGame === gameType;
+        if (part == null) {
+            return MGPValidation.failure('UNEXISTANT_PART');
+        }
+        if (part.typeGame === gameType) {
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure('WRONG_GAME_TYPE');
+        }
     }
-
     protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
-        display(GameService.VERBOSE, 'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer);
+        display(GameService.VERBOSE,
+                'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer + ')');
 
         const newPart: ICurrentPart = {
             listMoves: [],
@@ -77,7 +85,7 @@ export class GameService {
         this.activesPartsService.startObserving();
         return this.activesPartsService.activesPartsObs;
     }
-    public unSubFromActivesPartsObs() {
+    public unSubFromActivesPartsObs(): void {
         display(GameService.VERBOSE, 'GameService.unSubFromActivesPartsObs()');
 
         this.activesPartsService.stopObserving();
@@ -87,52 +95,24 @@ export class GameService {
     private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
 
-        let firstPlayer: string;
-        let secondPlayer: string;
-        if (joiner.firstPlayer === '2') {
-            // '2' = random first player
+        let whoStarts: FirstPlayer = FirstPlayer.of(joiner.firstPlayer);
+        if (whoStarts === FirstPlayer.RANDOM) {
             if (Math.random() < 0.5) {
-                joiner.firstPlayer = '1';
+                whoStarts = FirstPlayer.CREATOR;
             } else {
-                joiner.firstPlayer = '0';
-            }
-        } else if (joiner.firstPlayer === '1') {
-            // the opposite config is planned
-            secondPlayer = joiner.creator;
-            firstPlayer = joiner.chosenPlayer;
-        } else {
-            firstPlayer = joiner.creator;
-            secondPlayer = joiner.chosenPlayer;
-        }
-        const modification = {
-            playerZero: firstPlayer,
-            playerOne: secondPlayer,
-            turn: 0,
-            beginning: Date.now(),
-        };
-        return this.partDao.update(partId, modification);
-    }
-    private FUTURE_startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
-
-        let whoStart: FirstPlayer = FirstPlayer.of(joiner['whoStart']);
-        if (whoStart === FirstPlayer.RANDOM) {
-            if (Math.random() < 0.5) {
-                whoStart = FirstPlayer.CREATOR;
-            } else {
-                whoStart = FirstPlayer.CHOSEN_PLAYER;
+                whoStarts = FirstPlayer.CHOSEN_PLAYER;
             }
         }
         let playerZero: string;
         let playerOne: string;
-        if (whoStart === FirstPlayer.CREATOR) {
+        if (whoStarts === FirstPlayer.CREATOR) {
             playerZero = joiner.creator;
             playerOne = joiner.chosenPlayer;
         } else {
             playerZero = joiner.creator;
             playerOne = joiner.chosenPlayer;
         }
-        const modification = {
+        const modification: PICurrentPart = {
             playerZero,
             playerOne,
             turn: 0,
@@ -149,21 +129,23 @@ export class GameService {
         return this.partDao.delete(partId);
     }
     public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.acceptConfig(' + partId + ', ' + JSON.stringify(joiner) + ') + tmp partStatus: ' + joiner.partStatus);
+        display(GameService.VERBOSE, { gameService_acceptConfig: { partId, joiner } });
 
         await this.joinerService.acceptConfig();
-        return this.startGameWithConfig(partId, joiner);
+        return this.startGameWithConfig(partId, joiner);  //  OLDLY DU CUL
+        // await this.startGameWithConfig(partId, joiner);
+        // return this.joinerService.acceptConfig();
     }
     // on OnlineGame Component
 
-    public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void) {
+    public startObserving(partId: string, callback: (iPart: ICurrentPartId) => void): void {
         if (this.followedPartId == null) {
             display(GameService.VERBOSE, '[start watching part ' + partId);
 
             this.followedPartId = partId;
             this.followedPartObs = this.partDao.getObsById(partId);
             this.followedPartSub = this.followedPartObs
-                .subscribe((onFullFilled) => callback(onFullFilled));
+                .subscribe((onFullFilled: ICurrentPartId) => callback(onFullFilled));
         } else {
             throw new Error('GameService.startObserving should not be called while already observing a game');
         }
@@ -183,7 +165,8 @@ export class GameService {
         });
     }
     public proposeRematch(partId: string, observerRole: 0 | 1): Promise<void> {
-        const code: RequestCode = observerRole === 0 ? RequestCode.ZERO_PROPOSED_REMATCH : RequestCode.ONE_PROPOSED_REMATCH;
+        const code: RequestCode =
+            observerRole === 0 ? RequestCode.ZERO_PROPOSED_REMATCH : RequestCode.ONE_PROPOSED_REMATCH;
         return this.partDao.update(partId, code.toInterface());
     }
     public async acceptRematch(part: ICurrentPartId): Promise<void> {
@@ -191,22 +174,22 @@ export class GameService {
 
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
         const rematchId: string = await this.createGame(iJoiner.creator, part.doc.typeGame, iJoiner.chosenPlayer);
-        let firstPlayer: string = iJoiner.firstPlayer;
-        if (firstPlayer === '2') {
+        let firstPlayer: FirstPlayer = FirstPlayer.of(iJoiner.firstPlayer);
+        if (firstPlayer === FirstPlayer.RANDOM) {
             if (part.doc.playerZero === iJoiner.creator) {
                 // the creator started the previous game thank to hazard
-                firstPlayer = '1'; // so he won't start this one
+                firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
             } else {
-                firstPlayer = '0';
+                firstPlayer = FirstPlayer.CREATOR;
             }
         } else {
-            firstPlayer = firstPlayer === '0' ? '1' : '0';
+            firstPlayer = firstPlayer.getOpponent();
         }
         const newJoiner: IJoiner = {
             candidatesNames: iJoiner.candidatesNames,
             creator: iJoiner.creator,
             chosenPlayer: iJoiner.chosenPlayer,
-            firstPlayer: firstPlayer,
+            firstPlayer: firstPlayer.value,
             partStatus: 3, // already started
             maximalMoveDuration: iJoiner.maximalMoveDuration,
             totalPartDuration: iJoiner.totalPartDuration,
@@ -220,17 +203,18 @@ export class GameService {
     }
     public async updateDBBoard(
         partId: string,
-        encodedMove: number,
+        encodedMove: JSONValue,
         scorePlayerZero: number,
         scorePlayerOne: number,
         notifyDraw?: boolean,
         winner?: string,
     ): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.updateDBBoard(' + encodedMove + ', ' + scorePlayerZero + ', ' + scorePlayerOne + ', ' + partId + ')');
+        display(GameService.VERBOSE, { gameService_updateDBBoard: {
+            partId, encodedMove, scorePlayerZero, scorePlayerOne, notifyDraw, winner } });
 
         const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
-        const listMoves: number[] = ArrayUtils.copyImmutableArray(part.listMoves);
+        const listMoves: JSONValue[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
         const update: PICurrentPart = {
             listMoves,
@@ -293,7 +277,7 @@ export class GameService {
             request,
         });
     }
-    public stopObserving() {
+    public stopObserving(): void {
         display(GameService.VERBOSE, 'GameService.stopObserving();');
 
         if (this.followedPartId == null) {

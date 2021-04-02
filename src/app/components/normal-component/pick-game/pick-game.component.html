@@ -1,14 +1,9 @@
-<label for="gameType">Choisissez un jeu</label>
-<select id="gameType"
-        class="form-control"
-        (change)="onChange($event)">
+<select class="form-select" id="gameType" (change)="onChange($event)">
     <option value=""
-            class="form-control">
-        -
-    </option>
+            selected
+    >Choisir un jeu</option>
     <option *ngFor="let gameName of gameNameList"
-            [value]="gameName"
-            class="form-control">
+            [value]="gameName">
         {{ gameName }}
     </option>
 </select>

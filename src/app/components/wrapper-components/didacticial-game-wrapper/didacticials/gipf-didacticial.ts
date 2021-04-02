@@ -1,8 +1,8 @@
+import { GipfBoard } from 'src/app/games/gipf/gipf-move/GipfBoard';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-move/GipfMove';
 import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice';
 import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { DidacticialStep } from '../DidacticialStep';
@@ -44,7 +44,7 @@ export const gipfDidacticial: DidacticialStep[] = [
          B. Faire votre insertion.
          C. Choisir la/les ligne(s) à capturer que vous venez de créer.
          Vous jouez Foncé, une capture est faisable, faites là.`,
-        new GipfPartSlice(HexaBoard.fromTable([
+        new GipfPartSlice(GipfBoard.of([
             [_, _, _, O, X, _, _],
             [_, _, _, _, _, _, _],
             [_, _, _, _, _, _, _],
@@ -52,7 +52,7 @@ export const gipfDidacticial: DidacticialStep[] = [
             [X, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
             [_, _, _, X, _, _, _],
-        ], GipfPiece.EMPTY, GipfPiece.encoder), 42, [8, 8], [0, 0]),
+        ]), 42, [8, 8], [0, 0]),
         [new GipfMove(
             new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
             [],
@@ -73,7 +73,7 @@ export const gipfDidacticial: DidacticialStep[] = [
          L'une ne permet aucune capture de pièce adverse.
          L'autre permet une capture de pièce adverse.
          La dernière en permet deux, choisissez cette dernière.`,
-        new GipfPartSlice(HexaBoard.fromTable([
+        new GipfPartSlice(GipfBoard.of([
             [_, _, _, _, _, _, _],
             [_, _, _, X, _, _, _],
             [_, _, _, O, _, _, _],
@@ -81,7 +81,7 @@ export const gipfDidacticial: DidacticialStep[] = [
             [_, _, _, O, _, _, _],
             [_, _, _, O, _, _, _],
             [_, _, _, X, _, _, _],
-        ], GipfPiece.EMPTY, GipfPiece.encoder), 42, [8, 4], [2, 3]),
+        ]), 42, [8, 4], [2, 3]),
         [new GipfMove(
             new GipfPlacement(new Coord(-3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
             [],
@@ -105,7 +105,7 @@ export const gipfDidacticial: DidacticialStep[] = [
          (bien que ce plateau soit fictif à des fins pédagogiques).
          Et après le bon mouvement, vous pourrez faire deux captures différentes!
          Gardez à l'esprit que le plus utile d'une capture, est de capturer les pièces ennemies!`,
-        new GipfPartSlice(HexaBoard.fromTable([
+        new GipfPartSlice(GipfBoard.of([
             [_, _, _, O, _, _, O],
             [_, _, _, O, _, _, O],
             [_, O, O, _, O, X, O],
@@ -113,7 +113,7 @@ export const gipfDidacticial: DidacticialStep[] = [
             [_, _, _, O, _, _, _],
             [O, O, O, X, X, _, _],
             [_, _, _, O, _, _, _],
-        ], GipfPiece.EMPTY, GipfPiece.encoder), 42, [8, 4], [2, 3]),
+        ]), 42, [8, 4], [2, 3]),
         [
             new GipfMove(
                 new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.UP)),

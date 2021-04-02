@@ -1,6 +1,5 @@
 import { GoRules } from './GoRules';
 import { GoMove } from '../go-move/GoMove';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Phase, GoPartSlice, GoPiece } from '../go-part-slice/GoPartSlice';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { GoLegalityStatus } from '../GoLegalityStatus';
@@ -20,7 +19,6 @@ describe('GoRules:', () => {
     const _: GoPiece = GoPiece.EMPTY;
 
     beforeAll(() => {
-        GoRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GoRules.VERBOSE;
         GoPartSlice.HEIGHT = 5;
         GoPartSlice.WIDTH = 5;
     });

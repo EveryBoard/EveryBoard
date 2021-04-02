@@ -1,5 +1,6 @@
 import { IMGPRequest } from './request';
 import { ArrayUtils } from '../utils/collection-lib/array-utils/ArrayUtils';
+import { JSONValue } from '../utils/collection-lib/utils';
 
 export interface ICurrentPart {
 
@@ -101,7 +102,7 @@ export interface PICurrentPart {
     playerOne?: string; // id
 
     beginning?: number; // should be date; is a timestamp
-    lastMove?: number; // should/could? be a date; is a timestamp
+    lastMove?: JSONValue; // should/could? be a date; is a timestamp
 
     typePart?: number|string; // amicale, comptabilisée, pédagogique
     result?: IMGPResult;
@@ -110,7 +111,7 @@ export interface PICurrentPart {
     scorePlayerOne?: number|string; // TODO : implémenter ça aussi en même temps
 
     historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
-    listMoves?: number[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
+    listMoves?: JSONValue[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
     request?: IMGPRequest;
 }
 export class MGPResult {

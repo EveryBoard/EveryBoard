@@ -4,7 +4,6 @@ import { GameService } from './GameService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { of } from 'rxjs';
 import { ICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
@@ -20,9 +19,6 @@ describe('GameService', () => {
 
     let partDao: PartDAO;
 
-    beforeAll(() => {
-        GameService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GameService.VERBOSE;
-    });
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
@@ -45,7 +41,7 @@ describe('GameService', () => {
         service.startObserving('partId', myCallback);
         expect(partDao.getObsById).toHaveBeenCalled();
     });
-    it('startObserving should throw exception when called while observing ', async () => {
+    it('startObserving should throw exception when called while observing ', async() => {
         await partDao.set('myJoinerId', PartMocks.INITIAL.copy());
 
         expect(() => {
@@ -58,7 +54,7 @@ describe('GameService', () => {
         service.deletePart('partId');
         expect(partDao.delete).toHaveBeenCalled();
     });
-    it('should forbid to accept a take back that the player proposed himself', async () => {
+    it('should forbid to accept a take back that the player proposed himself', async() => {
         const part: ICurrentPart = {
             typeGame: 'Quarto',
             playerZero: 'creator',
@@ -67,7 +63,7 @@ describe('GameService', () => {
             listMoves: [107, 161],
             request: { code: RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code },
         };
-        const getError: (player: Player) => Promise<string> = async (player: Player) => {
+        const getError: (player: Player) => Promise<string> = async(player: Player) => {
             let errorMessage: string;
             try {
                 await service.acceptTakeBack('joinerId', part, player);
@@ -88,7 +84,7 @@ describe('GameService', () => {
             creator: 'creator',
             chosenPlayer: 'hisFriend',
             partStatus: 2,
-            whoStart: 'yes, I was an hidden todo :D'
+            firstPlayer: 'CREATOR',
         };
         spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);
@@ -103,7 +99,7 @@ describe('GameService', () => {
             creator: 'creator',
             chosenPlayer: 'hisFriend',
             partStatus: 2,
-            whoStart: 'somethingElse'
+            whoStart: 'somethingElse',
         };
         spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);

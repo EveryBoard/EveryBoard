@@ -9,6 +9,7 @@ export class PickGameComponent {
 
     public readonly gameNameList: ReadonlyArray<string> = [ // After Gipf: median = 24j; average = 65j
         'Awale', // /////  2ème: 2018.11.29 ( 3  mois après P4)
+        'Coerceo', // /// 16ème: 2021.03.21 (27 jours après Gipf)
         'Dvonn', // ///// 13ème: 2020.10.21 (18 jours après Kamisado) *Quentin
         'Encapsule', // /  7ème: 2019.12.30 ( 9 jours après Go)
         'Epaminondas', // 14ème: 2021.01.06 (22 jours après Quixo)

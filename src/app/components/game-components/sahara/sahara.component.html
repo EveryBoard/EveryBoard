@@ -1,38 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg"
-     width="500px" height="500px"
-     viewBox="0 0 500 500"
+     width="100%" height="auto"
+     viewBox="0 0 300 300"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let caseContent of line; index as x;"
            id="click_{{x}}_{{y}}"
            (click)="onClick(x, y);">
-            <g *ngIf="caseContent === 0">
-                <polyline [attr.points]="getPyramidCoordinate(x, y)"
-                          [attr.fill]="getPlayerFill(x, y)"
-                          style="stroke: black; stroke-width: 5" />
-            </g>
-            <g *ngIf="caseContent === 1">
+            <g *ngIf="caseContent === 0 || caseContent === 1">
                 <polyline [attr.points]="getPyramidCoordinate(x, y)"
                           [attr.fill]="getPlayerFill(x, y)"
                           style="stroke: black; stroke-width: 5" />
             </g>
             <g *ngIf="caseContent === 2">
                 <polyline *ngIf="(x+y)%2 === 1"
-                          [attr.points]="getCoordinate(x, y)"
+                          [attr.points]="getTriangleCoordinate(x, y)"
                           style="fill: lightgrey; stroke: black; stroke-width: 5" />
                 <polyline *ngIf="(x+y)%2 === 0"
-                          [attr.points]="getCoordinate(x, y)"
+                          [attr.points]="getTriangleCoordinate(x, y)"
                           style="fill: dimgray; stroke:black; stroke-width: 5" />
             </g>
         </g>
     </g>
     <ng-container *ngIf="lastMoved">
-        <polyline [attr.points]="getCoordinate(lastCoord.x, lastCoord.y)"
+        <polyline [attr.points]="getTriangleCoordinate(lastCoord.x, lastCoord.y)"
                   style="fill: none; stroke: yellow; stroke-width: 5" />
-        <polyline [attr.points]="getCoordinate(lastMoved.x, lastMoved.y)"
+        <polyline [attr.points]="getTriangleCoordinate(lastMoved.x, lastMoved.y)"
                   style="fill: none; stroke: yellow; stroke-width: 5" />
     </ng-container>
     <polyline *ngIf="chosenCoord.isPresent()"
-              [attr.points]="getCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
+              [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
               style="fill: none; stroke: blue; stroke-width: 5" />
 </svg>

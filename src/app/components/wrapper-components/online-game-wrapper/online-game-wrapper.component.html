@@ -1,6 +1,4 @@
-<div class="container-fluid"
-     style="height: 88%; max-height: 88%">
-
+<div class="container">
     <app-part-creation id="partCreation" #partCreation
                        *ngIf="gameStarted === false"
                        [partId]="currentPartId"
@@ -9,16 +7,15 @@
     </app-part-creation>
 
     <div id="game"
-         class="flex-container"
+         class="row"
          *ngIf="gameStarted"
          [ngStyle] = "{ 'height': getGameHeight(), 'max-height': '100%' }">
-
-         <div id="board"
-              class="flex-container circled col-sm-9">
+        <div id="board"
+             class="col-sm-8 circled">
             <app-game-includer></app-game-includer>
         </div>
 
-        <div id="info" class="circled col-sm-3">
+        <div id="info" class="circled col-sm-4">
             <div class="inforow" id="turnIndicator" style="text-align:center"
                  *ngIf="currentPart">
                 <h4>Tour n° {{ currentPart.turn + 1 }}</h4>
@@ -34,24 +31,24 @@
             <div class="inforow" id="partChronos">
                 <app-count-down #chronoZeroGlobal
                                 style="float: left"
-                                debugName="chrono Zero Global"
+                                debugName="ZERO Global"
                                 (outOfTimeAction)="reachedOutOfTime(0)">
                 </app-count-down>
                 <app-count-down #chronoOneGlobal
                                 style="float: right"
-                                debugName="chrono One Global"
+                                debugName="ONE Global"
                                 (outOfTimeAction)="reachedOutOfTime(1)">
                 </app-count-down>
             </div>
             <div class="inforow" id="turnChronos">
                 <app-count-down #chronoZeroLocal
                                 style="float: left"
-                                debugName="chrono Zero Local"
+                                debugName="ZERO Local"
                                 (outOfTimeAction)="reachedOutOfTime(0)">
                 </app-count-down>
                 <app-count-down #chronoOneLocal
                                 style="float: right"
-                                debugName="chrono One Local"
+                                debugName="ONE Local"
                                 (outOfTimeAction)="reachedOutOfTime(1)">
                 </app-count-down>
             </div>
@@ -128,5 +125,5 @@
                   [chatId]="currentPartId"
                   [turn]="currentPart?.turn"></app-chat>
     </div>
-
 </div>
+

@@ -54,9 +54,9 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
             for (let x: number = 0; x < slice.board[0].length; x++) {
                 const coord: Coord = new Coord(x, y);
                 if (coord.equals(this.lastMove.coord) === false) {
-                    const stack: DvonnPieceStack = DvonnPieceStack.of(slice.getBoardAt(coord));
+                    const stack: DvonnPieceStack = DvonnPieceStack.encoder.decode(slice.getBoardAt(coord));
                     const caseContent: number = previousSlice.getBoardAt(coord);
-                    const previousStack: DvonnPieceStack = DvonnPieceStack.of(caseContent);
+                    const previousStack: DvonnPieceStack = DvonnPieceStack.encoder.decode(caseContent);
                     if (stack.isEmpty() && !previousStack.isEmpty()) {
                         const disconnected: { x: number, y: number, caseContent: number } = { x, y, caseContent };
                         this.disconnecteds.push(disconnected);
@@ -122,21 +122,21 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
                          this.CASE_SIZE / 2 + (y * (this.CASE_SIZE * 0.75)));
     }
     public isSource(stackValue: number): boolean {
-        return DvonnPieceStack.of(stackValue).containsSource();
+        return DvonnPieceStack.encoder.decode(stackValue).containsSource();
     }
     public size(stackValue: number): number {
-        return DvonnPieceStack.of(stackValue).size();
+        return DvonnPieceStack.encoder.decode(stackValue).getSize();
     }
     public stylePiece(stackValue: number, hasSource: boolean): { [key: string]: string } {
-        const stack: DvonnPieceStack = DvonnPieceStack.of(stackValue);
+        const stack: DvonnPieceStack = DvonnPieceStack.encoder.decode(stackValue);
         const playerColor: string = this.getPlayerColor(stack.getOwner());
         return {
-            fill: (hasSource && stack.size() === 1) ? 'red' : playerColor,
+            fill: (hasSource && stack.getSize() === 1) ? 'red' : playerColor,
             stroke: hasSource ? 'red' : playerColor,
         };
     }
     public pieceText(stackValue: number): string {
-        return '' + DvonnPieceStack.of(stackValue).size();
+        return '' + DvonnPieceStack.encoder.decode(stackValue).getSize();
     }
     public getHexaCoordinates(center: Coord): string {
         const x: number = center.x;

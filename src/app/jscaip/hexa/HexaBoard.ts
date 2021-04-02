@@ -1,74 +1,80 @@
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from '../coord/Coord';
-import { Encoder } from '../encoder';
+import { HexaLine } from './HexaLine';
 
 /** An hexagonal board encoding,
     inspired by the description on this page: https://www.redblobgames.com/grids/hexagons/#map-storage */
 export class HexaBoard<T> {
-    public static empty<T>(width: number, height: number, empty: T, encoder: Encoder<T>): HexaBoard<T> {
-        return new HexaBoard(ArrayUtils.createBiArray(width, height, empty), width, height, empty, encoder);
+    public static empty<T>(width: number,
+                           height: number,
+                           excludedCases: ReadonlyArray<number>,
+                           empty: T): HexaBoard<T> {
+        return new HexaBoard(ArrayUtils.createBiArray(width, height, empty),
+                             width,
+                             height,
+                             excludedCases,
+                             empty);
     }
-    public static fromTable<T>(table: Table<T>, empty: T, encoder: Encoder<T>): HexaBoard<T> {
+    public static fromTable<T>(table: Table<T>,
+                               excludedCases: ReadonlyArray<number>,
+                               empty: T): HexaBoard<T> {
         const height: number = table.length;
         if (height === 0) {
-            throw new Error('Cannot create an HexaBoard from an empty table');
+            throw new Error('Cannot create an HexaBoard from an empty table.');
         }
         const width: number = table[0].length;
-        return new HexaBoard(table, width, height, empty, encoder);
+        return new HexaBoard(table, width, height, excludedCases, empty);
     }
 
-    private readonly widthRadius: number;
-    private readonly heightRadius: number;
     public constructor(public readonly contents: Table<T>,
                        public readonly width: number,
                        public readonly height: number,
-                       public readonly empty: T,
-                       public readonly encoder: Encoder<T>) {
-        if (width % 2 === 0) {
-            throw new Error('Cannot create an HexaBoard with an even width');
+                       public readonly excludedCases: ReadonlyArray<number>,
+                       public readonly empty: T) {
+        if (this.excludedCases.length >= this.height/2) {
+            throw new Error('Invalid excluded cases specification for HexaBoard.');
         }
-        if (height % 2 === 0) {
-            throw new Error('Cannot create an HexaBoard with an even height');
-        }
-        this.heightRadius = (this.height - 1)/2;
-        this.widthRadius = (this.width - 1)/2;
     }
     public equals(other: HexaBoard<T>, equalT: (a: T, b: T) => boolean): boolean {
         if (this === other) return true;
         if (this.width !== other.width) return false;
         if (this.height !== other.height) return false;
         if (equalT(this.empty, other.empty) === false) return false;
-        if (this.encoder !== other.encoder) return false;
+        // TODO: check excludedCases
         for (const coord of this.allCoords()) {
             if (equalT(this.getAtUnsafe(coord), other.getAtUnsafe(coord)) === false) return false;
         }
         return true;
     }
     private getAtUnsafe(coord: Coord): T {
-        return this.contents[coord.y+this.heightRadius][coord.x+this.widthRadius];
+        return this.contents[coord.y][coord.x];
     }
     public getAt(coord: Coord): T {
         if (this.isOnBoard(coord)) {
             return this.getAtUnsafe(coord);
         } else {
-            throw new Error('Accessing coord not on hexa board: ' + coord);
+            throw new Error('Accessing coord not on hexa board: ' + coord + '.');
         }
     }
-    public setAt(coord: Coord, v: T): HexaBoard<T> {
+    protected setAtUnsafe(coord: Coord, v: T): this {
         const contents: T[][] = ArrayUtils.copyBiArray(this.contents);
-        contents[coord.y+this.heightRadius][coord.x+this.widthRadius] = v;
-        return new HexaBoard(contents, this.width, this.height, this.empty, this.encoder);
+        contents[coord.y][coord.x] = v;
+        return new HexaBoard(contents, this.width, this.height, this.excludedCases, this.empty) as this;
     }
-    public toNumberTable(): NumberTable {
-        return ArrayUtils.mapBiArray(this.contents, this.encoder.encode);
+    public setAt(coord: Coord, v: T): this {
+        if (this.isOnBoard(coord)) {
+            return this.setAtUnsafe(coord, v);
+        } else {
+            throw new Error('Setting coord not on hexa board: ' + coord + '.');
+        }
     }
     public forEachCoord(callback: (coord: Coord, content: T) => void): void {
-        for (let q: number = -this.widthRadius; q <= this.widthRadius; q++) {
-            const r1: number = Math.max(-this.heightRadius, -q - this.heightRadius);
-            const r2: number = Math.min(this.heightRadius, -q + this.heightRadius);
-            for (let r: number = r1; r <= r2; r++) {
-                const coord: Coord = new Coord(q, r);
-                callback(coord, this.getAt(coord));
+        for (let y: number = 0; y < this.height; y++) {
+            for (let x: number = 0; x < this.width; x++) {
+                const coord: Coord = new Coord(x, y);
+                if (this.isOnBoard(coord)) {
+                    callback(coord, this.getAtUnsafe(coord));
+                }
             }
         }
     }
@@ -79,80 +85,36 @@ export class HexaBoard<T> {
         });
         return coords;
     }
-    public getAllBorders(): Coord[] {
-        const coords: Coord[] = [];
-        for (let q: number = -this.widthRadius; q <= this.widthRadius; q++) {
-            const r1: number = Math.max(-this.heightRadius, -q - this.heightRadius);
-            const r2: number = Math.min(this.heightRadius, -q + this.heightRadius);
-            if (q === this.widthRadius || q === -this.widthRadius) {
-                // This is the border with constant q, we need to add all cases
-                for (let r: number = r1; r <= r2; r++) {
-                    coords.push(new Coord(q, r));
-                }
+    public isOnBoard(coord: Coord): boolean {
+        const halfHeight: number = this.height / 2 | 0;
+        if (coord.x < 0 || coord.x >= this.width || coord.y < 0 || coord.y >= this.height) {
+            return false;
+        }
+        if (coord.y <= halfHeight) {
+            if (this.excludedCases[coord.y] != null) {
+                return coord.x > this.excludedCases[coord.y]-1;
             } else {
-                coords.push(new Coord(q, r1));
-                coords.push(new Coord(q, r2));
+                return true;
+            }
+        } else {
+            if (this.excludedCases[this.height-1 - coord.y] != null) {
+                return (this.width-1-coord.x) > this.excludedCases[this.height-1 - coord.y]-1;
+            } else {
+                return true;
             }
         }
-        return coords;
     }
-    public isOnBoard(coord: Coord): boolean {
-        const q: number = coord.x;
-        if (q < - this.widthRadius || q > this.widthRadius) return false;
-
-        const r1: number = Math.max(-this.heightRadius, -q - this.heightRadius);
-        const r2: number = Math.min(this.heightRadius, -q + this.heightRadius);
-        const r: number = coord.y;
-        if (r < r1 || r > r2) return false;
-        return true;
-    }
-    public isOnBorder(coord: Coord): boolean {
-        return this.isOnTopRightBorder(coord) ||
-            this.isOnRightBorder(coord) ||
-            this.isOnBottomRightBorder(coord) ||
-            this.isOnBottomLeftBorder(coord) ||
-            this.isOnLeftBorder(coord) ||
-            this.isOnLeftBorder(coord) ||
-            this.isOnTopLeftBorder(coord);
-    }
-    public isOnTopRightBorder(coord: Coord): boolean {
-        return coord.y === -this.heightRadius;
-    }
-    public isOnRightBorder(coord: Coord): boolean {
-        return coord.x === this.widthRadius;
-    }
-    public isOnBottomRightBorder(coord: Coord): boolean {
-        return this.axialToCubeYCoordinate(coord) === -this.widthRadius;
-    }
-    public isOnBottomLeftBorder(coord: Coord): boolean {
-        return coord.y === this.heightRadius;
-    }
-    public isOnLeftBorder(coord: Coord): boolean {
-        return coord.x === -this.widthRadius;
-    }
-    public isOnTopLeftBorder(coord: Coord): boolean {
-        return this.axialToCubeYCoordinate(coord) === this.widthRadius;
-    }
-    private axialToCubeYCoordinate(coord: Coord): number {
-        return -coord.x-coord.y;
-    }
-    public isTopLeftCorner(coord: Coord): boolean {
-        return coord.x === -this.widthRadius && coord.y === 0;
-    }
-    public isTopCorner(coord: Coord): boolean {
-        return coord.x === 0 && coord.y === -this.heightRadius;
-    }
-    public isTopRightCorner(coord: Coord): boolean {
-        return coord.x === this.widthRadius && coord.y === -this.heightRadius;
-    }
-    public isBottomRightCorner(coord: Coord): boolean {
-        return coord.x === this.widthRadius && coord.y === 0;
-    }
-    public isBottomCorner(coord: Coord): boolean {
-        return coord.x === 0 && coord.y === this.heightRadius;
-    }
-    public isBottomLeftCorner(coord: Coord): boolean {
-        return coord.x === -this.widthRadius && coord.y === this.heightRadius;
+    public allLines(): ReadonlyArray<HexaLine> {
+        const lines: HexaLine[] = [];
+        for (let i: number = 0; i < this.width; i++) {
+            lines.push(HexaLine.constantQ(i));
+        }
+        for (let i: number = 0; i < this.height; i++) {
+            lines.push(HexaLine.constantR(i));
+        }
+        for (let i: number = this.excludedCases.length; i < this.height+this.excludedCases.length; i++) {
+            lines.push(HexaLine.constantS(i));
+        }
+        return lines;
     }
 }
-

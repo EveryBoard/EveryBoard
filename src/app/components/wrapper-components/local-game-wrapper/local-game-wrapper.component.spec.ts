@@ -7,7 +7,7 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { of, Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { ActivatedRoute } from '@angular/router';
-import { AppModule, INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
+import { AppModule } from 'src/app/app.module';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
@@ -48,7 +48,7 @@ describe('LocalGameWrapperComponent', () => {
     const X: number = Player.ONE.value;
     const _: number = Player.NONE.value;
 
-    const clickElement: (elementName: string) => Promise<boolean> = async (elementName: string) => {
+    const clickElement: (elementName: string) => Promise<boolean> = async(elementName: string) => {
         const element: DebugElement = debugElement.query(By.css(elementName));
         if (element != null) {
             element.triggerEventHandler('click', null);
@@ -59,10 +59,7 @@ describe('LocalGameWrapperComponent', () => {
             return false;
         }
     };
-    beforeAll(() => {
-        LocalGameWrapperComponent.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || LocalGameWrapperComponent.VERBOSE;
-    });
-    beforeEach(fakeAsync(async () => {
+    beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
@@ -101,7 +98,7 @@ describe('LocalGameWrapperComponent', () => {
         expect(p4Tag).toBeTruthy('app-p4 tag should be present after view init');
         expect(component.gameComponent).toBeTruthy('gameComponent should be present once component view init');
     }));
-    it('connected user should be able to play', fakeAsync(async () => {
+    it('connected user should be able to play', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
 
         fixture.detectChanges();
@@ -111,7 +108,7 @@ describe('LocalGameWrapperComponent', () => {
         const legality: MGPValidation = await component.gameComponent.chooseMove(P4Move.of(4), slice, null, null);
         expect(legality.isSuccess()).toBeTrue();
     }));
-    it('should allow to go back one move', fakeAsync(async () => {
+    it('should allow to go back one move', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
         fixture.detectChanges();
         tick(1);
@@ -131,7 +128,7 @@ describe('LocalGameWrapperComponent', () => {
         expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
         expect(component.gameComponent.updateBoard).toHaveBeenCalledTimes(1);
     }));
-    it('should show draw', fakeAsync(async () => {
+    it('should show draw', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
         fixture.detectChanges();
         tick(1);
@@ -151,14 +148,16 @@ describe('LocalGameWrapperComponent', () => {
         const drawIndicator: DebugElement = debugElement.query(By.css('#draw'));
         expect(drawIndicator).toBeTruthy('Draw indicator should be present');
     }));
-    it('should show score if needed', fakeAsync(async () => {
+    it('should show score if needed', fakeAsync(async() => {
         AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
         fixture.detectChanges();
         tick(1);
-        expect(await clickElement('#scoreIndicator')).toBeFalsy();
+        expect(await clickElement('#scoreZero')).toBeFalsy();
+        expect(await clickElement('#scoreOne')).toBeFalsy();
         component.gameComponent.showScore = true;
         component.gameComponent['scores'] = [0, 0];
         fixture.detectChanges();
-        expect(await clickElement('#scoreIndicator')).toBeTrue();
+        expect(await clickElement('#scoreZero')).toBeTrue();
+        expect(await clickElement('#scoreOne')).toBeTrue();
     }));
 });
