@@ -1,3 +1,4 @@
+import { assert, JSONValue } from '../utils/collection-lib/utils';
 import { Coord } from './coord/Coord';
 import { Encoder } from './encoder';
 
@@ -133,10 +134,11 @@ export class Direction extends BaseDirection {
         };
     public static readonly DIRECTIONS: ReadonlyArray<Direction> = Direction.factory.all;
     public static readonly encoder: Encoder<Direction> =
-        Encoder.of(7, (dir: Direction) => {
-            return dir.toInt();
-        }, (n: number) => {
-            return Direction.factory.fromInt(n);
+        Encoder.of((dir: Direction) => {
+            return dir.toString();
+        }, (encoded: JSONValue) => {
+            assert(typeof encoded === 'string', 'Invalid encoded direction');
+            return Direction.factory.fromString(encoded as string);
         });
     private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
         super();
@@ -173,10 +175,11 @@ export class Orthogonal extends BaseDirection {
         };
     public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = Orthogonal.factory.all;
     public static readonly encoder: Encoder<Orthogonal> =
-        Encoder.of(7, (dir: Orthogonal) => {
-            return dir.toInt();
-        }, (n: number) => {
-            return Orthogonal.factory.fromInt(n);
+        Encoder.of((dir: Orthogonal) => {
+            return dir.toString();
+        }, (encoded: JSONValue) => {
+            assert(typeof encoded === 'string', 'Invalid encoded orthogonal direction');
+            return Orthogonal.factory.fromString(encoded as string);
         });
 
     private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {

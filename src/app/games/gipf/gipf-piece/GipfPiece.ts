@@ -1,16 +1,16 @@
-import { Encoder } from 'src/app/jscaip/encoder';
+import { NumberEncoder } from 'src/app/jscaip/encoder';
 import { Player } from 'src/app/jscaip/player/Player';
 
 export class GipfPiece {
-    public static encoder: Encoder<GipfPiece> = new class extends Encoder<GipfPiece> {
+    public static encoder: NumberEncoder<GipfPiece> = new class extends NumberEncoder<GipfPiece> {
         public maxValue(): number {
             // Double piece of player 1 is encoded into 3
             return 2;
         }
-        public encode(piece: GipfPiece): number {
+        public encodeNumber(piece: GipfPiece): number {
             return piece.player.value;
         }
-        public decode(encoded: number): GipfPiece {
+        public decodeNumber(encoded: number): GipfPiece {
             const player: Player = Player.of(encoded);
             return GipfPiece.ofPlayer(player);
         }

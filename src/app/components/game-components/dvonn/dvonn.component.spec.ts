@@ -19,6 +19,7 @@ import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { expectClickSuccess, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { Player } from 'src/app/jscaip/player/Player';
+import { JSONValue } from 'src/app/utils/collection-lib/utils';
 
 const activatedRouteStub = {
     snapshot: {
@@ -166,7 +167,7 @@ describe('DvonnComponent', () => {
     it('should delegate decoding to move', () => {
         const moveSpy: jasmine.Spy = spyOn(DvonnMove, 'decode').and.callThrough();
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
-        const encoded: number = testElements.gameComponent.encodeMove(move);
+        const encoded: JSONValue = testElements.gameComponent.encodeMove(move);
         testElements.gameComponent.decodeMove(encoded);
         expect(moveSpy).toHaveBeenCalledTimes(1);
     });

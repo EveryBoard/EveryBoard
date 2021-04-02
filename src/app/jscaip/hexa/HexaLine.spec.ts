@@ -53,7 +53,7 @@ describe('HexaLine', () => {
         });
     });
     describe('getEntrance', () => {
-        const board: HexaBoard<number> = HexaBoard.empty(7, 7, [3, 2, 1], 0, Encoder.numberEncoder(100));
+        const board: HexaBoard<number> = HexaBoard.empty(7, 7, [3, 2, 1], 0);
         it('should return the correct entrance for lines with a constant q', () => {
             const line1: HexaLine = HexaLine.constantQ(0);
             expect(line1.getEntrance(board).equals(new Coord(0, 3))).toBeTrue();

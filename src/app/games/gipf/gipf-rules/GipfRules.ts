@@ -1,5 +1,4 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
 import { FlatHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
@@ -13,6 +12,7 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { GipfLegalityStatus } from '../gipf-legality-status/GipfLegalityStatus';
+import { GipfBoard } from '../gipf-move/GipfBoard';
 import { GipfCapture, GipfMove, GipfPlacement } from '../gipf-move/GipfMove';
 import { GipfPartSlice } from '../gipf-part-slice/GipfPartSlice';
 import { GipfPiece } from '../gipf-piece/GipfPiece';
@@ -242,7 +242,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
     public applyCapture(slice: GipfPartSlice, capture: GipfCapture): GipfPartSlice {
         const player: Player = slice.getCurrentPlayer();
-        let board: HexaBoard<GipfPiece> = slice.hexaBoard;
+        let board: GipfBoard = slice.hexaBoard;
         const sidePieces: [number, number] = [slice.sidePieces[0], slice.sidePieces[1]];
         const capturedPieces: [number, number] = [slice.capturedPieces[0], slice.capturedPieces[1]];
         capture.forEach((coord: Coord) => {
@@ -284,7 +284,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
     public applyPlacement(slice: GipfPartSlice, placement: GipfPlacement): GipfPartSlice {
         const player: Player = slice.getCurrentPlayer();
-        let board: HexaBoard<GipfPiece> = slice.hexaBoard;
+        let board: GipfBoard = slice.hexaBoard;
         let prevPiece: GipfPiece = GipfPiece.ofPlayer(slice.getCurrentPlayer());
         if (placement.direction.isAbsent()) {
             // Only valid if there is an empty spot

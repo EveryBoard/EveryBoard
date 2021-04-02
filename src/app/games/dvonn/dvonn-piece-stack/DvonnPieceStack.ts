@@ -1,26 +1,26 @@
 import { Player } from 'src/app/jscaip/player/Player';
-import { Encoder } from 'src/app/jscaip/encoder';
+import { NumberEncoder } from 'src/app/jscaip/encoder';
 
 export class DvonnPieceStack {
-    public static sizeEncoder: Encoder<number> = Encoder.numberEncoder(49);
-    public static encoder: Encoder<DvonnPieceStack> = new class extends Encoder<DvonnPieceStack> {
+    public static sizeEncoder: NumberEncoder<number> = NumberEncoder.numberEncoder(49);
+    public static encoder: NumberEncoder<DvonnPieceStack> = new class extends NumberEncoder<DvonnPieceStack> {
         public maxValue(): number {
             return (DvonnPieceStack.sizeEncoder.maxValue() *
-                Player.encoder.shift() * Player.encoder.maxValue() *
-                Encoder.booleanEncoder.shift() * Encoder.booleanEncoder.maxValue());
+                Player.numberEncoder.shift() * Player.numberEncoder.maxValue() *
+                NumberEncoder.booleanEncoder.shift() * NumberEncoder.booleanEncoder.maxValue());
         }
-        public encode(stack: DvonnPieceStack): number {
-            return ((DvonnPieceStack.sizeEncoder.encode(stack.size) *
-                Player.encoder.shift() + Player.encoder.encode(stack.owner)) *
-                Encoder.booleanEncoder.shift() + Encoder.booleanEncoder.encode(stack.source));
+        public encodeNumber(stack: DvonnPieceStack): number {
+            return ((DvonnPieceStack.sizeEncoder.encodeNumber(stack.size) *
+                Player.numberEncoder.shift() + Player.numberEncoder.encodeNumber(stack.owner)) *
+                NumberEncoder.booleanEncoder.shift() + NumberEncoder.booleanEncoder.encodeNumber(stack.source));
         }
-        public decode(encoded: number): DvonnPieceStack {
-            const sourceN: number = encoded % Encoder.booleanEncoder.shift();
-            encoded = (encoded - sourceN) / Encoder.booleanEncoder.shift();
-            const playerN: number = encoded % Player.encoder.shift();
-            encoded = (encoded - playerN) / Player.encoder.shift();
+        public decodeNumber(encoded: number): DvonnPieceStack {
+            const sourceN: number = encoded % NumberEncoder.booleanEncoder.shift();
+            encoded = (encoded - sourceN) / NumberEncoder.booleanEncoder.shift();
+            const playerN: number = encoded % Player.numberEncoder.shift();
+            encoded = (encoded - playerN) / Player.numberEncoder.shift();
             const size: number = encoded;
-            return new DvonnPieceStack(Player.of(playerN), size, Encoder.booleanEncoder.decode(sourceN));
+            return new DvonnPieceStack(Player.of(playerN), size, NumberEncoder.booleanEncoder.decode(sourceN));
         }
     }
     public static MAX_SIZE: number = 49; // The maximal possible size for a stack
@@ -38,7 +38,7 @@ export class DvonnPieceStack {
                 public readonly source: boolean) {
     }
     public getValue(): number {
-        return DvonnPieceStack.encoder.encode(this);
+        return DvonnPieceStack.encoder.encodeNumber(this);
     }
     public getOwner(): Player {
         return this.owner;

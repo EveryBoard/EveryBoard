@@ -1,4 +1,6 @@
+import { assert, JSONValue } from 'src/app/utils/collection-lib/utils';
 import { BaseDirection, DirectionFactory } from '../Direction';
+import { Encoder } from '../encoder';
 
 /** Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons */
 export class HexaDirection extends BaseDirection {
@@ -19,6 +21,14 @@ export class HexaDirection extends BaseDirection {
                 HexaDirection.DOWN,
             ];
         };
+    public static readonly encoder: Encoder<HexaDirection> =
+        Encoder.of((dir: HexaDirection) => {
+            return dir.toString();
+        }, (encoded: JSONValue) => {
+            assert(typeof encoded === 'string', 'Invalid encoded HexaDirection');
+            return HexaDirection.factory.fromString(encoded as string);
+        });
+
     private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
         super();
     }

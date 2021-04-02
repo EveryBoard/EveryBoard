@@ -1,7 +1,20 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
+import { assert, JSONObject, JSONValue } from 'src/app/utils/collection-lib/utils';
 import { Comparable } from '../../utils/collection-lib/Comparable';
+import { Encoder } from '../encoder';
 
 export class Coord implements Comparable {
+    public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {
+        public encode(coord: Coord): JSONValue {
+            return { x: coord.x, y: coord.y };
+        }
+        public decode(encoded: JSONValue): Coord {
+            const casted: JSONObject = encoded as JSONObject;
+            assert(casted.x != null && typeof casted.x === 'number' &&
+                casted.y != null && typeof casted.y === 'number', 'Invalid encoded coord');
+            return new Coord(casted.x as number, casted.y as number);
+        }
+    }
 
     public static equals(a: Coord, b: Coord): boolean {
         return a.equals(b);

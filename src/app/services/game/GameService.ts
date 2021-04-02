@@ -13,7 +13,7 @@ import { IChat } from '../../domain/ichat';
 import { IMGPRequest, RequestCode } from '../../domain/request';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display, JSONValue } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Injectable({
@@ -231,7 +231,7 @@ export class GameService {
     }
     public async updateDBBoard(
         partId: string,
-        encodedMove: number,
+        encodedMove: JSONValue,
         scorePlayerZero: number,
         scorePlayerOne: number,
         notifyDraw?: boolean,
@@ -242,7 +242,7 @@ export class GameService {
 
         const part: ICurrentPart = await this.partDao.read(partId); // TODO: optimise this
         const turn: number = part.turn + 1;
-        const listMoves: number[] = ArrayUtils.copyImmutableArray(part.listMoves);
+        const listMoves: JSONValue[] = ArrayUtils.copyImmutableArray(part.listMoves);
         listMoves[listMoves.length] = encodedMove;
         const update: PICurrentPart = {
             listMoves,

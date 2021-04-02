@@ -19,7 +19,7 @@ import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { assert, display } from 'src/app/utils/collection-lib/utils';
+import { assert, display, JSONValue } from 'src/app/utils/collection-lib/utils';
 import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/object-utils/ObjectUtils';
 
 export class UpdateType {
@@ -182,7 +182,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId): void {
         const part: ICurrentPart = updatedICurrentPart.doc;
-        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
+        display(OnlineGameWrapperComponent.VERBOSE || true, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
             then: updatedICurrentPart.doc,
             before_part_turn: part.turn,
@@ -314,7 +314,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             assert(false, 'Should not be here');
         }
     }
-    public notifyDraw(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number): void {
+    public notifyDraw(encodedMove: JSONValue, scorePlayerZero: number, scorePlayerOne: number): void {
         this.endGame = true;
         this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, true);
     }
@@ -328,7 +328,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
 
         this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer);
     }
-    public notifyVictory(encodedMove: number, scorePlayerZero: number, scorePlayerOne: number): void {
+    public notifyVictory(encodedMove: JSONValue, scorePlayerZero: number, scorePlayerOne: number): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
         let winner: string;
         if (this.gameComponent.rules.node.ownValue === Number.MAX_SAFE_INTEGER) {
@@ -489,7 +489,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public async updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
-        const encodedMove: number = this.gameComponent.encodeMove(move);
+        const encodedMove: JSONValue = this.gameComponent.encodeMove(move);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
         this.gameComponent.rules.choose(move);

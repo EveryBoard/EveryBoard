@@ -1,5 +1,4 @@
 import { Coord } from '../coord/Coord';
-import { Encoder } from '../encoder';
 import { HexaBoard } from './HexaBoard';
 import { FlatHexaOrientation } from './HexaOrientation';
 
@@ -8,7 +7,7 @@ describe('PointyHexaOrientation', () => {
 
 describe('FlatHexaOrientation', () => {
     describe('on a 7x5 board', () => {
-        const board: HexaBoard<number> = HexaBoard.empty(7, 5, [2, 1], 0, Encoder.numberEncoder(100));
+        const board: HexaBoard<number> = HexaBoard.empty(7, 5, [2, 1], 0);
         it('should consider (2, 0) to be the on the top left, top right border, and the top corner', () => {
             const coord: Coord = new Coord(2, 0);
             expect(FlatHexaOrientation.INSTANCE.isOnTopLeftBorder(board, coord)).toBeTrue();

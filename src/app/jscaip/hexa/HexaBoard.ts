@@ -1,42 +1,36 @@
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from '../coord/Coord';
-import { Encoder } from '../encoder';
 import { HexaLine } from './HexaLine';
 
 /** An hexagonal board encoding,
     inspired by the description on this page: https://www.redblobgames.com/grids/hexagons/#map-storage */
-
 export class HexaBoard<T> {
     public static empty<T>(width: number,
                            height: number,
                            excludedCases: ReadonlyArray<number>,
-                           empty: T,
-                           encoder: Encoder<T>): HexaBoard<T> {
+                           empty: T): HexaBoard<T> {
         return new HexaBoard(ArrayUtils.createBiArray(width, height, empty),
                              width,
                              height,
                              excludedCases,
-                             empty,
-                             encoder);
+                             empty);
     }
     public static fromTable<T>(table: Table<T>,
                                excludedCases: ReadonlyArray<number>,
-                               empty: T,
-                               encoder: Encoder<T>): HexaBoard<T> {
+                               empty: T): HexaBoard<T> {
         const height: number = table.length;
         if (height === 0) {
             throw new Error('Cannot create an HexaBoard from an empty table.');
         }
         const width: number = table[0].length;
-        return new HexaBoard(table, width, height, excludedCases, empty, encoder);
+        return new HexaBoard(table, width, height, excludedCases, empty);
     }
 
     public constructor(public readonly contents: Table<T>,
                        public readonly width: number,
                        public readonly height: number,
                        public readonly excludedCases: ReadonlyArray<number>,
-                       public readonly empty: T,
-                       public readonly encoder: Encoder<T>) {
+                       public readonly empty: T) {
         if (this.excludedCases.length >= this.height/2) {
             throw new Error('Invalid excluded cases specification for HexaBoard.');
         }
@@ -47,7 +41,6 @@ export class HexaBoard<T> {
         if (this.height !== other.height) return false;
         if (equalT(this.empty, other.empty) === false) return false;
         // TODO: check excludedCases
-        if (this.encoder !== other.encoder) return false;
         for (const coord of this.allCoords()) {
             if (equalT(this.getAtUnsafe(coord), other.getAtUnsafe(coord)) === false) return false;
         }
@@ -63,17 +56,17 @@ export class HexaBoard<T> {
             throw new Error('Accessing coord not on hexa board: ' + coord + '.');
         }
     }
-    public setAt(coord: Coord, v: T): HexaBoard<T> {
+    protected setAtUnsafe(coord: Coord, v: T): this {
+        const contents: T[][] = ArrayUtils.copyBiArray(this.contents);
+        contents[coord.y][coord.x] = v;
+        return new HexaBoard(contents, this.width, this.height, this.excludedCases, this.empty) as this;
+    }
+    public setAt(coord: Coord, v: T): this {
         if (this.isOnBoard(coord)) {
-            const contents: T[][] = ArrayUtils.copyBiArray(this.contents);
-            contents[coord.y][coord.x] = v;
-            return new HexaBoard(contents, this.width, this.height, this.excludedCases, this.empty, this.encoder);
+            return this.setAtUnsafe(coord, v);
         } else {
             throw new Error('Setting coord not on hexa board: ' + coord + '.');
         }
-    }
-    public toNumberTable(): NumberTable {
-        return ArrayUtils.mapBiArray(this.contents, this.encoder.encode);
     }
     public forEachCoord(callback: (coord: Coord, content: T) => void): void {
         for (let y: number = 0; y < this.height; y++) {

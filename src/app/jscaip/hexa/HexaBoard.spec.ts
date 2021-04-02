@@ -5,36 +5,35 @@ import { HexaBoard } from './HexaBoard';
 import { HexaLine } from './HexaLine';
 
 describe('HexaBoard', () => {
-    const numEncoder: Encoder<number> = Encoder.numberEncoder(100);
     function numCompare(x: number, y: number): boolean {
         return x === y;
     }
     let board: HexaBoard<number>;
     beforeEach(() => {
-        board = HexaBoard.empty(7, 7, [3, 2, 1], 0, numEncoder);
+        board = HexaBoard.empty(7, 7, [3, 2, 1], 0);
     });
     describe('empty', () => {
         it('should create empty boards with empty cells', () => {
             expect(board.getAt(new Coord(2, 2))).toEqual(0);
         });
         it('should support rectangular boards', () => {
-            const board: HexaBoard<number> = HexaBoard.empty(3, 7, [1], 0, numEncoder);
+            const board: HexaBoard<number> = HexaBoard.empty(3, 7, [1], 0);
             expect(board).toBeTruthy();
         });
         xit('should support even-sized boards', () => {
-            const board: HexaBoard<number> = HexaBoard.empty(4, 8, [1], 0, numEncoder);
+            const board: HexaBoard<number> = HexaBoard.empty(4, 8, [1], 0);
             expect(board).toBeTruthy();
         });
         it('should throw when excluded case specification is incorrect', () => {
-            expect(() => HexaBoard.empty(7, 7, [1, 1, 1, 1, 1], 0, numEncoder)).toThrow();
+            expect(() => HexaBoard.empty(7, 7, [1, 1, 1, 1, 1], 0)).toThrow();
         });
     });
     describe('fromTable', () => {
         it('should throw when called with an empty table', () => {
-            expect(() => HexaBoard.fromTable([], [], 0, numEncoder)).toThrow();
+            expect(() => HexaBoard.fromTable([], [], 0)).toThrow();
         });
         it('should compute the width and height from the table', () => {
-            const board: HexaBoard<number> = HexaBoard.fromTable([[0, 0, 0]], [], 0, numEncoder);
+            const board: HexaBoard<number> = HexaBoard.fromTable([[0, 0, 0]], [], 0);
             expect(board.width).toBe(3);
             expect(board.height).toBe(1);
         });
@@ -51,23 +50,18 @@ describe('HexaBoard', () => {
             expect(board1.equals(board2, numCompare)).toBeFalse();
         });
         it('should distinguish different boards due to different width', () => {
-            const board1: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0, numEncoder);
-            const board2: HexaBoard<number> = HexaBoard.empty(5, 3, [1], 0, numEncoder);
+            const board1: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0);
+            const board2: HexaBoard<number> = HexaBoard.empty(5, 3, [1], 0);
             expect(board1.equals(board2, numCompare)).toBeFalse();
         });
         it('should distinguish different boards due to different width', () => {
-            const board1: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0, numEncoder);
-            const board2: HexaBoard<number> = HexaBoard.empty(3, 5, [1], 0, numEncoder);
-            expect(board1.equals(board2, numCompare)).toBeFalse();
-        });
-        it('should distinguish different boards due to different encoders', () => {
-            const board1: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0, numEncoder);
-            const board2: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0, Encoder.numberEncoder(5));
+            const board1: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0);
+            const board2: HexaBoard<number> = HexaBoard.empty(3, 5, [1], 0);
             expect(board1.equals(board2, numCompare)).toBeFalse();
         });
         it('should distinguish different boards due to different empty coords', () => {
-            const board1: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0, numEncoder);
-            const board2: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 1, numEncoder);
+            const board1: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 0);
+            const board2: HexaBoard<number> = HexaBoard.empty(3, 3, [1], 1);
             expect(board1.equals(board2, numCompare)).toBeFalse();
         });
     });
@@ -76,7 +70,7 @@ describe('HexaBoard', () => {
             expect(() => board.getAt(new Coord(10, 5))).toThrow();
         });
         it('should return the right content', () => {
-            const board: HexaBoard<number> = HexaBoard.fromTable([[0, 1, 0]], [], 0, numEncoder);
+            const board: HexaBoard<number> = HexaBoard.fromTable([[0, 1, 0]], [], 0);
             expect(board.getAt(new Coord(1, 0))).toBe(1);
         });
     });
@@ -108,14 +102,6 @@ describe('HexaBoard', () => {
             expect(board.isOnBoard(new Coord(3, -3))).toBeFalse();
             expect(board.isOnBoard(new Coord(0, 0))).toBeFalse();
             expect(board.isOnBoard(new Coord(0, 8))).toBeFalse();
-        });
-    });
-    describe('toNumberTable', () => {
-        it('should convert to a NumberTable using the encoder', () => {
-            const encodeSpy: jasmine.Spy = spyOn(numEncoder, 'encode').and.callThrough();
-            const table: Table<number> = board.toNumberTable();
-            expect(table[3][3]).toBe(0);
-            expect(encodeSpy).toHaveBeenCalledTimes(49);
         });
     });
     describe('allLines', () => {

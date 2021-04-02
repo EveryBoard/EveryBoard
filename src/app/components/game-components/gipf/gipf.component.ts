@@ -13,6 +13,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { JSONValue } from 'src/app/utils/collection-lib/utils';
 
 export class Arrow {
     public constructor(public readonly source: Coord,
@@ -86,10 +87,10 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
             this.captured.push(c);
         });
     }
-    public decodeMove(encodedMove: number): GipfMove {
+    public decodeMove(encodedMove: JSONValue): GipfMove {
         return GipfMove.encoder.decode(encodedMove);
     }
-    public encodeMove(move: GipfMove): number {
+    public encodeMove(move: GipfMove): JSONValue {
         return GipfMove.encoder.encode(move);
     }
     public getAllCoords(): Coord[] {

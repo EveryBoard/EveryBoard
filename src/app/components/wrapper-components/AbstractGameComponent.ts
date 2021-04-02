@@ -7,6 +7,7 @@ import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
+import { JSONValue } from 'src/app/utils/collection-lib/utils';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -67,9 +68,9 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     public cancelMoveAttempt(): void {
         // Override if need be
     }
-    public abstract decodeMove(encodedMove: number): Move;
+    public abstract decodeMove(encodedMove: JSONValue): Move;
 
-    public abstract encodeMove(move: Move): number;
+    public abstract encodeMove(move: Move): JSONValue;
 
     public abstract updateBoard(): void;
 

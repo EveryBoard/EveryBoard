@@ -1,7 +1,7 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { GipfBoard } from '../gipf-move/GipfBoard';
 import { GipfPiece } from '../gipf-piece/GipfPiece';
 
 export class GipfPartSlice extends GamePartSlice {
@@ -18,10 +18,10 @@ export class GipfPartSlice extends GamePartSlice {
             [_, _, _, _, _, _, _],
             [X, _, _, O, _, _, _],
         ];
-        const hexaBoard: HexaBoard<GipfPiece> = HexaBoard.fromTable(board, [3, 2, 1], _, GipfPiece.encoder);
+        const hexaBoard: GipfBoard = GipfBoard.of(board);
         return new GipfPartSlice(hexaBoard, 0, [12, 12], [0, 0]);
     }
-    public constructor(public hexaBoard: HexaBoard<GipfPiece>,
+    public constructor(public hexaBoard: GipfBoard,
                        turn: number,
                        public sidePieces: [number, number],
                        public capturedPieces: [number, number]) {
