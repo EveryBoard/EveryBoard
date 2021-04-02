@@ -133,7 +133,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     public getBoardValue(move: KamisadoMove, slice: KamisadoPartSlice): number {
         const player: Player = slice.getCurrentPlayer();
         if (this.canOnlyPass(slice) && slice.alreadyPassed) {
-            return player === Player.ZERO ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
+            return player.getVictoryValue();
         }
         let furthest0: number = 7; // player 0 goes from bottom (7) to top (0)
         let furthest1: number = 0; // player 1 goes from top (0) to bottom (7)

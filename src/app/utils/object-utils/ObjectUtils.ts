@@ -56,7 +56,9 @@ export const getDiff: (before: { [key: string]: any }, after: { [key: string]: a
                 if (before[commonKey].length === after[commonKey].length) {
                     let equal: boolean = true;
                     for (let i: number = 0; equal && i < before[commonKey]['length']; i++) {
-                        if (after[commonKey][i] !== before[commonKey][i]) {
+                        const elementDiff: ObjectDifference = getDiff(before[commonKey][i], after[commonKey][i]);
+                        const nbDiff: number = getDiffChangesNumber(elementDiff);
+                        if (nbDiff > 0) {
                             equal = false;
                             changes.modified[commonKey] = after ? after[commonKey] : after;
                         }
