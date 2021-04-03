@@ -14,13 +14,13 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 export class KamisadoFailure {
-    public static CANT_PASS: string = `Vous n'êtes pas autorisé à passer, vous pouvez toujours vous déplacer`;
-    public static NOT_PIECE_OF_PLAYER: string = `Ce n'est pas une de vos pièces`;
-    public static NOT_RIGHT_COLOR: string = `La pièce n'est pas de la couleur à jouer`;
-    public static END_CASE_NOT_EMPTY: string = `La case de fin du déplacement n'est pas vide`;
-    public static DIRECTION_NOT_ALLOWED: string = `Vous ne pouvez pas vous déplacer dans cette direction`;
-    public static MOVE_BLOCKED: string = `Ce mouvement est obstrué`;
-    public static INVALID_DIRECTION: string = `La direction de ce déplacement est invalide`;
+    public static CANT_PASS: string = `Vous n'êtes pas autorisé à passer, vous pouvez toujours vous déplacer.`;
+    public static NOT_PIECE_OF_PLAYER: string = `Choisissez une de vos pièces.`;
+    public static NOT_RIGHT_COLOR: string = `La pièce n'est pas de la couleur à jouer.`;
+    public static END_CASE_NOT_EMPTY: string = `Vous devez vous déplacer vers une case vide.`;
+    public static DIRECTION_NOT_ALLOWED: string =
+        `Vous ne pouvez pas vous déplacer que vers l'avant orthogonalement ou diagonalement.`;
+    public static MOVE_BLOCKED: string = `Ce mouvement est obstrué.`;
     public static GAME_ENDED: string = `La partie est finie`
 }
 
@@ -232,7 +232,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                 }
             }
         } catch (e) {
-            return { legal: MGPValidation.failure(KamisadoFailure.INVALID_DIRECTION) };
+            return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
         }
         return { legal: MGPValidation.SUCCESS };
     }
