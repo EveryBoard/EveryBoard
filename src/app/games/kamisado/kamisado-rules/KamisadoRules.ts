@@ -21,10 +21,10 @@ export class KamisadoFailure {
     public static DIRECTION_NOT_ALLOWED: string =
         `Vous ne pouvez pas vous déplacer que vers l'avant orthogonalement ou diagonalement.`;
     public static MOVE_BLOCKED: string = `Ce mouvement est obstrué.`;
-    public static GAME_ENDED: string = `La partie est finie`
+    public static GAME_ENDED: string = `La partie est finie.`
 }
 
-abstract class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> { }
+export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> { }
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
     public getColorMatchingPiece(slice: KamisadoPartSlice): Array<Coord> {
@@ -135,8 +135,21 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         if (this.canOnlyPass(slice) && slice.alreadyPassed) {
             return player.getVictoryValue();
         }
+
+        const [furthest0, furthest1]: [number, number] = this.getFurthestPiecePositions(slice);
+        // Board value is how far my piece is - how far my opponent piece is, except in case of victory
+        if (furthest1 === 7) {
+            return Number.MAX_SAFE_INTEGER;
+        } else if (furthest0 === 0) {
+            return Number.MIN_SAFE_INTEGER;
+        } else {
+            return furthest1 - (7 - furthest0);
+        }
+    }
+    private getFurthestPiecePositions(slice: KamisadoPartSlice): [number, number] {
         let furthest0: number = 7; // player 0 goes from bottom (7) to top (0)
         let furthest1: number = 0; // player 1 goes from top (0) to bottom (7)
+
         KamisadoBoard.allPieceCoords(slice.board).forEach((c: Coord) => {
             const piece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, c);
             if (piece !== KamisadoPiece.NONE) {
@@ -147,14 +160,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                 }
             }
         });
-        // Board value is how far my piece is - how far my opponent piece is, except in case of victory
-        if (furthest1 === 7) {
-            return Number.MAX_SAFE_INTEGER;
-        } else if (furthest0 === 0) {
-            return Number.MIN_SAFE_INTEGER;
-        } else {
-            return furthest1 - (7 - furthest0);
-        }
+        return [furthest0, furthest1];
     }
     // Returns the next coord that plays
     public nextCoordToPlay(slice: KamisadoPartSlice, colorToPlay: KamisadoColor): MGPOptional<Coord> {
@@ -202,6 +208,10 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             }
         }
 
+        if (this.isVictory(slice)) {
+            return { legal: MGPValidation.failure(KamisadoFailure.GAME_ENDED) };
+        }
+
         // A move is legal if:
         //   - the move is within the board (this has been checked when constructing the move)
         //   - start piece should be owned by the current player
@@ -235,5 +245,9 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
             return { legal: MGPValidation.failure(KamisadoFailure.DIRECTION_NOT_ALLOWED) };
         }
         return { legal: MGPValidation.SUCCESS };
+    }
+    private isVictory(slice: KamisadoPartSlice): boolean {
+        const [furthest0, furthest1]: [number, number] = this.getFurthestPiecePositions(slice);
+        return furthest0 === 0 || furthest1 === 7;
     }
 }

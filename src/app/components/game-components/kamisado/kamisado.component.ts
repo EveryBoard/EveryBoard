@@ -52,7 +52,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         this.lastMove = this.rules.node.move;
 
         this.canPass = this.rules.canOnlyPass(slice);
-        this.cancelMove();
+        this.cancelMoveAttempt();
         if (this.canPass || slice.coordToPlay.isAbsent()) {
             this.chosenAutomatically = false;
             this.chosen = new Coord(-1, -1);
@@ -75,7 +75,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         }
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);
-        } else if (x === this.chosen.x && y === this.chosen.y) {
+        } else if (this.chosenAutomatically === false && x === this.chosen.x && y === this.chosen.y) {
             // user selected the already-selected piece
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
