@@ -1,5 +1,4 @@
 import { P4Node, P4Rules } from './P4Rules';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { Player } from 'src/app/jscaip/player/Player';
 import { P4PartSlice } from '../P4PartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -12,9 +11,6 @@ describe('P4Rules', () => {
     const X: number = Player.ONE.value;
     const _: number = Player.NONE.value;
 
-    beforeAll(() => {
-        P4Rules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || P4Rules.VERBOSE;
-    });
     beforeEach(() => {
         rules = new P4Rules(P4PartSlice);
     });

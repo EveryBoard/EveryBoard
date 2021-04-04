@@ -3,7 +3,6 @@ import { TablutMove } from '../tablut-move/TablutMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutPartSlice } from '../TablutPartSlice';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { TablutCase } from './TablutCase';
 import { Player } from 'src/app/jscaip/player/Player';
 import { TablutLegalityStatus } from '../TablutLegalityStatus';
@@ -15,9 +14,6 @@ describe('TablutRules', () => {
     const i: number = TablutCase.DEFENDERS.value;
     const A: number = TablutCase.PLAYER_ONE_KING.value;
 
-    beforeAll(() => {
-        TablutRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || TablutRules.VERBOSE;
-    });
     beforeEach(() => {
         rules = new TablutRules(TablutPartSlice);
     });

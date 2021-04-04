@@ -4,7 +4,6 @@ import { GameService } from './GameService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { of } from 'rxjs';
 import { ICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
@@ -20,9 +19,6 @@ describe('GameService', () => {
 
     let partDao: PartDAO;
 
-    beforeAll(() => {
-        GameService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || GameService.VERBOSE;
-    });
     beforeEach(() => {
         TestBed.configureTestingModule({
             providers: [
@@ -58,7 +54,7 @@ describe('GameService', () => {
         service.deletePart('partId');
         expect(partDao.delete).toHaveBeenCalled();
     });
-    it('should forbid to accept a take back that the player proposed himself', async () => {
+    it('should forbid to accept a take back that the player proposed himself', async() => {
         const part: ICurrentPart = {
             typeGame: 'Quarto',
             playerZero: 'creator',

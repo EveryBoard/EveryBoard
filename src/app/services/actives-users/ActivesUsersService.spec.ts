@@ -1,15 +1,11 @@
 import { ActivesUsersService } from './ActivesUsersService';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { IJoueurId } from 'src/app/domain/iuser';
 
 describe('ActivesUsersService', () => {
     let service: ActivesUsersService;
 
-    beforeAll(() => {
-        ActivesUsersService.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || ActivesUsersService.VERBOSE;
-    });
     beforeEach(() => {
         service = new ActivesUsersService(new JoueursDAOMock() as unknown as JoueursDAO);
     });

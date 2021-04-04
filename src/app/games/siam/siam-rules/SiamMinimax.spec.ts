@@ -1,5 +1,4 @@
 import { SiamRules, SiamNode } from './SiamRules';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { SiamPiece } from '../siam-piece/SiamPiece';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { SiamPartSlice } from '../SiamPartSlice';
@@ -19,16 +18,12 @@ describe('SiamRules - Minimax:', () => {
     const U: number = SiamPiece.WHITE_UP.value;
     const L: number = SiamPiece.WHITE_LEFT.value;
     const R: number = SiamPiece.WHITE_RIGHT.value;
-    const D: number = SiamPiece.WHITE_DOWN.value;
 
     const u: number = SiamPiece.BLACK_UP.value;
     const l: number = SiamPiece.BLACK_LEFT.value;
     const r: number = SiamPiece.BLACK_RIGHT.value;
     const d: number = SiamPiece.BLACK_DOWN.value;
 
-    beforeAll(() => {
-        SiamRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SiamRules.VERBOSE;
-    });
     beforeEach(() => {
         rules = new SiamRules(SiamPartSlice);
         MGPNode.NB_NODE_CREATED = 0; // TODO: Delete and use spy

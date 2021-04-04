@@ -3,7 +3,6 @@ import { SiamMove } from '../siam-move/SiamMove';
 import { SiamPiece } from '../siam-piece/SiamPiece';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { SiamPartSlice } from '../SiamPartSlice';
-import { INCLUDE_VERBOSE_LINE_IN_TEST } from 'src/app/app.module';
 import { SiamLegalityStatus } from '../SiamLegalityStatus';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
@@ -24,9 +23,6 @@ describe('SiamRules:', () => {
     const r: number = SiamPiece.BLACK_RIGHT.value;
     const d: number = SiamPiece.BLACK_DOWN.value;
 
-    beforeAll(() => {
-        SiamRules.VERBOSE = INCLUDE_VERBOSE_LINE_IN_TEST || SiamRules.VERBOSE;
-    });
     beforeEach(() => {
         rules = new SiamRules(SiamPartSlice);
     });
