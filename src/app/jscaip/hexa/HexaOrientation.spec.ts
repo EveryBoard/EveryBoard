@@ -68,24 +68,22 @@ describe('FlatHexaOrientation', () => {
             expect(FlatHexaOrientation.INSTANCE.isOnTopRightBorder(board, coord)).toBeTrue();
             expect(FlatHexaOrientation.INSTANCE.isTopRightCorner(board, coord)).toBeTrue();
         });
-        // TODO
-//             describe('isOnBorder', () => {
-//         it('should detect when a coord is on the border', () => {
-//             expect(board.isOnBorder(new Coord(-3, 1))).toBeTrue();
-//             expect(board.isOnBorder(new Coord(0, -3))).toBeTrue();
-//             expect(board.isOnBorder(new Coord(-2, -1))).toBeTrue();
-//         });
-//         it('should detect when a coord is not on the border', () => {
-//             expect(board.isOnBorder(new Coord(-2, 0))).toBeFalse();
-//             expect(board.isOnBorder(new Coord(0, 0))).toBeFalse();
-//             expect(board.isOnBorder(new Coord(2, -2))).toBeFalse();
-//         });
-//     });
-//     describe('getAllBorders', () => {
-//         it('should return 18 borders for a radius of 3', () => {
-//             expect(board.getAllBorders().length).toEqual(18);
-//         });
-//     });
-
+        describe('isOnBorder', () => {
+            it('should detect when a coord is on the border', () => {
+                expect(FlatHexaOrientation.INSTANCE.isOnBorder(board, new Coord(6, 0))).toBeTrue();
+                expect(FlatHexaOrientation.INSTANCE.isOnBorder(board, new Coord(4, 4))).toBeTrue();
+                expect(FlatHexaOrientation.INSTANCE.isOnBorder(board, new Coord(2, 4))).toBeTrue();
+            });
+            it('should detect when a coord is not on the border', () => {
+                expect(FlatHexaOrientation.INSTANCE.isOnBorder(board, new Coord(1, 3))).toBeFalse();
+                expect(FlatHexaOrientation.INSTANCE.isOnBorder(board, new Coord(5, 2))).toBeFalse();
+                expect(FlatHexaOrientation.INSTANCE.isOnBorder(board, new Coord(3, 3))).toBeFalse();
+            });
+        });
+        describe('getAllBorders', () => {
+            it('should return 16 borders', () => {
+                expect(FlatHexaOrientation.INSTANCE.getAllBorders(board).length).toEqual(16);
+            });
+        });
     });
 });
