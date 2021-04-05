@@ -76,7 +76,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             if (this.chosenPiece != null) {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
-                return this.tryMove(chosenMove);
+                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             } else if (slice.getAt(clickedCoord).belongsTo(slice.getCurrentPlayer()) === false) {
                 return this.cancelMove(EncapsuleComponentFailure.INVALID_PIECE_SELECTED);
             }
@@ -86,19 +86,8 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
-                return this.tryMove(chosenMove);
-
+                return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             }
-        }
-    }
-    public async tryMove(move: EncapsuleMove): Promise<MGPValidation> {
-        // TODO: shouldn't this be checked already by chooseMove? Tests
-        // complain that chooseMove is called if we do not check it.
-        const result = this.rules.isLegal(move, this.rules.node.gamePartSlice);
-        if (result.legal.isFailure()) {
-            return this.cancelMove(result.legal.getReason());
-        } else {
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         }
     }
     public cancelMoveAttempt(): void {
