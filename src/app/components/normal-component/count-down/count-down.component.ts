@@ -60,7 +60,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
                         ' so it was called with a ' + (expectedEndTime - failedTime) + ' diff' +
                         ' after ' + (failedTime - this.startTime) + 'ms');
             this.onEndReached();
-        }, this.remainingTime);
+        }, remainingTimeOnResume);
         this.countSeconds();
     }
     private onEndReached(): void {

@@ -180,16 +180,16 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         });
         return Promise.resolve();
     }
-    protected onCurrentPartUpdate(updatedICurrentPart: ICurrentPartId): void {
-        const part: ICurrentPart = updatedICurrentPart.doc;
+    protected onCurrentPartUpdate(update: ICurrentPartId): void {
+        const part: ICurrentPart = update.doc;
         display(OnlineGameWrapperComponent.VERBOSE || true, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
-            then: updatedICurrentPart.doc,
+            then: update.doc,
             before_part_turn: part.turn,
             before_slice_turn: this.gameComponent.rules.node.gamePartSlice.turn,
             nbPlayedMoves: part.listMoves.length,
         } });
-        const updateType: UpdateType = this.getUpdateType(updatedICurrentPart.doc);
+        const updateType: UpdateType = this.getUpdateType(part);
         this.currentPart = Part.of(part);
         display(true, 'OnlineGameWrapperComponent.onCurrentPartUpdate: UpdateType.' + updateType.value);
         switch (updateType) {

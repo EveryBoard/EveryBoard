@@ -9,7 +9,6 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { assert } from 'src/app/utils/collection-lib/utils';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 
 @Component({

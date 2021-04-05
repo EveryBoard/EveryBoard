@@ -1,0 +1,21 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     [attr.viewBox]="viewBox"
+     preserveAspectRatio="xMidYMid meet">
+    <polyline *ngFor="let piece of pieces"
+              id="piece_{{ piece.x }}_{{ piece.y }}"
+              (click)="onPieceClick(piece)"
+              [attr.points]="getHexaCoordinates(piece)"
+              stroke-width="8"
+              stroke="black"
+              [attr.fill]="getPieceFill(piece)"
+              stroke-linecap="round"/>
+    <polyline *ngFor="let neighboor of neighboors"
+              id="neighboor_{{ neighboor.x }}_{{ neighboor.y }}"
+              (click)="onNeighboorClick(neighboor)"
+              [attr.points]="getHexaCoordinates(neighboor)"
+              stroke-width="8"
+              stroke="black"
+              fill="lightgrey"
+              stroke-linecap="round"/>
+</svg>

@@ -15,14 +15,13 @@ import { CoerceoComponent } from './coerceo.component';
 import {
     expectClickFail, expectClickSuccess, expectElementNotToExist, expectElementToExist, expectMoveFailure,
     expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
-import { CoerceoMove, CoerceoStep } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
+import { CoerceoMove } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/coerceo-part-slice/CoerceoPartSlice';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { CoerceoNode } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 const activatedRouteStub = {
     snapshot: {
@@ -52,7 +51,7 @@ describe('CoerceoComponent:', () => {
     const O: number = CoerceoPiece.ZERO.value;
     const X: number = CoerceoPiece.ONE.value;
 
-    function getMoveExpectation(move: CoerceoMove): MoveExpectations {
+    function getMoveExpectations(move: CoerceoMove): MoveExpectations {
         return {
             move,
             slice: testElements.gameComponent.rules.node.gamePartSlice,
@@ -117,7 +116,7 @@ describe('CoerceoComponent:', () => {
     });
     it('Should accept tiles exchange proposal as first click', fakeAsync(async() => {
         const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 9));
-        const expectations: MoveExpectations = getMoveExpectation(move);
+        const expectations: MoveExpectations = getMoveExpectations(move);
         const reason: string = CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE;
         await expectMoveFailure('#click_6_9', testElements, expectations, reason);
     }));
@@ -132,7 +131,7 @@ describe('CoerceoComponent:', () => {
     it('Should accept deplacement', fakeAsync(async() => {
         await expectClickSuccess('#click_6_2', testElements);
         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
-        const expectations: MoveExpectations = getMoveExpectation(move);
+        const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#click_7_3', testElements, expectations);
     }));
     it('Should cancelMoveAttempt without toasting when re-clicking on selected piece', fakeAsync(async() => {
