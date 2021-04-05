@@ -16,7 +16,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleFailure, EncapsuleNode } from 'src/app/games/encapsule/encapsule-rules/EncapsuleRules';
 import { Player } from 'src/app/jscaip/player/Player';
-import { expectClickFail, expectClickSuccess, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import { expectClickFail, expectClickSuccess, expectMoveSuccess, expectMoveFailure, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { EncapsulePiece } from 'src/app/games/encapsule/encapsule-piece/EncapsulePiece';
 import { Move } from 'src/app/jscaip/Move';
 
@@ -144,7 +144,9 @@ describe('EncapsuleComponent', () => {
         setupSlice(new EncapsulePartSlice(board, P0Turn, [EncapsulePiece.SMALL_BLACK]));
         await expectClickSuccess('#piece_0_SMALL_BLACK', testElements);
 
-        await expectClickFail('#click_0_1', testElements, EncapsuleFailure.INVALID_PLACEMENT);
+        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 1));
+        await expectMoveFailure('#click_0_1', testElements,
+                                expectationFromMove(move), EncapsuleFailure.INVALID_PLACEMENT);
     }));
     it('should forbid selecting a piece that is not remaining', fakeAsync(async() => {
         setupSlice(new EncapsulePartSlice(emptyBoard, P0Turn, []));
@@ -203,7 +205,9 @@ describe('EncapsuleComponent', () => {
 
         await expectClickSuccess('#click_0_1', testElements);
 
-        await expectClickFail('#click_1_1', testElements, EncapsuleFailure.INVALID_PLACEMENT);
+        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 1), new Coord(1, 1));
+        await expectMoveFailure('#click_1_1', testElements,
+                                expectationFromMove(move), EncapsuleFailure.INVALID_PLACEMENT);
     }));
     it('should detect victory', fakeAsync(async() => {
         const x: number = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE).encode();

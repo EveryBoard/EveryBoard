@@ -61,4 +61,19 @@ describe('getUpdateType', () => {
         const diff: ObjectDifference = getDiff(before, after);
         expect(diff).toEqual(expectedDiff);
     });
+    it('should handle null values', () => {
+        const before: unknown = {
+            someKey: null,
+        };
+        const after: unknown = {
+            someKey: null,
+        };
+        const expectedDiff: ObjectDifference = {
+            added: {},
+            modified: {},
+            removed: {},
+        };
+        const diff: ObjectDifference = getDiff(before, after);
+        expect(diff).toEqual(expectedDiff);
+    });
 });

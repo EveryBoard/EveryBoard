@@ -95,7 +95,7 @@ export class GipfPlacement {
         }
         public decode(encoded: JSONValue): GipfPlacement {
             const casted: JSONObject = encoded as JSONObject;
-            assert(casted.coord != null && casted.direction != null, 'Invalid encoded GipfPlacement');
+            assert(casted.coord != null, 'Invalid encoded GipfPlacement');
             return new GipfPlacement(Coord.encoder.decode(casted.coord),
                                      this.optionalDirectionEncoder.decode(casted.direction));
         }

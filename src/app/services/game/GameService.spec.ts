@@ -93,13 +93,13 @@ describe('GameService', () => {
 
         expect(service.joinerService.acceptConfig).toHaveBeenCalled();
     }));
-    xit('FUTURE_startGameWithConfig should throw when whoStart is not a value of FIRST_PLAYER enum', fakeAsync(async() => {
+    it('startGameWithConfig should throw when firstPlayer is not a value of FIRST_PLAYER enum', fakeAsync(async() => {
         const joiner: IJoiner = {
             candidatesNames: [],
             creator: 'creator',
             chosenPlayer: 'hisFriend',
             partStatus: 2,
-            whoStart: 'somethingElse',
+            firstPlayer: 'somethingElse',
         };
         spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);

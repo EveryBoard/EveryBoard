@@ -10,6 +10,11 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
+export class KamisadoComponentFailure {
+    public static PLAY_WITH_SELECTED_PIECE: string =
+        `Vous devez jouer avec la pièce déjà séléctionnée.`;
+}
+
 @Component({
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
@@ -47,7 +52,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         this.lastMove = this.rules.node.move;
 
         this.canPass = this.rules.canOnlyPass(slice);
-        this.cancelMove();
+        this.cancelMoveAttempt();
         if (this.canPass || slice.coordToPlay.isAbsent()) {
             this.chosenAutomatically = false;
             this.chosen = new Coord(-1, -1);
@@ -70,11 +75,24 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         }
         if (this.chosen.x === -1) {
             return this.choosePiece(x, y);
-        } else if (x === this.chosen.x && y === this.chosen.y) {
-            // Do nothing, the user selected the already-selected piece
+        } else if (this.chosenAutomatically === false && x === this.chosen.x && y === this.chosen.y) {
+            // user selected the already-selected piece
+            this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
         } else {
-            return await this.chooseDestination(x, y);
+            const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
+            const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
+            if (piece.belongsTo(player)) {
+                // Player clicked on another of its pieces, select it if he can
+                if (this.chosenAutomatically) {
+                    return this.cancelMove(KamisadoComponentFailure.PLAY_WITH_SELECTED_PIECE);
+                } else {
+                    this.chosen = new Coord(x, y);
+                    return MGPValidation.SUCCESS;
+                }
+            } else {
+                return await this.chooseDestination(x, y);
+            }
         }
     }
     public choosePiece(x: number, y: number): MGPValidation {

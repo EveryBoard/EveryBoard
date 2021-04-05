@@ -4,7 +4,8 @@
       preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let caseContent of line; index as x;">
-            <g (click)="onClick(x, y)">
+            <g id="click_{{ x }}_{{ y }}"
+               (click)="onClick(x, y)">
                 <!-- Background -->
                 <rect [attr.x]="x * 75"
                       [attr.y]="y * 75"
