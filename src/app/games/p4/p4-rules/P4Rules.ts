@@ -124,7 +124,9 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
             }
 
             const lineDist: number = distByDirs.get(dir) + distByDirs.get(dir.getOpposite());
-            if (lineDist >= 3) {
+            if (lineDist === 3) {
+                score += 2;
+            } else if (lineDist > 3) {
                 score += lineDist - 2;
             }
         }
