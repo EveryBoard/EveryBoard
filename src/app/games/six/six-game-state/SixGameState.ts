@@ -17,7 +17,7 @@ export class SixGameState extends GamePartSlice {
     public readonly height: number;
 
     public static getInitialSlice(): SixGameState {
-        const board: NumberTable = [[Player.ZERO.value, Player.ONE.value]];
+        const board: NumberTable = [[Player.ZERO.value], [Player.ONE.value]];
         return SixGameState.fromRepresentation(board, 0);
     }
     public static fromRepresentation(board: NumberTable, turn: number): SixGameState {
@@ -117,8 +117,8 @@ export class SixGameState extends GamePartSlice {
     }
     public deplacePiece(move: SixMove): SixGameState {
         const pieces: MGPMap<Coord, boolean> = this.pieces.getCopy();
-        pieces.delete(move.coord);
-        pieces.set(move.landing.get(), this.getCurrentPlayer() === Player.ONE);
+        pieces.delete(move.start.get());
+        pieces.set(move.landing, this.getCurrentPlayer() === Player.ONE);
         return new SixGameState(pieces, this.turn);
     }
     public getGroups(lastRemovedPiece: Coord): MGPSet<MGPSet<Coord>> {

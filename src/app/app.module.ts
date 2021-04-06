@@ -68,6 +68,7 @@ import { SaharaComponent } from './components/game-components/sahara/sahara.comp
 import { SiamComponent } from './components/game-components/siam/siam.component';
 import { TablutComponent } from './components/game-components/tablut/tablut.component';
 import { TestCountDownComponent } from './components/normal-component/test-count-down/test-count-down.component';
+import { SixComponent } from './components/game-components/six/six.component';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
@@ -130,6 +131,7 @@ const routes: Route [] = [
         SaharaComponent,
         SiamComponent,
         TablutComponent,
+        SixComponent,
     ],
     entryComponents: [
         AwaleComponent,
