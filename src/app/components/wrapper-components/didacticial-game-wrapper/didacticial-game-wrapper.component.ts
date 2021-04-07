@@ -12,6 +12,7 @@ import { DidacticialStep } from './DidacticialStep';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 import { awaleDidacticial } from './didacticials/awale-didacticial';
+import { coerceoDidacticial } from './didacticials/coerceo-didacticial';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
 import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
 import { encapsuleDidacticial } from './didacticials/encapsule-didacticial';
@@ -81,6 +82,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
         const didacticials: { [key: string]: DidacticialStep[] } = {
             Awale: awaleDidacticial,
+            Coerceo: coerceoDidacticial,
             Dvonn: dvonnDidacticial,
             Encapsule: encapsuleDidacticial,
             Epaminondas: epaminondasDidacticial,

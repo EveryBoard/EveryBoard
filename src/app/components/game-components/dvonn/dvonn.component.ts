@@ -44,7 +44,6 @@ export class DvonnComponent extends AbstractGameComponent<DvonnMove, DvonnPartSl
             this.calculateDisconnecteds();
         }
         this.canPass = this.rules.canOnlyPass(slice);
-        this.chosen = null;
         this.scores = this.rules.getScores(slice);
     }
     private calculateDisconnecteds(): void {

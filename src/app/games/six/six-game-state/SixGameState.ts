@@ -16,9 +16,11 @@ export class SixGameState extends GamePartSlice {
 
     public readonly height: number;
 
+    public readonly offset: Vector;
+
     public static getInitialSlice(): SixGameState {
         const board: NumberTable = [[Player.ZERO.value], [Player.ONE.value]];
-        return SixGameState.fromRepresentation(board, 0);
+        return SixGameState.fromRepresentation(board, 36);
     }
     public static fromRepresentation(board: NumberTable, turn: number): SixGameState {
         const pieces: MGPMap<Coord, boolean> = new MGPMap<Coord, boolean>();
@@ -39,13 +41,17 @@ export class SixGameState extends GamePartSlice {
         turn: number)
     {
         super([], turn);
-        const scale: { width: number, height: number, pieces: MGPMap<Coord, boolean> } = this.getCalculatedScale();
+        const scale: { width: number,
+                       height: number,
+                       pieces: MGPMap<Coord, boolean>,
+                       offset: Vector } = this.getCalculatedScale();
         this.pieces = scale.pieces;
         this.width = scale.width;
         this.height = scale.height;
+        this.offset = scale.offset;
         this.pieces.makeImmutable();
     }
-    public getCalculatedScale(): { width: number, height: number, pieces: MGPMap<Coord, boolean> } {
+    public getCalculatedScale(): { width: number, height: number, pieces: MGPMap<Coord, boolean>, offset: Vector } {
         let minWidth: number = 0;
         let maxWidth: number = 0;
         let minHeight: number = 0;
@@ -57,11 +63,11 @@ export class SixGameState extends GamePartSlice {
             maxHeight = Math.max(coord.y, maxHeight);
         }
         let newPieces: MGPMap<Coord, boolean> = new MGPMap<Coord, boolean>();
+        const offset: Vector = new Vector(- minWidth, - minHeight);
         if (minWidth !== 0 || minHeight !== 0) {
-            const decallage: Vector = new Vector(- minWidth, - minHeight);
             for (const coord of this.pieces.listKeys()) {
                 const oldValue: boolean = this.pieces.delete(coord);
-                const newCoord: Coord = coord.getNext(decallage);
+                const newCoord: Coord = coord.getNext(offset);
                 newPieces.set(newCoord, oldValue);
             }
         } else {
@@ -71,6 +77,7 @@ export class SixGameState extends GamePartSlice {
             width: maxWidth + 1 - minWidth,
             height: maxHeight + 1 - minHeight,
             pieces: newPieces,
+            offset,
         };
     }
     public toRepresentation(): NumberTable {

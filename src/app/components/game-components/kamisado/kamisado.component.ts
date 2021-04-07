@@ -52,7 +52,6 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         this.lastMove = this.rules.node.move;
 
         this.canPass = this.rules.canOnlyPass(slice);
-        this.cancelMoveAttempt();
         if (this.canPass || slice.coordToPlay.isAbsent()) {
             this.chosenAutomatically = false;
             this.chosen = new Coord(-1, -1);

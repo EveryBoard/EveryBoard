@@ -162,6 +162,7 @@ export abstract class GameWrapper {
             this.gameComponent.cancelMove(legality.legal.getReason());
             return legality.legal;
         }
+        this.gameComponent.cancelMoveAttempt();
         await this.onLegalUserMove(move, scorePlayerZero, scorePlayerOne);
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;

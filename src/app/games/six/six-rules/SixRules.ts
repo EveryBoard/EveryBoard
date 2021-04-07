@@ -11,6 +11,10 @@ import { SixGameState } from '../six-game-state/SixGameState';
 import { SixMove } from '../six-move/SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
 
+export class SixFailure {
+
+    public static readonly MUST_CUT: string = 'Several groups are of same size, you must pick the one to keep!';
+}
 export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus> {}
 
 export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
@@ -54,9 +58,11 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
                 for (const landing of legalLandings) {
                     const move: SixMove = SixMove.fromDeplacement(start, landing);
                     const legality: SixLegalityStatus = this.isLegalDeplacement(move, state);
-                    const resultingState: SixGameState =
-                        this.applyLegalMove(move, state, legality).resultingSlice; // TODO
-                    deplacements.put(move, resultingState);
+                    if (legality.legal.isSuccess()) { // TODO: cuttingMove
+                        const resultingState: SixGameState =
+                            this.applyLegalMove(move, state, legality).resultingSlice;
+                        deplacements.put(move, resultingState);
+                    }
                 }
             }
         }
@@ -236,8 +242,8 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
             case state.getCurrentEnnemy():
                 return { legal: MGPValidation.failure('Cannot move ennemy piece!'), kept: null };
         }
-        const stateAfterDeplacement: SixGameState = state.deplacePiece(move);
-        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterDeplacement.getGroups(move.start.get());
+        const stateAfterDeplacement: SixGameState = state.deplacePiece(move); // LELE
+        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterDeplacement.getGroups(move.start.get()); // LELE
         if (this.isSplit(groupsAfterMove)) {
             const biggerGroups: MGPSet<MGPSet<Coord>> = this.getBiggerGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
@@ -282,7 +288,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
                                state: SixGameState): SixLegalityStatus {
         if (keep.isAbsent()) {
             return {
-                legal: MGPValidation.failure('Several groups are of same size, you must pick the one to keep!'),
+                legal: MGPValidation.failure(SixFailure.MUST_CUT),
                 kept: null,
             };
         }

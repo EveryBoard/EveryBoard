@@ -41,7 +41,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
         const move: EncapsuleMove = this.rules.node.move;
-        this.cancelMoveAttempt();
 
         if (move != null) {
             this.lastLandingCoord = move.landingCoord;

@@ -114,6 +114,9 @@ describe('CoerceoComponent:', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(testElements.gameComponent).toBeTruthy('CoerceoComponent should be created');
     });
+    it('should show separation between tiles', fakeAsync(async() => {
+
+    }));
     it('Should accept tiles exchange proposal as first click', fakeAsync(async() => {
         const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 9));
         const expectations: MoveExpectations = getMoveExpectations(move);

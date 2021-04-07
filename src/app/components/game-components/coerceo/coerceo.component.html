@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 800 1000"
+     viewBox="-5 -5 810 1010"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let caseContent of line; index as x;"
@@ -11,14 +11,24 @@
                       [attr.points]="getPyramidCoordinate(x, y)"
                       [attr.fill]="getPyramidFill(caseContent)"
                       style="stroke: black; stroke-width: 5"
+                      stroke-linecap="round"
             />
             <ng-template #emptyCase>
                 <polyline *ngIf="isEmptyCase(x, y, caseContent)"
                           [attr.points]="getTriangleCoordinate(x, y)"
                           [attr.fill]="getEmptyFill(x, y, caseContent)"
-                          style="stroke:black; stroke-width: 5"
+                          style="stroke: black; stroke-width: 2"
+                          stroke-linecap="round"
                 />
             </ng-template>
+            <polyline *ngIf="caseContent !== NONE"
+                      id="line_{{ x }}_{{ y }}"
+                      [attr.points]="getLineCoordinate(x, y)"
+                      fill="none"
+                      stroke="black"
+                      stroke-width="8"
+                      stroke-linecap="round" />
+
         </g>
     </g>
     <polyline *ngFor="let hl of highlights"
