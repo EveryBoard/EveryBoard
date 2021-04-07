@@ -13,7 +13,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { expectClickSuccess, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import { expectClickSuccess, expectElementToExist, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 import { SixComponent } from './six.component';
@@ -90,13 +90,13 @@ describe('SixComponent', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(testElements.gameComponent).toBeTruthy('SixComponent should be created');
     });
-    it('Should drop before 40th turn', fakeAsync(async() => {
+    xit('Should drop before 40th turn', fakeAsync(async() => {
         testElements.fixture.detectChanges();
         const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#neighboor_0_2', testElements, expectations);
     }));
-    it('Should do deplacement after the 39th turn', fakeAsync(async() => {
+    xit('Should do deplacement after the 39th turn and show left coords', fakeAsync(async() => {
         const board: NumberTable = [
             [O, X, O],
             [_, _, X],
@@ -107,12 +107,15 @@ describe('SixComponent', () => {
         testElements.gameComponent.updateBoard();
         testElements.fixture.detectChanges();
 
+        const gameComponent: SixComponent = testElements.gameComponent as SixComponent;
         await expectClickSuccess('#piece_0_0', testElements);
+        expectElementToExist('#selectedPiece_0_0', testElements);
         const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(2, 2));
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#neighboor_2_2', testElements, expectations);
+        expect(gameComponent.getPieceFill(new Coord(1, 2))).toBe(gameComponent.MOVED_FILL);
     }));
-    xit('Should ask to cut when needed', fakeAsync(async() => {
+    xit('Should ask to cut when needed', fakeAsync(async() => { console.clear();
         const board: NumberTable = [
             [O, _, O],
             [X, _, O],
@@ -126,14 +129,19 @@ describe('SixComponent', () => {
 
         await expectClickSuccess('#piece_1_2', testElements);
         await expectClickSuccess('#neighboor_2_3', testElements);
-        const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(1, 2), new Coord(2, 3), new Coord(2, 3));
+        const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(1, 2), new Coord(2, 3), new Coord(2, 0));
         const expectations: MoveExpectations = getMoveExpectations(move);
-        await expectMoveSuccess('#neighboor_2_3', testElements, expectations);
+        await expectMoveSuccess('#piece_2_0', testElements, expectations);
     }));
-    it('Should highlight last left coord, landing coord, and disconnected coords');
-    describe('victory', () => {
-        it('should highlight winning line');
-        it('should highlight winning triangle');
-        it('should highlight winning hexagone');
+    xdescribe('victory', () => {
+        it('should highlight winning line', () => {
+            expect(false).toBeTrue();
+        });
+        it('should highlight winning triangle', () => {
+            expect(false).toBeTrue();
+        });
+        it('should highlight winning hexagone', () => {
+            expect(false).toBeTrue();
+        });
     });
 });

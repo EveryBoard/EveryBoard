@@ -18,4 +18,29 @@
               stroke="black"
               fill="lightgrey"
               stroke-linecap="round"/>
+    <polyline *ngIf="leftCoord != null"
+              id="leftCoord_{{ leftCoord.x }}_{{ leftCoord.y }}"
+              (click)="onPieceClick(leftCoord)"
+              [attr.points]="getHexaCoordinates(leftCoord)"
+              stroke-width="8"
+              stroke="black"
+              [attr.fill]="MOVED_FILL"
+              stroke-linecap="round"/>
+    <polyline *ngIf="lastDrop != null"
+              id="lastDrop_{{ lastDrop.x }}_{{ lastDrop.y }}"
+              (click)="onPieceClick(lastDrop)"
+              [attr.points]="getHexaCoordinates(lastDrop)"
+              stroke-width="8"
+              stroke="blue"
+              fill="none"
+              stroke-linecap="round"/>
+    <polyline *ngIf="selectedPiece != null"
+              id="selectedPiece_{{ selectedPiece.x }}_{{ selectedPiece.y }}"
+              (click)="onPieceClick(selectedPiece)"
+              [attr.points]="getHexaCoordinates(selectedPiece)"
+              stroke-width="8"
+              stroke="yellow"
+              fill="none"
+              stroke-linecap="round"/>
+
 </svg>

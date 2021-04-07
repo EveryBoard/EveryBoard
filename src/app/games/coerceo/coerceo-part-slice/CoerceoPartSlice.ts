@@ -174,7 +174,7 @@ export class CoerceoPartSlice extends TriangularGameState {
         let i: number = 1;
         while (i < connectedSidesIndexes.length) {
             if (connectedSidesIndexes[i - 1] === connectedSidesIndexes[i] - 1 ||
-                (connectedSidesIndexes[0] === 0 && connectedSidesIndexes[i] === 5))
+                (connectedSidesIndexes[0] === 0 && connectedSidesIndexes[connectedSidesIndexes.length - 1] === 5))
             {
                 i++;
             } else {
