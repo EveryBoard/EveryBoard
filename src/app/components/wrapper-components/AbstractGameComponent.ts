@@ -25,6 +25,9 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     public readonly CLICKABLE_STYLE: { [key: string]: string } = {
         stroke: 'yellow',
     };
+    public readonly STROKE_WIDTH: number = 8;
+    public readonly SMALL_STROKE_WIDTH: number = 2;
+
 
     public rules: Rules<M, S, L>;
 
