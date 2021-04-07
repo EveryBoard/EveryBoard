@@ -266,32 +266,21 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
 
         this.moveToInitialCaptureOrPlacementPhase();
     }
-    public getCaseStyle(coord: Coord): {[key: string]: string} {
-        return {
-            'stroke-width': '8px', // TODO: static in html, dynamic in code!
-            'fill': this.getCaseFill(coord),
-            'stroke': 'black', // TODO: static in html, dynamic in code!
-        };
-    }
-    private getCaseFill(coord: Coord): string {
+    public getCaseClass(coord: Coord): string {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return this.CAPTURED_FILL;
+            return 'captured';
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return this.MOVED_FILL;
+            return 'moved';
         } else {
-            return this.NORMAL_FILL;
+            return '';
         }
     }
-    public getPieceStyle(coord: Coord): {[key:string]: string} {
+    public getPieceClass(coord: Coord): string {
         const piece: GipfPiece = this.getPiece(coord);
-        return this.getPlayerPieceStyle(piece.player.value);
+        return this.getPlayerClass(piece.player.value);
     }
-    public getPlayerPieceStyle(player: number): {[key:string]: string} {
-        return {
-            'fill': this.getPlayerColor(Player.of(player)),
-            'stroke': 'black',
-            'stroke-width': '8px',
-        };
+    public getPlayerClass(player: number): string {
+        return 'player' + player;
     }
     public getPieceSize(): number {
         return GipfComponent.PIECE_SIZE;

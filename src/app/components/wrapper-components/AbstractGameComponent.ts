@@ -21,6 +21,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
     public readonly CAPTURED_FILL: string = 'red';
     public readonly MOVED_FILL: string = 'gray';
     public readonly NORMAL_FILL: string = 'lightgrey';
+    public readonly CLICKABLE_STROKE: string = 'yellow';
     public readonly CLICKABLE_STYLE: { [key: string]: string } = {
         stroke: 'yellow',
     };

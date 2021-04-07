@@ -6,15 +6,30 @@
         .text {
             font: 20 sans-serif;
         }
+        .base {
+            stroke: black;
+            stroke-width: 8;
+            fill: {{NORMAL_FILL}};
+        }
+        .captured {
+            fill: {{CAPTURED_FILL}};
+        }
+        .moved {
+            fill: {{MOVED_FILL}};
+        }
         .capture {
             stroke-width: 2;
-            stroke: yellow;
+            stroke: {{CLICKABLE_STROKE}};
             fill: none;
         }
         .capture:hover {
             stroke-width: 8;
-            stroke: yellow;
-            fill: none;
+        }
+        .player0 {
+            fill: {{PLAYER_ZERO_FILL}};
+        }
+        .player1 {
+            fill: {{PLAYER_ONE_FILL}};
         }
     </style>
     <defs>
@@ -28,13 +43,13 @@
         <g (click)="onClick(case)"
            id="click_{{ case.x }}_{{ case.y }}">
             <polyline [attr.points]="getHexaCoordinates(case)"
-                      [ngStyle]="getCaseStyle(case)"
+                      class="base {{getCaseClass(case)}}"
                       stroke-linecap="round"/>
             <circle *ngIf="isPiece(case)"
                     [attr.cx]="getCenter(case).x"
                     [attr.cy]="getCenter(case).y"
                     [attr.r]="getPieceSize()"
-                    [ngStyle]="getPieceStyle(case)"/>
+                    class="base {{getPieceClass(case)}}"/>
         </g>
     </g>
 
@@ -67,7 +82,7 @@
                     [attr.cx] = "120+(p * getPieceSize()/3)"
                     [attr.cy]="20+(getPieceSize()+10)*player"
                     [attr.r]="getPieceSize()/3"
-                    [ngStyle]="getPlayerPieceStyle(player)"/>
+                    class="base {{getPlayerClass(player)}}"/>
         </g>
     </g>
 </svg>
