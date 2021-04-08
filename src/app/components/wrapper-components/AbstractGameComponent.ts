@@ -13,17 +13,22 @@ import { JSONValue } from 'src/app/utils/collection-lib/utils';
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */
-@Component({ template: '' })
+@Component({ template: '', styleUrls: ['./abstract-game-wrapper.css'] })
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
+    // TODO: remove these as they have been replaced by specific CSS classes
     public readonly PLAYER_ZERO_FILL: string = '#994d00';
     public readonly PLAYER_ONE_FILL: string = '#ffc34d';
     public readonly EMPTY_CASE_FILL: string = 'lightgrey';
     public readonly CAPTURED_FILL: string = 'red';
     public readonly MOVED_FILL: string = 'gray';
     public readonly NORMAL_FILL: string = 'lightgrey';
+    public readonly CLICKABLE_STROKE: string = 'yellow';
     public readonly CLICKABLE_STYLE: { [key: string]: string } = {
         stroke: 'yellow',
     };
+    public readonly STROKE_WIDTH: number = 8;
+    public readonly SMALL_STROKE_WIDTH: number = 2;
+
 
     public rules: Rules<M, S, L>;
 

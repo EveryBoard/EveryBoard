@@ -1,0 +1,24 @@
+.base {
+    stroke: black;
+    stroke-width: 8;
+    fill: lightgrey;
+}
+.captured {
+    fill: red;
+}
+.moved {
+    fill: gray;
+}
+.highlighted {
+    stroke: yellow;
+}
+.clickable {
+    stroke: yellow;
+}
+.player0 {
+    fill: #994d00;
+}
+.player1 {
+    fill: #ffc34d;
+}
+          

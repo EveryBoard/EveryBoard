@@ -2,7 +2,13 @@
      width="100%" height="auto"
      viewBox="0 0 600 200"
      preserveAspectRatio="xMidYMid meet"
->
+     >
+    <style type="text/css">
+        .text {
+            font: 50px sans-serif;
+            text-anchor: middle;
+        }
+    </style>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let content of line; index as x">
             <circle id="click_{{x}}_{{y}}"
@@ -10,16 +16,12 @@
                     [attr.cx]="50 + 100*x"
                     [attr.cy]="50 + 100*y"
                     r="46"
-                    [attr.stroke]="getPieceStroke(x, y)"
-                    stroke-width="8"
-                    [attr.fill]="getCircleFill(x, y)"
+                    class="base {{getCaseClasses(x, y)}}"
             />
             <text (click)="onClick(x, y)"
                   [attr.x]="50 + 100*x"
                   [attr.y]="66 + 100*y"
-                  text-anchor="middle"
-                  stroke="black"
-                  font-size="50"
+                  class="text"
             >
                 {{ content }}
             </text>

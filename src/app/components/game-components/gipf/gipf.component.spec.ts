@@ -57,13 +57,10 @@ describe('GipfComponent', () => {
         testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
         testElements.gameComponent.updateBoard();
     }
-    function expectToHaveFill(x: number, y: number, color: string): void {
-        expect(getComponent().getCaseStyle(new Coord(x, y)).fill).toBe(color);
+    function expectToHaveClass(x: number, y: number, class_: string): void {
         const element: DebugElement = testElements.debugElement.query(By.css('#click_' + x + '_' + y));
         expect(element).toBeTruthy();
-        // In a regexp, \s means any non-word character
-        const regex: RegExp = new RegExp('\\sfill: ' + color + ';');
-        expect(element.children[0].attributes.style).toMatch(regex);
+        expect(element.children[0].attributes.class).toBe(class_);
     }
     function expectationFromMove(move: GipfMove): MoveExpectations {
         return {
@@ -168,10 +165,10 @@ describe('GipfComponent', () => {
 
         await expectClickSuccess('#click_3_3', testElements);
 
-        expectToHaveFill(3, 2, getComponent().CAPTURED_FILL);
-        expectToHaveFill(3, 3, getComponent().CAPTURED_FILL);
-        expectToHaveFill(3, 4, getComponent().CAPTURED_FILL);
-        expectToHaveFill(3, 5, getComponent().CAPTURED_FILL);
+        expectToHaveClass(3, 2, 'base captured');
+        expectToHaveClass(3, 3, 'base captured');
+        expectToHaveClass(3, 4, 'base captured');
+        expectToHaveClass(3, 5, 'base captured');
     }));
     it('should make pieces disappear upon selection of a capture', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -288,9 +285,9 @@ describe('GipfComponent', () => {
         await expectClickSuccess('#click_1_6', testElements);
         await expectMoveSuccess('#click_2_5', testElements, expectationFromMove(move));
 
-        expect(getComponent().getCaseStyle(new Coord(1, 6)).fill).toEqual(getComponent().MOVED_FILL);
-        expect(getComponent().getCaseStyle(new Coord(2, 5)).fill).toEqual(getComponent().MOVED_FILL);
-        expect(getComponent().getCaseStyle(new Coord(3, 4)).fill).not.toEqual(getComponent().MOVED_FILL);
+        expect(getComponent().getCaseClass(new Coord(1, 6))).toEqual('moved');
+        expect(getComponent().getCaseClass(new Coord(2, 5))).toEqual('moved');
+        expect(getComponent().getCaseClass(new Coord(3, 4))).not.toEqual('moved');
     }));
     it('should highlight capturable pieces', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -333,10 +330,10 @@ describe('GipfComponent', () => {
 
         await expectMoveSuccess('#click_0_4', testElements, expectationFromMove(move));
 
-        expectToHaveFill(3, 2, 'red');
-        expectToHaveFill(3, 3, 'red');
-        expectToHaveFill(3, 4, 'red');
-        expectToHaveFill(3, 5, 'red');
+        expectToHaveClass(3, 2, 'base captured');
+        expectToHaveClass(3, 3, 'base captured');
+        expectToHaveClass(3, 4, 'base captured');
+        expectToHaveClass(3, 5, 'base captured');
     }));
     it('should update the number of pieces available', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -459,8 +456,8 @@ describe('GipfComponent', () => {
         await expectClickSuccess('#click_4_4', testElements);
         await expectClickFail('#click_3_3', testElements, GipfComponentFailure.NOT_PART_OF_CAPTURE);
 
-        expectToHaveFill(4, 5, getComponent().NORMAL_FILL);
-        expectToHaveFill(3, 3, getComponent().NORMAL_FILL);
+        expectToHaveClass(4, 5, 'base');
+        expectToHaveClass(3, 3, 'base');
         expect(getComponent().arrows.length).toBe(0);
     }));
     it('should recompute captures upon intersecting captures', fakeAsync(async() => {
