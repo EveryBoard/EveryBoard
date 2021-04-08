@@ -61,7 +61,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public encodeMove(move: SixMove): JSONValue {
         return SixMove.encoder.encode(move);
     }
-    public updateBoard(): void { this.message("update board")
+    public updateBoard(): void {
         const node: SixNode = this.rules.node;
         this.state = node.gamePartSlice;
         this.showLastMove();

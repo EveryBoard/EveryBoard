@@ -48,11 +48,58 @@ export const coerceoDidacticial: DidacticialStep[] = [
             [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
         ], 3, [0, 0], [0, 0]),
         [CoerceoMove.fromCoordToCoord(new Coord(5, 2), new Coord(4, 1))],
-        'Bravo, voyons les captures maintenant.',
+        'Bravo!',
         `Raté, vous n'avez pas capturé de pièces!`,
     ),
-    // leave tile
-    // capture by left tile
-    // tile exchange
-    // you move = you live
+    DidacticialStep.forMove(
+        `Gagner une tuile`,
+        `Quand une tuile est quittée, elle devient potentiellement enlevable du plateau.
+         Pour qu'elle soit enlevée, il faut que trois de ses bords voisins soient libres.
+         Notez que si une tuile vide, voisine d'une tuile qu'on vient de retirer, devient retirablerable, elle peut l'être.
+         Par exemple, ci-dessous, en quittant la tuile du haut, celle-ci restera connectée,
+         Mais en quittant la tuile en bas à gauche, deux tuiles seront enlevées. Faite-le.`,
+        new CoerceoPartSlice([
+            [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
+            [_, _, _, N, N, N, _, _, _, N, N, N, N, N, N],
+            [_, _, X, _, _, _, _, O, _, N, N, N, N, N, N],
+            [_, _, _, X, _, _, _, _, _, N, N, N, N, N, N],
+            [_, _, _, _, _, _, _, _, _, _, _, O, N, N, N],
+            [_, _, O, _, _, X, _, _, _, _, O, _, _, _, O],
+            [_, _, _, _, _, _, X, _, X, _, _, O, _, O, _],
+            [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
+            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
+        ], 2, [0, 0], [0, 0]),
+        [
+            CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(4, 6)),
+            CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(3, 5)),
+            CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(3, 7)),
+        ],
+        'Bravo!',
+        `Raté, vous n'avez pas récupéré les deux tuiles récupérable!`,
+    ),
+    DidacticialStep.forMove(
+        `Échanger une tuile`,
+        `Dès que vous avez au moins une tuile, vous pourrez le voir sur la gauche du plateau.
+         Dès que vous en avez deux, vous pouvez, en cliquant sur une pièce ennemie, la capturer immédiatement.
+         Cet action vous coûtera deux tuiles.
+         Gagnez du temps, et capturez la dernière pièce ennemie!`,
+        new CoerceoPartSlice([
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, _, _, O, N, N, N, N, N, N, N, N, N],
+            [N, N, N, _, _, _, _, _, _, N, N, N, N, N, N],
+            [N, N, N, _, _, _, X, _, X, N, N, N, N, N, N],
+            [N, N, N, _, _, X, _, _, _, N, N, N, N, N, N],
+            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
+        ], 1, [0, 2], [0, 0]),
+        [
+            CoerceoMove.fromTilesExchange(new Coord(5, 5)),
+        ],
+        'Bravo!',
+        `C'est bien gentil de se déplacer mais en cliquant sur la pièce vous l'aurez immédiatement!`,
+    ),
 ];

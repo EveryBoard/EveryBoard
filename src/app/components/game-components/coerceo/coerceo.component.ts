@@ -45,7 +45,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         this.showScore = true;
         this.updateBoard();
     }
-    public updateBoard(): void { console.log('update board')
+    public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         this.slice = this.rules.node.gamePartSlice;
         this.scores = this.slice.captures;
@@ -63,7 +63,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
     private showHighlight() {
         this.highlights = this.slice.getLegalLandings(this.chosenCoord.get());
     }
-    public cancelMoveAttempt(): void { console.log("cancel attempt")
+    public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
         this.highlights = [];
     }
