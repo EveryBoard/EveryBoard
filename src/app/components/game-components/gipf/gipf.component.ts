@@ -39,6 +39,7 @@ export class GipfComponentFailure {
 @Component({
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlice, GipfLegalityStatus> {
     private static PIECE_SIZE: number = 30;

@@ -3,22 +3,22 @@
     stroke-width: 8;
     fill: lightgrey;
 }
-captured {
+.captured {
     fill: red;
 }
-moved {
+.moved {
     fill: gray;
 }
-highlighted {
+.highlighted {
     stroke: yellow;
 }
-clickable {
+.clickable {
     stroke: yellow;
 }
-player0 {
+.player0 {
     fill: #994d00;
 }
-player1 {
+.player1 {
     fill: #ffc34d;
 }
           
