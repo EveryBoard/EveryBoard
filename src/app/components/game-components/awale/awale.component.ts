@@ -11,6 +11,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 @Component({
     selector: 'app-awale-component',
     templateUrl: './awale.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
     public rules: AwaleRules = new AwaleRules(AwalePartSlice);
@@ -74,24 +75,16 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         // let's confirm on java-server-side that the move is legal
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
     }
-    public getCircleFill(x: number, y: number): string {
+    public getCaseClasses(x: number, y: number): string {
         const coord: Coord = new Coord(x, y);
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return this.CAPTURED_FILL;
+            return 'captured';
         } else if (coord.equals(this.last)) {
-            return this.MOVED_FILL;
+            return 'moved highlighted';
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return this.MOVED_FILL;
+            return 'moved';
         } else {
-            return this.NORMAL_FILL;
-        }
-    }
-    public getPieceStroke(x: number, y: number): string {
-        const coord: Coord = new Coord(x, y);
-        if (coord.equals(this.last)) {
-            return 'yellow';
-        } else {
-            return 'black';
+            return '';
         }
     }
     public decodeMove(encodedMove: number): AwaleMove {
