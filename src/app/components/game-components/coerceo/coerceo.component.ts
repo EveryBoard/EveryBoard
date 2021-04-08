@@ -177,4 +177,18 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             return points[1].x + ',' + points[1].y + ',' + points[2].x + ',' + points[2].y;
         }
     }
+    public mustShowTilesOf(player: number): boolean {
+        if (this.tiles[player] > 0) {
+            return true;
+        } else {
+            return this.lastTurnWasTilesExchange(player);
+        }
+    }
+    public lastTurnWasTilesExchange(player: number): boolean {
+        if (this.rules.node.mother == null) {
+            return false;
+        }
+        const previousTiles: number = this.rules.node.mother.gamePartSlice.tiles[player];
+        return previousTiles > this.tiles[player];
+    }
 }

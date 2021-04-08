@@ -114,9 +114,6 @@ describe('CoerceoComponent:', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(testElements.gameComponent).toBeTruthy('CoerceoComponent should be created');
     });
-    it('should show separation between tiles', fakeAsync(async() => {
-
-    }));
     it('Should accept tiles exchange proposal as first click', fakeAsync(async() => {
         const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 9));
         const expectations: MoveExpectations = getMoveExpectations(move);
@@ -160,7 +157,7 @@ describe('CoerceoComponent:', () => {
         testElements.fixture.detectChanges();
         expectElementToExist('#playerZeroTilesCount', testElements);
     }));
-    xit('Should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
+    it('Should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
         // given a board with just removed pieces
         const previousBoard: NumberTable = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -203,7 +200,8 @@ describe('CoerceoComponent:', () => {
         expectCoordToBeOfRemovedFill(8, 7, testElements);
         expectCoordToBeOfRemovedFill(7, 7, testElements);
         expectCoordToBeOfRemovedFill(6, 7, testElements);
-        expect('tiles exchanged').toBe('visible somehow');
+        expectElementToExist('#tilesCountZero', testElements);
+        expectElementNotToExist('#tilesCountOne', testElements);
     }));
     it('Should show removed tiles, and captured piece (after deplacement)', fakeAsync(async() => {
         // given a board with just removed pieces
