@@ -87,14 +87,14 @@ describe('SaharaComponent', () => {
         expect(testElements.gameComponent).toBeTruthy('SaharaComponent should be created');
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(SaharaMove, 'decode').and.callThrough();
+        spyOn(SaharaMove, 'decode').and.callThrough();
         testElements.gameComponent.decodeMove(1);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(SaharaMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(SaharaMove, 'encode').and.callThrough();
+        spyOn(SaharaMove, 'encode').and.callThrough();
         testElements.gameComponent.encodeMove(new SaharaMove(new Coord(1, 1), new Coord(2, 1)));
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(SaharaMove.encode).toHaveBeenCalledTimes(1);
     });
     it('Should play correctly shortest victory', fakeAsync(async() => {
         const board: NumberTable = [

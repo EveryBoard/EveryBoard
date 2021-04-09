@@ -53,7 +53,7 @@ describe('GipfCapture', () => {
                 new Coord(1, -3), new Coord(0, -2), new Coord(-1, -1), new Coord(-2, 0),
             ]);
             let count: number = 0;
-            capture.forEach((_c: Coord) => {
+            capture.forEach((c: Coord) => {
                 count += 1;
             });
             expect(count).toEqual(4);
@@ -196,24 +196,24 @@ describe('GipfMove', () => {
     });
     describe('encode', () => {
         it('should delegate encoding to encoder', () => {
-            const encoderSpy: jasmine.Spy = spyOn(GipfMove.encoder, 'encode').and.callThrough();
+            spyOn(GipfMove.encoder, 'encode').and.callThrough();
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
                                                                MGPOptional.of(HexaDirection.DOWN));
             const move: GipfMove = new GipfMove(placement, [], []);
             move.encode();
 
-            expect(encoderSpy).toHaveBeenCalledTimes(1);
+            expect(GipfMove.encoder.encode).toHaveBeenCalledTimes(1);
         });
     });
     describe('decode', () => {
         it('should delegate decoding to encoder', () => {
-            const decoderSpy: jasmine.Spy = spyOn(GipfMove.encoder, 'decode').and.callThrough();
+            spyOn(GipfMove.encoder, 'decode').and.callThrough();
             const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
                                                                MGPOptional.of(HexaDirection.DOWN));
             const move: GipfMove = new GipfMove(placement, [], []);
             move.decode(move.encode());
 
-            expect(decoderSpy).toHaveBeenCalledTimes(1);
+            expect(GipfMove.encoder.decode).toHaveBeenCalledTimes(1);
         });
     });
     describe('equals', () => {

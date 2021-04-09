@@ -70,13 +70,13 @@ describe('P4Component', () => {
         expect((await gameComponent.onClick(currentMove.x)).isSuccess()).toBeTrue();
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(P4Move, 'decode').and.callThrough();
+        spyOn(P4Move, 'decode').and.callThrough();
         gameComponent.decodeMove(5);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(P4Move.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(P4Move, 'encode').and.callThrough();
+        spyOn(P4Move, 'encode').and.callThrough();
         gameComponent.encodeMove(P4Move.of(5));
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(P4Move.encode).toHaveBeenCalledTimes(1);
     });
 });

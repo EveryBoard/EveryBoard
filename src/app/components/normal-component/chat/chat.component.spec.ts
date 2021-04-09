@@ -71,20 +71,20 @@ describe('ChatComponent', () => {
         expect(component).toBeTruthy();
     });
     it('should not load message for unlogged user', async() => {
-        const startObservingSpy: jasmine.Spy = spyOn(chatService, 'startObserving');
-        const stopObservingSpy: jasmine.Spy = spyOn(chatService, 'stopObserving');
-        const showDisconnectedChatSpy: jasmine.Spy = spyOn(component, 'showDisconnectedChat');
-        const loadChatContentSpy: jasmine.Spy = spyOn(component, 'loadChatContent');
+        spyOn(chatService, 'startObserving');
+        spyOn(chatService, 'stopObserving');
+        spyOn(component, 'showDisconnectedChat');
+        spyOn(component, 'loadChatContent');
 
         component.ngOnInit();
 
-        expect(startObservingSpy).toHaveBeenCalledTimes(0);
-        expect(loadChatContentSpy).toHaveBeenCalledTimes(0);
-        expect(showDisconnectedChatSpy).toHaveBeenCalledTimes(1);
+        expect(chatService.startObserving).toHaveBeenCalledTimes(0);
+        expect(component.loadChatContent).toHaveBeenCalledTimes(0);
+        expect(component.showDisconnectedChat).toHaveBeenCalledTimes(1);
 
         component.ngOnDestroy();
         await fixture.whenStable();
-        expect(stopObservingSpy).toHaveBeenCalledTimes(0);
+        expect(chatService.stopObserving).toHaveBeenCalledTimes(0);
     });
     it('should propose to hide chat when chat is visible, and work', async() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Jean-Connecté', verified: true };

@@ -23,9 +23,9 @@ describe('JoinerService', () => {
         const myCallback: (joiner: IJoinerId) => void = (joiner: IJoinerId) => {
             expect(joiner.id).toBe('myJoinerId');
         };
-        const mySpy: jasmine.Spy = spyOn(dao, 'getObsById').and.returnValue(of({ id: 'myJoinerId', doc: null }));
+        spyOn(dao, 'getObsById').and.returnValue(of({ id: 'myJoinerId', doc: null }));
         service.startObserving('myJoinerId', myCallback);
-        expect(mySpy).toHaveBeenCalled();
+        expect(dao.getObsById).toHaveBeenCalled();
     }));
     it('startObserving should throw exception when called while observing ', fakeAsync(() => {
         service.set('myJoinerId', JoinerMocks.INITIAL.copy());
@@ -36,19 +36,19 @@ describe('JoinerService', () => {
         }).toThrowError('JoinerService.startObserving should not be called while already observing a joiner');
     }));
     it('read should be delegated to JoinerDAO', () => {
-        const read: jasmine.Spy = spyOn(dao, 'read');
+        spyOn(dao, 'read');
         service.readJoinerById('myJoinerId');
-        expect(read).toHaveBeenCalled();
+        expect(dao.read).toHaveBeenCalled();
     });
     it('set should be delegated to JoinerDAO', () => {
-        const set: jasmine.Spy = spyOn(dao, 'set');
+        spyOn(dao, 'set');
         service.set('partId', JoinerMocks.INITIAL.copy());
-        expect(set).toHaveBeenCalled();
+        expect(dao.set).toHaveBeenCalled();
     });
     it('update should delegated to JoinerDAO', () => {
-        const update: jasmine.Spy = spyOn(dao, 'update');
+        spyOn(dao, 'update');
         service.updateJoinerById('partId', JoinerMocks.INITIAL.copy());
-        expect(update).toHaveBeenCalled();
+        expect(dao.update).toHaveBeenCalled();
     });
     it('joinGame should throw when called by a candidate already in the game', fakeAsync(async() => {
         dao.set('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.copy());
@@ -66,26 +66,26 @@ describe('JoinerService', () => {
     }));
     it('joinGame should not update joiner when called by the creator', fakeAsync(async() => {
         dao.set('joinerId', JoinerMocks.INITIAL.copy());
-        const updateSpy: jasmine.Spy = spyOn(dao, 'update').and.callThrough();
-        expect(updateSpy).not.toHaveBeenCalled();
+        spyOn(dao, 'update').and.callThrough();
+        expect(dao.update).not.toHaveBeenCalled();
 
         await service.joinGame('joinerId', JoinerMocks.INITIAL.copy().creator);
 
         const resultingJoiner: IJoiner = await dao.read('joinerId');
 
-        expect(updateSpy).not.toHaveBeenCalled();
+        expect(dao.update).not.toHaveBeenCalled();
         expect(resultingJoiner).toEqual(JoinerMocks.INITIAL.copy());
     }));
     it('joinGame should be delegated to JoinerDAO', fakeAsync(async() => {
         dao.set('joinerId', JoinerMocks.INITIAL.copy());
-        const update: jasmine.Spy = spyOn(dao, 'update');
+        spyOn(dao, 'update');
 
         await service.joinGame('joinerId', 'some totally new user');
 
-        expect(update).toHaveBeenCalled();
+        expect(dao.update).toHaveBeenCalled();
     }));
     it('cancelJoining should throw when there was no observed joiner', fakeAsync(async() => {
-        let threw = false;
+        let threw: boolean = false;
 
         try {
             await service.cancelJoining('whoever');
@@ -101,11 +101,11 @@ describe('JoinerService', () => {
         service.startObserving('joinerId', (iJoiner: IJoinerId) => {});
         service.joinGame('joinerId', 'someone totally new');
 
-        const update: jasmine.Spy = spyOn(dao, 'update');
+        spyOn(dao, 'update');
 
         await service.cancelJoining('someone totally new');
 
-        expect(update).toHaveBeenCalled();
+        expect(dao.update).toHaveBeenCalled();
     }));
     it('cancelJoining should start as new when chosenPlayer leaves', fakeAsync(async() => {
         dao.set('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER.copy());

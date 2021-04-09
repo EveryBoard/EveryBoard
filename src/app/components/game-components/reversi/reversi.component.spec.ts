@@ -119,13 +119,13 @@ describe('ReversiComponent', () => {
         expect(tablutGameComponent.getRectFill(0, 4)).toEqual(tablutGameComponent.MOVED_FILL);
     }));
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(ReversiMove, 'decode').and.callThrough();
+        spyOn(ReversiMove, 'decode').and.callThrough();
         testElements.gameComponent.decodeMove(5);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(ReversiMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(ReversiMove, 'encode').and.callThrough();
+        spyOn(ReversiMove, 'encode').and.callThrough();
         testElements.gameComponent.encodeMove(new ReversiMove(1, 1));
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(ReversiMove.encode).toHaveBeenCalledTimes(1);
     });
 });

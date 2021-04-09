@@ -140,13 +140,13 @@ describe('QuartoComponent', () => {
         expect(gameComponent.rules.node.gamePartSlice.turn).toBe(initialSlice.turn + 1);
     }));
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(QuartoMove, 'decode').and.callThrough();
+        spyOn(QuartoMove, 'decode').and.callThrough();
         gameComponent.decodeMove(5);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(QuartoMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(QuartoMove, 'encode').and.callThrough();
+        spyOn(QuartoMove, 'encode').and.callThrough();
         gameComponent.encodeMove(new QuartoMove(2, 2, QuartoPiece.AABA));
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(QuartoMove.encode).toHaveBeenCalledTimes(1);
     });
 });

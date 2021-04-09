@@ -245,14 +245,14 @@ describe('CoerceoComponent:', () => {
     }));
     describe('encode/decode', () => {
         it('should delegate decoding to move', () => {
-            const moveSpy: jasmine.Spy = spyOn(CoerceoMove, 'decode').and.callThrough();
+            spyOn(CoerceoMove, 'decode').and.callThrough();
             testElements.gameComponent.decodeMove(5);
-            expect(moveSpy).toHaveBeenCalledTimes(1);
+            expect(CoerceoMove.decode).toHaveBeenCalledTimes(1);
         });
         it('should delegate encoding to move', () => {
-            const moveSpy: jasmine.Spy = spyOn(CoerceoMove, 'encode').and.callThrough();
+            spyOn(CoerceoMove, 'encode').and.callThrough();
             testElements.gameComponent.encodeMove(CoerceoMove.fromTilesExchange(new Coord(1, 1)));
-            expect(moveSpy).toHaveBeenCalledTimes(1);
+            expect(CoerceoMove.encode).toHaveBeenCalledTimes(1);
         });
     });
 });

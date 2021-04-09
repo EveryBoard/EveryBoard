@@ -66,9 +66,9 @@ import { QuixoComponent } from './components/game-components/quixo/quixo.compone
 import { ReversiComponent } from './components/game-components/reversi/reversi.component';
 import { SaharaComponent } from './components/game-components/sahara/sahara.component';
 import { SiamComponent } from './components/game-components/siam/siam.component';
+import { SixComponent } from './components/game-components/six/six.component';
 import { TablutComponent } from './components/game-components/tablut/tablut.component';
 import { TestCountDownComponent } from './components/normal-component/test-count-down/test-count-down.component';
-import { SixComponent } from './components/game-components/six/six.component';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
@@ -130,8 +130,8 @@ const routes: Route [] = [
         ReversiComponent,
         SaharaComponent,
         SiamComponent,
-        TablutComponent,
         SixComponent,
+        TablutComponent,
     ],
     entryComponents: [
         AwaleComponent,
@@ -149,6 +149,7 @@ const routes: Route [] = [
         ReversiComponent,
         SaharaComponent,
         SiamComponent,
+        SixComponent,
         TablutComponent,
 
         CountDownComponent,

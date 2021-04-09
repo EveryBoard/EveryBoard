@@ -116,9 +116,9 @@ describe('ServerPageComponent', () => {
         expect(userService.getActivesUsersObs).toHaveBeenCalledTimes(1);
     }));
     it('isUserLogged should delegate to authService', fakeAsync(async() => {
-        const isUserLogged: jasmine.Spy = spyOn(authenticationService, 'isUserLogged');
+        spyOn(authenticationService, 'isUserLogged');
         component.isUserLogged();
-        expect(isUserLogged).toHaveBeenCalledTimes(1);
+        expect(authenticationService.isUserLogged).toHaveBeenCalledTimes(1);
     }));
     it('should be legal for any logged user to create game when there is none', fakeAsync(async() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };

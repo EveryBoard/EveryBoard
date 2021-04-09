@@ -191,7 +191,7 @@ describe('SixRules', () => {
         });
     });
     describe('victories', () => {
-        it('Should consider winner player who align 6 pieces', () => {
+        xit('Should consider winner player who align 6 pieces', () => {
             const board: number[][] = [
                 [O, O, O, O, O, X, X, X, X, X],
             ];
@@ -284,7 +284,30 @@ describe('SixRules', () => {
             expect(boardValue).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for Player.ONE.');
         });
         xit('Should consider looser the first player to drop bellow 6 pieces on phase two', () => {
-            expect(false).toBeTrue();
+            const board: NumberTable = [
+                [X, X, O, _, _],
+                [_, X, O, _, _],
+                [_, X, O, _, _],
+                [_, X, O, _, X],
+                [_, _, O, O, X],
+            ];
+            const expectedBoard: NumberTable = [
+                [X, X, O, O],
+                [_, X, O, _],
+                [_, X, O, _],
+                [_, X, O, _],
+                [_, _, O, _],
+            ];
+            const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
+            const status: SixLegalityStatus = rules.isLegal(move, slice);
+            expect(status.legal.isSuccess()).toBeTrue();
+            const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+            const expectedSlice: SixGameState =
+                SixGameState.fromRepresentation(expectedBoard, 43);
+            expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
+            const boardValue: number = rules.getBoardValue(move, expectedSlice);
+            expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for Player.ZERO.');
         });
     });
 });
