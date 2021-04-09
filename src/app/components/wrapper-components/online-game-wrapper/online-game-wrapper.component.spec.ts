@@ -117,29 +117,29 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         });
         it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL.copy(), PartMocks.INITIAL.copy());
-            const joinGame: jasmine.Spy = spyOn(joinerService, 'joinGame').and.callThrough();
-            const startObserving: jasmine.Spy = spyOn(joinerService, 'startObserving').and.callThrough();
+            spyOn(joinerService, 'joinGame').and.callThrough();
+            spyOn(joinerService, 'startObserving').and.callThrough();
             expect(component.currentPartId).not.toBeDefined();
-            expect(joinGame).not.toHaveBeenCalled();
-            expect(startObserving).not.toHaveBeenCalled();
+            expect(joinerService.joinGame).not.toHaveBeenCalled();
+            expect(joinerService.startObserving).not.toHaveBeenCalled();
 
             fixture.detectChanges();
             tick();
 
             expect(component.currentPartId).toBeDefined();
-            expect(joinGame).toHaveBeenCalledTimes(1);
-            expect(startObserving).toHaveBeenCalledTimes(1);
+            expect(joinerService.joinGame).toHaveBeenCalledTimes(1);
+            expect(joinerService.startObserving).toHaveBeenCalledTimes(1);
         }));
         it('Initialisation on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy(), PartMocks.INITIAL.copy());
             fixture.detectChanges();
 
-            const startGame: jasmine.Spy = spyOn(component, 'startGame').and.callThrough();
-            expect(startGame).not.toHaveBeenCalled();
+            spyOn(component, 'startGame').and.callThrough();
+            expect(component.startGame).not.toHaveBeenCalled();
 
             tick(); // Finish calling async code from PartCreationComponent initialisation
 
-            expect(startGame).toHaveBeenCalledTimes(1);
+            expect(component.startGame).toHaveBeenCalledTimes(1);
             fixture.detectChanges(); // Needed so PartCreation is destroyed and GameIncluder Component created
             tick(1);
             tick(component.maximalMoveDuration);

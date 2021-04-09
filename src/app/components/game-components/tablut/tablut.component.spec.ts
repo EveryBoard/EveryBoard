@@ -146,13 +146,13 @@ describe('TablutComponent', () => {
         expect(tablutGameComponent.getRectFill(2, 0)).toEqual(tablutGameComponent.MOVED_FILL);
     }));
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(TablutMove, 'decode').and.callThrough();
+        spyOn(TablutMove, 'decode').and.callThrough();
         testElements.gameComponent.decodeMove(1);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(TablutMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(TablutMove, 'encode').and.callThrough();
+        spyOn(TablutMove, 'encode').and.callThrough();
         testElements.gameComponent.encodeMove(new TablutMove(new Coord(1, 1), new Coord(2, 1)));
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(TablutMove.encode).toHaveBeenCalledTimes(1);
     });
 });

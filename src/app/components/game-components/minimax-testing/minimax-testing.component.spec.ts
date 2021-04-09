@@ -60,16 +60,16 @@ describe('MinimaxTestingComponent', () => {
         expect(gameComponent).toBeTruthy();
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(MinimaxTestingMove, 'decode').and.callThrough();
+        spyOn(MinimaxTestingMove, 'decode').and.callThrough();
         gameComponent.decodeMove(1);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(MinimaxTestingMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(MinimaxTestingMove, 'encode').and.callThrough();
+        spyOn(MinimaxTestingMove, 'encode').and.callThrough();
         gameComponent.encodeMove(MinimaxTestingMove.DOWN);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(MinimaxTestingMove.encode).toHaveBeenCalledTimes(1);
     });
-    it('should allow simple moves', async () => {
+    it('should allow simple moves', async() => {
         expect((await gameComponent.chooseDown()).isSuccess()).toBeTrue();
         expect((await gameComponent.chooseRight()).isSuccess()).toBeTrue();
     });

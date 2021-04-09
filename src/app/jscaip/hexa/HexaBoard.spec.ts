@@ -20,7 +20,7 @@ describe('HexaBoard', () => {
             const board: HexaBoard<number> = HexaBoard.empty(3, 7, [1], 0);
             expect(board).toBeTruthy();
         });
-        xit('should support even-sized boards', () => {
+        it('should support even-sized boards', () => {
             const board: HexaBoard<number> = HexaBoard.empty(4, 8, [1], 0);
             expect(board).toBeTruthy();
         });

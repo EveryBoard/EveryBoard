@@ -24,7 +24,9 @@ export class PickGameComponent {
         'Reversi', // ///  5ème: 2019.01.16 (20 jours après Tablut)
         'Sahara', // ////  9ème: 2020.02.29 (49 jours après Siam)
         'Siam', // //////  8ème: 2020.01.11 (12 jours après Encapsule)
-        'Tablut']; // ///  4ème: 2018.12.27 (26 jours après Quarto)
+        'Six', // /////// 17ème: 2021.04.08 (18 jours après Coerceo)
+        'Tablut', // ////  4ème: 2018.12.27 (26 jours après Quarto)
+    ];
 
     @Output('pickGame') pickGame: EventEmitter<string> = new EventEmitter<string>();
 

@@ -131,27 +131,22 @@ export class CoerceoPartSlice extends TriangularGameState {
         display(CoerceoPartSlice.VERBOSE,
                 { coerceoPartSlice_removeTilesIfNeeded: { object: this, tile, countTiles } });
         let resultingSlice: CoerceoPartSlice = this;
-        if (this.isTileRemoved(tile) === false) {
-            const currentTile: Coord = CoerceoPartSlice.getTilesUpperLeftCoord(tile);
-            if (this.isTileEmpty(currentTile) &&
-                this.isDeconnectable(currentTile))
-            {
-                resultingSlice = this.deconnectTile(currentTile, countTiles);
-                const neighboors: Coord[] = CoerceoPartSlice.getPresentNeighboorEntrances(currentTile);
-                for (const neighboor of neighboors) {
-                    const caseContent: number = resultingSlice.getBoardAt(neighboor);
-                    if (caseContent === CoerceoPiece.EMPTY.value) {
-                        resultingSlice = resultingSlice.removeTilesIfNeeded(neighboor, countTiles);
-                    } else if (caseContent === this.getCurrentEnnemy().value) {
-                        resultingSlice = resultingSlice.captureIfNeeded(neighboor);
-                    }
+        const currentTile: Coord = CoerceoPartSlice.getTilesUpperLeftCoord(tile);
+        if (this.isTileEmpty(currentTile) &&
+            this.isDeconnectable(currentTile))
+        {
+            resultingSlice = this.deconnectTile(currentTile, countTiles);
+            const neighboors: Coord[] = CoerceoPartSlice.getPresentNeighboorEntrances(currentTile);
+            for (const neighboor of neighboors) {
+                const caseContent: number = resultingSlice.getBoardAt(neighboor);
+                if (caseContent === CoerceoPiece.EMPTY.value) {
+                    resultingSlice = resultingSlice.removeTilesIfNeeded(neighboor, countTiles);
+                } else if (caseContent === this.getCurrentEnnemy().value) {
+                    resultingSlice = resultingSlice.captureIfNeeded(neighboor);
                 }
             }
         }
         return resultingSlice;
-    }
-    public isTileRemoved(tile: Coord): boolean {
-        return this.getBoardAt(tile) === CoerceoPiece.NONE.value;
     }
     public isTileEmpty(tileUpperLeft: Coord): boolean {
         assert(this.getBoardAt(tileUpperLeft) !== CoerceoPiece.NONE.value,
@@ -174,7 +169,7 @@ export class CoerceoPartSlice extends TriangularGameState {
         let i: number = 1;
         while (i < connectedSidesIndexes.length) {
             if (connectedSidesIndexes[i - 1] === connectedSidesIndexes[i] - 1 ||
-                (connectedSidesIndexes[0] === 0 && connectedSidesIndexes[i] === 5))
+                (connectedSidesIndexes[0] === 0 && connectedSidesIndexes[connectedSidesIndexes.length - 1] === 5))
             {
                 i++;
             } else {

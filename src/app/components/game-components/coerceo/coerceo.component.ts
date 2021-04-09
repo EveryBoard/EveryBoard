@@ -9,8 +9,8 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { assert } from 'src/app/utils/collection-lib/utils';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
+import { Vector } from 'src/app/jscaip/Direction';
 
 @Component({
     selector: 'app-coerceo',
@@ -51,7 +51,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         this.scores = this.slice.captures;
         this.tiles = this.slice.tiles;
         const move: CoerceoMove = this.rules.node.move;
-        this.cancelMoveAttempt();
         if (move) {
             this.lastStart = move.start;
             this.lastEnd = move.landingCoord;
@@ -154,11 +153,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
     }
     public getTilesCountCoordinate(x: number, y: number): string {
         const bx: number = x * 100; const by: number = y * 100;
-        const coin0x: number = bx + 33; const coin0y: number = by;
-        const coin1x: number = bx + 66; const coin1y: number = by;
+        const coin0x: number = bx + 25; const coin0y: number = by;
+        const coin1x: number = bx + 75; const coin1y: number = by;
         const coin2x: number = bx + 100; const coin2y: number = by + 50;
-        const coin3x: number = bx + 66; const coin3y: number = by + 100;
-        const coin4x: number = bx + 33; const coin4y: number = by + 100;
+        const coin3x: number = bx + 75; const coin3y: number = by + 100;
+        const coin4x: number = bx + 25; const coin4y: number = by + 100;
         const coin5x: number = bx + 0; const coin5y: number = by + 50;
         return '' + coin0x + ', ' + coin0y + ', ' +
                     coin1x + ', ' + coin1y + ', ' +
@@ -167,5 +166,29 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
                     coin4x + ', ' + coin4y + ', ' +
                     coin5x + ', ' + coin5y + ', ' +
                     coin0x + ', ' + coin0y;
+    }
+    public getLineCoordinate(x: number, y: number): string {
+        const points: Coord[] = this.getTriangleCornerCoords(x, y);
+        if (x % 3 === 0) {
+            return points[0].x + ',' + points[0].y + ',' + points[1].x + ',' + points[1].y;
+        } else if (x % 3 === 1) {
+            return points[0].x + ',' + points[0].y + ',' + points[2].x + ',' + points[2].y;
+        } else {
+            return points[1].x + ',' + points[1].y + ',' + points[2].x + ',' + points[2].y;
+        }
+    }
+    public mustShowTilesOf(player: number): boolean {
+        if (this.tiles[player] > 0) {
+            return true;
+        } else {
+            return this.lastTurnWasTilesExchange(player);
+        }
+    }
+    public lastTurnWasTilesExchange(player: number): boolean {
+        if (this.rules.node.mother == null) {
+            return false;
+        }
+        const previousTiles: number = this.rules.node.mother.gamePartSlice.tiles[player];
+        return previousTiles > this.tiles[player];
     }
 }

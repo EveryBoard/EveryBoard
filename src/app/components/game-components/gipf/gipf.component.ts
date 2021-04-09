@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GipfLegalityStatus } from 'src/app/games/gipf/gipf-legality-status/GipfLegalityStatus';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-move/GipfMove';
@@ -14,6 +13,7 @@ import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { HexagonalGameComponent } from '../HexagonalGameComponent';
 
 export class Arrow {
     public constructor(public readonly source: Coord,
@@ -39,8 +39,9 @@ export class GipfComponentFailure {
 @Component({
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
-export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice, GipfLegalityStatus> {
+export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlice, GipfLegalityStatus> {
     private static PIECE_SIZE: number = 30;
 
     public rules: GipfRules = new GipfRules(GipfPartSlice);
@@ -54,7 +55,8 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
 
     public hexaLayout: HexaLayout =
         new HexaLayout(GipfComponent.PIECE_SIZE * 1.50,
-                       new Coord(GipfComponent.PIECE_SIZE * 2, 0), FlatHexaOrientation.INSTANCE);
+                       new Coord(GipfComponent.PIECE_SIZE * 2, 0),
+                       FlatHexaOrientation.INSTANCE);
 
     private static PHASE_INITIAL_CAPTURE: number = 0;
     private static PHASE_PLACEMENT_COORD: number = 1;
@@ -111,18 +113,6 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
     private getPiece(coord: Coord): GipfPiece {
         const piece: GipfPiece = this.constructedSlice.hexaBoard.getAt(coord);
         return piece;
-    }
-    public getCenter(coord: Coord): Coord {
-        return this.hexaLayout.getCenter(coord);
-    }
-    public getHexaCoordinates(coord: Coord): string {
-        let desc: string = '';
-        const coords: ReadonlyArray<Coord> = this.hexaLayout.getHexaCoordinates(coord);
-        for (const corner of coords) {
-            desc += corner.x + ' ' + corner.y + ' ';
-        }
-        desc += coords[0].x + ' ' + coords[0].y;
-        return desc;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
@@ -275,35 +265,23 @@ export class GipfComponent extends AbstractGameComponent<GipfMove, GipfPartSlice
         this.currentlyMoved = [];
         this.arrows = [];
 
-
         this.moveToInitialCaptureOrPlacementPhase();
     }
-    public getCaseStyle(coord: Coord): {[key: string]: string} {
-        return {
-            'stroke-width': '8px',
-            'fill': this.getCaseFill(coord),
-            'stroke': 'black',
-        };
-    }
-    private getCaseFill(coord: Coord): string {
+    public getCaseClass(coord: Coord): string {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return this.CAPTURED_FILL;
+            return 'captured';
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return this.MOVED_FILL;
+            return 'moved';
         } else {
-            return this.NORMAL_FILL;
+            return '';
         }
     }
-    public getPieceStyle(coord: Coord): {[key:string]: string} {
+    public getPieceClass(coord: Coord): string {
         const piece: GipfPiece = this.getPiece(coord);
-        return this.getPlayerPieceStyle(piece.player.value);
+        return this.getPlayerClass(piece.player.value);
     }
-    public getPlayerPieceStyle(player: number): {[key:string]: string} {
-        return {
-            'fill': this.getPlayerColor(Player.of(player)),
-            'stroke': 'black',
-            'stroke-width': '8px',
-        };
+    public getPlayerClass(player: number): string {
+        return 'player' + player;
     }
     public getPieceSize(): number {
         return GipfComponent.PIECE_SIZE;

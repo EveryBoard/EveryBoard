@@ -109,8 +109,8 @@ export class GameService {
             playerZero = joiner.creator;
             playerOne = joiner.chosenPlayer;
         } else {
-            playerZero = joiner.creator;
-            playerOne = joiner.chosenPlayer;
+            playerZero = joiner.chosenPlayer;
+            playerOne = joiner.creator;
         }
         const modification: PICurrentPart = {
             playerZero,
@@ -132,9 +132,7 @@ export class GameService {
         display(GameService.VERBOSE, { gameService_acceptConfig: { partId, joiner } });
 
         await this.joinerService.acceptConfig();
-        return this.startGameWithConfig(partId, joiner);  //  OLDLY DU CUL
-        // await this.startGameWithConfig(partId, joiner);
-        // return this.joinerService.acceptConfig();
+        return this.startGameWithConfig(partId, joiner);
     }
     // on OnlineGame Component
 

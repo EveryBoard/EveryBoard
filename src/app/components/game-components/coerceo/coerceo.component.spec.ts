@@ -15,14 +15,13 @@ import { CoerceoComponent } from './coerceo.component';
 import {
     expectClickFail, expectClickSuccess, expectElementNotToExist, expectElementToExist, expectMoveFailure,
     expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
-import { CoerceoMove, CoerceoStep } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
+import { CoerceoMove } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/coerceo-part-slice/CoerceoPartSlice';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { CoerceoNode } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 const activatedRouteStub = {
     snapshot: {
@@ -52,7 +51,7 @@ describe('CoerceoComponent:', () => {
     const O: number = CoerceoPiece.ZERO.value;
     const X: number = CoerceoPiece.ONE.value;
 
-    function getMoveExpectation(move: CoerceoMove): MoveExpectations {
+    function getMoveExpectations(move: CoerceoMove): MoveExpectations {
         return {
             move,
             slice: testElements.gameComponent.rules.node.gamePartSlice,
@@ -117,7 +116,7 @@ describe('CoerceoComponent:', () => {
     });
     it('Should accept tiles exchange proposal as first click', fakeAsync(async() => {
         const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 9));
-        const expectations: MoveExpectations = getMoveExpectation(move);
+        const expectations: MoveExpectations = getMoveExpectations(move);
         const reason: string = CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE;
         await expectMoveFailure('#click_6_9', testElements, expectations, reason);
     }));
@@ -132,7 +131,7 @@ describe('CoerceoComponent:', () => {
     it('Should accept deplacement', fakeAsync(async() => {
         await expectClickSuccess('#click_6_2', testElements);
         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(new Coord(6, 2), new Coord(7, 3));
-        const expectations: MoveExpectations = getMoveExpectation(move);
+        const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#click_7_3', testElements, expectations);
     }));
     it('Should cancelMoveAttempt without toasting when re-clicking on selected piece', fakeAsync(async() => {
@@ -158,7 +157,7 @@ describe('CoerceoComponent:', () => {
         testElements.fixture.detectChanges();
         expectElementToExist('#playerZeroTilesCount', testElements);
     }));
-    xit('Should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
+    it('Should show removed tiles, and captured piece (after tiles exchange)', fakeAsync(async() => {
         // given a board with just removed pieces
         const previousBoard: NumberTable = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -201,7 +200,8 @@ describe('CoerceoComponent:', () => {
         expectCoordToBeOfRemovedFill(8, 7, testElements);
         expectCoordToBeOfRemovedFill(7, 7, testElements);
         expectCoordToBeOfRemovedFill(6, 7, testElements);
-        expect('tiles exchanged').toBe('visible somehow');
+        expectElementToExist('#tilesCountZero', testElements);
+        expectElementNotToExist('#tilesCountOne', testElements);
     }));
     it('Should show removed tiles, and captured piece (after deplacement)', fakeAsync(async() => {
         // given a board with just removed pieces
@@ -245,14 +245,14 @@ describe('CoerceoComponent:', () => {
     }));
     describe('encode/decode', () => {
         it('should delegate decoding to move', () => {
-            const moveSpy: jasmine.Spy = spyOn(CoerceoMove, 'decode').and.callThrough();
+            spyOn(CoerceoMove, 'decode').and.callThrough();
             testElements.gameComponent.decodeMove(5);
-            expect(moveSpy).toHaveBeenCalledTimes(1);
+            expect(CoerceoMove.decode).toHaveBeenCalledTimes(1);
         });
         it('should delegate encoding to move', () => {
-            const moveSpy: jasmine.Spy = spyOn(CoerceoMove, 'encode').and.callThrough();
+            spyOn(CoerceoMove, 'encode').and.callThrough();
             testElements.gameComponent.encodeMove(CoerceoMove.fromTilesExchange(new Coord(1, 1)));
-            expect(moveSpy).toHaveBeenCalledTimes(1);
+            expect(CoerceoMove.encode).toHaveBeenCalledTimes(1);
         });
     });
 });

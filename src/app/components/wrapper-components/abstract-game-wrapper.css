@@ -1,0 +1,32 @@
+.base {
+    stroke: black;
+    stroke-width: 8;
+    fill: lightgrey;
+}
+.player0 {
+    fill: #994d00;
+}
+.player0-stroke {
+    stroke: #994d00;
+}
+.player1 {
+    fill: #ffc34d;
+}
+.player1-stroke {
+    stroke: #ffc34d;
+}
+.no-fill {
+    fill: none;
+}
+.captured {
+    fill: red;
+}
+.moved {
+    fill: gray;
+}
+.highlighted {
+    stroke: yellow;
+}
+.clickable {
+    stroke: yellow;
+}

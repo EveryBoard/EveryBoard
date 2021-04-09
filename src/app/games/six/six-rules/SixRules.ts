@@ -11,24 +11,73 @@ import { SixGameState } from '../six-game-state/SixGameState';
 import { SixMove } from '../six-move/SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
 
+export class SixFailure {
+
+    public static readonly MUST_CUT: string = 'Several groups are of same size, you must pick the one to keep!';
+}
 export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus> {}
 
 export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
+
     public getListMoves(node: SixNode): MGPMap<SixMove, SixGameState> {
-        throw new Error('Method not implemented.');
+        const legalLandings: Coord[] = this.getLegalLandings(node.gamePartSlice);
+        if (node.gamePartSlice.turn < 40) {
+            return this.getListDrop(node.gamePartSlice, legalLandings);
+        } else {
+            return this.getListDeplacement(node.gamePartSlice, legalLandings);
+        }
+    }
+    public getLegalLandings(state: SixGameState): Coord[] {
+        const neighboors: Coord[] = [];
+        for (const piece of state.pieces.listKeys()) {
+            for (const dir of HexaDirection.factory.all) {
+                const neighboor: Coord = piece.getNext(dir, 1);
+                if (state.getPieceAt(neighboor) === Player.NONE) {
+                    neighboors.push(neighboor);
+                }
+            }
+        }
+        return neighboors;
+    }
+    public getListDrop(state: SixGameState, legalLandings: Coord[]): MGPMap<SixMove, SixGameState> {
+        const drops: MGPMap<SixMove, SixGameState> = new MGPMap<SixMove, SixGameState>();
+        for (const landing of legalLandings) {
+            const drop: SixMove = SixMove.fromDrop(landing);
+            const resultingState: SixGameState = state.applyLegalDrop(landing);
+            drops.put(drop, resultingState);
+        }
+        return drops;
+    }
+    public getListDeplacement(state: SixGameState, legalLandings: Coord[]): MGPMap<SixMove, SixGameState> {
+        // get list pieces belonging to me
+        // multiply list with legalLandings
+        // check for each if a cut is needed
+        const deplacements: MGPMap<SixMove, SixGameState> = new MGPMap<SixMove, SixGameState>();
+        for (const start of state.pieces.listKeys()) {
+            if (state.getPieceAt(start) === state.getCurrentPlayer()) {
+                for (const landing of legalLandings) {
+                    const move: SixMove = SixMove.fromDeplacement(start, landing);
+                    const legality: SixLegalityStatus = this.isLegalDeplacement(move, state);
+                    if (legality.legal.isSuccess()) { // TODO: cuttingMove
+                        const resultingState: SixGameState =
+                            this.applyLegalMove(move, state, legality).resultingSlice;
+                        deplacements.put(move, resultingState);
+                    }
+                }
+            }
+        }
+        return deplacements;
     }
     public getBoardValue(move: SixMove, slice: SixGameState): number {
-        let lastDrop: Coord;
-        if (move.landing.isPresent()) {
-            lastDrop = move.landing.get();
-        } else {
-            lastDrop = move.coord;
-        }
+        const lastDrop: Coord = move.landing;
         const victoryValue: number = slice.getCurrentPlayer().getVictoryValue();
         if (this.isLineVictory(lastDrop, slice)) {
             return victoryValue;
         }
         if (this.isCircleVictory(lastDrop, slice)) {
+            return victoryValue;
+        }
+        if (this.isTriangleVictory(lastDrop, slice)) {
             return victoryValue;
         }
         return 0;
@@ -92,18 +141,82 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         }
         return false;
     }
+    public isTriangleVictory(lastDrop: Coord, state: SixGameState): boolean {
+        if (this.isTrangleVictoryCorner(lastDrop, state)) {
+            return true;
+        }
+        if (this.isTrangleVictoryEdge(lastDrop, state)) {
+            return true;
+        }
+        return false;
+    }
+    public isTrangleVictoryCorner(lastDrop: Coord, state: SixGameState): boolean {
+        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        for (let i: number = 0; i < 6; i++) {
+            let edgeDirection: HexaDirection = HexaDirection.factory.all[i];
+            let testedEdges: number = 0;
+            let noStop: boolean = true;
+            let testCorner: Coord = lastDrop;
+            while (testedEdges < 3 && noStop) {
+                if (state.getPieceAt(testCorner) === LAST_PLAYER &&
+                    state.getPieceAt(testCorner.getNext(edgeDirection, 1)) === LAST_PLAYER)
+                {
+                    testedEdges++;
+                    const dirIndex: number = ((2*testedEdges) + i) % 6;
+                    testCorner = testCorner.getNext(edgeDirection, 2);
+                    edgeDirection = HexaDirection.factory.all[dirIndex];
+                } else {
+                    noStop = false;
+                }
+            }
+            if (testedEdges === 3 && noStop) {
+                return true;
+            }
+        }
+        return false;
+    }
+    public isTrangleVictoryEdge(lastDrop: Coord, state: SixGameState): boolean {
+        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        for (let i: number = 0; i < 6; i++) {
+            const initialDirection: HexaDirection = HexaDirection.factory.all[i];
+            let edgeDirection: HexaDirection = HexaDirection.factory.all[(i + 2) % 6];
+            let testedEdges: number = 0;
+            let noStop: boolean = true;
+            let testCorner: Coord = lastDrop.getNext(initialDirection, 1);
+            while (testedEdges < 3 && noStop) {
+                if (state.getPieceAt(testCorner) === LAST_PLAYER &&
+                    state.getPieceAt(testCorner.getNext(edgeDirection, 1)) === LAST_PLAYER)
+                {
+                    testedEdges++;
+                    const dirIndex: number = ((2*testedEdges) + i + 2) % 6;
+                    testCorner = testCorner.getNext(edgeDirection, 2);
+                    edgeDirection = HexaDirection.factory.all[dirIndex];
+                } else {
+                    noStop = false;
+                }
+            }
+            if (testedEdges === 3 && noStop) {
+                return true;
+            }
+        }
+        return false;
+    }
     public applyLegalMove(move: SixMove,
                           state: SixGameState,
                           status: SixLegalityStatus): { resultingMove: SixMove; resultingSlice: SixGameState; }
     {
         if (state.turn < 40) {
-            return { resultingSlice: state.applyLegalDrop(move.coord), resultingMove: move };
+            return { resultingSlice: state.applyLegalDrop(move.landing), resultingMove: move };
         } else {
             const kept: MGPSet<Coord> = status.kept;
             return { resultingSlice: state.applyLegalDeplacement(move, kept), resultingMove: move };
         }
     }
     public isLegal(move: SixMove, slice: SixGameState): SixLegalityStatus {
+        const landingLegality: MGPValidation = slice.isIllegalLandingZone(move.landing);
+        if (landingLegality.isFailure()) {
+            return { legal: landingLegality, kept: null };
+        }
         if (slice.turn < 40) {
             return this.isLegalDrop(move, slice);
         } else {
@@ -111,12 +224,8 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         }
     }
     public isLegalDrop(move: SixMove, slice: SixGameState): SixLegalityStatus {
-        if (move.landing.isPresent() || move.keep.isPresent()) {
+        if (move.isDrop() === false) {
             return { legal: MGPValidation.failure('Cannot do deplacement before 42th turn!'), kept: null };
-        }
-        const landingLegality: MGPValidation = slice.isIllegalLandingZone(move.coord);
-        if (landingLegality.isFailure()) {
-            return { legal: landingLegality, kept: null };
         }
         return {
             legal: MGPValidation.SUCCESS,
@@ -124,22 +233,17 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         };
     }
     public isLegalDeplacement(move: SixMove, state: SixGameState): SixLegalityStatus {
-        const landing: Coord = move.landing.getOrNull();
-        if (landing == null) {
+        if (move.isDrop()) {
             return { legal: MGPValidation.failure('Can no longer drop after 40th turn!'), kept: null };
         }
-        switch (state.getPieceAt(move.coord)) {
+        switch (state.getPieceAt(move.start.get())) {
             case Player.NONE:
                 return { legal: MGPValidation.failure('Cannot move empty coord!'), kept: null };
             case state.getCurrentEnnemy():
                 return { legal: MGPValidation.failure('Cannot move ennemy piece!'), kept: null };
         }
-        const landingLegality: MGPValidation = state.isIllegalLandingZone(landing);
-        if (landingLegality.isFailure()) {
-            return { legal: landingLegality, kept: null };
-        }
-        const stateAfterDeplacement: SixGameState = state.deplacePiece(move);
-        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterDeplacement.getGroups(move.coord);
+        const stateAfterDeplacement: SixGameState = state.deplacePiece(move); // LELE
+        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterDeplacement.getGroups(move.start.get()); // LELE
         if (this.isSplit(groupsAfterMove)) {
             const biggerGroups: MGPSet<MGPSet<Coord>> = this.getBiggerGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
@@ -184,7 +288,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
                                state: SixGameState): SixLegalityStatus {
         if (keep.isAbsent()) {
             return {
-                legal: MGPValidation.failure('Several groups are of same size, you must pick the one to keep!'),
+                legal: MGPValidation.failure(SixFailure.MUST_CUT),
                 kept: null,
             };
         }

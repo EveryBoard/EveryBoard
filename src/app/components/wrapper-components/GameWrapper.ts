@@ -25,6 +25,7 @@ import { QuixoComponent } from '../game-components/quixo/quixo.component';
 import { ReversiComponent } from '../game-components/reversi/reversi.component';
 import { SaharaComponent } from '../game-components/sahara/sahara.component';
 import { SiamComponent } from '../game-components/siam/siam.component';
+import { SixComponent } from '../game-components/six/six.component';
 import { TablutComponent } from '../game-components/tablut/tablut.component';
 
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
@@ -76,6 +77,8 @@ export abstract class GameWrapper {
                 return GoComponent;
             case 'Gipf':
                 return GipfComponent;
+            case 'Kamisado':
+                return KamisadoComponent;
             case 'MinimaxTesting':
                 return MinimaxTestingComponent;
             case 'P4':
@@ -92,10 +95,10 @@ export abstract class GameWrapper {
                 return SaharaComponent;
             case 'Siam':
                 return SiamComponent;
+            case 'Six':
+                return SixComponent;
             case 'Tablut':
                 return TablutComponent;
-            case 'Kamisado':
-                return KamisadoComponent;
             default:
                 throw new Error('Unknown Games are unwrappable');
         }
@@ -159,6 +162,7 @@ export abstract class GameWrapper {
             this.gameComponent.cancelMove(legality.legal.getReason());
             return legality.legal;
         }
+        this.gameComponent.cancelMoveAttempt();
         await this.onLegalUserMove(move, scorePlayerZero, scorePlayerOne);
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, 'GameWrapper.receiveValidMove says: valid move legal');
         return MGPValidation.SUCCESS;

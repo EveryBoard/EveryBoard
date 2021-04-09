@@ -76,14 +76,14 @@ describe('AwaleComponent', () => {
     });
     describe('encode/decode', () => {
         it('should delegate decoding to move', () => {
-            const moveSpy: jasmine.Spy = spyOn(AwaleMove, 'decode').and.callThrough();
+            spyOn(AwaleMove, 'decode').and.callThrough();
             testElements.gameComponent.decodeMove(5);
-            expect(moveSpy).toHaveBeenCalledTimes(1);
+            expect(AwaleMove.decode).toHaveBeenCalledTimes(1);
         });
         it('should delegate encoding to move', () => {
-            const moveSpy: jasmine.Spy = spyOn(AwaleMove, 'encode').and.callThrough();
+            spyOn(AwaleMove, 'encode').and.callThrough();
             testElements.gameComponent.encodeMove(new AwaleMove(1, 1));
-            expect(moveSpy).toHaveBeenCalledTimes(1);
+            expect(AwaleMove.encode).toHaveBeenCalledTimes(1);
         });
     });
     it('should accept simple move for player zero, show captured and moved', fakeAsync(async() => {
@@ -103,9 +103,9 @@ describe('AwaleComponent', () => {
         };
         await expectMoveSuccess('#click_5_0', testElements, expectations);
         const awaleComponent: AwaleComponent = testElements.gameComponent as AwaleComponent;
-        expect(awaleComponent.getCircleFill(5, 0)).toEqual(awaleComponent.MOVED_FILL);
-        expect(awaleComponent.getCircleFill(5, 1)).toEqual(awaleComponent.MOVED_FILL);
-        expect(awaleComponent.getCircleFill(4, 1)).toEqual(awaleComponent.CAPTURED_FILL);
+        expect(awaleComponent.getCaseClasses(5, 0)).toBe('moved highlighted');
+        expect(awaleComponent.getCaseClasses(5, 1)).toBe('moved');
+        expect(awaleComponent.getCaseClasses(4, 1)).toBe('captured');
     }));
     it('should tell to user he can\'t move empty house', fakeAsync(async() => {
         const board: number[][] = [

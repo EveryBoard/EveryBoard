@@ -16,7 +16,9 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleFailure, EncapsuleNode } from 'src/app/games/encapsule/encapsule-rules/EncapsuleRules';
 import { Player } from 'src/app/jscaip/player/Player';
-import { expectClickFail, expectClickSuccess, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import {
+    expectClickFail, expectClickSuccess, expectMoveSuccess,
+    expectMoveFailure, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { EncapsulePiece } from 'src/app/games/encapsule/encapsule-piece/EncapsulePiece';
 import { Move } from 'src/app/jscaip/Move';
 
@@ -43,7 +45,6 @@ describe('EncapsuleComponent', () => {
         [_, _, _],
     ];
     const P0Turn: number = 6;
-    const P1Turn: number = P0Turn+1;
 
     let wrapper: LocalGameWrapperComponent;
     let testElements: TestElements;
@@ -103,14 +104,14 @@ describe('EncapsuleComponent', () => {
         expect(getComponent()).toBeTruthy('EncapsuleComponent should be created');
     });
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(EncapsuleMove, 'decode').and.callThrough();
+        spyOn(EncapsuleMove, 'decode').and.callThrough();
         getComponent().decodeMove(0);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(EncapsuleMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(EncapsuleMove, 'encode').and.callThrough();
+        spyOn(EncapsuleMove, 'encode').and.callThrough();
         getComponent().encodeMove(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2)));
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(EncapsuleMove.encode).toHaveBeenCalledTimes(1);
     });
     it('should drop a piece on the board when selecting it and dropping it', fakeAsync(async() => {
         await expectClickSuccess('#piece_0_SMALL_BLACK', testElements);
@@ -144,7 +145,9 @@ describe('EncapsuleComponent', () => {
         setupSlice(new EncapsulePartSlice(board, P0Turn, [EncapsulePiece.SMALL_BLACK]));
         await expectClickSuccess('#piece_0_SMALL_BLACK', testElements);
 
-        await expectClickFail('#click_0_1', testElements, EncapsuleFailure.INVALID_PLACEMENT);
+        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(0, 1));
+        await expectMoveFailure('#click_0_1', testElements,
+                                expectationFromMove(move), EncapsuleFailure.INVALID_PLACEMENT);
     }));
     it('should forbid selecting a piece that is not remaining', fakeAsync(async() => {
         setupSlice(new EncapsulePartSlice(emptyBoard, P0Turn, []));
@@ -203,7 +206,9 @@ describe('EncapsuleComponent', () => {
 
         await expectClickSuccess('#click_0_1', testElements);
 
-        await expectClickFail('#click_1_1', testElements, EncapsuleFailure.INVALID_PLACEMENT);
+        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(0, 1), new Coord(1, 1));
+        await expectMoveFailure('#click_1_1', testElements,
+                                expectationFromMove(move), EncapsuleFailure.INVALID_PLACEMENT);
     }));
     it('should detect victory', fakeAsync(async() => {
         const x: number = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE).encode();

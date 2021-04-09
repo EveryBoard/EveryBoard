@@ -1,0 +1,48 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     [attr.viewBox]="viewBox"
+     preserveAspectRatio="xMidYMid meet">
+    <polyline *ngFor="let piece of pieces"
+              id="piece_{{ piece.x }}_{{ piece.y }}"
+              (click)="onPieceClick(piece)"
+              [attr.points]="getHexaCoordinates(piece)"
+              stroke-width="8"
+              stroke="black"
+              [attr.fill]="getPieceFill(piece)"
+              stroke-linecap="round"/>
+    <polyline *ngFor="let neighboor of neighboors"
+              id="neighboor_{{ neighboor.x }}_{{ neighboor.y }}"
+              (click)="onNeighboorClick(neighboor)"
+              [attr.points]="getHexaCoordinates(neighboor)"
+              stroke-width="8"
+              stroke="black"
+              fill="lightgrey"
+              stroke-linecap="round"/>
+    <polyline *ngIf="leftCoord != null"
+              id="leftCoord_{{ leftCoord.x }}_{{ leftCoord.y }}"
+              (click)="onPieceClick(leftCoord)"
+              [attr.points]="getHexaCoordinates(leftCoord)"
+              stroke-width="8"
+              stroke="black"
+              [attr.fill]="MOVED_FILL"
+              stroke-linecap="round"/>
+    <polyline *ngIf="lastDrop != null"
+              id="lastDrop_{{ lastDrop.x }}_{{ lastDrop.y }}"
+              (click)="onPieceClick(lastDrop)"
+              [attr.points]="getHexaCoordinates(lastDrop)"
+              stroke-width="8"
+              stroke="blue"
+              fill="none"
+              stroke-linecap="round"/>
+    <polyline *ngIf="selectedPiece != null"
+              id="selectedPiece_{{ selectedPiece.x }}_{{ selectedPiece.y }}"
+              (click)="onPieceClick(selectedPiece)"
+              [attr.points]="getHexaCoordinates(selectedPiece)"
+              stroke-width="8"
+              stroke="yellow"
+              fill="none"
+              stroke-linecap="round"/>
+    <rect [attr.x]="PIECE_SIZE * (-0.5)" [attr.y]="PIECE_SIZE * (-0.5)" [attr.width]="PIECE_SIZE" [attr.height]="PIECE_SIZE" fill="none" stroke-width="5" stroke="red" />
+    <rect [attr.x]="PIECE_SIZE * (-1.5)" [attr.y]="PIECE_SIZE * (-1.5)" [attr.width]="CONCRETE_WIDTH" [attr.height]="CONCRETE_HEIGHT" fill="none" stroke-width="5" stroke="red" />
+</svg>
+{{ state.width }} x {{ state.height }} // {{ state.offset.x }} : {{ state.offset.y }}

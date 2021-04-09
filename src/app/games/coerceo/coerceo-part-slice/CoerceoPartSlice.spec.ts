@@ -28,9 +28,14 @@ describe('CoerceoPartSlice', () => {
             spyOn(slice, 'getPresentNeighboorTilesIndexes').and.returnValue([2, 3, 4]);
             expect(slice.isDeconnectable(null)).toBeTrue();
         });
-        it('Should deconnect when 3 adjacent side (special)', () => {
+        it('Should deconnect when 3 adjacent side (special 0)', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice([], 0, [0, 0], [0, 0]);
             spyOn(slice, 'getPresentNeighboorTilesIndexes').and.returnValue([0, 1, 5]);
+            expect(slice.isDeconnectable(null)).toBeTrue();
+        });
+        it('Should deconnect when 3 adjacent side (special 1)', () => {
+            const slice: CoerceoPartSlice = new CoerceoPartSlice([], 0, [0, 0], [0, 0]);
+            spyOn(slice, 'getPresentNeighboorTilesIndexes').and.returnValue([0, 4, 5]);
             expect(slice.isDeconnectable(null)).toBeTrue();
         });
     });

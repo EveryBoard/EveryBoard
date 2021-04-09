@@ -35,7 +35,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         } else {
             this.lastMove = null;
         }
-        this.cancelMoveAttempt();
     }
     /** ******************************** For Online Game **********************************/
 

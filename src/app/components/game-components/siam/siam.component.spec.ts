@@ -202,13 +202,13 @@ describe('SiamComponent', () => {
         await expectMoveSuccess('#chooseDirection_DOWN', testElements, expectations);
     }));
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(SiamMove, 'decode').and.callThrough();
+        spyOn(SiamMove, 'decode').and.callThrough();
         testElements.gameComponent.decodeMove(269);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(SiamMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(SiamMove, 'encode').and.callThrough();
+        spyOn(SiamMove, 'encode').and.callThrough();
         testElements.gameComponent.encodeMove(new SiamMove(2, 2, MGPOptional.empty(), Orthogonal.UP));
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(SiamMove.encode).toHaveBeenCalledTimes(1);
     });
 });

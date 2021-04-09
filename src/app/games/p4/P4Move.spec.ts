@@ -37,9 +37,9 @@ describe('P4Move', () => {
     describe('decode method', () => {
         it('should delegate decoding to static method', () => {
             const move: P4Move = P4Move.of(2);
-            const decodeSpy: jasmine.Spy = spyOn(P4Move, 'decode').and.callThrough();
+            spyOn(P4Move, 'decode').and.callThrough();
             move.decode(5);
-            expect(decodeSpy).toHaveBeenCalledTimes(1);
+            expect(P4Move.decode).toHaveBeenCalledTimes(1);
         });
     });
     describe('toString', () => {
