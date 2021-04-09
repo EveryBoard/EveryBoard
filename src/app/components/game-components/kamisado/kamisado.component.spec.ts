@@ -14,7 +14,7 @@ import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { KamisadoMove } from 'src/app/games/kamisado/kamisado-move/KamisadoMove';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { expectClickFail, expectClickSuccess, expectMoveFailure, expectMoveSuccess, MoveExpectations, TestElements }
+import { expectClickFail, expectClickSuccess, expectMoveFailure, MoveExpectations, TestElements }
     from 'src/app/utils/TestUtils';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
@@ -189,9 +189,9 @@ describe('KamisadoComponent', () => {
         expect((getComponent().choosePiece(2, 0)).isSuccess()).toBeFalse(); // can't select a piece either
     }));
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(KamisadoMove, 'decode').and.callThrough();
+        spyOn(KamisadoMove, 'decode').and.callThrough();
         getComponent().decodeMove(5);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(KamisadoMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
         spyOn(KamisadoMove, 'encode').and.callThrough();

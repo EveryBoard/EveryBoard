@@ -42,5 +42,7 @@
               stroke="yellow"
               fill="none"
               stroke-linecap="round"/>
-
+    <rect [attr.x]="PIECE_SIZE * (-0.5)" [attr.y]="PIECE_SIZE * (-0.5)" [attr.width]="PIECE_SIZE" [attr.height]="PIECE_SIZE" fill="none" stroke-width="5" stroke="red" />
+    <rect [attr.x]="PIECE_SIZE * (-1.5)" [attr.y]="PIECE_SIZE * (-1.5)" [attr.width]="CONCRETE_WIDTH" [attr.height]="CONCRETE_HEIGHT" fill="none" stroke-width="5" stroke="red" />
 </svg>
+{{ state.width }} x {{ state.height }} // {{ state.offset.x }} : {{ state.offset.y }}

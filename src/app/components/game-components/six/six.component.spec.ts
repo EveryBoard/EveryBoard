@@ -13,7 +13,9 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { expectClickSuccess, expectElementToExist, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import {
+    expectClickSuccess, expectElementToExist, expectMoveSuccess,
+    MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 import { SixComponent } from './six.component';
@@ -90,13 +92,13 @@ describe('SixComponent', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(testElements.gameComponent).toBeTruthy('SixComponent should be created');
     });
-    xit('Should drop before 40th turn', fakeAsync(async() => {
+    it('Should drop before 40th turn', fakeAsync(async() => {
         testElements.fixture.detectChanges();
         const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#neighboor_0_2', testElements, expectations);
     }));
-    xit('Should do deplacement after the 39th turn and show left coords', fakeAsync(async() => {
+    xit('Should do deplacement after the 39th turn and show left coords', fakeAsync(async() => {console.clear();
         const board: NumberTable = [
             [O, X, O],
             [_, _, X],
@@ -115,7 +117,7 @@ describe('SixComponent', () => {
         await expectMoveSuccess('#neighboor_2_2', testElements, expectations);
         expect(gameComponent.getPieceFill(new Coord(1, 2))).toBe(gameComponent.MOVED_FILL);
     }));
-    xit('Should ask to cut when needed', fakeAsync(async() => { console.clear();
+    it('Should ask to cut when needed', fakeAsync(async() => {
         const board: NumberTable = [
             [O, _, O],
             [X, _, O],

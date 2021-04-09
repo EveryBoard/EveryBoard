@@ -142,7 +142,14 @@ export class MGPBiMap<K extends Comparable, V extends Comparable> extends MGPMap
         }
         return reversedMap;
     }
-    public equals(other: MGPMap<K, V>): boolean {
+    public getCopy(): MGPBiMap<K, V> {
+        const newMap: MGPBiMap<K, V> = new MGPBiMap<K, V>();
+        for (const key of this.listKeys()) {
+            newMap.set(key, this.get(key).get());
+        }
+        return newMap;
+    }
+    public equals(other: MGPBiMap<K, V>): boolean {
         const keySet: MGPSet<K> = this.getKeySet();
         const otherKeySet: MGPSet<K> = other.getKeySet();
         if (keySet.equals(otherKeySet) === false) {

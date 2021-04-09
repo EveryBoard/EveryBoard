@@ -250,13 +250,13 @@ describe('PylosComponent', () => {
         await expectClickFail('#click_2_2_0', testElements, 'Must move pieces upward.');
     }));
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(PylosMove, 'decode').and.callThrough();
+        spyOn(PylosMove, 'decode').and.callThrough();
         testElements.gameComponent.decodeMove(0);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(PylosMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(PylosMove, 'encode').and.callThrough();
+        spyOn(PylosMove, 'encode').and.callThrough();
         testElements.gameComponent.encodeMove(PylosMove.fromDrop(new PylosCoord(0, 0, 0), []));
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(PylosMove.encode).toHaveBeenCalledTimes(1);
     });
 });

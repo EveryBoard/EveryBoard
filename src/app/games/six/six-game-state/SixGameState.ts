@@ -4,12 +4,30 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { Player } from 'src/app/jscaip/player/Player';
 import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MGPBiMap, MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { Comparable } from 'src/app/utils/collection-lib/Comparable';
+import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { SixMove } from '../six-move/SixMove';
 
+export class MGPBoolean implements Comparable {
+
+    public static TRUE: MGPBoolean = new MGPBoolean(true);
+
+    public static FALSE: MGPBoolean = new MGPBoolean(false);
+
+    private constructor(public readonly value: boolean) {}
+
+    public equals(o: MGPBoolean): boolean {
+        return o.value === this.value;
+    }
+    public toString(): string {
+        return '' + this.value;
+    }
+
+}
 export class SixGameState extends GamePartSlice {
 
     public readonly width: number;
@@ -20,30 +38,30 @@ export class SixGameState extends GamePartSlice {
 
     public static getInitialSlice(): SixGameState {
         const board: NumberTable = [[Player.ZERO.value], [Player.ONE.value]];
-        return SixGameState.fromRepresentation(board, 36);
+        return SixGameState.fromRepresentation(board, 0);
     }
     public static fromRepresentation(board: NumberTable, turn: number): SixGameState {
-        const pieces: MGPMap<Coord, boolean> = new MGPMap<Coord, boolean>();
+        const pieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
                 if (board[y][x] === Player.ZERO.value) {
-                    pieces.set(new Coord(x, y), false);
+                    pieces.set(new Coord(x, y), MGPBoolean.FALSE);
                 }
                 if (board[y][x] === Player.ONE.value) {
-                    pieces.set(new Coord(x, y), true);
+                    pieces.set(new Coord(x, y), MGPBoolean.TRUE);
                 }
             }
         }
         return new SixGameState(pieces, turn);
     }
     public constructor(
-        public readonly pieces: MGPMap<Coord, boolean>,
+        public readonly pieces: MGPBiMap<Coord, MGPBoolean>,
         turn: number)
     {
         super([], turn);
         const scale: { width: number,
                        height: number,
-                       pieces: MGPMap<Coord, boolean>,
+                       pieces: MGPBiMap<Coord, MGPBoolean>,
                        offset: Vector } = this.getCalculatedScale();
         this.pieces = scale.pieces;
         this.width = scale.width;
@@ -51,22 +69,26 @@ export class SixGameState extends GamePartSlice {
         this.offset = scale.offset;
         this.pieces.makeImmutable();
     }
-    public getCalculatedScale(): { width: number, height: number, pieces: MGPMap<Coord, boolean>, offset: Vector } {
-        let minWidth: number = 0;
-        let maxWidth: number = 0;
-        let minHeight: number = 0;
-        let maxHeight: number = 0;
+    public getCalculatedScale(): { width: number,
+                                   height: number,
+                                   pieces: MGPBiMap<Coord, MGPBoolean>,
+                                   offset: Vector }
+    {
+        let minWidth: number = Number.MAX_SAFE_INTEGER;
+        let maxWidth: number = Number.MIN_SAFE_INTEGER;
+        let minHeight: number = Number.MAX_SAFE_INTEGER;
+        let maxHeight: number = Number.MIN_SAFE_INTEGER;
         for (const coord of this.pieces.listKeys()) {
             minWidth = Math.min(coord.x, minWidth);
             maxWidth = Math.max(coord.x, maxWidth);
             minHeight = Math.min(coord.y, minHeight);
             maxHeight = Math.max(coord.y, maxHeight);
         }
-        let newPieces: MGPMap<Coord, boolean> = new MGPMap<Coord, boolean>();
+        let newPieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
         const offset: Vector = new Vector(- minWidth, - minHeight);
         if (minWidth !== 0 || minHeight !== 0) {
             for (const coord of this.pieces.listKeys()) {
-                const oldValue: boolean = this.pieces.delete(coord);
+                const oldValue: MGPBoolean = this.pieces.delete(coord);
                 const newCoord: Coord = coord.getNext(offset);
                 newPieces.set(newCoord, oldValue);
             }
@@ -117,15 +139,16 @@ export class SixGameState extends GamePartSlice {
     }
     public getPieceAt(coord: Coord): Player {
         if (this.pieces.containsKey(coord)) {
-            return this.pieces.get(coord).getOrNull() ? Player.ONE : Player.ZERO;
+            return this.pieces.get(coord).getOrNull() === MGPBoolean.TRUE ? Player.ONE : Player.ZERO;
+            // TODO: get() and not getOrNull
         } else {
             return Player.NONE;
         }
     }
     public deplacePiece(move: SixMove): SixGameState {
-        const pieces: MGPMap<Coord, boolean> = this.pieces.getCopy();
+        const pieces: MGPBiMap<Coord, MGPBoolean> = this.pieces.getCopy() as MGPBiMap<Coord, MGPBoolean>;
         pieces.delete(move.start.get());
-        pieces.set(move.landing, this.getCurrentPlayer() === Player.ONE);
+        pieces.set(move.landing, this.getCurrentPlayer() === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE);
         return new SixGameState(pieces, this.turn);
     }
     public getGroups(lastRemovedPiece: Coord): MGPSet<MGPSet<Coord>> {
@@ -159,22 +182,31 @@ export class SixGameState extends GamePartSlice {
         return coordsGroup;
     }
     public applyLegalDrop(coord: Coord): SixGameState {
-        const pieces: MGPMap<Coord, boolean> = this.pieces.getCopy();
-        pieces.put(coord, this.getCurrentPlayer() === Player.ONE);
+        const pieces: MGPBiMap<Coord, MGPBoolean> = this.pieces.getCopy() as MGPBiMap<Coord, MGPBoolean>;
+        pieces.put(coord, this.getCurrentPlayer() === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE);
         return new SixGameState(pieces, this.turn + 1);
     }
     public applyLegalDeplacement(move: SixMove, kept: MGPSet<Coord>): SixGameState {
         const stateAfterDeplacement: SixGameState = this.deplacePiece(move);
-        let newPieces: MGPMap<Coord, boolean> = new MGPMap<Coord, boolean>();
+        let newPieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
         if (kept.size() > 0) {
-            newPieces = new MGPMap<Coord, boolean>();
+            newPieces = new MGPBiMap<Coord, MGPBoolean>();
             for (let i: number = 0; i < kept.size(); i++) {
                 const coord: Coord = kept.get(i);
                 newPieces.set(coord, stateAfterDeplacement.pieces.get(coord).get());
             }
         } else {
-            newPieces = stateAfterDeplacement.pieces.getCopy();
+            newPieces = stateAfterDeplacement.pieces.getCopy() as MGPBiMap<Coord, MGPBoolean>;
         }
         return new SixGameState(newPieces, stateAfterDeplacement.turn + 1);
+    }
+    public countPieces(owner: Player): number {
+        const player: MGPBoolean = owner === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE;
+        const playerPieces: MGPOptional<MGPSet<Coord>> = this.pieces.groupByValue().get(player);
+        if (playerPieces.isAbsent()) {
+            return 0;
+        } else {
+            return playerPieces.get().size();
+        }
     }
 }

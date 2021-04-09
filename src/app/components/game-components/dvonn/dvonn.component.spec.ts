@@ -165,11 +165,11 @@ describe('DvonnComponent', () => {
         ]);
     }));
     it('should delegate decoding to move', () => {
-        const moveSpy: jasmine.Spy = spyOn(DvonnMove, 'decode').and.callThrough();
+        spyOn(DvonnMove, 'decode').and.callThrough();
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
         const encoded: JSONValue = testElements.gameComponent.encodeMove(move);
         testElements.gameComponent.decodeMove(encoded);
-        expect(moveSpy).toHaveBeenCalledTimes(1);
+        expect(DvonnMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
         spyOn(DvonnMove, 'encode').and.callThrough();

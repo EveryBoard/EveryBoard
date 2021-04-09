@@ -76,14 +76,14 @@ describe('AwaleComponent', () => {
     });
     describe('encode/decode', () => {
         it('should delegate decoding to move', () => {
-            const moveSpy: jasmine.Spy = spyOn(AwaleMove, 'decode').and.callThrough();
+            spyOn(AwaleMove, 'decode').and.callThrough();
             testElements.gameComponent.decodeMove(5);
-            expect(moveSpy).toHaveBeenCalledTimes(1);
+            expect(AwaleMove.decode).toHaveBeenCalledTimes(1);
         });
         it('should delegate encoding to move', () => {
-            const moveSpy: jasmine.Spy = spyOn(AwaleMove, 'encode').and.callThrough();
+            spyOn(AwaleMove, 'encode').and.callThrough();
             testElements.gameComponent.encodeMove(new AwaleMove(1, 1));
-            expect(moveSpy).toHaveBeenCalledTimes(1);
+            expect(AwaleMove.encode).toHaveBeenCalledTimes(1);
         });
     });
     it('should accept simple move for player zero, show captured and moved', fakeAsync(async() => {

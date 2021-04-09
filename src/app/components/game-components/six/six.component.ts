@@ -1,4 +1,3 @@
-import { THIS_EXPR } from '@angular/compiler/src/output/output_ast';
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SixGameState } from 'src/app/games/six/six-game-state/SixGameState';
@@ -28,7 +27,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public readonly CONCRETE_WIDTH: number = 1000;
     public readonly CONCRETE_HEIGHT: number = 800;
     public rules: SixRules = new SixRules(SixGameState);
-    private state: SixGameState;
+    public state: SixGameState;
 
     public pieces: Coord[];
     public disconnected: Coord[];
@@ -61,17 +60,20 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public encodeMove(move: SixMove): JSONValue {
         return SixMove.encoder.encode(move);
     }
-    public updateBoard(): void { this.message("update board")
+    public updateBoard(): void {
         const node: SixNode = this.rules.node;
         this.state = node.gamePartSlice;
+        console.table(this.state.toRepresentation())
+        console.log({
+            state: this.state,
+            move: node.move })
         this.showLastMove();
         this.pieces = this.state.pieces.listKeys();
         this.neighboors = this.getEmptyNeighboors();
-        this.setScale();
+        // this.setScale();
         this.viewBox = this.getViewBox();
     }
     public showLastMove(): void {
-        console.log( { offset: this.state.offset })
         const lastMove: SixMove = this.rules.node.move;
         if (lastMove) {
             this.lastDrop = lastMove.landing.getNext(this.state.offset, 1);
@@ -94,12 +96,43 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             this.pointScale = scales.coord;
         } else {
             console.log({
-                diffMinX: this.coordScale.minX - scales.coord.minX,
-                diffMinY: this.coordScale.minY - scales.coord.minY,
+                diffMin: {
+                    x: this.coordScale.minX - scales.coord.minX,
+                    y: this.coordScale.minY - scales.coord.minY,
+                },
+                offset: this.state.offset,
             })
         }
     }
     private getViewBox(): string {
+        const scales: { coord: Scale, point: Scale } = this.getScales(this.pieces, this.neighboors);
+        const usedWidth: number = (2 * this.PIECE_SIZE) + scales.point.maxX - scales.point.minX;
+        const usedHeight: number = (2 * this.PIECE_SIZE) + scales.point.maxY - scales.point.minY;
+        const widthOverstepRatio: number = usedWidth / this.CONCRETE_WIDTH;
+        const heightOverstepRatio: number = usedHeight / this.CONCRETE_HEIGHT;
+        if (widthOverstepRatio > 1 || heightOverstepRatio > 1) {
+            console.log("wanting " + this.CONCRETE_WIDTH + " x " + this.CONCRETE_HEIGHT)
+            console.log("using " + usedWidth + " x " + usedHeight)
+            const overstepRatio: number = Math.max(widthOverstepRatio, heightOverstepRatio);
+            console.log('Ratio de dépassement: (' + overstepRatio + ")");
+            console.log("piece size before: " + this.PIECE_SIZE)
+            this.PIECE_SIZE /= Math.floor(overstepRatio);
+            console.log("piece size (floored) now: " + Math.floor(this.PIECE_SIZE))
+        } else {
+            console.log('pas de dépassement');
+        }
+        const width: number = this.CONCRETE_WIDTH / (this.state.width + 2);
+        const height: number = this.CONCRETE_HEIGHT / (this.state.height + 2);
+        this.PIECE_SIZE = Math.min(width, height);
+        this.hexaLayout = new HexaLayout(this.PIECE_SIZE / 2,
+                                         new Coord(0, 0),
+                                         FlatHexaOrientation.INSTANCE);
+        return (-1.5 * this.PIECE_SIZE) + ' ' +
+               (-1.5 * this.PIECE_SIZE) + ' ' +
+               this.CONCRETE_WIDTH + ' ' +
+               this.CONCRETE_HEIGHT;
+    }
+    private OldgetViewBox(): string {
         const scales: { coord: Scale, point: Scale } = this.getScales(this.pieces, this.neighboors);
         const width: number = Math.ceil(scales.point.maxX - scales.point.minX);
         const height: number = Math.ceil(scales.point.maxY - scales.point.minY);
