@@ -24,11 +24,10 @@ export class EncapsuleComponentFailure {
 @Component({
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
     public CASE_SIZE: number = 100;
-    public STROKE_WIDTH: number = 5;
-    public CIRCLE_STROKE_WIDTH: number = 10;
 
     public rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
     private lastLandingCoord: Coord;
@@ -111,25 +110,11 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
             return this.cancelMove(EncapsuleComponentFailure.END_YOUR_MOVE);
         }
     }
-    public getRectFill(x: number, y: number): string {
-        if (this.isMoved(x, y)) {
-            return this.MOVED_FILL;
-        } else {
-            return this.NORMAL_FILL;
-        }
-    }
-    public getRectStyle(x: number, y: number): {[key:string]: string} {
+    public getRectClasses(x: number, y: number): string {
         if (this.isSelected(x, y)) {
-            return this.CLICKABLE_STYLE;
+            return 'moved';
         }
-        return {};
-    }
-    private isMoved(x: number, y: number): boolean {
-        const coord: Coord = new Coord(x, y);
-        const lastStartingCoord: Coord = this.lastStartingCoord.getOrNull();
-        return coord.equals(this.lastLandingCoord) ||
-               coord.equals(lastStartingCoord) ||
-               coord.equals(this.chosenCoord);
+        return '';
     }
     private isSelected(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
@@ -143,25 +128,36 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         }
         return false;
     }
+    public getPieceClasses(piece: EncapsulePiece): string {
+        return this.getPieceStrokeClass(piece);
+    }
+    public getPieceStrokeClass(piece: EncapsulePiece): string {
+        const player: Player = piece.getPlayer();
+        return 'player' + player.value + '-stroke';
+    }
     public getPieceRadius(piece: EncapsulePiece): number {
         switch (piece.getSize()) {
             case Size.BIG:
-                return 45;
+                return 40;
             case Size.MEDIUM:
-                return 35;
+                return 30;
             case Size.SMALL:
                 return 20;
         }
     }
-    public getPieceStroke(piece: EncapsulePiece): string {
-        const player: Player = piece.getPlayer();
-        return this.getPlayerColor(player);
-    }
-    public getSidePieceStyle(piece: EncapsulePiece, index: number): {[key:string]: string} {
-        if (this.isSelectedPiece(piece) && this.chosenPieceIndex === index) {
-            return this.CLICKABLE_STYLE;
+    public getHighlightedCases(): Coord[] {
+        const coords: Coord[] = [];
+        if (this.chosenCoord != null) {
+            coords.push(this.chosenCoord);
         }
-        return {};
+        return coords;
+    }
+    public getSidePieceClasses(piece: EncapsulePiece, index: number): string {
+        const pieceClasses: string = this.getPieceClasses(piece);
+        if (this.isSelectedPiece(piece) && this.chosenPieceIndex === index) {
+            return 'clickable ' + pieceClasses;
+        }
+        return pieceClasses;
     }
     private isSelectedPiece(piece: EncapsulePiece): boolean {
         if (this.chosenPiece === null) {
