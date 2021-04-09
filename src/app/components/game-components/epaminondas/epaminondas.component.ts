@@ -12,12 +12,14 @@ import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComp
 @Component({
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                 EpaminondasPartSlice,
                                                                 EpaminondasLegalityStatus>
 {
     public NONE: number = Player.NONE.value;
+    public CASE_SIZE: number = 100;
     public rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
 
     public firstPiece: Coord = new Coord(-15, -1);
@@ -331,41 +333,53 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         this.cancelMove();
         return this.chooseMove(move, slice, null, null);
     }
-    public getPieceStyle(x: number, y: number): any {
-        const fill: string = this.getPlayerColor(Player.of(this.board[y][x]));
-        const stroke: string = this.getPieceStroke(x, y);
-        return { fill, stroke };
+    public getPieceClasses(x: number, y: number): string {
+        const player: string = 'player' + this.board[y][x];
+        const stroke: string = this.getPieceStrokeClass(x, y);
+        return [player, stroke].join(' ');
     }
-    public getPieceStroke(x: number, y: number): string {
+    private getPieceStrokeClass(x: number, y: number): string {
         // Show pieces belonging to the phalanx to move
         const coord: Coord = new Coord(x, y);
         if (this.firstPiece.x === -15 && this.lastPiece.x === -15) {
-            return null;
+            return '';
         }
         if (this.firstPiece.equals(coord) ||
             this.lastPiece.equals(coord) ||
             this.phalanxMiddles.some((c: Coord) => c.equals(coord))) {
-            return 'yellow';
+            return 'highlighted';
         } else {
-            return null;
+            return '';
         }
     }
-    public getRectFill(x: number, y: number): string {
+    public getRectClass(x: number, y: number): string {
         const clicked: Coord = new Coord(x, y);
         if (this.captureds.some((c: Coord) => c.equals(clicked))) {
-            return this.CAPTURED_FILL;
+            return 'captured';
         } else if (this.moveds.some((c: Coord) => c.equals(clicked))) {
-            return this.MOVED_FILL;
+            return 'moved';
+        }
+        return '';
+    }
+    public getHighlightedCoords(): Coord[] {
+        if (this.firstPiece.x === -15 && this.isPlayerTurn) {
+            return this.getCurrentPlayerPieces();
         } else {
-            return this.NORMAL_FILL;
+            return this.phalanxValidLandings.concat(this.validExtensions);
         }
     }
-    public getRectStyle(x: number, y: number): any {
-        if (this.isClickable(x, y)) {
-            return this.CLICKABLE_STYLE;
-        } else {
-            return null;
+    private getCurrentPlayerPieces(): Coord[] {
+        const pieces: Coord[] = [];
+        const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
+        const player: Player = slice.getCurrentPlayer();
+        for (let y: number = 0; y < this.board.length; y++) {
+            for (let x: number = 0; x < this.board[y].length; x++) {
+                if (this.board[y][x] === player.value) {
+                    pieces.push(new Coord(x, y));
+                }
+            }
         }
+        return pieces;
     }
     public isClickable(x: number, y: number): boolean {
         // Show if the piece can be clicked

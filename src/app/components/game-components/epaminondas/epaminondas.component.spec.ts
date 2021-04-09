@@ -49,6 +49,17 @@ describe('EpaminondasComponent:', () => {
 
     let testElements: TestElements;
 
+    function expectClickable(x: number, y: number): void {
+        const coord: Coord = new Coord(x, y);
+        expect((testElements.gameComponent as EpaminondasComponent)
+            .getHighlightedCoords().some((c: Coord) => c.equals(coord))).toBeTrue();
+    }
+    function expectNotClickable(x: number, y: number): void {
+        const coord: Coord = new Coord(x, y);
+        expect((testElements.gameComponent as EpaminondasComponent)
+            .getHighlightedCoords().some((c: Coord) => c.equals(coord))).toBeFalse();
+    }
+
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
             imports: [
@@ -115,11 +126,10 @@ describe('EpaminondasComponent:', () => {
 
         await expectClickSuccess('#click_0_11', testElements);
 
-        const epaminondasComponent: EpaminondasComponent = testElements.gameComponent as EpaminondasComponent;
-        expect(epaminondasComponent.getRectStyle(0, 10)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 9)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(1, 11)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(1, 10)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
+        expectClickable(0, 10);
+        expectClickable(0, 9);
+        expectClickable(1, 11);
+        expectClickable(1, 10);
     }));
     it('Should cancel move when clicking on non aligned pice', fakeAsync(async() => {
         await expectClickSuccess('#click_0_11', testElements);
@@ -185,10 +195,9 @@ describe('EpaminondasComponent:', () => {
         await expectClickSuccess('#click_0_11', testElements);
         await expectClickSuccess('#click_0_11', testElements);
 
-        const epaminondasComponent: EpaminondasComponent = testElements.gameComponent as EpaminondasComponent;
-        expect(epaminondasComponent.getRectStyle(0, 11)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 10)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 9)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
+        expectClickable(0, 11);
+        expectClickable(0, 10);
+        expectClickable(0, 9);
     }));
     it('Should cancel move when selecting non-contiguous soldier line', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -234,17 +243,16 @@ describe('EpaminondasComponent:', () => {
         await expectClickSuccess('#click_0_7', testElements);
         await expectClickSuccess('#click_0_5', testElements);
 
-        const epaminondasComponent: EpaminondasComponent = testElements.gameComponent as EpaminondasComponent;
-        expect(epaminondasComponent.getRectStyle(0, 2)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 3)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 4)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 5)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 6)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 7)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 8)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 9)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 10)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 11)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
+        expectNotClickable(0, 2);
+        expectClickable(0, 3);
+        expectClickable(0, 4);
+        expectNotClickable(0, 5);
+        expectNotClickable(0, 6);
+        expectNotClickable(0, 7);
+        expectClickable(0, 8);
+        expectClickable(0, 9);
+        expectClickable(0, 10);
+        expectNotClickable(0, 11);
     }));
     it('Should change first piece coord when clicked and last piece is neighboors', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -272,13 +280,13 @@ describe('EpaminondasComponent:', () => {
         const epaminondasComponent: EpaminondasComponent = testElements.gameComponent as EpaminondasComponent;
         expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece).toEqual(new Coord(-15, -1));
-        expect(epaminondasComponent.getRectStyle(0, 9)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 10)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 11)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
+        expectClickable(0, 9);
+        expectNotClickable(0, 10);
+        expectClickable(0, 11);
 
-        expect(epaminondasComponent.getRectStyle(1, 9)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(1, 10)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(1, 11)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
+        expectClickable(1, 9);
+        expectClickable(1, 10);
+        expectClickable(1, 11);
     }));
     it('Should change first piece coord when clicked and last piece exist but is not neighboors', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -307,10 +315,10 @@ describe('EpaminondasComponent:', () => {
         const epaminondasComponent: EpaminondasComponent = testElements.gameComponent as EpaminondasComponent;
         expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 10));
         expect(epaminondasComponent.lastPiece).toEqual(new Coord(0, 9));
-        expect(epaminondasComponent.getRectStyle(0, 8)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 9)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 10)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 11)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
+        expectNotClickable(0, 8);
+        expectNotClickable(0, 9);
+        expectNotClickable(0, 10);
+        expectClickable(0, 11);
     }));
     it('Should change last piece coord when clicked and first piece is neighboors', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -339,12 +347,11 @@ describe('EpaminondasComponent:', () => {
         const epaminondasComponent: EpaminondasComponent = testElements.gameComponent as EpaminondasComponent;
         expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 11));
         expect(epaminondasComponent.lastPiece).toEqual(new Coord(-15, -1));
-        expect(epaminondasComponent.getRectStyle(0, 9)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 10)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(0, 11)).not.toEqual(epaminondasComponent.CLICKABLE_STYLE);
-
-        expect(epaminondasComponent.getRectStyle(1, 10)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
-        expect(epaminondasComponent.getRectStyle(1, 11)).toEqual(epaminondasComponent.CLICKABLE_STYLE);
+        expectClickable(0, 9);
+        expectClickable(0, 10);
+        expectNotClickable(0, 11);
+        expectClickable(1, 10);
+        expectClickable(1, 11);
     }));
     it('Should change last piece coord when clicked but first piece is not neighboors', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -373,11 +380,11 @@ describe('EpaminondasComponent:', () => {
         const epaminondasComponent: EpaminondasComponent = testElements.gameComponent as EpaminondasComponent;
         expect(epaminondasComponent.firstPiece).toEqual(new Coord(0, 11));
         expect(epaminondasComponent.lastPiece).toEqual(new Coord(0, 9));
-        expect(epaminondasComponent.getPieceStroke(0, 7)).toBeNull();
-        expect(epaminondasComponent.getPieceStroke(0, 8)).toBeNull();
-        expect(epaminondasComponent.getPieceStroke(0, 9)).toBe('yellow');
-        expect(epaminondasComponent.getPieceStroke(0, 10)).toBe('yellow');
-        expect(epaminondasComponent.getPieceStroke(0, 11)).toBe('yellow');
+        expect(epaminondasComponent.getPieceClasses(0, 7)).not.toContain('highlighted');
+        expect(epaminondasComponent.getPieceClasses(0, 8)).not.toContain('highlighted');
+        expect(epaminondasComponent.getPieceClasses(0, 9)).toContain('highlighted');
+        expect(epaminondasComponent.getPieceClasses(0, 10)).toContain('highlighted');
+        expect(epaminondasComponent.getPieceClasses(0, 11)).toContain('highlighted');
     }));
     it('Should cancelMove when third click is not aligned with last click', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -508,11 +515,11 @@ describe('EpaminondasComponent:', () => {
         };
         await expectMoveSuccess('#click_0_8', testElements, expectations);
 
-        expect(epaminondasComponent.getRectFill(0, 7)).toEqual(epaminondasComponent.CAPTURED_FILL);
-        expect(epaminondasComponent.getRectFill(0, 8)).toEqual(epaminondasComponent.CAPTURED_FILL);
-        expect(epaminondasComponent.getRectFill(0, 9)).toEqual(epaminondasComponent.MOVED_FILL);
-        expect(epaminondasComponent.getRectFill(0, 10)).toEqual(epaminondasComponent.MOVED_FILL);
-        expect(epaminondasComponent.getRectFill(0, 11)).toEqual(epaminondasComponent.MOVED_FILL);
+        expect(epaminondasComponent.getRectClass(0, 7)).toEqual('captured');
+        expect(epaminondasComponent.getRectClass(0, 8)).toEqual('captured');
+        expect(epaminondasComponent.getRectClass(0, 9)).toEqual('moved');
+        expect(epaminondasComponent.getRectClass(0, 10)).toEqual('moved');
+        expect(epaminondasComponent.getRectClass(0, 11)).toEqual('moved');
     }));
     it('should delegate decoding to move', () => {
         spyOn(EpaminondasMove, 'decode').and.callThrough();

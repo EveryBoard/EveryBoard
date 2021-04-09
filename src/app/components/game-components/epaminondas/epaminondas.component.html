@@ -1,29 +1,33 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 1400 1200"
+     viewBox="0 0 1410 1210"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
             <rect id="click_{{ x }}_{{ y }}"
                   (click)="onClick(x, y)"
-                  [attr.fill]="getRectFill(x, y)"
-                  [ngStyle]="getRectStyle(x, y)"
-                  [attr.x] = "100*x"
-                  [attr.y] = "100*y"
-                  width="95"
-                  height="95"
-                  stroke-width="5"
-                  stroke="black"
+                  [attr.x] = "CASE_SIZE*x+STROKE_WIDTH"
+                  [attr.y] = "CASE_SIZE*y+STROKE_WIDTH"
+                  [attr.width]="CASE_SIZE"
+                  [attr.height]="CASE_SIZE"
+                  class="base {{getRectClass(x, y)}}"
             />
             <circle *ngIf="board[y][x] !== NONE"
                     (click)="onClick(x, y)"
-                    r="45"
-                    stroke-width="10"
-                    stroke="black"
-                    [attr.cx]="50 + 100*x"
-                    [attr.cy]="50 + 100*y"
-                    [ngStyle]="getPieceStyle(x, y)"
+                    [attr.r]="(CASE_SIZE-2*STROKE_WIDTH)/2"
+                    [attr.cx]="CASE_SIZE*x+STROKE_WIDTH + CASE_SIZE/2"
+                    [attr.cy]="CASE_SIZE*y+STROKE_WIDTH + CASE_SIZE/2"
+                    class="base {{getPieceClasses(x, y)}}"
             />
         </g>
+    </g>
+    <g *ngFor="let coord of getHighlightedCoords();">
+        <rect (click)="onClick(coord.x, coord.y)"
+              [attr.x] = "CASE_SIZE*coord.x+STROKE_WIDTH"
+              [attr.y] = "CASE_SIZE*coord.y+STROKE_WIDTH"
+              [attr.width]="CASE_SIZE"
+              [attr.height]="CASE_SIZE"
+              class="base no-fill highlighted"
+        />
     </g>
 </svg>
