@@ -210,7 +210,7 @@ describe('PylosComponent', () => {
         await expectClickSuccess('#click_1_1_0', testElements);
         await expectClickSuccess('#click_0_0_0', testElements);
         const pylosGameComponent: PylosComponent = testElements.gameComponent as PylosComponent;
-        expect(pylosGameComponent.getCaseFill(0, 0, 0)).toEqual(pylosGameComponent.PRE_CAPTURED_FILL);
+        expect(pylosGameComponent.getCaseClasses(0, 0, 0)).toEqual(['pre-captured']);
         const captures: PylosCoord[] = [new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)];
         const expectations: MoveExpectations = {
             move: PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures),
@@ -219,9 +219,9 @@ describe('PylosComponent', () => {
             scoreOne: null,
         };
         await expectMoveSuccess('#click_0_1_0', testElements, expectations);
-        expect(pylosGameComponent.getCaseFill(1, 1, 0)).toEqual(pylosGameComponent.MOVED_FILL);
-        expect(pylosGameComponent.getCaseFill(0, 0, 0)).toEqual(pylosGameComponent.CAPTURED_FILL);
-        expect(pylosGameComponent.getCaseFill(0, 1, 0)).toEqual(pylosGameComponent.CAPTURED_FILL);
+        expect(pylosGameComponent.getCaseClasses(1, 1, 0)).toEqual(['moved']);
+        expect(pylosGameComponent.getCaseClasses(0, 0, 0)).toEqual(['captured']);
+        expect(pylosGameComponent.getCaseClasses(0, 1, 0)).toEqual(['captured']);
     }));
     it('should forbid piece to land lower than they started', fakeAsync(async() => {
         const initialBoard: number[][][] = [

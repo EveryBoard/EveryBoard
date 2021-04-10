@@ -11,10 +11,10 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;
-    public readonly PRE_CAPTURED_FILL: string = 'pink';
 
     public rules: PylosRules = new PylosRules(PylosPartSlice);
 
@@ -118,21 +118,21 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         }
         return clickedCoord.isUpperThan(this.chosenStartingCoord); // true if legal climbing (without capture)
     }
-    public getCaseFill(x: number, y: number, z: number): string {
+    public getCaseClasses(x: number, y: number, z: number): string[] {
         const coord: PylosCoord = new PylosCoord(x, y, z);
         if (this.lastMove) {
             if (coord.equals(this.lastMove.firstCapture.getOrNull()) ||
                 coord.equals(this.lastMove.secondCapture.getOrNull())) {
-                return this.CAPTURED_FILL;
+                return ['captured'];
             } else if (coord.equals(this.lastMove.landingCoord) ||
                        coord.equals(this.lastMove.startingCoord.getOrNull())) {
-                return this.MOVED_FILL;
+                return ['moved'];
             }
         }
         if (coord.equals(this.chosenFirstCapture)) {
-            return this.PRE_CAPTURED_FILL;
+            return ['pre-captured'];
         } else {
-            return this.NORMAL_FILL;
+            return [];
         }
     }
     public getPieceRay(z: number): number {
@@ -150,25 +150,24 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         const landingCoord: boolean = coord.equals(this.chosenLandingCoord);
         return reallyOccupied || landingCoord;
     }
-    public getPieceStyle(x: number, y: number, z: number): any {
+    public getPieceClasses(x: number, y: number, z: number): string[] {
         const c: PylosCoord = new PylosCoord(x, y, z);
-        const fill: string = this.getPieceFill(c);
-        let stroke: string = 'black';
-
-        if (c.equals(this.lastLandingCoord) ||
-            c.equals(this.lastStartingCoord)) stroke = 'yellow';
-        else if (c.equals(this.chosenStartingCoord) ||
-                 c.equals(this.chosenLandingCoord)) stroke = 'grey';
-        else if (c.equals(this.lastFirstCapture) ||
-                 c.equals(this.lastSecondCapture)) stroke = 'orange';
-        return { fill, stroke };
+        const classes: string[] = [this.getPieceFillClass(c)];
+        if (c.equals(this.lastLandingCoord) || c.equals(this.lastStartingCoord)) {
+            classes.push('highlighted');
+        } else if (c.equals(this.chosenStartingCoord) || c.equals(this.chosenLandingCoord)) {
+            classes.push('moved');
+        } else if (c.equals(this.lastFirstCapture) || c.equals(this.lastSecondCapture)) {
+            classes.push('highlighted2');
+        }
+        return classes;
     }
-    private getPieceFill(c: PylosCoord): string {
+    private getPieceFillClass(c: PylosCoord): string {
         let owner: number = this.slice.getBoardAt(c);
         if (c.equals(this.chosenLandingCoord)) {
             owner = this.slice.getCurrentPlayer().value;
         }
-        return this.getPlayerColor(Player.of(owner));
+        return 'player' + owner;
     }
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;

@@ -103,9 +103,9 @@ describe('AwaleComponent', () => {
         };
         await expectMoveSuccess('#click_5_0', testElements, expectations);
         const awaleComponent: AwaleComponent = testElements.gameComponent as AwaleComponent;
-        expect(awaleComponent.getCaseClasses(5, 0)).toBe('moved highlighted');
-        expect(awaleComponent.getCaseClasses(5, 1)).toBe('moved');
-        expect(awaleComponent.getCaseClasses(4, 1)).toBe('captured');
+        expect(awaleComponent.getCaseClasses(5, 0)).toEqual(['moved', 'highlighted']);
+        expect(awaleComponent.getCaseClasses(5, 1)).toEqual(['moved']);
+        expect(awaleComponent.getCaseClasses(4, 1)).toEqual(['captured']);
     }));
     it('should tell to user he can\'t move empty house', fakeAsync(async() => {
         const board: number[][] = [

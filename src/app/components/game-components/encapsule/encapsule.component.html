@@ -10,14 +10,16 @@
                   [attr.y]="CASE_SIZE*y+STROKE_WIDTH"
                   [attr.width]="CASE_SIZE"
                   [attr.height]="CASE_SIZE"
-                  class="base {{getRectClasses(x, y)}}"
+                  [ngClass]="getRectClasses(x, y)"
+                  class="base"
                   />
             <circle *ngFor="let piece of getListPieces(caseContent);"
                     (click)="onBoardClick(x, y)"
                     [attr.r]="getPieceRadius(piece)"
                     [attr.cx]="CASE_SIZE*x+STROKE_WIDTH + CASE_SIZE/2"
                     [attr.cy]="CASE_SIZE*y+STROKE_WIDTH + CASE_SIZE/2"
-                    class='base no-fill {{getPieceClasses(piece)}}'
+                    [ngClass]="getPieceClasses(piece)"
+                    class='base no-fill'
                     />
         </g>
     </g>
@@ -38,7 +40,8 @@
                     [attr.r]="getPieceRadius(piece)"
                     [attr.cx]="CASE_SIZE*4 + CASE_SIZE/2 + CASE_SIZE*pieceIdx"
                     [attr.cy]="CASE_SIZE/2 + CASE_SIZE*player"
-                    class="base no-fill {{getSidePieceClasses(piece, pieceIdx)}}"
+                    [ngClass]="getSidePieceClasses(piece, pieceIdx)"
+                    class="base no-fill"
                     pointer-events="fill"
                     />
         </g>

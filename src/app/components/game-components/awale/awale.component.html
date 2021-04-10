@@ -3,12 +3,6 @@
      viewBox="0 0 600 200"
      preserveAspectRatio="xMidYMid meet"
      >
-    <style type="text/css">
-        .text {
-            font: 50px sans-serif;
-            text-anchor: middle;
-        }
-    </style>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let content of line; index as x">
             <circle id="click_{{x}}_{{y}}"
@@ -16,12 +10,13 @@
                     [attr.cx]="50 + 100*x"
                     [attr.cy]="50 + 100*y"
                     r="46"
-                    class="base {{getCaseClasses(x, y)}}"
+                    [ngClass]="getCaseClasses(x, y)"
+                    class="base"
             />
             <text (click)="onClick(x, y)"
                   [attr.x]="50 + 100*x"
                   [attr.y]="66 + 100*y"
-                  class="text"
+                  class="text-big text-center"
             >
                 {{ content }}
             </text>

@@ -75,16 +75,16 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         // let's confirm on java-server-side that the move is legal
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
     }
-    public getCaseClasses(x: number, y: number): string {
+    public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return 'captured';
+            return ['captured'];
         } else if (coord.equals(this.last)) {
-            return 'moved highlighted';
+            return ['moved', 'highlighted'];
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return 'moved';
+            return ['moved'];
         } else {
-            return '';
+            return [];
         }
     }
     public decodeMove(encodedMove: number): AwaleMove {

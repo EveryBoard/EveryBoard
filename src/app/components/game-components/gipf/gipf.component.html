@@ -2,19 +2,6 @@
      width="100%" height="auto"
      viewBox="0 0 530 640"
      preserveAspectRatio="xMidYMid meet">
-    <style type="text/css">
-        .text {
-            font: 20 sans-serif;
-        }
-        .capture {
-            stroke-width: {{SMALL_STROKE_WIDTH}};
-            stroke: {{CLICKABLE_STROKE}};
-            fill: none;
-        }
-        .capture:hover {
-            stroke-width: {{STROKE_WIDTH}};
-        }
-    </style>
     <defs>
         <marker id="arrowhead" markerWidth="10" markerHeight="7"
                 refX="5" refY="3.5" orient="auto">
@@ -32,14 +19,15 @@
                     [attr.cx]="getCenter(case).x"
                     [attr.cy]="getCenter(case).y"
                     [attr.r]="getPieceSize()"
-                    class="base {{getPieceClass(case)}}"/>
+                    [ngClass]="getPieceClass(case)"
+                    class="base"/>
         </g>
     </g>
 
 
     <g *ngFor="let capture of possibleCaptures; index as i;"
        pointer-events="fill"
-       class="capture">
+       class="capturable">
         <g *ngFor="let case of capture.capturedCases;">
             <polyline [attr.points]="getHexaCoordinates(case)"
                       (click)="onClick(case)"
@@ -52,20 +40,21 @@
               [attr.y1]="arrow.y1"
               [attr.x2]="arrow.x2"
               [attr.y2]="arrow.y2"
-              stroke="#000"
-              stroke-width="3"
+              class="arrow"
               marker-end="url(#arrowhead)"
               (click)="onClick(arrow.destination)"/>
     </g>
 
     <g *ngFor="let player of [0, 1];">
-        <text x="0" [attr.y]="20+(getPieceSize()+20)*player" class="text">Pièces du joueur {{player+1}}</text>
+        <text x="0" [attr.y]="22+(getPieceSize()+10)*player" class="text-small">Pièces du joueur {{player+1}}</text>
         <g *ngFor="let p of getPlayerSidePieces(player);">
             <circle id="piece_{{ player }}_{{ p }}"
-                    [attr.cx] = "120+(p * getPieceSize()/3)"
-                    [attr.cy]="20+(getPieceSize()+10)*player"
+                    [attr.cx]="150+(p * getPieceSize()/3)"
+                    [attr.cy]="20+(getPieceSize()+5)*player"
                     [attr.r]="getPieceSize()/3"
-                    class="base {{getPlayerClass(player)}}"/>
+                    [ngClass]="getPlayerClass(player)"
+                    class="base small-stroke"
+                    />
         </g>
     </g>
 </svg>
