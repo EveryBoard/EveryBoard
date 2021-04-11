@@ -128,8 +128,8 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         }
         return false;
     }
-    public getPieceClasses(piece: EncapsulePiece): string {
-        return this.getPieceStrokeClass(piece);
+    public getPieceClasses(piece: EncapsulePiece): string[] {
+        return [this.getPieceStrokeClass(piece)];
     }
     public getPieceStrokeClass(piece: EncapsulePiece): string {
         const player: Player = piece.getPlayer();
@@ -152,10 +152,10 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         }
         return coords;
     }
-    public getSidePieceClasses(piece: EncapsulePiece, index: number): string {
-        const pieceClasses: string = this.getPieceClasses(piece);
+    public getSidePieceClasses(piece: EncapsulePiece, index: number): string[] {
+        const pieceClasses: string[] = this.getPieceClasses(piece);
         if (this.isSelectedPiece(piece) && this.chosenPieceIndex === index) {
-            return 'clickable ' + pieceClasses;
+            pieceClasses.push('clickable ');
         }
         return pieceClasses;
     }

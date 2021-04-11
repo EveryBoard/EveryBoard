@@ -12,6 +12,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;
@@ -42,18 +43,16 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
             this.last = null;
         }
     }
-    public getCaseStyle(x: number, y: number): {[key:string]: string} {
-        return {
-            'fill': this.getCaseFill(this.board[y][x]),
-            'stroke': this.last && this.last.equals(new Coord(x, y)) ? 'yellow' : 'black',
-        };
-    }
-    private getCaseFill(content: number): string {
-        if (content === Player.NONE.value) {
-            return 'none';
-        } else {
-            return this.getPlayerColor(Player.of(content));
+    public getCaseClasses(x: number, y: number): string[] {
+        const classes: string[] = [];
+        classes.push(this.getCaseFillClass(this.board[y][x]));
+        if (this.last && this.last.equals(new Coord(x, y))) {
+            classes.push('highlighted');
         }
+        return classes;
+    }
+    private getCaseFillClass(content: number): string {
+        return this.getPlayerClass(Player.of(content));
     }
     public decodeMove(encodedMove: number): Move {
         return P4Move.decode(encodedMove);

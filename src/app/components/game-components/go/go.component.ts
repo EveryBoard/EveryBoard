@@ -9,12 +9,12 @@ import { GroupDatas } from 'src/app/games/go/group-datas/GroupDatas';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
     public static VERBOSE: boolean = false;
@@ -101,9 +101,9 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
             return MGPValidation.failure('Cannot pass');
         }
     }
-    public getCaseColor(x: number, y: number): string {
+    public getCaseClass(x: number, y: number): string {
         const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
-        return this.getPlayerColor(piece.getOwner());
+        return this.getPlayerClass(piece.getOwner());
     }
     public caseIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);

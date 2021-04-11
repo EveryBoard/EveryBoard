@@ -515,11 +515,11 @@ describe('EpaminondasComponent:', () => {
         };
         await expectMoveSuccess('#click_0_8', testElements, expectations);
 
-        expect(epaminondasComponent.getRectClass(0, 7)).toEqual('captured');
-        expect(epaminondasComponent.getRectClass(0, 8)).toEqual('captured');
-        expect(epaminondasComponent.getRectClass(0, 9)).toEqual('moved');
-        expect(epaminondasComponent.getRectClass(0, 10)).toEqual('moved');
-        expect(epaminondasComponent.getRectClass(0, 11)).toEqual('moved');
+        expect(epaminondasComponent.getRectClasses(0, 7)).toEqual(['captured']);
+        expect(epaminondasComponent.getRectClasses(0, 8)).toEqual(['captured']);
+        expect(epaminondasComponent.getRectClasses(0, 9)).toEqual(['moved']);
+        expect(epaminondasComponent.getRectClasses(0, 10)).toEqual(['moved']);
+        expect(epaminondasComponent.getRectClasses(0, 11)).toEqual(['moved']);
     }));
     it('should delegate decoding to move', () => {
         spyOn(EpaminondasMove, 'decode').and.callThrough();

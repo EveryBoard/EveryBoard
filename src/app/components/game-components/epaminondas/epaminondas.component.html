@@ -10,14 +10,16 @@
                   [attr.y] = "CASE_SIZE*y+STROKE_WIDTH"
                   [attr.width]="CASE_SIZE"
                   [attr.height]="CASE_SIZE"
-                  class="base {{getRectClass(x, y)}}"
+                  [ngClass]="getRectClasses(x, y)"
+                  class="base"
             />
             <circle *ngIf="board[y][x] !== NONE"
                     (click)="onClick(x, y)"
                     [attr.r]="(CASE_SIZE-2*STROKE_WIDTH)/2"
                     [attr.cx]="CASE_SIZE*x+STROKE_WIDTH + CASE_SIZE/2"
                     [attr.cy]="CASE_SIZE*y+STROKE_WIDTH + CASE_SIZE/2"
-                    class="base {{getPieceClasses(x, y)}}"
+                    [ngClass]="getPieceClasses(x, y)"
+                    class="base"
             />
         </g>
     </g>

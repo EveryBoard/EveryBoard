@@ -13,8 +13,10 @@ import { Direction } from 'src/app/jscaip/Direction';
 @Component({
     selector: 'app-reversi',
     templateUrl: './reversi.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
+    public CASE_SIZE: number = 100;
     public NONE: number = Player.NONE.value;
     public lastMove: Coord = new Coord(-2, -2);
 
@@ -75,19 +77,18 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
             }
         }
     }
-    public getRectFill(x: number, y: number): string {
+    public getRectClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.captureds.some((c: Coord) => c.equals(coord))) {
-            return this.CAPTURED_FILL;
+            return ['captured'];
         } else if (coord.equals(this.lastMove)) {
-            return this.MOVED_FILL;
+            return ['moved'];
         } else {
-            return this.NORMAL_FILL;
+            return [];
         }
     }
-    public getPieceStyle(x: number, y: number): any {
-        const fill: string = this.getPlayerColor(Player.of(this.board[y][x]));
-        return { fill };
+    public getPieceClass(x: number, y: number): string {
+        return this.getPlayerClass(Player.of(this.board[y][x]));
     }
     public async pass(): Promise<MGPValidation> {
         return this.onClick(ReversiMove.PASS.coord.x, ReversiMove.PASS.coord.y);

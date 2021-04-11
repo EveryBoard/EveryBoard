@@ -3,6 +3,10 @@
     stroke-width: 8;
     fill: lightgrey;
 }
+.base-no-fill {
+    stroke: black;
+    stroke-width: 8;
+}
 .player0 {
     fill: #994d00;
 }
@@ -15,18 +19,62 @@
 .player1-stroke {
     stroke: #ffc34d;
 }
-.no-fill {
-    fill: none;
+.pre-captured {
+    fill: pink;
 }
 .captured {
     fill: red;
+}
+.captured-stroke {
+    stroke: red;
 }
 .moved {
     fill: gray;
 }
 .highlighted {
-    stroke: yellow;
+    stroke: #e6e600;
+}
+.highlighted2 {
+    stroke: orange;
+}
+.selected {
+    stroke: green;
 }
 .clickable {
     stroke: yellow;
+}
+.capturable {
+    stroke-width: 2;
+    stroke: yellow;
+}
+.capturable:hover {
+    stroke-width: 8;
+}
+.arrow {
+    stroke: black;
+    stroke-width: 3;
+}
+.no-fill {
+    fill: none;
+}
+.no-stroke {
+    stroke: none;
+}
+.small-stroke {
+    stroke-wdth: 2;
+}
+.mid-stroke {
+    stroke-width: 5;
+}
+.normal-stroke {
+    stroke-width: 8;
+}
+.text-big {
+    font: 50px sans-serif;
+}
+.text-small {
+    font: 20 sans-serif;
+}
+.text-center {
+    text-anchor: middle;
 }
