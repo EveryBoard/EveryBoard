@@ -52,11 +52,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
         return classes;
     }
     private getCaseFillClass(content: number): string {
-        if (content === Player.NONE.value) {
-            return 'no-fill';
-        } else {
-            return 'player' + content;
-        }
+        return this.getPlayerClass(Player.of(content));
     }
     public decodeMove(encodedMove: number): Move {
         return P4Move.decode(encodedMove);

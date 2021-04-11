@@ -86,6 +86,13 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
             case Player.NONE: return this.EMPTY_CASE_FILL;
         }
     }
+    public getPlayerClass(player: Player): string {
+        switch (player) {
+            case Player.ZERO: return 'player0';
+            case Player.ONE: return 'player1';
+            case Player.NONE: return '';
+        }
+    }
     public getTurn(): number {
         return this.rules.node.gamePartSlice.turn;
     }

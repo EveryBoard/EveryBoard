@@ -13,7 +13,6 @@ import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { QuixoComponent } from './quixo.component';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/player/Player';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
@@ -43,11 +42,7 @@ describe('QuixoComponent', () => {
 
     let gameComponent: QuixoComponent;
 
-    const _: number = Player.NONE.value;
-    const X: number = Player.ONE.value;
-    const O: number = Player.ZERO.value;
-
-    const doMove: (move: QuixoMove) => Promise<MGPValidation> = async (move: QuixoMove) => {
+    const doMove: (move: QuixoMove) => Promise<MGPValidation> = async(move: QuixoMove) => {
         return gameComponent.onBoardClick(move.coord.x, move.coord.y) &&
                await gameComponent.chooseDirection(move.direction.toString());
     };
@@ -75,14 +70,11 @@ describe('QuixoComponent', () => {
         expect(gameComponent).toBeTruthy('QuixoComponent should be created');
     });
     it('should style piece correctly', () => {
-        expect(gameComponent.getPlayerColor(Player.ZERO)).toBe('#994d00');
-        expect(gameComponent.getPlayerColor(Player.ONE)).toBe('#ffc34d');
-
         gameComponent.chosenCoord = new Coord(0, 0);
-        expect(gameComponent.getPieceStyle(0, 0)).toEqual({ fill: 'lightgrey', stroke: 'grey' });
+        expect(gameComponent.getPieceClasses(0, 0)).toContain('selected');
 
         gameComponent.lastMoveCoord = new Coord(4, 4);
-        expect(gameComponent.getPieceStyle(4, 4)).toEqual({ fill: 'lightgrey', stroke: 'orange' });
+        expect(gameComponent.getPieceClasses(4, 4)).toContain('highlighted2');
     });
     it('should give correct direction', () => {
         let possibleDirections: [number, number, string][];
@@ -95,7 +87,7 @@ describe('QuixoComponent', () => {
         possibleDirections = gameComponent.getPossiblesDirections();
         expect(possibleDirections).toEqual([[0, 1, 'LEFT'], [1, 0, 'UP']]);
     });
-    it('should cancel move when trying to select ennemy piece or center coord', async () => {
+    it('should cancel move when trying to select ennemy piece or center coord', async() => {
         const firstMove: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
 
         const legal: MGPValidation = await doMove(firstMove);

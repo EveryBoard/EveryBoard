@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/player/Player';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -10,10 +9,12 @@ import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Rules } from 'src/app/jscaip/Rules';
+import { Player } from 'src/app/jscaip/player/Player';
 
 @Component({
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;
@@ -44,15 +45,15 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     public encodeMove(move: QuixoMove): number {
         return QuixoMove.encode(move);
     }
-    public getPieceStyle(x: number, y: number): { [key: string]: string } {
+    public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const c: Player = Player.of(this.board[y][x]);
-        const fill: string = this.getPlayerColor(c);
-        let stroke: string = 'black';
+        const player: Player = Player.of(this.board[y][x]);
+        const classes: string[] = [];
 
-        if (coord.equals(this.chosenCoord)) stroke = 'grey';
-        else if (coord.equals(this.lastMoveCoord)) stroke = 'orange';
-        return { fill, stroke };
+        classes.push(this.getPlayerClass(player));
+        if (coord.equals(this.chosenCoord)) classes.push('selected');
+        else if (coord.equals(this.lastMoveCoord)) classes.push('highlighted2');
+        return classes;
     }
     public onBoardClick(x: number, y: number): MGPValidation {
         const clickedCoord: Coord = new Coord(x, y);

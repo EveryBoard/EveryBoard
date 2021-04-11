@@ -163,11 +163,10 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         return classes;
     }
     private getPieceFillClass(c: PylosCoord): string {
-        let owner: number = this.slice.getBoardAt(c);
         if (c.equals(this.chosenLandingCoord)) {
-            owner = this.slice.getCurrentPlayer().value;
+            return this.getPlayerClass(this.slice.getCurrentPlayer());
         }
-        return 'player' + owner;
+        return this.getPlayerClass(Player.of(this.slice.getBoardAt(c)));
     }
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;

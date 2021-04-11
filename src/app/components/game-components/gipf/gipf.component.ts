@@ -278,10 +278,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
     }
     public getPieceClass(coord: Coord): string {
         const piece: GipfPiece = this.getPiece(coord);
-        return this.getPlayerClass(piece.player.value);
+        return this.getPlayerClass(piece.player);
     }
-    public getPlayerClass(player: number): string {
-        return 'player' + player;
+    public getSidePieceClass(player: number): string {
+        return this.getPlayerClass(Player.of(player));
     }
     public getPieceSize(): number {
         return GipfComponent.PIECE_SIZE;

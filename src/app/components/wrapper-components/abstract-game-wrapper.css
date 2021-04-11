@@ -33,11 +33,12 @@
 }
 .highlighted {
     stroke: #e6e600;
-    stroke-width: 5;
 }
 .highlighted2 {
     stroke: orange;
-    stroke-width: 5;
+}
+.selected {
+    stroke: green;
 }
 .clickable {
     stroke: yellow;
@@ -61,6 +62,12 @@
 }
 .small-stroke {
     stroke-wdth: 2;
+}
+.mid-stroke {
+    stroke-width: 5;
+}
+.normal-stroke {
+    stroke-width: 8;
 }
 .text-big {
     font: 50px sans-serif;

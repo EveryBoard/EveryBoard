@@ -334,7 +334,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return this.chooseMove(move, slice, null, null);
     }
     public getPieceClasses(x: number, y: number): string[] {
-        const player: string = 'player' + this.board[y][x];
+        const player: string = this.getPlayerClass(Player.of(this.board[y][x]));
         const stroke: string[] = this.getPieceStrokeClasses(x, y);
         return stroke.concat([player]);
     }

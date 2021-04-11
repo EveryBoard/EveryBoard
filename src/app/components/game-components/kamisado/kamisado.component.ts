@@ -39,7 +39,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     }
     public pieceBorderClass(pieceValue: number): string {
         const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
-        return 'player' + piece.player.value;
+        return this.getPlayerClass(piece.player);
     }
     public updateBoard(): void {
         const slice: KamisadoPartSlice = this.rules.node.gamePartSlice;

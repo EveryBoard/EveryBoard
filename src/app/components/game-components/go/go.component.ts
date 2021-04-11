@@ -103,7 +103,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     }
     public getCaseClass(x: number, y: number): string {
         const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
-        return 'player' + piece.getOwner().value;
+        return this.getPlayerClass(piece.getOwner());
     }
     public caseIsFull(x: number, y: number): boolean {
         const piece: GoPiece = this.rules.node.gamePartSlice.getBoardByXYGoPiece(x, y);
