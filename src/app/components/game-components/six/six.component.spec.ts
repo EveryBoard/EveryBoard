@@ -98,7 +98,7 @@ describe('SixComponent', () => {
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#neighboor_0_2', testElements, expectations);
     }));
-    xit('Should do deplacement after the 39th turn and show left coords', fakeAsync(async() => {console.clear();
+    xit('Should do deplacement after the 39th turn and show left coords', fakeAsync(async() => {
         const board: NumberTable = [
             [O, X, O],
             [_, _, X],

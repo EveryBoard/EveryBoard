@@ -191,7 +191,7 @@ describe('SixRules', () => {
         });
     });
     describe('victories', () => {
-        xit('Should consider winner player who align 6 pieces', () => {
+        it('Should consider winner player who align 6 pieces', () => {
             const board: number[][] = [
                 [O, O, O, O, O, X, X, X, X, X],
             ];

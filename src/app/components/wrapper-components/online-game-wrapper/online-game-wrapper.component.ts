@@ -196,14 +196,14 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             case UpdateType.REQUEST:
                 return this.onRequest(part.request);
             case UpdateType.DOUBLON:
-                return console.log('FIREBIIIIITE');
+                return;
             case UpdateType.END_GAME:
                 return this.checkEndgames();
                 // TODO: might no longer be checkEndGame but "do"EndGame
             case UpdateType.MOVE:
                 return this.doNewMoves(part);
             case UpdateType.PRE_START_DOC:
-                return console.log('FIREBAULD');
+                return;
             case UpdateType.STARTING_DOC:
                 this.setChronos();
                 this.setPlayersDatas(part);

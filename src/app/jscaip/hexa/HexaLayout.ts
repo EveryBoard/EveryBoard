@@ -12,12 +12,10 @@ export class HexaLayout {
         const y: number = this.size * (M[2] * coord.x + M[3] * coord.y);
         return new Coord(x + this.origin.x, y + this.origin.y);
     }
-
     private getCornerOffset(corner: number): Coord {
         const angle: number = 2 * Math.PI * (this.orientation.startAngle + corner) / 6;
         return new Coord(this.size * Math.cos(angle), this.size * Math.sin(angle));
     }
-
     public getHexaCoordinates(coord: Coord): ReadonlyArray<Coord> {
         const center: Coord = this.getCenter(coord);
         const corners: Coord[] = [];
@@ -26,5 +24,8 @@ export class HexaLayout {
             corners.push(new Coord(center.x + offset.x, center.y + offset.y));
         }
         return corners;
+    }
+    public getYOffset(): number {
+        return this.size * Math.sin(Math.PI / 3);
     }
 }
