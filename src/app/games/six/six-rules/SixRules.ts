@@ -3,11 +3,11 @@ import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPBiMap, MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { SixGameState } from '../six-game-state/SixGameState';
+import { MGPBoolean, SixGameState } from '../six-game-state/SixGameState';
 import { SixMove } from '../six-move/SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
 
@@ -79,6 +79,31 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         }
         if (this.isTriangleVictory(lastDrop, slice)) {
             return victoryValue;
+        }
+        if (slice.turn > 40) {
+            const pieceByPlayer: MGPBiMap<MGPBoolean, MGPSet<Coord>> = slice.pieces.groupByValue();
+            const LAST_PLAYER: Player = slice.getCurrentEnnemy();
+            const ENNEMY: MGPBoolean = slice.getCurrentPlayer() === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE;
+            const ennemyPieces: number =
+                pieceByPlayer.get(ENNEMY).isAbsent() ? 0 : pieceByPlayer.get(ENNEMY).get().size();
+            const PLAYER: MGPBoolean = LAST_PLAYER === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE;
+            const playerPieces: number =
+                pieceByPlayer.get(PLAYER).isAbsent() ? 0 : pieceByPlayer.get(PLAYER).get().size();
+            if (ennemyPieces < 6 && playerPieces < 6) {
+                if (ennemyPieces < playerPieces) {
+                    return LAST_PLAYER.getVictoryValue();
+                } else if (ennemyPieces > playerPieces) {
+                    return LAST_PLAYER.getDefeatValue();
+                } else {
+                    return 0; // DRAW
+                }
+            } else if (ennemyPieces < 6) {
+                return LAST_PLAYER.getVictoryValue();
+            } else if (playerPieces < 6) {
+                return LAST_PLAYER.getDefeatValue();
+            } else {
+                return (playerPieces - ennemyPieces) * LAST_PLAYER.getScoreModifier();
+            }
         }
         return 0;
     }
@@ -242,8 +267,9 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
             case state.getCurrentEnnemy():
                 return { legal: MGPValidation.failure('Cannot move ennemy piece!'), kept: null };
         }
-        const stateAfterDeplacement: SixGameState = state.deplacePiece(move); // LELE
-        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterDeplacement.getGroups(move.start.get()); // LELE
+        const piecesAfterDeplacement: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(state, move);
+        const groupsAfterMove: MGPSet<MGPSet<Coord>> =
+            SixGameState.getGroups(piecesAfterDeplacement, move.start.get()); // LELE
         if (this.isSplit(groupsAfterMove)) {
             const biggerGroups: MGPSet<MGPSet<Coord>> = this.getBiggerGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
@@ -256,7 +282,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
                     return { legal: MGPValidation.SUCCESS, kept: biggerGroups.get(0) };
                 }
             } else {
-                return this.moveKeepBiggerGroup(move.keep, biggerGroups, stateAfterDeplacement);
+                return this.moveKeepBiggerGroup(move.keep, biggerGroups, piecesAfterDeplacement);
             }
         } else {
             return {
@@ -285,14 +311,14 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
     }
     public moveKeepBiggerGroup(keep: MGPOptional<Coord>,
                                biggerGroups: MGPSet<MGPSet<Coord>>,
-                               state: SixGameState): SixLegalityStatus {
+                               pieces: MGPBiMap<Coord, MGPBoolean>): SixLegalityStatus {
         if (keep.isAbsent()) {
             return {
                 legal: MGPValidation.failure(SixFailure.MUST_CUT),
                 kept: null,
             };
         }
-        if (state.getPieceAt(keep.get()) === Player.NONE) {
+        if (pieces.get(keep.get()).isAbsent()) {
             return { legal: MGPValidation.failure('Cannot keep empty coord!'), kept: null };
         }
         const keptCoord: Coord = keep.get();

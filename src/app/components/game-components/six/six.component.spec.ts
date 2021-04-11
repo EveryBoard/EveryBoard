@@ -98,11 +98,14 @@ describe('SixComponent', () => {
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#neighboor_0_2', testElements, expectations);
     }));
-    xit('Should do deplacement after the 39th turn and show left coords', fakeAsync(async() => {
+    it('Should do deplacement after the 39th turn and show left coords', fakeAsync(async() => {
         const board: NumberTable = [
-            [O, X, O],
-            [_, _, X],
-            [_, O, _],
+            [O],
+            [X],
+            [O],
+            [X],
+            [O],
+            [X],
         ];
         const state: SixGameState = SixGameState.fromRepresentation(board, 40);
         testElements.gameComponent.rules.node = new SixNode(null, null, state, 0);
@@ -112,10 +115,13 @@ describe('SixComponent', () => {
         const gameComponent: SixComponent = testElements.gameComponent as SixComponent;
         await expectClickSuccess('#piece_0_0', testElements);
         expectElementToExist('#selectedPiece_0_0', testElements);
-        const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(2, 2));
+        const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 6));
         const expectations: MoveExpectations = getMoveExpectations(move);
-        await expectMoveSuccess('#neighboor_2_2', testElements, expectations);
-        expect(gameComponent.getPieceFill(new Coord(1, 2))).toBe(gameComponent.MOVED_FILL);
+        await expectMoveSuccess('#neighboor_0_6', testElements, expectations);
+
+        expectElementToExist('#leftCoord_0_-1', testElements);
+        expectElementToExist('#lastDrop_0_5', testElements);
+        expect(gameComponent.getPieceFill(new Coord(0, 5))).toBe(gameComponent.PLAYER_ZERO_FILL);
     }));
     it('Should ask to cut when needed', fakeAsync(async() => {
         const board: NumberTable = [
