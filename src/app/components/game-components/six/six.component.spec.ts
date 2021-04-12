@@ -141,15 +141,22 @@ describe('SixComponent', () => {
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#piece_2_0', testElements, expectations);
     }));
-    xdescribe('victory', () => {
-        it('should highlight winning line', () => {
-            expect(false).toBeTrue();
-        });
-        it('should highlight winning triangle', () => {
-            expect(false).toBeTrue();
-        });
-        it('should highlight winning hexagone', () => {
-            expect(false).toBeTrue();
-        });
-    });
+    it('should highlight winning coords', fakeAsync(async() => {
+        const board: number[][] = [
+            [O, _, _, _, _, _, _, _, _, _],
+            [O, O, O, O, O, X, X, X, X, X],
+            [_, _, _, _, _, _, _, _, _, X],
+        ];
+        const state: SixGameState = SixGameState.fromRepresentation(board, 42);
+        testElements.gameComponent.rules.node = new SixNode(null, null, state, 0);
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
+
+        await expectClickSuccess('#piece_0_0', testElements);
+        const expectations: MoveExpectations =
+            getMoveExpectations(SixMove.fromDeplacement(new Coord(0, 0), new Coord(-1, 1)));
+        await expectMoveSuccess('#neighboor_-1_1', testElements, expectations);
+        expectElementToExist('#victoryCoord_0_0', testElements);
+        expectElementToExist('#victoryCoord_5_0', testElements);
+    }));
 });

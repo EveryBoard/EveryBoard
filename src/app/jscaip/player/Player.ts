@@ -35,17 +35,17 @@ export class Player {
     public getDefeatValue(): number {
         assert(this !== Player.NONE, 'Should not call getDefeatValue on Player.NONE!');
         if (this === Player.ZERO) {
-            return Number.MIN_SAFE_INTEGER;
-        } else {
             return Number.MAX_SAFE_INTEGER;
+        } else {
+            return Number.MIN_SAFE_INTEGER;
         }
     }
     public getVictoryValue(): number {
         assert(this !== Player.NONE, 'Should not call getVictoryValue on Player.NONE!');
         if (this === Player.ZERO) {
-            return Number.MAX_SAFE_INTEGER;
-        } else {
             return Number.MIN_SAFE_INTEGER;
+        } else {
+            return Number.MAX_SAFE_INTEGER;
         }
     }
 }
