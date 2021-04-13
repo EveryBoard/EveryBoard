@@ -4,7 +4,7 @@ import { SixGameState } from '../six-game-state/SixGameState';
 import { SixMove } from '../six-move/SixMove';
 import { SixRules } from './SixRules';
 
-fdescribe('Six.Minimax', () => {
+describe('Six.Minimax', () => {
 
     let rules: SixRules;
 

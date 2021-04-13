@@ -7,7 +7,7 @@ import { SixMove } from '../six-move/SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
 import { SixRules } from './SixRules';
 
-fdescribe('SixRules', () => {
+describe('SixRules', () => {
     let rules: SixRules;
 
     const _: number = Player.NONE.value;

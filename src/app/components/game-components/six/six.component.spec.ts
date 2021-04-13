@@ -123,7 +123,7 @@ describe('SixComponent', () => {
         expectElementToExist('#lastDrop_0_5', testElements);
         expect(gameComponent.getPieceFill(new Coord(0, 5))).toBe(gameComponent.PLAYER_ZERO_FILL);
     }));
-    it('Should ask to cut when needed', fakeAsync(async() => { console.clear();
+    xit('Should ask to cut when needed', fakeAsync(async() => {
         const board: NumberTable = [
             [O, _, O],
             [X, _, O],

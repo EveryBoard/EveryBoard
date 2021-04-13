@@ -75,7 +75,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         if (shapeVictory.length === 6) {
             return victoryValue;
         }
-        if (slice.turn > 40) {
+        if (slice.turn > 39) {
             const pieceByPlayer: MGPBiMap<MGPBoolean, MGPSet<Coord>> = slice.pieces.groupByValue();
             const LAST_PLAYER: Player = slice.getCurrentEnnemy();
             const ENNEMY: MGPBoolean = slice.getCurrentPlayer() === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE;
