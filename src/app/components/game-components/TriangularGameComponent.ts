@@ -88,7 +88,7 @@ export abstract class TriangularGameComponent<M extends Move,
                CENTER + ',' +
                DOWN_RIGHT;
     }
-    public getPlayerFill(x: number, y: number): string {
-        return this.getPlayerColor(Player.of(this.board[y][x]));
+    public getPlayerClassFor(x: number, y: number): string {
+        return this.getPlayerClass(Player.of(this.board[y][x]));
     }
 }

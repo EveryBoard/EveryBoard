@@ -10,11 +10,12 @@ import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/coerceo-rules/C
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
-import { Vector } from 'src/app/jscaip/Direction';
+import { Player } from 'src/app/jscaip/player/Player';
 
 @Component({
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
                                                               CoerceoPartSlice,
@@ -37,8 +38,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
     public lastEnd: MGPOptional<Coord> = MGPOptional.empty();
 
     public highlights: Coord[] = [];
-
-    public REMOVED_FILL: string = '#990000';
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
@@ -117,13 +116,13 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         const mother: CoerceoNode = this.rules.node.mother;
         return mother && mother.gamePartSlice.getBoardByXY(x, y) === mother.gamePartSlice.getCurrentEnnemy().value;
     }
-    public getPyramidFill(caseContent: number): string {
+    public getPyramidClass(caseContent: number): string {
         if (caseContent === CoerceoPiece.ZERO.value) {
-            return this.PLAYER_ZERO_FILL;
+            return this.getPlayerClass(Player.ZERO);
         } else if (caseContent === CoerceoPiece.ONE.value) {
-            return this.PLAYER_ONE_FILL;
+            return this.getPlayerClass(Player.ONE);
         } else {
-            return this.CAPTURED_FILL;
+            return 'captured';
         }
     }
     public isEmptyCase(x: number, y: number, caseContent: number): boolean {
@@ -140,15 +139,15 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             return false;
         }
     }
-    public getEmptyFill(x: number, y: number, caseContent: number): string {
+    public getEmptyClass(x: number, y: number, caseContent: number): string {
         if (caseContent === CoerceoPiece.EMPTY.value) {
             if ((x+y)%2 === 1) {
-                return 'lightgrey';
+                return 'background';
             } else {
-                return 'dimgray';
+                return 'background2';
             }
         } else {
-            return this.REMOVED_FILL;
+            return 'captured2';
         }
     }
     public getTilesCountCoordinate(x: number, y: number): string {

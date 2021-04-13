@@ -13,6 +13,7 @@ import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 @Component({
     selector: 'app-sahara',
     templateUrl: './sahara.component.html',
+    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
 })
 export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;

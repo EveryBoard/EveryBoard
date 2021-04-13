@@ -7,22 +7,22 @@
                   (click)="insertAt(n, -1)"
                   [attr.points]="getArrowCoordinate(n + 1, 0)"
                   [attr.transform]="rotate(n + 1, 0, 'DOWN')"
-                  style="fill:grey;stroke:grey"/>
+                  class="gray"/>
         <polyline id="insertAt_{{n}}_5"
                   (click)="insertAt(n, 5)"
                   [attr.points]="getArrowCoordinate(n + 1, 6)"
                   [attr.transform]="rotate(n + 1, 6, 'UP')"
-                  style="fill:grey;stroke:grey"/>
+                  class="gray"/>
         <polyline id="insertAt_-1_{{n}}"
                   (click)="insertAt(-1, n)"
                   [attr.points]="getArrowCoordinate(0, n + 1)"
                   [attr.transform]="rotate(0, n + 1, 'RIGHT')"
-                  style="fill:grey;stroke:grey"/>
+                  class="gray"/>
         <polyline id="insertAt_5_{{n}}"
                   (click)="insertAt(5, n)"
                   [attr.points]="getArrowCoordinate(6, n + 1)"
                   [attr.transform]="rotate(6, n + 1, 'LEFT')"
-                  style="fill:grey;stroke:grey"/>
+                  class="gray"/>
     </g>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
@@ -31,8 +31,8 @@
                           (click)="clickPiece(x, y)"
                           [attr.points]="getArrowCoordinate(x + 1, y + 1)"
                           [attr.transform]="rotateOf(x, y)"
-                          [ngStyle]="stylePiece(x, y, c)"
-                          style="stroke-width: 5"
+                          [ngClass]="getPieceClasses(x, y, c)"
+                          class="mid-stroke"
                 />
                 <g *ngIf="choosingDirection(x, y)">
                     <polyline id="chooseDirection_{{direction[2]}}"

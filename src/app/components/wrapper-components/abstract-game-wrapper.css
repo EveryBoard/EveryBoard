@@ -7,6 +7,15 @@
     stroke: black;
     stroke-width: 8;
 }
+.background {
+    fill: lightgray;
+}
+.background2 {
+    fill: gray;
+}
+.background3 {
+    fill: dimgray;
+}
 .player0 {
     fill: #994d00;
 }
@@ -25,6 +34,9 @@
 .captured {
     fill: red;
 }
+.captured2 {
+    fill: #990000;
+}
 .captured-stroke {
     stroke: red;
 }
@@ -38,7 +50,7 @@
     stroke: orange;
 }
 .selected {
-    stroke: green;
+    stroke: blue;
 }
 .clickable {
     stroke: yellow;
@@ -61,7 +73,7 @@
     stroke: none;
 }
 .small-stroke {
-    stroke-wdth: 2;
+    stroke-width: 2;
 }
 .mid-stroke {
     stroke-width: 5;
