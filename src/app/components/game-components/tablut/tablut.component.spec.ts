@@ -105,7 +105,7 @@ describe('TablutComponent', () => {
     });
     it('Diagonal move attempt should not throw', async() => {
         await expectClickSuccess('#click_3_0', testElements);
-        let threw = false;
+        let threw: boolean = false;
         try {
             const message: string = 'TablutMove cannot be diagonal.';
             await expectClickFail('#click_4_1', testElements, message);
@@ -141,9 +141,9 @@ describe('TablutComponent', () => {
         await expectMoveSuccess('#click_2_0', testElements, expactions);
 
         const tablutGameComponent: TablutComponent = <TablutComponent> testElements.gameComponent;
-        expect(tablutGameComponent.getRectFill(2, 1)).toEqual(tablutGameComponent.CAPTURED_FILL);
-        expect(tablutGameComponent.getRectFill(1, 0)).toEqual(tablutGameComponent.MOVED_FILL);
-        expect(tablutGameComponent.getRectFill(2, 0)).toEqual(tablutGameComponent.MOVED_FILL);
+        expect(tablutGameComponent.getRectClasses(2, 1)).toContain('captured');
+        expect(tablutGameComponent.getRectClasses(1, 0)).toContain('moved');
+        expect(tablutGameComponent.getRectClasses(2, 0)).toContain('moved');
     }));
     it('should delegate decoding to move', () => {
         spyOn(TablutMove, 'decode').and.callThrough();

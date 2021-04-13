@@ -66,7 +66,7 @@ describe('CoerceoComponent:', () => {
         const gameComponent: CoerceoComponent = testElements.gameComponent as CoerceoComponent;
         const caseContent: number = gameComponent.rules.node.gamePartSlice.getBoardByXY(x, y);
         expect(gameComponent.isEmptyCase(x, y, caseContent)).toBeTrue();
-        expect(gameComponent.getEmptyFill(x, y, caseContent)).toBe(gameComponent.REMOVED_FILL);
+        expect(gameComponent.getEmptyClass(x, y, caseContent)).toBe('captured2');
     }
     function expectCoordToBeOfCapturedFill(x: number,
                                            y: number,
@@ -75,7 +75,7 @@ describe('CoerceoComponent:', () => {
         const gameComponent: CoerceoComponent = testElements.gameComponent as CoerceoComponent;
         const caseContent: number = gameComponent.rules.node.gamePartSlice.getBoardByXY(x, y);
         expect(gameComponent.isPyramid(x, y, caseContent)).toBeTrue();
-        expect(gameComponent.getPyramidFill(caseContent)).toBe(gameComponent.CAPTURED_FILL);
+        expect(gameComponent.getPyramidClass(caseContent)).toBe('captured');
     }
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({

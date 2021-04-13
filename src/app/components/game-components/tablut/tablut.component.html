@@ -6,109 +6,106 @@
         <g *ngFor="let c of line; index as x">
             <rect id="click_{{ x }}_{{ y }}"
                   (click)="onClick(x, y)"
-                  [attr.fill]="getRectFill(x, y)"
-                  [ngStyle]="getRectStyle(x, y)"
-                  [attr.x] = "100*x"
-                  [attr.y] = "100*y"
-                  width="95"
-                  height="95"
-                  stroke-width="5"
-                  stroke="black"
+                  [attr.x]="CASE_SIZE*x"
+                  [attr.y]="CASE_SIZE*y"
+                  [attr.width]="CASE_SIZE"
+                  [attr.height]="CASE_SIZE"
+                  [ngClass]="getRectClasses(x, y)"
+                  class="base"
             />
             <g *ngIf="board[y][x] === NONE && isThrone(x, y)">
                 <line (click)="onClick(x, y)"
-                      [attr.x1]="x * 100"
-                      [attr.y1]="y * 100"
-                      [attr.x2]="100 + (x * 100)"
-                      [attr.y2]="100 + (y * 100)"
-                      stroke-width="10"
-                      stroke="black" />
+                      [attr.x1]="CASE_SIZE*x"
+                      [attr.y1]="CASE_SIZE*y"
+                      [attr.x2]="CASE_SIZE + (CASE_SIZE*x)"
+                      [attr.y2]="CASE_SIZE + (CASE_SIZE*y)"
+                      class="base"
+                      />
                 <line (click)="onClick(x, y)"
-                      [attr.x1]="100 + (x * 100)"
-                      [attr.y1]="y * 100"
-                      [attr.x2]="x * 100"
-                      [attr.y2]="100 + (y * 100)"
-                      stroke-width="10"
-                      stroke="black" />
+                      [attr.x1]="CASE_SIZE + (CASE_SIZE*x)"
+                      [attr.y1]="CASE_SIZE*y"
+                      [attr.x2]="CASE_SIZE*x"
+                      [attr.y2]="CASE_SIZE + (CASE_SIZE*y)"
+                      class="base"
+                      />
             </g>
             <g *ngIf="board[y][x] !== NONE">
                 <circle (click)="onClick(x, y)"
-                        r="45"
-                        stroke-width="8"
-                        stroke="black"
-                        [attr.cx]="50 + 100*x"
-                        [attr.cy]="50 + 100*y"
-                        [ngStyle]="getPieceStyle(x, y)"
+                        [attr.r]="(CASE_SIZE-STROKE_WIDTH)/2"
+                        [attr.cx]="CASE_SIZE/2 + CASE_SIZE*x"
+                        [attr.cy]="CASE_SIZE/2 + CASE_SIZE*y"
+                        [ngClass]="getPieceClasses(x, y)"
+                        class="base"
                 />
                 <g *ngIf="isInvader(x, y) else defender">
                     <line (click)="onClick(x, y)"
-                          [attr.x1]="50 + 100*x" [attr.y1]="4 + 100*y"
-                          [attr.x2]="50 + 100*x" [attr.y2]="96 + 100*y"
-                          stroke-width="8"
-                          stroke="black"
+                          [attr.x1]="0.50*CASE_SIZE + CASE_SIZE*x" [attr.y1]="0.04*CASE_SIZE + CASE_SIZE*y"
+                          [attr.x2]="0.50*CASE_SIZE + CASE_SIZE*x" [attr.y2]="0.96*CASE_SIZE + CASE_SIZE*y"
+                          class="base"
                     />
                     <line (click)="onClick(x, y)"
-                          [attr.x1]="50 + 100*x" [attr.y1]="20 + 100*y"
-                          [attr.x2]="5 + 100*x" [attr.y2]="65 + 100*y"
-                          stroke-width="8"
-                          stroke="black"
+                          [attr.x1]="0.50*CASE_SIZE + CASE_SIZE*x" [attr.y1]="0.20*CASE_SIZE + CASE_SIZE*y"
+                          [attr.x2]="0.05*CASE_SIZE + CASE_SIZE*x" [attr.y2]="0.65*CASE_SIZE + CASE_SIZE*y"
+                          class="base"
                     />
                     <line (click)="onClick(x, y)"
-                          [attr.x1]="50 + 100*x" [attr.y1]="20 + 100*y"
-                          [attr.x2]="95 + 100*x" [attr.y2]="65 + 100*y"
-                          stroke-width="8"
-                          stroke="black"
+                          [attr.x1]="0.50*CASE_SIZE + CASE_SIZE*x" [attr.y1]="0.20*CASE_SIZE + CASE_SIZE*y"
+                          [attr.x2]="0.95*CASE_SIZE + CASE_SIZE*x" [attr.y2]="0.65*CASE_SIZE + CASE_SIZE*y"
+                          class="base"
                     />
                     <line (click)="onClick(x, y)"
-                          [attr.x1]="50 + 100*x" [attr.y1]="40 + 100*y"
-                          [attr.x2]="15 + 100*x" [attr.y2]="75 + 100*y"
-                          stroke-width="8"
-                          stroke="black"
+                          [attr.x1]="0.50*CASE_SIZE + CASE_SIZE*x" [attr.y1]="0.40*CASE_SIZE + CASE_SIZE*y"
+                          [attr.x2]="0.15*CASE_SIZE + CASE_SIZE*x" [attr.y2]="0.75*CASE_SIZE + CASE_SIZE*y"
+                          class="base"
                     />
                     <line (click)="onClick(x, y)"
-                          [attr.x1]="50 + 100*x" [attr.y1]="40 + 100*y"
-                          [attr.x2]="85 + 100*x" [attr.y2]="75 + 100*y"
-                          stroke-width="8"
-                          stroke="black"
+                          [attr.x1]="0.50*CASE_SIZE + CASE_SIZE*x" [attr.y1]="0.40*CASE_SIZE + CASE_SIZE*y"
+                          [attr.x2]="0.85*CASE_SIZE + CASE_SIZE*x" [attr.y2]="0.75*CASE_SIZE + CASE_SIZE*y"
+                          class="base"
                     />
                 </g>
                 <ng-template #defender>
                     <g *ngIf="isKing(x, y) else soldierDefender">
                         <polyline (click)="onClick(x, y)"
                                   [attr.points]="getKingPolyline(x, y)"
-                                  fill="none"
-                                  stroke-width="8"
-                                  stroke="black"
+                                  class="base no-fill"
                         />
                     </g>
                     <ng-template #soldierDefender>
                         <line (click)="onClick(x, y)"
-                              [attr.x1]="50 + 100*x" [attr.y1]="4 + 100*y"
-                              [attr.x2]="50 + 100*x" [attr.y2]="96 + 100*y"
-                              stroke-width="8"
-                              stroke="black"
+                              [attr.x1]="50 + CASE_SIZE*x" [attr.y1]="4 + CASE_SIZE*y"
+                              [attr.x2]="50 + CASE_SIZE*x" [attr.y2]="96 + CASE_SIZE*y"
+                              classs="base"
                         />
                         <line (click)="onClick(x, y)"
-                              [attr.x1]="4 + 100*x"  [attr.y1]="50 + 100*y"
-                              [attr.x2]="96 + 100*x" [attr.y2]="50 + 100*y"
-                              stroke-width="8"
-                              stroke="black"
+                              [attr.x1]="4 + CASE_SIZE*x"  [attr.y1]="50 + CASE_SIZE*y"
+                              [attr.x2]="96 + CASE_SIZE*x" [attr.y2]="50 + CASE_SIZE*y"
+                              class="base"
                         />
                         <line (click)="onClick(x, y)"
-                              [attr.x1]="15 + 100*x" [attr.y1]="15 + 100*y"
-                              [attr.x2]="85 + 100*x" [attr.y2]="85 + 100*y"
-                              stroke-width="8"
-                              stroke="black"
+                              [attr.x1]="15 + CASE_SIZE*x" [attr.y1]="15 + CASE_SIZE*y"
+                              [attr.x2]="85 + CASE_SIZE*x" [attr.y2]="85 + CASE_SIZE*y"
+                              class="base"
                         />
                         <line (click)="onClick(x, y)"
-                              [attr.x1]="85 + 100*x" [attr.y1]="15 + 100*y"
-                              [attr.x2]="15 + 100*x" [attr.y2]="85 + 100*y"
-                              stroke-width="8"
-                              stroke="black"
+                              [attr.x1]="85 + CASE_SIZE*x" [attr.y1]="15 + CASE_SIZE*y"
+                              [attr.x2]="15 + CASE_SIZE*x" [attr.y2]="85 + CASE_SIZE*y"
+                              class="base"
                         />
                     </ng-template>
                 </ng-template>
             </g>
         </g>
+    </g>
+
+    <g *ngFor="let coord of getClickables();">
+        <rect id="click_{{ coord.x }}_{{ coord.y }}"
+              (click)="onClick(coord.x, coord.y)"
+              [attr.x]="CASE_SIZE*coord.x"
+              [attr.y]="CASE_SIZE*coord.y"
+              [attr.width]="CASE_SIZE"
+              [attr.height]="CASE_SIZE"
+              class="no-fill mid-stroke clickable"
+              />
     </g>
 </svg>

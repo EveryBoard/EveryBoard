@@ -9,47 +9,44 @@
         >
             <polyline *ngIf="isPyramid(x, y, caseContent) else emptyCase"
                       [attr.points]="getPyramidCoordinate(x, y)"
-                      [attr.fill]="getPyramidFill(caseContent)"
-                      style="stroke: black; stroke-width: 5"
+                      [ngClass]="getPyramidClass(caseContent)"
+                      class="base mid-stroke"
                       stroke-linecap="round"
             />
             <ng-template #emptyCase>
                 <polyline *ngIf="isEmptyCase(x, y, caseContent)"
                           [attr.points]="getTriangleCoordinate(x, y)"
-                          [attr.fill]="getEmptyFill(x, y, caseContent)"
-                          style="stroke: black; stroke-width: 2"
+                          [ngClass]="getEmptyClass(x, y, caseContent)"
+                          class="base small-stroke"
                           stroke-linecap="round"
                 />
             </ng-template>
             <polyline *ngIf="caseContent !== NONE"
                       id="line_{{ x }}_{{ y }}"
                       [attr.points]="getLineCoordinate(x, y)"
-                      fill="none"
-                      stroke="black"
-                      stroke-width="8"
+                      class="base no-fill"
                       stroke-linecap="round" />
 
         </g>
     </g>
     <polyline *ngFor="let hl of highlights"
               [attr.points]="getTriangleCoordinate(hl.x, hl.y)"
-              style="fill: none; stroke: yellow; stroke-width: 5" />
+              class="base no-fill highlighted" />
     <polyline *ngIf="lastStart.isPresent()"
               [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
-              style="fill: none; stroke: yellow; stroke-width: 5" />
+              class="base no-fill highlighted2" />
     <polyline *ngIf="lastEnd.isPresent()"
               [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
-              style="fill: none; stroke: yellow; stroke-width: 5" />
+              class="base no-fill highlighted2" />
     <polyline *ngIf="chosenCoord.isPresent()"
               [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
-              style="fill: none; stroke: blue; stroke-width: 5" />
+              class="base no-fill selected" />
     <g *ngIf="mustShowTilesOf(0)"
         id="tilesCountZero"
     >
         <polyline [attr.points]="getTilesCountCoordinate(0, 0)"
-                  [attr.fill]="PLAYER_ZERO_FILL"
                   [attr.stroke]="lastTurnWasTilesExchange(0) ? 'yellow' : 'black'"
-                  stroke-width="8"
+                  class="base player0"
                   stroke-linecap="round"
         />
         <text id="playerZeroTilesCount"
@@ -64,9 +61,8 @@
         id="tilesCountOne"
     >
         <polyline [attr.points]="getTilesCountCoordinate(0, 9)"
-                  [attr.fill]="PLAYER_ONE_FILL"
                   [attr.stroke]="lastTurnWasTilesExchange(1) ? 'yellow' : 'black'"
-                  stroke-width="8"
+                  class="base player1"
                   stroke-linecap="round"
         />
         <text id="playerOneTilesCount"
