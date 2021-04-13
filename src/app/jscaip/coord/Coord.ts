@@ -1,11 +1,11 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
-import { assert, JSONObject, JSONValue } from 'src/app/utils/collection-lib/utils';
+import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/collection-lib/utils';
 import { Comparable } from '../../utils/collection-lib/Comparable';
 import { Encoder } from '../encoder';
 
 export class Coord implements Comparable {
     public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {
-        public encode(coord: Coord): JSONValue {
+        public encode(coord: Coord): JSONValueWithoutArray {
             return { x: coord.x, y: coord.y };
         }
         public decode(encoded: JSONValue): Coord {

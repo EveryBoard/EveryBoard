@@ -23,7 +23,7 @@ export abstract class NumberEncoder<T> extends Encoder<T> {
         return this.maxValue() + 1;
     }
     public abstract encodeNumber(t: T): number
-    public encode(t: T): JSONValue {
+    public encode(t: T): JSONValue {
         return this.encodeNumber(t);
     }
     public abstract decodeNumber(n: number): T
