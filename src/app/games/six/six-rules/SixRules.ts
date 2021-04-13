@@ -69,12 +69,10 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         return deplacements;
     }
     public getBoardValue(move: SixMove, slice: SixGameState): number {
-        console.log('getSixValue')
         const lastDrop: Coord = move.landing.getNext(slice.offset, 1);
         const victoryValue: number = slice.getCurrentEnnemy().getVictoryValue();
         const shapeVictory: Coord[] = this.getShapeVictory(lastDrop, slice);
         if (shapeVictory.length === 6) {
-            console.log('SHAPE VICTORY')
             return victoryValue;
         }
         if (slice.turn > 40) {
@@ -88,27 +86,20 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
                 pieceByPlayer.get(PLAYER).isAbsent() ? 0 : pieceByPlayer.get(PLAYER).get().size();
             if (ennemyPieces < 6 && playerPieces < 6) {
                 if (ennemyPieces < playerPieces) {
-                    console.log('EFFICIENT SUICIDE')
                     return LAST_PLAYER.getVictoryValue();
                 } else if (ennemyPieces > playerPieces) {
-                    console.log('FAILED SUICIDE')
                     return LAST_PLAYER.getDefeatValue();
                 } else {
-                    console.log('END GAME DRAW')
                     return 0; // DRAW
                 }
             } else if (ennemyPieces < 6) {
-                console.log('STRANGULATION')
                 return LAST_PLAYER.getVictoryValue();
             } else if (playerPieces < 6) {
-                console.log('ASPHIOXION')
                 return LAST_PLAYER.getDefeatValue();
             } else {
-                console.log('JUST SOME SCORE');
                 return (playerPieces - ennemyPieces) * LAST_PLAYER.getScoreModifier();
             }
         }
-        console.log('JUST SOME SCORE BUT BEFORE TURN 40');
         return 0;
     }
     public getShapeVictory(lastDrop: Coord, state: SixGameState): Coord[] {

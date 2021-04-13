@@ -49,4 +49,11 @@
               stroke="yellow"
               fill="none"
               stroke-linecap="round"/>
+    <polyline *ngFor="let disconnected of disconnecteds"
+              id="disconnected_{{ disconnected.x }}_{{ disconnected.y }}"
+              [attr.points]="getHexaCoordinates(disconnected)"
+              stroke-width="8"
+              stroke="black"
+              [attr.fill]="CAPTURED_FILL"
+              stroke-linecap="round"/>
 </svg>

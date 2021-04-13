@@ -31,6 +31,7 @@
         <g *ngFor="let case of capture.capturedCases;">
             <polyline [attr.points]="getHexaCoordinates(case)"
                       (click)="onClick(case)"
+                      fill="none"
                       stroke-linecap="round" />
         </g>
     </g>

@@ -31,7 +31,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public state: SixGameState;
 
     public pieces: Coord[];
-    public disconnected: Coord[];
+    public disconnecteds: Coord[] = [];
     public victoryCoords: Coord[];
     public neighboors: Coord[];
     public leftCoord: Coord = null;
@@ -84,21 +84,34 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             }
             if (this.rules.node.isEndGame()) {
                 this.victoryCoords = this.rules.getShapeVictory(this.lastDrop, this.rules.node.gamePartSlice);
-                //this.victoryCoords = this.victoryCoords.map((c: Coord) => c.getNext(this.state.offset, 1));
+            }
+            this.disconnecteds = this.getDisconnected();
+        }
+    }
+    private getDisconnected(): Coord[] {
+        const oldPieces: Coord[] = this.rules.node.mother.gamePartSlice.pieces.listKeys();
+        const newPieces: Coord[] = this.rules.node.gamePartSlice.pieces.listKeys();
+        const disconnecteds: Coord[] =[];
+        for (const oldPiece of oldPieces) {
+            if (oldPiece.equals(this.rules.node.move.start.getOrNull()) === false &&
+                newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece.getNext(this.state.offset, 1))) === false)
+            {
+                disconnecteds.push(oldPiece.getNext(this.state.offset, 1));
             }
         }
+        return disconnecteds;
     }
     public hideLastMove(): void {
         this.lastDrop = null;
         this.leftCoord = null;
-        this.disconnected = [];
+        this.disconnecteds = [];
         this.victoryCoords = [];
     }
     public getEmptyNeighboors(): Coord[] {
         return this.rules.getLegalLandings(this.state);
     }
     private getViewBox(): string {
-        const abstractScale: Scale = this.getAbstractBoardUse(this.pieces, this.neighboors);
+        const abstractScale: Scale = this.getAbstractBoardUse(this.pieces, this.neighboors, this.disconnecteds);
         const abstractWidth: number = abstractScale.maxX - abstractScale.minX;
         const abstractHeight: number = abstractScale.maxY - abstractScale.minY;
 
@@ -114,8 +127,9 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
                (this.CONCRETE_WIDTH + 20) + ' ' +
                (this.CONCRETE_HEIGHT + 20);
     }
-    public getAbstractBoardUse(pieces: Coord[], neighboors: Coord[]): Scale {
-        const coords: Coord[] = pieces.concat(neighboors);
+    public getAbstractBoardUse(pieces: Coord[], neighboors: Coord[], disconnecteds: Coord[]): Scale {
+        const coords: Coord[] = pieces.concat(neighboors).concat(disconnecteds);
+        console.log('drawing all theses gentlemens: ', coords)
         let upperPiece: Coord;
         let maxX: number = Number.MIN_SAFE_INTEGER;
         let maxY: number = Number.MIN_SAFE_INTEGER;

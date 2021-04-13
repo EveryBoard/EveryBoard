@@ -14,7 +14,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import {
-    expectClickSuccess, expectElementToExist, expectMoveSuccess,
+    expectClickSuccess, expectElementNotToExist, expectElementToExist, expectMoveSuccess,
     MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
@@ -123,7 +123,7 @@ describe('SixComponent', () => {
         expectElementToExist('#lastDrop_0_5', testElements);
         expect(gameComponent.getPieceFill(new Coord(0, 5))).toBe(gameComponent.PLAYER_ZERO_FILL);
     }));
-    it('Should ask to cut when needed', fakeAsync(async() => {
+    it('Should ask to cut when needed', fakeAsync(async() => { console.clear();
         const board: NumberTable = [
             [O, _, O],
             [X, _, O],
@@ -137,9 +137,24 @@ describe('SixComponent', () => {
 
         await expectClickSuccess('#piece_1_2', testElements);
         await expectClickSuccess('#neighboor_2_3', testElements);
+        expectElementToExist('#movingPiece_2_3', testElements);
+        expectElementNotToExist('#piece_1_2', testElements);
+        expectElementToExist('#cuttablePiece_0_0', testElements);
+        expectElementToExist('#cuttablePiece_0_1', testElements);
+        expectElementToExist('#cuttablePiece_0_2', testElements);
+        expectElementToExist('#cuttablePiece_0_3', testElements);
+        expectElementToExist('#cuttablePiece_2_0', testElements);
+        expectElementToExist('#cuttablePiece_2_1', testElements);
+        expectElementToExist('#cuttablePiece_2_2', testElements);
+        expectElementToExist('#cuttablePiece_2_3', testElements);
         const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(1, 2), new Coord(2, 3), new Coord(2, 0));
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#piece_2_0', testElements, expectations);
+        expectElementToExist('#disconnected_-2_0', testElements);
+        expectElementToExist('#disconnected_-2_1', testElements);
+        expectElementToExist('#disconnected_-2_2', testElements);
+        expectElementToExist('#disconnected_-2_3', testElements);
+        console.log('finish')
     }));
     it('should highlight winning coords', fakeAsync(async() => {
         const board: number[][] = [
