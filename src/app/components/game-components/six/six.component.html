@@ -42,4 +42,11 @@
               stroke="yellow"
               fill="none"
               stroke-linecap="round"/>
+    <polyline *ngFor="let victoryCoord of victoryCoords"
+              id="victoryCoord_{{ victoryCoord.x }}_{{ victoryCoord.y }}"
+              [attr.points]="getHexaCoordinates(victoryCoord)"
+              stroke-width="8"
+              stroke="yellow"
+              fill="none"
+              stroke-linecap="round"/>
 </svg>

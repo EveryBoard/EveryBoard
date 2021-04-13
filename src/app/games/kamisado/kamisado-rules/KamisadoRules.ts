@@ -27,6 +27,7 @@ export class KamisadoFailure {
 export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice, LegalityStatus> { }
 
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
+
     public getColorMatchingPiece(slice: KamisadoPartSlice): Array<Coord> {
         if (slice.coordToPlay.isPresent()) {
             // Only one piece can move, and its coord is stored in slice.coordToPlay
@@ -85,7 +86,10 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                 const move: KamisadoMove = KamisadoMove.PASS;
                 const legality: LegalityStatus = this.isLegal(move, slice);
                 if (legality.legal.isSuccess()) {
-                    const result = this.applyLegalMove(move, slice, legality);
+                    const result: {
+                        resultingMove: KamisadoMove;
+                        resultingSlice: KamisadoPartSlice;
+                    } = this.applyLegalMove(move, slice, legality);
                     moves.set(result.resultingMove, result.resultingSlice);
                 }
             }
@@ -112,7 +116,10 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                             const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);
                             const legality: LegalityStatus = this.isLegal(move, slice);
                             if (legality.legal.isSuccess()) {
-                                const result = this.applyLegalMove(move, slice, legality);
+                                const result: {
+                                    resultingMove: KamisadoMove;
+                                    resultingSlice: KamisadoPartSlice;
+                                } = this.applyLegalMove(move, slice, legality);
                                 moves.set(result.resultingMove, result.resultingSlice);
                             }
                         }
@@ -133,7 +140,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     public getBoardValue(move: KamisadoMove, slice: KamisadoPartSlice): number {
         const player: Player = slice.getCurrentPlayer();
         if (this.canOnlyPass(slice) && slice.alreadyPassed) {
-            return player.getVictoryValue();
+            return player.getDefeatValue();
         }
 
         const [furthest0, furthest1]: [number, number] = this.getFurthestPiecePositions(slice);

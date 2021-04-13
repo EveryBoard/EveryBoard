@@ -32,6 +32,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
 
     public pieces: Coord[];
     public disconnected: Coord[];
+    public victoryCoords: Coord[];
     public neighboors: Coord[];
     public leftCoord: Coord = null;
     public lastDrop: Coord = null;
@@ -81,12 +82,17 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             if (lastMove.isDrop() === false) {
                 this.leftCoord = lastMove.start.get().getNext(this.state.offset, 1);
             }
+            if (this.rules.node.isEndGame()) {
+                this.victoryCoords = this.rules.getShapeVictory(this.lastDrop, this.rules.node.gamePartSlice);
+                //this.victoryCoords = this.victoryCoords.map((c: Coord) => c.getNext(this.state.offset, 1));
+            }
         }
     }
     public hideLastMove(): void {
         this.lastDrop = null;
         this.leftCoord = null;
         this.disconnected = [];
+        this.victoryCoords = [];
     }
     public getEmptyNeighboors(): Coord[] {
         return this.rules.getLegalLandings(this.state);
