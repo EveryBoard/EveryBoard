@@ -38,7 +38,7 @@ export class SixGameState extends GamePartSlice {
 
     public static getInitialSlice(): SixGameState {
         const board: NumberTable = [[Player.ZERO.value], [Player.ONE.value]];
-        return SixGameState.fromRepresentation(board, 0);
+        return SixGameState.fromRepresentation(board, 36);
     }
     public static fromRepresentation(board: NumberTable, turn: number): SixGameState {
         const pieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();

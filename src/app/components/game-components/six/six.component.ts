@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SixGameState } from 'src/app/games/six/six-game-state/SixGameState';
+import { MGPBoolean, SixGameState } from 'src/app/games/six/six-game-state/SixGameState';
 import { SixMove } from 'src/app/games/six/six-move/SixMove';
 import { SixFailure, SixNode, SixRules } from 'src/app/games/six/six-rules/SixRules';
 import { SixLegalityStatus } from 'src/app/games/six/SixLegalityStatus';
@@ -9,6 +9,8 @@ import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { Player } from 'src/app/jscaip/player/Player';
 import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { HexagonalGameComponent } from '../HexagonalGameComponent';
 
@@ -18,6 +20,7 @@ interface Scale {
     maxX: number;
     maxY: number
     upperPiece: Coord,
+    lefterPiece: Coord,
 }
 @Component({
     selector: 'app-six',
@@ -32,6 +35,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
 
     public pieces: Coord[];
     public disconnecteds: Coord[] = [];
+    public cuttables: Coord[] = [];
     public victoryCoords: Coord[];
     public neighboors: Coord[];
     public leftCoord: Coord = null;
@@ -60,6 +64,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public cancelMoveAttempt(): void {
         this.selectedPiece = null;
         this.chosenLanding = null;
+        this.cuttables = [];
     }
     public decodeMove(encodedMove: JSONValue): SixMove {
         return SixMove.encoder.decode(encodedMove);
@@ -99,16 +104,19 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
                 disconnecteds.push(oldPiece.getNext(this.state.offset, 1));
             }
         }
+        if (this.pieces.some((coord: Coord) => coord.equals(this.lastDrop)) === false &&
+            newPieces.some((coord: Coord) => coord.equals(this.lastDrop)) === false)
+        {
+            disconnecteds.push(this.lastDrop); // Dummy captured his own piece
+        }
         return disconnecteds;
     }
-    public hideLastMove(): void {
-        this.lastDrop = null;
-        this.leftCoord = null;
-        this.disconnecteds = [];
-        this.victoryCoords = [];
-    }
     public getEmptyNeighboors(): Coord[] {
-        return this.rules.getLegalLandings(this.state);
+        let legalLandings: Coord[] = this.rules.getLegalLandings(this.state);
+        if (this.chosenLanding) {
+            legalLandings = legalLandings.filter((c: Coord) => c.equals(this.chosenLanding) === false);
+        }
+        return legalLandings;
     }
     private getViewBox(): string {
         const abstractScale: Scale = this.getAbstractBoardUse(this.pieces, this.neighboors, this.disconnecteds);
@@ -120,7 +128,8 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         const commonSize: number = Math.min(verticalSize, horizontalSize);
 
         this.setPieceSize(commonSize);
-        const left: number = -2.5 * this.hexaLayout.size;
+        const lefterPiece: Coord = this.hexaLayout.getCenter(abstractScale.lefterPiece);
+        const left: number = lefterPiece.x - this.hexaLayout.size;
         const upperPiece: Coord = this.hexaLayout.getCenter(abstractScale.upperPiece);
         const up: number = upperPiece.y - this.hexaLayout.getYOffset();
         return (left - 10) + ' ' + (up - 10) + ' ' +
@@ -128,9 +137,10 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
                (this.CONCRETE_HEIGHT + 20);
     }
     public getAbstractBoardUse(pieces: Coord[], neighboors: Coord[], disconnecteds: Coord[]): Scale {
+        console.log('disconnecteds: ', disconnecteds )
         const coords: Coord[] = pieces.concat(neighboors).concat(disconnecteds);
-        console.log('drawing all theses gentlemens: ', coords)
         let upperPiece: Coord;
+        let lefterPiece: Coord;
         let maxX: number = Number.MIN_SAFE_INTEGER;
         let maxY: number = Number.MIN_SAFE_INTEGER;
         let minX: number = Number.MAX_SAFE_INTEGER;
@@ -138,7 +148,10 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         for (const coord of coords) {
             const coordY: number = (2 * coord.y) + coord.x; // en demi Y_OFFSETs
             const coordX: number = coord.x; // en nombre de colonnes, simplement
-            minX = Math.min(minX, coordX);
+            if (coordX < minX) {
+                minX = coordX;
+                lefterPiece = coord;
+            }
             if (coordY < minY) {
                 minY = coordY;
                 upperPiece = coord;
@@ -146,7 +159,8 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             maxX = Math.max(maxX, coordX + 1);
             maxY = Math.max(maxY, coordY + 2);
         }
-        return { minX, minY, maxX, maxY, upperPiece };
+        console.log(minX);
+        return { minX, minY, maxX, maxY, upperPiece, lefterPiece };
     }
     public getPieceFill(coord: Coord): string {
         const player: Player = this.rules.node.gamePartSlice.getPieceAt(coord);
@@ -158,8 +172,8 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.state.turn < 40) {
-            return this.cancelMove('TODO: DROP BEFORE 40th turn');
-        } else if (this.selectedPiece == null) {
+            return this.cancelMove('Vous ne pouvez pas encore effectuer de déplacement. Choisissez une case où déposer une pièce.');
+        } else if (this.chosenLanding == null) {
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;
         } else {
@@ -176,13 +190,14 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             return this.chooseMove(SixMove.fromDrop(neighboor), this.state, null, null);
         } else {
             if (this.selectedPiece == null) {
-                return this.cancelMove('TODO: select a piece to move first, you can no longer drop pieces!');
+                return this.cancelMove('Vous ne pouvez plus déposer de pièces, choisissez d\'abord une pièce à déplacer!');
             } else {
                 const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, neighboor);
                 const legality: SixLegalityStatus = this.rules.isLegalDeplacement(deplacement, this.state);
                 if (this.neededCutting(legality)) {
                     this.chosenLanding = neighboor;
-                    this.message('COUPEZ');
+                    this.moveVirtuallyPiece();
+                    this.showCuttable();
                     return MGPValidation.SUCCESS;
                 } else {
                     return this.chooseMove(deplacement, this.state, null, null);
@@ -190,8 +205,38 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             }
         }
     }
-    public neededCutting(legality: SixLegalityStatus): boolean {
+    private neededCutting(legality: SixLegalityStatus): boolean {
         return legality.legal.isFailure() &&
                legality.legal.reason === SixFailure.MUST_CUT;
+    }
+    private moveVirtuallyPiece(): void {
+        this.pieces = this.pieces.filter((c: Coord) => c.equals(this.selectedPiece) === false);
+        this.neighboors = this.getEmptyNeighboors();
+    }
+    private showCuttable(): void {
+        const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, this.chosenLanding);
+        const piecesAfterDeplacement: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(this.state, deplacement);
+        const groupsAfterMove: MGPSet<MGPSet<Coord>> =
+            SixGameState.getGroups(piecesAfterDeplacement, deplacement.start.get());
+        const biggerGroups: MGPSet<MGPSet<Coord>> = this.rules.getBiggerGroups(groupsAfterMove);
+        this.cuttables = [];
+        for (let i: number = 0; i < biggerGroups.size(); i++) {
+            const subList: Coord[] = biggerGroups.get(i).toArray();
+            this.cuttables = this.cuttables.concat(subList);
+        }
+    }
+    public getSelectedPieceFill(): string {
+        if (this.chosenLanding) {
+            return this.MOVED_FILL;
+        } else {
+            return 'none';
+        }
+    }
+    public getSelectedPieceStroke(): string {
+        if (this.chosenLanding) {
+            return 'black';
+        } else {
+            return 'yellow';
+        }
     }
 }

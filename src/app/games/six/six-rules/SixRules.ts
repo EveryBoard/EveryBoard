@@ -285,7 +285,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         }
         const piecesAfterDeplacement: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
-            SixGameState.getGroups(piecesAfterDeplacement, move.start.get()); // LELE
+            SixGameState.getGroups(piecesAfterDeplacement, move.start.get());
         if (this.isSplit(groupsAfterMove)) {
             const biggerGroups: MGPSet<MGPSet<Coord>> = this.getBiggerGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {

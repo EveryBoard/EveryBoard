@@ -21,7 +21,7 @@ export const pylosDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.anyMove(
         'Déposer une pièce',
-        `Quand c'est votre tour, vous avez toujours l'option de déposer une de vos pièce sur une case vide.
+        `Quand c'est votre tour, vous avez toujours l'option de déposer une de vos pièces sur une case vide.
          Les ronds gris sont les cases sur lesquelles vous pouvez déposez vos pièces.
          Cliquez sur une de ces cases pour déposer une pièce.`,
         PylosPartSlice.getInitialSlice(),
@@ -143,7 +143,7 @@ export const pylosDidacticial: DidacticialStep[] = [
             ],
         ], 0),
         [PylosMove.fromDrop(new PylosCoord(0, 0, 1), [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)])],
-        'Bravo, vous avez économisé deux pièces. Vous êtes maintenant prêt à y jouer.',
+        'Bravo, vous avez économisé deux pièces. Vous êtes maintenant prêt à jouer.',
         'Raté.',
     ),
 ];

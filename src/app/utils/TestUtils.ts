@@ -149,6 +149,6 @@ export const expectElementNotToExist: (elementName: string, testElements: TestEl
 export const expectElementToExist: (elementName: string, testElements: TestElements) => DebugElement =
 (elementName: string, testElements: TestElements) => {
     const element: DebugElement = testElements.debugElement.query(By.css(elementName));
-    expect(element).toBeTruthy();
+    expect(element).toBeTruthy(elementName + ' was expected to exist');
     return element;
 };

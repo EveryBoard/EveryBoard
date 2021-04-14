@@ -13,6 +13,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { JSONValue } from 'src/app/utils/collection-lib/utils';
 import {
     expectClickSuccess, expectElementNotToExist, expectElementToExist, expectMoveSuccess,
     MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
@@ -123,7 +124,7 @@ describe('SixComponent', () => {
         expectElementToExist('#lastDrop_0_5', testElements);
         expect(gameComponent.getPieceFill(new Coord(0, 5))).toBe(gameComponent.PLAYER_ZERO_FILL);
     }));
-    xit('Should ask to cut when needed', fakeAsync(async() => {
+    it('Should ask to cut when needed', fakeAsync(async() => {
         const board: NumberTable = [
             [O, _, O],
             [X, _, O],
@@ -135,18 +136,27 @@ describe('SixComponent', () => {
         testElements.gameComponent.updateBoard();
         testElements.fixture.detectChanges();
 
+        // Choosing piece
         await expectClickSuccess('#piece_1_2', testElements);
+
+        // Choosing landing case
         await expectClickSuccess('#neighboor_2_3', testElements);
-        expectElementToExist('#movingPiece_2_3', testElements);
-        expectElementNotToExist('#piece_1_2', testElements);
-        expectElementToExist('#cuttablePiece_0_0', testElements);
-        expectElementToExist('#cuttablePiece_0_1', testElements);
-        expectElementToExist('#cuttablePiece_0_2', testElements);
-        expectElementToExist('#cuttablePiece_0_3', testElements);
-        expectElementToExist('#cuttablePiece_2_0', testElements);
-        expectElementToExist('#cuttablePiece_2_1', testElements);
-        expectElementToExist('#cuttablePiece_2_2', testElements);
-        expectElementToExist('#cuttablePiece_2_3', testElements);
+        expectElementNotToExist('#piece_2_3', testElements); // Landing coord should be filled
+        expectElementToExist('#chosenLanding_2_3', testElements); // Landing coord should be filled
+        expectElementNotToExist('#neighboor_2_3', testElements); // And no longer an empty coord
+
+        expectElementNotToExist('#piece_1_2', testElements); // Piece should be moved
+        expectElementToExist('#selectedPiece_1_2', testElements); // Piece should not be highlighted anymore
+
+        // Expect to choosable cut to be showed
+        expectElementToExist('#cuttable_0_0', testElements);
+        expectElementToExist('#cuttable_0_1', testElements);
+        expectElementToExist('#cuttable_0_2', testElements);
+        expectElementToExist('#cuttable_0_3', testElements);
+        expectElementToExist('#cuttable_2_0', testElements);
+        expectElementToExist('#cuttable_2_1', testElements);
+        expectElementToExist('#cuttable_2_2', testElements);
+        expectElementToExist('#cuttable_2_3', testElements);
         const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(1, 2), new Coord(2, 3), new Coord(2, 0));
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#piece_2_0', testElements, expectations);
@@ -154,7 +164,6 @@ describe('SixComponent', () => {
         expectElementToExist('#disconnected_-2_1', testElements);
         expectElementToExist('#disconnected_-2_2', testElements);
         expectElementToExist('#disconnected_-2_3', testElements);
-        console.log('finish')
     }));
     it('should highlight winning coords', fakeAsync(async() => {
         const board: number[][] = [
@@ -174,4 +183,42 @@ describe('SixComponent', () => {
         expectElementToExist('#victoryCoord_0_0', testElements);
         expectElementToExist('#victoryCoord_5_0', testElements);
     }));
+    it('should show as disconnected opponent lastDrop if he\'s dumb enough to do that', fakeAsync(async() => {
+        const board: NumberTable = [
+            [O, _, O],
+            [X, _, O],
+            [O, O, X],
+            [X, _, _],
+        ];
+        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
+        testElements.gameComponent.rules.node = new SixNode(null, null, state, 0);
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
+
+        // Choosing piece
+        await expectClickSuccess('#piece_1_2', testElements);
+
+        // Choosing landing case
+        await expectClickSuccess('#neighboor_2_3', testElements);
+        const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(1, 2), new Coord(2, 3), new Coord(0, 0));
+        const expectations: MoveExpectations = getMoveExpectations(move);
+        await expectMoveSuccess('#piece_0_0', testElements, expectations);
+        expectElementToExist('#disconnected_2_0', testElements);
+        expectElementToExist('#disconnected_2_1', testElements);
+        expectElementToExist('#disconnected_2_2', testElements);
+        expectElementToExist('#disconnected_2_3', testElements);
+    }));
+    describe('encode/decode', () => {
+        it('should delegate decoding to move', () => {
+            const encodedMove: JSONValue = SixMove.encoder.encode(SixMove.fromDrop(new Coord(0, 0)));
+            spyOn(SixMove.encoder, 'decode').and.callThrough();
+            testElements.gameComponent.decodeMove(encodedMove);
+            expect(SixMove.encoder.decode).toHaveBeenCalledTimes(1);
+        });
+        it('should delegate encoding to move', () => {
+            spyOn(SixMove.encoder, 'encode').and.callThrough();
+            testElements.gameComponent.encodeMove(SixMove.fromDrop(new Coord(0, 0)));
+            expect(SixMove.encoder.encode).toHaveBeenCalledTimes(1);
+        });
+    });
 });
