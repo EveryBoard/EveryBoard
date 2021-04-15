@@ -36,7 +36,7 @@ export const encapsuleDidacticial: DidacticialStep[] = [
          Choisissez une des pièces sur le côté du plateau est placez là sur le plateau.`,
         EncapsulePartSlice.getInitialSlice(),
         'Bravo !'),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Déplacement',
         `Un autre type de coup à Encapsule est de déplacer une de ses pièces déjà sur le plateau.
          Cliquez sur votre pièce foncée et puis sur n'importe quel emplacement vide du plateau.`,
@@ -56,7 +56,7 @@ export const encapsuleDidacticial: DidacticialStep[] = [
         ],
         'Bravo !',
         'Raté, réessayez.'),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Spécificité',
         `À Encapsule, les pièces s'encapsulent les unes sur les autres.
          Il est donc possible d'avoir jusqu'à trois pièces par case !

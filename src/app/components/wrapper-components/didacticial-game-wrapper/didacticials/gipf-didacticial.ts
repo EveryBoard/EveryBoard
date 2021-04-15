@@ -30,7 +30,7 @@ export const gipfDidacticial: DidacticialStep[] = [
         GipfPartSlice.getInitialSlice(),
         'Bravo.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture (1/3)',
         `Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
          Il y a plusieurs choses à savoir sur une capture :
@@ -67,7 +67,7 @@ export const gipfDidacticial: DidacticialStep[] = [
          Voyons maintenant la vraie utilité d'une capture.`,
         'Raté.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture (2/3)',
         `Ici, il est possible de capturer de trois façons différentes.
          L'une ne permet aucune capture de pièce adverse.
@@ -98,7 +98,7 @@ export const gipfDidacticial: DidacticialStep[] = [
          Le maximum possible étant 3 par captures.`,
         'Raté, la capture optimale capture 2 pièces adverses.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture (3/3)',
         `Ici, vous aurez une capture à faire au début de votre tour.
          Elle a été provoquée par un mouvement de votre adversaire lors de son tour de jeu

@@ -5,7 +5,7 @@ import { QuartoMove } from '../quarto-move/QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';

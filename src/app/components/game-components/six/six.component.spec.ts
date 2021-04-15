@@ -8,15 +8,16 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { SixGameState } from 'src/app/games/six/six-game-state/SixGameState';
 import { SixMove } from 'src/app/games/six/six-move/SixMove';
+import { SixFailure } from 'src/app/games/six/six-rules/SixFailure';
 import { SixNode } from 'src/app/games/six/six-rules/SixRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { JSONValue } from 'src/app/utils/utils/utils';
 import {
-    expectClickSuccess, expectElementNotToExist, expectElementToExist, expectMoveSuccess,
-    MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+    expectClickFail, expectClickSuccess, expectElementNotToExist, expectElementToExist,
+    expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 import { SixComponent } from './six.component';
@@ -157,7 +158,7 @@ describe('SixComponent', () => {
         expectElementToExist('#cuttable_2_1', testElements);
         expectElementToExist('#cuttable_2_2', testElements);
         expectElementToExist('#cuttable_2_3', testElements);
-        const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(1, 2), new Coord(2, 3), new Coord(2, 0));
+        const move: SixMove = SixMove.fromCut(new Coord(1, 2), new Coord(2, 3), new Coord(2, 0));
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#piece_2_0', testElements, expectations);
         expectElementToExist('#disconnected_-2_0', testElements);
@@ -200,13 +201,32 @@ describe('SixComponent', () => {
 
         // Choosing landing case
         await expectClickSuccess('#neighboor_2_3', testElements);
-        const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(1, 2), new Coord(2, 3), new Coord(0, 0));
+        const move: SixMove = SixMove.fromCut(new Coord(1, 2), new Coord(2, 3), new Coord(0, 0));
         const expectations: MoveExpectations = getMoveExpectations(move);
         await expectMoveSuccess('#piece_0_0', testElements, expectations);
         expectElementToExist('#disconnected_2_0', testElements);
         expectElementToExist('#disconnected_2_1', testElements);
         expectElementToExist('#disconnected_2_2', testElements);
         expectElementToExist('#disconnected_2_3', testElements);
+    }));
+    it('should cancel move when clicking on piece before 40th turn', fakeAsync(async() => {
+        await expectClickFail('#piece_0_0', testElements, SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
+    }));
+    it('should cancel move when clicking on empty case as first click after 40th turn', fakeAsync(async() => {
+        const board: NumberTable = [
+            [O],
+            [X],
+            [O],
+            [X],
+            [O],
+            [X],
+        ];
+        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
+        testElements.gameComponent.rules.node = new SixNode(null, null, state, 0);
+        testElements.gameComponent.updateBoard();
+        testElements.fixture.detectChanges();
+
+        await expectClickFail('#neighboor_1_1', testElements, SixFailure.CAN_NO_LONGER_DROP);
     }));
     describe('encode/decode', () => {
         it('should delegate decoding to move', () => {

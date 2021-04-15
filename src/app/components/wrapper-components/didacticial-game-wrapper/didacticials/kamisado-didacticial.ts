@@ -50,7 +50,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
         KamisadoPartSlice.getInitialSlice(),
         `Parfait! Notez bien que chacune de vos pièces a une couleur différente.`,
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Déplacement',
         `Considérons maintenant le coup du joueur clair, après le déplacement de la pièce bleue.
          Tous les déplacements après le déplacement initial se font obligatoirement à partir de la pièce correspondant
@@ -88,7 +88,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [br, gr, re, ye, pi, pu, __, or],
         ]),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Victoire par blocage',
         `À tout moment, si un joueur provoque un blocage total du jeu, il perd.
          C'est-à-dire que si un joueur oblige son adversaire à déplacer une pièce que l'adversaire ne peut bouger,

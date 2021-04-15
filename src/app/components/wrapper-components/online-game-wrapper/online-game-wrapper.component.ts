@@ -19,7 +19,7 @@ import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { assert, display, JSONValue } from 'src/app/utils/collection-lib/utils';
+import { assert, display, JSONValue } from 'src/app/utils/utils/utils';
 import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/object-utils/ObjectUtils';
 
 export class UpdateType {
@@ -215,7 +215,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public getUpdateType(update: ICurrentPart): UpdateType {
         const currentPart: ICurrentPart = this.currentPart ? this.currentPart.copy() : null;
         const diff: ObjectDifference = getDiff(currentPart, update);
-        console.log({ diff })
+        display(true, { diff });
         const nbDiffs: number = getDiffChangesNumber(diff);
         if (diff == null || nbDiffs === 0) {
             return UpdateType.DOUBLON;
@@ -319,7 +319,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, true);
     }
     public notifyTimeoutVictory(victoriousPlayer: string): void {
-        console.log('TIMEOUT IN FAVOR OF ' + victoriousPlayer)
+        display(true, 'TIMEOUT IN FAVOR OF ' + victoriousPlayer);
         this.endGame = true;
 
         const wonPart: ICurrentPart = this.currentPart.copy();

@@ -7,7 +7,7 @@ import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
-import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { JSONValue } from 'src/app/utils/utils/utils';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -42,7 +42,10 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public isPlayerTurn: boolean;
 
-    public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => Promise<MGPValidation>;
+    public chooseMove: (move: Move,
+                        slice: GamePartSlice,
+                        scorePlayerZero: number,
+                        scorePlayerOne: number) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => MGPValidation;
 

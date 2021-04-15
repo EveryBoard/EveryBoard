@@ -10,7 +10,7 @@ import { SiamLegalityStatus } from '../SiamLegalityStatus';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 abstract class _SiamRules extends Rules<SiamMove, SiamPartSlice, SiamLegalityStatus> {}
 

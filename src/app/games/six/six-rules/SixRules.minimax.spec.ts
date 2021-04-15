@@ -8,7 +8,6 @@ describe('Six.Minimax', () => {
 
     let rules: SixRules;
 
-    const _: number = Player.NONE.value;
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
 
@@ -24,6 +23,6 @@ describe('Six.Minimax', () => {
             [X, X, X, X, O, O, O, O, O],
             [X, X, X, X, O, O, O, O, O],
         ], 40);
-        expect(rules.getBoardValue(SixMove.fromDrop(new Coord(1, 1)), state)).toBe(-2);
+        expect(rules.getBoardValue(SixMove.fromDrop(new Coord(1, 1)), state)).toBe(2);
     });
 });

@@ -1,4 +1,4 @@
-import { assert, JSONValue } from '../utils/collection-lib/utils';
+import { assert, JSONValue } from 'src/app/utils/utils/utils';
 
 export abstract class Encoder<T> {
     public abstract encode(t: T): JSONValue;

@@ -3,7 +3,7 @@ import { EncapsulePiece, Size } from 'src/app/games/encapsule/encapsule-piece/En
 import { Player } from 'src/app/jscaip/player/Player';
 import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { assert } from 'src/app/utils/collection-lib/utils';
+import { assert } from 'src/app/utils/utils/utils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 
 export class EncapsulePartSlice extends GamePartSlice {

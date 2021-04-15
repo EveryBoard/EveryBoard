@@ -3,13 +3,13 @@ import { BehaviorSubject } from 'rxjs';
 import { IJoueurId, IJoueur } from '../../domain/iuser';
 import { JoueursDAO } from '../../dao/joueurs/JoueursDAO';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ActivesUsersService {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     private activesUsersBS = new BehaviorSubject<IJoueurId[]>([]);
 

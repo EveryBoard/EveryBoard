@@ -1,5 +1,5 @@
 import { Player } from 'src/app/jscaip/player/Player';
-import { assert } from 'src/app/utils/collection-lib/utils';
+import { assert } from 'src/app/utils/utils/utils';
 
 export enum Size {
     NONE = 0,

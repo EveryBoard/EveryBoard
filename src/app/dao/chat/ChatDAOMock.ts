@@ -3,12 +3,12 @@ import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
 import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock';
 import { IChat, PIChat, IChatId } from 'src/app/domain/ichat';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 type ChatOS = ObservableSubject<IChatId>
 
 export class ChatDAOMock extends FirebaseFirestoreDAOMock<IChat, PIChat> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     private static chatDB: MGPMap<MGPStr, ChatOS>;
 

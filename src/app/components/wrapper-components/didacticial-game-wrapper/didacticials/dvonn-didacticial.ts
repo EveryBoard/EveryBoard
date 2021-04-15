@@ -35,7 +35,7 @@ export const dvonnDidacticial: DidacticialStep[] = [
         DvonnPartSlice.getInitialSlice(),
         'Bravo.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Déconnection',
         `Les pièces rouges sont appelées “sources”.
          Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.
@@ -53,7 +53,7 @@ export const dvonnDidacticial: DidacticialStep[] = [
          Les piles déconnectées cesseront d'être visibles au tour suivant.`,
         `Mauvais choix! En le déplaçant sur la source vous déconnectiez l'adversaire et lui faisiez perdre ces 4 points. Ici, il gagne 2 à 0.`,
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Fin de partie',
         `Quand plus aucun mouvement n’est possible, la partie est finie et le joueur avec le plus de points gagne.
          Faites votre dernier mouvement!`,

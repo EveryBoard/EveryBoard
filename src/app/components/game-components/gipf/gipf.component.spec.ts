@@ -23,7 +23,7 @@ import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice'
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { By } from '@angular/platform-browser';
 import { GipfBoard } from 'src/app/games/gipf/gipf-move/GipfBoard';
-import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { JSONValue } from 'src/app/utils/utils/utils';
 
 
 const activatedRouteStub = {

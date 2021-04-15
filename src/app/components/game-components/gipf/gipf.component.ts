@@ -12,7 +12,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
-import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { JSONValue } from 'src/app/utils/utils/utils';
 import { HexagonalGameComponent } from '../HexagonalGameComponent';
 
 export class Arrow {

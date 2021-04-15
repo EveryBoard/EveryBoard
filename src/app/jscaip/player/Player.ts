@@ -1,5 +1,5 @@
+import { assert } from 'src/app/utils/utils/utils';
 import { NumberEncoder } from '../encoder';
-import { assert } from 'src/app/utils/collection-lib/utils';
 
 export class Player {
     public static numberEncoder: NumberEncoder<Player> = NumberEncoder.ofN(2, (player: Player) => {

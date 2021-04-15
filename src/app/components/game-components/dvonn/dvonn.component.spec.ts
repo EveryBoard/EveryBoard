@@ -19,7 +19,7 @@ import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { expectClickSuccess, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { Player } from 'src/app/jscaip/player/Player';
-import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { JSONValue } from 'src/app/utils/utils/utils';
 
 const activatedRouteStub = {
     snapshot: {

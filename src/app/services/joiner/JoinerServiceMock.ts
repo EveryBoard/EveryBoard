@@ -1,9 +1,9 @@
 import { IJoinerId } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 export class JoinerServiceMock {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public static emittedsJoiner: IJoinerId[];
 

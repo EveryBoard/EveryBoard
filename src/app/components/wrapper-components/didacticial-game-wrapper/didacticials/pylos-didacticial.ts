@@ -27,7 +27,7 @@ export const pylosDidacticial: DidacticialStep[] = [
         PylosPartSlice.getInitialSlice(),
         'Voilà, aussi simplement que ça.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Grimper',
         `Quand 4 pièces forment un carré, il est possible de placer une cinquième pièce dessus.
          Cependant, à ce moment là, se crée une opportunité d'économiser une pièce.
@@ -59,7 +59,7 @@ export const pylosDidacticial: DidacticialStep[] = [
          3. Un déplacement ne peut se faire que quand la case d'arrivée est plus haute que la case de départ.`,
         'Raté',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Carré (1/3)',
         `Quand la pièce que vous posez est la quatrième d'un carré de pièces de votre couleur,
          vous pouvez choisir alors n'importe où sur le plateau, une à deux de vos pièces.
@@ -94,7 +94,7 @@ export const pylosDidacticial: DidacticialStep[] = [
         'Bravo, vous avez économisé une pièce.',
         'Raté.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Carré (2/3)',
         `Vous jouez Foncé.
          Faites comme à l'étape précédente, mais cliquez cette fois sur les deux pièces du haut.`,
@@ -119,7 +119,7 @@ export const pylosDidacticial: DidacticialStep[] = [
         'Bravo, vous avez économisé deux pièces.',
         'Raté.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Carré (3/3)',
         `Vous jouez Foncé.
          Faites comme à l'étape précédente, mais cette fois:

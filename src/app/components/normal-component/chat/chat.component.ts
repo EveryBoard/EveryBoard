@@ -3,7 +3,7 @@ import { ChatService } from '../../../services/chat/ChatService';
 import { IMessage } from '../../../domain/imessage';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { IChatId } from 'src/app/domain/ichat';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 @Component({
     selector: 'app-chat',
@@ -11,7 +11,7 @@ import { display } from 'src/app/utils/collection-lib/utils';
     styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     @Input() public chatId: string;
     @Input() public turn: number;
@@ -19,16 +19,16 @@ export class ChatComponent implements OnInit, OnDestroy {
 
     public chat: IMessage[];
     public userMessage: string;
-    public readMessages = 0;
-    public unreadMessages = 0;
+    public readMessages: number = 0;
+    public unreadMessages: number = 0;
 
-    public visible = true;
+    public visible: boolean = true;
 
     constructor(private chatService: ChatService,
                 private authenticationService: AuthenticationService) {
         display(ChatComponent.VERBOSE, 'ChatComponent constructor');
     }
-    public ngOnInit() {
+    public ngOnInit(): void {
         display(ChatComponent.VERBOSE, 'ChatComponent.ngOnInit');
 
         if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
@@ -47,11 +47,11 @@ export class ChatComponent implements OnInit, OnDestroy {
     }
     public isConnectedUser(joueur: { pseudo: string; verified: boolean;}): boolean {
         return joueur && joueur.pseudo &&
-               joueur.pseudo != '' &&
-               joueur.pseudo != 'null' &&
-               joueur.pseudo != 'undefined';
+               joueur.pseudo !== '' &&
+               joueur.pseudo !== 'null' &&
+               joueur.pseudo !== 'undefined';
     }
-    public loadChatContent() {
+    public loadChatContent(): void {
         display(ChatComponent.VERBOSE, 'User \'' + this.userName + '\' logged, loading chat content');
 
         this.chatService.startObserving(this.chatId, this.updateMessages);

@@ -36,7 +36,7 @@ export const goDidacticial: DidacticialStep[] = [
             [_, _, O, X, _, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture simple',
         `Une pierre isolée, comme la pierre claire au milieu, a 4 intersections voisines (et non 8, car on ne compte pas les diagonales).
          Si une intersection voisine est inoccupée, elle est appelée liberté.
@@ -53,7 +53,7 @@ export const goDidacticial: DidacticialStep[] = [
         'Bravo, vous avez gagné un point',
         'Raté, réessayez en jouant sur l\'une des intersections immédiatement voisines de la pierre claire.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture de plusieurs pierres',
         `Des pierres connectées horizontalement ou verticalement doivent être capturées ensemble, et ne sont pas capturables séparement.
          Le groupe clair ci-dessus n'a plus qu'une liberté, capturez ce groupe.`,
@@ -126,7 +126,7 @@ export const goDidacticial: DidacticialStep[] = [
             [_, X, O, _, X, O, _],
         ], [0, 0], 0, MGPOptional.empty(), Phase.PLAYING),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Ko',
         `Un joueur, en posant une pierre, ne doit pas redonner au goban un état identique à l'un de ceux qu'il lui avait déjà donné, ce afin d'empêcher qu'une partie soit sans fin.
          Capturez la pierre claire.`,
@@ -146,7 +146,7 @@ export const goDidacticial: DidacticialStep[] = [
          Toute l'astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n'ait pas le temps de protéger sa dernière pierre, afin que Clair puissr la recapturer.`,
         'Raté.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Fin de partie',
         `Quand un joueur estime qu'il n'a plus intérêt à placer une pierre, il l'indique en passant son tour.
          La phase de jeu s'arrête lorsque les deux joueurs passent consécutivement, on passe alors en phase de comptage.

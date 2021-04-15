@@ -31,7 +31,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         CoerceoPartSlice.getInitialSlice(),
         'Bravo, voyons les captures maintenant.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         `Capture`,
         `Chaque pièce a trois cases triangulaires voisines (2 sur les bords).
          Quand toutes les cases voisines sauf une sont occupées, et qu'un ennemi vient se déplacer sur cette dernière case libre, votre pièce est capturée!
@@ -53,7 +53,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         'Bravo!',
         `Raté, vous n'avez pas capturé de pièces!`,
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         `Gagner une tuile`,
         `Quand une tuile est quittée, elle devient potentiellement enlevable du plateau.
          Pour qu'elle soit enlevée, il faut que trois de ses bords voisins soient libres.
@@ -80,7 +80,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         'Bravo!',
         `Raté, vous n'avez pas récupéré les deux tuiles récupérable!`,
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         `Échanger une tuile`,
         `Dès que vous avez au moins une tuile, vous pourrez le voir sur la gauche du plateau.
          Dès que vous en avez deux, vous pouvez, en cliquant sur une pièce ennemie, la capturer immédiatement.
@@ -105,7 +105,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         'Bravo!',
         `C'est bien gentil de se déplacer mais en cliquant sur la pièce vous l'aurez immédiatement!`,
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         `Capture spéciale`,
         `Dès qu'une tuile est enlevée du plateau pendant votre tour, certaines pièces de l'adversaires peuvent n'avoir plus aucunes cases voisines libre, elle seront alors capturées!
         Si cela arrivait à l'une de vos pièces, celle-ci resterait cependant sur le plateau.`,

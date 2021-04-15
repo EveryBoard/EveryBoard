@@ -13,8 +13,8 @@ import { IChat } from '../../domain/ichat';
 import { IMGPRequest, RequestCode } from '../../domain/request';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
-import { display, JSONValue } from 'src/app/utils/collection-lib/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { display, JSONValue } from 'src/app/utils/utils/utils';
 
 @Injectable({
     providedIn: 'root',

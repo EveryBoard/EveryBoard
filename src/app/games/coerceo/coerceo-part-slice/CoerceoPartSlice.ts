@@ -4,7 +4,7 @@ import { TriangularGameState } from 'src/app/jscaip/game-state/triangular-game-s
 import { Player } from 'src/app/jscaip/player/Player';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { assert, display } from 'src/app/utils/collection-lib/utils';
+import { assert, display } from 'src/app/utils/utils/utils';
 import { CoerceoMove, CoerceoStep } from '../coerceo-move/CoerceoMove';
 
 export class CoerceoPiece {
@@ -193,7 +193,7 @@ export class CoerceoPartSlice extends TriangularGameState {
     }
     public deconnectTile(tileUpperLeft: Coord, countTiles: boolean): CoerceoPartSlice {
         display(CoerceoPartSlice.VERBOSE,
-                { coerceoPartSlice_deconnectTile: { object: this, tileUpperLeft, countTiles} });
+                { coerceoPartSlice_deconnectTile: { object: this, tileUpperLeft, countTiles } });
         const newBoard: number[][] = this.getCopiedBoard();
         const x0: number = tileUpperLeft.x;
         const y0: number = tileUpperLeft.y;

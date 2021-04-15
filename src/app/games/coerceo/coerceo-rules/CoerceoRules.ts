@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Rules } from 'src/app/jscaip/Rules';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { CoerceoMove } from '../coerceo-move/CoerceoMove';

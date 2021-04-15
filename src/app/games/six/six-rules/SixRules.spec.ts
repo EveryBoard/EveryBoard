@@ -5,6 +5,7 @@ import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils
 import { SixGameState } from '../six-game-state/SixGameState';
 import { SixMove } from '../six-move/SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
+import { SixFailure } from './SixFailure';
 import { SixRules } from './SixRules';
 
 describe('SixRules', () => {
@@ -148,7 +149,7 @@ describe('SixRules', () => {
                 SixGameState.fromRepresentation(expectedBoard, 43);
             expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
         });
-        it('Should refuse deconnection of same sized group when no group is mentionned', () => {
+        it('Should refuse deconnection of same sized group when no group is mentionned in move', () => {
             const board: NumberTable = [
                 [X, X, _, O, _],
                 [X, X, _, O, _],
@@ -161,7 +162,7 @@ describe('SixRules', () => {
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.getReason()).toBe('Several groups are of same size, you must pick the one to keep!');
         });
-        it('Should refuse deconnection of different sized group with mentionned group', () => {
+        it('Should refuse deconnection of different sized group with group mentionned in move', () => {
             const board: NumberTable = [
                 [X, X, _, _, _],
                 [X, X, _, _, _],
@@ -170,9 +171,9 @@ describe('SixRules', () => {
                 [_, X, _, O, O],
             ];
             const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
-            const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(2, 2), new Coord(4, 3), new Coord(0, 0));
+            const move: SixMove = SixMove.fromCut(new Coord(2, 2), new Coord(4, 3), new Coord(0, 0));
             const status: LegalityStatus = rules.isLegal(move, slice);
-            const reason: string = 'You cannot choose which part to keep when one is smaller than the other!';
+            const reason: string = SixFailure.CANNOT_CHOOSE_TO_KEEP;
             expect(status.legal.getReason()).toBe(reason);
         });
         it('Should refuse deconnection where captured coord is empty', () => {
@@ -184,9 +185,23 @@ describe('SixRules', () => {
                 [_, X, _, O, _],
             ];
             const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
-            const move: SixMove = SixMove.fromCuttingDeplacement(new Coord(2, 2), new Coord(4, 4), new Coord(4, 0));
+            const move: SixMove = SixMove.fromCut(new Coord(2, 2), new Coord(4, 4), new Coord(4, 0));
             const status: LegalityStatus = rules.isLegal(move, slice);
-            const reason: string = 'Cannot keep empty coord!';
+            const reason: string = SixFailure.CANNOT_KEEP_EMPTY_COORD;
+            expect(status.legal.getReason()).toBe(reason);
+        });
+        it('Should refuse deconnection where captured coord is in a smaller group', () => {
+            const board: NumberTable = [
+                [_, X, X, _],
+                [_, X, X, _],
+                [_, _, O, O],
+                [X, X, _, _],
+                [X, X, _, _],
+            ];
+            const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const move: SixMove = SixMove.fromCut(new Coord(2, 2), new Coord(4, 2), new Coord(4, 2));
+            const status: LegalityStatus = rules.isLegal(move, slice);
+            const reason: string = SixFailure.MUST_CAPTURE_BIGGEST_GROUPS;
             expect(status.legal.getReason()).toBe(reason);
         });
     });

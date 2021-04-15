@@ -4,13 +4,13 @@ import { IJoueur, PIJoueur } from '../../domain/iuser';
 import { FirebaseFirestoreDAO } from '../firebase-firestore-dao/FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { environment } from 'src/environments/environment';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 @Injectable({
     providedIn: 'root',
 })
 export class JoueursDAO extends FirebaseFirestoreDAO<IJoueur, PIJoueur> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     constructor(protected afs: AngularFirestore) {
         super('joueurs', afs);

@@ -12,7 +12,7 @@ export class DidacticialStep {
                                    null,
                                    null);
     }
-    public static forMove(
+    public static fromMove(
         title: string,
         instruction: string,
         slice: GamePartSlice,
