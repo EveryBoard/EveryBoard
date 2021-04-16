@@ -78,7 +78,10 @@ export namespace NumberEncoder {
                 return n;
             }
             public decodeNumber(encoded: number): number {
-                return encoded % max;
+                if (encoded > max) {
+                    throw new Error('Cannot decode number bigger than the max with numberEncoder');
+                }
+                return encoded;
             }
         };
     }

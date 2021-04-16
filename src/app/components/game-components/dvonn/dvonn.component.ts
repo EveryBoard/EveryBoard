@@ -34,7 +34,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
                        new Coord(-DvonnComponent.CASE_SIZE, DvonnComponent.CASE_SIZE * 2),
                        PointyHexaOrientation.INSTANCE);
 
-    constructor(public snackBar: MatSnackBar) {
+    constructor(snackBar: MatSnackBar) {
         super(snackBar);
         this.showScore = true;
         this.scores = this.rules.getScores(this.rules.node.gamePartSlice);
@@ -117,9 +117,6 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
     }
     public encodeMove(move: DvonnMove): number {
         return DvonnMove.encode(move);
-    }
-    public isOnBoard(x: number, y: number): boolean {
-        return this.rules.node.gamePartSlice.hexaBoard.isOnBoard(new Coord(x, y));
     }
     public getPieceClasses(stack: DvonnPieceStack): string[] {
         if (stack.containsSource() && stack.getSize() === 1) {

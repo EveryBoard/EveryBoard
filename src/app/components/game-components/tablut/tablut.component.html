@@ -73,23 +73,23 @@
                     </g>
                     <ng-template #soldierDefender>
                         <line (click)="onClick(x, y)"
-                              [attr.x1]="50 + CASE_SIZE*x" [attr.y1]="4 + CASE_SIZE*y"
-                              [attr.x2]="50 + CASE_SIZE*x" [attr.y2]="96 + CASE_SIZE*y"
-                              classs="base"
-                        />
-                        <line (click)="onClick(x, y)"
-                              [attr.x1]="4 + CASE_SIZE*x"  [attr.y1]="50 + CASE_SIZE*y"
-                              [attr.x2]="96 + CASE_SIZE*x" [attr.y2]="50 + CASE_SIZE*y"
+                              [attr.x1]="0.50*CASE_SIZE + CASE_SIZE*x" [attr.y1]="0.04*CASE_SIZE + CASE_SIZE*y"
+                              [attr.x2]="0.50*CASE_SIZE + CASE_SIZE*x" [attr.y2]="0.96*CASE_SIZE + CASE_SIZE*y"
                               class="base"
                         />
                         <line (click)="onClick(x, y)"
-                              [attr.x1]="15 + CASE_SIZE*x" [attr.y1]="15 + CASE_SIZE*y"
-                              [attr.x2]="85 + CASE_SIZE*x" [attr.y2]="85 + CASE_SIZE*y"
+                              [attr.x1]="0.04*CASE_SIZE + CASE_SIZE*x" [attr.y1]="0.50*CASE_SIZE + CASE_SIZE*y"
+                              [attr.x2]="0.96*CASE_SIZE + CASE_SIZE*x" [attr.y2]="0.50*CASE_SIZE + CASE_SIZE*y"
                               class="base"
                         />
                         <line (click)="onClick(x, y)"
-                              [attr.x1]="85 + CASE_SIZE*x" [attr.y1]="15 + CASE_SIZE*y"
-                              [attr.x2]="15 + CASE_SIZE*x" [attr.y2]="85 + CASE_SIZE*y"
+                              [attr.x1]="0.15*CASE_SIZE + CASE_SIZE*x" [attr.y1]="0.15*CASE_SIZE + CASE_SIZE*y"
+                              [attr.x2]="0.85*CASE_SIZE + CASE_SIZE*x" [attr.y2]="0.85*CASE_SIZE + CASE_SIZE*y"
+                              class="base"
+                        />
+                        <line (click)="onClick(x, y)"
+                              [attr.x1]="0.85*CASE_SIZE + CASE_SIZE*x" [attr.y1]="0.15*CASE_SIZE + CASE_SIZE*y"
+                              [attr.x2]="0.15*CASE_SIZE + CASE_SIZE*x" [attr.y2]="0.85*CASE_SIZE + CASE_SIZE*y"
                               class="base"
                         />
                     </ng-template>
