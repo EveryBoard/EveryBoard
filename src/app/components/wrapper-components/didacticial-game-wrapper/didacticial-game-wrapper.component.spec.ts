@@ -184,7 +184,7 @@ describe('DidacticialGameWrapperComponent', () => {
         it('Should start step again after clicking "retry" on step failure', fakeAsync(async() => {
             // Given any DidacticialStep where an invalid move has been done
             const didacticial: DidacticialStep[] = [
-                DidacticialStep.forMove(
+                DidacticialStep.fromMove(
                     'title',
                     'instruction',
                     QuartoPartSlice.getInitialSlice(),
@@ -217,7 +217,7 @@ describe('DidacticialGameWrapperComponent', () => {
         it('Should start step again after clicking "retry" on step success', fakeAsync(async() => {
             // Given any DidacticialStep
             const didacticial: DidacticialStep[] = [
-                DidacticialStep.forMove(
+                DidacticialStep.fromMove(
                     'title',
                     'instruction',
                     QuartoPartSlice.getInitialSlice(),
@@ -249,7 +249,7 @@ describe('DidacticialGameWrapperComponent', () => {
         it('Should forbid clicking again on the board after success', fakeAsync(async() => {
             // Given a DidacticialStep on which a valid move has been done.
             const didacticial: DidacticialStep[] = [
-                DidacticialStep.forMove(
+                DidacticialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
                     QuartoPartSlice.getInitialSlice(),
@@ -488,7 +488,7 @@ describe('DidacticialGameWrapperComponent', () => {
         it('Should show highlight of first click on multiclick game component', fakeAsync(async() => {
             // Given a DidacticialStep with several moves
             const didacticial: DidacticialStep[] = [
-                DidacticialStep.forMove(
+                DidacticialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
                     QuartoPartSlice.getInitialSlice(),
@@ -515,7 +515,7 @@ describe('DidacticialGameWrapperComponent', () => {
         it('Should show success message after step success', fakeAsync(async() => {
             // Given a DidacticialStep with several moves
             const didacticial: DidacticialStep[] = [
-                DidacticialStep.forMove(
+                DidacticialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
                     QuartoPartSlice.getInitialSlice(),
@@ -551,7 +551,7 @@ describe('DidacticialGameWrapperComponent', () => {
         it('Should show failure message after step failure', fakeAsync(async() => {
             // Given a DidacticialStep with several move
             const didacticial: DidacticialStep[] = [
-                DidacticialStep.forMove(
+                DidacticialStep.fromMove(
                     'title',
                     'Put your piece in a corner and give the opposite one.',
                     QuartoPartSlice.getInitialSlice(),
@@ -589,7 +589,7 @@ describe('DidacticialGameWrapperComponent', () => {
         it('When illegal click is tried, toast message should be shown and restart not needed', fakeAsync(async() => {
             // Given a DidacticialStep on which illegal move has been tried
             const didacticial: DidacticialStep[] = [
-                DidacticialStep.forMove(
+                DidacticialStep.fromMove(
                     'title 0',
                     'instruction 0.',
                     new QuartoPartSlice([
@@ -625,7 +625,7 @@ describe('DidacticialGameWrapperComponent', () => {
             const awaitedMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BBAA);
             const stepInitialTurn: number = 0;
             const didacticial: DidacticialStep[] = [
-                DidacticialStep.forMove(
+                DidacticialStep.fromMove(
                     'title 0',
                     'instruction 0.',
                     new QuartoPartSlice([

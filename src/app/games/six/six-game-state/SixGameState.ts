@@ -6,7 +6,6 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Comparable } from 'src/app/utils/collection-lib/Comparable';
 import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
@@ -201,13 +200,13 @@ export class SixGameState extends GamePartSlice {
         }
         return new SixGameState(newPieces, this.turn + 1);
     }
-    public countPieces(owner: Player): number {
-        const player: MGPBoolean = owner === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE;
-        const playerPieces: MGPOptional<MGPSet<Coord>> = this.pieces.groupByValue().get(player);
-        if (playerPieces.isAbsent()) {
-            return 0;
-        } else {
-            return playerPieces.get().size();
-        }
+    public countPieces(): [number, number] {
+        const pieces: MGPBiMap<MGPBoolean, MGPSet<Coord>> = this.pieces.groupByValue();
+        const zeroPieces: MGPSet<Coord> = pieces.get(MGPBoolean.FALSE).getOrNull();
+        const onePieces: MGPSet<Coord> = pieces.get(MGPBoolean.TRUE).getOrNull();
+        return [
+            zeroPieces ? zeroPieces.size() : 0,
+            onePieces ? onePieces.size() : 0,
+        ];
     }
 }

@@ -5,7 +5,7 @@ import { AwaleMove } from '../awale-move/AwaleMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Player } from 'src/app/jscaip/player/Player';
 

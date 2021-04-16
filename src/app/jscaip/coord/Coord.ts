@@ -1,5 +1,5 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
-import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/collection-lib/utils';
+import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils/utils';
 import { Comparable } from '../../utils/collection-lib/Comparable';
 import { Encoder } from '../encoder';
 

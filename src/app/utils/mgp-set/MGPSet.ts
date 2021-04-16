@@ -58,4 +58,11 @@ export class MGPSet<T extends Comparable> implements Comparable {
     public get(index: number): T {
         return this.values[index];
     }
+    public toArray(): T[] {
+        const result: T[] = [];
+        for (const value of this.values) {
+            result.push(value);
+        }
+        return result;
+    }
 }

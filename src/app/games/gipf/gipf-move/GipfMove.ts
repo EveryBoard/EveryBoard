@@ -4,7 +4,7 @@ import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/collection-lib/utils';
+import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils/utils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 export class GipfCapture {

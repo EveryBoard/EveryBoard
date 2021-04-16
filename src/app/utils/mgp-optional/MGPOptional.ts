@@ -1,5 +1,5 @@
 import { Encoder } from 'src/app/jscaip/encoder';
-import { JSONValue } from '../collection-lib/utils';
+import { JSONValue } from '../utils/utils';
 
 export class MGPOptional<T> {
     public static encoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {

@@ -7,7 +7,7 @@ import { TablutPartSlice } from '../../../games/tablut/TablutPartSlice';
 import { TablutRules } from '../../../games/tablut/tablut-rules/TablutRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { TablutCase } from 'src/app/games/tablut/tablut-rules/TablutCase';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';

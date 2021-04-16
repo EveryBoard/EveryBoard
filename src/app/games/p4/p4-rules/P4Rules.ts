@@ -8,7 +8,7 @@ import { P4PartSlice } from '../P4PartSlice';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
-import { assert, display } from 'src/app/utils/collection-lib/utils';
+import { assert, display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from '../P4Move';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';

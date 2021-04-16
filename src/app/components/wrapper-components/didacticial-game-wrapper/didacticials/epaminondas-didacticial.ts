@@ -52,7 +52,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
             [_, _, X, X, _, _, _, O, O, _, O, O, O, O],
         ], 1),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Déplacement de pièce',
         `Voici le plateau de départ, c'est à Foncé de commencer.
          Commençons simplement par un déplacement d'une seule pièce.
@@ -63,7 +63,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
         `Voilà, c'est comme ça qu'on déplace une seule pièce.`,
         'Raté, recommencez.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Déplacement de phalange',
         `Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange)?
          1. Cliquez sur la première pièce (la plus en bas à gauche).
@@ -78,7 +78,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
          Il ne peut y avoir ni ennemis ni trous dans la phalange.`,
         'Raté',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture',
         `Pour capturer une phalange ennemie:
          1. Il faut que celle-ci soit alignée avec la phalange en déplacement.

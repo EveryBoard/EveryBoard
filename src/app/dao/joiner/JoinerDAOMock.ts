@@ -3,7 +3,7 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
 import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 type JoinerOS = ObservableSubject<IJoinerId>
 

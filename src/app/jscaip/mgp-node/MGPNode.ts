@@ -4,7 +4,7 @@ import { Rules } from '../Rules';
 import { GamePartSlice } from '../GamePartSlice';
 import { MGPMap } from '../../utils/mgp-map/MGPMap';
 import { LegalityStatus } from '../LegalityStatus';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
@@ -16,7 +16,7 @@ export class MGPNode<R extends Rules<M, S, L>, M extends Move, S extends GamePar
 
     public static NB_NODE_CREATED = 0;
 
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public static ruler: Rules<Move, GamePartSlice, LegalityStatus>;
     // Permet d'obtenir les donn�es propre au jeu et non au minimax, ruler restera l'unique instance d'un set de r�gles

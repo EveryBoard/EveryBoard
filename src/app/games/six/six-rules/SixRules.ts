@@ -10,11 +10,8 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MGPBoolean, SixGameState } from '../six-game-state/SixGameState';
 import { SixMove } from '../six-move/SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
+import { SixFailure } from './SixFailure';
 
-export class SixFailure {
-
-    public static readonly MUST_CUT: string = 'Several groups are of same size, you must pick the one to keep!';
-}
 export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus> {}
 
 export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
@@ -69,46 +66,32 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         return deplacements;
     }
     public getBoardValue(move: SixMove, slice: SixGameState): number {
-        console.log('getSixValue')
         const lastDrop: Coord = move.landing.getNext(slice.offset, 1);
         const victoryValue: number = slice.getCurrentEnnemy().getVictoryValue();
         const shapeVictory: Coord[] = this.getShapeVictory(lastDrop, slice);
         if (shapeVictory.length === 6) {
-            console.log('SHAPE VICTORY')
             return victoryValue;
         }
-        if (slice.turn > 40) {
-            const pieceByPlayer: MGPBiMap<MGPBoolean, MGPSet<Coord>> = slice.pieces.groupByValue();
-            const LAST_PLAYER: Player = slice.getCurrentEnnemy();
-            const ENNEMY: MGPBoolean = slice.getCurrentPlayer() === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE;
-            const ennemyPieces: number =
-                pieceByPlayer.get(ENNEMY).isAbsent() ? 0 : pieceByPlayer.get(ENNEMY).get().size();
-            const PLAYER: MGPBoolean = LAST_PLAYER === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE;
-            const playerPieces: number =
-                pieceByPlayer.get(PLAYER).isAbsent() ? 0 : pieceByPlayer.get(PLAYER).get().size();
-            if (ennemyPieces < 6 && playerPieces < 6) {
-                if (ennemyPieces < playerPieces) {
-                    console.log('EFFICIENT SUICIDE')
-                    return LAST_PLAYER.getVictoryValue();
-                } else if (ennemyPieces > playerPieces) {
-                    console.log('FAILED SUICIDE')
-                    return LAST_PLAYER.getDefeatValue();
+        if (slice.turn > 39) {
+            const pieces: number[] = slice.countPieces();
+            const zeroPieces: number = pieces[0];
+            const onePieces: number = pieces[1];
+            if (zeroPieces < 6 && onePieces < 6) {
+                if (zeroPieces < onePieces) {
+                    return Player.ONE.getVictoryValue();
+                } else if (onePieces < zeroPieces) {
+                    return Player.ZERO.getVictoryValue();
                 } else {
-                    console.log('END GAME DRAW')
                     return 0; // DRAW
                 }
-            } else if (ennemyPieces < 6) {
-                console.log('STRANGULATION')
-                return LAST_PLAYER.getVictoryValue();
-            } else if (playerPieces < 6) {
-                console.log('ASPHIOXION')
-                return LAST_PLAYER.getDefeatValue();
+            } else if (zeroPieces < 6) {
+                return Player.ZERO.getDefeatValue();
+            } else if (onePieces < 6) {
+                return Player.ONE.getDefeatValue();
             } else {
-                console.log('JUST SOME SCORE');
-                return (playerPieces - ennemyPieces) * LAST_PLAYER.getScoreModifier();
+                return zeroPieces - onePieces;
             }
         }
-        console.log('JUST SOME SCORE BUT BEFORE TURN 40');
         return 0;
     }
     public getShapeVictory(lastDrop: Coord, state: SixGameState): Coord[] {
@@ -294,13 +277,13 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         }
         const piecesAfterDeplacement: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
-            SixGameState.getGroups(piecesAfterDeplacement, move.start.get()); // LELE
+            SixGameState.getGroups(piecesAfterDeplacement, move.start.get());
         if (this.isSplit(groupsAfterMove)) {
             const biggerGroups: MGPSet<MGPSet<Coord>> = this.getBiggerGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
                 if (move.keep.isPresent()) {
                     return {
-                        legal: MGPValidation.failure('You cannot choose which part to keep when one is smaller than the other!'),
+                        legal: MGPValidation.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP),
                         kept: null,
                     };
                 } else {
@@ -344,7 +327,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
             };
         }
         if (pieces.get(keep.get()).isAbsent()) {
-            return { legal: MGPValidation.failure('Cannot keep empty coord!'), kept: null };
+            return { legal: MGPValidation.failure(SixFailure.CANNOT_KEEP_EMPTY_COORD), kept: null };
         }
         const keptCoord: Coord = keep.get();
         for (let i: number = 0; i < biggerGroups.size(); i++) {
@@ -354,7 +337,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
             }
         }
         return {
-            legal: MGPValidation.failure('Should keep a piece belonging to one of the greater groups'),
+            legal: MGPValidation.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS),
             kept: null,
         };
     }

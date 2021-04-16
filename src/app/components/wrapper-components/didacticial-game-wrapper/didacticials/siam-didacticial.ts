@@ -39,7 +39,7 @@ export const siamDidacticial: DidacticialStep[] = [
         SiamPartSlice.getInitialSlice(),
         'Bravo',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Déplacer une pièce',
         `Nous distinguerons ici "déplacer" et "pousser".
          Un déplacement de pièce se fait de sa case à une case vide voisine horizontalement ou verticalement.
@@ -61,7 +61,7 @@ export const siamDidacticial: DidacticialStep[] = [
         'Bravo, vous avez fait un dérapage!',
         'Raté.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Sortir une pièce',
         `Sortir une pièce du plateau est plus simple, préciser son orientation d'arrivée n'est pas nécessaire.
          Sortez cette pièce du plateau!`,
@@ -76,7 +76,7 @@ export const siamDidacticial: DidacticialStep[] = [
         `Bravo, même si dans le contexte c'était plutôt un mouvement inutile.`,
         'Raté, elle est encore sur le plateau.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Pousser',
         `Quand la case d'arrivée de votre déplacement est occupée, on parle de "pousser".
          Pour pousser il faut plusieurs critères:
@@ -97,7 +97,7 @@ export const siamDidacticial: DidacticialStep[] = [
         'Bravo',
         'Raté',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Victoire',
         `Pour rappel, la partie se termine quand une montagne est poussée hors du plateau.
          Si vous l'avez poussé et que personne ne vous barre la route, vous êtes le vainqueur.

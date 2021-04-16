@@ -114,4 +114,9 @@ describe('SixGameState', () => {
             expect(groups.equals(expectedGroups)).toBeTrue();
         });
     });
+    describe('MGPBoolean', () => {
+        it('Should disappear soon, and in the meanwhile, have a toString', () => {
+            expect(MGPBoolean.FALSE.toString()).toBe('false');
+        });
+    });
 });

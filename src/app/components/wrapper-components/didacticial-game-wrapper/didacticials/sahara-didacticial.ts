@@ -30,7 +30,7 @@ export const saharaDidacticial: DidacticialStep[] = [
             [N, N, X, O, _, _, _, X, O, N, N],
         ], 3),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Déplacement simple',
         `Pour parvenir à immobiliser l'adversaire, il faut déplacer ses pyramides.
          Quand une pyramide partage ses arêtes avec des cases claires, elle peut se déplacer dessus (un 'pas').
@@ -44,7 +44,7 @@ export const saharaDidacticial: DidacticialStep[] = [
          Vous n'avez pas déplacé la pyramide demandée.
          Cependant c'est un déplacement légal, donc j'imagine que vous pouvez aller jouer maintenant!`,
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Déplacement double',
         `Quand une pyramide partage ses arêtes avec des cases foncées, vous pouvez la déplacer de deux pas.
          Pour ce faire:

@@ -1,4 +1,4 @@
-import { assert, JSONValue } from 'src/app/utils/collection-lib/utils';
+import { assert, JSONValue } from 'src/app/utils/utils/utils';
 import { BaseDirection, DirectionFactory } from '../Direction';
 import { Encoder } from '../encoder';
 

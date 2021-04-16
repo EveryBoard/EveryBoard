@@ -9,7 +9,7 @@ import { TablutRulesConfig } from './TablutRulesConfig';
 import { Player } from 'src/app/jscaip/player/Player';
 import { TablutCase } from './TablutCase';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { TablutLegalityStatus } from '../TablutLegalityStatus';

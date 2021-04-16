@@ -29,7 +29,7 @@ import { SixComponent } from '../game-components/six/six.component';
 import { TablutComponent } from '../game-components/tablut/tablut.component';
 
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 @Component({ template: '' })
 export abstract class GameWrapper {

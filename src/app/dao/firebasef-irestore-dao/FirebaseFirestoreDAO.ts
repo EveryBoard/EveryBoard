@@ -5,7 +5,7 @@ import { map } from 'rxjs/operators';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 export interface IFirebaseFirestoreDAO<T, PT> {
 
@@ -28,7 +28,7 @@ export interface IFirebaseFirestoreDAO<T, PT> {
 }
 
 export abstract class FirebaseFirestoreDAO<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     // T is a full element
 

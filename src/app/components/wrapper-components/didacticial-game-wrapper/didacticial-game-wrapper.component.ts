@@ -7,7 +7,7 @@ import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { UserService } from 'src/app/services/user/UserService';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { DidacticialStep } from './DidacticialStep';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
@@ -26,6 +26,7 @@ import { quixoDidacticial } from './didacticials/quixo-didacticial';
 import { reversiDidacticial } from './didacticials/reversi-didacticial';
 import { saharaDidacticial } from './didacticials/sahara-didacticial';
 import { siamDidacticial } from './didacticials/siam-didacticial';
+import { sixDidacticial } from './didacticials/six-didacticial';
 import { tablutDidacticial } from './didacticials/tablut-didacticial';
 
 @Component({
@@ -96,6 +97,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Reversi: reversiDidacticial,
             Sahara: saharaDidacticial,
             Siam: siamDidacticial,
+            Six: sixDidacticial,
             Tablut: tablutDidacticial,
         };
         if (didacticials[game] == null) {
@@ -174,7 +176,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             }, 10);
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure('Step is not awaiting actions.');
+            return MGPValidation.failure('Cette étape n\'attends pas de mouvements de votre part.');
         }
     }
     public onCancelMove: (reason?: string) => void = (reason?: string) => {
