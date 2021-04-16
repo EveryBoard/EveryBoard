@@ -3,7 +3,6 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
-import { FlatHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { AbstractGameComponent } from '../wrapper-components/AbstractGameComponent';
@@ -17,10 +16,7 @@ export abstract class HexagonalGameComponent<M extends Move,
 
     public PIECE_SIZE: number = 30;
 
-    public hexaLayout: HexaLayout =
-        new HexaLayout(this.PIECE_SIZE * 1.50,
-                       new Coord(this.PIECE_SIZE * 2, 0),
-                       FlatHexaOrientation.INSTANCE);
+    public abstract hexaLayout: HexaLayout;
 
     public constructor(snackBar: MatSnackBar) {
         super(snackBar);

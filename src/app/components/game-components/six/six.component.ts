@@ -44,6 +44,12 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public pointScale: Scale;
     public coordScale: Scale;
     public Y_OFFSET: number;
+    public PIECE_SIZE: number = 30;
+
+    public hexaLayout: HexaLayout =
+        new HexaLayout(this.PIECE_SIZE * 1.50,
+                       new Coord(this.PIECE_SIZE * 2, 0),
+                       FlatHexaOrientation.INSTANCE);
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
