@@ -12,6 +12,5 @@ export class DvonnPartSlice extends GamePartSlice {
         public readonly alreadyPassed: boolean)
     {
         super(hexaBoard.toNumberTable(), turn);
-        console.log({hexaBoard});
     }
 }

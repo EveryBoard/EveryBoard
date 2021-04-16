@@ -156,7 +156,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         if (c.equals(this.lastLandingCoord) || c.equals(this.lastStartingCoord)) {
             classes.push('highlighted');
         } else if (c.equals(this.chosenStartingCoord) || c.equals(this.chosenLandingCoord)) {
-            classes.push('moved');
+            classes.push('selected');
         } else if (c.equals(this.lastFirstCapture) || c.equals(this.lastSecondCapture)) {
             classes.push('highlighted2');
         }
