@@ -7,13 +7,6 @@ export class DvonnBoard extends HexaBoard<DvonnPieceStack> {
     public static WIDTH: number = 11;
     public static HEIGHT: number = 5;
     public static EXCLUDED_CASES: ReadonlyArray<number> = [2, 1];
-    public static neighbors(coord: Coord, distance: number): Coord[] {
-        return [
-            new Coord(coord.x+distance, coord.y-distance), new Coord(coord.x+distance, coord.y),
-            new Coord(coord.x-distance, coord.y+distance), new Coord(coord.x-distance, coord.y),
-            new Coord(coord.x, coord.y+distance), new Coord(coord.x, coord.y-distance),
-        ];
-    }
     public static isOnBoard(coord: Coord): boolean {
         return HexaBoard.isOnBoard(coord, DvonnBoard.WIDTH, DvonnBoard.HEIGHT, DvonnBoard.EXCLUDED_CASES);
     }
@@ -48,7 +41,7 @@ export class DvonnBoard extends HexaBoard<DvonnPieceStack> {
         return new DvonnBoard(contents) as this;
     }
     public numberOfNeighbors(coord: Coord): number {
-        return DvonnBoard.neighbors(coord, 1)
+        return HexaBoard.neighbors(coord, 1)
             .filter((c: Coord): boolean => this.isOnBoard(c) && this.getAt(c).isEmpty() === false)
             .length;
     }

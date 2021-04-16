@@ -47,6 +47,13 @@ export class HexaBoard<T> {
             }
         }
     }
+    public static neighbors(coord: Coord, distance: number): Coord[] {
+        return [
+            new Coord(coord.x+distance, coord.y-distance), new Coord(coord.x+distance, coord.y),
+            new Coord(coord.x-distance, coord.y+distance), new Coord(coord.x-distance, coord.y),
+            new Coord(coord.x, coord.y+distance), new Coord(coord.x, coord.y-distance),
+        ];
+    }
 
     public constructor(public readonly contents: Table<T>,
                        public readonly width: number,
