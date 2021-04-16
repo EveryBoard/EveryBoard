@@ -21,10 +21,10 @@ export class GipfPartSlice extends GamePartSlice {
         const hexaBoard: GipfBoard = GipfBoard.of(board);
         return new GipfPartSlice(hexaBoard, 0, [12, 12], [0, 0]);
     }
-    public constructor(public hexaBoard: GipfBoard,
+    public constructor(public readonly hexaBoard: GipfBoard,
                        turn: number,
-                       public sidePieces: [number, number],
-                       public capturedPieces: [number, number]) {
+                       public readonly sidePieces: [number, number],
+                       public readonly capturedPieces: [number, number]) {
         super(hexaBoard.toNumberTable(), turn);
     }
     public equals(other: GipfPartSlice): boolean {

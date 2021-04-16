@@ -20,6 +20,7 @@ import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { expectClickSuccess, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { Player } from 'src/app/jscaip/player/Player';
 import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 
 const activatedRouteStub = {
     snapshot: {
@@ -43,10 +44,10 @@ describe('DvonnComponent', () => {
 
     let testElements: TestElements;
 
-    const __ : number = DvonnPieceStack.EMPTY.getValue();
-    const D1 : number = DvonnPieceStack.SOURCE.getValue();
-    const W1: number = DvonnPieceStack.PLAYER_ZERO.getValue();
-    const WW : number = new DvonnPieceStack(Player.ZERO, 2, false).getValue();
+    const __ : DvonnPieceStack = DvonnPieceStack.EMPTY;
+    const D1 : DvonnPieceStack = DvonnPieceStack.SOURCE;
+    const W1: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
+    const WW : DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 2, false);
 
     beforeEach(fakeAsync(() => {
         TestBed.configureTestingModule({
@@ -85,9 +86,9 @@ describe('DvonnComponent', () => {
         expect(wrapper).toBeTruthy('Wrapper should be created');
         expect(testElements.gameComponent).toBeTruthy('DvonnComponent should be created');
     });
-    it('should not allow to pass initially', async() => {
+    it('should not allow to pass initially', fakeAsync(async() => {
         expect((await testElements.gameComponent.pass()).isFailure()).toBeTrue();
-    });
+    }));
     it('should allow valid moves', fakeAsync(async() => {
         const gameComponent: DvonnComponent = testElements.gameComponent as DvonnComponent;
         expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeTrue();
@@ -98,12 +99,13 @@ describe('DvonnComponent', () => {
         testElements.fixture.detectChanges();
     }));
     it('should allow to pass if stuck position', async() => {
-        const board: number[][] = [
+        const board: DvonnBoard = new DvonnBoard([
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D1, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __, __, __, __]];
+            [__, __, __, __, __, __, __, __, __, __, __],
+        ]);
         const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         testElements.gameComponent.updateBoard();
@@ -125,12 +127,13 @@ describe('DvonnComponent', () => {
         // select black piece (but white plays first)
     });
     it('should disallow choosing a piece at end of the game', async() => {
-        const board: number[][] = [
+        const board: DvonnBoard = new DvonnBoard([
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D1, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __, __, __, __]];
+            [__, __, __, __, __, __, __, __, __, __, __],
+        ]);
         const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
         testElements.gameComponent.updateBoard();
@@ -140,14 +143,16 @@ describe('DvonnComponent', () => {
     });
     it('should show disconnection/captures precisely', fakeAsync(async() => {
         // given board with ready disconnection
-        const board: number[][] = [
+        const board: DvonnBoard = new DvonnBoard([
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D1, W1, W1, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
-            [__, __, __, __, __, __, __, __, __, __, __]];
+            [__, __, __, __, __, __, __, __, __, __, __],
+        ]);
         const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+        testElements.gameComponent.updateBoard();
 
         // When doing that disconnection
         await expectClickSuccess('#click_3_1', testElements);

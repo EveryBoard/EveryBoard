@@ -28,6 +28,12 @@
 .player1-stroke {
     stroke: #ffc34d;
 }
+.other-piece {
+    fill: red;
+}
+.other-piece-stroke {
+    stroke: red;
+}
 .pre-captured {
     fill: pink;
 }
@@ -81,8 +87,17 @@
 .normal-stroke {
     stroke-width: 8;
 }
+.transparent {
+    fill-opacity: 0.75;
+}
 .text-big {
     font: 50px sans-serif;
+}
+.text-big-vcenter {
+    dy: 17;
+}
+.text-medium {
+    font: 35px sans-serif;
 }
 .text-small {
     font: 20 sans-serif;

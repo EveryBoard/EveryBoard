@@ -1,4 +1,4 @@
-import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from '../coord/Coord';
 import { HexaLine } from './HexaLine';
 
@@ -24,6 +24,28 @@ export class HexaBoard<T> {
         }
         const width: number = table[0].length;
         return new HexaBoard(table, width, height, excludedCases, empty);
+    }
+    public static isOnBoard(coord: Coord,
+                            width: number,
+                            height: number,
+                            excludedCases: ReadonlyArray<number>): boolean {
+        const halfHeight: number = height / 2 | 0;
+        if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height) {
+            return false;
+        }
+        if (coord.y <= halfHeight) {
+            if (excludedCases[coord.y] != null) {
+                return coord.x > excludedCases[coord.y]-1;
+            } else {
+                return true;
+            }
+        } else {
+            if (excludedCases[height-1 - coord.y] != null) {
+                return (width-1-coord.x) > excludedCases[height-1 - coord.y]-1;
+            } else {
+                return true;
+            }
+        }
     }
 
     public constructor(public readonly contents: Table<T>,
@@ -80,29 +102,13 @@ export class HexaBoard<T> {
     }
     public allCoords(): Coord[] {
         const coords: Coord[] = [];
-        this.forEachCoord((coord: Coord, _content: T) => {
+        this.forEachCoord((coord: Coord) => {
             coords.push(coord);
         });
         return coords;
     }
     public isOnBoard(coord: Coord): boolean {
-        const halfHeight: number = this.height / 2 | 0;
-        if (coord.x < 0 || coord.x >= this.width || coord.y < 0 || coord.y >= this.height) {
-            return false;
-        }
-        if (coord.y <= halfHeight) {
-            if (this.excludedCases[coord.y] != null) {
-                return coord.x > this.excludedCases[coord.y]-1;
-            } else {
-                return true;
-            }
-        } else {
-            if (this.excludedCases[this.height-1 - coord.y] != null) {
-                return (this.width-1-coord.x) > this.excludedCases[this.height-1 - coord.y]-1;
-            } else {
-                return true;
-            }
-        }
+        return HexaBoard.isOnBoard(coord, this.width, this.height, this.excludedCases);
     }
     public allLines(): ReadonlyArray<HexaLine> {
         const lines: HexaLine[] = [];
