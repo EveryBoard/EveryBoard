@@ -7,12 +7,12 @@ import { EpaminondasRules } from 'src/app/games/epaminondas/epaminondas-rules/Ep
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 
 @Component({
     selector: 'app-epaminondas',
     templateUrl: './epaminondas.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                 EpaminondasPartSlice,

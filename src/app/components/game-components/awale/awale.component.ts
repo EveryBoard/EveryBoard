@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { AwaleRules } from '../../../games/awale/awale-rules/AwaleRules';
 import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
 import { AwalePartSlice } from '../../../games/awale/AwalePartSlice';
@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 @Component({
     selector: 'app-awale-component',
     templateUrl: './awale.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
     public rules: AwaleRules = new AwaleRules(AwalePartSlice);

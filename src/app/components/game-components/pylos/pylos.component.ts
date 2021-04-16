@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { PylosMove } from 'src/app/games/pylos/pylos-move/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
@@ -11,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 @Component({
     selector: 'app-pylos',
     templateUrl: './pylos.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;

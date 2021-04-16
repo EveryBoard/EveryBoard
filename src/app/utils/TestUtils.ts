@@ -1,7 +1,7 @@
 import { DebugElement } from '@angular/core';
 import { ComponentFixture } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { AbstractGameComponent } from '../components/wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../components/game-components/abstract-game-component/AbstractGameComponent';
 import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { GamePartSlice } from '../jscaip/GamePartSlice';

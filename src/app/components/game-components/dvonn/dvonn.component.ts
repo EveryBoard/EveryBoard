@@ -9,13 +9,14 @@ import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPiec
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
-import { HexagonalGameComponent } from '../HexagonalGameComponent';
 import { PointyHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
+import { HexagonalGameComponent }
+    from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
 
 @Component({
     selector: 'app-dvonn',
     templateUrl: './dvonn.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartSlice, LegalityStatus> {

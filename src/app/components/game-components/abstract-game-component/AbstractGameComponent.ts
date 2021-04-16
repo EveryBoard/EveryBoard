@@ -1,5 +1,5 @@
-import { Move } from '../../jscaip/Move';
-import { Rules } from '../../jscaip/Rules';
+import { Move } from '../../../jscaip/Move';
+import { Rules } from '../../../jscaip/Rules';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,7 +13,10 @@ import { JSONValue } from 'src/app/utils/utils/utils';
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */
-@Component({ template: '', styleUrls: ['./abstract-game-wrapper.css'] })
+@Component({
+    template: '',
+    styleUrls: ['./abstract-game-component.css'],
+})
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
     // TODO: remove these as they have been replaced by specific CSS classes
     public readonly PLAYER_ZERO_FILL: string = '#994d00';

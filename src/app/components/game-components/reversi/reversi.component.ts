@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { ReversiRules } from '../../../games/reversi/reversi-rules/ReversiRules';
 import { ReversiPartSlice } from '../../../games/reversi/ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/reversi-move/ReversiMove';
@@ -13,7 +13,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 @Component({
     selector: 'app-reversi',
     templateUrl: './reversi.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
     public CASE_SIZE: number = 100;

@@ -1,4 +1,4 @@
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
@@ -18,7 +18,7 @@ export class KamisadoComponentFailure {
 @Component({
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 
 export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice, LegalityStatus> {

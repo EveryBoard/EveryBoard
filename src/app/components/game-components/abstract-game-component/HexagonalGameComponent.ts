@@ -5,7 +5,7 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
-import { AbstractGameComponent } from '../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from './AbstractGameComponent';
 
 @Component({ template: '' })
 export abstract class HexagonalGameComponent<M extends Move,

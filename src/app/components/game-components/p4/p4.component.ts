@@ -2,17 +2,18 @@ import { Component } from '@angular/core';
 import { P4PartSlice } from '../../../games/p4/P4PartSlice';
 import { P4Rules } from '../../../games/p4/p4-rules/P4Rules';
 import { Move } from '../../../jscaip/Move';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;
