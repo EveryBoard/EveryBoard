@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { GoMove } from 'src/app/games/go/go-move/GoMove';
 import { GoRules } from 'src/app/games/go/go-rules/GoRules';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/go-part-slice/GoPartSlice';
@@ -14,7 +14,7 @@ import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 @Component({
     selector: 'app-go',
     templateUrl: './go.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
     public static VERBOSE: boolean = false;

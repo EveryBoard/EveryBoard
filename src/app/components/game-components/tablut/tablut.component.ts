@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { TablutMove } from 'src/app/games/tablut/tablut-move/TablutMove';
 import { TablutPartSlice } from '../../../games/tablut/TablutPartSlice';
@@ -18,7 +18,7 @@ import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 @Component({
     selector: 'app-tablut',
     templateUrl: './tablut.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;

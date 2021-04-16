@@ -13,7 +13,7 @@ import { JSONValue } from 'src/app/utils/utils/utils';
 import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { HexagonalGameComponent } from '../HexagonalGameComponent';
+import { HexagonalGameComponent } from '../abstract-game-component/HexagonalGameComponent';
 
 interface Scale {
     minX: number;
@@ -76,7 +76,6 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public updateBoard(): void {
         const node: SixNode = this.rules.node;
         this.state = node.gamePartSlice;
-        console.log(JSON.stringify(this.state.toRepresentation()))
         const lastMove: SixMove = this.rules.node.move;
         if (lastMove) {
             this.showLastMove();

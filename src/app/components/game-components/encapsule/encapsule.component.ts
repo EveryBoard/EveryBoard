@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Move } from '../../../jscaip/Move';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { EncapsuleRules } from 'src/app/games/encapsule/encapsule-rules/EncapsuleRules';
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleMove } from 'src/app/games/encapsule/encapsule-move/EncapsuleMove';
@@ -24,9 +24,11 @@ export class EncapsuleComponentFailure {
 @Component({
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
-export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
+export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
+                                                              EncapsulePartSlice,
+                                                              EncapsuleLegalityStatus> {
     public CASE_SIZE: number = 100;
 
     public rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);

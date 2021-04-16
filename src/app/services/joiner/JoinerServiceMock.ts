@@ -16,15 +16,15 @@ export class JoinerServiceMock {
             resolve();
         });
     }
-    public stopObserving() {
+    public stopObserving(): void {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.stopObserving');
         // this.emittedsJoiner = [];
         // TODO stop all timeout
         return;
     }
-    public startObserving(jId: string, callback: (iJ: IJoinerId) => void) {
+    public startObserving(jId: string, callback: (iJ: IJoinerId) => void): void {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.startObserving');
-        let i = 0;
+        let i: number = 0;
         while (i<JoinerServiceMock.emittedsJoiner.length) {
             setTimeout(
                 (index: number) => callback(JoinerServiceMock.emittedsJoiner[index]),

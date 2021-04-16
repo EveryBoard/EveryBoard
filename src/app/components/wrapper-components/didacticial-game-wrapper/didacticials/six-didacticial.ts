@@ -10,6 +10,7 @@ const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 
 export const sixDidacticial: DidacticialStep[] = [
+
     DidacticialStep.informational(
         'Six',
         `Le six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un bloc discontinu.

@@ -4,7 +4,7 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/player/Player';
-import { AbstractGameComponent } from '../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from './AbstractGameComponent';
 
 @Component({ template: '' })
 export abstract class TriangularGameComponent<M extends Move,

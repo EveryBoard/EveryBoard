@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { TriangularGameComponent } from '../TriangularGameComponent';
+import { TriangularGameComponent }
+    from 'src/app/components/game-components/abstract-game-component/TriangularGameComponent';
 import { CoerceoMove } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/coerceo-part-slice/CoerceoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -15,7 +16,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 @Component({
     selector: 'app-coerceo',
     templateUrl: './coerceo.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
                                                               CoerceoPartSlice,
