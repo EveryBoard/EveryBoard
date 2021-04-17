@@ -16,7 +16,7 @@ export const p4Didacticial: DidacticialStep[] = [
         P4PartSlice.getInitialSlice(),
         'Comme vous voyez, la pièce va toujours tomber tout en bas de la colonne.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Victoire',
         `Vous jouez Foncé.
          Placez votre pion de façon à aligner horizontalement 4 de vos pièces.`,
@@ -32,7 +32,7 @@ export const p4Didacticial: DidacticialStep[] = [
         'Voilà, vous avez gagné!',
         'Raté, vous n\'avez pas aligné 4 pièces et perdu votre occasion de gagner.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Autre Victoire',
         'Vous pouvez également aligner 4 pions diagonalement ou verticalement',
         new P4PartSlice([

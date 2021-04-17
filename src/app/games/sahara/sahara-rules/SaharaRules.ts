@@ -11,7 +11,7 @@ import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { TriangularGameState } from 'src/app/jscaip/game-state/triangular-game-state/TriangularGameState';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice, LegalityStatus> {}

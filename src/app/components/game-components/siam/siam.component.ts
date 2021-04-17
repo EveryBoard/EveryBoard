@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { SiamMove } from 'src/app/games/siam/siam-move/SiamMove';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
@@ -11,25 +11,23 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 @Component({
     selector: 'app-siam',
     templateUrl: './siam.component.html',
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice, SiamLegalityStatus> {
     public static VERBOSE: boolean = false;
 
+    public readonly CASE_SIZE: number = 100;
     public rules: SiamRules = new SiamRules(SiamPartSlice);
 
     public lastMove: SiamMove;
-
     public chosenCoord: Coord;
-
     public landingCoord: Coord;
-
     public chosenDirection: MGPOptional<Orthogonal>;
-
     public chosenOrientation: Orthogonal;
 
     public updateBoard(): void {
@@ -162,15 +160,19 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
                x5 + ' ' + y5 + ' ' + x6 + ' ' + y6 + ' ' +
                x7 + ' ' + y7 + ' ' + x8 + ' ' + y8;
     }
-    public stylePiece(x: number, y:number, c: number): any {
+    public getPieceClasses(x: number, y: number, c: number): string[] {
+        const classes: string[] = [];
         const coord: Coord = new Coord(x, y);
+
         let last: Coord = this.lastMove ? this.lastMove.coord : null;
         const direction: Orthogonal = this.lastMove ? this.lastMove.moveDirection.getOrNull() : null;
         last = last && direction ? last.getNext(direction) : last;
-        const isHighlighted: boolean = coord.equals(last);
-        const stroke: string = isHighlighted ? 'yellow' : 'black';
-        const fill: string = SiamPiece.getOwner(c) === Player.ZERO ? 'red' : 'blue';
-        return { fill, stroke };
+        if (coord.equals(last)) {
+            classes.push('highlighted');
+        }
+
+        classes.push(this.getPlayerClass(SiamPiece.getOwner(c)));
+        return classes;
     }
     public choosingOrientation(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);

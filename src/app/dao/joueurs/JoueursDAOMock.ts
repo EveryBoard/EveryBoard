@@ -4,12 +4,12 @@ import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubjec
 import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock';
 import { IJoueurId, IJoueur, PIJoueur } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 type JoueursOS = ObservableSubject<IJoueurId>
 
 export class JoueursDAOMock extends FirebaseFirestoreDAOMock<IJoueur, PIJoueur> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     private static joueursDB: MGPMap<MGPStr, JoueursOS>;
 

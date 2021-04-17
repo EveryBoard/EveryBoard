@@ -23,6 +23,7 @@ import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice'
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { By } from '@angular/platform-browser';
 import { GipfBoard } from 'src/app/games/gipf/gipf-move/GipfBoard';
+import { JSONValue } from 'src/app/utils/utils/utils';
 
 
 const activatedRouteStub = {
@@ -518,4 +519,23 @@ describe('GipfComponent', () => {
         setupSlice(slice);
         await expectClickFail('#click_0_6', testElements, GipfComponentFailure.NO_DIRECTIONS_AVAILABLE);
     }));
+    describe('encode/decode', () => {
+        it('should delegate decoding to move', () => {
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
+                                                               MGPOptional.of(HexaDirection.DOWN));
+            const move: GipfMove = new GipfMove(placement, [], []);
+            const encodedMove: JSONValue = GipfMove.encoder.encode(move);
+            spyOn(GipfMove.encoder, 'decode').and.callThrough();
+            testElements.gameComponent.decodeMove(encodedMove);
+            expect(GipfMove.encoder.decode).toHaveBeenCalledTimes(1);
+        });
+        it('should delegate encoding to move', () => {
+            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
+                                                               MGPOptional.of(HexaDirection.DOWN));
+            const move: GipfMove = new GipfMove(placement, [], []);
+            spyOn(GipfMove.encoder, 'encode').and.callThrough();
+            testElements.gameComponent.encodeMove(move);
+            expect(GipfMove.encoder.encode).toHaveBeenCalledTimes(1);
+        });
+    });
 });

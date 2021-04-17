@@ -8,11 +8,11 @@ import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 
 export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     // T is a full element
 

@@ -33,7 +33,7 @@ export const reversiDidacticial: DidacticialStep[] = [
         ReversiPartSlice.getInitialSlice(),
         'Bravo',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture (2/2)',
         `Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.
          Vous êtes le joueur clair ici.

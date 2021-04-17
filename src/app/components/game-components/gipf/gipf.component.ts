@@ -12,8 +12,8 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
-import { JSONValue } from 'src/app/utils/collection-lib/utils';
-import { HexagonalGameComponent } from '../HexagonalGameComponent';
+import { JSONValue } from 'src/app/utils/utils/utils';
+import { HexagonalGameComponent } from '../abstract-game-component/HexagonalGameComponent';
 
 export class Arrow {
     public constructor(public readonly source: Coord,
@@ -39,7 +39,7 @@ export class GipfComponentFailure {
 @Component({
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlice, GipfLegalityStatus> {
     private static PIECE_SIZE: number = 30;
@@ -278,10 +278,10 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
     }
     public getPieceClass(coord: Coord): string {
         const piece: GipfPiece = this.getPiece(coord);
-        return this.getPlayerClass(piece.player.value);
+        return this.getPlayerClass(piece.player);
     }
-    public getPlayerClass(player: number): string {
-        return 'player' + player;
+    public getSidePieceClass(player: number): string {
+        return this.getPlayerClass(Player.of(player));
     }
     public getPieceSize(): number {
         return GipfComponent.PIECE_SIZE;

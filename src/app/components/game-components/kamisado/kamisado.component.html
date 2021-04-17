@@ -7,43 +7,48 @@
             <g id="click_{{ x }}_{{ y }}"
                (click)="onClick(x, y)">
                 <!-- Background -->
-                <rect [attr.x]="x * 75"
-                      [attr.y]="y * 75"
-                      width="75" height="75"
-                      style="stroke: 'black'; stroke-width: 8;"
-                      [ngStyle]="styleBackground(x, y)"
+                <rect [attr.x]="x * CASE_SIZE"
+                      [attr.y]="y * CASE_SIZE"
+                      [attr.width]="CASE_SIZE"
+                      [attr.height]="CASE_SIZE"
+                      class="base-no-fill"
+                      [attr.fill]="backgroundColor(x, y)"
                       fill-opacity="0.7"/>
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== UNOCCUPIED"
-                        [attr.cx]="37.5 + (x * 75)"
-                        [attr.cy]="37.5 + (y * 75)"
+                        [attr.cx]="CASE_SIZE/2 + (x * CASE_SIZE)"
+                        [attr.cy]="CASE_SIZE/2 + (y * CASE_SIZE)"
+                        [attr.fill]="pieceColor(caseContent)"
                         r="25"
-                        style="stroke-width: 8"
-                        [ngStyle]="stylePieceBorder(caseContent)"/>
+                        class="base-no-fill"/>
                 <circle *ngIf="caseContent !== UNOCCUPIED"
-                        [attr.cx]="37.5 + (x * 75)"
-                        [attr.cy]="37.5 + (y * 75)"
+                        [attr.cx]="CASE_SIZE/2 + (x * CASE_SIZE)"
+                        [attr.cy]="CASE_SIZE/2 + (y * CASE_SIZE)"
+                        [ngClass]="pieceBorderClass(caseContent)"
                         r="8"
-                        style="stroke-width: 0"
-                        [ngStyle]="stylePiece(caseContent)"/>
+                        class="no-stroke"
+                        />
+
             </g>
         </g>
     </g>
     <!-- Highlight last move -->
     <g *ngIf="lastMove !== null">
-        <rect [attr.x]="lastMove.coord.x * 75"
-              [attr.y]="lastMove.coord.y * 75"
-              width="75" height="75"
-              style="fill:none;stroke:#e6e600;stroke-width:5;"/>
-        <rect [attr.x]="lastMove.end.x * 75"
-              [attr.y]="lastMove.end.y * 75"
-              width="75" height="75"
-              style="fill:none;stroke:#e6e600;stroke-width:5;"/>
+        <rect [attr.x]="lastMove.coord.x * CASE_SIZE"
+              [attr.y]="lastMove.coord.y * CASE_SIZE"
+              [attr.width]="CASE_SIZE"
+              [attr.height]="CASE_SIZE"
+              class="base no-fill highlighted"/>
+        <rect [attr.x]="lastMove.end.x * CASE_SIZE"
+              [attr.y]="lastMove.end.y * CASE_SIZE"
+              [attr.width]="CASE_SIZE"
+              [attr.height]="CASE_SIZE"
+              class="base no-fill highlighted"/>
     </g>
     <!-- Highlight selected piece -->
     <circle *ngIf="chosen !== null"
-            [attr.cx]="37.5 + (chosen.x * 75)"
-            [attr.cy]="37.5 + (chosen.y * 75)"
+            [attr.cx]="CASE_SIZE/2 + (chosen.x * CASE_SIZE)"
+            [attr.cy]="CASE_SIZE/2 + (chosen.y * CASE_SIZE)"
             r="30"
-            style="fill:none;stroke:#e6e600;stroke-width:5;"/>
+            class="base mid-stroke no-fill highlighted"/>
 </svg>

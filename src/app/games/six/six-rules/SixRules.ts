@@ -3,18 +3,15 @@ import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPBiMap, MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { SixGameState } from '../six-game-state/SixGameState';
+import { MGPBoolean, SixGameState } from '../six-game-state/SixGameState';
 import { SixMove } from '../six-move/SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
+import { SixFailure } from './SixFailure';
 
-export class SixFailure {
-
-    public static readonly MUST_CUT: string = 'Several groups are of same size, you must pick the one to keep!';
-}
 export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus> {}
 
 export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
@@ -69,34 +66,64 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         return deplacements;
     }
     public getBoardValue(move: SixMove, slice: SixGameState): number {
-        const lastDrop: Coord = move.landing;
-        const victoryValue: number = slice.getCurrentPlayer().getVictoryValue();
-        if (this.isLineVictory(lastDrop, slice)) {
+        const lastDrop: Coord = move.landing.getNext(slice.offset, 1);
+        const victoryValue: number = slice.getCurrentEnnemy().getVictoryValue();
+        const shapeVictory: Coord[] = this.getShapeVictory(lastDrop, slice);
+        if (shapeVictory.length === 6) {
             return victoryValue;
         }
-        if (this.isCircleVictory(lastDrop, slice)) {
-            return victoryValue;
-        }
-        if (this.isTriangleVictory(lastDrop, slice)) {
-            return victoryValue;
+        if (slice.turn > 39) {
+            const pieces: number[] = slice.countPieces();
+            const zeroPieces: number = pieces[0];
+            const onePieces: number = pieces[1];
+            if (zeroPieces < 6 && onePieces < 6) {
+                if (zeroPieces < onePieces) {
+                    return Player.ONE.getVictoryValue();
+                } else if (onePieces < zeroPieces) {
+                    return Player.ZERO.getVictoryValue();
+                } else {
+                    return 0; // DRAW
+                }
+            } else if (zeroPieces < 6) {
+                return Player.ZERO.getDefeatValue();
+            } else if (onePieces < 6) {
+                return Player.ONE.getDefeatValue();
+            } else {
+                return zeroPieces - onePieces;
+            }
         }
         return 0;
     }
-    public isLineVictory(lastDrop: Coord, state: SixGameState): boolean {
+    public getShapeVictory(lastDrop: Coord, state: SixGameState): Coord[] {
+        const lineVictory: Coord[] = this.getLineVictory(lastDrop, state);
+        if (lineVictory.length === 6) {
+            return lineVictory;
+        }
+        const triangleVictory: Coord[] = this.getTriangleVictory(lastDrop, state);
+        if (triangleVictory.length === 6) {
+            return triangleVictory;
+        }
+        const circleVictory: Coord[] = this.getCircleVictory(lastDrop, state);
+        if (circleVictory.length === 6) {
+            return circleVictory;
+        }
+        return [];
+    }
+    public getLineVictory(lastDrop: Coord, state: SixGameState): Coord[] {
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
-        const alignedByDirection: MGPMap<HexaDirection, number> = new MGPMap<HexaDirection, number>();
-        alignedByDirection.set(HexaDirection.UP, 1);
-        alignedByDirection.set(HexaDirection.UP_RIGHT, 1);
-        alignedByDirection.set(HexaDirection.UP_LEFT, 1);
+        const coordsOfDirection: MGPMap<HexaDirection, Coord[]> = new MGPMap<HexaDirection, Coord[]>();
+        coordsOfDirection.set(HexaDirection.UP, [lastDrop]);
+        coordsOfDirection.set(HexaDirection.UP_RIGHT, [lastDrop]);
+        coordsOfDirection.set(HexaDirection.UP_LEFT, [lastDrop]);
         for (const dir of HexaDirection.factory.all) {
             let testedCoords: number = 0;
             let noStop: boolean = true;
             let testCoord: Coord = lastDrop.getNext(dir, 1);
             while (testedCoords < 6 && noStop) {
                 if (state.getPieceAt(testCoord) === LAST_PLAYER) {
-                    const aligned: number = this.incrementForDirection(alignedByDirection, dir);
-                    if (aligned === 6) {
-                        return true;
+                    const aligned: Coord[] = this.addCoordForDirection(coordsOfDirection, dir, testCoord);
+                    if (aligned.length === 6) {
+                        return aligned;
                     }
                     testedCoords++;
                     testCoord = testCoord.getNext(dir, 1);
@@ -105,101 +132,107 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
                 }
             }
         }
-        return false;
+        return [];
     }
-    private incrementForDirection(alignedByDirection: MGPMap<HexaDirection, number>, dir: HexaDirection): number {
+    private addCoordForDirection(coordsOfDirection: MGPMap<HexaDirection, Coord[]>,
+                                 dir: HexaDirection,
+                                 coord: Coord): Coord[]
+    {
         let key: HexaDirection;
-        if (alignedByDirection.containsKey(dir)) {
+        if (coordsOfDirection.containsKey(dir)) {
             key = dir;
         } else {
             key = dir.getOpposite();
         }
-        const aligned: number = alignedByDirection.get(key).get() + 1;
-        alignedByDirection.replace(key, aligned);
+        const aligned: Coord[] = coordsOfDirection.get(key).get();
+        aligned.push(coord);
+        coordsOfDirection.replace(key, aligned);
         return aligned;
     }
-    public isCircleVictory(lastDrop: Coord, state: SixGameState): boolean {
+    public getCircleVictory(lastDrop: Coord, state: SixGameState): Coord[] {
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
         for (let i: number = 0; i < 6; i++) {
             const initialDirection: HexaDirection = HexaDirection.factory.all[i];
-            let testedCoords: number = 0;
+            const testedCoords: Coord[] = [lastDrop];
             let noStop: boolean = true;
             let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
-            while (testedCoords < 5 && noStop) {
+            while (testedCoords.length < 6 && noStop) {
                 if (state.getPieceAt(testCoord) === LAST_PLAYER) {
-                    testedCoords++;
-                    const dirIndex: number = (testedCoords + i) % 6;
+                    testedCoords.push(testCoord);
+                    const dirIndex: number = (testedCoords.length + i -1) % 6;
                     const dir: HexaDirection = HexaDirection.factory.all[dirIndex];
                     testCoord = testCoord.getNext(dir, 1);
                 } else {
                     noStop = false;
                 }
             }
-            if (testedCoords === 5 && noStop) {
-                return true;
+            if (testedCoords.length === 6 && noStop) {
+                return testedCoords;
             }
         }
-        return false;
+        return [];
     }
-    public isTriangleVictory(lastDrop: Coord, state: SixGameState): boolean {
-        if (this.isTrangleVictoryCorner(lastDrop, state)) {
-            return true;
+    public getTriangleVictory(lastDrop: Coord, state: SixGameState): Coord[] {
+        const triangleVictoryCorner: Coord[] = this.getTriangleVictoryCorner(lastDrop, state);
+        if (triangleVictoryCorner.length === 6) {
+            return triangleVictoryCorner;
         }
-        if (this.isTrangleVictoryEdge(lastDrop, state)) {
-            return true;
+        const triangleVictoryEdge: Coord[] = this.getTriangleVictoryEdge(lastDrop, state);
+        if (triangleVictoryEdge.length === 6) {
+            return triangleVictoryEdge;
         }
-        return false;
+        return [];
     }
-    public isTrangleVictoryCorner(lastDrop: Coord, state: SixGameState): boolean {
+    public getTriangleVictoryCorner(lastDrop: Coord, state: SixGameState): Coord[] {
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
         for (let i: number = 0; i < 6; i++) {
             let edgeDirection: HexaDirection = HexaDirection.factory.all[i];
-            let testedEdges: number = 0;
+            const testedEdges: Coord[] = [];
             let noStop: boolean = true;
             let testCorner: Coord = lastDrop;
-            while (testedEdges < 3 && noStop) {
+            while (testedEdges.length < 6 && noStop) {
                 if (state.getPieceAt(testCorner) === LAST_PLAYER &&
                     state.getPieceAt(testCorner.getNext(edgeDirection, 1)) === LAST_PLAYER)
                 {
-                    testedEdges++;
-                    const dirIndex: number = ((2*testedEdges) + i) % 6;
+                    testedEdges.push(testCorner, testCorner.getNext(edgeDirection, 1));
+                    const dirIndex: number = ((testedEdges.length) + i) % 6;
                     testCorner = testCorner.getNext(edgeDirection, 2);
                     edgeDirection = HexaDirection.factory.all[dirIndex];
                 } else {
                     noStop = false;
                 }
             }
-            if (testedEdges === 3 && noStop) {
-                return true;
+            if (testedEdges.length ===6 && noStop) {
+                return testedEdges;
             }
         }
-        return false;
+        return [];
     }
-    public isTrangleVictoryEdge(lastDrop: Coord, state: SixGameState): boolean {
+    public getTriangleVictoryEdge(lastDrop: Coord, state: SixGameState): Coord[] {
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
         for (let i: number = 0; i < 6; i++) {
             const initialDirection: HexaDirection = HexaDirection.factory.all[i];
             let edgeDirection: HexaDirection = HexaDirection.factory.all[(i + 2) % 6];
-            let testedEdges: number = 0;
+            const testedCoords: Coord[] = [];
             let noStop: boolean = true;
             let testCorner: Coord = lastDrop.getNext(initialDirection, 1);
-            while (testedEdges < 3 && noStop) {
+            while (testedCoords.length < 6 && noStop) {
                 if (state.getPieceAt(testCorner) === LAST_PLAYER &&
                     state.getPieceAt(testCorner.getNext(edgeDirection, 1)) === LAST_PLAYER)
                 {
-                    testedEdges++;
-                    const dirIndex: number = ((2*testedEdges) + i + 2) % 6;
+                    testedCoords.push(testCorner, testCorner.getNext(edgeDirection, 1));
+                    const dirIndex: number = (testedCoords.length + i + 2) % 6;
                     testCorner = testCorner.getNext(edgeDirection, 2);
                     edgeDirection = HexaDirection.factory.all[dirIndex];
                 } else {
                     noStop = false;
                 }
             }
-            if (testedEdges === 3 && noStop) {
-                return true;
+            if (testedCoords.length && noStop) {
+                return testedCoords;
             }
         }
-        return false;
+        return [];
     }
     public applyLegalMove(move: SixMove,
                           state: SixGameState,
@@ -242,21 +275,22 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
             case state.getCurrentEnnemy():
                 return { legal: MGPValidation.failure('Cannot move ennemy piece!'), kept: null };
         }
-        const stateAfterDeplacement: SixGameState = state.deplacePiece(move); // LELE
-        const groupsAfterMove: MGPSet<MGPSet<Coord>> = stateAfterDeplacement.getGroups(move.start.get()); // LELE
+        const piecesAfterDeplacement: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(state, move);
+        const groupsAfterMove: MGPSet<MGPSet<Coord>> =
+            SixGameState.getGroups(piecesAfterDeplacement, move.start.get());
         if (this.isSplit(groupsAfterMove)) {
             const biggerGroups: MGPSet<MGPSet<Coord>> = this.getBiggerGroups(groupsAfterMove);
             if (biggerGroups.size() === 1) {
                 if (move.keep.isPresent()) {
                     return {
-                        legal: MGPValidation.failure('You cannot choose which part to keep when one is smaller than the other!'),
+                        legal: MGPValidation.failure(SixFailure.CANNOT_CHOOSE_TO_KEEP),
                         kept: null,
                     };
                 } else {
                     return { legal: MGPValidation.SUCCESS, kept: biggerGroups.get(0) };
                 }
             } else {
-                return this.moveKeepBiggerGroup(move.keep, biggerGroups, stateAfterDeplacement);
+                return this.moveKeepBiggerGroup(move.keep, biggerGroups, piecesAfterDeplacement);
             }
         } else {
             return {
@@ -285,15 +319,15 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
     }
     public moveKeepBiggerGroup(keep: MGPOptional<Coord>,
                                biggerGroups: MGPSet<MGPSet<Coord>>,
-                               state: SixGameState): SixLegalityStatus {
+                               pieces: MGPBiMap<Coord, MGPBoolean>): SixLegalityStatus {
         if (keep.isAbsent()) {
             return {
                 legal: MGPValidation.failure(SixFailure.MUST_CUT),
                 kept: null,
             };
         }
-        if (state.getPieceAt(keep.get()) === Player.NONE) {
-            return { legal: MGPValidation.failure('Cannot keep empty coord!'), kept: null };
+        if (pieces.get(keep.get()).isAbsent()) {
+            return { legal: MGPValidation.failure(SixFailure.CANNOT_KEEP_EMPTY_COORD), kept: null };
         }
         const keptCoord: Coord = keep.get();
         for (let i: number = 0; i < biggerGroups.size(); i++) {
@@ -303,7 +337,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
             }
         }
         return {
-            legal: MGPValidation.failure('Should keep a piece belonging to one of the greater groups'),
+            legal: MGPValidation.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS),
             kept: null,
         };
     }

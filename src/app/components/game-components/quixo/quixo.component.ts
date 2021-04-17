@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/player/Player';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -10,10 +9,12 @@ import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Rules } from 'src/app/jscaip/Rules';
+import { Player } from 'src/app/jscaip/player/Player';
 
 @Component({
     selector: 'app-quixo',
     templateUrl: './quixo.component.html',
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;
@@ -44,17 +45,21 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     public encodeMove(move: QuixoMove): number {
         return QuixoMove.encode(move);
     }
-    public getPieceStyle(x: number, y: number): { [key: string]: string } {
+    public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        const c: Player = Player.of(this.board[y][x]);
-        const fill: string = this.getPlayerColor(c);
-        let stroke: string = 'black';
+        const player: Player = Player.of(this.board[y][x]);
+        const classes: string[] = [];
 
-        if (coord.equals(this.chosenCoord)) stroke = 'grey';
-        else if (coord.equals(this.lastMoveCoord)) stroke = 'orange';
-        return { fill, stroke };
+        classes.push(this.getPlayerClass(player));
+        if (coord.equals(this.chosenCoord)) classes.push('selected');
+        else if (coord.equals(this.lastMoveCoord)) classes.push('highlighted2');
+        return classes;
     }
     public onBoardClick(x: number, y: number): MGPValidation {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         const clickedCoord: Coord = new Coord(x, y);
         if (QuixoMove.isValidCoord(clickedCoord).valid === false) {
             // TODO: is this possible ? If not, should'nt it be a classic Error ?
@@ -76,6 +81,10 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         return infos;
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#chooseDirection_' + direction);
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
         this.chosenDirection = Orthogonal.factory.fromString(direction);
         return await this.tryMove();
     }

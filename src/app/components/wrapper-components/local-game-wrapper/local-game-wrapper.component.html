@@ -55,7 +55,9 @@
                         Passer son tour
                     </button>
                 </div>
-                <div class="inforow" id="takeBackDiv" *ngIf="endGame === false && compo.rules.node.gamePartSlice.turn > 0">
+                <div class="inforow"
+                     id="takeBackDiv"
+                     *ngIf="endGame === false && compo.rules.node.gamePartSlice.turn > 0">
                     <button id="takeBack"
                             type="button"
                             class="btn btn-lg btn-primary w-100"

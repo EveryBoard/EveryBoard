@@ -5,8 +5,9 @@ import { AwaleMove } from '../awale-move/AwaleMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { AwaleLegalityStatus } from '../AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { Player } from 'src/app/jscaip/player/Player';
 
 abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
@@ -229,10 +230,10 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         AwaleRules.GET_BOARD_VALUE_CALL_COUNT++;
 
         const player: number = slice.turn % 2;
-        const ennemy = (player + 1) % 2;
+        const ennemy: number = (player + 1) % 2;
         const captured: number[] = slice.getCapturedCopy();
-        const c1 = captured[1];
-        const c0 = captured[0];
+        const c1: number = captured[1];
+        const c0: number = captured[0];
         const board: number[][] = slice.getCopiedBoard();
         if (AwaleRules.isStarving(player, board)) { // TODO tester de l'enlever
             if (!AwaleRules.canDistribute(ennemy, board)) {
@@ -241,10 +242,10 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
 
         if (c1 > 24) {
-            return Number.MAX_SAFE_INTEGER;
+            return Player.ONE.getVictoryValue();
         }
         if (c0 > 24) {
-            return Number.MIN_SAFE_INTEGER;
+            return Player.ZERO.getVictoryValue();
         }
         return c1 - c0;
     }

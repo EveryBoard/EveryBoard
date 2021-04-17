@@ -9,8 +9,8 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 import { PIJoueur } from '../../domain/iuser';
 import { environment } from 'src/environments/environment';
+import { display } from 'src/app/utils/utils/utils';
 
-import { display } from 'src/app/utils/collection-lib/utils';
 
 interface ConnectivityStatus {
     state: string,

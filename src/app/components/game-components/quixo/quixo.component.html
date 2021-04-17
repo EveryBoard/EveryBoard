@@ -8,8 +8,9 @@
                     r="45"
                     [attr.cx]="50 + 100*x"
                     [attr.cy]="50 + 100*y"
-                    [ngStyle]="getPieceStyle(x, y)"
-                    stroke-width="10px"/>
+                    [ngClass]="getPieceClasses(x, y)"
+                    class="base"
+                    />
         </g>
     </g>
     <g *ngIf="chosenCoord != null">

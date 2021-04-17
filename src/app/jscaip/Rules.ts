@@ -3,9 +3,9 @@ import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
 import { MGPMap } from '../utils/mgp-map/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
-import { display } from '../utils/collection-lib/utils';
 import { Type } from '@angular/core';
 import { MGPValidation } from '../utils/mgp-validation/MGPValidation';
+import { display } from '../utils/utils/utils';
 
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 

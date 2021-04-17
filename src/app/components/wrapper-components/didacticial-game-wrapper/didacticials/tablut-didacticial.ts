@@ -34,7 +34,7 @@ export const tablutDidacticial: DidacticialStep[] = [
         TablutPartSlice.getInitialSlice(),
         'Bravo',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Comment capturer un simple soldat (1/2)',
         `Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l'exception du roi.
          Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats.
@@ -58,7 +58,7 @@ export const tablutDidacticial: DidacticialStep[] = [
         'Bravo, ça lui apprendra!',
         'Raté, vous avez raté l\'occasion de capturer un adversaire',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Comment capturer un simple soldat (2/2)',
         `Un deuxième moyen de capturer un soldat, est contre un trône vide.
          Le Roi a quitté son poste, et mis en danger un de ses soldats.
@@ -78,7 +78,7 @@ export const tablutDidacticial: DidacticialStep[] = [
         'Bravo, un défenseur en moins, mais gardez quand même un oeil sur le roi, c\'est le plus important.',
         'Raté, vous n\'avez pas fait le mouvement demandé.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Comment capturer le roi (1/2)',
         `Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus.
          Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats.
@@ -98,7 +98,7 @@ export const tablutDidacticial: DidacticialStep[] = [
         'Bravo, vous avez gagné la partie.',
         'Raté, vous avez laissé fuir le roi.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Comment capturer le roi (2/2)',
         `Un autre moyen de capturer le roi est de l'immobiliser à 3 contre un bord.
          Notez qu'un roi n'est pas capturable sur une case voisine à un trône.`,

@@ -6,7 +6,6 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Comparable } from 'src/app/utils/collection-lib/Comparable';
 import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
@@ -53,6 +52,43 @@ export class SixGameState extends GamePartSlice {
             }
         }
         return new SixGameState(pieces, turn);
+    }
+    public static deplacePiece(state: SixGameState, move: SixMove): MGPBiMap<Coord, MGPBoolean> {
+        const pieces: MGPBiMap<Coord, MGPBoolean> = state.pieces.getCopy();
+        pieces.delete(move.start.get());
+        pieces.set(move.landing, state.getCurrentPlayer() === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE);
+        return pieces;
+    }
+    public static getGroups(pieces: MGPBiMap<Coord, MGPBoolean>, lastRemovedPiece: Coord): MGPSet<MGPSet<Coord>> {
+        let coordsGroup: MGPBiMap<Coord, MGPStr> = new MGPBiMap<Coord, MGPStr>();
+        let nbGroup: number = 0;
+        for (const dir of HexaDirection.factory.all) {
+            const groupEntry: Coord = lastRemovedPiece.getNext(dir, 1);
+            coordsGroup = SixGameState.putCoordInGroup(pieces, groupEntry, coordsGroup, new MGPStr('' + nbGroup));
+            nbGroup++;
+        }
+        const reversed: MGPBiMap<MGPStr, MGPSet<Coord>> = coordsGroup.groupByValue();
+        const groups: MGPSet<MGPSet<Coord>> = new MGPSet();
+        for (let i: number = 0; i < reversed.size(); i++) {
+            groups.add(reversed.getByIndex(i).value);
+        }
+        return groups;
+    }
+    private static putCoordInGroup(pieces: MGPBiMap<Coord, MGPBoolean>,
+                                   piece: Coord,
+                                   coordsGroup: MGPBiMap<Coord, MGPStr>,
+                                   group: MGPStr): MGPBiMap<Coord, MGPStr>
+    {
+        if (pieces.get(piece).isPresent() &&
+           coordsGroup.get(piece).isAbsent())
+        {
+            coordsGroup.set(piece, group);
+            for (const dir of HexaDirection.factory.all) {
+                const nextCoord: Coord = piece.getNext(dir, 1);
+                coordsGroup = SixGameState.putCoordInGroup(pieces, nextCoord, coordsGroup, group);
+            }
+        }
+        return coordsGroup;
     }
     public constructor(
         public readonly pieces: MGPBiMap<Coord, MGPBoolean>,
@@ -145,68 +181,32 @@ export class SixGameState extends GamePartSlice {
             return Player.NONE;
         }
     }
-    public deplacePiece(move: SixMove): SixGameState {
-        const pieces: MGPBiMap<Coord, MGPBoolean> = this.pieces.getCopy() as MGPBiMap<Coord, MGPBoolean>;
-        pieces.delete(move.start.get());
-        pieces.set(move.landing, this.getCurrentPlayer() === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE);
-        return new SixGameState(pieces, this.turn);
-    }
-    public getGroups(lastRemovedPiece: Coord): MGPSet<MGPSet<Coord>> {
-        let coordsGroup: MGPBiMap<Coord, MGPStr> = new MGPBiMap<Coord, MGPStr>();
-        let nbGroup: number = 0;
-        for (const dir of HexaDirection.factory.all) {
-            const groupEntry: Coord = lastRemovedPiece.getNext(dir, 1);
-            coordsGroup = this.putCoordInGroup(groupEntry, coordsGroup, new MGPStr('' + nbGroup));
-            nbGroup++;
-        }
-        const reversed: MGPBiMap<MGPStr, MGPSet<Coord>> = coordsGroup.groupByValue();
-        const groups: MGPSet<MGPSet<Coord>> = new MGPSet();
-        for (let i: number = 0; i < reversed.size(); i++) {
-            groups.add(reversed.getByIndex(i).value);
-        }
-        return groups;
-    }
-    private putCoordInGroup(piece: Coord,
-                            coordsGroup: MGPBiMap<Coord, MGPStr>,
-                            group: MGPStr): MGPBiMap<Coord, MGPStr>
-    {
-        if (this.pieces.get(piece).isPresent() &&
-            coordsGroup.get(piece).isAbsent())
-        {
-            coordsGroup.set(piece, group);
-            for (const dir of HexaDirection.factory.all) {
-                const nextCoord: Coord = piece.getNext(dir, 1);
-                coordsGroup = this.putCoordInGroup(nextCoord, coordsGroup, group);
-            }
-        }
-        return coordsGroup;
-    }
     public applyLegalDrop(coord: Coord): SixGameState {
-        const pieces: MGPBiMap<Coord, MGPBoolean> = this.pieces.getCopy() as MGPBiMap<Coord, MGPBoolean>;
+        const pieces: MGPBiMap<Coord, MGPBoolean> = this.pieces.getCopy();
         pieces.put(coord, this.getCurrentPlayer() === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE);
         return new SixGameState(pieces, this.turn + 1);
     }
     public applyLegalDeplacement(move: SixMove, kept: MGPSet<Coord>): SixGameState {
-        const stateAfterDeplacement: SixGameState = this.deplacePiece(move);
+        const afterDeplacementPieces: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(this, move);
         let newPieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
         if (kept.size() > 0) {
             newPieces = new MGPBiMap<Coord, MGPBoolean>();
             for (let i: number = 0; i < kept.size(); i++) {
                 const coord: Coord = kept.get(i);
-                newPieces.set(coord, stateAfterDeplacement.pieces.get(coord).get());
+                newPieces.set(coord, afterDeplacementPieces.get(coord).get());
             }
         } else {
-            newPieces = stateAfterDeplacement.pieces.getCopy() as MGPBiMap<Coord, MGPBoolean>;
+            newPieces = afterDeplacementPieces.getCopy();
         }
-        return new SixGameState(newPieces, stateAfterDeplacement.turn + 1);
+        return new SixGameState(newPieces, this.turn + 1);
     }
-    public countPieces(owner: Player): number {
-        const player: MGPBoolean = owner === Player.ONE ? MGPBoolean.TRUE : MGPBoolean.FALSE;
-        const playerPieces: MGPOptional<MGPSet<Coord>> = this.pieces.groupByValue().get(player);
-        if (playerPieces.isAbsent()) {
-            return 0;
-        } else {
-            return playerPieces.get().size();
-        }
+    public countPieces(): [number, number] {
+        const pieces: MGPBiMap<MGPBoolean, MGPSet<Coord>> = this.pieces.groupByValue();
+        const zeroPieces: MGPSet<Coord> = pieces.get(MGPBoolean.FALSE).getOrNull();
+        const onePieces: MGPSet<Coord> = pieces.get(MGPBoolean.TRUE).getOrNull();
+        return [
+            zeroPieces ? zeroPieces.size() : 0,
+            onePieces ? onePieces.size() : 0,
+        ];
     }
 }

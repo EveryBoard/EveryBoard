@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { TablutMove } from 'src/app/games/tablut/tablut-move/TablutMove';
 import { TablutPartSlice } from '../../../games/tablut/TablutPartSlice';
 import { TablutRules } from '../../../games/tablut/tablut-rules/TablutRules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { TablutCase } from 'src/app/games/tablut/tablut-rules/TablutCase';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -18,9 +18,12 @@ import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 @Component({
     selector: 'app-tablut',
     templateUrl: './tablut.component.html',
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;
+
+    public readonly CASE_SIZE: number = 100;
 
     public NONE: number = TablutCase.UNOCCUPIED.value;
 
@@ -123,40 +126,43 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     public encodeMove(move: TablutMove): number {
         return move.encode();
     }
-    public getPieceStyle(x: number, y: number): any {
+    public getPieceClasses(x: number, y: number): string[] {
+        const classes: string[] = [];
         const coord: Coord = new Coord(x, y);
+
         const owner: Player = TablutRules.getAbsoluteOwner(coord, this.board);
-        const fill: string = this.getPlayerColor(owner);
-        const stroke: string = this.getPieceStroke(x, y);
-        return { fill, stroke };
-    }
-    public getPieceStroke(x: number, y: number): string {
-        const coord: Coord = new Coord(x, y);
+        classes.push(this.getPlayerClass(owner));
+
         if (this.chosen.equals(coord)) {
-            return 'yellow';
-        } else {
-            return null;
+            classes.push('selected');
         }
+
+        return classes;
     }
-    public getRectFill(x: number, y: number): string {
+    public getRectClasses(x: number, y: number): string[] {
+        const classes: string[] = [];
+
         const coord: Coord = new Coord(x, y);
         const lastStart: Coord = this.lastMove ? this.lastMove.coord : null;
         const lastEnd: Coord = this.lastMove ? this.lastMove.end : null;
         if (this.captureds.some((c: Coord) => c.equals(coord))) {
-            return this.CAPTURED_FILL;
-        } else if (coord.equals(lastStart) ||
-                   coord.equals(lastEnd)) {
-            return this.MOVED_FILL;
-        } else {
-            return this.NORMAL_FILL;
+            classes.push('captured');
+        } else if (coord.equals(lastStart) || coord.equals(lastEnd)) {
+            classes.push('moved');
         }
+
+        return classes;
     }
-    public getRectStyle(x: number, y: number): unknown {
-        if (this.isClickable(x, y)) {
-            return this.CLICKABLE_STYLE;
-        } else {
-            return null;
+    public getClickables(): Coord[] {
+        const coords: Coord[] = [];
+        for (let y: number = 0; y < this.board.length; y++) {
+            for (let x: number = 0; x < this.board[y].length; x++) {
+                if (this.isClickable(x, y)) {
+                    coords.push(new Coord(x, y));
+                }
+            }
         }
+        return coords;
     }
     private isClickable(x: number, y: number): boolean {
         // Show if the piece can be clicked

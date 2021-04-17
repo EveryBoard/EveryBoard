@@ -25,7 +25,7 @@ import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { MGPRequest, RequestCode } from 'src/app/domain/request';
+import { RequestCode } from 'src/app/domain/request';
 import { ICurrentPart, MGPResult, Part, PICurrentPart } from 'src/app/domain/icurrentpart';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { RouterTestingModule } from '@angular/router/testing';

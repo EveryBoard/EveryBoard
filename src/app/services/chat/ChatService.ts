@@ -3,13 +3,13 @@ import { Observable, Subscription } from 'rxjs';
 import { IChat, IChatId } from '../../domain/ichat';
 import { ChatDAO } from '../../dao/chat/ChatDAO';
 import { IMessage } from '../../domain/imessage';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ChatService implements OnDestroy {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     private followedChatId: string;
 

@@ -1,22 +1,27 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SixGameState } from 'src/app/games/six/six-game-state/SixGameState';
+import { MGPBoolean, SixGameState } from 'src/app/games/six/six-game-state/SixGameState';
 import { SixMove } from 'src/app/games/six/six-move/SixMove';
-import { SixFailure, SixNode, SixRules } from 'src/app/games/six/six-rules/SixRules';
+import { SixFailure } from 'src/app/games/six/six-rules/SixFailure';
+import { SixNode, SixRules } from 'src/app/games/six/six-rules/SixRules';
 import { SixLegalityStatus } from 'src/app/games/six/SixLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { Player } from 'src/app/jscaip/player/Player';
-import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { JSONValue } from 'src/app/utils/utils/utils';
+import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { HexagonalGameComponent } from '../HexagonalGameComponent';
+import { HexagonalGameComponent } from '../abstract-game-component/HexagonalGameComponent';
 
 interface Scale {
     minX: number;
     minY: number;
     maxX: number;
     maxY: number
+    upperPiece: Coord,
+    lefterPiece: Coord,
 }
 @Component({
     selector: 'app-six',
@@ -30,7 +35,9 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public state: SixGameState;
 
     public pieces: Coord[];
-    public disconnected: Coord[];
+    public disconnecteds: Coord[] = [];
+    public cuttables: Coord[] = [];
+    public victoryCoords: Coord[];
     public neighboors: Coord[];
     public leftCoord: Coord = null;
     public lastDrop: Coord = null;
@@ -41,18 +48,30 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public viewBox: string;
     public pointScale: Scale;
     public coordScale: Scale;
+    public Y_OFFSET: number;
+    public PIECE_SIZE: number = 30;
+
+    public hexaLayout: HexaLayout =
+        new HexaLayout(this.PIECE_SIZE * 1.50,
+                       new Coord(this.PIECE_SIZE * 2, 0),
+                       FlatHexaOrientation.INSTANCE);
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
-        this.PIECE_SIZE = 50;
-        this.hexaLayout = new HexaLayout(this.PIECE_SIZE,
+        this.setPieceSize(25);
+        this.updateBoard();
+    }
+    private setPieceSize(rayon: number): void {
+        this.PIECE_SIZE = 2 * rayon;
+        this.hexaLayout = new HexaLayout(rayon,
                                          new Coord(0, 0),
                                          FlatHexaOrientation.INSTANCE);
-        this.updateBoard();
+        this.Y_OFFSET = this.hexaLayout.getYOffset();
     }
     public cancelMoveAttempt(): void {
         this.selectedPiece = null;
         this.chosenLanding = null;
+        this.cuttables = [];
     }
     public decodeMove(encodedMove: JSONValue): SixMove {
         return SixMove.encoder.decode(encodedMove);
@@ -63,124 +82,98 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public updateBoard(): void {
         const node: SixNode = this.rules.node;
         this.state = node.gamePartSlice;
-        console.table(this.state.toRepresentation())
-        console.log({
-            state: this.state,
-            move: node.move })
-        this.showLastMove();
+        const lastMove: SixMove = this.rules.node.move;
+        if (lastMove) {
+            this.showLastMove();
+        } else {
+            // For didacticial
+            this.leftCoord = null;
+            this.lastDrop = null;
+            this.victoryCoords = [];
+        }
         this.pieces = this.state.pieces.listKeys();
         this.neighboors = this.getEmptyNeighboors();
-        // this.setScale();
         this.viewBox = this.getViewBox();
     }
     public showLastMove(): void {
         const lastMove: SixMove = this.rules.node.move;
-        if (lastMove) {
-            this.lastDrop = lastMove.landing.getNext(this.state.offset, 1);
-            if (lastMove.isDrop() === false) {
-                this.leftCoord = lastMove.start.get().getNext(this.state.offset, 1);
+        this.lastDrop = lastMove.landing.getNext(this.state.offset, 1);
+        if (lastMove.isDrop() === false) {
+            this.leftCoord = lastMove.start.get().getNext(this.state.offset, 1);
+        } else {
+            this.leftCoord = null;
+        }
+        if (this.rules.node.isEndGame()) {
+            this.victoryCoords = this.rules.getShapeVictory(this.lastDrop, this.rules.node.gamePartSlice);
+        }
+        this.disconnecteds = this.getDisconnected();
+    }
+    private getDisconnected(): Coord[] {
+        const oldPieces: Coord[] = this.rules.node.mother.gamePartSlice.pieces.listKeys();
+        const newPieces: Coord[] = this.rules.node.gamePartSlice.pieces.listKeys();
+        const disconnecteds: Coord[] =[];
+        for (const oldPiece of oldPieces) {
+            if (oldPiece.equals(this.rules.node.move.start.getOrNull()) === false &&
+                newPieces.some((newCoord: Coord) => newCoord.equals(oldPiece.getNext(this.state.offset, 1))) === false)
+            {
+                disconnecteds.push(oldPiece.getNext(this.state.offset, 1));
             }
         }
-    }
-    public hideLastMove(): void {
-        this.lastDrop = null;
-        this.leftCoord = null;
+        if (this.pieces.some((coord: Coord) => coord.equals(this.lastDrop)) === false &&
+            newPieces.some((coord: Coord) => coord.equals(this.lastDrop)) === false)
+        {
+            disconnecteds.push(this.lastDrop); // Dummy captured his own piece
+        }
+        return disconnecteds;
     }
     public getEmptyNeighboors(): Coord[] {
-        return this.rules.getLegalLandings(this.state);
-    }
-    private setScale(): void {
-        const scales: { coord: Scale, point: Scale } = this.getScales(this.pieces, this.neighboors);
-        if (this.coordScale == null) {
-            this.coordScale = scales.coord;
-            this.pointScale = scales.coord;
-        } else {
-            console.log({
-                diffMin: {
-                    x: this.coordScale.minX - scales.coord.minX,
-                    y: this.coordScale.minY - scales.coord.minY,
-                },
-                offset: this.state.offset,
-            })
+        let legalLandings: Coord[] = this.rules.getLegalLandings(this.state);
+        if (this.chosenLanding) {
+            legalLandings = legalLandings.filter((c: Coord) => c.equals(this.chosenLanding) === false);
         }
+        return legalLandings;
     }
     private getViewBox(): string {
-        const scales: { coord: Scale, point: Scale } = this.getScales(this.pieces, this.neighboors);
-        const usedWidth: number = (2 * this.PIECE_SIZE) + scales.point.maxX - scales.point.minX;
-        const usedHeight: number = (2 * this.PIECE_SIZE) + scales.point.maxY - scales.point.minY;
-        const widthOverstepRatio: number = usedWidth / this.CONCRETE_WIDTH;
-        const heightOverstepRatio: number = usedHeight / this.CONCRETE_HEIGHT;
-        if (widthOverstepRatio > 1 || heightOverstepRatio > 1) {
-            console.log("wanting " + this.CONCRETE_WIDTH + " x " + this.CONCRETE_HEIGHT)
-            console.log("using " + usedWidth + " x " + usedHeight)
-            const overstepRatio: number = Math.max(widthOverstepRatio, heightOverstepRatio);
-            console.log('Ratio de dépassement: (' + overstepRatio + ")");
-            console.log("piece size before: " + this.PIECE_SIZE)
-            this.PIECE_SIZE /= Math.floor(overstepRatio);
-            console.log("piece size (floored) now: " + Math.floor(this.PIECE_SIZE))
-        } else {
-            console.log('pas de dépassement');
-        }
-        const width: number = this.CONCRETE_WIDTH / (this.state.width + 2);
-        const height: number = this.CONCRETE_HEIGHT / (this.state.height + 2);
-        this.PIECE_SIZE = Math.min(width, height);
-        this.hexaLayout = new HexaLayout(this.PIECE_SIZE / 2,
-                                         new Coord(0, 0),
-                                         FlatHexaOrientation.INSTANCE);
-        return (-1.5 * this.PIECE_SIZE) + ' ' +
-               (-1.5 * this.PIECE_SIZE) + ' ' +
-               this.CONCRETE_WIDTH + ' ' +
-               this.CONCRETE_HEIGHT;
+        const abstractScale: Scale = this.getAbstractBoardUse(this.pieces, this.neighboors, this.disconnecteds);
+        const abstractWidth: number = abstractScale.maxX - abstractScale.minX;
+        const abstractHeight: number = abstractScale.maxY - abstractScale.minY;
+
+        const verticalSize: number = this.CONCRETE_HEIGHT / (Math.sin(Math.PI/3) * abstractHeight);
+        const horizontalSize: number = this.CONCRETE_WIDTH / ((1.5 * abstractWidth) + 0.5);
+        const commonSize: number = Math.min(verticalSize, horizontalSize);
+
+        this.setPieceSize(commonSize);
+        const lefterPiece: Coord = this.hexaLayout.getCenter(abstractScale.lefterPiece);
+        const left: number = lefterPiece.x - this.hexaLayout.size;
+        const upperPiece: Coord = this.hexaLayout.getCenter(abstractScale.upperPiece);
+        const up: number = upperPiece.y - this.hexaLayout.getYOffset();
+        return (left - 10) + ' ' + (up - 10) + ' ' +
+               (this.CONCRETE_WIDTH + 20) + ' ' +
+               (this.CONCRETE_HEIGHT + 20);
     }
-    private OldgetViewBox(): string {
-        const scales: { coord: Scale, point: Scale } = this.getScales(this.pieces, this.neighboors);
-        const width: number = Math.ceil(scales.point.maxX - scales.point.minX);
-        const height: number = Math.ceil(scales.point.maxY - scales.point.minY);
-        const horizontalRatio: number = width / this.CONCRETE_WIDTH;
-        const verticalRatio: number = height / this.CONCRETE_HEIGHT;
-        const distortion: number = Math.max(horizontalRatio, verticalRatio);
-        if (distortion > 1) {
-            console.log('what we have to draw is ' + distortion + ' times to big');
-            console.log( this.PIECE_SIZE + ' will become ' + this.PIECE_SIZE/distortion);
-            this.PIECE_SIZE /= distortion;
-            this.hexaLayout = this.hexaLayout = new HexaLayout(this.PIECE_SIZE,
-                                                               new Coord(0, 0),
-                                                               FlatHexaOrientation.INSTANCE);
-        }
-        const padding: number = 10;
-        return (Math.ceil(scales.point.minX) - padding) + ' ' +
-               (Math.ceil(scales.point.minY) - padding) + ' ' +
-               this.CONCRETE_WIDTH + ' ' +
-               this.CONCRETE_HEIGHT;
-    }
-    public getScales(pieces: Coord[], neighboors: Coord[]): { point: Scale, coord: Scale } {
-        const newCoordScale: Scale = {
-            minX: Number.MAX_SAFE_INTEGER,
-            minY: Number.MAX_SAFE_INTEGER,
-            maxX: Number.MIN_SAFE_INTEGER,
-            maxY: Number.MIN_SAFE_INTEGER,
-        };
-        const newPointScale: Scale = {
-            minX: Number.MAX_SAFE_INTEGER,
-            minY: Number.MAX_SAFE_INTEGER,
-            maxX: Number.MIN_SAFE_INTEGER,
-            maxY: Number.MIN_SAFE_INTEGER,
-        };
-        const coords: Coord[] = pieces.concat(neighboors);
+    public getAbstractBoardUse(pieces: Coord[], neighboors: Coord[], disconnecteds: Coord[]): Scale {
+        const coords: Coord[] = pieces.concat(neighboors).concat(disconnecteds);
+        let upperPiece: Coord;
+        let lefterPiece: Coord;
+        let maxX: number = Number.MIN_SAFE_INTEGER;
+        let maxY: number = Number.MIN_SAFE_INTEGER;
+        let minX: number = Number.MAX_SAFE_INTEGER;
+        let minY: number = Number.MAX_SAFE_INTEGER;
         for (const coord of coords) {
-            newCoordScale.minX = Math.min(newCoordScale.minX, coord.x);
-            newCoordScale.maxX = Math.max(newCoordScale.maxX, coord.x);
-            newCoordScale.minY = Math.min(newCoordScale.minY, coord.y);
-            newCoordScale.maxY = Math.max(newCoordScale.maxY, coord.y);
-            const cornerCoords: ReadonlyArray<Coord> = this.hexaLayout.getHexaCoordinates(coord);
-            for (const cornerCoord of cornerCoords) {
-                newPointScale.minX = Math.min(newPointScale.minX, cornerCoord.x);
-                newPointScale.maxX = Math.max(newPointScale.maxX, cornerCoord.x);
-                newPointScale.minY = Math.min(newPointScale.minY, cornerCoord.y);
-                newPointScale.maxY = Math.max(newPointScale.maxY, cornerCoord.y);
+            const coordY: number = (2 * coord.y) + coord.x; // en demi Y_OFFSETs
+            const coordX: number = coord.x; // en nombre de colonnes, simplement
+            if (coordX < minX) {
+                minX = coordX;
+                lefterPiece = coord;
             }
+            if (coordY < minY) {
+                minY = coordY;
+                upperPiece = coord;
+            }
+            maxX = Math.max(maxX, coordX + 1);
+            maxY = Math.max(maxY, coordY + 2);
         }
-        return { point: newPointScale, coord: newCoordScale };
+        return { minX, minY, maxX, maxY, upperPiece, lefterPiece };
     }
     public getPieceFill(coord: Coord): string {
         const player: Player = this.rules.node.gamePartSlice.getPieceAt(coord);
@@ -192,12 +185,12 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             return this.cancelMove(clickValidity.getReason());
         }
         if (this.state.turn < 40) {
-            return this.cancelMove('TODO: DROP BEFORE 40th turn');
-        } else if (this.selectedPiece == null) {
+            return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
+        } else if (this.chosenLanding == null) {
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;
         } else {
-            const cuttingMove: SixMove = SixMove.fromCuttingDeplacement(this.selectedPiece, this.chosenLanding, piece);
+            const cuttingMove: SixMove = SixMove.fromCut(this.selectedPiece, this.chosenLanding, piece);
             return this.chooseMove(cuttingMove, this.state, null, null);
         }
     }
@@ -210,13 +203,14 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             return this.chooseMove(SixMove.fromDrop(neighboor), this.state, null, null);
         } else {
             if (this.selectedPiece == null) {
-                return this.cancelMove('TODO: select a piece to move first, you can no longer drop pieces!');
+                return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP);
             } else {
                 const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, neighboor);
                 const legality: SixLegalityStatus = this.rules.isLegalDeplacement(deplacement, this.state);
                 if (this.neededCutting(legality)) {
                     this.chosenLanding = neighboor;
-                    this.message("COUPEZ")
+                    this.moveVirtuallyPiece();
+                    this.showCuttable();
                     return MGPValidation.SUCCESS;
                 } else {
                     return this.chooseMove(deplacement, this.state, null, null);
@@ -224,8 +218,38 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             }
         }
     }
-    public neededCutting(legality: SixLegalityStatus): boolean {
+    private neededCutting(legality: SixLegalityStatus): boolean {
         return legality.legal.isFailure() &&
                legality.legal.reason === SixFailure.MUST_CUT;
+    }
+    private moveVirtuallyPiece(): void {
+        this.pieces = this.pieces.filter((c: Coord) => c.equals(this.selectedPiece) === false);
+        this.neighboors = this.getEmptyNeighboors();
+    }
+    private showCuttable(): void {
+        const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, this.chosenLanding);
+        const piecesAfterDeplacement: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(this.state, deplacement);
+        const groupsAfterMove: MGPSet<MGPSet<Coord>> =
+            SixGameState.getGroups(piecesAfterDeplacement, deplacement.start.get());
+        const biggerGroups: MGPSet<MGPSet<Coord>> = this.rules.getBiggerGroups(groupsAfterMove);
+        this.cuttables = [];
+        for (let i: number = 0; i < biggerGroups.size(); i++) {
+            const subList: Coord[] = biggerGroups.get(i).toArray();
+            this.cuttables = this.cuttables.concat(subList);
+        }
+    }
+    public getSelectedPieceFill(): string {
+        if (this.chosenLanding) {
+            return this.MOVED_FILL;
+        } else {
+            return 'none';
+        }
+    }
+    public getSelectedPieceStroke(): string {
+        if (this.chosenLanding) {
+            return 'black';
+        } else {
+            return 'yellow';
+        }
     }
 }

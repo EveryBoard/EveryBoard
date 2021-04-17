@@ -1,0 +1,107 @@
+.base {
+    stroke: black;
+    stroke-width: 8;
+    fill: lightgrey;
+}
+.base-no-fill {
+    stroke: black;
+    stroke-width: 8;
+}
+.background {
+    fill: lightgray;
+}
+.background2 {
+    fill: gray;
+}
+.background3 {
+    fill: dimgray;
+}
+.player0 {
+    fill: #994d00;
+}
+.player0-stroke {
+    stroke: #994d00;
+}
+.player1 {
+    fill: #ffc34d;
+}
+.player1-stroke {
+    stroke: #ffc34d;
+}
+.other-piece {
+    fill: red;
+}
+.other-piece-stroke {
+    stroke: red;
+}
+.pre-captured {
+    fill: pink;
+}
+.captured {
+    fill: red;
+}
+.captured2 {
+    fill: #990000;
+}
+.captured-stroke {
+    stroke: red;
+}
+.moved {
+    fill: gray;
+}
+.highlighted {
+    stroke: #e6e600;
+}
+.highlighted2 {
+    stroke: orange;
+}
+.selected {
+    stroke: blue;
+}
+.clickable {
+    stroke: yellow;
+}
+.capturable {
+    stroke-width: 2;
+    stroke: yellow;
+}
+.capturable:hover {
+    stroke-width: 8;
+}
+.arrow {
+    stroke: black;
+    stroke-width: 3;
+}
+.no-fill {
+    fill: none;
+}
+.no-stroke {
+    stroke: none;
+}
+.small-stroke {
+    stroke-width: 2;
+}
+.mid-stroke {
+    stroke-width: 5;
+}
+.normal-stroke {
+    stroke-width: 8;
+}
+.transparent {
+    fill-opacity: 0.75;
+}
+.text-big {
+    font: 50px sans-serif;
+}
+.text-big-vcenter {
+    dy: 17;
+}
+.text-medium {
+    font: 35px sans-serif;
+}
+.text-small {
+    font: 20 sans-serif;
+}
+.text-center {
+    text-anchor: middle;
+}

@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Encoder } from 'src/app/jscaip/encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { ComparableEquals } from 'src/app/utils/collection-lib/Comparable';
-import { JSONObject, JSONValue } from 'src/app/utils/collection-lib/utils';
+import { JSONObject, JSONValue } from 'src/app/utils/utils/utils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 export class SixMove extends Move {
@@ -12,7 +12,7 @@ export class SixMove extends Move {
             return {
                 start: move.start.isPresent() ? Coord.encoder.encode(move.start.get()) : null,
                 landing: Coord.encoder.encode(move.landing),
-                keep: move.start.isPresent() ? Coord.encoder.encode(move.keep.get()) : null,
+                keep: move.keep.isPresent() ? Coord.encoder.encode(move.keep.get()) : null,
             };
         }
         public decode(encoded: JSONValue): SixMove {
@@ -29,7 +29,7 @@ export class SixMove extends Move {
                 return SixMove.fromDeplacement(decodedStart, decodedLanding);
             } else {
                 const decodedKeep: Coord = Coord.encoder.decode(casted.keep);
-                return SixMove.fromCuttingDeplacement(decodedStart, decodedLanding, decodedKeep);
+                return SixMove.fromCut(decodedStart, decodedLanding, decodedKeep);
             }
         }
     }
@@ -39,7 +39,7 @@ export class SixMove extends Move {
     public static fromDeplacement(start: Coord, landing: Coord): SixMove {
         return new SixMove(MGPOptional.of(start), landing, MGPOptional.empty());
     }
-    public static fromCuttingDeplacement(start: Coord, landing: Coord, keep: Coord): SixMove {
+    public static fromCut(start: Coord, landing: Coord, keep: Coord): SixMove {
         return new SixMove(MGPOptional.of(start), landing, MGPOptional.of(keep));
     }
     private constructor(public readonly start: MGPOptional<Coord>,
@@ -57,13 +57,13 @@ export class SixMove extends Move {
     public isDrop(): boolean {
         return this.start.isAbsent();
     }
-    public isCuttingDeplacement(): boolean {
+    public isCut(): boolean {
         return this.keep.isPresent();
     }
     public toString(): string {
         if (this.isDrop()) {
             return 'SixMove(' + this.landing.toString() + ')';
-        } else if (this.isCuttingDeplacement()) {
+        } else if (this.isCut()) {
             return 'SixMove(' + this.start.get().toString() + ' > ' +
                                 this.landing + ', keep: ' +
                                 this.keep.get().toString() + ')';

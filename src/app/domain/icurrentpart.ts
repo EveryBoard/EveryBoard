@@ -1,6 +1,6 @@
 import { IMGPRequest } from './request';
 import { ArrayUtils } from '../utils/collection-lib/array-utils/ArrayUtils';
-import { JSONValue } from '../utils/collection-lib/utils';
+import { JSONValue } from 'src/app/utils/utils/utils';
 
 export interface ICurrentPart {
 

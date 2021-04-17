@@ -1,4 +1,4 @@
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
@@ -18,33 +18,28 @@ export class KamisadoComponentFailure {
 @Component({
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 
 export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
     public rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice);
+    public CASE_SIZE: number = 75;
     public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();
     public lastMove: KamisadoMove = null;
     public chosen: Coord = new Coord(-1, -1);
     public chosenAutomatically: boolean = false;
     public canPass: boolean = false;
 
-    public styleBackground(x: number, y: number): {[key:string]: string} {
-        return {
-            fill: KamisadoBoard.getColorAt(x, y).rgb,
-        };
+    public backgroundColor(x: number, y: number): string {
+        return KamisadoBoard.getColorAt(x, y).rgb;
     }
-    public stylePiece(pieceValue: number): {[key:string]: string} {
+    public pieceColor(pieceValue: number): string {
         const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
-        return {
-            fill: piece.color.rgb,
-        };
+        return piece.color.rgb;
     }
-    public stylePieceBorder(pieceValue: number): {[key:string]: string} {
+    public pieceBorderClass(pieceValue: number): string {
         const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
-        return {
-            fill: this.getPlayerColor(piece.player),
-            stroke: 'black',
-        };
+        return this.getPlayerClass(piece.player);
     }
     public updateBoard(): void {
         const slice: KamisadoPartSlice = this.rules.node.gamePartSlice;

@@ -106,17 +106,17 @@ describe('ReversiComponent', () => {
         await expectMoveSuccess('#click_0_4', testElements, expactions);
 
         const tablutGameComponent: ReversiComponent = <ReversiComponent> testElements.gameComponent;
-        expect(tablutGameComponent.getRectFill(1, 3)).not.toEqual(tablutGameComponent.CAPTURED_FILL);
-        expect(tablutGameComponent.getRectFill(2, 2)).not.toEqual(tablutGameComponent.CAPTURED_FILL);
-        expect(tablutGameComponent.getRectFill(3, 1)).not.toEqual(tablutGameComponent.CAPTURED_FILL);
-        expect(tablutGameComponent.getRectFill(4, 0)).not.toEqual(tablutGameComponent.CAPTURED_FILL);
+        expect(tablutGameComponent.getRectClasses(1, 3)).not.toContain('captured');
+        expect(tablutGameComponent.getRectClasses(2, 2)).not.toContain('captured');
+        expect(tablutGameComponent.getRectClasses(3, 1)).not.toContain('captured');
+        expect(tablutGameComponent.getRectClasses(4, 0)).not.toContain('captured');
 
-        expect(tablutGameComponent.getRectFill(1, 4)).toEqual(tablutGameComponent.CAPTURED_FILL);
+        expect(tablutGameComponent.getRectClasses(1, 4)).toEqual(['captured']);
 
-        expect(tablutGameComponent.getRectFill(1, 5)).toEqual(tablutGameComponent.CAPTURED_FILL);
-        expect(tablutGameComponent.getRectFill(2, 6)).toEqual(tablutGameComponent.CAPTURED_FILL);
+        expect(tablutGameComponent.getRectClasses(1, 5)).toEqual(['captured']);
+        expect(tablutGameComponent.getRectClasses(2, 6)).toEqual(['captured']);
 
-        expect(tablutGameComponent.getRectFill(0, 4)).toEqual(tablutGameComponent.MOVED_FILL);
+        expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved']);
     }));
     it('should delegate decoding to move', () => {
         spyOn(ReversiMove, 'decode').and.callThrough();

@@ -5,39 +5,44 @@
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let caseContent of line; index as x;">
             <g *ngIf="caseIsFull(x, y) else empty">
+                <rect id="click_{{x}}_{{y}}"
+                      width="50" height="50"
+                      [attr.x]="50*x" [attr.y]="50*y"
+                      class="base no-stroke"/>
                 <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
-                        stroke="black"
-                        [attr.fill]="getCaseColor(x, y)"
-                        stroke-width="5px"
-                        (click)="onClick(x, y);"/>
+                        (click)="onClick(x, y);"
+                        [ngClass]="getCaseClass(x, y)"
+                        class="base"
+                        />
                 <circle *ngIf="isLastCase(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
-                        stroke="yellow"
-                        style="fill: none; stroke-width: 5px;" />
-                <line *ngIf="isDead(x, y)"
+                        class="base no-fill highlighted"
+                        />
+                <line *ngIf="isDead(x, y)" <!-- TODO: draw after everything else -->
                       (click)="onClick(x, y);"
                       [attr.x1]="50*x"      [attr.y1]="50*y"
                       [attr.x2]="50 + 50*x" [attr.y2]="50 + 50*y"
-                      style="stroke: red; stroke-width: 5px;"/>
+                      class="base no-fill captured-stroke"
+                      />
             </g>
             <ng-template #empty>
                 <rect id="click_{{x}}_{{y}}"
                       width="50" height="50"
                       [attr.x]="50*x" [attr.y]="50*y"
-                      fill="white"
-                      (click)="onClick(x, y);"/>
+                      (click)="onClick(x, y);"
+                      class="base no-stroke"/>
                 <line [attr.x1]="50*x"      [attr.y1]="25 + 50*y"
                       [attr.x2]="50 + 50*x" [attr.y2]="25 + 50*y"
-                      style="fill:#ffffff; stroke:black; stroke-width: 5px;"
-                      (click)="onClick(x, y);"/>
+                      (click)="onClick(x, y);"
+                      class="base"/>
                 <line [attr.x1]="25 + 50*x" [attr.y1]="50*y"
                       [attr.x2]="25 + 50*x" [attr.y2]="50 + 50*y"
-                      style="fill:#ffffff; stroke:black; stroke-width: 5px;"
-                      (click)="onClick(x, y);"/>
+                      (click)="onClick(x, y);"
+                      class="base"/>
                 <circle *ngIf="isTerritory(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="10"
-                        [attr.fill]="caseContent === 6 ? 'darkgrey' : 'black'"
+                        [attr.class]="caseContent === 6 ? 'player1' : 'player0'"
                         (click)="onClick(x, y);" />
             </ng-template>
         </g>
@@ -45,11 +50,11 @@
     <rect *ngIf="isThereAKo();"
           width="30" height="30"
           [attr.x]="10 + 50*ko.x" [attr.y]="10 + 50*ko.y"
-          style="fill:none; stroke:red; stroke-width: 5px;"
+          class="highlighted"
     />
     <circle *ngFor="let capture of captures"
             [attr.cx]="25 + 50*capture.x" [attr.cy]="25 + 50*capture.y"
-            [attr.r]="5"
-            style="fill: red; stroke: red; stroke-width: 10;"
+            [attr.r]="7"
+            class="captured"
     />
 </svg>

@@ -35,7 +35,7 @@ export const quartoDidacticial: DidacticialStep[] = [
         ], 7, QuartoPiece.ABAA),
         'Parfait!',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Situation',
         `Nous avons ici une situation délicate. Analysez bien le plateau et jouer votre coup,
          en faisant particulièrement attention de ne pas permettre à l'adversaire de l'emporter au prochain coup.`,

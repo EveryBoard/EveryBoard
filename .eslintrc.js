@@ -49,6 +49,7 @@ module.exports = {
         } }],
         'new-cap': ['off'], // Because there are false positives
         'no-undef': ['off'], // Because there are false positives
+        'valid-jsdoc': ['off'], // Because we do not use jsdoc
         'no-unused-vars': ['error'],
         'no-invalid-this': ['warn'],
         'indent': [
@@ -63,7 +64,6 @@ module.exports = {
         'object-curly-spacing': ['warn', 'always'],
         'no-redeclare': ['error'],
         'camelcase': ['warn'],
-        'valid-jsdoc': ['warn'],
         'no-case-declarations': ['off'],
         'padded-blocks': ['off'],
         'space-before-function-paren': ['error', {

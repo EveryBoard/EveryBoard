@@ -8,26 +8,28 @@
            (click)="onClick(x, y);">
             <g *ngIf="caseContent === 0 || caseContent === 1">
                 <polyline [attr.points]="getPyramidCoordinate(x, y)"
-                          [attr.fill]="getPlayerFill(x, y)"
-                          style="stroke: black; stroke-width: 5" />
+                          [ngClass]="getPlayerClassFor(x, y)"
+                          class="base small-stroke"
+                          />
             </g>
             <g *ngIf="caseContent === 2">
                 <polyline *ngIf="(x+y)%2 === 1"
                           [attr.points]="getTriangleCoordinate(x, y)"
-                          style="fill: lightgrey; stroke: black; stroke-width: 5" />
+                          class="base small-stroke"
+                          />
                 <polyline *ngIf="(x+y)%2 === 0"
                           [attr.points]="getTriangleCoordinate(x, y)"
-                          style="fill: dimgray; stroke:black; stroke-width: 5" />
+                          class="base small-stroke background2" />
             </g>
         </g>
     </g>
     <ng-container *ngIf="lastMoved">
         <polyline [attr.points]="getTriangleCoordinate(lastCoord.x, lastCoord.y)"
-                  style="fill: none; stroke: yellow; stroke-width: 5" />
+                  class="base no-fill small-stroke highlighted" />
         <polyline [attr.points]="getTriangleCoordinate(lastMoved.x, lastMoved.y)"
-                  style="fill: none; stroke: yellow; stroke-width: 5" />
+                  class="base no-fill small-stroke highlighted" />
     </ng-container>
     <polyline *ngIf="chosenCoord.isPresent()"
               [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
-              style="fill: none; stroke: blue; stroke-width: 5" />
+              class="base no-fill small-stroke selected" />
 </svg>

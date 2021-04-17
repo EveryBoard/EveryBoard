@@ -4,13 +4,13 @@
       preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let currentCase of line; index as x;">
-            <circle [attr.cx]="(CASE_SIZE * x) + (CASE_SIZE / 2)"
+            <circle (click)="onClick(x)"
+                    [attr.cx]="(CASE_SIZE * x) + (CASE_SIZE / 2)"
                     [attr.cy]="(CASE_SIZE * y) + (CASE_SIZE / 2)"
                     [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
-                    [ngStyle]="getCaseStyle(x, y)"
-                    [attr.stroke-width]="STROKE_WIDTH"
+                    [ngClass]="getCaseClasses(x, y)"
+                    class="base"
                     pointer-events="fill"
-                    (click)="onClick(x)"
             />
         </g>
     </g>

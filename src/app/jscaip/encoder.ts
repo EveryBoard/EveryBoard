@@ -1,4 +1,4 @@
-import { assert, JSONValue } from '../utils/collection-lib/utils';
+import { assert, JSONValue } from 'src/app/utils/utils/utils';
 
 export abstract class Encoder<T> {
     public abstract encode(t: T): JSONValue;
@@ -23,7 +23,7 @@ export abstract class NumberEncoder<T> extends Encoder<T> {
         return this.maxValue() + 1;
     }
     public abstract encodeNumber(t: T): number
-    public encode(t: T): JSONValue {
+    public encode(t: T): JSONValue {
         return this.encodeNumber(t);
     }
     public abstract decodeNumber(n: number): T
@@ -78,39 +78,10 @@ export namespace NumberEncoder {
                 return n;
             }
             public decodeNumber(encoded: number): number {
-                return encoded % max;
-            }
-        };
-    }
-
-    export function arrayEncoder<T>(encoder: NumberEncoder<T>, maxLength: number): NumberEncoder<ReadonlyArray<T>> {
-        return new class extends NumberEncoder<ReadonlyArray<T>> {
-            public maxValue(): number {
-                let max: number = 0;
-                for (let i: number = 0; i <= maxLength; i++) {
-                    max = (max + encoder.maxValue()) * encoder.shift();
+                if (encoded > max) {
+                    throw new Error('Cannot decode number bigger than the max with numberEncoder');
                 }
-                max += maxLength;
-                return max;
-            }
-            public encodeNumber(array: ReadonlyArray<T>): number {
-                let encoded: number = 0;
-                array.forEach((v: T) => {
-                    encoded = encoded * encoder.shift() + encoder.encodeNumber(v);
-                });
-                encoded = encoded * (maxLength+1) + array.length;
                 return encoded;
-            }
-            public decodeNumber(encoded: number): ReadonlyArray<T> {
-                const size: number = encoded % (maxLength+1);
-                encoded = (encoded - size) / (maxLength+1);
-                const array: T[] = [];
-                for (let i: number = 0; i < size; i++) {
-                    const valueN: number = encoded % encoder.shift();
-                    encoded = (encoded - valueN) / encoder.shift();
-                    array.push(encoder.decode(valueN));
-                }
-                return array.reverse();
             }
         };
     }

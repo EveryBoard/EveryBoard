@@ -8,20 +8,19 @@
                 <ng-container *ngIf="isDrawable(x, y, z)">
                     <circle id="click_{{x}}_{{y}}_{{z}}"
                             (click)="onClick(x, y, z)"
-                            [attr.fill]="getCaseFill(x, y, z)"
-                            stroke="black"
-                            stroke-width='8'
                             [attr.r]="getPieceRay(z)"
                             [attr.cx]="getPieceCx(x, y, z)"
                             [attr.cy]="getPieceCy(x, y, z)"
+                            [ngClass]="getCaseClasses(x, y, z)"
+                            class="base"
                     />
                     <circle *ngIf="isOccupied(x, y, z)"
                             (click)="onClick(x, y, z)"
-                            [ngStyle]="getPieceStyle(x, y, z)"
-                            stroke-width='8'
                             [attr.r]="getPieceRay(z) - 16"
                             [attr.cx]="getPieceCx(x, y, z)"
                             [attr.cy]="getPieceCy(x, y, z)"
+                            [ngClass]="getPieceClasses(x, y, z)"
+                            class="base"
                     />
                 </ng-container>
             </g>

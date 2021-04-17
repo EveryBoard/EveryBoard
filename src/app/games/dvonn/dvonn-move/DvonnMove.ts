@@ -6,13 +6,13 @@ export class DvonnMove extends MoveCoordToCoord {
     public static PASS: DvonnMove = new DvonnMove(new Coord(-1, -1), new Coord(-2, -2));
     public static decode(encodedMove: number): DvonnMove {
         if (encodedMove < 0) return this.PASS;
-        const y2 = encodedMove % 16;
+        const y2: number = encodedMove % 16;
         encodedMove = (encodedMove / 16) | 0;
-        const x2 = encodedMove % 16;
+        const x2: number = encodedMove % 16;
         encodedMove = (encodedMove / 16) | 0;
-        const y1 = encodedMove % 16;
+        const y1: number = encodedMove % 16;
         encodedMove = (encodedMove / 16) | 0;
-        const x1 = encodedMove % 16;
+        const x1: number = encodedMove % 16;
         return new DvonnMove(new Coord(x1, y1), new Coord(x2, y2));
     }
     public static encode(move: DvonnMove): number {
@@ -40,7 +40,7 @@ export class DvonnMove extends MoveCoordToCoord {
         } else if (start.x === end.x) {
             // horizontal move, allowed
             return new DvonnMove(start, end);
-        } else if (start.x + start.y == end.x + end.y) {
+        } else if (start.x + start.y === end.x + end.y) {
             // diagonal move, allowed
             return new DvonnMove(start, end);
         } else {

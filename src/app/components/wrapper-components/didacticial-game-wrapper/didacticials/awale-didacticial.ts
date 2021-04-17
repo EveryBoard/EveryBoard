@@ -23,7 +23,7 @@ export const awaleDidacticial: DidacticialStep[] = [
         ], 1, [0, 0]),
         'Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines)!',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture simple',
         `Après une distribution, si la dernière graine tombe dans une maison du camp adverse et qu'il y a maintenant deux ou trois graines dans cette maison, le joueur capture ces deux ou trois graines.
          Ensuite il regarde la case précédente:
@@ -37,7 +37,7 @@ export const awaleDidacticial: DidacticialStep[] = [
         `Bravo. Il s'agissait ici d'une capture simple, voyons maintenant une capture composée.`,
         'Perdu. Recommencez et distribuez la maison la plus à gauche.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture composée possible',
         `En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2.
          Ces deux maisons, étant consécutives, seront donc toutes les deux capturables.
@@ -50,7 +50,7 @@ export const awaleDidacticial: DidacticialStep[] = [
         'Bravo, vous gagnez 3 point dans la première maison plus 2 dans la seconde!',
         'Perdu. Recommencez.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture interrompue',
         'En cliquant sur votre maison la plus à gauche, vous atterrissez sur la 3ème maison, qui est capturable. Faites-le.',
         new AwalePartSlice([
@@ -61,7 +61,7 @@ export const awaleDidacticial: DidacticialStep[] = [
         'Constatez que la 2ème maison n’étant pas capturable, la capture a été interrompue et vous n’avez pas pu capturer la 1ère maison.',
         'Perdu. Recommencez.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Capture chez l\'adversaire uniquement',
         'Essayez de capturer les deux maisons les plus à gauche de l’adversaire.',
         new AwalePartSlice([
@@ -72,7 +72,7 @@ export const awaleDidacticial: DidacticialStep[] = [
         'Bravo. Constatez que la capture s\'est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons!',
         'Vous n\'avez capturé qu\'une seule maison, recommencez!',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Ne pas affamer',
         'Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire! Lancez-vous !',
         new AwalePartSlice([

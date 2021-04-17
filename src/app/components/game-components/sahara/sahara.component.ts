@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
-import { TriangularGameComponent } from '../TriangularGameComponent';
+import { TriangularGameComponent }
+    from 'src/app/components/game-components/abstract-game-component/TriangularGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { SaharaMove } from 'src/app/games/sahara/sahara-move/SaharaMove';
@@ -13,6 +14,7 @@ import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 @Component({
     selector: 'app-sahara',
     templateUrl: './sahara.component.html',
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaPartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;

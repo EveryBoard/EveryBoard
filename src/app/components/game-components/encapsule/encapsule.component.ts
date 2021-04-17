@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Move } from '../../../jscaip/Move';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { EncapsuleRules } from 'src/app/games/encapsule/encapsule-rules/EncapsuleRules';
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleMove } from 'src/app/games/encapsule/encapsule-move/EncapsuleMove';
@@ -24,9 +24,11 @@ export class EncapsuleComponentFailure {
 @Component({
     selector: 'app-encapsule',
     templateUrl: './encapsule.component.html',
-    styleUrls: ['../../wrapper-components/abstract-game-wrapper.css'],
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
-export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
+export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
+                                                              EncapsulePartSlice,
+                                                              EncapsuleLegalityStatus> {
     public CASE_SIZE: number = 100;
 
     public rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
@@ -128,8 +130,8 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         }
         return false;
     }
-    public getPieceClasses(piece: EncapsulePiece): string {
-        return this.getPieceStrokeClass(piece);
+    public getPieceClasses(piece: EncapsulePiece): string[] {
+        return [this.getPieceStrokeClass(piece)];
     }
     public getPieceStrokeClass(piece: EncapsulePiece): string {
         const player: Player = piece.getPlayer();
@@ -152,10 +154,10 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove, Enc
         }
         return coords;
     }
-    public getSidePieceClasses(piece: EncapsulePiece, index: number): string {
-        const pieceClasses: string = this.getPieceClasses(piece);
+    public getSidePieceClasses(piece: EncapsulePiece, index: number): string[] {
+        const pieceClasses: string[] = this.getPieceClasses(piece);
         if (this.isSelectedPiece(piece) && this.chosenPieceIndex === index) {
-            return 'clickable ' + pieceClasses;
+            pieceClasses.push('clickable ');
         }
         return pieceClasses;
     }

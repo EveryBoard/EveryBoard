@@ -1,17 +1,15 @@
-import { IChat, PIChat, IChatId } from '../../domain/ichat';
+import { IChat, PIChat } from '../../domain/ichat';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { FirebaseFirestoreDAO } from '../firebase-firestore-dao/FirebaseFirestoreDAO';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 @Injectable({
     providedIn: 'root',
 })
 export class ChatDAO extends FirebaseFirestoreDAO<IChat, PIChat> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     constructor(protected afs: AngularFirestore) {
         super('chats', afs);

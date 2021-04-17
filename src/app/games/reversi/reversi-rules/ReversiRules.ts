@@ -7,13 +7,13 @@ import { ReversiMove } from '../reversi-move/ReversiMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
 
 export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public applyLegalMove(move: ReversiMove, slice: ReversiPartSlice, status: ReversiLegalityStatus): { resultingMove: ReversiMove; resultingSlice: ReversiPartSlice; } {
         const turn: number = slice.turn;

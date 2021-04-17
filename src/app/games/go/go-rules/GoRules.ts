@@ -8,7 +8,7 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
 import { GroupDatas } from '../group-datas/GroupDatas';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';

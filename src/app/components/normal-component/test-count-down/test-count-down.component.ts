@@ -1,5 +1,5 @@
 import { Component, ViewChild } from '@angular/core';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 import { CountDownComponent } from '../count-down/count-down.component';
 
 @Component({

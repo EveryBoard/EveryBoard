@@ -1,6 +1,6 @@
 import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Type, ViewChild } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AbstractGameComponent } from './AbstractGameComponent';
+import { AbstractGameComponent } from '../game-components/abstract-game-component/AbstractGameComponent';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
 import { UserService } from '../../services/user/UserService';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
@@ -29,7 +29,7 @@ import { SixComponent } from '../game-components/six/six.component';
 import { TablutComponent } from '../game-components/tablut/tablut.component';
 
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 @Component({ template: '' })
 export abstract class GameWrapper {
@@ -53,7 +53,7 @@ export abstract class GameWrapper {
 
     constructor(protected componentFactoryResolver: ComponentFactoryResolver,
                 protected actRoute: ActivatedRoute,
-                protected router: Router,
+                public router: Router,
                 protected userService: UserService,
                 protected authenticationService: AuthenticationService,
     ) {

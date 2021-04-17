@@ -1,5 +1,5 @@
-import { Move } from '../../jscaip/Move';
-import { Rules } from '../../jscaip/Rules';
+import { Move } from '../../../jscaip/Move';
+import { Rules } from '../../../jscaip/Rules';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -7,13 +7,16 @@ import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
-import { JSONValue } from 'src/app/utils/collection-lib/utils';
+import { JSONValue } from 'src/app/utils/utils/utils';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
  * (since OnlineGameWrapper and LocalGameWrapper will not give the same action to do when a move is done)
  */
-@Component({ template: '', styleUrls: ['./abstract-game-wrapper.css'] })
+@Component({
+    template: '',
+    styleUrls: ['./abstract-game-component.css'],
+})
 export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
     // TODO: remove these as they have been replaced by specific CSS classes
     public readonly PLAYER_ZERO_FILL: string = '#994d00';
@@ -42,7 +45,10 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public isPlayerTurn: boolean;
 
-    public chooseMove: (move: Move, slice: GamePartSlice, scorePlayerZero: number, scorePlayerOne: number) => Promise<MGPValidation>;
+    public chooseMove: (move: Move,
+                        slice: GamePartSlice,
+                        scorePlayerZero: number,
+                        scorePlayerOne: number) => Promise<MGPValidation>;
 
     public canUserPlay: (element: string) => MGPValidation;
 
@@ -84,6 +90,13 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
             case Player.ZERO: return this.PLAYER_ZERO_FILL;
             case Player.ONE: return this.PLAYER_ONE_FILL;
             case Player.NONE: return this.EMPTY_CASE_FILL;
+        }
+    }
+    public getPlayerClass(player: Player): string {
+        switch (player) {
+            case Player.ZERO: return 'player0';
+            case Player.ONE: return 'player1';
+            case Player.NONE: return '';
         }
     }
     public getTurn(): number {

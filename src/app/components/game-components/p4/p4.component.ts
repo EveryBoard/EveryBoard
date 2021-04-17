@@ -2,16 +2,18 @@ import { Component } from '@angular/core';
 import { P4PartSlice } from '../../../games/p4/P4PartSlice';
 import { P4Rules } from '../../../games/p4/p4-rules/P4Rules';
 import { Move } from '../../../jscaip/Move';
-import { AbstractGameComponent } from '../../wrapper-components/AbstractGameComponent';
+import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-p4',
     templateUrl: './p4.component.html',
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, LegalityStatus> {
     public static VERBOSE: boolean = false;
@@ -42,18 +44,16 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, Lega
             this.last = null;
         }
     }
-    public getCaseStyle(x: number, y: number): {[key:string]: string} {
-        return {
-            'fill': this.getCaseFill(this.board[y][x]),
-            'stroke': this.last && this.last.equals(new Coord(x, y)) ? 'yellow' : 'black',
-        };
-    }
-    private getCaseFill(content: number): string {
-        if (content === Player.NONE.value) {
-            return 'none';
-        } else {
-            return this.getPlayerColor(Player.of(content));
+    public getCaseClasses(x: number, y: number): string[] {
+        const classes: string[] = [];
+        classes.push(this.getCaseFillClass(this.board[y][x]));
+        if (this.last && this.last.equals(new Coord(x, y))) {
+            classes.push('highlighted');
         }
+        return classes;
+    }
+    private getCaseFillClass(content: number): string {
+        return this.getPlayerClass(Player.of(content));
     }
     public decodeMove(encodedMove: number): Move {
         return P4Move.decode(encodedMove);

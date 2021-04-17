@@ -1,9 +1,9 @@
 import { IJoinerId } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { display } from 'src/app/utils/collection-lib/utils';
+import { display } from 'src/app/utils/utils/utils';
 
 export class JoinerServiceMock {
-    public static VERBOSE = false;
+    public static VERBOSE: boolean = false;
 
     public static emittedsJoiner: IJoinerId[];
 
@@ -16,15 +16,15 @@ export class JoinerServiceMock {
             resolve();
         });
     }
-    public stopObserving() {
+    public stopObserving(): void {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.stopObserving');
         // this.emittedsJoiner = [];
         // TODO stop all timeout
         return;
     }
-    public startObserving(jId: string, callback: (iJ: IJoinerId) => void) {
+    public startObserving(jId: string, callback: (iJ: IJoinerId) => void): void {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.startObserving');
-        let i = 0;
+        let i: number = 0;
         while (i<JoinerServiceMock.emittedsJoiner.length) {
             setTimeout(
                 (index: number) => callback(JoinerServiceMock.emittedsJoiner[index]),

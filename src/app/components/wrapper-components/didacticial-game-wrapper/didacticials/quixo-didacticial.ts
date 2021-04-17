@@ -17,7 +17,7 @@ export const quixoDidacticial: DidacticialStep[] = [
          Chaque pièce a un face neutre, une face claire et une face foncée.`,
         QuixoPartSlice.getInitialSlice(),
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'A quoi ressemble un mouvement (sans animation)',
         `Quand c'est à votre tour de jouer:
          1. Cliquez sur une de vos pièces ou une pièce neutre, il est interdit de choisir une pièce de l'adversaire.
@@ -39,7 +39,7 @@ export const quixoDidacticial: DidacticialStep[] = [
          La pièce neutre, elle, s'est déplacé de 4 cases à gauche et est devenue claire.`,
         'Raté.',
     ),
-    DidacticialStep.forMove(
+    DidacticialStep.fromMove(
         'Victoire',
         `Vous savez déjà tout ce qu'il faut pour jouer, il ne manque qu'une spécificité.
          Si vous créez une ligne de 5 pièces vous appartenant, vous gagnez.

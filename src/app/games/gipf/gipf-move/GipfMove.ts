@@ -4,14 +4,16 @@ import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { assert, JSONObject, JSONValue } from 'src/app/utils/collection-lib/utils';
+import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils/utils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 export class GipfCapture {
     // Encodes a capture as: initial case, direction, length
     public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
         public encode(capture: GipfCapture): JSONValue {
-            return capture.capturedCases.map((coord: Coord): JSONValue => Coord.encoder.encode(coord));
+            return capture.capturedCases.map((coord: Coord): JSONValueWithoutArray => {
+                return Coord.encoder.encode(coord) as JSONValueWithoutArray;
+            });
         }
         public decode(encoded: JSONValue): GipfCapture {
             const casted: Array<JSONValue> = encoded as Array<JSONValue>;
@@ -124,19 +126,33 @@ export class GipfPlacement {
 export class GipfMove extends Move {
     public static encoder: Encoder<GipfMove> = new class extends Encoder<GipfMove> {
         public encode(move: GipfMove): JSONValue {
-            return {
+            const encoded: JSONValue = {
                 placement: GipfPlacement.encoder.encode(move.placement),
-                initialCaptures: move.initialCaptures.map(GipfCapture.encoder.encode),
-                finalCaptures: move.finalCaptures.map(GipfCapture.encoder.encode),
             };
+
+            move.initialCaptures.map((c: GipfCapture, i: number) => {
+                encoded['initialCapture' + i] = GipfCapture.encoder.encode(c);
+            });
+            move.finalCaptures.map((c: GipfCapture, i: number) => {
+                encoded['finalCapture' + i] = GipfCapture.encoder.encode(c);
+            });
+
+            return encoded;
         }
         public decode(encoded: JSONValue): GipfMove {
             const casted: JSONObject = encoded as JSONObject;
-            assert(casted.placement != null && casted.initialCaptures != null && casted.finalCaptures != null,
-                   'Invalid encoded GipfMove');
+            assert(casted.placement != null, 'Invalid encoded GipfMove');
+
             return new GipfMove(GipfPlacement.encoder.decode(casted.placement),
-                                (casted.initialCaptures as Array<JSONValue>).map(GipfCapture.encoder.decode),
-                                (casted.finalCaptures as Array<JSONValue>).map(GipfCapture.encoder.decode));
+                                this.decodeArray(casted, 'initialCapture', GipfCapture.encoder.decode),
+                                this.decodeArray(casted, 'finalCapture', GipfCapture.encoder.decode));
+        }
+        private decodeArray<T>(v: JSONObject, name: string, decode: (v: JSONValue) => T): T[] {
+            const array: T[] = [];
+            for (let i: number = 0; v[name + i] != null; i++) {
+                array.push(decode(v[name + i]));
+            }
+            return array;
         }
     }
 
