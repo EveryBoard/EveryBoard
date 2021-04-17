@@ -43,7 +43,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public imagesLocation: string = 'assets/images/';
 
-    public isPlayerTurn: boolean;
+    public isPlayerTurn: () => boolean;
 
     public chooseMove: (move: Move,
                         slice: GamePartSlice,

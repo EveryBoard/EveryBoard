@@ -7,7 +7,8 @@ import { LocalGameWrapperComponent }
 import { GamePartSlice } from '../jscaip/GamePartSlice';
 import { LegalityStatus } from '../jscaip/LegalityStatus';
 import { Move } from '../jscaip/Move';
-import { DidacticialGameWrapperComponent } from '../components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
+import { DidacticialGameWrapperComponent }
+    from '../components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
 import { MGPValidation } from './mgp-validation/MGPValidation';
 
 export interface MoveExpectations {

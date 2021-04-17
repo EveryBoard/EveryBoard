@@ -57,13 +57,23 @@
                 </div>
                 <div class="inforow"
                      id="takeBackDiv"
-                     *ngIf="endGame === false && compo.rules.node.gamePartSlice.turn > 0">
+                     *ngIf="compo.rules.node.gamePartSlice.turn > 0 && endGame === false">
                     <button id="takeBack"
                             type="button"
                             class="btn btn-lg btn-primary w-100"
                             (click)="takeBack()"
                             mat-stroked-button>
                         Reprendre un coup
+                    </button>
+                </div>
+                <div class="inforow"
+                     *ngIf="endGame === true">
+                    <button id="restartButton"
+                            type="button"
+                            class="btn btn-lg btn-primary w-100"
+                            (click)="restartGame()"
+                            mat-stroked-button>
+                        Recommencer une partie
                     </button>
                 </div>
             </div>

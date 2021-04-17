@@ -18,10 +18,10 @@ import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 
-const activatedRouteStub = {
+const activatedRouteStub: unknown = {
     snapshot: {
         paramMap: {
-            get: (str: string) => {
+            get: () => {
                 return 'P4';
             },
         },
@@ -76,6 +76,9 @@ describe('LocalGameWrapperComponent', () => {
         fixture = TestBed.createComponent(LocalGameWrapperComponent);
         debugElement = fixture.debugElement;
         component = fixture.debugElement.componentInstance;
+        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
+        fixture.detectChanges();
+        tick(1);
     }));
     it('should create', () => {
         AuthenticationServiceMock.USER = { pseudo: null, verified: null };
@@ -83,35 +86,21 @@ describe('LocalGameWrapperComponent', () => {
     });
     it('should have game included after view init', fakeAsync(() => {
         AuthenticationServiceMock.USER = { pseudo: null, verified: null };
-        const compiled = fixture.debugElement.nativeElement;
-        const gameIncluderTag = compiled.querySelector('app-game-includer');
-        let p4Tag = compiled.querySelector('app-p4');
+        const gameIncluderTag: DebugElement = fixture.debugElement.nativeElement.querySelector('app-game-includer');
+        let p4Tag: DebugElement = fixture.debugElement.nativeElement.querySelector('app-p4');
         expect(gameIncluderTag).toBeTruthy('app-game-includer tag should be present at start');
-        expect(p4Tag).toBeFalsy('app-p4 tag should be absent at start');
-        expect(component.gameComponent).toBeUndefined('gameComponent should not be loaded before the timeout int afterViewInit resolve');
 
-        fixture.detectChanges();
-        tick(1);
-
-        p4Tag = compiled.querySelector('app-p4');
+        p4Tag = fixture.debugElement.nativeElement.querySelector('app-p4');
         expect(component.gameIncluder).toBeTruthy('gameIncluder should exist after view init');
         expect(p4Tag).toBeTruthy('app-p4 tag should be present after view init');
         expect(component.gameComponent).toBeTruthy('gameComponent should be present once component view init');
     }));
     it('connected user should be able to play', fakeAsync(async() => {
-        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
-
-        fixture.detectChanges();
-        tick(1);
-
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
         const legality: MGPValidation = await component.gameComponent.chooseMove(P4Move.of(4), slice, null, null);
         expect(legality.isSuccess()).toBeTrue();
     }));
     it('should allow to go back one move', fakeAsync(async() => {
-        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
-        fixture.detectChanges();
-        tick(1);
         const slice: P4PartSlice = component.gameComponent.rules.node.gamePartSlice;
         expect(slice.turn).toBe(0);
         const legality: MGPValidation = await component.gameComponent.chooseMove(P4Move.of(4), slice, null, null);
@@ -129,10 +118,6 @@ describe('LocalGameWrapperComponent', () => {
         expect(component.gameComponent.updateBoard).toHaveBeenCalledTimes(1);
     }));
     it('should show draw', fakeAsync(async() => {
-        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
-        fixture.detectChanges();
-        tick(1);
-
         const board: number[][] = [
             [X, X, X, _, X, X, X],
             [O, O, O, X, O, O, O],
@@ -143,15 +128,13 @@ describe('LocalGameWrapperComponent', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 0);
         component.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        expect(await component.gameComponent.chooseMove(P4Move.of(3), slice, null, null)).toBeTruthy('Last move should be legal');
+        const legality: MGPValidation = await component.gameComponent.chooseMove(P4Move.of(3), slice, null, null);
+        expect(legality.isSuccess()).toBeTrue();
         component.cdr.detectChanges();
         const drawIndicator: DebugElement = debugElement.query(By.css('#draw'));
         expect(drawIndicator).toBeTruthy('Draw indicator should be present');
     }));
     it('should show score if needed', fakeAsync(async() => {
-        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
-        fixture.detectChanges();
-        tick(1);
         expect(await clickElement('#scoreZero')).toBeFalsy();
         expect(await clickElement('#scoreOne')).toBeFalsy();
         component.gameComponent.showScore = true;
@@ -159,5 +142,30 @@ describe('LocalGameWrapperComponent', () => {
         fixture.detectChanges();
         expect(await clickElement('#scoreZero')).toBeTrue();
         expect(await clickElement('#scoreOne')).toBeTrue();
+    }));
+    it('should allow to restart game at the end', fakeAsync(async() => {
+        const board: number[][] = [
+            [O, O, O, _, O, O, O],
+            [X, X, X, O, X, X, X],
+            [O, O, O, X, O, O, O],
+            [X, X, X, O, X, X, X],
+            [O, O, O, X, O, O, O],
+            [X, X, X, O, X, X, X],
+        ];
+        const slice: P4PartSlice = new P4PartSlice(board, 41);
+        component.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+        fixture.detectChanges();
+        let restartButton: DebugElement = debugElement.query(By.css('#restartButton'));
+        expect(restartButton).toBeFalsy('Restart button should be absent during the game');
+        const legality: MGPValidation = await component.gameComponent.chooseMove(P4Move.of(3), slice, null, null);
+        expect(legality.isSuccess()).toBeTrue();
+        component.cdr.detectChanges();
+        restartButton = debugElement.query(By.css('#restartButton'));
+        expect(restartButton).toBeTruthy('Restart button should be present after end game');
+        await clickElement('#restartButton');
+        fixture.detectChanges();
+        expect(component.gameComponent.rules.node.gamePartSlice.turn).toBe(0);
+        const drawIndicator: DebugElement = debugElement.query(By.css('#draw'));
+        expect(drawIndicator).toBeFalsy('Draw indicator should be removed');
     }));
 });
