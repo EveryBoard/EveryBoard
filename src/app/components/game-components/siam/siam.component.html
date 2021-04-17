@@ -7,22 +7,22 @@
                   (click)="insertAt(n, -1)"
                   [attr.points]="getArrowCoordinate(n + 1, 0)"
                   [attr.transform]="rotate(n + 1, 0, 'DOWN')"
-                  class="gray"/>
+                  class="base mid-stroke"/>
         <polyline id="insertAt_{{n}}_5"
                   (click)="insertAt(n, 5)"
                   [attr.points]="getArrowCoordinate(n + 1, 6)"
                   [attr.transform]="rotate(n + 1, 6, 'UP')"
-                  class="gray"/>
+                  class="base mid-stroke"/>
         <polyline id="insertAt_-1_{{n}}"
                   (click)="insertAt(-1, n)"
                   [attr.points]="getArrowCoordinate(0, n + 1)"
                   [attr.transform]="rotate(0, n + 1, 'RIGHT')"
-                  class="gray"/>
+                  class="base mid-stroke"/>
         <polyline id="insertAt_5_{{n}}"
                   (click)="insertAt(5, n)"
                   [attr.points]="getArrowCoordinate(6, n + 1)"
                   [attr.transform]="rotate(6, n + 1, 'LEFT')"
-                  class="gray"/>
+                  class="base mid-stroke"/>
     </g>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
@@ -32,7 +32,7 @@
                           [attr.points]="getArrowCoordinate(x + 1, y + 1)"
                           [attr.transform]="rotateOf(x, y)"
                           [ngClass]="getPieceClasses(x, y, c)"
-                          class="mid-stroke"
+                          class="base mid-stroke"
                 />
                 <g *ngIf="choosingDirection(x, y)">
                     <polyline id="chooseDirection_{{direction[2]}}"
@@ -42,7 +42,8 @@
                 </g>
             </g>
             <polyline *ngIf="isMountain(c)"
-                      [attr.points]="getMountainCoordinate(x + 1, y + 1)" />
+                      [attr.points]="getMountainCoordinate(x + 1, y + 1)"
+                      fill="brown" />
             <g *ngIf="choosingOrientation(x, y)">
                 <polyline id="chooseOrientation_{{orientation[2]}}"
                           *ngFor="let orientation of [[2, 1, 'RIGHT'], [1, 2, 'DOWN'], [0, 1, 'LEFT'], [1, 0, 'UP']]"

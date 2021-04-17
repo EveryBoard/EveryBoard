@@ -38,7 +38,7 @@
               [attr.x]="getCenter(disconnected).x"
               [attr.y]="getCenter(disconnected).y"
               class="text-center text-big"
-              dy="17">{{caseContent.getSize()}}</text>
+              dy="17">{{disconnected.caseContent.getSize()}}</text>
     </g>
     <!-- Highlight last move -->
     <ng-container *ngIf="lastMove !== null">

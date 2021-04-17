@@ -18,7 +18,7 @@
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
                         class="base no-fill highlighted"
                         />
-                <line *ngIf="isDead(x, y)"
+                <line *ngIf="isDead(x, y)" <!-- TODO: draw after everything else -->
                       (click)="onClick(x, y);"
                       [attr.x1]="50*x"      [attr.y1]="50*y"
                       [attr.x2]="50 + 50*x" [attr.y2]="50 + 50*y"
@@ -42,7 +42,7 @@
                 <circle *ngIf="isTerritory(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="10"
-                        [attr.fill]="caseContent === 6 ? 'darkgrey' : 'black'"
+                        [attr.class]="caseContent === 6 ? 'player1' : 'player0'"
                         (click)="onClick(x, y);" />
             </ng-template>
         </g>
@@ -54,7 +54,7 @@
     />
     <circle *ngFor="let capture of captures"
             [attr.cx]="25 + 50*capture.x" [attr.cy]="25 + 50*capture.y"
-            [attr.r]="5"
+            [attr.r]="7"
             class="captured"
     />
 </svg>
