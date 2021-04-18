@@ -74,7 +74,7 @@ describe('QuixoComponent', () => {
         expect(gameComponent.getPieceClasses(0, 0)).toContain('selected');
 
         gameComponent.lastMoveCoord = new Coord(4, 4);
-        expect(gameComponent.getPieceClasses(4, 4)).toContain('highlighted2');
+        expect(gameComponent.getPieceClasses(4, 4)).toContain('lastmove');
     });
     it('should give correct direction', () => {
         let possibleDirections: [number, number, string][];

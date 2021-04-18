@@ -1,12 +1,13 @@
 import { DvonnPieceStack } from '../dvonn-piece-stack/DvonnPieceStack';
 import { DvonnPartSlice } from '../DvonnPartSlice';
-import { DvonnRules } from './DvonnRules';
+import { DvonnFailure, DvonnRules } from './DvonnRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { DvonnMove } from '../dvonn-move/DvonnMove';
 import { Player } from 'src/app/jscaip/player/Player';
 import { DvonnBoard } from '../DvonnBoard';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 describe('DvonnRules:', () => {
     let rules: DvonnRules;
@@ -82,7 +83,46 @@ describe('DvonnRules:', () => {
         const slice: DvonnPartSlice = rules.node.gamePartSlice;
         expect(rules.isLegal(DvonnMove.of(new Coord(1, 3), new Coord(1, 2)), slice).legal.isSuccess()).toBeFalse();
     });
-    it('should have the target stack owned by the owner of the source stack', () => {
+    it('should not allow moves from an empty stack', () => {
+        const board: DvonnBoard = new DvonnBoard([
+            [_, _, _, B, B, B, W, W, B, D, B],
+            [_, B, B, W, W, W, B, B, W, B, B],
+            [WB, B, B, B, W, D, B, W, W, W, W],
+            [_, W, B, W, W, B, B, B, W, W, _],
+            [W, D, W, B, B, W, W, W, B, _, _],
+        ]);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
+        const legality: MGPValidation = rules.isLegal(move, slice).legal;
+        expect(legality).toEqual(MGPValidation.failure(DvonnFailure.EMPTY_STACK));
+    });
+    it('should forbid moves with pieces that cannot reach any target', () => {
+        const board: DvonnBoard = new DvonnBoard([
+            [_, _, WW, D, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, W, B, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+        ]);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(4, 0));
+        const legality: MGPValidation = rules.isLegal(move, slice).legal;
+        expect(legality).toEqual(MGPValidation.failure(DvonnFailure.CANT_REACH_TARGET));
+    });
+    it('should forbid moves with a different length than the stack size', () => {
+        const board: DvonnBoard = new DvonnBoard([
+            [_, _, WW, B, _, _, _, _, _, _, _],
+            [_, WWW, BD, W, W, _, _, D, _, _, _],
+            [BB, B, B, _, W, _, _, BB, _, _, _],
+            [W, _, B, WWW, W, _, _, _, _, _, _],
+            [W, D, W, B, B, W, _, _, _, _, _],
+        ]);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(3, 0));
+        const legality: MGPValidation = rules.isLegal(move, slice).legal;
+        expect(legality).toEqual(MGPValidation.failure(DvonnFailure.INVALID_MOVE_LENGTH));
+    });
+    it('should have the target stack owned by the owner of the source stack after the move', () => {
         const expectedBoard: DvonnBoard = new DvonnBoard([
             [_, _, W, B, B, B, W, W, B, D, B],
             [_, B, B, W, W, W, B, B, W, B, B],
@@ -111,7 +151,7 @@ describe('DvonnRules:', () => {
             [W, _, B, W, W, _, B, B, W, W, _],
             [W, D, W, B, B, W, W, W, B, _, _],
         ]);
-        const slice : DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
             expect(board.getAt(move.end).isEmpty()).toBeFalse();
@@ -126,7 +166,7 @@ describe('DvonnRules:', () => {
             [W, _, B, WWW, W, _, _, _, _, _, _],
             [W, D, W, B, B, W, _, _, _, _, _],
         ]);
-        const slice : DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
             expect(move.length()).toEqual(board.getAt(move.coord).getSize());
@@ -141,7 +181,7 @@ describe('DvonnRules:', () => {
             [W, _, B, WWW, W, _, _, _, _, _, _],
             [W, D, W, B, B, W, _, _, _, _, _],
         ]);
-        const slice : DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         const moves: MGPMap<DvonnMove, DvonnPartSlice> = rules.getListMovesFromSlice(null, slice);
         for (const move of moves.listKeys()) {
             expect(board.getAt(move.end).isEmpty()).toBeFalse();
