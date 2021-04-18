@@ -131,7 +131,8 @@ export class ComponentTestUtils<T> {
                                    slice?: GamePartSlice,
                                    scoreZero?: number,
                                    scoreOne?: number)
-    : Promise<void> {
+    : Promise<void>
+    {
         const element: DebugElement = this.debugElement.query(By.css(elementName));
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
@@ -157,7 +158,8 @@ export class ComponentTestUtils<T> {
                                    slice?: GamePartSlice,
                                    scoreZero?: number,
                                    scoreOne?: number)
-    : Promise<void> {
+    : Promise<void>
+    {
         const element: DebugElement = this.debugElement.query(By.css(elementName));
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
