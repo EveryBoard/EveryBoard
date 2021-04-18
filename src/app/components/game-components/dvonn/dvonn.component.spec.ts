@@ -15,9 +15,9 @@ import { ComponentTestUtils } from 'src/app/utils/TestUtils';
 describe('DvonnComponent', () => {
     let componentTestUtils: ComponentTestUtils<DvonnComponent>;
 
-    const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
-    const D: DvonnPieceStack = DvonnPieceStack.SOURCE;
-    const W: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
+    const __: DvonnPieceStack = DvonnPieceStack.EMPTY;
+    const D_: DvonnPieceStack = DvonnPieceStack.SOURCE;
+    const W_: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
     const WW: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 2, false);
 
     beforeEach(fakeAsync(() => {
@@ -37,22 +37,21 @@ describe('DvonnComponent', () => {
     }));
     it('should allow to pass if stuck position', async() => {
         const board: DvonnBoard = new DvonnBoard([
-            [_, _, WW, _, _, _, _, _, _, _, _],
-            [_, _, D, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
+            [__, __, WW, __, __, __, __, __, __, __, __],
+            [__, __, D_, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
         ]);
         const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
         componentTestUtils.setupSlice(slice);
         expect(componentTestUtils.getComponent().canPass).toBeTrue();
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
     });
-    it('should disallow moving from an invalid location', async() => {
-        const gameComponent: DvonnComponent = componentTestUtils.getComponent();
-        expect((await gameComponent.onClick(0, 0)).isSuccess()).toBeFalse();
+    xit('should disallow moving from an invalid location', async() => {
+        await componentTestUtils.expectClickFailure('#click_0_0', 'TODO');
     });
-    it('should disallow moving to invalid location', async() => {
+    xit('should disallow moving to invalid location', async() => {
         const gameComponent: DvonnComponent = componentTestUtils.getComponent();
         expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeTrue();
         expect((await gameComponent.onClick(1, 0)).isSuccess()).toBeFalse();
@@ -64,11 +63,11 @@ describe('DvonnComponent', () => {
     it('should show disconnection/captures precisely', fakeAsync(async() => {
         // given board with ready disconnection
         const board: DvonnBoard = new DvonnBoard([
-            [_, _, WW, _, _, _, _, _, _, _, _],
-            [_, _, D, W, W, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
+            [__, __, WW, __, __, __, __, __, __, __, __],
+            [__, __, D_, W_, W_, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
+            [__, __, __, __, __, __, __, __, __, __, __],
         ]);
         componentTestUtils.setupSlice(new DvonnPartSlice(board, 0, false));
 
@@ -80,7 +79,7 @@ describe('DvonnComponent', () => {
         const gameComponent: DvonnComponent = componentTestUtils.getComponent();
         // expect board to show it
         expect(gameComponent.disconnecteds).toEqual([
-            { x: 4, y: 1, caseContent: W },
+            { x: 4, y: 1, caseContent: W_ },
         ]);
     }));
     it('should delegate decoding to move', () => {
