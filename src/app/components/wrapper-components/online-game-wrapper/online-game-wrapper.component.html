@@ -55,29 +55,39 @@
             <div class="inforow" id="currentPlayerIndicator" *ngIf="endGame === false">
                 <h4>C'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
             </div>
-            <div class="inforow" id="resignButtonDiv" *ngIf="endGame === false && opponent && observerRole < 2">
+            <div class="inforow"
+                 id="resignButtonDiv"
+                 *ngIf="endGame === false && opponent && observerRole < 2">
                 <button mat-stroked-button
                         id="resignButton"
                         (click)="resign()">
                     Abandonner
                 </button>
             </div>
-            <div class="inforow" id="passButtonDiv" *ngIf="endGame === false && observerRole < 2 && compo.canPass && (currentPlayer===userName)">
+            <div class="inforow"
+                 id="passButtonDiv"
+                 *ngIf="endGame === false && observerRole < 2 && compo.canPass && (currentPlayer===userName)">
                 <button mat-stroked-button
                         id="passButton"
                         (click)="compo.pass()">
                     Passer son tour
                 </button>
             </div>
-            <div class="inforow" id="allowTakeBackDiv" *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
-                <button mat-stroked-button
+            <div class="inforow"
+                 id="allowTakeBackDiv"
+                 *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
+                <button mat-raised-button
+                        color="warn"
                         id="acceptTakeBackButton"
                         (click)="acceptTakeBack()">
                     Autoriser à reprendre un tour
                 </button>
             </div>
-            <div class="inforow" id="refuseTakeBackDiv" *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
-                <button mat-stroked-button
+            <div class="inforow"
+                 id="refuseTakeBackDiv"
+                 *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
+                <button mat-raised-button
+                        color="warn"
                         id="refuseTakeBackButton"
                         (click)="refuseTakeBack()">
                     Refuser de reprendre un tour
