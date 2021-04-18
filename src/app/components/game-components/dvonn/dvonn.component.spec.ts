@@ -61,17 +61,6 @@ describe('DvonnComponent', () => {
         // select black piece (but white plays first)
         await componentTestUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE);
     });
-    xit('should disallow choosing a piece at end of the game', async() => {
-        const board: DvonnBoard = new DvonnBoard([
-            [_, _, W, _, _, _, _, _, _, _, _],
-            [_, _, D, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _],
-        ]);
-        componentTestUtils.setupSlice(new DvonnPartSlice(board, 0, true));
-        await componentTestUtils.expectClickForbidden('#click_2_0');
-    });
     it('should show disconnection/captures precisely', fakeAsync(async() => {
         // given board with ready disconnection
         const board: DvonnBoard = new DvonnBoard([
