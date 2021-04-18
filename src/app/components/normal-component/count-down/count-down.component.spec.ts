@@ -23,7 +23,7 @@ describe('CountDownComponent', () => {
         it('should throw when setting chrono already started', () => {
             component.setDuration(1250);
             component.start();
-            const error: string = 'Should not set a chrono that has already been started!';
+            const error: string = 'Should not set a chrono that has already been started (undefined)!';
             expect(() => component.setDuration(1250)).toThrowError(error);
         });
     });

@@ -182,7 +182,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     protected onCurrentPartUpdate(update: ICurrentPartId): void {
         const part: ICurrentPart = update.doc;
-        display(OnlineGameWrapperComponent.VERBOSE || true, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
+        display(OnlineGameWrapperComponent.VERBOSE, { OnlineGameWrapperComponent_onCurrentPartUpdate: {
             before: this.currentPart,
             then: update.doc,
             before_part_turn: part.turn,
@@ -246,11 +246,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         if (update.beginning == null) {
             return UpdateType.PRE_START_DOC;
         }
+        if (update['result'] && update['result']['value'] !== 5) { // TODO: non nullable result
+            return UpdateType.END_GAME;
+        }
         if (update.beginning != null && update.listMoves.length === 0) {
             return UpdateType.STARTING_DOC;
-        }
-        if (update['result'] != null) { // TODO: non nullable result
-            return UpdateType.END_GAME;
         }
         throw new Error('Unexpected update: ' + JSON.stringify(diff));
     }
@@ -283,19 +283,19 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameComponent.updateBoard();
     }
     private switchPlayer(): void {
+        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.switchPlayer');
         const part: ICurrentPart = this.currentPart.copy();
-        const currentPlayer: Player = part.turn % 2 === 0 ? Player.ZERO : Player.ONE;
         const currentEnnemy: Player = part.turn % 2 === 0 ? Player.ONE : Player.ZERO;
-        display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.doNewMoves');
+        if (this.didUserPlay(currentEnnemy)) {
+            this.pauseCountDownsFor(currentEnnemy);
+        }
+        const currentPlayer: Player = part.turn % 2 === 0 ? Player.ZERO : Player.ONE;
         if (this.didUserPlay(currentPlayer)) {
             display(OnlineGameWrapperComponent.VERBOSE,
                     'OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player');
             this.resumeCountDownFor(currentPlayer);
         } else {
             this.startCountDownFor(currentPlayer);
-        }
-        if (this.didUserPlay(currentEnnemy)) {
-            this.pauseCountDownsFor(currentEnnemy);
         }
     }
     private checkEndgames() {
@@ -431,11 +431,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     private takeBackFor(player: Player) {
         this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
-        if (this.gameComponent.rules.node.gamePartSlice.turn % 2 !== player.value) {
+        if (this.gameComponent.rules.node.gamePartSlice.turn % 2 === player.value) {
+            this.switchPlayer();
+        } else {
             // Second time to make sure it end up on player's turn
             this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
-        } else {
-            this.switchPlayer();
         }
         this.gameComponent.updateBoard();
     }
@@ -512,12 +512,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             // the player has run out of time, he'll notify his own defeat by time
             this.notifyTimeoutVictory(this.opponent.doc.pseudo);
         } else {
-            if (!this.endGame) {
+            if (this.endGame) {
+                display(true, 'time might be better handled in the future');
+            } else {
                 // the other player has timed out
                 this.notifyTimeoutVictory(this.userName);
                 this.endGame = true;
-            } else {
-                display(true, 'time might be better handled in the future');
             }
         }
     }
@@ -548,7 +548,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameService.refuseTakeBack(this.currentPartId, player);
     }
     private startCountDownFor(player: Player) {
-        display(OnlineGameWrapperComponent.VERBOSE || true,
+        display(OnlineGameWrapperComponent.VERBOSE,
                 'dans OnlineGameWrapperComponent.startCountDownFor(' + player.toString() +
                 ') (turn ' + this.currentPart.turn + ')');
         this.hasUserPlayed[player.value] = true;
@@ -561,7 +561,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     private resumeCountDownFor(player: Player): void {
-        display(OnlineGameWrapperComponent.VERBOSE || true,
+        display(OnlineGameWrapperComponent.VERBOSE,
                 'dans OnlineGameWrapperComponent.resumeCountDownFor(' + player.toString() +
                 ') (turn ' + this.currentPart.turn + ')');
 
@@ -576,7 +576,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public pauseCountDownsFor(player: Player): void {
-        display(OnlineGameWrapperComponent.VERBOSE || true,
+        display(OnlineGameWrapperComponent.VERBOSE,
                 'dans OnlineGameWrapperComponent.pauseCountDownFor(' + player.value +
                 ') (turn ' + this.currentPart.turn + ')');
         if (player === Player.ZERO) {
@@ -588,16 +588,28 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     private stopCountdownsFor(player: Player) {
-        display(OnlineGameWrapperComponent.VERBOSE || true,
+        display(OnlineGameWrapperComponent.VERBOSE,
                 'cdc::stopCountDownsFor(' + player.toString() +
                 ') (turn ' + this.currentPart.copy().turn + ')');
 
         if (player === Player.ZERO) {
-            this.chronoZeroGlobal.stop();
-            this.chronoZeroLocal.stop();
+            if (this.chronoZeroGlobal.isStarted()) {
+                display(true, 'stop zero global');
+                this.chronoZeroGlobal.stop();
+            }
+            if (this.chronoZeroLocal.isStarted()) {
+                display(true, 'stop zero local');
+                this.chronoZeroLocal.stop();
+            }
         } else {
-            this.chronoOneGlobal.stop();
-            this.chronoOneLocal.stop();
+            if (this.chronoOneGlobal.isStarted()) {
+                display(true, 'stop one global');
+                this.chronoOneGlobal.stop();
+            }
+            if (this.chronoOneLocal.isStarted()) {
+                display(true, 'stop one local');
+                this.chronoOneLocal.stop();
+            }
         }
     }
     public ngOnDestroy(): void {

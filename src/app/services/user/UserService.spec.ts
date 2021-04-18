@@ -11,8 +11,7 @@ describe('UserService', () => {
 
     beforeEach(() => {
         const joueursDAOMock: JoueursDAOMock = new JoueursDAOMock();
-        service = new UserService(routerStub as Router,
-            new ActivesUsersService(joueursDAOMock as unknown as JoueursDAO),
+        service = new UserService(new ActivesUsersService(joueursDAOMock as unknown as JoueursDAO),
                                   joueursDAOMock as unknown as JoueursDAO);
     });
     it('should create', () => {
