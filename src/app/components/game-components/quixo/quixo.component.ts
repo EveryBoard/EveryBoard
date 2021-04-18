@@ -52,7 +52,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
         classes.push(this.getPlayerClass(player));
         if (coord.equals(this.chosenCoord)) classes.push('selected');
-        else if (coord.equals(this.lastMoveCoord)) classes.push('highlighted2');
+        else if (coord.equals(this.lastMoveCoord)) classes.push('lastmove');
         return classes;
     }
     public onBoardClick(x: number, y: number): MGPValidation {

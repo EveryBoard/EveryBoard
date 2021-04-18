@@ -34,10 +34,10 @@
               class="base no-fill highlighted" />
     <polyline *ngIf="lastStart.isPresent()"
               [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
-              class="base no-fill highlighted2" />
+              class="base no-fill lastmove" />
     <polyline *ngIf="lastEnd.isPresent()"
               [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
-              class="base no-fill highlighted2" />
+              class="base no-fill lastmove" />
     <polyline *ngIf="chosenCoord.isPresent()"
               [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
               class="base no-fill selected" />

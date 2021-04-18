@@ -52,7 +52,7 @@
 .highlighted {
     stroke: #e6e600;
 }
-.highlighted2 {
+.lastmove {
     stroke: orange;
 }
 .selected {
@@ -89,6 +89,9 @@
 }
 .transparent {
     fill-opacity: 0.75;
+}
+.round {
+    stroke-linecap: round;
 }
 .text-big {
     font: 50px sans-serif;
