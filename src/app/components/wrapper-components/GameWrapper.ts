@@ -45,7 +45,7 @@ export abstract class GameWrapper {
 
     public players: string[] = [null, null];
 
-    public observerRole: number; // TODO: change into Player
+    public observerRole: number;
 
     public canPass: boolean;
 

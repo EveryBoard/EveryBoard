@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
+import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
@@ -30,6 +30,7 @@ import { ICurrentPart, MGPResult, Part, PICurrentPart } from 'src/app/domain/icu
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Player } from 'src/app/jscaip/player/Player';
+import { IJoueur } from 'src/app/domain/iuser';
 
 const activatedRouteStub: unknown = {
     snapshot: {
@@ -81,15 +82,30 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     let partDAO: PartDAOMock;
 
+    let joueurDAO: JoueursDAOMock;
+
+    const OPPONENT: IJoueur = {
+        pseudo: 'firstCandidate',
+        displayName: 'firstCandidate',
+        email: 'firstCandidate@mgp.team',
+        emailVerified: true,
+        last_changed: {
+            seconds: Date.now() / 1000,
+        },
+        state: 'online',
+    };
+
     const prepareComponent: (initialJoiner: IJoiner) => Promise<void> = async(initialJoiner: IJoiner) => {
         fixture = TestBed.createComponent(OnlineGameWrapperComponent);
         debugElement = fixture.debugElement;
         partDAO = TestBed.get(PartDAO);
         joinerDAO = TestBed.get(JoinerDAO);
+        joueurDAO = TestBed.get(JoueursDAO);
         const chatDAOMock: ChatDAOMock = TestBed.get(ChatDAO);
         component = debugElement.componentInstance;
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL.copy());
+        await joueurDAO.set('firstCandidateDocId', OPPONENT);
         await chatDAOMock.set('joinerId', { messages: [], status: 'I don\'t have a clue' });
         return Promise.resolve();
     };
@@ -486,6 +502,17 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         it('should stop player\'s local chrono when local global');
         it('should stop ennemy\'s global chrono when local reach end');
         it('should stop ennemy\'s local chrono when local global');
+    });
+    describe('User "handshake"', () => {
+        it('Should make opponent\'s name lightgrey when he is absent', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            expect(component.getPlayerNameFontColor(1)).toEqual({ color: 'black' });
+            joueurDAO.update('firstCandidateDocId', { state: 'offline' });
+            fixture.detectChanges();
+            expect(component.getPlayerNameFontColor(1)).toBe(component.OFFLINE_FONT_COLOR);
+            tick(component.maximalMoveDuration);
+        }));
     });
     it('Should not allow player to move after resigning', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });

@@ -21,8 +21,14 @@
                 <h4>Tour n° {{ currentPart.turn + 1 }}</h4>
             </div>
             <div class="inforow" id="playerIndicator" *ngIf="players">
-                <h4 style="float: left"> {{ players[0] }} </h4>
-                <h4 style="float: right"> {{ players[1] }} </h4>
+                <h4 id="playerZeroIndicator"
+                    float="left"
+                    [ngStyle]="getPlayerNameFontColor(0)"
+                >{{ players[0] }}</h4>
+                <h4 id="playerZeroIndicator"
+                    float="right"
+                    [ngStyle]="getPlayerNameFontColor(1)"
+                >{{ players[1] }}</h4>
             </div>
             <div class="inforow" id="scoreIndicator" *ngIf="currentPart && compo && compo.showScore">
                 <h4 style="float: left"> {{ compo.scores[0] }} pts </h4>

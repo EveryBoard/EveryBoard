@@ -7,16 +7,20 @@ export interface IJoueur {
     pseudo: string;
     email?: string;
     displayName?: string;
+    // eslint-disable-next-line camelcase
     last_changed?: Time;
     emailVerified?: boolean;
+    state?: string;
 }
 
 export interface PIJoueur {
     pseudo?: string;
     email?: string;
     displayName?: string;
+    // eslint-disable-next-line camelcase
     last_changed?: Time;
     emailVerified?: boolean;
+    state?: string;
 }
 
 export interface IJoueurId {

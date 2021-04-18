@@ -20,20 +20,13 @@ export class JoueursDAOMock extends FirebaseFirestoreDAOMock<IJoueur, PIJoueur> 
     public getStaticDB(): MGPMap<MGPStr, JoueursOS> {
         return JoueursDAOMock.joueursDB;
     }
-    public resetStaticDB() {
+    public resetStaticDB(): void {
         JoueursDAOMock.joueursDB = new MGPMap();
     }
     public observeUserByPseudo(pseudo: string, callback: FirebaseCollectionObserver<IJoueur>): () => void {
-        const iJoueurId: IJoueurId = {
-            id: 'firstCandidate',
-            doc: {
-                pseudo: 'firstCandidate',
-            },
-        };
-        callback.onDocumentCreated([iJoueurId]);
-        return () => {}; // TODO: use this.observingWhere
+        return this.observingWhere('pseudo', '==', pseudo, callback);
     }
     public observeActivesUsers(callback: FirebaseCollectionObserver<IJoueur>): () => void {
-        return () => {}; // TODO: use this.observingWhere
+        return this.observingWhere('state', '==', 'online', callback);
     }
 }
