@@ -362,7 +362,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         return [];
     }
     public getHighlightedCoords(): Coord[] {
-        if (this.firstPiece.x === -15 && this.isPlayerTurn) {
+        if (this.firstPiece.x === -15 && this.isPlayerTurn()) {
             return this.getCurrentPlayerPieces();
         } else {
             return this.phalanxValidLandings.concat(this.validExtensions);
