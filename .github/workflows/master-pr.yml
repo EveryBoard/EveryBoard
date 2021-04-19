@@ -1,0 +1,35 @@
+name: CI On Master PR
+
+on:
+  pull_request:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: [12.x]
+
+      steps:
+      - name: Checkout the repository
+        uses: actions/checkout@v2
+      - name: Cache node modules
+        uses: actions/cache@v1
+        with:
+          path: ~/.npm
+      - name: Node ${{ matrix.node-version }}
+        uses: actions/setup-node@v1
+        with:
+          node-version: ${{ matrix.node-version }}
+      - name: Install dependencies
+        run: npm ci
+      - name: Run linter
+        run: npm run lint
+        continue-on-error: true
+      - name: Launch tests
+        run: npm run tests -- --configuration=ci
+      - name: Build
+        run: npm run build -- --prod --base-href=/boards/
