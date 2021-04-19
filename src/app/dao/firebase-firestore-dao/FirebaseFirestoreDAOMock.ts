@@ -12,7 +12,7 @@ import { display } from 'src/app/utils/utils/utils';
 
 
 export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     // T is a full element
 
@@ -109,11 +109,10 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
             throw new Error('Cannot delete element ' + id + ' absent from ' + this.collectionName);
         }
     }
-    public observingWhere(
-        field: string,
-        condition: firebase.firestore.WhereFilterOp,
-        value: any,
-        callback: FirebaseCollectionObserver<T>): () => void
+    public observingWhere(field: string,
+                          condition: firebase.firestore.WhereFilterOp,
+                          value: unknown,
+                          callback: FirebaseCollectionObserver<T>): () => void
     {
         // Note, for now, only check first match field/condition/value at creation, not the added document matching it !
         if (condition === '==') {

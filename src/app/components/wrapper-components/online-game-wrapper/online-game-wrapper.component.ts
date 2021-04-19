@@ -10,7 +10,7 @@ import { UserService } from 'src/app/services/user/UserService';
 import { Move } from '../../../jscaip/Move';
 import { ICurrentPart, ICurrentPartId, Part, MGPResult } from '../../../domain/icurrentpart';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
-import { PartCreationComponent } from '../../normal-component/part-creation/part-creation.component';
+import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { IJoueurId, IJoueur } from '../../../domain/iuser';
 import { IMGPRequest, RequestCode } from '../../../domain/request';
 import { GameWrapper } from '../GameWrapper';
@@ -461,11 +461,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
         if (opponentName !== '') {
             const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUser: IJoueurId[]) => {
-                console.log('CREATERUUU');
                 this.opponent = foundUser[0];
             };
             const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
-                console.log('MODIFIIIIERRRD');
                 this.opponent = modifiedUsers[0];
             };
             const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
