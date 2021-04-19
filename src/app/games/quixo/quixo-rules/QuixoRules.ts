@@ -9,9 +9,10 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { QuixoPartSlice } from '../quixo-part-slice/QuixoPartSlice';
 import { QuixoMove } from '../QuixoMove';
 
-export abstract class QuixoNode extends MGPNode<Rules<QuixoMove, QuixoPartSlice, LegalityStatus>, QuixoMove, QuixoPartSlice, LegalityStatus> {}
+export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoPartSlice, LegalityStatus> {}
 
 export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus> {
+
     public getListMoves(node: QuixoNode): MGPMap<QuixoMove, QuixoPartSlice> {
         const slice: QuixoPartSlice = node.gamePartSlice;
         const moves: MGPMap<QuixoMove, QuixoPartSlice> = new MGPMap<QuixoMove, QuixoPartSlice>();
@@ -93,7 +94,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
         for (let y: number = 0; y < 5; y++) {
             for (let x: number = 0; x < 5; x++) {
                 const c: number = slice.getBoardByXY(x, y);
-                if (c != Player.NONE.value) {
+                if (c !== Player.NONE.value) {
                     sums[c].columns[x] = sums[c].columns[x] + 1;
                     sums[c].rows[y] = sums[c].rows[y] + 1;
                     if (x === y) sums[c].diagonals[0] = sums[c].diagonals[0] + 1;
@@ -109,16 +110,25 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
                 playersLinesInfo.diagonals));
         return Math.max(...linesScores);
     }
-    public applyLegalMove(move: QuixoMove, slice: QuixoPartSlice, status: LegalityStatus): { resultingMove: QuixoMove; resultingSlice: QuixoPartSlice; } {
+    public applyLegalMove(move: QuixoMove,
+                          slice: QuixoPartSlice,
+                          status: LegalityStatus): { resultingMove: QuixoMove; resultingSlice: QuixoPartSlice; }
+    {
         return QuixoRules.applyLegalMove(move, slice, status);
     }
-    public static applyLegalMove(move: QuixoMove, slice: QuixoPartSlice, status: LegalityStatus): { resultingMove: QuixoMove; resultingSlice: QuixoPartSlice; } {
+    public static applyLegalMove(move: QuixoMove,
+                                 slice: QuixoPartSlice,
+                                 status: LegalityStatus): { resultingMove: QuixoMove; resultingSlice: QuixoPartSlice; }
+    {
         return { resultingMove: move,
             resultingSlice: slice.applyLegalMove(move),
         };
     }
     public isLegal(move: QuixoMove, slice: QuixoPartSlice): LegalityStatus {
-        if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) return { legal: MGPValidation.failure('piece owned by ennemy player') };
-        else return { legal: MGPValidation.SUCCESS };
+        if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) {
+            return { legal: MGPValidation.failure('piece owned by ennemy player') };
+        } else {
+            return { legal: MGPValidation.SUCCESS };
+        }
     }
 }

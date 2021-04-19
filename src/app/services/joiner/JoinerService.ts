@@ -8,7 +8,7 @@ import { display } from 'src/app/utils/utils/utils';
     providedIn: 'root',
 })
 export class JoinerService {
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     public static readonly EMPTY_JOINER: IJoiner = {
         creator: null,
@@ -95,8 +95,13 @@ export class JoinerService {
                 partStatus,
                 candidatesNames: joinersList,
             };
-            await this.joinerDao.update(this.observedJoinerId, modification);
+            return this.joinerDao.update(this.observedJoinerId, modification);
         }
+    }
+    public async updateCandidatesNames(candidatesNames: string[]): Promise<void> {
+        console.log('updateCandidatesNames', candidatesNames)
+        const modification: PIJoiner = { candidatesNames };
+        return this.joinerDao.update(this.observedJoinerId, modification);
     }
     public async deleteJoiner(): Promise<void> {
         display(JoinerService.VERBOSE,
@@ -131,8 +136,20 @@ export class JoinerService {
             chosenPlayer: chosenPlayerPseudo,
         });
     }
-    public unselectChosenPlayer(): void {
-        throw new Error('JoinerService.unselectChosenPlayer: TODO');
+    public unselectChosenPlayer(candidatesList: string[],
+                                chosenPlayer: string,
+                                keepHimInLobby: boolean): Promise<void>
+    {
+        console.log('unselectChosenPlayer with ' + this.observedJoinerId);
+        if (keepHimInLobby) {
+            candidatesList.push(chosenPlayer);
+        }
+        const modification: PIJoiner = {
+            chosenPlayer: '',
+            candidatesNames: candidatesList,
+            partStatus: 0,
+        };
+        return this.joinerDao.update(this.observedJoinerId, modification);
     }
     public proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
         display(JoinerService.VERBOSE,
