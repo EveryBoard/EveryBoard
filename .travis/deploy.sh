@@ -13,4 +13,5 @@ ssh-add id_rsa
 echo "Host $HOST" >> ~/.ssh/config
 echo "StrictHostKeyChecking no" >> ~/.ssh/config
 
-rsync -avz dist/pantheonsgame/ $USER@$HOST:$DEPLOY_PATH
+# Disabled
+# rsync -avz dist/pantheonsgame/ $USER@$HOST:$DEPLOY_PATH
