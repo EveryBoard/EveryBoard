@@ -80,6 +80,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     protected observedPartSubscription: Subscription;
     protected opponentSubscription: () => void;
 
+    public readonly OFFLINE_FONT_COLOR: { [key: string]: string} = { color: 'lightgrey' };
+
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
                 router: Router,
@@ -459,10 +461,11 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
         if (opponentName !== '') {
             const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUser: IJoueurId[]) => {
+                console.log('CREATERUUU');
                 this.opponent = foundUser[0];
             };
             const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
-                console.log({ modifiedUsers });
+                console.log('MODIFIIIIERRRD');
                 this.opponent = modifiedUsers[0];
             };
             const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
@@ -475,7 +478,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                                                onDocumentDeleted);
             this.opponentSubscription =
                 this.userService.observeUserByPseudo(opponentName, callback);
-            // TODO: CHECK IF USEFULL OR NOT WITH NEW WAY TO DETECT DISCONNECTION
         }
     }
     public async onLegalUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
@@ -610,6 +612,15 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                 display(true, 'stop one local');
                 this.chronoOneLocal.stop();
             }
+        }
+    }
+    public getPlayerNameFontColor(player: number): { [key: string]: string} {
+        if (this.observerRole === player || this.observerRole > 1) {
+            return { color: 'black' };
+        } else if (this.opponent && this.opponent.doc && this.opponent.doc.state === 'offline') {
+            return this.OFFLINE_FONT_COLOR;
+        } else {
+            return { color: 'black' };
         }
     }
     public ngOnDestroy(): void {

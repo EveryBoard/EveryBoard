@@ -31,7 +31,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
 
     public abstract resetStaticDB(): void;
 
-    public reset() {
+    public reset(): void {
         const removed: string = this.getStaticDB() ? this.getStaticDB().size() + ' removed' : 'not initialised yet';
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.reset, ' + removed);
 
@@ -66,7 +66,8 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         }
     }
     public async set(id: string, doc: T): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
+                this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -81,7 +82,8 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         return Promise.resolve();
     }
     public async update(id: string, update: PT): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
+                this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -111,7 +113,27 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         field: string,
         condition: firebase.firestore.WhereFilterOp,
         value: any,
-        callback: FirebaseCollectionObserver<T>): () => void {
-        throw new Error('FirebaseFirestoreDAOMock.observingWhere Not Implemented yet and it seem\'s hard');
+        callback: FirebaseCollectionObserver<T>): () => void
+    {
+        // Note, for now, only check first match field/condition/value at creation, not the added document matching it !
+        if (condition === '==') {
+            display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
+                    { 'FirebaseFirestoreDAOMock_observingWhere': {
+                        collection: this.collectionName, field, condition, value, callback } });
+
+            const db: MGPMap<MGPStr, ObservableSubject<{id: string, doc: T}>> = this.getStaticDB();
+            for (let entryId: number = 0; entryId < db.size(); entryId++) {
+                const entry: ObservableSubject<{id: string, doc: T}> = db.getByIndex(entryId).value;
+                if (entry.subject.value.doc[field] === value) {
+                    callback.onDocumentCreated([entry.subject.value]);
+                    entry.observable.subscribe((document: {id: string, doc: T}) => {
+                        callback.onDocumentModified([document]);
+                    });
+                }
+            }
+            return () => {};
+        } else {
+            throw new Error('FirebaseFirestoreDAOMock.observingWhere for non ==');
+        }
     }
 }
