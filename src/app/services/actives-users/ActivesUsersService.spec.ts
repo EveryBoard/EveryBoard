@@ -2,6 +2,7 @@ import { ActivesUsersService } from './ActivesUsersService';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { IJoueurId } from 'src/app/domain/iuser';
+import { fakeAsync } from '@angular/core/testing';
 
 describe('ActivesUsersService', () => {
     let service: ActivesUsersService;
@@ -11,9 +12,30 @@ describe('ActivesUsersService', () => {
     });
     it('should create', () => {
         expect(service).toBeTruthy();
-        service.startObserving();
-        service.stopObserving();
     });
+    it('Should update list of users when one change', fakeAsync(async() => {
+        service.joueursDAO.set('playerDocId', {
+            pseudo: 'premier',
+            state: 'online',
+        });
+        service.startObserving();
+        let observerCalls: number = 0;
+        service.activesUsersObs.subscribe((users: IJoueurId[]) => {
+            if (observerCalls === 1) {
+                expect(users).toEqual([{
+                    id: 'playerDocId',
+                    doc: {
+                        pseudo: 'nouveau',
+                        state: 'online',
+                    },
+                }]);
+            }
+            observerCalls++;
+        });
+        await service.joueursDAO.update('playerDocId', { pseudo: 'nouveau' });
+        expect(observerCalls).toBe(2);
+        service.stopObserving();
+    }));
     it('should order', () => {
         const joueurIds: IJoueurId[] = [
             { id: 'second', doc: { pseudo: 'second', last_changed: { seconds: 2 } } },

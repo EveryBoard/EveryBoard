@@ -27,7 +27,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
      * they need common data so mother calculate/retrieve then share them with her child
      */
 
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     @Input() partId: string;
     @Input() userName: string;
@@ -159,20 +159,16 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             this.acceptingDisabled = (joiner.partStatus !== 2);
         }
         this.currentJoiner = joiner;
-        console.log('update finished +' + JSON.stringify(joiner));
     }
     private observeCandidates(joiner: IJoiner): void {
         display(PartCreationComponent.VERBOSE, {PartCreation_observeCandidates: JSON.stringify(joiner) });
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUser: IJoueurId[]) => {
-            console.log('callback: ' + foundUser[0].doc.pseudo + ' viens de nous joindre!');
             if (foundUser[0].doc.state === 'offline') {
-                console.log('callback: what the hell, he\'s already offline!');
+                console.log('callback: what the hell ' + foundUser[0].doc.pseudo + ' is already offline!');
             }
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
-            console.log('callback: user modified');
             if (modifiedUsers[0].doc.state === 'offline') {
-                console.log(modifiedUsers[0].doc.pseudo + 'c\'est déconnecté! kick from lobby!');
                 this.removeUserFromLobby(modifiedUsers[0].doc.pseudo);
             }
         };
@@ -193,7 +189,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         for (const oldCandidate of this.candidateSubscription.listKeys()) {
             if (oldCandidate.toString() !== joiner.chosenPlayer) {
                 if (joiner.candidatesNames.includes(oldCandidate.toString()) === false) {
-                    console.log(oldCandidate.toString() + ' n\'est plus dans le lobby! unsubscribe');
                     this.unsubscribeFrom(oldCandidate.toString());
                 }
             }
@@ -206,9 +201,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                            false);
         } else {
             const index: number = this.currentJoiner.candidatesNames.indexOf(userPseudo);
-            if (index === -1) {
-                console.log('He left, cleanly');
-            } else {
+            if (index !== -1) {
                 const beforeUser: string[] = this.currentJoiner.candidatesNames.slice(0, index);
                 const afterUser: string[] = this.currentJoiner.candidatesNames.slice(index, -1);
                 const candidatesNames: string[] = beforeUser.concat(afterUser);

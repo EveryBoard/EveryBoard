@@ -353,18 +353,25 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             return false;
         }
         const currentPart: ICurrentPart = this.currentPart.copy();
-        if (this.observerRole === 2) return false;
-        else if (currentPart.turn <= this.observerRole) return false;
-        else if (this.observerRole === 0 &&
-                 currentPart.request &&
-                 currentPart.request.code === RequestCode.ONE_REFUSED_TAKE_BACK.toInterface().code) {
+        if (this.observerRole === 2) {
+            return false;
+        } else if (currentPart.turn <= this.observerRole) {
+            return false;
+        } else if (this.observerRole === 0 &&
+                   currentPart.request &&
+                   currentPart.request.code === RequestCode.ONE_REFUSED_TAKE_BACK.toInterface().code)
+        {
             return false;
         } else if (this.observerRole === 1 &&
-                 currentPart.request &&
-                 currentPart.request.code === RequestCode.ZERO_REFUSED_TAKE_BACK.toInterface().code) {
+                   currentPart.request &&
+                   currentPart.request.code === RequestCode.ZERO_REFUSED_TAKE_BACK.toInterface().code)
+        {
             return false;
-        } else if (this.getTakeBackRequester() === Player.NONE) return true;
-        else return false;
+        } else if (this.getTakeBackRequester() === Player.NONE) {
+            return true;
+        } else {
+            return false;
+        }
     }
     public isOpponentWaitingForTakeBackResponse(): boolean {
         const takeBackRequester: Player = this.getTakeBackRequester();
@@ -594,20 +601,16 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
 
         if (player === Player.ZERO) {
             if (this.chronoZeroGlobal.isStarted()) {
-                display(true, 'stop zero global');
                 this.chronoZeroGlobal.stop();
             }
             if (this.chronoZeroLocal.isStarted()) {
-                display(true, 'stop zero local');
                 this.chronoZeroLocal.stop();
             }
         } else {
             if (this.chronoOneGlobal.isStarted()) {
-                display(true, 'stop one global');
                 this.chronoOneGlobal.stop();
             }
             if (this.chronoOneLocal.isStarted()) {
-                display(true, 'stop one local');
                 this.chronoOneLocal.stop();
             }
         }
@@ -629,7 +632,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             this.userSub.unsubscribe();
         }
         if (this.gameStarted === true) {
-            if (this.observedPartSubscription && this.observedPartSubscription.unsubscribe) {
+            if (this.observedPartSubscription) {
                 this.observedPartSubscription.unsubscribe();
             }
             if (this.opponentSubscription) {
