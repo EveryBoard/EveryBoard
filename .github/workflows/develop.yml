@@ -44,7 +44,7 @@ jobs:
       - name: Launch tests
         run: npm run test:ci
       - name: Build
-        run: npm run build -- --base-href=/boards/
+        run: npm run build -- --base-href=/boards-dev/
       - name: Deploy
         uses: burnett01/rsync-deployments@4.1
         with:
