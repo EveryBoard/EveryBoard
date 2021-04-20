@@ -8,7 +8,7 @@ import { display } from 'src/app/utils/utils/utils';
     providedIn: 'root',
 })
 export class JoinerService {
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public static readonly EMPTY_JOINER: IJoiner = {
         creator: null,
@@ -99,7 +99,6 @@ export class JoinerService {
         }
     }
     public async updateCandidatesNames(candidatesNames: string[]): Promise<void> {
-        console.log('updateCandidatesNames', candidatesNames)
         const modification: PIJoiner = { candidatesNames };
         return this.joinerDao.update(this.observedJoinerId, modification);
     }
@@ -140,7 +139,6 @@ export class JoinerService {
                                 chosenPlayer: string,
                                 keepHimInLobby: boolean): Promise<void>
     {
-        console.log('unselectChosenPlayer with ' + this.observedJoinerId);
         if (keepHimInLobby) {
             candidatesList.push(chosenPlayer);
         }

@@ -1,7 +1,7 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { IFirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
@@ -12,7 +12,7 @@ import { display } from 'src/app/utils/utils/utils';
 
 
 export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     // T is a full element
 
@@ -115,24 +115,36 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
                           callback: FirebaseCollectionObserver<T>): () => void
     {
         // Note, for now, only check first match field/condition/value at creation, not the added document matching it !
+        display(FirebaseFirestoreDAOMock.VERBOSE,
+                'FirebaseFirestoreDAOMock.observingWhere(' + field + condition + value);
         if (condition === '==') {
             display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                     { 'FirebaseFirestoreDAOMock_observingWhere': {
                         collection: this.collectionName, field, condition, value, callback } });
 
-            const db: MGPMap<MGPStr, ObservableSubject<{id: string, doc: T}>> = this.getStaticDB();
-            for (let entryId: number = 0; entryId < db.size(); entryId++) {
-                const entry: ObservableSubject<{id: string, doc: T}> = db.getByIndex(entryId).value;
-                if (entry.subject.value.doc[field] === value) {
-                    callback.onDocumentCreated([entry.subject.value]);
-                    entry.observable.subscribe((document: {id: string, doc: T}) => {
-                        callback.onDocumentModified([document]);
-                    });
-                }
+            const subscription: Subscription = this.subscribeToMatcher(field, value, callback);
+            if (subscription == null) {
+                return () => {};
+            } else {
+                return () => subscription.unsubscribe();
             }
-            return () => {};
         } else {
             throw new Error('FirebaseFirestoreDAOMock.observingWhere for non ==');
+        }
+    }
+    private subscribeToMatcher(field: string,
+                               value: unknown,
+                               callback: FirebaseCollectionObserver<T>): Subscription
+    {
+        const db: MGPMap<MGPStr, ObservableSubject<{id: string, doc: T}>> = this.getStaticDB();
+        for (let entryId: number = 0; entryId < db.size(); entryId++) {
+            const entry: ObservableSubject<{id: string, doc: T}> = db.getByIndex(entryId).value;
+            if (entry.subject.value.doc[field] === value) {
+                callback.onDocumentCreated([entry.subject.value]);
+                return entry.observable.subscribe((document: {id: string, doc: T}) => {
+                    callback.onDocumentModified([document]);
+                });
+            }
         }
     }
 }

@@ -84,6 +84,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
     let joueurDAO: JoueursDAOMock;
 
+    const CREATOR: IJoueur = {
+        pseudo: 'creator',
+        state: 'online',
+    };
     const OPPONENT: IJoueur = {
         pseudo: 'firstCandidate',
         displayName: 'firstCandidate',
@@ -106,11 +110,13 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await joinerDAO.set('joinerId', initialJoiner);
         await partDAO.set('joinerId', PartMocks.INITIAL.copy());
         await joueurDAO.set('firstCandidateDocId', OPPONENT);
+        await joueurDAO.set('creatorDocId', CREATOR);
         await chatDAOMock.set('joinerId', { messages: [], status: 'I don\'t have a clue' });
         return Promise.resolve();
     };
-    const prepareStartedGameFor: (user: {pseudo: string, verified: boolean}) => Promise<void> =
-    async(user: {pseudo: string, verified: boolean}) => {
+    const prepareStartedGameFor: (user: {pseudo: string, verified: boolean},
+                                  shorterGlobalChrono?: boolean) => Promise<void> =
+    async(user: {pseudo: string, verified: boolean}, shorterGlobalChrono?: boolean) => {
         AuthenticationServiceMock.USER = user;
         await prepareComponent(JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -127,7 +133,11 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         fixture.detectChanges();
         await component.partCreation.proposeConfig();
         fixture.detectChanges();
-        await joinerDAO.update('joinerId', { partStatus: 3 });
+        if (shorterGlobalChrono) {
+            await joinerDAO.update('joinerId', { partStatus: 3, maximalMoveDuration: 120 });
+        } else {
+            await joinerDAO.update('joinerId', { partStatus: 3 });
+        }
         await partDAO.update('joinerId', { playerOne: 'firstCandidate', turn: 0, beginning: Date.now() });
         fixture.detectChanges();
         return Promise.resolve();
@@ -498,15 +508,48 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }));
     });
     describe('Timeouts', () => {
-        it('should stop player\'s global chrono when local reach end');
-        it('should stop player\'s local chrono when local global');
-        it('should stop ennemy\'s global chrono when local reach end');
-        it('should stop ennemy\'s local chrono when local global');
+        it('should stop player\'s global chrono when local reach end', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            spyOn(component, 'reachedOutOfTime').and.callThrough();
+            spyOn(component.chronoZeroGlobal, 'stop').and.callThrough();
+            tick(component.maximalMoveDuration);
+            expect(component.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
+            expect(component.chronoZeroGlobal.stop).toHaveBeenCalled();
+        }));
+        it('should stop player\'s local chrono when local global', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
+            tick(1);
+            spyOn(component, 'reachedOutOfTime').and.callThrough();
+            spyOn(component.chronoZeroLocal, 'stop').and.callThrough();
+            tick(component.maximalMoveDuration);
+            expect(component.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
+            expect(component.chronoZeroLocal.stop).toHaveBeenCalled();
+        }));
+        it('should stop ennemy\'s global chrono when local reach end', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            await doMove(FIRST_MOVE, true);
+            spyOn(component, 'reachedOutOfTime').and.callThrough();
+            spyOn(component.chronoOneGlobal, 'stop').and.callThrough();
+            tick(component.maximalMoveDuration);
+            expect(component.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
+            expect(component.chronoOneGlobal.stop).toHaveBeenCalled();
+        }));
+        it('should stop ennemy\'s local chrono when local global', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
+            tick(1);
+            await doMove(FIRST_MOVE, true);
+            spyOn(component, 'reachedOutOfTime').and.callThrough();
+            spyOn(component.chronoOneLocal, 'stop').and.callThrough();
+            tick(component.maximalMoveDuration);
+            expect(component.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
+            expect(component.chronoOneLocal.stop).toHaveBeenCalled();
+        }));
     });
     describe('User "handshake"', () => {
-        xit('Should make opponent\'s name lightgrey when he is absent', fakeAsync(async() => {
+        it('Should make opponent\'s name lightgrey when he is absent', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
-            fixture.detectChanges();
             tick(1);
             expect(component.getPlayerNameFontColor(1)).toEqual({ color: 'black' });
             joueurDAO.update('firstCandidateDocId', { state: 'offline' });
