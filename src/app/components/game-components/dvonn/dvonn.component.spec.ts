@@ -1,5 +1,4 @@
 import { DvonnComponent } from './dvonn.component';
-
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
 import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
@@ -9,8 +8,7 @@ import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { fakeAsync } from '@angular/core/testing';
 import { DvonnFailure } from 'src/app/games/dvonn/dvonn-rules/DvonnRules';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils';
-
+import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 
 describe('DvonnComponent', () => {
     let componentTestUtils: ComponentTestUtils<DvonnComponent>;
@@ -47,14 +45,6 @@ describe('DvonnComponent', () => {
         componentTestUtils.setupSlice(slice);
         expect(componentTestUtils.getComponent().canPass).toBeTrue();
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
-    });
-    xit('should disallow moving from an invalid location', async() => {
-        await componentTestUtils.expectClickFailure('#click_0_0', 'TODO');
-    });
-    xit('should disallow moving to invalid location', async() => {
-        const gameComponent: DvonnComponent = componentTestUtils.getComponent();
-        expect((await gameComponent.onClick(2, 0)).isSuccess()).toBeTrue();
-        expect((await gameComponent.onClick(1, 0)).isSuccess()).toBeFalse();
     });
     it('should disallow choosing an incorrect piece', async() => {
         // select black piece (but white plays first)
@@ -94,5 +84,10 @@ describe('DvonnComponent', () => {
         componentTestUtils.getComponent().encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
         expect(DvonnMove.encode).toHaveBeenCalledTimes(1);
     });
+    it('should allow clicking twice on a piece to deselect it', fakeAsync(async() => {
+        await componentTestUtils.expectClickSuccess('#click_2_0');
+        await componentTestUtils.expectClickSuccess('#click_2_0');
+        expect(componentTestUtils.getComponent().chosen).toBeNull();
+    }));
 });
 

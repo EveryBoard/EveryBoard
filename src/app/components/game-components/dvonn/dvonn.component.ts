@@ -88,6 +88,10 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
         }
         if (this.chosen === null) {
             return this.choosePiece(x, y);
+        } else if (this.chosen.equals(new Coord(x, y))) {
+            // Deselects the piece
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
         } else {
             return await this.chooseDestination(x, y);
         }
