@@ -18,6 +18,7 @@ import { JoueursDAO } from '../dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from '../dao/joueurs/JoueursDAOMock';
 import { AuthenticationService } from '../services/authentication/AuthenticationService';
 import { MGPNode } from '../jscaip/mgp-node/MGPNode';
+import { Rules } from '../jscaip/Rules';
 
 export class ComponentTestUtils<T> {
     public fixture: ComponentFixture<LocalGameWrapperComponent | DidacticialGameWrapperComponent>;
@@ -69,9 +70,16 @@ export class ComponentTestUtils<T> {
         this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
     }
-    public setupSlice(slice: GamePartSlice): void {
-        this.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
+    public setupSlice(slice: GamePartSlice, previousSlice?: GamePartSlice, previousMove?: Move): void
+    {
+        if (previousSlice !== undefined) {
+            this.gameComponent.rules.node =
+                new MGPNode(new MGPNode(null, null, previousSlice, 0), previousMove, slice, 0);
+        } else {
+            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, slice, 0);
+        }
         this.gameComponent.updateBoard();
+        this.fixture.detectChanges();
     }
     public getComponent(): T {
         return (this.gameComponent as unknown) as T;
@@ -206,4 +214,5 @@ export class ComponentTestUtils<T> {
         expect(element).toBeTruthy(elementName + ' was expected to exist');
         return element;
     }
+    // TODO: add method "expectElementToHaveClass" to check the CSS class
 }
