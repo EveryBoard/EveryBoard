@@ -36,11 +36,13 @@
             </div>
             <div class="inforow" id="partChronos">
                 <app-count-down #chronoZeroGlobal
+                                [dangerTimeLimit]="60*1000"
                                 style="float: left"
                                 debugName="ZERO Global"
                                 (outOfTimeAction)="reachedOutOfTime(0)">
                 </app-count-down>
                 <app-count-down #chronoOneGlobal
+                                [dangerTimeLimit]="60*1000"
                                 style="float: right"
                                 debugName="ONE Global"
                                 (outOfTimeAction)="reachedOutOfTime(1)">
@@ -48,11 +50,13 @@
             </div>
             <div class="inforow" id="turnChronos">
                 <app-count-down #chronoZeroLocal
+                                [dangerTimeLimit]="15*1000"
                                 style="float: left"
                                 debugName="ZERO Local"
                                 (outOfTimeAction)="reachedOutOfTime(0)">
                 </app-count-down>
                 <app-count-down #chronoOneLocal
+                                [dangerTimeLimit]="15*1000"
                                 style="float: right"
                                 debugName="ONE Local"
                                 (outOfTimeAction)="reachedOutOfTime(1)">

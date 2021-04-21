@@ -121,4 +121,21 @@ describe('CountDownComponent', () => {
         tick(1000);
         expect(component.outOfTimeAction.emit).toHaveBeenCalledOnceWith();
     }));
+    describe('Style depending of remaining time', () => {
+        it('Should be safe style when upper than limit', () => {
+            component.dangerTimeLimit = 10 * 1000;
+            component.setDuration(12 * 1000);
+            expect(component.getTimeStyle()).toEqual(component.SAFE_TIME);
+        });
+        it('Should be first danger style when lower than limit and even remaining second', () => {
+            component.dangerTimeLimit = 10 * 1000;
+            component.setDuration(9 * 1000);
+            expect(component.getTimeStyle()).toEqual(component.DANGER_TIME_EVEN);
+        });
+        it('Should be second danger style when lower than limit and odd remaining second', () => {
+            component.dangerTimeLimit = 10 * 1000;
+            component.setDuration(8 * 1000);
+            expect(component.getTimeStyle()).toEqual(component.DANGER_TIME_ODD);
+        });
+    });
 });

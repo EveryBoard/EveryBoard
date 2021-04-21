@@ -115,11 +115,6 @@ describe('ServerPageComponent', () => {
         expect(gameService.getActivesPartsObs).toHaveBeenCalledTimes(1);
         expect(userService.getActivesUsersObs).toHaveBeenCalledTimes(1);
     }));
-    it('isUserLogged should delegate to authService', fakeAsync(async() => {
-        spyOn(authenticationService, 'isUserLogged');
-        component.isUserLogged();
-        expect(authenticationService.isUserLogged).toHaveBeenCalledTimes(1);
-    }));
     it('should be legal for any logged user to create game when there is none', fakeAsync(async() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
         AuthenticationServiceMock.IS_USER_LOGGED = true;

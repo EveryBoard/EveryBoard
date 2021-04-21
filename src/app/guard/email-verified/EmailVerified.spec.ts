@@ -1,12 +1,20 @@
 import { EmailVerified } from './EmailVerified';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { Router } from '@angular/router';
+import { AngularFireAuth } from '@angular/fire/auth';
+import { AngularFirestore } from '@angular/fire/firestore';
+import { of } from 'rxjs';
 
 class RouterMock {
     public async navigate(to: string[]): Promise<boolean> {
         return Promise.resolve(true);
     }
 }
+const afAuth: unknown = {
+    authState: of(null),
+};
+const afs: unknown = {
+};
 describe('EmailVerified', () => {
     let guard: EmailVerified;
 
@@ -15,7 +23,7 @@ describe('EmailVerified', () => {
     let router: Router;
 
     beforeEach(() => {
-        authService = {} as AuthenticationService;
+        authService = new AuthenticationService(afAuth as AngularFireAuth, afs as AngularFirestore);
         router = new RouterMock() as Router;
         guard = new EmailVerified(authService, router);
     });
@@ -24,7 +32,7 @@ describe('EmailVerified', () => {
     });
     it('should move unconnected user to login page and refuse them', () => {
         authService.getAuthenticatedUser = () => {
-            return { pseudo: null, verified: null };
+            return AuthenticationService.NOT_CONNECTED;
         };
         spyOn(router, 'navigate');
 
@@ -53,4 +61,5 @@ describe('EmailVerified', () => {
 
         expect(authorisation).toBeTrue();
     });
+    it('Should take in account the fact that at first user is not yet connected')
 });
