@@ -11,7 +11,8 @@ describe('AwaleComponent', () => {
         componentTestUtils = new ComponentTestUtils<AwaleComponent>('Awale');
     }));
     it('should create', async() => {
-        expect(componentTestUtils.getComponent()).toBeTruthy();
+        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
+        expect(componentTestUtils.getComponent()).toBeTruthy('AwaleComponent should be created');
     });
     describe('encode/decode', () => {
         it('should delegate decoding to move', () => {
