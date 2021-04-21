@@ -67,9 +67,6 @@ export class OnlineGameCreationComponent implements OnInit, OnDestroy {
         }
         return !found;
     }
-    public isUserLogged(): boolean {
-        return this.authenticationService.isUserLogged();
-    }
     public ngOnDestroy(): void {
         if (this.userNameSub) {
             this.userNameSub.unsubscribe();

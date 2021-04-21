@@ -9,6 +9,7 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public static VERBOSE: boolean = false;
 
     @Input() debugName: string;
+    @Input() dangerTimeLimit: number;
     remainingTime: number;
     private timeoutHandleGlobal: number;
     private timeoutHandleSec: number;
@@ -17,6 +18,19 @@ export class CountDownComponent implements OnInit, OnDestroy {
     private startTime: number;
 
     @Output() outOfTimeAction: EventEmitter<void> = new EventEmitter<void>();
+
+    public readonly DANGER_TIME_EVEN: { [key: string]: string } = {
+        'color': 'red',
+        'font-weight': 'bold',
+    };
+    public readonly DANGER_TIME_ODD: { [key: string]: string } = {
+        'color': 'white',
+        'font-weight': 'bold',
+        'background-color': 'red',
+    };
+    public readonly SAFE_TIME: { [key: string]: string } = { color: 'black' };
+
+    public style: { [key: string]: string } = this.SAFE_TIME;
 
     public ngOnInit(): void {
         display(CountDownComponent.VERBOSE, 'CountDownComponent.ngOnInit (' + this.debugName + ')');
@@ -105,9 +119,22 @@ export class CountDownComponent implements OnInit, OnDestroy {
     public isStarted(): boolean {
         return this.started;
     }
+    public getTimeStyle(): { [key: string]: string } {
+        console.log(this.remainingTime)
+        if (this.remainingTime < this.dangerTimeLimit) {
+            if (this.remainingTime % 2000 < 1000) {
+                return this.DANGER_TIME_ODD;
+            } else {
+                return this.DANGER_TIME_EVEN;
+            }
+        } else {
+            return this.SAFE_TIME;
+        }
+    }
     private updateShownTime(): void {
         const now: number = Date.now();
         this.remainingTime -= (now - this.startTime);
+        this.style = this.getTimeStyle();
         this.startTime = now;
         if (!this.isPaused) {
             this.countSeconds();

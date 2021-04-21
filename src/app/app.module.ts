@@ -133,7 +133,7 @@ const routes: Route [] = [
         AwaleComponent,
         DvonnComponent,
         EncapsuleComponent,
-        EpaminondasComponent,
+        // EpaminondasComponent,
         GipfComponent,
         GoComponent,
         KamisadoComponent,
@@ -147,8 +147,6 @@ const routes: Route [] = [
         SiamComponent,
         SixComponent,
         TablutComponent,
-
-        CountDownComponent,
     ],
     imports: [
         BrowserModule,

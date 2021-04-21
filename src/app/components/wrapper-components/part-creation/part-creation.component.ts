@@ -165,6 +165,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUser: IJoueurId[]) => {
             if (foundUser[0].doc.state === 'offline') {
                 console.log('callback: what the hell ' + foundUser[0].doc.pseudo + ' is already offline!');
+                this.removeUserFromLobby(foundUser[0].doc.pseudo);
             }
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
