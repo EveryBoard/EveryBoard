@@ -61,5 +61,5 @@ describe('EmailVerified', () => {
 
         expect(authorisation).toBeTrue();
     });
-    it('Should take in account the fact that at first user is not yet connected')
+    it('Should take in account the fact that at first user is not yet connected');
 });

@@ -25,7 +25,7 @@ module.exports = function(config) {
                 global: {
                     statements: 95,
                     branches: 89,
-                    functions: 94,
+                    functions: 95,
                     lines: 95,
                 },
             },
@@ -33,8 +33,8 @@ module.exports = function(config) {
         customLaunchers: {
             ChromeHeadlessCustom: {
                 base: 'ChromeHeadless',
-                flags: ['--no-sandbox', '--disable-gpu']
-            }
+                flags: ['--no-sandbox', '--disable-gpu'],
+            },
         },
         reporters: ['progress', 'coverage', 'kjhtml'],
         port: 9876,
