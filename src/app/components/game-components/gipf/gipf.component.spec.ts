@@ -1,140 +1,59 @@
-import { TestBed, tick, fakeAsync, ComponentFixture } from '@angular/core/testing';
-
 import { Arrow, GipfComponent, GipfComponentFailure } from './gipf.component';
-import { AppModule } from 'src/app/app.module';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { of } from 'rxjs';
-import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import {
-    expectClickFail, expectClickSuccess, expectMoveSuccess,
-    MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-move/GipfMove';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
-import { GipfFailure, GipfNode } from 'src/app/games/gipf/gipf-rules/GipfRules';
+import { GipfFailure } from 'src/app/games/gipf/gipf-rules/GipfRules';
 import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
-import { By } from '@angular/platform-browser';
 import { GipfBoard } from 'src/app/games/gipf/gipf-move/GipfBoard';
 import { JSONValue } from 'src/app/utils/utils/utils';
+import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { fakeAsync } from '@angular/core/testing';
+import { Coord } from 'src/app/jscaip/coord/Coord';
 
-
-const activatedRouteStub = {
-    snapshot: {
-        paramMap: {
-            get: (str: string) => {
-                return 'Gipf';
-            },
-        },
-    },
-};
-const authenticationServiceStub = {
-    getJoueurObs: () => of({ pseudo: null, verified: null }),
-    getAuthenticatedUser: () => {
-        return { pseudo: null, verified: null };
-    },
-};
 describe('GipfComponent', () => {
+    let componentTestUtils: ComponentTestUtils<GipfComponent>;
+
     const _: GipfPiece = GipfPiece.EMPTY;
     const A: GipfPiece = GipfPiece.PLAYER_ZERO;
     const B: GipfPiece = GipfPiece.PLAYER_ONE;
     const P0Turn: number = 6;
     const P1Turn: number = P0Turn+1;
 
-    let wrapper: LocalGameWrapperComponent;
-    let testElements: TestElements;
-
-    function getComponent(): GipfComponent {
-        return testElements.gameComponent as GipfComponent;
-    }
-    function setupSlice(slice: GipfPartSlice): void {
-        testElements.gameComponent.rules.node = new GipfNode(null, null, slice, 0);
-        testElements.gameComponent.updateBoard();
-    }
-    function expectToHaveClass(x: number, y: number, class_: string): void {
-        const element: DebugElement = testElements.debugElement.query(By.css('#click_' + x + '_' + y));
-        expect(element).toBeTruthy();
-        expect(element.children[0].attributes.class).toBe(class_);
-    }
-    function expectationFromMove(move: GipfMove): MoveExpectations {
-        return {
-            move,
-            slice: testElements.gameComponent.rules.node.gamePartSlice,
-            scoreZero: null,
-            scoreOne: null,
-        };
-    }
     beforeEach(fakeAsync(async() => {
-        TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule,
-                AppModule,
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
-                { provide: AuthenticationService, useValue: authenticationServiceStub },
-            ],
-        }).compileComponents();
-        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
-        wrapper = fixture.debugElement.componentInstance;
-        fixture.detectChanges();
-        const debugElement: DebugElement = fixture.debugElement;
-        tick(1);
-        const gameComponent: GipfComponent = wrapper.gameComponent as GipfComponent;
-        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
-        const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
-        const onLegalUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onLegalUserMove').and.callThrough();
-        const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
-        testElements = {
-            fixture,
-            debugElement,
-            gameComponent,
-            canUserPlaySpy,
-            cancelMoveSpy,
-            chooseMoveSpy,
-            onLegalUserMoveSpy,
-        };
+        componentTestUtils = new ComponentTestUtils<GipfComponent>('Gipf');
     }));
     it('should create', () => {
-        expect(wrapper).toBeTruthy('Wrapper should be created');
-        expect(testElements.gameComponent).toBeTruthy('GipfComponent should be created');
+        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
+        expect(componentTestUtils.getComponent()).toBeTruthy('GipfComponent should be created');
     });
     it('should fail on selecting an invalid direction', fakeAsync(async() => {
-        await expectClickSuccess('#click_3_6', testElements);
-        await expectClickFail('#click_4_4', testElements, GipfFailure.INVALID_PLACEMENT_DIRECTION);
+        await componentTestUtils.expectClickSuccess('#click_3_6');
+        await componentTestUtils.expectClickFailure('#click_4_4', GipfFailure.INVALID_PLACEMENT_DIRECTION);
     }));
     it('should allow placement directly resulting in a move if there is no initial capture', fakeAsync(async() => {
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()), [], []);
-        await expectMoveSuccess('#click_0_4', testElements, expectationFromMove(move));
+        await componentTestUtils.expectMoveSuccess('#click_0_4', move);
     }));
     it('should not accept selecting a non-border coord for placement', fakeAsync(async() => {
-        await expectClickFail('#click_3_3', testElements, GipfFailure.PLACEMENT_NOT_ON_BORDER);
+        await componentTestUtils.expectClickFailure('#click_3_3', GipfFailure.PLACEMENT_NOT_ON_BORDER);
     }));
     it('should show possible directions after selecting an occupied placement coord', fakeAsync(async() => {
-        await expectClickSuccess('#click_6_3', testElements);
-        expect(getComponent().arrows.length).toBe(3);
-        expect(getComponent().arrows.some((arrow: Arrow) => {
+        await componentTestUtils.expectClickSuccess('#click_6_3');
+        expect(componentTestUtils.getComponent().arrows.length).toBe(3);
+        expect(componentTestUtils.getComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(new Coord(6, 3)) && arrow.destination.equals(new Coord(5, 3));
         }));
-        expect(getComponent().arrows.some((arrow: Arrow) => {
+        expect(componentTestUtils.getComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(new Coord(6, 3)) && arrow.destination.equals(new Coord(5, 4));
         }));
-        expect(getComponent().arrows.some((arrow: Arrow) => {
+        expect(componentTestUtils.getComponent().arrows.some((arrow: Arrow) => {
             return arrow.source.equals(new Coord(6, 3)) && arrow.destination.equals(new Coord(6, 2));
         }));
     }));
     it('should not accept selecting something else than one of the proposed direction', fakeAsync(async() => {
-        await expectClickSuccess('#click_6_3', testElements);
-        await expectClickFail('#click_3_3', testElements, GipfComponentFailure.CLICK_FURTHER_THAN_ONE_COORD);
+        await componentTestUtils.expectClickSuccess('#click_6_3');
+        await componentTestUtils.expectClickFailure('#click_3_3', GipfComponentFailure.CLICK_FURTHER_THAN_ONE_COORD);
     }));
     it('should not allow clicking on anything else than a capture if there is one in the initial captures', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -147,9 +66,9 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickFail('#click_6_3', testElements, GipfComponentFailure.NOT_PART_OF_CAPTURE);
+        await componentTestUtils.expectClickFailure('#click_6_3', GipfComponentFailure.NOT_PART_OF_CAPTURE);
     }));
     it('should highlight initial captures directly', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -162,14 +81,14 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#click_3_3', testElements);
+        await componentTestUtils.expectClickSuccess('#click_3_3');
 
-        expectToHaveClass(3, 2, 'base captured');
-        expectToHaveClass(3, 3, 'base captured');
-        expectToHaveClass(3, 4, 'base captured');
-        expectToHaveClass(3, 5, 'base captured');
+        componentTestUtils.expectElementToHaveClasses('#click_3_2', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#click_3_3', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#click_3_4', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#click_3_5', ['base', 'captured']);
     }));
     it('should make pieces disappear upon selection of a capture', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -182,13 +101,13 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#click_3_3', testElements);
-        expect(getComponent().isPiece(new Coord(3, 2))).toBeFalse();
-        expect(getComponent().isPiece(new Coord(3, 3))).toBeFalse();
-        expect(getComponent().isPiece(new Coord(3, 4))).toBeFalse();
-        expect(getComponent().isPiece(new Coord(3, 5))).toBeFalse();
+        await componentTestUtils.expectClickSuccess('#click_3_3');
+        expect(componentTestUtils.getComponent().isPiece(new Coord(3, 2))).toBeFalse();
+        expect(componentTestUtils.getComponent().isPiece(new Coord(3, 3))).toBeFalse();
+        expect(componentTestUtils.getComponent().isPiece(new Coord(3, 4))).toBeFalse();
+        expect(componentTestUtils.getComponent().isPiece(new Coord(3, 5))).toBeFalse();
     }));
     it('should accept placing after performing initial captures', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -201,14 +120,14 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#click_3_3', testElements);
+        await componentTestUtils.expectClickSuccess('#click_3_3');
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
                                             [new GipfCapture([
                                                 new Coord(3, 2), new Coord(3, 3), new Coord(3, 4), new Coord(3, 5),
                                             ])], []);
-        await expectMoveSuccess('#click_0_4', testElements, expectationFromMove(move));
+        await componentTestUtils.expectMoveSuccess('#click_0_4', move);
     }));
     it('should not allow capturing from a coord that is part of intersecting captures', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -221,9 +140,9 @@ describe('GipfComponent', () => {
             [_, _, B, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickFail('#click_2_3', testElements, GipfComponentFailure.AMBIGUOUS_CAPTURE_COORD);
+        await componentTestUtils.expectClickFailure('#click_2_3', GipfComponentFailure.AMBIGUOUS_CAPTURE_COORD);
     }));
     it('should not allow clicking on anything else than a capture if there is one in the final captures', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -236,12 +155,12 @@ describe('GipfComponent', () => {
             [_, _, B, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
         // Perform the placement to prepare for final capture
-        await expectClickSuccess('#click_0_3', testElements);
-        await expectClickSuccess('#click_1_3', testElements);
-        await expectClickFail('#click_3_3', testElements, GipfComponentFailure.NOT_PART_OF_CAPTURE);
+        await componentTestUtils.expectClickSuccess('#click_0_3');
+        await componentTestUtils.expectClickSuccess('#click_1_3');
+        await componentTestUtils.expectClickFailure('#click_3_3', GipfComponentFailure.NOT_PART_OF_CAPTURE);
     }));
     it('should perform move after final captures has been done', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -254,10 +173,10 @@ describe('GipfComponent', () => {
             [_, _, B, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#click_0_3', testElements);
-        await expectClickSuccess('#click_1_3', testElements);
+        await componentTestUtils.expectClickSuccess('#click_0_3');
+        await componentTestUtils.expectClickSuccess('#click_1_3');
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 3),
                                                               MGPOptional.of(HexaDirection.DOWN_RIGHT)),
@@ -266,7 +185,7 @@ describe('GipfComponent', () => {
                                                 new Coord(2, 3), new Coord(2, 4), new Coord(2, 5), new Coord(2, 6),
                                             ])]);
 
-        await expectMoveSuccess('#click_2_3', testElements, expectationFromMove(move));
+        await componentTestUtils.expectMoveSuccess('#click_2_3', move);
     }));
     it('should highlight moved pieces only', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -279,16 +198,16 @@ describe('GipfComponent', () => {
             [_, B, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
         const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.UP_RIGHT));
         const move: GipfMove = new GipfMove(placement, [], []);
-        await expectClickSuccess('#click_1_6', testElements);
-        await expectMoveSuccess('#click_2_5', testElements, expectationFromMove(move));
+        await componentTestUtils.expectClickSuccess('#click_1_6');
+        await componentTestUtils.expectMoveSuccess('#click_2_5', move);
 
-        expect(getComponent().getCaseClass(new Coord(1, 6))).toEqual('moved');
-        expect(getComponent().getCaseClass(new Coord(2, 5))).toEqual('moved');
-        expect(getComponent().getCaseClass(new Coord(3, 4))).not.toEqual('moved');
+        expect(componentTestUtils.getComponent().getCaseClass(new Coord(1, 6))).toEqual('moved');
+        expect(componentTestUtils.getComponent().getCaseClass(new Coord(2, 5))).toEqual('moved');
+        expect(componentTestUtils.getComponent().getCaseClass(new Coord(3, 4))).not.toEqual('moved');
     }));
     it('should highlight capturable pieces', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -301,9 +220,9 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        expect(getComponent().possibleCaptures).toContain(new GipfCapture([
+        expect(componentTestUtils.getComponent().possibleCaptures).toContain(new GipfCapture([
             new Coord(3, 2),
             new Coord(3, 3),
             new Coord(3, 4),
@@ -321,20 +240,20 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#click_3_3', testElements);
+        await componentTestUtils.expectClickSuccess('#click_3_3');
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
                                             [new GipfCapture([
                                                 new Coord(3, 2), new Coord(3, 3), new Coord(3, 4), new Coord(3, 5),
                                             ])], []);
 
-        await expectMoveSuccess('#click_0_4', testElements, expectationFromMove(move));
+        await componentTestUtils.expectMoveSuccess('#click_0_4', move);
 
-        expectToHaveClass(3, 2, 'base captured');
-        expectToHaveClass(3, 3, 'base captured');
-        expectToHaveClass(3, 4, 'base captured');
-        expectToHaveClass(3, 5, 'base captured');
+        componentTestUtils.expectElementToHaveClasses('#click_3_2', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#click_3_3', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#click_3_4', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#click_3_5', ['base', 'captured']);
     }));
     it('should update the number of pieces available', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -347,18 +266,18 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#click_3_3', testElements);
+        await componentTestUtils.expectClickSuccess('#click_3_3');
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(0, 4), MGPOptional.empty()),
                                             [new GipfCapture([
                                                 new Coord(3, 2), new Coord(3, 3), new Coord(3, 4), new Coord(3, 5),
                                             ])], []);
 
-        await expectMoveSuccess('#click_0_4', testElements, expectationFromMove(move));
+        await componentTestUtils.expectMoveSuccess('#click_0_4', move);
 
-        expect(getComponent().getPlayerSidePieces(0).length).toBe(8);
-        expect(getComponent().getPlayerSidePieces(1).length).toBe(5);
+        expect(componentTestUtils.getComponent().getPlayerSidePieces(0).length).toBe(8);
+        expect(componentTestUtils.getComponent().getPlayerSidePieces(1).length).toBe(5);
     }));
     it('should not accept placement on a complete line', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -371,11 +290,11 @@ describe('GipfComponent', () => {
             [_, B, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#click_1_6', testElements);
-        expect(getComponent().arrows.length).toBe(1);
-        await expectClickFail('#click_2_5', testElements, GipfFailure.PLACEMENT_ON_COMPLETE_LINE);
+        await componentTestUtils.expectClickSuccess('#click_1_6');
+        expect(componentTestUtils.getComponent().arrows.length).toBe(1);
+        await componentTestUtils.expectClickFailure('#click_2_5', GipfFailure.PLACEMENT_ON_COMPLETE_LINE);
     }));
     it('should accept moves with two initial captures', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -388,7 +307,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(6, 3),
                                                               MGPOptional.empty()),
@@ -403,9 +322,9 @@ describe('GipfComponent', () => {
                                                 ]),
                                             ], []);
 
-        await expectClickSuccess('#click_4_4', testElements);
-        await expectClickSuccess('#click_2_4', testElements);
-        await expectMoveSuccess('#click_6_3', testElements, expectationFromMove(move));
+        await componentTestUtils.expectClickSuccess('#click_4_4');
+        await componentTestUtils.expectClickSuccess('#click_2_4');
+        await componentTestUtils.expectMoveSuccess('#click_6_3', move);
     }));
     it('should accept moves with two final captures', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -418,7 +337,7 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
         const move: GipfMove = new GipfMove(new GipfPlacement(new Coord(5, 4),
                                                               MGPOptional.of(HexaDirection.UP_LEFT)),
@@ -434,10 +353,10 @@ describe('GipfComponent', () => {
                                                 ]),
                                             ]);
 
-        await expectClickSuccess('#click_5_4', testElements); // select placement coord
-        await expectClickSuccess('#click_4_4', testElements); // select direction
-        await expectClickSuccess('#click_4_4', testElements); // select first capture
-        await expectMoveSuccess('#click_2_4', testElements, expectationFromMove(move)); // select second capture
+        await componentTestUtils.expectClickSuccess('#click_5_4'); // select placement coord
+        await componentTestUtils.expectClickSuccess('#click_4_4'); // select direction
+        await componentTestUtils.expectClickSuccess('#click_4_4'); // select first capture
+        await componentTestUtils.expectMoveSuccess('#click_2_4', move); // select second capture
     }));
     it('should remove highlights and arrows upon move cancellation', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -450,16 +369,16 @@ describe('GipfComponent', () => {
             [_, _, _, _, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#click_3_3', testElements);
-        await expectClickSuccess('#click_4_5', testElements);
-        await expectClickSuccess('#click_4_4', testElements);
-        await expectClickFail('#click_3_3', testElements, GipfComponentFailure.NOT_PART_OF_CAPTURE);
+        await componentTestUtils.expectClickSuccess('#click_3_3');
+        await componentTestUtils.expectClickSuccess('#click_4_5');
+        await componentTestUtils.expectClickSuccess('#click_4_4');
+        await componentTestUtils.expectClickFailure('#click_3_3', GipfComponentFailure.NOT_PART_OF_CAPTURE);
 
-        expectToHaveClass(4, 5, 'base');
-        expectToHaveClass(3, 3, 'base');
-        expect(getComponent().arrows.length).toBe(0);
+        componentTestUtils.expectElementToHaveClasses('#click_4_5', ['base']);
+        componentTestUtils.expectElementToHaveClasses('#click_3_3', ['base']);
+        expect(componentTestUtils.getComponent().arrows.length).toBe(0);
     }));
     it('should recompute captures upon intersecting captures', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -472,7 +391,7 @@ describe('GipfComponent', () => {
             [_, _, _, A, _, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [8, 4], [2, 3]);
-        setupSlice(slice);
+        componentTestUtils.setupSlice(slice);
 
         const move: GipfMove = new GipfMove(
             new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),
@@ -499,11 +418,11 @@ describe('GipfComponent', () => {
                 ]),
             ],
         );
-        await expectClickSuccess('#click_6_0', testElements); // Initial capture
-        await expectClickSuccess('#click_3_6', testElements); // Placement coord
-        await expectClickSuccess('#click_3_5', testElements); // Placement direction
-        await expectClickSuccess('#click_0_5', testElements); // Final capture 1
-        await expectMoveSuccess('#click_3_0', testElements, expectationFromMove(move)); // Final capture 2
+        await componentTestUtils.expectClickSuccess('#click_6_0'); // Initial capture
+        await componentTestUtils.expectClickSuccess('#click_3_6'); // Placement coord
+        await componentTestUtils.expectClickSuccess('#click_3_5'); // Placement direction
+        await componentTestUtils.expectClickSuccess('#click_0_5'); // Final capture 1
+        await componentTestUtils.expectMoveSuccess('#click_3_0', move); // Final capture 2
     }));
     it('should not allow selecting placement when no direction is valid', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -516,8 +435,8 @@ describe('GipfComponent', () => {
             [B, A, B, A, B, _, _],
         ]);
         const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-        setupSlice(slice);
-        await expectClickFail('#click_0_6', testElements, GipfComponentFailure.NO_DIRECTIONS_AVAILABLE);
+        componentTestUtils.setupSlice(slice);
+        await componentTestUtils.expectClickFailure('#click_0_6', GipfComponentFailure.NO_DIRECTIONS_AVAILABLE);
     }));
     describe('encode/decode', () => {
         it('should delegate decoding to move', () => {
@@ -526,7 +445,7 @@ describe('GipfComponent', () => {
             const move: GipfMove = new GipfMove(placement, [], []);
             const encodedMove: JSONValue = GipfMove.encoder.encode(move);
             spyOn(GipfMove.encoder, 'decode').and.callThrough();
-            testElements.gameComponent.decodeMove(encodedMove);
+            componentTestUtils.getComponent().decodeMove(encodedMove);
             expect(GipfMove.encoder.decode).toHaveBeenCalledTimes(1);
         });
         it('should delegate encoding to move', () => {
@@ -534,7 +453,7 @@ describe('GipfComponent', () => {
                                                                MGPOptional.of(HexaDirection.DOWN));
             const move: GipfMove = new GipfMove(placement, [], []);
             spyOn(GipfMove.encoder, 'encode').and.callThrough();
-            testElements.gameComponent.encodeMove(move);
+            componentTestUtils.getComponent().encodeMove(move);
             expect(GipfMove.encoder.encode).toHaveBeenCalledTimes(1);
         });
     });
