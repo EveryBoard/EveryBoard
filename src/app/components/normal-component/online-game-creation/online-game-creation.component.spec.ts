@@ -22,9 +22,6 @@ class AuthenticationServiceMock {
     public getJoueurObs(): Observable<{pseudo: string, verified: boolean}> {
         return of(AuthenticationServiceMock.CURRENT_USER);
     }
-    public isUserLogged(): boolean {
-        return true;
-    }
 }
 class RouterMock {
     public async navigate(to: string[]): Promise<boolean> {

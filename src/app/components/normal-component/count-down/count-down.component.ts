@@ -120,7 +120,6 @@ export class CountDownComponent implements OnInit, OnDestroy {
         return this.started;
     }
     public getTimeStyle(): { [key: string]: string } {
-        console.log(this.remainingTime)
         if (this.remainingTime < this.dangerTimeLimit) {
             if (this.remainingTime % 2000 < 1000) {
                 return this.DANGER_TIME_ODD;

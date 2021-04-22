@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
 import { ChatService } from '../../../services/chat/ChatService';
 import { IMessage } from '../../../domain/imessage';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
 import { IChatId } from 'src/app/domain/ichat';
 import { display } from 'src/app/utils/utils/utils';
 
@@ -34,7 +34,7 @@ export class ChatComponent implements OnInit, OnDestroy {
         if (this.chatId == null || this.chatId === '') throw new Error('No chat to join mentionned');
 
         this.authenticationService.getJoueurObs()
-            .subscribe((joueur) => {
+            .subscribe((joueur: AuthUser) => {
                 if (this.isConnectedUser(joueur)) {
                     display(ChatComponent.VERBOSE, JSON.stringify(joueur) + ' just connected');
                     this.userName = joueur.pseudo;
@@ -56,7 +56,7 @@ export class ChatComponent implements OnInit, OnDestroy {
 
         this.chatService.startObserving(this.chatId, this.updateMessages);
     }
-    public updateMessages = (iChatId: IChatId) => {
+    public updateMessages: (iChatId: IChatId) => void = (iChatId: IChatId) => {
         this.chat = iChatId.doc.messages;
         const nbMessages: number = this.chat.length;
         if (this.visible === false) {
@@ -66,23 +66,28 @@ export class ChatComponent implements OnInit, OnDestroy {
             this.unreadMessages = 0;
         }
     }
-    public showDisconnectedChat() {
-        const msg: IMessage = { sender: 'fake', content: 'vous devez être connecté pour voir le chat...', postedTime: Date.now(), lastTurnThen: null };
+    public showDisconnectedChat(): void {
+        const msg: IMessage = {
+            sender: 'fake',
+            content: 'vous devez être connecté pour voir le chat...',
+            postedTime: Date.now(),
+            lastTurnThen: null,
+        };
         this.chat = [msg, msg, msg, msg, msg];
     }
-    public sendMessage() {
+    public sendMessage(): void {
         if (this.userName === '') {
             display(ChatComponent.VERBOSE, 'je t\'envoie un toast car t\'es pas connecté donc tu te tait!');
         }
         this.chatService.sendMessage(this.userName, this.turn, this.userMessage);
         this.userMessage = '';
     }
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         if (this.chatService.isObserving()) {
             this.chatService.stopObserving();
         }
     }
-    public switchChatVisibility() {
+    public switchChatVisibility(): void {
         if (this.visible === true) {
             this.visible = false;
         } else {

@@ -33,13 +33,6 @@ class AuthenticationServiceMock {
         }
         return of(AuthenticationServiceMock.CURRENT_USER);
     }
-    public isUserLogged(): boolean {
-        if (AuthenticationServiceMock.IS_USER_LOGGED == null) {
-            throw new Error('MOCK VALUE NOT SET BEFORE USE');
-        } else {
-            return AuthenticationServiceMock.IS_USER_LOGGED;
-        }
-    }
 }
 class RouterMock {
     public async navigate(to: string[]): Promise<boolean> {
