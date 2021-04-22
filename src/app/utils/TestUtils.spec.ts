@@ -18,7 +18,6 @@ import { JoueursDAO } from '../dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from '../dao/joueurs/JoueursDAOMock';
 import { AuthenticationService } from '../services/authentication/AuthenticationService';
 import { MGPNode } from '../jscaip/mgp-node/MGPNode';
-import { Rules } from '../jscaip/Rules';
 
 export class ComponentTestUtils<T> {
     public fixture: ComponentFixture<LocalGameWrapperComponent | DidacticialGameWrapperComponent>;
@@ -214,5 +213,11 @@ export class ComponentTestUtils<T> {
         expect(element).toBeTruthy(elementName + ' was expected to exist');
         return element;
     }
-    // TODO: add method "expectElementToHaveClass" to check the CSS class
+    public expectElementToHaveClasses(elementName: string, classes: string[]): void {
+        const classesSorted: string[] = [...classes].sort();
+        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        expect(element).toBeTruthy(elementName + ' was expected to exist');
+        const elementClasses: string[] = element.children[0].attributes.class.split(' ').sort();
+        expect(elementClasses).toEqual(classesSorted);
+    }
 }
