@@ -161,7 +161,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.currentJoiner = joiner;
     }
     private observeCandidates(joiner: IJoiner): void {
-        display(PartCreationComponent.VERBOSE, {PartCreation_observeCandidates: JSON.stringify(joiner) });
+        display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: JSON.stringify(joiner) });
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUser: IJoueurId[]) => {
             if (foundUser[0].doc.state === 'offline') {
                 console.log('callback: what the hell ' + foundUser[0].doc.pseudo + ' is already offline!');

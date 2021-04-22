@@ -1,4 +1,6 @@
+import { fakeAsync, tick } from '@angular/core/testing';
 import { Router } from '@angular/router';
+import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { MustVerifyEmail } from './MustVerifyEmail';
 
@@ -22,35 +24,42 @@ describe('EmailVerified', () => {
     it('should create', () => {
         expect(guard).toBeTruthy();
     });
-    it('should move unconnected user to login page and refuse them', () => {
-        authService.getAuthenticatedUser = () => {
-            return { pseudo: null, verified: null };
-        };
+    it('should move unconnected user to login page and refuse them', fakeAsync(() => {
+        authService.getJoueurObs = () => of(AuthenticationService.DISCONNECTED);
         spyOn(router, 'navigate');
 
-        const authorisation: boolean = guard.canActivate();
+        let observableEnded: boolean;
+        guard.canActivate().subscribe((canActivate: boolean) => {
+            expect(canActivate).toBeFalse();
+            observableEnded = true;
+        });
+        tick();
 
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
-        expect(authorisation).toBeFalse();
-    });
+        expect(observableEnded).toBeTrue();
+    }));
     it('should move verified user to login page and refuse them', () => {
-        authService.getAuthenticatedUser = () => {
-            return { pseudo: 'JeanMichelNouveau user', verified: true };
-        };
+        authService.getJoueurObs = () => of({ pseudo: 'JeanMichelNouveau user', verified: true });
         spyOn(router, 'navigate');
 
-        const authorisation: boolean = guard.canActivate();
+        let observableEnded: boolean;
+        guard.canActivate().subscribe((canActivate: boolean) => {
+            expect(canActivate).toBeFalse();
+            observableEnded = true;
+        });
 
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
-        expect(authorisation).toBeFalse();
+        expect(observableEnded).toBeTrue();
     });
     it('should accept logged unverified user', () => {
-        authService.getAuthenticatedUser = () => {
-            return { pseudo: 'JeanJaJa Toujours là', verified: false };
-        };
+        authService.getJoueurObs = () => of({ pseudo: 'JeanJaja ToujoursLà', verified: false });
 
-        const authorisation: boolean = guard.canActivate();
+        let observableEnded: boolean;
+        guard.canActivate().subscribe((canActivate: boolean) => {
+            expect(canActivate).toBeTrue();
+            observableEnded = true;
+        });
 
-        expect(authorisation).toBeTrue();
+        expect(observableEnded).toBeTrue();
     });
 });

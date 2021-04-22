@@ -15,13 +15,13 @@ interface ConnectivityStatus {
     // eslint-disable-next-line camelcase
     last_changed: unknown,
 }
-interface AuthUser {
+export interface AuthUser {
     pseudo: string,
     verified: boolean,
 }
 @Injectable()
 export class AuthenticationService implements OnDestroy {
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public static NOT_CONNECTED: { pseudo: string, verified: boolean } = null;
 
@@ -102,16 +102,7 @@ export class AuthenticationService implements OnDestroy {
     public getAuthenticatedUser(): AuthUser {
         return this.joueurBS.getValue();
     }
-    public isUserLogged(): boolean {
-        const joueur: AuthUser = this.joueurBS.getValue();
-        if (joueur == null) return false;
-        if (joueur.pseudo == null) return false;
-        if (joueur.pseudo === '') return false;
-        if (joueur.pseudo === 'undefined') return false;
-        if (joueur.pseudo === 'null') return false;
-        return true;
-    }
-    private updatePresence() {
+    protected updatePresence(): void {
         const uid: string = firebase.auth().currentUser.uid;
         const userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
         firebase.database().ref('.info/connected').on('value', function(snapshot: firebase.database.DataSnapshot) {
