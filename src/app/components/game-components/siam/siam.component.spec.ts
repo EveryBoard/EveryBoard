@@ -34,7 +34,7 @@ describe('SiamComponent', () => {
         componentTestUtils = new ComponentTestUtils<SiamComponent>('Siam');
     }));
     it('should create', () => {
-        expect(componentTestUtils.getComponent()).toBeTruthy('Wrapper should be created');
+        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
     });
     it('should accept insertion at first turn', fakeAsync(async() => {

@@ -1,22 +1,18 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { QuixoFailure } from './QuixoFailure';
 
 export class QuixoMove extends MoveCoord {
-    public static isValidCoord(coord: Coord): { valid: boolean, reason: string } {
+    public static isValidCoord(coord: Coord): MGPValidation {
         if (coord.isNotInRange(5, 5)) {
-            return {
-                valid: false,
-                reason: 'Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.',
-            };
+            return MGPValidation.failure('Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.');
         }
         if (coord.x !== 0 && coord.x !== 4 && coord.y !== 0 && coord.y !== 4) {
-            return {
-                valid: false,
-                reason: 'Invalid coord for QuixoMove: ' + coord.toString() + ' is not on the edge.',
-            };
+            return MGPValidation.failure(QuixoFailure.NO_INSIDE_CLICK);
         }
-        return { valid: true, reason: null };
+        return MGPValidation.SUCCESS;
     }
     public static encode(move: QuixoMove): number {
         return move.encode();
@@ -30,13 +26,21 @@ export class QuixoMove extends MoveCoord {
     }
     constructor(x: number, y: number, public readonly direction: Orthogonal) {
         super(x, y);
-        const coordValidity: { valid: boolean, reason: string } = QuixoMove.isValidCoord(this.coord);
-        if (coordValidity.valid === false) throw new Error(coordValidity.reason);
+        const coordValidity: MGPValidation = QuixoMove.isValidCoord(this.coord);
+        if (coordValidity.isFailure()) throw new Error(coordValidity.reason);
         if (direction == null) throw new Error('Direction cannot be null.');
-        if (x === 0 && direction === Orthogonal.LEFT) throw new Error('Invalid direction: pawn on the left side can\'t be moved to the left ' + this.coord.toString() + '.');
-        if (x === 4 && direction === Orthogonal.RIGHT) throw new Error('Invalid direction: pawn on the right side can\'t be moved to the right ' + this.coord.toString() + '.');
-        if (y === 0 && direction === Orthogonal.UP) throw new Error('Invalid direction: pawn on the top side can\'t be moved up ' + this.coord.toString() + '.');
-        if (y === 4 && direction === Orthogonal.DOWN) throw new Error('Invalid direction: pawn on the bottom side can\'t be moved down ' + this.coord.toString() + '.');
+        if (x === 0 && direction === Orthogonal.LEFT) {
+            throw new Error('Invalid direction: pawn on the left side can\'t be moved to the left.');
+        }
+        if (x === 4 && direction === Orthogonal.RIGHT) {
+            throw new Error('Invalid direction: pawn on the right side can\'t be moved to the right.');
+        }
+        if (y === 0 && direction === Orthogonal.UP) {
+            throw new Error('Invalid direction: pawn on the top side can\'t be moved up.');
+        }
+        if (y === 4 && direction === Orthogonal.DOWN) {
+            throw new Error('Invalid direction: pawn on the bottom side can\'t be moved down.');
+        }
     }
     public toString(): string {
         return 'QuixoMove(' + this.coord.x + ', ' + this.coord.y + ', ' + this.direction.toString() + ')';

@@ -10,16 +10,16 @@ export class MGPValidation {
         return new MGPValidation(reason);
     }
     public isFailure(): boolean {
-        return this.reason != null;
+        return this.isSuccess() === false;
     }
     public isSuccess(): boolean {
-        return !this.isFailure();
+        return this.reason == null;
     }
     public getReason(): string {
-        if (this.isFailure()) {
-            return this.reason;
-        } else {
+        if (this.isSuccess()) {
             throw new Error('MGPValidation: Cannot extract failure reason from success.');
+        } else {
+            return this.reason;
         }
     }
 }
