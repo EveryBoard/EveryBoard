@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-        base-href: /board/
+        base-href: [/board/]
 
     steps:
       - name: Checkout the repository
