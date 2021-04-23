@@ -10,7 +10,7 @@ import { display } from '../utils/utils/utils';
 export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
 
     public static readonly CANNOT_CHOOSE_ENNEMY_PIECE: string =
-        'Vous ne pouvez pas choisir une pièce de l\'ennemi.';
+        `Vous ne pouvez pas choisir une pièce de l'ennemi.`;
     public static readonly MUST_CLICK_ON_EMPTY_CASE: MGPValidation =
         MGPValidation.failure('Vous devez cliquer sur une case vide.');
 

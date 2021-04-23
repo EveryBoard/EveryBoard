@@ -133,7 +133,7 @@ const routes: Route [] = [
         AwaleComponent,
         DvonnComponent,
         EncapsuleComponent,
-        // EpaminondasComponent,
+        EpaminondasComponent,
         GipfComponent,
         GoComponent,
         KamisadoComponent,

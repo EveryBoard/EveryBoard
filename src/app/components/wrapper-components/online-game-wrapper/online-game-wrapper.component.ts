@@ -103,12 +103,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         const partValidity: MGPValidation =
             await this.gameService.getPartValidity(this.currentPartId, gameType);
         if (partValidity.isFailure()) {
-            let page: string;
-            if (partValidity.reason === 'WRONG_GAME_TYPE') {
-                page = '/enfantDCul';
-            } else {
-                page = '/notFound';
-            }
+            // note, option if WRONG_GAME_TYPE to redirect to another page
+            const page: string = '/notFound';
             this.routerEventsSub.unsubscribe();
             this.router.navigate([page]);
         }

@@ -4,17 +4,19 @@
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
-            <circle (click)="onBoardClick(x, y)"
+            <circle id="click_{{ x }}_{{ y }}"
+                    (click)="onBoardClick(x, y)"
                     r="45"
                     [attr.cx]="50 + 100*x"
                     [attr.cy]="50 + 100*y"
                     [ngClass]="getPieceClasses(x, y)"
                     class="base"
-                    />
+            />
         </g>
     </g>
     <g *ngIf="chosenCoord != null">
         <polyline *ngFor="let direction of getPossiblesDirections()"
+                  id="chooseDirection_{{ direction[2] }}"
                   (click)="chooseDirection(direction[2])"
                   [attr.points]="getTriangleCoordinate(direction[0], direction[1])"/>
     </g>
