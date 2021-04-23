@@ -10,7 +10,7 @@ import { Move } from '../jscaip/Move';
 import { DidacticialGameWrapperComponent }
     from '../components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
 import { MGPValidation } from './mgp-validation/MGPValidation';
-import { of } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from '../app.module';
 import { ActivatedRoute } from '@angular/router';
@@ -19,10 +19,35 @@ import { JoueursDAOMock } from '../dao/joueurs/JoueursDAOMock';
 import { AuthenticationService } from '../services/authentication/AuthenticationService';
 import { MGPNode } from '../jscaip/mgp-node/MGPNode';
 
-export class ComponentTestUtils<T> {
+class ActivatedRouteMock {
+    public readonly snapshot: any;
+    public constructor(game: string) {
+        this.snapshot = {
+            paramMap: {
+                get: (str: string) => {
+                    return game;
+                },
+            },
+        };
+    }
+}
+export class AuthenticationServiceMock {
+    public static USER: { pseudo: string, verified: boolean } = { pseudo: null, verified: null };
+
+    public getJoueurObs(): Observable<{ pseudo: string, verified: boolean }> {
+        return of(AuthenticationServiceMock.USER);
+    }
+    public getAuthenticatedUser(): { pseudo: string, verified: boolean } {
+        return AuthenticationServiceMock.USER;
+    }
+}
+
+export class ComponentTestUtils<T extends AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
     public fixture: ComponentFixture<LocalGameWrapperComponent | DidacticialGameWrapperComponent>;
     public debugElement: DebugElement;
     public wrapper: LocalGameWrapperComponent | DidacticialGameWrapperComponent;
+
+    public activatedRouteStub: ActivatedRouteMock;
 
     private gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
     private canUserPlaySpy: jasmine.Spy;
@@ -30,22 +55,8 @@ export class ComponentTestUtils<T> {
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public constructor(game: string, wrapperKind: any = LocalGameWrapperComponent ) {
-        const activatedRouteStub: unknown = {
-            snapshot: {
-                paramMap: {
-                    get: (str: string) => {
-                        return game;
-                    },
-                },
-            },
-        };
-        const authenticationServiceStub: unknown = {
-            getJoueurObs: () => of({ pseudo: null, verified: null }),
-            getAuthenticatedUser: () => {
-                return { pseudo: null, verified: null };
-            },
-        };
+    public constructor(game: string, wrapperKind: any = LocalGameWrapperComponent) {
+        this.activatedRouteStub = new ActivatedRouteMock(game);
         TestBed.configureTestingModule({
             imports: [
                 RouterTestingModule,
@@ -53,9 +64,9 @@ export class ComponentTestUtils<T> {
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
+                { provide: ActivatedRoute, useValue: this.activatedRouteStub },
                 { provide: JoueursDAO, useClass: JoueursDAOMock },
-                { provide: AuthenticationService, useValue: authenticationServiceStub },
+                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
             ],
         }).compileComponents();
         this.fixture = TestBed.createComponent(wrapperKind);
@@ -84,7 +95,7 @@ export class ComponentTestUtils<T> {
         return (this.gameComponent as unknown) as T;
     }
     public async expectClickSuccess(elementName: string): Promise<void> {
-        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
@@ -100,7 +111,7 @@ export class ComponentTestUtils<T> {
         }
     }
     public async expectClickFailure(elementName: string, reason: string): Promise<void> {
-        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
@@ -116,7 +127,7 @@ export class ComponentTestUtils<T> {
         }
     }
     public async expectClickForbidden(elementName: string): Promise<void> {
-        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
@@ -140,7 +151,7 @@ export class ComponentTestUtils<T> {
                                    scoreOne?: number)
     : Promise<void>
     {
-        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
@@ -174,7 +185,7 @@ export class ComponentTestUtils<T> {
                                    scoreOne?: number)
     : Promise<void>
     {
-        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
@@ -194,7 +205,7 @@ export class ComponentTestUtils<T> {
         }
     }
     public async clickElement(elementName: string): Promise<boolean> {
-        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         if (element == null) {
             return null;
         } else {
@@ -205,19 +216,22 @@ export class ComponentTestUtils<T> {
         }
     }
     public expectElementNotToExist(elementName: string): void {
-        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         expect(element).toBeNull();
     }
     public expectElementToExist(elementName: string): DebugElement {
-        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy(elementName + ' was expected to exist');
         return element;
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
-        const element: DebugElement = this.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy(elementName + ' was expected to exist');
         const elementClasses: string[] = element.children[0].attributes.class.split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
+    }
+    public findElement(elementName: string): DebugElement {
+        return this.debugElement.query(By.css(elementName));
     }
 }
