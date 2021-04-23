@@ -12,6 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
+        base-href: /board/
 
     steps:
       - name: Checkout the repository
@@ -44,4 +45,4 @@ jobs:
       - name: Launch tests
         run: npm run test:ci
       - name: Build
-        run: npm run build -- --base-href=/boards/
+        run: npm run build -- --base-href=${{ matrix.base-href }}
