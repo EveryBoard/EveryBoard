@@ -1,12 +1,10 @@
 <div class="d-flex align-items-center h-100">
     <div class="container">
         <app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
-        <input id="playOnline"
-               type="button"
-               [disabled]="!selectedGame"
-               value="Créer partie en ligne"
+        <button class="w-100 btn btn-lg btn-primary"
+                id="playOnline"
+                [disabled]="!selectedGame"
                (click)="createGame()"
-               class="btn btn-primary btn-block"
-               >
+        >Créer partie en ligne</button>
     </div>
 </div>

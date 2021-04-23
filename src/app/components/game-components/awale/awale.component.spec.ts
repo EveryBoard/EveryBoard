@@ -1,88 +1,28 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-
 import { AwaleComponent } from './awale.component';
 import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { RouterTestingModule } from '@angular/router/testing';
-import { AppModule } from 'src/app/app.module';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
-import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { of } from 'rxjs';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
-import { expectMoveFailure, expectMoveSuccess, MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
+import { fakeAsync } from '@angular/core/testing';
+import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 
-const activatedRouteStub = {
-    snapshot: {
-        paramMap: {
-            get: (str: string) => {
-                return 'Awale';
-            },
-        },
-    },
-};
-const authenticationServiceStub = {
-
-    getJoueurObs: () => of({ pseudo: null, verified: null }),
-
-    getAuthenticatedUser: () => {
-        return { pseudo: null, verified: null };
-    },
-};
 describe('AwaleComponent', () => {
-    let wrapper: LocalGameWrapperComponent;
-
-    let testElements: TestElements;
+    let componentTestUtils: ComponentTestUtils<AwaleComponent>;
 
     beforeEach(fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule,
-                AppModule,
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
-                { provide: AuthenticationService, useValue: authenticationServiceStub },
-            ],
-        }).compileComponents();
-        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
-        wrapper = fixture.debugElement.componentInstance;
-        fixture.detectChanges();
-        const debugElement: DebugElement = fixture.debugElement;
-        tick(1);
-        const gameComponent: AwaleComponent = wrapper.gameComponent as AwaleComponent;
-        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
-        const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
-        const onLegalUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onLegalUserMove').and.callThrough();
-        const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
-        testElements = {
-            fixture,
-            debugElement,
-            gameComponent,
-            canUserPlaySpy,
-            cancelMoveSpy,
-            chooseMoveSpy,
-            onLegalUserMoveSpy,
-        };
+        componentTestUtils = new ComponentTestUtils<AwaleComponent>('Awale');
     }));
     it('should create', async() => {
-        expect(testElements.gameComponent).toBeTruthy();
+        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
+        expect(componentTestUtils.getComponent()).toBeTruthy('AwaleComponent should be created');
     });
     describe('encode/decode', () => {
         it('should delegate decoding to move', () => {
             spyOn(AwaleMove, 'decode').and.callThrough();
-            testElements.gameComponent.decodeMove(5);
+            componentTestUtils.getComponent().decodeMove(5);
             expect(AwaleMove.decode).toHaveBeenCalledTimes(1);
         });
         it('should delegate encoding to move', () => {
             spyOn(AwaleMove, 'encode').and.callThrough();
-            testElements.gameComponent.encodeMove(new AwaleMove(1, 1));
+            componentTestUtils.getComponent().encodeMove(new AwaleMove(1, 1));
             expect(AwaleMove.encode).toHaveBeenCalledTimes(1);
         });
     });
@@ -92,37 +32,25 @@ describe('AwaleComponent', () => {
             [4, 4, 4, 4, 1, 4],
         ];
         const slice: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
-        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        testElements.gameComponent.updateBoard();
-        testElements.fixture.detectChanges();
-        const expectations: MoveExpectations = {
-            move: new AwaleMove(5, 0),
-            slice: testElements.gameComponent.rules.node.gamePartSlice,
-            scoreZero: 0,
-            scoreOne: 0,
-        };
-        await expectMoveSuccess('#click_5_0', testElements, expectations);
-        const awaleComponent: AwaleComponent = testElements.gameComponent as AwaleComponent;
+        componentTestUtils.setupSlice(slice);
+
+        const move: AwaleMove = new AwaleMove(5, 0);
+        componentTestUtils.expectMoveSuccess('#click_5_0', move, undefined, 0, 0);
+        const awaleComponent: AwaleComponent = componentTestUtils.getComponent() as AwaleComponent;
         expect(awaleComponent.getCaseClasses(5, 0)).toEqual(['moved', 'highlighted']);
         expect(awaleComponent.getCaseClasses(5, 1)).toEqual(['moved']);
         expect(awaleComponent.getCaseClasses(4, 1)).toEqual(['captured']);
     }));
-    it('should tell to user he can\'t move empty house', fakeAsync(async() => {
+    it('should tell to user empty house cannot be moved', fakeAsync(async() => {
         const board: number[][] = [
             [0, 4, 4, 4, 4, 4],
             [4, 4, 4, 4, 4, 4],
         ];
         const slice: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
-        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        testElements.gameComponent.updateBoard();
-        testElements.fixture.detectChanges();
-        const expectations: MoveExpectations = {
-            move: new AwaleMove(0, 0),
-            slice: testElements.gameComponent.rules.node.gamePartSlice,
-            scoreZero: 0,
-            scoreOne: 0,
-        };
+        componentTestUtils.setupSlice(slice);
+
+        const move: AwaleMove = new AwaleMove(0, 0);
         const message: string = 'You must choose a non-empty house to distribute.';
-        await expectMoveFailure('#click_0_0', testElements, expectations, message);
+        await componentTestUtils.expectMoveFailure('#click_0_0', message, move, undefined, 0, 0);
     }));
 });

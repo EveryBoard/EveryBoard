@@ -1,7 +1,7 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
-import { Observable, BehaviorSubject } from 'rxjs';
+import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { IFirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
@@ -31,7 +31,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
 
     public abstract resetStaticDB(): void;
 
-    public reset() {
+    public reset(): void {
         const removed: string = this.getStaticDB() ? this.getStaticDB().size() + ' removed' : 'not initialised yet';
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.reset, ' + removed);
 
@@ -66,7 +66,8 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         }
     }
     public async set(id: string, doc: T): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
+                this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -81,7 +82,8 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         return Promise.resolve();
     }
     public async update(id: string, update: PT): Promise<void> {
-        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
+        display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
+                this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
 
         const key: MGPStr = new MGPStr(id);
         const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
@@ -107,11 +109,42 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
             throw new Error('Cannot delete element ' + id + ' absent from ' + this.collectionName);
         }
     }
-    public observingWhere(
-        field: string,
-        condition: firebase.firestore.WhereFilterOp,
-        value: any,
-        callback: FirebaseCollectionObserver<T>): () => void {
-        throw new Error('FirebaseFirestoreDAOMock.observingWhere Not Implemented yet and it seem\'s hard');
+    public observingWhere(field: string,
+                          condition: firebase.firestore.WhereFilterOp,
+                          value: unknown,
+                          callback: FirebaseCollectionObserver<T>): () => void
+    {
+        // Note, for now, only check first match field/condition/value at creation, not the added document matching it !
+        display(FirebaseFirestoreDAOMock.VERBOSE,
+                'FirebaseFirestoreDAOMock.observingWhere(' + field + condition + value);
+        if (condition === '==') {
+            display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
+                    { 'FirebaseFirestoreDAOMock_observingWhere': {
+                        collection: this.collectionName, field, condition, value, callback } });
+
+            const subscription: Subscription = this.subscribeToMatcher(field, value, callback);
+            if (subscription == null) {
+                return () => {};
+            } else {
+                return () => subscription.unsubscribe();
+            }
+        } else {
+            throw new Error('FirebaseFirestoreDAOMock.observingWhere for non ==');
+        }
+    }
+    private subscribeToMatcher(field: string,
+                               value: unknown,
+                               callback: FirebaseCollectionObserver<T>): Subscription
+    {
+        const db: MGPMap<MGPStr, ObservableSubject<{id: string, doc: T}>> = this.getStaticDB();
+        for (let entryId: number = 0; entryId < db.size(); entryId++) {
+            const entry: ObservableSubject<{id: string, doc: T}> = db.getByIndex(entryId).value;
+            if (entry.subject.value.doc[field] === value) {
+                callback.onDocumentCreated([entry.subject.value]);
+                return entry.observable.subscribe((document: {id: string, doc: T}) => {
+                    callback.onDocumentModified([document]);
+                });
+            }
+        }
     }
 }

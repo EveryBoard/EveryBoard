@@ -45,7 +45,7 @@ export abstract class GameWrapper {
 
     public players: string[] = [null, null];
 
-    public observerRole: number; // TODO: change into Player
+    public observerRole: number;
 
     public canPass: boolean;
 
@@ -129,7 +129,7 @@ export abstract class GameWrapper {
         // the game wrapper can then act accordingly to the chosen move.
         this.gameComponent.canUserPlay = this.onUserClick; // So that when the game component click
         // the game wrapper can act accordly
-        this.gameComponent.isPlayerTurn = this.isPlayerTurn();
+        this.gameComponent.isPlayerTurn = this.isPlayerTurn;
         this.gameComponent.cancelMoveOnWrapper = this.onCancelMove; // Mostly for interception by DidacticialGameWrapper
 
         this.gameComponent.observerRole = this.observerRole;
@@ -185,7 +185,7 @@ export abstract class GameWrapper {
     public onCancelMove(): void {
         // Non needed by default'
     }
-    public isPlayerTurn(): boolean {
+    public isPlayerTurn: () => boolean = () => {
         if (this.observerRole > 1) {
             return false;
         }

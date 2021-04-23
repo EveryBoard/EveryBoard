@@ -16,18 +16,18 @@ abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnPartSlice, 
 
 export class DvonnFailure {
     public static INVALID_COORD: string = `Coordonnée invalide, veuillez sélectionner un pièce sur le plateau.`;
-    public static NOT_PLAYER_PIECE: string = `Veuillez choisir une des pièces à votre couleur.`;
-    public static STACK_EMPTY: string = `Veuillez choisir une case qui n'est pas vide.`;
+    public static NOT_PLAYER_PIECE: string = `Veuillez choisir une des piles vous appartenant.`;
+    public static EMPTY_STACK: string = `Veuillez choisir une pile qui n'est pas vide.`;
     public static TOO_MANY_NEIGHBORS: string =
-        `Cette pièce ne peut pas se déplacer car les 6 cases voisines sont occupées.
+        `Cette pile ne peut pas se déplacer car les 6 cases voisines sont occupées.
          Veuillez choisir une pièce avec strictement moins de 6 pièces voisines.`;
-    public static CANT_ACHIEVE_TARGET: string =
+    public static CANT_REACH_TARGET: string =
         `Cette pièce ne peut pas se déplacer car il est impossible qu'elle termine
          son déplacement sur une autre pièce.`;
     public static CAN_ONLY_PASS: string =
         `Vous êtes obligés de passer, il n'y a aucun déplacement possible.`;
     public static INVALID_MOVE_LENGTH: string =
-        `La distance effectuée par le mouvement doit correspondre à la taille de la pile de pièce.`;
+        `La distance effectuée par le mouvement doit correspondre à la taille de la pile de pièces.`;
     public static EMPTY_TARGET_STACK: string =
         `Le déplacement doit se terminée sur une case occupée.`;
 }
@@ -63,18 +63,18 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         if (!slice.hexaBoard.isOnBoard(coord)) {
             return MGPValidation.failure(DvonnFailure.INVALID_COORD);
         }
-        if (!slice.hexaBoard.getAt(coord).belongsTo(slice.getCurrentPlayer())) {
-            return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE);
+        const stack: DvonnPieceStack = slice.hexaBoard.getAt(coord);
+        if (stack.getSize() < 1) {
+            return MGPValidation.failure(DvonnFailure.EMPTY_STACK);
         }
-        const stackSize: number = slice.hexaBoard.getAt(coord).getSize();
-        if (stackSize < 1) {
-            return MGPValidation.failure(DvonnFailure.STACK_EMPTY);
+        if (!stack.belongsTo(slice.getCurrentPlayer())) {
+            return MGPValidation.failure(DvonnFailure.NOT_PLAYER_PIECE);
         }
         if (slice.hexaBoard.numberOfNeighbors(coord) >= 6) {
             return MGPValidation.failure(DvonnFailure.TOO_MANY_NEIGHBORS);
         }
         if (!this.pieceHasTarget(slice, coord)) {
-            return MGPValidation.failure(DvonnFailure.CANT_ACHIEVE_TARGET);
+            return MGPValidation.failure(DvonnFailure.CANT_REACH_TARGET);
         }
         return MGPValidation.SUCCESS;
     }
@@ -182,7 +182,6 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         }
     }
     public isLegal(move: DvonnMove, slice: DvonnPartSlice): LegalityStatus {
-        // TODO: some conditions are shared with isMovablePiece, use that here
         if (this.getMovablePieces(slice).length === 0) {
             // If no pieces are movable, the player can pass
             // but only if the previous move was not a pass itself

@@ -18,13 +18,6 @@ class AuthenticationServiceMock {
         }
         return of(AuthenticationServiceMock.CURRENT_USER);
     }
-    public isUserLogged(): boolean {
-        if (AuthenticationServiceMock.IS_USER_LOGGED == null) {
-            throw new Error('MOCK IS_USER_LOGGED VALUE NOT SET BEFORE USE');
-        } else {
-            return AuthenticationServiceMock.IS_USER_LOGGED;
-        }
-    }
     public doEmailLogin(): Promise<unknown> {
         return;
     }

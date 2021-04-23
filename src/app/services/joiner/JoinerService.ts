@@ -95,8 +95,12 @@ export class JoinerService {
                 partStatus,
                 candidatesNames: joinersList,
             };
-            await this.joinerDao.update(this.observedJoinerId, modification);
+            return this.joinerDao.update(this.observedJoinerId, modification);
         }
+    }
+    public async updateCandidatesNames(candidatesNames: string[]): Promise<void> {
+        const modification: PIJoiner = { candidatesNames };
+        return this.joinerDao.update(this.observedJoinerId, modification);
     }
     public async deleteJoiner(): Promise<void> {
         display(JoinerService.VERBOSE,
@@ -131,8 +135,19 @@ export class JoinerService {
             chosenPlayer: chosenPlayerPseudo,
         });
     }
-    public unselectChosenPlayer(): void {
-        throw new Error('JoinerService.unselectChosenPlayer: TODO');
+    public unselectChosenPlayer(candidatesList: string[],
+                                chosenPlayer: string,
+                                keepHimInLobby: boolean): Promise<void>
+    {
+        if (keepHimInLobby) {
+            candidatesList.push(chosenPlayer);
+        }
+        const modification: PIJoiner = {
+            chosenPlayer: '',
+            candidatesNames: candidatesList,
+            partStatus: 0,
+        };
+        return this.joinerDao.update(this.observedJoinerId, modification);
     }
     public proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
         display(JoinerService.VERBOSE,

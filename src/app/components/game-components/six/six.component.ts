@@ -26,6 +26,7 @@ interface Scale {
 @Component({
     selector: 'app-six',
     templateUrl: './six.component.html',
+    styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, SixLegalityStatus> {
 
@@ -175,9 +176,9 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         }
         return { minX, minY, maxX, maxY, upperPiece, lefterPiece };
     }
-    public getPieceFill(coord: Coord): string {
+    public getPieceClass(coord: Coord): string {
         const player: Player = this.rules.node.gamePartSlice.getPieceAt(coord);
-        return this.getPlayerColor(player);
+        return this.getPlayerClass(player);
     }
     public async onPieceClick(piece: Coord): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#piece_' + piece.x + '_' + piece.y);
@@ -238,18 +239,11 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             this.cuttables = this.cuttables.concat(subList);
         }
     }
-    public getSelectedPieceFill(): string {
+    public getSelectedPieceClass(): string {
         if (this.chosenLanding) {
-            return this.MOVED_FILL;
+            return 'moved';
         } else {
-            return 'none';
-        }
-    }
-    public getSelectedPieceStroke(): string {
-        if (this.chosenLanding) {
-            return 'black';
-        } else {
-            return 'yellow';
+            return 'selected';
         }
     }
 }

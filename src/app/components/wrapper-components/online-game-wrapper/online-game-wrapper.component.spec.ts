@@ -26,7 +26,7 @@ import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ICurrentPart } from 'src/app/domain/icurrentpart';
 
-const activatedRouteStub = {
+const activatedRouteStub: unknown = {
     snapshot: {
         paramMap: {
             get: (str: string) => {
@@ -40,16 +40,10 @@ class AuthenticationServiceMock {
     public static USER: {pseudo: string, verified: boolean};
 
     public getJoueurObs() {
-        return of({
-            pseudo: AuthenticationServiceMock.USER.pseudo,
-            verified: AuthenticationServiceMock.USER.verified,
-        });
+        return of(AuthenticationServiceMock.USER);
     }
     public getAuthenticatedUser(): {pseudo: string, verified: boolean} {
-        return {
-            pseudo: AuthenticationServiceMock.USER.pseudo,
-            verified: AuthenticationServiceMock.USER.verified,
-        };
+        return AuthenticationServiceMock.USER;
     }
 }
 

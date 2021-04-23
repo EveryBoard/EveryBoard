@@ -43,7 +43,7 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public imagesLocation: string = 'assets/images/';
 
-    public isPlayerTurn: boolean;
+    public isPlayerTurn: () => boolean;
 
     public chooseMove: (move: Move,
                         slice: GamePartSlice,
@@ -85,13 +85,6 @@ export abstract class AbstractGameComponent<M extends Move, S extends GamePartSl
 
     public abstract updateBoard(): void;
 
-    public getPlayerColor(player: Player): string {
-        switch (player) {
-            case Player.ZERO: return this.PLAYER_ZERO_FILL;
-            case Player.ONE: return this.PLAYER_ONE_FILL;
-            case Player.NONE: return this.EMPTY_CASE_FILL;
-        }
-    }
     public getPlayerClass(player: Player): string {
         switch (player) {
             case Player.ZERO: return 'player0';

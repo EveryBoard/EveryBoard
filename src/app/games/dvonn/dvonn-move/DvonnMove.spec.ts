@@ -54,4 +54,7 @@ describe('DvonnMove', () => {
         expect(move.equals(neighboor)).toBeFalse();
         expect(move.equals(stranger)).toBeFalse();
     });
+    it('should construct (-1,-1)->(-2,-2) as PASS', () => {
+        expect(DvonnMove.of(new Coord(-1, -1), new Coord(-2, -2))).toBe(DvonnMove.PASS);
+    });
 });

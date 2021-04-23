@@ -30,7 +30,7 @@ export class PickGameComponent {
 
     @Output('pickGame') pickGame: EventEmitter<string> = new EventEmitter<string>();
 
-    public onChange(s: any): void {
-        this.pickGame.emit(s.target.value);
+    public onChange(game: string): void {
+        this.pickGame.emit(game);
     }
 }

@@ -62,9 +62,6 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public joinGame(partId: string, typeGame: string): void {
         this.router.navigate(['/play/' + typeGame, partId]);
     }
-    public isUserLogged(): boolean {
-        return this.authenticationService.isUserLogged();
-    }
     public playLocally(): void {
         this.router.navigate(['local/' + this.selectedGame]);
     }

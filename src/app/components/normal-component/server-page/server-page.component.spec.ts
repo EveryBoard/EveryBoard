@@ -33,13 +33,6 @@ class AuthenticationServiceMock {
         }
         return of(AuthenticationServiceMock.CURRENT_USER);
     }
-    public isUserLogged(): boolean {
-        if (AuthenticationServiceMock.IS_USER_LOGGED == null) {
-            throw new Error('MOCK VALUE NOT SET BEFORE USE');
-        } else {
-            return AuthenticationServiceMock.IS_USER_LOGGED;
-        }
-    }
 }
 class RouterMock {
     public async navigate(to: string[]): Promise<boolean> {
@@ -114,11 +107,6 @@ describe('ServerPageComponent', () => {
         expect(authenticationService.getJoueurObs).toHaveBeenCalledTimes(1);
         expect(gameService.getActivesPartsObs).toHaveBeenCalledTimes(1);
         expect(userService.getActivesUsersObs).toHaveBeenCalledTimes(1);
-    }));
-    it('isUserLogged should delegate to authService', fakeAsync(async() => {
-        spyOn(authenticationService, 'isUserLogged');
-        component.isUserLogged();
-        expect(authenticationService.isUserLogged).toHaveBeenCalledTimes(1);
     }));
     it('should be legal for any logged user to create game when there is none', fakeAsync(async() => {
         AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };

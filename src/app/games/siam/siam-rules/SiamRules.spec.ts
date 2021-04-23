@@ -6,6 +6,7 @@ import { SiamPartSlice } from '../SiamPartSlice';
 import { SiamLegalityStatus } from '../SiamLegalityStatus';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { Player } from 'src/app/jscaip/player/Player';
 
 describe('SiamRules:', () => {
     let rules: SiamRules;
@@ -368,7 +369,8 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
+        const boardValue: number = rules.getBoardValue(move, expectedSlice);
+        expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for player 0');
     });
     it('Player 1 pushing player 0 pushing mountain should be a victory for player 0', () => {
         const board: number[][] = [
@@ -392,7 +394,8 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
+        const boardValue: number = rules.getBoardValue(move, expectedSlice);
+        expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for player 1');
     });
     it('Player 0 pushing player 1 on his side pushing mountain should be a victory for player 0', () => {
         const board: number[][] = [
@@ -416,6 +419,7 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice)).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
+        const boardValue: number = rules.getBoardValue(move, expectedSlice);
+        expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for player 0');
     });
 });

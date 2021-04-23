@@ -88,6 +88,10 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
         }
         if (this.chosen === null) {
             return this.choosePiece(x, y);
+        } else if (this.chosen.equals(new Coord(x, y))) {
+            // Deselects the piece
+            this.cancelMoveAttempt();
+            return MGPValidation.SUCCESS;
         } else {
             return await this.chooseDestination(x, y);
         }
@@ -105,12 +109,9 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
     private async chooseDestination(x: number, y: number): Promise<MGPValidation> {
         const chosenPiece: Coord = this.chosen;
         const chosenDestination: Coord = new Coord(x, y);
-        try {
-            const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
-            return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-        } catch (e) {
-            return this.cancelMove('Cannot choose this move: ' + e);
-        }
+        // By construction, only valid moves can be created
+        const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
+        return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
     public decodeMove(encodedMove: number): DvonnMove {
         return DvonnMove.decode(encodedMove);

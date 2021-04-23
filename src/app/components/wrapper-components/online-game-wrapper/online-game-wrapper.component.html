@@ -21,8 +21,14 @@
                 <h4>Tour n° {{ currentPart.turn + 1 }}</h4>
             </div>
             <div class="inforow" id="playerIndicator" *ngIf="players">
-                <h4 style="float: left"> {{ players[0] }} </h4>
-                <h4 style="float: right"> {{ players[1] }} </h4>
+                <h4 id="playerZeroIndicator"
+                    float="left"
+                    [ngStyle]="getPlayerNameFontColor(0)"
+                >{{ players[0] }}</h4>
+                <h4 id="playerZeroIndicator"
+                    float="right"
+                    [ngStyle]="getPlayerNameFontColor(1)"
+                >{{ players[1] }}</h4>
             </div>
             <div class="inforow" id="scoreIndicator" *ngIf="currentPart && compo && compo.showScore">
                 <h4 style="float: left"> {{ compo.scores[0] }} pts </h4>
@@ -30,11 +36,13 @@
             </div>
             <div class="inforow" id="partChronos">
                 <app-count-down #chronoZeroGlobal
+                                [dangerTimeLimit]="60*1000"
                                 style="float: left"
                                 debugName="ZERO Global"
                                 (outOfTimeAction)="reachedOutOfTime(0)">
                 </app-count-down>
                 <app-count-down #chronoOneGlobal
+                                [dangerTimeLimit]="60*1000"
                                 style="float: right"
                                 debugName="ONE Global"
                                 (outOfTimeAction)="reachedOutOfTime(1)">
@@ -42,11 +50,13 @@
             </div>
             <div class="inforow" id="turnChronos">
                 <app-count-down #chronoZeroLocal
+                                [dangerTimeLimit]="15*1000"
                                 style="float: left"
                                 debugName="ZERO Local"
                                 (outOfTimeAction)="reachedOutOfTime(0)">
                 </app-count-down>
                 <app-count-down #chronoOneLocal
+                                [dangerTimeLimit]="15*1000"
                                 style="float: right"
                                 debugName="ONE Local"
                                 (outOfTimeAction)="reachedOutOfTime(1)">
@@ -55,29 +65,39 @@
             <div class="inforow" id="currentPlayerIndicator" *ngIf="endGame === false">
                 <h4>C'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}</h4>
             </div>
-            <div class="inforow" id="resignButtonDiv" *ngIf="endGame === false && opponent && observerRole < 2">
+            <div class="inforow"
+                 id="resignButtonDiv"
+                 *ngIf="endGame === false && opponent && observerRole < 2">
                 <button mat-stroked-button
                         id="resignButton"
                         (click)="resign()">
                     Abandonner
                 </button>
             </div>
-            <div class="inforow" id="passButtonDiv" *ngIf="endGame === false && observerRole < 2 && compo.canPass && (currentPlayer===userName)">
+            <div class="inforow"
+                 id="passButtonDiv"
+                 *ngIf="endGame === false && observerRole < 2 && compo.canPass && (currentPlayer===userName)">
                 <button mat-stroked-button
                         id="passButton"
                         (click)="compo.pass()">
                     Passer son tour
                 </button>
             </div>
-            <div class="inforow" id="allowTakeBackDiv" *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
-                <button mat-stroked-button
+            <div class="inforow"
+                 id="allowTakeBackDiv"
+                 *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
+                <button mat-raised-button
+                        color="warn"
                         id="acceptTakeBackButton"
                         (click)="acceptTakeBack()">
                     Autoriser à reprendre un tour
                 </button>
             </div>
-            <div class="inforow" id="refuseTakeBackDiv" *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
-                <button mat-stroked-button
+            <div class="inforow"
+                 id="refuseTakeBackDiv"
+                 *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()">
+                <button mat-raised-button
+                        color="warn"
                         id="refuseTakeBackButton"
                         (click)="refuseTakeBack()">
                     Refuser de reprendre un tour

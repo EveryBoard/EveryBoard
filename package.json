@@ -6,7 +6,8 @@
     "start": "ng serve",
     "build": "ng build",
     "test": "ng test --code-coverage",
-    "lint": "ng lint",
+    "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom",
+    "lint": "eslint --ext ts ./",
     "e2e": "ng e2e"
   },
   "private": true,
@@ -21,7 +22,7 @@
     "@angular/platform-browser": "^10.2.4",
     "@angular/platform-browser-dynamic": "^10.2.4",
     "@angular/router": "^10.2.4",
-    "bootstrap": "^4.6.0",
+    "bootstrap": "^5.0.0-beta3",
     "core-js": "^3.8.3",
     "firebase": "^8.2.3",
     "jquery": "^3.5.1",
@@ -54,6 +55,7 @@
     "karma-jasmine": "^4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "protractor": "^7.0.0",
+    "puppeteer": "^8.0.0",
     "ts-node": "^9.1.1",
     "typescript": "^4.0.2"
   }

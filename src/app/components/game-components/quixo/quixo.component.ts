@@ -52,7 +52,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
         classes.push(this.getPlayerClass(player));
         if (coord.equals(this.chosenCoord)) classes.push('selected');
-        else if (coord.equals(this.lastMoveCoord)) classes.push('highlighted2');
+        else if (coord.equals(this.lastMoveCoord)) classes.push('lastmove');
         return classes;
     }
     public onBoardClick(x: number, y: number): MGPValidation {
@@ -61,12 +61,12 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
             return this.cancelMove(clickValidity.getReason());
         }
         const clickedCoord: Coord = new Coord(x, y);
-        if (QuixoMove.isValidCoord(clickedCoord).valid === false) {
-            // TODO: is this possible ? If not, should'nt it be a classic Error ?
-            return this.cancelMove('Unvalid coord ' + clickedCoord.toString());
+        const coordLegality: MGPValidation = QuixoMove.isValidCoord(clickedCoord);
+        if (coordLegality.isFailure()) {
+            return this.cancelMove(coordLegality.reason);
         }
         if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove(Rules.CANNOT_CHOOSE_ENNEMY_PIECE + clickedCoord.toString());
+            return this.cancelMove(Rules.CANNOT_CHOOSE_ENNEMY_PIECE);
         } else {
             this.chosenCoord = clickedCoord;
             return MGPValidation.SUCCESS;

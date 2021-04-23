@@ -20,8 +20,8 @@ export const epaminondasDidacticial: DidacticialStep[] = [
         `Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l'adversaire que l'adversaire n'en a sur la ligne de départ du joueur, ce joueur gagne.
          Ici, c'est au tour du joueur foncé de jouer, il a donc gagné.`,
         new EpaminondasPartSlice([
-            [_, _, _, _, _, O, _, _, _, _, X, X, X, X],
-            [_, _, _, _, _, O, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, O, _, _, X, X, X, X, X, X],
+            [_, _, _, _, _, O, _, _, _, _, _, _, X, X],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -57,7 +57,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
         `Voici le plateau de départ, c'est à Foncé de commencer.
          Commençons simplement par un déplacement d'une seule pièce.
          1. Cliquez la pièce sur la colonne la plus à gauche et sur la deuxième rangée en commençant par le bas.
-         2. Cliquez une case plus haut.`,
+         2. Cliquez la case au dessus.`,
         EpaminondasPartSlice.getInitialSlice(),
         [new EpaminondasMove(0, 10, 1, 1, Direction.UP)],
         `Voilà, c'est comme ça qu'on déplace une seule pièce.`,
@@ -71,7 +71,9 @@ export const epaminondasDidacticial: DidacticialStep[] = [
          3. Cliquez une ou deux cases plus haut, pour déplacer toute la phalange de deux cases
          (soit de la distance maximale légale qui vaut le nombre de pièces déplacées).`,
         EpaminondasPartSlice.getInitialSlice(),
-        [new EpaminondasMove(0, 11, 2, 1, Direction.UP), new EpaminondasMove(0, 11, 2, 2, Direction.UP)],
+        [
+            new EpaminondasMove(0, 11, 2, 1, Direction.UP),
+            new EpaminondasMove(0, 11, 2, 2, Direction.UP)],
         `Bravo.
          Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
          Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.

@@ -6,6 +6,8 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/user/UserService';
 import { display } from 'src/app/utils/utils/utils';
+import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -36,7 +38,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.ngAfterViewInit');
         setTimeout(() => {
             display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.ngAfterViewInit inside timeout');
-            this.authenticationService.getJoueurObs().subscribe((user) => {
+            this.authenticationService.getJoueurObs().subscribe((user: { pseudo: string, verified: boolean }) => {
                 this.userName = user.pseudo;
                 if (this.isAI(this.players[0]) === false) this.players[0] = user.pseudo;
                 if (this.isAI(this.players[1]) === false) this.players[1] = user.pseudo;
@@ -59,7 +61,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         return Promise.resolve();
     }
     public updateBoard(): void {
-        this.gameComponent.isPlayerTurn = this.isPlayerTurn();
         this.gameComponent.updateBoard();
         if (this.gameComponent.rules.node.isEndGame()) {
             this.endGame = true;
@@ -115,5 +116,12 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
             this.gameComponent.updateBoard();
         }
+    }
+    public restartGame(): void {
+        const state: GamePartSlice = this.gameComponent.rules.sliceType['getInitialSlice']();
+        this.gameComponent.rules.node = new MGPNode(null, null, state, 0);
+        this.gameComponent.updateBoard();
+        this.endGame = false;
+        this.winner = null;
     }
 }

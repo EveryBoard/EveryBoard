@@ -8,36 +8,40 @@ import 'firebase/database';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
 import { PIJoueur } from '../../domain/iuser';
-import { environment } from 'src/environments/environment';
 import { display } from 'src/app/utils/utils/utils';
-
 
 interface ConnectivityStatus {
     state: string,
     // eslint-disable-next-line camelcase
     last_changed: unknown,
 }
+export interface AuthUser {
+    pseudo: string,
+    verified: boolean,
+}
 @Injectable()
 export class AuthenticationService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
-    public static IN_TESTING: boolean = false;
+    public static NOT_CONNECTED: { pseudo: string, verified: boolean } = null;
+
+    public static DISCONNECTED: { pseudo: string, verified: boolean } = { pseudo: null, verified: null };
 
     private authSub: Subscription;
 
-    private joueurBS: BehaviorSubject<{pseudo: string, verified: boolean}> =
-        new BehaviorSubject<{pseudo: string, verified: boolean}>({ pseudo: null, verified: null });
+    private joueurBS: BehaviorSubject<AuthUser>;
 
-    private joueurObs: Observable<{pseudo: string, verified: boolean}> = this.joueurBS.asObservable();
+    private joueurObs: Observable<AuthUser>;
 
     constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
-        if (environment.test && !AuthenticationService.IN_TESTING) throw new Error('NO AUTH SERVICE IN TEST');
-
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
+
+        this.joueurBS = new BehaviorSubject<AuthUser>(AuthenticationService.NOT_CONNECTED);
+        this.joueurObs = this.joueurBS.asObservable();
         this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
             if (user == null) { // user logged out
                 display(AuthenticationService.VERBOSE, '2.B: Obs<User> Sends null, logged out');
-                this.joueurBS.next({ pseudo: null, verified: null });
+                this.joueurBS.next(AuthenticationService.DISCONNECTED);
             } else { // user logged in
                 this.updatePresence();
                 const pseudo: string =
@@ -95,23 +99,14 @@ export class AuthenticationService implements OnDestroy {
         await firebase.database().ref('/status/' + uid).set(isOfflineForDatabase);
         return this.afAuth.signOut();
     }
-    public getAuthenticatedUser(): {pseudo: string, verified: boolean} {
+    public getAuthenticatedUser(): AuthUser {
         return this.joueurBS.getValue();
     }
-    public isUserLogged(): boolean {
-        const joueur: { pseudo: string; verified: boolean; } = this.joueurBS.getValue();
-        if (joueur == null) return false;
-        if (joueur.pseudo == null) return false;
-        if (joueur.pseudo == '') return false;
-        if (joueur.pseudo == 'undefined') return false;
-        if (joueur.pseudo == 'null') return false;
-        return true;
-    }
-    private updatePresence() {
+    protected updatePresence(): void {
         const uid: string = firebase.auth().currentUser.uid;
         const userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
         firebase.database().ref('.info/connected').on('value', function(snapshot: firebase.database.DataSnapshot) {
-            if (snapshot.val() == false) {
+            if (snapshot.val() === false) {
                 return;
             }
             const isOfflineForDatabase: ConnectivityStatus = {
@@ -130,7 +125,7 @@ export class AuthenticationService implements OnDestroy {
     public ngOnDestroy(): void {
         if (this.authSub) this.authSub.unsubscribe();
     }
-    public getJoueurObs(): Observable<{pseudo: string, verified: boolean}> {
+    public getJoueurObs(): Observable<AuthUser> {
         return this.joueurObs;
     }
     public sendEmailVerification(): Promise<void> {

@@ -1,50 +1,15 @@
-import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
-import { RouterTestingModule } from '@angular/router/testing';
-import { ActivatedRoute } from '@angular/router';
-
-import { of } from 'rxjs';
-
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { AppModule } from 'src/app/app.module';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
-import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { SiamComponent } from './siam.component';
 import { SiamMove } from 'src/app/games/siam/siam-move/SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import {
-    expectClickFail, expectClickSuccess, expectMoveSuccess,
-    MoveExpectations, TestElements } from 'src/app/utils/TestUtils';
 import { SiamPiece } from 'src/app/games/siam/siam-piece/SiamPiece';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { fakeAsync } from '@angular/core/testing';
 
-const activatedRouteStub = {
-    snapshot: {
-        paramMap: {
-            get: (str: string) => {
-                return 'Siam';
-            },
-        },
-    },
-};
-const authenticationServiceStub = {
-
-    getJoueurObs: () => of({ pseudo: null, verified: null }),
-
-    getAuthenticatedUser: () => {
-        return { pseudo: null, verified: null };
-    },
-};
 describe('SiamComponent', () => {
-
-    let wrapper: LocalGameWrapperComponent;
-
-    let testElements: TestElements;
+    let componentTestUtils: ComponentTestUtils<SiamComponent>;
 
     const _: number = SiamPiece.EMPTY.value;
     const M: number = SiamPiece.MOUNTAIN.value;
@@ -52,68 +17,30 @@ describe('SiamComponent', () => {
     const u: number = SiamPiece.BLACK_UP.value;
 
     const expectMoveLegality: (move: SiamMove) => Promise<void> = async(move: SiamMove) => {
-        const expectations: MoveExpectations = {
-            move, scoreZero: null, scoreOne: null,
-            slice: testElements.gameComponent.rules.node.gamePartSlice,
-        };
         if (move.isInsertion()) {
-            await expectClickSuccess('#insertAt_' + move.coord.x + '_' + move.coord.y, testElements);
+            await componentTestUtils.expectClickSuccess('#insertAt_' + move.coord.x + '_' + move.coord.y);
             const orientation: string = move.landingOrientation.toString();
-            return expectMoveSuccess('#chooseOrientation_' + orientation, testElements, expectations);
+            return componentTestUtils.expectMoveSuccess('#chooseOrientation_' + orientation, move);
         } else {
-            await expectClickSuccess('#clickPiece_' + move.coord.x + '_' + move.coord.y, testElements);
+            await componentTestUtils.expectClickSuccess('#clickPiece_' + move.coord.x + '_' + move.coord.y);
             const direction: Orthogonal = move.moveDirection.getOrNull();
             const moveDirection: string = direction ? direction.toString() : '';
-            await expectClickSuccess('#chooseDirection_' + moveDirection, testElements);
+            await componentTestUtils.expectClickSuccess('#chooseDirection_' + moveDirection);
             const landingOrientation: string = move.landingOrientation.toString();
-            return expectMoveSuccess('#chooseOrientation_' + landingOrientation, testElements, expectations);
+            return componentTestUtils.expectMoveSuccess('#chooseOrientation_' + landingOrientation, move);
         }
     };
     beforeEach(fakeAsync(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                RouterTestingModule,
-                AppModule,
-            ],
-            schemas: [CUSTOM_ELEMENTS_SCHEMA],
-            providers: [
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
-                { provide: AuthenticationService, useValue: authenticationServiceStub },
-            ],
-        }).compileComponents();
-        const fixture: ComponentFixture<LocalGameWrapperComponent> = TestBed.createComponent(LocalGameWrapperComponent);
-        wrapper = fixture.debugElement.componentInstance;
-        fixture.detectChanges();
-        const debugElement: DebugElement = fixture.debugElement;
-        tick(1);
-        const gameComponent: SiamComponent = wrapper.gameComponent as SiamComponent;
-        const cancelMoveSpy: jasmine.Spy = spyOn(gameComponent, 'cancelMove').and.callThrough();
-        const chooseMoveSpy: jasmine.Spy = spyOn(gameComponent, 'chooseMove').and.callThrough();
-        const onLegalUserMoveSpy: jasmine.Spy = spyOn(wrapper, 'onLegalUserMove').and.callThrough();
-        const canUserPlaySpy: jasmine.Spy = spyOn(gameComponent, 'canUserPlay').and.callThrough();
-        testElements = {
-            fixture,
-            debugElement,
-            gameComponent,
-            canUserPlaySpy,
-            cancelMoveSpy,
-            chooseMoveSpy,
-            onLegalUserMoveSpy,
-        };
+        componentTestUtils = new ComponentTestUtils<SiamComponent>('Siam');
     }));
     it('should create', () => {
-        expect(wrapper).toBeTruthy('Wrapper should be created');
-        expect(testElements.gameComponent).toBeTruthy('SiamComponent should be created');
+        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
+        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
     });
     it('should accept insertion at first turn', fakeAsync(async() => {
-        await expectClickSuccess('#insertAt_2_-1', testElements);
-        const expectations: MoveExpectations = {
-            move: new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
-            slice: testElements.gameComponent.rules.node.gamePartSlice,
-            scoreZero: null, scoreOne: null,
-        };
-        await expectMoveSuccess('#chooseOrientation_DOWN', testElements, expectations);
+        await componentTestUtils.expectClickSuccess('#insertAt_2_-1');
+        const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
+        await componentTestUtils.expectMoveSuccess('#chooseOrientation_DOWN', move);
     }));
     it('Should not allow to move ennemy pieces', async() => {
         const board: NumberTable = [
@@ -124,11 +51,9 @@ describe('SiamComponent', () => {
             [_, _, _, _, u],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        testElements.gameComponent.updateBoard();
-        testElements.fixture.detectChanges();
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickFail('#clickPiece_4_4', testElements, 'Can\'t choose ennemy\'s pieces');
+        await componentTestUtils.expectClickFailure('#clickPiece_4_4', 'Can\'t choose ennemy\'s pieces');
     });
     it('should cancel move when trying to insert while having selected a piece', fakeAsync(async() => {
         const board: NumberTable = [
@@ -139,14 +64,12 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        testElements.gameComponent.updateBoard();
-        testElements.fixture.detectChanges();
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#clickPiece_0_0', testElements);
+        await componentTestUtils.expectClickSuccess('#clickPiece_0_0');
 
         const reason: string = 'Can\'t insert when there is already a selected piece';
-        await expectClickFail('#insertAt_-1_2', testElements, reason);
+        await componentTestUtils.expectClickFailure('#insertAt_-1_2', reason);
     }));
     it('should allow rotation', fakeAsync(async() => {
         const board: NumberTable = [
@@ -157,9 +80,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, _],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        testElements.gameComponent.updateBoard();
-        testElements.fixture.detectChanges();
+        componentTestUtils.setupSlice(slice);
 
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.empty(), Orthogonal.DOWN);
         await expectMoveLegality(move);
@@ -173,9 +94,7 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        testElements.gameComponent.updateBoard();
-        testElements.fixture.detectChanges();
+        componentTestUtils.setupSlice(slice);
 
         const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         await expectMoveLegality(move);
@@ -189,26 +108,20 @@ describe('SiamComponent', () => {
             [_, _, _, _, U],
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        testElements.gameComponent.rules.node = new MGPNode(null, null, slice, 0);
-        testElements.gameComponent.updateBoard();
-        testElements.fixture.detectChanges();
+        componentTestUtils.setupSlice(slice);
 
-        await expectClickSuccess('#clickPiece_4_4', testElements);
-        const expectations: MoveExpectations = {
-            move: new SiamMove(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
-            slice: testElements.gameComponent.rules.node.gamePartSlice,
-            scoreZero: null, scoreOne: null,
-        };
-        await expectMoveSuccess('#chooseDirection_DOWN', testElements, expectations);
+        await componentTestUtils.expectClickSuccess('#clickPiece_4_4');
+        const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
+        await componentTestUtils.expectMoveSuccess('#chooseDirection_DOWN', move);
     }));
     it('should delegate decoding to move', () => {
         spyOn(SiamMove, 'decode').and.callThrough();
-        testElements.gameComponent.decodeMove(269);
+        componentTestUtils.getComponent().decodeMove(269);
         expect(SiamMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should delegate encoding to move', () => {
         spyOn(SiamMove, 'encode').and.callThrough();
-        testElements.gameComponent.encodeMove(new SiamMove(2, 2, MGPOptional.empty(), Orthogonal.UP));
+        componentTestUtils.getComponent().encodeMove(new SiamMove(2, 2, MGPOptional.empty(), Orthogonal.UP));
         expect(SiamMove.encode).toHaveBeenCalledTimes(1);
     });
 });

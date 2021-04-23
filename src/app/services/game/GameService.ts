@@ -172,16 +172,11 @@ export class GameService {
 
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
         const rematchId: string = await this.createGame(iJoiner.creator, part.doc.typeGame, iJoiner.chosenPlayer);
-        let firstPlayer: FirstPlayer = FirstPlayer.of(iJoiner.firstPlayer);
-        if (firstPlayer === FirstPlayer.RANDOM) {
-            if (part.doc.playerZero === iJoiner.creator) {
-                // the creator started the previous game thank to hazard
-                firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
-            } else {
-                firstPlayer = FirstPlayer.CREATOR;
-            }
+        let firstPlayer: FirstPlayer;
+        if (part.doc.playerZero === iJoiner.creator) {
+            firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
         } else {
-            firstPlayer = firstPlayer.getOpponent();
+            firstPlayer = FirstPlayer.CREATOR;
         }
         const newJoiner: IJoiner = {
             candidatesNames: iJoiner.candidatesNames,

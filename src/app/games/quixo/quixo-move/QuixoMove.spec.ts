@@ -1,31 +1,36 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Player } from 'src/app/jscaip/player/Player';
 import { QuixoPartSlice } from '../quixo-part-slice/QuixoPartSlice';
 import { QuixoNode, QuixoRules } from '../quixo-rules/QuixoRules';
 import { QuixoMove } from '../QuixoMove';
+import { QuixoFailure } from '../QuixoFailure';
 
 describe('QuixoMove:', () => {
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;
-    const O: number = Player.ZERO.value;
 
     it('Should forbid move creation for invalid x or y coord', () => {
-        expect(() => new QuixoMove(-1, 0, Orthogonal.UP)).toThrowError('Invalid coord for QuixoMove: (-1, 0) is outside the board.');
+        expect(() => new QuixoMove(-1, 0, Orthogonal.UP))
+            .toThrowError('Invalid coord for QuixoMove: (-1, 0) is outside the board.');
     });
     it('Should forbid move creation from coord not on the side', () => {
-        expect(() => new QuixoMove(1, 1, Orthogonal.UP)).toThrowError('Invalid coord for QuixoMove: (1, 1) is not on the edge.');
+        expect(() => new QuixoMove(1, 1, Orthogonal.UP))
+            .toThrowError(QuixoFailure.NO_INSIDE_CLICK);
     });
     it('Should forbid move creation without direction', () => {
         expect(() => new QuixoMove(0, 0, null)).toThrowError('Direction cannot be null.');
     });
     it('Should forbid move creation from board who\'se side is the same as the direction', () => {
-        expect(() => new QuixoMove(0, 2, Orthogonal.LEFT)).toThrowError('Invalid direction: pawn on the left side can\'t be moved to the left (0, 2).');
-        expect(() => new QuixoMove(4, 2, Orthogonal.RIGHT)).toThrowError('Invalid direction: pawn on the right side can\'t be moved to the right (4, 2).');
-        expect(() => new QuixoMove(2, 0, Orthogonal.UP)).toThrowError('Invalid direction: pawn on the top side can\'t be moved up (2, 0).');
-        expect(() => new QuixoMove(2, 4, Orthogonal.DOWN)).toThrowError('Invalid direction: pawn on the bottom side can\'t be moved down (2, 4).');
+        expect(() => new QuixoMove(0, 2, Orthogonal.LEFT))
+            .toThrowError('Invalid direction: pawn on the left side can\'t be moved to the left.');
+        expect(() => new QuixoMove(4, 2, Orthogonal.RIGHT))
+            .toThrowError('Invalid direction: pawn on the right side can\'t be moved to the right.');
+        expect(() => new QuixoMove(2, 0, Orthogonal.UP))
+            .toThrowError('Invalid direction: pawn on the top side can\'t be moved up.');
+        expect(() => new QuixoMove(2, 4, Orthogonal.DOWN))
+            .toThrowError('Invalid direction: pawn on the bottom side can\'t be moved down.');
     });
     it('QuixoMove.encode and QuixoMove.decode should be reversible', () => {
         const board: number[][] = [
@@ -40,7 +45,7 @@ describe('QuixoMove:', () => {
         const node: QuixoNode = new MGPNode(null, move, slice, 0);
         const rules: QuixoRules = new QuixoRules(QuixoPartSlice);
         const moves: MGPMap<QuixoMove, QuixoPartSlice> = rules.getListMoves(node);
-        for (let i = 0; i < moves.size(); i++) {
+        for (let i: number = 0; i < moves.size(); i++) {
             const move: QuixoMove = moves.getByIndex(i).key;
             const encodedMove: number = move.encode();
             const decodedMove: QuixoMove = QuixoMove.decode(encodedMove);
