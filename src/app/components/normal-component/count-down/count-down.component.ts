@@ -64,16 +64,8 @@ export class CountDownComponent implements OnInit, OnDestroy {
         }
         this.startTime = Date.now();
         const remainingTimeOnResume: number = this.remainingTime;
-        const startTimeOnResume: number = this.startTime;
         this.isPaused = false;
         this.timeoutHandleGlobal = window.setTimeout(() => {
-            const failedTime: number = Date.now();
-            const expectedEndTime: number = startTimeOnResume + remainingTimeOnResume;
-            console.log('END REACHED OF ' + this.debugName +
-                        ' at ' + failedTime +
-                        ' while it should have been called at ' + expectedEndTime +
-                        ' so it was called with a ' + (expectedEndTime - failedTime) + ' diff' +
-                        ' after ' + (failedTime - startTimeOnResume) + 'ms');
             this.onEndReached();
         }, remainingTimeOnResume);
         this.countSeconds();

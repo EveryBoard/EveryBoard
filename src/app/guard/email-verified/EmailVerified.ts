@@ -11,7 +11,6 @@ export class EmailVerified implements CanActivate {
     constructor(private authService: AuthenticationService, private router : Router) {
     }
     public canActivate(): Observable<boolean> {
-        console.log('canActivate')
         return this.authService.getJoueurObs().pipe(map((user: AuthUser) => {
             if (user == null || user.pseudo == null) {
                 this.router.navigate(['/login']);

@@ -189,7 +189,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         } });
         const updateType: UpdateType = this.getUpdateType(part);
         this.currentPart = Part.of(part);
-        display(true, 'OnlineGameWrapperComponent.onCurrentPartUpdate: UpdateType.' + updateType.value);
+        display(OnlineGameWrapperComponent.VERBOSE,
+                'OnlineGameWrapperComponent.onCurrentPartUpdate: UpdateType.' + updateType.value);
         switch (updateType) {
             case UpdateType.REQUEST:
                 return this.onRequest(part.request);
@@ -213,7 +214,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public getUpdateType(update: ICurrentPart): UpdateType {
         const currentPart: ICurrentPart = this.currentPart ? this.currentPart.copy() : null;
         const diff: ObjectDifference = getDiff(currentPart, update);
-        display(true, { diff });
+        display(OnlineGameWrapperComponent.VERBOSE, { diff });
         const nbDiffs: number = getDiffChangesNumber(diff);
         if (diff == null || nbDiffs === 0) {
             return UpdateType.DOUBLON;
@@ -317,7 +318,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, true);
     }
     public notifyTimeoutVictory(victoriousPlayer: string): void {
-        display(true, 'TIMEOUT IN FAVOR OF ' + victoriousPlayer);
         this.endGame = true;
 
         const wonPart: ICurrentPart = this.currentPart.copy();
