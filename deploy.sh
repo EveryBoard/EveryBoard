@@ -1,5 +1,4 @@
 #!/bin/sh
-BASE_HREF="/board-test/"
-ls
+BASE_HREF="&#x2f;board-test/"
 npm run build -- --base-href=$BASE_HREF
-rsync -avzr --delete dist/pantheonsgame gaviall@awesom.eu:/var/www/html/$BASE_HREF
+time scp -C -r ./dist/pantheonsgame/* "gaviall@awesom.eu:/var/www/html/board-test"

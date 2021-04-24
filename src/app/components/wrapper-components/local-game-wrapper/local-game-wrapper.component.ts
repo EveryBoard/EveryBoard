@@ -1,7 +1,7 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/user/UserService';
@@ -38,7 +38,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.ngAfterViewInit');
         setTimeout(() => {
             display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.ngAfterViewInit inside timeout');
-            this.authenticationService.getJoueurObs().subscribe((user: { pseudo: string, verified: boolean }) => {
+            this.authenticationService.getJoueurObs().subscribe((user: AuthUser) => {
                 this.userName = user.pseudo;
                 if (this.isAI(this.players[0]) === false) this.players[0] = user.pseudo;
                 if (this.isAI(this.players[1]) === false) this.players[1] = user.pseudo;

@@ -5,7 +5,7 @@ import { LocalGameWrapperComponent }
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of, Observable } from 'rxjs';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule } from 'src/app/app.module';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
@@ -28,12 +28,12 @@ const activatedRouteStub: unknown = {
     },
 };
 class AuthenticationServiceMock {
-    public static USER: { pseudo: string, verified: boolean } = { pseudo: null, verified: null };
+    public static USER: AuthUser = AuthenticationService.NOT_CONNECTED;
 
-    public getJoueurObs(): Observable<{ pseudo: string, verified: boolean }> {
+    public getJoueurObs(): Observable<AuthUser> {
         return of(AuthenticationServiceMock.USER);
     }
-    public getAuthenticatedUser(): { pseudo: string, verified: boolean } {
+    public getAuthenticatedUser(): AuthUser {
         return AuthenticationServiceMock.USER;
     }
 }
@@ -81,11 +81,11 @@ describe('LocalGameWrapperComponent', () => {
         tick(1);
     }));
     it('should create', () => {
-        AuthenticationServiceMock.USER = { pseudo: null, verified: null };
+        AuthenticationServiceMock.USER = AuthenticationService.NOT_CONNECTED;
         expect(component).toBeTruthy();
     });
     it('should have game included after view init', fakeAsync(() => {
-        AuthenticationServiceMock.USER = { pseudo: null, verified: null };
+        AuthenticationServiceMock.USER = AuthenticationService.NOT_CONNECTED;
         const gameIncluderTag: DebugElement = fixture.debugElement.nativeElement.querySelector('app-game-includer');
         let p4Tag: DebugElement = fixture.debugElement.nativeElement.querySelector('app-p4');
         expect(gameIncluderTag).toBeTruthy('app-game-includer tag should be present at start');

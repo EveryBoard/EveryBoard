@@ -23,9 +23,9 @@ export interface AuthUser {
 export class AuthenticationService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
-    public static NOT_CONNECTED: { pseudo: string, verified: boolean } = null;
+    public static NOT_AUTHENTICATED: { pseudo: string, verified: boolean } = null;
 
-    public static DISCONNECTED: { pseudo: string, verified: boolean } = { pseudo: null, verified: null };
+    public static NOT_CONNECTED: { pseudo: string, verified: boolean } = { pseudo: null, verified: null };
 
     private authSub: Subscription;
 
@@ -36,17 +36,17 @@ export class AuthenticationService implements OnDestroy {
     constructor(public afAuth: AngularFireAuth, private afs: AngularFirestore) {
         display(AuthenticationService.VERBOSE, '1 authService subscribe to Obs<User>');
 
-        this.joueurBS = new BehaviorSubject<AuthUser>(AuthenticationService.NOT_CONNECTED);
+        this.joueurBS = new BehaviorSubject<AuthUser>(AuthenticationService.NOT_AUTHENTICATED);
         this.joueurObs = this.joueurBS.asObservable();
         this.authSub = this.afAuth.authState.subscribe((user: firebase.User) => {
             if (user == null) { // user logged out
-                display(AuthenticationService.VERBOSE, '2.B: Obs<User> Sends null, logged out');
-                this.joueurBS.next(AuthenticationService.DISCONNECTED);
+                display(AuthenticationService.VERBOSE, '2.B: User is not connected, according to fireAuth');
+                this.joueurBS.next(AuthenticationService.NOT_CONNECTED);
             } else { // user logged in
                 this.updatePresence();
                 const pseudo: string =
                     (user.displayName === '' || user.displayName == null) ? user.email : user.displayName;
-                display(AuthenticationService.VERBOSE, '2.A: Obs<User> Sends ' + pseudo + ', logged in');
+                display(AuthenticationService.VERBOSE, { userLoggedInAccordingToFireAuth: user });
                 const verified: boolean = user.emailVerified;
                 this.joueurBS.next({ pseudo, verified });
             }

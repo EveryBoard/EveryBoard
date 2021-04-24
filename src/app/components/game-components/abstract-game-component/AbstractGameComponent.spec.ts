@@ -20,7 +20,7 @@ const activatedRouteStub: unknown = {
     },
 };
 class AuthenticationServiceMock {
-    public static USER: {pseudo: string, verified: boolean} = { pseudo: null, verified: null };
+    public static USER: {pseudo: string, verified: boolean} = AuthenticationService.NOT_CONNECTED;
 
     public getJoueurObs() {
         return of({

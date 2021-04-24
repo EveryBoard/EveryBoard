@@ -45,13 +45,13 @@ describe('AuthenticationService', () => {
         let first: boolean = true;
         service.getJoueurObs().subscribe((user: AuthUser) => {
             if (first) {
-                expect(user).toBe(AuthenticationService.NOT_CONNECTED);
+                expect(user).toBe(AuthenticationService.NOT_AUTHENTICATED);
                 first = false;
             }
         });
         tick(10);
         service.getJoueurObs().subscribe((user: AuthUser) => {
-            expect(user).toEqual(AuthenticationService.DISCONNECTED);
+            expect(user).toEqual(AuthenticationService.NOT_CONNECTED);
         });
     }));
 });

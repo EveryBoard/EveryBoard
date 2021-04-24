@@ -9,7 +9,7 @@ import { ICurrentPartId } from '../../../domain/icurrentpart';
 
 import { UserService } from '../../../services/user/UserService';
 import { GameService } from '../../../services/game/GameService';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
 import { display } from 'src/app/utils/utils/utils';
 
 @Component({
@@ -43,7 +43,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
         this.userNameSub = this.authenticationService.getJoueurObs()
-            .subscribe((joueur: { pseudo: string, verified: boolean }) => {
+            .subscribe((joueur: AuthUser) => {
                 if (joueur == null) this.userName = null;
                 else this.userName = joueur.pseudo;
             });
