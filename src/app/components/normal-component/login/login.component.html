@@ -18,14 +18,16 @@
                placeholder="Password"
                type="password" />
 
-        <button id="loginButton"
-                type="submit"
-                class="btn btn-lg btn-primary btn-block"
-                (click)="loginWithEmail(loginForm.value)" > Connection </button>
-        <button id="googleButton"
-                type="submit"
-                (click)="loginWithGoogle()"
-                class="btn btn-lg btn-primary btn-block">Se connecter avec Google</button>
+        <div class="btn-group w-100">
+            <button id="loginButton"
+                    type="submit"
+                    class="btn btn-lg btn-primary"
+                    (click)="loginWithEmail(loginForm.value)" >Connexion</button>
+            <button id="googleButton"
+                    type="submit"
+                    (click)="loginWithGoogle()"
+                    class="btn btn-lg btn-primary">Se connecter avec Google</button>
+        </div>
         <a class="nav-link" [routerLink]="['/inscription']">Pas encore inscrit? Crée un compte.</a><br/>
         <span id="errorSpan"
               style="color:red">{{ errorMessage }}</span><br/>

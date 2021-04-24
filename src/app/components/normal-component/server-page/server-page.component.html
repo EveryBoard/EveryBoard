@@ -26,26 +26,19 @@
                  label="Créer">
             <div id="gameCreator" class="circled form-group">
                 <app-pick-game (pickGame)="pickGame($event)"></app-pick-game>
-                <br />
-                <input type="button"
-                       value="Créer une partie en ligne"
-                       [disabled]="!selectedGame"
-                       (click)="createGame()"
-                       class="btn btn-primary btn-block">
-                <br />
-                <input id="playLocally"
-                       type="button"
-                       [disabled]="!selectedGame"
-                       value="Jouer localement"
-                       (click)="playLocally()"
-                       class="btn btn-primary btn-block">
-                <br />
-                <input id="startDidacticial"
-                       type="button"
-                       [disabled]="!selectedGame"
-                       value="Apprendre les règles"
-                       (click)="startTutorial()"
-                       class="btn btn-primary btn-block">
+                <div class="btn-group-vertical w-100">
+                    <button class="btn btn-lg btn-primary"
+                            [disabled]="!selectedGame"
+                            (click)="createGame()">Créer une partie en ligne</button>
+                    <button class="btn btn-lg btn-primary"
+                            id="playLocally"
+                            [disabled]="!selectedGame"
+                            (click)="playLocally()">Jouer localement</button>
+                    <button class="btn btn-lg btn-primary"
+                            id="startDidacticial"
+                            [disabled]="!selectedGame"
+                            (click)="startTutorial()">Apprendre les règles</button>
+                </div>
             </div>
         </mat-tab>
 
