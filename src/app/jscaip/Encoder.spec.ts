@@ -1,4 +1,14 @@
+import { Comparable } from 'src/app/utils/collection-lib/Comparable';
 import { NumberEncoder } from './encoder';
+
+export class NumberEncoderTestUtils {
+    public static expectToBeCorrect<T extends Comparable>(encoder: NumberEncoder<T>, value: T): void {
+        const encoded: number = encoder.encodeNumber(value);
+        expect(encoded).toBeLessThan(encoder.maxValue());
+        const decoded: T = encoder.decodeNumber(encoded);
+        expect(decoded.equals(value));
+    }
+}
 
 describe('NumberEncoder', () => {
     describe('booleanEncoder', () => {

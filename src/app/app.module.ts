@@ -151,7 +151,7 @@ const routes: Route [] = [
     imports: [
         BrowserModule,
         HttpClientModule,
-        RouterModule.forRoot(routes, { useHash: true }),
+        RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,
         AngularFireModule.initializeApp(firebaseConfig),
