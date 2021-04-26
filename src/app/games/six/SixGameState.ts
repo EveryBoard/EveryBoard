@@ -9,7 +9,7 @@ import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { SixMove } from '../six-move/SixMove';
+import { SixMove } from './SixMove';
 
 export class MGPBoolean implements Comparable {
 

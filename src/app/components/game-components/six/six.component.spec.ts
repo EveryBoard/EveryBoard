@@ -1,7 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
-import { SixGameState } from 'src/app/games/six/six-game-state/SixGameState';
-import { SixMove } from 'src/app/games/six/six-move/SixMove';
-import { SixFailure } from 'src/app/games/six/six-rules/SixFailure';
+import { SixGameState } from 'src/app/games/six/SixGameState';
+import { SixMove } from 'src/app/games/six/SixMove';
+import { SixFailure } from 'src/app/games/six/SixFailure';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
@@ -9,7 +9,7 @@ import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { SixComponent } from './six.component';
 
-describe('SixComponent', () => {
+fdescribe('SixComponent', () => {
     let componentTestUtils: ComponentTestUtils<SixComponent>;
 
     const _: number = Player.NONE.value;

@@ -17,6 +17,8 @@ import { JoueursDAOMock } from '../dao/joueurs/JoueursDAOMock';
 import { AuthenticationService, AuthUser } from '../services/authentication/AuthenticationService';
 import { MGPNode } from '../jscaip/mgp-node/MGPNode';
 import { GameWrapper } from '../components/wrapper-components/GameWrapper';
+import { Rules } from '../jscaip/Rules';
+import { Player } from '../jscaip/player/Player';
 
 class ActivatedRouteMock {
     public readonly snapshot: any;
@@ -230,3 +232,28 @@ export class ComponentTestUtils<T extends AbstractGameComponent<Move, GamePartSl
         return this.debugElement.query(By.css(elementName));
     }
 }
+
+export const expectFirstStateToWorthMoreThanSecond: (weakerState: GamePartSlice,
+                                                     weakMove: Move,
+                                                     strongerState: GamePartSlice,
+                                                     strongMove: Move,
+                                                     rules: Rules<Move, GamePartSlice, LegalityStatus>) => void =
+(weakerState: GamePartSlice,
+ weakMove: Move,
+ strongerState: GamePartSlice,
+ strongMove: Move,
+ rules: Rules<Move, GamePartSlice, LegalityStatus>) =>
+{
+    const weakValue: number = rules.getBoardValue(weakMove, weakerState);
+    const strongValue: number = rules.getBoardValue(strongMove, strongerState);
+    expect(weakValue).toBeLessThan(strongValue);
+};
+export const expectStateToBePreVictory: (state: GamePartSlice,
+                                         previousMove: Move,
+                                         player: Player,
+                                         rules: Rules<Move, GamePartSlice, LegalityStatus>) => void =
+(state: GamePartSlice, previousMove: Move, player: Player, rules: Rules<Move, GamePartSlice, LegalityStatus>) => {
+    const value: number = rules.getBoardValue(previousMove, state);
+    const expectedValue: number = player.getPreVictory();
+    expect(value).toBe(expectedValue);
+};

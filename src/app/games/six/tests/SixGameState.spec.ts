@@ -4,10 +4,10 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
-import { SixMove } from '../six-move/SixMove';
-import { MGPBoolean, SixGameState } from './SixGameState';
+import { SixMove } from '../SixMove';
+import { MGPBoolean, SixGameState } from '../SixGameState';
 
-describe('SixGameState', () => {
+fdescribe('SixGameState', () => {
 
     const _: number = Player.NONE.value;
     const O: number = Player.ZERO.value;

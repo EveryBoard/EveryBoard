@@ -65,6 +65,7 @@
                             mat-stroked-button>
                         Reprendre un coup
                     </button>
+                    {{ compo.rules.node.ownValue + '>' + compo.rules.node.hopedValue }}
                 </div>
                 <div class="inforow"
                      *ngIf="endGame === true">
