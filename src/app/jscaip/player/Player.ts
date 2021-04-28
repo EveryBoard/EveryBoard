@@ -1,7 +1,8 @@
 import { assert } from 'src/app/utils/utils/utils';
+import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
 import { NumberEncoder } from '../encoder';
 
-export class Player {
+export class Player implements ComparableObject {
     public static numberEncoder: NumberEncoder<Player> = NumberEncoder.ofN(2, (player: Player) => {
         return player.value;
     }, (encoded: number) => {
@@ -24,6 +25,9 @@ export class Player {
 
     public toString(): string {
         return 'Player ' + this.value;
+    }
+    public equals(other: Player): boolean {
+        return this === other;
     }
     public getScoreModifier(): number {
         switch (this.value) {
