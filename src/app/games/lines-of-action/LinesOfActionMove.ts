@@ -34,7 +34,7 @@ export class LinesOfActionMove extends MoveCoordToCoord {
     public encode(): JSONValue {
         return LinesOfActionMove.encoder.encode(this);
     }
-    public decode(encodedMove: number): LinesOfActionMove {
+    public decode(encodedMove: JSONValue): LinesOfActionMove {
         return LinesOfActionMove.encoder.decode(encodedMove);
     }
 

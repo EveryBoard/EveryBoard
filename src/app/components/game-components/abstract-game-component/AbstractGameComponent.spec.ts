@@ -70,6 +70,7 @@ describe('AbstractGameComponent', () => {
             Gipf: { onClick: [0, 0] },
             Go: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
+            LinesOfAction: { onClick: [0, 0] },
             //
             P4: { onClick: [0, 0] },
             Pylos: { onClick: [0, 0] },

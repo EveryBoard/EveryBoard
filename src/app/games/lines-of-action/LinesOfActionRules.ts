@@ -17,13 +17,40 @@ export class LinesOfActionFailure {
          au nombre de pièces présente sur la ligne de votre déplacement.`
     public static CANNOT_JUMP_OVER_ENEMY: string = `Vous ne pouvez pas passer au dessus d'une pièce ennemie.`;
     public static BUSY_TARGET: string = `Votre case d'arrivée doit être vide ou contenir une pièce ennemie.`;
+    public static NOT_YOUR_PIECE: string = `Veuillez sélectionner une de vos propres pièces.`;
+    public static PIECE_CANNOT_MOVE: string = `Cette pièce n'a aucun mouvement possible, choisissez-en une autre.`;
+    public static INVALID_DIRECTION: string = `Un mouvement dois se faire selon une direction orthogonale ou diagonale.`;
 }
 
-export abstract class LinesOfActionNode extends MGPNode<LinesOfActionRules, LinesOfActionMove, LinesOfActionState, LegalityStatus> {}
+export class LinesOfActionNode extends MGPNode<LinesOfActionRules, LinesOfActionMove, LinesOfActionState, LegalityStatus> {}
 
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState, LegalityStatus> {
     public getListMoves(node: LinesOfActionNode): MGPMap<LinesOfActionMove, LinesOfActionState> {
-        throw new Error('Method not implemented.');
+        return this.getListMovesFromState(node.gamePartSlice);
+    }
+    public getListMovesFromState(state: LinesOfActionState): MGPMap<LinesOfActionMove, LinesOfActionState> {
+        const map: MGPMap<LinesOfActionMove, LinesOfActionState> = new MGPMap();
+
+        if (this.getVictory(state).isPresent()) {
+            return map;
+        }
+
+        for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
+            for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
+                const coord: Coord = new Coord(x, y);
+                const piece: number = state.getAt(coord);
+                if (piece !== Player.NONE.value) {
+                    for (const target of this.possibleTargets(state, coord)) {
+                        const move: LinesOfActionMove = new LinesOfActionMove(coord, target);
+                        const status: LegalityStatus = this.isLegal(move, state);
+                        // This move is legal by construction
+                        const newState: LinesOfActionState = this.applyLegalMove(move, state, status).resultingSlice;
+                        map.set(move, newState);
+                    }
+                }
+            }
+        }
+        return map;
     }
     public getBoardValue(move: LinesOfActionMove, state: LinesOfActionState): number {
         const [zero, one]: [number, number] = this.getNumberOfGroups(state);
@@ -41,7 +68,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         const numGroups: [number, number] = [0, 0];
         let highestGroup: number = 0;
         for (let y: number = 0; y < LinesOfActionState.SIZE; y++) {
-            for (let x: number = 0; y < LinesOfActionState.SIZE; y++) {
+            for (let x: number = 0; x < LinesOfActionState.SIZE; x++) {
                 if (groups[y][x] === -1) {
                     const content: number = state.getAt(new Coord(x, y));
                     if (content !== Player.NONE.value) {
@@ -57,17 +84,20 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
     private markGroupStartingAt(state: LinesOfActionState, groups: number[][], pos: Coord, id: number): void {
         const stack: Coord[] = [pos];
         const player: number = state.getAt(pos);
-        while (stack !== []) {
+        while (stack.length > 0) {
             const coord: Coord = stack.pop();
             if (groups[coord.y][coord.x] === -1) {
                 const content: number = state.getAt(coord);
                 if (content === player) {
                     groups[coord.y][coord.x] = id;
+                    for (const dir of Direction.DIRECTIONS) {
+                        const next: Coord = coord.getNext(dir);
+                        if (LinesOfActionState.isOnBoard(next)) {
+                            stack.push(next);
+                        }
+                    }
                 } else if (content === Player.NONE.value) {
                     groups[coord.y][coord.x] = 0;
-                }
-                for (const dir of Direction.DIRECTIONS) {
-                    stack.push(pos.getNext(dir));
                 }
             }
         }
@@ -84,6 +114,9 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         };
     }
     public isLegal(move: LinesOfActionMove, state: LinesOfActionState): LegalityStatus {
+        if (state.getAt(move.coord) !== state.getCurrentPlayer().value) {
+            return { legal: MGPValidation.failure(LinesOfActionFailure.NOT_YOUR_PIECE) };
+        }
         if (move.length() !== this.numberOfPiecesOnLine(state, move.coord, move.direction)) {
             return { legal: MGPValidation.failure(LinesOfActionFailure.INVALID_MOVE_LENGTH) };
         }
@@ -94,6 +127,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         if (state.getAt(move.end) === state.getCurrentPlayer().value) {
             return { legal: MGPValidation.failure(LinesOfActionFailure.BUSY_TARGET) };
         }
+        return { legal: MGPValidation.SUCCESS };
     }
     private numberOfPiecesOnLine(state: LinesOfActionState, pos: Coord, dir: Direction): number {
         let count: number = 0;
@@ -105,28 +139,33 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         return count;
     }
     private getLineCoords(pos: Coord, dir: Direction): Coord[] {
-        let current: Coord = this.getEntrance(pos, dir);
+        const entranceAndDir: [Coord, Direction] = this.getEntranceAndForwardDirection(pos, dir);
+        let current: Coord = entranceAndDir[0];
+        const forwardDirection: Direction = entranceAndDir[1];
         const coords: Coord[] = [];
         while (LinesOfActionState.isOnBoard(current)) {
             coords.push(current);
-            current = current.getNext(dir);
+            current = current.getNext(forwardDirection);
         }
         return coords;
     }
-    private getEntrance(pos: Coord, dir: Direction): Coord {
+    private getEntranceAndForwardDirection(pos: Coord, dir: Direction): [Coord, Direction] {
         switch (dir) {
             case Direction.UP:
             case Direction.DOWN:
-                return new Coord(pos.x, 0);
+                return [new Coord(pos.x, 0), Direction.DOWN];
             case Direction.LEFT:
             case Direction.RIGHT:
-                return new Coord(0, pos.y);
+                return [new Coord(0, pos.y), Direction.RIGHT];
             case Direction.UP_RIGHT:
             case Direction.DOWN_LEFT:
-                return new Coord(pos.x - Math.min(pos.x, pos.y), pos.y - Math.min(pos.x, pos.y));
+                return [new Coord(Math.max(0, (pos.x + pos.y) - 7), Math.min(7, pos.x + pos.y)), Direction.UP_RIGHT];
             case Direction.UP_LEFT:
             case Direction.DOWN_RIGHT:
-                return new Coord(Math.min(7, pos.x + pos.y), Math.max(0, (pos.x + pos.y) - 7));
+                return [
+                    new Coord(pos.x - Math.min(pos.x, pos.y), pos.y - Math.min(pos.x, pos.y)),
+                    Direction.DOWN_RIGHT,
+                ];
         }
     }
     public getVictory(state: LinesOfActionState): MGPOptional<Player> {
@@ -141,5 +180,20 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         } else {
             return MGPOptional.empty();
         }
+    }
+    public possibleTargets(state: LinesOfActionState, start: Coord): Coord[] {
+        const targets: Coord[] = [];
+        for (const dir of Direction.DIRECTIONS) {
+            const numberOfPiecesOnLine: number = this.numberOfPiecesOnLine(state, start, dir);
+            const target: Coord = start.getNext(dir, numberOfPiecesOnLine);
+            if (LinesOfActionState.isOnBoard(target)) {
+                const move: LinesOfActionMove = new LinesOfActionMove(start, target);
+                const legality: LegalityStatus = this.isLegal(move, state);
+                if (legality.legal.isSuccess()) {
+                    targets.push(target);
+                }
+            }
+        }
+        return targets;
     }
 }

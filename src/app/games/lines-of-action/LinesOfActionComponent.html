@@ -1,0 +1,34 @@
+<svg  xmlns="http://www.w3.org/2000/svg"
+      width="100%" height="auto"
+      viewBox="0 0 800 800"
+      preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of board; index as y;">
+        <g *ngFor="let caseContent of line; index as x;">
+            <g id="click_{{ x }}_{{ y }}"
+               (click)="onClick(x, y)">
+                <!-- Background -->
+                <rect [attr.x]="x * CASE_SIZE"
+                      [attr.y]="y * CASE_SIZE"
+                      [attr.width]="CASE_SIZE"
+                      [attr.height]="CASE_SIZE"
+                      [ngClass]="getCaseClasses(x, y)"
+                      class="base" />
+                <!-- Piece -->
+                <circle *ngIf="caseContent !== EMPTY"
+                        [attr.cx]="CASE_SIZE/2 + (x * CASE_SIZE)"
+                        [attr.cy]="CASE_SIZE/2 + (y * CASE_SIZE)"
+                        [ngClass]="getPieceClasses(x, y, caseContent)"
+                        r="40"
+                        class="base"/>
+            </g>
+        </g>
+    </g>
+    <g *ngFor="let coord of targets">
+        <rect [attr.x]="coord.x * CASE_SIZE + (CASE_SIZE/2 - INDICATOR_SIZE/2)"
+              [attr.y]="coord.y * CASE_SIZE + (CASE_SIZE/2 - INDICATOR_SIZE/2)"
+              [attr.width]="INDICATOR_SIZE"
+              [attr.height]="INDICATOR_SIZE"
+              (click)="onClick(coord.x, coord.y)"
+              class="indicator" />
+    </g>
+</svg>
