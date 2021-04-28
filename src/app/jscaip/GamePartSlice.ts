@@ -1,8 +1,9 @@
 import { Coord } from './coord/Coord';
 import { Player } from './player/Player';
 import { ArrayUtils, NumberTable } from '../utils/collection-lib/array-utils/ArrayUtils';
+import { ComparableObject } from '../utils/collection-lib/Comparable';
 
-export abstract class GamePartSlice {
+export abstract class GamePartSlice implements ComparableObject {
     public constructor(
         public readonly board: NumberTable,
         public readonly turn: number) {
@@ -33,6 +34,10 @@ export abstract class GamePartSlice {
     public getCurrentEnnemy(): Player {
         return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;
     }
+    public equals(other: GamePartSlice): boolean {
+        throw new Error('Method uneeded yet' + other.toString());
+    }
+
     public toString(): string {
         return '(t:'+this.turn+') = ' + JSON.stringify(this.board);
     }

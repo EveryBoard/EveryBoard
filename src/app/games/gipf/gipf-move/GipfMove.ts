@@ -114,12 +114,7 @@ export class GipfPlacement {
     }
     public equals(other: GipfPlacement): boolean {
         if (!this.coord.equals(other.coord)) return false;
-        const cmpDir: (x: HexaDirection, y: HexaDirection) => boolean =
-            (x: HexaDirection, y: HexaDirection): boolean => {
-                return x === y;
-            };
-        if (this.direction.equals(other.direction, cmpDir) === false) return false;
-        return true;
+        return this.direction.equals(other.direction);
     }
 }
 

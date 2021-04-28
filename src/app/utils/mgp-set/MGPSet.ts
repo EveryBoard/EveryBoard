@@ -1,7 +1,7 @@
-import { Comparable } from '../collection-lib/Comparable';
+import { Comparable, comparableEquals, ComparableObject } from '../collection-lib/Comparable';
 import { Sets } from '../collection-lib/sets/Sets';
 
-export class MGPSet<T extends Comparable> implements Comparable {
+export class MGPSet<T extends Comparable> implements ComparableObject {
 
     constructor(private values?: T[]) {
         if (values == null) {
@@ -27,14 +27,14 @@ export class MGPSet<T extends Comparable> implements Comparable {
     public count(element: T): number {
         let count: number = 0;
         for (let i: number = 0; i < this.size(); i++) {
-            if (this.values[i].equals(element)) {
+            if (comparableEquals(this.values[i], element)) {
                 count++;
             }
         }
         return count;
     }
     public toString(): string {
-        throw new Error('Method not implemented.');
+        throw new Error('MGPSets.toString Method not implemented.');
     }
     public add(element: T): boolean {
         if (this.contains(element)) {
@@ -46,7 +46,7 @@ export class MGPSet<T extends Comparable> implements Comparable {
     }
     public contains(element: T): boolean {
         for (const value of this.values) {
-            if (value.equals(element)) {
+            if (comparableEquals(value, element)) {
                 return true;
             }
         }

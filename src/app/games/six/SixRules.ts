@@ -7,7 +7,7 @@ import { MGPBiMap, MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { MGPBoolean, SixGameState } from './SixGameState';
+import { SixGameState } from './SixGameState';
 import { SixMove } from './SixMove';
 import { SixLegalityStatus } from './SixLegalityStatus';
 import { SixFailure } from './SixFailure';
@@ -124,10 +124,10 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
     public getLineInfo(lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
         display(this.VERBOSE, { called: 'SixRules.getListVictory', lastDrop, state, boardInfo });
         const LAST_ENNEMY: Player = state.getCurrentPlayer();
-        const coordsOfDirection: MGPMap<HexaDirection, Coord[]> = new MGPMap<HexaDirection, Coord[]>();
-        coordsOfDirection.set(HexaDirection.UP, [lastDrop]);
-        coordsOfDirection.set(HexaDirection.UP_RIGHT, [lastDrop]);
-        coordsOfDirection.set(HexaDirection.UP_LEFT, [lastDrop]);
+        const coordsOfDirection: MGPMap<HexaDirection, MGPSet<Coord>> = new MGPMap<HexaDirection, MGPSet<Coord>>();
+        coordsOfDirection.set(HexaDirection.UP, new MGPSet([lastDrop]));
+        coordsOfDirection.set(HexaDirection.UP_RIGHT, new MGPSet([lastDrop]));
+        coordsOfDirection.set(HexaDirection.UP_LEFT, new MGPSet([lastDrop]));
         let sum: number = boardInfo.sum;
         let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
         for (const dir of HexaDirection.factory.all) {
@@ -147,11 +147,11 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
                         lastEmpty = testCoord;
                     } else {
                         subSum++;
-                        const aligned: Coord[] = this.addCoordForDirection(coordsOfDirection, dir, testCoord);
-                        if (aligned.length === 6) {
+                        const aligned: MGPSet<Coord> = this.addCoordForDirection(coordsOfDirection, dir, testCoord);
+                        if (aligned.size() === 6) {
                             return {
                                 status: SCORE.VICTORY,
-                                victory: aligned,
+                                victory: aligned.toArray(),
                                 preVictory,
                                 sum: null,
                             };
@@ -184,9 +184,9 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
             sum,
         };
     }
-    private addCoordForDirection(coordsOfDirection: MGPMap<HexaDirection, Coord[]>,
+    private addCoordForDirection(coordsOfDirection: MGPMap<HexaDirection, MGPSet<Coord>>,
                                  dir: HexaDirection,
-                                 coord: Coord): Coord[]
+                                 coord: Coord): MGPSet<Coord>
     {
         let key: HexaDirection;
         if (coordsOfDirection.containsKey(dir)) {
@@ -194,8 +194,8 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
         } else {
             key = dir.getOpposite();
         }
-        const aligned: Coord[] = coordsOfDirection.get(key).get();
-        aligned.push(coord);
+        const aligned: MGPSet<Coord> = coordsOfDirection.get(key).get();
+        aligned.add(coord);
         coordsOfDirection.replace(key, aligned);
         return aligned;
     }
@@ -438,7 +438,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
             case state.getCurrentEnnemy():
                 return { legal: MGPValidation.failure('Cannot move ennemy piece!'), kept: null };
         }
-        const piecesAfterDeplacement: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(state, move);
+        const piecesAfterDeplacement: MGPBiMap<Coord, boolean> = SixGameState.deplacePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
             SixGameState.getGroups(piecesAfterDeplacement, move.start.get());
         if (this.isSplit(groupsAfterMove)) {
@@ -482,7 +482,7 @@ export class SixRules extends Rules<SixMove, SixGameState, SixLegalityStatus> {
     }
     public moveKeepBiggerGroup(keep: MGPOptional<Coord>,
                                biggerGroups: MGPSet<MGPSet<Coord>>,
-                               pieces: MGPBiMap<Coord, MGPBoolean>): SixLegalityStatus {
+                               pieces: MGPBiMap<Coord, boolean>): SixLegalityStatus {
         if (keep.isAbsent()) {
             return {
                 legal: MGPValidation.failure(SixFailure.MUST_CUT),

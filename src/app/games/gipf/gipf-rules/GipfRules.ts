@@ -169,16 +169,16 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         const player: Player = slice.getCurrentPlayer();
         const captures: GipfCapture[] = [];
         this.getLinePortionsWithFourPiecesOfPlayer(slice, player)
-            .forEach((linePortion: [Coord, Coord, HexaDirection]) => {
+            .forEach((linePortion: { 0: Coord, 1: Coord, 2: HexaDirection}) => {
                 captures.push(this.getCapturable(slice, linePortion));
             });
         return captures;
     }
     private getLinePortionsWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player):
-    ReadonlyArray<[Coord, Coord, HexaDirection]> {
-        const linePortions: [Coord, Coord, HexaDirection][] = [];
+    ReadonlyArray<{ 0: Coord, 1: Coord, 2: HexaDirection}> {
+        const linePortions: { 0: Coord, 1: Coord, 2: HexaDirection}[] = [];
         slice.hexaBoard.allLines().forEach((line: HexaLine) => {
-            const linePortion: MGPOptional<[Coord, Coord, HexaDirection]> =
+            const linePortion: MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
                 this.getLinePortionWithFourPiecesOfPlayer(slice, player, line);
             if (linePortion.isPresent()) {
                 linePortions.push(linePortion.get());
@@ -187,7 +187,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         return linePortions;
     }
     private getLinePortionWithFourPiecesOfPlayer(slice: GipfPartSlice, player: Player, line: HexaLine):
-    MGPOptional<[Coord, Coord, HexaDirection]> {
+    MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}> {
         let consecutives: number = 0;
         const coord: Coord = line.getEntrance(slice.hexaBoard);
         const dir: HexaDirection = line.getDirection();
@@ -202,12 +202,12 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
                 consecutives = 0;
             }
             if (consecutives === 4) {
-                return MGPOptional.of([start, cur, dir]);
+                return MGPOptional.of({ 0: start, 1: cur, 2: dir });
             }
         }
         return MGPOptional.empty();
     }
-    private getCapturable(slice: GipfPartSlice, linePortion: [Coord, Coord, HexaDirection]): GipfCapture {
+    private getCapturable(slice: GipfPartSlice, linePortion: { 0: Coord, 1: Coord, 2: HexaDirection}): GipfCapture {
         // Go into each direction and continue until there are pieces
         const capturable: Coord[] = [];
         const start: Coord = linePortion[0];
@@ -409,13 +409,13 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
     public captureValidity(slice: GipfPartSlice, capture: GipfCapture): MGPValidation {
         const player: Player = slice.getCurrentPlayer();
-        const linePortionOpt: MGPOptional<[Coord, Coord, HexaDirection]> =
+        const linePortionOpt: MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
             this.getLinePortionWithFourPiecesOfPlayer(slice, player, capture.getLine());
         if (linePortionOpt.isAbsent()) {
             return MGPValidation.failure(GipfFailure.CAPTURE_MUST_BE_ALIGNED);
         }
 
-        const linePortion: [Coord, Coord, HexaDirection] = linePortionOpt.get();
+        const linePortion: { 0: Coord, 1: Coord, 2: HexaDirection} = linePortionOpt.get();
 
         const capturable: GipfCapture = this.getCapturable(slice, linePortion);
         if (capturable.equals(capture)) {
@@ -426,7 +426,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     }
     private noMoreCapturesValidity(slice: GipfPartSlice): MGPValidation {
         const player: Player = slice.getCurrentPlayer();
-        const linePortions: ReadonlyArray<[Coord, Coord, HexaDirection]> =
+        const linePortions: ReadonlyArray<{ 0: Coord, 1: Coord, 2: HexaDirection}> =
             this.getLinePortionsWithFourPiecesOfPlayer(slice, player);
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;

@@ -66,7 +66,7 @@ export class SiamMove extends MoveCoord {
     public equals(o: SiamMove): boolean {
         if (this === o) return true;
         if (!this.coord.equals(o.coord)) return false;
-        if (this.moveDirection.equals(o.moveDirection, (a, b) => a === b) === false) return false;
+        if (this.moveDirection.equals(o.moveDirection) === false) return false;
         return this.landingOrientation === o.landingOrientation;
     }
     public toString(): string {

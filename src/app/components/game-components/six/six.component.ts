@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MGPBoolean, SixGameState } from 'src/app/games/six/SixGameState';
+import { SixGameState } from 'src/app/games/six/SixGameState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { SixNode, SixRules } from 'src/app/games/six/SixRules';
@@ -230,7 +230,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     }
     private showCuttable(): void {
         const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, this.chosenLanding);
-        const piecesAfterDeplacement: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(this.state, deplacement);
+        const piecesAfterDeplacement: MGPBiMap<Coord, boolean> = SixGameState.deplacePiece(this.state, deplacement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
             SixGameState.getGroups(piecesAfterDeplacement, deplacement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = this.rules.getBiggerGroups(groupsAfterMove);

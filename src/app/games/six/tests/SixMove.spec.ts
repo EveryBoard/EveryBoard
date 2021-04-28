@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { SixMove } from '../SixMove';
 
-fdescribe('SixMove', () => {
+describe('SixMove', () => {
     it('Should allow dropping', () => {
         const move: SixMove = SixMove.fromDrop(new Coord(0, 0));
         expect(move).toBeTruthy();

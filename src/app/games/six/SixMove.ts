@@ -1,7 +1,6 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Encoder } from 'src/app/jscaip/encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { ComparableEquals } from 'src/app/utils/collection-lib/Comparable';
 import { JSONObject, JSONValue } from 'src/app/utils/utils/utils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
@@ -79,10 +78,10 @@ export class SixMove extends Move {
         if (this.landing.equals(o.landing) === false) {
             return false;
         }
-        if (this.start.equals(o.start, ComparableEquals) === false) {
+        if (this.start.equals(o.start) === false) {
             return false;
         }
-        return this.keep.equals(o.keep, ComparableEquals);
+        return this.keep.equals(o.keep);
     }
     public encode(): JSONValue {
         return SixMove.encoder.encode(this);

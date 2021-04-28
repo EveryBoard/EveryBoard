@@ -1,5 +1,5 @@
 import { Player } from 'src/app/jscaip/player/Player';
-import { assert } from 'src/app/utils/utils/utils';
+import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
 
 export enum Size {
     NONE = 0,
@@ -8,7 +8,8 @@ export enum Size {
     BIG = 3,
 }
 
-export class EncapsulePiece {
+export class EncapsulePiece implements ComparableObject {
+
     public static readonly SMALL_BLACK: EncapsulePiece = new EncapsulePiece(0);
     public static readonly SMALL_WHITE: EncapsulePiece = new EncapsulePiece(1);
     public static readonly MEDIUM_BLACK: EncapsulePiece = new EncapsulePiece(2);
@@ -72,6 +73,9 @@ export class EncapsulePiece {
     }
     public belongsTo(player: Player): boolean {
         return this.getPlayer() === player;
+    }
+    public equals(other: EncapsulePiece): boolean {
+        return this === other;
     }
     public toString(): string {
         switch (this) {

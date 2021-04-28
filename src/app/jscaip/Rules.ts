@@ -60,13 +60,13 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
             return false;
         } else display(LOCAL_VERBOSE, 'Rules.choose: Move is legal, let\'s apply it');
 
-        const result: {resultingMove: Move, resultingSlice: GamePartSlice} = MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
+        const result: {resultingMove: Move, resultingSlice: GamePartSlice} =
+            MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
         const boardValue: number = MGPNode.ruler.getBoardValue(result.resultingMove, result.resultingSlice);
-        const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(
-            this.node,
-            result.resultingMove as M,
-            result.resultingSlice as S,
-            boardValue);
+        const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(this.node,
+                                                                  result.resultingMove as M,
+                                                                  result.resultingSlice as S,
+                                                                  boardValue);
         this.node = son;
         return true;
     };

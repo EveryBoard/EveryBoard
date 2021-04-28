@@ -8,7 +8,7 @@ import { SixLegalityStatus } from '../SixLegalityStatus';
 import { SixFailure } from '../SixFailure';
 import { SixRules } from '../SixRules';
 
-fdescribe('SixRules', () => {
+describe('SixRules', () => {
     let rules: SixRules;
 
     const _: number = Player.NONE.value;
@@ -123,7 +123,7 @@ fdescribe('SixRules', () => {
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.getReason()).toBe('Cannot move empty coord!');
         });
-        it('Should refuse dropping piece where its only neighboor is herself last turn', () => {
+        xit('Should refuse dropping piece where its only neighboor is herself last turn', () => {
             expect('TODO').toBe('DONE');
         });
     });

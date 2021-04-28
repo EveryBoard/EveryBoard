@@ -1,5 +1,4 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
 import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock';
 import { IJoueurId, IJoueur, PIJoueur } from 'src/app/domain/iuser';
@@ -11,13 +10,13 @@ type JoueursOS = ObservableSubject<IJoueurId>
 export class JoueursDAOMock extends FirebaseFirestoreDAOMock<IJoueur, PIJoueur> {
     public static VERBOSE: boolean = false;
 
-    private static joueursDB: MGPMap<MGPStr, JoueursOS>;
+    private static joueursDB: MGPMap<string, JoueursOS>;
 
     public constructor() {
         super('JoueursDAOMock', JoueursDAOMock.VERBOSE);
         display(this.VERBOSE, 'JoueursDAOMock.constructor');
     }
-    public getStaticDB(): MGPMap<MGPStr, JoueursOS> {
+    public getStaticDB(): MGPMap<string, JoueursOS> {
         return JoueursDAOMock.joueursDB;
     }
     public resetStaticDB(): void {
