@@ -3,7 +3,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
 import { GameService } from 'src/app/services/game/GameService';
 
 @Component({
@@ -30,7 +30,7 @@ export class OnlineGameCreationComponent implements OnInit, OnDestroy {
     }
     public ngOnInit(): void {
         this.userNameSub = this.authenticationService.getJoueurObs()
-            .subscribe((joueur: { pseudo: string, verified: boolean }) => {
+            .subscribe((joueur: AuthUser) => {
                 if (joueur == null) this.userName = null;
                 else this.userName = joueur.pseudo;
             });

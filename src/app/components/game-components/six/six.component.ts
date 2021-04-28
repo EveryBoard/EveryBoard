@@ -1,9 +1,9 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MGPBoolean, SixGameState } from 'src/app/games/six/six-game-state/SixGameState';
-import { SixMove } from 'src/app/games/six/six-move/SixMove';
-import { SixFailure } from 'src/app/games/six/six-rules/SixFailure';
-import { SixNode, SixRules } from 'src/app/games/six/six-rules/SixRules';
+import { SixGameState } from 'src/app/games/six/SixGameState';
+import { SixMove } from 'src/app/games/six/SixMove';
+import { SixFailure } from 'src/app/games/six/SixFailure';
+import { SixNode, SixRules } from 'src/app/games/six/SixRules';
 import { SixLegalityStatus } from 'src/app/games/six/SixLegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
@@ -105,7 +105,8 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             this.leftCoord = null;
         }
         if (this.rules.node.isEndGame()) {
-            this.victoryCoords = this.rules.getShapeVictory(this.lastDrop, this.rules.node.gamePartSlice);
+            this.victoryCoords = this.rules.getShapeInfo(this.lastDrop,
+                                                         this.rules.node.gamePartSlice).victory;
         }
         this.disconnecteds = this.getDisconnected();
     }
@@ -229,7 +230,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     }
     private showCuttable(): void {
         const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, this.chosenLanding);
-        const piecesAfterDeplacement: MGPBiMap<Coord, MGPBoolean> = SixGameState.deplacePiece(this.state, deplacement);
+        const piecesAfterDeplacement: MGPBiMap<Coord, boolean> = SixGameState.deplacePiece(this.state, deplacement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
             SixGameState.getGroups(piecesAfterDeplacement, deplacement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = this.rules.getBiggerGroups(groupsAfterMove);

@@ -32,6 +32,9 @@ export class Player {
             default: throw new Error('No score modifier');
         }
     }
+    public getPreVictory(): number {
+        return this.getVictoryValue() - this.getScoreModifier();
+    }
     public getDefeatValue(): number {
         assert(this !== Player.NONE, 'Should not call getDefeatValue on Player.NONE!');
         if (this === Player.ZERO) {

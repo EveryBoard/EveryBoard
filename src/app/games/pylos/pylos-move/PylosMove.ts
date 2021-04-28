@@ -104,22 +104,19 @@ export class PylosMove extends Move {
                ')';
     }
     public equals(o: PylosMove): boolean {
-        const coordComparator: (a: PylosCoord, b: PylosCoord) => boolean =
-            (a: PylosCoord, b: PylosCoord) => a.equals(b);
         if (o === this) return true;
-        if (!o.startingCoord.equals(this.startingCoord, coordComparator)) return false;
+        if (!o.startingCoord.equals(this.startingCoord)) return false;
         if (!this.landingCoord.equals(o.landingCoord)) return false;
         const firstEquals: boolean =
-            o.firstCapture.equals(this.firstCapture, coordComparator);
+            o.firstCapture.equals(this.firstCapture);
         const secondEquals: boolean =
-            o.secondCapture.equals(this.secondCapture, coordComparator);
+            o.secondCapture.equals(this.secondCapture);
         const firstCrossedEquals: boolean =
-            o.firstCapture.equals(this.secondCapture, coordComparator);
+            o.firstCapture.equals(this.secondCapture);
         const secondCrossedEquals: boolean =
-            o.secondCapture.equals(this.firstCapture, coordComparator);
+            o.secondCapture.equals(this.firstCapture);
         if (firstEquals && secondEquals) return true;
-        if (firstCrossedEquals && secondCrossedEquals) return true;
-        return false;
+        return firstCrossedEquals && secondCrossedEquals;
     }
     public encode(): number {
         // Encoded as second Capture then first then startingCoord then landingCoord

@@ -1,8 +1,9 @@
 import { Encoder } from 'src/app/jscaip/encoder';
+import { Comparable, comparableEquals } from '../collection-lib/Comparable';
 import { JSONValue } from '../utils/utils';
 
-export class MGPOptional<T> {
-    public static encoder<T>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
+export class MGPOptional<T extends Comparable> {
+    public static encoder<T extends Comparable>(encoderT: Encoder<T>): Encoder<MGPOptional<T>> {
         return new class extends Encoder<MGPOptional<T>> {
             public encode(opt: MGPOptional<T>): JSONValue {
                 if (opt.isPresent()) {
@@ -20,15 +21,15 @@ export class MGPOptional<T> {
             }
         };
     }
-    public static of<T>(value: T): MGPOptional<T> {
+    public static of<T extends Comparable>(value: T): MGPOptional<T> {
         if (value == null) throw new Error('Optional cannot be create with empty value, use MGPOptional.empty instead');
         return new MGPOptional(value);
     }
-    public static ofNullable<T>(value: T): MGPOptional<T> {
+    public static ofNullable<T extends Comparable>(value: T): MGPOptional<T> {
         if (value == null) return MGPOptional.empty();
         return MGPOptional.of(value);
     }
-    public static empty<T>(): MGPOptional<T> {
+    public static empty<T extends Comparable>(): MGPOptional<T> {
         return new MGPOptional(null);
     }
     private constructor(private readonly value: T) {}
@@ -49,14 +50,13 @@ export class MGPOptional<T> {
     public getOrNull(): T {
         return this.value;
     }
-    // TODO: instead of having the comparator argument, require T to implement compare
-    public equals(t: MGPOptional<T>, comparator: (a: T, b: T) => boolean): boolean {
+    public equals(other: MGPOptional<T>): boolean {
         if (this.isAbsent()) {
-            return t.isAbsent();
+            return other.isAbsent();
         }
-        if (t.isAbsent()) {
+        if (other.isAbsent()) {
             return false;
         }
-        return comparator(this.value, t.value);
+        return comparableEquals(this.value, other.value);
     }
 }

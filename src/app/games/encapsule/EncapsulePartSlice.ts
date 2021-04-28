@@ -5,6 +5,7 @@ import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/Arra
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { assert } from 'src/app/utils/utils/utils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
+import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
 
 export class EncapsulePartSlice extends GamePartSlice {
     private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;
@@ -55,7 +56,8 @@ export class EncapsulePartSlice extends GamePartSlice {
     }
 }
 
-export class EncapsuleCase {
+export class EncapsuleCase implements ComparableObject {
+
     public static readonly EMPTY: EncapsuleCase = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE);
 
     public readonly small: Player;
@@ -64,6 +66,19 @@ export class EncapsuleCase {
 
     public readonly big: Player;
 
+    public static decode(encapsuleCase: number): EncapsuleCase {
+        assert(encapsuleCase % 1 === 0, 'EncapsuleCase must be encoded as integer: ' + encapsuleCase);
+        assert(encapsuleCase >= 0, 'To small representation for EncapsuleCase: ' + encapsuleCase);
+        assert(encapsuleCase <= 26, 'To big representation for EncapsuleCase: ' + encapsuleCase);
+        const small: Player = Player.of(encapsuleCase%3);
+        encapsuleCase -= small.value;
+        encapsuleCase/=3;
+        const medium: Player = Player.of(encapsuleCase%3);
+        encapsuleCase -= medium.value;
+        encapsuleCase/=3;
+        const big: Player = Player.of(encapsuleCase);
+        return new EncapsuleCase(small, medium, big);
+    }
     constructor(small: Player, medium: Player, big: Player) {
         if (small == null) throw new Error('Small cannot be null');
         if (medium == null) throw new Error('Medium cannot be null');
@@ -74,10 +89,6 @@ export class EncapsuleCase {
     }
     public isEmpty(): boolean {
         return this.small === Player.NONE && this.medium === Player.NONE && this.big === Player.NONE;
-    }
-    public toString(): string {
-        const pieceNames: string[] = this.toOrderedPieceNames();
-        return '(' + pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';
     }
     public toList(): EncapsulePiece[] {
         const l: EncapsulePiece[] = [];
@@ -151,20 +162,14 @@ export class EncapsuleCase {
                this.medium.value*3 +
                this.big.value*9;
     }
-    public static decode(encapsuleCase: number): EncapsuleCase {
-        assert(encapsuleCase%1 === 0, 'EncapsuleCase must be encoded as integer: ' + encapsuleCase);
-        assert(encapsuleCase >= 0, 'To small representation for EncapsuleCase: ' + encapsuleCase);
-        assert(encapsuleCase <= 26, 'To big representation for EncapsuleCase: ' + encapsuleCase);
-        const small: Player = Player.of(encapsuleCase%3);
-        encapsuleCase -= small.value;
-        encapsuleCase/=3;
-        const medium: Player = Player.of(encapsuleCase%3);
-        encapsuleCase -= medium.value;
-        encapsuleCase/=3;
-        const big: Player = Player.of(encapsuleCase);
-        return new EncapsuleCase(small, medium, big);
-    }
     public belongsTo(player: Player): boolean {
         return this.getBiggest().getPlayer() === player;
+    }
+    public equals(o: EncapsuleCase): boolean {
+        throw new Error('EncapsuleCase.equals is needed! Blame the dev!' + o.toString());
+    }
+    public toString(): string {
+        const pieceNames: string[] = this.toOrderedPieceNames();
+        return '(' + pieceNames[0] + ', ' + pieceNames[1] + ', ' + pieceNames[2] + ')';
     }
 }

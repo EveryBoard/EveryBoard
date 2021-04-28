@@ -30,7 +30,7 @@ export class QuartoHasher {
         let quartoHasherInfos: QuartoHashInfo[] = QuartoHasher.coordDirs.map((coordDir: CoordDir) => {
             return {
                 coordDir,
-                firstPiece: MGPOptional.empty()
+                firstPiece: MGPOptional.empty(),
             };
         });
         let level: number = 0;
@@ -43,7 +43,7 @@ export class QuartoHasher {
     public static filterSubLevel(
         board: NumberTable,
         depth: number,
-        quartoHashInfos: QuartoHashInfo[]
+        quartoHashInfos: QuartoHashInfo[],
     ): QuartoHashInfo[]
     {
         let remainingHashInfos: QuartoHashInfo[] = [];

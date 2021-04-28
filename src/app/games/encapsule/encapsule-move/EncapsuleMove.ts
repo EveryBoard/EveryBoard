@@ -1,7 +1,6 @@
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { ComparableEquals, StrictEquals } from 'src/app/utils/collection-lib/Comparable';
 import { EncapsulePiece } from '../encapsule-piece/EncapsulePiece';
 
 export class EncapsuleMove extends Move {
@@ -83,9 +82,8 @@ export class EncapsuleMove extends Move {
     public equals(o: EncapsuleMove): boolean {
         if (this === o) return true;
         if (o.landingCoord.equals(this.landingCoord) === false) return false;
-        if (this.startingCoord.equals(o.startingCoord, ComparableEquals) === false) return false;
-        if (this.piece.equals(o.piece, StrictEquals) === false) return false;
-        return true;
+        if (this.startingCoord.equals(o.startingCoord) === false) return false;
+        return this.piece.equals(o.piece);
     }
     public toString(): string {
         if (this.isDropping()) {

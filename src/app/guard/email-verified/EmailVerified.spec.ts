@@ -4,7 +4,7 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { of } from 'rxjs';
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 
 class RouterMock {
     public async navigate(to: string[]): Promise<boolean> {
@@ -31,41 +31,25 @@ describe('EmailVerified', () => {
     it('should create', () => {
         expect(guard).toBeTruthy();
     });
-    it('should move unconnected user to login page and refuse them', () => {
+    it('should move unconnected user to login page and refuse them', async() => {
         authService.getJoueurObs = () => of(AuthenticationService.NOT_CONNECTED);
         spyOn(router, 'navigate');
 
-        let observableEnded: boolean;
-        guard.canActivate().subscribe((canActivate: boolean) => {
-            expect(canActivate).toBeFalse();
-            observableEnded = true;
-        });
+        expect(await guard.canActivate()).toBeFalse();
 
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
-        expect(observableEnded).toBeTrue();
     });
-    it('should move unverified user to confirm-inscription page and refuse them', () => {
+    it('should move unverified user to confirm-inscription page and refuse them', async() => {
         authService.getJoueurObs = () => of({ pseudo: 'JeanMichelNouveau user', verified: false });
         spyOn(router, 'navigate');
 
-        let observableEnded: boolean;
-        guard.canActivate().subscribe((canActivate: boolean) => {
-            expect(canActivate).toBeFalse();
-            observableEnded = true;
-        });
+        expect(await guard.canActivate()).toBeFalse();
 
         expect(router.navigate).toHaveBeenCalledWith(['/confirm-inscription']);
-        expect(observableEnded).toBeTrue();
     });
-    it('should accept logged user', () => {
+    it('should accept logged user', async() => {
         authService.getJoueurObs = () => of({ pseudo: 'JeanJaJa Toujours là', verified: true });
 
-        let observableEnded: boolean;
-        guard.canActivate().subscribe((canActivate: boolean) => {
-            expect(canActivate).toBeTrue();
-            observableEnded = true;
-        });
-
-        expect(observableEnded).toBeTrue();
+        expect(await guard.canActivate()).toBeTrue();
     });
 });

@@ -1,10 +1,11 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { Move } from 'src/app/jscaip/Move';
+import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { CoerceoFailure } from '../CoerceoFailure';
 
-export class CoerceoStep {
+export class CoerceoStep implements ComparableObject {
 
     public static LEFT: CoerceoStep = new CoerceoStep(new Vector(-2, 0), 'LEFT');
 
@@ -39,6 +40,9 @@ export class CoerceoStep {
 
     public toInt(): number {
         return CoerceoStep.STEPS.findIndex((s: CoerceoStep) => Vector.equals(s.direction, this.direction));
+    }
+    public equals(other: CoerceoStep): boolean {
+        return this === other;
     }
     public toString(): string {
         return this.str;
@@ -118,13 +122,13 @@ export class CoerceoMove extends Move {
         if (o == null) {
             return false;
         }
-        if (!this.capture.equals(o.capture, Coord.equals)) {
+        if (!this.capture.equals(o.capture)) {
             return false;
         }
-        if (!this.start.equals(o.start, Coord.equals)) {
+        if (!this.start.equals(o.start)) {
             return false;
         }
-        return this.landingCoord.equals(o.landingCoord, Coord.equals);
+        return this.landingCoord.equals(o.landingCoord);
     }
     public encode(): number {
         // tileExchange: cx, cy

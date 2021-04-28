@@ -1,4 +1,7 @@
-export class QuartoPiece {
+import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
+
+export class QuartoPiece implements ComparableObject {
+
     public static readonly AAAA: QuartoPiece = new QuartoPiece(0);
     public static readonly AAAB: QuartoPiece = new QuartoPiece(1);
     public static readonly AABA: QuartoPiece = new QuartoPiece(2);
@@ -17,8 +20,6 @@ export class QuartoPiece {
     public static readonly BBBB: QuartoPiece = new QuartoPiece(15);
 
     public static readonly NONE: QuartoPiece = new QuartoPiece(16);
-
-    private constructor(public value: number) { }
 
     public static readonly pieces: ReadonlyArray<QuartoPiece> = [
         QuartoPiece.AAAA,
@@ -50,5 +51,13 @@ export class QuartoPiece {
         } else {
             throw new Error('Invalid piece (' + piece + ')');
         }
+    }
+    private constructor(public value: number) { }
+
+    public equals(o: QuartoPiece): boolean {
+        return this === o;
+    }
+    public toString(): string {
+        return 'QuartoPiece(' + this.value + ')';
     }
 }

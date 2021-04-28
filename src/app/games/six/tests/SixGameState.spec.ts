@@ -4,8 +4,8 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
-import { SixMove } from '../six-move/SixMove';
-import { MGPBoolean, SixGameState } from './SixGameState';
+import { SixMove } from '../SixMove';
+import { SixGameState } from '../SixGameState';
 
 describe('SixGameState', () => {
 
@@ -15,9 +15,9 @@ describe('SixGameState', () => {
 
     describe('toRepresentation/fromRepresentation', () => {
         it('Should represent correctly board', () => {
-            const pieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
-            pieces.put(new Coord(0, 0), MGPBoolean.TRUE);
-            pieces.put(new Coord(1, 1), MGPBoolean.FALSE);
+            const pieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
+            pieces.put(new Coord(0, 0), true);
+            pieces.put(new Coord(1, 1), false);
             const state: SixGameState = new SixGameState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X, _],
@@ -30,17 +30,17 @@ describe('SixGameState', () => {
                 [X, _],
                 [_, O],
             ];
-            const expectedPieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
-            expectedPieces.put(new Coord(0, 0), MGPBoolean.TRUE);
-            expectedPieces.put(new Coord(1, 1), MGPBoolean.FALSE);
+            const expectedPieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
+            expectedPieces.put(new Coord(0, 0), true);
+            expectedPieces.put(new Coord(1, 1), false);
             expectedPieces.makeImmutable();
             const state: SixGameState = SixGameState.fromRepresentation(representation, 0);
             expect(state.pieces).toEqual(expectedPieces);
         });
         it('Should make 0 the left and upper indexes', () => {
-            const pieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
-            pieces.put(new Coord(-1, -1), MGPBoolean.TRUE);
-            pieces.put(new Coord(0, 0), MGPBoolean.FALSE);
+            const pieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
+            pieces.put(new Coord(-1, -1), true);
+            pieces.put(new Coord(0, 0), false);
             const state: SixGameState = new SixGameState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X, _],
@@ -50,10 +50,10 @@ describe('SixGameState', () => {
             expect(state.offset).toEqual(new Vector(1, 1));
         });
         it('Should make 0 the left and upper indexes (horizontal bug)', () => {
-            const pieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
-            pieces.put(new Coord(1, 0), MGPBoolean.TRUE);
-            pieces.put(new Coord(2, 0), MGPBoolean.FALSE);
-            pieces.put(new Coord(3, 0), MGPBoolean.TRUE);
+            const pieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
+            pieces.put(new Coord(1, 0), true);
+            pieces.put(new Coord(2, 0), false);
+            pieces.put(new Coord(3, 0), true);
             const state: SixGameState = new SixGameState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X, O, X],
@@ -62,10 +62,10 @@ describe('SixGameState', () => {
             expect(Vector.equals(state.offset, new Vector(-1, 0)));
         });
         it('Should make 0 the left and upper indexes (vertical bug)', () => {
-            const pieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
-            pieces.put(new Coord(0, 1), MGPBoolean.TRUE);
-            pieces.put(new Coord(0, 2), MGPBoolean.FALSE);
-            pieces.put(new Coord(0, 3), MGPBoolean.TRUE);
+            const pieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
+            pieces.put(new Coord(0, 1), true);
+            pieces.put(new Coord(0, 2), false);
+            pieces.put(new Coord(0, 3), true);
             const state: SixGameState = new SixGameState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X],
@@ -76,19 +76,19 @@ describe('SixGameState', () => {
             expect(Vector.equals(state.offset, new Vector(0, -1))).toBeTrue();
         });
         it('should set offset when board only upper-piece went down', () => {
-            const beforePieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
-            beforePieces.put(new Coord(0, 0), MGPBoolean.TRUE);
-            beforePieces.put(new Coord(0, 1), MGPBoolean.FALSE);
-            beforePieces.put(new Coord(0, 2), MGPBoolean.TRUE);
+            const beforePieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
+            beforePieces.put(new Coord(0, 0), true);
+            beforePieces.put(new Coord(0, 1), false);
+            beforePieces.put(new Coord(0, 2), true);
             const beforeState: SixGameState = new SixGameState(beforePieces, 0);
 
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 3));
             const afterState: SixGameState = beforeState.applyLegalDeplacement(move, new MGPSet());
 
-            const expectedPieces: MGPBiMap<Coord, MGPBoolean> = new MGPBiMap<Coord, MGPBoolean>();
-            expectedPieces.put(new Coord(0, 0), MGPBoolean.FALSE);
-            expectedPieces.put(new Coord(0, 1), MGPBoolean.TRUE);
-            expectedPieces.put(new Coord(0, 2), MGPBoolean.FALSE);
+            const expectedPieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
+            expectedPieces.put(new Coord(0, 0), false);
+            expectedPieces.put(new Coord(0, 1), true);
+            expectedPieces.put(new Coord(0, 2), false);
             expectedPieces.makeImmutable();
 
             expect(afterState.pieces).toEqual(expectedPieces);
@@ -112,11 +112,6 @@ describe('SixGameState', () => {
                 new MGPSet([new Coord(0, 4), new Coord(1, 3)]),
             ]);
             expect(groups.equals(expectedGroups)).toBeTrue();
-        });
-    });
-    describe('MGPBoolean', () => {
-        it('Should disappear soon, and in the meanwhile, have a toString', () => {
-            expect(MGPBoolean.FALSE.toString()).toBe('false');
         });
     });
 });

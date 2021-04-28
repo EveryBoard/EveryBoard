@@ -6,12 +6,15 @@ import { GameService } from '../../../services/game/GameService';
 import { JoinerService } from '../../../services/joiner/JoinerService';
 import { ChatService } from '../../../services/chat/ChatService';
 import { display } from 'src/app/utils/utils/utils';
-import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { UserService } from 'src/app/services/user/UserService';
 import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 
+interface ComparableSubscription {
+    subscription: () => void,
+    equals: () => boolean,
+}
 @Component({
     selector: 'app-part-creation',
     templateUrl: './part-creation.component.html',
@@ -52,7 +55,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public maximalMoveDuration: number = 30;
 
     // Subscription
-    private candidateSubscription: MGPMap<MGPStr, () => void> = new MGPMap();
+    private candidateSubscription: MGPMap<string, ComparableSubscription> = new MGPMap();
 
     public opponentFormGroup: FormGroup;
     public configFormGroup: FormGroup;
@@ -182,9 +185,14 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                            onDocumentModified,
                                            onDocumentDeleted);
         for (const candidateName of joiner.candidatesNames) {
-            if (this.candidateSubscription.get(new MGPStr(candidateName)).isAbsent()) {
-                this.candidateSubscription.set(new MGPStr(candidateName),
-                                               this.userService.observeUserByPseudo(candidateName, callback));
+            if (this.candidateSubscription.get(candidateName).isAbsent()) {
+                const comparableSubscription: ComparableSubscription = {
+                    subscription: this.userService.observeUserByPseudo(candidateName, callback),
+                    equals: () => {
+                        throw new Error('ObservableSubscription should not be used');
+                    },
+                };
+                this.candidateSubscription.set(candidateName, comparableSubscription);
             }
         }
         for (const oldCandidate of this.candidateSubscription.listKeys()) {
@@ -211,7 +219,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private unsubscribeFrom(userPseudo: string): void {
-        this.candidateSubscription.get(new MGPStr(userPseudo)).get()();
+        this.candidateSubscription.get(userPseudo).get().subscription();
     }
     private async cancelGameCreation(): Promise<void> {
         // callable only by the creator
@@ -265,7 +273,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.ngOnDestroy');
 
         for (const candidateName of this.candidateSubscription.listKeys()) {
-            this.candidateSubscription.get(candidateName).get()();
+            this.candidateSubscription.get(candidateName).get().subscription();
         }
         if (this.gameStarted) {
             display(PartCreationComponent.VERBOSE,

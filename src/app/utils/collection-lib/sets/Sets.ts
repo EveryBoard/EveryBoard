@@ -1,4 +1,4 @@
-import { Comparable } from '../Comparable';
+import { Comparable, comparableEquals } from '../Comparable';
 
 export class Sets {
 
@@ -23,7 +23,7 @@ export class Sets {
     public static toSet<O extends Comparable>(list: O[]): O[] {
         const result: O[] = [];
         list.forEach((o: O) => {
-            if (!result.some((el: O) => el.equals(o))) {
+            if (!result.some((el: O) => comparableEquals(el, o))) {
                 result.push(o);
             }
         });

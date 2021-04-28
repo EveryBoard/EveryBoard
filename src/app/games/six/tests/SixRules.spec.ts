@@ -2,11 +2,11 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { SixGameState } from '../six-game-state/SixGameState';
-import { SixMove } from '../six-move/SixMove';
+import { SixGameState } from '../SixGameState';
+import { SixMove } from '../SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
-import { SixFailure } from './SixFailure';
-import { SixRules } from './SixRules';
+import { SixFailure } from '../SixFailure';
+import { SixRules } from '../SixRules';
 
 describe('SixRules', () => {
     let rules: SixRules;
@@ -122,6 +122,9 @@ describe('SixRules', () => {
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(2, 1));
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.getReason()).toBe('Cannot move empty coord!');
+        });
+        xit('Should refuse dropping piece where its only neighboor is herself last turn', () => {
+            expect('TODO').toBe('DONE');
         });
     });
     describe('Deconnection', () => {
