@@ -9,7 +9,7 @@ import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { SixComponent } from './six.component';
 
-fdescribe('SixComponent', () => {
+describe('SixComponent', () => {
     let componentTestUtils: ComponentTestUtils<SixComponent>;
 
     const _: number = Player.NONE.value;

@@ -5,7 +5,7 @@ import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixRules } from '../SixRules';
 
-fdescribe('Six.Minimax', () => {
+describe('Six.Minimax', () => {
 
     let rules: SixRules;
 
@@ -19,7 +19,7 @@ fdescribe('Six.Minimax', () => {
     it('should stop searching for something less good than what it has (victory > pre-victory > sum', () => {
         expect('shit').toBe('correct');
     });
-    fdescribe('pre-victories', () => {
+    describe('pre-victories', () => {
         it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
             const state: SixGameState = SixGameState.fromRepresentation([
                 [X, X, X, X, X],

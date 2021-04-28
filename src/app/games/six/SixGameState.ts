@@ -9,6 +9,7 @@ import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
 
 export class MGPBoolean implements Comparable {
@@ -146,32 +147,26 @@ export class SixGameState extends GamePartSlice {
         }
         return board;
     }
-    public isIllegalLandingZone(coord: Coord): MGPValidation {
-        if (this.pieces.containsKey(coord)) {
+    public isIllegalLandingZone(landing: Coord, start: Coord | null): MGPValidation {
+        if (this.pieces.containsKey(landing)) {
             return MGPValidation.failure('Cannot land on occupied coord!');
         }
-        if (this.isCoordConnected(coord)) {
+        if (this.isCoordConnected(landing, start)) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure('Piece must be connected to other pieces!');
+            return MGPValidation.failure(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE);
         }
     }
-    public isCoordConnected(coord: Coord): boolean {
-        for (const piece of this.pieces.listKeys()) {
-            if (this.areHexaCoordNeighboor(piece, coord)) {
+    public isCoordConnected(coord: Coord, except: Coord | null): boolean {
+        for (const dir of HexaDirection.factory.all) {
+            const neighboor: Coord = coord.getNext(dir, 1);
+            if (this.pieces.containsKey(neighboor) &&
+                neighboor.equals(except) === false)
+            {
                 return true;
             }
         }
         return false;
-    }
-    public areHexaCoordNeighboor(a: Coord, b: Coord): boolean {
-        const vector: Vector = a.getVectorToward(b);
-        function vectorIsHexaDirection(hexaDirection: HexaDirection) {
-            return Vector.equals(vector, hexaDirection);
-        }
-        if (HexaDirection.factory.all.some(vectorIsHexaDirection)) {
-            return true;
-        }
     }
     public getPieceAt(coord: Coord): Player {
         if (this.pieces.containsKey(coord)) {
