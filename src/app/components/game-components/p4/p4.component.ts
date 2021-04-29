@@ -8,7 +8,6 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-p4',

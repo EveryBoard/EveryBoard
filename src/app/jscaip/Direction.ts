@@ -2,6 +2,14 @@ import { assert, JSONValue } from 'src/app/utils/utils/utils';
 import { Coord } from './coord/Coord';
 import { Encoder } from './encoder';
 
+export class DirectionError extends Error {
+    constructor(message?: string) {
+        const trueProto = new.target.prototype;
+        super(message);
+        Object.setPrototypeOf(this, trueProto);
+    }
+}
+
 export class Vector {
     // Since it's not a coord and not a direction, what should we do to name thing correctly and avoid code overlap ?
 
@@ -23,19 +31,19 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
         for (const dir of this.all) {
             if (dir.x === x && dir.y === y) return dir;
         }
-        throw new Error('Invalid direction');
+        throw new DirectionError('Invalid direction');
     }
 
     public fromDelta(dx: number, dy: number): T {
         if (dx === 0 && dy === 0) {
-            throw new Error('Invalid direction from static move');
+            throw new DirectionError('Invalid direction from static move');
         } else if (Math.abs(dx) === Math.abs(dy) ||
                    dx === 0 ||
                    dy === 0)
         {
             return this.of(Math.sign(dx), Math.sign(dy));
         }
-        throw new Error('Invalid direction from delta dx:' + dx + ', dy:' + dy);
+        throw new DirectionError('Invalid direction from delta dx:' + dx + ', dy:' + dy);
     }
     public fromMove(start: Coord, end: Coord): T {
         return this.fromDelta(end.x - start.x, end.y - start.y);
@@ -50,7 +58,7 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
             case 'UP_RIGHT': return this.of(1, -1);
             case 'DOWN_LEFT': return this.of(-1, 1);
             case 'DOWN_RIGHT': return this.of(1, 1);
-            default: throw new Error('Unknown direction ' + str);
+            default: throw new DirectionError('Unknown direction ' + str);
         }
     }
     public fromInt(int: number): T {
@@ -63,7 +71,7 @@ export abstract class DirectionFactory<T extends AbstractDirection> {
             case 5: return this.of(1, -1);
             case 6: return this.of(-1, 1);
             case 7: return this.of(1, 1);
-            default: throw new Error('No Direction matching int ' + int);
+            default: throw new DirectionError('No Direction matching int ' + int);
         }
     }
 }
@@ -95,7 +103,7 @@ export abstract class BaseDirection {
         if (this.x === 1 && this.y === -1) return 5;
         if (this.x === -1 && this.y === 1) return 6;
         if (this.x === 1 && this.y === 1) return 7;
-        throw new Error('Invalid direction');
+        throw new DirectionError('Invalid direction');
     }
     public toString(): string {
         if (this.x === 0 && this.y === -1) return 'UP';
@@ -106,7 +114,7 @@ export abstract class BaseDirection {
         if (this.x === 1 && this.y === -1) return 'UP_RIGHT';
         if (this.x === -1 && this.y === 1) return 'DOWN_LEFT';
         if (this.x === 1 && this.y === 1) return 'DOWN_RIGHT';
-        throw new Error('Invalid direction');
+        throw new DirectionError('Invalid direction');
     }
 }
 
@@ -170,7 +178,7 @@ export class Orthogonal extends BaseDirection {
                 if (x === 1 && y === 0) return Orthogonal.RIGHT;
                 if (x === 0 && y === 1) return Orthogonal.DOWN;
                 if (x === -1 && y === 0) return Orthogonal.LEFT;
-                throw new Error('Invalid direction');
+                throw new DirectionError('Invalid direction');
             }
         };
     public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = Orthogonal.factory.all;

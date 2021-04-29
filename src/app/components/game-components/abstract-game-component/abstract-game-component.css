@@ -49,6 +49,10 @@
 .moved {
     fill: gray;
 }
+.indicator {
+    fill: green;
+    stroke: none;
+}
 .highlighted {
     stroke: #e6e600;
 }

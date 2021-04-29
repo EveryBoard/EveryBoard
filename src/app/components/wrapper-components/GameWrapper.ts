@@ -17,6 +17,7 @@ import { EpaminondasComponent } from '../game-components/epaminondas/epaminondas
 import { GipfComponent } from '../game-components/gipf/gipf.component';
 import { GoComponent } from '../game-components/go/go.component';
 import { KamisadoComponent } from '../game-components/kamisado/kamisado.component';
+import { LinesOfActionComponent } from 'src/app/games/lines-of-action/LinesOfActionComponent';
 import { MinimaxTestingComponent } from '../game-components/minimax-testing/minimax-testing.component';
 import { P4Component } from '../game-components/p4/p4.component';
 import { PylosComponent } from '../game-components/pylos/pylos.component';
@@ -80,6 +81,8 @@ export abstract class GameWrapper {
                 return GipfComponent;
             case 'Kamisado':
                 return KamisadoComponent;
+            case 'LinesOfAction':
+                return LinesOfActionComponent;
             case 'MinimaxTesting':
                 return MinimaxTestingComponent;
             case 'P4':
