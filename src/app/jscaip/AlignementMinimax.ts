@@ -1,7 +1,9 @@
 import { MGPOptional } from '../utils/mgp-optional/MGPOptional';
 import { Coord } from './coord/Coord';
 import { GamePartSlice } from './GamePartSlice';
+import { LegalityStatus } from './LegalityStatus';
 import { Move } from './Move';
+import { Rules } from './Rules';
 import { SCORE } from './SCORE';
 
 export interface BoardInfo {
@@ -10,9 +12,13 @@ export interface BoardInfo {
     preVictory: MGPOptional<Coord>,
     sum: number
 }
-export abstract class AlignementMinimax<M extends Move, S extends GamePartSlice, V> {
+export abstract class AlignementMinimax<M extends Move,
+                                        S extends GamePartSlice,
+                                        L extends LegalityStatus, V>
+    extends Rules<M, S, L>
+{
 
-    public getBoardValue(move: M, state: S): number {
+    public calculateBoardValue(move: M, state: S): BoardInfo {
         this.startSearchingVictorySources();
         let boardInfo: BoardInfo = {
             status: SCORE.DEFAULT,
@@ -24,14 +30,13 @@ export abstract class AlignementMinimax<M extends Move, S extends GamePartSlice,
             const victorySource: V = this.getNextVictorySource();
             let newBoardInfo: BoardInfo;
             if (boardInfo.status === SCORE.PRE_VICTORY) {
-                newBoardInfo = this.searchVictoryOnly(victorySource);
-            } else if (boardInfo.preVictory.isPresent()) {
-                newBoardInfo = this.searchSecondVictoriousCoord(victorySource);
+                newBoardInfo = this.searchVictoryOnly(victorySource, move, state);
             } else {
-                newBoardInfo = this.getBoardInfo(victorySource);
+                newBoardInfo = this.getBoardInfo(victorySource, move, state, boardInfo);
             }
             if (newBoardInfo.status === SCORE.VICTORY) {
-                return state.getCurrentEnnemy().getVictoryValue();
+                // return state.getCurrentEnnemy().getVictoryValue();
+                return newBoardInfo;
             }
             boardInfo = {
                 status: newBoardInfo.status,
@@ -40,11 +45,7 @@ export abstract class AlignementMinimax<M extends Move, S extends GamePartSlice,
                 sum: boardInfo.sum + newBoardInfo.sum,
             };
         }
-        if (boardInfo.status === SCORE.PRE_VICTORY) {
-            return state.getCurrentEnnemy().getPreVictory();
-        } else {
-            return boardInfo.sum * state.getCurrentEnnemy().getScoreModifier();
-        }
+        return boardInfo;
     }
     public abstract startSearchingVictorySources(): void;
 
@@ -52,9 +53,7 @@ export abstract class AlignementMinimax<M extends Move, S extends GamePartSlice,
 
     public abstract getNextVictorySource(): V;
 
-    public abstract searchVictoryOnly(victorySource: V): BoardInfo;
+    public abstract searchVictoryOnly(victorySource: V, move: M, state: S): BoardInfo;
 
-    public abstract searchSecondVictoriousCoord(victorySource: V): BoardInfo;
-
-    public abstract getBoardInfo(victorySource: V): BoardInfo;
+    public abstract getBoardInfo(victorySource: V, move: M, state: S, boardInfo: BoardInfo): BoardInfo;
 }

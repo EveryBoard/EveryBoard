@@ -208,7 +208,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
                 return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP);
             } else {
                 const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, neighboor);
-                const legality: SixLegalityStatus = this.rules.isLegalDeplacement(deplacement, this.state);
+                const legality: SixLegalityStatus = this.rules.isPhaseTwoMove(deplacement, this.state);
                 if (this.neededCutting(legality)) {
                     this.chosenLanding = neighboor;
                     this.moveVirtuallyPiece();
