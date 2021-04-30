@@ -3,6 +3,12 @@ export class RequestCode {
 
     public static ONE_PROPOSED_DRAW: RequestCode = new RequestCode('ONE_PROPOSED_DRAW');
 
+    public static DRAW_ACCEPTED: RequestCode = new RequestCode('DRAW_ACCEPTED');
+
+    public static ZERO_REFUSED_DRAW: RequestCode = new RequestCode('ZERO_REFUSED_DRAW');
+
+    public static ONE_REFUSED_DRAW: RequestCode = new RequestCode('ONE_REFUSED_DRAW');
+
     public static ZERO_ADDED_TIME: RequestCode = new RequestCode('ZERO_ADDED_TIME');
 
     public static ONE_ADDED_TIME: RequestCode = new RequestCode('ONE_ADDED_TIME');

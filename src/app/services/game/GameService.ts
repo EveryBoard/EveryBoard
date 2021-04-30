@@ -14,7 +14,7 @@ import { IMGPRequest, RequestCode } from '../../domain/request';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display, JSONValue } from 'src/app/utils/utils/utils';
+import { assert, display, JSONValue } from 'src/app/utils/utils/utils';
 
 @Injectable({
     providedIn: 'root',
@@ -155,6 +155,23 @@ export class GameService {
             request: null,
         }); // resign
     }
+    public acceptDraw(partId: string): Promise<void> {
+        return this.partDao.update(partId, {
+            draw: true,
+            result: MGPResult.DRAW.toInterface(),
+            request: null,
+        });
+    }
+    public refuseDraw(partId: string, player: Player): Promise<void> {
+        let request: IMGPRequest;
+        assert(player !== Player.NONE, 'Illegal player to make requests');
+        if (player === Player.ZERO) {
+            request = RequestCode.ZERO_REFUSED_DRAW.toInterface();
+        } else if (player === Player.ONE) {
+            request = RequestCode.ONE_REFUSED_DRAW.toInterface();
+        }
+        return this.partDao.update(partId, { request });
+    }
     public notifyTimeout(partId: string, winner: string): Promise<void> {
         return this.partDao.update(partId, {
             winner: winner,
@@ -162,10 +179,17 @@ export class GameService {
             request: null, // TODO: check line use
         });
     }
-    public proposeRematch(partId: string, observerRole: 0 | 1): Promise<void> {
+    public proposeRematch(partId: string, player: Player): Promise<void> {
+        assert(player !== Player.NONE, 'proposeRematch called with no player');
         const code: RequestCode =
-            observerRole === 0 ? RequestCode.ZERO_PROPOSED_REMATCH : RequestCode.ONE_PROPOSED_REMATCH;
+            player === Player.ZERO ? RequestCode.ZERO_PROPOSED_REMATCH : RequestCode.ONE_PROPOSED_REMATCH;
         return this.partDao.update(partId, code.toInterface());
+    }
+    public proposeDraw(partId: string, player: Player): Promise<void> {
+        assert(player !== Player.NONE, 'proposeDraw called with no player');
+        const code: RequestCode =
+            player === Player.ZERO ? RequestCode.ZERO_PROPOSED_DRAW : RequestCode.ONE_PROPOSED_DRAW;
+        return this.partDao.update(partId, { request: code.toInterface() });
     }
     public async acceptRematch(part: ICurrentPartId): Promise<void> {
         display(GameService.VERBOSE, 'GameService.acceptRematch(' + JSON.stringify(part) + ')');
@@ -224,10 +248,10 @@ export class GameService {
         }
         return await this.partDao.update(partId, update);
     }
-    public askTakeBack(partId: string, observerRole: Player): Promise<void> {
+    public askTakeBack(partId: string, player: Player): Promise<void> {
         let code: RequestCode;
-        if (observerRole === Player.ZERO) code = RequestCode.ZERO_ASKED_TAKE_BACK;
-        else if (observerRole === Player.ONE) code = RequestCode.ONE_ASKED_TAKE_BACK;
+        if (player === Player.ZERO) code = RequestCode.ZERO_ASKED_TAKE_BACK;
+        else if (player === Player.ONE) code = RequestCode.ONE_ASKED_TAKE_BACK;
         else throw new Error('Illegal for observer to make request');
         return this.partDao.update(partId, { request: code.toInterface() });
     }

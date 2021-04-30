@@ -107,6 +107,7 @@ export interface PICurrentPart {
     typePart?: number|string; // amicale, comptabilisée, pédagogique
     result?: IMGPResult;
     winner?: string; // joueur 1, joueur 2, null
+    draw?: boolean;
     scorePlayerZero?: number|string; // TODO : implémenter ça
     scorePlayerOne?: number|string; // TODO : implémenter ça aussi en même temps
 

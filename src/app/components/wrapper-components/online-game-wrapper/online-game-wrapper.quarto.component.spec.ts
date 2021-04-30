@@ -196,6 +196,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             return true;
         }
     };
+    function expectElementNotToExist(elementName: string): void {
+        expect(getElement(elementName)).toBeNull();
+    }
+    function expectElementToExist(elementName: string): void {
+        expect(getElement(elementName)).toBeTruthy();
+    }
     const prepareBoard: (moves: QuartoMove[]) => Promise<void> = async(moves: QuartoMove[]) => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
@@ -375,7 +381,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             tick(component.maximalMoveDuration);
         }));
-        it('Player accepting take back should move player board backward (two moves)', fakeAsync(async() => {
+        it('Player accepting take back should move player board backward (dtwo moves)', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
 
@@ -503,6 +509,95 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             await receiveRequest(RequestCode.ONE_REFUSED_TAKE_BACK);
 
             expect(await askTakeBack()).toBeFalse();
+
+            tick(component.maximalMoveDuration);
+        }));
+    });
+    describe('Draw', () => {
+        async function setup() {
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            fixture.detectChanges();
+        }
+        it('should send draw request when player asks to', fakeAsync(async() => {
+            await setup();
+            spyOn(partDAO, 'update').and.callThrough();
+
+            expect(await clickElement('#proposeDrawButton')).toBeTrue();
+            expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+                request: RequestCode.ZERO_PROPOSED_DRAW.toInterface(),
+            });
+
+            tick(component.maximalMoveDuration);
+        }));
+        it('should forbid to propose to draw while draw request is waiting', fakeAsync(async() => {
+            await setup();
+            expect(await clickElement('#proposeDrawButton')).toBeTrue();
+            expect(await clickElement('#proposeDrawButton')).toBeFalse();
+
+            tick(component.maximalMoveDuration);
+        }));
+        it('should forbid to propose to draw after refusal', fakeAsync(async() => {
+            await setup();
+            expect(await clickElement('#proposeDrawButton')).toBeTrue();
+            await receiveRequest(RequestCode.ONE_REFUSED_DRAW);
+
+            tick(1);
+            expect(await clickElement('#proposeDrawButton')).toBeFalse();
+
+            tick(component.maximalMoveDuration);
+        }));
+        it('should finish the game after accepting a proposed draw', fakeAsync(async() => {
+            await setup();
+            await receiveRequest(RequestCode.ONE_PROPOSED_DRAW);
+
+            spyOn(partDAO, 'update').and.callThrough();
+            expect(await clickElement('#acceptDrawButton')).toBeTrue();
+
+            tick(1);
+            expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+                draw: true,
+                result: MGPResult.DRAW.toInterface(),
+                request: null,
+            });
+
+            tick(component.maximalMoveDuration);
+        }));
+        it('should finish the game when opponent accepts our proposed draw', fakeAsync(async() => {
+            await setup();
+            expect(await clickElement('#proposeDrawButton')).toBeTrue();
+
+            spyOn(partDAO, 'update').and.callThrough();
+            await receiveRequest(RequestCode.DRAW_ACCEPTED);
+
+            tick(1);
+            expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+                draw: true,
+                result: MGPResult.DRAW.toInterface(),
+                request: null,
+            });
+        }));
+        it('should send refusal when player asks to', fakeAsync(async() => {
+            await setup();
+            await receiveRequest(RequestCode.ONE_PROPOSED_DRAW);
+
+            spyOn(partDAO, 'update').and.callThrough();
+
+            expect(await clickElement('#refuseDrawButton')).toBeTrue();
+            expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
+                request: RequestCode.ZERO_REFUSED_DRAW.toInterface(),
+            });
+
+            tick(component.maximalMoveDuration);
+        }));
+        it('should only propose to accept/refuse draw when asked', fakeAsync(async() => {
+            await setup();
+            expectElementNotToExist('#acceptDrawButton');
+            expectElementNotToExist('#refuseDrawButton');
+            await receiveRequest(RequestCode.ONE_PROPOSED_DRAW);
+
+            expectElementToExist('#acceptDrawButton');
+            expectElementToExist('#refuseDrawButton');
 
             tick(component.maximalMoveDuration);
         }));

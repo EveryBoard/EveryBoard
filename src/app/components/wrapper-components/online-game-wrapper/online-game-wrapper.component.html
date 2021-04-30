@@ -67,11 +67,40 @@
             </div>
             <div class="inforow"
                  id="resignButtonDiv"
-                 *ngIf="endGame === false && opponent && observerRole < 2">
+                 *ngIf="endGame === false && opponent && isPlaying()">
                 <button mat-stroked-button
                         id="resignButton"
                         (click)="resign()">
                     Abandonner
+                </button>
+            </div>
+            <div class="inforow"
+                 id="proposeDrawButtonDiv"
+                 *ngIf="canProposeDraw()">
+                <button mat-stroked-button
+                        id="proposeDrawButton"
+                        (click)="proposeDraw()">
+                    Proposer un match nul
+                </button>
+            </div>
+            <div class="inforow"
+                 id="acceptDraw"
+                 *ngIf="endGame === false && isOpponentWaitingForDrawResponse()">
+                <button mat-raised-button
+                        color="warn"
+                        id="acceptDrawButton"
+                        (click)="acceptDraw()">
+                    Accepter un match nul
+                </button>
+            </div>
+            <div class="inforow"
+                 id="refuseDraw"
+                 *ngIf="endGame === false && isOpponentWaitingForDrawResponse()">
+                <button mat-raised-button
+                        color="warn"
+                        id="refuseDrawButton"
+                        (click)="refuseDraw()">
+                    Refuser un match nul
                 </button>
             </div>
             <div class="inforow"
@@ -110,7 +139,6 @@
                     Demander à reprendre un coup
                 </button>
             </div>
-            <!--<div *ngIf="!endGame && (observerRole < 2)" class="inforow"> Proposer Match nul TODO </div>-->
             <div class="inforow" id="winnerIndicator" *ngIf="endGame">
                 <h4 id="youWonIndicator" *ngIf="currentPart.winner === userName"> Vous avez gagné </h4>
                 <h4 *ngIf="(currentPart.winner != null) && (currentPart.winner !== userName) && (observerRole < 2)"> Vous avez perdu </h4>
