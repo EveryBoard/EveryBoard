@@ -1,5 +1,4 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
@@ -27,7 +26,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         this.reset();
     }
 
-    public abstract getStaticDB(): MGPMap<MGPStr, ObservableSubject<{id: string, doc: T}>>;
+    public abstract getStaticDB(): MGPMap<string, ObservableSubject<{id: string, doc: T}>>;
 
     public abstract resetStaticDB(): void;
 
@@ -40,8 +39,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
     public getObsById(id: string): Observable<{id: string, doc: T}> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.getObsById(' + id + ')');
 
-        const key: MGPStr = new MGPStr(id);
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
+        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             return optionalOS.get().observable;
         } else {
@@ -57,8 +55,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
     public async read(id: string): Promise<T> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.read(' + id + ')');
 
-        const key: MGPStr = new MGPStr(id);
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
+        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             return optionalOS.get().subject.getValue().doc;
         } else {
@@ -69,15 +66,14 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.set(' + id + ', ' + JSON.stringify(doc) + ')');
 
-        const key: MGPStr = new MGPStr(id);
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
+        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         const tid: {id: string, doc: T} = { id, doc };
         if (optionalOS.isPresent()) {
             optionalOS.get().subject.next(tid);
         } else {
             const subject: BehaviorSubject<{id: string, doc: T}> = new BehaviorSubject<{id: string, doc: T}>(tid);
             const observable: Observable<{id: string, doc: T}> = subject.asObservable();
-            this.getStaticDB().put(key, new ObservableSubject(subject, observable));
+            this.getStaticDB().put(id, new ObservableSubject(subject, observable));
         }
         return Promise.resolve();
     }
@@ -85,8 +81,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
 
-        const key: MGPStr = new MGPStr(id);
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
+        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             const observableSubject: ObservableSubject<{id: string, doc: T}> = optionalOS.get();
             const oldDoc: T = observableSubject.subject.getValue().doc;
@@ -100,11 +95,10 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
     public async delete(id: string): Promise<void> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE, this.collectionName + '.delete(' + id + ')');
 
-        const key: MGPStr = new MGPStr(id);
-        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(key);
+        const optionalOS: MGPOptional<ObservableSubject<{id: string, doc: T}>> = this.getStaticDB().get(id);
         if (optionalOS.isPresent()) {
             optionalOS.get().subject.next(null);
-            this.getStaticDB().delete(key);
+            this.getStaticDB().delete(id);
         } else {
             throw new Error('Cannot delete element ' + id + ' absent from ' + this.collectionName);
         }
@@ -136,7 +130,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
                                value: unknown,
                                callback: FirebaseCollectionObserver<T>): Subscription
     {
-        const db: MGPMap<MGPStr, ObservableSubject<{id: string, doc: T}>> = this.getStaticDB();
+        const db: MGPMap<string, ObservableSubject<{id: string, doc: T}>> = this.getStaticDB();
         for (let entryId: number = 0; entryId < db.size(); entryId++) {
             const entry: ObservableSubject<{id: string, doc: T}> = db.getByIndex(entryId).value;
             if (entry.subject.value.doc[field] === value) {

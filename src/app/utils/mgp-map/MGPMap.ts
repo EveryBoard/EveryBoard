@@ -1,8 +1,8 @@
 import { MGPOptional } from '../mgp-optional/MGPOptional';
-import { Comparable, ComparableEquals, StrictEquals } from '../collection-lib/Comparable';
+import { Comparable, comparableEquals } from '../collection-lib/Comparable';
 import { MGPSet } from '../mgp-set/MGPSet';
 
-export class MGPMap<K extends Comparable, V> {
+export class MGPMap<K extends Comparable, V extends Comparable> {
     private map: {key: K, value: V}[] = [];
 
     private isImmutable: boolean = false;
@@ -13,7 +13,7 @@ export class MGPMap<K extends Comparable, V> {
     public get(key: K): MGPOptional<V> {
         if (key == null) throw new Error('Key cannot be null!');
         for (const keymap of this.map) {
-            if (keymap.key.equals(key)) {
+            if (comparableEquals(keymap.key, key)) {
                 return MGPOptional.of(keymap.value);
             }
         }
@@ -39,7 +39,7 @@ export class MGPMap<K extends Comparable, V> {
         if (value == null) throw new Error('Value cannot be null!');
         for (let i: number = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
-            if (entry.key.equals(key)) {
+            if (comparableEquals(entry.key, key)) {
                 const oldValue: V = this.map[i].value;
                 this.map[i].value = value;
                 return MGPOptional.of(oldValue);
@@ -49,7 +49,7 @@ export class MGPMap<K extends Comparable, V> {
         return MGPOptional.empty();
     }
     public containsKey(key: K): boolean {
-        return this.map.some((entry: {key: K, value: V}) => entry.key.equals(key));
+        return this.map.some((entry: {key: K, value: V}) => comparableEquals(entry.key, key));
     }
     public size(): number {
         return this.map.length;
@@ -66,7 +66,7 @@ export class MGPMap<K extends Comparable, V> {
         if (newValue == null) throw new Error('Value cannot be null, use delete instead!');
         for (let i: number = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
-            if (entry.key.equals(key)) {
+            if (comparableEquals(entry.key, key)) {
                 const oldValue: V = this.map[i].value;
                 this.map[i].value = newValue;
                 return oldValue;
@@ -89,7 +89,7 @@ export class MGPMap<K extends Comparable, V> {
         if (key == null) throw new Error('Key cannot be null!');
         for (let i: number = 0; i < this.map.length; i++) {
             const entry: {key: K, value: V} = this.map[i];
-            if (entry.key.equals(key)) {
+            if (comparableEquals(entry.key, key)) {
                 const oldValue: V = this.map[i].value;
                 const beforeDeleted: {key: K, value: V}[] = this.map.slice(0, i);
                 const afterDeleted: {key: K, value: V}[] = this.map.slice(i + 1);
@@ -119,7 +119,7 @@ export class MGPMap<K extends Comparable, V> {
             if (right.isAbsent()) {
                 return false;
             }
-            if (StrictEquals(left, right.get()) === false) {
+            if (comparableEquals(left, right.get()) === false) {
                 return false;
             }
         }
@@ -162,7 +162,7 @@ export class MGPBiMap<K extends Comparable, V extends Comparable> extends MGPMap
             if (right.isAbsent()) {
                 return false;
             }
-            if (ComparableEquals(left, right.get()) === false) {
+            if (comparableEquals(left, right.get()) === false) {
                 return false;
             }
         }

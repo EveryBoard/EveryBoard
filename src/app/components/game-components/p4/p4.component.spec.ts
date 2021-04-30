@@ -27,10 +27,10 @@ const activatedRouteStub = {
 };
 const authenticationServiceStub = {
 
-    getJoueurObs: () => of({ pseudo: null, verified: null }),
+    getJoueurObs: () => of(AuthenticationService.NOT_CONNECTED),
 
     getAuthenticatedUser: () => {
-        return { pseudo: null, verified: null };
+        return AuthenticationService.NOT_CONNECTED;
     },
 };
 describe('P4Component', () => {

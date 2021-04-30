@@ -24,11 +24,8 @@ describe('TablutRules', () => {
     describe('getSurroundings', () => {
         it('Should return neighboorings cases', () => {
             const startingBoard: number[][] = rules.node.gamePartSlice.getCopiedBoard();
-            const {
-                backCoord, back, backInRange,
-                leftCoord, left,
-                rightCoord, right,
-            } = TablutRules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingBoard);
+            const { backCoord } =
+                TablutRules.getSurroundings(new Coord(3, 1), Orthogonal.RIGHT, Player.ZERO, startingBoard);
             expect(backCoord).toEqual(new Coord(4, 1));
         });
     });
@@ -59,7 +56,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(1, 0), new Coord(2, 0));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 4);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -102,7 +99,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(3, 0), new Coord(2, 0));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 24);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
@@ -135,7 +132,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(3, 0), new Coord(2, 0));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 4);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -166,7 +163,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 0), new Coord(3, 0));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
@@ -199,7 +196,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 1), new Coord(3, 1));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
@@ -232,7 +229,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 1), new Coord(1, 1));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 3);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
@@ -265,7 +262,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 2), new Coord(4, 2));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
@@ -299,7 +296,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(2, 2), new Coord(4, 2));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 13);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
@@ -366,7 +363,7 @@ describe('TablutRules', () => {
         const move: TablutMove = new TablutMove(new Coord(8, 4), new Coord(1, 4));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: TablutPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: TablutPartSlice = new TablutPartSlice(expectedBoard, 25);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);

@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AbstractGameComponent } from '../components/game-components/abstract-game-component/AbstractGameComponent';
@@ -7,8 +7,6 @@ import { LocalGameWrapperComponent }
 import { GamePartSlice } from '../jscaip/GamePartSlice';
 import { LegalityStatus } from '../jscaip/LegalityStatus';
 import { Move } from '../jscaip/Move';
-import { DidacticialGameWrapperComponent }
-    from '../components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component';
 import { MGPValidation } from './mgp-validation/MGPValidation';
 import { Observable, of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -16,8 +14,12 @@ import { AppModule } from '../app.module';
 import { ActivatedRoute } from '@angular/router';
 import { JoueursDAO } from '../dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from '../dao/joueurs/JoueursDAOMock';
-import { AuthenticationService } from '../services/authentication/AuthenticationService';
+import { AuthenticationService, AuthUser } from '../services/authentication/AuthenticationService';
 import { MGPNode } from '../jscaip/mgp-node/MGPNode';
+import { GameWrapper } from '../components/wrapper-components/GameWrapper';
+import { Rules } from '../jscaip/Rules';
+import { Player } from '../jscaip/player/Player';
+import { NodeUnheritance } from '../jscaip/NodeUnheritance';
 
 class ActivatedRouteMock {
     public readonly snapshot: any;
@@ -32,30 +34,36 @@ class ActivatedRouteMock {
     }
 }
 export class AuthenticationServiceMock {
-    public static USER: { pseudo: string, verified: boolean } = { pseudo: null, verified: null };
+    public static USER: AuthUser = AuthenticationService.NOT_CONNECTED;
 
-    public getJoueurObs(): Observable<{ pseudo: string, verified: boolean }> {
+    public getJoueurObs(): Observable<AuthUser> {
         return of(AuthenticationServiceMock.USER);
     }
-    public getAuthenticatedUser(): { pseudo: string, verified: boolean } {
+    public getAuthenticatedUser(): AuthUser {
         return AuthenticationServiceMock.USER;
     }
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
-    public fixture: ComponentFixture<LocalGameWrapperComponent | DidacticialGameWrapperComponent>;
+export class ComponentTestUtils<T extends AbstractGameComponent<Move,
+                                                                GamePartSlice,
+                                                                LegalityStatus,
+                                                                NodeUnheritance>> {
+    public fixture: ComponentFixture<GameWrapper>;
     public debugElement: DebugElement;
-    public wrapper: LocalGameWrapperComponent | DidacticialGameWrapperComponent;
+    public wrapper: GameWrapper;
 
     public activatedRouteStub: ActivatedRouteMock;
 
-    private gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
+    private gameComponent: AbstractGameComponent<Move,
+                                                 GamePartSlice,
+                                                 LegalityStatus,
+                                                 NodeUnheritance>;
     private canUserPlaySpy: jasmine.Spy;
     private cancelMoveSpy: jasmine.Spy;
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public constructor(game: string, wrapperKind: any = LocalGameWrapperComponent) {
+    public constructor(game: string, wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent) {
         this.activatedRouteStub = new ActivatedRouteMock(game);
         TestBed.configureTestingModule({
             imports: [
@@ -97,18 +105,14 @@ export class ComponentTestUtils<T extends AbstractGameComponent<Move, GamePartSl
     public async expectClickSuccess(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
-        if (element == null) {
-            return;
-        } else {
-            element.triggerEventHandler('click', null);
-            await this.fixture.whenStable();
-            this.fixture.detectChanges();
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
-            this.canUserPlaySpy.calls.reset();
-            expect(this.cancelMoveSpy).not.toHaveBeenCalled();
-            expect(this.chooseMoveSpy).not.toHaveBeenCalled();
-            expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
-        }
+        element.triggerEventHandler('click', null);
+        await this.fixture.whenStable();
+        this.fixture.detectChanges();
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+        expect(this.cancelMoveSpy).not.toHaveBeenCalled();
+        expect(this.chooseMoveSpy).not.toHaveBeenCalled();
+        expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
     }
     public async expectClickFailure(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
@@ -234,4 +238,29 @@ export class ComponentTestUtils<T extends AbstractGameComponent<Move, GamePartSl
     public findElement(elementName: string): DebugElement {
         return this.debugElement.query(By.css(elementName));
     }
+}
+
+export function expectFirstStateToWorthMoreThanSecond(weakerState: GamePartSlice,
+                                                      weakMove: Move,
+                                                      strongerState: GamePartSlice,
+                                                      strongMove: Move,
+                                                      rules: Rules<Move,
+                                                                   GamePartSlice,
+                                                                   LegalityStatus,
+                                                                   NodeUnheritance>)
+                                                      : void
+{
+    const weakValue: number = rules.getBoardNumericValue(weakMove, weakerState);
+    const strongValue: number = rules.getBoardNumericValue(strongMove, strongerState);
+    expect(weakValue).toBeLessThan(strongValue);
+}
+export function expectStateToBePreVictory(state: GamePartSlice,
+                                          previousMove: Move,
+                                          player: Player,
+                                          rules: Rules<Move, GamePartSlice, LegalityStatus, NodeUnheritance>)
+                                          : void
+{
+    const value: number = rules.getBoardNumericValue(previousMove, state);
+    const expectedValue: number = player.getPreVictory();
+    expect(value).toBe(expectedValue);
 }

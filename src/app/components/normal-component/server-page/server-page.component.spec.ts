@@ -79,7 +79,7 @@ describe('ServerPageComponent', () => {
         gameService = TestBed.get(GameService);
         userService = TestBed.get(UserService);
 
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null };
+        AuthenticationServiceMock.CURRENT_USER = AuthenticationService.NOT_CONNECTED;
         AuthenticationServiceMock.IS_USER_LOGGED = null;
     });
     it('should create', fakeAsync(async() => {
@@ -137,7 +137,7 @@ describe('ServerPageComponent', () => {
         flush();
     }));
     it('Should be legal for unlogged user to create local game', fakeAsync(async() => {
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null };
+        AuthenticationServiceMock.CURRENT_USER = AuthenticationService.NOT_CONNECTED;
         AuthenticationServiceMock.IS_USER_LOGGED = false;
         spyOn(component.router, 'navigate').and.callThrough();
         component.ngOnInit();

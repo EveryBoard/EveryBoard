@@ -67,7 +67,7 @@ describe('GipfRules:', () => {
             const legality: GipfLegalityStatus = rules.isLegal(move, slice);
             expect(legality.legal.isSuccess()).toBeTrue();
 
-            const resultingSlice: GipfPartSlice = rules.applyLegalMove(move, slice, legality).resultingSlice;
+            const resultingSlice: GipfPartSlice = rules.applyLegalMove(move, slice, legality);
 
             // This is diagram 2b in the rules of Gipf
             const expectedBoard: GipfBoard = GipfBoard.of([
@@ -103,7 +103,7 @@ describe('GipfRules:', () => {
             const legality: GipfLegalityStatus = rules.isLegal(move, slice);
             expect(legality.legal.isSuccess()).toBeTrue();
 
-            const resultingSlice: GipfPartSlice = rules.applyLegalMove(move, slice, legality).resultingSlice;
+            const resultingSlice: GipfPartSlice = rules.applyLegalMove(move, slice, legality);
 
             // This is diagram 2b in the rules of Gipf
             const expectedBoard: GipfBoard = GipfBoard.of([
@@ -189,7 +189,7 @@ describe('GipfRules:', () => {
             const firstLegality: GipfLegalityStatus = rules.isLegal(move, slice);
             expect(firstLegality.legal.isSuccess()).toBeTrue();
 
-            const resultingSlice: GipfPartSlice = rules.applyLegalMove(move, slice, firstLegality).resultingSlice;
+            const resultingSlice: GipfPartSlice = rules.applyLegalMove(move, slice, firstLegality);
             const placement: GipfPlacement = new GipfPlacement(new Coord(2, 6),
                                                                MGPOptional.of(HexaDirection.UP_RIGHT));
 
@@ -273,7 +273,7 @@ describe('GipfRules:', () => {
             const legalityA: GipfLegalityStatus = rules.isLegal(moveA, slice);
             expect(legalityA.legal.isSuccess()).toBeTrue();
 
-            const resultingSlice: GipfPartSlice = rules.applyLegalMove(moveA, slice, legalityA).resultingSlice;
+            const resultingSlice: GipfPartSlice = rules.applyLegalMove(moveA, slice, legalityA);
 
             const placementB: GipfPlacement = new GipfPlacement(new Coord(3, 0),
                                                                 MGPOptional.of(HexaDirection.DOWN_RIGHT));
@@ -356,7 +356,7 @@ describe('GipfRules:', () => {
             expect(legality.legal.isSuccess()).toBeTrue();
 
             const resultingSlice: GipfPartSlice =
-                rules.applyLegalMove(move, slice, new GipfLegalityStatus(MGPValidation.SUCCESS, null)).resultingSlice;
+                rules.applyLegalMove(move, slice, new GipfLegalityStatus(MGPValidation.SUCCESS, null));
 
             const expectedBoard: GipfBoard = GipfBoard.of([
                 [_, _, _, _, A, _, _],

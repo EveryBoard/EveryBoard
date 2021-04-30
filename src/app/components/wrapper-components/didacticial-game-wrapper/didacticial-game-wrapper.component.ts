@@ -19,6 +19,7 @@ import { encapsuleDidacticial } from './didacticials/encapsule-didacticial';
 import { gipfDidacticial } from './didacticials/gipf-didacticial';
 import { goDidacticial } from './didacticials/go-didacticial';
 import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
+import { linesOfActionDidacticial } from 'src/app/games/lines-of-action/LinesOfActionDidacticial';
 import { p4Didacticial } from './didacticials/p4-didacticial';
 import { pylosDidacticial } from './didacticials/pylos-didacticial';
 import { quartoDidacticial } from './didacticials/quarto-didacticial';
@@ -90,6 +91,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Gipf: gipfDidacticial,
             Go: goDidacticial,
             Kamisado: kamisadoDidacticial,
+            LinesOfAction: linesOfActionDidacticial,
             P4: p4Didacticial,
             Pylos: pylosDidacticial,
             Quarto: quartoDidacticial,

@@ -57,7 +57,7 @@ describe('ChatComponent', () => {
         chatDAO = TestBed.get(ChatDAO);
         chatDAO.set('fauxChat', { messages: [], status: 'dont have a clue' });
 
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: null, verified: null };
+        AuthenticationServiceMock.CURRENT_USER = AuthenticationService.NOT_CONNECTED;
         AuthenticationServiceMock.IS_USER_LOGGED = null;
     });
     it('should create', () => {

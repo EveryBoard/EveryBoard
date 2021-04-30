@@ -134,13 +134,9 @@ describe('DvonnRules:', () => {
         const move: DvonnMove = DvonnMove.of(new Coord(0, 3), new Coord(0, 2));
         const legality: LegalityStatus = rules.isLegal(move, slice);
         expect(legality.legal.isSuccess()).toBeTrue();
-        const moveResult: {
-            resultingMove: DvonnMove;
-            resultingSlice: DvonnPartSlice;
-        } = rules.applyLegalMove(move, slice, legality);
-        expect(moveResult.resultingMove).toEqual(move);
-        expect(moveResult.resultingSlice.hexaBoard).toEqual(expectedBoard);
-        const stack: DvonnPieceStack = moveResult.resultingSlice.hexaBoard.getAt(new Coord(0, 2));
+        const resultingSlice: DvonnPartSlice = rules.applyLegalMove(move, slice, legality);
+        expect(resultingSlice.hexaBoard).toEqual(expectedBoard);
+        const stack: DvonnPieceStack = resultingSlice.hexaBoard.getAt(new Coord(0, 2));
         expect(stack.belongsTo(Player.ZERO)).toBeTrue();
     });
     it('should allow moves only to occupied spaces', () => {
@@ -242,12 +238,8 @@ describe('DvonnRules:', () => {
         const move: DvonnMove = DvonnMove.of(new Coord(3, 1), new Coord(2, 1));
         const legality: LegalityStatus = rules.isLegal(move, slice);
         expect(legality.legal.isSuccess()).toBeTrue();
-        const moveResult: {
-            resultingMove: DvonnMove;
-            resultingSlice: DvonnPartSlice;
-        } = rules.applyLegalMove(move, slice, legality);
-        expect(moveResult.resultingMove).toEqual(move);
-        expect(moveResult.resultingSlice.hexaBoard).toEqual(expectedBoard);
+        const resultingSlice: DvonnPartSlice = rules.applyLegalMove(move, slice, legality);
+        expect(resultingSlice.hexaBoard).toEqual(expectedBoard);
     });
     it('should end the game when no move can be done', () => {
         const board: DvonnBoard = new DvonnBoard([

@@ -87,7 +87,7 @@ describe('ReversiRules', () => {
         const move: ReversiMove = new ReversiMove(0, 7);
         const status: ReversiLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: ReversiPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: ReversiPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: ReversiPartSlice = new ReversiPartSlice(expectedBoard, 60);
         expect(resultingSlice).toEqual(expectedSlice);
         expect(rules.getBoardValue(move, expectedSlice))

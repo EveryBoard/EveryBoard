@@ -1,13 +1,13 @@
-import { Comparable } from '../collection-lib/Comparable';
+import { Comparable, comparableEquals, ComparableObject } from '../collection-lib/Comparable';
 import { Sets } from '../collection-lib/sets/Sets';
 
-export class MGPSet<T extends Comparable> implements Comparable {
+export class MGPSet<T extends Comparable> implements ComparableObject {
 
     constructor(private values?: T[]) {
         if (values == null) {
             this.values = [];
         } else {
-            this.values = Sets.toImmutableSet(values);
+            this.values = Sets.toComparableSet(values);
         }
     }
     public equals(other: MGPSet<T>): boolean {
@@ -16,37 +16,32 @@ export class MGPSet<T extends Comparable> implements Comparable {
         }
         for (let i: number = 0; i < this.size(); i++) {
             const thisElement: T = this.values[i];
-            const thisCount: number = this.count(thisElement);
-            const otherCount: number = other.count(thisElement);
-            if (thisCount !== otherCount) {
+            if (other.contains(thisElement) === false) {
                 return false;
             }
         }
         return true;
     }
-    public count(element: T): number {
-        let count: number = 0;
-        for (let i: number = 0; i < this.size(); i++) {
-            if (this.values[i].equals(element)) {
-                count++;
-            }
-        }
-        return count;
-    }
     public toString(): string {
-        throw new Error('Method not implemented.');
+        const printer: (element: T) => string = (element: T) => element.toString();
+
+        let result: string = '';
+        for (const element of this.values) {
+            result += printer(element) + ', ';
+        }
+        return '[' + result.slice(0, -2) + ']';
     }
     public add(element: T): boolean {
         if (this.contains(element)) {
             return false;
         } else {
             this.values.push(element);
-            return false;
+            return true;
         }
     }
     public contains(element: T): boolean {
         for (const value of this.values) {
-            if (value.equals(element)) {
+            if (comparableEquals(value, element)) {
                 return true;
             }
         }
@@ -58,7 +53,7 @@ export class MGPSet<T extends Comparable> implements Comparable {
     public get(index: number): T {
         return this.values[index];
     }
-    public toArray(): T[] {
+    public getCopy(): T[] {
         const result: T[] = [];
         for (const value of this.values) {
             result.push(value);

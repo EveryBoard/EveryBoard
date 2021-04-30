@@ -58,6 +58,7 @@ import { EpaminondasComponent } from './components/game-components/epaminondas/e
 import { GipfComponent } from './components/game-components/gipf/gipf.component';
 import { GoComponent } from './components/game-components/go/go.component';
 import { KamisadoComponent } from './components/game-components/kamisado/kamisado.component';
+import { LinesOfActionComponent } from './games/lines-of-action/LinesOfActionComponent';
 import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
 import { P4Component } from './components/game-components/p4/p4.component';
 import { PylosComponent } from './components/game-components/pylos/pylos.component';
@@ -118,6 +119,7 @@ const routes: Route [] = [
         GipfComponent,
         GoComponent,
         KamisadoComponent,
+        LinesOfActionComponent,
         MinimaxTestingComponent,
         P4Component,
         PylosComponent,
@@ -137,6 +139,7 @@ const routes: Route [] = [
         GipfComponent,
         GoComponent,
         KamisadoComponent,
+        LinesOfActionComponent,
         MinimaxTestingComponent,
         P4Component,
         PylosComponent,
@@ -151,7 +154,7 @@ const routes: Route [] = [
     imports: [
         BrowserModule,
         HttpClientModule,
-        RouterModule.forRoot(routes, { useHash: true }),
+        RouterModule.forRoot(routes, { useHash: false }),
         ReactiveFormsModule,
         FormsModule,
         AngularFireModule.initializeApp(firebaseConfig),

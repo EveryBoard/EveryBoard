@@ -8,6 +8,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
 import { JSONValue } from 'src/app/utils/utils/utils';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -17,23 +18,14 @@ import { JSONValue } from 'src/app/utils/utils/utils';
     template: '',
     styleUrls: ['./abstract-game-component.css'],
 })
-export abstract class AbstractGameComponent<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
-    // TODO: remove these as they have been replaced by specific CSS classes
-    public readonly PLAYER_ZERO_FILL: string = '#994d00';
-    public readonly PLAYER_ONE_FILL: string = '#ffc34d';
-    public readonly EMPTY_CASE_FILL: string = 'lightgrey';
-    public readonly CAPTURED_FILL: string = 'red';
-    public readonly MOVED_FILL: string = 'gray';
-    public readonly NORMAL_FILL: string = 'lightgrey';
-    public readonly CLICKABLE_STROKE: string = 'yellow';
-    public readonly CLICKABLE_STYLE: { [key: string]: string } = {
-        stroke: 'yellow',
-    };
+export abstract class AbstractGameComponent<M extends Move,
+                                            S extends GamePartSlice,
+                                            L extends LegalityStatus,
+                                            U extends NodeUnheritance = NodeUnheritance> {
     public readonly STROKE_WIDTH: number = 8;
     public readonly SMALL_STROKE_WIDTH: number = 2;
 
-
-    public rules: Rules<M, S, L>;
+    public rules: Rules<M, S, L, U>;
 
     public board: NumberTable;
 

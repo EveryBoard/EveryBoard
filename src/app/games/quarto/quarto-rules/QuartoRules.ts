@@ -5,12 +5,10 @@ import { QuartoMove } from '../quarto-move/QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { display } from 'src/app/utils/utils/utils';
+import { assert, display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { Direction } from 'src/app/jscaip/Direction';
 import { SCORE } from 'src/app/jscaip/SCORE';
 
 interface BoardStatus {
@@ -19,8 +17,8 @@ interface BoardStatus {
 }
 class CaseSensible {
     criteres: Critere[];
-    // listes des crit�res qu'il faut remplir dans cette case pour gagner
-    // si la pi�ce en main match un de ces crit�res, c'est une pr�-victoire
+    // listes des critères qu'il faut remplir dans cette case pour gagner
+    // si la pièce en main match un de ces critères, c'est une pré-victoire
     x: number;
     y: number;
 
@@ -33,23 +31,22 @@ class CaseSensible {
         this.y = y;
     }
     addCritere(c: Critere): boolean {
-        // rajoute le crit�re au cas où plusieurs lignes contiennent cette case sensible (de 1 à 3)
+        // rajoute le critère au cas où plusieurs lignes contiennent cette case sensible (de 1 à 3)
         // sans doublons
-        // return true si le crit�re a �t� ajout�
+        // return true si le critère a été ajouté
         const i: number = this.indexOf(c);
         if (i > 0) {
-            // pas ajout�, compt� en double
+            // pas ajouté, compté en double
             return false;
         }
-        if (i === 3) {
-            throw new Error('CECI EST IMPOSSIBLE, on a rajout� trop d\'�l�ments dans cette CaseSensible'); // TODO enlever ce d�bug
-        }
+        assert(i !== 3, 'CECI EST IMPOSSIBLE, on a rajouté trop d\'éléments dans cette CaseSensible');
+        // TODO enlever ce débug
         this.criteres[-i - 1] = c;
         return true;
     }
     indexOf(c: Critere): number {
         // TODO Critere.contains
-        // voit si ce crit�re est d�jà contenu dans la liste
+        // voit si ce critère est déjà contenu dans la liste
         // retourne l'index de c si il le trouve
         // retourne l'index de l'endroit ou on pourrait le mettre si il n'est pas dedans
         let i: number;
@@ -82,8 +79,8 @@ class Critere {
     }
     setSubCrit(index: number, value: boolean): boolean {
         this.subCritere[index] = value;
-        return true; // TODO v�rifier si j'ai un int�rêt à garder ceci
-        // pour l'instant ça me permet de pouvoir v�rifier si il n'y a pas �crasement ou donn�e
+        return true; // TODO vérifier si j'ai un intérêt à garder ceci
+        // pour l'instant ça me permet de pouvoir vérifier si il n'y a pas écrasement ou donnée
         // mais je crois que c'est impossible vu l'usage que je compte en faire
     }
     equals(o: Critere): boolean {
@@ -106,12 +103,12 @@ class Critere {
         let nonNull: number = 4;
         do {
             if (this.subCritere[i] !== c.subCritere[i]) {
-                // si la case repr�sent�e par C et cette case ci sont diff�rentes
-                // sur leurs i'i�me crit�re respectifs, alors il n'y a pas de crit�re en commun (NULL)
+                // si la case représentée par C et cette case ci sont différentes
+                // sur leurs i'ième critère respectifs, alors il n'y a pas de critère en commun (NULL)
                 this.subCritere[i] = null;
             }
             if (this.subCritere[i] == null) {
-                // si apr�s ceci le i'i�me crit�re de cette repr�sentation est NULL, alors il perd un crit�re
+                // si après ceci le i'ième critère de cette représentation est NULL, alors il perd un critère
                 nonNull--;
             }
             i++;
@@ -155,7 +152,7 @@ class Critere {
     }
     toString(): string {
         return 'Critere{' + QuartoRules.printArray(
-            this.subCritere.map( (b) => {
+            this.subCritere.map((b: boolean) => {
                 return (b === true) ? 1 : 0;
             })) + '}';
     }
@@ -168,14 +165,14 @@ abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSli
 
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStatus> {
 
-    public applyLegalMove(
-        move: QuartoMove,
-        slice: QuartoPartSlice): { resultingMove: QuartoMove; resultingSlice: QuartoPartSlice; }
+    public applyLegalMove(move: QuartoMove,
+                          slice: QuartoPartSlice)
+    : QuartoPartSlice
     {
         const newBoard: number[][] = slice.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = slice.pieceInHand.value;
         const resultingSlice: QuartoPartSlice = new QuartoPartSlice(newBoard, slice.turn + 1, move.piece);
-        return { resultingSlice, resultingMove: move };
+        return resultingSlice;
     }
 
     public static VERBOSE: boolean = false;
@@ -235,20 +232,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStat
             return MGPValidation.failure('You cannot give the piece that was in your hands.');
         }
         return MGPValidation.SUCCESS;
-    }
-    private static filter(
-        board: NumberTable,
-        depth: number,
-        firstPiece: MGPOptional<QuartoPiece>,
-        coordDirs: { coord: Coord, dir: Orthogonal}[],
-    ): { coord: Coord, dir: Orthogonal}[] {
-        const remainingCoordDirs: { coord: Coord, dir: Orthogonal}[] = [];
-        const min: QuartoPiece = QuartoPiece.NONE;
-        if (remainingCoordDirs.length === 0) {
-            return coordDirs;
-        } else {
-            return remainingCoordDirs;
-        }
     }
     // Overrides :
 

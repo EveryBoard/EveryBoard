@@ -23,7 +23,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
             const possibleDirections: Orthogonal[] = QuixoRules.getPossibleDirections(coord);
             for (const possibleDirection of possibleDirections) {
                 const newMove: QuixoMove = new QuixoMove(coord.x, coord.y, possibleDirection);
-                const resultingSlice: QuixoPartSlice = QuixoRules.applyLegalMove(newMove, slice, null).resultingSlice;
+                const resultingSlice: QuixoPartSlice = QuixoRules.applyLegalMove(newMove, slice, null);
                 moves.put(newMove, resultingSlice);
             }
         }
@@ -112,17 +112,16 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice, LegalityStatus>
     }
     public applyLegalMove(move: QuixoMove,
                           slice: QuixoPartSlice,
-                          status: LegalityStatus): { resultingMove: QuixoMove; resultingSlice: QuixoPartSlice; }
+                          status: LegalityStatus): QuixoPartSlice
     {
         return QuixoRules.applyLegalMove(move, slice, status);
     }
     public static applyLegalMove(move: QuixoMove,
                                  slice: QuixoPartSlice,
-                                 status: LegalityStatus): { resultingMove: QuixoMove; resultingSlice: QuixoPartSlice; }
+                                 status: LegalityStatus)
+    : QuixoPartSlice
     {
-        return { resultingMove: move,
-            resultingSlice: slice.applyLegalMove(move),
-        };
+        return slice.applyLegalMove(move);
     }
     public isLegal(move: QuixoMove, slice: QuixoPartSlice): LegalityStatus {
         if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) {

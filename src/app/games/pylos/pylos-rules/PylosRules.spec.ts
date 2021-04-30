@@ -107,7 +107,8 @@ describe('PylosRules:', () => {
         ];
 
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 3, 0), [new PylosCoord(0, 0, 0), new PylosCoord(3, 3, 0)]);
+        const move: PylosMove =
+            PylosMove.fromDrop(new PylosCoord(0, 3, 0), [new PylosCoord(0, 0, 0), new PylosCoord(3, 3, 0)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
     });
@@ -136,7 +137,8 @@ describe('PylosRules:', () => {
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeFalse();
 
-        const otherMove: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
+        const otherMove: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0),
+                                                        [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
         const otherStatus: LegalityStatus = rules.isLegal(otherMove, slice);
         expect(otherStatus.legal.isSuccess()).toBeFalse();
     });
@@ -232,7 +234,9 @@ describe('PylosRules:', () => {
         ];
 
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
-        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 3, 0), new PylosCoord(0, 0, 1), [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
+        const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 3, 0),
+                                                    new PylosCoord(0, 0, 1),
+                                                    [new PylosCoord(1, 0, 2), new PylosCoord(1, 0, 1)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
     });
@@ -259,7 +263,7 @@ describe('PylosRules:', () => {
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status);
         expect(rules.getBoardValue(move, resultingSlice)).toBe(Number.MAX_SAFE_INTEGER);
     });
     it('should declare looser Player.ONE when he put his 15th ball', () => {
@@ -285,7 +289,7 @@ describe('PylosRules:', () => {
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status);
         expect(rules.getBoardValue(move, resultingSlice)).toBe(Number.MIN_SAFE_INTEGER);
     });
 });

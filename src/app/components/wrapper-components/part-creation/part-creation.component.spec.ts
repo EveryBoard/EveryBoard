@@ -18,7 +18,6 @@ import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
-import { MGPStr } from 'src/app/utils/mgp-str/MGPStr';
 import { ICurrentPart } from 'src/app/domain/icurrentpart';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
@@ -233,7 +232,7 @@ describe('PartCreationComponent:', () => {
 
         expect(component.gameStartNotification.emit).toHaveBeenCalledWith(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
-        const currentPart: ICurrentPart = partDAOMock.getStaticDB().get(new MGPStr('joinerId')).get().subject.value.doc;
+        const currentPart: ICurrentPart = partDAOMock.getStaticDB().get('joinerId').get().subject.value.doc;
         const expectedPart: ICurrentPart = PartMocks.STARTING.copy();
         expectedPart.beginning = currentPart.beginning;
         expect(currentPart).toEqual(expectedPart);

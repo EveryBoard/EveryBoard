@@ -26,7 +26,7 @@ describe('SiamRules - Minimax:', () => {
 
     beforeEach(() => {
         rules = new SiamRules(SiamPartSlice);
-        MGPNode.NB_NODE_CREATED = 0; // TODO: Delete and use spy
+        MGPNode.NB_NODE_CREATED = 0;
     });
     it('Board value test: Should know who is closer to win (1)', () => {
         const board: number[][] = [
@@ -38,7 +38,8 @@ describe('SiamRules - Minimax:', () => {
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(rules.getBoardValue(move, slice)).toBeLessThan(0, 'First player should be considered as closer to victory');
+        expect(rules.getBoardValue(move, slice))
+            .toBeLessThan(0, 'First player should be considered as closer to victory');
     });
     it('Board value test: Should know who is closer to win (2)', () => {
         const board: number[][] = [

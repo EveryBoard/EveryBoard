@@ -142,13 +142,12 @@ export class SiamRules extends _SiamRules {
     public applyLegalMove(move: SiamMove,
                           slice: SiamPartSlice,
                           status: SiamLegalityStatus)
-                          : { resultingMove: SiamMove; resultingSlice: SiamPartSlice}
+    : SiamPartSlice
     {
-        const resultingMove: SiamMove = move;
         const newBoard: number[][] = status.resultingBoard;
         const newTurn: number = slice.turn + 1;
         const resultingSlice: SiamPartSlice = new SiamPartSlice(newBoard, newTurn);
-        return { resultingMove, resultingSlice };
+        return resultingSlice;
     }
     public getBoardValue(move: SiamMove, slice: SiamPartSlice): number {
         return this.getBoardValueInfo(move, slice).boardValue;
