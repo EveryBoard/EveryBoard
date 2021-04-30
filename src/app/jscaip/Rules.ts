@@ -57,7 +57,8 @@ export abstract class Rules<M extends Move,
         display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choix: MGPNode<Rules<M, S, L, U>, M, S, L, U> = this.node.getSonByMove(move);// let's not doing it twice
+            const choix: MGPNode<Rules<M, S, L, U>, M, S, L, U> =
+                this.node.getSonByMove(move);// let's not doing it twice
             if (choix !== null) {
                 display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
                 this.node = choix; // qui devient le plateau actuel
@@ -72,23 +73,25 @@ export abstract class Rules<M extends Move,
             return false;
         } else display(LOCAL_VERBOSE, 'Rules.choose: Move is legal, let\'s apply it');
 
-        const result: {resultingMove: Move, resultingSlice: GamePartSlice} =
-            MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
-        const boardInfo: unknown = MGPNode.ruler.getBoardValue(result.resultingMove, result.resultingSlice);
+        const resultingSlice: GamePartSlice = MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
+        const boardInfo: unknown = MGPNode.ruler.getBoardValue(move, resultingSlice);
         let boardValue: number;
+        let unheritance: U;
         if (typeof boardInfo === 'number') {
             boardValue = boardInfo;
         } else {
             boardValue = (boardInfo as U).value;
+            unheritance = boardInfo as U;
         }
         const son: MGPNode<Rules<M, S, L, U>, M, S, L, U> = new MGPNode(this.node,
-                                                                        result.resultingMove as M,
-                                                                        result.resultingSlice as S,
-                                                                        boardValue);
+                                                                        move as M, // TODO: check cast use
+                                                                        resultingSlice as S,
+                                                                        boardValue,
+                                                                        unheritance);
         this.node = son;
         return true;
     };
-    public abstract applyLegalMove(move: M, slice: S, status: L): {resultingMove: M, resultingSlice: S};
+    public abstract applyLegalMove(move: M, slice: S, status: L): S;
 
     public abstract isLegal(move: M, slice: S): L; // TODO: rename, isBlbl should return a boolean
     /* return a legality status about the move, allowing to return already calculated info
@@ -110,7 +113,7 @@ export abstract class Rules<M extends Move,
             if (status.legal.isFailure()) {
                 throw new Error('Can\'t create slice from invalid moves (' + i + '): ' + status.legal.reason + '.');
             }
-            slice = this.applyLegalMove(move, slice, status).resultingSlice;
+            slice = this.applyLegalMove(move, slice, status);
             i++;
         }
         return slice;

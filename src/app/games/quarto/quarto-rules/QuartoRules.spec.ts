@@ -100,7 +100,7 @@ describe('QuartoRules', () => {
         const move: QuartoMove = new QuartoMove(3, 0, QuartoPiece.AAAB);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice).resultingSlice;
+        const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice);
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 5, QuartoPiece.AAAB);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
@@ -123,7 +123,7 @@ describe('QuartoRules', () => {
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.AABA);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice).resultingSlice;
+        const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice);
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 10, QuartoPiece.AABA);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);

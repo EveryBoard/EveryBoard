@@ -64,7 +64,7 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
     ): MGPMap<EpaminondasMove, EpaminondasPartSlice> {
         const legality: EpaminondasLegalityStatus = this.isLegal(move, slice);
         if (legality.legal.isSuccess()) {
-            const resultingSlice: EpaminondasPartSlice = this.applyLegalMove(move, slice, legality).resultingSlice;
+            const resultingSlice: EpaminondasPartSlice = this.applyLegalMove(move, slice, legality);
             moves.put(move, resultingSlice);
         }
         return moves;
@@ -83,10 +83,11 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
     public applyLegalMove(
         move: EpaminondasMove,
         slice: EpaminondasPartSlice,
-        status: EpaminondasLegalityStatus): { resultingMove: EpaminondasMove; resultingSlice: EpaminondasPartSlice; }
+        status: EpaminondasLegalityStatus)
+    : EpaminondasPartSlice
     {
         const resultingSlice: EpaminondasPartSlice = new EpaminondasPartSlice(status.newBoard, slice.turn + 1);
-        return { resultingMove: move, resultingSlice };
+        return resultingSlice;
     }
     public isLegal(move: EpaminondasMove, slice: EpaminondasPartSlice): EpaminondasLegalityStatus {
         const phalanxValidity: MGPValidation = this.getPhalanxValidity(slice, move);
@@ -155,7 +156,12 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         newBoard[landingCoord.y][landingCoord.x] = CURRENT_PLAYER;
         return { newBoard, legal: MGPValidation.SUCCESS };
     }
-    public getCaptureValidity(oldSlice: EpaminondasPartSlice, board: number[][], move: EpaminondasMove, ENNEMY: number): EpaminondasLegalityStatus {
+    public getCaptureValidity(oldSlice: EpaminondasPartSlice,
+                              board: number[][],
+                              move: EpaminondasMove,
+                              ENNEMY: number)
+    : EpaminondasLegalityStatus
+    {
         let capturedSoldier: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
         const EMPTY: number = Player.NONE.value;
         let captured: number = 0;

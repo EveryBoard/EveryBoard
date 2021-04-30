@@ -38,7 +38,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 0), new Coord(2, 2));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status).resultingSlice;
+        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(resultingState.board).toEqual(expectedBoard);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, going up', () => {
@@ -56,7 +56,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 7), new Coord(2, 5));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status).resultingSlice;
+        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(resultingState.board).toEqual(expectedBoard);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, horizontally', () => {
@@ -84,7 +84,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 2), new Coord(5, 2));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status).resultingSlice;
+        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(resultingState.board).toEqual(expectedBoard);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, diagonally', () => {
@@ -102,7 +102,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(1, 0), new Coord(3, 2));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status).resultingSlice;
+        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(resultingState.board).toEqual(expectedBoard);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, diagonally from the bottom row', () => {
@@ -120,7 +120,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(1, 7), new Coord(3, 5));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status).resultingSlice;
+        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(resultingState.board).toEqual(expectedBoard);
     });
     it('should move a piece by exactly as many spaces as there are pieces on the same line, variant', () => {
@@ -148,7 +148,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 2), new Coord(3, 5));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status).resultingSlice;
+        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(resultingState.board).toEqual(expectedBoard);
     });
     it('should forbid to move a piece by a different number of spaces than the number of pieces on the same line', () => {
@@ -207,7 +207,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(1, 0), new Coord(7, 0));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status).resultingSlice;
+        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(resultingState.board).toEqual(expectedBoard);
     });
     it('should capture when landing on an enemy', () => {
@@ -235,7 +235,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 2), new Coord(4, 2));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status).resultingSlice;
+        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(resultingState.board).toEqual(expectedBoard);
     });
     it('should not detect win when there still are multiple groups', () => {
@@ -297,7 +297,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 2), new Coord(4, 2));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status).resultingSlice;
+        const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
         expect(rules.getVictory(resultingState)).toEqual(MGPOptional.of(Player.NONE));
     });
     it('should list all possible targets', () => {

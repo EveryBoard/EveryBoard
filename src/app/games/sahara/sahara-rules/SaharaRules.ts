@@ -92,14 +92,15 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice, LegalityStat
     }
     public applyLegalMove(move: SaharaMove,
                           slice: SaharaPartSlice,
-                          status: LegalityStatus): { resultingMove: SaharaMove; resultingSlice: SaharaPartSlice; }
+                          status: LegalityStatus)
+    : SaharaPartSlice
     {
         display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
         const board: SaharaPawn[][] = slice.getCopiedBoard();
         board[move.end.y][move.end.x] = board[move.coord.y][move.coord.x];
         board[move.coord.y][move.coord.x] = SaharaPawn.EMPTY;
         const resultingSlice: SaharaPartSlice = new SaharaPartSlice(board, slice.turn + 1);
-        return { resultingMove: move, resultingSlice };
+        return resultingSlice;
     }
     public isLegal(move: SaharaMove, slice: SaharaPartSlice): LegalityStatus {
         const movedPawn: SaharaPawn = slice.getBoardAt(move.coord);

@@ -13,10 +13,17 @@ import { SixFailure } from './SixFailure';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { display } from 'src/app/utils/utils/utils';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
-export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus> {
+
+interface SixNodeUnheritance extends NodeUnheritance {
+
+    value: number;
+
+    preVictory?: Coord;
 }
-
+export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus, SixNodeUnheritance> {
+}
 interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
     index: number,
@@ -31,8 +38,17 @@ export class SixRules extends AlignementMinimax<SixMove,
     private currentVictorySource: SixVictorySource;
 
     public getListMoves(node: SixNode): MGPMap<SixMove, SixGameState> {
-        if (node.mother && node.mother['preVictory']) {
-            console.log('EH! MOPATÉÉ')
+        if (node.unheritance.preVictory) {
+            if (node.gamePartSlice.turn < 40) {
+                const forcedMove: MGPMap<SixMove, SixGameState> = new MGPMap();
+                const move: SixMove = SixMove.fromDrop(node.unheritance.preVictory);
+                const status: SixLegalityStatus = { legal: MGPValidation.SUCCESS, kept: null };
+                const state: SixGameState = this.applyLegalMove(move, node.gamePartSlice, status);
+                forcedMove.put(move, state);
+                return forcedMove;
+            } else {
+                throw new Error('TODO FANDPETE');
+            }
         }
         const legalLandings: Coord[] = this.getLegalLandings(node.gamePartSlice);
         if (node.gamePartSlice.turn < 40) {
@@ -74,7 +90,7 @@ export class SixRules extends AlignementMinimax<SixMove,
                     const legality: SixLegalityStatus = this.isPhaseTwoMove(move, state);
                     if (legality.legal.isSuccess()) { // TODO: cuttingMove
                         const resultingState: SixGameState =
-                            this.applyLegalMove(move, state, legality).resultingSlice;
+                            this.applyLegalMove(move, state, legality);
                         deplacements.put(move, resultingState);
                     }
                 }
@@ -526,13 +542,14 @@ export class SixRules extends AlignementMinimax<SixMove,
     }
     public applyLegalMove(move: SixMove,
                           state: SixGameState,
-                          status: SixLegalityStatus): { resultingMove: SixMove; resultingSlice: SixGameState; }
+                          status: SixLegalityStatus)
+    : SixGameState
     {
         if (state.turn < 40) {
-            return { resultingSlice: state.applyLegalDrop(move.landing), resultingMove: move };
+            return state.applyLegalDrop(move.landing);
         } else {
             const kept: MGPSet<Coord> = status.kept;
-            return { resultingSlice: state.applyLegalDeplacement(move, kept), resultingMove: move };
+            return state.applyLegalDeplacement(move, kept);
         }
     }
     public isLegal(move: SixMove, slice: SixGameState): SixLegalityStatus {

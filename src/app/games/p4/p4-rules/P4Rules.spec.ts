@@ -39,7 +39,7 @@ describe('P4Rules', () => {
         const move: P4Move = P4Move.of(3);
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: P4PartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: P4PartSlice = rules.applyLegalMove(move, slice, status);
         expect(resultingSlice.board).toEqual(expectedBoard);
     });
     it('First player should win vertically', () => {

@@ -2,7 +2,7 @@ import { Rules } from '../../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { Coord } from '../../../jscaip/coord/Coord';
 import { GoPartSlice, Phase, GoPiece } from '../go-part-slice/GoPartSlice';
-import { Direction, Orthogonal } from 'src/app/jscaip/Direction';
+import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from '../go-move/GoMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { GoLegalityStatus } from '../GoLegalityStatus';
@@ -42,7 +42,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         } else if (GoRules.isAccept(move)) {
             const counting: boolean = slice.phase === Phase.COUNTING;
             const accept: boolean = slice.phase === Phase.ACCEPT;
-            display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.isLegal: move is GoMove.ACCEPT, hence, it is ' + ((counting || accept) ? ' legal' : 'illegal'));
             return {
                 legal: (counting || accept) ? MGPValidation.SUCCESS : GoRules.CANNOT_ACCEPT_BEFORE_COUNTING_PHRASE,
                 capturedCoords: [],
@@ -68,14 +67,11 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                (slice.phase === Phase.COUNTING || slice.phase === Phase.ACCEPT);
     }
     private static isLegalNormalMove(move: GoMove, slice: GoPartSlice): GoLegalityStatus {
-        const LOCAL_VERBOSE: boolean = false;
 
         const boardCopy: GoPiece[][] = slice.getCopiedBoardGoPiece();
         if (GoRules.isOccupied(move.coord, boardCopy)) {
-            display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegalNormalMove: ' + move + ' illegal ecrasement on ' + slice.getCopiedBoard());
             return GoLegalityStatus.failure('illegal ecrasement');
         } else if (GoRules.isKo(move, slice)) {
-            display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegalNormalMove: ' + move + ' illegal ko on ' + slice.getCopiedBoard());
             return GoLegalityStatus.failure('illegal ko');
         }
         if ([Phase.COUNTING, Phase.ACCEPT].includes(slice.phase)) {
@@ -83,7 +79,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         }
         const captureState: CaptureState = GoRules.getCaptureState(move, slice);
         if (CaptureState.isCapturing(captureState)) {
-            display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegalNormalMove: ' + move + ' legal avec capture on ' + slice.getCopiedBoard());
             return { legal: MGPValidation.SUCCESS, capturedCoords: captureState.capturedCoords };
         } else {
             boardCopy[move.coord.y][move.coord.x] = slice.turn%2 === 0 ? GoPiece.BLACK : GoPiece.WHITE;
@@ -91,10 +86,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             boardCopy[move.coord.y][move.coord.x] = GoPiece.EMPTY;
 
             if (isSuicide) {
-                display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegalNormalMove: ' + move + ' illegal suicide on ' + slice.getCopiedBoard());
                 return GoLegalityStatus.failure('illegal suicide');
             } else {
-                display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegalNormalMove: ' + move + ' legal on ' + slice.getCopiedBoard());
                 return { legal: MGPValidation.SUCCESS, capturedCoords: [] };
             }
         }
@@ -159,14 +152,14 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         const playingMoves: MGPMap<GoMove, GoPartSlice> = this.getPlayingMovesList(currentSlice);
         if (currentSlice.phase === Phase.PLAYING ||
             currentSlice.phase === Phase.PASSED) {
-            playingMoves.set(GoMove.PASS, GoRules.applyPass(currentSlice).resultingSlice);
+            playingMoves.set(GoMove.PASS, GoRules.applyPass(currentSlice));
             return playingMoves;
         } else if (currentSlice.phase === Phase.COUNTING ||
                    currentSlice.phase === Phase.ACCEPT) {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.getListMoves in counting phase');
             const markingMoves: MGPMap<GoMove, GoPartSlice> = this.getCountingMovesList(currentSlice);
             if (markingMoves.size() === 0) {
-                markingMoves.set(GoMove.ACCEPT, GoRules.applyAccept(currentSlice).resultingSlice);
+                markingMoves.set(GoMove.ACCEPT, GoRules.applyAccept(currentSlice));
             }
             return markingMoves;
         } else {
@@ -211,7 +204,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             const actualContent: GoPiece = currentSlice.getBoardAtGoPiece(coord);
             if (actualContent !== correctContent) {
                 const move: GoMove = new GoMove(coord.x, coord.y);
-                const resultingSlice: GoPartSlice = GoRules.applyDeadMarkingMove(move, currentSlice).resultingSlice;
+                const resultingSlice: GoPartSlice = GoRules.applyDeadMarkingMove(move, currentSlice);
                 choices.set(move, resultingSlice);
                 return choices;
             }
@@ -253,19 +246,18 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                 if (slice.getBoardAtGoPiece(newMove.coord) === GoPiece.EMPTY) {
                     const legality: GoLegalityStatus = this.isLegal(newMove, slice);
                     if (legality.legal.isSuccess()) {
-                        const result: {resultingMove: GoMove, resultingSlice: GoPartSlice} =
-                            this.applyLegalMove(newMove, slice, legality);
-                        choices.set(result.resultingMove, result.resultingSlice);
+                        const resultingSlice: GoPartSlice = this.applyLegalMove(newMove, slice, legality);
+                        choices.set(newMove, resultingSlice);
                     }
                 }
             }
         }
         return choices;
     }
-    public applyLegalMove(
-        legalMove: GoMove,
-        slice: GoPartSlice,
-        status: GoLegalityStatus): {resultingMove: GoMove, resultingSlice: GoPartSlice}
+    public applyLegalMove(legalMove: GoMove,
+                          slice: GoPartSlice,
+                          status: GoLegalityStatus)
+    : GoPartSlice
     {
         display(GoRules.VERBOSE, { applyLegalMove: { legalMove, slice, status } });
         if (GoRules.isPass(legalMove)) {
@@ -282,8 +274,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             return GoRules.applyNormalLegalMove(slice, legalMove, status);
         }
     }
-    private static applyPass(slice: GoPartSlice): {resultingMove: GoMove, resultingSlice: GoPartSlice} {
-        const resultingMove: GoMove = GoMove.PASS;
+    private static applyPass(slice: GoPartSlice): GoPartSlice {
         const oldBoard: GoPiece[][] = slice.getCopiedBoardGoPiece();
         const oldCaptured: number[] = slice.getCapturedCopy();
         const oldTurn: number = slice.turn;
@@ -299,16 +290,15 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         } else {
             throw new Error('Cannot pass in counting phase!');
         }
-        return { resultingMove, resultingSlice };
+        return resultingSlice;
     }
-    private static applyAccept(slice: GoPartSlice): {resultingMove: GoMove, resultingSlice: GoPartSlice} {
+    private static applyAccept(slice: GoPartSlice): GoPartSlice {
         if (slice.phase === Phase.PLAYING) {
             throw new Error('Cannot accept in PLAYING Phase');
         }
         if (slice.phase === Phase.PASSED) {
             throw new Error('Cannot accept in PASSED Phase');
         }
-        const resultingMove: GoMove = GoMove.ACCEPT;
         if (slice.phase === Phase.COUNTING) {
             const countingBoard: GoPiece[][] = slice.getCopiedBoardGoPiece();
             const resultingSlice: GoPartSlice = new GoPartSlice(countingBoard,
@@ -316,20 +306,20 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                                                                 slice.turn + 1,
                                                                 MGPOptional.empty(),
                                                                 Phase.ACCEPT);
-            return { resultingMove, resultingSlice };
+            return resultingSlice;
         } else if (slice.phase === Phase.ACCEPT) {
             const resultingSlice: GoPartSlice = new GoPartSlice(slice.getCopiedBoardGoPiece(),
                                                                 slice.getCapturedCopy(),
                                                                 slice.turn + 1,
                                                                 MGPOptional.empty(),
                                                                 Phase.FINISHED);
-            return { resultingMove, resultingSlice };
+            return resultingSlice;
         }
     }
-    private static applyNormalLegalMove(
-        currentPartSlice: GoPartSlice,
-        legalMove: GoMove,
-        status: GoLegalityStatus): {resultingMove: GoMove, resultingSlice: GoPartSlice}
+    private static applyNormalLegalMove(currentPartSlice: GoPartSlice,
+                                        legalMove: GoMove,
+                                        status: GoLegalityStatus)
+    : GoPartSlice
     {
         display(GoRules.VERBOSE, { applyNormalLegal: { currentPartSlice, legalMove, status } });
         let slice: GoPartSlice;
@@ -350,12 +340,10 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         for (const capturedCoord of capturedCoords) {
             newBoard[capturedCoord.y][capturedCoord.x] = GoPiece.EMPTY;
         }
-        const resultingMove: GoMove = new GoMove(x, y);
-        const newKoCoord: MGPOptional<Coord> = GoRules.getNewKo(resultingMove, newBoard, capturedCoords);
+        const newKoCoord: MGPOptional<Coord> = GoRules.getNewKo(legalMove, newBoard, capturedCoords);
         const newCaptured: number[] = slice.getCapturedCopy();
         newCaptured[currentPlayer] += capturedCoords.length;
-        const resultingSlice: GoPartSlice = new GoPartSlice(newBoard, newCaptured, newTurn, newKoCoord, Phase.PLAYING);
-        return { resultingMove, resultingSlice };
+        return new GoPartSlice(newBoard, newCaptured, newTurn, newKoCoord, Phase.PLAYING);
     }
     public static resurectStones(slice: GoPartSlice): GoPartSlice {
         for (let y: number = 0; y < slice.board.length; y++) {
@@ -369,19 +357,18 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
     }
     private static applyDeadMarkingMove(
         legalMove: GoMove,
-        slice: GoPartSlice): {resultingMove: GoMove, resultingSlice: GoPartSlice}
+        slice: GoPartSlice): GoPartSlice
     {
         display(GoRules.VERBOSE, { applyDeadMarkingMove: { legalMove, slice } });
         const territorylessSlice: GoPartSlice = GoRules.removeAndSubstractTerritory(slice);
         const switchedSlice: GoPartSlice = GoRules.switchAliveness(legalMove.coord, territorylessSlice);
-        let resultingSlice: GoPartSlice =
+        const resultingSlice: GoPartSlice =
             new GoPartSlice(switchedSlice.getCopiedBoardGoPiece(),
                             switchedSlice.getCapturedCopy(),
                             switchedSlice.turn + 1,
                             MGPOptional.empty(),
                             Phase.COUNTING);
-        resultingSlice = GoRules.markTerritoryAndCount(resultingSlice);
-        return { resultingMove: legalMove, resultingSlice };
+        return GoRules.markTerritoryAndCount(resultingSlice);
     }
     public getBoardValue(move: GoMove, slice: GoPartSlice): number {
         const LOCAL_VERBOSE: boolean = false;
@@ -481,7 +468,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                 coord = new Coord(x, y);
                 currentCase = board[y][x];
                 if (condition(currentCase)) {
-                    if (!groups.some((currentGroup) => currentGroup.selfCountains(coord))) {
+                    if (!groups.some((currentGroup: GroupDatas) => currentGroup.selfCountains(coord))) {
                         group = GroupDatas.getGroupDatas(coord, board);
                         groups.push(group);
                     }

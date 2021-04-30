@@ -18,7 +18,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): { resultingMove: AwaleMove; resultingSlice: AwalePartSlice; } {
+    public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): AwalePartSlice {
         display(AwaleRules.VERBOSE, 'applyLegalMove');
         const turn: number = slice.turn;
         const PLAYER: number = slice.getCurrentPlayer().value;
@@ -30,16 +30,15 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         captured[PLAYER] += status.captured[PLAYER];
         captured[ENNEMY] += status.captured[ENNEMY];
 
-        const resultingSlice: AwalePartSlice = new AwalePartSlice(status.resultingBoard, turn + 1, captured);
-        return { resultingSlice, resultingMove: move };
+        return new AwalePartSlice(status.resultingBoard, turn + 1, captured);
     }
     private static mansoon(mansooningPlayer: number, board: number[][]): number {
         /* capture all the seeds of the mansooning player
          * return the sum of all captured seeds
          * is called when a game is over because of starvation
          */
-        let sum = 0;
-        let x = 0;
+        let sum: number = 0;
+        let x: number = 0;
         do {
             sum += board[mansooningPlayer][x];
             board[mansooningPlayer][x] = 0;
@@ -109,7 +108,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         return board[y][x] > x; // distribution from right to left
     }
     private static canDistribute(player: number, board: number[][]): boolean {
-        let x = 0;
+        let x: number = 0;
         do {
             if (AwaleRules.doesDistribute(x++, player, board)) {
                 return true;
@@ -118,7 +117,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         return false;
     }
     private static isStarving(player: number, board: number[][]): boolean {
-        let i = 0;
+        let i: number = 0;
         do {
             if (board[player][i++] > 0) {
                 return false; // found some food there, so not starving
@@ -135,7 +134,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         const ix: number = x;
         const iy: number = y;
         // à retenir pour appliquer la règle de la jachère en cas de tour complet
-        let inHand = board[y][x];
+        let inHand: number = board[y][x];
         board[y][x] = 0; // on vide la case
         while (inHand > 0) {
             // get next case
@@ -168,14 +167,14 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
          * capture even if this could mean doing an illegal starvation
          */
 
-        let target = board[y][x];
+        let target: number = board[y][x];
         if ((target < 2) || (target > 3)) {
             return 0; // first case not capturable
         }
 
-        let captured = 0;
-        let direction = -1; // by defaut, capture from right to left
-        let limite = -1;
+        let captured: number = 0;
+        let direction: number = -1; // by defaut, capture from right to left
+        let limite: number = -1;
         if (player === 0) {
             /* if turn == 0 capture is on the bottom line
              * means capture goes from left to right ( + 1)
@@ -201,7 +200,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         const player: number = turn % 2;
         let newMove: AwaleMove;
         let newSlice: AwalePartSlice;
-        let x = 0;
+        let x: number = 0;
         do {
             // for each house that might be playable
 

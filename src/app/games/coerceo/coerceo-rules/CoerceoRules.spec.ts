@@ -139,7 +139,7 @@ describe('CoerceoRules', () => {
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+            const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status);
             const expectedSlice: CoerceoPartSlice =
                 new CoerceoPartSlice(expectedBoard, 2, [0, 0], [0, 1]);
             expect(resultingSlice).toEqual(expectedSlice);
@@ -173,7 +173,7 @@ describe('CoerceoRules', () => {
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(7, 5), CoerceoStep.DOWN_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+            const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status);
             const expectedSlice: CoerceoPartSlice =
                 new CoerceoPartSlice(expectedBoard, 2, [0, 1], [0, 0]);
             expect(resultingSlice).toEqual(expectedSlice);
@@ -207,7 +207,7 @@ describe('CoerceoRules', () => {
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(8, 6), CoerceoStep.DOWN_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+            const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status);
             const expectedSlice: CoerceoPartSlice =
                 new CoerceoPartSlice(expectedBoard, 2, [0, 1], [0, 1]);
             expect(resultingSlice).toEqual(expectedSlice);
@@ -315,7 +315,7 @@ describe('CoerceoRules', () => {
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(10, 7));
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+            const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status);
             const expectedSlice: CoerceoPartSlice =
                 new CoerceoPartSlice(expectedBoard, 2, [0, 0], [0, 1]);
             expect(resultingSlice).toEqual(expectedSlice);
@@ -350,7 +350,7 @@ describe('CoerceoRules', () => {
         const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(10, 7));
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: CoerceoPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: CoerceoPartSlice =
             new CoerceoPartSlice(expectedBoard, 2, [0, 0], [0, 1]);
         expect(resultingSlice).toEqual(expectedSlice);

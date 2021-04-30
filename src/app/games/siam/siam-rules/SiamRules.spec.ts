@@ -55,7 +55,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(-1, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -78,7 +78,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -114,7 +114,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -137,7 +137,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.RIGHT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -160,7 +160,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.empty(), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -183,7 +183,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -219,7 +219,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.LEFT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -268,7 +268,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -343,7 +343,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
@@ -366,7 +366,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
@@ -391,7 +391,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(2, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
@@ -416,7 +416,7 @@ describe('SiamRules:', () => {
         const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status).resultingSlice;
+        const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = rules.getBoardValue(move, expectedSlice);
