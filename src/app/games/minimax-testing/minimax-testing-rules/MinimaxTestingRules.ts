@@ -41,7 +41,8 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
     }
     public getListMoves(n: MinimaxTestingNode): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {
         MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT++;
-        const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> = new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();
+        const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> =
+            new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();
         const slice: MinimaxTestingPartSlice = n.gamePartSlice;
         const LEGAL: LegalityStatus = { legal: MGPValidation.SUCCESS };
         if (slice.location.x < 3) {

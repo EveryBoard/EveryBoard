@@ -27,11 +27,3 @@ export function comparableEquals<T extends Comparable>(a: T, b: T): boolean {
         return a === b;
     }
 }
-
-export function comparableObjectEquals(a: ComparableObject, b: ComparableObject): boolean {
-    return a.equals(b);
-}
-
-export function primitiveEquals<T extends JSONPrimitive>(a: T, b: T): boolean {
-    return a === b;
-}

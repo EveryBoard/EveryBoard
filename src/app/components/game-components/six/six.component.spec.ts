@@ -88,7 +88,7 @@ describe('SixComponent', () => {
         componentTestUtils.expectElementToExist('#disconnected_-2_2');
         componentTestUtils.expectElementToExist('#disconnected_-2_3');
     }));
-    xit('should highlight winning coords', fakeAsync(async() => {
+    it('should highlight winning coords', fakeAsync(async() => {
         const board: number[][] = [
             [O, _, _, _, _, _, _, _, _, _],
             [O, O, O, O, O, X, X, X, X, X],

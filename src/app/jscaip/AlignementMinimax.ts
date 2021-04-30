@@ -3,6 +3,7 @@ import { Coord } from './coord/Coord';
 import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';
 import { Move } from './Move';
+import { NodeUnheritance } from './NodeUnheritance';
 import { Rules } from './Rules';
 import { SCORE } from './SCORE';
 
@@ -14,8 +15,10 @@ export interface BoardInfo {
 }
 export abstract class AlignementMinimax<M extends Move,
                                         S extends GamePartSlice,
-                                        L extends LegalityStatus, V>
-    extends Rules<M, S, L>
+                                        L extends LegalityStatus,
+                                        V,
+                                        U extends NodeUnheritance = NodeUnheritance>
+    extends Rules<M, S, L, U>
 {
 
     public calculateBoardValue(move: M, state: S): BoardInfo {

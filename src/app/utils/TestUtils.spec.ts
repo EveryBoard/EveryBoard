@@ -19,6 +19,7 @@ import { MGPNode } from '../jscaip/mgp-node/MGPNode';
 import { GameWrapper } from '../components/wrapper-components/GameWrapper';
 import { Rules } from '../jscaip/Rules';
 import { Player } from '../jscaip/player/Player';
+import { NodeUnheritance } from '../jscaip/NodeUnheritance';
 
 class ActivatedRouteMock {
     public readonly snapshot: any;
@@ -43,14 +44,20 @@ export class AuthenticationServiceMock {
     }
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
+export class ComponentTestUtils<T extends AbstractGameComponent<Move,
+                                                                GamePartSlice,
+                                                                LegalityStatus,
+                                                                NodeUnheritance>> {
     public fixture: ComponentFixture<GameWrapper>;
     public debugElement: DebugElement;
     public wrapper: GameWrapper;
 
     public activatedRouteStub: ActivatedRouteMock;
 
-    private gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
+    private gameComponent: AbstractGameComponent<Move,
+                                                 GamePartSlice,
+                                                 LegalityStatus,
+                                                 NodeUnheritance>;
     private canUserPlaySpy: jasmine.Spy;
     private cancelMoveSpy: jasmine.Spy;
     private chooseMoveSpy: jasmine.Spy;
@@ -233,27 +240,27 @@ export class ComponentTestUtils<T extends AbstractGameComponent<Move, GamePartSl
     }
 }
 
-export const expectFirstStateToWorthMoreThanSecond: (weakerState: GamePartSlice,
-                                                     weakMove: Move,
-                                                     strongerState: GamePartSlice,
-                                                     strongMove: Move,
-                                                     rules: Rules<Move, GamePartSlice, LegalityStatus>) => void =
-(weakerState: GamePartSlice,
- weakMove: Move,
- strongerState: GamePartSlice,
- strongMove: Move,
- rules: Rules<Move, GamePartSlice, LegalityStatus>) =>
+export function expectFirstStateToWorthMoreThanSecond(weakerState: GamePartSlice,
+                                                      weakMove: Move,
+                                                      strongerState: GamePartSlice,
+                                                      strongMove: Move,
+                                                      rules: Rules<Move,
+                                                                   GamePartSlice,
+                                                                   LegalityStatus,
+                                                                   NodeUnheritance>)
+                                                      : void
 {
-    const weakValue: number = rules.getBoardValue(weakMove, weakerState);
-    const strongValue: number = rules.getBoardValue(strongMove, strongerState);
+    const weakValue: number = rules.getBoardNumericValue(weakMove, weakerState);
+    const strongValue: number = rules.getBoardNumericValue(strongMove, strongerState);
     expect(weakValue).toBeLessThan(strongValue);
-};
-export const expectStateToBePreVictory: (state: GamePartSlice,
-                                         previousMove: Move,
-                                         player: Player,
-                                         rules: Rules<Move, GamePartSlice, LegalityStatus>) => void =
-(state: GamePartSlice, previousMove: Move, player: Player, rules: Rules<Move, GamePartSlice, LegalityStatus>) => {
-    const value: number = rules.getBoardValue(previousMove, state);
+}
+export function expectStateToBePreVictory(state: GamePartSlice,
+                                          previousMove: Move,
+                                          player: Player,
+                                          rules: Rules<Move, GamePartSlice, LegalityStatus, NodeUnheritance>)
+                                          : void
+{
+    const value: number = rules.getBoardNumericValue(previousMove, state);
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);
-};
+}

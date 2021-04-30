@@ -12,7 +12,6 @@ export class MustVerifyEmail implements CanActivate {
     public canActivate(): Promise<boolean> {
         return new Promise((resolve: (value: boolean) => void) => {
             this.authService.getJoueurObs().subscribe((user: AuthUser) => {
-                console.log('we received a new user:', user);
                 if (user === AuthenticationService.NOT_AUTHENTICATED) {
                     console.log('Authentication incoming!');
                 } else {

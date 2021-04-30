@@ -13,22 +13,27 @@ import { SixFailure } from './SixFailure';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { display } from 'src/app/utils/utils/utils';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
-import { Move } from 'src/app/jscaip/Move';
-import { last } from 'rxjs/operators';
 
-export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus> {}
+export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus> {
+}
 
 interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
     index: number,
 }
-export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegalityStatus, SixVictorySource> {
+export class SixRules extends AlignementMinimax<SixMove,
+                                                SixGameState,
+                                                SixLegalityStatus,
+                                                SixVictorySource> {
 
-    public VERBOSE: boolean = true;
+    public VERBOSE: boolean = false;
 
     private currentVictorySource: SixVictorySource;
 
     public getListMoves(node: SixNode): MGPMap<SixMove, SixGameState> {
+        if (node.mother && node.mother['preVictory']) {
+            console.log('EH! MOPATÉÉ')
+        }
         const legalLandings: Coord[] = this.getLegalLandings(node.gamePartSlice);
         if (node.gamePartSlice.turn < 40) {
             return this.getListDrop(node.gamePartSlice, legalLandings);
@@ -77,14 +82,18 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
         }
         return deplacements;
     }
-    public getBoardValue(move: SixMove, slice: SixGameState): number {
+    public getBoardValue(move: SixMove, slice: SixGameState): { value: number, preVictory?: Coord } {
         // const lastDrop: Coord = move.landing.getNext(slice.offset, 1);
         const LAST_PLAYER: Player = slice.getCurrentEnnemy();
         const victoryValue: number = LAST_PLAYER.getVictoryValue();
         // const shapeInfo: BoardInfo = this.getShapeInfo(lastDrop, slice);
         const shapeInfo: BoardInfo = this.calculateBoardValue(move, slice);
+        let preVictory: Coord | null;
+        if (shapeInfo.status === SCORE.DEFAULT) {
+            preVictory = shapeInfo.preVictory.getOrNull();
+        }
         if (shapeInfo.status === SCORE.VICTORY) {
-            return victoryValue;
+            return { value: victoryValue, preVictory: null };
         }
         if (slice.turn > 39) {
             const pieces: number[] = slice.countPieces();
@@ -92,24 +101,33 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
             const onePieces: number = pieces[1];
             if (zeroPieces < 6 && onePieces < 6) {
                 if (zeroPieces < onePieces) {
-                    return Player.ONE.getVictoryValue();
+                    return { value: Player.ONE.getVictoryValue() };
                 } else if (onePieces < zeroPieces) {
-                    return Player.ZERO.getVictoryValue();
+                    return { value: Player.ZERO.getVictoryValue() };
                 } else {
-                    return 0; // DRAW
+                    return { value: 0 }; // DRAW
                 }
             } else if (zeroPieces < 6) {
-                return Player.ZERO.getDefeatValue();
+                return { value: Player.ZERO.getDefeatValue() };
             } else if (onePieces < 6) {
-                return Player.ONE.getDefeatValue();
+                return { value: Player.ONE.getDefeatValue() };
             } else {
-                return zeroPieces - onePieces;
+                return {
+                    value: zeroPieces - onePieces,
+                    preVictory,
+                };
             }
         }
         if (shapeInfo.status === SCORE.PRE_VICTORY) {
-            return LAST_PLAYER.getPreVictory();
+            return {
+                value: LAST_PLAYER.getPreVictory(),
+                preVictory,
+            };
         }
-        return shapeInfo.sum * LAST_PLAYER.getScoreModifier();
+        return {
+            value: shapeInfo.sum * LAST_PLAYER.getScoreModifier(),
+            preVictory,
+        };
     }
     public startSearchingVictorySources(): void {
         display(this.VERBOSE, 'SixRules.startSearchingVictorySources()');
@@ -154,24 +172,25 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
         return this.currentVictorySource;
     }
     public searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixGameState): BoardInfo {
+        const lastDrop: Coord = move.landing.getNext(state.offset, 1);
         display(this.VERBOSE, { called: 'SixRules.searchVictoryOnly', victorySource, move, state });
         switch (victorySource.typeSource) {
             case 'CIRCLE':
-                return this.searchVictoryOnlyForCircle(victorySource.index, move, state);
+                return this.searchVictoryOnlyForCircle(victorySource.index, lastDrop, state);
             case 'LINE':
-                return this.searchVictoryOnlyForLine(victorySource.index, move, state);
+                return this.searchVictoryOnlyForLine(victorySource.index, lastDrop, state);
             case 'TRIANGLE_CORNER':
-                return this.searchVictoryOnlyForTriangleCorner(victorySource.index, move, state);
+                return this.searchVictoryOnlyForTriangleCorner(victorySource.index, lastDrop, state);
             default:
-                return this.searchVictoryOnlyForTriangleEdge(victorySource.index, move, state);
+                return this.searchVictoryOnlyForTriangleEdge(victorySource.index, lastDrop, state);
         }
     }
-    public searchVictoryOnlyForCircle(index: number, move: SixMove, state: SixGameState): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.searchVictoryOnlyForCircle', index, move, state });
+    public searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixGameState): BoardInfo {
+        display(this.VERBOSE, { called: 'SixRules.searchVictoryOnlyForCircle', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
-        const testedCoords: Coord[] = [move.landing];
-        let testCoord: Coord = move.landing.getNext(initialDirection, 1);
+        const testedCoords: Coord[] = [lastDrop];
+        let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
         while (testedCoords.length < 6) {
             const testedPiece: Player = state.getPieceAt(testCoord);
             if (testedPiece !== LAST_PLAYER) {
@@ -191,11 +210,11 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
             preVictory: null, sum: null,
         };
     }
-    public searchVictoryOnlyForLine(index: number, move: SixMove, state: SixGameState): BoardInfo {
+    public searchVictoryOnlyForLine(index: number, lastDrop: Coord, state: SixGameState): BoardInfo {
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
         let dir: HexaDirection = HexaDirection.factory.all[index];
-        let testCoord: Coord = move.landing.getNext(dir, 1);
-        const victory: Coord[] = [move.landing];
+        let testCoord: Coord = lastDrop.getNext(dir, 1);
+        const victory: Coord[] = [lastDrop];
         let twoDirectionCovered: boolean = false;
         while (victory.length < 6) {
             const testedPiece: Player = state.getPieceAt(testCoord);
@@ -221,12 +240,12 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
             preVictory: null, sum: null,
         };
     }
-    public searchVictoryOnlyForTriangleCorner(index: number, move: SixMove, state: SixGameState): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.searchVictoryTriangleCornerOnly', index, move, state });
+    public searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixGameState): BoardInfo {
+        display(this.VERBOSE, { called: 'SixRules.searchVictoryTriangleCornerOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
-        const testedCoords: Coord[] = [move.landing];
-        let testCoord: Coord = move.landing.getNext(edgeDirection, 1);
+        const testedCoords: Coord[] = [lastDrop];
+        let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (testedCoords.length < 6) {
             // Testing the corner
             const testedPiece: Player = state.getPieceAt(testCoord);
@@ -250,12 +269,12 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
             preVictory: null, sum: null,
         };
     }
-    public searchVictoryOnlyForTriangleEdge(index: number, move: SixMove, state: SixGameState): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.searchVictoryTriangleEdgeOnly', index, move, state });
+    public searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixGameState): BoardInfo {
+        display(this.VERBOSE, { called: 'SixRules.searchVictoryTriangleEdgeOnly', index, lastDrop, state });
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
-        const testedCoords: Coord[] = [move.landing];
-        let testCoord: Coord = move.landing.getNext(edgeDirection, 1);
+        const testedCoords: Coord[] = [lastDrop];
+        let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         while (testedCoords.length < 6) {
             // Testing the corner
             const testedPiece: Player = state.getPieceAt(testCoord);
@@ -285,24 +304,25 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
                         boardInfo: BoardInfo)
                         : BoardInfo
     {
-        display(this.VERBOSE && false, { called: 'SixRules.getBoardInfo', victorySource, move, state, boardInfo });
+        display(this.VERBOSE, { called: 'SixRules.getBoardInfo', victorySource, move, state, boardInfo });
+        const lastDrop: Coord = move.landing.getNext(state.offset, 1);
         switch (victorySource.typeSource) {
             case 'CIRCLE':
-                return this.getBoardInfoForCircle(victorySource.index, move, state, boardInfo);
+                return this.getBoardInfoForCircle(victorySource.index, lastDrop, state, boardInfo);
             case 'LINE':
-                return this.getBoardInfoForLine(victorySource.index, move, state, boardInfo);
+                return this.getBoardInfoForLine(victorySource.index, lastDrop, state, boardInfo);
             case 'TRIANGLE_CORNER':
-                return this.getBoardInfoForTriangleCorner(victorySource.index, move, state, boardInfo);
+                return this.getBoardInfoForTriangleCorner(victorySource.index, lastDrop, state, boardInfo);
             default:
-                return this.getBoardInfoForTriangleEdge(victorySource.index, move, state, boardInfo);
+                return this.getBoardInfoForTriangleEdge(victorySource.index, lastDrop, state, boardInfo);
         }
     }
-    public getBoardInfoForCircle(index: number, move: SixMove, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForCircle', index, move, state, boardInfo });
+    public getBoardInfoForCircle(index: number, lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
+        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForCircle', index, lastDrop, state, boardInfo });
         const LAST_ENNEMY: Player = state.getCurrentPlayer();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
-        const testedCoords: Coord[] = [move.landing];
-        let testCoord: Coord = move.landing.getNext(initialDirection, 1);
+        const testedCoords: Coord[] = [lastDrop];
+        let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
         let subSum: number = 0;
         let lastEmpty: Coord;
         while (testedCoords.length < 6) {
@@ -357,54 +377,93 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
             victory: null,
         };
     }
-    public getBoardInfoForLine(index: number, move: SixMove, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForLine', index, move, state, boardInfo });
+    public getBoardInfoForLine(index: number, lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
+        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForLine', index, lastDrop, state, boardInfo });
         const dir: HexaDirection = HexaDirection.factory.all[index];
-        const LAST_ENNEMY: Player = state.getCurrentPlayer();
-        let testedCoord: Coord = move.landing.getPrevious(dir, 5);
-        let nbTested: number = 0;
-        let subSum: number = 0;
-        let aligned: Coord[] = [];
+        let testedCoord: Coord = lastDrop.getPrevious(dir, 5);
+        let testedCoords: Coord[] = [];
+        let encountered: number[] = [];
         let lastEmpty: Coord;
-        while (nbTested < 11) {
-            const testedPiece: Player = state.getPieceAt(testedCoord);
-            if (testedPiece === LAST_ENNEMY) {
-                if (nbTested > 6) {
-                    return this.getBoardInfoResult(subSum, lastEmpty, aligned, boardInfo);
+        for (let i: number = 0; i < 6; i++) {
+            const empty: Coord = this.updateEncounterAndReturnLastEmpty(state, testedCoord, encountered);
+            if (empty) {
+                lastEmpty = empty;
+            }
+            testedCoords.push(testedCoord);
+            testedCoord = testedCoord.getNext(dir, 1);
+        }
+        let status: SCORE = boardInfo.status;
+        let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
+        let nbTested: number = 0;
+        let finalSubSum: number = 0;
+        while (nbTested < 6) {
+            const subSum: number = encountered.reduce((a: number, b: number) => a+b);
+            if (subSum === 6) {
+                return {
+                    status: SCORE.VICTORY,
+                    victory: testedCoords,
+                    preVictory: null, sum: null,
+                };
+            } else if (subSum === 5.16 &&
+                       status === SCORE.DEFAULT)
+            {
+                if (preVictory.isPresent()) {
+                    if (preVictory.get().equals(lastEmpty) === false) {
+                        status = SCORE.PRE_VICTORY;
+                    }
                 } else {
-                    subSum = 0;
-                    lastEmpty = null;
-                    aligned = [];
+                    preVictory = MGPOptional.of(lastEmpty);
                 }
-            } else {
-                if (testedPiece === Player.NONE) {
-                    subSum += 0.16;
-                    aligned = [];
-                    lastEmpty = testedCoord;
-                } else {
-                    subSum++;
-                    aligned.push(testedCoord);
-                }
-                if (subSum === 5.16 || subSum === 6 ) {
-                    return this.getBoardInfoResult(subSum - 1, lastEmpty, aligned, boardInfo);
-                }
+            }
+            finalSubSum = Math.max(finalSubSum, subSum);
+            testedCoords = testedCoords.slice(1, 6);
+            testedCoords.push(testedCoord);
+            encountered = encountered.slice(1, 6);
+            const newEmpty: Coord = this.updateEncounterAndReturnLastEmpty(state, testedCoord, encountered);
+            if (newEmpty) {
+                lastEmpty = newEmpty;
             }
             nbTested++;
             testedCoord = testedCoord.getNext(dir, 1);
         }
-        return this.getBoardInfoResult(subSum - 1, lastEmpty, aligned, boardInfo);
+        const newBoardInfo: BoardInfo = {
+            status,
+            victory: testedCoords,
+            preVictory,
+            sum: finalSubSum,
+        };
+        return this.getBoardInfoResult(finalSubSum, lastEmpty, testedCoords, newBoardInfo);
+    }
+    private updateEncounterAndReturnLastEmpty(state: SixGameState,
+                                              testedCoord: Coord,
+                                              encountered: number[])
+                                              : Coord
+    {
+        const LAST_ENNEMY: Player = state.getCurrentPlayer();
+        switch (state.getPieceAt(testedCoord)) {
+            case LAST_ENNEMY:
+                encountered.push(-7);
+                // just enough to make sum negative when ennemy encountered
+                break;
+            case Player.NONE:
+                encountered.push(0.16);
+                return testedCoord;
+            default:
+                encountered.push(1);
+                break;
+        }
     }
     public getBoardInfoForTriangleCorner(index: number,
-                                         move: SixMove,
+                                         lastDrop: Coord,
                                          state: SixGameState,
                                          boardInfo: BoardInfo)
                                          : BoardInfo
     {
-        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForTriangleCorner', index, move, state, boardInfo });
+        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForTriangleCorner', index, lastDrop, state, boardInfo });
         const LAST_ENNEMY: Player = state.getCurrentPlayer();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
-        const testedCoords: Coord[] = [move.landing];
-        let testCoord: Coord = move.landing.getNext(edgeDirection, 1);
+        const testedCoords: Coord[] = [lastDrop];
+        let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         let subSum: number = 0;
         let lastEmpty: Coord;
         while (testedCoords.length < 6) {
@@ -430,17 +489,17 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
         return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }
     public getBoardInfoForTriangleEdge(index: number,
-                                       move: SixMove,
+                                       lastDrop: Coord,
                                        state: SixGameState,
                                        boardInfo: BoardInfo)
                                        : BoardInfo
     {
 
-        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForTriangleEdge', index, move, state, boardInfo });
+        display(this.VERBOSE, { called: 'SixRules.getBoardInfoForTriangleEdge', index, lastDrop, state, boardInfo });
         const LAST_ENNEMY: Player = state.getCurrentPlayer();
         let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
-        const testedCoords: Coord[] = [move.landing];
-        let testCoord: Coord = move.landing.getNext(edgeDirection, 1);
+        const testedCoords: Coord[] = [lastDrop];
+        let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
         let subSum: number = 0;
         let lastEmpty: Coord;
         while (testedCoords.length < 6) {
@@ -464,300 +523,6 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
             testCoord = testCoord.getNext(edgeDirection, 1);
         }
         return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
-    }
-    public getShapeInfo(lastDrop: Coord, state: SixGameState): BoardInfo
-    {
-        const boardInfo: BoardInfo = {
-            status: SCORE.DEFAULT,
-            victory: null,
-            preVictory: MGPOptional.empty(),
-            sum: 0,
-        };
-        const lineInfo: BoardInfo = this.getLineInfo(lastDrop, state, boardInfo);
-        if (lineInfo.status === SCORE.VICTORY) {
-            return lineInfo;
-        }
-        const triangleInfo: BoardInfo = this.getTriangleInfo(lastDrop, state, lineInfo);
-        if (triangleInfo.status === SCORE.VICTORY) {
-            return triangleInfo;
-        }
-        return this.getCircleInfo(lastDrop, state, triangleInfo);
-    }
-    public getLineInfo(lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.getListVictory', lastDrop, state, boardInfo });
-        const LAST_ENNEMY: Player = state.getCurrentPlayer();
-        const coordsOfDirection: MGPMap<HexaDirection, MGPSet<Coord>> = new MGPMap<HexaDirection, MGPSet<Coord>>();
-        coordsOfDirection.set(HexaDirection.UP, new MGPSet([lastDrop]));
-        coordsOfDirection.set(HexaDirection.UP_RIGHT, new MGPSet([lastDrop]));
-        coordsOfDirection.set(HexaDirection.UP_LEFT, new MGPSet([lastDrop]));
-        let sum: number = boardInfo.sum;
-        let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
-        for (const dir of HexaDirection.factory.all) {
-            let subSum: number = 0;
-            let testedCoords: number = 0;
-            let pathIsWinnable: boolean = true;
-            let testCoord: Coord = lastDrop.getNext(dir, 1);
-            let lastEmpty: Coord;
-            while (testedCoords < 6 && pathIsWinnable) {
-                const testedPiece: Player = state.getPieceAt(testCoord);
-                if (testedPiece === LAST_ENNEMY) {
-                    subSum = 0;
-                    pathIsWinnable = false;
-                } else {
-                    if (testedPiece === Player.NONE) {
-                        subSum += 0.16; // roughly 1/6
-                        lastEmpty = testCoord;
-                    } else {
-                        subSum++;
-                        const aligned: MGPSet<Coord> = this.addCoordForDirection(coordsOfDirection, dir, testCoord);
-                        if (aligned.size() === 6) {
-                            return {
-                                status: SCORE.VICTORY,
-                                victory: aligned.toArray(),
-                                preVictory,
-                                sum: null,
-                            };
-                        }
-                    }
-                    testedCoords++;
-                    testCoord = testCoord.getNext(dir, 1);
-                }
-            }
-            sum += subSum;
-            if (subSum === 4.16) {
-                display(this.VERBOSE, '5+1 found !');
-                // We found 5 pieces aligned and one space, so that space is a preVictory coord
-                if (preVictory.isPresent() && preVictory.get().equals(lastEmpty) === false) {
-                    return {
-                        status: SCORE.PRE_VICTORY,
-                        victory: null,
-                        preVictory, // no longer usefull
-                        sum: null,
-                    };
-                } else {
-                    preVictory = MGPOptional.of(lastEmpty);
-                }
-            }
-        }
-        return {
-            status: boardInfo.status,
-            victory: null,
-            preVictory,
-            sum,
-        };
-    }
-    private addCoordForDirection(coordsOfDirection: MGPMap<HexaDirection, MGPSet<Coord>>,
-                                 dir: HexaDirection,
-                                 coord: Coord): MGPSet<Coord>
-    {
-        let key: HexaDirection;
-        if (coordsOfDirection.containsKey(dir)) {
-            key = dir;
-        } else {
-            key = dir.getOpposite();
-        }
-        const aligned: MGPSet<Coord> = coordsOfDirection.get(key).get();
-        aligned.add(coord);
-        coordsOfDirection.replace(key, aligned);
-        return aligned;
-    }
-    public getCircleInfo(lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.getCircleVictory', lastDrop, state, preVictory: boardInfo });
-        const LAST_ENNEMY: Player = state.getCurrentPlayer();
-        let sum: number = 0;
-        let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
-        for (let i: number = 0; i < 6; i++) {
-            const initialDirection: HexaDirection = HexaDirection.factory.all[i];
-            const testedCoords: Coord[] = [lastDrop];
-            let pathIsWinnable: boolean = true;
-            let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
-            let subSum: number = 0;
-            let lastEmpty: Coord;
-            while (testedCoords.length < 6 && pathIsWinnable) {
-                const testedPiece: Player = state.getPieceAt(testCoord);
-                if (testedPiece === LAST_ENNEMY) {
-                    subSum = 0;
-                    pathIsWinnable = false;
-                } else {
-                    const dirIndex: number = (i + testedCoords.length) % 6;
-                    testedCoords.push(testCoord);
-                    const dir: HexaDirection = HexaDirection.factory.all[dirIndex];
-                    testCoord = testCoord.getNext(dir, 1);
-                    if (testedPiece === Player.NONE) {
-                        subSum += 0.16; // roughly 1/6
-                        lastEmpty = testCoord;
-                    } else {
-                        subSum++;
-                    }
-                }
-            }
-            sum += subSum;
-            if (subSum === 4.16) {
-                display(this.VERBOSE, '5+1 found !');
-                // We found 5 pieces aligned and one space, so that space is a preVictory coord
-                if (preVictory.isPresent() && preVictory.get().equals(lastEmpty) === false) {
-                    return {
-                        status: SCORE.PRE_VICTORY,
-                        victory: null,
-                        preVictory, // no longer usefull
-                        sum: null,
-                    };
-                } else {
-                    preVictory = MGPOptional.of(lastEmpty);
-                }
-            }
-            if (subSum === 5) {
-                return {
-                    status: SCORE.VICTORY,
-                    victory: testedCoords,
-                    preVictory,
-                    sum: null,
-                };
-            }
-        }
-        return {
-            status: boardInfo.status,
-            victory: null,
-            preVictory,
-            sum,
-        };
-    }
-    public getTriangleInfo(lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
-        const triangleCornerInfo: BoardInfo = this.getTriangleCornerInfo(lastDrop, state, boardInfo);
-        if (triangleCornerInfo.victory) {
-            return triangleCornerInfo;
-        }
-        return this.getTriangleEdgeInfo(lastDrop, state, triangleCornerInfo);
-    }
-    public getTriangleCornerInfo(lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.getTriangleVictoryCorner', lastDrop, state: state, boardInfo });
-        const LAST_ENNEMY: Player = state.getCurrentPlayer();
-        let sum: number = 0;
-        let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
-        for (let i: number = 0; i < 6; i++) {
-            let edgeDirection: HexaDirection = HexaDirection.factory.all[i];
-            const testedCoords: Coord[] = [lastDrop];
-            let pathIsWinnable: boolean = true;
-            let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
-            let subSum: number = 0;
-            let lastEmpty: Coord;
-            while (testedCoords.length < 6 && pathIsWinnable) {
-                // Testing the corner
-                const testedPiece: Player = state.getPieceAt(testCoord);
-                if (testedPiece === LAST_ENNEMY) {
-                    subSum = 0;
-                    pathIsWinnable = false;
-                } else {
-                    if (testedPiece === Player.NONE) {
-                        subSum += 0.16; // rougly 1/6
-                        lastEmpty = testCoord;
-                    } else {
-                        subSum++;
-                    }
-                    if (testedCoords.length % 2 === 0) {
-                        // reached a corner, let's turn
-                        const dirIndex: number = (i + testedCoords.length) % 6;
-                        edgeDirection = HexaDirection.factory.all[dirIndex];
-                    }
-                    testedCoords.push(testCoord);
-                    testCoord = testCoord.getNext(edgeDirection, 1);
-                }
-            }
-            sum += subSum;
-            if (subSum === 5) {
-                return {
-                    status: SCORE.VICTORY,
-                    victory: testedCoords,
-                    preVictory,
-                    sum: null,
-                };
-            }
-            if (subSum === 4.16) {
-                display(this.VERBOSE, '5+1 found !');
-                // We found 5 pieces aligned and one space, so that space is a preVictory coord
-                if (preVictory.isPresent() && preVictory.get().equals(lastEmpty) === false) {
-                    return {
-                        status: SCORE.PRE_VICTORY,
-                        victory: null,
-                        preVictory, // no longer usefull
-                        sum: null,
-                    };
-                } else {
-                    preVictory = MGPOptional.of(lastEmpty);
-                }
-            }
-        }
-        return {
-            status: boardInfo.status,
-            victory: null,
-            preVictory,
-            sum,
-        };
-    }
-    public getTriangleEdgeInfo(lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
-        display(this.VERBOSE, { called: 'SixRules.getTriangleVictoryEdge', lastDrop, state, preVictory: boardInfo });
-        const LAST_ENNEMY: Player = state.getCurrentPlayer();
-        let sum: number = 0;
-        let preVictory: MGPOptional<Coord> = boardInfo.preVictory;
-        for (let i: number = 0; i < 6; i++) {
-            let edgeDirection: HexaDirection = HexaDirection.factory.all[i];
-            const testedCoords: Coord[] = [lastDrop];
-            let pathIsWinnable: boolean = true;
-            let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
-            let subSum: number = 0;
-            let lastEmpty: Coord;
-            while (testedCoords.length < 6 && pathIsWinnable) {
-                // Testing the corner
-                const testedPiece: Player = state.getPieceAt(testCoord);
-                if (testedPiece === LAST_ENNEMY) {
-                    subSum = 0;
-                    pathIsWinnable = false;
-                } else {
-                    if (testedPiece === Player.NONE) {
-                        subSum += 0.16; // rougly 1/6
-                        lastEmpty = testCoord;
-                    } else {
-                        subSum++;
-                    }
-                    testedCoords.push(testCoord);
-                    if (testedCoords.length % 2 === 0) {
-                        // reached a corner, let's turn
-                        const dirIndex: number = (i + testedCoords.length) % 6;
-                        edgeDirection = HexaDirection.factory.all[dirIndex];
-                    }
-                    testCoord = testCoord.getNext(edgeDirection, 1);
-                }
-            }
-            sum += subSum;
-            if (subSum === 5) {
-                return {
-                    status: SCORE.VICTORY,
-                    victory: testedCoords,
-                    preVictory,
-                    sum: null,
-                };
-            }
-            if (subSum === 4.16) {
-                display(this.VERBOSE, '5+1 found !');
-                // We found 5 pieces aligned and one space, so that space is a preVictory coord
-                if (preVictory.isPresent() && preVictory.get().equals(lastEmpty) === false) {
-                    return {
-                        status: SCORE.PRE_VICTORY,
-                        victory: null,
-                        preVictory, // no longer usefull
-                        sum: null,
-                    };
-                } else {
-                    preVictory = MGPOptional.of(lastEmpty);
-                }
-            }
-        }
-        return {
-            status: boardInfo.status,
-            victory: null,
-            preVictory,
-            sum,
-        };
     }
     public applyLegalMove(move: SixMove,
                           state: SixGameState,
@@ -800,7 +565,7 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
             case state.getCurrentEnnemy():
                 return { legal: MGPValidation.failure('Cannot move ennemy piece!'), kept: null };
         }
-        const piecesAfterDeplacement: MGPBiMap<Coord, boolean> = SixGameState.deplacePiece(state, move);
+        const piecesAfterDeplacement: MGPBiMap<Coord, Player> = SixGameState.deplacePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
             SixGameState.getGroups(piecesAfterDeplacement, move.start.get());
         if (this.isSplit(groupsAfterMove)) {
@@ -844,7 +609,7 @@ export class SixRules extends AlignementMinimax<SixMove, SixGameState, SixLegali
     }
     public moveKeepBiggerGroup(keep: MGPOptional<Coord>,
                                biggerGroups: MGPSet<MGPSet<Coord>>,
-                               pieces: MGPBiMap<Coord, boolean>): SixLegalityStatus {
+                               pieces: MGPBiMap<Coord, Player>): SixLegalityStatus {
         if (keep.isAbsent()) {
             return {
                 legal: MGPValidation.failure(SixFailure.MUST_CUT),

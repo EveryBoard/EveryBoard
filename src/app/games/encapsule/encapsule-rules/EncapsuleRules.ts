@@ -73,11 +73,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
             const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
             if (!slice.pieceBelongsToCurrentPlayer(movingPiece)) {
-                display(LOCAL_VERBOSE,
-                    'at ' + startingCoord.toString() + '\n' +
-                    'there is ' + startingCase.toString() + '\n' +
-                    'whose bigger is ' + movingPiece.toString() + '\n' +
-                    'move illegal because: piece does not belong to current player');
                 return EncapsuleLegalityStatus.failure(EncapsuleFailure.WRONG_COLOR);
             }
         }
@@ -135,7 +130,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         const slice: EncapsulePartSlice = n.gamePartSlice;
         const board: Table<EncapsuleCase> = slice.toCaseBoard();
         const currentPlayer: Player = slice.getCurrentPlayer();
-        const puttablePieces: EncapsulePiece[] = Sets.toImmutableSet(slice.getPlayerRemainingPieces());
+        const puttablePieces: EncapsulePiece[] = Sets.toComparableObjectSet(slice.getPlayerRemainingPieces());
         for (let y: number = 0; y < 3; y++) {
             for (let x: number = 0; x < 3; x++) {
                 const coord: Coord = new Coord(x, y);
@@ -144,7 +139,8 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                     const move: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
                     const status: EncapsuleLegalityStatus = this.isLegal(move, slice);
                     if (status.legal.isSuccess()) {
-                        const result = this.applyLegalMove(move, slice, status);
+                        const result: { resultingMove: EncapsuleMove, resultingSlice: EncapsulePartSlice } =
+                            this.applyLegalMove(move, slice, status);
                         moves.set(result.resultingMove, result.resultingSlice);
                     }
                 }
