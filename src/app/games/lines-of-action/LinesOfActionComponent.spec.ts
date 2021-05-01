@@ -59,7 +59,6 @@ describe('LinesOfActionComponent', () => {
     it('should show selected piece', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
         const component: LinesOfActionComponent = componentTestUtils.getComponent();
-        component.updateBoard();
         expect(component.getPieceClasses(2, 0, component.getState().getAt(new Coord(2, 0))))
             .toEqual(['player0', 'selected']);
     }));
