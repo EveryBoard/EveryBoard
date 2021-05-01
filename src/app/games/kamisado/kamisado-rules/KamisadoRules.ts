@@ -86,11 +86,8 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                 const move: KamisadoMove = KamisadoMove.PASS;
                 const legality: LegalityStatus = this.isLegal(move, slice);
                 if (legality.legal.isSuccess()) {
-                    const result: {
-                        resultingMove: KamisadoMove;
-                        resultingSlice: KamisadoPartSlice;
-                    } = this.applyLegalMove(move, slice, legality);
-                    moves.set(result.resultingMove, result.resultingSlice);
+                    const resultingSlice: KamisadoPartSlice = this.applyLegalMove(move, slice, legality);
+                    moves.set(move, resultingSlice);
                 }
             }
         } else {
@@ -116,11 +113,8 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
                             const move: KamisadoMove = KamisadoMove.of(startCoord, endCoord);
                             const legality: LegalityStatus = this.isLegal(move, slice);
                             if (legality.legal.isSuccess()) {
-                                const result: {
-                                    resultingMove: KamisadoMove;
-                                    resultingSlice: KamisadoPartSlice;
-                                } = this.applyLegalMove(move, slice, legality);
-                                moves.set(result.resultingMove, result.resultingSlice);
+                                const resultingSlice: KamisadoPartSlice = this.applyLegalMove(move, slice, legality);
+                                moves.set(move, resultingSlice);
                             }
                         }
                     }
@@ -178,12 +172,12 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
     }
     // Apply the move by only relying on tryMove
     public applyLegalMove(move: KamisadoMove, slice: KamisadoPartSlice, status: LegalityStatus)
-    : { resultingMove: KamisadoMove, resultingSlice: KamisadoPartSlice } {
+    : KamisadoPartSlice {
         if (move === KamisadoMove.PASS) {
             const nextCoord: MGPOptional<Coord> = this.nextCoordToPlay(slice, slice.colorToPlay);
             const resultingSlice: KamisadoPartSlice =
                 new KamisadoPartSlice(slice.turn + 1, slice.colorToPlay, nextCoord, true, slice.board);
-            return { resultingSlice, resultingMove: move };
+            return resultingSlice;
         }
         const start: Coord = move.coord;
         const end: Coord = move.end;
@@ -200,7 +194,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice, Legali
         const resultingSlice: KamisadoPartSlice =
             new KamisadoPartSlice(slice.turn + 1, newColorToPlay, nextCoord, false, newBoard);
 
-        return { resultingSlice, resultingMove: move };
+        return resultingSlice;
     }
     public isLegal(move: KamisadoMove, slice: KamisadoPartSlice): LegalityStatus {
         const start: Coord = move.coord;

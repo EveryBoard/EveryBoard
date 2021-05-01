@@ -15,21 +15,21 @@ export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiPartS
 export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
     public static VERBOSE: boolean = false;
 
-    public applyLegalMove(move: ReversiMove, slice: ReversiPartSlice, status: ReversiLegalityStatus): { resultingMove: ReversiMove; resultingSlice: ReversiPartSlice; } {
+    public applyLegalMove(move: ReversiMove, slice: ReversiPartSlice, status: ReversiLegalityStatus): ReversiPartSlice {
         const turn: number = slice.turn;
         const player: number = turn % 2;
         const board: number[][] = slice.getCopiedBoard();
         if (move.equals(ReversiMove.PASS)) { // if the player pass
             const sameBoardDifferentTurn: ReversiPartSlice =
                 new ReversiPartSlice(board, turn + 1);
-            return { resultingMove: move, resultingSlice: sameBoardDifferentTurn };
+            return sameBoardDifferentTurn;
         }
         for (const s of status.switched) {
             board[s.y][s.x] = player;
         }
         board[move.coord.y][move.coord.x] = player;
         const resultingSlice: ReversiPartSlice = new ReversiPartSlice(board, turn + 1);
-        return { resultingMove: move, resultingSlice };
+        return resultingSlice;
     }
     public static getAllSwitcheds(move: ReversiMove, turn: number, board: number[][]): Coord[] {
         // try the move, do it if legal, and return the switched pieces
@@ -61,7 +61,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
          * else : return all the coord between start and the first 'capturer' found (exluded)
          */
 
-        const sandwichedsCoord = [start]; // here we know it in range and captured
+        const sandwichedsCoord: Coord[] = [start]; // here we know it in range and captured
         let testedCoord: Coord = start.getNext(direction);
         while (testedCoord.isInRange(ReversiPartSlice.BOARD_WIDTH, ReversiPartSlice.BOARD_HEIGHT)) {
             const testedCoordContent: number = board[testedCoord.y][testedCoord.x];
@@ -111,7 +111,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
                     nextBoard = slice.getCopiedBoard();
                     const ennemyNeighboors: Coord[] = ReversiPartSlice.getNeighbooringPawnLike(nextBoard, ennemy, x, y);
                     if (ennemyNeighboors.length > 0) {
-                        // if one of the 8 neighbooring case is an ennemy then, there could be a switch, and hence a legal move
+                        // if one of the 8 neighbooring case is an ennemy then, there could be a switch,
+                        // and hence a legal move
                         const move: ReversiMove = new ReversiMove(x, y);
                         const result: Coord[] = ReversiRules.getAllSwitcheds(move, player, nextBoard);
                         if (result.length > 0) {
@@ -145,7 +146,12 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             // let's check that pass is a legal move right now
             // if he had no choice but to pass, then passing is legal !
             // else, passing was illegal
-            return { legal: ReversiRules.playerCanOnlyPass(slice) ? MGPValidation.SUCCESS : MGPValidation.failure('player can only pass'), switched: null };
+            return {
+                legal: ReversiRules.playerCanOnlyPass(slice) ?
+                    MGPValidation.SUCCESS :
+                    MGPValidation.failure('player can only pass'),
+                switched: null,
+            };
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE.value) {
             display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée');
@@ -153,7 +159,10 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, turn, board);
         display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: '+ switched.length + ' element(s) switched');
-        return { legal: (switched.length === 0) ? MGPValidation.failure('no elements switched') : MGPValidation.SUCCESS, switched };
+        return {
+            legal: (switched.length === 0) ? MGPValidation.failure('no elements switched') : MGPValidation.SUCCESS,
+            switched,
+        };
     }
     public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): number {
         const gameIsEnded: boolean = ReversiRules.isGameEnded(slice);

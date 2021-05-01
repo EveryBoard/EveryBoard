@@ -31,7 +31,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
                     for (const end of legalLandings) {
                         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);
                         const resultingSlice: CoerceoPartSlice =
-                            this.applyLegalDeplacement(move, slice, null).resultingSlice;
+                            this.applyLegalDeplacement(move, slice, null);
                         deplacements.put(move, resultingSlice);
                     }
                 }
@@ -53,7 +53,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
                 if (slice.getBoardAt(captured) === ENNEMY) {
                     const move: CoerceoMove = CoerceoMove.fromTilesExchange(captured);
                     const resultingSlice: CoerceoPartSlice =
-                        this.applyLegalTileExchange(move, slice, null).resultingSlice;
+                        this.applyLegalTileExchange(move, slice, null);
                     exchanges.put(move, resultingSlice);
                 }
             }
@@ -75,7 +75,8 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
     }
     public applyLegalMove(move: CoerceoMove,
                           slice: CoerceoPartSlice,
-                          status: LegalityStatus): { resultingMove: CoerceoMove, resultingSlice: CoerceoPartSlice; }
+                          status: LegalityStatus)
+    : CoerceoPartSlice
     {
         if (move.isTileExchange()) {
             return this.applyLegalTileExchange(move, slice, status);
@@ -83,10 +84,10 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
             return this.applyLegalDeplacement(move, slice, status);
         }
     }
-    public applyLegalTileExchange(
-        move: CoerceoMove,
-        slice: CoerceoPartSlice,
-        status: LegalityStatus): { resultingMove: CoerceoMove, resultingSlice: CoerceoPartSlice; }
+    public applyLegalTileExchange(move: CoerceoMove,
+                                  slice: CoerceoPartSlice,
+                                  status: LegalityStatus)
+    : CoerceoPartSlice
     {
         const newBoard: number[][] = slice.getCopiedBoard();
         const captured: Coord = move.capture.get();
@@ -107,12 +108,13 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
         display(CoerceoRules.VERBOSE,
                 { coerceoRules_applyLegalTileExchange:
                     { a_initialSlice: slice, afterCapture, afterTileRemoval, resultingSlice } });
-        return { resultingMove: null, resultingSlice };
+        return resultingSlice;
     }
     public applyLegalDeplacement(
         move: CoerceoMove,
         slice: CoerceoPartSlice,
-        status: LegalityStatus): { resultingMove: CoerceoMove, resultingSlice: CoerceoPartSlice; }
+        status: LegalityStatus)
+    : CoerceoPartSlice
     {
         // Move the piece
         const afterDeplacement: CoerceoPartSlice = slice.applyLegalDeplacement(move);
@@ -130,7 +132,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice, LegalityS
             afterTilesRemoved: afterTilesRemoved,
             d_afterCaptures: afterCaptures,
             resultingSlice: resultingSlice });
-        return { resultingMove: move, resultingSlice };
+        return resultingSlice;
     }
     public isLegal(move: CoerceoMove, slice: CoerceoPartSlice): LegalityStatus {
         if (move.isTileExchange()) {

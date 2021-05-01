@@ -32,8 +32,8 @@ export class GipfFailure {
 }
 
 export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus> {
-    public applyLegalMove(move: GipfMove, slice: GipfPartSlice, status: GipfLegalityStatus):
-      { resultingMove: GipfMove; resultingSlice: GipfPartSlice; } {
+
+    public applyLegalMove(move: GipfMove, slice: GipfPartSlice, status: GipfLegalityStatus): GipfPartSlice {
         let sliceWithoutTurn: GipfPartSlice;
         if (status.computedSlice !== null) {
             sliceWithoutTurn = status.computedSlice;
@@ -46,11 +46,8 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
                 this.applyCaptures(sliceAfterPlacement, move.finalCaptures);
             sliceWithoutTurn = sliceAfterFinalCapture;
         }
-        return {
-            resultingMove: move,
-            resultingSlice: new GipfPartSlice(sliceWithoutTurn.hexaBoard, sliceWithoutTurn.turn+1,
-                                              sliceWithoutTurn.sidePieces, sliceWithoutTurn.capturedPieces),
-        };
+        return new GipfPartSlice(sliceWithoutTurn.hexaBoard, sliceWithoutTurn.turn+1,
+                                 sliceWithoutTurn.sidePieces, sliceWithoutTurn.capturedPieces);
     }
     public getBoardValue(_move: GipfMove, slice: GipfPartSlice): number {
         const score0: MGPOptional<number> = this.getPlayerScore(slice, Player.ZERO);
@@ -95,10 +92,10 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
                             this.applyCaptures(sliceAfterPlacement, finalCaptures);
                         const moveSimple: GipfMove =
                             new GipfMove(placement, initialCaptures, finalCaptures);
-                        map.set(moveSimple,
-                                this.applyLegalMove(moveSimple, slice,
-                                                    { legal: MGPValidation.SUCCESS, computedSlice: finalSlice })
-                                    .resultingSlice);
+                        const status: GipfLegalityStatus = { legal: MGPValidation.SUCCESS, computedSlice: finalSlice };
+                        const resultingSlice: GipfPartSlice =
+                            this.applyLegalMove(moveSimple, slice, status);
+                        map.set(moveSimple, resultingSlice);
                     });
             });
         });

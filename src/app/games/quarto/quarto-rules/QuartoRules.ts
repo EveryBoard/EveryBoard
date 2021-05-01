@@ -165,14 +165,14 @@ abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSli
 
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice, LegalityStatus> {
 
-    public applyLegalMove(
-        move: QuartoMove,
-        slice: QuartoPartSlice): { resultingMove: QuartoMove; resultingSlice: QuartoPartSlice; }
+    public applyLegalMove(move: QuartoMove,
+                          slice: QuartoPartSlice)
+    : QuartoPartSlice
     {
         const newBoard: number[][] = slice.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = slice.pieceInHand.value;
         const resultingSlice: QuartoPartSlice = new QuartoPartSlice(newBoard, slice.turn + 1, move.piece);
-        return { resultingSlice, resultingMove: move };
+        return resultingSlice;
     }
 
     public static VERBOSE: boolean = false;

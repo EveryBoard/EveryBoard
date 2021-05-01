@@ -22,7 +22,10 @@ export class LinesOfActionFailure {
     public static INVALID_DIRECTION: string = `Un mouvement dois se faire selon une direction orthogonale ou diagonale.`;
 }
 
-export class LinesOfActionNode extends MGPNode<LinesOfActionRules, LinesOfActionMove, LinesOfActionState, LegalityStatus> {}
+export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
+                                               LinesOfActionMove,
+                                               LinesOfActionState,
+                                               LegalityStatus> {}
 
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState, LegalityStatus> {
     public getListMoves(node: LinesOfActionNode): MGPMap<LinesOfActionMove, LinesOfActionState> {
@@ -44,7 +47,7 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
                         const move: LinesOfActionMove = new LinesOfActionMove(coord, target);
                         const status: LegalityStatus = this.isLegal(move, state);
                         // This move is legal by construction
-                        const newState: LinesOfActionState = this.applyLegalMove(move, state, status).resultingSlice;
+                        const newState: LinesOfActionState = this.applyLegalMove(move, state, status);
                         map.set(move, newState);
                     }
                 }
@@ -102,16 +105,16 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
             }
         }
     }
-    public applyLegalMove(move: LinesOfActionMove, state: LinesOfActionState, status: LegalityStatus)
-    : { resultingMove: LinesOfActionMove; resultingSlice: LinesOfActionState } {
+    public applyLegalMove(move: LinesOfActionMove,
+                          state: LinesOfActionState,
+                          status: LegalityStatus)
+    : LinesOfActionState
+    {
         const board: number[][] = state.getCopiedBoard();
         board[move.coord.y][move.coord.x] = Player.NONE.value;
         board[move.end.y][move.end.x] = state.getCurrentPlayer().value;
 
-        return {
-            resultingMove: move,
-            resultingSlice: new LinesOfActionState(board, state.turn+1),
-        };
+        return new LinesOfActionState(board, state.turn + 1);
     }
     public isLegal(move: LinesOfActionMove, state: LinesOfActionState): LegalityStatus {
         if (state.getAt(move.coord) !== state.getCurrentPlayer().value) {

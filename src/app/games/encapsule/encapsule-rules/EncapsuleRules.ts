@@ -82,11 +82,12 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         if (superpositionResult.isPresent()) {
             return { legal: MGPValidation.SUCCESS, newLandingCase: superpositionResult.get() };
         }
-        display(LOCAL_VERBOSE, 'move illegal because: Impossible Superposition ('+ movingPiece.toString() + ' on ' + landingCase.toString() + ')');
         return EncapsuleLegalityStatus.failure(EncapsuleFailure.INVALID_PLACEMENT);
     }
-    public applyLegalMove(move: EncapsuleMove, slice: EncapsulePartSlice, legality: EncapsuleLegalityStatus):
-    { resultingMove: EncapsuleMove; resultingSlice: EncapsulePartSlice; }
+    public applyLegalMove(move: EncapsuleMove,
+                          slice: EncapsulePartSlice,
+                          legality: EncapsuleLegalityStatus)
+    : EncapsulePartSlice
     {
         const newBoard: EncapsuleCase[][] = ArrayUtils.copyBiArray(slice.toCaseBoard());
 
@@ -112,7 +113,7 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         const demapper: (p: EncapsuleCase) => number = (p: EncapsuleCase) => p.encode();
         const newNumberBoard: number[][] = ArrayUtils.mapBiArray<EncapsuleCase, number>(newBoard, demapper);
         const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newNumberBoard, newTurn, newRemainingPiece);
-        return { resultingSlice, resultingMove: move };
+        return resultingSlice;
     }
     public getBoardValue(move: EncapsuleMove, slice: EncapsulePartSlice): number {
         let boardValue: number;
@@ -139,9 +140,8 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                     const move: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
                     const status: EncapsuleLegalityStatus = this.isLegal(move, slice);
                     if (status.legal.isSuccess()) {
-                        const result: { resultingMove: EncapsuleMove, resultingSlice: EncapsulePartSlice } =
-                            this.applyLegalMove(move, slice, status);
-                        moves.set(result.resultingMove, result.resultingSlice);
+                        const resultingSlice: EncapsulePartSlice = this.applyLegalMove(move, slice, status);
+                        moves.set(move, resultingSlice);
                     }
                 }
                 if (board[y][x].belongsTo(currentPlayer)) {
@@ -152,8 +152,9 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                                 const newMove: EncapsuleMove = EncapsuleMove.fromMove(coord, landingCoord);
                                 const status: EncapsuleLegalityStatus = this.isLegal(newMove, slice);
                                 if (status.legal.isSuccess()) {
-                                    const result = this.applyLegalMove(newMove, slice, status);
-                                    moves.set(result.resultingMove, result.resultingSlice);
+                                    const resultingSlice: EncapsulePartSlice =
+                                        this.applyLegalMove(newMove, slice, status);
+                                    moves.set(newMove, resultingSlice);
                                 }
                             }
                         }

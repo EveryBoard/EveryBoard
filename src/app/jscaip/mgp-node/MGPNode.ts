@@ -24,13 +24,13 @@ export class MGPNode<R extends Rules<M, S, L, U>,
     public static VERBOSE: boolean = false;
 
     public static ruler: Rules<Move, GamePartSlice, LegalityStatus, NodeUnheritance>;
-    // Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de r�gles
+    // Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de règles
 
     /* Exemples d'états théorique d'un Node (cours)
     * Feuille - stérile: n'as pas d'enfant après un calcul
     * Feuille - bourgeon: n'as pas d'enfant avant un calcul
     * Une branche
-    * Le tronc (la m�re)
+    * Le tronc (la mère)
     */
 
     // instance fields:
@@ -261,8 +261,8 @@ export class MGPNode<R extends Rules<M, S, L, U>,
     }
     private calculateChildsValue() {
         /* Condition d'appel
-         * - les enfants sont d�jà crées
-         * - ils ne sont pas forc�ment calcul�, mais si on l'appel c'est que le calcul n'est plus valable
+         * - les enfants sont déjà crées
+         * - ils ne sont pas forcément calculé, mais si on l'appel c'est que le calcul n'est plus valable
          * - la Node n'est pas une feuille
          */
         if (this.childs == null) {

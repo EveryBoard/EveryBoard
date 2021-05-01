@@ -17,7 +17,7 @@ describe('Six - Minimax', () => {
         rules = new SixRules(SixGameState);
     });
     describe('pre-victories', () => {
-        xit('Should pass forcing move to children node to minimise calculations', () => {
+        it('Should pass forcing move to children node to minimise calculations', () => {
             const board: number[][] = [
                 [X, _, _, _, _, _, X],
                 [O, _, _, _, _, O, _],

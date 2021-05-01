@@ -37,7 +37,8 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
                     display(P4Rules.VERBOSE, { preVictoryOrVictory: { slice, tmpScore, coord: { x, y } } });
                     return tmpScore; // we return it
                     // TODO vérifier que PRE_VICTORY n'écrase pas les VICTORY dans ce cas ci
-                    // Il semble tout à fait possible d'avoir une pré-victoire sur une colonne, et une victoire sur la suivante
+                    // Il semble tout à fait possible d'avoir une pré-victoire sur une colonne,
+                    // et une victoire sur la suivante
                 }
                 score += tmpScore;
             }
@@ -173,8 +174,8 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
 
     public applyLegalMove(move: P4Move,
                           slice: P4PartSlice,
-                          status: LegalityStatus):
-    { resultingMove: P4Move; resultingSlice: P4PartSlice; }
+                          status: LegalityStatus)
+    : P4PartSlice
     {
         const x: number = move.x;
         const board: number[][] = slice.getCopiedBoard();
@@ -185,7 +186,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice, LegalityStatus> {
         board[y][x] = slice.getCurrentPlayer().value;
 
         const resultingSlice: P4PartSlice = new P4PartSlice(board, turn+1);
-        return { resultingMove: move, resultingSlice };
+        return resultingSlice;
     }
     public isLegal(move: P4Move, slice: P4PartSlice): LegalityStatus {
         display(P4Rules.VERBOSE, { context: 'P4Rules.isLegal', move: move.toString(), slice });

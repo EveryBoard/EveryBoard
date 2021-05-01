@@ -73,7 +73,7 @@ describe('SixRules', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(5, -1));
             const status: SixLegalityStatus = rules.isLegal(move, state);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+            const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
             const expectedSlice: SixGameState =
                 SixGameState.fromRepresentation(expectedBoard, 1);
             expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
@@ -156,7 +156,7 @@ describe('SixRules', () => {
             const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
             const status: SixLegalityStatus = rules.isLegal(move, state);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+            const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
             const expectedSlice: SixGameState =
                 SixGameState.fromRepresentation(expectedBoard, 43);
             expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
@@ -240,7 +240,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState =
                     SixGameState.fromRepresentation(expectedBoard, 11, new Vector(-1, 0));
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
@@ -268,7 +268,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 11);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
                 const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
@@ -295,7 +295,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 2));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 10);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
                 const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
@@ -320,7 +320,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(3, 1));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 12);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
                 const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
@@ -345,7 +345,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 2));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 12);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
                 const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
@@ -370,7 +370,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 10);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
                 const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
@@ -397,7 +397,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState =
                     SixGameState.fromRepresentation(expectedBoard, 44);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
@@ -423,7 +423,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState =
                     SixGameState.fromRepresentation(expectedBoard, 43);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
@@ -444,7 +444,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDeplacement(new Coord(4, 1), new Coord(-1, 1));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 41);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
                 const boardValue: number = rules.getBoardNumericValue(move, expectedSlice);
@@ -466,7 +466,7 @@ describe('SixRules', () => {
                 const move: SixMove = SixMove.fromDeplacement(new Coord(4, 1), new Coord(6, 1));
                 const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status);
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 43);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
                 const boardValue: number = rules.getBoardNumericValue(move, expectedSlice);

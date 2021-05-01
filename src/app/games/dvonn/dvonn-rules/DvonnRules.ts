@@ -89,11 +89,11 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
                 const move: DvonnMove = DvonnMove.of(start, end);
                 const legalityStatus: LegalityStatus = this.isLegal(move, slice);
                 // the move should be legal by construction, hence we don't check it
-                map.set(move, this.applyLegalMove(move, slice, legalityStatus).resultingSlice);
+                map.set(move, this.applyLegalMove(move, slice, legalityStatus));
             }));
         if (map.size() === 0 && move !== DvonnMove.PASS) {
             map.set(DvonnMove.PASS, this.applyLegalMove(DvonnMove.PASS, slice,
-                                                        { legal: MGPValidation.SUCCESS }).resultingSlice);
+                                                        { legal: MGPValidation.SUCCESS }));
         }
         return map;
     }
@@ -161,13 +161,13 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
         });
         return new DvonnPartSlice(newBoard, slice.turn, slice.alreadyPassed);
     }
-    public applyLegalMove(move: DvonnMove, slice: DvonnPartSlice, status: LegalityStatus)
-    : { resultingMove: DvonnMove, resultingSlice: DvonnPartSlice } {
+    public applyLegalMove(move: DvonnMove,
+                          slice: DvonnPartSlice,
+                          status: LegalityStatus)
+    : DvonnPartSlice
+    {
         if (move === DvonnMove.PASS) {
-            return {
-                resultingSlice: new DvonnPartSlice(slice.hexaBoard, slice.turn + 1, true),
-                resultingMove: move,
-            };
+            return new DvonnPartSlice(slice.hexaBoard, slice.turn + 1, true);
         } else {
             // To apply a legal move, the stack is added in the front of its end coordinate
             // (and removed from its start coordinate)
@@ -178,7 +178,7 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice, LegalityStatus>
                 .setAt(move.end, DvonnPieceStack.append(stack, targetStack));
             const resultingSlice: DvonnPartSlice =
                 this.removeDisconnectedPieces(new DvonnPartSlice(newBoard, slice.turn+1, false));
-            return { resultingSlice, resultingMove: move };
+            return resultingSlice;
         }
     }
     public isLegal(move: DvonnMove, slice: DvonnPartSlice): LegalityStatus {
