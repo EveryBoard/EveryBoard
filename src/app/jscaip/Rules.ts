@@ -6,8 +6,12 @@ import { LegalityStatus } from './LegalityStatus';
 import { Type } from '@angular/core';
 import { MGPValidation } from '../utils/mgp-validation/MGPValidation';
 import { display } from '../utils/utils/utils';
+import { NodeUnheritance } from './NodeUnheritance';
 
-export abstract class Rules<M extends Move, S extends GamePartSlice, L extends LegalityStatus> {
+export abstract class Rules<M extends Move,
+                            S extends GamePartSlice,
+                            L extends LegalityStatus,
+                            U extends NodeUnheritance = NodeUnheritance> {
 
     public static readonly CANNOT_CHOOSE_ENNEMY_PIECE: string =
         `Vous ne pouvez pas choisir une pièce de l'ennemi.`;
@@ -17,7 +21,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
     public constructor(public readonly sliceType: Type<S>) { // TODO: Make singleton ?
         this.setInitialBoard();
     }
-    public node: MGPNode<Rules<M, S, L>, M, S, L>; // TODO: check that this should not made static
+    public node: MGPNode<Rules<M, S, L, U>, M, S, L, U>; // TODO: check that this should not made static
     /* The data that represent the status of the game at the current moment, including:
      * the board
      * the turn
@@ -25,13 +29,21 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
      * the remaining pawn that you can put on the board...
      */
 
-    public abstract getListMoves(node: MGPNode<Rules<M, S, L>, M, S, L>): MGPMap<M, S> ;
+    public abstract getListMoves(node: MGPNode<Rules<M, S, L, U>, M, S, L, U>): MGPMap<M, S> ;
     /* has to be implemented for each rule so that the AI can choose amongst theses informations
      * this function could give an incomplete set of data if some of them are redondant
      * or also if some of them are too bad to be interesting to count, as a matter of performance
      */
 
-    public abstract getBoardValue(move: M, slice: S): number;
+    public getBoardNumericValue(move: M, state: S): number {
+        const boardInfo: unknown = this.getBoardValue(move, state);
+        if (typeof boardInfo === 'number') {
+            return boardInfo;
+        } else {
+            return (boardInfo as U).value;
+        }
+    }
+    public abstract getBoardValue(move: M, slice: S): number | U;
     /* used to give a comparable data type linked to the gameSlicePart of the moment
      * so that the AI can know what is best, according to you algorithm in there
      */
@@ -45,7 +57,7 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
         display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choix: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);// let's not doing it twice
+            const choix: MGPNode<Rules<M, S, L, U>, M, S, L, U> = this.node.getSonByMove(move);// let's not doing it twice
             if (choix !== null) {
                 display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
                 this.node = choix; // qui devient le plateau actuel
@@ -62,11 +74,17 @@ export abstract class Rules<M extends Move, S extends GamePartSlice, L extends L
 
         const result: {resultingMove: Move, resultingSlice: GamePartSlice} =
             MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
-        const boardValue: number = MGPNode.ruler.getBoardValue(result.resultingMove, result.resultingSlice);
-        const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(this.node,
-                                                                  result.resultingMove as M,
-                                                                  result.resultingSlice as S,
-                                                                  boardValue);
+        const boardInfo: unknown = MGPNode.ruler.getBoardValue(result.resultingMove, result.resultingSlice);
+        let boardValue: number;
+        if (typeof boardInfo === 'number') {
+            boardValue = boardInfo;
+        } else {
+            boardValue = (boardInfo as U).value;
+        }
+        const son: MGPNode<Rules<M, S, L, U>, M, S, L, U> = new MGPNode(this.node,
+                                                                        result.resultingMove as M,
+                                                                        result.resultingSlice as S,
+                                                                        boardValue);
         this.node = son;
         return true;
     };

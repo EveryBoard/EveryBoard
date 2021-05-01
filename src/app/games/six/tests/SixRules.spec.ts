@@ -7,6 +7,7 @@ import { SixMove } from '../SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
 import { SixFailure } from '../SixFailure';
 import { SixRules } from '../SixRules';
+import { Vector } from 'src/app/jscaip/Direction';
 
 describe('SixRules', () => {
     let rules: SixRules;
@@ -25,9 +26,9 @@ describe('SixRules', () => {
                 [_, X, _],
                 [X, O, _],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 4);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 4);
             const move: SixMove = SixMove.fromDrop(new Coord(1, 1));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             expect(status.legal.getReason()).toBe('Cannot land on occupied coord!');
         });
         it('Should forbid landing/dropping on existing piece (deplacement)', () => {
@@ -36,9 +37,9 @@ describe('SixRules', () => {
                 [_, X, _],
                 [X, O, _],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 44);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 44);
             const move: SixMove = SixMove.fromDeplacement(new Coord(1, 2), new Coord(1, 1));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             expect(status.legal.getReason()).toBe('Cannot land on occupied coord!');
         });
         it('Should forbid drop after 40th turn', () => {
@@ -47,9 +48,9 @@ describe('SixRules', () => {
                 [_, X, _],
                 [X, O, _],
             ]; // Fake 40th turn, since there is not 42 stone on the board
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 40);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 40);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 1));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             expect(status.legal.getReason()).toBe('Can no longer drop after 40th turn!');
         });
         it('Should allow drop outside the current range', () => {
@@ -68,11 +69,11 @@ describe('SixRules', () => {
                 [_, X, O, _, X, _],
                 [_, X, O, O, X, _],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 0);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 0);
             const move: SixMove = SixMove.fromDrop(new Coord(5, -1));
-            const status: SixLegalityStatus = rules.isLegal(move, slice);
+            const status: SixLegalityStatus = rules.isLegal(move, state);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+            const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
             const expectedSlice: SixGameState =
                 SixGameState.fromRepresentation(expectedBoard, 1);
             expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
@@ -83,10 +84,10 @@ describe('SixRules', () => {
                 [_, _, O],
                 [X, X, O],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 5);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 5);
             const move: SixMove = SixMove.fromDrop(new Coord(0, 0));
-            const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe('Piece must be connected to other pieces!');
+            const status: LegalityStatus = rules.isLegal(move, state);
+            expect(status.legal.getReason()).toBe(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE);
         });
     });
     describe('Deplacement', () => {
@@ -95,10 +96,10 @@ describe('SixRules', () => {
                 [_, _, O],
                 [_, X, _],
                 [X, O, _],
-            ]; // Fake 40th turn, since there is not 42 stone on the board
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 0);
+            ];
+            const state: SixGameState = SixGameState.fromRepresentation(board, 0);
             const move: SixMove = SixMove.fromDeplacement(new Coord(1, 2), new Coord(3, 0));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             expect(status.legal.getReason()).toBe('Cannot do deplacement before 42th turn!');
         });
         it('Should forbid moving ennemy piece', () => {
@@ -107,9 +108,9 @@ describe('SixRules', () => {
                 [_, X, _],
                 [X, O, _],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 2), new Coord(2, 1));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             expect(status.legal.getReason()).toBe('Cannot move ennemy piece!');
         });
         it('Should forbid moving empty piece', () => {
@@ -118,13 +119,21 @@ describe('SixRules', () => {
                 [_, X, _],
                 [X, O, _],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(2, 1));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             expect(status.legal.getReason()).toBe('Cannot move empty coord!');
         });
-        xit('Should refuse dropping piece where its only neighboor is herself last turn', () => {
-            expect('TODO').toBe('DONE');
+        it('Should refuse dropping piece where its only neighboor is herself last turn', () => {
+            const board: NumberTable = [
+                [_, _, O],
+                [_, X, _],
+                [X, O, _],
+            ];
+            const state: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const move: SixMove = SixMove.fromDeplacement(new Coord(1, 2), new Coord(2, 2));
+            const status: LegalityStatus = rules.isLegal(move, state);
+            expect(status.legal.getReason()).toBe(SixFailure.MUST_DROP_NEXT_TO_OTHER_PIECE);
         });
     });
     describe('Deconnection', () => {
@@ -143,11 +152,11 @@ describe('SixRules', () => {
                 [_, X, O, _],
                 [_, X, O, _],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
-            const status: SixLegalityStatus = rules.isLegal(move, slice);
+            const status: SixLegalityStatus = rules.isLegal(move, state);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+            const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
             const expectedSlice: SixGameState =
                 SixGameState.fromRepresentation(expectedBoard, 43);
             expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
@@ -160,9 +169,9 @@ describe('SixRules', () => {
                 [_, X, _, O, _],
                 [_, X, _, O, O],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(2, 2), new Coord(4, 3));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             expect(status.legal.getReason()).toBe('Several groups are of same size, you must pick the one to keep!');
         });
         it('Should refuse deconnection of different sized group with group mentionned in move', () => {
@@ -173,9 +182,9 @@ describe('SixRules', () => {
                 [_, X, _, O, _],
                 [_, X, _, O, O],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromCut(new Coord(2, 2), new Coord(4, 3), new Coord(0, 0));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             const reason: string = SixFailure.CANNOT_CHOOSE_TO_KEEP;
             expect(status.legal.getReason()).toBe(reason);
         });
@@ -187,9 +196,9 @@ describe('SixRules', () => {
                 [_, X, _, O, O],
                 [_, X, _, O, _],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromCut(new Coord(2, 2), new Coord(4, 4), new Coord(4, 0));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             const reason: string = SixFailure.CANNOT_KEEP_EMPTY_COORD;
             expect(status.legal.getReason()).toBe(reason);
         });
@@ -201,22 +210,51 @@ describe('SixRules', () => {
                 [X, X, _, _],
                 [X, X, _, _],
             ];
-            const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+            const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromCut(new Coord(2, 2), new Coord(4, 2), new Coord(4, 2));
-            const status: LegalityStatus = rules.isLegal(move, slice);
+            const status: LegalityStatus = rules.isLegal(move, state);
             const reason: string = SixFailure.MUST_CAPTURE_BIGGEST_GROUPS;
             expect(status.legal.getReason()).toBe(reason);
         });
     });
     describe('victories', () => {
         describe('Shape Victories', () => {
-            it('Should consider winner player who align 6 pieces', () => {
+            it('Should consider winner player who align 6 pieces (playing on border)', () => {
                 const board: number[][] = [
-                    [_, _, _, _, O],
-                    [_, _, _, O, X],
-                    [_, _, O, X, _],
-                    [_, O, X, X, _],
+                    [O, _, _, _, _],
+                    [O, _, _, _, O],
+                    [O, _, _, O, X],
+                    [O, _, O, X, _],
+                    [O, O, X, X, _],
+                    [_, X, _, _, _],
+                ];
+                const expectedBoard: number[][] = [
+                    [O, _, _, _, _],
+                    [O, _, _, _, O],
+                    [O, _, _, O, X],
+                    [O, _, O, X, _],
+                    [O, O, X, X, _],
                     [O, X, _, _, _],
+                ];
+                const state: SixGameState = SixGameState.fromRepresentation(board, 10);
+                const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
+                const status: SixLegalityStatus = rules.isLegal(move, state);
+                expect(status.legal.isSuccess()).toBeTrue();
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const expectedSlice: SixGameState =
+                    SixGameState.fromRepresentation(expectedBoard, 11, new Vector(-1, 0));
+                expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
+                const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
+                expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for Player.ZERO.');
+            });
+            it('Should consider winner player who align 6 pieces (playing in the middle)', () => {
+                const board: number[][] = [
+                    [_, _, _, _, _, O],
+                    [_, _, _, _, O, X],
+                    [_, _, _, O, X, _],
+                    [_, _, _, X, X, _],
+                    [_, O, X, _, _, _],
+                    [O, O, _, _, _, _],
                 ];
                 const expectedBoard: number[][] = [
                     [_, _, _, _, _, O],
@@ -224,91 +262,118 @@ describe('SixRules', () => {
                     [_, _, _, O, X, _],
                     [_, _, O, X, X, _],
                     [_, O, X, _, _, _],
-                    [O, _, _, _, _, _],
+                    [O, O, _, _, _, _],
                 ];
-                const slice: SixGameState = SixGameState.fromRepresentation(board, 10);
-                const move: SixMove = SixMove.fromDrop(new Coord(-1, 5));
-                const status: SixLegalityStatus = rules.isLegal(move, slice);
+                const state: SixGameState = SixGameState.fromRepresentation(board, 10);
+                const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
+                const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 11);
-                expect(resultingSlice.pieces).toEqual(expectedSlice.pieces);
-                const boardValue: number = rules.getBoardValue(move, resultingSlice);
+                expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
+                const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
                 expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for Player.ZERO.');
             });
             it('Should consider winner player who draw a circle/hexagon of his pieces', () => {
                 const board: number[][] = [
+                    [_, _, _, _, X],
+                    [O, _, _, X, _],
+                    [O, _, _, X, _],
+                    [O, X, _, X, O],
+                    [X, X, X, _, _],
+                    [_, _, O, X, _],
+                ];
+                const expectedBoard: number[][] = [
+                    [_, _, _, _, X],
+                    [O, _, _, X, _],
+                    [O, _, X, X, _],
+                    [O, X, _, X, O],
+                    [X, X, X, _, _],
+                    [_, _, O, X, _],
+                ];
+                const state: SixGameState = SixGameState.fromRepresentation(board, 9);
+                const move: SixMove = SixMove.fromDrop(new Coord(2, 2));
+                const status: SixLegalityStatus = rules.isLegal(move, state);
+                expect(status.legal.isSuccess()).toBeTrue();
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 10);
+                expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
+                const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
+                expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for Player.ONE.');
+            });
+            it('Should consider winner player who draw a triangle of his pieces (corner drop)', () => {
+                const board: number[][] = [
+                    [O, X, _, X, _],
+                    [O, _, _, _, _],
+                    [O, _, X, X, O],
+                    [O, X, X, X, _],
+                    [O, O, _, X, _],
+                ];
+                const expectedBoard: number[][] = [
+                    [O, X, _, X, _],
+                    [O, _, _, X, _],
+                    [O, _, X, X, O],
+                    [O, X, X, X, _],
+                    [O, O, _, X, _],
+                ];
+                const state: SixGameState = SixGameState.fromRepresentation(board, 11);
+                const move: SixMove = SixMove.fromDrop(new Coord(3, 1));
+                const status: SixLegalityStatus = rules.isLegal(move, state);
+                expect(status.legal.isSuccess()).toBeTrue();
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 12);
+                expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
+                const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
+                expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for Player.ONE.');
+            });
+            it('Should consider winner player who draw a triangle of his pieces (edge drop)', () => {
+                const board: number[][] = [
+                    [O, _, _, _, X],
+                    [O, X, _, X, _],
+                    [O, _, _, X, O],
+                    [O, X, X, X, _],
+                    [X, O, _, _, _],
+                ];
+                const expectedBoard: number[][] = [
+                    [O, _, _, _, X],
+                    [O, X, _, X, _],
+                    [O, _, X, X, O],
+                    [O, X, X, X, _],
+                    [X, O, _, _, _],
+                ];
+                const state: SixGameState = SixGameState.fromRepresentation(board, 11);
+                const move: SixMove = SixMove.fromDrop(new Coord(2, 2));
+                const status: SixLegalityStatus = rules.isLegal(move, state);
+                expect(status.legal.isSuccess()).toBeTrue();
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
+                const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 12);
+                expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
+                const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
+                expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for Player.ONE.');
+            });
+            it('Should consider winner player who draw a circle/hexagon of his pieces (coverage remix)', () => {
+                const board: number[][] = [
                     [O, _, _, _, _],
                     [O, _, _, X, _],
                     [O, X, _, X, O],
-                    [_, X, X, _, _],
+                    [O, X, X, _, _],
                     [_, _, O, X, _],
                 ];
                 const expectedBoard: number[][] = [
                     [O, _, _, _, _],
                     [O, _, X, X, _],
                     [O, X, _, X, O],
-                    [_, X, X, _, _],
+                    [O, X, X, _, _],
                     [_, _, O, X, _],
                 ];
-                const slice: SixGameState = SixGameState.fromRepresentation(board, 9);
+                const state: SixGameState = SixGameState.fromRepresentation(board, 9);
                 const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
-                const status: SixLegalityStatus = rules.isLegal(move, slice);
+                const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 10);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
-                const boardValue: number = rules.getBoardValue(move, resultingSlice);
-                expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for Player.ONE.');
-            });
-            it('Should consider winner player who draw a triangle of his pieces (corner drop)', () => {
-                const board: number[][] = [
-                    [O, X, _, _, _],
-                    [O, _, _, _, _],
-                    [O, _, X, X, O],
-                    [O, X, X, X, _],
-                    [O, O, _, _, _],
-                ];
-                const expectedBoard: number[][] = [
-                    [O, X, _, _, _],
-                    [O, _, _, X, _],
-                    [O, _, X, X, O],
-                    [O, X, X, X, _],
-                    [O, O, _, _, _],
-                ];
-                const slice: SixGameState = SixGameState.fromRepresentation(board, 11);
-                const move: SixMove = SixMove.fromDrop(new Coord(3, 1));
-                const status: SixLegalityStatus = rules.isLegal(move, slice);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
-                const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 12);
-                expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
-                const boardValue: number = rules.getBoardValue(move, resultingSlice);
-                expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for Player.ONE.');
-            });
-            it('Should consider winner player who draw a triangle of his pieces (edge drop)', () => {
-                const board: number[][] = [
-                    [O, _, _, _, _],
-                    [O, X, _, X, _],
-                    [O, _, _, X, O],
-                    [O, X, X, X, _],
-                    [O, O, _, _, _],
-                ];
-                const expectedBoard: number[][] = [
-                    [O, _, _, _, _],
-                    [O, X, _, X, _],
-                    [O, _, X, X, O],
-                    [O, X, X, X, _],
-                    [O, O, _, _, _],
-                ];
-                const slice: SixGameState = SixGameState.fromRepresentation(board, 11);
-                const move: SixMove = SixMove.fromDrop(new Coord(2, 2));
-                const status: SixLegalityStatus = rules.isLegal(move, slice);
-                expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
-                const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 12);
-                expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
-                const boardValue: number = rules.getBoardValue(move, resultingSlice);
+                const boardValue: number = rules.getBoardNumericValue(move, resultingSlice);
                 expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for Player.ONE.');
             });
         });
@@ -328,15 +393,15 @@ describe('SixRules', () => {
                     [_, O, X, _],
                     [_, _, X, _],
                 ];
-                const slice: SixGameState = SixGameState.fromRepresentation(board, 43);
+                const state: SixGameState = SixGameState.fromRepresentation(board, 43);
                 const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
-                const status: SixLegalityStatus = rules.isLegal(move, slice);
+                const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
                 const expectedSlice: SixGameState =
                     SixGameState.fromRepresentation(expectedBoard, 44);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
-                const boardValue: number = rules.getBoardValue(move, expectedSlice);
+                const boardValue: number = rules.getBoardNumericValue(move, expectedSlice);
                 expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for Player.ONE.');
             });
             it('Should consider looser PLAYER.ONE when he drop bellow 6 pieces on phase two', () => {
@@ -354,15 +419,15 @@ describe('SixRules', () => {
                     [_, X, O, _],
                     [_, _, O, _],
                 ];
-                const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+                const state: SixGameState = SixGameState.fromRepresentation(board, 42);
                 const move: SixMove = SixMove.fromDeplacement(new Coord(3, 4), new Coord(3, 0));
-                const status: SixLegalityStatus = rules.isLegal(move, slice);
+                const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
                 const expectedSlice: SixGameState =
                     SixGameState.fromRepresentation(expectedBoard, 43);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
-                const boardValue: number = rules.getBoardValue(move, expectedSlice);
+                const boardValue: number = rules.getBoardNumericValue(move, expectedSlice);
                 expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for Player.ZERO.');
             });
             it('Should consider winner Player who has more pieces than opponent and both have less than 6', () => {
@@ -375,14 +440,14 @@ describe('SixRules', () => {
                 const expectedBoard: number[][] = [
                     [O, O, O, O, O],
                 ];
-                const slice: SixGameState = SixGameState.fromRepresentation(board, 40);
+                const state: SixGameState = SixGameState.fromRepresentation(board, 40);
                 const move: SixMove = SixMove.fromDeplacement(new Coord(4, 1), new Coord(-1, 1));
-                const status: SixLegalityStatus = rules.isLegal(move, slice);
+                const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 41);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
-                const boardValue: number = rules.getBoardValue(move, expectedSlice);
+                const boardValue: number = rules.getBoardNumericValue(move, expectedSlice);
                 expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for Player.ZERO.');
             });
             it('Should consider looser Player who has less pieces than opponent and both have less than 6', () => {
@@ -397,14 +462,14 @@ describe('SixRules', () => {
                     [X, _, _, _],
                     [X, _, _, _],
                 ];
-                const slice: SixGameState = SixGameState.fromRepresentation(board, 42);
+                const state: SixGameState = SixGameState.fromRepresentation(board, 42);
                 const move: SixMove = SixMove.fromDeplacement(new Coord(4, 1), new Coord(6, 1));
-                const status: SixLegalityStatus = rules.isLegal(move, slice);
+                const status: SixLegalityStatus = rules.isLegal(move, state);
                 expect(status.legal.isSuccess()).toBeTrue();
-                const resultingSlice: SixGameState = rules.applyLegalMove(move, slice, status).resultingSlice;
+                const resultingSlice: SixGameState = rules.applyLegalMove(move, state, status).resultingSlice;
                 const expectedSlice: SixGameState = SixGameState.fromRepresentation(expectedBoard, 43);
                 expect(resultingSlice.pieces.equals(expectedSlice.pieces)).toBeTrue();
-                const boardValue: number = rules.getBoardValue(move, expectedSlice);
+                const boardValue: number = rules.getBoardNumericValue(move, expectedSlice);
                 expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for Player.ONE.');
             });
         });

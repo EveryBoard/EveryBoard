@@ -15,9 +15,9 @@ describe('SixGameState', () => {
 
     describe('toRepresentation/fromRepresentation', () => {
         it('Should represent correctly board', () => {
-            const pieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
-            pieces.put(new Coord(0, 0), true);
-            pieces.put(new Coord(1, 1), false);
+            const pieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            pieces.put(new Coord(0, 0), Player.ONE);
+            pieces.put(new Coord(1, 1), Player.ZERO);
             const state: SixGameState = new SixGameState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X, _],
@@ -30,17 +30,17 @@ describe('SixGameState', () => {
                 [X, _],
                 [_, O],
             ];
-            const expectedPieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
-            expectedPieces.put(new Coord(0, 0), true);
-            expectedPieces.put(new Coord(1, 1), false);
+            const expectedPieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            expectedPieces.put(new Coord(0, 0), Player.ONE);
+            expectedPieces.put(new Coord(1, 1), Player.ZERO);
             expectedPieces.makeImmutable();
             const state: SixGameState = SixGameState.fromRepresentation(representation, 0);
             expect(state.pieces).toEqual(expectedPieces);
         });
         it('Should make 0 the left and upper indexes', () => {
-            const pieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
-            pieces.put(new Coord(-1, -1), true);
-            pieces.put(new Coord(0, 0), false);
+            const pieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            pieces.put(new Coord(-1, -1), Player.ONE);
+            pieces.put(new Coord(0, 0), Player.ZERO);
             const state: SixGameState = new SixGameState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X, _],
@@ -50,10 +50,10 @@ describe('SixGameState', () => {
             expect(state.offset).toEqual(new Vector(1, 1));
         });
         it('Should make 0 the left and upper indexes (horizontal bug)', () => {
-            const pieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
-            pieces.put(new Coord(1, 0), true);
-            pieces.put(new Coord(2, 0), false);
-            pieces.put(new Coord(3, 0), true);
+            const pieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            pieces.put(new Coord(1, 0), Player.ONE);
+            pieces.put(new Coord(2, 0), Player.ZERO);
+            pieces.put(new Coord(3, 0), Player.ONE);
             const state: SixGameState = new SixGameState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X, O, X],
@@ -62,10 +62,10 @@ describe('SixGameState', () => {
             expect(Vector.equals(state.offset, new Vector(-1, 0)));
         });
         it('Should make 0 the left and upper indexes (vertical bug)', () => {
-            const pieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
-            pieces.put(new Coord(0, 1), true);
-            pieces.put(new Coord(0, 2), false);
-            pieces.put(new Coord(0, 3), true);
+            const pieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            pieces.put(new Coord(0, 1), Player.ONE);
+            pieces.put(new Coord(0, 2), Player.ZERO);
+            pieces.put(new Coord(0, 3), Player.ONE);
             const state: SixGameState = new SixGameState(pieces, 0);
             const expectedRepresentation: NumberTable = [
                 [X],
@@ -76,19 +76,19 @@ describe('SixGameState', () => {
             expect(Vector.equals(state.offset, new Vector(0, -1))).toBeTrue();
         });
         it('should set offset when board only upper-piece went down', () => {
-            const beforePieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
-            beforePieces.put(new Coord(0, 0), true);
-            beforePieces.put(new Coord(0, 1), false);
-            beforePieces.put(new Coord(0, 2), true);
+            const beforePieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            beforePieces.put(new Coord(0, 0), Player.ONE);
+            beforePieces.put(new Coord(0, 1), Player.ZERO);
+            beforePieces.put(new Coord(0, 2), Player.ONE);
             const beforeState: SixGameState = new SixGameState(beforePieces, 0);
 
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 3));
             const afterState: SixGameState = beforeState.applyLegalDeplacement(move, new MGPSet());
 
-            const expectedPieces: MGPBiMap<Coord, boolean> = new MGPBiMap<Coord, boolean>();
-            expectedPieces.put(new Coord(0, 0), false);
-            expectedPieces.put(new Coord(0, 1), true);
-            expectedPieces.put(new Coord(0, 2), false);
+            const expectedPieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            expectedPieces.put(new Coord(0, 0), Player.ZERO);
+            expectedPieces.put(new Coord(0, 1), Player.ONE);
+            expectedPieces.put(new Coord(0, 2), Player.ZERO);
             expectedPieces.makeImmutable();
 
             expect(afterState.pieces).toEqual(expectedPieces);

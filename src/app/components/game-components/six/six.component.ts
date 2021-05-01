@@ -105,8 +105,8 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             this.leftCoord = null;
         }
         if (this.rules.node.isEndGame()) {
-            this.victoryCoords = this.rules.getShapeInfo(this.lastDrop,
-                                                         this.rules.node.gamePartSlice).victory;
+            this.victoryCoords = this.rules.calculateBoardValue(this.rules.node.move,
+                                                                this.rules.node.gamePartSlice).victory;
         }
         this.disconnecteds = this.getDisconnected();
     }
@@ -208,7 +208,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
                 return this.cancelMove(SixFailure.CAN_NO_LONGER_DROP);
             } else {
                 const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, neighboor);
-                const legality: SixLegalityStatus = this.rules.isLegalDeplacement(deplacement, this.state);
+                const legality: SixLegalityStatus = this.rules.isPhaseTwoMove(deplacement, this.state);
                 if (this.neededCutting(legality)) {
                     this.chosenLanding = neighboor;
                     this.moveVirtuallyPiece();
@@ -230,13 +230,13 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     }
     private showCuttable(): void {
         const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, this.chosenLanding);
-        const piecesAfterDeplacement: MGPBiMap<Coord, boolean> = SixGameState.deplacePiece(this.state, deplacement);
+        const piecesAfterDeplacement: MGPBiMap<Coord, Player> = SixGameState.deplacePiece(this.state, deplacement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
             SixGameState.getGroups(piecesAfterDeplacement, deplacement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = this.rules.getBiggerGroups(groupsAfterMove);
         this.cuttables = [];
         for (let i: number = 0; i < biggerGroups.size(); i++) {
-            const subList: Coord[] = biggerGroups.get(i).toArray();
+            const subList: Coord[] = biggerGroups.get(i).getCopy();
             this.cuttables = this.cuttables.concat(subList);
         }
     }
