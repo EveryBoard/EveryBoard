@@ -44,20 +44,3 @@ export interface IMGPRequest {
 
     typeGame?: string;
 }
-export class MGPRequest {
-    public readonly code: string;
-
-    public constructor(
-        code: RequestCode,
-        public readonly partId?: string,
-        public readonly typeGame?: string,
-    ) {
-        if (code === RequestCode.REMATCH_ACCEPTED &&
-            (partId == null || typeGame == null)) {
-            throw new Error('To accept rematch, one must provide new partId and typeGame.');
-        }
-        this.code = code.toInterface().code;
-        if (this.partId === undefined) this.partId = null;
-        if (this.typeGame === undefined) this.typeGame = null;
-    }
-}
