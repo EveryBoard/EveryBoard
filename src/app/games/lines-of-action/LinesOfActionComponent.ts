@@ -71,6 +71,7 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
         return this.rules.node.mother.gamePartSlice;
     }
     public updateBoard(): void {
+        this.cancelMoveAttempt();
         this.board = this.getState().board;
         this.lastMove = MGPOptional.ofNullable(this.rules.node.move);
         if (this.lastMove.isPresent()) {
