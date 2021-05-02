@@ -1,6 +1,6 @@
-import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
-import { PylosMove } from 'src/app/games/pylos/pylos-move/PylosMove';
-import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
+import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
+import { PylosMove } from 'src/app/games/pylos/PylosMove';
+import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
 import { Player } from 'src/app/jscaip/player/Player';
 import { DidacticialStep } from '../DidacticialStep';
 

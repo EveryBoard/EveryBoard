@@ -6,7 +6,7 @@ import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
 import { SixFailure } from '../SixFailure';
-import { SixRules } from '../SixRules';
+import { SixNodeUnheritance, SixRules } from '../SixRules';
 import { Vector } from 'src/app/jscaip/Direction';
 
 describe('SixRules', () => {
@@ -18,6 +18,19 @@ describe('SixRules', () => {
 
     beforeEach(() => {
         rules = new SixRules(SixGameState);
+    });
+    describe('chooseMove', () => {
+        it('should have boardInfo after first move', () => {
+            let moveSuccess: boolean = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
+            expect(moveSuccess).toBeTrue();
+            let unheritance: SixNodeUnheritance = rules.node.unheritance;
+            expect(unheritance.preVictory).toBeNull();
+
+            moveSuccess = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
+            expect(moveSuccess).toBeTrue();
+            unheritance = rules.node.unheritance;
+            expect(unheritance.preVictory).toBeNull();
+        });
     });
     describe('dropping', () => {
         it('Should forbid landing/dropping on existing piece (drop)', () => {

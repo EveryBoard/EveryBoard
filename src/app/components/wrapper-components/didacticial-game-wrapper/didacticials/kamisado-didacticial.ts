@@ -1,4 +1,4 @@
-import { KamisadoMove } from 'src/app/games/kamisado/kamisado-move/KamisadoMove';
+import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';

@@ -10,7 +10,7 @@ import { NodeUnheritance } from './NodeUnheritance';
 
 export abstract class Rules<M extends Move,
                             S extends GamePartSlice,
-                            L extends LegalityStatus,
+                            L extends LegalityStatus = LegalityStatus,
                             U extends NodeUnheritance = NodeUnheritance> {
 
     public static readonly CANNOT_CHOOSE_ENNEMY_PIECE: string =

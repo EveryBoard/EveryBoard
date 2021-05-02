@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
-import { CoerceoMove } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
+import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
-import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/coerceo-part-slice/CoerceoPartSlice';
+import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 
 const _: number = CoerceoPiece.EMPTY.value;

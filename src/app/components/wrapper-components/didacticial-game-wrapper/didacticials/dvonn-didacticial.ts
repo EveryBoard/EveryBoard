@@ -1,9 +1,9 @@
 /* eslint-disable max-len */
-import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
+import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
-import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
+import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { Player } from 'src/app/jscaip/player/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 

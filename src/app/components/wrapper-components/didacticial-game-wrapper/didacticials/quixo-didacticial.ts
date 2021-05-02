@@ -1,4 +1,4 @@
-import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSlice';
+import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';

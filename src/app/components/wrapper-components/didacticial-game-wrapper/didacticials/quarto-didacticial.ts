@@ -1,4 +1,4 @@
-import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
+import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { DidacticialStep } from '../DidacticialStep';

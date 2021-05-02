@@ -1,5 +1,5 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
-import { TablutCase } from './tablut-rules/TablutCase';
+import { TablutCase } from './TablutCase';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class TablutPartSlice extends GamePartSlice {

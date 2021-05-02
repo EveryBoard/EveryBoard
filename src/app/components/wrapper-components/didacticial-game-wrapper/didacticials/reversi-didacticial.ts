@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { ReversiMove } from 'src/app/games/reversi/reversi-move/ReversiMove';
+import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
 import { Player } from 'src/app/jscaip/player/Player';
 import { DidacticialStep } from '../DidacticialStep';

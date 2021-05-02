@@ -1,5 +1,5 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/encapsule-piece/EncapsulePiece';
+import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Player } from 'src/app/jscaip/player/Player';
 import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';

@@ -1,4 +1,4 @@
-import { SaharaMove } from 'src/app/games/sahara/sahara-move/SaharaMove';
+import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { Coord } from 'src/app/jscaip/coord/Coord';

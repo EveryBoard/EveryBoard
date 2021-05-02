@@ -28,7 +28,7 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         'Plateau de départ et déplacement',
         `Voici le plateau de départ.
-         Les déplacement s'effectuent orthogonalement ou diagonalement.
+         Les déplacements s'effectuent orthogonalement ou diagonalement.
          La longueur d'un déplacement est égale au nombre de pièces présente dans la ligne du déplacement.
          Notez la présence d'un indicateur d'aide qui indique où une pièce peut aterrir quand vous la sélectionnez.
          Vous jouez Foncé, faites le premier déplacement !`,
