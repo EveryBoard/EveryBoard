@@ -27,7 +27,7 @@ module.exports = {
             },
         ],
         '@typescript-eslint/no-empty-function': ['off'],
-        '@typescript-eslint/no-namespace': ['warn'],
+        '@typescript-eslint/no-namespace': ['off'],
         '@typescript-eslint/ban-types': [
             'error',
             { 'types': { 'String': { 'message': 'Use string instead', 'fixWith': 'string' } } },

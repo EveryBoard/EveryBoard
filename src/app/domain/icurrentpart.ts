@@ -1,6 +1,6 @@
-import { IMGPRequest } from './request';
 import { ArrayUtils } from '../utils/collection-lib/array-utils/ArrayUtils';
 import { JSONValue } from 'src/app/utils/utils/utils';
+import { Request } from './request';
 
 export interface ICurrentPart {
 
@@ -20,7 +20,7 @@ export interface ICurrentPart {
 
     historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
     listMoves: number[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
-    request?: IMGPRequest;
+    request?: Request;
 }
 export class Part {
     public constructor(
@@ -39,7 +39,7 @@ export class Part {
         private readonly scorePlayerOne?: number|string, // TODO : implémenter ça aussi en même temps
 
         private readonly historic?: string,
-        private readonly request?: IMGPRequest,
+        private readonly request?: Request,
     ) {
         if (typeGame == null) throw new Error('typeGame can\'t be null');
         if (playerZero == null) throw new Error('playerZero can\'t be null');
@@ -113,7 +113,7 @@ export interface PICurrentPart {
 
     historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
     listMoves?: JSONValue[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
-    request?: IMGPRequest;
+    request?: Request;
 }
 export class MGPResult {
     public static DRAW: MGPResult = new MGPResult(0);

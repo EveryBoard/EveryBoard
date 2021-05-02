@@ -55,4 +55,11 @@ export class Player implements ComparableObject {
             return Number.MAX_SAFE_INTEGER;
         }
     }
+    public getOpponent(): Player {
+        switch (this) {
+            case Player.ZERO: return Player.ONE;
+            case Player.ONE: return Player.ZERO;
+            case Player.NONE: return Player.NONE;
+        }
+    }
 }
