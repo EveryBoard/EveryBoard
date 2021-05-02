@@ -2,16 +2,15 @@ import { Component } from '@angular/core';
 
 import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
 import { Coord } from '../../../jscaip/coord/Coord';
-import { TablutMove } from 'src/app/games/tablut/tablut-move/TablutMove';
+import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutPartSlice } from '../../../games/tablut/TablutPartSlice';
-import { TablutRules } from '../../../games/tablut/tablut-rules/TablutRules';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { TablutCase } from 'src/app/games/tablut/tablut-rules/TablutCase';
+import { TablutRules } from '../../../games/tablut/TablutRules';
+import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { TablutRulesConfig } from 'src/app/games/tablut/tablut-rules/TablutRulesConfig';
+import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 
@@ -20,7 +19,7 @@ import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
     templateUrl: './tablut.component.html',
     styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
-export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, LegalityStatus> {
+export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice> {
     public static VERBOSE: boolean = false;
 
     public readonly CASE_SIZE: number = 100;

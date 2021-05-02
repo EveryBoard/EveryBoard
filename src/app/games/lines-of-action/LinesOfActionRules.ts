@@ -19,7 +19,8 @@ export class LinesOfActionFailure {
     public static BUSY_TARGET: string = `Votre case d'arrivée doit être vide ou contenir une pièce ennemie.`;
     public static NOT_YOUR_PIECE: string = `Veuillez sélectionner une de vos propres pièces.`;
     public static PIECE_CANNOT_MOVE: string = `Cette pièce n'a aucun mouvement possible, choisissez-en une autre.`;
-    public static INVALID_DIRECTION: string = `Un mouvement dois se faire selon une direction orthogonale ou diagonale.`;
+    public static INVALID_DIRECTION: string =
+        `Un mouvement dois se faire selon une direction orthogonale ou diagonale.`;
 }
 
 export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
@@ -27,7 +28,7 @@ export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
                                                LinesOfActionState,
                                                LegalityStatus> {}
 
-export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState, LegalityStatus> {
+export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
     public getListMoves(node: LinesOfActionNode): MGPMap<LinesOfActionMove, LinesOfActionState> {
         return this.getListMovesFromState(node.gamePartSlice);
     }

@@ -3,7 +3,6 @@ import { AbstractGameComponent }
     from 'src/app/components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DirectionError } from 'src/app/jscaip/Direction';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
@@ -18,7 +17,7 @@ import { LinesOfActionState } from './LinesOfActionState';
     templateUrl: './LinesOfActionComponent.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionMove, LinesOfActionState, LegalityStatus> {
+export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionMove, LinesOfActionState> {
     public CASE_SIZE: number = 100;
     public STROKE_WIDTH: number = 8;
     public INDICATOR_SIZE: number = 20;

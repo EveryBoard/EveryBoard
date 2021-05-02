@@ -1,8 +1,8 @@
 import { CoerceoComponent } from './coerceo.component';
-import { CoerceoMove } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
+import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
-import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/coerceo-part-slice/CoerceoPartSlice';
+import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';

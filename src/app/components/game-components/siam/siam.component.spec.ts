@@ -1,8 +1,8 @@
 import { SiamComponent } from './siam.component';
-import { SiamMove } from 'src/app/games/siam/siam-move/SiamMove';
+import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { SiamPiece } from 'src/app/games/siam/siam-piece/SiamPiece';
+import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';

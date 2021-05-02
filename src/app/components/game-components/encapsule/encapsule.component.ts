@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { Move } from '../../../jscaip/Move';
 import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
-import { EncapsuleRules } from 'src/app/games/encapsule/encapsule-rules/EncapsuleRules';
+import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
-import { EncapsuleMove } from 'src/app/games/encapsule/encapsule-move/EncapsuleMove';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/encapsule-piece/EncapsulePiece';
+import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
+import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/player/Player';

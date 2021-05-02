@@ -9,7 +9,7 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
-import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSlice';
+import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoFailure } from 'src/app/games/quixo/QuixoFailure';
 
 describe('QuixoComponent', () => {

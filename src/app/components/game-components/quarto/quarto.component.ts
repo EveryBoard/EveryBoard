@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
-import { QuartoMove } from '../../../games/quarto/quarto-move/QuartoMove';
+import { QuartoMove } from '../../../games/quarto/QuartoMove';
 import { QuartoPartSlice } from '../../../games/quarto/QuartoPartSlice';
-import { QuartoRules } from '../../../games/quarto/quarto-rules/QuartoRules';
+import { QuartoRules } from '../../../games/quarto/QuartoRules';
 import { QuartoPiece } from '../../../games/quarto/QuartoPiece';
 import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
@@ -12,7 +11,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
 })
-export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice, LegalityStatus> {
+export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
     public rules: QuartoRules = new QuartoRules(QuartoPartSlice);
 
     public chosen: Coord = new Coord(-1, -1);

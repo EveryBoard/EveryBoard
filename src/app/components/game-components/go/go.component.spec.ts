@@ -1,7 +1,6 @@
 import { GoComponent } from './go.component';
-import { GoMove } from 'src/app/games/go/go-move/GoMove';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
-import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/go-part-slice/GoPartSlice';
+import { GoMove } from 'src/app/games/go/GoMove';
+import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/GoPartSlice';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';

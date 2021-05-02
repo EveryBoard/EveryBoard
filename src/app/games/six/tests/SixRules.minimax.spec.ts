@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';
-import { expectFirstStateToWorthMoreThanSecond, expectStateToBePreVictory } from 'src/app/utils/TestUtils.spec';
+import { expectFirstStateToBeBetterThanSecond, expectStateToBePreVictory } from 'src/app/utils/TestUtils.spec';
 import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
@@ -25,15 +25,6 @@ describe('Six - Minimax', () => {
                 [O, _, _, O, X, _, _],
                 [O, _, O, X, _, _, _],
                 [_, O, X, X, _, _, _],
-                [_, X, _, _, _, _, _],
-            ];
-            const expectedBoard: number[][] = [
-                [X, _, _, _, _, _, X],
-                [O, _, _, _, _, O, _],
-                [O, _, _, _, O, _, _],
-                [O, _, _, O, X, _, _],
-                [O, _, O, X, _, _, _],
-                [O, O, X, X, _, _, _],
                 [_, X, _, _, _, _, _],
             ];
             const state: SixGameState = SixGameState.fromRepresentation(board, 10);
@@ -76,7 +67,7 @@ describe('Six - Minimax', () => {
                 [O, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 4);
-            expectFirstStateToWorthMoreThanSecond(weakerState, move, strongerState, move, rules);
+            expectFirstStateToBeBetterThanSecond(weakerState, move, strongerState, move, rules);
         });
         it('should be true with triangle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(1, 3));
@@ -94,7 +85,7 @@ describe('Six - Minimax', () => {
                 [O, X, O, O, _],
                 [O, O, O, _, _],
             ], 4);
-            expectFirstStateToWorthMoreThanSecond(weakerState, move, strongerState, move, rules);
+            expectFirstStateToBeBetterThanSecond(weakerState, move, strongerState, move, rules);
         });
         it('should be true with circle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
@@ -112,7 +103,7 @@ describe('Six - Minimax', () => {
                 [O, _, X, O, O],
                 [O, O, O, O, _],
             ], 4);
-            expectFirstStateToWorthMoreThanSecond(weakerState, move, strongerState, move, rules);
+            expectFirstStateToBeBetterThanSecond(weakerState, move, strongerState, move, rules);
         });
     });
     describe('4 pieces aligned with two spaces should be better than 4 aligned with two ennemies', () => {
@@ -128,7 +119,7 @@ describe('Six - Minimax', () => {
                 [_, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 6);
-            expectFirstStateToWorthMoreThanSecond(weakerState, move, strongerState, move, rules);
+            expectFirstStateToBeBetterThanSecond(weakerState, move, strongerState, move, rules);
         });
     });
     describe('Phase 2', () => {

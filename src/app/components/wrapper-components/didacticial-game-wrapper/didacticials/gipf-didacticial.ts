@@ -1,7 +1,7 @@
-import { GipfBoard } from 'src/app/games/gipf/gipf-move/GipfBoard';
-import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-move/GipfMove';
-import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice';
-import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
+import { GipfBoard } from 'src/app/games/gipf/GipfBoard';
+import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
+import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
+import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
@@ -33,13 +33,13 @@ export const gipfDidacticial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         'Capture (1/3)',
         `Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
-         Il y a plusieurs choses à savoir sur une capture :
+         Il y a plusieurs choses à savoir sur une capture :
          1. Quand 4 pièces sont capturées, toutes les pièces directement alignées avec ces 4 pièces le sont également.
          2. Dès qu'il y a une case vide dans la ligne, la capture s'arrête.
          3. Vos pièces capturées rejoignent votre réserve.
          Celles de l'adversaire par contre sont réellement capturées et ne rejoignent pas sa réserve.
          4. Si vous créez une ligne de 4 pièces de l'adversaire, c'est au début de son tour qu'il pourra les capturer.
-         Ceci implique que votre tour se passe en trois phases :
+         Ceci implique que votre tour se passe en trois phases :
          A. Choisir la/les capture(s) crée(s) par le dernier mouvement de votre adversaire.
          B. Faire votre poussée.
          C. Choisir la/les ligne(s) à capturer que vous venez de créer (en cliquant dessus).

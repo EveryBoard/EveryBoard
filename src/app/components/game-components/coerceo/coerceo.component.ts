@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { TriangularGameComponent }
     from 'src/app/components/game-components/abstract-game-component/TriangularGameComponent';
-import { CoerceoMove } from 'src/app/games/coerceo/coerceo-move/CoerceoMove';
-import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/coerceo-part-slice/CoerceoPartSlice';
+import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
+import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/coerceo-rules/CoerceoRules';
+import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';

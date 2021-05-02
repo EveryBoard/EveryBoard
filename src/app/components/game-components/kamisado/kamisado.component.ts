@@ -2,11 +2,10 @@ import { AbstractGameComponent } from '../abstract-game-component/AbstractGameCo
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
-import { KamisadoMove } from 'src/app/games/kamisado/kamisado-move/KamisadoMove';
+import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoFailure, KamisadoRules } from 'src/app/games/kamisado/kamisado-rules/KamisadoRules';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { KamisadoFailure, KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
@@ -21,7 +20,7 @@ export class KamisadoComponentFailure {
     styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 
-export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice, LegalityStatus> {
+export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice> {
     public rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice);
     public CASE_SIZE: number = 75;
     public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();

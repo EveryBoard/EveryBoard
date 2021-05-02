@@ -40,7 +40,7 @@ export abstract class GameWrapper {
     @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
-    public gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
+    public gameComponent: AbstractGameComponent<Move, GamePartSlice>;
 
     public userName: string = this.authenticationService.getAuthenticatedUser() &&
                               this.authenticationService.getAuthenticatedUser().pseudo // TODO, clean that;
@@ -61,7 +61,7 @@ export abstract class GameWrapper {
     ) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
-    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
+    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
 
         switch (compoString) {
@@ -120,13 +120,13 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE && this.gameIncluder == null, 'GameIncluder should be present');
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
-        const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> =
+        const component: Type<AbstractGameComponent<Move, GamePartSlice>> =
             this.getMatchingComponent(compoString);
-        const componentFactory: ComponentFactory<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> =
+        const componentFactory: ComponentFactory<AbstractGameComponent<Move, GamePartSlice>> =
             this.componentFactoryResolver.resolveComponentFactory(component);
-        const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> =
+        const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice>> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
-        this.gameComponent = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance;
+        this.gameComponent = <AbstractGameComponent<Move, GamePartSlice>>componentRef.instance;
         // Shortent by T<S = Truc>
 
         this.gameComponent.chooseMove = this.receiveValidMove; // so that when the game component do a move
@@ -209,7 +209,7 @@ export abstract class GameWrapper {
             return true;
         }
     }
-    get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
+    get compo(): AbstractGameComponent<Move, GamePartSlice> {
         return this.gameComponent;
     }
 }

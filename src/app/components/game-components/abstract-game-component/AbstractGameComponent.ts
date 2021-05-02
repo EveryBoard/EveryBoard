@@ -20,7 +20,7 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 })
 export abstract class AbstractGameComponent<M extends Move,
                                             S extends GamePartSlice,
-                                            L extends LegalityStatus,
+                                            L extends LegalityStatus = LegalityStatus,
                                             U extends NodeUnheritance = NodeUnheritance> {
     public readonly STROKE_WIDTH: number = 8;
     public readonly SMALL_STROKE_WIDTH: number = 2;

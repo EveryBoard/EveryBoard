@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
-import { SiamMove } from 'src/app/games/siam/siam-move/SiamMove';
+import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
-import { SiamRules } from 'src/app/games/siam/siam-rules/SiamRules';
+import { SiamRules } from 'src/app/games/siam/SiamRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { SiamPiece } from 'src/app/games/siam/siam-piece/SiamPiece';
+import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';

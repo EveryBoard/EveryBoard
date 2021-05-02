@@ -1,9 +1,8 @@
 import { Component } from '@angular/core';
 import { P4PartSlice } from '../../../games/p4/P4PartSlice';
-import { P4Rules } from '../../../games/p4/p4-rules/P4Rules';
+import { P4Rules } from '../../../games/p4/P4Rules';
 import { Move } from '../../../jscaip/Move';
 import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/player/Player';
@@ -14,7 +13,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
     templateUrl: './p4.component.html',
     styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
-export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice, LegalityStatus> {
+export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
     public static VERBOSE: boolean = false;
 
     public EMPTY_CASE: number = Player.NONE.value;

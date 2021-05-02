@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
-import { GoMove } from 'src/app/games/go/go-move/GoMove';
-import { GoRules } from 'src/app/games/go/go-rules/GoRules';
-import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/go-part-slice/GoPartSlice';
+import { GoMove } from 'src/app/games/go/GoMove';
+import { GoRules } from 'src/app/games/go/GoRules';
+import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
-import { GroupDatas } from 'src/app/games/go/group-datas/GroupDatas';
+import { GroupDatas } from 'src/app/games/go/GroupDatas';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';

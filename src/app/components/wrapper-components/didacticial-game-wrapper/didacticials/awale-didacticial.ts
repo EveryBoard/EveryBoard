@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
+import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 export const awaleDidacticial: DidacticialStep[] = [

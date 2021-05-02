@@ -1,5 +1,5 @@
-import { EncapsuleMove } from 'src/app/games/encapsule/encapsule-move/EncapsuleMove';
-import { EncapsulePiece } from 'src/app/games/encapsule/encapsule-piece/EncapsulePiece';
+import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Player } from 'src/app/jscaip/player/Player';

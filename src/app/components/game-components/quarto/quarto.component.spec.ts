@@ -11,7 +11,7 @@ import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
+import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { By } from '@angular/platform-browser';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';

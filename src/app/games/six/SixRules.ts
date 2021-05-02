@@ -15,8 +15,7 @@ import { display } from 'src/app/utils/utils/utils';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
-
-interface SixNodeUnheritance extends NodeUnheritance {
+export interface SixNodeUnheritance extends NodeUnheritance {
 
     value: number;
 
@@ -38,7 +37,7 @@ export class SixRules extends AlignementMinimax<SixMove,
     private currentVictorySource: SixVictorySource;
 
     public getListMoves(node: SixNode): MGPMap<SixMove, SixGameState> {
-        if (node.unheritance.preVictory) {
+        if (node.unheritance && node.unheritance.preVictory) {
             if (node.gamePartSlice.turn < 40) {
                 const forcedMove: MGPMap<SixMove, SixGameState> = new MGPMap();
                 const move: SixMove = SixMove.fromDrop(node.unheritance.preVictory);

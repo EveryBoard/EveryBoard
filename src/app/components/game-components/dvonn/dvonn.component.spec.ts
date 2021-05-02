@@ -1,13 +1,13 @@
 import { DvonnComponent } from './dvonn.component';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
-import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
+import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
+import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { Player } from 'src/app/jscaip/player/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { fakeAsync } from '@angular/core/testing';
-import { DvonnFailure } from 'src/app/games/dvonn/dvonn-rules/DvonnRules';
+import { DvonnFailure } from 'src/app/games/dvonn/DvonnRules';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 
 describe('DvonnComponent', () => {

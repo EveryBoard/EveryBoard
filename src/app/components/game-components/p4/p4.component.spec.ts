@@ -11,7 +11,7 @@ import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
-import { P4Rules } from 'src/app/games/p4/p4-rules/P4Rules';
+import { P4Rules } from 'src/app/games/p4/P4Rules';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { P4Move } from 'src/app/games/p4/P4Move';

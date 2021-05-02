@@ -3,9 +3,8 @@ import { AbstractGameComponent } from '../abstract-game-component/AbstractGameCo
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
-import { QuixoPartSlice } from 'src/app/games/quixo/quixo-part-slice/QuixoPartSlice';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { QuixoRules } from 'src/app/games/quixo/quixo-rules/QuixoRules';
+import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
+import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
 import { GameComponentUtils } from '../GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Rules } from 'src/app/jscaip/Rules';
@@ -16,7 +15,7 @@ import { Player } from 'src/app/jscaip/player/Player';
     templateUrl: './quixo.component.html',
     styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
-export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice, LegalityStatus> {
+export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice> {
     public static VERBOSE: boolean = false;
 
     public rules: QuixoRules = new QuixoRules(QuixoPartSlice);

@@ -22,7 +22,7 @@ import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
-import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
+import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { RequestCode } from 'src/app/domain/request';

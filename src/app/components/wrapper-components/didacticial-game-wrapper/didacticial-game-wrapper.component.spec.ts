@@ -1,6 +1,6 @@
 import { DidacticialGameWrapperComponent } from './didacticial-game-wrapper.component';
 import { DidacticialStep } from './DidacticialStep';
-import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
+import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';

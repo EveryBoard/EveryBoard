@@ -1,5 +1,5 @@
 import { AwaleComponent } from './awale.component';
-import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
+import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';

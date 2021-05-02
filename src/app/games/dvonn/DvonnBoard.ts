@@ -1,6 +1,6 @@
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { DvonnPieceStack } from './dvonn-piece-stack/DvonnPieceStack';
+import { DvonnPieceStack } from './DvonnPieceStack';
 import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
 
 export class DvonnBoard extends HexaBoard<DvonnPieceStack> {

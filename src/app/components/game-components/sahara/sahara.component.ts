@@ -2,11 +2,10 @@ import { Component } from '@angular/core';
 
 import { TriangularGameComponent }
     from 'src/app/components/game-components/abstract-game-component/TriangularGameComponent';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { SaharaMove } from 'src/app/games/sahara/sahara-move/SaharaMove';
+import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
-import { SaharaRules } from 'src/app/games/sahara/sahara-rules/SaharaRules';
+import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
@@ -16,7 +15,7 @@ import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
     templateUrl: './sahara.component.html',
     styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
-export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaPartSlice, LegalityStatus> {
+export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaPartSlice> {
     public static VERBOSE: boolean = false;
 
     public rules: SaharaRules = new SaharaRules(SaharaPartSlice);

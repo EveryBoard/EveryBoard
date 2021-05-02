@@ -4,7 +4,7 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { of } from 'rxjs';
 import { AppModule } from 'src/app/app.module';
-import { EncapsulePiece } from 'src/app/games/encapsule/encapsule-piece/EncapsulePiece';
+import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { PickGameComponent } from '../../normal-component/pick-game/pick-game.component';

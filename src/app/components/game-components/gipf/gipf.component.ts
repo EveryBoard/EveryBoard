@@ -1,10 +1,6 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GipfLegalityStatus } from 'src/app/games/gipf/gipf-legality-status/GipfLegalityStatus';
-import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/gipf-move/GipfMove';
-import { GipfPartSlice } from 'src/app/games/gipf/gipf-part-slice/GipfPartSlice';
-import { GipfPiece } from 'src/app/games/gipf/gipf-piece/GipfPiece';
-import { GipfRules, GipfFailure } from 'src/app/games/gipf/gipf-rules/GipfRules';
+import { GipfRules, GipfFailure } from 'src/app/games/gipf/GipfRules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
@@ -14,6 +10,10 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { HexagonalGameComponent } from '../abstract-game-component/HexagonalGameComponent';
+import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
+import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
+import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
+import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 
 export class Arrow {
     public constructor(public readonly source: Coord,

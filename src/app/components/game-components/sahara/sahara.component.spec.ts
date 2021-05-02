@@ -1,6 +1,6 @@
 import { SaharaComponent } from './sahara.component';
 import { Coord } from 'src/app/jscaip/coord/Coord';
-import { SaharaMove } from 'src/app/games/sahara/sahara-move/SaharaMove';
+import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';

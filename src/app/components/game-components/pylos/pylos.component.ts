@@ -1,10 +1,9 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../abstract-game-component/AbstractGameComponent';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { PylosMove } from 'src/app/games/pylos/pylos-move/PylosMove';
-import { PylosPartSlice } from 'src/app/games/pylos/pylos-part-slice/PylosPartSlice';
-import { PylosRules } from 'src/app/games/pylos/pylos-rules/PylosRules';
-import { PylosCoord } from 'src/app/games/pylos/pylos-coord/PylosCoord';
+import { PylosMove } from 'src/app/games/pylos/PylosMove';
+import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
+import { PylosRules } from 'src/app/games/pylos/PylosRules';
+import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/player/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
@@ -13,7 +12,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
     templateUrl: './pylos.component.html',
     styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
-export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSlice, LegalityStatus> {
+export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSlice> {
     public static VERBOSE: boolean = false;
 
     public rules: PylosRules = new PylosRules(PylosPartSlice);

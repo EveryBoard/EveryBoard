@@ -1,11 +1,10 @@
 import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
-import { DvonnMove } from 'src/app/games/dvonn/dvonn-move/DvonnMove';
+import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
-import { DvonnRules } from 'src/app/games/dvonn/dvonn-rules/DvonnRules';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { DvonnPieceStack } from 'src/app/games/dvonn/dvonn-piece-stack/DvonnPieceStack';
+import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
+import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
@@ -19,7 +18,7 @@ import { HexagonalGameComponent }
     styleUrls: ['../abstract-game-component/abstract-game-component.css'],
 })
 
-export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartSlice, LegalityStatus> {
+export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartSlice> {
     private static CASE_SIZE: number = 30;
     public rules: DvonnRules = new DvonnRules(DvonnPartSlice);
     public scores: number[] = [0, 0];

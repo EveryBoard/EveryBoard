@@ -10,7 +10,7 @@ import { NodeUnheritance } from '../NodeUnheritance';
 export class MGPNode<R extends Rules<M, S, L, U>,
                      M extends Move,
                      S extends GamePartSlice,
-                     L extends LegalityStatus,
+                     L extends LegalityStatus = LegalityStatus,
                      U extends NodeUnheritance = NodeUnheritance> {
     // TODO: calculate a board - value by the information of the mother.boardValue + this.move to ease the calculation
     // TODO: choose ONE commenting langage, for fuck's sake.
@@ -205,7 +205,7 @@ export class MGPNode<R extends Rules<M, S, L, U>,
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'createChilds received listMoves from ruler');
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, moves);
 
-        const winningMoveInfo: { winningMoveIndex: number, boardValues: number[] } =
+        const winningMoveInfo: { winningMoveIndex: number, boardValues: number[], unheritances: U[] } =
             this.getWinningMoveIndex(moves, this.gamePartSlice.turn);
         if (winningMoveInfo.winningMoveIndex === -1) {
             for (let i: number = 0; i < moves.size(); i++) {
@@ -218,7 +218,9 @@ export class MGPNode<R extends Rules<M, S, L, U>,
                 display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'move and board retrieved from the entry');
 
                 const boardValue: number = winningMoveInfo.boardValues[i];
-                const child: MGPNode<R, M, S, L, U> = new MGPNode<R, M, S, L, U>(this, move, slice, boardValue);
+                const unheritance: U = winningMoveInfo.unheritances[i];
+                const child: MGPNode<R, M, S, L, U> =
+                    new MGPNode<R, M, S, L, U>(this, move, slice, boardValue, unheritance);
                 display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'child created');
                 display(MGPNode.VERBOSE || LOCAL_VERBOSE, child);
 
@@ -234,22 +236,33 @@ export class MGPNode<R extends Rules<M, S, L, U>,
     }
     private getWinningMoveIndex(moves: MGPMap<M, S>,
                                 turn: number)
-                                : { winningMoveIndex: number, boardValues: number[] }
+    : { winningMoveIndex: number, boardValues: number[], unheritances: U[] }
     {
         const winningValue: number = turn % 2 === 0 ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
         let hasWinningMove: boolean = false;
         const boardValues: number[] = [];
+        const unheritances: U[] = [];
         let i: number = 0;
         while (i < moves.size() && !hasWinningMove) {
             const move: M = moves.getByIndex(i).key;
             const slice: S = moves.getByIndex(i).value;
-            const sliceValue: number = MGPNode.ruler.getBoardNumericValue(move, slice);
-            boardValues[i] = sliceValue;
-            hasWinningMove = winningValue === sliceValue;
+            const stateInfo: number | NodeUnheritance = MGPNode.ruler.getBoardValue(move, slice);
+            let stateValue: number;
+            let unheritance: U;
+            if (typeof stateInfo === 'number') {
+                stateValue = stateInfo;
+            } else {
+                stateValue = (stateInfo as U).value;
+                unheritance = (stateInfo as U);
+            }
+
+            boardValues[i] = stateValue;
+            unheritances[i] = unheritance;
+            hasWinningMove = winningValue === stateValue;
             i++;
         }
         const winningMoveIndex: number = hasWinningMove ? i - 1 : -1;
-        return { winningMoveIndex, boardValues };
+        return { winningMoveIndex, boardValues, unheritances };
     }
     private createOnlyWinningChild(move: { key: M, value: S }, winningValue: number) {
         const winningChild: MGPNode<R, M, S, L, U> = new MGPNode<R, M, S, L, U>(
