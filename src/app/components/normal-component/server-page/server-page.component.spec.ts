@@ -34,11 +34,7 @@ class AuthenticationServiceMock {
         return of(AuthenticationServiceMock.CURRENT_USER);
     }
 }
-class RouterMock {
-    public async navigate(to: string[]): Promise<boolean> {
-        return true;
-    }
-}
+
 describe('ServerPageComponent', () => {
     let component: ServerPageComponent;
 
@@ -70,7 +66,6 @@ describe('ServerPageComponent', () => {
                 { provide: ChatDAO, useClass: ChatDAOMock },
 
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-                { provide: Router, useClass: RouterMock },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(ServerPageComponent);
@@ -139,7 +134,7 @@ describe('ServerPageComponent', () => {
     it('Should be legal for unlogged user to create local game', fakeAsync(async() => {
         AuthenticationServiceMock.CURRENT_USER = AuthenticationService.NOT_CONNECTED;
         AuthenticationServiceMock.IS_USER_LOGGED = false;
-        spyOn(component.router, 'navigate').and.callThrough();
+        spyOn(component.router, 'navigate');
         component.ngOnInit();
 
         component.playLocally();

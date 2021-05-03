@@ -25,6 +25,7 @@ import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ICurrentPart } from 'src/app/domain/icurrentpart';
+import { BlankComponent } from 'src/app/utils/TestUtils.spec';
 
 const activatedRouteStub: unknown = {
     snapshot: {
@@ -46,9 +47,6 @@ class AuthenticationServiceMock {
         return AuthenticationServiceMock.USER;
     }
 }
-
-@Component({})
-class BlankComponent {}
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
     /* Life cycle summary

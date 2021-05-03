@@ -22,12 +22,8 @@ import { ICurrentPart } from 'src/app/domain/icurrentpart';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
 import { IJoueur } from 'src/app/domain/iuser';
+import { BlankComponent } from 'src/app/utils/TestUtils.spec';
 
-class RouterMock {
-    public async navigate(to: string[]): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-}
 describe('PartCreationComponent:', () => {
     let fixture: ComponentFixture<PartCreationComponent>;
 
@@ -49,7 +45,9 @@ describe('PartCreationComponent:', () => {
             imports: [
                 MatStepperModule, MatRadioModule, MatSliderModule,
                 ReactiveFormsModule,
-                RouterTestingModule,
+                RouterTestingModule.withRoutes(
+                    [{ path: 'server', component: BlankComponent }],
+                ),
                 BrowserAnimationsModule,
             ],
             declarations: [PartCreationComponent],
@@ -58,7 +56,6 @@ describe('PartCreationComponent:', () => {
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoueursDAO, useClass: JoueursDAOMock },
-                { provide: Router, useClass: RouterMock },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(PartCreationComponent);

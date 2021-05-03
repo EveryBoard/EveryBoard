@@ -7,13 +7,7 @@ import { Observable, of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
 
-class RouterMock {
-    public async navigate(to: string[]): Promise<boolean> {
-        return true;
-    }
-}
 class AuthenticationServiceMock {
     public static CURRENT_USER: {pseudo: string, verified: boolean} = null;
 
@@ -54,7 +48,6 @@ describe('InscriptionComponent', () => {
             declarations: [InscriptionComponent],
             providers: [
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-                { provide: Router, useClass: RouterMock },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(InscriptionComponent);
@@ -65,14 +58,14 @@ describe('InscriptionComponent', () => {
         expect(component).toBeTruthy();
     });
     it('Registration should navigate to ConfirmInscriptionComponent', fakeAsync(async() => {
-        spyOn(component.router, 'navigate').and.callThrough();
+        spyOn(component.router, 'navigate');
 
         expect(await clickElement('#registerButton')).toBeTrue();
 
         expect(component.router.navigate).toHaveBeenCalledWith(['/confirm-inscription']);
     }));
     it('Registration failure should show a message', fakeAsync(async() => {
-        spyOn(component.router, 'navigate').and.callThrough();
+        spyOn(component.router, 'navigate');
         spyOn(component.authService, 'doRegister').and.rejectWith({ message: 'c\'est caca monsieur.' });
 
         expect(await clickElement('#registerButton')).toBeTrue();

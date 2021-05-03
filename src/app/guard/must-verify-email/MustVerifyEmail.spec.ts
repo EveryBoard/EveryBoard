@@ -3,11 +3,6 @@ import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { MustVerifyEmail } from './MustVerifyEmail';
 
-class RouterMock {
-    public async navigate(to: string[]): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-}
 describe('EmailVerified', () => {
     let guard: MustVerifyEmail;
 
@@ -17,7 +12,9 @@ describe('EmailVerified', () => {
 
     beforeEach(() => {
         authService = {} as AuthenticationService;
-        router = new RouterMock() as Router;
+        router = {
+            navigate: jasmine.createSpy('navigate'),
+        } as unknown as Router;
         guard = new MustVerifyEmail(authService, router);
     });
     it('should create', () => {
@@ -25,7 +22,6 @@ describe('EmailVerified', () => {
     });
     it('should move unconnected user to login page and refuse them', async() => {
         authService.getJoueurObs = () => of(AuthenticationService.NOT_CONNECTED);
-        spyOn(router, 'navigate');
 
         expect(await guard.canActivate()).toBeFalse();
 
@@ -33,7 +29,6 @@ describe('EmailVerified', () => {
     });
     it('should move verified user to login page and refuse them', async() => {
         authService.getJoueurObs = () => of({ pseudo: 'JeanMichelNouveau user', verified: true });
-        spyOn(router, 'navigate');
 
         expect(await guard.canActivate()).toBeFalse();
 

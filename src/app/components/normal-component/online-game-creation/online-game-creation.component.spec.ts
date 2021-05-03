@@ -2,7 +2,7 @@ import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testing';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 import { Observable, of } from 'rxjs';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
@@ -23,11 +23,7 @@ class AuthenticationServiceMock {
         return of(AuthenticationServiceMock.CURRENT_USER);
     }
 }
-class RouterMock {
-    public async navigate(to: string[]): Promise<boolean> {
-        return true;
-    }
-}
+
 describe('OnlineGameCreationComponent', () => {
     let component: OnlineGameCreationComponent;
     let fixture: ComponentFixture<OnlineGameCreationComponent>;
@@ -47,6 +43,7 @@ describe('OnlineGameCreationComponent', () => {
         await TestBed.configureTestingModule({
             imports: [
                 MatSnackBarModule,
+                RouterTestingModule,
             ],
             declarations: [
                 OnlineGameCreationComponent,
@@ -59,7 +56,6 @@ describe('OnlineGameCreationComponent', () => {
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-                { provide: Router, useClass: RouterMock },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(OnlineGameCreationComponent);

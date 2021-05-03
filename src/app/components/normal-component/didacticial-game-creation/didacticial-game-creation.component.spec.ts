@@ -1,15 +1,10 @@
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { DidacticialGameCreationComponent } from './didacticial-game-creation.component';
 
-class RouterMock {
-    public async navigate(to: string[]): Promise<boolean> {
-        return true;
-    }
-}
 describe('DidacticialGameCreationComponent', () => {
     let component: DidacticialGameCreationComponent;
     let fixture: ComponentFixture<DidacticialGameCreationComponent>;
@@ -27,14 +22,12 @@ describe('DidacticialGameCreationComponent', () => {
     };
     beforeEach(async() => {
         await TestBed.configureTestingModule({
+            imports: [RouterTestingModule],
             declarations: [
                 DidacticialGameCreationComponent,
             ],
             schemas: [
                 CUSTOM_ELEMENTS_SCHEMA,
-            ],
-            providers: [
-                { provide: Router, useClass: RouterMock },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(DidacticialGameCreationComponent);

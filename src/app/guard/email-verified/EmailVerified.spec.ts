@@ -4,13 +4,7 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { of } from 'rxjs';
-import { fakeAsync } from '@angular/core/testing';
 
-class RouterMock {
-    public async navigate(to: string[]): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-}
 const afAuth: unknown = {
     authState: of(null),
 };
@@ -25,7 +19,9 @@ describe('EmailVerified', () => {
 
     beforeEach(() => {
         authService = new AuthenticationService(afAuth as AngularFireAuth, afs as AngularFirestore);
-        router = new RouterMock() as Router;
+        router = {
+            navigate: jasmine.createSpy('navigate'),
+        } as unknown as Router;
         guard = new EmailVerified(authService, router);
     });
     it('should create', () => {
@@ -33,7 +29,6 @@ describe('EmailVerified', () => {
     });
     it('should move unconnected user to login page and refuse them', async() => {
         authService.getJoueurObs = () => of(AuthenticationService.NOT_CONNECTED);
-        spyOn(router, 'navigate');
 
         expect(await guard.canActivate()).toBeFalse();
 
@@ -41,7 +36,6 @@ describe('EmailVerified', () => {
     });
     it('should move unverified user to confirm-inscription page and refuse them', async() => {
         authService.getJoueurObs = () => of({ pseudo: 'JeanMichelNouveau user', verified: false });
-        spyOn(router, 'navigate');
 
         expect(await guard.canActivate()).toBeFalse();
 

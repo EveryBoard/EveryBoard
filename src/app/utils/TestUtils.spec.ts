@@ -1,4 +1,4 @@
-import { CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
+import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AbstractGameComponent } from '../components/game-components/abstract-game-component/AbstractGameComponent';
@@ -20,6 +20,9 @@ import { GameWrapper } from '../components/wrapper-components/GameWrapper';
 import { Rules } from '../jscaip/Rules';
 import { Player } from '../jscaip/player/Player';
 import { NodeUnheritance } from '../jscaip/NodeUnheritance';
+
+@Component({})
+export class BlankComponent {}
 
 class ActivatedRouteMock {
     public readonly snapshot: any;
