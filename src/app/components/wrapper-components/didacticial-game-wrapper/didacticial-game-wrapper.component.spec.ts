@@ -85,7 +85,7 @@ describe('DidacticialGameWrapperComponent', () => {
             expect(currentTitle).toBe(expectedTitle);
         }));
         it('It should throw when trying to reach unexisting game', fakeAsync(async() => {
-            spyOn(componentTestUtils.activatedRouteStub.snapshot.paramMap, 'get').and.returnValue('IDontExist');
+            componentTestUtils.activatedRouteStub.setRoute('compo', 'IDontExist');
             expect(() => component.getDidacticial()).toThrowError('Unknown Game IDontExist.');
         }));
         // ///////////////////////// ATTEMPTING ///////////////////////////////////

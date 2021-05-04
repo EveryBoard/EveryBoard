@@ -9,19 +9,11 @@ import { AppModule } from 'src/app/app.module';
 import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { of } from 'rxjs';
+import { ActivatedRouteStub } from 'src/app/utils/TestUtils.spec';
 
-const activatedRouteStub = {
-    snapshot: {
-        paramMap: {
-            get: (str: string) => {
-                return 'MinimaxTesting';
-            },
-        },
-    },
-};
 const authenticationServiceStub = {
 
     getJoueurObs: () => of(AuthenticationService.NOT_CONNECTED),
@@ -31,6 +23,7 @@ const authenticationServiceStub = {
     },
 };
 describe('MinimaxTestingComponent', () => {
+    const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub('MinimaxTesting');
     let wrapper: LocalGameWrapperComponent;
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;

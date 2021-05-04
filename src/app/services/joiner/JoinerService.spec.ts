@@ -4,8 +4,8 @@ import { JoinerService } from './JoinerService';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { IJoinerId, IJoiner } from 'src/app/domain/ijoiner';
 import { of } from 'rxjs';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks';
+import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 
 describe('JoinerService', () => {
     let dao: JoinerDAOMock;

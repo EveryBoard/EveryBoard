@@ -1,6 +1,6 @@
 import { ActivesPartsService } from './ActivesPartsService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
+import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
 
 describe('ActivesPartsService', () => {
     let service: ActivesPartsService;

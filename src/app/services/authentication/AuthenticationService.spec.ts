@@ -44,21 +44,23 @@ export class AuthenticationServiceMock {
     public doGoogleLogin(): Promise<unknown> {
         return;
     }
+}
 
+export class AuthenticationServiceUnderTest extends AuthenticationService {
+    public updatePresence(): Promise<void> {
+        return null;
+    }
 }
 
 describe('AuthenticationService', () => {
     function setupService(afAuth: unknown): AuthenticationService {
         const service: AuthenticationService =
-            new AuthenticationService(afAuth as AngularFireAuth, {} as AngularFirestore);
-        service.updatePresence = () => {
-            return;
-        };
+            new AuthenticationServiceUnderTest(afAuth as AngularFireAuth, {} as AngularFirestore);
         spyOn(service, 'updatePresence');
         return service;
     }
     it('should create', () => {
-        const service: AuthenticationService = setupService({ authState: of({ pseudo: 'JeanJaja ' }) });
+        const service: AuthenticationService = setupService({ authState: of({ pseudo: 'Jean Jaja' }) });
         expect(service).toBeTruthy();
     });
     it('Should update user presence on db when he got connected', fakeAsync(() => {

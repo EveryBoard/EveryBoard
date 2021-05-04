@@ -1,11 +1,8 @@
 import { UserService } from './UserService';
 import { ActivesUsersService } from '../actives-users/ActivesUsersService';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { Router } from '@angular/router';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
 
-const routerStub = {
-};
 describe('UserService', () => {
     let service: UserService;
 

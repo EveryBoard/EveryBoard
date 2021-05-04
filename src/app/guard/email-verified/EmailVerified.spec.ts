@@ -4,12 +4,8 @@ import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { of } from 'rxjs';
+import { AuthenticationServiceUnderTest } from 'src/app/services/authentication/AuthenticationService.spec';
 
-const afAuth: unknown = {
-    authState: of(null),
-};
-const afs: unknown = {
-};
 describe('EmailVerified', () => {
     let guard: EmailVerified;
 
@@ -18,7 +14,8 @@ describe('EmailVerified', () => {
     let router: Router;
 
     beforeEach(() => {
-        authService = new AuthenticationService(afAuth as AngularFireAuth, afs as AngularFirestore);
+        authService = new AuthenticationServiceUnderTest(
+            { authState: of(null) } as AngularFireAuth, {} as AngularFirestore);
         router = {
             navigate: jasmine.createSpy('navigate'),
         } as unknown as Router;

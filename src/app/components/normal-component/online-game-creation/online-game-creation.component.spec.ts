@@ -4,11 +4,11 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { By } from '@angular/platform-browser';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
+import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
+import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 

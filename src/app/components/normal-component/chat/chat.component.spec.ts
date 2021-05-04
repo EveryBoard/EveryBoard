@@ -10,7 +10,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
 import { NoopAnimationsModule } from '@angular/platform-browser/animations';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { PIChat } from 'src/app/domain/ichat';

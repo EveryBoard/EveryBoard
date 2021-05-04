@@ -1,6 +1,29 @@
-import { JoinerDAOMock } from './JoinerDAOMock';
-import { IJoinerId, IJoiner } from 'src/app/domain/ijoiner';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks';
+import { IJoinerId, IJoiner, PIJoiner } from 'src/app/domain/ijoiner';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
+import { display } from 'src/app/utils/utils/utils';
+import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock.spec';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
+
+type JoinerOS = ObservableSubject<IJoinerId>
+
+export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner, PIJoiner> {
+    public static VERBOSE: boolean = false;
+
+    private static joinerDB: MGPMap<string, JoinerOS>;
+
+    public constructor() {
+        super('JoinerDAOMock', JoinerDAOMock.VERBOSE);
+        display(this.VERBOSE, 'JoinerDAOMock.constructor');
+    }
+    public getStaticDB(): MGPMap<string, JoinerOS> {
+        return JoinerDAOMock.joinerDB;
+    }
+    public resetStaticDB(): void {
+        JoinerDAOMock.joinerDB = new MGPMap();
+    }
+}
+
 
 describe('JoinerDAOMock', () => {
     let joinerDaoMock: JoinerDAOMock;
@@ -14,7 +37,7 @@ describe('JoinerDAOMock', () => {
         callCount = 0;
         lastJoiner = null;
     });
-    it('Total update should update', async () => {
+    it('Total update should update', async() => {
         await joinerDaoMock.set('joinerId', JoinerMocks.INITIAL.copy());
 
         expect(lastJoiner).toBeNull();
@@ -35,7 +58,7 @@ describe('JoinerDAOMock', () => {
         expect(callCount).toEqual(2);
         expect(lastJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
     });
-    it('Partial update should update', async () => {
+    it('Partial update should update', async() => {
         await joinerDaoMock.set('joinerId', JoinerMocks.INITIAL.copy());
 
         expect(callCount).toEqual(0);

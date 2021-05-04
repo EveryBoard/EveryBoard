@@ -1,5 +1,5 @@
 import { ICurrentPart, PICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock';
+import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock.spec';
 import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';

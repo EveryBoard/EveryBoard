@@ -4,15 +4,15 @@ import { GameService } from './GameService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { of } from 'rxjs';
 import { ICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
-import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
+import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { PartMocks } from 'src/app/domain/PartMocks';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/player/Player';
 import { Request } from 'src/app/domain/request';
 import { IJoiner } from 'src/app/domain/ijoiner';
+import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 
 describe('GameService', () => {
     let service: GameService;

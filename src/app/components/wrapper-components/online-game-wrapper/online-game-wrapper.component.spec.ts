@@ -7,31 +7,20 @@ import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { JoinerService } from 'src/app/services/joiner/JoinerService';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
+import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
 import { IJoiner } from 'src/app/domain/ijoiner';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
-import { PartMocks } from 'src/app/domain/PartMocks';
+import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ICurrentPart } from 'src/app/domain/icurrentpart';
-import { BlankComponent } from 'src/app/utils/TestUtils.spec';
+import { ActivatedRouteStub, BlankComponent } from 'src/app/utils/TestUtils.spec';
 import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
-
-const activatedRouteStub: unknown = {
-    snapshot: {
-        paramMap: {
-            get: (str: string) => {
-                if (str === 'id') return 'joinerId';
-                if (str === 'compo') return 'P4';
-            },
-        },
-    },
-};
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
     /* Life cycle summary
@@ -45,6 +34,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
      * stage 3: P4Component appear
      * differents scenarios
      */
+    const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub('P4', 'joinerId');
 
     let fixture: ComponentFixture<OnlineGameWrapperComponent>;
 

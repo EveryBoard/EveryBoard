@@ -9,17 +9,17 @@ import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.co
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
+import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
 
 import { IJoiner } from 'src/app/domain/ijoiner';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
-import { PartMocks } from 'src/app/domain/PartMocks';
+import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -30,19 +30,9 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { Player } from 'src/app/jscaip/player/Player';
 import { IJoueur } from 'src/app/domain/iuser';
 import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
+import { ActivatedRouteStub } from 'src/app/utils/TestUtils.spec';
 
-const activatedRouteStub: unknown = {
-    snapshot: {
-        paramMap: {
-            get: (str: string) => {
-                if (str === 'id') return 'joinerId';
-                if (str === 'compo') return 'Quarto';
-            },
-        },
-    },
-};
-
-fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
+describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0
@@ -54,6 +44,8 @@ fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
      * stage 3: P4Component appear
      * differents scenarios
      */
+
+    const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub('Quarto', 'joinerId');
 
     let fixture: ComponentFixture<OnlineGameWrapperComponent>;
 

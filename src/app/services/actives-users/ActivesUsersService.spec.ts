@@ -1,6 +1,6 @@
 import { ActivesUsersService } from './ActivesUsersService';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
 import { IJoueurId } from 'src/app/domain/iuser';
 import { fakeAsync } from '@angular/core/testing';
 

@@ -1,6 +1,6 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
-import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock';
+import { FirebaseFirestoreDAOMock } from '../firebase-firestore-dao/FirebaseFirestoreDAOMock.spec';
 import { IChat, PIChat, IChatId } from 'src/app/domain/ichat';
 import { display } from 'src/app/utils/utils/utils';
 
