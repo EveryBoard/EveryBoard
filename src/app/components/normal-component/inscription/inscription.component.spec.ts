@@ -1,28 +1,12 @@
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
-
 import { InscriptionComponent } from './inscription.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { Observable, of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
+import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 
-class AuthenticationServiceMock {
-    public static CURRENT_USER: {pseudo: string, verified: boolean} = null;
-
-    public static IS_USER_LOGGED: boolean = null;
-
-    public getJoueurObs(): Observable<{pseudo: string, verified: boolean}> {
-        if (AuthenticationServiceMock.CURRENT_USER == null) {
-            throw new Error('MOCK VALUE CURRENT_USER NOT SET BEFORE USE');
-        }
-        return of(AuthenticationServiceMock.CURRENT_USER);
-    }
-    public async doRegister(): Promise<void> {
-        return;
-    }
-}
 describe('InscriptionComponent', () => {
     let component: InscriptionComponent;
 

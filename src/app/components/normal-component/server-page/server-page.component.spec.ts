@@ -4,11 +4,8 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { MatTabsModule } from '@angular/material/tabs';
 import { FormsModule } from '@angular/forms';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { Router } from '@angular/router';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
-
-import { of, Observable } from 'rxjs';
-
+import { of } from 'rxjs';
 import { ServerPageComponent } from './server-page.component';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { UserService } from 'src/app/services/user/UserService';
@@ -21,19 +18,7 @@ import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
-
-class AuthenticationServiceMock {
-    public static CURRENT_USER: {pseudo: string, verified: boolean} = null;
-
-    public static IS_USER_LOGGED: boolean = null;
-
-    public getJoueurObs(): Observable<{pseudo: string, verified: boolean}> {
-        if (AuthenticationServiceMock.CURRENT_USER == null) {
-            throw new Error('MOCK VALUE CURRENT_USER NOT SET BEFORE USE');
-        }
-        return of(AuthenticationServiceMock.CURRENT_USER);
-    }
-}
+import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 
 describe('ServerPageComponent', () => {
     let component: ServerPageComponent;
@@ -73,9 +58,7 @@ describe('ServerPageComponent', () => {
         authenticationService = TestBed.get(AuthenticationService);
         gameService = TestBed.get(GameService);
         userService = TestBed.get(UserService);
-
-        AuthenticationServiceMock.CURRENT_USER = AuthenticationService.NOT_CONNECTED;
-        AuthenticationServiceMock.IS_USER_LOGGED = null;
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
     });
     it('should create', fakeAsync(async() => {
         expect(component).toBeTruthy();
@@ -86,7 +69,8 @@ describe('ServerPageComponent', () => {
         flush();
     }));
     it('should subscribe to three observable on init', fakeAsync(async() => {
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+
         expect(component.userName).toBeUndefined();
         spyOn(authenticationService, 'getJoueurObs').and.callThrough();
         spyOn(gameService, 'getActivesPartsObs').and.callThrough();
@@ -98,30 +82,27 @@ describe('ServerPageComponent', () => {
 
         component.ngOnInit();
 
-        expect(component.userName).toBe('Pseudo');
+        expect(component.userName).toBe(AuthenticationServiceMock.CONNECTED.pseudo);
         expect(authenticationService.getJoueurObs).toHaveBeenCalledTimes(1);
         expect(gameService.getActivesPartsObs).toHaveBeenCalledTimes(1);
         expect(userService.getActivesUsersObs).toHaveBeenCalledTimes(1);
     }));
     it('should be legal for any logged user to create game when there is none', fakeAsync(async() => {
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
-        AuthenticationServiceMock.IS_USER_LOGGED = true;
-
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         component.ngOnInit();
 
         expect(component.canCreateGame()).toBeTrue();
     }));
     it('should be illegal to create game for a player already in game', fakeAsync(async() => {
         // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Pseudo', verified: true };
-        AuthenticationServiceMock.IS_USER_LOGGED = true;
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         gameService.getActivesPartsObs(); // Call is here to avoid that unscrubscription throw error
         spyOn(gameService, 'getActivesPartsObs').and.returnValue(of([
             {
                 id: 'partId',
                 doc: {
                     typeGame: 'P4',
-                    playerZero: 'Pseudo',
+                    playerZero: AuthenticationServiceMock.CONNECTED.pseudo,
                     turn: -1,
                     listMoves: [],
                 },
@@ -132,8 +113,7 @@ describe('ServerPageComponent', () => {
         flush();
     }));
     it('Should be legal for unlogged user to create local game', fakeAsync(async() => {
-        AuthenticationServiceMock.CURRENT_USER = AuthenticationService.NOT_CONNECTED;
-        AuthenticationServiceMock.IS_USER_LOGGED = false;
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         spyOn(component.router, 'navigate');
         component.ngOnInit();
 

@@ -3,8 +3,6 @@ import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { By } from '@angular/platform-browser';
 
-import { of } from 'rxjs';
-
 import { AppModule } from 'src/app/app.module';
 import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
 
@@ -31,6 +29,7 @@ import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Player } from 'src/app/jscaip/player/Player';
 import { IJoueur } from 'src/app/domain/iuser';
+import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 
 const activatedRouteStub: unknown = {
     snapshot: {
@@ -42,24 +41,8 @@ const activatedRouteStub: unknown = {
         },
     },
 };
-class AuthenticationServiceMock {
-    public static USER: {pseudo: string, verified: boolean};
 
-    public getJoueurObs() {
-        return of({
-            pseudo: AuthenticationServiceMock.USER.pseudo,
-            verified: AuthenticationServiceMock.USER.verified,
-        });
-    }
-    public getAuthenticatedUser(): {pseudo: string, verified: boolean} {
-        return {
-            pseudo: AuthenticationServiceMock.USER.pseudo,
-            verified: AuthenticationServiceMock.USER.verified,
-        };
-    }
-}
-
-describe('OnlineGameWrapperComponent of Quarto:', () => {
+fdescribe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
      * component construction (beforeEach)
      * stage 0
@@ -117,7 +100,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     const prepareStartedGameFor: (user: {pseudo: string, verified: boolean},
                                   shorterGlobalChrono?: boolean) => Promise<void> =
     async(user: {pseudo: string, verified: boolean}, shorterGlobalChrono?: boolean) => {
-        AuthenticationServiceMock.USER = user;
+        AuthenticationServiceMock.setUser(user);
         await prepareComponent(JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
         tick(1);

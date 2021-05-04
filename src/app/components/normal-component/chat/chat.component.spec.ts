@@ -3,7 +3,6 @@ import { FormsModule } from '@angular/forms';
 
 import { ChatComponent } from './chat.component';
 
-import { of, Observable } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { ChatService } from 'src/app/services/chat/ChatService';
 import { MatIconModule } from '@angular/material/icon';
@@ -15,19 +14,8 @@ import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { PIChat } from 'src/app/domain/ichat';
+import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 
-class AuthenticationServiceMock {
-    public static CURRENT_USER: {pseudo: string, verified: boolean} = null;
-
-    public static IS_USER_LOGGED: boolean = null;
-
-    public getJoueurObs(): Observable<{pseudo: string, verified: boolean}> {
-        if (AuthenticationServiceMock.CURRENT_USER == null) {
-            throw new Error('MOCK VALUE CURRENT_USER NOT SET BEFORE USE');
-        }
-        return of(AuthenticationServiceMock.CURRENT_USER);
-    }
-}
 describe('ChatComponent', () => {
     let fixture: ComponentFixture<ChatComponent>;
 
@@ -57,8 +45,7 @@ describe('ChatComponent', () => {
         chatDAO = TestBed.get(ChatDAO);
         chatDAO.set('fauxChat', { messages: [], status: 'dont have a clue' });
 
-        AuthenticationServiceMock.CURRENT_USER = AuthenticationService.NOT_CONNECTED;
-        AuthenticationServiceMock.IS_USER_LOGGED = null;
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
     });
     it('should create', () => {
         expect(component).toBeTruthy();
@@ -80,7 +67,7 @@ describe('ChatComponent', () => {
         expect(chatService.stopObserving).toHaveBeenCalledTimes(0);
     });
     it('should propose to hide chat when chat is visible, and work', async() => {
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Jean-Connecté', verified: true };
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         fixture.detectChanges();
         let switchButton: DebugElement = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         let chat: DebugElement = fixture.debugElement.query(By.css('#chatForm'));
@@ -98,7 +85,7 @@ describe('ChatComponent', () => {
         await fixture.whenStable();
     });
     it('should propose to show chat when chat is hidden, and work', async() => {
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Jean-Connecté', verified: true };
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         fixture.detectChanges();
         component.switchChatVisibility();
         fixture.detectChanges();
@@ -119,7 +106,7 @@ describe('ChatComponent', () => {
         await fixture.whenStable();
     });
     it('should show how many messages where sent since you hide the chat', async() => {
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Jean-Connecté', verified: true };
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         fixture.detectChanges();
         component.switchChatVisibility();
         fixture.detectChanges();
@@ -138,7 +125,7 @@ describe('ChatComponent', () => {
         expect(switchButton.nativeElement.innerText).toEqual('Afficher chat (1 nouveau(x) message(s))');
     });
     it('should reset new messages count once messages have been read', async() => {
-        AuthenticationServiceMock.CURRENT_USER = { pseudo: 'Jean-Connecté', verified: true };
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         fixture.detectChanges();
         component.switchChatVisibility();
         fixture.detectChanges();

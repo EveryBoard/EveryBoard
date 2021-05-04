@@ -4,8 +4,7 @@ import { LocalGameWrapperComponent }
     from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of, Observable } from 'rxjs';
-import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { ActivatedRoute } from '@angular/router';
 import { AppModule } from 'src/app/app.module';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
@@ -17,6 +16,7 @@ import { Player } from 'src/app/jscaip/player/Player';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
+import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 
 const activatedRouteStub: unknown = {
     snapshot: {
@@ -27,16 +27,6 @@ const activatedRouteStub: unknown = {
         },
     },
 };
-class AuthenticationServiceMock {
-    public static USER: AuthUser = AuthenticationService.NOT_CONNECTED;
-
-    public getJoueurObs(): Observable<AuthUser> {
-        return of(AuthenticationServiceMock.USER);
-    }
-    public getAuthenticatedUser(): AuthUser {
-        return AuthenticationServiceMock.USER;
-    }
-}
 describe('LocalGameWrapperComponent', () => {
     let component: LocalGameWrapperComponent;
 
@@ -74,18 +64,18 @@ describe('LocalGameWrapperComponent', () => {
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(LocalGameWrapperComponent);
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         debugElement = fixture.debugElement;
         component = fixture.debugElement.componentInstance;
-        AuthenticationServiceMock.USER = { pseudo: 'Connecté', verified: true };
         fixture.detectChanges();
         tick(1);
     }));
     it('should create', () => {
-        AuthenticationServiceMock.USER = AuthenticationService.NOT_CONNECTED;
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         expect(component).toBeTruthy();
     });
     it('should have game included after view init', fakeAsync(() => {
-        AuthenticationServiceMock.USER = AuthenticationService.NOT_CONNECTED;
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         const gameIncluderTag: DebugElement = fixture.debugElement.nativeElement.querySelector('app-game-includer');
         let p4Tag: DebugElement = fixture.debugElement.nativeElement.querySelector('app-p4');
         expect(gameIncluderTag).toBeTruthy('app-game-includer tag should be present at start');

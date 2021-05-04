@@ -8,18 +8,18 @@ import { GamePartSlice } from '../jscaip/GamePartSlice';
 import { LegalityStatus } from '../jscaip/LegalityStatus';
 import { Move } from '../jscaip/Move';
 import { MGPValidation } from './mgp-validation/MGPValidation';
-import { Observable, of } from 'rxjs';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from '../app.module';
 import { ActivatedRoute } from '@angular/router';
 import { JoueursDAO } from '../dao/joueurs/JoueursDAO';
 import { JoueursDAOMock } from '../dao/joueurs/JoueursDAOMock';
-import { AuthenticationService, AuthUser } from '../services/authentication/AuthenticationService';
+import { AuthenticationService } from '../services/authentication/AuthenticationService';
 import { MGPNode } from '../jscaip/mgp-node/MGPNode';
 import { GameWrapper } from '../components/wrapper-components/GameWrapper';
 import { Rules } from '../jscaip/Rules';
 import { Player } from '../jscaip/player/Player';
 import { NodeUnheritance } from '../jscaip/NodeUnheritance';
+import { AuthenticationServiceMock } from '../services/authentication/AuthenticationService.spec';
 
 @Component({})
 export class BlankComponent {}
@@ -34,16 +34,6 @@ class ActivatedRouteMock {
                 },
             },
         };
-    }
-}
-export class AuthenticationServiceMock {
-    public static USER: AuthUser = AuthenticationService.NOT_CONNECTED;
-
-    public getJoueurObs(): Observable<AuthUser> {
-        return of(AuthenticationServiceMock.USER);
-    }
-    public getAuthenticatedUser(): AuthUser {
-        return AuthenticationServiceMock.USER;
     }
 }
 
@@ -80,6 +70,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent<Move,
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
             ],
         }).compileComponents();
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         this.fixture = TestBed.createComponent(wrapperKind);
         this.wrapper = this.fixture.debugElement.componentInstance;
         this.fixture.detectChanges();
@@ -244,10 +235,10 @@ export class ComponentTestUtils<T extends AbstractGameComponent<Move,
 }
 
 export function expectFirstStateToBeBetterThanSecond(weakerState: GamePartSlice,
-                                                      weakMove: Move,
-                                                      strongerState: GamePartSlice,
-                                                      strongMove: Move,
-                                                      rules: Rules<Move,
+                                                     weakMove: Move,
+                                                     strongerState: GamePartSlice,
+                                                     strongMove: Move,
+                                                     rules: Rules<Move,
                                                                    GamePartSlice,
                                                                    LegalityStatus,
                                                                    NodeUnheritance>)
