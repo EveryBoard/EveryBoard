@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
-import { Rules } from 'src/app/jscaip/Rules';
+import { Rules, RulesFailure } from 'src/app/jscaip/Rules';
 import { display } from 'src/app/utils/utils/utils';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
@@ -63,7 +63,6 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
     public getBoardValue(move: CoerceoMove, slice: CoerceoPartSlice): number {
         const piecesByFreedom: number[][] = slice.getPiecesByFreedom();
         const piecesScores: number[] = this.getPiecesScore(piecesByFreedom);
-        console.log(piecesByFreedom, piecesScores)
         const scoreZero: number = (2 * slice.captures[0]) + piecesScores[0];
         const scoreOne: number = (2 * slice.captures[1]) + piecesScores[1];
         if (slice.captures[0] === 18) {
@@ -185,7 +184,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
             return { legal: MGPValidation.failure(CoerceoFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };
         }
         if (slice.getBoardAt(move.start.get()) === slice.getCurrentEnnemy().value) {
-            return { legal: MGPValidation.failure(Rules.CANNOT_CHOOSE_ENNEMY_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE) };
         }
         if (slice.getBoardAt(move.landingCoord.get()) === slice.getCurrentPlayer().value) {
             return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_LAND_ON_ALLY) };

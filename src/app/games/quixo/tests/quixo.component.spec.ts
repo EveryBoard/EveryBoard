@@ -5,7 +5,7 @@ import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { GameComponentUtils } from '../../../components/game-components/GameComponentUtils';
-import { Rules } from 'src/app/jscaip/Rules';
+import { RulesFailure } from 'src/app/jscaip/Rules';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/player/Player';
@@ -57,7 +57,7 @@ describe('QuixoComponent', () => {
         const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
         componentTestUtils.setupSlice(state);
 
-        await componentTestUtils.expectClickFailure('#click_0_0', Rules.CANNOT_CHOOSE_ENNEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
     });
     it('should cancel move when trying to select center coord', async() => {
         const board: NumberTable = [

@@ -37,8 +37,7 @@ describe('EpaminondasRules - Minimax:', () => {
         const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
         rules.node = new MGPNode(null, null, slice, 0);
         const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Direction.UP);
-        const bestMove: EpaminondasMove = rules.node.findBestMoveAndSetDepth(1).move;
-        console.log({bestMove })
+        const bestMove: EpaminondasMove = rules.node.findBestMove(1).move;
         expect(bestMove).toEqual(capture);
     });
     xit('Should consider two neighboor piece better than two separated piece', () => {

@@ -11,7 +11,7 @@ import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { Rules } from 'src/app/jscaip/Rules';
+import { Rules, RulesFailure } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/coord/Coord';
 
 abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
@@ -51,7 +51,10 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         if (GoRules.isOccupied(move.coord, slice.getCopiedBoardGoPiece())) {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is marking');
             const legal: boolean = GoRules.isLegalDeadMarking(move, slice);
-            return { legal: legal ? MGPValidation.SUCCESS : Rules.MUST_CLICK_ON_EMPTY_CASE, capturedCoords: [] };
+            return {
+                legal: legal ? MGPValidation.SUCCESS : RulesFailure.MUST_CLICK_ON_EMPTY_CASE,
+                capturedCoords: [],
+            };
         } else {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is normal stuff: ' + move.toString());
             return GoRules.isLegalNormalMove(move, slice);

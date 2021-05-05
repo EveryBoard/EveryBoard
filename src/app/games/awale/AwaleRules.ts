@@ -12,9 +12,6 @@ import { Player } from 'src/app/jscaip/player/Player';
 abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
 export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
-    public static GET_BOARD_VALUE_CALL_COUNT: number = 0;
-
-    public static GET_LIST_MOVES_CALL_COUNT: number = 0;
 
     public static VERBOSE: boolean = false;
 
@@ -192,7 +189,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         return captured;
     }
     public getListMoves(n: AwaleNode): MGPMap<AwaleMove, AwalePartSlice> {
-        AwaleRules.GET_LIST_MOVES_CALL_COUNT++;
 
         const choices: MGPMap<AwaleMove, AwalePartSlice> = new MGPMap<AwaleMove, AwalePartSlice>();
         const oldSlice: AwalePartSlice = n.gamePartSlice;
@@ -226,7 +222,6 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         return choices;
     }
     public getBoardValue(move: AwaleMove, slice: AwalePartSlice): number {
-        AwaleRules.GET_BOARD_VALUE_CALL_COUNT++;
 
         const player: number = slice.turn % 2;
         const ennemy: number = (player + 1) % 2;
