@@ -1,15 +1,10 @@
 import { DebugElement, CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
-import { Router } from '@angular/router';
+import { RouterTestingModule } from '@angular/router/testing';
 
 import { LocalGameCreationComponent } from './local-game-creation.component';
 
-class RouterMock {
-    public async navigate(to: string[]): Promise<boolean> {
-        return true;
-    }
-}
 describe('LocalGameCreationComponent', () => {
     let component: LocalGameCreationComponent;
     let fixture: ComponentFixture<LocalGameCreationComponent>;
@@ -27,6 +22,9 @@ describe('LocalGameCreationComponent', () => {
     };
     beforeEach(async() => {
         await TestBed.configureTestingModule({
+            imports: [
+                RouterTestingModule,
+            ],
             declarations: [
                 LocalGameCreationComponent,
             ],
@@ -34,7 +32,6 @@ describe('LocalGameCreationComponent', () => {
                 CUSTOM_ELEMENTS_SCHEMA,
             ],
             providers: [
-                { provide: Router, useClass: RouterMock },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(LocalGameCreationComponent);

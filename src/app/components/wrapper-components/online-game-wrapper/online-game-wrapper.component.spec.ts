@@ -1,54 +1,26 @@
 import { ComponentFixture, TestBed, fakeAsync, tick, flush } from '@angular/core/testing';
-import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, DebugElement } from '@angular/core';
 import { By } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
-
-import { of } from 'rxjs';
-
 import { AppModule } from 'src/app/app.module';
 import { OnlineGameWrapperComponent } from './online-game-wrapper.component';
-
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { JoinerService } from 'src/app/services/joiner/JoinerService';
-
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
-
+import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
 import { IJoiner } from 'src/app/domain/ijoiner';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
-import { PartMocks } from 'src/app/domain/PartMocks';
+import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
 import { RouterTestingModule } from '@angular/router/testing';
 import { ICurrentPart } from 'src/app/domain/icurrentpart';
-
-const activatedRouteStub: unknown = {
-    snapshot: {
-        paramMap: {
-            get: (str: string) => {
-                if (str === 'id') return 'joinerId';
-                if (str === 'compo') return 'P4';
-            },
-        },
-    },
-};
-class AuthenticationServiceMock {
-    public static USER: {pseudo: string, verified: boolean};
-
-    public getJoueurObs() {
-        return of(AuthenticationServiceMock.USER);
-    }
-    public getAuthenticatedUser(): {pseudo: string, verified: boolean} {
-        return AuthenticationServiceMock.USER;
-    }
-}
-
-@Component({})
-class BlankComponent {}
+import { ActivatedRouteStub, BlankComponent } from 'src/app/utils/TestUtils.spec';
+import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
     /* Life cycle summary
@@ -62,6 +34,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
      * stage 3: P4Component appear
      * differents scenarios
      */
+    const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub('P4', 'joinerId');
 
     let fixture: ComponentFixture<OnlineGameWrapperComponent>;
 
@@ -107,7 +80,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
     describe('for creator', () => {
         beforeAll(() => {
-            AuthenticationServiceMock.USER = { pseudo: 'creator', verified: true };
+            AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         });
         it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL.copy(), PartMocks.INITIAL.copy());
@@ -141,7 +114,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
         it('Some tags are needed before initialisation', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.INITIAL.copy(), PartMocks.INITIAL.copy());
             expect(component).toBeTruthy();
-            const compiled = fixture.debugElement.nativeElement;
+            const compiled: any = fixture.debugElement.nativeElement;
             const partCreationTag: DebugElement = compiled.querySelector('app-part-creation');
             const gameIncluderTag: DebugElement = compiled.querySelector('app-game-includer');
             const p4Tag: DebugElement = compiled.querySelector('app-p4');
@@ -216,7 +189,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
     describe('for chosenPlayer', () => {
         beforeAll(() => {
-            AuthenticationServiceMock.USER = { pseudo: 'chosenPlayer', verified: true };
+            AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         });
         it('StartGame should replace PartCreationComponent by GameIncluderComponent', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy(), PartMocks.INITIAL.copy());
@@ -239,7 +212,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
     it('should redirect to index page if part does not exist', fakeAsync(async() => {
         spyOn(router, 'navigate').and.callThrough();
-        AuthenticationServiceMock.USER = { pseudo: 'player', verified: true };
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         await prepareComponent(null, null);
         fixture.detectChanges();
         tick();

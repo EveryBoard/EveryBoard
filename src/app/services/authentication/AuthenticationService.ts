@@ -102,7 +102,7 @@ export class AuthenticationService implements OnDestroy {
     public getAuthenticatedUser(): AuthUser {
         return this.joueurBS.getValue();
     }
-    protected updatePresence(): void {
+    public updatePresence(): void {
         const uid: string = firebase.auth().currentUser.uid;
         const userStatusDatabaseRef: firebase.database.Reference = firebase.database().ref('/status/' + uid);
         firebase.database().ref('.info/connected').on('value', function(snapshot: firebase.database.DataSnapshot) {

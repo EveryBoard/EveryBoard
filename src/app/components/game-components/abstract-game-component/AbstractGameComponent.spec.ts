@@ -2,46 +2,24 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ComponentFixture, fakeAsync, flush, TestBed, tick } from '@angular/core/testing';
 import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
-import { of } from 'rxjs';
 import { AppModule } from 'src/app/app.module';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { ActivatedRouteStub } from 'src/app/utils/TestUtils.spec';
 import { PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
-const activatedRouteStub: unknown = {
-    snapshot: {
-        paramMap: {
-            get: (str: string) => {
-                return str;
-            },
-        },
-    },
-};
-class AuthenticationServiceMock {
-    public static USER: {pseudo: string, verified: boolean} = AuthenticationService.NOT_CONNECTED;
-
-    public getJoueurObs() {
-        return of({
-            pseudo: AuthenticationServiceMock.USER.pseudo,
-            verified: AuthenticationServiceMock.USER.verified,
-        });
-    }
-    public getAuthenticatedUser(): {pseudo: string, verified: boolean} {
-        return {
-            pseudo: AuthenticationServiceMock.USER.pseudo,
-            verified: AuthenticationServiceMock.USER.verified,
-        };
-    }
-}
 describe('AbstractGameComponent', () => {
+    const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
 
     let component: LocalGameWrapperComponent;
 
     const gameList: ReadonlyArray<string> = new PickGameComponent().gameNameList;
+
 
     beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
@@ -56,6 +34,7 @@ describe('AbstractGameComponent', () => {
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
             ],
         }).compileComponents();
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
     }));
     it('Clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
@@ -103,7 +82,7 @@ describe('AbstractGameComponent', () => {
             if (game == null) {
                 throw new Error('Please define ' + gameName + ' clickable method in here to test them.');
             }
-            activatedRouteStub['snapshot']['paramMap']['get'] = () => gameName;
+            activatedRouteStub.setRoute('compo', gameName);
             fixture = TestBed.createComponent(LocalGameWrapperComponent);
             component = fixture.debugElement.componentInstance;
             component.observerRole = 2;

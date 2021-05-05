@@ -5,6 +5,7 @@
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let currentCase of line; index as x;">
             <circle (click)="onClick(x)"
+                    id="click_{{ x }}"
                     [attr.cx]="(CASE_SIZE * x) + (CASE_SIZE / 2)"
                     [attr.cy]="(CASE_SIZE * y) + (CASE_SIZE / 2)"
                     [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"

@@ -7,11 +7,14 @@ import { LinesOfActionFailure, LinesOfActionNode, LinesOfActionRules } from '../
 import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionRules', () => {
-    const rules: LinesOfActionRules = new LinesOfActionRules(LinesOfActionState);
+    let rules: LinesOfActionRules;
     const X: number = Player.ZERO.value;
     const O: number = Player.ONE.value;
     const _: number = Player.NONE.value;
 
+    beforeEach(() => {
+        rules = new LinesOfActionRules(LinesOfActionState);
+    });
     it('should be created', () => {
         expect(rules).toBeTruthy();
         expect(rules.getBoardValue(rules.node.move, rules.node.gamePartSlice)).toEqual(0);

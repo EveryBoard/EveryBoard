@@ -4,15 +4,15 @@ import { GameService } from './GameService';
 import { PartDAO } from 'src/app/dao/part/PartDAO';
 import { of } from 'rxjs';
 import { ICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
-import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
+import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
+import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { PartMocks } from 'src/app/domain/PartMocks';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/player/Player';
-import { RequestCode } from 'src/app/domain/request';
+import { Request } from 'src/app/domain/request';
 import { IJoiner } from 'src/app/domain/ijoiner';
+import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
 
 describe('GameService', () => {
     let service: GameService;
@@ -61,7 +61,7 @@ describe('GameService', () => {
             playerOne: 'joiner',
             turn: 2,
             listMoves: [107, 161],
-            request: { code: RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code },
+            request: Request.takeBackAsked(Player.ZERO),
         };
         const getError: (player: Player) => Promise<string> = async(player: Player) => {
             let errorMessage: string;
@@ -73,10 +73,10 @@ describe('GameService', () => {
             return errorMessage;
         };
         const firstError: string = await getError(Player.ZERO);
-        part.request.code = RequestCode.ONE_ASKED_TAKE_BACK.toInterface().code;
+        part.request = Request.takeBackAsked(Player.ONE);
         const secondError: string = await getError(Player.ONE);
-        expect(firstError).toEqual('Illegal to accept your own request.');
-        expect(secondError).toEqual('Illegal to accept your own request.');
+        expect(firstError).toEqual('Assertion failure: Illegal to accept your own request.');
+        expect(secondError).toEqual('Assertion failure: Illegal to accept your own request.');
     });
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
         const joiner: IJoiner = {
