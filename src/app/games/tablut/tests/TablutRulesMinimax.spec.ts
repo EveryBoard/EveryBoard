@@ -44,7 +44,7 @@ describe('TablutRules - Minimax:', () => {
         const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
         const winnerSlice: TablutPartSlice = new TablutPartSlice(winnerBoard, 2);
 
-        const bestMove: TablutNode = rules.node.findBestMoveAndSetDepth(1);
+        const bestMove: TablutNode = rules.node.findBestMove(1);
         expect(bestMove.move.toString()).toEqual(winnerMove.toString());
         expect(bestMove.gamePartSlice).toEqual(winnerSlice);
     });

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
-import { Rules } from 'src/app/jscaip/Rules';
+import { Rules, RulesFailure } from 'src/app/jscaip/Rules';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
@@ -72,7 +72,7 @@ describe('CoerceoRules', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe(Rules.CANNOT_CHOOSE_ENNEMY_PIECE);
+            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
         });
         it('Should forbid to move empty pieces', () => {
             const board: NumberTable = [

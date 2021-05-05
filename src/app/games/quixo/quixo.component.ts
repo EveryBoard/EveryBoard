@@ -7,7 +7,7 @@ import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
 import { GameComponentUtils } from '../../components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { Rules } from 'src/app/jscaip/Rules';
+import { Rules, RulesFailure } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/player/Player';
 
 @Component({
@@ -65,7 +65,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
             return this.cancelMove(coordLegality.reason);
         }
         if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove(Rules.CANNOT_CHOOSE_ENNEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
         } else {
             this.chosenCoord = clickedCoord;
             return MGPValidation.SUCCESS;

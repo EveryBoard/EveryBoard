@@ -7,15 +7,11 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
-abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
-                                                  MinimaxTestingMove,
-                                                  MinimaxTestingPartSlice,
-                                                  LegalityStatus> {}
+export abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
+                                                         MinimaxTestingMove,
+                                                         MinimaxTestingPartSlice> {}
 
 export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestingPartSlice> {
-    public static GET_BOARD_VALUE_CALL_COUNT: number = 0;
-
-    public static GET_LIST_MOVES_CALL_COUNT: number = 0;
 
     public applyLegalMove(move: MinimaxTestingMove,
                           slice: MinimaxTestingPartSlice,
@@ -40,11 +36,9 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         return { legal: MGPValidation.SUCCESS };
     }
     public getBoardValue(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice): number {
-        MinimaxTestingRules.GET_BOARD_VALUE_CALL_COUNT++;
         return slice.getBoardAt(slice.location);
     }
     public getListMoves(n: MinimaxTestingNode): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {
-        MinimaxTestingRules.GET_LIST_MOVES_CALL_COUNT++;
         const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> =
             new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();
         const slice: MinimaxTestingPartSlice = n.gamePartSlice;

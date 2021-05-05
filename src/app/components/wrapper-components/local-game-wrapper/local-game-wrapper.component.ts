@@ -78,7 +78,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             setTimeout(() => {
                 // called only when it's AI's Turn
                 if (!this.gameComponent.rules.node.isEndGame()) {
-                    const aiMove: Move = this.gameComponent.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
+                    const aiMove: Move = this.gameComponent.rules.node.findBestMove(this.aiDepth).move;
                     if (this.gameComponent.rules.choose(aiMove)) {
                         this.updateBoard();
                         this.cdr.detectChanges();
@@ -118,7 +118,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }
     }
     public restartGame(): void {
-        const state: GamePartSlice = this.gameComponent.rules.sliceType['getInitialSlice']();
+        const state: GamePartSlice = this.gameComponent.rules.stateType['getInitialSlice']();
         this.gameComponent.rules.node = new MGPNode(null, null, state, 0);
         this.gameComponent.updateBoard();
         this.endGame = false;

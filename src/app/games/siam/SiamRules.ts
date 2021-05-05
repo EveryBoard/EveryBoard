@@ -438,12 +438,6 @@ export class SiamRules extends _SiamRules {
         const currentPlayer: Player = node.gamePartSlice.getCurrentPlayer();
         let c: number;
         let legality: SiamLegalityStatus;
-        if (node.gamePartSlice.countPlayerPawn() < 5) {
-            // up to 20 pushing insertion
-            moves.putAll(this.getPushingInsertions(node));
-            // up to 24 deraping insertion
-            moves.putAll(this.getDerapingInsertions(node));
-        }
         for (let y: number = 0; y<5; y++) {
             for (let x: number = 0; x<5; x++) {
                 c = node.gamePartSlice.getBoardByXY(x, y);
@@ -476,6 +470,12 @@ export class SiamRules extends _SiamRules {
                     }
                 }
             }
+        }
+        if (node.gamePartSlice.countPlayerPawn() < 5) {
+            // up to 20 pushing insertion
+            moves.putAll(this.getPushingInsertions(node));
+            // up to 24 deraping insertion
+            moves.putAll(this.getDerapingInsertions(node));
         }
         display(SiamRules.VERBOSE, { getListMovesResult: moves });
         return moves;

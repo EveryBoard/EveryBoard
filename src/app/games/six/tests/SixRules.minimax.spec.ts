@@ -31,7 +31,7 @@ describe('Six - Minimax', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
             rules.node = new SixNode(null, null, state, 0);
             expect(rules.choose(move)).toBeTrue();
-            rules.node.findBestMoveAndSetDepth(1);
+            rules.node.findBestMove(1);
             expect(rules.node.countDescendants()).toBe(1);
 
         });
