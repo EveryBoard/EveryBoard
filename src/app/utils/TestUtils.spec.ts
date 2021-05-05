@@ -2,8 +2,6 @@ import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/
 import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AbstractGameComponent } from '../components/game-components/abstract-game-component/AbstractGameComponent';
-import { LocalGameWrapperComponent }
-    from 'src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { GamePartSlice } from '../jscaip/GamePartSlice';
 import { LegalityStatus } from '../jscaip/LegalityStatus';
 import { Move } from '../jscaip/Move';
@@ -12,7 +10,6 @@ import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from '../app.module';
 import { ActivatedRoute } from '@angular/router';
 import { JoueursDAO } from '../dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from '../dao/joueurs/JoueursDAOMock.spec';
 import { AuthenticationService } from '../services/authentication/AuthenticationService';
 import { MGPNode } from '../jscaip/mgp-node/MGPNode';
 import { GameWrapper } from '../components/wrapper-components/GameWrapper';
@@ -23,11 +20,13 @@ import { AuthenticationServiceMock } from '../services/authentication/Authentica
 import { OnlineGameWrapperComponent }
     from '../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
 import { ChatDAO } from '../dao/chat/ChatDAO';
-import { ChatDAOMock } from '../dao/chat/ChatDAOMock.spec';
 import { JoinerDAOMock } from '../dao/joiner/JoinerDAOMock.spec';
-import { PartDAOMock } from '../dao/part/PartDAOMock.spec';
 import { PartDAO } from '../dao/part/PartDAO';
 import { JoinerDAO } from '../dao/joiner/JoinerDAO';
+import { JoueursDAOMock } from '../dao/joueurs/JoueursDAOMock.spec';
+import { ChatDAOMock } from '../dao/chat/ChatDAOMock.spec';
+import { PartDAOMock } from '../dao/part/PartDAOMock.spec';
+import { LocalGameWrapperComponent } from '../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 @Component({})
 export class BlankComponent {}
@@ -59,28 +58,30 @@ export class ActivatedRouteStub {
     }
 }
 
-export class ComponentTestUtils<T extends AbstractGameComponent<Move,
-                                                                GamePartSlice,
-                                                                LegalityStatus,
-                                                                NodeUnheritance>> {
+type GameComponent = AbstractGameComponent<Move, GamePartSlice, LegalityStatus, NodeUnheritance>;
+
+export class ComponentTestUtils<T extends GameComponent> {
     public fixture: ComponentFixture<GameWrapper>;
-    public debugElement: DebugElement;
     public wrapper: GameWrapper;
+    private debugElement: DebugElement;
+    private gameComponent: GameComponent;
 
-    public activatedRouteStub: ActivatedRouteStub;
-
-    private gameComponent: AbstractGameComponent<Move,
-                                                 GamePartSlice,
-                                                 LegalityStatus,
-                                                 NodeUnheritance>;
     private canUserPlaySpy: jasmine.Spy;
     private cancelMoveSpy: jasmine.Spy;
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public constructor(game: string, wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent, dontWaitOneTick?: boolean) {
-        this.activatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
-        this.activatedRouteStub.setRoute('id', 'joinerId');
+    public static forGame<T extends GameComponent>(game: string,
+                                                   wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent)
+    : ComponentTestUtils<T>
+    {
+        const testUtils: ComponentTestUtils<T> = ComponentTestUtils.basic(game);
+        testUtils.prepareFixture(wrapperKind);
+        testUtils.prepareSpies();
+        return testUtils;
+    }
+    public static basic<T extends GameComponent>(game: string): ComponentTestUtils<T> {
+        const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         TestBed.configureTestingModule({
             imports: [
                 AppModule,
@@ -91,7 +92,7 @@ export class ComponentTestUtils<T extends AbstractGameComponent<Move,
             ],
             schemas: [CUSTOM_ELEMENTS_SCHEMA],
             providers: [
-                { provide: ActivatedRoute, useValue: this.activatedRouteStub },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
                 { provide: JoueursDAO, useClass: JoueursDAOMock },
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
@@ -100,21 +101,29 @@ export class ComponentTestUtils<T extends AbstractGameComponent<Move,
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        return new ComponentTestUtils<T>(activatedRouteStub);
+    }
+
+    private constructor(private readonly activatedRouteStub: ActivatedRouteStub) {}
+
+    public prepareFixture(wrapperKind: Type<GameWrapper>): void {
         this.fixture = TestBed.createComponent(wrapperKind);
         this.wrapper = this.fixture.debugElement.componentInstance;
         this.fixture.detectChanges();
         this.debugElement = this.fixture.debugElement;
-        if (dontWaitOneTick == null || dontWaitOneTick === false) {
-            tick(1);
-            this.gameComponent = this.wrapper.gameComponent;
-            this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
-            this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
-            this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
-            this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
-        }
     }
-    public setupSlice(slice: GamePartSlice, previousSlice?: GamePartSlice, previousMove?: Move): void
-    {
+    public prepareSpies(): void {
+        tick(1);
+        this.gameComponent = this.wrapper.gameComponent;
+        this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
+        this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
+        this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
+        this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
+    }
+    public setRoute(id: string, value: string): void {
+        this.activatedRouteStub.setRoute(id, value);
+    }
+    public setupSlice(slice: GamePartSlice, previousSlice?: GamePartSlice, previousMove?: Move): void {
         if (previousSlice !== undefined) {
             this.gameComponent.rules.node =
                 new MGPNode(new MGPNode(null, null, previousSlice, 0), previousMove, slice, 0);
@@ -127,22 +136,20 @@ export class ComponentTestUtils<T extends AbstractGameComponent<Move,
     public getComponent(): T {
         return (this.gameComponent as unknown) as T;
     }
-    public async expectClickSuccess(elementName: string, skipCanUserPlayCheck?: boolean): Promise<void> {
+    public async expectClickSuccess(elementName: string): Promise<void> {
+        await this.expectInterfaceClickSuccess(elementName);
+        expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
+        this.canUserPlaySpy.calls.reset();
+    }
+    public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         element.triggerEventHandler('click', null);
         await this.fixture.whenStable();
         this.fixture.detectChanges();
-        if (skipCanUserPlayCheck !== true) {
-            expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
-        }
-        this.canUserPlaySpy.calls.reset();
         expect(this.cancelMoveSpy).not.toHaveBeenCalled();
         expect(this.chooseMoveSpy).not.toHaveBeenCalled();
         expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
-    }
-    public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
-        return this.expectClickSuccess(elementName, true);
     }
     public async expectClickFailure(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);

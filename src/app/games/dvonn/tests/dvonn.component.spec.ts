@@ -19,7 +19,7 @@ describe('DvonnComponent', () => {
     const WW: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 2, false);
 
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<DvonnComponent>('Dvonn');
+        componentTestUtils = ComponentTestUtils.forGame<DvonnComponent>('Dvonn');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

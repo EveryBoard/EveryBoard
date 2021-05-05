@@ -27,7 +27,7 @@ describe('EpaminondasComponent:', () => {
     }
 
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<EpaminondasComponent>('Epaminondas');
+        componentTestUtils = ComponentTestUtils.forGame<EpaminondasComponent>('Epaminondas');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

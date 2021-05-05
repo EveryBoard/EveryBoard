@@ -14,7 +14,7 @@ describe('ReversiComponent', () => {
     const O: number = Player.ZERO.value;
 
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<ReversiComponent>('Reversi');
+        componentTestUtils = ComponentTestUtils.forGame<ReversiComponent>('Reversi');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

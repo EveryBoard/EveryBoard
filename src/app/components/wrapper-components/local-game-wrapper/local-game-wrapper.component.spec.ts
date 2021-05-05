@@ -15,7 +15,7 @@ describe('LocalGameWrapperComponent', () => {
     const _: number = Player.NONE.value;
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = new ComponentTestUtils<P4Component>('P4', LocalGameWrapperComponent);
+        componentTestUtils = ComponentTestUtils.forGame<P4Component>('P4', LocalGameWrapperComponent);
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
     }));
     it('should create', () => {

@@ -13,7 +13,7 @@ describe('QuartoComponent', () => {
     const AAAA: number = QuartoPiece.AAAA.value;
 
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<QuartoComponent>('Quarto');
+        componentTestUtils = ComponentTestUtils.forGame<QuartoComponent>('Quarto');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

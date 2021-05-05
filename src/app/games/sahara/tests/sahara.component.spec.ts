@@ -15,7 +15,7 @@ describe('SaharaComponent', () => {
     const _: number = SaharaPawn.EMPTY;
 
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<SaharaComponent>('Sahara');
+        componentTestUtils = ComponentTestUtils.forGame<SaharaComponent>('Sahara');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

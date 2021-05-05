@@ -21,7 +21,7 @@ describe('QuixoComponent', () => {
     const O: number = Player.ZERO.value;
 
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<QuixoComponent>('Quixo');
+        componentTestUtils = ComponentTestUtils.forGame<QuixoComponent>('Quixo');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
