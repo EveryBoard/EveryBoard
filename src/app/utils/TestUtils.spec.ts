@@ -26,7 +26,10 @@ import { JoinerDAO } from '../dao/joiner/JoinerDAO';
 import { JoueursDAOMock } from '../dao/joueurs/JoueursDAOMock.spec';
 import { ChatDAOMock } from '../dao/chat/ChatDAOMock.spec';
 import { PartDAOMock } from '../dao/part/PartDAOMock.spec';
-import { LocalGameWrapperComponent } from '../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { ReactiveFormsModule } from '@angular/forms';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { LocalGameWrapperComponent }
+    from '../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 @Component({})
 export class BlankComponent {}
@@ -55,6 +58,53 @@ export class ActivatedRouteStub {
     }
     public setRoute(key: string, value: string): void {
         this.route[key] = value;
+    }
+}
+
+export class SimpleComponentTestUtils<T> {
+    private fixture: ComponentFixture<T>;
+    private component: T;
+    public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
+        await TestBed.configureTestingModule({
+            imports: [MatSnackBarModule, RouterTestingModule, ReactiveFormsModule],
+            declarations: [componentType],
+            schemas: [
+                CUSTOM_ELEMENTS_SCHEMA,
+            ],
+            providers: [
+                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
+                { provide: PartDAO, useClass: PartDAOMock },
+                { provide: JoinerDAO, useClass: JoinerDAOMock },
+                { provide: ChatDAO, useClass: ChatDAOMock },
+            ],
+        }).compileComponents();
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        const testUtils: SimpleComponentTestUtils<T> = new SimpleComponentTestUtils<T>();
+        testUtils.fixture = TestBed.createComponent(componentType);
+        testUtils.component = testUtils.fixture.componentInstance;
+        return testUtils;
+    }
+
+    private constructor() {}
+    public async clickElement(elementName: string): Promise<boolean> {
+        const element: DebugElement = this.fixture.debugElement.query(By.css(elementName));
+        if (element == null) {
+            return null;
+        } else {
+            element.triggerEventHandler('click', null);
+            await this.fixture.whenStable();
+            this.fixture.detectChanges();
+            return true;
+        }
+    }
+    public getComponent(): T {
+        return this.component;
+    }
+    public detectChanges(): void {
+        this.fixture.detectChanges();
+    }
+    public findElement(elementName: string): DebugElement {
+        return this.fixture.debugElement.query(By.css(elementName));
     }
 }
 
