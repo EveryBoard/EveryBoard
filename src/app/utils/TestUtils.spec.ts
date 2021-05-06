@@ -71,18 +71,21 @@ export class ComponentTestUtils<T extends GameComponent> {
     private chooseMoveSpy: jasmine.Spy;
     private onLegalUserMoveSpy: jasmine.Spy;
 
-    public static forGame<T extends GameComponent>(game: string,
-                                                   wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent)
-    : ComponentTestUtils<T>
+    public static async forGame<T extends GameComponent>(game: string,
+                                                         wrapperKind: Type<GameWrapper> = LocalGameWrapperComponent)
+    : Promise<ComponentTestUtils<T>>
     {
-        const testUtils: ComponentTestUtils<T> = ComponentTestUtils.basic(game);
+        const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game);
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         testUtils.prepareFixture(wrapperKind);
+        testUtils.fixture.detectChanges();
+        tick(1);
         testUtils.prepareSpies();
         return testUtils;
     }
-    public static basic<T extends GameComponent>(game: string): ComponentTestUtils<T> {
+    public static async basic<T extends GameComponent>(game: string): Promise<ComponentTestUtils<T>> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
-        TestBed.configureTestingModule({
+        await TestBed.configureTestingModule({
             imports: [
                 AppModule,
                 RouterTestingModule.withRoutes([
@@ -100,7 +103,6 @@ export class ComponentTestUtils<T extends GameComponent> {
                 { provide: PartDAO, useClass: PartDAOMock },
             ],
         }).compileComponents();
-        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         return new ComponentTestUtils<T>(activatedRouteStub);
     }
 
@@ -109,16 +111,17 @@ export class ComponentTestUtils<T extends GameComponent> {
     public prepareFixture(wrapperKind: Type<GameWrapper>): void {
         this.fixture = TestBed.createComponent(wrapperKind);
         this.wrapper = this.fixture.debugElement.componentInstance;
-        this.fixture.detectChanges();
         this.debugElement = this.fixture.debugElement;
     }
     public prepareSpies(): void {
-        tick(1);
         this.gameComponent = this.wrapper.gameComponent;
         this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
         this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
         this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
         this.canUserPlaySpy = spyOn(this.gameComponent, 'canUserPlay').and.callThrough();
+    }
+    public detectChanges(): void {
+        this.fixture.detectChanges();
     }
     public setRoute(id: string, value: string): void {
         this.activatedRouteStub.setRoute(id, value);

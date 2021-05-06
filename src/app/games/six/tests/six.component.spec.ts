@@ -16,8 +16,8 @@ describe('SixComponent', () => {
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
 
-    beforeEach(fakeAsync(() => {
-        componentTestUtils = ComponentTestUtils.forGame<SixComponent>('Six');
+    beforeEach(fakeAsync(async() => {
+        componentTestUtils = await ComponentTestUtils.forGame<SixComponent>('Six');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
