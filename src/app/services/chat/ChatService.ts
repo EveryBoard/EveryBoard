@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { IChat, IChatId } from '../../domain/ichat';
-import { ChatDAO } from '../../dao/chat/ChatDAO';
+import { ChatDAO } from '../../dao/ChatDAO';
 import { IMessage } from '../../domain/imessage';
 import { display } from 'src/app/utils/utils/utils';
 

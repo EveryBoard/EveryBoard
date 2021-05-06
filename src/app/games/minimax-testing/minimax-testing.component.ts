@@ -17,19 +17,19 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
                                                                    LegalityStatus> {
     /** ************************* Common Fields **************************/
 
-    public rules = new MinimaxTestingRules(MinimaxTestingPartSlice);
+    public rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
 
     public coord: Coord = new Coord(-1, -1);
 
     public chooseRight(): Promise<MGPValidation> {
-        const chosenMove = MinimaxTestingMove.RIGHT;
+        const chosenMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
     public chooseDown(): Promise<MGPValidation> {
-        const chosenMove = MinimaxTestingMove.DOWN;
+        const chosenMove: MinimaxTestingMove = MinimaxTestingMove.DOWN;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
-    public updateBoard() {
+    public updateBoard(): void {
         const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
         this.coord = slice.location;

@@ -12,7 +12,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 import { firebaseConfig } from './firebaseConfig';
 
-import { PartDAO } from './dao/part/PartDAO';
+import { PartDAO } from './dao/PartDAO';
 
 import { ChatService } from './services/chat/ChatService';
 import { UserService } from './services/user/UserService';

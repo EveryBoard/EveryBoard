@@ -1,5 +1,5 @@
-import { FirebaseFirestoreDAO } from '../firebase-firestore-dao/FirebaseFirestoreDAO';
-import { IJoiner, PIJoiner } from '../../domain/ijoiner';
+import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
+import { IJoiner, PIJoiner } from '../domain/ijoiner';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';

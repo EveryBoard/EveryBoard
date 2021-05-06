@@ -1,6 +1,6 @@
-import { IChat, PIChat } from '../../domain/ichat';
+import { IChat, PIChat } from '../domain/ichat';
 import { AngularFirestore } from '@angular/fire/firestore';
-import { FirebaseFirestoreDAO } from '../firebase-firestore-dao/FirebaseFirestoreDAO';
+import { FirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { display } from 'src/app/utils/utils/utils';

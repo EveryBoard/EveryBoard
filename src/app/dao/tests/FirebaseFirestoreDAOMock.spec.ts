@@ -1,14 +1,14 @@
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { IFirebaseFirestoreDAO } from './FirebaseFirestoreDAO';
-import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-import { display } from 'src/app/utils/utils/utils';
 
+import { display } from 'src/app/utils/utils/utils';
+import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
+import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
 
 export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
     public static VERBOSE: boolean = false;

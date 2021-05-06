@@ -10,17 +10,17 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/joiner/JoinerService';
-import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
+import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
-import { PartDAO } from 'src/app/dao/part/PartDAO';
+import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
+import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
+import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { ICurrentPart } from 'src/app/domain/icurrentpart';
-import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
+import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
 import { IJoueur } from 'src/app/domain/iuser';
 import { BlankComponent } from 'src/app/utils/TestUtils.spec';
 

@@ -1,11 +1,13 @@
 import { AngularFirestore, DocumentReference, CollectionReference } from '@angular/fire/firestore';
-import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
+
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
 
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+
 import { display } from 'src/app/utils/utils/utils';
+import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 
 export interface IFirebaseFirestoreDAO<T, PT> {
 

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
-import { PartDAO } from '../../dao/part/PartDAO';
+import { PartDAO } from '../../dao/PartDAO';
 
 import { ICurrentPart, ICurrentPartId, MGPResult, PICurrentPart } from '../../domain/icurrentpart';
 import { FirstPlayer, IJoiner } from '../../domain/ijoiner';

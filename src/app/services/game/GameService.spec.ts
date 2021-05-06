@@ -1,18 +1,18 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 
 import { GameService } from './GameService';
-import { PartDAO } from 'src/app/dao/part/PartDAO';
+import { PartDAO } from 'src/app/dao/PartDAO';
 import { of } from 'rxjs';
 import { ICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
-import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
+import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
+import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
+import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
+import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/request';
 import { IJoiner } from 'src/app/domain/ijoiner';
-import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 
 describe('GameService', () => {
     let service: GameService;

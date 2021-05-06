@@ -1,6 +1,6 @@
 import { ChatService } from './ChatService';
-import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
+import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 
 describe('ChatService', () => {
     let service: ChatService;

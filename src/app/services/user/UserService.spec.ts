@@ -1,7 +1,7 @@
 import { UserService } from './UserService';
 import { ActivesUsersService } from '../actives-users/ActivesUsersService';
-import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
+import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
 
 describe('UserService', () => {
     let service: UserService;
