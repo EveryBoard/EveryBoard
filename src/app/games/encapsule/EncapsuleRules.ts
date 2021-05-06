@@ -55,7 +55,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         return (owner[0] === owner[1]) && (owner[1] === owner[2]);
     }
     public isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
-        // TODO: rename, not returning boolean anymore
         const LOCAL_VERBOSE: boolean = false;
         const boardCopy: number[][] = slice.getCopiedBoard();
         display(LOCAL_VERBOSE, move.toString());

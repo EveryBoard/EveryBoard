@@ -30,7 +30,7 @@ class CaseSensible {
         this.x = x;
         this.y = y;
     }
-    addCritere(c: Critere): boolean {
+    public addCritere(c: Critere): boolean {
         // rajoute le critère au cas où plusieurs lignes contiennent cette case sensible (de 1 à 3)
         // sans doublons
         // return true si le critère a été ajouté
@@ -44,7 +44,7 @@ class CaseSensible {
         this.criteres[-i - 1] = c;
         return true;
     }
-    indexOf(c: Critere): number {
+    public indexOf(c: Critere): number {
         // TODO Critere.contains
         // voit si ce critère est déjà contenu dans la liste
         // retourne l'index de c si il le trouve
@@ -77,13 +77,13 @@ class Critere {
         this.subCritere[2] = (bCase & 2) === 2;
         this.subCritere[3] = (bCase & 1) === 1;
     }
-    setSubCrit(index: number, value: boolean): boolean {
+    public setSubCrit(index: number, value: boolean): boolean {
         this.subCritere[index] = value;
         return true; // TODO vérifier si j'ai un intérêt à garder ceci
         // pour l'instant ça me permet de pouvoir vérifier si il n'y a pas écrasement ou donnée
         // mais je crois que c'est impossible vu l'usage que je compte en faire
     }
-    equals(o: Critere): boolean {
+    public equals(o: Critere): boolean {
         let i: number = 0;
         do {
             if (this.subCritere[i] !== o.subCritere[i]) {
@@ -94,7 +94,7 @@ class Critere {
 
         return true;
     }
-    mergeWith(c: Critere): boolean {
+    public mergeWith(c: Critere): boolean {
         // merge avec l'autre critere
         // ce qu'ils signifie qu'on prendra ce qu'ils ont en commun
         // return true si ils ont au moins un critere en commun, false sinon
@@ -133,7 +133,7 @@ class Critere {
         } while (i < 4);
         return true;
     }
-    match(c: Critere): boolean {
+    public match(c: Critere): boolean {
         // return true if there is at least one sub-critere in common between the two
         let i: number = 0;
         do {
@@ -144,13 +144,13 @@ class Critere {
         } while (i < 4);
         return false;
     }
-    matchQE(qe: QuartoPiece): boolean {
+    public matchQE(qe: QuartoPiece): boolean {
         return this.match(new Critere(qe.value));
     }
-    matchInt(c: number): boolean {
+    public matchInt(c: number): boolean {
         return this.match(new Critere(c));
     }
-    toString(): string {
+    public toString(): string {
         return 'Critere{' + QuartoRules.printArray(
             this.subCritere.map((b: boolean) => {
                 return (b === true) ? 1 : 0;
@@ -327,8 +327,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
     private searchForVictoryOrPreVictoryInLine(
         line: Line,
         slice: QuartoPartSlice,
-        boardStatus: BoardStatus):
-        BoardStatus
+        boardStatus: BoardStatus)
+    : BoardStatus
     {
         // on cherche pour une victoire, pré victoire, ou un score normal
         let cs: CaseSensible = null; // la première case vide

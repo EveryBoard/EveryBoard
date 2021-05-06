@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/coord/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/player/Player';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { SixMove } from '../SixMove';
 import { SixGameState } from '../SixGameState';
@@ -15,7 +15,7 @@ describe('SixGameState', () => {
 
     describe('toRepresentation/fromRepresentation', () => {
         it('Should represent correctly board', () => {
-            const pieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            const pieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             pieces.put(new Coord(0, 0), Player.ONE);
             pieces.put(new Coord(1, 1), Player.ZERO);
             const state: SixGameState = new SixGameState(pieces, 0);
@@ -30,7 +30,7 @@ describe('SixGameState', () => {
                 [X, _],
                 [_, O],
             ];
-            const expectedPieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            const expectedPieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             expectedPieces.put(new Coord(0, 0), Player.ONE);
             expectedPieces.put(new Coord(1, 1), Player.ZERO);
             expectedPieces.makeImmutable();
@@ -38,7 +38,7 @@ describe('SixGameState', () => {
             expect(state.pieces).toEqual(expectedPieces);
         });
         it('Should make 0 the left and upper indexes', () => {
-            const pieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            const pieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             pieces.put(new Coord(-1, -1), Player.ONE);
             pieces.put(new Coord(0, 0), Player.ZERO);
             const state: SixGameState = new SixGameState(pieces, 0);
@@ -50,7 +50,7 @@ describe('SixGameState', () => {
             expect(state.offset).toEqual(new Vector(1, 1));
         });
         it('Should make 0 the left and upper indexes (horizontal bug)', () => {
-            const pieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            const pieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             pieces.put(new Coord(1, 0), Player.ONE);
             pieces.put(new Coord(2, 0), Player.ZERO);
             pieces.put(new Coord(3, 0), Player.ONE);
@@ -62,7 +62,7 @@ describe('SixGameState', () => {
             expect(Vector.equals(state.offset, new Vector(-1, 0)));
         });
         it('Should make 0 the left and upper indexes (vertical bug)', () => {
-            const pieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            const pieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             pieces.put(new Coord(0, 1), Player.ONE);
             pieces.put(new Coord(0, 2), Player.ZERO);
             pieces.put(new Coord(0, 3), Player.ONE);
@@ -76,7 +76,7 @@ describe('SixGameState', () => {
             expect(Vector.equals(state.offset, new Vector(0, -1))).toBeTrue();
         });
         it('should set offset when board only upper-piece went down', () => {
-            const beforePieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            const beforePieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             beforePieces.put(new Coord(0, 0), Player.ONE);
             beforePieces.put(new Coord(0, 1), Player.ZERO);
             beforePieces.put(new Coord(0, 2), Player.ONE);
@@ -85,7 +85,7 @@ describe('SixGameState', () => {
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 3));
             const afterState: SixGameState = beforeState.applyLegalDeplacement(move, new MGPSet());
 
-            const expectedPieces: MGPBiMap<Coord, Player> = new MGPBiMap<Coord, Player>();
+            const expectedPieces: MGPMap<Coord, Player> = new MGPMap<Coord, Player>();
             expectedPieces.put(new Coord(0, 0), Player.ZERO);
             expectedPieces.put(new Coord(0, 1), Player.ONE);
             expectedPieces.put(new Coord(0, 2), Player.ZERO);

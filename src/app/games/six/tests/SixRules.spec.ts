@@ -468,11 +468,10 @@ describe('SixRules', () => {
                     [_, _, _, _, _, X, O],
                     [X, X, X, X, O, _, _],
                     [X, _, _, _, O, _, _],
-                    [X, _, _, O, O, _, _],
+                    [_, _, _, O, O, _, _],
                 ];
                 const expectedBoard: number[][] = [
                     [X, X, X, X],
-                    [X, _, _, _],
                     [X, _, _, _],
                 ];
                 const state: SixGameState = SixGameState.fromRepresentation(board, 42);

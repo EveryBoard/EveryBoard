@@ -10,10 +10,11 @@ import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/hexa/HexaOrientation';
 import { Player } from 'src/app/jscaip/player/Player';
 import { JSONValue } from 'src/app/utils/utils/utils';
-import { MGPBiMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { HexagonalGameComponent } from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
+import { HexagonalGameComponent }
+    from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
 
 interface Scale {
     minX: number;
@@ -230,7 +231,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     }
     private showCuttable(): void {
         const deplacement: SixMove = SixMove.fromDeplacement(this.selectedPiece, this.chosenLanding);
-        const piecesAfterDeplacement: MGPBiMap<Coord, Player> = SixGameState.deplacePiece(this.state, deplacement);
+        const piecesAfterDeplacement: MGPMap<Coord, Player> = SixGameState.deplacePiece(this.state, deplacement);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
             SixGameState.getGroups(piecesAfterDeplacement, deplacement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = this.rules.getBiggerGroups(groupsAfterMove);

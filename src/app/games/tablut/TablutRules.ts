@@ -71,7 +71,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         if (cOwner === RelativePlayer.NONE) {
             return MGPValidation.failure('pawn coord unoccupied');
         }
-        if (cOwner === RelativePlayer.ENNEMY) { // TODO OwnerEnum/Type
+        if (cOwner === RelativePlayer.ENNEMY) {
             return MGPValidation.failure('moving opponent piece');
         }
 

@@ -99,7 +99,7 @@ export abstract class Rules<M extends Move,
     };
     public abstract applyLegalMove(move: M, slice: S, status: L): S;
 
-    public abstract isLegal(move: M, slice: S): L; // TODO: rename, isBlbl should return a boolean
+    public abstract isLegal(move: M, slice: S): L;
     /* return a legality status about the move, allowing to return already calculated info
      * don't do any modification to the board
      */

@@ -65,13 +65,23 @@ export class HexaBoard<T> {
         }
     }
     public equals(other: HexaBoard<T>, equalT: (a: T, b: T) => boolean): boolean {
-        if (this === other) return true;
-        if (this.width !== other.width) return false;
-        if (this.height !== other.height) return false;
-        if (equalT(this.empty, other.empty) === false) return false;
+        if (this === other) {
+            return true;
+        }
+        if (this.width !== other.width) {
+            return false;
+        }
+        if (this.height !== other.height) {
+            return false;
+        }
+        if (equalT(this.empty, other.empty) === false) {
+            return false;
+        }
         // TODO: check excludedCases
         for (const coord of this.allCoords()) {
-            if (equalT(this.getAtUnsafe(coord), other.getAtUnsafe(coord)) === false) return false;
+            if (equalT(this.getAtUnsafe(coord), other.getAtUnsafe(coord)) === false) {
+                return false;
+            }
         }
         return true;
     }
