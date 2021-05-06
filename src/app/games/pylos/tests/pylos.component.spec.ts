@@ -14,7 +14,7 @@ describe('PylosComponent', () => {
     const X: number = Player.ONE.value;
 
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<PylosComponent>('Pylos');
+        componentTestUtils = ComponentTestUtils.forGame<PylosComponent>('Pylos');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

@@ -21,7 +21,7 @@ describe('GipfComponent', () => {
     const P1Turn: number = P0Turn+1;
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = new ComponentTestUtils<GipfComponent>('Gipf');
+        componentTestUtils = ComponentTestUtils.forGame<GipfComponent>('Gipf');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

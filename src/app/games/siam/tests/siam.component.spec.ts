@@ -31,7 +31,7 @@ describe('SiamComponent', () => {
         }
     };
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<SiamComponent>('Siam');
+        componentTestUtils = ComponentTestUtils.forGame<SiamComponent>('Siam');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

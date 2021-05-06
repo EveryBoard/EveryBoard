@@ -7,7 +7,7 @@ describe('P4Component', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
 
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<P4Component>('P4');
+        componentTestUtils = ComponentTestUtils.forGame<P4Component>('P4');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

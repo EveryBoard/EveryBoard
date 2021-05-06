@@ -19,7 +19,7 @@ describe('GoComponent', () => {
         GoPartSlice.WIDTH = 5;
     });
     beforeEach(fakeAsync(() => {
-        componentTestUtils = new ComponentTestUtils<GoComponent>('Go');
+        componentTestUtils = ComponentTestUtils.forGame<GoComponent>('Go');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
