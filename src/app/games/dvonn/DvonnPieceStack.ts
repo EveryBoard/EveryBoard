@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { NumberEncoder } from 'src/app/jscaip/encoder';
 
 export class DvonnPieceStack {

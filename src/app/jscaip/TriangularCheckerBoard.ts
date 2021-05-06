@@ -1,4 +1,4 @@
-import { Coord } from './coord/Coord';
+import { Coord } from './Coord';
 import { MGPOptional } from '../utils/mgp-optional/MGPOptional';
 
 export class TriangularCheckerBoard {

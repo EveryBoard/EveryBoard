@@ -1,6 +1,6 @@
 import { CoerceoComponent } from '../coerceo.component';
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';

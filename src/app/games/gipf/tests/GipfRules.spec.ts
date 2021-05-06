@@ -1,5 +1,5 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { Coord } from 'src/app/jscaip/Coord';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { GipfBoard } from '../GipfBoard';

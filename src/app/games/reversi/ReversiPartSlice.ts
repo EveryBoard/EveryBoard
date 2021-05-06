@@ -1,6 +1,6 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
-import { Coord } from '../../jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Coord } from '../../jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class ReversiPartSlice extends GamePartSlice {
@@ -10,8 +10,8 @@ export class ReversiPartSlice extends GamePartSlice {
 
     public static getInitialSlice(): ReversiPartSlice {
         const board: number[][] = ArrayUtils.createBiArray(ReversiPartSlice.BOARD_WIDTH,
-            ReversiPartSlice.BOARD_HEIGHT,
-            Player.NONE.value);
+                                                           ReversiPartSlice.BOARD_HEIGHT,
+                                                           Player.NONE.value);
         board[3][3] = Player.ZERO.value;
         board[4][4] = Player.ZERO.value;
         board[3][4] = Player.ONE.value;

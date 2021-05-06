@@ -1,18 +1,18 @@
 
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GoPartSlice, Phase, GoPiece } from './GoPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { GoMove } from './GoMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { GoLegalityStatus } from './GoLegalityStatus';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { GroupDatas } from './GroupDatas';
 import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { Rules, RulesFailure } from 'src/app/jscaip/Rules';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 
 abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
 

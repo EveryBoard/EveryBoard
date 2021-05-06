@@ -1,8 +1,8 @@
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 import { DidacticialStep } from '../DidacticialStep';
 
 const _: number = new EncapsuleCase(Player.NONE, Player.NONE, Player.NONE).encode();

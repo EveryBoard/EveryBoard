@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { Coord } from '../../jscaip/coord/Coord';
+import { Coord } from '../../jscaip/Coord';
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutPartSlice } from './TablutPartSlice';
 import { TablutRules } from './TablutRules';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';

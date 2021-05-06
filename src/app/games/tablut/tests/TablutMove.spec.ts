@@ -2,7 +2,7 @@ import { TablutRules } from '../TablutRules';
 import { TablutMove } from '../TablutMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { TablutPartSlice } from '../TablutPartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 
 describe('TablutMove', () => {
 

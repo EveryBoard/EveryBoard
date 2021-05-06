@@ -3,8 +3,8 @@ import { GoMove } from '../GoMove';
 import { Phase, GoPartSlice, GoPiece } from '../GoPartSlice';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { GoLegalityStatus } from '../GoLegalityStatus';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { Coord } from 'src/app/jscaip/Coord';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GoRules } from '../GoRules';
 

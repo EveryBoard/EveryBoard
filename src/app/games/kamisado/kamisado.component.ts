@@ -1,12 +1,12 @@
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Component } from '@angular/core';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoFailure, KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 export class KamisadoComponentFailure {

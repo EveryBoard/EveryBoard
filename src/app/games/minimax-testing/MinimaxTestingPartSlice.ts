@@ -1,5 +1,5 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 const M: number = Number.MAX_SAFE_INTEGER;

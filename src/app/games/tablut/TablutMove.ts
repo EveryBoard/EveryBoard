@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { TablutRulesConfig } from './TablutRulesConfig';
 import { Direction } from 'src/app/jscaip/Direction';

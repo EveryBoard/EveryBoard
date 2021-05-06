@@ -4,9 +4,9 @@ import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondas
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 
 @Component({

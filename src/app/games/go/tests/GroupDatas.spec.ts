@@ -1,6 +1,6 @@
 import { GroupDatas } from '../GroupDatas';
 import { GoPiece } from '../GoPartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 
 describe('GroupDatas:', () => {
     const c: Coord = new Coord(0, 0);

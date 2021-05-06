@@ -2,7 +2,7 @@ import { PylosComponent } from '../pylos.component';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 

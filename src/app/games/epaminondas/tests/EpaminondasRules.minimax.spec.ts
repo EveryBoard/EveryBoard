@@ -1,7 +1,7 @@
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { Direction } from 'src/app/jscaip/Direction';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
-import { Player } from 'src/app/jscaip/player/Player';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
 import { EpaminondasRules } from '../EpaminondasRules';

@@ -1,5 +1,5 @@
 import { DvonnMove } from '../DvonnMove';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 
 describe('DvonnMove', () => {
     it('should toString in a readable way', () => {

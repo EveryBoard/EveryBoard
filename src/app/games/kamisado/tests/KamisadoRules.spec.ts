@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { KamisadoColor } from '../KamisadoColor';
 import { KamisadoMove } from '../KamisadoMove';
@@ -7,9 +7,9 @@ import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoRules } from '../KamisadoRules';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('KamisadoRules:', () => {
     let rules: KamisadoRules;

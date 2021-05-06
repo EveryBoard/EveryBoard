@@ -1,6 +1,6 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionFailure, LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';

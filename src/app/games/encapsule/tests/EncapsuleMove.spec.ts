@@ -1,7 +1,7 @@
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { EncapsuleRules } from '../EncapsuleRules';
 import { EncapsulePartSlice } from '../EncapsulePartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
 

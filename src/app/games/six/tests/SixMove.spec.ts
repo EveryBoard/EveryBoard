@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { SixMove } from '../SixMove';
 

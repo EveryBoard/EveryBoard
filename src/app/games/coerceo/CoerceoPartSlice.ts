@@ -1,7 +1,7 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { TriangularGameState } from 'src/app/jscaip/game-state/triangular-game-state/TriangularGameState';
-import { Player } from 'src/app/jscaip/player/Player';
+import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
+import { Player } from 'src/app/jscaip/Player';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { assert, display } from 'src/app/utils/utils/utils';

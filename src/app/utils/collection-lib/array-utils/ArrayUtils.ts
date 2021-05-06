@@ -1,5 +1,3 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
-
 export type Table<T> = ReadonlyArray<ReadonlyArray<T>>;
 
 export type NumberTable = Table<number>;
@@ -44,15 +42,6 @@ export class ArrayUtils {
     }
     public static copyImmutableArray<I>(array: ReadonlyArray<I>): I[] {
         const retour: Array<I> = [];
-        let x: number = 0;
-        while (x < array.length) {
-            retour[x] = array[x];
-            x++;
-        }
-        return retour;
-    }
-    public static copyArray<T>(array: ReadonlyArray<T>): T[] { // TODO: REMOVE FOR copyImmutableArray
-        const retour: Array<T> = [];
         let x: number = 0;
         while (x < array.length) {
             retour[x] = array[x];

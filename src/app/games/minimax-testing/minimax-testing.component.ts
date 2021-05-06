@@ -3,7 +3,7 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { MinimaxTestingRules } from 'src/app/games/minimax-testing/MinimaxTestingRules';
 import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTestingPartSlice';
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTestingMove';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 

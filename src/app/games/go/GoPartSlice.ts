@@ -1,6 +1,6 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 

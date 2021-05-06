@@ -1,5 +1,5 @@
 import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Coord } from '../coord/Coord';
+import { Coord } from './Coord';
 import { HexaLine } from './HexaLine';
 
 /** An hexagonal board encoding,
@@ -65,13 +65,23 @@ export class HexaBoard<T> {
         }
     }
     public equals(other: HexaBoard<T>, equalT: (a: T, b: T) => boolean): boolean {
-        if (this === other) return true;
-        if (this.width !== other.width) return false;
-        if (this.height !== other.height) return false;
-        if (equalT(this.empty, other.empty) === false) return false;
+        if (this === other) {
+            return true;
+        }
+        if (this.width !== other.width) {
+            return false;
+        }
+        if (this.height !== other.height) {
+            return false;
+        }
+        if (equalT(this.empty, other.empty) === false) {
+            return false;
+        }
         // TODO: check excludedCases
         for (const coord of this.allCoords()) {
-            if (equalT(this.getAtUnsafe(coord), other.getAtUnsafe(coord)) === false) return false;
+            if (equalT(this.getAtUnsafe(coord), other.getAtUnsafe(coord)) === false) {
+                return false;
+            }
         }
         return true;
     }

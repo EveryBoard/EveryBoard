@@ -125,11 +125,8 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
         }
         return true;
     }
-}
-export class MGPBiMap<K extends Comparable, V extends Comparable> extends MGPMap<K, V> {
-
-    public groupByValue(): MGPBiMap<V, MGPSet<K>> {
-        const reversedMap: MGPBiMap<V, MGPSet<K>> = new MGPBiMap<V, MGPSet<K>>();
+    public groupByValue(): MGPMap<V, MGPSet<K>> {
+        const reversedMap: MGPMap<V, MGPSet<K>> = new MGPMap<V, MGPSet<K>>();
         for (const key of this.listKeys()) {
             const value: V = this.get(key).get();
             if (reversedMap.containsKey(value)) {
@@ -141,31 +138,5 @@ export class MGPBiMap<K extends Comparable, V extends Comparable> extends MGPMap
             }
         }
         return reversedMap;
-    }
-    public getCopy(): MGPBiMap<K, V> {
-        const newMap: MGPBiMap<K, V> = new MGPBiMap<K, V>();
-        for (const key of this.listKeys()) {
-            newMap.set(key, this.get(key).get());
-        }
-        return newMap;
-    }
-    public equals(other: MGPBiMap<K, V>): boolean {
-        const keySet: MGPSet<K> = this.getKeySet();
-        const otherKeySet: MGPSet<K> = other.getKeySet();
-        if (keySet.equals(otherKeySet) === false) {
-            return false;
-        }
-        for (let i: number = 0; i < keySet.size(); i++) {
-            const key: K = keySet.get(i);
-            const left: V = this.get(key).get();
-            const right: MGPOptional<V> = other.get(key);
-            if (right.isAbsent()) {
-                return false;
-            }
-            if (comparableEquals(left, right.get()) === false) {
-                return false;
-            }
-        }
-        return true;
     }
 }

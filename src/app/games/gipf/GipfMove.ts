@@ -1,7 +1,7 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder } from 'src/app/jscaip/encoder';
-import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
-import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils/utils';

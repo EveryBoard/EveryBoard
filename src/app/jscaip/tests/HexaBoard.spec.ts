@@ -1,8 +1,6 @@
-import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Coord } from '../coord/Coord';
-import { Encoder } from '../encoder';
-import { HexaBoard } from './HexaBoard';
-import { HexaLine } from './HexaLine';
+import { Coord } from '../Coord';
+import { HexaBoard } from '../HexaBoard';
+import { HexaLine } from '../HexaLine';
 
 describe('HexaBoard', () => {
     function numCompare(x: number, y: number): boolean {

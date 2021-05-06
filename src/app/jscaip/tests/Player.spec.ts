@@ -1,4 +1,4 @@
-import { Player } from './Player';
+import { Player } from '../Player';
 
 describe('Player', () => {
     it('Should override toString correctly', () => {

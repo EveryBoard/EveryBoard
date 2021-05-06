@@ -1,16 +1,16 @@
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { DvonnPartSlice } from './DvonnPartSlice';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { DvonnBoard } from './DvonnBoard';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { HexaBoard } from 'src/app/jscaip/hexa/HexaBoard';
+import { HexaBoard } from 'src/app/jscaip/HexaBoard';
 
 abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnPartSlice> { }
 

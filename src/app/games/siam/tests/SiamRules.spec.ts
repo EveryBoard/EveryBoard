@@ -6,7 +6,7 @@ import { SiamPartSlice } from '../SiamPartSlice';
 import { SiamLegalityStatus } from '../SiamLegalityStatus';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('SiamRules:', () => {
     let rules: SiamRules;

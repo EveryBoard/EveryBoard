@@ -1,7 +1,7 @@
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Coord } from '../../coord/Coord';
-import { GamePartSlice } from '../../GamePartSlice';
-import { TriangularCheckerBoard } from '../../TriangularCheckerBoard';
+import { Coord } from './Coord';
+import { GamePartSlice } from './GamePartSlice';
+import { TriangularCheckerBoard } from './TriangularCheckerBoard';
 
 export abstract class TriangularGameState extends GamePartSlice {
 

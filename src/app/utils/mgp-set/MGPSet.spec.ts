@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { MGPSet } from './MGPSet';
 
 describe('MGPSet', () => {

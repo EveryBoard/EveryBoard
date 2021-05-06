@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { GoPiece } from './GoPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { display } from 'src/app/utils/utils/utils';

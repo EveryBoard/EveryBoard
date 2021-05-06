@@ -1,5 +1,5 @@
-import { Coord } from './coord/Coord';
-import { Direction, Orthogonal } from './Direction';
+import { Coord } from '../Coord';
+import { Direction, Orthogonal } from '../Direction';
 
 describe('Direction', () => {
     it('should have 8 directions', () => {

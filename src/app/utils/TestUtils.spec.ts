@@ -11,10 +11,10 @@ import { AppModule } from '../app.module';
 import { ActivatedRoute } from '@angular/router';
 import { JoueursDAO } from '../dao/joueurs/JoueursDAO';
 import { AuthenticationService } from '../services/authentication/AuthenticationService';
-import { MGPNode } from '../jscaip/mgp-node/MGPNode';
+import { MGPNode } from '../jscaip/MGPNode';
 import { GameWrapper } from '../components/wrapper-components/GameWrapper';
 import { Rules } from '../jscaip/Rules';
-import { Player } from '../jscaip/player/Player';
+import { Player } from '../jscaip/Player';
 import { NodeUnheritance } from '../jscaip/NodeUnheritance';
 import { AuthenticationServiceMock } from '../services/authentication/AuthenticationService.spec';
 import { OnlineGameWrapperComponent }

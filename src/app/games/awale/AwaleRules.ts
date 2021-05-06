@@ -1,5 +1,5 @@
 import { Rules } from '../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { AwalePartSlice } from './AwalePartSlice';
 import { AwaleMove } from './AwaleMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
@@ -7,7 +7,8 @@ import { AwaleLegalityStatus } from './AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
+import { Coord } from 'src/app/jscaip/Coord';
 
 abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
@@ -73,17 +74,17 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         // arrived here you can distribute this house
         // but we'll have to check if you can capture
-        const lastCase: number[] = AwaleRules.distribute(x, y, resultingBoard);
+        const lastCase: Coord = AwaleRules.distribute(x, y, resultingBoard);
         // do the distribution and retrieve the landing part
         // of the last stone
-        const landingCamp: number = lastCase[1];
+        const landingCamp: number = lastCase.y;
         if (landingCamp === player) {
             // on termine la distribution dans son propre camp, rien d'autre à vérifier
             return { legal: MGPValidation.SUCCESS, captured: [0, 0], resultingBoard };
         }
         // on as donc terminé la distribution dans le camps adverse, capture est de mise
         const boardBeforeCapture: number[][] = ArrayUtils.copyBiArray(resultingBoard);
-        captured[player] = AwaleRules.capture(lastCase[0], ennemi, player, resultingBoard);
+        captured[player] = AwaleRules.capture(lastCase.x, ennemi, player, resultingBoard);
         if (AwaleRules.isStarving(ennemi, resultingBoard)) {
             if (captured[player] > 0) {
                 // if the distribution would capture all seeds
@@ -122,10 +123,10 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (i < 6);
         return true;
     }
-    private static distribute(x: number, y: number, board: number[][]): number[] {
+    private static distribute(x: number, y: number, board: number[][]): Coord {
         // just apply's the move on the board (the distribution part)
         // does not make the capture nor verify the legality of the move
-        // return (x, y) of the last case the move got down
+        // return the coord of the last case the move got down
 
         // iy et ix sont les cases initiales
         const ix: number = x;
@@ -155,7 +156,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             }
         }
 
-        return [x, y]; // TODO: return a Coord
+        return new Coord(x, y);
     }
     private static capture(x: number, y: number, player: number, board: number[][]): number {
         /* only called if y and player are not equal

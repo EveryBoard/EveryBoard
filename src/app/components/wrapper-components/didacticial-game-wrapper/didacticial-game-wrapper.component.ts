@@ -3,7 +3,7 @@ import {
     Component, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { UserService } from 'src/app/services/user/UserService';

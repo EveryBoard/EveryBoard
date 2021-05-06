@@ -27,7 +27,7 @@ import { Request } from 'src/app/domain/request';
 import { ICurrentPart, MGPResult, Part, PICurrentPart } from 'src/app/domain/icurrentpart';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { RouterTestingModule } from '@angular/router/testing';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { IJoueur } from 'src/app/domain/iuser';
 import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 import { ActivatedRouteStub } from 'src/app/utils/TestUtils.spec';

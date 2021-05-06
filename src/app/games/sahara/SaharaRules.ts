@@ -1,9 +1,9 @@
 import { Rules } from 'src/app/jscaip/Rules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { Player } from 'src/app/jscaip/player/Player';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Player } from 'src/app/jscaip/Player';
+import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from './SaharaMove';
 import { SaharaPawn } from './SaharaPawn';
 import { SaharaPartSlice } from './SaharaPartSlice';
@@ -12,7 +12,7 @@ import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { display } from 'src/app/utils/utils/utils';
-import { TriangularGameState } from 'src/app/jscaip/game-state/triangular-game-state/TriangularGameState';
+import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice> {}
 

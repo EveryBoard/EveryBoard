@@ -4,7 +4,7 @@ import { AwaleRules } from './AwaleRules';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from './AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 

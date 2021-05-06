@@ -1,5 +1,5 @@
 import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
-import { NumberEncoder } from './encoder';
+import { NumberEncoder } from '../encoder';
 
 export class NumberEncoderTestUtils {
     public static expectToBeCorrect<T extends ComparableObject>(encoder: NumberEncoder<T>, value: T): void {

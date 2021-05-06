@@ -1,7 +1,7 @@
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { DidacticialStep } from '../DidacticialStep';
 
 const _: number = Player.NONE.value;

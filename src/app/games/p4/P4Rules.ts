@@ -1,13 +1,13 @@
 import { Direction } from '../../jscaip/Direction';
-import { Coord } from '../../jscaip/coord/Coord';
+import { Coord } from '../../jscaip/Coord';
 import { Rules } from '../../jscaip/Rules';
 import { SCORE } from '../../jscaip/SCORE';
-import { MGPNode } from '../../jscaip/mgp-node/MGPNode';
+import { MGPNode } from '../../jscaip/MGPNode';
 
 import { P4PartSlice } from './P4PartSlice';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { assert, display } from 'src/app/utils/utils/utils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { P4Move } from './P4Move';

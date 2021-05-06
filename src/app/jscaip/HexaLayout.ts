@@ -1,4 +1,4 @@
-import { Coord } from '../coord/Coord';
+import { Coord } from './Coord';
 import { HexaOrientation } from './HexaOrientation';
 
 export class HexaLayout {

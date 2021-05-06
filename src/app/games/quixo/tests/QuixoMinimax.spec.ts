@@ -1,5 +1,5 @@
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoRules } from '../QuixoRules';

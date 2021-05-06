@@ -1,5 +1,5 @@
-import { Coord } from './coord/Coord';
-import { Player } from './player/Player';
+import { Coord } from './Coord';
+import { Player } from './Player';
 import { ArrayUtils, NumberTable } from '../utils/collection-lib/array-utils/ArrayUtils';
 import { ComparableObject } from '../utils/collection-lib/Comparable';
 

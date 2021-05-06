@@ -1,5 +1,5 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { NumberEncoderTestUtils } from 'src/app/jscaip/Encoder.spec';
+import { Coord } from 'src/app/jscaip/Coord';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 

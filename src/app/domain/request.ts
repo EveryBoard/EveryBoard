@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { JSONValue } from 'src/app/utils/utils/utils';
 
 export type RequestCode =

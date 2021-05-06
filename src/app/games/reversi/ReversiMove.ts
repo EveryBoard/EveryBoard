@@ -9,8 +9,8 @@ export class ReversiMove extends MoveCoord {
         return (move.coord.y*8) + move.coord.x;
     }
     public static decode(encodedMove: number): ReversiMove {
-        const x = encodedMove % 8; // TODO: vérifier ici le cas où ce sera pas un plateau de taille standard 8x8
-        const y = (encodedMove - x) / 8;
+        const x: number = encodedMove % 8; // TODO: vérifier ici le cas où ce sera pas un plateau de taille standard 8x8
+        const y: number = (encodedMove - x) / 8;
         return new ReversiMove(x, y);
     }
     public equals(o: ReversiMove): boolean {

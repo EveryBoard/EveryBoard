@@ -9,7 +9,7 @@ import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/request';
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';

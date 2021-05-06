@@ -4,7 +4,7 @@ import { QuartoPartSlice } from './QuartoPartSlice';
 import { QuartoRules } from './QuartoRules';
 import { QuartoPiece } from './QuartoPiece';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 
 @Component({

@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
@@ -8,8 +8,8 @@ import { KamisadoPiece } from './KamisadoPiece';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
-import { Player } from 'src/app/jscaip/player/Player';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 

@@ -1,5 +1,5 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 import { expectFirstStateToBeBetterThanSecond, expectStateToBePreVictory } from 'src/app/utils/TestUtils.spec';
 import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
@@ -31,9 +31,9 @@ describe('Six - Minimax', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
             rules.node = new SixNode(null, null, state, 0);
             expect(rules.choose(move)).toBeTrue();
-            rules.node.findBestMove(1);
+            const bestSon: SixNode = rules.node.findBestMove(1);
+            expect(bestSon.move).toEqual(SixMove.fromDrop(new Coord(0, 6)));
             expect(rules.node.countDescendants()).toBe(1);
-
         });
         it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
             const state: SixGameState = SixGameState.fromRepresentation([
@@ -52,6 +52,22 @@ describe('Six - Minimax', () => {
             ], 2);
             const previousMove: SixMove = SixMove.fromDrop(new Coord(2, 2));
             expectStateToBePreVictory(state, previousMove, Player.ONE, rules);
+        });
+        it('shound only count one preVictory when one coord is a forcing move for two lines', () => {
+            const board: number[][] = [
+                [_, _, X, _, _, X],
+                [_, _, O, _, O, _],
+                [_, _, O, O, _, _],
+                [_, _, _, _, _, O],
+                [_, O, O, _, O, X],
+                [O, _, O, O, X, X],
+            ];
+            const state: SixGameState = SixGameState.fromRepresentation(board, 9);
+            const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
+            rules.node = new SixNode(null, null, state, 0);
+            const boardValue: { value: number, preVictory?: Coord } = rules.getBoardValue(move, state);
+            expect(boardValue.preVictory).toBeUndefined();
+            expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
     });
     describe('4 pieces aligned is better than 3 pieces aligned', () => {
@@ -123,7 +139,40 @@ describe('Six - Minimax', () => {
         });
     });
     describe('Phase 2', () => {
-        xit('Should not consider moving piece that are blocking an ennemy victory');
+        it('Should not consider moving piece that are blocking an ennemy victory', () => {
+            const board: number[][] = [
+                [O, O, _, _, _, _, O],
+                [X, _, _, _, _, X, _],
+                [X, _, _, O, X, X, _],
+                [X, X, O, X, X, O, _],
+                [X, _, X, X, O, _, _],
+                [_, X, _, _, _, _, _],
+            ];
+            const state: SixGameState = SixGameState.fromRepresentation(board, 39);
+            const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
+            rules.node = new SixNode(null, null, state, 0);
+            expect(rules.choose(move)).toBeTrue();
+            const bestMove: SixMove = rules.node.findBestMove(1).move;
+            const expectedMove: SixMove = SixMove.fromDeplacement(new Coord(1, 0), new Coord(0, 6));
+            expect(bestMove).toEqual(expectedMove);
+            expect(rules.node.countDescendants()).toBe(1);
+        });
+        it('Should propose only one starting piece when all piece are blocking an ennemy victory', () => {
+            const board: number[][] = [
+                [O, _, _, _, _, _, O],
+                [X, _, _, _, _, X, _],
+                [X, _, _, O, X, X, _],
+                [X, X, O, X, X, O, _],
+                [X, _, X, X, O, _, _],
+                [_, X, _, _, _, _, _],
+            ];
+            const state: SixGameState = SixGameState.fromRepresentation(board, 39);
+            const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
+            rules.node = new SixNode(null, null, state, 0);
+            expect(rules.choose(move)).toBeTrue();
+            rules.node.findBestMove(1);
+            expect(rules.node.countDescendants()).toBe(1);
+        });
         // TODO: comparing what's best between that calculation and Phase 1 one
         it('Score after 40th turn should be a substraction of the number of piece', () => {
             const state: SixGameState = SixGameState.fromRepresentation([

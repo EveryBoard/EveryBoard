@@ -1,7 +1,7 @@
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { QuixoMove } from './QuixoMove';
 
 export class QuixoPartSlice extends GamePartSlice {

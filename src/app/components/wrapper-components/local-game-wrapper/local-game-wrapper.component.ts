@@ -6,7 +6,7 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/user/UserService';
 import { display } from 'src/app/utils/utils/utils';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 
 @Component({

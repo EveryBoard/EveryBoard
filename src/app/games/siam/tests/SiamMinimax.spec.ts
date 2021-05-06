@@ -1,12 +1,12 @@
 import { SiamRules, SiamNode } from '../SiamRules';
 import { SiamPiece } from '../SiamPiece';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { SiamMove } from '../SiamMove';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 
 describe('SiamRules - Minimax:', () => {

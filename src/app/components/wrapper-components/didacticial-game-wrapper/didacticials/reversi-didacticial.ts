@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { DidacticialStep } from '../DidacticialStep';
 
 const _: number = Player.NONE.value;

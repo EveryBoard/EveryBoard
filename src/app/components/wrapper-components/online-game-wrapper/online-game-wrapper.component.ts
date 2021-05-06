@@ -17,7 +17,7 @@ import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { assert, display, JSONValue } from 'src/app/utils/utils/utils';
 import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/object-utils/ObjectUtils';

@@ -1,7 +1,7 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
-import { Rules, RulesFailure } from 'src/app/jscaip/Rules';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { RulesFailure } from 'src/app/jscaip/Rules';
 import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';

@@ -1,5 +1,5 @@
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { SiamPiece } from '../SiamPiece';
 
 describe('SiamPiece:', () => {

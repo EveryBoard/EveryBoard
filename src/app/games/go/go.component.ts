@@ -3,7 +3,7 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoRules } from 'src/app/games/go/GoRules';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { GroupDatas } from 'src/app/games/go/GroupDatas';
 import { MatSnackBar } from '@angular/material/snack-bar';

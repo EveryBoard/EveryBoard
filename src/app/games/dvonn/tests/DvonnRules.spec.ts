@@ -1,9 +1,9 @@
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnPartSlice } from '../DvonnPartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { DvonnMove } from '../DvonnMove';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from '../DvonnBoard';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';

@@ -1,9 +1,9 @@
 import { DvonnComponent } from '../dvonn.component';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { fakeAsync } from '@angular/core/testing';

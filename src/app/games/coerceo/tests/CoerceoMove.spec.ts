@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { CoerceoPartSlice } from '../CoerceoPartSlice';
 import { CoerceoRules } from '../CoerceoRules';
