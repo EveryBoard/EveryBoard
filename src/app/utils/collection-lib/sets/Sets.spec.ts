@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Comparable, ComparableObject } from '../Comparable';
 import { Sets } from './Sets';
 

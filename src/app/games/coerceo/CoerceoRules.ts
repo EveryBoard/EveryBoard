@@ -1,6 +1,6 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Rules, RulesFailure } from 'src/app/jscaip/Rules';
 import { display } from 'src/app/utils/utils/utils';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';

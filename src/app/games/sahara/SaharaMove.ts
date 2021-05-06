@@ -1,5 +1,5 @@
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaPartSlice } from './SaharaPartSlice';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 

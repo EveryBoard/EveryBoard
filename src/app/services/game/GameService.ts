@@ -12,7 +12,7 @@ import { ChatService } from '../chat/ChatService';
 import { IChat } from '../../domain/ichat';
 import { Request } from '../../domain/request';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { assert, display, JSONValue } from 'src/app/utils/utils/utils';
 

@@ -1,8 +1,8 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { HexaLayout } from 'src/app/jscaip/hexa/HexaLayout';
+import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';

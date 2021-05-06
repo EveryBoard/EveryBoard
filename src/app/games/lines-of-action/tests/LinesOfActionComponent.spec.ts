@@ -1,6 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { LinesOfActionComponent } from '../LinesOfActionComponent';

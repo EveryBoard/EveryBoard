@@ -1,14 +1,14 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
 import { GameComponentUtils } from '../../components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { Rules, RulesFailure } from 'src/app/jscaip/Rules';
-import { Player } from 'src/app/jscaip/player/Player';
+import { RulesFailure } from 'src/app/jscaip/Rules';
+import { Player } from 'src/app/jscaip/Player';
 
 @Component({
     selector: 'app-quixo',

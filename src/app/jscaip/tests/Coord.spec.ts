@@ -1,4 +1,4 @@
-import { Coord } from './Coord';
+import { Coord } from '../Coord';
 
 describe('Coord', () => {
     it('should compare correctly, y first', () => {
@@ -47,8 +47,9 @@ describe('Coord', () => {
         expect(coord.getCoordsToward(alignedFar)).toEqual([new Coord(1, 1)]);
     });
     it('Should throw when asked distance toward an unaligned coord', () => {
-        const coord = new Coord(0, 0);
-        const unalignedCoord = new Coord(1,2);
-        expect(() => coord.getDistance(unalignedCoord)).toThrowError('Cannot calculate distance with non aligned coords.');
+        const coord: Coord = new Coord(0, 0);
+        const unalignedCoord: Coord = new Coord(1, 2);
+        expect(() => coord.getDistance(unalignedCoord))
+            .toThrowError('Cannot calculate distance with non aligned coords.');
     });
 });

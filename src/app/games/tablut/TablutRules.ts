@@ -1,12 +1,12 @@
 import { Orthogonal, Direction } from '../../jscaip/Direction';
 import { Rules } from '../../jscaip/Rules';
-import { Coord } from '../../jscaip/coord/Coord';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { Coord } from '../../jscaip/Coord';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutPartSlice } from './TablutPartSlice';
 import { TablutMove } from './TablutMove';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { TablutRulesConfig } from './TablutRulesConfig';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { TablutCase } from './TablutCase';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { display } from 'src/app/utils/utils/utils';

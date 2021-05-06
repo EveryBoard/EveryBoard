@@ -1,4 +1,4 @@
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
 
 export enum Size {

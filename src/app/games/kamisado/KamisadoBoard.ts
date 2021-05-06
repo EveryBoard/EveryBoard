@@ -1,7 +1,7 @@
 import { KamisadoColor } from './KamisadoColor';
 import { KamisadoPiece } from './KamisadoPiece';
 import { ArrayUtils, Table, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 
 export class KamisadoBoard {
     public static INITIAL: Table<KamisadoPiece> = KamisadoBoard.getInitialBoard();

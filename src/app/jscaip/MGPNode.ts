@@ -1,11 +1,11 @@
-import { Move } from '../Move';
-import { SCORE } from '../SCORE';
-import { Rules } from '../Rules';
-import { GamePartSlice } from '../GamePartSlice';
-import { MGPMap } from '../../utils/mgp-map/MGPMap';
-import { LegalityStatus } from '../LegalityStatus';
+import { Move } from './Move';
+import { SCORE } from './SCORE';
+import { Rules } from './Rules';
+import { GamePartSlice } from './GamePartSlice';
+import { MGPMap } from '../utils/mgp-map/MGPMap';
+import { LegalityStatus } from './LegalityStatus';
 import { display } from 'src/app/utils/utils/utils';
-import { NodeUnheritance } from '../NodeUnheritance';
+import { NodeUnheritance } from './NodeUnheritance';
 
 export class MGPNode<R extends Rules<M, S, L, U>,
                      M extends Move,

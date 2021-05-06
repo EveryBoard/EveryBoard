@@ -1,5 +1,5 @@
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 
 export class PylosCoord extends Coord {

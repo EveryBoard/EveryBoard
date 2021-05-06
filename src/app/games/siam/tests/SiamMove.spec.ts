@@ -4,7 +4,7 @@ import { SiamMove } from '../SiamMove';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamPiece } from '../SiamPiece';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 
 describe('SiamMove', () => {

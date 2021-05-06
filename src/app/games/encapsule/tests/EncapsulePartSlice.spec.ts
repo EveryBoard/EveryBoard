@@ -1,5 +1,5 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';

@@ -2,7 +2,7 @@ import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { DidacticialStep } from '../DidacticialStep';
 

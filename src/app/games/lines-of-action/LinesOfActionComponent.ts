@@ -1,10 +1,10 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent }
     from 'src/app/components/game-components/abstract-game-component/AbstractGameComponent';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { DirectionError } from 'src/app/jscaip/Direction';
 import { Move } from 'src/app/jscaip/Move';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { assert, JSONValue } from 'src/app/utils/utils/utils';

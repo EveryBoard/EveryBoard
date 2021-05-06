@@ -1,5 +1,5 @@
 import { MoveCoord } from './MoveCoord';
-import { Coord } from './coord/Coord';
+import { Coord } from './Coord';
 import { NumberEncoder } from './encoder';
 import { MGPOptional } from '../utils/mgp-optional/MGPOptional';
 import { Direction, DirectionError } from './Direction';

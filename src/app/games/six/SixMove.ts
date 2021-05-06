@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder } from 'src/app/jscaip/encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { JSONObject, JSONValue } from 'src/app/utils/utils/utils';

@@ -1,5 +1,5 @@
 import { NumberEncoder } from 'src/app/jscaip/encoder';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 
 export class GipfPiece {
     public static encoder: NumberEncoder<GipfPiece> = new class extends NumberEncoder<GipfPiece> {

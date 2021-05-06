@@ -1,5 +1,5 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 import { GipfBoard } from '../GipfBoard';
 import { GipfPartSlice } from '../GipfPartSlice';
 import { GipfPiece } from '../GipfPiece';

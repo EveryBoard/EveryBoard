@@ -1,5 +1,5 @@
 import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Coord } from '../coord/Coord';
+import { Coord } from './Coord';
 import { HexaLine } from './HexaLine';
 
 /** An hexagonal board encoding,

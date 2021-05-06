@@ -6,7 +6,7 @@ import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoRules';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { KamisadoComponent, KamisadoComponentFailure } from '../kamisado.component';
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 
 describe('KamisadoComponent', () => {

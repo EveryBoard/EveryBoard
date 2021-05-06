@@ -1,6 +1,6 @@
-import { Coord } from '../coord/Coord';
-import { HexaBoard } from './HexaBoard';
-import { FlatHexaOrientation } from './HexaOrientation';
+import { Coord } from '../Coord';
+import { HexaBoard } from '../HexaBoard';
+import { FlatHexaOrientation } from '../HexaOrientation';
 
 describe('PointyHexaOrientation', () => {
 });

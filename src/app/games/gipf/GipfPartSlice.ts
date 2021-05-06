@@ -1,5 +1,5 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { GipfBoard } from './GipfBoard';
 import { GipfPiece } from './GipfPiece';

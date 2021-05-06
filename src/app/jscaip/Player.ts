@@ -1,6 +1,6 @@
 import { assert } from 'src/app/utils/utils/utils';
 import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
-import { NumberEncoder } from '../encoder';
+import { NumberEncoder } from './encoder';
 
 export class Player implements ComparableObject {
     public static numberEncoder: NumberEncoder<Player> = NumberEncoder.ofN(2, (player: Player) => {

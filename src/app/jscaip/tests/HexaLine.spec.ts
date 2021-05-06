@@ -1,9 +1,8 @@
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { Coord } from '../coord/Coord';
-import { Encoder } from '../encoder';
-import { HexaBoard } from './HexaBoard';
-import { HexaDirection } from './HexaDirection';
-import { HexaLine } from './HexaLine';
+import { Coord } from '../Coord';
+import { HexaBoard } from '../HexaBoard';
+import { HexaDirection } from '../HexaDirection';
+import { HexaLine } from '../HexaLine';
 
 describe('HexaLine', () => {
     describe('fromTwoCoords', () => {

@@ -2,7 +2,7 @@ import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { SaharaRules } from '../SaharaRules';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 
 describe('SaharaMoves', () => {
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {

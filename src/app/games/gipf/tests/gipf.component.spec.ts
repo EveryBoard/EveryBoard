@@ -1,11 +1,11 @@
 import { Arrow, GipfComponent, GipfComponentFailure } from '../gipf.component';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GipfFailure } from 'src/app/games/gipf/GipfRules';
-import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { JSONValue } from 'src/app/utils/utils/utils';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfBoard } from 'src/app/games/gipf/GipfBoard';

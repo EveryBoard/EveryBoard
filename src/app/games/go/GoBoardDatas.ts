@@ -1,7 +1,7 @@
 import { GroupInfos } from './GoRules';
 import { GoPiece, GoPartSlice } from './GoPartSlice';
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { GroupDatas } from './GroupDatas';
 
 export class GoBoardDatas {

@@ -1,8 +1,8 @@
 import { EncapsuleRules } from '../EncapsuleRules';
 import { EncapsuleMove } from '../EncapsuleMove';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleCase, EncapsulePartSlice } from '../EncapsulePartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
 
 describe('EncapsuleRules', () => {

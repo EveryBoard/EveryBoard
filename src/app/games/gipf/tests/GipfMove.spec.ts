@@ -1,6 +1,6 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
-import { HexaLine } from 'src/app/jscaip/hexa/HexaLine';
+import { Coord } from 'src/app/jscaip/Coord';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { GipfCapture, GipfMove, GipfPlacement } from '../GipfMove';
 

@@ -1,4 +1,4 @@
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
 import { MGPMap } from '../utils/mgp-map/MGPMap';

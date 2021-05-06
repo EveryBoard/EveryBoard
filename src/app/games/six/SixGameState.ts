@@ -1,8 +1,8 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
-import { Player } from 'src/app/jscaip/player/Player';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';

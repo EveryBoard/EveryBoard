@@ -1,8 +1,8 @@
 /* eslint-disable max-len */
 import { SixGameState } from 'src/app/games/six/SixGameState';
 import { SixMove } from 'src/app/games/six/SixMove';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 import { DidacticialStep } from '../DidacticialStep';
 
 const _: number = Player.NONE.value;

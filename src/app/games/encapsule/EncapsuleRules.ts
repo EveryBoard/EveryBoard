@@ -1,11 +1,11 @@
 import { Rules } from '../../jscaip/Rules';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { EncapsulePartSlice, EncapsuleCase } from './EncapsulePartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { Sets } from 'src/app/utils/collection-lib/sets/Sets';
 import { EncapsuleLegalityStatus } from './EncapsuleLegalityStatus';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
 import { display } from 'src/app/utils/utils/utils';

@@ -1,4 +1,4 @@
-import { HexaDirection } from './HexaDirection';
+import { HexaDirection } from '../HexaDirection';
 
 describe('HexaDirection', () => {
     describe('all', () => {

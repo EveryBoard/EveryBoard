@@ -1,10 +1,10 @@
 import { TablutRules } from '../TablutRules';
 import { TablutMove } from '../TablutMove';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutPartSlice } from '../TablutPartSlice';
 import { TablutCase } from '../TablutCase';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { TablutLegalityStatus } from '../TablutLegalityStatus';
 
 describe('TablutRules', () => {

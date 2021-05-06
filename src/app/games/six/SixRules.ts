@@ -1,7 +1,7 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Coord } from 'src/app/jscaip/Coord';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Player } from 'src/app/jscaip/Player';
 import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';

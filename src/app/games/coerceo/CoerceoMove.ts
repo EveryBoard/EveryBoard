@@ -1,4 +1,4 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { Move } from 'src/app/jscaip/Move';
 import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';

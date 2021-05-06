@@ -2,8 +2,8 @@ import { GipfBoard } from 'src/app/games/gipf/GipfBoard';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { HexaDirection } from 'src/app/jscaip/hexa/HexaDirection';
+import { Coord } from 'src/app/jscaip/Coord';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
 import { DidacticialStep } from '../DidacticialStep';
 

@@ -1,6 +1,6 @@
 import { assert, JSONValue } from 'src/app/utils/utils/utils';
-import { BaseDirection, DirectionFactory } from '../Direction';
-import { Encoder } from '../encoder';
+import { BaseDirection, DirectionFactory } from './Direction';
+import { Encoder } from './encoder';
 
 /** Hexagonal directions encoded with axial coordinates, for "flat toped" hexagons */
 export class HexaDirection extends BaseDirection {

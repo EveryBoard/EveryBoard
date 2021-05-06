@@ -2,7 +2,7 @@
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 
 const _: number = CoerceoPiece.EMPTY.value;
 const N: number = CoerceoPiece.NONE.value;

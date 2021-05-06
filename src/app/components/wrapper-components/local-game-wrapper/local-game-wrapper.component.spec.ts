@@ -1,6 +1,6 @@
 import { fakeAsync } from '@angular/core/testing';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
