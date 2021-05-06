@@ -18,8 +18,8 @@ describe('KamisadoComponent', () => {
     const r: number = KamisadoPiece.ONE.RED.getValue();
     const b: number = KamisadoPiece.ONE.BROWN.getValue();
 
-    beforeEach(fakeAsync(() => {
-        componentTestUtils = ComponentTestUtils.forGame<KamisadoComponent>('Kamisado');
+    beforeEach(fakeAsync(async() => {
+        componentTestUtils = await ComponentTestUtils.forGame<KamisadoComponent>('Kamisado');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

@@ -20,7 +20,7 @@ describe('EncapsuleComponent', () => {
     const P0Turn: number = 6;
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = ComponentTestUtils.forGame<EncapsuleComponent>('Encapsule');
+        componentTestUtils = await ComponentTestUtils.forGame<EncapsuleComponent>('Encapsule');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

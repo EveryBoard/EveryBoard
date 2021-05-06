@@ -6,8 +6,8 @@ import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 describe('P4Component', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
 
-    beforeEach(fakeAsync(() => {
-        componentTestUtils = ComponentTestUtils.forGame<P4Component>('P4');
+    beforeEach(fakeAsync(async() => {
+        componentTestUtils = await ComponentTestUtils.forGame<P4Component>('P4');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

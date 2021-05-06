@@ -16,7 +16,7 @@ describe('LinesOfActionComponent', () => {
 
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
+        componentTestUtils = await ComponentTestUtils.forGame<LinesOfActionComponent>('LinesOfAction');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

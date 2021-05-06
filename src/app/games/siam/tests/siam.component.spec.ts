@@ -30,8 +30,8 @@ describe('SiamComponent', () => {
             return componentTestUtils.expectMoveSuccess('#chooseOrientation_' + landingOrientation, move);
         }
     };
-    beforeEach(fakeAsync(() => {
-        componentTestUtils = ComponentTestUtils.forGame<SiamComponent>('Siam');
+    beforeEach(fakeAsync(async() => {
+        componentTestUtils = await ComponentTestUtils.forGame<SiamComponent>('Siam');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

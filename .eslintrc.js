@@ -16,6 +16,7 @@ module.exports = {
     ],
     extends: ['eslint:recommended', 'google', 'plugin:@typescript-eslint/recommended'],
     rules: {
+        'complexity': ['error', 20],
         '@typescript-eslint/typedef': [
             'warn',
             {

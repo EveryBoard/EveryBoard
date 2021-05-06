@@ -14,7 +14,7 @@ describe('DidacticialGameWrapperComponent', () => {
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils =
-            ComponentTestUtils.forGame<QuartoComponent>('Quarto', DidacticialGameWrapperComponent);
+            await ComponentTestUtils.forGame<QuartoComponent>('Quarto', DidacticialGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as DidacticialGameWrapperComponent;
     }));
     describe('Common behavior', () => {

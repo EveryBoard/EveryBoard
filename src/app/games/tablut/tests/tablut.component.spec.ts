@@ -15,7 +15,7 @@ describe('TablutComponent', () => {
     const A: number = TablutCase.PLAYER_ONE_KING.value;
 
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = ComponentTestUtils.forGame<TablutComponent>('Tablut');
+        componentTestUtils = await ComponentTestUtils.forGame<TablutComponent>('Tablut');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

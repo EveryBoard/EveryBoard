@@ -26,8 +26,8 @@ describe('EpaminondasComponent:', () => {
             .getHighlightedCoords().some((c: Coord) => c.equals(coord))).toBeFalse();
     }
 
-    beforeEach(fakeAsync(() => {
-        componentTestUtils = ComponentTestUtils.forGame<EpaminondasComponent>('Epaminondas');
+    beforeEach(fakeAsync(async() => {
+        componentTestUtils = await ComponentTestUtils.forGame<EpaminondasComponent>('Epaminondas');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');

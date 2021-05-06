@@ -30,8 +30,8 @@ describe('CoerceoComponent:', () => {
         expect(gameComponent.isPyramid(x, y, caseContent)).toBeTrue();
         expect(gameComponent.getPyramidClass(caseContent)).toBe('captured');
     }
-    beforeEach(fakeAsync(() => {
-        componentTestUtils = ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');
+    beforeEach(fakeAsync(async() => {
+        componentTestUtils = await ComponentTestUtils.forGame<CoerceoComponent>('Coerceo');
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
