@@ -303,7 +303,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             tick(wrapper.maximalMoveDuration);
         }));
-        it('Player accepting take back should move player board backward (dtwo moves)', fakeAsync(async() => {
+        it('Player accepting take back should move player board backward (two moves)', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true });
             tick(1);
 

@@ -19,15 +19,18 @@
                         [attr.cx]="CASE_SIZE/2 + (x * CASE_SIZE)"
                         [attr.cy]="CASE_SIZE/2 + (y * CASE_SIZE)"
                         [attr.fill]="pieceColor(caseContent)"
-                        r="25"
+                        [attr.r]="CASE_SIZE/3"
                         class="base-no-fill"/>
-                <circle *ngIf="caseContent !== UNOCCUPIED"
-                        [attr.cx]="CASE_SIZE/2 + (x * CASE_SIZE)"
-                        [attr.cy]="CASE_SIZE/2 + (y * CASE_SIZE)"
-                        [ngClass]="pieceBorderClass(caseContent)"
-                        r="8"
-                        class="no-stroke"
-                        />
+                <rect *ngIf="caseContent !== UNOCCUPIED"
+                      [attr.x]="CASE_SIZE/2 + (x * CASE_SIZE) - CASE_SIZE/8"
+                      [attr.y]="CASE_SIZE/2 + (y * CASE_SIZE) - CASE_SIZE/8"
+                      [attr.rx]="isPlayerZero(caseContent) ? CASE_SIZE : 0"
+                      [attr.ry]="isPlayerZero(caseContent) ? CASE_SIZE : 0"
+                      [attr.width]="CASE_SIZE/4"
+                      [attr.height]="CASE_SIZE/4"
+                      [ngClass]="piecePlayerClass(caseContent)"
+                      class="no-stroke"
+                      />
 
             </g>
         </g>

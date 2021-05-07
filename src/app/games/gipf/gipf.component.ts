@@ -48,6 +48,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
 
     public scores: number[] = [0, 0];
 
+    public inserted: Arrow = null;
     public arrows: Arrow[] = [];
     public captured: Coord[] = [];
     public moved: Coord[] = [];
@@ -81,8 +82,19 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
     public updateBoard(): void {
         const slice: GipfPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
+
+        const lastMove: GipfMove = this.rules.node.move;
+        if (lastMove != null && lastMove.placement.direction.isPresent()) {
+            this.inserted = this.arrowTowards(lastMove.placement.coord, lastMove.placement.direction.get());
+        }
         this.cancelMoveAttempt();
         this.moveToInitialCaptureOrPlacementPhase();
+    }
+    private arrowTowards(placement: Coord, direction: HexaDirection): Arrow {
+        const previous: Coord = placement.getNext(direction.getOpposite());
+        const center: Coord = this.getCenter(placement);
+        const previousCenter: Coord = this.getCenter(previous);
+        return new Arrow(previous, placement, previousCenter.x, previousCenter.y, center.x, center.y);
     }
     private markCapture(capture: GipfCapture): void {
         capture.forEach((c: Coord) => {

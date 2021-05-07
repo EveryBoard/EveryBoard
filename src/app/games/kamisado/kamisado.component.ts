@@ -32,11 +32,14 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;
     }
+    public isPlayerZero(pieceValue: number): boolean {
+        return KamisadoPiece.of(pieceValue).player === Player.ZERO;
+    }
     public pieceColor(pieceValue: number): string {
         const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
         return piece.color.rgb;
     }
-    public pieceBorderClass(pieceValue: number): string {
+    public piecePlayerClass(pieceValue: number): string {
         const piece: KamisadoPiece = KamisadoPiece.of(pieceValue);
         return this.getPlayerClass(piece.player);
     }
