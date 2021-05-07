@@ -12,7 +12,7 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 import { firebaseConfig } from './firebaseConfig';
 
-import { PartDAO } from './dao/part/PartDAO';
+import { PartDAO } from './dao/PartDAO';
 
 import { ChatService } from './services/chat/ChatService';
 import { UserService } from './services/user/UserService';
@@ -20,8 +20,8 @@ import { AuthenticationService } from './services/authentication/AuthenticationS
 import { GameService } from './services/game/GameService';
 import { JoinerService } from './services/joiner/JoinerService';
 
-import { EmailVerified } from './guard/email-verified/EmailVerified';
-import { MustVerifyEmail } from './guard/must-verify-email/MustVerifyEmail';
+import { EmailVerified } from './guard/EmailVerified';
+import { MustVerifyEmail } from './guard/MustVerifyEmail';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';

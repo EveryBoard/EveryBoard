@@ -1,10 +1,10 @@
 import { fakeAsync } from '@angular/core/testing';
 
 import { JoinerService } from './JoinerService';
-import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { IJoinerId, IJoiner } from 'src/app/domain/ijoiner';
 import { of } from 'rxjs';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
+import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 
 describe('JoinerService', () => {
@@ -53,9 +53,9 @@ describe('JoinerService', () => {
     it('joinGame should throw when called by a candidate already in the game', fakeAsync(async() => {
         dao.set('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.copy());
         const candidateName: string = JoinerMocks.WITH_FIRST_CANDIDATE.copy().candidatesNames[0];
-        const expectedError = 'JoinerService.joinGame was called by a user already in the game';
+        const expectedError: string = 'JoinerService.joinGame was called by a user already in the game';
 
-        let erreur = '';
+        let erreur: string = '';
         try {
             await service.joinGame('joinerId', candidateName);
         } catch (error) {
@@ -121,7 +121,7 @@ describe('JoinerService', () => {
         service.startObserving('joinerId', (iJoiner: IJoinerId) => {});
         service.joinGame('joinerId', 'whoever');
 
-        let threw = false;
+        let threw: boolean = false;
         let errorMessage: string;
 
         try {
@@ -130,7 +130,9 @@ describe('JoinerService', () => {
             errorMessage = error.message;
             threw = true;
         } finally {
-            expect(errorMessage).toEqual('someone that was nor candidate nor chosenPlayer just left the chat: who is that');
+            const expectedError: string =
+                'someone that was nor candidate nor chosenPlayer just left the chat: who is that';
+            expect(errorMessage).toEqual(expectedError);
             expect(threw).toBeTrue();
         }
     }));

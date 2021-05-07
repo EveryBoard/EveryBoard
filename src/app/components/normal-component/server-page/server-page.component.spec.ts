@@ -10,14 +10,14 @@ import { ServerPageComponent } from './server-page.component';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { UserService } from 'src/app/services/user/UserService';
 import { GameService } from 'src/app/services/game/GameService';
-import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
-import { PartDAO } from 'src/app/dao/part/PartDAO';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
-import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
-import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
+import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
+import { PartDAO } from 'src/app/dao/PartDAO';
+import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
+import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
+import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 
 describe('ServerPageComponent', () => {

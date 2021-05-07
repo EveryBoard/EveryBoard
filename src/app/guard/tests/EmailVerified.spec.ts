@@ -1,4 +1,4 @@
-import { EmailVerified } from './EmailVerified';
+import { EmailVerified } from '../EmailVerified';
 import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';

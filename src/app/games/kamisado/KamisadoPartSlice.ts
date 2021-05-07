@@ -4,6 +4,7 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { KamisadoBoard } from './KamisadoBoard';
 import { KamisadoColor } from './KamisadoColor';
 import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { KamisadoPiece } from './KamisadoPiece';
 
 export class KamisadoPartSlice extends GamePartSlice {
     public constructor(turn: number,
@@ -21,6 +22,7 @@ export class KamisadoPartSlice extends GamePartSlice {
                                      KamisadoColor.ANY,
                                      MGPOptional.empty(),
                                      false,
-                                     ArrayUtils.mapBiArray(KamisadoBoard.INITIAL, (p) => p.getValue()));
+                                     ArrayUtils.mapBiArray(KamisadoBoard.INITIAL,
+                                                           (p: KamisadoPiece) => p.getValue()));
     }
 }

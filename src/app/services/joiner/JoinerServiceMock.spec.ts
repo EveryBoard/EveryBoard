@@ -1,5 +1,5 @@
 import { IJoinerId } from 'src/app/domain/ijoiner';
-import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils/utils';
 
 export class JoinerServiceMock {
@@ -66,7 +66,11 @@ export class JoinerServiceMock {
             resolve();
         }); // DO REAL MOCK
     }
-    public async proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
+    public async proposeConfig(maximalMoveDuration: number,
+                               firstPlayer: string,
+                               totalPartDuration: number)
+    : Promise<void>
+    {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.proposeConfig');
         return new Promise((resolve) => {
             resolve();

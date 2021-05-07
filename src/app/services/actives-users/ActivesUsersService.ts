@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { IJoueurId, IJoueur } from '../../domain/iuser';
-import { JoueursDAO } from '../../dao/joueurs/JoueursDAO';
+import { JoueursDAO } from '../../dao/JoueursDAO';
 import { FirebaseCollectionObserver } from '../../dao/FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils/utils';
 

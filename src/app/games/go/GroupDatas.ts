@@ -55,11 +55,11 @@ export class GroupDatas {
                 .concat(this.emptyCoords
                     .concat(this.deadBlackCoords
                         .concat(this.deadWhiteCoords))));
-        return allCoords.some((c) => c.equals(coord));
+        return allCoords.some((c: Coord) => c.equals(coord));
     }
     public selfCountains(coord: Coord): boolean {
         const ownCoords: Coord[] = this.getCoords();
-        return ownCoords.some((c) => c.equals(coord));
+        return ownCoords.some((c: Coord) => c.equals(coord));
     }
     public addPawn(coord: Coord, color: GoPiece): void {
         if (this.countains(coord)) {

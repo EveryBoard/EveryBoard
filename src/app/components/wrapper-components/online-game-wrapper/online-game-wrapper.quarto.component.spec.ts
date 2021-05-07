@@ -1,17 +1,15 @@
 import { TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { DebugElement } from '@angular/core';
 import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
-import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock.spec';
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
-import { PartDAO } from 'src/app/dao/part/PartDAO';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock.spec';
+import { PartDAO } from 'src/app/dao/PartDAO';
+import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
-import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock.spec';
-import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock.spec';
+import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
+import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
@@ -23,6 +21,8 @@ import { IJoueur } from 'src/app/domain/iuser';
 import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
 import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
+import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary

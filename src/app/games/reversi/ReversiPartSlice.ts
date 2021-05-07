@@ -4,9 +4,10 @@ import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
 
 export class ReversiPartSlice extends GamePartSlice {
-    public static readonly BOARD_WIDTH = 8;
 
-    public static readonly BOARD_HEIGHT = 8; // default
+    public static readonly BOARD_WIDTH: number = 8;
+
+    public static readonly BOARD_HEIGHT: number = 8; // default
 
     public static getInitialSlice(): ReversiPartSlice {
         const board: number[][] = ArrayUtils.createBiArray(ReversiPartSlice.BOARD_WIDTH,
@@ -21,8 +22,8 @@ export class ReversiPartSlice extends GamePartSlice {
     public static getNeighbooringPawnLike(board: number[][], searchedValue: number, cx: number, cy: number): Coord[] {
         let c: Coord;
         const result: Coord[] = [];
-        for (let ny = -1; ny < 2; ny++) {
-            for (let nx = -1; nx < 2; nx++) {
+        for (let ny: number = -1; ny < 2; ny++) {
+            for (let nx: number = -1; nx < 2; nx++) {
                 c = new Coord(cx + nx, cy + ny);
                 if (c.isInRange(this.BOARD_WIDTH, this.BOARD_HEIGHT)) {
                     if (board[c.y][c.x] === searchedValue) {
@@ -35,8 +36,8 @@ export class ReversiPartSlice extends GamePartSlice {
     }
     public countScore(): number[] {
         const scores: number[] = [0, 0];
-        for (let y = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
-            for (let x = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
+        for (let y: number = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
+            for (let x: number = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
                 const caseOwner: number = this.board[y][x];
                 if (caseOwner !== Player.NONE.value) {
                     scores[caseOwner] += 1;
