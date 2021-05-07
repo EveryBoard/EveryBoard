@@ -16,7 +16,7 @@ export class PickGameComponent {
         'Gipf', // //////// 15ème: 2021.02.22 ( 4  mois après Dvonn) *Quentin
         'Go', // //////////  6ème: 2019.12.21 (11  mois après Reversi)
         'Kamisado', // //// 11ème: 2020.10.03 (26 jours après arrivée) *Quentin
-        'LinesOfAction', // 18ème: 2020.04.28 (65 jours après Six) *Quentin
+        'LinesOfAction', // 18ème: 2020.04.28 (65 jours après Gipf) *Quentin
         // 'MinimaxTesting', nor counted nor showed on the list, but it could be reached
         'P4', // //////////  1 er: 2018.08.28  (????????????????????)
         'Pylos', // /////// 10ème: 2020.10.02 ( 7  mois après Sahara)
