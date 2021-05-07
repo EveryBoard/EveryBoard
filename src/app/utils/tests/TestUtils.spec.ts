@@ -87,13 +87,13 @@ export class SimpleComponentTestUtils<T> {
 
     private constructor() {}
     public async clickElement(elementName: string): Promise<boolean> {
-        const element: DebugElement = this.fixture.debugElement.query(By.css(elementName));
+        const element: DebugElement = this.findElement(elementName);
         if (element == null) {
-            return null;
+            return false;
         } else {
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
-            this.fixture.detectChanges();
+            this.detectChanges();
             return true;
         }
     }
@@ -128,8 +128,9 @@ export class ComponentTestUtils<T extends GameComponent> {
         const testUtils: ComponentTestUtils<T> = await ComponentTestUtils.basic(game);
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
         testUtils.prepareFixture(wrapperKind);
-        testUtils.fixture.detectChanges();
+        testUtils.detectChanges();
         tick(1);
+        testUtils.bindGameComponent();
         testUtils.prepareSpies();
         return testUtils;
     }
@@ -163,8 +164,10 @@ export class ComponentTestUtils<T extends GameComponent> {
         this.wrapper = this.fixture.debugElement.componentInstance;
         this.debugElement = this.fixture.debugElement;
     }
-    public prepareSpies(): void {
+    public bindGameComponent(): void {
         this.gameComponent = this.wrapper.gameComponent;
+    }
+    public prepareSpies(): void {
         this.cancelMoveSpy = spyOn(this.gameComponent, 'cancelMove').and.callThrough();
         this.chooseMoveSpy = spyOn(this.gameComponent, 'chooseMove').and.callThrough();
         this.onLegalUserMoveSpy = spyOn(this.wrapper, 'onLegalUserMove').and.callThrough();
@@ -301,11 +304,11 @@ export class ComponentTestUtils<T extends GameComponent> {
     public async clickElement(elementName: string): Promise<boolean> {
         const element: DebugElement = this.findElement(elementName);
         if (element == null) {
-            return null;
+            return false;
         } else {
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
-            this.fixture.detectChanges();
+            this.detectChanges();
             return true;
         }
     }

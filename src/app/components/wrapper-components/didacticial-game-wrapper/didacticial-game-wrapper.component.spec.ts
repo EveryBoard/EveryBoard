@@ -374,9 +374,9 @@ describe('DidacticialGameWrapperComponent', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
             // expect next button to be hidden
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeNull();
+            expect(await componentTestUtils.clickElement('#nextButton')).toBeFalse();
             // expect retry button to be hidden
-            expect(await componentTestUtils.clickElement('#retryButton')).toBeNull();
+            expect(await componentTestUtils.clickElement('#retryButton')).toBeFalse();
             // expect restart button to be here
             expect(await componentTestUtils.clickElement('#restartButton')).toBeTrue();
         }));

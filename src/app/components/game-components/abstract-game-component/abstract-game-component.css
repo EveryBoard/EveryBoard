@@ -7,6 +7,10 @@
     stroke: black;
     stroke-width: 8;
 }
+.arrow {
+    stroke: black;
+    stroke-width: 3;
+}
 .background {
     fill: lightgray;
 }
@@ -29,10 +33,10 @@
     stroke: #ffc34d;
 }
 .other-piece {
-    fill: red;
+    fill: forestgreen;
 }
 .other-piece-stroke {
-    stroke: red;
+    stroke: forestgreen;
 }
 .pre-captured {
     fill: pink;
@@ -48,6 +52,9 @@
 }
 .moved {
     fill: gray;
+}
+.moved-stroke {
+    stroke: gray;
 }
 .indicator {
     fill: green;
@@ -71,10 +78,6 @@
 }
 .capturable:hover {
     stroke-width: 8;
-}
-.arrow {
-    stroke: black;
-    stroke-width: 3;
 }
 .no-fill {
     fill: none;

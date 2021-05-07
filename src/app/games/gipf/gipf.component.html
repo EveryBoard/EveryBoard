@@ -7,6 +7,10 @@
                 refX="5" refY="3.5" orient="auto">
             <polygon points="0 0, 10 3.5, 0 7" />
         </marker>
+        <marker id="arrowhead-moved" markerWidth="10" markerHeight="7"
+                refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="moved moved-stroke"/>
+        </marker>
     </defs>
 
     <g *ngFor="let case of getAllCoords();">
@@ -57,5 +61,14 @@
                     class="base small-stroke"
                     />
         </g>
+    </g>
+
+    <g *ngIf="inserted">
+        <line [attr.x1]="inserted.x1"
+              [attr.y1]="inserted.y1"
+              [attr.x2]="inserted.x2"
+              [attr.y2]="inserted.y2"
+              class="arrow moved-stroke"
+              marker-end="url(#arrowhead-moved)" />
     </g>
 </svg>
