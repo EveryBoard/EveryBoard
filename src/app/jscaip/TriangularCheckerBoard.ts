@@ -1,5 +1,5 @@
-import { Coord } from './coord/Coord';
-import { MGPOptional } from '../utils/mgp-optional/MGPOptional';
+import { Coord } from './Coord';
+import { MGPOptional } from '../utils/MGPOptional';
 
 export class TriangularCheckerBoard {
     public static getNeighboors(c: Coord): Coord[] {

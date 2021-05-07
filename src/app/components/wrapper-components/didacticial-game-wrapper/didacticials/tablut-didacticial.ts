@@ -1,7 +1,7 @@
-import { TablutMove } from 'src/app/games/tablut/tablut-move/TablutMove';
-import { TablutCase } from 'src/app/games/tablut/tablut-rules/TablutCase';
+import { TablutMove } from 'src/app/games/tablut/TablutMove';
+import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { DidacticialStep } from '../DidacticialStep';
 
 const _: number = TablutCase.UNOCCUPIED.value;

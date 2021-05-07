@@ -1,6 +1,6 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
-import { TablutCase } from './tablut-rules/TablutCase';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { TablutCase } from './TablutCase';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class TablutPartSlice extends GamePartSlice {
     // Statics Fields:

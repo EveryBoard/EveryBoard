@@ -3,13 +3,13 @@ import {
     Component, ComponentFactoryResolver } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { UserService } from 'src/app/services/user/UserService';
-import { display } from 'src/app/utils/utils/utils';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { UserService } from 'src/app/services/UserService';
+import { display } from 'src/app/utils/utils';
 import { DidacticialStep } from './DidacticialStep';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 import { awaleDidacticial } from './didacticials/awale-didacticial';
 import { coerceoDidacticial } from './didacticials/coerceo-didacticial';

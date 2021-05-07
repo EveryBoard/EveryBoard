@@ -1,5 +1,5 @@
-import { MGPOptional } from '../utils/mgp-optional/MGPOptional';
-import { Coord } from './coord/Coord';
+import { MGPOptional } from '../utils/MGPOptional';
+import { Coord } from './Coord';
 import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';
 import { Move } from './Move';

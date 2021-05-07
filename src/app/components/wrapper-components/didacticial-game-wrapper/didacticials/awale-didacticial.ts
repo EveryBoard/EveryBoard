@@ -1,5 +1,5 @@
 /* eslint-disable max-len */
-import { AwaleMove } from 'src/app/games/awale/awale-move/AwaleMove';
+import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 export const awaleDidacticial: DidacticialStep[] = [
@@ -62,15 +62,15 @@ export const awaleDidacticial: DidacticialStep[] = [
         'Perdu. Recommencez.',
     ),
     DidacticialStep.fromMove(
-        'Capture chez l\'adversaire uniquement',
+        `Capture chez l'adversaire uniquement`,
         'Essayez de capturer les deux maisons les plus à gauche de l’adversaire.',
         new AwalePartSlice([
             [2, 2, 0, 0, 1, 0],
             [1, 3, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [new AwaleMove(1, 1)],
-        'Bravo. Constatez que la capture s\'est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons!',
-        'Vous n\'avez capturé qu\'une seule maison, recommencez!',
+        `Bravo. Constatez que la capture s'est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons!`,
+        `Vous n'avez capturé qu'une seule maison, recommencez!`,
     ),
     DidacticialStep.fromMove(
         'Ne pas affamer',
@@ -85,7 +85,7 @@ export const awaleDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.anyMove(
         'Nourir est obligatoire',
-        `"Affamer" est interdit, c'est-à-dire: si votre adversaire n\'a plus de graines et que vous savez lui en donner une ou plusieurs, vous êtes obligé de le faire.
+        `"Affamer" est interdit, c'est-à-dire: si votre adversaire n'a plus de graines et que vous savez lui en donner une ou plusieurs, vous êtes obligé de le faire.
          Allez-y!`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],

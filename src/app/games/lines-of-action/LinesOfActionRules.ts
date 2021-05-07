@@ -1,13 +1,13 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
-import { Player } from 'src/app/jscaip/player/Player';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
@@ -19,7 +19,8 @@ export class LinesOfActionFailure {
     public static BUSY_TARGET: string = `Votre case d'arrivée doit être vide ou contenir une pièce ennemie.`;
     public static NOT_YOUR_PIECE: string = `Veuillez sélectionner une de vos propres pièces.`;
     public static PIECE_CANNOT_MOVE: string = `Cette pièce n'a aucun mouvement possible, choisissez-en une autre.`;
-    public static INVALID_DIRECTION: string = `Un mouvement dois se faire selon une direction orthogonale ou diagonale.`;
+    public static INVALID_DIRECTION: string =
+        `Un mouvement dois se faire selon une direction orthogonale ou diagonale.`;
 }
 
 export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
@@ -27,7 +28,7 @@ export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
                                                LinesOfActionState,
                                                LegalityStatus> {}
 
-export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState, LegalityStatus> {
+export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
     public getListMoves(node: LinesOfActionNode): MGPMap<LinesOfActionMove, LinesOfActionState> {
         return this.getListMovesFromState(node.gamePartSlice);
     }

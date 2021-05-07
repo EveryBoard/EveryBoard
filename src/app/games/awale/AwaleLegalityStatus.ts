@@ -1,4 +1,4 @@
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 export class AwaleLegalityStatus implements LegalityStatus {

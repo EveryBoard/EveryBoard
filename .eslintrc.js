@@ -16,6 +16,7 @@ module.exports = {
     ],
     extends: ['eslint:recommended', 'google', 'plugin:@typescript-eslint/recommended'],
     rules: {
+        'complexity': ['error', 20],
         '@typescript-eslint/typedef': [
             'warn',
             {
@@ -27,7 +28,7 @@ module.exports = {
             },
         ],
         '@typescript-eslint/no-empty-function': ['off'],
-        '@typescript-eslint/no-namespace': ['warn'],
+        '@typescript-eslint/no-namespace': ['off'],
         '@typescript-eslint/ban-types': [
             'error',
             { 'types': { 'String': { 'message': 'Use string instead', 'fixWith': 'string' } } },
@@ -50,7 +51,7 @@ module.exports = {
         'new-cap': ['off'], // Because there are false positives
         'no-undef': ['off'], // Because there are false positives
         'valid-jsdoc': ['off'], // Because we do not use jsdoc
-        'no-unused-vars': ['error'],
+        '@typescript-eslint/no-unused-vars': ['error', { 'args': 'none' }],
         'no-invalid-this': ['warn'],
         'indent': [
             'error', 4,

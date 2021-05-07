@@ -2,35 +2,35 @@ import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Ty
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractGameComponent } from '../game-components/abstract-game-component/AbstractGameComponent';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
-import { UserService } from '../../services/user/UserService';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { UserService } from '../../services/UserService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 import { Move } from '../../jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
-import { AwaleComponent } from '../game-components/awale/awale.component';
-import { CoerceoComponent } from '../game-components/coerceo/coerceo.component';
-import { DvonnComponent } from '../game-components/dvonn/dvonn.component';
-import { EncapsuleComponent } from '../game-components/encapsule/encapsule.component';
-import { EpaminondasComponent } from '../game-components/epaminondas/epaminondas.component';
-import { GipfComponent } from '../game-components/gipf/gipf.component';
-import { GoComponent } from '../game-components/go/go.component';
-import { KamisadoComponent } from '../game-components/kamisado/kamisado.component';
+import { AwaleComponent } from '../../games/awale/awale.component';
+import { CoerceoComponent } from '../../games/coerceo/coerceo.component';
+import { DvonnComponent } from '../../games/dvonn/dvonn.component';
+import { EncapsuleComponent } from '../../games/encapsule/encapsule.component';
+import { EpaminondasComponent } from '../../games/epaminondas/epaminondas.component';
+import { GipfComponent } from '../../games/gipf/gipf.component';
+import { GoComponent } from '../../games/go/go.component';
+import { KamisadoComponent } from '../../games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from 'src/app/games/lines-of-action/LinesOfActionComponent';
-import { MinimaxTestingComponent } from '../game-components/minimax-testing/minimax-testing.component';
-import { P4Component } from '../game-components/p4/p4.component';
-import { PylosComponent } from '../game-components/pylos/pylos.component';
-import { QuartoComponent } from '../game-components/quarto/quarto.component';
-import { QuixoComponent } from '../game-components/quixo/quixo.component';
-import { ReversiComponent } from '../game-components/reversi/reversi.component';
-import { SaharaComponent } from '../game-components/sahara/sahara.component';
-import { SiamComponent } from '../game-components/siam/siam.component';
-import { SixComponent } from '../game-components/six/six.component';
-import { TablutComponent } from '../game-components/tablut/tablut.component';
+import { MinimaxTestingComponent } from '../../games/minimax-testing/minimax-testing.component';
+import { P4Component } from '../../games/p4/p4.component';
+import { PylosComponent } from '../../games/pylos/pylos.component';
+import { QuartoComponent } from '../../games/quarto/quarto.component';
+import { QuixoComponent } from '../../games/quixo/quixo.component';
+import { ReversiComponent } from '../../games/reversi/reversi.component';
+import { SaharaComponent } from '../../games/sahara/sahara.component';
+import { SiamComponent } from '../../games/siam/siam.component';
+import { SixComponent } from '../../games/six/six.component';
+import { TablutComponent } from '../../games/tablut/tablut.component';
 
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/utils/utils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { display } from 'src/app/utils/utils';
 
 @Component({ template: '' })
 export abstract class GameWrapper {
@@ -40,7 +40,7 @@ export abstract class GameWrapper {
     @ViewChild(GameIncluderComponent)
     public gameIncluder: GameIncluderComponent;
 
-    public gameComponent: AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
+    public gameComponent: AbstractGameComponent<Move, GamePartSlice>;
 
     public userName: string = this.authenticationService.getAuthenticatedUser() &&
                               this.authenticationService.getAuthenticatedUser().pseudo // TODO, clean that;
@@ -61,7 +61,7 @@ export abstract class GameWrapper {
     ) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
-    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> {
+    public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
 
         switch (compoString) {
@@ -120,13 +120,13 @@ export abstract class GameWrapper {
         display(GameWrapper.VERBOSE && this.gameIncluder == null, 'GameIncluder should be present');
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
-        const component: Type<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> =
+        const component: Type<AbstractGameComponent<Move, GamePartSlice>> =
             this.getMatchingComponent(compoString);
-        const componentFactory: ComponentFactory<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> =
+        const componentFactory: ComponentFactory<AbstractGameComponent<Move, GamePartSlice>> =
             this.componentFactoryResolver.resolveComponentFactory(component);
-        const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice, LegalityStatus>> =
+        const componentRef: ComponentRef<AbstractGameComponent<Move, GamePartSlice>> =
             this.gameIncluder.viewContainerRef.createComponent(componentFactory);
-        this.gameComponent = <AbstractGameComponent<Move, GamePartSlice, LegalityStatus>>componentRef.instance;
+        this.gameComponent = <AbstractGameComponent<Move, GamePartSlice>>componentRef.instance;
         // Shortent by T<S = Truc>
 
         this.gameComponent.chooseMove = this.receiveValidMove; // so that when the game component do a move
@@ -209,7 +209,7 @@ export abstract class GameWrapper {
             return true;
         }
     }
-    get compo(): AbstractGameComponent<Move, GamePartSlice, LegalityStatus> {
+    get compo(): AbstractGameComponent<Move, GamePartSlice> {
         return this.gameComponent;
     }
 }

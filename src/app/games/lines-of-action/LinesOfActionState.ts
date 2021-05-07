@@ -1,7 +1,7 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
-import { assert } from 'src/app/utils/utils/utils';
+import { Player } from 'src/app/jscaip/Player';
+import { assert } from 'src/app/utils/utils';
 
 export class LinesOfActionState extends GamePartSlice {
     public static SIZE: number = 8; // board size

@@ -1,7 +1,7 @@
-import { EpaminondasMove } from 'src/app/games/epaminondas/epaminondas-move/EpaminondasMove';
-import { EpaminondasPartSlice } from 'src/app/games/epaminondas/epaminondas-part-slice/EpaminondasPartSlice';
+import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
+import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Player } from 'src/app/jscaip/Player';
 import { DidacticialStep } from '../DidacticialStep';
 
 const _: number = Player.NONE.value;

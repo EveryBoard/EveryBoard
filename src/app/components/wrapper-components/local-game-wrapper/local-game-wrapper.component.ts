@@ -1,12 +1,12 @@
 import { Component, ComponentFactoryResolver, AfterViewInit,
     ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
-import { UserService } from 'src/app/services/user/UserService';
-import { display } from 'src/app/utils/utils/utils';
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { UserService } from 'src/app/services/UserService';
+import { display } from 'src/app/utils/utils';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 
 @Component({
@@ -78,7 +78,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             setTimeout(() => {
                 // called only when it's AI's Turn
                 if (!this.gameComponent.rules.node.isEndGame()) {
-                    const aiMove: Move = this.gameComponent.rules.node.findBestMoveAndSetDepth(this.aiDepth).move;
+                    const aiMove: Move = this.gameComponent.rules.node.findBestMove(this.aiDepth);
                     if (this.gameComponent.rules.choose(aiMove)) {
                         this.updateBoard();
                         this.cdr.detectChanges();
@@ -118,7 +118,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }
     }
     public restartGame(): void {
-        const state: GamePartSlice = this.gameComponent.rules.sliceType['getInitialSlice']();
+        const state: GamePartSlice = this.gameComponent.rules.stateType['getInitialSlice']();
         this.gameComponent.rules.node = new MGPNode(null, null, state, 0);
         this.gameComponent.updateBoard();
         this.endGame = false;

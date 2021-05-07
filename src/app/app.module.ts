@@ -12,16 +12,16 @@ import { AngularFireAuth } from '@angular/fire/auth';
 
 import { firebaseConfig } from './firebaseConfig';
 
-import { PartDAO } from './dao/part/PartDAO';
+import { PartDAO } from './dao/PartDAO';
 
-import { ChatService } from './services/chat/ChatService';
-import { UserService } from './services/user/UserService';
-import { AuthenticationService } from './services/authentication/AuthenticationService';
-import { GameService } from './services/game/GameService';
-import { JoinerService } from './services/joiner/JoinerService';
+import { ChatService } from './services/ChatService';
+import { UserService } from './services/UserService';
+import { AuthenticationService } from './services/AuthenticationService';
+import { GameService } from './services/GameService';
+import { JoinerService } from './services/JoinerService';
 
-import { EmailVerified } from './guard/email-verified/EmailVerified';
-import { MustVerifyEmail } from './guard/must-verify-email/MustVerifyEmail';
+import { EmailVerified } from './guard/EmailVerified';
+import { MustVerifyEmail } from './guard/MustVerifyEmail';
 
 import { AppComponent } from './app.component';
 import { HeaderComponent } from './components/normal-component/header/header.component';
@@ -50,25 +50,25 @@ import { OnlineGameCreationComponent }
 import { DidacticialGameCreationComponent }
     from './components/normal-component/didacticial-game-creation/didacticial-game-creation.component';
 
-import { AwaleComponent } from './components/game-components/awale/awale.component';
-import { CoerceoComponent } from './components/game-components/coerceo/coerceo.component';
-import { DvonnComponent } from './components/game-components/dvonn/dvonn.component';
-import { EncapsuleComponent } from './components/game-components/encapsule/encapsule.component';
-import { EpaminondasComponent } from './components/game-components/epaminondas/epaminondas.component';
-import { GipfComponent } from './components/game-components/gipf/gipf.component';
-import { GoComponent } from './components/game-components/go/go.component';
-import { KamisadoComponent } from './components/game-components/kamisado/kamisado.component';
+import { AwaleComponent } from './games/awale/awale.component';
+import { CoerceoComponent } from './games/coerceo/coerceo.component';
+import { DvonnComponent } from './games/dvonn/dvonn.component';
+import { EncapsuleComponent } from './games/encapsule/encapsule.component';
+import { EpaminondasComponent } from './games/epaminondas/epaminondas.component';
+import { GipfComponent } from './games/gipf/gipf.component';
+import { GoComponent } from './games/go/go.component';
+import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from './games/lines-of-action/LinesOfActionComponent';
-import { MinimaxTestingComponent } from './components/game-components/minimax-testing/minimax-testing.component';
-import { P4Component } from './components/game-components/p4/p4.component';
-import { PylosComponent } from './components/game-components/pylos/pylos.component';
-import { QuartoComponent } from './components/game-components/quarto/quarto.component';
-import { QuixoComponent } from './components/game-components/quixo/quixo.component';
-import { ReversiComponent } from './components/game-components/reversi/reversi.component';
-import { SaharaComponent } from './components/game-components/sahara/sahara.component';
-import { SiamComponent } from './components/game-components/siam/siam.component';
-import { SixComponent } from './components/game-components/six/six.component';
-import { TablutComponent } from './components/game-components/tablut/tablut.component';
+import { MinimaxTestingComponent } from './games/minimax-testing/minimax-testing.component';
+import { P4Component } from './games/p4/p4.component';
+import { PylosComponent } from './games/pylos/pylos.component';
+import { QuartoComponent } from './games/quarto/quarto.component';
+import { QuixoComponent } from './games/quixo/quixo.component';
+import { ReversiComponent } from './games/reversi/reversi.component';
+import { SaharaComponent } from './games/sahara/sahara.component';
+import { SiamComponent } from './games/siam/siam.component';
+import { SixComponent } from './games/six/six.component';
+import { TablutComponent } from './games/tablut/tablut.component';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 

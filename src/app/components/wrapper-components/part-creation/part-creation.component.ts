@@ -2,12 +2,12 @@ import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angu
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { IJoiner, IJoinerId } from '../../../domain/ijoiner';
 import { Router } from '@angular/router';
-import { GameService } from '../../../services/game/GameService';
-import { JoinerService } from '../../../services/joiner/JoinerService';
-import { ChatService } from '../../../services/chat/ChatService';
-import { display } from 'src/app/utils/utils/utils';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { UserService } from 'src/app/services/user/UserService';
+import { GameService } from '../../../services/GameService';
+import { JoinerService } from '../../../services/JoinerService';
+import { ChatService } from '../../../services/ChatService';
+import { display } from 'src/app/utils/utils';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { UserService } from 'src/app/services/UserService';
 import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 

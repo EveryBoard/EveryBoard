@@ -3,24 +3,24 @@ import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { GameService } from 'src/app/services/game/GameService';
-import { UserService } from 'src/app/services/user/UserService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { GameService } from 'src/app/services/GameService';
+import { UserService } from 'src/app/services/UserService';
 
 import { Move } from '../../../jscaip/Move';
 import { ICurrentPart, ICurrentPartId, Part, MGPResult } from '../../../domain/icurrentpart';
 import { CountDownComponent } from '../../normal-component/count-down/count-down.component';
 import { PartCreationComponent } from '../part-creation/part-creation.component';
 import { IJoueurId, IJoueur } from '../../../domain/iuser';
-import { IMGPRequest, RequestCode } from '../../../domain/request';
+import { Request } from '../../../domain/request';
 import { GameWrapper } from '../GameWrapper';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
-import { Player } from 'src/app/jscaip/player/Player';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { assert, display, JSONValue } from 'src/app/utils/utils/utils';
-import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/object-utils/ObjectUtils';
+import { Player } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { assert, display, JSONValue } from 'src/app/utils/utils';
+import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/ObjectUtils';
 
 export class UpdateType {
 
@@ -65,8 +65,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public opponent: IJoueurId = null;
     public currentPlayer: string;
 
-    public rematchProposed: boolean = null;
-    public opponentProposedRematch: boolean = null;
+    public rematchProposed: boolean = false;
+    public opponentProposedRematch: boolean = false;
 
     public maximalMoveDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
     public totalPartDuration: number; // TODO: rendre inutile, remplacé par l'instance d'ICurrentPartId
@@ -97,6 +97,18 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     private extractGameTypeFromURL(): string {
         // url is ["play", "game-name", "part-id"]
         return this.actRoute.snapshot.paramMap.get('compo');
+    }
+    private isPlaying(): boolean {
+        return this.observerRole === 0 || this.observerRole === 1;
+    }
+    private getPlayer(): Player {
+        return Player.of(this.observerRole);
+    }
+    private isPlayer(player: Player): boolean {
+        return this.observerRole === player.value;
+    }
+    private isOpponent(player: Player): boolean {
+        return this.observerRole !== player.value;
     }
     private async redirectIfPartIsInvalid(): Promise<void> {
         const gameType: string = this.extractGameTypeFromURL();
@@ -148,8 +160,8 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.opponent = null;
 
         this.canPass = null;
-        this.rematchProposed = null;
-        this.opponentProposedRematch = null;
+        this.rematchProposed = false;
+        this.opponentProposedRematch = false;
         this.currentPartId = this.actRoute.snapshot.paramMap.get('id');
     }
     public startGame(iJoiner: IJoiner): void {
@@ -349,18 +361,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             return false;
         }
         const currentPart: ICurrentPart = this.currentPart.copy();
-        if (this.observerRole === 2) {
+        if (this.isPlaying() === false) {
             return false;
         } else if (currentPart.turn <= this.observerRole) {
             return false;
-        } else if (this.observerRole === 0 &&
-                   currentPart.request &&
-                   currentPart.request.code === RequestCode.ONE_REFUSED_TAKE_BACK.toInterface().code)
-        {
-            return false;
-        } else if (this.observerRole === 1 &&
-                   currentPart.request &&
-                   currentPart.request.code === RequestCode.ZERO_REFUSED_TAKE_BACK.toInterface().code)
+        } else if (currentPart.request &&
+                   currentPart.request.code === 'TakeBackRefused' &&
+                   currentPart.request.data['player'] === this.getPlayer().getOpponent().value)
         {
             return false;
         } else if (this.getTakeBackRequester() === Player.NONE) {
@@ -371,64 +378,93 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     }
     public isOpponentWaitingForTakeBackResponse(): boolean {
         const takeBackRequester: Player = this.getTakeBackRequester();
-        if (takeBackRequester === Player.ONE && this.observerRole === 0) return true;
-        if (takeBackRequester === Player.ZERO && this.observerRole === 1) return true;
-        return false;
+        if (takeBackRequester === Player.NONE) return false;
+        return this.isOpponent(takeBackRequester);
     }
     private getTakeBackRequester(): Player {
         if (this.currentPart == null) {
             return Player.NONE;
         }
-        const request: IMGPRequest = this.currentPart.copy().request;
-        if (request == null) {
-            return Player.NONE;
-        } else if (request.code === RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code) {
-            return Player.ZERO;
-        } else if (request.code === RequestCode.ONE_ASKED_TAKE_BACK.toInterface().code) {
-            return Player.ONE;
+        const request: Request = this.currentPart.copy().request;
+        if (request && request.code === 'TakeBackAsked') {
+            return Player.of(request.data['player']);
         } else {
             return Player.NONE;
         }
     }
-    protected onRequest(request: IMGPRequest): void {
+    public canProposeDraw(): boolean {
+        if (this.endGame) {
+            return false;
+        }
+        if (this.currentPart == null) {
+            return false;
+        }
+        const currentPart: ICurrentPart = this.currentPart.copy();
+        if (this.isPlaying() === false) {
+            return false;
+        } else if (currentPart.request &&
+                   currentPart.request.code === 'DrawRefused' &&
+                   currentPart.request.data['player'] === this.getPlayer().getOpponent().value)
+        {
+            return false;
+        } else if (this.isOpponentWaitingForDrawResponse()) {
+            return false;
+        } else if (this.getDrawRequester() === Player.NONE) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+    public isOpponentWaitingForDrawResponse(): boolean {
+        const drawRequester: Player = this.getDrawRequester();
+        if (drawRequester === Player.NONE) return false;
+        return this.isOpponent(drawRequester);
+    }
+    private getDrawRequester(): Player {
+        if (this.currentPart == null) {
+            return Player.NONE;
+        }
+        const request: Request = this.currentPart.copy().request;
+        if (request == null) {
+            return Player.NONE;
+        } else if (request.code === 'DrawProposed') {
+            return Player.of(request.data['player']);
+        } else {
+            return Player.NONE;
+        }
+    }
+    protected onRequest(request: Request): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'dans OnlineGameWrapper.onRequest(' + request.code + ')');
         switch (request.code) {
-            case RequestCode.ONE_ASKED_TAKE_BACK.toInterface().code:
+            case 'TakeBackAsked':
                 break;
-            case RequestCode.ZERO_ASKED_TAKE_BACK.toInterface().code:
+            case 'TakeBackRefused':
                 break;
-            case RequestCode.ONE_REFUSED_TAKE_BACK.toInterface().code:
+            case 'TakeBackAccepted':
+                this.takeBackFor(Player.of(request.data['player']).getOpponent());
                 break;
-            case RequestCode.ZERO_REFUSED_TAKE_BACK.toInterface().code:
-                break;
-            case RequestCode.ZERO_ACCEPTED_TAKE_BACK.toInterface().code:
-                this.takeBackFor(Player.ONE);
-                break;
-            case RequestCode.ONE_ACCEPTED_TAKE_BACK.toInterface().code:
-                this.takeBackFor(Player.ZERO);
-                break;
-            case RequestCode.ZERO_PROPOSED_REMATCH.toInterface().code: // 0 propose un rematch
+            case 'RematchProposed':
                 this.rematchProposed = true;
-                if (this.observerRole === 1) {
-                    display(OnlineGameWrapperComponent.VERBOSE, 'ton adversaire te propose une revanche, 1');
+                if (this.isPlayer(Player.of(request.data['player']).getOpponent())) {
+                    display(OnlineGameWrapperComponent.VERBOSE, 'ton adversaire te propose une revanche');
                     this.opponentProposedRematch = true;
                 }
                 break;
-            case RequestCode.ONE_PROPOSED_REMATCH.toInterface().code: // 1 propose un rematch
-                this.rematchProposed = true;
-                if (this.observerRole === 0) {
-                    display(OnlineGameWrapperComponent.VERBOSE, 'ton adversaire te propose une revanche, 0');
-                    this.opponentProposedRematch = true;
-                }
-                break;
-            case RequestCode.REMATCH_ACCEPTED.toInterface().code: // rematch accepted
+            case 'RematchAccepted':
                 this.router
-                    .navigate(['/' + request.typeGame + '/' + request.partId])
-                    .then((onSuccess) => {
+                    .navigate(['/' + request.data['typeGame'] + '/' + request.data['partId']])
+                    .then(() => {
                         this.ngOnDestroy();
                         this.resetGameDatas();
                         this.startGame(null);
                     });
+                break;
+            case 'DrawProposed':
+                break;
+            case 'DrawRefused':
+                break;
+            case 'DrawAccepted':
+                this.acceptDraw();
                 break;
             default:
                 throw new Error('there was an error : ' + JSON.stringify(request) + ' had ' + request.code + ' value');
@@ -525,7 +561,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public acceptRematch(): void {
-        if (this.observerRole === 0 || this.observerRole === 1) {
+        if (this.isPlaying()) {
             const currentPartId: ICurrentPartId = {
                 id: this.currentPartId,
                 doc: this.currentPart.copy(),
@@ -534,9 +570,19 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public proposeRematch(): void {
-        if (this.observerRole === 0 || this.observerRole === 1) {
-            this.gameService.proposeRematch(this.currentPartId, this.observerRole);
+        if (this.isPlaying()) {
+            this.gameService.proposeRematch(this.currentPartId, this.getPlayer());
         }
+    }
+    public proposeDraw(): void {
+        this.gameService.proposeDraw(this.currentPartId, this.getPlayer());
+    }
+    public acceptDraw(): void {
+        this.gameService.acceptDraw(this.currentPartId);
+    }
+    public refuseDraw(): void {
+        const player: Player = Player.of(this.observerRole);
+        this.gameService.refuseDraw(this.currentPartId, player);
     }
     public askTakeBack(): void {
         const player: Player = Player.of(this.observerRole);

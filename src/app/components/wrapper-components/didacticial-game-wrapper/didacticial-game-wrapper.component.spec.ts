@@ -1,30 +1,27 @@
 import { DidacticialGameWrapperComponent } from './didacticial-game-wrapper.component';
 import { DidacticialStep } from './DidacticialStep';
-import { QuartoMove } from 'src/app/games/quarto/quarto-move/QuartoMove';
+import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync, tick } from '@angular/core/testing';
-import { QuartoComponent } from '../../game-components/quarto/quarto.component';
+import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { DebugElement } from '@angular/core';
 
 describe('DidacticialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
-    let component: DidacticialGameWrapperComponent;
+    let wrapper: DidacticialGameWrapperComponent;
 
-    function getGameComponent(): QuartoComponent {
-        return componentTestUtils.getComponent();
-    }
     beforeEach(fakeAsync(async() => {
         componentTestUtils =
-            new ComponentTestUtils<QuartoComponent>('Quarto', DidacticialGameWrapperComponent);
-        component = componentTestUtils.debugElement.componentInstance;
+            await ComponentTestUtils.forGame<QuartoComponent>('Quarto', DidacticialGameWrapperComponent);
+        wrapper = componentTestUtils.wrapper as DidacticialGameWrapperComponent;
     }));
     describe('Common behavior', () => {
         // ///////////////////////// BEFORE ///////////////////////////////////////
         it('should create', () => {
             expect(componentTestUtils.wrapper).toBeTruthy();
-            expect(component).toBeTruthy();
+            expect(componentTestUtils.getComponent()).toBeTruthy();
         });
         it('Should show informations bellow/beside the board', fakeAsync(async() => {
             // Given a certain DidacticialStep
@@ -45,13 +42,14 @@ describe('DidacticialGameWrapperComponent', () => {
                 ),
             ];
             // when starting didacticial
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // expect to see step instruction on component
             const expectedMessage: string = 'instruction';
             const currentMessage: string = componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const actualSlice: QuartoPartSlice = getGameComponent().rules.node.gamePartSlice as QuartoPartSlice;
+            const actualSlice: QuartoPartSlice =
+                componentTestUtils.getComponent().rules.node.gamePartSlice as QuartoPartSlice;
             expect(actualSlice).toEqual(slice);
         }));
         it('Should show title of the steps, the selected one in bold', fakeAsync(async() => {
@@ -74,7 +72,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 ),
             ];
             // when page rendered
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // expect to see three "li" with step title
             let expectedTitle: string = '<span style="color: black;"><b>title 0</b></span>';
@@ -85,8 +83,8 @@ describe('DidacticialGameWrapperComponent', () => {
             expect(currentTitle).toBe(expectedTitle);
         }));
         it('It should throw when trying to reach unexisting game', fakeAsync(async() => {
-            spyOn(componentTestUtils.activatedRouteStub.snapshot.paramMap, 'get').and.returnValue('IDontExist');
-            expect(() => component.getDidacticial()).toThrowError('Unknown Game IDontExist.');
+            componentTestUtils.setRoute('compo', 'IDontExist');
+            expect(() => wrapper.getDidacticial()).toThrowError('Unknown Game IDontExist.');
         }));
         // ///////////////////////// ATTEMPTING ///////////////////////////////////
         it('Should go to specific step when clicking on it', fakeAsync(async() => {
@@ -108,7 +106,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     QuartoPartSlice.getInitialSlice(),
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // when clicking on step 2
             expect(await componentTestUtils.clickElement('#step_2')).toBeTruthy();
@@ -131,7 +129,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
             await componentTestUtils.expectClickSuccess('#choosePiece_8');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
@@ -145,7 +143,8 @@ describe('DidacticialGameWrapperComponent', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(getGameComponent().rules.node.gamePartSlice).toEqual(QuartoPartSlice.getInitialSlice());
+            expect(componentTestUtils.getComponent().rules.node.gamePartSlice)
+                .toEqual(QuartoPartSlice.getInitialSlice());
         }));
         it('Should start step again after clicking "retry" on step success', fakeAsync(async() => {
             // Given any DidacticialStep
@@ -159,7 +158,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
             // when doing another move, then clicking retry
             await componentTestUtils.expectClickSuccess('#choosePiece_15');
             tick(10);
@@ -172,7 +171,8 @@ describe('DidacticialGameWrapperComponent', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('instruction');
-            expect(getGameComponent().rules.node.gamePartSlice).toEqual(QuartoPartSlice.getInitialSlice());
+            expect(componentTestUtils.getComponent().rules.node.gamePartSlice)
+                .toEqual(QuartoPartSlice.getInitialSlice());
         }));
         it('Should forbid clicking again on the board after success', fakeAsync(async() => {
             // Given a DidacticialStep on which a valid move has been done.
@@ -191,7 +191,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
             tick(10);
@@ -211,7 +211,7 @@ describe('DidacticialGameWrapperComponent', () => {
         }));
         it('Should allow clicking again after restarting succeeded steps', fakeAsync(async() => {
             // Given any DidacticialStep whose step has been succeeded and restarted
-            component.steps = [
+            wrapper.steps = [
                 DidacticialStep.forClick(
                     'title',
                     'instruction',
@@ -231,12 +231,13 @@ describe('DidacticialGameWrapperComponent', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Bravo.');
-            expect(getGameComponent().rules.node.gamePartSlice).toEqual(QuartoPartSlice.getInitialSlice());
+            expect(componentTestUtils.getComponent().rules.node.gamePartSlice)
+                .toEqual(QuartoPartSlice.getInitialSlice());
         }));
         // /////////////////////// Next /////////////////////////////////////////////////////////
         it('Should allow to skip step', fakeAsync(async() => {
             // Given a DidacticialStep with one clic
-            component.steps = [
+            wrapper.steps = [
                 DidacticialStep.forClick(
                     'title',
                     'Explanation Explanation Explanation.',
@@ -262,7 +263,7 @@ describe('DidacticialGameWrapperComponent', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            expect(component.stepFinished[0]).toBeFalse();
+            expect(wrapper.stepFinished[0]).toBeFalse();
         }));
         it('Should move to the next unfinished step when next step is finished', fakeAsync(async() => {
             // Given a didacticial on which the two first steps have been skipped
@@ -292,7 +293,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
             expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
             expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
             await componentTestUtils.expectClickSuccess('#chooseCoord_2_2');
@@ -334,7 +335,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
             expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue(); // Go to 1
             await componentTestUtils.expectClickSuccess('#chooseCoord_1_1'); // Do 1
             expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue(); // Go to 2
@@ -361,27 +362,27 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
 
             // when clicking next button
             expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
 
             // expect to see end tutorial congratulations
-            const expectedMessage: string = component.COMPLETED_TUTORIAL_MESSAGE;
+            const expectedMessage: string = wrapper.COMPLETED_TUTORIAL_MESSAGE;
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
             // expect next button to be hidden
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeNull();
+            expect(await componentTestUtils.clickElement('#nextButton')).toBeFalse();
             // expect retry button to be hidden
-            expect(await componentTestUtils.clickElement('#retryButton')).toBeNull();
+            expect(await componentTestUtils.clickElement('#retryButton')).toBeFalse();
             // expect restart button to be here
             expect(await componentTestUtils.clickElement('#restartButton')).toBeTrue();
         }));
         it('Should allow to restart the whole didacticial when finished', fakeAsync(async() => {
             // Given a finish tutorial
-            component.startDidacticial([
+            wrapper.startDidacticial([
                 DidacticialStep.informational(
                     'title 0',
                     'instruction 0',
@@ -402,9 +403,9 @@ describe('DidacticialGameWrapperComponent', () => {
             // expect to be back on first step
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
-            expect(currentMessage).toBe(component.steps[0].instruction);
-            expect(component.stepFinished.every((v: boolean) => v === false)).toBeTrue();
-            expect(component.stepIndex).toEqual(0);
+            expect(currentMessage).toBe(wrapper.steps[0].instruction);
+            expect(wrapper.stepFinished.every((v: boolean) => v === false)).toBeTrue();
+            expect(wrapper.stepIndex).toEqual(0);
         }));
     });
     describe('DidacticialStep awaiting specific moves', () => {
@@ -425,7 +426,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // when doing that move
             await componentTestUtils.expectClickSuccess('#chooseCoord_3_3');
@@ -452,7 +453,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // when doing that move
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
@@ -484,7 +485,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // when doing another move
             await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
@@ -518,7 +519,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
             await componentTestUtils.expectClickFailure('#chooseCoord_0_0', 'Choisissez une case vide.');
             tick(10);
 
@@ -532,7 +533,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(expectedReason);
             // expect click to be still possible
-            expect(getGameComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
+            expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
             tick(10);
         }));
         it('Should propose to see the solution When move attempt done', fakeAsync(async() => {
@@ -554,28 +555,28 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
             await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
             tick(10);
             const move: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAA);
             await componentTestUtils.expectMoveSuccess('#choosePiece_8', move);
             tick(10);
-            expect(component.moveAttemptMade).toBeTrue();
-            expect(component.stepFinished[component.stepIndex])
+            expect(wrapper.moveAttemptMade).toBeTrue();
+            expect(wrapper.stepFinished[wrapper.stepIndex])
                 .toBeFalse();
 
             // When clicking "Show Solution"
             expect(await componentTestUtils.clickElement('#showSolutionButton')).toBeTrue();
 
             // Expect the first awaited move to have been done
-            expect(getGameComponent().rules.node.move).toEqual(awaitedMove);
-            expect(getGameComponent().rules.node.gamePartSlice.turn).toEqual(stepInitialTurn + 1);
+            expect(componentTestUtils.getComponent().rules.node.move).toEqual(awaitedMove);
+            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toEqual(stepInitialTurn + 1);
             // expect 'solution' message to be shown
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Bravo.');
             // expect step not to be considered a success
-            expect(component.stepFinished[component.stepIndex])
+            expect(wrapper.stepFinished[wrapper.stepIndex])
                 .toBeFalse();
         }));
     });
@@ -590,7 +591,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Bravo.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // when doing any move
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
@@ -619,7 +620,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // when doing that move
             await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
@@ -642,7 +643,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // when doing another move
             await componentTestUtils.expectClickSuccess('#chooseCoord_1_1');
@@ -670,7 +671,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'Perdu.',
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // When doing invalid click
             await componentTestUtils.expectClickFailure('#chooseCoord_0_0', 'Choisissez une case vide.');
@@ -685,7 +686,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(expectedReason);
             // expect click to be still possible
-            expect(getGameComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
+            expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
         }));
     });
     describe('Informational DidacticialStep', () => {
@@ -698,7 +699,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     QuartoPartSlice.getInitialSlice(),
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
 
             // when clicking
             await componentTestUtils.expectClickForbidden('#chooseCoord_2_2');
@@ -723,7 +724,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     QuartoPartSlice.getInitialSlice(),
                 ),
             ];
-            component.startDidacticial(didacticial);
+            wrapper.startDidacticial(didacticial);
             // when clicking "Next Button"
             const nextButtonMessage: string =
                 componentTestUtils.findElement('#nextButton').nativeElement.innerHTML;
@@ -735,7 +736,7 @@ describe('DidacticialGameWrapperComponent', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            expect(component.stepFinished[0]).toBeTrue();
+            expect(wrapper.stepFinished[0]).toBeTrue();
         }));
     });
 });

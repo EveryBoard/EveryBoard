@@ -1,12 +1,12 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Player } from 'src/app/jscaip/player/Player';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { Player } from 'src/app/jscaip/Player';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
 import { SixFailure } from '../SixFailure';
-import { SixRules } from '../SixRules';
+import { SixNodeUnheritance, SixRules } from '../SixRules';
 import { Vector } from 'src/app/jscaip/Direction';
 
 describe('SixRules', () => {
@@ -18,6 +18,19 @@ describe('SixRules', () => {
 
     beforeEach(() => {
         rules = new SixRules(SixGameState);
+    });
+    describe('chooseMove', () => {
+        it('should have boardInfo after first move', () => {
+            let moveSuccess: boolean = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
+            expect(moveSuccess).toBeTrue();
+            let unheritance: SixNodeUnheritance = rules.node.unheritance;
+            expect(unheritance.preVictory).toBeNull();
+
+            moveSuccess = rules.choose(SixMove.fromDrop(new Coord(-1, 0)));
+            expect(moveSuccess).toBeTrue();
+            unheritance = rules.node.unheritance;
+            expect(unheritance.preVictory).toBeNull();
+        });
     });
     describe('dropping', () => {
         it('Should forbid landing/dropping on existing piece (drop)', () => {
@@ -455,11 +468,10 @@ describe('SixRules', () => {
                     [_, _, _, _, _, X, O],
                     [X, X, X, X, O, _, _],
                     [X, _, _, _, O, _, _],
-                    [X, _, _, O, O, _, _],
+                    [_, _, _, O, O, _, _],
                 ];
                 const expectedBoard: number[][] = [
                     [X, X, X, X],
-                    [X, _, _, _],
                     [X, _, _, _],
                 ];
                 const state: SixGameState = SixGameState.fromRepresentation(board, 42);

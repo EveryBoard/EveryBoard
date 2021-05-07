@@ -4,10 +4,10 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { Player } from 'src/app/jscaip/player/Player';
-import { JSONValue } from 'src/app/utils/utils/utils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Player } from 'src/app/jscaip/Player';
+import { JSONValue } from 'src/app/utils/utils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 /* All method are to be implemented by the Concretes Game Component
@@ -20,7 +20,7 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 })
 export abstract class AbstractGameComponent<M extends Move,
                                             S extends GamePartSlice,
-                                            L extends LegalityStatus,
+                                            L extends LegalityStatus = LegalityStatus,
                                             U extends NodeUnheritance = NodeUnheritance> {
     public readonly STROKE_WIDTH: number = 8;
     public readonly SMALL_STROKE_WIDTH: number = 2;

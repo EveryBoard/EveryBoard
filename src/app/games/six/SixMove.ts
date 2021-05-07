@@ -1,8 +1,8 @@
-import { Coord } from 'src/app/jscaip/coord/Coord';
+import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder } from 'src/app/jscaip/encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { JSONObject, JSONValue } from 'src/app/utils/utils/utils';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { JSONObject, JSONValue } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class SixMove extends Move {
 

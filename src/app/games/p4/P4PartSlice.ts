@@ -1,6 +1,6 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
-import { Player } from 'src/app/jscaip/player/Player';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { Player } from 'src/app/jscaip/Player';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class P4PartSlice extends GamePartSlice {
     public static getInitialSlice(): P4PartSlice {

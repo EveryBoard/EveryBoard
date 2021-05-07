@@ -7,10 +7,10 @@ import { Subscription } from 'rxjs';
 import { IJoueurId } from '../../../domain/iuser';
 import { ICurrentPartId } from '../../../domain/icurrentpart';
 
-import { UserService } from '../../../services/user/UserService';
-import { GameService } from '../../../services/game/GameService';
-import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
-import { display } from 'src/app/utils/utils/utils';
+import { UserService } from '../../../services/UserService';
+import { GameService } from '../../../services/GameService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { display } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-server-page',

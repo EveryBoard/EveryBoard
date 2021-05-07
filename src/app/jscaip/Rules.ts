@@ -1,24 +1,30 @@
-import { MGPNode } from 'src/app/jscaip/mgp-node/MGPNode';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
-import { MGPMap } from '../utils/mgp-map/MGPMap';
+import { MGPMap } from '../utils/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
 import { Type } from '@angular/core';
-import { MGPValidation } from '../utils/mgp-validation/MGPValidation';
-import { display } from '../utils/utils/utils';
+import { MGPValidation } from '../utils/MGPValidation';
+import { display } from '../utils/utils';
 import { NodeUnheritance } from './NodeUnheritance';
 
-export abstract class Rules<M extends Move,
-                            S extends GamePartSlice,
-                            L extends LegalityStatus,
-                            U extends NodeUnheritance = NodeUnheritance> {
+export class RulesFailure {
 
     public static readonly CANNOT_CHOOSE_ENNEMY_PIECE: string =
         `Vous ne pouvez pas choisir une pièce de l'ennemi.`;
     public static readonly MUST_CLICK_ON_EMPTY_CASE: MGPValidation =
         MGPValidation.failure('Vous devez cliquer sur une case vide.');
 
-    public constructor(public readonly sliceType: Type<S>) { // TODO: Make singleton ?
+    private constructor() {}
+}
+
+export abstract class Rules<M extends Move,
+                            S extends GamePartSlice,
+                            L extends LegalityStatus = LegalityStatus,
+                            U extends NodeUnheritance = NodeUnheritance>
+{
+
+    public constructor(public readonly stateType: Type<S>) { // TODO: Make singleton ?
         this.setInitialBoard();
     }
     public node: MGPNode<Rules<M, S, L, U>, M, S, L, U>; // TODO: check that this should not made static
@@ -29,7 +35,7 @@ export abstract class Rules<M extends Move,
      * the remaining pawn that you can put on the board...
      */
 
-    public abstract getListMoves(node: MGPNode<Rules<M, S, L, U>, M, S, L, U>): MGPMap<M, S> ;
+    public abstract getListMoves(node: MGPNode<Rules<M, S, L, U>, M, S, L, U>): MGPMap<M, S>;
     /* has to be implemented for each rule so that the AI can choose amongst theses informations
      * this function could give an incomplete set of data if some of them are redondant
      * or also if some of them are too bad to be interesting to count, as a matter of performance
@@ -93,13 +99,13 @@ export abstract class Rules<M extends Move,
     };
     public abstract applyLegalMove(move: M, slice: S, status: L): S;
 
-    public abstract isLegal(move: M, slice: S): L; // TODO: rename, isBlbl should return a boolean
+    public abstract isLegal(move: M, slice: S): L;
     /* return a legality status about the move, allowing to return already calculated info
      * don't do any modification to the board
      */
     public setInitialBoard(): void {
         if (this.node == null) {
-            const initialSlice: S = this.sliceType['getInitialSlice']();
+            const initialSlice: S = this.stateType['getInitialSlice']();
             this.node = MGPNode.getFirstNode(initialSlice, this);
         } else {
             this.node = this.node.getInitialNode();

@@ -1,11 +1,11 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { EncapsulePiece, Size } from 'src/app/games/encapsule/encapsule-piece/EncapsulePiece';
-import { Player } from 'src/app/jscaip/player/Player';
-import { ArrayUtils, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { assert } from 'src/app/utils/utils/utils';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
+import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
+import { Player } from 'src/app/jscaip/Player';
+import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { assert } from 'src/app/utils/utils';
+import { Coord } from 'src/app/jscaip/Coord';
+import { ComparableObject } from 'src/app/utils/Comparable';
 
 export class EncapsulePartSlice extends GamePartSlice {
     private readonly remainingPieces: ReadonlyArray<EncapsulePiece>;

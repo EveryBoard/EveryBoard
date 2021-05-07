@@ -1,6 +1,6 @@
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
-import { Coord } from 'src/app/jscaip/coord/Coord';
-import { Player } from 'src/app/jscaip/player/Player';
+import { Coord } from 'src/app/jscaip/Coord';
+import { Player } from 'src/app/jscaip/Player';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 
@@ -28,42 +28,12 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         'Plateau de départ et déplacement',
         `Voici le plateau de départ.
-         Les déplacement s'effectuent orthogonalement ou diagonalement.
+         Les déplacements s'effectuent orthogonalement ou diagonalement.
          La longueur d'un déplacement est égale au nombre de pièces présente dans la ligne du déplacement.
          Notez la présence d'un indicateur d'aide qui indique où une pièce peut aterrir quand vous la sélectionnez.
          Vous jouez Foncé, faites le premier déplacement !`,
         LinesOfActionState.getInitialSlice(),
         `Super !`,
-    ),
-    DidacticialStep.fromMove(
-        'Déplacement',
-        `Voici une configuration différente. Sélectionnez la pièce foncée au milieu (4, 4) et observez bien les
-         déplacements possibles.
-         Horizontalement, elle se déplace d'une case car elle est seule sur sa ligne.
-         Verticalement, elle se déplace de trois cases car il y a en tout trois pièces sur cette ligne verticale.
-         Mais elle ne peut qu'aller vers le haut, car vers le bas l'espace est obstrué par une autre de nos pièces.
-         Diagonalement, un seul mouvement est possible : sur la diagonale qui contient trois pièces, dans la seule
-         direction où on ne doit pas sauter au dessus d'une pièce adverse.
-         Sur l'autre diagonale, il y a trop de pièces pour que le déplacement se termine sur le plateau.
-         Effectuez un de ces déplacements.`,
-        new LinesOfActionState([
-            [_, _, _, _, _, _, O, _],
-            [_, _, _, _, _, X, _, _],
-            [_, _, _, _, O, _, _, _],
-            [_, _, _, X, _, _, _, _],
-            [_, _, _, _, _, _, _, O],
-            [_, _, _, _, _, O, _, O],
-            [_, _, _, X, _, _, O, O],
-            [_, _, _, X, _, _, _, _],
-        ], 0),
-        [
-            new LinesOfActionMove(new Coord(3, 3), new Coord(3, 0)),
-            new LinesOfActionMove(new Coord(3, 3), new Coord(0, 0)),
-            new LinesOfActionMove(new Coord(3, 3), new Coord(2, 3)),
-            new LinesOfActionMove(new Coord(3, 3), new Coord(4, 3)),
-        ],
-        `Bravo !`,
-        `Ce n'était pas un des déplacements attendus`,
     ),
     DidacticialStep.fromMove(
         'Sauts',
@@ -87,6 +57,7 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         'Captures',
         `Si un déplacement se termine sur une pièce adverse, celle-ci est capturée et disparait du plateau.
+         Un déplacement par contre ne peut pas se terminer sur une pièce du joueur lui-même.
          Attention, avoir moins de pièces à Lines of Action rend plus atteignable la condition de victoire,
          car il est plus facile de regrouper moins de pièces ! D'ailleurs, s'il reste une seule pièce à un joueur,
          il gagne la partie. Dans la configuration suivante, avec Foncé, essayez de capturer une pièce.`,
@@ -103,6 +74,36 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
         [new LinesOfActionMove(new Coord(2, 2), new Coord(4, 2))],
         `Bravo !`,
         `Raté !`,
+    ),
+    DidacticialStep.fromMove(
+        'Déplacement',
+        `Voici une configuration différente. Sélectionnez la pièce foncée au milieu (4, 4) et observez bien les
+         déplacements possibles.
+         Horizontalement, elle se déplace d'une case car elle est seule sur cette ligne.
+         Verticalement, elle se déplace de trois cases car il y a en tout trois pièces sur cette ligne verticale.
+         Mais elle ne peut qu'aller vers le haut, car vers le bas la case d'aterrisage est occupée par une autre de vos pièces.
+         Diagonalement, un seul mouvement est possible : sur la diagonale qui contient trois pièces, dans la seule
+         direction où on ne doit pas sauter au dessus d'une pièce adverse.
+         Sur l'autre diagonale, il y a trop de pièces pour que le déplacement se termine sur le plateau.
+         Effectuez un de ces déplacements.`,
+        new LinesOfActionState([
+            [_, _, _, _, _, _, O, _],
+            [_, _, _, _, _, X, _, _],
+            [_, _, _, _, O, _, _, _],
+            [_, _, _, X, _, _, _, _],
+            [_, _, _, _, _, _, _, O],
+            [_, _, _, _, _, O, _, O],
+            [_, _, _, X, _, _, O, O],
+            [_, _, _, X, _, _, _, _],
+        ], 0),
+        [
+            new LinesOfActionMove(new Coord(3, 3), new Coord(3, 0)),
+            new LinesOfActionMove(new Coord(3, 3), new Coord(0, 0)),
+            new LinesOfActionMove(new Coord(3, 3), new Coord(2, 3)),
+            new LinesOfActionMove(new Coord(3, 3), new Coord(4, 3)),
+        ],
+        `Bravo !`,
+        `Ce n'était pas un des déplacements attendus`,
     ),
     DidacticialStep.fromMove(
         'Égalité',

@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -9,25 +8,21 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PartCreationComponent } from './part-creation.component';
-import { JoinerService } from 'src/app/services/joiner/JoinerService';
-import { JoinerDAO } from 'src/app/dao/joiner/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/joiner/JoinerDAOMock';
-import { JoinerMocks } from 'src/app/domain/JoinerMocks';
-import { PartDAOMock } from 'src/app/dao/part/PartDAOMock';
-import { PartDAO } from 'src/app/dao/part/PartDAO';
-import { PartMocks } from 'src/app/domain/PartMocks';
-import { ChatDAO } from 'src/app/dao/chat/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/chat/ChatDAOMock';
+import { JoinerService } from 'src/app/services/JoinerService';
+import { JoinerDAO } from 'src/app/dao/JoinerDAO';
+import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
+import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
+import { PartDAO } from 'src/app/dao/PartDAO';
+import { PartMocks } from 'src/app/domain/PartMocks.spec';
+import { ChatDAO } from 'src/app/dao/ChatDAO';
+import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { ICurrentPart } from 'src/app/domain/icurrentpart';
-import { JoueursDAO } from 'src/app/dao/joueurs/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/joueurs/JoueursDAOMock';
+import { JoueursDAO } from 'src/app/dao/JoueursDAO';
+import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
 import { IJoueur } from 'src/app/domain/iuser';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
-class RouterMock {
-    public async navigate(to: string[]): Promise<boolean> {
-        return Promise.resolve(true);
-    }
-}
 describe('PartCreationComponent:', () => {
     let fixture: ComponentFixture<PartCreationComponent>;
 
@@ -49,7 +44,9 @@ describe('PartCreationComponent:', () => {
             imports: [
                 MatStepperModule, MatRadioModule, MatSliderModule,
                 ReactiveFormsModule,
-                RouterTestingModule,
+                RouterTestingModule.withRoutes(
+                    [{ path: 'server', component: BlankComponent }],
+                ),
                 BrowserAnimationsModule,
             ],
             declarations: [PartCreationComponent],
@@ -58,7 +55,6 @@ describe('PartCreationComponent:', () => {
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoueursDAO, useClass: JoueursDAOMock },
-                { provide: Router, useClass: RouterMock },
             ],
         }).compileComponents();
         fixture = TestBed.createComponent(PartCreationComponent);
