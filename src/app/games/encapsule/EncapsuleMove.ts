@@ -1,6 +1,6 @@
 import { Move } from 'src/app/jscaip/Move';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsulePiece } from './EncapsulePiece';
 
 export class EncapsuleMove extends Move {

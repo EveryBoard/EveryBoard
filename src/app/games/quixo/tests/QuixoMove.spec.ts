@@ -1,4 +1,4 @@
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';

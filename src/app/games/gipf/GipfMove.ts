@@ -3,9 +3,9 @@ import { Encoder } from 'src/app/jscaip/encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils/utils';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class GipfCapture {
     // Encodes a capture as: initial case, direction, length

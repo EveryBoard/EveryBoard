@@ -7,10 +7,10 @@ import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamLegalityStatus } from './SiamLegalityStatus';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/utils/utils';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { display } from 'src/app/utils/utils';
 import { SiamFailure } from './SiamFailure';
 
 abstract class _SiamRules extends Rules<SiamMove, SiamPartSlice, SiamLegalityStatus> {}

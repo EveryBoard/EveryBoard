@@ -3,7 +3,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutMove } from '../TablutMove';
 import { TablutPartSlice } from '../TablutPartSlice';
 import { TablutCase } from '../TablutCase';
-import { TablutNode, TablutRules } from '../TablutRules';
+import { TablutRules } from '../TablutRules';
 
 describe('TablutRules - Minimax:', () => {
 
@@ -28,24 +28,11 @@ describe('TablutRules - Minimax:', () => {
             [_, _, _, _, _, _, _, i, _],
             [_, _, _, _, _, _, _, _, _],
         ];
-        const winnerBoard: number[][] = [
-            [_, _, x, _, _, _, _, _, A],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, i, _],
-            [_, _, _, _, _, _, _, _, _],
-        ];
         const slice: TablutPartSlice = new TablutPartSlice(board, 1);
         rules.node = new MGPNode(null, null, slice, 0);
         const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
-        const winnerSlice: TablutPartSlice = new TablutPartSlice(winnerBoard, 2);
 
-        const bestMove: TablutNode = rules.node.findBestMove(1);
-        expect(bestMove.move.toString()).toEqual(winnerMove.toString());
-        expect(bestMove.gamePartSlice).toEqual(winnerSlice);
+        const bestMove: TablutMove = rules.node.findBestMove(1);
+        expect(bestMove).toEqual(winnerMove);
     });
 });

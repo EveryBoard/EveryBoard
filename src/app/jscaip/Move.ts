@@ -1,5 +1,5 @@
-import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
-import { JSONValue } from '../utils/utils/utils';
+import { ComparableObject } from 'src/app/utils/Comparable';
+import { JSONValue } from '../utils/utils';
 
 export abstract class Move implements ComparableObject {
     public abstract toString(): string;

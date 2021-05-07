@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';

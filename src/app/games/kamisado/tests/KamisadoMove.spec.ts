@@ -1,4 +1,4 @@
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoPartSlice } from '../KamisadoPartSlice';
 import { KamisadoRules } from '../KamisadoRules';

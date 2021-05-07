@@ -3,7 +3,7 @@ import { P4PartSlice } from './P4PartSlice';
 import { P4Rules } from './P4Rules';
 import { Move } from '../../jscaip/Move';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';

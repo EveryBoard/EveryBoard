@@ -1,9 +1,9 @@
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoRules';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { KamisadoComponent, KamisadoComponentFailure } from '../kamisado.component';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';

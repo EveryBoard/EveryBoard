@@ -1,10 +1,10 @@
 import { EmailVerified } from '../EmailVerified';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { Router } from '@angular/router';
 import { AngularFireAuth } from '@angular/fire/auth';
 import { AngularFirestore } from '@angular/fire/firestore';
 import { of } from 'rxjs';
-import { AuthenticationServiceUnderTest } from 'src/app/services/authentication/AuthenticationService.spec';
+import { AuthenticationServiceUnderTest } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('EmailVerified', () => {
     let guard: EmailVerified;

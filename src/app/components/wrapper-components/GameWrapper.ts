@@ -2,8 +2,8 @@ import { Component, ComponentFactory, ComponentFactoryResolver, ComponentRef, Ty
 import { ActivatedRoute, Router } from '@angular/router';
 import { AbstractGameComponent } from '../game-components/abstract-game-component/AbstractGameComponent';
 import { GameIncluderComponent } from '../game-components/game-includer/game-includer.component';
-import { UserService } from '../../services/user/UserService';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { UserService } from '../../services/UserService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 import { Move } from '../../jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
@@ -29,8 +29,8 @@ import { SiamComponent } from '../../games/siam/siam.component';
 import { SixComponent } from '../../games/six/six.component';
 import { TablutComponent } from '../../games/tablut/tablut.component';
 
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/utils/utils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { display } from 'src/app/utils/utils';
 
 @Component({ template: '' })
 export abstract class GameWrapper {

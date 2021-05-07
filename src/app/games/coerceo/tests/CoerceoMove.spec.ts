@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { CoerceoPartSlice } from '../CoerceoPartSlice';
 import { CoerceoRules } from '../CoerceoRules';
 import { CoerceoFailure } from '../CoerceoFailure';

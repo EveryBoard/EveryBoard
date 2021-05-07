@@ -2,9 +2,9 @@ import { Move } from './Move';
 import { SCORE } from './SCORE';
 import { Rules } from './Rules';
 import { GamePartSlice } from './GamePartSlice';
-import { MGPMap } from '../utils/mgp-map/MGPMap';
+import { MGPMap } from '../utils/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
-import { display } from 'src/app/utils/utils/utils';
+import { display } from 'src/app/utils/utils';
 import { NodeUnheritance } from './NodeUnheritance';
 
 export class MGPNode<R extends Rules<M, S, L, U>,
@@ -104,10 +104,15 @@ export class MGPNode<R extends Rules<M, S, L, U>,
         this.hopedValue = this.ownValue;
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, { createdNode: this });
     }
-    public findBestMove(readingDepth: number): MGPNode<R, M, S, L, U> {
-        return this.alphaBeta(readingDepth,
-                              Number.MIN_SAFE_INTEGER,
-                              Number.MAX_SAFE_INTEGER);
+    public findBestMove(readingDepth: number): M {
+        let bestDescendant: MGPNode<R, M, S, L, U> = this.alphaBeta(readingDepth,
+                                                                    Number.MIN_SAFE_INTEGER,
+                                                                    Number.MAX_SAFE_INTEGER);
+        while (readingDepth > 1) {
+            bestDescendant = bestDescendant.mother;
+            readingDepth--;
+        }
+        return bestDescendant.move;
     }
     public alphaBeta(depth: number, alpha: number, beta: number): MGPNode<R, M, S, L, U> {
         const LOCAL_VERBOSE: boolean = false;

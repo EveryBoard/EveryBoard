@@ -1,4 +1,4 @@
-import { MGPOptional } from '../utils/mgp-optional/MGPOptional';
+import { MGPOptional } from '../utils/MGPOptional';
 import { Coord } from './Coord';
 import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';

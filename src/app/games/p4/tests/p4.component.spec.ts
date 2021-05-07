@@ -1,7 +1,7 @@
 import { fakeAsync } from '@angular/core/testing';
 import { P4Component } from '../p4.component';
 import { P4Move } from 'src/app/games/p4/P4Move';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('P4Component', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;

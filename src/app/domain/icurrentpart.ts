@@ -1,5 +1,5 @@
-import { ArrayUtils } from '../utils/collection-lib/array-utils/ArrayUtils';
-import { JSONValue } from 'src/app/utils/utils/utils';
+import { ArrayUtils } from '../utils/ArrayUtils';
+import { JSONValue } from 'src/app/utils/utils';
 import { Request } from './request';
 
 export interface ICurrentPart {

@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoPiece } from './GoPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { display } from 'src/app/utils/utils/utils';
-import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { display } from 'src/app/utils/utils';
+import { Table } from 'src/app/utils/ArrayUtils';
 
 export class GroupDatas {
     public static VERBOSE: boolean = false;

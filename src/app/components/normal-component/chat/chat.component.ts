@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, OnDestroy } from '@angular/core';
-import { ChatService } from '../../../services/chat/ChatService';
+import { ChatService } from '../../../services/ChatService';
 import { IMessage } from '../../../domain/imessage';
-import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
 import { IChatId } from 'src/app/domain/ichat';
-import { display } from 'src/app/utils/utils/utils';
+import { display } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-chat',

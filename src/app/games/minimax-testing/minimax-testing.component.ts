@@ -5,7 +5,7 @@ import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTe
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 @Component({
     selector: 'app-minimax-testing',

@@ -1,4 +1,4 @@
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Player } from 'src/app/jscaip/Player';

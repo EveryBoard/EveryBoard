@@ -1,4 +1,4 @@
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from '../Coord';
 import { HexaBoard } from '../HexaBoard';
 import { HexaDirection } from '../HexaDirection';

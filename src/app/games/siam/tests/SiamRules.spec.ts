@@ -1,11 +1,11 @@
 import { SiamRules } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { SiamLegalityStatus } from '../SiamLegalityStatus';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 
 describe('SiamRules:', () => {

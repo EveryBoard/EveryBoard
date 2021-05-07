@@ -3,8 +3,8 @@ import { FormsModule } from '@angular/forms';
 
 import { ChatComponent } from './chat.component';
 
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { ChatService } from 'src/app/services/chat/ChatService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { ChatService } from 'src/app/services/ChatService';
 import { MatIconModule } from '@angular/material/icon';
 import { MatInputModule } from '@angular/material/input';
 import { MatListModule } from '@angular/material/list';
@@ -14,7 +14,7 @@ import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
 import { PIChat } from 'src/app/domain/ichat';
-import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
+import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('ChatComponent', () => {
     let fixture: ComponentFixture<ChatComponent>;

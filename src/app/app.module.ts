@@ -14,11 +14,11 @@ import { firebaseConfig } from './firebaseConfig';
 
 import { PartDAO } from './dao/PartDAO';
 
-import { ChatService } from './services/chat/ChatService';
-import { UserService } from './services/user/UserService';
-import { AuthenticationService } from './services/authentication/AuthenticationService';
-import { GameService } from './services/game/GameService';
-import { JoinerService } from './services/joiner/JoinerService';
+import { ChatService } from './services/ChatService';
+import { UserService } from './services/UserService';
+import { AuthenticationService } from './services/AuthenticationService';
+import { GameService } from './services/GameService';
+import { JoinerService } from './services/JoinerService';
 
 import { EmailVerified } from './guard/EmailVerified';
 import { MustVerifyEmail } from './guard/MustVerifyEmail';

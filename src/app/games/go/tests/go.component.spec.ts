@@ -1,10 +1,10 @@
 import { GoComponent } from '../go.component';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/GoPartSlice';
-import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('GoComponent', () => {

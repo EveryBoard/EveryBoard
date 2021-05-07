@@ -1,7 +1,7 @@
 /* eslint-disable max-len */
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoPartSlice, GoPiece, Phase } from 'src/app/games/go/GoPartSlice';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DidacticialStep } from '../DidacticialStep';
 
 const X: GoPiece = GoPiece.WHITE;

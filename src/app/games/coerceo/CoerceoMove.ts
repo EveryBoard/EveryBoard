@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { Move } from 'src/app/jscaip/Move';
-import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { ComparableObject } from 'src/app/utils/Comparable';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { CoerceoFailure } from './CoerceoFailure';
 
 export class CoerceoStep implements ComparableObject {

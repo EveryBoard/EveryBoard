@@ -1,4 +1,4 @@
-import { assert, JSONValue } from 'src/app/utils/utils/utils';
+import { assert, JSONValue } from 'src/app/utils/utils';
 import { Coord } from './Coord';
 import { Encoder } from './encoder';
 

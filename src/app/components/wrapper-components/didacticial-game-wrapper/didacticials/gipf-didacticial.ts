@@ -4,7 +4,7 @@ import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { DidacticialStep } from '../DidacticialStep';
 
 const _: GipfPiece = GipfPiece.EMPTY;

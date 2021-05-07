@@ -6,12 +6,12 @@ import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutPartSlice } from './TablutPartSlice';
 import { TablutRules } from './TablutRules';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
-import { display } from 'src/app/utils/utils/utils';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { display } from 'src/app/utils/utils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 
 @Component({

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondaslegalitystatus';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';

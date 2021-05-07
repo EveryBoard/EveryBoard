@@ -3,7 +3,7 @@ import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
 import { Player } from 'src/app/jscaip/Player';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('PylosComponent', () => {

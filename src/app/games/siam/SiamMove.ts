@@ -1,6 +1,6 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class SiamMove extends MoveCoord {
     public static encode(move: SiamMove): number {

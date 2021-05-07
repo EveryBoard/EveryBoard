@@ -3,10 +3,10 @@ import { Vector } from 'src/app/jscaip/Direction';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { ArrayUtils, NumberTable } from 'src/app/utils/ArrayUtils';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SixFailure } from './SixFailure';
 import { SixMove } from './SixMove';
 

@@ -1,5 +1,5 @@
-import { assert } from 'src/app/utils/utils/utils';
-import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
+import { assert } from 'src/app/utils/utils';
+import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from './encoder';
 
 export class Player implements ComparableObject {

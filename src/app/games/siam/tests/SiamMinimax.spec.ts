@@ -5,9 +5,9 @@ import { SiamPartSlice } from '../SiamPartSlice';
 import { SiamMove } from '../SiamMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 
 describe('SiamRules - Minimax:', () => {
     let rules: SiamRules;
@@ -61,20 +61,11 @@ describe('SiamRules - Minimax:', () => {
             [_, _, _, _, _],
             [_, _, _, _, _],
         ];
-        const expectedBoard: number[][] = [
-            [_, U, _, U, _],
-            [_, _, _, _, _],
-            [_, M, M, _, _],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const node: SiamNode = new MGPNode(null, null, slice, 0);
-        const bestSon: SiamNode = node.findBestMove(1);
+        const chosenMove: SiamMove = node.findBestMove(1);
         const bestMove: SiamMove = new SiamMove(3, 1, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
-        const expectedSon: SiamNode = new MGPNode(node, bestMove, expectedSlice, Number.MIN_SAFE_INTEGER);
-        expect(bestSon).toEqual(expectedSon);
+        expect(chosenMove).toEqual(bestMove);
         expect(node.countDescendants()).toBe(1, 'Pre-victory node should only have victory child');
     });
     it('Best choice test: Should consider pushing as the best option', () => {
@@ -87,9 +78,9 @@ describe('SiamRules - Minimax:', () => {
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const node: SiamNode = new MGPNode(null, null, slice, 0);
-        const bestSon: SiamNode = node.findBestMove(1);
+        const chosenMove: SiamMove = node.findBestMove(1);
         const bestMove: SiamMove = new SiamMove(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(bestSon.move.toString()).toEqual(bestMove.toString());
+        expect(chosenMove).toEqual(bestMove);
     });
     it('Best choice test: Pushing from outside could be considered the best option', () => {
         const board: number[][] = [
@@ -129,9 +120,9 @@ describe('SiamRules - Minimax:', () => {
                 choicesValues['' + value] = choicesValues['' + value] + 1;
             }
         }
-        const bestSon: SiamNode = node.findBestMove(1);
+        const chosenMove: SiamMove = node.findBestMove(1);
         const bestMove: SiamMove = new SiamMove(3, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(bestSon.move.toString()).toEqual(bestMove.toString());
+        expect(chosenMove).toEqual(bestMove);
         expect(moveType).toEqual({ moving: 35, rotation: 12, pushingInsertion: 18, slidingInsertion: 16 });
     });
     it('Best choice test: Inserting a piece when 5 player are on the board should not be an option', () => {

@@ -5,7 +5,7 @@ import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/Encap
 import { EncapsuleFailure } from 'src/app/games/encapsule/EncapsuleRules';
 import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('EncapsuleComponent', () => {

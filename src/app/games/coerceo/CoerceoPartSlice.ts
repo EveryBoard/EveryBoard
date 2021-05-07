@@ -3,8 +3,8 @@ import { Vector } from 'src/app/jscaip/Direction';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { Player } from 'src/app/jscaip/Player';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { assert, display } from 'src/app/utils/utils/utils';
+import { NumberTable, Table } from 'src/app/utils/ArrayUtils';
+import { assert, display } from 'src/app/utils/utils';
 import { CoerceoMove, CoerceoStep } from './CoerceoMove';
 
 export class CoerceoPiece {

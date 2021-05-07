@@ -1,9 +1,9 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPSet } from 'src/app/utils/MGPSet';
 import { SixMove } from '../SixMove';
 import { SixGameState } from '../SixGameState';
 

@@ -1,11 +1,11 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
-import { MGPMap } from '../utils/mgp-map/MGPMap';
+import { MGPMap } from '../utils/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
 import { Type } from '@angular/core';
-import { MGPValidation } from '../utils/mgp-validation/MGPValidation';
-import { display } from '../utils/utils/utils';
+import { MGPValidation } from '../utils/MGPValidation';
+import { display } from '../utils/utils';
 import { NodeUnheritance } from './NodeUnheritance';
 
 export class RulesFailure {

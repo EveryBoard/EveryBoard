@@ -1,7 +1,7 @@
 import { MoveCoord } from './MoveCoord';
 import { Coord } from './Coord';
 import { NumberEncoder } from './encoder';
-import { MGPOptional } from '../utils/mgp-optional/MGPOptional';
+import { MGPOptional } from '../utils/MGPOptional';
 import { Direction, DirectionError } from './Direction';
 
 export abstract class MoveCoordToCoord extends MoveCoord {

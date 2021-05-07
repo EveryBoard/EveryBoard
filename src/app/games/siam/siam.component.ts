@@ -8,10 +8,10 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GameComponentUtils } from '../../components/game-components/GameComponentUtils';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { display } from 'src/app/utils/utils/utils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { display } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-siam',

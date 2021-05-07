@@ -1,6 +1,5 @@
 import { ComponentFixture, TestBed, fakeAsync, tick } from '@angular/core/testing';
 import { ReactiveFormsModule } from '@angular/forms';
-import { Router } from '@angular/router';
 import { MatRadioModule } from '@angular/material/radio';
 import { MatSliderModule } from '@angular/material/slider';
 import { MatStepperModule } from '@angular/material/stepper';
@@ -9,7 +8,7 @@ import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { PartCreationComponent } from './part-creation.component';
-import { JoinerService } from 'src/app/services/joiner/JoinerService';
+import { JoinerService } from 'src/app/services/JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
@@ -22,7 +21,7 @@ import { ICurrentPart } from 'src/app/domain/icurrentpart';
 import { JoueursDAO } from 'src/app/dao/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
 import { IJoueur } from 'src/app/domain/iuser';
-import { BlankComponent } from 'src/app/utils/TestUtils.spec';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('PartCreationComponent:', () => {
     let fixture: ComponentFixture<PartCreationComponent>;

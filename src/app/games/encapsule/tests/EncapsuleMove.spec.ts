@@ -1,4 +1,4 @@
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { EncapsuleRules } from '../EncapsuleRules';
 import { EncapsulePartSlice } from '../EncapsulePartSlice';
 import { Coord } from 'src/app/jscaip/Coord';

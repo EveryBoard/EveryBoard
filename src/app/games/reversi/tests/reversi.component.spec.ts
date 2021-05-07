@@ -2,8 +2,8 @@ import { ReversiComponent } from '../reversi.component';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
 import { Player } from 'src/app/jscaip/Player';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('ReversiComponent', () => {

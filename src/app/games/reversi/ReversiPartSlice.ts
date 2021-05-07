@@ -1,7 +1,7 @@
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
 import { Coord } from '../../jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class ReversiPartSlice extends GamePartSlice {
 

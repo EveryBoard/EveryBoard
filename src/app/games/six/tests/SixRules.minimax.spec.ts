@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { expectFirstStateToBeBetterThanSecond, expectStateToBePreVictory } from 'src/app/utils/TestUtils.spec';
+import { expectFirstStateToBeBetterThanSecond, expectStateToBePreVictory } from 'src/app/utils/tests/TestUtils.spec';
 import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
@@ -31,8 +31,8 @@ describe('Six - Minimax', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
             rules.node = new SixNode(null, null, state, 0);
             expect(rules.choose(move)).toBeTrue();
-            const bestSon: SixNode = rules.node.findBestMove(1);
-            expect(bestSon.move).toEqual(SixMove.fromDrop(new Coord(0, 6)));
+            const chosenMove: SixMove = rules.node.findBestMove(1);
+            expect(chosenMove).toEqual(SixMove.fromDrop(new Coord(0, 6)));
             expect(rules.node.countDescendants()).toBe(1);
         });
         it('should know that 5 pieces aligned with two empty extension mean PRE_VICTORY', () => {
@@ -152,7 +152,7 @@ describe('Six - Minimax', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
             rules.node = new SixNode(null, null, state, 0);
             expect(rules.choose(move)).toBeTrue();
-            const bestMove: SixMove = rules.node.findBestMove(1).move;
+            const bestMove: SixMove = rules.node.findBestMove(1);
             const expectedMove: SixMove = SixMove.fromDeplacement(new Coord(1, 0), new Coord(0, 6));
             expect(bestMove).toEqual(expectedMove);
             expect(rules.node.countDescendants()).toBe(1);

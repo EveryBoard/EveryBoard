@@ -1,5 +1,5 @@
 import { fakeAsync } from '@angular/core/testing';
-import { SimpleComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 import { DidacticialGameCreationComponent } from './didacticial-game-creation.component';
 

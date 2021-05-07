@@ -8,8 +8,8 @@ import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 export class EncapsuleComponentFailure {
     public static NOT_DROPPABLE: string =`Veuillez choisir une de vos pièces parmi les pièces restantes.`;

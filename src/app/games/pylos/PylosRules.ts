@@ -1,6 +1,6 @@
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';

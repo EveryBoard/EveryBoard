@@ -3,8 +3,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { AuthenticationService, AuthUser } from 'src/app/services/authentication/AuthenticationService';
-import { GameService } from 'src/app/services/game/GameService';
+import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { GameService } from 'src/app/services/GameService';
 
 @Component({
     selector: 'app-online-game-creation',

@@ -1,11 +1,11 @@
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
 import { EpaminondasRules } from '../EpaminondasRules';
-import { expectFirstStateToBeBetterThanSecond } from 'src/app/utils/TestUtils.spec';
+import { expectFirstStateToBeBetterThanSecond } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('EpaminondasRules - Minimax:', () => {
     let rules: EpaminondasRules;
@@ -37,10 +37,10 @@ describe('EpaminondasRules - Minimax:', () => {
         const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
         rules.node = new MGPNode(null, null, slice, 0);
         const capture: EpaminondasMove = new EpaminondasMove(4, 9, 2, 1, Direction.UP);
-        const bestMove: EpaminondasMove = rules.node.findBestMove(1).move;
+        const bestMove: EpaminondasMove = rules.node.findBestMove(1);
         expect(bestMove).toEqual(capture);
     });
-    xit('Should consider two neighboor piece better than two separated piece', () => {
+    it('Should consider two neighboor piece better than two separated piece', () => {
         const weakerState: EpaminondasPartSlice = new EpaminondasPartSlice([
             [_, _, _, _, _, _, _, _, _, X, _, X, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -56,7 +56,8 @@ describe('EpaminondasRules - Minimax:', () => {
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 0);
         const strongerState: EpaminondasPartSlice = new EpaminondasPartSlice([
-            [_, _, _, _, _, _, _, _, _, X, X, _, _, _],
+            [_, _, _, _, _, _, _, _, _, X, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, X, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
@@ -66,8 +67,7 @@ describe('EpaminondasRules - Minimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, O, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, O, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 0);
         expectFirstStateToBeBetterThanSecond(weakerState, null, strongerState, null, rules);
     });

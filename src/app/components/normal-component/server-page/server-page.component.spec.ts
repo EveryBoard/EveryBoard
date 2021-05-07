@@ -7,9 +7,9 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { of } from 'rxjs';
 import { ServerPageComponent } from './server-page.component';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { UserService } from 'src/app/services/user/UserService';
-import { GameService } from 'src/app/services/game/GameService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { UserService } from 'src/app/services/UserService';
+import { GameService } from 'src/app/services/GameService';
 import { JoueursDAO } from 'src/app/dao/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
@@ -18,7 +18,7 @@ import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
-import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
+import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('ServerPageComponent', () => {
     let component: ServerPageComponent;

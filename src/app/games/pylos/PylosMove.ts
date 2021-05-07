@@ -1,4 +1,4 @@
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Move } from 'src/app/jscaip/Move';
 import { PylosCoord } from './PylosCoord';
 

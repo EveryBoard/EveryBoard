@@ -1,4 +1,4 @@
-import { MGPValidation } from '../utils/mgp-validation/MGPValidation';
+import { MGPValidation } from '../utils/MGPValidation';
 
 export interface LegalityStatus {
     readonly legal: MGPValidation;

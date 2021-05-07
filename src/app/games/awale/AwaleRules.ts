@@ -2,11 +2,11 @@ import { Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { AwalePartSlice } from './AwalePartSlice';
 import { AwaleMove } from './AwaleMove';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { AwaleLegalityStatus } from './AwaleLegalityStatus';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { display } from 'src/app/utils/utils/utils';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { display } from 'src/app/utils/utils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 

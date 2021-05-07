@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoPartSlice, GoPiece, Phase } from '../GoPartSlice';
 
 describe('GoPartSlice', () => {

@@ -1,11 +1,11 @@
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasComponent } from '../epaminondas.component';
 import { Coord } from 'src/app/jscaip/Coord';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('EpaminondasComponent:', () => {

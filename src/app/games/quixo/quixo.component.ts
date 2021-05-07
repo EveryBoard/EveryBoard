@@ -6,7 +6,7 @@ import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
 import { GameComponentUtils } from '../../components/game-components/GameComponentUtils';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 

@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { GipfBoard } from '../GipfBoard';
 import { GipfLegalityStatus } from '../GipfLegalityStatus';
 import { GipfCapture, GipfMove, GipfPlacement } from '../GipfMove';

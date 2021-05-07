@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { NumberEncoder } from 'src/app/jscaip/encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
-import { JSONValue } from 'src/app/utils/utils/utils';
+import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionState } from './LinesOfActionState';
 
 export class LinesOfActionMove extends MoveCoordToCoord {

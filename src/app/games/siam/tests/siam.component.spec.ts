@@ -1,11 +1,11 @@
 import { SiamComponent } from '../siam.component';
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('SiamComponent', () => {

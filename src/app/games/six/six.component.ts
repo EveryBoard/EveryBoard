@@ -9,10 +9,10 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { Player } from 'src/app/jscaip/Player';
-import { JSONValue } from 'src/app/utils/utils/utils';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPSet } from 'src/app/utils/mgp-set/MGPSet';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { JSONValue } from 'src/app/utils/utils';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPSet } from 'src/app/utils/MGPSet';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
     from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
 

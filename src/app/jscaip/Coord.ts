@@ -1,6 +1,6 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
-import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils/utils';
-import { ComparableObject } from '../utils/collection-lib/Comparable';
+import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { ComparableObject } from '../utils/Comparable';
 import { Encoder } from './encoder';
 
 export class Coord implements ComparableObject {

@@ -6,7 +6,7 @@ import { By } from '@angular/platform-browser';
 import { AppModule } from 'src/app/app.module';
 import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
 
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
@@ -25,12 +25,12 @@ import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { Request } from 'src/app/domain/request';
 import { ICurrentPart, MGPResult, Part, PICurrentPart } from 'src/app/domain/icurrentpart';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RouterTestingModule } from '@angular/router/testing';
 import { Player } from 'src/app/jscaip/Player';
 import { IJoueur } from 'src/app/domain/iuser';
-import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
-import { ActivatedRouteStub } from 'src/app/utils/TestUtils.spec';
+import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary

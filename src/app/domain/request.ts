@@ -1,5 +1,5 @@
 import { Player } from 'src/app/jscaip/Player';
-import { JSONValue } from 'src/app/utils/utils/utils';
+import { JSONValue } from 'src/app/utils/utils';
 
 export type RequestCode =
     'DrawProposed' | 'DrawAccepted' | 'DrawRefused' |

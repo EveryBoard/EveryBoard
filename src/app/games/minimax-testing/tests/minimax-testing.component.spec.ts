@@ -10,9 +10,9 @@ import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { JoueursDAO } from 'src/app/dao/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { of } from 'rxjs';
-import { ActivatedRouteStub } from 'src/app/utils/TestUtils.spec';
+import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
 
 const authenticationServiceStub = {
 

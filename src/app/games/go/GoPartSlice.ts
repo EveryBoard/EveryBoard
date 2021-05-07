@@ -1,8 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Player } from 'src/app/jscaip/Player';
-import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class GoPiece {
     public static BLACK: GoPiece = new GoPiece(Player.ZERO.value);

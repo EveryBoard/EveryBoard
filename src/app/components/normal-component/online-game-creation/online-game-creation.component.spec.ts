@@ -1,5 +1,5 @@
 import { fakeAsync, tick } from '@angular/core/testing';
-import { SimpleComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { OnlineGameCreationComponent } from './online-game-creation.component';
 
 describe('OnlineGameCreationComponent', () => {

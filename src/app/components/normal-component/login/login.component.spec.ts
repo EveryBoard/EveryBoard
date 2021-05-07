@@ -2,9 +2,9 @@ import { ComponentFixture, fakeAsync, TestBed, tick } from '@angular/core/testin
 import { LoginComponent } from './login.component';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RouterTestingModule } from '@angular/router/testing';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { By } from '@angular/platform-browser';
-import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
+import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('LoginComponent', () => {
     let component: LoginComponent;

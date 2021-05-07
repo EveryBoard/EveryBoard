@@ -1,5 +1,5 @@
 import { MinimaxTestingRules } from '../MinimaxTestingRules';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { MinimaxTestingMove } from '../MinimaxTestingMove';
 import { MinimaxTestingPartSlice } from '../MinimaxTestingPartSlice';
 

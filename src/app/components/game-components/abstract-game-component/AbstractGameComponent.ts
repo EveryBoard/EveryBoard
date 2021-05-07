@@ -4,10 +4,10 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component } from '@angular/core';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
-import { JSONValue } from 'src/app/utils/utils/utils';
+import { JSONValue } from 'src/app/utils/utils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 /* All method are to be implemented by the Concretes Game Component

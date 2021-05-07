@@ -1,4 +1,4 @@
-import { ComparableObject } from 'src/app/utils/collection-lib/Comparable';
+import { ComparableObject } from 'src/app/utils/Comparable';
 import { NumberEncoder } from '../encoder';
 
 export class NumberEncoderTestUtils {

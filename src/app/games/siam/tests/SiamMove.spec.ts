@@ -1,11 +1,11 @@
 import { SiamRules, SiamNode } from '../SiamRules';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { SiamMove } from '../SiamMove';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamPiece } from '../SiamPiece';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 describe('SiamMove', () => {
     const _: number = SiamPiece.EMPTY.value;

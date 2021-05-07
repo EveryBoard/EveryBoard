@@ -3,9 +3,9 @@ import { ActivatedRoute, NavigationEnd, Router, Event } from '@angular/router';
 
 import { Subscription } from 'rxjs';
 
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { GameService } from 'src/app/services/game/GameService';
-import { UserService } from 'src/app/services/user/UserService';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { GameService } from 'src/app/services/GameService';
+import { UserService } from 'src/app/services/UserService';
 
 import { Move } from '../../../jscaip/Move';
 import { ICurrentPart, ICurrentPartId, Part, MGPResult } from '../../../domain/icurrentpart';
@@ -18,9 +18,9 @@ import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserv
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { ChatComponent } from '../../normal-component/chat/chat.component';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { assert, display, JSONValue } from 'src/app/utils/utils/utils';
-import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/object-utils/ObjectUtils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { assert, display, JSONValue } from 'src/app/utils/utils';
+import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/ObjectUtils';
 
 export class UpdateType {
 

@@ -1,5 +1,5 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
-import { display } from 'src/app/utils/utils/utils';
+import { display } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-count-down',

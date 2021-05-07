@@ -4,10 +4,10 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { ActivatedRouteStub } from 'src/app/utils/TestUtils.spec';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
 import { PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 

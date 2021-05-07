@@ -4,9 +4,9 @@ import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
-import { JSONValue } from 'src/app/utils/utils/utils';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { JSONValue } from 'src/app/utils/utils';
 import { SixComponent } from '../six.component';
 
 describe('SixComponent', () => {

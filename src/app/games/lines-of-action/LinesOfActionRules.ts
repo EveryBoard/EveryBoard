@@ -4,10 +4,10 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { ArrayUtils } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionState } from './LinesOfActionState';
 

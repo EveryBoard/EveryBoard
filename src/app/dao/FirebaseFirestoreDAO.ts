@@ -6,7 +6,7 @@ import { map } from 'rxjs/operators';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-import { display } from 'src/app/utils/utils/utils';
+import { display } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
 
 export interface IFirebaseFirestoreDAO<T, PT> {

@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { ConfirmInscriptionComponent } from './confirm-inscription.component';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { AuthenticationServiceMock } from 'src/app/services/authentication/AuthenticationService.spec';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('ConfirmInscriptionComponent', () => {
     let component: ConfirmInscriptionComponent;

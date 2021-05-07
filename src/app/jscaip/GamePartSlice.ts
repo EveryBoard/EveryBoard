@@ -1,7 +1,7 @@
 import { Coord } from './Coord';
 import { Player } from './Player';
-import { ArrayUtils, NumberTable } from '../utils/collection-lib/array-utils/ArrayUtils';
-import { ComparableObject } from '../utils/collection-lib/Comparable';
+import { ArrayUtils, NumberTable } from '../utils/ArrayUtils';
+import { ComparableObject } from '../utils/Comparable';
 
 export abstract class GamePartSlice implements ComparableObject {
     public constructor(

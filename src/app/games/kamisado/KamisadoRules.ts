@@ -6,12 +6,12 @@ import { KamisadoMove } from './KamisadoMove';
 import { KamisadoPartSlice } from './KamisadoPartSlice';
 import { KamisadoPiece } from './KamisadoPiece';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 export class KamisadoFailure {
     public static CANT_PASS: string = `Vous n'êtes pas autorisé à passer, vous pouvez toujours vous déplacer.`;

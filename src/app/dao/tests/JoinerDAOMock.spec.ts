@@ -1,7 +1,7 @@
 import { IJoinerId, IJoiner, PIJoiner } from 'src/app/domain/ijoiner';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
-import { ObservableSubject } from 'src/app/utils/collection-lib/ObservableSubject';
-import { display } from 'src/app/utils/utils/utils';
+import { MGPMap } from 'src/app/utils/MGPMap';
+import { ObservableSubject } from 'src/app/utils/ObservableSubject';
+import { display } from 'src/app/utils/utils';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 

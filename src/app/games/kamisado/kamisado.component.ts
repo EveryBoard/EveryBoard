@@ -7,7 +7,7 @@ import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoFailure, KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
 import { Player } from 'src/app/jscaip/Player';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 export class KamisadoComponentFailure {
     public static PLAY_WITH_SELECTED_PIECE: string =

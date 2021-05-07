@@ -1,5 +1,5 @@
-import { NumberTable } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
-import { expectFirstStateToBeBetterThanSecond } from 'src/app/utils/TestUtils.spec';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { expectFirstStateToBeBetterThanSecond } from 'src/app/utils/tests/TestUtils.spec';
 import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
 import { CoerceoRules } from '../CoerceoRules';
 

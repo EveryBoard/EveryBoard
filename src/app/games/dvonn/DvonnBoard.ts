@@ -1,4 +1,4 @@
-import { ArrayUtils, NumberTable, Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { HexaBoard } from 'src/app/jscaip/HexaBoard';

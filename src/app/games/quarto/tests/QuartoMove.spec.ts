@@ -1,5 +1,5 @@
 import { QuartoRules } from '../QuartoRules';
-import { MGPMap } from 'src/app/utils/mgp-map/MGPMap';
+import { MGPMap } from 'src/app/utils/MGPMap';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPartSlice } from '../QuartoPartSlice';
 import { QuartoPiece } from '../QuartoPiece';

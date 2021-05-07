@@ -7,9 +7,9 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
 import { GroupDatas } from 'src/app/games/go/GroupDatas';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { display } from 'src/app/utils/utils/utils';
-import { MGPValidation } from 'src/app/utils/mgp-validation/MGPValidation';
-import { MGPOptional } from 'src/app/utils/mgp-optional/MGPOptional';
+import { display } from 'src/app/utils/utils';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 @Component({
     selector: 'app-go',

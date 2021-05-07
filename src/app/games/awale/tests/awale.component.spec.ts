@@ -2,7 +2,7 @@ import { AwaleComponent } from '../awale.component';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 import { fakeAsync } from '@angular/core/testing';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('AwaleComponent', () => {
     let componentTestUtils: ComponentTestUtils<AwaleComponent>;

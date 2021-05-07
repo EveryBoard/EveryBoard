@@ -3,7 +3,7 @@ import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
-import { ComponentTestUtils } from 'src/app/utils/TestUtils.spec';
+import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 
 describe('TablutComponent', () => {

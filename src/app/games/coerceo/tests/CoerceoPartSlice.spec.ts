@@ -1,6 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { Table } from 'src/app/utils/collection-lib/array-utils/ArrayUtils';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
 
 describe('CoerceoPartSlice', () => {

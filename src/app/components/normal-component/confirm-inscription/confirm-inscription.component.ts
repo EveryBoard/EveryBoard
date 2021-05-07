@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthenticationService } from 'src/app/services/authentication/AuthenticationService';
-import { display } from 'src/app/utils/utils/utils';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { display } from 'src/app/utils/utils';
 
 @Component({
     selector: 'app-confirm-inscription',

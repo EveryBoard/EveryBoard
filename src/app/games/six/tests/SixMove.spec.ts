@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { JSONValue } from 'src/app/utils/utils/utils';
+import { JSONValue } from 'src/app/utils/utils';
 import { SixMove } from '../SixMove';
 
 describe('SixMove', () => {
