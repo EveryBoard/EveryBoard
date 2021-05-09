@@ -14,15 +14,7 @@ import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMov
 import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
 import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
-
-export class Arrow {
-    public constructor(public readonly source: Coord,
-                       public readonly destination: Coord,
-                       public readonly x1: number,
-                       public readonly y1: number,
-                       public readonly x2: number,
-                       public readonly y2: number) {}
-}
+import { Arrow } from 'src/app/jscaip/Arrow';
 
 export class GipfComponentFailure {
     public static AMBIGUOUS_CAPTURE_COORD: string =

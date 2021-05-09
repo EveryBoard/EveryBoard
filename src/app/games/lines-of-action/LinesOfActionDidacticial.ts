@@ -77,11 +77,12 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         'Déplacement',
-        `Voici une configuration différente. Sélectionnez la pièce foncée au milieu (4, 4) et observez bien les
-         déplacements possibles.
+        `Voici une configuration différente. Sélectionnez la pièce foncée au milieu (ligne 4, colonne 4) 
+         et observez bien les déplacements possibles.
          Horizontalement, elle se déplace d'une case car elle est seule sur cette ligne.
          Verticalement, elle se déplace de trois cases car il y a en tout trois pièces sur cette ligne verticale.
-         Mais elle ne peut qu'aller vers le haut, car vers le bas la case d'aterrisage est occupée par une autre de vos pièces.
+         Mais elle ne peut qu'aller vers le haut, car vers le bas la case d'aterrisage est occupée par une autre 
+         de vos pièces.
          Diagonalement, un seul mouvement est possible : sur la diagonale qui contient trois pièces, dans la seule
          direction où on ne doit pas sauter au dessus d'une pièce adverse.
          Sur l'autre diagonale, il y a trop de pièces pour que le déplacement se termine sur le plateau.
