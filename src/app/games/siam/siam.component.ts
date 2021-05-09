@@ -9,10 +9,8 @@ import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameComponentUtils } from '../../components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
-import { Arrow } from 'src/app/jscaip/Arrow';
 
 @Component({
     selector: 'app-siam',

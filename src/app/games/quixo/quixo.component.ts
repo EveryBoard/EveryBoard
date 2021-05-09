@@ -5,7 +5,6 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
-import { GameComponentUtils } from '../../components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
@@ -17,6 +16,8 @@ import { Player } from 'src/app/jscaip/Player';
 })
 export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice> {
     public static VERBOSE: boolean = false;
+
+    public CASE_SIZE: number = 100;
 
     public rules: QuixoRules = new QuixoRules(QuixoPartSlice);
 
@@ -94,9 +95,37 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         this.cancelMove();
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
-    public getTriangleCoordinate(lx: number, ly: number): string {
-        const x: number = this.chosenCoord.x;
-        const y: number = this.chosenCoord.y;
-        return GameComponentUtils.getTriangleCoordinate(x, y, lx, ly);
+    public getArrowTransform(coord: Coord, direction: string): string {
+        let dx: number;
+        let dy: number;
+        let angle: number;
+        switch (direction) {
+            case 'UP':
+                dx = 0;
+                dy = -1;
+                angle = -90;
+                break;
+            case 'DOWN':
+                dx = 0;
+                dy = 1;
+                angle = 90;
+                break;
+            case 'LEFT':
+                dx = -1;
+                dy = 0;
+                angle = 180;
+                break;
+            case 'RIGHT':
+                dx = 1;
+                dy = 0;
+                angle = 0;
+                break;
+        }
+        const rotation: string = 'rotate(' + angle + ')';
+        const scaling: string = 'scale(2)';
+        const realX: number = coord.x * this.CASE_SIZE + this.CASE_SIZE/2 + dx * this.CASE_SIZE/4;
+        const realY: number = coord.y * this.CASE_SIZE + this.CASE_SIZE/2 + dy * this.CASE_SIZE/4;
+        const translation: string = 'translate(' + realX + ' ' + realY + ')';
+        return [translation, scaling, rotation].join(' ');
     }
 }

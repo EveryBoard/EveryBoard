@@ -2,6 +2,10 @@
      width="100%" height="auto"
      viewBox="0 0 500 500"
      preserveAspectRatio="xMidYMid meet">
+    <defs>
+        <polygon id="triangle" points="0 -3.5, 10 0, 0 3.5"/>
+    </defs>
+
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
             <circle id="click_{{ x }}_{{ y }}"
@@ -15,9 +19,10 @@
         </g>
     </g>
     <g *ngIf="chosenCoord != null">
-        <polyline *ngFor="let direction of getPossiblesDirections()"
-                  id="chooseDirection_{{ direction[2] }}"
-                  (click)="chooseDirection(direction[2])"
-                  [attr.points]="getTriangleCoordinate(direction[0], direction[1])"/>
+        <use *ngFor="let direction of getPossiblesDirections()"
+             xlink:href="#triangle"
+             id="chooseDirection_{{ direction[2] }}"
+             (click)="chooseDirection(direction[2])"
+             [attr.transform]="getArrowTransform(chosenCoord, direction[2])"/>
     </g>
 </svg>

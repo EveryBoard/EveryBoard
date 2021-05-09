@@ -4,7 +4,6 @@ import { QuixoComponent } from '../quixo.component';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameComponentUtils } from '../../../components/game-components/GameComponentUtils';
 import { RulesFailure } from 'src/app/jscaip/Rules';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
@@ -71,22 +70,6 @@ describe('QuixoComponent', () => {
         componentTestUtils.setupSlice(state);
 
         await componentTestUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK);
-    });
-    it('should delegate triangleCoord calculation to GameComponentUtils', () => {
-        const board: NumberTable = [
-            [O, _, _, _, _],
-            [_, _, _, _, _],
-            [X, _, _, _, X],
-            [_, _, _, _, _],
-            [_, _, _, _, _],
-        ];
-        const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
-        componentTestUtils.setupSlice(state);
-
-        spyOn(GameComponentUtils, 'getTriangleCoordinate').and.callThrough();
-        componentTestUtils.expectClickSuccess('#click_0_2');
-        componentTestUtils.getComponent().getTriangleCoordinate(2, 1);
-        expect(GameComponentUtils.getTriangleCoordinate).toHaveBeenCalledWith(0, 2, 2, 1);
     });
     it('should delegate decoding to move', () => {
         spyOn(QuixoMove, 'decode').and.callThrough();
