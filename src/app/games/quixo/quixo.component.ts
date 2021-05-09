@@ -72,13 +72,13 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
             return MGPValidation.SUCCESS;
         }
     }
-    public getPossiblesDirections(): [number, number, string][] {
-        const infos: [number, number, string][] = [];
-        if (this.chosenCoord.x !== 4) infos.push([2, 1, 'RIGHT']);
-        if (this.chosenCoord.x !== 0) infos.push([0, 1, 'LEFT']);
-        if (this.chosenCoord.y !== 4) infos.push([1, 2, 'DOWN']);
-        if (this.chosenCoord.y !== 0) infos.push([1, 0, 'UP']);
-        return infos;
+    public getPossiblesDirections(): string[] {
+        const directions: string[] = [];
+        if (this.chosenCoord.x !== 4) directions.push('RIGHT');
+        if (this.chosenCoord.x !== 0) directions.push('LEFT');
+        if (this.chosenCoord.y !== 4) directions.push('DOWN');
+        if (this.chosenCoord.y !== 0) directions.push('UP');
+        return directions;
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#chooseDirection_' + direction);

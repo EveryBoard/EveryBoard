@@ -34,18 +34,13 @@ describe('QuixoComponent', () => {
         expect(componentTestUtils.getComponent().getPieceClasses(4, 4)).toContain('lastmove');
     });
     it('should give correct direction', () => {
-        let possibleDirections: [number, number, string][];
-
         componentTestUtils.getComponent().chosenCoord = new Coord(0, 0);
-        // might want changeDetection
-        possibleDirections = componentTestUtils.getComponent().getPossiblesDirections();
-        expect(possibleDirections).toEqual([[2, 1, 'RIGHT'], [1, 2, 'DOWN']]);
+        expect(componentTestUtils.getComponent().getPossiblesDirections()).toEqual(['RIGHT', 'DOWN']);
 
         componentTestUtils.getComponent().onBoardClick(4, 4);
-        possibleDirections = componentTestUtils.getComponent().getPossiblesDirections();
-        expect(possibleDirections).toEqual([[0, 1, 'LEFT'], [1, 0, 'UP']]);
+        expect(componentTestUtils.getComponent().getPossiblesDirections()).toEqual(['LEFT', 'UP']);
     });
-    it('should cancel move when trying to select ennemy piece', async() => {
+    it('should cancel move when trying to select ennemy piece', fakeAsync(async() => {
         const board: NumberTable = [
             [O, _, _, _, _],
             [_, _, _, _, _],
@@ -57,8 +52,8 @@ describe('QuixoComponent', () => {
         componentTestUtils.setupSlice(state);
 
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
-    });
-    it('should cancel move when trying to select center coord', async() => {
+    }));
+    it('should cancel move when trying to select center coord', fakeAsync(async() => {
         const board: NumberTable = [
             [O, _, _, _, _],
             [_, _, _, _, _],
@@ -70,7 +65,19 @@ describe('QuixoComponent', () => {
         componentTestUtils.setupSlice(state);
 
         await componentTestUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK);
-    });
+    }));
+    it('should show insertion directions when clicking on a border case', fakeAsync(async() => {
+        await componentTestUtils.expectClickSuccess('#click_0_0');
+        componentTestUtils.expectElementToExist('#chooseDirection_DOWN');
+    }));
+    it('should allow a simple move', fakeAsync(async() => {
+        await componentTestUtils.expectClickSuccess('#click_4_0');
+        await componentTestUtils.expectMoveSuccess('#chooseDirection_LEFT', new QuixoMove(4, 0, Orthogonal.LEFT));
+    }));
+    it('should allow a simple move upwards', fakeAsync(async() => {
+        await componentTestUtils.expectClickSuccess('#click_4_4');
+        await componentTestUtils.expectMoveSuccess('#chooseDirection_UP', new QuixoMove(4, 4, Orthogonal.UP));
+    }));
     it('should delegate decoding to move', () => {
         spyOn(QuixoMove, 'decode').and.callThrough();
         componentTestUtils.getComponent().decodeMove(new QuixoMove(0, 0, Orthogonal.DOWN).encode());
