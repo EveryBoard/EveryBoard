@@ -1,6 +1,6 @@
 import { Arrow, GipfComponent, GipfComponentFailure } from '../gipf.component';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GipfFailure } from 'src/app/games/gipf/GipfRules';
+import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { JSONValue } from 'src/app/utils/utils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';

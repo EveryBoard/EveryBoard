@@ -58,7 +58,7 @@ import { EpaminondasComponent } from './games/epaminondas/epaminondas.component'
 import { GipfComponent } from './games/gipf/gipf.component';
 import { GoComponent } from './games/go/go.component';
 import { KamisadoComponent } from './games/kamisado/kamisado.component';
-import { LinesOfActionComponent } from './games/lines-of-action/LinesOfActionComponent';
+import { LinesOfActionComponent } from './games/lines-of-action/LinesOfAction.component';
 import { MinimaxTestingComponent } from './games/minimax-testing/minimax-testing.component';
 import { P4Component } from './games/p4/p4.component';
 import { PylosComponent } from './games/pylos/pylos.component';

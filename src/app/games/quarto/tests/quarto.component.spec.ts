@@ -1,10 +1,10 @@
+import { fakeAsync } from '@angular/core/testing';
 import { QuartoComponent } from '../quarto.component';
 import { QuartoMove } from 'src/app/games/quarto/QuartoMove';
 import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 
 describe('QuartoComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;

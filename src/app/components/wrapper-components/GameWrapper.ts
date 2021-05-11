@@ -17,7 +17,7 @@ import { EpaminondasComponent } from '../../games/epaminondas/epaminondas.compon
 import { GipfComponent } from '../../games/gipf/gipf.component';
 import { GoComponent } from '../../games/go/go.component';
 import { KamisadoComponent } from '../../games/kamisado/kamisado.component';
-import { LinesOfActionComponent } from 'src/app/games/lines-of-action/LinesOfActionComponent';
+import { LinesOfActionComponent } from 'src/app/games/lines-of-action/LinesOfAction.component';
 import { MinimaxTestingComponent } from '../../games/minimax-testing/minimax-testing.component';
 import { P4Component } from '../../games/p4/p4.component';
 import { PylosComponent } from '../../games/pylos/pylos.component';
@@ -204,7 +204,8 @@ export abstract class GameWrapper {
             isThereAPlayer: this.players[indexPlayer],
         } });
         if (this.players[indexPlayer]) {
-            return this.players[indexPlayer] === this.userName;
+            return this.players[indexPlayer] === this.userName ||
+                   this.players[indexPlayer] === 'humain';
         } else {
             return true;
         }

@@ -1,15 +1,14 @@
-import { ReversiRules } from '../ReversiRules';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { ReversiMinimax, ReversiRules } from '../ReversiRules';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
 
 describe('ReversiMove', () => {
     it('ReversiMove.encode and ReversiMove.decode should be reversible', () => {
         const rules: ReversiRules = new ReversiRules(ReversiPartSlice);
-        const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
-        moves.put(ReversiMove.PASS, new ReversiPartSlice([], 0));
-        for (let i = 0; i < moves.size(); i++) {
-            const move: ReversiMove = moves.getByIndex(i).key;
+        const minimax: ReversiMinimax = new ReversiMinimax('ReversiMinimax');
+        const moves: ReversiMove[] = minimax.getListMoves(rules.node);
+        moves.push(ReversiMove.PASS);
+        for (const move of moves) {
             const encodedMove: number = move.encode();
             const decodedMove: ReversiMove = ReversiMove.decode(encodedMove);
             const reEncodedMove: number = decodedMove.encode();

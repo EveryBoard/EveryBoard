@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { P4PartSlice } from './P4PartSlice';
-import { P4Rules } from './P4Rules';
+import { P4Minimax, P4Rules } from './P4Rules';
 import { Move } from '../../jscaip/Move';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-p4',
@@ -16,6 +17,10 @@ import { Coord } from 'src/app/jscaip/Coord';
 export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
     public static VERBOSE: boolean = false;
 
+    public availableMinimaxes: Minimax<P4Move, P4PartSlice>[] = [
+        // TODO:does minimax use legality status ????
+        new P4Minimax('P4Minimax'),
+    ];
     public EMPTY_CASE: number = Player.NONE.value;
     public CASE_SIZE: number = 100;
     public STROKE_WIDTH: number = 8;

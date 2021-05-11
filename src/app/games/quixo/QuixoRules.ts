@@ -1,4 +1,3 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -8,14 +7,15 @@ import { Player } from 'src/app/jscaip/Player';
 import { Rules } from 'src/app/jscaip/Rules';
 import { QuixoPartSlice } from './QuixoPartSlice';
 import { QuixoMove } from './QuixoMove';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoPartSlice> {}
 
-export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
+export class QuixoMinimax extends Minimax<QuixoMove, QuixoPartSlice> {
 
-    public getListMoves(node: QuixoNode): MGPMap<QuixoMove, QuixoPartSlice> {
-        const slice: QuixoPartSlice = node.gamePartSlice;
-        const moves: MGPMap<QuixoMove, QuixoPartSlice> = new MGPMap<QuixoMove, QuixoPartSlice>();
+    public getListMoves(node: QuixoNode): QuixoMove[] {
+        const moves: QuixoMove[] = [];
         const verticalCoords: Coord[] = QuixoRules.getVerticalCoords(node);
         const horizontalCenterCoords: Coord[] = QuixoRules.getHorizontalCenterCoords(node);
         const coords: Coord[] = horizontalCenterCoords.concat(verticalCoords);
@@ -23,12 +23,30 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
             const possibleDirections: Orthogonal[] = QuixoRules.getPossibleDirections(coord);
             for (const possibleDirection of possibleDirections) {
                 const newMove: QuixoMove = new QuixoMove(coord.x, coord.y, possibleDirection);
-                const resultingSlice: QuixoPartSlice = QuixoRules.applyLegalMove(newMove, slice, null);
-                moves.put(newMove, resultingSlice);
+                moves.push(newMove);
             }
         }
         return moves;
     }
+    public getBoardValue(move: QuixoMove, slice: QuixoPartSlice): NodeUnheritance {
+        const linesSums: {[key: string]: {[key: number]: number[]}} =
+            QuixoRules.getLinesSums(slice);
+        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
+        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
+        const currentPlayer: Player = slice.getCurrentPlayer();
+        if (zerosFullestLine === 5) {
+            if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
+                return new NodeUnheritance(Number.MIN_SAFE_INTEGER); // TODO: Player.victory please
+            }
+        }
+        if (onesFullestLine === 5) {
+            return new NodeUnheritance(Number.MAX_SAFE_INTEGER); // TODO: same
+        }
+        return new NodeUnheritance(onesFullestLine - zerosFullestLine);
+    }
+}
+export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
+
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentEnnemy: number = node.gamePartSlice.getCurrentEnnemy().value;
         const verticalCoords: Coord[] = [];
@@ -62,22 +80,6 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
         if (coord.x !== 4) possibleDirections.push(Orthogonal.RIGHT);
         if (coord.y !== 4) possibleDirections.push(Orthogonal.DOWN);
         return possibleDirections;
-    }
-    public getBoardValue(move: QuixoMove, slice: QuixoPartSlice): number {
-        const linesSums: {[key: string]: {[key: number]: number[]}} =
-            QuixoRules.getLinesSums(slice);
-        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
-        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        const currentPlayer: Player = slice.getCurrentPlayer();
-        if (zerosFullestLine === 5) {
-            if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
-                return Number.MIN_SAFE_INTEGER;
-            }
-        }
-        if (onesFullestLine === 5) {
-            return Number.MAX_SAFE_INTEGER;
-        }
-        return onesFullestLine - zerosFullestLine;
     }
     public static getLinesSums(slice: QuixoPartSlice): {[player: number]: {[lineType: string]: number[]}} {
         const sums: {[player: number]: {[lineType: string]: number[]}} = {};

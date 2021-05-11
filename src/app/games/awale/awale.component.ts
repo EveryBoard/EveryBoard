@@ -1,12 +1,13 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { AwaleRules } from './AwaleRules';
+import { AwaleMinimax, AwaleRules } from './AwaleRules';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from './AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-awale-component',
@@ -14,6 +15,11 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
+
+    public availableMinimaxes: Minimax<AwaleMove, AwalePartSlice, AwaleLegalityStatus>[] = [
+        new AwaleMinimax('AwaleMinimax'),
+    ];
+
     public rules: AwaleRules = new AwaleRules(AwalePartSlice);
 
     public scores: number[] = [0, 0];

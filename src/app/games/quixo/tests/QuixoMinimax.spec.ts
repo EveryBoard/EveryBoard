@@ -2,16 +2,16 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
 import { QuixoMove } from '../QuixoMove';
-import { QuixoRules } from '../QuixoRules';
+import { QuixoMinimax } from '../QuixoRules';
 
 describe('QuixoRules - Minimax:', () => {
-    let rules: QuixoRules;
+    let minimax: QuixoMinimax;
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;
     const O: number = Player.ZERO.value;
 
     beforeEach(() => {
-        rules = new QuixoRules(QuixoPartSlice);
+        minimax = new QuixoMinimax('QuixoMinimax');
     });
 
     it('Should calcule board value according to longest line differences', () => {
@@ -24,6 +24,6 @@ describe('QuixoRules - Minimax:', () => {
         ];
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        expect(rules.getBoardValue(move, slice)).toEqual(-1);
+        expect(minimax.getBoardValue(move, slice).value).toEqual(-1);
     });
 });

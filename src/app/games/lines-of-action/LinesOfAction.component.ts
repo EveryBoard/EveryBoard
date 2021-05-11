@@ -9,15 +9,22 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionMove } from './LinesOfActionMove';
-import { LinesOfActionFailure, LinesOfActionRules } from './LinesOfActionRules';
+import { LinesOfActionMinimax, LinesOfActionRules } from './LinesOfActionRules';
+import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-linesofaction',
-    templateUrl: './LinesOfActionComponent.html',
+    templateUrl: './LinesOfAction.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionMove, LinesOfActionState> {
+
+    public availableMinimaxes: Minimax<LinesOfActionMove, LinesOfActionState>[] = [
+        // TODO:does minimax use legality status ????
+        new LinesOfActionMinimax('LinesOfActionMinimax'),
+    ];
     public CASE_SIZE: number = 100;
     public STROKE_WIDTH: number = 8;
     public INDICATOR_SIZE: number = 20;
@@ -57,7 +64,7 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
             return this.cancelMove(LinesOfActionFailure.NOT_YOUR_PIECE);
         }
         this.selected = MGPOptional.of(coord);
-        this.targets = this.rules.possibleTargets(this.rules.node.gamePartSlice, this.selected.get());
+        this.targets = LinesOfActionRules.possibleTargets(this.rules.node.gamePartSlice, this.selected.get());
         if (this.targets.length === 0) {
             return this.cancelMove(LinesOfActionFailure.PIECE_CANNOT_MOVE);
         }

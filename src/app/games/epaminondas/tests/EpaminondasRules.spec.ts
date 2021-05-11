@@ -4,16 +4,19 @@ import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasLegalityStatus } from '../epaminondaslegalitystatus';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
-import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasMinimax, EpaminondasRules } from '../EpaminondasRules';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('EpaminondasRules:', () => {
     let rules: EpaminondasRules;
+    let minimax: EpaminondasMinimax;
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;
     const O: number = Player.ZERO.value;
 
     beforeEach(() => {
         rules = new EpaminondasRules(EpaminondasPartSlice);
+        minimax = new EpaminondasMinimax('EpaminondasMinimax');
     });
     it('Should forbid phalanx to go outside the board (body)', () => {
         const board: NumberTable = [
@@ -157,7 +160,7 @@ describe('EpaminondasRules:', () => {
         const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe('Vous ne pouvez pas capturer/atterrir sur vos propres pions.');
+        expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_SELF_CAPTURE);
     });
     it('Should declare first player winner if his pawn survive one turn on last line', () => {
         const board: NumberTable = [
@@ -195,7 +198,7 @@ describe('EpaminondasRules:', () => {
         const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice))
+        expect(minimax.getBoardValue(move, expectedSlice).value)
             .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
     it('Should declare second player winner if his pawn survive one turn on first line', () => {
@@ -234,7 +237,7 @@ describe('EpaminondasRules:', () => {
         const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice))
+        expect(minimax.getBoardValue(move, expectedSlice).value)
             .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
     it('Should not consider first player winner if both player have one piece on their landing line', () => {
@@ -273,7 +276,7 @@ describe('EpaminondasRules:', () => {
         const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = rules.getBoardValue(move, expectedSlice);
+        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
         expect(boardValue).not.toEqual(Number.MIN_SAFE_INTEGER, 'This should not be a victory for player 0');
         expect(boardValue).not.toEqual(Number.MAX_SAFE_INTEGER, 'This should not be a victory for player 1');
     });

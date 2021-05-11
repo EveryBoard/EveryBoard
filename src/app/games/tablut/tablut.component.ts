@@ -4,7 +4,7 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { Coord } from '../../jscaip/Coord';
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutPartSlice } from './TablutPartSlice';
-import { TablutRules } from './TablutRules';
+import { TablutMinimax, TablutRules } from './TablutRules';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -13,6 +13,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-tablut',
@@ -20,8 +21,13 @@ import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice> {
+
     public static VERBOSE: boolean = false;
 
+    public availableMinimaxes: Minimax<TablutMove, TablutPartSlice>[] = [
+        // TODO:does minimax use legality status ????
+        new TablutMinimax('TablutMinimax'),
+    ];
     public readonly CASE_SIZE: number = 100;
 
     public NONE: number = TablutCase.UNOCCUPIED.value;

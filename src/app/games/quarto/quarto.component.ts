@@ -1,17 +1,23 @@
 import { Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPartSlice } from './QuartoPartSlice';
-import { QuartoRules } from './QuartoRules';
+import { QuartoMinimax, QuartoRules } from './QuartoRules';
 import { QuartoPiece } from './QuartoPiece';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
 })
 export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
+
+    public availableMinimaxes: Minimax<QuartoMove, QuartoPartSlice>[] = [
+        // TODO:does minimax use legality status ????
+        new QuartoMinimax('QuartoMinimax'),
+    ];
     public rules: QuartoRules = new QuartoRules(QuartoPartSlice);
 
     public chosen: Coord = new Coord(-1, -1);

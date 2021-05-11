@@ -1,23 +1,28 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
-import { LinesOfActionFailure, LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
+import { LinesOfActionMinimax, LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionRules', () => {
+
     let rules: LinesOfActionRules;
+    let minimax: LinesOfActionMinimax;
     const X: number = Player.ZERO.value;
     const O: number = Player.ONE.value;
     const _: number = Player.NONE.value;
 
     beforeEach(() => {
         rules = new LinesOfActionRules(LinesOfActionState);
+        minimax = new LinesOfActionMinimax('LinesOfActionMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.getBoardValue(rules.node.move, rules.node.gamePartSlice)).toEqual(0);
+        expect(minimax.getBoardValue(rules.node.move, rules.node.gamePartSlice).value).toEqual(0);
     });
     it('should forbid moving a piece of the opponent', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
@@ -176,7 +181,7 @@ describe('LinesOfActionRules', () => {
         const move: LinesOfActionMove = new LinesOfActionMove(new Coord(2, 0), new Coord(2, 2));
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeFalse();
-        expect(status.legal.getReason()).toBe(LinesOfActionFailure.BUSY_TARGET);
+        expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_SELF_CAPTURE);
     });
     it('should forbid to jump over an enemy\'s piece', () => {
         const board: number[][] = [
@@ -253,7 +258,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        expect(rules.getVictory(state)).toEqual(MGPOptional.empty());
+        expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.empty());
     });
     it('should win when a player has only one piece', () => {
         const board: number[][] = [
@@ -267,8 +272,8 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        expect(rules.getVictory(state)).toEqual(MGPOptional.of(Player.ONE));
-        expect(rules.getBoardValue(undefined, state)).toBe(Player.ONE.getVictoryValue());
+        expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.of(Player.ONE));
+        expect(minimax.getBoardValue(undefined, state).value).toBe(Player.ONE.getVictoryValue());
     });
     it('should win when all the player\'s pieces are connected, in any direction', () => {
         const board: number[][] = [
@@ -282,8 +287,8 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        expect(rules.getVictory(state)).toEqual(MGPOptional.of(Player.ZERO));
-        expect(rules.getBoardValue(undefined, state)).toBe(Player.ZERO.getVictoryValue());
+        expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.of(Player.ZERO));
+        expect(minimax.getBoardValue(undefined, state).value).toBe(Player.ZERO.getVictoryValue());
     });
     it('should draw on simultaneous connections', () => {
         const board: number[][] = [
@@ -301,11 +306,11 @@ describe('LinesOfActionRules', () => {
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingState: LinesOfActionState = rules.applyLegalMove(move, state, status);
-        expect(rules.getVictory(resultingState)).toEqual(MGPOptional.of(Player.NONE));
+        expect(LinesOfActionRules.getVictory(resultingState)).toEqual(MGPOptional.of(Player.NONE));
     });
     it('should list all possible targets', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
-        const targets: Coord[] = rules.possibleTargets(state, new Coord(4, 7));
+        const targets: Coord[] = LinesOfActionRules.possibleTargets(state, new Coord(4, 7));
         expect(targets).toEqual([new Coord(4, 5), new Coord(6, 5), new Coord(2, 5)]);
     });
     it('should list only legal moves in possible targets', () => {
@@ -320,7 +325,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const targets: Coord[] = rules.possibleTargets(state, new Coord(2, 2));
+        const targets: Coord[] = LinesOfActionRules.possibleTargets(state, new Coord(2, 2));
         expect(targets).toEqual([
             new Coord(2, 1), new Coord(3, 1),
             new Coord(3, 3), new Coord(2, 3),
@@ -329,8 +334,8 @@ describe('LinesOfActionRules', () => {
     });
     it('should have 36 moves on the initial slice', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
-        const node: LinesOfActionNode = new LinesOfActionNode(null, null, state, 0);
-        expect(rules.getListMoves(node).size()).toBe(6 * 3 * 2);
+        const node: LinesOfActionNode = new LinesOfActionNode(null, null, state);
+        expect(minimax.getListMoves(node).length).toBe(6 * 3 * 2);
     });
     it('should have 0 moves on a victory slice', () => {
         const board: number[][] = [
@@ -344,7 +349,7 @@ describe('LinesOfActionRules', () => {
             [_, _, _, _, _, _, _, _],
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
-        const node: LinesOfActionNode = new LinesOfActionNode(null, null, state, 0);
-        expect(rules.getListMoves(node).size()).toBe(0);
+        const node: LinesOfActionNode = new LinesOfActionNode(null, null, state);
+        expect(minimax.getListMoves(node).length).toBe(0);
     });
 });

@@ -2,16 +2,71 @@ import { Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { AwalePartSlice } from './AwalePartSlice';
 import { AwaleMove } from './AwaleMove';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { AwaleLegalityStatus } from './AwaleLegalityStatus';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { GoPartSlice } from '../go/GoPartSlice';
 
 abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
+export class AwaleMinimax extends Minimax<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
+
+    public getListMoves(n: AwaleNode): AwaleMove[] {
+
+        const choices: AwaleMove[] = [];
+        const oldSlice: AwalePartSlice = n.gamePartSlice;
+        const turn: number = oldSlice.turn;
+        const player: number = turn % 2;
+        let newMove: AwaleMove;
+        let x: number = 0;
+        do {
+            // for each house that might be playable
+
+            if (n.gamePartSlice.getBoardByXY(x, player) !== 0) {
+                // if the house is not empty
+
+                newMove = new AwaleMove(x, player);
+                const legality: AwaleLegalityStatus = AwaleRules.isLegal(newMove, oldSlice); // see if the move is legal
+
+                if (legality.legal.isSuccess()) {
+                    // if the move is legal, we addPart it to the listMoves
+                    newMove = new AwaleMove(x, player);
+
+                    choices.push(newMove);
+                }
+            }
+            x++;
+        } while (x < 6);
+        return choices;
+    }
+    public getBoardValue(move: AwaleMove, slice: AwalePartSlice): NodeUnheritance {
+
+        const player: number = slice.turn % 2;
+        const ennemy: number = (player + 1) % 2;
+        const captured: number[] = slice.getCapturedCopy();
+        const c1: number = captured[1];
+        const c0: number = captured[0];
+        const board: number[][] = slice.getCopiedBoard();
+        if (AwaleRules.isStarving(player, board)) { // TODO tester de l'enlever
+            if (!AwaleRules.canDistribute(ennemy, board)) {
+                return new NodeUnheritance((c0 > c1) ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER);
+            }
+        }
+
+        if (c1 > 24) {
+            return new NodeUnheritance(Player.ONE.getVictoryValue());
+        }
+        if (c0 > 24) {
+            return new NodeUnheritance(Player.ZERO.getVictoryValue());
+        }
+        return new NodeUnheritance(c1 - c0);
+    }
+}
 export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
 
     public static VERBOSE: boolean = false;
@@ -30,7 +85,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
         return new AwalePartSlice(status.resultingBoard, turn + 1, captured);
     }
-    private static mansoon(mansooningPlayer: number, board: number[][]): number {
+    public static mansoon(mansooningPlayer: number, board: number[][]): number {
         /* capture all the seeds of the mansooning player
          * return the sum of all captured seeds
          * is called when a game is over because of starvation
@@ -44,7 +99,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (x < 6);
         return sum;
     }
-    public isLegal(move: AwaleMove, slice: AwalePartSlice): AwaleLegalityStatus {
+    public static isLegal(move: AwaleMove, slice: AwalePartSlice): AwaleLegalityStatus {
         /* modify the move to addPart the capture
          * modify the board to get the after-move result
          * return -1 if it's not legal, if so, the board should not be affected
@@ -99,13 +154,16 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         return { legal: MGPValidation.SUCCESS, captured, resultingBoard };
     }
-    private static doesDistribute(x: number, y: number, board: number[][]): boolean {
+    public isLegal(move: AwaleMove, slice: AwalePartSlice): AwaleLegalityStatus {
+        return AwaleRules.isLegal(move, slice);
+    }
+    public static doesDistribute(x: number, y: number, board: number[][]): boolean {
         if (y === 0) { // distribution from left to right
             return board[y][x] > (5 - x);
         }
         return board[y][x] > x; // distribution from right to left
     }
-    private static canDistribute(player: number, board: number[][]): boolean {
+    public static canDistribute(player: number, board: number[][]): boolean {
         let x: number = 0;
         do {
             if (AwaleRules.doesDistribute(x++, player, board)) {
@@ -114,7 +172,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (x < 6);
         return false;
     }
-    private static isStarving(player: number, board: number[][]): boolean {
+    public static isStarving(player: number, board: number[][]): boolean {
         let i: number = 0;
         do {
             if (board[player][i++] > 0) {
@@ -123,7 +181,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while (i < 6);
         return true;
     }
-    private static distribute(x: number, y: number, board: number[][]): Coord {
+    public static distribute(x: number, y: number, board: number[][]): Coord {
         // just apply's the move on the board (the distribution part)
         // does not make the capture nor verify the legality of the move
         // return the coord of the last case the move got down
@@ -158,7 +216,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
         return new Coord(x, y);
     }
-    private static capture(x: number, y: number, player: number, board: number[][]): number {
+    public static capture(x: number, y: number, player: number, board: number[][]): number {
         /* only called if y and player are not equal
          * if the condition are make to make an capture into the ennemi's side are met
          * capture and return the number of captured
@@ -189,59 +247,9 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while ((x !== limite) && (((target = board[y][x]) === 2) || (target === 3)));
         return captured;
     }
-    public getListMoves(n: AwaleNode): MGPMap<AwaleMove, AwalePartSlice> {
-
-        const choices: MGPMap<AwaleMove, AwalePartSlice> = new MGPMap<AwaleMove, AwalePartSlice>();
-        const oldSlice: AwalePartSlice = n.gamePartSlice;
-        const turn: number = oldSlice.turn;
-        const player: number = turn % 2;
-        let newMove: AwaleMove;
-        let newSlice: AwalePartSlice;
-        let x: number = 0;
-        do {
-            // for each house that might be playable
-
-            if (n.gamePartSlice.getBoardByXY(x, player) !== 0) {
-                // if the house is not empty
-
-                newMove = new AwaleMove(x, player);
-                const legality: AwaleLegalityStatus = this.isLegal(newMove, oldSlice); // see if the move is legal
-
-                if (legality.legal.isSuccess()) {
-                    // if the move is legal, we addPart it to the listMoves
-                    const capturedCopy: number[] = oldSlice.getCapturedCopy();
-                    capturedCopy[player] += legality.captured[player];
-                    capturedCopy[(player + 1) % 2] += legality.captured[(player + 1) % 2];
-                    newMove = new AwaleMove(x, player);
-
-                    newSlice = new AwalePartSlice(legality.resultingBoard, turn + 1, capturedCopy);
-                    choices.set(newMove, newSlice);
-                }
-            }
-            x++;
-        } while (x < 6);
-        return choices;
-    }
-    public getBoardValue(move: AwaleMove, slice: AwalePartSlice): number {
-
-        const player: number = slice.turn % 2;
-        const ennemy: number = (player + 1) % 2;
-        const captured: number[] = slice.getCapturedCopy();
-        const c1: number = captured[1];
-        const c0: number = captured[0];
-        const board: number[][] = slice.getCopiedBoard();
-        if (AwaleRules.isStarving(player, board)) { // TODO tester de l'enlever
-            if (!AwaleRules.canDistribute(ennemy, board)) {
-                return (c0 > c1) ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER;
-            }
-        }
-
-        if (c1 > 24) {
-            return Player.ONE.getVictoryValue();
-        }
-        if (c0 > 24) {
-            return Player.ZERO.getVictoryValue();
-        }
-        return c1 - c0;
+    public isGameOver(state: GoPartSlice): boolean {
+        return state.captured[0] > 24 ||
+               state.captured[1] > 24 ||
+               state.captured[0] + state.captured[1] === 48;
     }
 }

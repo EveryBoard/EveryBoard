@@ -1,6 +1,5 @@
-import { TablutRules } from '../TablutRules';
+import { TablutMinimax, TablutRules } from '../TablutRules';
 import { TablutMove } from '../TablutMove';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { TablutPartSlice } from '../TablutPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 
@@ -8,9 +7,9 @@ describe('TablutMove', () => {
 
     it('TablutMove.encode and TablutMove.decode should be reversible', () => {
         const rules: TablutRules = new TablutRules(TablutPartSlice);
-        const firstTurnMoves: MGPMap<TablutMove, TablutPartSlice> = rules.getListMoves(rules.node);
-        for (let i: number = 0; i < firstTurnMoves.size(); i++) {
-            const move: TablutMove = firstTurnMoves.getByIndex(i).key;
+        const minimax: TablutMinimax = new TablutMinimax('TablutMinimax');
+        const firstTurnMoves: TablutMove[] = minimax.getListMoves(rules.node);
+        for (const move of firstTurnMoves) {
             const encodedMove: number = move.encode();
             const decodedMove: TablutMove = TablutMove.decode(encodedMove);
             expect(decodedMove).toEqual(move);

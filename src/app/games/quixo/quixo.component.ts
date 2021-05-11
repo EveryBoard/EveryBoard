@@ -4,11 +4,12 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
-import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
+import { QuixoMinimax, QuixoRules } from 'src/app/games/quixo/QuixoRules';
 import { GameComponentUtils } from '../../components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { RulesFailure } from 'src/app/jscaip/Rules';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-quixo',
@@ -18,6 +19,10 @@ import { Player } from 'src/app/jscaip/Player';
 export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice> {
     public static VERBOSE: boolean = false;
 
+    public availableMinimaxes: Minimax<QuixoMove, QuixoPartSlice>[] = [
+        // TODO:does minimax use legality status ????
+        new QuixoMinimax('QuixoMinimax'),
+    ];
     public rules: QuixoRules = new QuixoRules(QuixoPartSlice);
 
     public slice: QuixoPartSlice = this.rules.node.gamePartSlice;

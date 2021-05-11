@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { ReversiRules } from './ReversiRules';
+import { ReversiMinimax, ReversiRules } from './ReversiRules';
 import { ReversiPartSlice } from './ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
@@ -9,6 +9,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Direction } from 'src/app/jscaip/Direction';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-reversi',
@@ -16,6 +17,11 @@ import { Direction } from 'src/app/jscaip/Direction';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
+
+    public availableMinimaxes: Minimax<ReversiMove, ReversiPartSlice, ReversiLegalityStatus>[] = [
+        // TODO:does minimax use legality status ????
+        new ReversiMinimax('ReversiMinimax'),
+    ];
     public CASE_SIZE: number = 100;
     public NONE: number = Player.NONE.value;
     public lastMove: Coord = new Coord(-2, -2);

@@ -6,10 +6,12 @@ import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GoRules } from '../GoRules';
+import { GoMinimax, GoRules } from '../GoRules';
 
 describe('GoRules:', () => {
+
     let rules: GoRules;
+    let minimax: GoMinimax;
 
     const X: GoPiece = GoPiece.WHITE;
     const O: GoPiece = GoPiece.BLACK;
@@ -25,6 +27,7 @@ describe('GoRules:', () => {
     });
     beforeEach(() => {
         rules = new GoRules(GoPartSlice);
+        minimax = new GoMinimax('GoMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
@@ -345,7 +348,7 @@ describe('GoRules:', () => {
 
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
 
-        expect(rules.node.isEndGame()).toBeTrue();
+        expect(rules.node.isEndGame(minimax)).toBeTrue();
         expect(rules.node.gamePartSlice.phase).toBe(Phase.FINISHED, 'Phase should have been switched to \'FINISHED\'');
     });
     it('simply shared board should be simple to calculate', () => {
@@ -394,12 +397,12 @@ describe('GoRules:', () => {
             [_, O, O, O, _],
         ];
         const slice: GoPartSlice = new GoPartSlice(board, [0, 0], 0, MGPOptional.empty(), Phase.PASSED);
-        rules.node = new MGPNode(null, null, slice, -6);
+        rules.node = new MGPNode(null, null, slice);
         expect(rules.choose(GoMove.PASS)).toBeTrue();
         expect(rules.node.gamePartSlice.phase).toBe(Phase.COUNTING);
         expect(rules.choose(new GoMove(4, 2))).toBeTrue();
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
-        expect(rules.getBoardValue(rules.node.move, rules.node.gamePartSlice)).toBe(0);
+        expect(minimax.getBoardValue(rules.node.move, rules.node.gamePartSlice).value).toBe(0);
     });
 });

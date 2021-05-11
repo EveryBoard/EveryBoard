@@ -1,4 +1,4 @@
-import { P4Node, P4Rules } from '../P4Rules';
+import { P4Minimax, P4Node, P4Rules } from '../P4Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { P4PartSlice } from '../P4PartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
@@ -6,17 +6,20 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { P4Move } from '../P4Move';
 
 describe('P4Rules', () => {
+
     let rules: P4Rules;
+    let minimax: P4Minimax;
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
     const _: number = Player.NONE.value;
 
     beforeEach(() => {
         rules = new P4Rules(P4PartSlice);
+        minimax = new P4Minimax('P4Minimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(rules.getBoardValue(rules.node.move, rules.node.gamePartSlice)).toEqual(0);
+        expect(minimax.getBoardValue(rules.node.move, rules.node.gamePartSlice).value).toEqual(0);
     });
     it('Should drop piece on the lowest case of the column', () => {
         const board: number[][] = [
@@ -60,12 +63,12 @@ describe('P4Rules', () => {
             [_, _, _, O, _, _, _],
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 0);
-        rules.node = new MGPNode(null, null, slice, 0);
+        rules.node = new MGPNode(null, null, slice);
         const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
-        expect(rules.node.ownValue).toEqual(Number.MIN_SAFE_INTEGER);
-        expect(rules.node.isEndGame()).toBeTrue();
+        expect(rules.node.getOwnValue(minimax).value).toEqual(Number.MIN_SAFE_INTEGER);
+        expect(rules.node.isEndGame(minimax)).toBeTrue();
     });
     it('Second player should win vertically', () => {
         const board: number[][] = [
@@ -85,12 +88,12 @@ describe('P4Rules', () => {
             [_, _, _, X, _, _, _],
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 1);
-        rules.node = new MGPNode(null, null, slice, 0);
+        rules.node = new MGPNode(null, null, slice);
         const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
-        expect(rules.node.ownValue).toEqual(Number.MAX_SAFE_INTEGER);
-        expect(rules.node.isEndGame()).toBeTrue();
+        expect(rules.node.getOwnValue(minimax).value).toEqual(Number.MAX_SAFE_INTEGER);
+        expect(rules.node.isEndGame(minimax)).toBeTrue();
     });
     it('Should be a draw', () => {
         const board: number[][] = [
@@ -110,13 +113,13 @@ describe('P4Rules', () => {
             [X, X, X, O, X, X, X],
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 41);
-        rules.node = new MGPNode(null, null, slice, 0);
+        rules.node = new MGPNode(null, null, slice);
         const move: P4Move = P4Move.of(3);
         expect(rules.choose(move)).toBeTrue();
         const resultingSlice: P4PartSlice = rules.node.gamePartSlice;
         expect(resultingSlice.board).toEqual(expectedBoard);
-        expect(rules.node.isEndGame()).toBeTrue();
-        expect(rules.node.ownValue).toBe(0);
+        expect(rules.node.isEndGame(minimax)).toBeTrue();
+        expect(rules.node.getOwnValue(minimax).value).toBe(0);
     });
     it('Should know when a column is full or not', () => {
         const board: number[][] = [
@@ -128,8 +131,8 @@ describe('P4Rules', () => {
             [O, O, X, O, X, O, X],
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 12);
-        const node: P4Node = new MGPNode(null, null, slice, 0);
-        expect(rules.getListMoves(node).size()).toBe(6);
+        const node: P4Node = new MGPNode(null, null, slice);
+        expect(minimax.getListMoves(node).length).toBe(6);
     });
     it('should forbid placing a piece on a full column', () => {
         const board: number[][] = [
@@ -164,6 +167,6 @@ describe('P4Rules', () => {
         ];
         const slice2: P4PartSlice = new P4PartSlice(board2, 12);
 
-        expect(P4Rules.getBoardValue(slice1)).toBeLessThan(P4Rules.getBoardValue(slice2));
+        expect(P4Rules.getBoardValue(slice1).value).toBeLessThan(P4Rules.getBoardValue(slice2).value);
     });
 });

@@ -6,6 +6,8 @@ import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTesting
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { MinimaxTestingMinimax } from './MinimaxTestingMinimax';
 
 @Component({
     selector: 'app-minimax-testing',
@@ -17,6 +19,10 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
                                                                    LegalityStatus> {
     /** ************************* Common Fields **************************/
 
+    public availableMinimaxes: Minimax<MinimaxTestingMove, MinimaxTestingPartSlice>[] = [
+        // TODO:does minimax use legality status ????
+        new MinimaxTestingMinimax('MinimaxTestingMinimax'),
+    ];
     public rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
 
     public coord: Coord = new Coord(-1, -1);

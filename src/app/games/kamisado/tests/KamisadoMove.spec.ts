@@ -1,7 +1,6 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoPartSlice } from '../KamisadoPartSlice';
-import { KamisadoRules } from '../KamisadoRules';
+import { KamisadoMinimax, KamisadoRules } from '../KamisadoRules';
 import { KamisadoMove } from '../KamisadoMove';
 
 describe('KamisadoMove', () => {
@@ -11,8 +10,9 @@ describe('KamisadoMove', () => {
     });
     it('should correctly encode and decode all moves', () => {
         const rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice);
-        const firstTurnMoves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMoves(rules.node);
-        for (const move of firstTurnMoves.listKeys()) {
+        const minimax: KamisadoMinimax = new KamisadoMinimax('KamisadoMinimax');
+        const moves: KamisadoMove[] = minimax.getListMoves(rules.node);
+        for (const move of moves) {
             const encodedMove: number = move.encode();
             const decodedMove: KamisadoMove = KamisadoMove.decode(encodedMove);
             expect(decodedMove).toEqual(move);

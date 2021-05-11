@@ -5,13 +5,14 @@ import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
 
 import { P4PartSlice } from './P4PartSlice';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from './P4Move';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export abstract class P4Node extends MGPNode<P4Rules, P4Move, P4PartSlice> {}
 
@@ -19,10 +20,22 @@ export class P4Failure {
     public static COLUMN_IS_FULL: string = 'Veuillez placer votre pièce dans une colonne non remplie';
 }
 
+export class P4Minimax extends Minimax<P4Move, P4PartSlice> {
+    public getListMoves(node: P4Node): P4Move[] {
+        return P4Rules.getListMoves(node);
+    }
+    public getBoardValue(move: P4Move, slice: P4PartSlice): NodeUnheritance {
+        display(P4Rules.VERBOSE, {
+            text: 'P4Rules instance methods getBoardValue called',
+            board: slice.getCopiedBoard(),
+        });
+        return P4Rules.getBoardValue(slice);
+    }
+}
 export class P4Rules extends Rules<P4Move, P4PartSlice> {
     public static VERBOSE: boolean = false;
 
-    private static getBoardValueFromScratch(slice: P4PartSlice): number {
+    private static getBoardValueFromScratch(slice: P4PartSlice): NodeUnheritance {
         display(P4Rules.VERBOSE, { P4Rules_getBoardValueFromScratch: { slice } });
         const currentBoard: number[][] = slice.getCopiedBoard();
         let score: number = 0;
@@ -35,7 +48,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
                 if (MGPNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
                     // if we find a pre-victory
                     display(P4Rules.VERBOSE, { preVictoryOrVictory: { slice, tmpScore, coord: { x, y } } });
-                    return tmpScore; // we return it
+                    return new NodeUnheritance(tmpScore); // we return it
                     // TODO vérifier que PRE_VICTORY n'écrase pas les VICTORY dans ce cas ci
                     // Il semble tout à fait possible d'avoir une pré-victoire sur une colonne,
                     // et une victoire sur la suivante
@@ -43,7 +56,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
                 score += tmpScore;
             }
         }
-        return score;
+        return new NodeUnheritance(score);
     }
     public static getLowestUnoccupiedCase(board: NumberTable, x: number): number {
         let y: number = 0;
@@ -140,38 +153,28 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
             return Number.MAX_SAFE_INTEGER;
         }
     }
-    public static getListMoves(node: P4Node): MGPMap<P4Move, P4PartSlice> {
+    public static getListMoves(node: P4Node): P4Move[] {
         display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });
 
         // should be called only if the game is not over
         const originalPartSlice: P4PartSlice = node.gamePartSlice;
-        const originalBoard: number[][] = originalPartSlice.getCopiedBoard();
-        const moves: MGPMap<P4Move, P4PartSlice> = new MGPMap<P4Move, P4PartSlice>();
-        const turn: number = originalPartSlice.turn;
+        const moves: P4Move[] = [];
 
         for (let x: number = 0; x < 7; x++) {
             if (originalPartSlice.getBoardByXY(x, 0) === Player.NONE.value) {
-                const y: number = P4Rules.getLowestUnoccupiedCase(originalBoard, x);
-
                 const move: P4Move = P4Move.of(x);
-                const newBoard: number[][] = originalPartSlice.getCopiedBoard();
-
-                newBoard[y][x] = originalPartSlice.getCurrentPlayer().value;
-
-                const newPartSlice: P4PartSlice = new P4PartSlice(newBoard, turn + 1);
-                moves.set(move, newPartSlice);
+                moves.push(move);
             }
         }
         return moves;
     }
-    public static getBoardValue(slice: P4PartSlice): number {
+    public static getBoardValue(slice: P4PartSlice): NodeUnheritance {
         display(P4Rules.VERBOSE, {
             text: 'P4Rules.getBoardValue called',
             board: slice.getCopiedBoard(),
         });
         return P4Rules.getBoardValueFromScratch(slice);
     }
-
     public applyLegalMove(move: P4Move,
                           slice: P4PartSlice,
                           status: LegalityStatus)
@@ -194,15 +197,5 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
             return { legal: MGPValidation.failure(P4Failure.COLUMN_IS_FULL) };
         }
         return { legal: MGPValidation.SUCCESS };
-    }
-    public getListMoves(node: P4Node): MGPMap<P4Move, P4PartSlice> {
-        return P4Rules.getListMoves(node);
-    }
-    public getBoardValue(move: P4Move, slice: P4PartSlice): number {
-        display(P4Rules.VERBOSE, {
-            text: 'P4Rules instance methods getBoardValue called',
-            board: slice.getCopiedBoard(),
-        });
-        return P4Rules.getBoardValue(slice);
     }
 }

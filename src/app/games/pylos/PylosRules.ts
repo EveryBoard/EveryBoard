@@ -1,4 +1,3 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -9,15 +8,18 @@ import { Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosPartSlice } from './PylosPartSlice';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export class PylosNode extends MGPNode<Rules<PylosMove, PylosPartSlice>,
                                        PylosMove,
                                        PylosPartSlice> {}
 
-export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
-    public getListMoves(node: PylosNode): MGPMap<PylosMove, PylosPartSlice> {
+export class PylosMinimax extends Minimax<PylosMove, PylosPartSlice> {
+
+    public getListMoves(node: PylosNode): PylosMove[] {
         const slice: PylosPartSlice = node.gamePartSlice;
-        const result: MGPMap<PylosMove, PylosPartSlice> = new MGPMap<PylosMove, PylosPartSlice>();
+        const result: PylosMove[] = [];
         const sliceInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] } =
             PylosRules.getSliceInfo(slice);
         const climbings: PylosMove[] = PylosRules.getClimbingMoves(sliceInfo);
@@ -32,13 +34,24 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
             }
             for (const possiblesCapture of possiblesCaptures) {
                 const newMove: PylosMove = PylosMove.changeCapture(move, possiblesCapture);
-                const newSlice: PylosPartSlice =
-                    PylosRules.applyLegalMove(newMove, slice, { legal: MGPValidation.SUCCESS });
-                result.set(newMove, newSlice);
+                result.push(newMove);
             }
         }
         return result;
     }
+    public getBoardValue(move: PylosMove, slice: PylosPartSlice): NodeUnheritance {
+        const ownershipMap: { [owner: number]: number } = slice.getPiecesRepartition();
+        if (ownershipMap[Player.ZERO.value] === 15) {
+            return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
+        } else if (ownershipMap[Player.ONE.value] === 15) {
+            return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
+        } else {
+            return new NodeUnheritance(ownershipMap[Player.ZERO.value] - ownershipMap[Player.ONE.value]);
+        }
+    }
+}
+export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
+
     public static getSliceInfo(slice: PylosPartSlice): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
         const freeToMove: PylosCoord[] = [];
         const landable: PylosCoord[] = [];
@@ -101,7 +114,9 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
     }
     public static getPossibleCaptures(freeToMoves: PylosCoord[],
                                       startingCoord: MGPOptional<PylosCoord>,
-                                      landingCoord: PylosCoord): PylosCoord[][] {
+                                      landingCoord: PylosCoord)
+    : PylosCoord[][]
+    {
         const possiblesCapturesSet: PylosCoord[][] = [];
 
         freeToMoves = freeToMoves.filter((c: PylosCoord) => c.equals(startingCoord.getOrNull()) === false);
@@ -116,12 +131,6 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
             }
         }
         return possiblesCapturesSet;
-    }
-    public getBoardValue(move: PylosMove, slice: PylosPartSlice): number {
-        const ownershipMap: { [owner: number]: number } = slice.getPiecesRepartition();
-        if (ownershipMap[Player.ZERO.value] === 15) return Number.MAX_SAFE_INTEGER;
-        if (ownershipMap[Player.ONE.value] === 15) return Number.MIN_SAFE_INTEGER;
-        return ownershipMap[Player.ZERO.value] - ownershipMap[Player.ONE.value];
     }
     public static applyLegalMove(move: PylosMove,
                                  slice: PylosPartSlice,
@@ -187,5 +196,10 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
             return false;
         }
         return true;
+    }
+    public isGameOver(state: PylosPartSlice): boolean {
+        const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
+        return ownershipMap[Player.ZERO.value] === 15 ||
+               ownershipMap[Player.ONE.value] === 15;
     }
 }

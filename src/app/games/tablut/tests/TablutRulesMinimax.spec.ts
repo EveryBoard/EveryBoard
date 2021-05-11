@@ -3,7 +3,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutMove } from '../TablutMove';
 import { TablutPartSlice } from '../TablutPartSlice';
 import { TablutCase } from '../TablutCase';
-import { TablutRules } from '../TablutRules';
+import { TablutMinimax, TablutRules } from '../TablutRules';
 
 describe('TablutRules - Minimax:', () => {
 
@@ -29,10 +29,11 @@ describe('TablutRules - Minimax:', () => {
             [_, _, _, _, _, _, _, _, _],
         ];
         const slice: TablutPartSlice = new TablutPartSlice(board, 1);
-        rules.node = new MGPNode(null, null, slice, 0);
+        rules.node = new MGPNode(null, null, slice);
         const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
 
-        const bestMove: TablutMove = rules.node.findBestMove(1);
+        const minimax: TablutMinimax = new TablutMinimax('TablutMinimax');
+        const bestMove: TablutMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(winnerMove);
     });
 });

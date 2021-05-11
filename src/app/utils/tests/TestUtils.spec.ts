@@ -13,7 +13,6 @@ import { JoueursDAO } from '../../dao/JoueursDAO';
 import { AuthenticationService } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
-import { Rules } from '../../jscaip/Rules';
 import { Player } from '../../jscaip/Player';
 import { NodeUnheritance } from '../../jscaip/NodeUnheritance';
 import { AuthenticationServiceMock } from '../../services/tests/AuthenticationService.spec';
@@ -30,6 +29,7 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({})
 export class BlankComponent {}
@@ -182,9 +182,9 @@ export class ComponentTestUtils<T extends GameComponent> {
     public setupSlice(slice: GamePartSlice, previousSlice?: GamePartSlice, previousMove?: Move): void {
         if (previousSlice !== undefined) {
             this.gameComponent.rules.node =
-                new MGPNode(new MGPNode(null, null, previousSlice, 0), previousMove, slice, 0);
+                new MGPNode(new MGPNode(null, null, previousSlice), previousMove, slice);
         } else {
-            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, slice, 0);
+            this.gameComponent.rules.node = new MGPNode(null, previousMove || null, slice);
         }
         this.gameComponent.updateBoard();
         this.fixture.detectChanges();
@@ -340,23 +340,20 @@ export function expectFirstStateToBeBetterThanSecond(weakerState: GamePartSlice,
                                                      weakMove: Move,
                                                      strongerState: GamePartSlice,
                                                      strongMove: Move,
-                                                     rules: Rules<Move,
-                                                                   GamePartSlice,
-                                                                   LegalityStatus,
-                                                                   NodeUnheritance>)
-                                                      : void
+                                                     minimax: Minimax<Move, GamePartSlice>)
+: void
 {
-    const weakValue: number = rules.getBoardNumericValue(weakMove, weakerState);
-    const strongValue: number = rules.getBoardNumericValue(strongMove, strongerState);
+    const weakValue: number = minimax.getBoardValue(weakMove, weakerState).value;
+    const strongValue: number = minimax.getBoardValue(strongMove, strongerState).value;
     expect(weakValue).toBeLessThan(strongValue);
 }
 export function expectStateToBePreVictory(state: GamePartSlice,
                                           previousMove: Move,
                                           player: Player,
-                                          rules: Rules<Move, GamePartSlice, LegalityStatus, NodeUnheritance>)
-                                          : void
-{
-    const value: number = rules.getBoardNumericValue(previousMove, state);
+                                          minimax: Minimax<Move, GamePartSlice>)
+: void
+{ // TODO: that's some Rules job, ideally!
+    const value: number = minimax.getBoardNumericValue(previousMove, state);
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);
 }

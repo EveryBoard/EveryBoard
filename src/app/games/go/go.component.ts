@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { GoMove } from 'src/app/games/go/GoMove';
-import { GoRules } from 'src/app/games/go/GoRules';
+import { GoMinimax, GoRules } from 'src/app/games/go/GoRules';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
@@ -10,6 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-go',
@@ -19,6 +20,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
     public static VERBOSE: boolean = false;
 
+    public availableMinimaxes: Minimax<GoMove, GoPartSlice, GoLegalityStatus>[] = [
+        // TODO:does minimax use legality status ????
+        new GoMinimax('GoMinimax'),
+    ];
     public scores: number[] = [0, 0];
 
     public rules: GoRules = new GoRules(GoPartSlice);

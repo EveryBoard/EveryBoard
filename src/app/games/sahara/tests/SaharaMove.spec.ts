@@ -1,5 +1,4 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
-import { SaharaRules } from '../SaharaRules';
+import { SaharaMinimax, SaharaRules } from '../SaharaRules';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -8,13 +7,13 @@ describe('SaharaMoves', () => {
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
         const rules: SaharaRules = new SaharaRules(SaharaPartSlice);
         expect(rules).toBeTruthy();
-        const moves: MGPMap<SaharaMove, SaharaPartSlice> = rules.getListMoves(rules.node);
-        expect(moves.size()).toEqual(12);
-        for (let i: number = 0; i < moves.size(); i++) {
-            const initialMove: SaharaMove = moves.getByIndex(i).key;
-            const encodedMove: number = initialMove.encode();
+        const minimax: SaharaMinimax = new SaharaMinimax('SaharaMinimax');
+        const moves: SaharaMove[] = minimax.getListMoves(rules.node);
+        expect(moves.length).toEqual(12);
+        for (const move of moves) {
+            const encodedMove: number = move.encode();
             const decodedMove: SaharaMove = SaharaMove.decode(encodedMove);
-            expect(decodedMove).toEqual(initialMove, initialMove.toString() + ' should be correctly translated');
+            expect(decodedMove).toEqual(move, move.toString() + ' should be correctly translated');
         }
     });
     it('should delegate to static method decode', () => {

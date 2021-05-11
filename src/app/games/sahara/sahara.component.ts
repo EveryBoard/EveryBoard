@@ -5,10 +5,11 @@ import { TriangularGameComponent }
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
-import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
+import { SaharaMinimax, SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-sahara',
@@ -18,6 +19,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaPartSlice> {
     public static VERBOSE: boolean = false;
 
+    public availableMinimaxes: Minimax<SaharaMove, SaharaPartSlice>[] = [
+        // TODO:does minimax use legality status ????
+        new SaharaMinimax('SaharaMinimax'),
+    ];
     public rules: SaharaRules = new SaharaRules(SaharaPartSlice);
 
     public lastCoord: Coord = new Coord(-2, -2);

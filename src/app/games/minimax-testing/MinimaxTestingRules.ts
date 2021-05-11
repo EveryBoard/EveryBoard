@@ -1,11 +1,11 @@
 import { Rules } from 'src/app/jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MinimaxTestingPartSlice } from './MinimaxTestingPartSlice';
 import { MinimaxTestingMove } from './MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Player } from 'src/app/jscaip/Player';
 
 export abstract class MinimaxTestingNode extends MGPNode<MinimaxTestingRules,
                                                          MinimaxTestingMove,
@@ -35,24 +35,11 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         }
         return { legal: MGPValidation.SUCCESS };
     }
-    public getBoardValue(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice): number {
-        return slice.getBoardAt(slice.location);
-    }
-    public getListMoves(n: MinimaxTestingNode): MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> {
-        const result: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> =
-            new MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice>();
-        const slice: MinimaxTestingPartSlice = n.gamePartSlice;
-        const LEGAL: LegalityStatus = { legal: MGPValidation.SUCCESS };
-        if (slice.location.x < 3) {
-            const rightMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
-            const rightSlice: MinimaxTestingPartSlice = this.applyLegalMove(rightMove, slice, LEGAL);
-            result.set(rightMove, rightSlice);
-        }
-        if (slice.location.y < 3) {
-            const downMove: MinimaxTestingMove = MinimaxTestingMove.DOWN;
-            const downSlice: MinimaxTestingPartSlice = this.applyLegalMove(downMove, slice, LEGAL);
-            result.set(downMove, downSlice);
-        }
-        return result;
+    public isGameOver(state: MinimaxTestingPartSlice): boolean {
+        const currentValue: number = state.getBoardAt(state.location);
+        const isGameOver: boolean = currentValue === Player.ZERO.getVictoryValue() ||
+                                    currentValue === Player.ONE.getVictoryValue() ||
+                                    state.location.equals(new Coord(3, 3));
+        return isGameOver;
     }
 }

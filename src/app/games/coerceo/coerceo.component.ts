@@ -7,11 +7,12 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
-import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
+import { CoerceoMinimax, CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 @Component({
     selector: 'app-coerceo',
@@ -22,6 +23,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
                                                               CoerceoPartSlice,
                                                               LegalityStatus>
 {
+
+    public availableMinimaxes: Minimax<CoerceoMove, CoerceoPartSlice>[] = [
+        new CoerceoMinimax('CoerceoMinimax'),
+    ];
+
     public rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
 
     private slice: CoerceoPartSlice;

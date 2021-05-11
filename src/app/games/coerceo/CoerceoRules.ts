@@ -1,27 +1,26 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Rules, RulesFailure } from 'src/app/jscaip/Rules';
+import { Rules } from 'src/app/jscaip/Rules';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { display } from 'src/app/utils/utils';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { CoerceoMove } from './CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from './CoerceoPartSlice';
 import { CoerceoFailure } from './CoerceoFailure';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export abstract class CoerceoNode extends MGPNode<CoerceoRules, CoerceoMove, CoerceoPartSlice> {}
 
-export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
+export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoPartSlice> {
 
-    public static VERBOSE: boolean = false;
-
-    public getListMoves(node: CoerceoNode): MGPMap<CoerceoMove, CoerceoPartSlice> {
-        const results: MGPMap<CoerceoMove, CoerceoPartSlice> = this.getListDeplacement(node);
-        results.putAll(this.getListExchanges(node));
-        return results;
+    public getListMoves(node: CoerceoNode): CoerceoMove[] {
+        const moves: CoerceoMove[] = this.getListDeplacement(node);
+        return moves.concat(this.getListExchanges(node));
     }
-    public getListDeplacement(node: CoerceoNode): MGPMap<CoerceoMove, CoerceoPartSlice> {
-        const deplacements: MGPMap<CoerceoMove, CoerceoPartSlice> = new MGPMap();
+    public getListDeplacement(node: CoerceoNode): CoerceoMove[] {
+        const deplacements: CoerceoMove[] = [];
         const slice: CoerceoPartSlice = node.gamePartSlice;
         for (let y: number = 0; y < 10; y++) {
             for (let x: number = 0; x < 15; x++) {
@@ -30,17 +29,15 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
                     const legalLandings: Coord[] = slice.getLegalLandings(start);
                     for (const end of legalLandings) {
                         const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);
-                        const resultingSlice: CoerceoPartSlice =
-                            this.applyLegalDeplacement(move, slice, null);
-                        deplacements.put(move, resultingSlice);
+                        deplacements.push(move);
                     }
                 }
             }
         }
         return deplacements;
     }
-    public getListExchanges(node: CoerceoNode): MGPMap<CoerceoMove, CoerceoPartSlice> {
-        const exchanges: MGPMap<CoerceoMove, CoerceoPartSlice> = new MGPMap();
+    public getListExchanges(node: CoerceoNode): CoerceoMove[] {
+        const exchanges: CoerceoMove[] = [];
         const slice: CoerceoPartSlice = node.gamePartSlice;
         const PLAYER: number = slice.getCurrentPlayer().value;
         const ENNEMY: number = slice.getCurrentEnnemy().value;
@@ -52,28 +49,26 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
                 const captured: Coord = new Coord(x, y);
                 if (slice.getBoardAt(captured) === ENNEMY) {
                     const move: CoerceoMove = CoerceoMove.fromTilesExchange(captured);
-                    const resultingSlice: CoerceoPartSlice =
-                        this.applyLegalTileExchange(move, slice, null);
-                    exchanges.put(move, resultingSlice);
+                    exchanges.push(move);
                 }
             }
         }
         return exchanges;
     }
-    public getBoardValue(move: CoerceoMove, slice: CoerceoPartSlice): number {
+    public getBoardValue(move: CoerceoMove, slice: CoerceoPartSlice): NodeUnheritance {
         const piecesByFreedom: number[][] = slice.getPiecesByFreedom();
         const piecesScores: number[] = this.getPiecesScore(piecesByFreedom);
         const scoreZero: number = (2 * slice.captures[0]) + piecesScores[0];
         const scoreOne: number = (2 * slice.captures[1]) + piecesScores[1];
         if (slice.captures[0] === 18) {
             // Everything captured, victory
-            return Number.MIN_SAFE_INTEGER;
+            return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
         }
         if (slice.captures[1] === 18) {
             // Everything captured, victory
-            return Number.MAX_SAFE_INTEGER;
+            return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
         }
-        return scoreOne - scoreZero;
+        return new NodeUnheritance(scoreOne - scoreZero);
     }
     public getPiecesScore(piecesByFreedom: number[][]): number[] {
         return [
@@ -87,6 +82,11 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
                (3 * piecesScores[2]) +
                (3 * piecesScores[3]);
     }
+}
+export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
+
+    public static VERBOSE: boolean = false;
+
     public applyLegalMove(move: CoerceoMove,
                           slice: CoerceoPartSlice,
                           status: LegalityStatus)
@@ -190,5 +190,9 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
             return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_LAND_ON_ALLY) };
         }
         return { legal: MGPValidation.SUCCESS };
+    }
+    public isGameOver(state: CoerceoPartSlice): boolean {
+        return state.captures[0] === 18 ||
+               state.captures[1] === 18;
     }
 }

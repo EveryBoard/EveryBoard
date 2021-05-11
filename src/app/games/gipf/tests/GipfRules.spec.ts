@@ -7,7 +7,7 @@ import { GipfLegalityStatus } from '../GipfLegalityStatus';
 import { GipfCapture, GipfMove, GipfPlacement } from '../GipfMove';
 import { GipfPartSlice } from '../GipfPartSlice';
 import { GipfPiece } from '../GipfPiece';
-import { GipfNode, GipfRules } from '../GipfRules';
+import { GipfMinimax, GipfNode, GipfRules } from '../GipfRules';
 
 describe('GipfRules:', () => {
     // Rules of gipf with the diagrams used in these tests: http://www.gipf.com/gipf/rules/complete_rules.html
@@ -19,8 +19,11 @@ describe('GipfRules:', () => {
 
     let rules: GipfRules;
 
+    let minimax: GipfMinimax;
+
     beforeEach(() => {
         rules = new GipfRules(GipfPartSlice);
+        minimax = new GipfMinimax('GipfMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
@@ -376,12 +379,12 @@ describe('GipfRules:', () => {
         it('should not allow applying placements where a piece already is no direction is given', () => {
             const slice: GipfPartSlice = rules.node.gamePartSlice;
             const placement: GipfPlacement = new GipfPlacement(new Coord(6, 3), MGPOptional.empty());
-            expect(() => rules.applyPlacement(slice, placement)).toThrow();
+            expect(() => GipfRules.applyPlacement(slice, placement)).toThrow();
         });
     });
     describe('getListMoves', () => {
         it('should have 30 moves on the initial slice', () => {
-            expect(rules.getListMoves(rules.node).size()).toBe(30);
+            expect(minimax.getListMoves(rules.node).length).toBe(30);
         });
         it('should have 0 moves on a victory slice', () => {
             const board: GipfBoard = GipfBoard.of([
@@ -394,8 +397,8 @@ describe('GipfRules:', () => {
                 [_, B, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [0, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(null, null, slice, 0);
-            expect(rules.getListMoves(node).size()).toBe(0);
+            const node: GipfNode = new GipfNode(null, null, slice);
+            expect(minimax.getListMoves(node).length).toBe(0);
         });
         it('should have 19 moves on an example slice with non-intersecting capture', () => {
             const board: GipfBoard = GipfBoard.of([
@@ -408,8 +411,8 @@ describe('GipfRules:', () => {
                 [_, _, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(null, null, slice, 0);
-            expect(rules.getListMoves(node).size()).toBe(19);
+            const node: GipfNode = new GipfNode(null, null, slice);
+            expect(minimax.getListMoves(node).length).toBe(19);
         });
         it('should have 20 moves on an example slice with a complete line', () => {
             // 16 simple moves and 4 diagonal ones on the occupied borders
@@ -423,8 +426,8 @@ describe('GipfRules:', () => {
                 [_, _, _, A, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(null, null, slice, 0);
-            expect(rules.getListMoves(node).size()).toBe(20);
+            const node: GipfNode = new GipfNode(null, null, slice);
+            expect(minimax.getListMoves(node).length).toBe(20);
         });
         it('should have 30 moves on an example slice with all borders occupied', () => {
             // 16 simple moves and 4 diagonal ones on the occupied borders
@@ -438,8 +441,8 @@ describe('GipfRules:', () => {
                 [A, B, A, B, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(null, null, slice, 0);
-            expect(rules.getListMoves(node).size()).toBe(30);
+            const node: GipfNode = new GipfNode(null, null, slice);
+            expect(minimax.getListMoves(node).length).toBe(30);
         });
         it('should have 38 moves on an example slice with intersecting captures', () => {
             // There are 19 valid placements, each can be played with one of 2 captures
@@ -453,8 +456,8 @@ describe('GipfRules:', () => {
                 [_, _, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
-            const node: GipfNode = new GipfNode(null, null, slice, 0);
-            expect(rules.getListMoves(node).size()).toBe(38);
+            const node: GipfNode = new GipfNode(null, null, slice);
+            expect(minimax.getListMoves(node).length).toBe(38);
         });
     });
     describe('getBoardValue', () => {
@@ -472,11 +475,11 @@ describe('GipfRules:', () => {
                 [_, B, _, _, _, _, _],
             ]);
             const slice1: GipfPartSlice = new GipfPartSlice(board, P0Turn, [0, 5], [0, 0]);
-            expect(rules.getBoardValue(dummyMove, slice1)).toEqual(Number.MAX_SAFE_INTEGER,
-                                                                   'This should be a victory for player 1');
+            expect(minimax.getBoardValue(dummyMove, slice1).value)
+                .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
             const slice2: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 0], [0, 0]);
-            expect(rules.getBoardValue(dummyMove, slice2)).toEqual(Number.MIN_SAFE_INTEGER,
-                                                                   'This should be a victory for player 0');
+            expect(minimax.getBoardValue(dummyMove, slice2).value)
+                .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
         });
         it('should favor having captured pieces', () => {
             const board: GipfBoard = GipfBoard.of([
@@ -489,7 +492,7 @@ describe('GipfRules:', () => {
                 [_, B, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 7]);
-            expect(rules.getBoardValue(dummyMove, slice)).toBeLessThan(0);
+            expect(minimax.getBoardValue(dummyMove, slice)).toBeLessThan(0);
         });
         it('should favor having pieces to play pieces', () => {
             const board: GipfBoard = GipfBoard.of([
@@ -502,7 +505,7 @@ describe('GipfRules:', () => {
                 [_, B, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 7], [0, 0]);
-            expect(rules.getBoardValue(dummyMove, slice)).toBeLessThan(0);
+            expect(minimax.getBoardValue(dummyMove, slice)).toBeLessThan(0);
         });
         it('should not declare victory when one player does not have pieces left but still has an initial capture', () => {
             const board: GipfBoard = GipfBoard.of([
@@ -515,13 +518,13 @@ describe('GipfRules:', () => {
                 [_, _, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [0, 5], [0, 0]);
-            expect(rules.getBoardValue(dummyMove, slice)).toBeLessThan(Number.MAX_SAFE_INTEGER);
-            expect(rules.getBoardValue(dummyMove, slice)).toBeGreaterThan(Number.MIN_SAFE_INTEGER);
+            expect(minimax.getBoardValue(dummyMove, slice)).toBeLessThan(Number.MAX_SAFE_INTEGER);
+            expect(minimax.getBoardValue(dummyMove, slice)).toBeGreaterThan(Number.MIN_SAFE_INTEGER);
         });
     });
     describe('getAllDirectionsForEntrance', () => {
         it('should fail on non-entrances', () => {
-            expect(() => rules.getAllDirectionsForEntrance(rules.node.gamePartSlice, new Coord(3, 3))).toThrow();
+            expect(() => GipfRules.getAllDirectionsForEntrance(rules.node.gamePartSlice, new Coord(3, 3))).toThrow();
         });
     });
 });

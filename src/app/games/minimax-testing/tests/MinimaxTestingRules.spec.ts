@@ -1,8 +1,12 @@
 import { MinimaxTestingNode, MinimaxTestingRules } from '../MinimaxTestingRules';
 import { MinimaxTestingPartSlice } from '../MinimaxTestingPartSlice';
 import { MinimaxTestingMove } from '../MinimaxTestingMove';
+import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('MinimaxTestingRules', () => {
+
+    const minimax: MinimaxTestingMinimax = new MinimaxTestingMinimax('MinimaxTesting');
 
     it('should be created', () => {
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
@@ -12,24 +16,26 @@ describe('MinimaxTestingRules', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         expect(rules.choose(MinimaxTestingMove.RIGHT)).toBeTrue();
-        expect(rules.getBoardValue(rules.node.move, rules.node.gamePartSlice)).toEqual(Number.MAX_SAFE_INTEGER);
+        expect(minimax.getBoardValue(rules.node.move, rules.node.gamePartSlice).value)
+            .toEqual(Player.ONE.getVictoryValue());
     });
     it('IA should avoid loosing 4 move in a row', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         let bestMove: MinimaxTestingMove;
         for (let i: number = 1; i < 5; i++) {
-            bestMove = rules.node.findBestMove(1);
+            bestMove = rules.node.findBestMove(1, minimax);
             rules.choose(bestMove);
-            expect(rules.getBoardValue(rules.node.move, rules.node.gamePartSlice)).toEqual(i);
+            const value: number = minimax.getBoardValue(rules.node.move, rules.node.gamePartSlice).value;
+            expect(value).toEqual(i);
         }
     });
-    xit('IA should not create sister-node to winning-node', () => {
+    it('should not create sister-node to winning-node', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
-        const bestMove: MinimaxTestingMove = rules.node.findBestMove(5);
+        const bestMove: MinimaxTestingMove = rules.node.findBestMove(5, minimax);
         expect(bestMove).toEqual(MinimaxTestingMove.DOWN);
-        expect(rules.node.getHopedValue()).toEqual(Number.MIN_SAFE_INTEGER);
+        expect(rules.node.getHopedValue(minimax)).toEqual(Number.MIN_SAFE_INTEGER);
         expect(rules.node.countDescendants()).toEqual(10);
     });
     it('IA(depth=1) should create exactly 2 child at each turn before reaching the border', () => {
@@ -38,7 +44,7 @@ describe('MinimaxTestingRules', () => {
         const initialNode: MinimaxTestingNode = rules.node;
         let bestMove: MinimaxTestingMove;
         for (let i: number = 1; i <= 3; i++) {
-            bestMove = rules.node.findBestMove(1);
+            bestMove = rules.node.findBestMove(1, minimax);
             rules.choose(bestMove);
         }
         expect(initialNode.countDescendants()).toEqual(6);
@@ -47,28 +53,28 @@ describe('MinimaxTestingRules', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_0;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         const initialNode: MinimaxTestingNode = rules.node;
-        spyOn(rules, 'getBoardValue').and.callThrough();
-        spyOn(rules, 'getListMoves').and.callThrough();
+        spyOn(minimax, 'getBoardValue').and.callThrough();
+        spyOn(minimax, 'getListMoves').and.callThrough();
 
-        rules.node.findBestMove(3);
+        rules.node.findBestMove(3, minimax);
 
-        expect(rules.getBoardValue).toHaveBeenCalledTimes(11); // should be 14 without pruning
+        expect(minimax.getBoardValue).toHaveBeenCalledTimes(11); // should be 14 without pruning
         expect(initialNode.countDescendants()).toBe(11); // should be 14 without pruning as well
-        expect(rules.getListMoves).toHaveBeenCalledTimes(6); // should be 7 without pruning
+        expect(minimax.getListMoves).toHaveBeenCalledTimes(6); // should be 7 without pruning
 
-        expect(initialNode.getHopedValue()).toBe(3);
+        expect(initialNode.getHopedValue(minimax)).toBe(3);
     });
     it('Should not go further than the end game', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_0;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         const initialNode: MinimaxTestingNode = rules.node;
-        spyOn(rules, 'getBoardValue').and.callThrough();
-        spyOn(rules, 'getListMoves').and.callThrough();
+        spyOn(minimax, 'getBoardValue').and.callThrough();
+        spyOn(minimax, 'getListMoves').and.callThrough();
 
-        rules.node.findBestMove(7);
+        rules.node.findBestMove(7, minimax);
 
-        expect(rules.getBoardValue).toHaveBeenCalledTimes(30); // should be 68 times without pruning
+        expect(minimax.getBoardValue).toHaveBeenCalledTimes(30); // should be 68 times without pruning
         expect(initialNode.countDescendants()).toBe(30); // should be 68 without pruning
-        expect(rules.getListMoves).toHaveBeenCalledTimes(31); // should be 69 without pruning
+        expect(minimax.getListMoves).toHaveBeenCalledTimes(24); // should be 69 without pruning
     });
 });

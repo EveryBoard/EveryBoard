@@ -3,16 +3,19 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
 import { QuixoMove } from '../QuixoMove';
-import { QuixoRules } from '../QuixoRules';
+import { QuixoMinimax, QuixoRules } from '../QuixoRules';
 
 describe('QuixoRules:', () => {
+
     let rules: QuixoRules;
+    let minimax: QuixoMinimax;
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;
     const O: number = Player.ZERO.value;
 
     beforeEach(() => {
         rules = new QuixoRules(QuixoPartSlice);
+        minimax = new QuixoMinimax('QuixoMinimax');
     });
     it('Should forbid player to start a move with opponents piece', () => {
         const board: number[][] = [
@@ -72,7 +75,7 @@ describe('QuixoRules:', () => {
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: QuixoPartSlice = new QuixoPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice))
+        expect(minimax.getBoardValue(move, expectedSlice).value)
             .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
     it('Should declare winner player one when he create a line of his symbol', () => {
@@ -97,7 +100,7 @@ describe('QuixoRules:', () => {
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: QuixoPartSlice = new QuixoPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice))
+        expect(minimax.getBoardValue(move, expectedSlice).value)
             .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
     it('Should declare looser player zero who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
@@ -122,7 +125,7 @@ describe('QuixoRules:', () => {
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: QuixoPartSlice = new QuixoPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice))
+        expect(minimax.getBoardValue(move, expectedSlice).value)
             .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
     it('Should declare looser player one who create a line of his opponent symbol, even if creating a line of his symbol too', () => {
@@ -147,7 +150,7 @@ describe('QuixoRules:', () => {
         const resultingSlice: QuixoPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: QuixoPartSlice = new QuixoPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice))
+        expect(minimax.getBoardValue(move, expectedSlice).value)
             .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
 });
