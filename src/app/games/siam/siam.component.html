@@ -42,7 +42,7 @@
             </g>
             <use *ngIf="isMountain(c)"
                  xlink:href="#mountain"
-                 [attr.transform]="'translate(' + (x+1)*CASE_SIZE + ' ' + (y+1)*CASE_SIZE + ')'"
+                 [attr.transform]="'translate(' + ((x+1)*CASE_SIZE) + ' ' + ((y+1)*CASE_SIZE) + ')'"
                  fill="brown" />
             <g *ngIf="choosingOrientation(x, y)">
                 <use *ngFor="let orientation of ['RIGHT', 'DOWN', 'LEFT', 'UP']"

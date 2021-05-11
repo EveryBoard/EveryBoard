@@ -4,6 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoRules } from '../QuixoRules';
+import { Coord } from 'src/app/jscaip/Coord';
 
 describe('QuixoRules:', () => {
     let rules: QuixoRules;
@@ -149,5 +150,55 @@ describe('QuixoRules:', () => {
         expect(resultingSlice).toEqual(expectedSlice);
         expect(rules.getBoardValue(move, expectedSlice))
             .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
+    });
+    describe('getVictoriousCoords', () => {
+        it('should return victorious column', () => {
+            const board: number[][] = [
+                [O, _, _, _, X],
+                [O, _, _, _, X],
+                [O, _, _, _, _],
+                [O, _, _, _, X],
+                [O, _, _, _, X],
+            ];
+            const slice: QuixoPartSlice = new QuixoPartSlice(board, 1);
+            expect(QuixoRules.getVictoriousCoords(slice))
+                .toEqual([new Coord(0, 0), new Coord(0, 1), new Coord(0, 2), new Coord(0, 3), new Coord(0, 4)]);
+        });
+        it('should return victorious row', () => {
+            const board: number[][] = [
+                [O, O, O, O, O],
+                [_, _, _, _, X],
+                [_, _, _, _, _],
+                [_, _, _, _, X],
+                [_, _, _, _, X],
+            ];
+            const slice: QuixoPartSlice = new QuixoPartSlice(board, 1);
+            expect(QuixoRules.getVictoriousCoords(slice))
+                .toEqual([new Coord(0, 0), new Coord(1, 0), new Coord(2, 0), new Coord(3, 0), new Coord(4, 0)]);
+        });
+        it('should return victorious first diagonal', () => {
+            const board: number[][] = [
+                [O, _, _, _, _],
+                [_, O, _, _, _],
+                [_, _, O, _, _],
+                [_, _, _, O, _],
+                [_, _, _, _, O],
+            ];
+            const slice: QuixoPartSlice = new QuixoPartSlice(board, 1);
+            expect(QuixoRules.getVictoriousCoords(slice))
+                .toEqual([new Coord(0, 0), new Coord(1, 1), new Coord(2, 2), new Coord(3, 3), new Coord(4, 4)]);
+        });
+        it('should return victorious second diagonal', () => {
+            const board: number[][] = [
+                [_, _, _, _, O],
+                [_, _, _, O, _],
+                [_, _, O, _, _],
+                [_, O, _, _, _],
+                [O, _, _, _, _],
+            ];
+            const slice: QuixoPartSlice = new QuixoPartSlice(board, 1);
+            expect(QuixoRules.getVictoriousCoords(slice))
+                .toEqual([new Coord(0, 4), new Coord(1, 3), new Coord(2, 2), new Coord(3, 1), new Coord(4, 0)]);
+        });
     });
 });

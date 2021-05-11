@@ -104,6 +104,35 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
         }
         return sums;
     }
+    public static getVictoriousCoords(slice: QuixoPartSlice): Coord[] {
+        const lineSums: {[player: number]: {[lineType: string]: number[]}} = QuixoRules.getLinesSums(slice);
+        const coords: Coord[] = [];
+        for (let player: number = 0; player < 2; player++) {
+            for (let i: number = 0; i < 5; i++) {
+                if (lineSums[player].columns[i] === 5) {
+                    for (let j: number = 0; j < 5; j++) {
+                        coords.push(new Coord(i, j));
+                    }
+                }
+                if (lineSums[player].rows[i] === 5) {
+                    for (let j: number = 0; j < 5; j++) {
+                        coords.push(new Coord(j, i));
+                    }
+                }
+            }
+            if (lineSums[player].diagonals[0] === 5) {
+                for (let i: number = 0; i < 5; i++) {
+                    coords.push(new Coord(i, i));
+                }
+            }
+            if (lineSums[player].diagonals[1] === 5) {
+                for (let i: number = 0; i < 5; i++) {
+                    coords.push(new Coord(i, 4-i));
+                }
+            }
+        }
+        return coords;
+    }
     public static getFullestLine(playersLinesInfo: {[lineType: string]: number[]}): number {
         const linesScores: number[] = playersLinesInfo.columns.concat(
             playersLinesInfo.rows.concat(

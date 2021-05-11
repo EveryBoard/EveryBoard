@@ -21,6 +21,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
     public STROKE_WIDTH: number = 8;
     public rules: P4Rules = new P4Rules(P4PartSlice);
     private last: Coord;
+    private victoryCoords: Coord[] = [];
 
     public async onClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
@@ -31,22 +32,26 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
     public updateBoard(): void {
-        const p4PartSlice: P4PartSlice = this.rules.node.gamePartSlice;
+        const slice: P4PartSlice = this.rules.node.gamePartSlice;
         const lastMove: P4Move = this.rules.node.move;
 
-        this.board = p4PartSlice.board;
+        this.victoryCoords = P4Rules.getVictoriousCoords(slice);
+        this.board = slice.board;
         if (lastMove !== null) {
-            const y: number = P4Rules.getLowestUnoccupiedCase(p4PartSlice.board, lastMove.x) + 1;
+            const y: number = P4Rules.getLowestUnoccupiedCase(slice.board, lastMove.x) + 1;
             this.last = new Coord(lastMove.x, y);
         } else {
             this.last = null;
         }
     }
     public getCaseClasses(x: number, y: number): string[] {
+        const coord: Coord = new Coord(x, y);
         const classes: string[] = [];
         classes.push(this.getCaseFillClass(this.board[y][x]));
-        if (this.last && this.last.equals(new Coord(x, y))) {
-            classes.push('highlighted');
+        if (this.victoryCoords.some((c: Coord): boolean => c.equals(coord))) {
+            classes.push('victory');
+        } else if (this.last && this.last.equals(coord)) {
+            classes.push('lastmove');
         }
         return classes;
     }

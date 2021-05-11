@@ -66,6 +66,9 @@
 .lastmove {
     stroke: orange;
 }
+.victory {
+    stroke: green;
+}
 .selected {
     stroke: blue;
 }

@@ -8,6 +8,7 @@ import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
+import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
     selector: 'app-quixo',
@@ -29,12 +30,15 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public chosenDirection: Orthogonal;
 
+    public victoriousCoords: Coord[] = [];
+
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;
         this.board = this.slice.board;
         const move: QuixoMove = this.rules.node.move;
         if (move) this.lastMoveCoord = move.coord;
         else this.lastMoveCoord = null;
+        this.victoriousCoords = QuixoRules.getVictoriousCoords(this.slice);
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = null;
@@ -53,6 +57,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         classes.push(this.getPlayerClass(player));
         if (coord.equals(this.chosenCoord)) classes.push('selected');
         else if (coord.equals(this.lastMoveCoord)) classes.push('lastmove');
+        if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) classes.push('victory');
         return classes;
     }
     public onBoardClick(x: number, y: number): MGPValidation {
@@ -95,37 +100,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         this.cancelMove();
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
-    public getArrowTransform(coord: Coord, direction: string): string {
-        let dx: number;
-        let dy: number;
-        let angle: number;
-        switch (direction) {
-            case 'UP':
-                dx = 0;
-                dy = -1;
-                angle = -90;
-                break;
-            case 'DOWN':
-                dx = 0;
-                dy = 1;
-                angle = 90;
-                break;
-            case 'LEFT':
-                dx = -1;
-                dy = 0;
-                angle = 180;
-                break;
-            case 'RIGHT':
-                dx = 1;
-                dy = 0;
-                angle = 0;
-                break;
-        }
-        const rotation: string = 'rotate(' + angle + ')';
-        const scaling: string = 'scale(2)';
-        const realX: number = coord.x * this.CASE_SIZE + this.CASE_SIZE/2 + dx * this.CASE_SIZE/4;
-        const realY: number = coord.y * this.CASE_SIZE + this.CASE_SIZE/2 + dy * this.CASE_SIZE/4;
-        const translation: string = 'translate(' + realX + ' ' + realY + ')';
-        return [translation, scaling, rotation].join(' ');
+    public getArrowTransform(coord: Coord, orientation: string): string {
+        return GameComponentUtils.getArrowTransform(this.CASE_SIZE, coord, Orthogonal.factory.fromString(orientation));
     }
 }

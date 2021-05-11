@@ -11,6 +11,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
+import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
     selector: 'app-siam',
@@ -156,39 +157,6 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         }
         return false;
     }
-    public getArrowTransform(x: number, y: number, direction: string): string {
-        let dx: number;
-        let dy: number;
-        let angle: number;
-        switch (direction) {
-            case 'UP':
-                dx = 0;
-                dy = -1;
-                angle = -90;
-                break;
-            case 'DOWN':
-                dx = 0;
-                dy = 1;
-                angle = 90;
-                break;
-            case 'LEFT':
-                dx = -1;
-                dy = 0;
-                angle = 180;
-                break;
-            case 'RIGHT':
-                dx = 1;
-                dy = 0;
-                angle = 0;
-                break;
-        }
-        const rotation: string = 'rotate(' + angle + ')';
-        const scaling: string = 'scale(2)';
-        const realX: number = x * this.CASE_SIZE + this.CASE_SIZE/2 + dx * this.CASE_SIZE/4;
-        const realY: number = y * this.CASE_SIZE + this.CASE_SIZE/2 + dy * this.CASE_SIZE/4;
-        const translation: string = 'translate(' + realX + ' ' + realY + ')';
-        return [translation, scaling, rotation].join(' ');
-    }
     public getInsertionArrowTransform(x: number, y: number, direction: string): string {
         const orientation: number = Orthogonal.factory.fromString(direction).toInt() - 2;
         const rotation: string = `rotate(${orientation*90} ${this.CASE_SIZE/2} ${this.CASE_SIZE/2})`;
@@ -201,5 +169,10 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         const rotation: string = `rotate(${orientation*90} ${this.CASE_SIZE/2} ${this.CASE_SIZE/2})`;
         const translation: string = 'translate(' + (x+1) * this.CASE_SIZE + ', ' + (y+1) * this.CASE_SIZE + ')';
         return [translation, rotation].join(' ');
+    }
+    public getArrowTransform(x: number, y: number, orientation: string): string {
+        return GameComponentUtils.getArrowTransform(this.CASE_SIZE,
+                                                    new Coord(x, y),
+                                                    Orthogonal.factory.fromString(orientation));
     }
 }
