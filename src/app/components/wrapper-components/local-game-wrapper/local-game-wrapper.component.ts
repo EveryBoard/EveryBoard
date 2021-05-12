@@ -17,8 +17,6 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
     public static VERBOSE: boolean = false;
 
-    public playerZeroValue: string = '0';
-    public playerOneValue: string = '0';
     public aiDepth: number = 5;
     public winner: string = null;
 
@@ -95,11 +93,11 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         const currentPlayer: string = this.players[turn];
         return this.isAI(currentPlayer);
     }
-    public switchPlayerOne(): void { // totally adaptable to other Rules
-        this.switchPlayer(0, this.playerZeroValue);
+    public switchPlayerOne(value: string): void {
+        this.switchPlayer(0, value);
     }
-    public switchPlayerTwo(): void { // totally adaptable to other Rules
-        this.switchPlayer(1, this.playerOneValue);
+    public switchPlayerTwo(value: string): void {
+        this.switchPlayer(1, value);
     }
     public switchPlayer(n: 0|1, value: string): void {
         const numberValue: number = Number.parseInt(value);

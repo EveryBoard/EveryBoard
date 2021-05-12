@@ -71,6 +71,18 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             return false;
         });
     }
+    public getNumberOfSteps(): number {
+        if (this.steps == null) {
+            return 0;
+        }
+        return this.steps.length;
+    }
+    public getCurrentStepTitle(): string {
+        if (this.steps == null) {
+            return '';
+        }
+        return this.steps[this.stepIndex].title;
+    }
     public ngAfterViewInit(): void {
         display(DidacticialGameWrapperComponent.VERBOSE, 'DidacticialGameWrapperComponent.ngAfterViewInit');
         this.afterGameIncluderViewInit();
@@ -115,6 +127,9 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.tutorialOver = false;
         this.stepFinished = this.getCompletionArray();
         this.showStep(0);
+    }
+    public changeStep(stepIndex: string): void {
+        this.showStep(Number.parseInt(stepIndex, 10));
     }
     private showStep(stepIndex: number): void {
         display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapperComponent.showStep(' + stepIndex + ')');

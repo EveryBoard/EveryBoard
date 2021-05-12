@@ -3,7 +3,7 @@
         <div id="gameConfig" class="circled col-sm-10">
             <mat-horizontal-stepper id="creatorDiv" linear #stepper *ngIf="userIsCreator">
                 <mat-step [stepControl]="opponentFormGroup" editable="false">
-                    <ng-template matStepLabel>Selection d'un adversaire</ng-template>
+                    <ng-template matStepLabel>Sélection d'un adversaire</ng-template>
                     <div *ngIf="currentJoiner.candidatesNames.length === 0 else chooseCandidate">
                         Attendez qu'un utilisateur vous rejoigne!
                     </div>

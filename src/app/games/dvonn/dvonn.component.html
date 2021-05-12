@@ -16,12 +16,17 @@
                     [attr.r]="getPieceSize()"
                     [ngClass]="getPieceClasses(caseContent)"
                     class="base mid-stroke"/>
+            <polygon *ngIf="caseContent.containsSource()"
+                     class="other-piece"
+                     points="157.055,0 90.798,196.319 164.417,196.319 88.344,400 289.571,159.509 218.405,159.509 311.656,0"
+                     [attr.transform]="'translate(' + (getCenter(coord).x+3) + ' ' + (getCenter(coord).y-12) + ') scale(0.07)'"/>
             <text *ngIf="caseContent.getSize() > 1"
                   (click)="onClick(coord.x, coord.y)"
                   [attr.x]="getCenter(coord).x"
                   [attr.y]="getCenter(coord).y"
-                  class="text-center text-big"
-                  dy="17">{{caseContent.getSize()}}</text>
+                  class="text-center text-medium text-bold"
+                  dy="13">{{caseContent.getSize()}}</text>
+
         </g>
     </g>
     <!-- Show disconnecteds -->

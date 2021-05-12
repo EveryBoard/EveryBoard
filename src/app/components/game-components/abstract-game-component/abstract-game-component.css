@@ -33,10 +33,13 @@
     stroke: #ffc34d;
 }
 .other-piece {
-    fill: forestgreen;
+    fill: #b0789e;
 }
 .other-piece-stroke {
-    stroke: forestgreen;
+    stroke: #b0789e;
+}
+.dashed-stroke {
+    stroke-dasharray: 2;
 }
 .pre-captured {
     fill: pink;
@@ -105,6 +108,9 @@
 }
 .text-big {
     font: 50px sans-serif;
+}
+.text-bold {
+    font-weight: bold;
 }
 .text-big-vcenter {
     dy: 17;

@@ -75,10 +75,10 @@ describe('DidacticialGameWrapperComponent', () => {
             wrapper.startDidacticial(didacticial);
 
             // expect to see three "li" with step title
-            let expectedTitle: string = '<span style="color: black;"><b>title 0</b></span>';
+            let expectedTitle: string = 'title 0';
             let currentTitle: string = componentTestUtils.findElement('#step_0').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
-            expectedTitle = '<span style="color: black;">title 1</span>';
+            expectedTitle = 'title 1';
             currentTitle = componentTestUtils.findElement('#step_1').nativeElement.innerHTML;
             expect(currentTitle).toBe(expectedTitle);
         }));
@@ -109,6 +109,7 @@ describe('DidacticialGameWrapperComponent', () => {
             wrapper.startDidacticial(didacticial);
 
             // when clicking on step 2
+            expect(await componentTestUtils.clickElement('#steps')).toBeTruthy();
             expect(await componentTestUtils.clickElement('#step_2')).toBeTruthy();
 
             // expect to have the step 2 shown

@@ -67,16 +67,19 @@ describe('LocalGameWrapperComponent', () => {
         expect(componentTestUtils.findElement('#draw')).toBeTruthy('Draw indicator should be present');
     }));
     it('should show score if needed', fakeAsync(async() => {
-        componentTestUtils.getComponent().showScore = false;
+        componentTestUtils.getComponent().showScore = true;
         expect(componentTestUtils.findElement('#scoreZero')).toBeFalsy();
         expect(componentTestUtils.findElement('#scoreOne')).toBeFalsy();
 
         componentTestUtils.getComponent().showScore = true;
         componentTestUtils.getComponent()['scores'] = [0, 0];
-        componentTestUtils.fixture.detectChanges();
+        componentTestUtils.detectChanges();
 
         expect(componentTestUtils.findElement('#scoreZero')).toBeTruthy();
         expect(componentTestUtils.findElement('#scoreOne')).toBeTruthy();
+    }));
+    it('should allow to restart game during the play', fakeAsync(async() => {
+        expect(componentTestUtils.findElement('#restartButton'));
     }));
     it('should allow to restart game at the end', fakeAsync(async() => {
         const board: number[][] = [
@@ -89,9 +92,6 @@ describe('LocalGameWrapperComponent', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 41);
         componentTestUtils.setupSlice(slice);
-
-        expect(componentTestUtils.findElement('#restartButton'))
-            .toBeFalsy('Restart button should be absent during the game');
 
         await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
 

@@ -1,64 +1,67 @@
-<div class="d-flex align-items-center h-100">
-    <div class="container">
-        <div class="row">
-            <div id="infos" class="flex-container circled">
-                <ul>
+<div class="box"
+     id="board">
+    <app-game-includer></app-game-includer>
+</div>
+
+<div id="infos" class="box">
+    <progress class="progress is-primary" [attr.value]="stepIndex" [attr.max]="getNumberOfSteps()"></progress>
+    <div class="level is-medium">
+        <div class="level-left">
+            <p class="title">{{ getCurrentStepTitle() }} [{{stepIndex+1}}/{{getNumberOfSteps()+1}}]</p>
+        </div>
+        <div class="level-right">
+            <div class="select">
+                <select id="steps" (change)="changeStep($event.target.value)">
                     <ng-container *ngFor="let step of steps; index as i;">
-                        <li *ngIf="i !== stepIndex else title"
-                            id="step_{{ i }}"
-                            [style.color]="getStepColor(i)"
-                            (click)="showStep(i)"
-                            >
-                            <span style="color: black">{{ step.title }}</span>
-                        </li>
-                        <ng-template #title>
-                            <li id="step_{{ i }}"
-                                [style.color]="getStepColor(i)"
-                                (click)="showStep(i)"
-                                >
-                                <span style="color: black"><b>{{ step.title }}</b></span>
-                            </li>
+                        <ng-container *ngIf="i === stepIndex else otherstep">
+                            <option id="step_{{ i }}" [value]="i" selected>{{ step.title }}</option>
+                        </ng-container>
+                        <ng-template #otherstep>
+                            <option [value]="i">
+                                <ng-container *ngIf="stepFinished[i] else notdone">v</ng-container>
+                                <ng-template  #notdone>x</ng-template>
+                                <span id="step_{{ i }}">{{ step.title }}</span>
+                            </option>
                         </ng-template>
                     </ng-container>
-                </ul>
-                <p class="lead" id='currentMessage'>{{ currentMessage }}</p>
-                <div *ngIf="currentReason" class="alert alert-danger" role="alert">
-                    <p id="currentReason">{{ currentReason }}</p>
-                </div>
-                <div class="btn-toolbar">
-                    <button id="retryButton"
-                            class="btn btn-lg btn-primary mr-3"
-                            *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex] === true) || moveAttemptMade)"
-                            (click)="retry()"
-                            >
-                        Essayez à nouveau
-                    </button>
-                    <button id="nextButton"
-                            class="btn btn-lg btn-primary mr-3"
-                            *ngIf="tutorialOver === false"
-                            (click)="next()"
-                            >{{ steps && steps[stepIndex].isInformation() ? 'Continuer' : 'Suivant' }}</button>
-                    <button id="restartButton"
-                            class="btn btn-lg btn-primary"
-                            *ngIf="tutorialOver"
-                            (click)="start()"
-                            >
-                        Recommencer
-                    </button>
-                    <button id="showSolutionButton"
-                            class="btn btn-lg btn-primary"
-                            *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
-                            (click)="showSolution()"
-                            >
-                        Voir la solution
-                    </button>
-                </div>
+                </select>
             </div>
         </div>
-        <div class="row">
-            <div id="board" class="flex-container circled mx-auto">
-                <app-game-includer></app-game-includer>
-            </div>
-        </div>
+    </div>
+    <div class="content is-medium">
+        <p id='currentMessage'>{{ currentMessage }}</p>
+    </div>
+
+    <div *ngIf="currentReason" class="message is-danger" role="alert">
+        <div class="message-header">Échec</div>
+        <div id="currentReason" class="message-body">{{ currentReason }}</div>
+    </div>
+    <div class="btn-toolbar">
+        <button id="retryButton"
+                class="button mr-3"
+                *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex] === true) || moveAttemptMade)"
+                (click)="retry()"
+                >
+            Essayez à nouveau
+        </button>
+        <button id="nextButton"
+                class="button is-primary mr-3"
+                *ngIf="tutorialOver === false"
+                (click)="next()"
+                >{{ steps && steps[stepIndex].isInformation() ? 'Continuer' : 'Suivant' }}</button>
+        <button id="restartButton"
+                class="button"
+                *ngIf="tutorialOver"
+                (click)="start()"
+                >
+            Recommencer
+        </button>
+        <button id="showSolutionButton"
+                class="button"
+                *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
+                (click)="showSolution()"
+                >
+            Voir la solution
+        </button>
     </div>
 </div>

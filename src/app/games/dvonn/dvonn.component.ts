@@ -120,11 +120,11 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
     }
     public getPieceClasses(stack: DvonnPieceStack): string[] {
         if (stack.containsSource() && stack.getSize() === 1) {
-            return ['other-piece'];
+            return ['other-piece', 'dashed-stroke'];
         }
         const playerColor: string = this.getPlayerClass(stack.getOwner());
         if (stack.containsSource()) {
-            return [playerColor, 'other-piece-stroke'];
+            return [playerColor, 'other-piece-stroke', 'dashed-stroke'];
         }
         return [playerColor];
     }
