@@ -535,7 +535,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                                                     ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
         this.gameComponent.rules.choose(move);
         const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
-        if (this.gameComponent.rules.isGameOver(state)) {
+        if (this.gameComponent.rules.isGameOver(state, move)) {
             const minimax: Minimax<Move, GamePartSlice> = this.gameComponent.availableMinimaxes[0];
             if (this.gameComponent.rules.node.getOwnValue(minimax).value === 0) { // TODO: not the one deciding!
                 this.notifyDraw(encodedMove, scorePlayerZero, scorePlayerOne);

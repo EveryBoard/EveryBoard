@@ -20,31 +20,33 @@ export class P4Failure {
     public static COLUMN_IS_FULL: string = 'Veuillez placer votre pièce dans une colonne non remplie';
 }
 
-export class P4Minimax extends Minimax<P4Move, P4PartSlice> {
-    public getListMoves(node: P4Node): P4Move[] {
-        return P4Rules.getListMoves(node);
-    }
-    public getBoardValue(move: P4Move, slice: P4PartSlice): NodeUnheritance {
-        display(P4Rules.VERBOSE, {
-            text: 'P4Rules instance methods getBoardValue called',
-            board: slice.getCopiedBoard(),
-        });
-        return P4Rules.getBoardValue(slice);
-    }
-}
 export class P4Rules extends Rules<P4Move, P4PartSlice> {
     public static VERBOSE: boolean = false;
 
+    public static getVictoriousCoords(slice: P4PartSlice): Coord[] {
+        const coords: Coord[] = [];
+        for (let x: number = 0; x < 7; x++) {
+            for (let y: number = 5; y !== -1 && slice.board[y][x] !== Player.NONE.value; y--) {
+                const caseScore: number = P4Rules.getCaseScore(slice.board, new Coord(x, y));
+                if (caseScore === Player.ZERO.getVictoryValue() ||
+                    caseScore === Player.ONE.getVictoryValue())
+                {
+                    coords.push(new Coord(x, y));
+                }
+            }
+        }
+        return coords;
+    }
+
     private static getBoardValueFromScratch(slice: P4PartSlice): NodeUnheritance {
         display(P4Rules.VERBOSE, { P4Rules_getBoardValueFromScratch: { slice } });
-        const currentBoard: number[][] = slice.getCopiedBoard();
         let score: number = 0;
 
         for (let x: number = 0; x < 7; x++) {
             // for every column, starting from the bottom of each column
-            for (let y: number = 5; y !== -1 && currentBoard[y][x] !== Player.NONE.value; y--) {
+            for (let y: number = 5; y !== -1 && slice.board[y][x] !== Player.NONE.value; y--) {
                 // while we haven't reached the top or an empty case
-                const tmpScore: number = P4Rules.getCaseScore(currentBoard, new Coord(x, y));
+                const tmpScore: number = P4Rules.getCaseScore(slice.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) !== SCORE.DEFAULT) {
                     // if we find a pre-victory
                     display(P4Rules.VERBOSE, { preVictoryOrVictory: { slice, tmpScore, coord: { x, y } } });
@@ -134,7 +136,7 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
                     'line allies : ' + lineAllies + '\n',
                 board,
                 });
-                return P4Rules.winForPlayer(ally);
+                return Player.of(ally).getVictoryValue();
             }
 
             const lineDist: number = distByDirs.get(dir) + distByDirs.get(dir.getOpposite());
@@ -145,13 +147,6 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
             }
         }
         return score * Player.of(ally).getScoreModifier();
-    }
-    private static winForPlayer(player: number): number {
-        if (player === Player.ZERO.value) {
-            return Number.MIN_SAFE_INTEGER;
-        } else {
-            return Number.MAX_SAFE_INTEGER;
-        }
     }
     public static getListMoves(node: P4Node): P4Move[] {
         display(P4Rules.VERBOSE, { context: 'P4Rules.getListMoves', node });
@@ -197,5 +192,18 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
             return { legal: MGPValidation.failure(P4Failure.COLUMN_IS_FULL) };
         }
         return { legal: MGPValidation.SUCCESS };
+    }
+    public isGameOver(state: P4PartSlice): boolean {
+        for (let x: number = 0; x < 7; x++) {
+            // for every column, starting from the bottom of each column
+            for (let y: number = 5; y !== -1 && state.board[y][x] !== Player.NONE.value; y--) {
+                // while we haven't reached the top or an empty case
+                const tmpScore: number = P4Rules.getCaseScore(state.board, new Coord(x, y));
+                if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
+                    return true;
+                }
+            }
+        }
+        return state.turn === 42;
     }
 }

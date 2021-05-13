@@ -69,7 +69,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.gameComponent.updateBoard();
         const minimax: Minimax<Move, GamePartSlice> = this.getPlayingAI();
         const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
-        if (this.gameComponent.rules.isGameOver(state)) {
+        const move: Move = this.gameComponent.rules.node.move;
+        if (this.gameComponent.rules.isGameOver(state, move)) {
             this.endGame = true;
             const boardValue: number = this.gameComponent.rules.node.getOwnValue(minimax).value;
             // TODO: Rules should adjuge victory, not minimaxes
@@ -87,7 +88,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             setTimeout(() => {
                 // called only when it's AI's Turn
                 const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
-                if (!this.gameComponent.rules.isGameOver(state)) {
+                const move: Move = this.gameComponent.rules.node.move;
+                if (!this.gameComponent.rules.isGameOver(state, move)) {
                     const turn: number = this.gameComponent.rules.node.gamePartSlice.turn % 2;
                     const currentAiDepth: number = Number.parseInt(turn === 0 ? this.aiZeroDepth : this.aiOneDepth);
                     const aiMove: Move =

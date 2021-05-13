@@ -9,10 +9,10 @@ import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GameComponentUtils } from '../../components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
     selector: 'app-siam',
@@ -120,50 +120,11 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         this.cancelMove();
         return await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
-    public getArrowCoordinate(x: number, y: number, o: string): string {
-        const x0: number = 100*x; const y0: number = 100*y;
-        const x1: number = x0 + 30; const y1: number = y0 + 0;
-        const x2: number = x0 + 30; const y2: number = y0 + 50;
-        const x3: number = x0 + 0; const y3: number = y0 + 50;
-        const x4: number = x0 + 50; const y4: number = y0 + 100;
-        const x5: number = x0 + 100; const y5: number = y0 + 50;
-        const x6: number = x0 + 70; const y6: number = y0 + 50;
-        const x7: number = x0 + 70; const y7: number = y0 + 0;
-        const x8: number = x0 + 27.5; const y8: number = y0 + 0;
-        return x1 + ' ' + y1 + ' ' + x2 + ' ' + y2 + ' ' +
-               x3 + ' ' + y3 + ' ' + x4 + ' ' + y4 + ' ' +
-               x5 + ' ' + y5 + ' ' + x6 + ' ' + y6 + ' ' +
-               x7 + ' ' + y7 + ' ' + x8 + ' ' + y8;
-    }
-    public rotate(x: number, y: number, o: string): string {
-        const orientation: number = Orthogonal.factory.fromString(o).toInt() - 2;
-        return 'rotate(' + (90*orientation) + ' ' + ((100*x) + 50) + ' ' + ((100*y) + 50) + ')';
-    }
     public isPiece(c: number): boolean {
         return ![SiamPiece.EMPTY.value, SiamPiece.MOUNTAIN.value].includes(c);
     }
-    public rotateOf(x: number, y: number): string {
-        const piece: SiamPiece = SiamPiece.decode(this.board[y][x]);
-        const orientation: string = piece.getDirection().toString();
-        return this.rotate(x + 1, y + 1, orientation);
-    }
     public isMountain(pieceValue: number): boolean {
         return pieceValue === SiamPiece.MOUNTAIN.value;
-    }
-    public getMountainCoordinate(x: number, y: number): string {
-        const x0: number = 100*x; const y0: number = 100*y;
-        const x1: number = x0; const y1: number = y0 + 100;
-        const x2: number = x0 + 16; const y2: number = y0 + 68;
-        const x3: number = x0 + 24; const y3: number = y0 + 76;
-        const x4: number = x0 + 48; const y4: number = y0 + 28;
-        const x5: number = x0 + 64; const y5: number = y0 + 60;
-        const x6: number = x0 + 72; const y6: number = y0 + 44;
-        const x7: number = x0 + 100; const y7: number = y0 + 100;
-        const x8: number = x0 + 0; const y8: number = y0 + 100;
-        return x1 + ' ' + y1 + ' ' + x2 + ' ' + y2 + ' ' +
-               x3 + ' ' + y3 + ' ' + x4 + ' ' + y4 + ' ' +
-               x5 + ' ' + y5 + ' ' + x6 + ' ' + y6 + ' ' +
-               x7 + ' ' + y7 + ' ' + x8 + ' ' + y8;
     }
     public getPieceClasses(x: number, y: number, c: number): string[] {
         const classes: string[] = [];
@@ -201,7 +162,22 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         }
         return false;
     }
-    public getTriangleCoordinate(x: number, y: number, lx: number, ly: number): string {
-        return GameComponentUtils.getTriangleCoordinate(x, y, lx, ly);
+    public getInsertionArrowTransform(x: number, y: number, direction: string): string {
+        const orientation: number = Orthogonal.factory.fromString(direction).toInt() - 2;
+        const rotation: string = `rotate(${orientation*90} ${this.CASE_SIZE/2} ${this.CASE_SIZE/2})`;
+        const translation: string = 'translate(' + x * this.CASE_SIZE + ', ' + y * this.CASE_SIZE + ')';
+        return [translation, rotation].join(' ');
+    }
+    public getPieceTransform(x: number, y: number): string {
+        const piece: SiamPiece = SiamPiece.decode(this.board[y][x]);
+        const orientation: number = piece.getDirection().toInt()-2;
+        const rotation: string = `rotate(${orientation*90} ${this.CASE_SIZE/2} ${this.CASE_SIZE/2})`;
+        const translation: string = 'translate(' + (x+1) * this.CASE_SIZE + ', ' + (y+1) * this.CASE_SIZE + ')';
+        return [translation, rotation].join(' ');
+    }
+    public getArrowTransform(x: number, y: number, orientation: string): string {
+        return GameComponentUtils.getArrowTransform(this.CASE_SIZE,
+                                                    new Coord(x, y),
+                                                    Orthogonal.factory.fromString(orientation));
     }
 }

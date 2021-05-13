@@ -40,11 +40,21 @@ export class SixMinimax extends AlignementMinimax<SixMove,
                                                   SixLegalityStatus,
                                                   SixVictorySource>
 {
+
+    private static INSTANCE: SixMinimax;
+
     public VERBOSE: boolean = false;
 
+    public static getInstance(): SixMinimax {
+        if (SixMinimax.INSTANCE == null) {
+            SixMinimax.INSTANCE = new SixMinimax('SixMinimax');
+        }
+        return SixMinimax.INSTANCE;
+    }
     private currentVictorySource: SixVictorySource;
 
-    public getListMoves(node: SixNode, minimax: SixMinimax): SixMove[] {
+    public getListMoves(node: SixNode): SixMove[] {
+        const minimax: SixMinimax = SixMinimax.getInstance();
         const unheritance: SixNodeUnheritance = node.getOwnValue(minimax);
         if (unheritance && unheritance.preVictory) {
             if (node.gamePartSlice.turn < 40) {
@@ -145,10 +155,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         return this.getDeplacementFrom(state, start, legalLandings);
     }
     public getBoardValue(move: SixMove, slice: SixGameState): SixNodeUnheritance {
-        // const lastDrop: Coord = move.landing.getNext(slice.offset, 1);
         const LAST_PLAYER: Player = slice.getCurrentEnnemy();
         const victoryValue: number = LAST_PLAYER.getVictoryValue();
-        // const shapeInfo: BoardInfo = this.getShapeInfo(lastDrop, slice);
         const shapeInfo: BoardInfo = this.calculateBoardValue(move, slice);
         let preVictory: Coord | null;
         if (shapeInfo.status === SCORE.DEFAULT) {
@@ -593,6 +601,8 @@ export class SixRules extends Rules<SixMove,
 
     public VERBOSE: boolean = false;
 
+    private currentVictorySource: SixVictorySource;
+
     public applyLegalMove(move: SixMove,
                           state: SixGameState,
                           status: SixLegalityStatus)
@@ -715,5 +725,175 @@ export class SixRules extends Rules<SixMove,
             legal: MGPValidation.failure(SixFailure.MUST_CAPTURE_BIGGEST_GROUPS),
             kept: null,
         };
+    }
+    public isGameOver(state: SixGameState, lastMove: SixMove): boolean {
+        const shapeVictory: Coord[] = this.getShapeVictory(lastMove, state);
+        if (shapeVictory.length === 6) {
+            return true;
+        }
+        if (state.turn > 39) {
+            const pieces: number[] = state.countPieces();
+            const zeroPieces: number = pieces[0];
+            const onePieces: number = pieces[1];
+            if (zeroPieces < 6 || onePieces < 6) {
+                return true;
+            }
+        }
+        return false;
+    }
+    private startSearchingVictorySources(): void {
+        display(this.VERBOSE, 'SixRules.startSearchingVictorySources()');
+        this.currentVictorySource = {
+            typeSource: 'LINE',
+            index: -1,
+        };
+    }
+    public getShapeVictory(lastMove: SixMove, state: SixGameState): Coord[] {
+        this.startSearchingVictorySources();
+        while (this.hasNextVictorySource()) {
+            this.getNextVictorySource();
+            const shapeVictory: Coord[] = this.searchVictoryOnly(this.currentVictorySource, lastMove, state);
+            if (shapeVictory.length === 6) {
+                return shapeVictory;
+            }
+        }
+        return [];
+    }
+    private hasNextVictorySource(): boolean {
+        return this.currentVictorySource.typeSource !== 'CIRCLE' ||
+               this.currentVictorySource.index !== 5;
+    }
+    private getNextVictorySource(): SixVictorySource {
+        const source: SixVictorySource = this.currentVictorySource;
+        if (source.index === 5) {
+            let newType: 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE';
+            switch (this.currentVictorySource.typeSource) {
+                case 'LINE':
+                    newType = 'TRIANGLE_CORNER';
+                    break;
+                case 'TRIANGLE_CORNER':
+                    newType = 'TRIANGLE_EDGE';
+                    break;
+                default:
+                    newType = 'CIRCLE';
+                    break;
+            }
+            this.currentVictorySource = {
+                typeSource: newType,
+                index: 0,
+            };
+        } else {
+            let increment: number = 1;
+            if (this.currentVictorySource.typeSource === 'LINE') {
+                increment = 2;
+            }
+            this.currentVictorySource = {
+                typeSource: this.currentVictorySource.typeSource,
+                index: this.currentVictorySource.index + increment,
+            };
+        }
+        return this.currentVictorySource;
+    }
+    private searchVictoryOnly(victorySource: SixVictorySource, move: SixMove, state: SixGameState): Coord[] {
+        const lastDrop: Coord = move.landing.getNext(state.offset, 1);
+        display(this.VERBOSE, { called: 'SixRules.searchVictoryOnly', victorySource, move, state });
+        switch (victorySource.typeSource) {
+            case 'LINE':
+                return this.searchVictoryOnlyForLine(victorySource.index, lastDrop, state);
+            case 'CIRCLE':
+                return this.searchVictoryOnlyForCircle(victorySource.index, lastDrop, state);
+            case 'TRIANGLE_CORNER':
+                return this.searchVictoryOnlyForTriangleCorner(victorySource.index, lastDrop, state);
+            default:
+                return this.searchVictoryOnlyForTriangleEdge(victorySource.index, lastDrop, state);
+        }
+    }
+    private searchVictoryOnlyForCircle(index: number, lastDrop: Coord, state: SixGameState): Coord[] {
+        display(this.VERBOSE,
+                { called: 'SixRules.searchVictoryOnlyForCircle', index, lastDrop, state });
+        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        const initialDirection: HexaDirection = HexaDirection.factory.all[index];
+        const victory: Coord[] = [lastDrop];
+        let testCoord: Coord = lastDrop.getNext(initialDirection, 1);
+        while (victory.length < 6) {
+            const testedPiece: Player = state.getPieceAt(testCoord);
+            if (testedPiece !== LAST_PLAYER) {
+                return [];
+            }
+            const dirIndex: number = (index + victory.length) % 6;
+            victory.push(testCoord);
+            const dir: HexaDirection = HexaDirection.factory.all[dirIndex];
+            testCoord = testCoord.getNext(dir, 1);
+        }
+        return victory;
+    }
+    private searchVictoryOnlyForLine(index: number, lastDrop: Coord, state: SixGameState): Coord[] {
+        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        let dir: HexaDirection = HexaDirection.factory.all[index];
+        let testCoord: Coord = lastDrop.getNext(dir, 1);
+        const victory: Coord[] = [lastDrop];
+        let twoDirectionCovered: boolean = false;
+        while (victory.length < 6) {
+            const testedPiece: Player = state.getPieceAt(testCoord);
+            if (testedPiece === LAST_PLAYER) {
+                victory.push(testCoord);
+            } else {
+                if (twoDirectionCovered) {
+                    return [];
+                } else {
+                    twoDirectionCovered = true;
+                    dir = dir.getOpposite();
+                    testCoord = testCoord.getNext(dir, victory.length);
+                }
+            }
+            testCoord = testCoord.getNext(dir, 1);
+        }
+        return victory;
+    }
+    private searchVictoryOnlyForTriangleCorner(index: number, lastDrop: Coord, state: SixGameState): Coord[] {
+        display(this.VERBOSE,
+                { called: 'SixRules.searchVictoryTriangleCornerOnly', index, lastDrop, state });
+        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
+        const victory: Coord[] = [lastDrop];
+        let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
+        while (victory.length < 6) {
+            // Testing the corner
+            const testedPiece: Player = state.getPieceAt(testCoord);
+            if (testedPiece !== LAST_PLAYER) {
+                return [];
+            }
+            if (victory.length % 2 === 0) {
+                // reached a corner, let's turn
+                const dirIndex: number = (index + victory.length) % 6;
+                edgeDirection = HexaDirection.factory.all[dirIndex];
+            }
+            victory.push(testCoord);
+            testCoord = testCoord.getNext(edgeDirection, 1);
+        }
+        return victory;
+    }
+    private searchVictoryOnlyForTriangleEdge(index: number, lastDrop: Coord, state: SixGameState): Coord[] {
+        display(this.VERBOSE,
+                { called: 'SixRules.searchVictoryTriangleEdgeOnly', index, lastDrop, state });
+        const LAST_PLAYER: Player = state.getCurrentEnnemy();
+        let edgeDirection: HexaDirection = HexaDirection.factory.all[index];
+        const victory: Coord[] = [lastDrop];
+        let testCoord: Coord = lastDrop.getNext(edgeDirection, 1);
+        while (victory.length < 6) {
+            // Testing the corner
+            const testedPiece: Player = state.getPieceAt(testCoord);
+            if (testedPiece !== LAST_PLAYER) {
+                return [];
+            }
+            victory.push(testCoord);
+            if (victory.length % 2 === 0) {
+                // reached a corner, let's turn
+                const dirIndex: number = (index + victory.length) % 6;
+                edgeDirection = HexaDirection.factory.all[dirIndex];
+            }
+            testCoord = testCoord.getNext(edgeDirection, 1);
+        }
+        return victory;
     }
 }

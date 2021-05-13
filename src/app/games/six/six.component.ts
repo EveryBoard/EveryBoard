@@ -110,9 +110,9 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         } else {
             this.leftCoord = null;
         }
-        const minimax: SixMinimax = new SixMinimax('SixMinimax'); // TODO: move to rules and remove ?
-        if (this.rules.node.isEndGame(minimax)) {
-            this.victoryCoords = this.rules.node.getOwnValue(minimax).victory;
+        const state: SixGameState = this.rules.node.gamePartSlice;
+        if (this.rules.isGameOver(state, lastMove)) {
+            this.victoryCoords = this.rules.getShapeVictory(lastMove, state);
         }
         this.disconnecteds = this.getDisconnected();
     }

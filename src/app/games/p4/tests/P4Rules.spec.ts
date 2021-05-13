@@ -1,9 +1,10 @@
-import { P4Minimax, P4Node, P4Rules } from '../P4Rules';
+import { P4Node, P4Rules } from '../P4Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { P4PartSlice } from '../P4PartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { P4Move } from '../P4Move';
+import { P4Minimax } from '../P4Minimax';
 
 describe('P4Rules', () => {
 

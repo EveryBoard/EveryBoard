@@ -5,7 +5,7 @@ import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixMinimax, SixNode, SixRules } from '../SixRules';
 
-describe('Six - Minimax', () => {
+describe('SixMinimax', () => {
 
     let rules: SixRules;
     let minimax: SixMinimax;
@@ -169,11 +169,17 @@ describe('Six - Minimax', () => {
                 [_, X, _, _, _, _, _],
             ];
             const state: SixGameState = SixGameState.fromRepresentation(board, 39);
-            const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
             rules.node = new SixNode(null, null, state);
+            const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
             expect(rules.choose(move)).toBeTrue();
-            rules.node.findBestMove(1, minimax);
+
+            expect(rules.isGameOver(rules.node.gamePartSlice, rules.node.move)).toBeFalse();
+            const bestMove: SixMove = rules.node.findBestMove(1, minimax);
+            expect(bestMove).toEqual(SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 6)));
             expect(rules.node.countDescendants()).toBe(1);
+
+            expect(rules.choose(bestMove)).toBeTrue();
+            expect(rules.isGameOver(rules.node.gamePartSlice, rules.node.move)).toBeFalse();
         });
         // TODO: comparing what's best between that calculation and Phase 1 one
         it('Score after 40th turn should be a substraction of the number of piece', () => {

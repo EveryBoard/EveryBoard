@@ -9,7 +9,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { SiamMinimax } from '../../siam/SiamRules';
 
-describe('SiamRules - Minimax:', () => {
+describe('SiamMinimax:', () => {
 
     let minimax: SiamMinimax;
 
@@ -25,6 +25,9 @@ describe('SiamRules - Minimax:', () => {
     const r: number = SiamPiece.BLACK_RIGHT.value;
     const d: number = SiamPiece.BLACK_DOWN.value;
 
+    beforeAll(() => {
+        MGPNode.ruler = new SiamRules(SiamPartSlice);
+    });
     beforeEach(() => {
         minimax = new SiamMinimax('SiamMinimax');
     });

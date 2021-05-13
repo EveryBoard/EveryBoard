@@ -73,9 +73,9 @@ export class PylosPartSlice extends GamePartSlice {
         ownershipMap[Player.NONE.value] = 0;
         ownershipMap[Player.ZERO.value] = 0;
         ownershipMap[Player.ONE.value] = 0;
-        for (let z = 0; z < 3; z++) {
-            for (let y = 0; y < (4 - z); y++) {
-                for (let x = 0; x < (4 - z); x++) {
+        for (let z: number = 0; z < 3; z++) {
+            for (let y: number = 0; y < (4 - z); y++) {
+                for (let x: number = 0; x < (4 - z); x++) {
                     const c: PylosCoord = new PylosCoord(x, y, z);
                     const v: number = this.getBoardAt(c);
                     ownershipMap[v] = 1 + ownershipMap[v];

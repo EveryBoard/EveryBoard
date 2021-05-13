@@ -1,4 +1,4 @@
-import { Arrow, GipfComponent, GipfComponentFailure } from '../gipf.component';
+import { GipfComponent, GipfComponentFailure } from '../gipf.component';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
@@ -10,6 +10,7 @@ import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfBoard } from 'src/app/games/gipf/GipfBoard';
 import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
+import { Arrow } from 'src/app/jscaip/Arrow';
 
 describe('GipfComponent', () => {
     let componentTestUtils: ComponentTestUtils<GipfComponent>;

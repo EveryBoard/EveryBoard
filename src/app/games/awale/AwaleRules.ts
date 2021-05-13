@@ -72,13 +72,12 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
     public static VERBOSE: boolean = false;
 
     public applyLegalMove(move: AwaleMove, slice: AwalePartSlice, status: AwaleLegalityStatus): AwalePartSlice {
-        display(AwaleRules.VERBOSE, 'applyLegalMove');
+        display(AwaleRules.VERBOSE, { called: 'AwaleRules.applyLegalMove', move, slice, status });
         const turn: number = slice.turn;
         const PLAYER: number = slice.getCurrentPlayer().value;
         const ENNEMY: number = slice.getCurrentEnnemy().value;
 
-        const awalePartSlice: AwalePartSlice = this.node.gamePartSlice;
-        const captured: number[] = awalePartSlice.getCapturedCopy();
+        const captured: number[] = slice.getCapturedCopy();
 
         captured[PLAYER] += status.captured[PLAYER];
         captured[ENNEMY] += status.captured[ENNEMY];

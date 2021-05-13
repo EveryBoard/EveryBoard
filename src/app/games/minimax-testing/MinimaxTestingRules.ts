@@ -23,8 +23,7 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         const newLocation: Coord = new Coord(newX, newY);
         return new MinimaxTestingPartSlice(slice.turn + 1, newLocation);
     }
-    public isLegal(move: MinimaxTestingMove): LegalityStatus {
-        const slice: MinimaxTestingPartSlice = this.node.gamePartSlice;
+    public isLegal(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice): LegalityStatus {
         const coord: Coord = slice.location;
         const board: number[][] = slice.getCopiedBoard();
         if (coord.x + 1 === board[0].length && move.right === true) {

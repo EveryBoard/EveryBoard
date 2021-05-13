@@ -109,7 +109,7 @@ export class MGPNode<R extends Rules<M, S, L, U>,
         } else {
             this.ownValue = new MGPMap();
         }
-        display(MGPNode.VERBOSE || LOCAL_VERBOSE, { createdNode: this });
+        display(MGPNode.VERBOSE || LOCAL_VERBOSE, this.myToString(null));
     }
     public findBestMove(readingDepth: number, minimax: Minimax<M, S, L, U>): M {
         let bestDescendant: MGPNode<R, M, S, L, U> = this.alphaBeta(readingDepth,
@@ -129,7 +129,7 @@ export class MGPNode<R extends Rules<M, S, L, U>,
     : MGPNode<R, M, S, L, U>
     {
         const LOCAL_VERBOSE: boolean = false;
-        if (depth < 1 || MGPNode.ruler.isGameOver(this.gamePartSlice)) {
+        if (depth < 1 || MGPNode.ruler.isGameOver(this.gamePartSlice, this.move)) {
             display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf : ' + this.myToString(minimax));
             return this; // rules - leaf or calculation - leaf
         }
@@ -233,13 +233,16 @@ export class MGPNode<R extends Rules<M, S, L, U>,
         let genealogy: string = '';
         let node: MGPNode<R, M, S, L, U> = this;
         if (node.mother == null) {
-            return 'first node';
+            const turn: number = node.gamePartSlice.turn;
+            return 'Node: ' + turn;
         }
-        while (node && node.move) {
-            genealogy = node.move.toString() + ' > ' + genealogy;
+        do {
+            const move: string = node.move ? ' >' + node.move.toString().split('e')[2] + '> ' : ' ';
+            const turn: number = node.gamePartSlice.turn;
+            genealogy = move + turn + ' ' + genealogy;
             node = node.mother;
-        }
-        return genealogy;
+        } while (node);
+        return 'Node: ' + genealogy;
     }
     public isEndGame(minimax: Minimax<M, S, L, U>): boolean { // TODO: remove cleanly
         if (minimax == null) {

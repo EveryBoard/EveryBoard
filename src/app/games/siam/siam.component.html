@@ -2,53 +2,55 @@
      width="100%" height="auto"
      viewBox="0 0 700 700"
      preserveAspectRatio="xMidYMid meet">
+    <defs>
+        <polygon id="triangle" points="0 -3.5, 10 0, 0 3.5"/>
+        <polygon id="arrow" points="30 0, 30 50, 0 50, 50 100, 100 50, 70 50, 70 0, 27.5 0" />
+        <polygon id="mountain" points="0 100, 16 68, 24 76, 48 28, 64 60, 72 44, 100 100, 0 100" />
+    </defs>
     <g *ngFor="let n of [0, 1, 2, 3, 4]">
-        <polyline id="insertAt_{{n}}_-1"
-                  (click)="insertAt(n, -1)"
-                  [attr.points]="getArrowCoordinate(n + 1, 0)"
-                  [attr.transform]="rotate(n + 1, 0, 'DOWN')"
-                  class="base mid-stroke"/>
-        <polyline id="insertAt_{{n}}_5"
-                  (click)="insertAt(n, 5)"
-                  [attr.points]="getArrowCoordinate(n + 1, 6)"
-                  [attr.transform]="rotate(n + 1, 6, 'UP')"
-                  class="base mid-stroke"/>
-        <polyline id="insertAt_-1_{{n}}"
-                  (click)="insertAt(-1, n)"
-                  [attr.points]="getArrowCoordinate(0, n + 1)"
-                  [attr.transform]="rotate(0, n + 1, 'RIGHT')"
-                  class="base mid-stroke"/>
-        <polyline id="insertAt_5_{{n}}"
-                  (click)="insertAt(5, n)"
-                  [attr.points]="getArrowCoordinate(6, n + 1)"
-                  [attr.transform]="rotate(6, n + 1, 'LEFT')"
-                  class="base mid-stroke"/>
+        <use *ngFor="let orientation of [['DOWN', n, -1], ['UP', n, 5], ['RIGHT', -1, n], ['LEFT', 5, n]]"
+             xlink:href="#arrow"
+             id="insertAt_{{orientation[1]}}_{{orientation[2]}}"
+             (click)="insertAt(orientation[1], orientation[2])"
+             [attr.transform]="getInsertionArrowTransform(orientation[1]+1, orientation[2]+1, orientation[0])"
+             class="base mid-stroke"/>
     </g>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
             <g *ngIf="isPiece(c)">
-                <polyline id="clickPiece_{{x}}_{{y}}"
-                          (click)="clickPiece(x, y)"
-                          [attr.points]="getArrowCoordinate(x + 1, y + 1)"
-                          [attr.transform]="rotateOf(x, y)"
-                          [ngClass]="getPieceClasses(x, y, c)"
-                          class="base mid-stroke"
-                />
+                <use xlink:href="#arrow"
+                     id="clickPiece_{{x}}_{{y}}"
+                     (click)="clickPiece(x, y)"
+                     [attr.transform]="getPieceTransform(x, y)"
+                     [ngClass]="getPieceClasses(x, y, c)"
+                     class="base mid-stroke"
+                     />
                 <g *ngIf="choosingDirection(x, y)">
-                    <polyline id="chooseDirection_{{direction[2]}}"
-                              *ngFor="let direction of [[1, 1, ''], [2, 1, 'RIGHT'], [1, 2, 'DOWN'], [0, 1, 'LEFT'], [1, 0, 'UP']]"
-                              (click)="chooseDirection(direction[2])"
-                              [attr.points]="getTriangleCoordinate(x + 1, y + 1, direction[0], direction[1])"/>
+                    <circle id="chooseDirection_"
+                            (click)="chooseDirection('')"
+                            [attr.cx]="(x+1)*CASE_SIZE + CASE_SIZE/2"
+                            [attr.cy]="(y+1)*CASE_SIZE + CASE_SIZE/2"
+                            class="arrow selected mid-stroke"
+                            r="8"/>
+                    <use *ngFor="let direction of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
+                         xlink:href="#triangle"
+                         id="chooseDirection_{{direction}}"
+                         (click)="chooseDirection(direction)"
+                         [attr.transform]="getArrowTransform(x+1, y+1, direction)"
+                         class="arrow selected small-stroke" />
                 </g>
             </g>
-            <polyline *ngIf="isMountain(c)"
-                      [attr.points]="getMountainCoordinate(x + 1, y + 1)"
-                      fill="brown" />
+            <use *ngIf="isMountain(c)"
+                 xlink:href="#mountain"
+                 [attr.transform]="'translate(' + ((x+1)*CASE_SIZE) + ' ' + ((y+1)*CASE_SIZE) + ')'"
+                 fill="brown" />
             <g *ngIf="choosingOrientation(x, y)">
-                <polyline id="chooseOrientation_{{orientation[2]}}"
-                          *ngFor="let orientation of [[2, 1, 'RIGHT'], [1, 2, 'DOWN'], [0, 1, 'LEFT'], [1, 0, 'UP']]"
-                          (click)="chooseOrientation(orientation[2])"
-                          [attr.points]="getTriangleCoordinate(x + 1, y + 1, orientation[0], orientation[1])"/>
+                <use *ngFor="let orientation of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
+                     xlink:href="#triangle"
+                     id="chooseOrientation_{{orientation}}"
+                     (click)="chooseOrientation(orientation)"
+                     [attr.transform]="getArrowTransform(x+1, y+1, orientation)"
+                     class="arrow selected small-stroke" />
             </g>
         </g>
     </g>

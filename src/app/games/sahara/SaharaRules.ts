@@ -91,7 +91,6 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
         for (const piece of playersPiece) {
             const freedoms: number = TriangularGameState.getEmptyNeighboors(board, piece, SaharaPawn.EMPTY).length;
             if (freedoms === 0) {
-                console.log('VEKTORUUUU')
                 return [0];
             }
             playerFreedoms.push(freedoms);

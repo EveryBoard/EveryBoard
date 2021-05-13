@@ -81,7 +81,7 @@ export abstract class Rules<M extends Move,
         }
         return slice;
     }
-    public isGameOver(state: S): boolean {
+    public isGameOver(state: S, lastMove: M): boolean {
         throw new Error('implement the shit, TODO, make abstract the fuck');
     }
 }

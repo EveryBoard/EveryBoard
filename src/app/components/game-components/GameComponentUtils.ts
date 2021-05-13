@@ -1,14 +1,38 @@
+import { Coord } from 'src/app/jscaip/Coord';
+import { Orthogonal } from 'src/app/jscaip/Direction';
+
 export class GameComponentUtils {
-    public static getTriangleCoordinate(x: number, y: number, lx: number, ly: number): string {
-        const x0: number = (100*x) + (lx*33);
-        const y0: number = (100*y) + (ly*33);
-        const x1: number = x0;
-        const y1: number = y0;
-        const x2: number = x0 + 32;
-        const y2: number = y0 + 16;
-        const x3: number = x0;
-        const y3: number = y0 + 32;
-        return x1 + ' ' + y1 + ' ' + x2 + ' ' + y2 + ' ' +
-               x3 + ' ' + y3 + ' ' + x1 + ' ' + y1;
+    public static getArrowTransform(caseSize: number, coord: Coord, direction: Orthogonal): string {
+        let dx: number;
+        let dy: number;
+        let angle: number;
+        switch (direction) {
+            case Orthogonal.UP:
+                dx = 0;
+                dy = -1;
+                angle = -90;
+                break;
+            case Orthogonal.DOWN:
+                dx = 0;
+                dy = 1;
+                angle = 90;
+                break;
+            case Orthogonal.LEFT:
+                dx = -1;
+                dy = 0;
+                angle = 180;
+                break;
+            case Orthogonal.RIGHT:
+                dx = 1;
+                dy = 0;
+                angle = 0;
+                break;
+        }
+        const rotation: string = `rotate(${angle})`;
+        const scaling: string = 'scale(2)';
+        const realX: number = coord.x * caseSize + caseSize/2 + dx * caseSize/4;
+        const realY: number = coord.y * caseSize + caseSize/2 + dy * caseSize/4;
+        const translation: string = `translate(${realX} ${realY})`;
+        return [translation, scaling, rotation].join(' ');
     }
 }

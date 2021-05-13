@@ -127,9 +127,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
                this.nextPlayerCantOnlyPass(state);
     }
     public isGameOver(state: ReversiPartSlice): boolean {
-        const TODO: boolean = ReversiRules.isGameEnded(state);
-        console.log('is Game over:', TODO);
-        return TODO;
+        return ReversiRules.isGameEnded(state);
     }
     public static playerCanOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
         const currentPlayerChoices: ReversiMove[] = this.getListMoves(reversiPartSlice);
