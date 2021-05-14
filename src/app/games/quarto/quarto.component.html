@@ -38,6 +38,7 @@
         </g>
         <g *ngIf="chosen.x !== -1" [attr.transform]="'translate(' + (chosen.x*CASE_SIZE) + ' ' + (chosen.y*CASE_SIZE) + ')'">
             <rect x="0" y="0"
+                  id="highlight"
                   [attr.width]="CASE_SIZE"
                   [attr.height]="CASE_SIZE"
                   class="base highlighted" />
@@ -90,7 +91,8 @@
         <g *ngFor="let line of board; index as y" [attr.transform]="'translate(0 ' + (CASE_SIZE*6) + ')'">
             <g *ngFor="let caseContent of line; index as x">
                 <g *ngIf="isRemaining((4*y)+x)"
-                   (click)="choosePiece((4*y)+x)">
+                   (click)="choosePiece((4*y)+x)"
+                   id="choosePiece_{{(4*y)+x}}">
                     <rect *ngIf="pieceToGive.value === (4*y)+x"
                           [attr.x]="CASE_SIZE*x"
                           [attr.y]="CASE_SIZE*y"

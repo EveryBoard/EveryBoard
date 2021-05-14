@@ -1,67 +1,65 @@
-<div class="box"
-     id="board">
-    <app-game-includer></app-game-includer>
-</div>
-
-<div id="infos" class="box">
-    <progress class="progress is-primary" [attr.value]="stepIndex" [attr.max]="getNumberOfSteps()"></progress>
-    <div class="level is-medium">
-        <div class="level-left">
-            <p class="title">{{ getCurrentStepTitle() }} [{{stepIndex+1}}/{{getNumberOfSteps()+1}}]</p>
-        </div>
-        <div class="level-right">
-            <div class="select">
-                <select id="steps" (change)="changeStep($event.target.value)">
-                    <ng-container *ngFor="let step of steps; index as i;">
-                        <ng-container *ngIf="i === stepIndex else otherstep">
-                            <option id="step_{{ i }}" [value]="i" selected>{{ step.title }}</option>
+<div class="columns">
+    <div class="column is-5">
+        <div id="infos" class="box">
+            <progress class="progress is-primary" [attr.value]="stepIndex" [attr.max]="getNumberOfSteps()"></progress>
+            <div class="content is-medium">
+                <p class="title">{{ getCurrentStepTitle() }} [{{stepIndex+1}}/{{getNumberOfSteps()+1}}]</p>
+                <p id='currentMessage'>{{ currentMessage }}</p>
+            </div>
+            <div *ngIf="currentReason" class="message is-danger" role="alert">
+                <div class="message-header">Échec</div>
+                <div id="currentReason" class="message-body">{{ currentReason }}</div>
+            </div>
+            <div class="block">
+                <button id="retryButton"
+                        class="button mr-3"
+                        *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex] === true) || moveAttemptMade)"
+                        (click)="retry()"
+                        >
+                    Essayez à nouveau
+                </button>
+                <button id="nextButton"
+                        class="button is-primary mr-3 mb-1"
+                        *ngIf="tutorialOver === false"
+                        (click)="next()"
+                        >{{ steps && steps[stepIndex].isInformation() ? 'Continuer' : 'Suivant' }}</button>
+                <button id="restartButton"
+                        class="button"
+                        *ngIf="tutorialOver"
+                        (click)="start()"
+                        >
+                    Recommencer
+                </button>
+                <button id="showSolutionButton"
+                        class="button"
+                        *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
+                        (click)="showSolution()"
+                        >
+                    Voir la solution
+                </button>
+                <div class="select">
+                    <select id="steps" (change)="changeStep($event.target.value)">
+                        <ng-container *ngFor="let step of steps; index as i;">
+                            <ng-container *ngIf="i === stepIndex else otherstep">
+                                <option id="step_{{ i }}" [value]="i" selected>{{ step.title }}</option>
+                            </ng-container>
+                            <ng-template #otherstep>
+                                <option [value]="i">
+                                    <ng-container *ngIf="stepFinished[i] else notdone">v </ng-container>
+                                    <ng-template  #notdone>x </ng-template>
+                                    <span id="step_{{ i }}">{{ step.title }}</span>
+                                </option>
+                            </ng-template>
                         </ng-container>
-                        <ng-template #otherstep>
-                            <option [value]="i">
-                                <ng-container *ngIf="stepFinished[i] else notdone">v</ng-container>
-                                <ng-template  #notdone>x</ng-template>
-                                <span id="step_{{ i }}">{{ step.title }}</span>
-                            </option>
-                        </ng-template>
-                    </ng-container>
-                </select>
+                    </select>
+                </div>
             </div>
         </div>
     </div>
-    <div class="content is-medium">
-        <p id='currentMessage'>{{ currentMessage }}</p>
-    </div>
-
-    <div *ngIf="currentReason" class="message is-danger" role="alert">
-        <div class="message-header">Échec</div>
-        <div id="currentReason" class="message-body">{{ currentReason }}</div>
-    </div>
-    <div class="btn-toolbar">
-        <button id="retryButton"
-                class="button mr-3"
-                *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex] === true) || moveAttemptMade)"
-                (click)="retry()"
-                >
-            Essayez à nouveau
-        </button>
-        <button id="nextButton"
-                class="button is-primary mr-3"
-                *ngIf="tutorialOver === false"
-                (click)="next()"
-                >{{ steps && steps[stepIndex].isInformation() ? 'Continuer' : 'Suivant' }}</button>
-        <button id="restartButton"
-                class="button"
-                *ngIf="tutorialOver"
-                (click)="start()"
-                >
-            Recommencer
-        </button>
-        <button id="showSolutionButton"
-                class="button"
-                *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
-                (click)="showSolution()"
-                >
-            Voir la solution
-        </button>
+    <div class="column is-7">
+        <div class="box"
+             id="board">
+            <app-game-includer></app-game-includer>
+        </div>
     </div>
 </div>
