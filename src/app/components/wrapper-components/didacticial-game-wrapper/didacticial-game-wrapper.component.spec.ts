@@ -108,9 +108,11 @@ describe('DidacticialGameWrapperComponent', () => {
             ];
             wrapper.startDidacticial(didacticial);
 
-            // when clicking on step 2
-            expect(await componentTestUtils.clickElement('#steps')).toBeTruthy();
-            expect(await componentTestUtils.clickElement('#step_2')).toBeTruthy();
+            // when selecting a step
+            const stepSelection: any = componentTestUtils.findElement('#steps').nativeElement;
+            stepSelection.value = stepSelection.options[2].value;
+            stepSelection.dispatchEvent(new Event('change'));
+            componentTestUtils.detectChanges();
 
             // expect to have the step 2 shown
             const expectedMessage: string = 'instruction 2';

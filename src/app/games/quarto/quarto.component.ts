@@ -10,18 +10,19 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 @Component({
     selector: 'app-quarto',
     templateUrl: './quarto.component.html',
+    styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
     public rules: QuartoRules = new QuartoRules(QuartoPartSlice);
 
+    public CASE_SIZE: number = 100;
+    public EMPTY: number = QuartoPiece.NONE.value;
+
     public chosen: Coord = new Coord(-1, -1);
-
     public lastMove: Coord = new Coord(-1, -1);
-
-    public pieceInHand: QuartoPiece = this.rules.node.gamePartSlice.pieceInHand;
     // the piece that the current user must place on the board
-
-    public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user want to give to the opponent
+    public pieceInHand: QuartoPiece = this.rules.node.gamePartSlice.pieceInHand;
+    public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
 
     public updateBoard(): void {
         const slice: QuartoPartSlice = this.rules.node.gamePartSlice;
@@ -32,19 +33,15 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         if (move != null) {
             this.lastMove = move.coord;
         } else {
-            this.lastMove = null;
+            this.lastMove = new Coord(-1, -1);
         }
     }
-    /** ******************************** For Online Game **********************************/
-
     public decodeMove(encodedMove: number): QuartoMove {
         return QuartoMove.decode(encodedMove);
     }
     public encodeMove(move: QuartoMove): number {
         return move.encode();
     }
-    // creating method for Quarto
-
     public async chooseCoord(x: number, y: number): Promise<MGPValidation> {
         // called when the user click on the quarto board
         const clickValidity: MGPValidation = this.canUserPlay('#chooseCoord_' + x + '_' + y);
@@ -104,9 +101,33 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public isRemaining(pawn: number): boolean {
         return QuartoPartSlice.isGivable(QuartoPiece.fromInt(pawn), this.board, this.pieceInHand);
     }
-    public isHighlighted(x: number, y: number): boolean {
-        const clickedCoord: Coord = new Coord(x, y);
-        return clickedCoord.equals(this.lastMove) ||
-               clickedCoord.equals(this.chosen);
+
+    public getCaseClasses(x: number, y: number): string[] {
+        if (this.lastMove.x === x && this.lastMove.y === y) {
+            return ['moved'];
+        }
+        return [];
+    }
+    public isRectangle(piece: number): boolean {
+        return piece % 4 < 2;
+    }
+    public getPieceClasses(piece: number): string[] {
+        const classes: string[] = [];
+        if (piece % 2 === 0) {
+            classes.push('player0');
+        } else {
+            classes.push('player1');
+        }
+        return classes;
+    }
+    public getPieceSize(piece: number): number {
+        if (piece < 8) {
+            return 40;
+        } else {
+            return 25;
+        }
+    }
+    public pieceHasDot(piece: number): boolean {
+        return piece !== QuartoPiece.NONE.value && (piece % 8 < 4);
     }
 }
