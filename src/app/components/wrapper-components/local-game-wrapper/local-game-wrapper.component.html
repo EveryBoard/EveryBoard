@@ -16,14 +16,16 @@
                     <option value="7"> IA LEVEL 7 </option>
                 </select>
             </div>
-            <mat-select></mat-select> <!-- TODO: removing this makes some async tests fail, wtf? -->
+            <div style="visibility: hidden;">
+                <mat-select></mat-select> <!-- TODO: removing this makes some async tests fail, wtf? (when removing, add the "block" class to the select div above) -->
+            </div>
             <p id="scoreZero"
                *ngIf="compo.showScore"
                class="block"> {{ compo.scores[0] }} points </p>
             <hr/>
             <p class="is-size-3">vs.</p>
             <hr/>
-            <div class="select">
+            <div class="select block">
                 <select (change)="switchPlayerTwo($event.target.value)">
                     <option selected value="0"> Humain </option>
                     <option value="1"> IA LEVEL 1 </option>
@@ -37,7 +39,7 @@
             </div>
             <p id="scoreOne"
                *ngIf="compo.scores"
-               class=""> {{ compo.scores[1] }} points </p>
+               class="block"> {{ compo.scores[1] }} points </p>
             <div class="block" id="gameResult" *ngIf="endGame">
                 <p class="subtitle" *ngIf="winner">{{ winner }} a gagné</p>
                 <p class="subtitle" id="draw" *ngIf="winner == null">Match nul</p>
