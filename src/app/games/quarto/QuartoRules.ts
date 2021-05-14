@@ -157,9 +157,16 @@ class Critere {
             })) + '}';
     }
 }
-interface Line {
-    initialCoord: Coord,
-    direction: Direction
+class Line {
+    public constructor(public readonly initialCoord: Coord,
+                       public readonly direction: Direction) {}
+    public allCoords(): Coord[] {
+        const coords: Coord[] = [];
+        for (let i: number = 0; i < 4; i++) {
+            coords.push(this.initialCoord.getNext(this.direction, i));
+        }
+        return coords;
+    }
 }
 abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice> {}
 
@@ -178,16 +185,16 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
     public static VERBOSE: boolean = false;
 
     public static readonly lines: ReadonlyArray<Line> = [
-        { initialCoord: new Coord(0, 0), direction: Direction.DOWN }, // les verticales
-        { initialCoord: new Coord(1, 0), direction: Direction.DOWN },
-        { initialCoord: new Coord(2, 0), direction: Direction.DOWN },
-        { initialCoord: new Coord(3, 0), direction: Direction.DOWN },
-        { initialCoord: new Coord(0, 0), direction: Direction.RIGHT }, // les horizontales
-        { initialCoord: new Coord(0, 1), direction: Direction.RIGHT },
-        { initialCoord: new Coord(0, 2), direction: Direction.RIGHT },
-        { initialCoord: new Coord(0, 3), direction: Direction.RIGHT },
-        { initialCoord: new Coord(0, 0), direction: Direction.DOWN_RIGHT }, // les diagonales
-        { initialCoord: new Coord(0, 3), direction: Direction.UP_RIGHT },
+        new Line(new Coord(0, 0), Direction.DOWN), // les verticales
+        new Line(new Coord(1, 0), Direction.DOWN),
+        new Line(new Coord(2, 0), Direction.DOWN),
+        new Line(new Coord(3, 0), Direction.DOWN),
+        new Line(new Coord(0, 0), Direction.RIGHT), // les horizontales
+        new Line(new Coord(0, 1), Direction.RIGHT),
+        new Line(new Coord(0, 2), Direction.RIGHT),
+        new Line(new Coord(0, 3), Direction.RIGHT),
+        new Line(new Coord(0, 0), Direction.DOWN_RIGHT), // les diagonales
+        new Line(new Coord(0, 3), Direction.UP_RIGHT),
     ];
 
     public node: MGPNode<QuartoRules, QuartoMove, QuartoPartSlice>;
@@ -273,6 +280,14 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             }
         }
         return listMoves;
+    }
+    public getVictoriousCoords(slice: QuartoPartSlice): Coord[] {
+        for (const line of QuartoRules.lines) {
+            if (this.isThereAVictoriousLine(line, slice)) {
+                return line.allCoords();
+            }
+        }
+        return [];
     }
     public getBoardValue(move: QuartoMove, slice: QuartoPartSlice): number {
         let boardStatus: BoardStatus = {

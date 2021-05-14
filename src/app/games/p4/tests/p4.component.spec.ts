@@ -33,7 +33,7 @@ describe('P4Component', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 0);
         componentTestUtils.setupSlice(slice);
-        expect(componentTestUtils.getComponent().getCaseClasses(3, 3)).toContain('victory');
+        expect(componentTestUtils.getComponent().getCaseClasses(3, 3)).toContain('victory-stroke');
     }));
     it('should delegate decoding to move', () => {
         spyOn(P4Move, 'decode').and.callThrough();

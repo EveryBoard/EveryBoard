@@ -23,12 +23,14 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     // the piece that the current user must place on the board
     public pieceInHand: QuartoPiece = this.rules.node.gamePartSlice.pieceInHand;
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
+    public victoriousCoords: Coord[] = [];
 
     public updateBoard(): void {
         const slice: QuartoPartSlice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
         this.pieceInHand = slice.pieceInHand;
+        this.victoriousCoords = this.rules.getVictoriousCoords(slice);;
 
         if (move != null) {
             this.lastMove = move.coord;
@@ -103,7 +105,11 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     }
 
     public getCaseClasses(x: number, y: number): string[] {
-        if (this.lastMove.x === x && this.lastMove.y === y) {
+        const coord: Coord = new Coord(x, y);
+        if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) {
+            return ['victory'];
+        }
+        if (this.lastMove.equals(coord)) {
             return ['moved'];
         }
         return [];

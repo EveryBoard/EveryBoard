@@ -77,11 +77,11 @@ describe('QuixoComponent', () => {
         const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
         componentTestUtils.setupSlice(state);
 
-        expect(componentTestUtils.getComponent().getPieceClasses(0, 0)).toContain('victory');
-        expect(componentTestUtils.getComponent().getPieceClasses(1, 0)).toContain('victory');
-        expect(componentTestUtils.getComponent().getPieceClasses(2, 0)).toContain('victory');
-        expect(componentTestUtils.getComponent().getPieceClasses(3, 0)).toContain('victory');
-        expect(componentTestUtils.getComponent().getPieceClasses(4, 0)).toContain('victory');
+        expect(componentTestUtils.getComponent().getPieceClasses(0, 0)).toContain('victory-stroke');
+        expect(componentTestUtils.getComponent().getPieceClasses(1, 0)).toContain('victory-stroke');
+        expect(componentTestUtils.getComponent().getPieceClasses(2, 0)).toContain('victory-stroke');
+        expect(componentTestUtils.getComponent().getPieceClasses(3, 0)).toContain('victory-stroke');
+        expect(componentTestUtils.getComponent().getPieceClasses(4, 0)).toContain('victory-stroke');
     }));
     it('should show insertion directions when clicking on a border case', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_0');
