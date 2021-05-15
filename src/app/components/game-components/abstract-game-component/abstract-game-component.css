@@ -78,6 +78,9 @@
 .selected {
     stroke: blue;
 }
+.selected-fill {
+    fill: blue;
+}
 .clickable {
     stroke: yellow;
 }

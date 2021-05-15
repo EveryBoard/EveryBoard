@@ -29,7 +29,7 @@ export class GameComponentUtils {
                 break;
         }
         const rotation: string = `rotate(${angle})`;
-        const scaling: string = 'scale(2)';
+        const scaling: string = 'scale(2.5)';
         const realX: number = coord.x * caseSize + caseSize/2 + dx * caseSize/4;
         const realY: number = coord.y * caseSize + caseSize/2 + dy * caseSize/4;
         const translation: string = `translate(${realX} ${realY})`;

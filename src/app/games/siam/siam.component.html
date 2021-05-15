@@ -4,8 +4,8 @@
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <polygon id="triangle" points="0 -3.5, 10 0, 0 3.5"/>
-        <polygon id="arrow" points="30 0, 30 50, 0 50, 50 100, 100 50, 70 50, 70 0, 27.5 0" />
-        <polygon id="mountain" points="0 100, 16 68, 24 76, 48 28, 64 60, 72 44, 100 100, 0 100" />
+        <polygon id="arrow" points="30 5, 30 50, 5 50, 50 95, 95 50, 70 50, 70 5, 27.5 5" />
+        <polygon id="mountain" points="5 95, 16 68, 24 76, 48 28, 64 60, 72 44, 95 95, 5 95" />
     </defs>
     <g *ngFor="let n of [0, 1, 2, 3, 4]">
         <use *ngFor="let orientation of [['DOWN', n, -1], ['UP', n, 5], ['RIGHT', -1, n], ['LEFT', 5, n]]"
@@ -17,12 +17,20 @@
     </g>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
+            <rect id="insertAt__{{ x }}_{{ y }}"
+                  (click)="insertAt(x, y)"
+                  [attr.x]="CASE_SIZE*(x+1)"
+                  [attr.y]="CASE_SIZE*(y+1)"
+                  [attr.width]="CASE_SIZE"
+                  [attr.height]="CASE_SIZE"
+                  [ngClass]="getCaseClasses(x, y)"
+                  class="base" />
             <g *ngIf="isPiece(c)">
                 <use xlink:href="#arrow"
                      id="clickPiece_{{x}}_{{y}}"
                      (click)="clickPiece(x, y)"
                      [attr.transform]="getPieceTransform(x, y)"
-                     [ngClass]="getPieceClasses(x, y, c)"
+                     [ngClass]="getPieceClasses(c)"
                      class="base mid-stroke"
                      />
                 <g *ngIf="choosingDirection(x, y)">
@@ -30,14 +38,14 @@
                             (click)="chooseDirection('')"
                             [attr.cx]="(x+1)*CASE_SIZE + CASE_SIZE/2"
                             [attr.cy]="(y+1)*CASE_SIZE + CASE_SIZE/2"
-                            class="arrow selected mid-stroke"
+                            class="arrow selected-fill no-stroke"
                             r="8"/>
                     <use *ngFor="let direction of ['RIGHT', 'DOWN', 'LEFT', 'UP']"
                          xlink:href="#triangle"
                          id="chooseDirection_{{direction}}"
                          (click)="chooseDirection(direction)"
                          [attr.transform]="getArrowTransform(x+1, y+1, direction)"
-                         class="arrow selected small-stroke" />
+                         class="arrow selected-fill no-stroke" />
                 </g>
             </g>
             <use *ngIf="isMountain(c)"
@@ -50,7 +58,7 @@
                      id="chooseOrientation_{{orientation}}"
                      (click)="chooseOrientation(orientation)"
                      [attr.transform]="getArrowTransform(x+1, y+1, orientation)"
-                     class="arrow selected small-stroke" />
+                     class="arrow selected-fill no-stroke" />
             </g>
         </g>
     </g>
