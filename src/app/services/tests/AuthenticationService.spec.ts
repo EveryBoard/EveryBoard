@@ -21,9 +21,6 @@ export class AuthenticationServiceMock {
     }
 
     public getJoueurObs(): Observable<AuthUser> {
-        if (AuthenticationServiceMock.CURRENT_USER == null) {
-            throw new Error('MOCK VALUE CURRENT_USER NOT SET BEFORE USE');
-        }
         return of(AuthenticationServiceMock.CURRENT_USER);
     }
     public getAuthenticatedUser(): AuthUser {
@@ -31,6 +28,9 @@ export class AuthenticationServiceMock {
             throw new Error('MOCK VALUE CURRENT_USER NOT SET BEFORE USE');
         }
         return AuthenticationServiceMock.CURRENT_USER;
+    }
+    public async disconnect(): Promise<void> {
+        return;
     }
     public async doRegister(): Promise<firebase.auth.UserCredential> {
         return null;
