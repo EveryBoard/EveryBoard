@@ -1,4 +1,4 @@
-import { Rules } from '../../jscaip/Rules';
+import { GameStatus, Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoPartSlice } from './QuartoPartSlice';
 import { QuartoMove } from './QuartoMove';
@@ -9,10 +9,10 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { Player } from 'src/app/jscaip/Player';
 
-interface BoardStatus {
+export interface BoardStatus {
     score: SCORE;
     casesSensibles: CaseSensible[];
 }
@@ -162,55 +162,8 @@ interface Line {
     initialCoord: Coord,
     direction: Direction
 }
-abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice> {}
+export abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice> {}
 
-export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
-
-    public getListMoves(node: QuartoNode): QuartoMove[] {
-        const listMoves: QuartoMove[] = [];
-
-        const slice: QuartoPartSlice = node.gamePartSlice;
-
-        const board: number[][] = slice.getCopiedBoard();
-        const pawns: Array<QuartoPiece> = slice.getRemainingPawns();
-        const inHand: QuartoPiece = slice.pieceInHand;
-
-        let nextBoard: number[][];
-
-        for (let y: number = 0; y < 4; y++) {
-            for (let x: number = 0; x < 4; x++) {
-                if (board[y][x] === QuartoPiece.NONE.value) {
-                    nextBoard = slice.getCopiedBoard();
-                    nextBoard[y][x] = inHand.value; // on place la pièce qu'on a en main en (x, y)
-                    if (slice.turn === 15) {
-                        const move: QuartoMove = new QuartoMove(x, y, QuartoPiece.NONE);
-                        listMoves.push(move);
-                        return listMoves;
-                    }
-                    // Pour chaque cases vides
-                    for (const remainingPiece of pawns) { // piece est la pièce qu'on va donner
-                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthèse du mouvement listé
-                        listMoves.push(move);
-                    }
-                }
-            }
-        }
-        return listMoves;
-    }
-    public getBoardValue(move: QuartoMove, slice: QuartoPartSlice): NodeUnheritance {
-        let boardStatus: BoardStatus = {
-            score: SCORE.DEFAULT,
-            casesSensibles: [],
-        };
-        for (const line of QuartoRules.lines) {
-            boardStatus = QuartoRules.updateBoardStatus(line, slice, boardStatus);
-            if (boardStatus.score === SCORE.VICTORY) {
-                return QuartoRules.scoreToBoardValue(boardStatus.score, slice.turn);
-            }
-        }
-        return QuartoRules.scoreToBoardValue(boardStatus.score, slice.turn);
-    }
-}
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
 
     public applyLegalMove(move: QuartoMove,
@@ -379,21 +332,33 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         if (score === SCORE.DEFAULT) {
             return new NodeUnheritance(0);
         } else {
-            const isPlayerZeroTurn: boolean = turn % 2 === 0;
+            const player: Player = Player.of(turn % 2);
             if (score === SCORE.PRE_VICTORY) {
-                return new NodeUnheritance(isPlayerZeroTurn ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1);
+                return new NodeUnheritance(player.getPreVictory());
             } else {
-                return new NodeUnheritance(isPlayerZeroTurn ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER);
+                return new NodeUnheritance(player.getDefeatValue());
             }
-            // TODO: REDO CLEANLY
         }
     }
-    public isGameOver(state: QuartoPartSlice): boolean {
+    public static scoreToGameStatus(score: SCORE, turn: number): GameStatus {
+        const player: Player = Player.of(turn % 2);
+        if (score === SCORE.VICTORY) {
+            return GameStatus.getDefeat(player);
+        }
+        return turn === 16 ? GameStatus.DRAW : GameStatus.ONGOING;
+    }
+    public getGameStatus(state: QuartoPartSlice): GameStatus {
+        let boardStatus: BoardStatus = {
+            score: SCORE.DEFAULT,
+            casesSensibles: [],
+        };
         for (const line of QuartoRules.lines) {
-            if (QuartoRules.isThereAVictoriousLine(line, state)) {
-                return true;
+            boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);
+            if (boardStatus.score === SCORE.VICTORY) {
+                return QuartoRules.scoreToGameStatus(boardStatus.score, state.turn);
             }
         }
-        return false;
+        return QuartoRules.scoreToGameStatus(boardStatus.score, state.turn);
+
     }
 }

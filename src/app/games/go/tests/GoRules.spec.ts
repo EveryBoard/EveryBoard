@@ -6,7 +6,8 @@ import { GoLegalityStatus } from '../GoLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GoMinimax, GoRules } from '../GoRules';
+import { GoRules } from '../GoRules';
+import { GoMinimax } from "../GoMinimax";
 
 describe('GoRules:', () => {
 
@@ -348,7 +349,7 @@ describe('GoRules:', () => {
 
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
 
-        expect(rules.node.isEndGame(minimax)).toBeTrue();
+        expect(rules.getGameStatus(rules.node.gamePartSlice).isEndGame).toBeTrue();
         expect(rules.node.gamePartSlice.phase).toBe(Phase.FINISHED, 'Phase should have been switched to \'FINISHED\'');
     });
     it('simply shared board should be simple to calculate', () => {

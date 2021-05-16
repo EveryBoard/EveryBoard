@@ -1,4 +1,5 @@
-import { GoMinimax, GoRules } from '../GoRules';
+import { GoRules } from '../GoRules';
+import { GoMinimax } from "../GoMinimax";
 import { GoPartSlice } from '../GoPartSlice';
 import { GoMove } from '../GoMove';
 

@@ -2,7 +2,8 @@ import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
-import { PylosMinimax, PylosRules } from 'src/app/games/pylos/PylosRules';
+import { PylosRules } from 'src/app/games/pylos/PylosRules';
+import { PylosMinimax } from "src/app/games/pylos/PylosMinimax";
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -17,7 +18,6 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
     public static VERBOSE: boolean = false;
 
     public availableMinimaxes: Minimax<PylosMove, PylosPartSlice>[] = [
-        // TODO:does minimax use legality status ????
         new PylosMinimax('PylosMinimax'),
     ];
     public rules: PylosRules = new PylosRules(PylosPartSlice);

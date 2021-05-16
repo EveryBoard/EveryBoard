@@ -20,7 +20,6 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
     /** ************************* Common Fields **************************/
 
     public availableMinimaxes: Minimax<MinimaxTestingMove, MinimaxTestingPartSlice>[] = [
-        // TODO:does minimax use legality status ????
         new MinimaxTestingMinimax('MinimaxTestingMinimax'),
     ];
     public rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);

@@ -4,47 +4,12 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { QuixoPartSlice } from './QuixoPartSlice';
 import { QuixoMove } from './QuixoMove';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoPartSlice> {}
 
-export class QuixoMinimax extends Minimax<QuixoMove, QuixoPartSlice> {
-
-    public getListMoves(node: QuixoNode): QuixoMove[] {
-        const moves: QuixoMove[] = [];
-        const verticalCoords: Coord[] = QuixoRules.getVerticalCoords(node);
-        const horizontalCenterCoords: Coord[] = QuixoRules.getHorizontalCenterCoords(node);
-        const coords: Coord[] = horizontalCenterCoords.concat(verticalCoords);
-        for (const coord of coords) {
-            const possibleDirections: Orthogonal[] = QuixoRules.getPossibleDirections(coord);
-            for (const possibleDirection of possibleDirections) {
-                const newMove: QuixoMove = new QuixoMove(coord.x, coord.y, possibleDirection);
-                moves.push(newMove);
-            }
-        }
-        return moves;
-    }
-    public getBoardValue(move: QuixoMove, slice: QuixoPartSlice): NodeUnheritance {
-        const linesSums: {[key: string]: {[key: number]: number[]}} =
-            QuixoRules.getLinesSums(slice);
-        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
-        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        const currentPlayer: Player = slice.getCurrentPlayer();
-        if (zerosFullestLine === 5) {
-            if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
-                return new NodeUnheritance(Number.MIN_SAFE_INTEGER); // TODO: Player.victory please
-            }
-        }
-        if (onesFullestLine === 5) {
-            return new NodeUnheritance(Number.MAX_SAFE_INTEGER); // TODO: same
-        }
-        return new NodeUnheritance(onesFullestLine - zerosFullestLine);
-    }
-}
 export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
 
     public static getVerticalCoords(node: QuixoNode): Coord[] {
@@ -161,20 +126,20 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
             return { legal: MGPValidation.SUCCESS };
         }
     }
-    public isGameOver(state: QuixoPartSlice): boolean {
+    public getGameStatus(slice: QuixoPartSlice): GameStatus {
         const linesSums: {[key: string]: {[key: number]: number[]}} =
-            QuixoRules.getLinesSums(state);
+            QuixoRules.getLinesSums(slice);
         const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
         const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        const currentPlayer: Player = state.getCurrentPlayer();
+        const currentPlayer: Player = slice.getCurrentPlayer();
         if (zerosFullestLine === 5) {
             if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
-                return true;
+                return GameStatus.ZERO_WON;
             }
         }
         if (onesFullestLine === 5) {
-            return true;
+            return GameStatus.ONE_WON;
         }
-        return false;
+        return GameStatus.ONGOING;
     }
 }

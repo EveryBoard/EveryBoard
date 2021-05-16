@@ -4,7 +4,8 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
-import { EpaminondasMinimax, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasMinimax } from "../EpaminondasMinimax";
 import { expectFirstStateToBeBetterThanSecond } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('EpaminondasRules - Minimax:', () => {

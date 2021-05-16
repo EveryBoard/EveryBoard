@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPartSlice } from './QuartoPartSlice';
-import { QuartoMinimax, QuartoRules } from './QuartoRules';
+import { QuartoRules } from './QuartoRules';
+import { QuartoMinimax } from "./QuartoMinimax";
 import { QuartoPiece } from './QuartoPiece';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -15,7 +16,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
 
     public availableMinimaxes: Minimax<QuartoMove, QuartoPartSlice>[] = [
-        // TODO:does minimax use legality status ????
         new QuartoMinimax('QuartoMinimax'),
     ];
     public rules: QuartoRules = new QuartoRules(QuartoPartSlice);

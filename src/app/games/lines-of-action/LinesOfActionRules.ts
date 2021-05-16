@@ -2,10 +2,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -20,24 +18,6 @@ export class LinesOfActionNode extends MGPNode<LinesOfActionRules,
                                                LegalityStatus> {}
 
 
-export class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActionState> {
-
-    public getListMoves(node: LinesOfActionNode): LinesOfActionMove[] {
-        return LinesOfActionRules.getListMovesFromState(node.gamePartSlice);
-    }
-    public getBoardValue(move: LinesOfActionMove, state: LinesOfActionState): NodeUnheritance {
-        const [zero, one]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
-        if (zero === 1 && one > 1) {
-            return new NodeUnheritance(Player.ZERO.getVictoryValue());
-        } else if (zero > 1 && one === 1) {
-            return new NodeUnheritance(Player.ONE.getVictoryValue());
-        } else {
-            // More groups = less score
-            return new NodeUnheritance((100 / zero) * Player.ZERO.getScoreModifier() +
-                                       (100 / one) * Player.ONE.getScoreModifier());
-        }
-    }
-}
 export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionState> {
 
     public static getListMovesFromState(state: LinesOfActionState): LinesOfActionMove[] {
@@ -197,14 +177,14 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         return targets;
     }
-    public isGameOver(state: LinesOfActionState): boolean {
+    public getGameStatus(state: LinesOfActionState): GameStatus {
         const [zero, one]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
         if (zero === 1 && one > 1) {
-            return true;
+            return GameStatus.ZERO_WON;
         } else if (zero > 1 && one === 1) {
-            return true;
+            return GameStatus.ONE_WON;
         } else {
-            return false;
+            return GameStatus.ONGOING;
         }
     }
 }

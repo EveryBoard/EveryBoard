@@ -1,5 +1,5 @@
 import { Orthogonal, Direction } from '../../jscaip/Direction';
-import { Rules } from '../../jscaip/Rules';
+import { GameStatus, Rules } from '../../jscaip/Rules';
 import { Coord } from '../../jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutPartSlice } from './TablutPartSlice';
@@ -13,44 +13,9 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { TablutLegalityStatus } from './TablutLegalityStatus';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export abstract class TablutNode extends MGPNode<TablutRules, TablutMove, TablutPartSlice, TablutLegalityStatus> {}
 
-export class TablutMinimax extends Minimax<TablutMove, TablutPartSlice, TablutLegalityStatus> {
-
-    public getListMoves(node: TablutNode): TablutMove[] {
-        const LOCAL_VERBOSE: boolean = false;
-        display(TablutRules.VERBOSE || LOCAL_VERBOSE, { TablutRules_getListMoves: { node } });
-
-        const slice: TablutPartSlice = node.gamePartSlice;
-
-        const currentBoard: number[][] = slice.getCopiedBoard();
-        const currentPlayer: Player = slice.getCurrentPlayer();
-
-        return TablutRules.getPlayerListMoves(currentPlayer, currentBoard);
-    }
-    public getBoardValue(move: TablutMove, slice: TablutPartSlice): NodeUnheritance {
-        // 1. is the king escaped ?
-        // 2. is the king captured ?
-        // 3. is one player immobilised ?
-        // 4. let's just for now just count the pawns
-        const board: number[][] = slice.getCopiedBoard();
-
-        const victory: MGPOptional<number> = TablutRules.getVictory(board);
-        if (victory.isPresent()) {
-            return new NodeUnheritance(victory.get());
-        }
-        const nbPlayerZeroPawns: number = TablutRules.getPlayerListPawns(Player.ZERO, board).length;
-        const nbPlayerOnePawns: number = TablutRules.getPlayerListPawns(Player.ONE, board).length;
-        const zeroMult: number = TablutPartSlice.INVADER_START ? 1 : 2; // invaders pawn are twice as numerous
-        const oneMult: number = TablutPartSlice.INVADER_START ? 2 : 1; // so they're twice less valuable
-        const scoreZero: number = nbPlayerZeroPawns * zeroMult;
-        const scoreOne: number = nbPlayerOnePawns * oneMult;
-        return new NodeUnheritance(scoreOne - scoreZero); // TODO : countInvader vs Defenders
-    }
-}
 export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegalityStatus> {
     public static VERBOSE: boolean = false;
 
@@ -479,20 +444,20 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         }
         return MGPOptional.empty();
     }
-    public static getInvaderVictoryValue(): NodeUnheritance {
+    public static getInvader(): Player {
         display(TablutRules.VERBOSE, 'TablutRules.getInvaderVictoryValue');
 
         if (TablutPartSlice.INVADER_START) {
-            return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
+            return Player.ZERO;
         } else {
-            return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
+            return Player.ONE;
         }
     }
-    public static getDefenderVictoryValue(): NodeUnheritance {
+    public static getDefender(): Player {
         if (TablutPartSlice.INVADER_START) {
-            return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
+            return Player.ONE;
         } else {
-            return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
+            return Player.ZERO;
         }
     }
     public static isPlayerImmobilised(player: Player, board: number[][]): boolean {
@@ -531,22 +496,22 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         }
         return listMoves;
     }
-    public static getVictory(board: number[][]): MGPOptional<number> {
+    public static getWinner(board: number[][]): MGPOptional<Player> {
         const optionalKingCoord: MGPOptional<Coord> = TablutRules.getKingCoord(board);
         if (optionalKingCoord.isAbsent()) {
             // the king is dead, long live the king
-            return MGPOptional.of(TablutRules.getInvaderVictoryValue().value);
+            return MGPOptional.of(TablutRules.getInvader());
         }
         const kingCoord: Coord = optionalKingCoord.get();
         if (TablutRules.isExternalThrone(kingCoord)) {
             // king reached one corner !
-            return MGPOptional.of(TablutRules.getDefenderVictoryValue().value);
+            return MGPOptional.of(TablutRules.getDefender());
         }
         if (TablutRules.isPlayerImmobilised(Player.ZERO, board)) {
-            return MGPOptional.of(Number.MAX_SAFE_INTEGER);
+            return MGPOptional.of(Player.ONE);
         }
         if (TablutRules.isPlayerImmobilised(Player.ONE, board)) {
-            return MGPOptional.of(Number.MIN_SAFE_INTEGER);
+            return MGPOptional.of(Player.ZERO);
         }
         return MGPOptional.empty();
     }
@@ -596,9 +561,13 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         const player: Player = slice.getCurrentPlayer();
         return TablutRules.tryMove(player, move, board);
     }
-    public isGameOver(state: TablutPartSlice): boolean {
-        const board: number[][] = state.getCopiedBoard();
-        const victory: MGPOptional<number> = TablutRules.getVictory(board);
-        return victory.isPresent();
+    public getGameStatus(slice: TablutPartSlice): GameStatus {
+        const board: number[][] = slice.getCopiedBoard();
+
+        const winner: MGPOptional<Player> = TablutRules.getWinner(board);
+        if (winner.isPresent()) {
+            return GameStatus.getVictory(winner.get());
+        }
+        return GameStatus.ONGOING;
     }
 }

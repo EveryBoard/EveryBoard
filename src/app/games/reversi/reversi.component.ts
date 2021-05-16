@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { ReversiMinimax, ReversiRules } from './ReversiRules';
+import { ReversiRules } from './ReversiRules';
+import { ReversiMinimax } from "./ReversiMinimax";
 import { ReversiPartSlice } from './ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
@@ -19,7 +20,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 export class ReversiComponent extends AbstractGameComponent<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
     public availableMinimaxes: Minimax<ReversiMove, ReversiPartSlice, ReversiLegalityStatus>[] = [
-        // TODO:does minimax use legality status ????
         new ReversiMinimax('ReversiMinimax'),
     ];
     public CASE_SIZE: number = 100;

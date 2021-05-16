@@ -1,4 +1,4 @@
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
@@ -11,64 +11,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice> {}
-
-export class SaharaMinimax extends Minimax<SaharaMove, SaharaPartSlice> {
-
-    public getListMoves(node: SaharaNode): SaharaMove[] {
-        const moves: SaharaMove[] = [];
-        const board: SaharaPawn[][] = node.gamePartSlice.getCopiedBoard();
-        const player: Player = node.gamePartSlice.getCurrentPlayer();
-        const startingCoords: Coord[] = SaharaRules.getStartingCoords(board, player);
-        for (const start of startingCoords) {
-            const neighboors: Coord[] = TriangularGameState.getEmptyNeighboors(board, start, SaharaPawn.EMPTY);
-            for (const neighboor of neighboors) {
-                const newMove: SaharaMove = new SaharaMove(start, neighboor);
-                board[neighboor.y][neighboor.x] = board[start.y][start.x];
-                board[start.y][start.x] = SaharaPawn.EMPTY;
-                moves.push(newMove);
-
-                const upwardTriangle: boolean = (neighboor.y + neighboor.x)%2 === 0;
-                if (upwardTriangle) {
-                    const farNeighboors: Coord[] =
-                        TriangularGameState.getEmptyNeighboors(board, neighboor, SaharaPawn.EMPTY);
-                    for (const farNeighboor of farNeighboors) {
-                        if (!farNeighboor.equals(start)) {
-                            const farMove: SaharaMove = new SaharaMove(start, farNeighboor);
-                            board[farNeighboor.y][farNeighboor.x] = board[neighboor.y][neighboor.x];
-                            board[neighboor.y][neighboor.x] = SaharaPawn.EMPTY;
-                            moves.push(farMove);
-
-                            board[neighboor.y][neighboor.x] = board[farNeighboor.y][farNeighboor.x];
-                            board[farNeighboor.y][farNeighboor.x] = SaharaPawn.EMPTY;
-                        }
-                    }
-                }
-                board[start.y][start.x] = board[neighboor.y][neighboor.x];
-                board[neighboor.y][neighboor.x] = SaharaPawn.EMPTY;
-            }
-        }
-        return moves;
-    }
-    public getBoardValue(move: SaharaMove, slice: SaharaPartSlice): NodeUnheritance {
-        const board: SaharaPawn[][] = slice.getCopiedBoard();
-        const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
-        const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
-        if (zeroFreedoms[0] === 0) {
-            return new NodeUnheritance(Number.MAX_SAFE_INTEGER); // TODO: redo with Player.blbl
-        } else if (oneFreedoms[0] === 0) {
-            return new NodeUnheritance(Number.MIN_SAFE_INTEGER); // TODO: same
-        }
-        let i: number = 0;
-        while (i<6 && zeroFreedoms[i] === oneFreedoms[i]) {
-            i++;
-        }
-        return new NodeUnheritance(oneFreedoms[i % 6] - zeroFreedoms[i % 6]);
-    }
-}
 
 export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
 
@@ -130,11 +74,15 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
             return { legal: MGPValidation.SUCCESS };
         }
     }
-    public isGameOver(state: SaharaPartSlice): boolean {
-        const board: SaharaPawn[][] = state.getCopiedBoard();
+    public getGameStatus(slice: SaharaPartSlice): GameStatus {
+        const board: SaharaPawn[][] = slice.getCopiedBoard();
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
-        return zeroFreedoms[0] === 0 ||
-               oneFreedoms[0] === 0;
+        if (zeroFreedoms[0] === 0) {
+            return GameStatus.ONE_WON;
+        } else if (oneFreedoms[0] === 0) {
+            return GameStatus.ZERO_WON;
+        }
+        return GameStatus.ONGOING;
     }
 }

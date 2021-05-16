@@ -1,6 +1,7 @@
 import { Direction } from 'src/app/jscaip/Direction';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
-import { EpaminondasMinimax, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasMinimax } from "../EpaminondasMinimax";
 import { EpaminondasMove } from '../EpaminondasMove';
 
 describe('EpaminondasMove: ', () => {

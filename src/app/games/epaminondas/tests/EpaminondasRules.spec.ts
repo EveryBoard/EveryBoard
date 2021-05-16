@@ -4,7 +4,8 @@ import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasLegalityStatus } from '../epaminondaslegalitystatus';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
-import { EpaminondasMinimax, EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasMinimax } from "../EpaminondasMinimax";
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('EpaminondasRules:', () => {

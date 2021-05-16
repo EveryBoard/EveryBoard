@@ -129,7 +129,7 @@ export class MGPNode<R extends Rules<M, S, L, U>,
     : MGPNode<R, M, S, L, U>
     {
         const LOCAL_VERBOSE: boolean = false;
-        if (depth < 1 || MGPNode.ruler.isGameOver(this.gamePartSlice, this.move)) {
+        if (depth < 1 || MGPNode.ruler.getGameStatus(this.gamePartSlice, this.move).isEndGame) {
             display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf : ' + this.myToString(minimax));
             return this; // rules - leaf or calculation - leaf
         }
@@ -243,37 +243,6 @@ export class MGPNode<R extends Rules<M, S, L, U>,
             node = node.mother;
         } while (node);
         return 'Node: ' + genealogy;
-    }
-    public isEndGame(minimax: Minimax<M, S, L, U>): boolean { // TODO: remove cleanly
-        if (minimax == null) {
-            console.log('endGame sans ia is faulxe for now');
-            return false;
-        }
-        const LOCAL_VERBOSE: boolean = false;
-        const minimaxBoardValue: U = this.getOwnValue(minimax);
-        const scoreStatus: SCORE = MGPNode.getScoreStatus(minimaxBoardValue.value);
-
-        if (scoreStatus === SCORE.VICTORY) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'MGPNode.isEndGame by victory');
-            return true;
-        }
-
-        if (this.possiblesMoves == null) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'uncalculated childs : [calculating childs...]');
-            this.possiblesMoves = minimax.getListMoves(this, minimax) as M[];
-            this.childs = [];
-            // TODO: make that part of the rules evaluation
-        }
-
-        // MOVES ARE CREATED NOW
-
-        if (this.possiblesMoves.length === 0) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'MGPNode.isEndGame by no-possible-moves after calculation');
-            return true;
-        }
-
-        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'MGPNode.isEndGame : no (moves and normal score)');
-        return false;
     }
     public hasMoves(): boolean {
         return this.childs !== null;

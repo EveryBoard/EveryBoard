@@ -3,73 +3,16 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { DvonnPartSlice } from './DvonnPartSlice';
 import { DvonnPieceStack } from './DvonnPieceStack';
 import { DvonnMove } from './DvonnMove';
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { DvonnBoard } from './DvonnBoard';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaBoard } from 'src/app/jscaip/HexaBoard';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { DvonnFailure } from './DvonnFailure';
 
-abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnPartSlice> { }
-
-export class DvonnFailure {
-    public static INVALID_COORD: string = `Coordonnée invalide, veuillez sélectionner un pièce sur le plateau.`;
-    public static NOT_PLAYER_PIECE: string = `Veuillez choisir une des piles vous appartenant.`;
-    public static EMPTY_STACK: string = `Veuillez choisir une pile qui n'est pas vide.`;
-    public static TOO_MANY_NEIGHBORS: string =
-        `Cette pile ne peut pas se déplacer car les 6 cases voisines sont occupées.
-         Veuillez choisir une pièce avec strictement moins de 6 pièces voisines.`;
-    public static CANT_REACH_TARGET: string =
-        `Cette pièce ne peut pas se déplacer car il est impossible qu'elle termine
-         son déplacement sur une autre pièce.`;
-    public static CAN_ONLY_PASS: string =
-        `Vous êtes obligés de passer, il n'y a aucun déplacement possible.`;
-    public static INVALID_MOVE_LENGTH: string =
-        `La distance effectuée par le mouvement doit correspondre à la taille de la pile de pièces.`;
-    public static EMPTY_TARGET_STACK: string =
-        `Le déplacement doit se terminée sur une case occupée.`;
-}
-
-export class DvonnMinimax extends Minimax<DvonnMove, DvonnPartSlice> {
-
-    public getListMoves(node: DvonnNode): DvonnMove[] {
-        return this.getListMovesFromSlice(node.move, node.gamePartSlice);
-    }
-    public getListMovesFromSlice(move: DvonnMove, slice: DvonnPartSlice): DvonnMove[] {
-        const moves: DvonnMove[] = [];
-        // For each movable piece, look at its possible targets
-        DvonnRules.getMovablePieces(slice).forEach((start: Coord) =>
-            DvonnRules.pieceTargets(slice, start).forEach((end: Coord) => {
-                const move: DvonnMove = DvonnMove.of(start, end);
-                // the move should be legal by construction, hence we don't check it
-                moves.push(move);
-            }));
-        if (moves.length === 0 && move !== DvonnMove.PASS) {
-            moves.push(DvonnMove.PASS);
-        }
-        return moves;
-    }
-    public getBoardValue(move: DvonnMove, slice: DvonnPartSlice): NodeUnheritance {
-        // Board value is the total number of pieces controlled by player 0 - by player 1
-        const scores: number[] = DvonnRules.getScores(slice);
-        if (DvonnRules.getMovablePieces(slice).length === 0) {
-            // This is the end of the game, boost the score to clearly indicate it
-            if (scores[0] > scores[1]) {
-                return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
-            } else if (scores[0] < scores[1]) {
-                return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
-            } else {
-                return new NodeUnheritance(0);
-            }
-        } else {
-            return new NodeUnheritance(scores[0] - scores[1]);
-        }
-    }
-
-}
+export abstract class DvonnNode extends MGPNode<DvonnRules, DvonnMove, DvonnPartSlice> { }
 
 export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice> {
 
@@ -213,7 +156,19 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice> {
         }
         return { legal: MGPValidation.SUCCESS };
     }
-    public isGameOver(state: DvonnPartSlice): boolean {
-        return DvonnRules.getMovablePieces(state).length === 0;
+    public getGameStatus(state: DvonnPartSlice): GameStatus {
+        const scores: number[] = DvonnRules.getScores(state);
+        if (DvonnRules.getMovablePieces(state).length === 0) {
+            // This is the end of the game, boost the score to clearly indicate it
+            if (scores[0] > scores[1]) {
+                return GameStatus.ZERO_WON;
+            } else if (scores[0] < scores[1]) {
+                return GameStatus.ONE_WON;
+            } else {
+                return GameStatus.DRAW;
+            }
+        } else {
+            return GameStatus.ONGOING;
+        }
     }
 }

@@ -4,7 +4,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
-import { QuixoMinimax, QuixoRules } from 'src/app/games/quixo/QuixoRules';
+import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
+import { QuixoMinimax } from "src/app/games/quixo/QuixoMinimax";
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -21,7 +22,6 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
 
     public availableMinimaxes: Minimax<QuixoMove, QuixoPartSlice>[] = [
-        // TODO:does minimax use legality status ????
         new QuixoMinimax('QuixoMinimax'),
     ];
     public CASE_SIZE: number = 100;

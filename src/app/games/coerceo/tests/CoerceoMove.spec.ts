@@ -1,6 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoPartSlice } from '../CoerceoPartSlice';
-import { CoerceoMinimax, CoerceoRules } from '../CoerceoRules';
+import { CoerceoRules } from '../CoerceoRules';
+import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
 

@@ -10,35 +10,39 @@
                 </div>
                 <div class="container row" id="playerSelector">
                     <div class="col-sm-6">
-                        <mat-select [(value)]="playerZero"
-                                    (selectionChange)="switchPlayerZero()">
-                            <mat-option selected value="humain"> Humain </mat-option>
+                        <select id="playerZeroSelect"
+                                (change)="updatePlayer(0)"
+                                [(ngModel)]="players[0]">
+                            <option selected
+                                    value="humain"> Humain </option>
                             <ng-container *ngFor="let minimax of compo.availableMinimaxes">
-                                <mat-option [value]="minimax.name">{{ minimax.name }}</mat-option>
+                                <option [value]="minimax.name">{{ minimax.name }}</option>
                             </ng-container>
-                        </mat-select>
-                        <mat-select *ngIf="isAI(0)"
-                                    [(value)]="aiZeroDepth"
-                                    (selectionChange)="switchPlayerZero()">
-                            <mat-option selected value="0">Choisissez le niveau</mat-option>
-                            <mat-option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
-                                        [value]="i">Niveau {{ i }}</mat-option>
-                        </mat-select>
+                        </select>
+                        <select *ngIf="players[0] !== 'humain'"
+                                id="aiZeroDepthSelect"
+                                [(ngModel)]="aiDepths[0]"
+                                (change)="updatePlayer(0)">
+                            <option selected
+                                    value="0">Choisissez le niveau</option>
+                            <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
+                                    [value]="i">Niveau {{ i }}</option>
+                        </select>
                         <p id="scoreZero"
                            *ngIf="compo.scores"
                            class="text-left"> {{ compo.scores[0] }} points </p>
                     </div>
                     <div class="col-sm-6">
-                        <mat-select [(value)]="playerOne"
-                                    (selectionChange)="switchPlayerOne()">
-                            <mat-option selected value="humain"> Humain </mat-option>
+                        <mat-select>
+                            <mat-option selected
+                                        (click)="changePlayer(1, 'humain')"
+                                        value="humain"> Humain </mat-option>
                             <ng-container *ngFor="let minimax of compo.availableMinimaxes">
-                                <mat-option [value]="minimax.name">{{ minimax.name }}</mat-option>
+                                <mat-option [value]="minimax.name"
+                                            (click)="changePlayer(1, minimax.name)">{{ minimax.name }}</mat-option>
                             </ng-container>
                         </mat-select>
-                        <mat-select *ngIf="isAI(1)"
-                                    [(value)]="aiOneDepth"
-                                    (selectionChange)="switchPlayerOne()">
+                        <mat-select *ngIf="players[1] !== 'humain'">
                             <mat-option selected value="0">Choisissez le niveau</mat-option>
                             <mat-option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
                                         [value]="i">Niveau {{ i }}</mat-option>

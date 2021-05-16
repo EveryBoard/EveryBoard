@@ -1,6 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoPartSlice } from '../KamisadoPartSlice';
-import { KamisadoMinimax, KamisadoRules } from '../KamisadoRules';
+import { KamisadoRules } from '../KamisadoRules';
+import { KamisadoMinimax } from "../KamisadoMinimax";
 import { KamisadoMove } from '../KamisadoMove';
 
 describe('KamisadoMove', () => {

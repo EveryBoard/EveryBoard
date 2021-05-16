@@ -5,7 +5,8 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
-import { LinesOfActionMinimax, LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
+import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
+import { LinesOfActionMinimax } from "../LinesOfActionMinimax";
 import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionRules', () => {

@@ -23,6 +23,7 @@ import { assert, display, JSONValue } from 'src/app/utils/utils';
 import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/ObjectUtils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 export class UpdateType {
 
@@ -344,7 +345,6 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
         let winner: string;
         const minimax: Minimax<Move, GamePartSlice> = this.gameComponent.availableMinimaxes[0];
-        // TODO: move to rules
         if (this.gameComponent.rules.node.getOwnValue(minimax).value === Number.MAX_SAFE_INTEGER) {
             winner = this.players[1];
         } else if (this.gameComponent.rules.node.getOwnValue(minimax).value === Number.MIN_SAFE_INTEGER) {
@@ -535,9 +535,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
                                                     ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
         this.gameComponent.rules.choose(move);
         const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
-        if (this.gameComponent.rules.isGameOver(state, move)) {
-            const minimax: Minimax<Move, GamePartSlice> = this.gameComponent.availableMinimaxes[0];
-            if (this.gameComponent.rules.node.getOwnValue(minimax).value === 0) { // TODO: not the one deciding!
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(state, move);
+        if (gameStatus.isEndGame) {
+            if (gameStatus === GameStatus.DRAW) {
                 this.notifyDraw(encodedMove, scorePlayerZero, scorePlayerOne);
             } else {
                 this.notifyVictory(encodedMove, scorePlayerZero, scorePlayerOne);

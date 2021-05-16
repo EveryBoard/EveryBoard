@@ -5,7 +5,8 @@ import { KamisadoBoard } from 'src/app/games/kamisado/KamisadoBoard';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoMinimax, KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
+import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
+import { KamisadoMinimax } from "src/app/games/kamisado/KamisadoMinimax";
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -25,7 +26,6 @@ export class KamisadoComponentFailure {
 export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice> {
 
     public availableMinimaxes: Minimax<KamisadoMove, KamisadoPartSlice>[] = [
-        // TODO:does minimax use legality status ????
         new KamisadoMinimax('KamisadoMinimax'),
     ];
     public rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice);
@@ -100,7 +100,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     }
     public choosePiece(x: number, y: number): MGPValidation {
         const state: KamisadoPartSlice = this.rules.node.gamePartSlice;
-        if (this.rules.isGameOver(state)) { // TODO: what the hell !!!! should be done upper!
+        if (this.rules.getGameStatus(state).isEndGame) { // TODO: what the hell !!!! should be done upper!
             return this.cancelMove(KamisadoFailure.GAME_ENDED);
         }
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));

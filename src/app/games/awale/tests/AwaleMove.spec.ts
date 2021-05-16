@@ -1,4 +1,5 @@
-import { AwaleMinimax, AwaleRules } from '../AwaleRules';
+import { AwaleRules } from '../AwaleRules';
+import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwalePartSlice } from '../AwalePartSlice';
 

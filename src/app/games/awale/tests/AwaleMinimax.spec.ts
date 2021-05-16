@@ -1,4 +1,5 @@
-import { AwaleMinimax, AwaleRules } from '../AwaleRules';
+import { AwaleRules } from '../AwaleRules';
+import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwalePartSlice } from '../AwalePartSlice';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -12,7 +13,6 @@ describe('AwaleMinimax:', () => {
     beforeEach(() => {
         rules = new AwaleRules(AwalePartSlice);
         minimax = new AwaleMinimax('AwaleMinimax');
-        console.clear()
     });
     it('should not throw at first choice', () => {
         const bestMove: AwaleMove = rules.node.findBestMove(2, minimax);

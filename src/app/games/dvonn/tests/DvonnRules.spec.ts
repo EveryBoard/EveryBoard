@@ -6,7 +6,10 @@ import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from '../DvonnBoard';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DvonnFailure, DvonnMinimax, DvonnRules } from '../DvonnRules';
+import { DvonnRules } from '../DvonnRules';
+import { DvonnFailure } from '../DvonnFailure';
+import { DvonnMinimax } from '../DvonnMinimax';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 describe('DvonnRules:', () => {
 
@@ -290,8 +293,12 @@ describe('DvonnRules:', () => {
         const slice1: DvonnPartSlice = new DvonnPartSlice(boardW, 0, false);
         const slice2: DvonnPartSlice = new DvonnPartSlice(boardB, 0, false);
         const slice3: DvonnPartSlice = new DvonnPartSlice(boardDraw, 0, false);
-        expect(minimax.getBoardValue(null, slice1).value).toEqual(Number.MIN_SAFE_INTEGER);
-        expect(minimax.getBoardValue(null, slice2).value).toEqual(Number.MAX_SAFE_INTEGER);
+
+        expect(rules.getGameStatus(slice1)).toEqual(GameStatus.ZERO_WON);
+        expect(rules.getGameStatus(slice2)).toEqual(GameStatus.ONE_WON);
+        expect(rules.getGameStatus(slice3)).toEqual(GameStatus.DRAW);
+        expect(minimax.getBoardValue(null, slice1).value).toEqual(Player.ZERO.getVictoryValue());
+        expect(minimax.getBoardValue(null, slice2).value).toEqual(Player.ONE.getVictoryValue());
         expect(minimax.getBoardValue(null, slice3).value).toEqual(0);
     });
 });

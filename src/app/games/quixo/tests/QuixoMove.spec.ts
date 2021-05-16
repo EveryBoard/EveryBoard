@@ -2,7 +2,8 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
-import { QuixoMinimax, QuixoNode } from '../QuixoRules';
+import { QuixoNode } from '../QuixoRules';
+import { QuixoMinimax } from "../QuixoMinimax";
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
 

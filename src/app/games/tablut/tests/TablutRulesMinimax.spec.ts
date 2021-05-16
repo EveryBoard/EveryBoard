@@ -3,7 +3,8 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { TablutMove } from '../TablutMove';
 import { TablutPartSlice } from '../TablutPartSlice';
 import { TablutCase } from '../TablutCase';
-import { TablutMinimax, TablutRules } from '../TablutRules';
+import { TablutRules } from '../TablutRules';
+import { TablutMinimax } from "../TablutMinimax";
 
 describe('TablutRules - Minimax:', () => {
 

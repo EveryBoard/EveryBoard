@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { GoMove } from 'src/app/games/go/GoMove';
-import { GoMinimax, GoRules } from 'src/app/games/go/GoRules';
+import { GoRules } from 'src/app/games/go/GoRules';
+import { GoMinimax } from "src/app/games/go/GoMinimax";
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
@@ -21,7 +22,6 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
     public static VERBOSE: boolean = false;
 
     public availableMinimaxes: Minimax<GoMove, GoPartSlice, GoLegalityStatus>[] = [
-        // TODO:does minimax use legality status ????
         new GoMinimax('GoMinimax'),
     ];
     public scores: number[] = [0, 0];

@@ -1,6 +1,6 @@
 import { Direction } from '../../jscaip/Direction';
 import { Coord } from '../../jscaip/Coord';
-import { Rules } from '../../jscaip/Rules';
+import { GameStatus, Rules } from '../../jscaip/Rules';
 import { SCORE } from '../../jscaip/SCORE';
 import { MGPNode } from '../../jscaip/MGPNode';
 
@@ -11,14 +11,10 @@ import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from './P4Move';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { P4Failure } from './P4Failure';
 
 export abstract class P4Node extends MGPNode<P4Rules, P4Move, P4PartSlice> {}
-
-export class P4Failure {
-    public static COLUMN_IS_FULL: string = 'Veuillez placer votre pièce dans une colonne non remplie';
-}
 
 export class P4Rules extends Rules<P4Move, P4PartSlice> {
     public static VERBOSE: boolean = false;
@@ -37,7 +33,6 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
         }
         return coords;
     }
-
     private static getBoardValueFromScratch(slice: P4PartSlice): NodeUnheritance {
         display(P4Rules.VERBOSE, { P4Rules_getBoardValueFromScratch: { slice } });
         let score: number = 0;
@@ -193,17 +188,17 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
         }
         return { legal: MGPValidation.SUCCESS };
     }
-    public isGameOver(state: P4PartSlice): boolean {
+    public getGameStatus(state: P4PartSlice): GameStatus {
         for (let x: number = 0; x < 7; x++) {
             // for every column, starting from the bottom of each column
             for (let y: number = 5; y !== -1 && state.board[y][x] !== Player.NONE.value; y--) {
                 // while we haven't reached the top or an empty case
                 const tmpScore: number = P4Rules.getCaseScore(state.board, new Coord(x, y));
                 if (MGPNode.getScoreStatus(tmpScore) === SCORE.VICTORY) {
-                    return true;
+                    return GameStatus.getVictory(state.getCurrentEnnemy());
                 }
             }
         }
-        return state.turn === 42;
+        return state.turn === 42 ? GameStatus.DRAW : GameStatus.ONGOING;
     }
 }

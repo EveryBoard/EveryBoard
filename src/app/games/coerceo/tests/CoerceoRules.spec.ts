@@ -6,7 +6,8 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
 import { CoerceoFailure } from '../CoerceoFailure';
-import { CoerceoMinimax, CoerceoNode, CoerceoRules } from '../CoerceoRules';
+import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
+import { CoerceoMinimax } from '../CoerceoMinimax';
 
 describe('CoerceoRules', () => {
 

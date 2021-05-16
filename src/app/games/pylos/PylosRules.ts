@@ -4,52 +4,15 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosPartSlice } from './PylosPartSlice';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export class PylosNode extends MGPNode<Rules<PylosMove, PylosPartSlice>,
                                        PylosMove,
                                        PylosPartSlice> {}
 
-export class PylosMinimax extends Minimax<PylosMove, PylosPartSlice> {
-
-    public getListMoves(node: PylosNode): PylosMove[] {
-        const slice: PylosPartSlice = node.gamePartSlice;
-        const result: PylosMove[] = [];
-        const sliceInfo: { freeToMove: PylosCoord[], landable: PylosCoord[] } =
-            PylosRules.getSliceInfo(slice);
-        const climbings: PylosMove[] = PylosRules.getClimbingMoves(sliceInfo);
-        const drops: PylosMove[] = PylosRules.getDropMoves(sliceInfo);
-        const moves: PylosMove[] = climbings.concat(drops);
-        for (const move of moves) {
-            let possiblesCaptures: PylosCoord[][] = [[]];
-            if (PylosRules.canCapture(slice, move.landingCoord)) {
-                possiblesCaptures = PylosRules.getPossibleCaptures(sliceInfo.freeToMove,
-                                                                   move.startingCoord,
-                                                                   move.landingCoord);
-            }
-            for (const possiblesCapture of possiblesCaptures) {
-                const newMove: PylosMove = PylosMove.changeCapture(move, possiblesCapture);
-                result.push(newMove);
-            }
-        }
-        return result;
-    }
-    public getBoardValue(move: PylosMove, slice: PylosPartSlice): NodeUnheritance {
-        const ownershipMap: { [owner: number]: number } = slice.getPiecesRepartition();
-        if (ownershipMap[Player.ZERO.value] === 15) {
-            return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
-        } else if (ownershipMap[Player.ONE.value] === 15) {
-            return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
-        } else {
-            return new NodeUnheritance(ownershipMap[Player.ZERO.value] - ownershipMap[Player.ONE.value]);
-        }
-    }
-}
 export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
 
     public static getSliceInfo(slice: PylosPartSlice): { freeToMove: PylosCoord[], landable: PylosCoord[] } {
@@ -197,9 +160,14 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         }
         return true;
     }
-    public isGameOver(state: PylosPartSlice): boolean {
+    public getGameStatus(state: PylosPartSlice): GameStatus {
         const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
-        return ownershipMap[Player.ZERO.value] === 15 ||
-               ownershipMap[Player.ONE.value] === 15;
+        if (ownershipMap[Player.ZERO.value] === 15) {
+            return GameStatus.ONE_WON;
+        } else if (ownershipMap[Player.ONE.value] === 15) {
+            return GameStatus.ZERO_WON;
+        } else {
+            return GameStatus.ONGOING;
+        }
     }
 }

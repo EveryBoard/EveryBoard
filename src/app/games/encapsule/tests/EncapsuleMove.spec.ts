@@ -1,4 +1,5 @@
-import { EncapsuleMinimax, EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleMinimax } from "../EncapsuleMinimax";
 import { EncapsulePartSlice } from '../EncapsulePartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';

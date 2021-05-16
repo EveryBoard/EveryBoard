@@ -1,4 +1,5 @@
-import { ReversiMinimax, ReversiRules } from '../ReversiRules';
+import { ReversiRules } from '../ReversiRules';
+import { ReversiMinimax } from "../ReversiMinimax";
 import { ReversiMove } from '../ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
 

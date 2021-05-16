@@ -23,7 +23,6 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public static VERBOSE: boolean = false;
 
     public availableMinimaxes: Minimax<SiamMove, SiamPartSlice, SiamLegalityStatus>[] = [
-        // TODO:does minimax use legality status ????
         new SiamMinimax('SiamMinimax'),
     ];
     public readonly CASE_SIZE: number = 100;

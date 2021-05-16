@@ -1,6 +1,6 @@
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoPartSlice } from '../QuartoPartSlice';
-import { QuartoMinimax } from '../QuartoRules';
+import { QuartoMinimax } from "../QuartoMinimax";
 
 describe('QuartoRules - Minimax:', () => {
     let minimax: QuartoMinimax;

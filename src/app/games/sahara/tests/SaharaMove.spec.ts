@@ -1,4 +1,5 @@
-import { SaharaMinimax, SaharaRules } from '../SaharaRules';
+import { SaharaRules } from '../SaharaRules';
+import { SaharaMinimax } from "../SaharaMinimax";
 import { SaharaMove } from '../SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';

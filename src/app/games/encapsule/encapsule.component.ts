@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { Move } from '../../jscaip/Move';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { EncapsuleMinimax, EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleMinimax } from "src/app/games/encapsule/EncapsuleMinimax";
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
@@ -32,7 +33,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
                                                               EncapsuleLegalityStatus> {
 
     public availableMinimaxes: Minimax<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus>[] = [
-        // TODO:does minimax use legality status ????
         new EncapsuleMinimax('EncapsuleMinimax'),
     ];
     public CASE_SIZE: number = 100;

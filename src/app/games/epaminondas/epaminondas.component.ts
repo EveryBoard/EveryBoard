@@ -3,7 +3,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondaslegalitystatus';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
-import { EpaminondasMinimax, EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
+import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
+import { EpaminondasMinimax } from "src/app/games/epaminondas/EpaminondasMinimax";
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
@@ -20,7 +21,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                 EpaminondasLegalityStatus>
 {
     public availableMinimaxes: Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus>[] = [
-        // TODO:does minimax use legality status ????
         new EpaminondasMinimax('EpaminondasMinimax'),
     ];
     public NONE: number = Player.NONE.value;

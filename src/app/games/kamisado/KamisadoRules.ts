@@ -9,37 +9,12 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { KamisadoFailure } from './KamisadoFailure';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice> { }
 
-export class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoPartSlice> {
-
-    public getListMoves(node: KamisadoNode): KamisadoMove[] {
-        return KamisadoRules.getListMovesFromSlice(node.gamePartSlice);
-    }
-    // Returns the value of the board, as the difference of distance to the win
-    public getBoardValue(move: KamisadoMove, slice: KamisadoPartSlice): NodeUnheritance {
-        const player: Player = slice.getCurrentPlayer();
-        if (KamisadoRules.canOnlyPass(slice) && slice.alreadyPassed) {
-            return new NodeUnheritance(player.getDefeatValue());
-        }
-
-        const [furthest0, furthest1]: [number, number] = KamisadoRules.getFurthestPiecePositions(slice);
-        // Board value is how far my piece is - how far my opponent piece is, except in case of victory
-        if (furthest1 === 7) {
-            return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
-        } else if (furthest0 === 0) {
-            return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
-        } else {
-            return new NodeUnheritance(furthest1 - (7 - furthest0));
-        }
-    }
-}
 export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
 
     public static getColorMatchingPiece(slice: KamisadoPartSlice): Array<Coord> {
@@ -254,14 +229,20 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         const [furthest0, furthest1]: [number, number] = this.getFurthestPiecePositions(slice);
         return furthest0 === 0 || furthest1 === 7;
     }
-    public isGameOver(state: KamisadoPartSlice): boolean {
-        if (KamisadoRules.canOnlyPass(state) && state.alreadyPassed) {
-            return true;
+    public getGameStatus(slice: KamisadoPartSlice): GameStatus {
+        const player: Player = slice.getCurrentPlayer();
+        if (KamisadoRules.canOnlyPass(slice) && slice.alreadyPassed) {
+            return GameStatus.getDefeat(player);
         }
 
-        const [furthest0, furthest1]: [number, number] = KamisadoRules.getFurthestPiecePositions(state);
+        const [furthest0, furthest1]: [number, number] = KamisadoRules.getFurthestPiecePositions(slice);
         // Board value is how far my piece is - how far my opponent piece is, except in case of victory
-        return furthest1 === 7 ||
-               furthest0 === 0;
+        if (furthest1 === 7) {
+            return GameStatus.ONE_WON;
+        } else if (furthest0 === 0) {
+            return GameStatus.ZERO_WON;
+        } else {
+            return GameStatus.ONGOING;
+        }
     }
 }

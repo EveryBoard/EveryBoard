@@ -1,4 +1,4 @@
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { SiamMove } from './SiamMove';
 import { SiamPartSlice } from './SiamPartSlice';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
@@ -264,11 +264,7 @@ export class SiamRules extends _SiamRules {
         const zeroScore: number = 6 - zeroShortestDistance;
         const oneScore: number = 6 - oneShortestDistance;
         if (zeroScore === oneScore) {
-            if (currentPlayer === Player.ZERO) {
-                return -1; // TODO think that correctly
-            } else {
-                return 1; // TODO think that correctly
-            }
+            return currentPlayer.getScoreModifier(); // TODO think that correctly
         } else if (zeroScore > oneScore) {
             return (-10 * (zeroScore + 1)) + (oneScore + 1); // TODO think that correctly
         } else {
@@ -572,15 +568,15 @@ export class SiamRules extends _SiamRules {
         const insertedPiece: SiamPiece = this.getInsertedPiece(coord, slice.getCurrentPlayer());
         return insertedPiece.getDirection();
     }
-    public isGameOver(state: SiamPartSlice): boolean {
-        let nbMountain: number = 0;
-        for (let y: number = 0; y<5; y++) {
-            for (let x: number = 0; x<5; x++) {
-                if (state.getBoardByXY(x, y) === SiamPiece.MOUNTAIN.value) {
-                    nbMountain++;
-                }
-            }
+    public getGameStatus(slice: SiamPartSlice, move: SiamMove): GameStatus {
+        const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
+            SiamRules.getMountainsRowsAndColumns(slice);
+
+        const winner: Player = SiamRules.getWinner(slice, move, mountainsInfo.nbMountain);
+        if (winner === Player.NONE) {
+            return GameStatus.ONGOING;
+        } else {
+            return GameStatus.getVictory(winner);
         }
-        return nbMountain < 3;
     }
 }

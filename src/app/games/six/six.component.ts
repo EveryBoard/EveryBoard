@@ -3,7 +3,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SixGameState } from 'src/app/games/six/SixGameState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
-import { SixMinimax, SixNode, SixRules } from 'src/app/games/six/SixRules';
+import { SixNode, SixRules } from 'src/app/games/six/SixRules';
+import { SixMinimax } from "src/app/games/six/SixMinimax";
 import { SixLegalityStatus } from 'src/app/games/six/SixLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -33,7 +34,6 @@ interface Scale {
 export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, SixLegalityStatus> {
 
     public availableMinimaxes: Minimax<SixMove, SixGameState, SixLegalityStatus>[] = [
-        // TODO:does minimax use legality status ????
         new SixMinimax('SixMinimax'),
     ];
     public readonly CONCRETE_WIDTH: number = 1000;
@@ -111,7 +111,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             this.leftCoord = null;
         }
         const state: SixGameState = this.rules.node.gamePartSlice;
-        if (this.rules.isGameOver(state, lastMove)) {
+        if (this.rules.getGameStatus(state, lastMove).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(lastMove, state);
         }
         this.disconnecteds = this.getDisconnected();

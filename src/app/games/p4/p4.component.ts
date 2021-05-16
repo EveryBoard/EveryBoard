@@ -19,7 +19,6 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
     public static VERBOSE: boolean = false;
 
     public availableMinimaxes: Minimax<P4Move, P4PartSlice>[] = [
-        // TODO:does minimax use legality status ????
         new P4Minimax('P4Minimax'),
     ];
     public EMPTY_CASE: number = Player.NONE.value;

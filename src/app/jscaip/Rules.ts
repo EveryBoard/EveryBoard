@@ -5,17 +5,45 @@ import { LegalityStatus } from './LegalityStatus';
 import { Type } from '@angular/core';
 import { display } from '../utils/utils';
 import { NodeUnheritance } from './NodeUnheritance';
+import { Player } from './Player';
 
+export class GameStatus {
+
+    public static readonly ZERO_WON: GameStatus = new GameStatus(true, Player.ZERO);
+
+    public static readonly ONE_WON: GameStatus = new GameStatus(true, Player.ONE);
+
+    public static readonly DRAW: GameStatus = new GameStatus(true, Player.NONE);
+
+    public static readonly ONGOING: GameStatus = new GameStatus(false, Player.NONE);
+
+    public static getVictory(nonNonePlayer: Player): GameStatus {
+        if (nonNonePlayer === Player.ZERO) {
+            return GameStatus.ZERO_WON;
+        } else {
+            return GameStatus.ONE_WON;
+        }
+    }
+    public static getDefeat(nonNonePlayer: Player): GameStatus {
+        if (nonNonePlayer === Player.ZERO) {
+            return GameStatus.ONE_WON;
+        } else {
+            return GameStatus.ZERO_WON;
+        }
+    }
+    private constructor(public readonly isEndGame: boolean, public readonly winner: Player) {
+    }
+}
 export abstract class Rules<M extends Move,
                             S extends GamePartSlice,
                             L extends LegalityStatus = LegalityStatus,
                             U extends NodeUnheritance = NodeUnheritance>
 {
 
-    public constructor(public readonly stateType: Type<S>) { // TODO: Make singleton ?
+    public constructor(public readonly stateType: Type<S>) {
         this.setInitialBoard();
     }
-    public node: MGPNode<Rules<M, S, L, U>, M, S, L, U>; // TODO: check that this should not made static
+    public node: MGPNode<Rules<M, S, L, U>, M, S, L, U>;
     /* The data that represent the status of the game at the current moment, including:
      * the board
      * the turn
@@ -49,7 +77,7 @@ export abstract class Rules<M extends Move,
 
         const resultingSlice: GamePartSlice = MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
         const son: MGPNode<Rules<M, S, L, U>, M, S, L, U> = new MGPNode(this.node,
-                                                                        move as M, // TODO: check cast use
+                                                                        move,
                                                                         resultingSlice as S);
         this.node = son;
         return true;
@@ -81,7 +109,5 @@ export abstract class Rules<M extends Move,
         }
         return slice;
     }
-    public isGameOver(state: S, lastMove: M): boolean {
-        throw new Error('implement the shit, TODO, make abstract the fuck');
-    }
+    public abstract getGameStatus(state: S, lastMove: M): GameStatus;
 }

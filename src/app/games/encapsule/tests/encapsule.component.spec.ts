@@ -2,7 +2,8 @@ import { EncapsuleComponent, EncapsuleComponentFailure } from '../encapsule.comp
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
-import { EncapsuleFailure, EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleFailure } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
 import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';

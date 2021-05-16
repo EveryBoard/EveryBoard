@@ -9,7 +9,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionMove } from './LinesOfActionMove';
-import { LinesOfActionMinimax, LinesOfActionRules } from './LinesOfActionRules';
+import { LinesOfActionRules } from './LinesOfActionRules';
+import { LinesOfActionMinimax } from "./LinesOfActionMinimax";
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -22,7 +23,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionMove, LinesOfActionState> {
 
     public availableMinimaxes: Minimax<LinesOfActionMove, LinesOfActionState>[] = [
-        // TODO:does minimax use legality status ????
         new LinesOfActionMinimax('LinesOfActionMinimax'),
     ];
     public CASE_SIZE: number = 100;

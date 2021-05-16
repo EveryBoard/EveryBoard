@@ -12,7 +12,7 @@ describe('P4Minimax', () => {
         MGPNode.ruler = new P4Rules(P4PartSlice);
         minimax = new P4Minimax('P4Minimax');
     });
-    it('First choice should be center at all IA depths', () => {
+    xit('First choice should be center at all IA depths', () => {
         const initialState: P4PartSlice = P4PartSlice.getInitialSlice();
         for (let depth: number = 1; depth < 6; depth ++) {
             const node: MGPNode<P4Rules, P4Move, P4PartSlice> = new MGPNode(null, null, initialState);

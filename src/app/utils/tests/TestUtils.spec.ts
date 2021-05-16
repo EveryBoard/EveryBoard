@@ -352,7 +352,7 @@ export function expectStateToBePreVictory(state: GamePartSlice,
                                           player: Player,
                                           minimax: Minimax<Move, GamePartSlice>)
 : void
-{ // TODO: that's some Rules job, ideally!
+{
     const value: number = minimax.getBoardNumericValue(previousMove, state);
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);

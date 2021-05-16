@@ -3,7 +3,8 @@ import { Player } from 'src/app/jscaip/Player';
 import { expectFirstStateToBeBetterThanSecond, expectStateToBePreVictory } from 'src/app/utils/tests/TestUtils.spec';
 import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
-import { SixMinimax, SixNode, SixRules } from '../SixRules';
+import { SixNode, SixRules } from '../SixRules';
+import { SixMinimax } from "../SixMinimax";
 
 describe('SixMinimax', () => {
 
@@ -173,13 +174,13 @@ describe('SixMinimax', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
             expect(rules.choose(move)).toBeTrue();
 
-            expect(rules.isGameOver(rules.node.gamePartSlice, rules.node.move)).toBeFalse();
+            expect(rules.getGameStatus(rules.node.gamePartSlice, rules.node.move).isEndGame).toBeFalse();
             const bestMove: SixMove = rules.node.findBestMove(1, minimax);
             expect(bestMove).toEqual(SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 6)));
             expect(rules.node.countDescendants()).toBe(1);
 
             expect(rules.choose(bestMove)).toBeTrue();
-            expect(rules.isGameOver(rules.node.gamePartSlice, rules.node.move)).toBeFalse();
+            expect(rules.getGameStatus(rules.node.gamePartSlice, rules.node.move).isEndGame).toBeFalse();
         });
         // TODO: comparing what's best between that calculation and Phase 1 one
         it('Score after 40th turn should be a substraction of the number of piece', () => {

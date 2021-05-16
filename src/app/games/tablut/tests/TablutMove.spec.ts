@@ -1,4 +1,5 @@
-import { TablutMinimax, TablutRules } from '../TablutRules';
+import { TablutRules } from '../TablutRules';
+import { TablutMinimax } from "../TablutMinimax";
 import { TablutMove } from '../TablutMove';
 import { TablutPartSlice } from '../TablutPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';

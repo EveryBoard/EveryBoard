@@ -1,4 +1,5 @@
-import { QuartoMinimax, QuartoRules } from '../QuartoRules';
+import { QuartoRules } from '../QuartoRules';
+import { QuartoMinimax } from "../QuartoMinimax";
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoPartSlice } from '../QuartoPartSlice';
@@ -48,7 +49,7 @@ describe('QuartoRules', () => {
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 16, QuartoPiece.NONE);
         expect(resultingSlice).toEqual(expectedSlice);
         expect(minimax.getBoardValue(move, expectedSlice).value).toEqual(0, 'This should be a draw.');
-        expect(rules.node.isEndGame(minimax)).toBeTrue();
+        expect(rules.getGameStatus(rules.node.gamePartSlice).isEndGame).toBeTrue();
     });
     it('Should forbid to give a piece already on the board', () => {
         const board: number[][] = [

@@ -1,4 +1,4 @@
-import { Rules } from '../../jscaip/Rules';
+import { GameStatus, Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { ReversiPartSlice } from './ReversiPartSlice';
 import { Coord } from '../../jscaip/Coord';
@@ -8,53 +8,9 @@ import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
 
-export class ReversiMinimax extends Minimax<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
-
-    public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): NodeUnheritance {
-        const gameIsEnded: boolean = ReversiRules.isGameEnded(slice);
-        const board: number[][] = slice.getCopiedBoard();
-        let player0Count: number = 0;
-        let player1Count: number = 0;
-        for (let y: number = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
-            for (let x: number = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
-                let locationValue: number;
-                if (gameIsEnded) {
-                    locationValue = 1;
-                } else {
-                    const verticalBorder: boolean = (x === 0) || (x === ReversiPartSlice.BOARD_WIDTH - 1);
-                    const horizontalBorder: boolean = (y === 0) || (y === ReversiPartSlice.BOARD_HEIGHT - 1);
-                    locationValue = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
-                }
-
-                if (board[y][x] === Player.ZERO.value) {
-                    player0Count += locationValue;
-                }
-                if (board[y][x] === Player.ONE.value) {
-                    player1Count += locationValue;
-                }
-            }
-        }
-        const diff: number = player1Count - player0Count;
-        if (gameIsEnded) {
-            if (diff < 0) {
-                return new NodeUnheritance(Player.ZERO.getVictoryValue());
-            }
-            if (diff > 0) {
-                return new NodeUnheritance(Player.ONE.getVictoryValue());
-            }
-            // else : equality
-        }
-        return new NodeUnheritance(diff);
-    }
-    public getListMoves(n: ReversiNode): ReversiMove[] {
-        return ReversiRules.getListMoves(n.gamePartSlice);
-    }
-}
 export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
     public static VERBOSE: boolean = false;
@@ -126,8 +82,20 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         return this.playerCanOnlyPass(state) &&
                this.nextPlayerCantOnlyPass(state);
     }
-    public isGameOver(state: ReversiPartSlice): boolean {
-        return ReversiRules.isGameEnded(state);
+    public getGameStatus(state: ReversiPartSlice): GameStatus {
+        const gameIsEnded: boolean = ReversiRules.isGameEnded(state);
+        if (gameIsEnded === false) {
+            return GameStatus.ONGOING;
+        }
+        const scores: [number, number] = state.countScore();
+        const diff: number = scores[1] - scores[0];
+        if (diff < 0) {
+            return GameStatus.ZERO_WON;
+        }
+        if (diff > 0) {
+            return GameStatus.ONE_WON;
+        }
+        return GameStatus.DRAW;
     }
     public static playerCanOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
         const currentPlayerChoices: ReversiMove[] = this.getListMoves(reversiPartSlice);

@@ -1,4 +1,4 @@
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MinimaxTestingPartSlice } from './MinimaxTestingPartSlice';
 import { MinimaxTestingMove } from './MinimaxTestingMove';
@@ -34,11 +34,23 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         }
         return { legal: MGPValidation.SUCCESS };
     }
-    public isGameOver(state: MinimaxTestingPartSlice): boolean {
+    public getGameStatus(state: MinimaxTestingPartSlice): GameStatus {
         const currentValue: number = state.getBoardAt(state.location);
-        const isGameOver: boolean = currentValue === Player.ZERO.getVictoryValue() ||
-                                    currentValue === Player.ONE.getVictoryValue() ||
-                                    state.location.equals(new Coord(3, 3));
-        return isGameOver;
+        if (currentValue === Player.ZERO.getVictoryValue()) {
+            return GameStatus.ZERO_WON;
+        }
+        if (currentValue === Player.ONE.getVictoryValue()) {
+            return GameStatus.ONE_WON;
+        }
+        if (state.location.equals(new Coord(3, 3))) {
+            if (currentValue === 0) {
+                return GameStatus.DRAW;
+            } else if (currentValue > 0) {
+                return GameStatus.ONE_WON;
+            } else {
+                return GameStatus.ZERO_WON;
+            }
+        }
+        return GameStatus.ONGOING;
     }
 }

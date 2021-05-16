@@ -1,7 +1,7 @@
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { expectFirstStateToBeBetterThanSecond } from 'src/app/utils/tests/TestUtils.spec';
 import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
-import { CoerceoMinimax } from '../CoerceoRules';
+import { CoerceoMinimax } from '../CoerceoMinimax';
 
 describe('Coerceo - Minimax', () => {
 

@@ -34,8 +34,8 @@ export class ReversiPartSlice extends GamePartSlice {
         }
         return result;
     }
-    public countScore(): number[] {
-        const scores: number[] = [0, 0];
+    public countScore(): [number, number] {
+        const scores: [number, number] = [0, 0];
         for (let y: number = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
             for (let x: number = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
                 const caseOwner: number = this.board[y][x];

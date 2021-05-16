@@ -69,7 +69,7 @@ describe('P4Rules', () => {
         expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
         expect(rules.node.getOwnValue(minimax).value).toEqual(Number.MIN_SAFE_INTEGER);
-        expect(rules.node.isEndGame(minimax)).toBeTrue();
+        expect(rules.getGameStatus(rules.node.gamePartSlice).isEndGame).toBeTrue();
     });
     it('Second player should win vertically', () => {
         const board: number[][] = [
@@ -94,7 +94,7 @@ describe('P4Rules', () => {
         expect(rules.choose(move)).toBeTrue();
         expect(rules.node.gamePartSlice.board).toEqual(expectedBoard);
         expect(rules.node.getOwnValue(minimax).value).toEqual(Number.MAX_SAFE_INTEGER);
-        expect(rules.node.isEndGame(minimax)).toBeTrue();
+        expect(rules.getGameStatus(rules.node.gamePartSlice).isEndGame).toBeTrue();
     });
     it('Should be a draw', () => {
         const board: number[][] = [
@@ -119,7 +119,7 @@ describe('P4Rules', () => {
         expect(rules.choose(move)).toBeTrue();
         const resultingSlice: P4PartSlice = rules.node.gamePartSlice;
         expect(resultingSlice.board).toEqual(expectedBoard);
-        expect(rules.node.isEndGame(minimax)).toBeTrue();
+        expect(rules.getGameStatus(rules.node.gamePartSlice).isEndGame).toBeTrue();
         expect(rules.node.getOwnValue(minimax).value).toBe(0);
     });
     it('Should know when a column is full or not', () => {

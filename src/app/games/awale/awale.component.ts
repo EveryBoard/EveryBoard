@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { AwaleMinimax, AwaleRules } from './AwaleRules';
+import { AwaleRules } from './AwaleRules';
+import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from './AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';

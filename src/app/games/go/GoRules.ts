@@ -10,50 +10,12 @@ import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
-abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
+export abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
 
-export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
-
-    public getListMoves(node: GoNode): GoMove[] {
-        const LOCAL_VERBOSE: boolean = false;
-        display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.getListMoves');
-
-        const currentSlice: GoPartSlice = node.gamePartSlice;
-        const playingMoves: GoMove[] = GoRules.getPlayingMovesList(currentSlice);
-        if (currentSlice.phase === Phase.PLAYING ||
-            currentSlice.phase === Phase.PASSED) {
-            playingMoves.push(GoMove.PASS);
-            return playingMoves;
-        } else if (currentSlice.phase === Phase.COUNTING ||
-                   currentSlice.phase === Phase.ACCEPT) {
-            display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.getListMoves in counting phase');
-            const markingMoves: GoMove[] = GoRules.getCountingMovesList(currentSlice);
-            if (markingMoves.length === 0) {
-                markingMoves.push(GoMove.ACCEPT);
-            }
-            return markingMoves;
-        } else {
-            return [];
-        }
-    }
-    public getBoardValue(move: GoMove, slice: GoPartSlice): NodeUnheritance {
-        const LOCAL_VERBOSE: boolean = false;
-
-        display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getBoardValue');
-
-        const goPartSlice: GoPartSlice = GoRules.markTerritoryAndCount(slice);
-
-        const goScore: number[] = goPartSlice.getCapturedCopy();
-        const goKilled: number[] = GoRules.getDeadStones(goPartSlice);
-        return new NodeUnheritance((goScore[1] + (2*goKilled[0])) - (goScore[0] + (2*goKilled[1])));
-    }
-}
 export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
     public static readonly CANNOT_PASS_AFTER_PASSED_PHASE: MGPValidation = MGPValidation.failure(
@@ -538,8 +500,19 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                                switchedSlice.koCoord,
                                switchedSlice.phase);
     }
-    public isGameOver(state: GoPartSlice): boolean {
-        return state.phase === Phase.FINISHED;
+    public getGameStatus(state: GoPartSlice): GameStatus {
+        if (state.phase === Phase.FINISHED) {
+            if (state.captured[0] > state.captured[1]) {
+                return GameStatus.ZERO_WON;
+            } else if (state.captured[1] > state.captured[0]) {
+                return GameStatus.ONE_WON;
+            } else {
+                // TODO: should not append in go, add 0.5 to black score!
+                return GameStatus.DRAW;
+            }
+        } else {
+            return GameStatus.ONGOING;
+        }
     }
 }
 class CaptureState {

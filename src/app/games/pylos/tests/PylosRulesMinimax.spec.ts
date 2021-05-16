@@ -3,7 +3,8 @@ import { Player } from 'src/app/jscaip/Player';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosPartSlice } from '../PylosPartSlice';
-import { PylosMinimax, PylosNode, PylosRules } from '../PylosRules';
+import { PylosNode, PylosRules } from '../PylosRules';
+import { PylosMinimax } from "../PylosMinimax";
 
 describe('PylosRules - Minimax:', () => {
 
