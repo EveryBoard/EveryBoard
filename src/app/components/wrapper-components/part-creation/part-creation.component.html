@@ -1,6 +1,7 @@
-<div *ngIf="currentJoiner" class="container">
-    <div class="row">
-        <div id="gameConfig" class="circled col-sm-10">
+<div *ngIf="currentJoiner"
+     class="columns">
+    <div class="column is-9">
+        <div id="gameConfig" class="box">
             <mat-horizontal-stepper id="creatorDiv" linear #stepper *ngIf="userIsCreator">
                 <mat-step [stepControl]="opponentFormGroup" editable="false">
                     <ng-template matStepLabel>Sélection d'un adversaire</ng-template>
@@ -110,19 +111,23 @@
                 Adversaire choisi : {{ currentJoiner.chosenPlayer }}
             </div>
         </div>
+    </div>
 
-        <div id="joiners" class="circled col-sm-2 flex-grow-1">
-            <h4> Joueurs présents : </h4>
-            <ul>
-                <li *ngIf="currentJoiner.chosenPlayer"
-                    id="selected_{{currentJoiner.chosenPlayer}}">
-                    <p><b> {{ currentJoiner.chosenPlayer }} </b></p>
-                </li>
-                <li *ngFor="let joinerName of currentJoiner.candidatesNames"
-                    id="presenceOf_{{joinerName}}">
-                    <p> {{ joinerName }} </p>
-                </li>
-            </ul>
+    <div id="joiners" class="column is-3">
+        <div class="box">
+            <div class="content">
+                <h4> Joueurs présents : </h4>
+                <ul>
+                    <li *ngIf="currentJoiner.chosenPlayer"
+                        id="selected_{{currentJoiner.chosenPlayer}}">
+                        <p><b> {{ currentJoiner.chosenPlayer }} </b></p>
+                    </li>
+                    <li *ngFor="let joinerName of currentJoiner.candidatesNames"
+                        id="presenceOf_{{joinerName}}">
+                        <p> {{ joinerName }} </p>
+                    </li>
+                </ul>
+            </div>
         </div>
     </div>
 </div>

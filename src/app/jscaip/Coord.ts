@@ -16,9 +16,6 @@ export class Coord implements ComparableObject {
         }
     }
 
-    public static equals(a: Coord, b: Coord): boolean {
-        return a.equals(b);
-    }
     public static getBinarised(n: number): -1 | 0 | 1 {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
         if (n < 0) return -1;

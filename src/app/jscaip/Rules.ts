@@ -8,14 +8,11 @@ import { MGPValidation } from '../utils/MGPValidation';
 import { display } from '../utils/utils';
 import { NodeUnheritance } from './NodeUnheritance';
 
-export class RulesFailure {
-
+export abstract class RulesFailure {
     public static readonly CANNOT_CHOOSE_ENNEMY_PIECE: string =
         `Vous ne pouvez pas choisir une pièce de l'ennemi.`;
     public static readonly MUST_CLICK_ON_EMPTY_CASE: MGPValidation =
         MGPValidation.failure('Vous devez cliquer sur une case vide.');
-
-    private constructor() {}
 }
 
 export abstract class Rules<M extends Move,
@@ -110,18 +107,5 @@ export abstract class Rules<M extends Move,
         } else {
             this.node = this.node.getInitialNode();
         }
-    }
-    public applyMoves(encodedMoves: number[], slice: S, moveDecoder: (em: number) => M): S {
-        let i: number = 0;
-        for (const encodedMove of encodedMoves) {
-            const move: M = moveDecoder(encodedMove);
-            const status: L = this.isLegal(move, slice);
-            if (status.legal.isFailure()) {
-                throw new Error('Can\'t create slice from invalid moves (' + i + '): ' + status.legal.reason + '.');
-            }
-            slice = this.applyLegalMove(move, slice, status);
-            i++;
-        }
-        return slice;
     }
 }

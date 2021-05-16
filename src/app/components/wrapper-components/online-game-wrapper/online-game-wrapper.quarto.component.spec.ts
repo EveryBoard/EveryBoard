@@ -598,7 +598,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(await componentTestUtils.clickElement('#passButton')).toBeFalse();
 
         wrapper.gameComponent.canPass = true;
-        wrapper.gameComponent.pass = async() => {
+        wrapper.gameComponent['pass'] = async() => {
             return MGPValidation.SUCCESS;
         };
         componentTestUtils.detectChanges();

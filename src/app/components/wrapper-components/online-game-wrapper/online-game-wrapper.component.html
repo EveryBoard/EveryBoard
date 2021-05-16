@@ -18,7 +18,7 @@
             </div>
             <div class="block" *ngIf="players">
                 <p id="playerZeroIndicator" [ngStyle]="getPlayerNameFontColor(0)">{{ players[0] }}</p>
-                <p id="scoreZeroIndicator" *ngIf="currentPart && compo && compo.showScore">{{ compo.scores[0] points</p>
+                <p id="scoreZeroIndicator" *ngIf="currentPart && compo && compo.showScore">{{ compo.scores[0] }} points</p>
                 <app-count-down #chronoZeroGlobal
                                 [dangerTimeLimit]="60*1000"
                                 debugName="ZERO Global"
@@ -33,7 +33,7 @@
             <p class="is-size-3">vs.</p>
             <div class="block" *ngIf="players">
                 <p id="playerOneIndicator" [ngStyle]="getPlayerNameFontColor(1)">{{ players[1] }}</p>
-                <p id="scoreOneIndicator" *ngIf="currentPart && compo && compo.showScore">{{ compo.scores[1] points</p>
+                <p id="scoreOneIndicator" *ngIf="currentPart && compo && compo.showScore">{{ compo.scores[1] }} points</p>
                 <app-count-down #chronoOneGlobal
                                 [dangerTimeLimit]="60*1000"
                                 debugName="ONE Global"
@@ -120,17 +120,18 @@
                 Accepter le rematch
             </button>
         </div>
-        <div class="column is-9">
-            <div id="board" class="box">
-                <app-game-includer></app-game-includer>
-            </div>
+    </div>
+    <div class="column is-9">
+        <div id="board" class="box">
+            <app-game-includer></app-game-includer>
         </div>
     </div>
 </div>
-<div id="chat"
-     class="box"
-     [ngStyle] = "{ 'height': getChatHeight(), 'max-height': '40%', 'float': 'bottom' }">
-    <app-chat [chatId]="currentPartId"
-              [turn]="currentPart?.turn"></app-chat>
+<div class="block mt-2">
+    <div id="chat"
+         class="box" >
+        <app-chat [chatId]="currentPartId"
+                  [turn]="currentPart?.turn"></app-chat>
+    </div>
 </div>
 

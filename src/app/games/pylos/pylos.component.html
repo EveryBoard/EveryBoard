@@ -6,7 +6,7 @@
         <text x="0" [attr.y]="850+22+(getPieceSize()+10)*player" class="text-small">Pièces du joueur {{player+1}}</text>
         <g *ngFor="let p of getPlayerSidePieces(player);">
             <circle id="piece_{{ player }}_{{ p }}"
-                    [attr.cx]="150+(p * getPieceSize()/3)"
+                    [attr.cx]="170+(p * getPieceSize()/3)"
                     [attr.cy]="850+20+(getPieceSize()+5)*player"
                     [attr.r]="getPieceSize()/3"
                     [ngClass]="getPlayerPieceClass(player)"
