@@ -1,22 +1,26 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
+import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 import { PickGameComponent } from './pick-game.component';
 
 describe('PickGameComponent', () => {
-    let component: PickGameComponent;
-    let fixture: ComponentFixture<PickGameComponent>;
+    let testUtils: SimpleComponentTestUtils<PickGameComponent>;
 
-    beforeEach(async() => {
-        await TestBed.configureTestingModule({
-            declarations: [PickGameComponent],
-        }).compileComponents();
-    });
-    beforeEach(() => {
-        fixture = TestBed.createComponent(PickGameComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
+    beforeEach(fakeAsync(async() => {
+        testUtils = await SimpleComponentTestUtils.create(PickGameComponent);
+        testUtils.detectChanges();
+    }));
     it('should create', () => {
-        expect(component).toBeTruthy();
+        expect(testUtils.getComponent()).toBeTruthy();
     });
+    it('should emit an event when a game has been selected', fakeAsync(async() => {
+        spyOn(testUtils.getComponent().pickGame, 'emit');
+
+        const gameSelection: any = testUtils.findElement('#gameType').nativeElement;
+        gameSelection.value = gameSelection.options[2].value;
+        gameSelection.dispatchEvent(new Event('change'));
+        testUtils.detectChanges();
+
+        expect(testUtils.getComponent().pickGame.emit).toHaveBeenCalledWith(gameSelection.options[2].innerText);
+    }));
 });
