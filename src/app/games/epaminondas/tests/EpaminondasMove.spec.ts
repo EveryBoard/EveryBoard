@@ -1,7 +1,7 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { Direction } from 'src/app/jscaip/Direction';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
 import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasMinimax } from "../EpaminondasMinimax";
 import { EpaminondasMove } from '../EpaminondasMove';
 
 describe('EpaminondasMove: ', () => {
@@ -29,9 +29,9 @@ describe('EpaminondasMove: ', () => {
     });
     it('EpaminondasMove.encode and EpaminondasMove.decode should be reversible', () => {
         const rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
-        const moves: MGPMap<EpaminondasMove, EpaminondasPartSlice> = rules.getListMoves(rules.node);
-        for (let i: number = 0; i < moves.size(); i++) {
-            const move: EpaminondasMove = moves.getByIndex(i).key;
+        const minimax: EpaminondasMinimax = new EpaminondasMinimax('EpaminondasMinimax');
+        const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
+        for (const move of moves) {
             const encodedMove: number = move.encode();
             const decodedMove: EpaminondasMove = EpaminondasMove.decode(encodedMove);
             expect(decodedMove).toEqual(move);

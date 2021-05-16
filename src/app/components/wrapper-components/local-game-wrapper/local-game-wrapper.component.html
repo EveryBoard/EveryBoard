@@ -4,17 +4,87 @@
             <div class="block" id="turnIndicator">
                 <p class="subtitle">Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }}</p>
             </div>
-            <div class="select">
-                <select (change)="switchPlayerOne($event.target.value)">
-                    <option selected value="0"> Humain </option>
-                    <option value="1"> IA LEVEL 1 </option>
-                    <option value="2"> IA LEVEL 2 </option>
-                    <option value="3"> IA LEVEL 3 </option>
-                    <option value="4"> IA LEVEL 4 </option>
-                    <option value="5"> IA LEVEL 5 </option>
-                    <option value="6"> IA LEVEL 6 </option>
-                    <option value="7"> IA LEVEL 7 </option>
-                </select>
+            <div *ngIf="compo" id="info" class="circled col-sm-4">
+                <div class="inforow" id="turnIndicator" style="text-align:center">
+                    <h4>Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }}</h4>
+                </div>
+                <div id="playerSelector"
+                     class="container row">
+                    <div class="col-sm-6">
+                        <select id="playerZeroSelect"
+                                (change)="updatePlayer(0)"
+                                [(ngModel)]="players[0]">
+                            <option selected
+                                    value="humain"> Humain </option>
+                            <ng-container *ngFor="let minimax of compo.availableMinimaxes">
+                                <option [value]="minimax.name">{{ minimax.name }}</option>
+                            </ng-container>
+                        </select>
+                        <select *ngIf="players[0] !== 'humain'"
+                                id="aiZeroDepthSelect"
+                                [(ngModel)]="aiDepths[0]"
+                                (change)="updatePlayer(0)">
+                            <option selected
+                                    value="0">Choisissez le niveau</option>
+                            <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
+                                    [value]="i">Niveau {{ i }}</option>
+                        </select>
+                        <p id="scoreZero"
+                           *ngIf="compo.scores"
+                           class="text-left"> {{ compo.scores[0] }} points </p>
+                    </div>
+                    <div class="col-sm-6">
+                        <select>
+                            <option selected
+                                    (click)="changePlayer(1, 'humain')"
+                                    value="humain"> Humain </option>
+                            <ng-container *ngFor="let minimax of compo.availableMinimaxes">
+                                <option [value]="minimax.name"
+                                        (click)="changePlayer(1, minimax.name)">{{ minimax.name }}</option>
+                            </ng-container>
+                        </select>
+                        <select *ngIf="players[1] !== 'humain'">
+                            <option selected value="0">Choisissez le niveau</option>
+                            <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
+                                    [value]="i">Niveau {{ i }}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="inforow" id="gameResult" *ngIf="endGame">
+                    <h4 *ngIf="winner">{{ winner }} a gagné</h4>
+                    <h4 id="draw" *ngIf="winner == null">Match nul</h4>
+                </div>
+                <div class="inforow" id="passButtonDiv" *ngIf="endGame === false && compo.canPass">
+                    <button id="passButton"
+                            type="button"
+                            class="btn btn-lg btn-primary w-100"
+                            (click)="compo.pass()"
+                            >
+                        Passer son tour
+                    </button>
+                </div>
+                <div class="inforow"
+                     id="takeBackDiv"
+                     *ngIf="compo.rules.node.gamePartSlice.turn > 0 && endGame === false">
+                    <button id="takeBack"
+                            type="button"
+                            class="btn btn-lg btn-primary w-100"
+                            (click)="takeBack()"
+                            mat-stroked-button>
+                        Reprendre un coup
+                    </button>
+                </div>
+                <div class="inforow"
+                     *ngIf="endGame === true">
+                    <button id="restartButton"
+                            type="button"
+                            class="btn btn-lg btn-primary w-100"
+                            (click)="restartGame()"
+                            mat-stroked-button>
+                        Recommencer une partie
+                    </button>
+                </div>
+                <!-- {{ compo.rules.node.ownValue + ' > ' + compo.rules.node.getHopedValue() }} -->
             </div>
             <div style="visibility: hidden;">
                 <mat-select></mat-select> <!-- TODO: removing this makes some async tests fail, wtf? (when removing, add the "block" class to the select div above) -->
@@ -25,18 +95,6 @@
             <hr/>
             <p class="is-size-3">vs.</p>
             <hr/>
-            <div class="select block">
-                <select (change)="switchPlayerTwo($event.target.value)">
-                    <option selected value="0"> Humain </option>
-                    <option value="1"> IA LEVEL 1 </option>
-                    <option value="2"> IA LEVEL 2 </option>
-                    <option value="3"> IA LEVEL 3 </option>
-                    <option value="4"> IA LEVEL 4 </option>
-                    <option value="5"> IA LEVEL 5 </option>
-                    <option value="6"> IA LEVEL 6 </option>
-                    <option value="7"> IA LEVEL 7 </option>
-                </select>
-            </div>
             <p id="scoreOne"
                *ngIf="compo.scores"
                class="block"> {{ compo.scores[1] }} points </p>

@@ -53,30 +53,30 @@ describe('LocalGameWrapperComponent', () => {
     }));
     it('should show draw', fakeAsync(async() => {
         const board: number[][] = [
-            [X, X, X, _, X, X, X],
-            [O, O, O, X, O, O, O],
+            [O, O, O, _, O, O, O],
             [X, X, X, O, X, X, X],
             [O, O, O, X, O, O, O],
             [X, X, X, O, X, X, X],
             [O, O, O, X, O, O, O],
+            [X, X, X, O, X, X, X],
         ];
-        const slice: P4PartSlice = new P4PartSlice(board, 0);
-        componentTestUtils.setupSlice(slice);
+        const state: P4PartSlice = new P4PartSlice(board, 41);
+        componentTestUtils.setupSlice(state);
 
         await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
         expect(componentTestUtils.findElement('#draw')).toBeTruthy('Draw indicator should be present');
     }));
     it('should show score if needed', fakeAsync(async() => {
-        componentTestUtils.getComponent().showScore = true;
-        expect(componentTestUtils.findElement('#scoreZero')).toBeFalsy();
-        expect(componentTestUtils.findElement('#scoreOne')).toBeFalsy();
+        componentTestUtils.getComponent().showScore = false;
+        componentTestUtils.expectElementNotToExist('#scoreZero');
+        componentTestUtils.expectElementNotToExist('#scoreOne');
 
         componentTestUtils.getComponent().showScore = true;
         componentTestUtils.getComponent()['scores'] = [0, 0];
         componentTestUtils.detectChanges();
 
-        expect(componentTestUtils.findElement('#scoreZero')).toBeTruthy();
-        expect(componentTestUtils.findElement('#scoreOne')).toBeTruthy();
+        componentTestUtils.expectElementToExist('#scoreZero');
+        componentTestUtils.expectElementToExist('#scoreOne');
     }));
     it('should allow to restart game during the play', fakeAsync(async() => {
         expect(componentTestUtils.findElement('#restartButton'));
@@ -103,4 +103,31 @@ describe('LocalGameWrapperComponent', () => {
         expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(0);
         expect(componentTestUtils.findElement('#draw')).toBeFalsy('Draw indicator should be removed');
     }));
+    describe('Using AI', () => {
+        it('Should show level when non-human player is selected', async() => {
+            // 1. Choosing AI
+            const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerZeroSelect').nativeElement;
+            componentTestUtils.expectElementNotToExist('#aiZeroDepthSelect');
+            selectAI.value = selectAI.options[1].value;
+            selectAI.dispatchEvent(new Event('change'));
+            componentTestUtils.fixture.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+            const aiName: string = selectAI.options[selectAI.selectedIndex].label;
+            expect(aiName).toBe('P4Minimax');
+
+            // 2. Choosing level
+            const selectDepth: HTMLSelectElement = componentTestUtils.findElement('#aiZeroDepthSelect').nativeElement;
+            const proposeAIToPlay: jasmine.Spy =
+                spyOn(componentTestUtils.wrapper as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
+            selectDepth.value = selectDepth.options[1].value;
+            selectDepth.dispatchEvent(new Event('change'));
+            componentTestUtils.fixture.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+            const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;
+            expect(aiDepth).toBe('Niveau 1');
+
+            expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
+            // Once by changing it on the select, once after the AI move and check who is next
+        });
+    });
 });

@@ -2,9 +2,9 @@ import { MGPOptional } from '../utils/MGPOptional';
 import { Coord } from './Coord';
 import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';
+import { Minimax } from './Minimax';
 import { Move } from './Move';
 import { NodeUnheritance } from './NodeUnheritance';
-import { Rules } from './Rules';
 import { SCORE } from './SCORE';
 
 export interface BoardInfo {
@@ -18,7 +18,7 @@ export abstract class AlignementMinimax<M extends Move,
                                         L extends LegalityStatus,
                                         V,
                                         U extends NodeUnheritance = NodeUnheritance>
-    extends Rules<M, S, L, U>
+    extends Minimax<M, S, L, U>
 {
 
     public calculateBoardValue(move: M, state: S): BoardInfo {

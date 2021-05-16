@@ -9,6 +9,7 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { JSONValue } from 'src/app/utils/utils';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -32,6 +33,8 @@ export abstract class AbstractGameComponent<M extends Move,
     public canPass: boolean;
 
     public showScore: boolean;
+
+    public availableMinimaxes: Minimax<Move, GamePartSlice>[];
 
     public imagesLocation: string = 'assets/images/';
 

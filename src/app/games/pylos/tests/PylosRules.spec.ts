@@ -4,9 +4,12 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosPartSlice } from '../PylosPartSlice';
 import { PylosRules } from '../PylosRules';
+import { PylosMinimax } from "../PylosMinimax";
 
 describe('PylosRules:', () => {
+
     let rules: PylosRules;
+    let minimax: PylosMinimax;
 
     const _: number = Player.NONE.value;
     const O: number = Player.ZERO.value;
@@ -14,6 +17,7 @@ describe('PylosRules:', () => {
 
     beforeEach(() => {
         rules = new PylosRules(PylosPartSlice);
+        minimax = new PylosMinimax('PylosMinimax');
     });
     it('should forbid move who\'se landing coord is not empty', () => {
         const board: number[][][] = [
@@ -264,7 +268,7 @@ describe('PylosRules:', () => {
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status);
-        expect(rules.getBoardValue(move, resultingSlice)).toBe(Number.MAX_SAFE_INTEGER);
+        expect(minimax.getBoardValue(move, resultingSlice).value).toBe(Number.MAX_SAFE_INTEGER);
     });
     it('should declare looser Player.ONE when he put his 15th ball', () => {
         const board: number[][][] = [
@@ -290,6 +294,6 @@ describe('PylosRules:', () => {
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status);
-        expect(rules.getBoardValue(move, resultingSlice)).toBe(Number.MIN_SAFE_INTEGER);
+        expect(minimax.getBoardValue(move, resultingSlice).value).toBe(Number.MIN_SAFE_INTEGER);
     });
 });

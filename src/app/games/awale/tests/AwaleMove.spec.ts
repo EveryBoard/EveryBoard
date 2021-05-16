@@ -1,14 +1,14 @@
 import { AwaleRules } from '../AwaleRules';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwalePartSlice } from '../AwalePartSlice';
 
 describe('AwaleMove', () => {
     it('AwaleMove.encode and AwaleMove.decode should be reversible', () => {
         const rules: AwaleRules = new AwaleRules(AwalePartSlice);
-        const firstTurnMoves: MGPMap<AwaleMove, AwalePartSlice> = rules.getListMoves(rules.node);
-        for (let i = 0; i < firstTurnMoves.size(); i++) {
-            const move: AwaleMove = firstTurnMoves.getByIndex(i).key;
+        const minimax: AwaleMinimax = new AwaleMinimax('AwaleMinimax');
+        const firstTurnMoves: AwaleMove[] = minimax.getListMoves(rules.node);
+        for (const move of firstTurnMoves) {
             const encodedMove: number = move.encode();
             const decodedMove: AwaleMove = AwaleMove.decode(encodedMove);
             expect(decodedMove).toEqual(move);

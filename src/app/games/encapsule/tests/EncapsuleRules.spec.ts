@@ -1,4 +1,5 @@
 import { EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleMinimax } from "../EncapsuleMinimax";
 import { EncapsuleMove } from '../EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleCase, EncapsulePartSlice } from '../EncapsulePartSlice';
@@ -6,7 +7,10 @@ import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from '../EncapsulePiece';
 
 describe('EncapsuleRules', () => {
+
     let rules: EncapsuleRules;
+
+    let minimax: EncapsuleMinimax;
 
     const drop: (piece: EncapsulePiece, coord: Coord) => boolean = (piece: EncapsulePiece, coord: Coord) => {
         const move: EncapsuleMove = EncapsuleMove.fromDrop(piece, coord);
@@ -24,6 +28,7 @@ describe('EncapsuleRules', () => {
 
     beforeEach(() => {
         rules = new EncapsuleRules(EncapsulePartSlice);
+        minimax = new EncapsuleMinimax('EncapsuleMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
@@ -66,7 +71,7 @@ describe('EncapsuleRules', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1))).toBeTrue();
         expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(0, 1))).toBeTrue();
         expect(drop(EncapsulePiece.MEDIUM_BLACK, new Coord(2, 2))).toBeTrue();
-        expect(rules.node.ownValue).toBe(Number.MIN_SAFE_INTEGER);
+        expect(rules.node.getOwnValue(minimax).value).toBe(Number.MIN_SAFE_INTEGER);
     });
     it('should allow simplest victory for player zero', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 0))).toBeTrue();
@@ -75,7 +80,7 @@ describe('EncapsuleRules', () => {
         expect(drop(EncapsulePiece.SMALL_WHITE, new Coord(1, 1))).toBeTrue();
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 1))).toBeTrue();
         expect(drop(EncapsulePiece.MEDIUM_WHITE, new Coord(2, 2))).toBeTrue();
-        expect(rules.node.ownValue).toBe(Number.MAX_SAFE_INTEGER);
+        expect(rules.node.getOwnValue(minimax).value).toBe(Number.MAX_SAFE_INTEGER);
     });
     it('should allow moving pieces on empty coord', () => {
         expect(drop(EncapsulePiece.SMALL_BLACK, new Coord(2, 0))).toBeTrue();
@@ -131,7 +136,7 @@ describe('EncapsuleRules', () => {
     describe('getListMoves', () => {
         it('should have 27 moves on first turn', () => {
             // 3 pieces x 9 coords = 27 moves
-            expect(rules.getListMoves(rules.node).size()).toBe(27);
+            expect(minimax.getListMoves(rules.node).length).toBe(27);
         });
         it('should have XX moves on a specific third turn', () => {
             drop(EncapsulePiece.SMALL_BLACK, new Coord(0, 0));
@@ -139,7 +144,7 @@ describe('EncapsuleRules', () => {
             // Drops medium = 9, drops big = 9, drops small = 7
             // Moving the piece on board = 7 possible landing cases
             // Total: 32
-            expect(rules.getListMoves(rules.node).size()).toBe(32);
+            expect(minimax.getListMoves(rules.node).length).toBe(32);
         });
     });
 });

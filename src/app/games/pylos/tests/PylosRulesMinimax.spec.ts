@@ -4,9 +4,12 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosPartSlice } from '../PylosPartSlice';
 import { PylosNode, PylosRules } from '../PylosRules';
+import { PylosMinimax } from "../PylosMinimax";
 
 describe('PylosRules - Minimax:', () => {
+
     let rules: PylosRules;
+    let minimax: PylosMinimax;
 
     const _: number = Player.NONE.value;
 
@@ -16,10 +19,11 @@ describe('PylosRules - Minimax:', () => {
 
     beforeEach(() => {
         rules = new PylosRules(PylosPartSlice);
+        minimax = new PylosMinimax('PylosMinimax');
     });
 
     it('Should provide 16 drops at first turn', () => {
-        expect(rules.getListMoves(rules.node).listKeys().length).toBe(16);
+        expect(minimax.getListMoves(rules.node).length).toBe(16);
     });
 
     it('Should provide 7 drops without capture, 6 drops with one capture, 15 drops with two capture, 3 climbing', () => {
@@ -42,8 +46,8 @@ describe('PylosRules - Minimax:', () => {
         ];
 
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
-        const node: PylosNode = new MGPNode(null, null, slice, 0);
-        expect(rules.getListMoves(node).listKeys().length).toBe(31);
+        const node: PylosNode = new MGPNode(null, null, slice);
+        expect(minimax.getListMoves(node).length).toBe(31);
     });
 
     it('should calculate board value according to number of pawn of each player', () => {
@@ -67,6 +71,6 @@ describe('PylosRules - Minimax:', () => {
 
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
-        expect(rules.getBoardValue(move, slice)).toBe(0);
+        expect(minimax.getBoardValue(move, slice).value).toBe(0);
     });
 });

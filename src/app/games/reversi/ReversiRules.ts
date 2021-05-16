@@ -1,10 +1,9 @@
-import { Rules } from '../../jscaip/Rules';
+import { GameStatus, Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { ReversiPartSlice } from './ReversiPartSlice';
 import { Coord } from '../../jscaip/Coord';
 import { Direction } from '../../jscaip/Direction';
 import { ReversiMove } from './ReversiMove';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { display } from 'src/app/utils/utils';
@@ -13,6 +12,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
 
 export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
+
     public static VERBOSE: boolean = false;
 
     public applyLegalMove(move: ReversiMove, slice: ReversiPartSlice, status: ReversiLegalityStatus): ReversiPartSlice {
@@ -78,15 +78,30 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         }
         return []; // we found the end of the board before we found     the newt pawn like 'searchedPawn'
     }
-    public static isGameEnded(reversiPartSlice: ReversiPartSlice): boolean {
-        return this.playerCanOnlyPass(reversiPartSlice) &&
-            this.nextPlayerCantOnlyPass(reversiPartSlice);
+    public static isGameEnded(state: ReversiPartSlice): boolean {
+        return this.playerCanOnlyPass(state) &&
+               this.nextPlayerCantOnlyPass(state);
+    }
+    public getGameStatus(state: ReversiPartSlice): GameStatus {
+        const gameIsEnded: boolean = ReversiRules.isGameEnded(state);
+        if (gameIsEnded === false) {
+            return GameStatus.ONGOING;
+        }
+        const scores: [number, number] = state.countScore();
+        const diff: number = scores[1] - scores[0];
+        if (diff < 0) {
+            return GameStatus.ZERO_WON;
+        }
+        if (diff > 0) {
+            return GameStatus.ONE_WON;
+        }
+        return GameStatus.DRAW;
     }
     public static playerCanOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
-        const currentPlayerChoices: MGPMap<ReversiMove, ReversiPartSlice> = this.getListMoves(reversiPartSlice);
+        const currentPlayerChoices: ReversiMove[] = this.getListMoves(reversiPartSlice);
         // if the current player cannot start, then the part is ended
-        return (currentPlayerChoices.size() === 1) &&
-               currentPlayerChoices.getByIndex(0).key.equals(ReversiMove.PASS);
+        return (currentPlayerChoices.length === 1) &&
+                currentPlayerChoices[0].equals(ReversiMove.PASS);
     }
     public static nextPlayerCantOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
         const nextBoard: number[][] = reversiPartSlice.getCopiedBoard();
@@ -94,12 +109,10 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         const nextPartSlice: ReversiPartSlice = new ReversiPartSlice(nextBoard, nextTurn);
         return this.playerCanOnlyPass(nextPartSlice);
     }
-    public static getListMoves(slice: ReversiPartSlice): MGPMap<ReversiMove, ReversiPartSlice> {
-        const listMoves: MGPMap<ReversiMove, ReversiPartSlice> = new MGPMap<ReversiMove, ReversiPartSlice>();
+    public static getListMoves(slice: ReversiPartSlice): ReversiMove[] {
+        const moves: ReversiMove[] = [];
 
-        let moveAppliedPartSlice: ReversiPartSlice;
         let nextBoard: number[][];
-        const nextTurn: number = slice.turn + 1;
 
         const player: number = slice.getCurrentPlayer().value;
         const ennemy: number = slice.getCurrentEnnemy().value;
@@ -124,20 +137,18 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
                                 nextBoard[switched.y][switched.x] = player;
                             }
                             nextBoard[y][x] = player;
-                            moveAppliedPartSlice = new ReversiPartSlice(nextBoard, nextTurn);
-                            listMoves.set(move, moveAppliedPartSlice);
+                            moves.push(move);
                         }
                     }
                 }
             }
         }
-        if (listMoves.size() === 0) {
+        if (moves.length === 0) {
             // when the user cannot start, his only move is to pass, which he cannot do otherwise
             // board unchanged, only the turn changed "pass"
-            moveAppliedPartSlice = new ReversiPartSlice(slice.getCopiedBoard(), nextTurn);
-            listMoves.set(ReversiMove.PASS, moveAppliedPartSlice);
+            moves.push(ReversiMove.PASS);
         }
-        return listMoves;
+        return moves;
     }
     public isLegal(move: ReversiMove, slice: ReversiPartSlice): ReversiLegalityStatus {
         const turn: number = slice.turn;
@@ -163,44 +174,5 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             legal: (switched.length === 0) ? MGPValidation.failure('no elements switched') : MGPValidation.SUCCESS,
             switched,
         };
-    }
-    public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): number {
-        const gameIsEnded: boolean = ReversiRules.isGameEnded(slice);
-        const board: number[][] = slice.getCopiedBoard();
-        let player0Count: number = 0;
-        let player1Count: number = 0;
-        for (let y: number = 0; y < ReversiPartSlice.BOARD_HEIGHT; y++) {
-            for (let x: number = 0; x < ReversiPartSlice.BOARD_WIDTH; x++) {
-                let locationValue: number;
-                if (gameIsEnded) {
-                    locationValue = 1;
-                } else {
-                    const verticalBorder: boolean = (x === 0) || (x === ReversiPartSlice.BOARD_WIDTH - 1);
-                    const horizontalBorder: boolean = (y === 0) || (y === ReversiPartSlice.BOARD_HEIGHT - 1);
-                    locationValue = (verticalBorder ? 4 : 1) * (horizontalBorder ? 4 : 1);
-                }
-
-                if (board[y][x] === Player.ZERO.value) {
-                    player0Count += locationValue;
-                }
-                if (board[y][x] === Player.ONE.value) {
-                    player1Count += locationValue;
-                }
-            }
-        }
-        const diff: number = player1Count - player0Count;
-        if (ReversiRules.isGameEnded(slice)) {
-            if (diff < 0) { // player 0 won
-                return Number.MIN_SAFE_INTEGER;
-            }
-            if (diff > 0) { // player 1 won
-                return Number.MAX_SAFE_INTEGER;
-            }
-            // else : equality
-        }
-        return diff;
-    }
-    public getListMoves(n: ReversiNode): MGPMap<ReversiMove, ReversiPartSlice> {
-        return ReversiRules.getListMoves(n.gamePartSlice);
     }
 }

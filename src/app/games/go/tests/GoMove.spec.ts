@@ -1,11 +1,13 @@
 import { GoRules } from '../GoRules';
+import { GoMinimax } from "../GoMinimax";
 import { GoPartSlice } from '../GoPartSlice';
 import { GoMove } from '../GoMove';
 
 describe('GoMove', () => {
     it('GoMove.encode and GoMove.decode should be reversible', () => {
         const rules: GoRules = new GoRules(GoPartSlice);
-        const firstTurnMoves: GoMove[] = rules.getListMoves(rules.node).listKeys();
+        const minimax: GoMinimax = new GoMinimax('GoMinimax');
+        const firstTurnMoves: GoMove[] = minimax.getListMoves(rules.node);
         firstTurnMoves.push(GoMove.PASS);
         firstTurnMoves.push(GoMove.ACCEPT);
         for (let i: number = 0; i < firstTurnMoves.length; i++) {

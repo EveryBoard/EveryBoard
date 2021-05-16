@@ -1,5 +1,5 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { ReversiRules } from '../ReversiRules';
+import { ReversiMinimax } from "../ReversiMinimax";
 import { ReversiMove } from '../ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
 import { Player } from 'src/app/jscaip/Player';
@@ -13,15 +13,17 @@ describe('ReversiRules', () => {
     const O: number = Player.ZERO.value;
 
     let rules: ReversiRules;
+    let minimax: ReversiMinimax;
 
     beforeEach(() => {
         rules = new ReversiRules(ReversiPartSlice);
+        minimax = new ReversiMinimax('ReversiMinimax');
     });
     it('ReversiRules should be created', () => {
         expect(rules).toBeTruthy();
         expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start a turn 0');
-        const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
-        expect(moves.size()).toBe(4);
+        const moves: ReversiMove[] = minimax.getListMoves(rules.node);
+        expect(moves.length).toBe(4);
     });
     it('First move should be legal and change score', () => {
         const isLegal: boolean = rules.choose(new ReversiMove(2, 4));
@@ -56,10 +58,10 @@ describe('ReversiRules', () => {
             [_, _, _, _, O, _, _, _],
         ];
         const slice: ReversiPartSlice = new ReversiPartSlice(board, 1);
-        rules.node = new MGPNode(null, null, slice, 0);
-        const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
-        expect(moves.size()).toBe(1);
-        expect(moves.getByIndex(0).key).toBe(ReversiMove.PASS);
+        rules.node = new MGPNode(null, null, slice);
+        const moves: ReversiMove[] = minimax.getListMoves(rules.node);
+        expect(moves.length).toBe(1);
+        expect(moves[0]).toBe(ReversiMove.PASS);
         expect(rules.choose(ReversiMove.PASS)).toBeTrue();
     });
     it('Should consider the player with the more point the winner at the end', () => {
@@ -90,7 +92,7 @@ describe('ReversiRules', () => {
         const resultingSlice: ReversiPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: ReversiPartSlice = new ReversiPartSlice(expectedBoard, 60);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice))
+        expect(minimax.getBoardValue(move, expectedSlice).value)
             .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
 });

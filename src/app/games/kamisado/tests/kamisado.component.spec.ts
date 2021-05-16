@@ -2,7 +2,7 @@ import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoRules';
+import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { KamisadoComponent, KamisadoComponentFailure } from '../kamisado.component';
 import { fakeAsync } from '@angular/core/testing';

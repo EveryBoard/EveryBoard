@@ -21,6 +21,9 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValue } from 'src/app/utils/utils';
 import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/ObjectUtils';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 export class UpdateType {
 
@@ -341,9 +344,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public notifyVictory(encodedMove: JSONValue, scorePlayerZero: number, scorePlayerOne: number): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
         let winner: string;
-        if (this.gameComponent.rules.node.ownValue === Number.MAX_SAFE_INTEGER) {
+        const minimax: Minimax<Move, GamePartSlice> = this.gameComponent.availableMinimaxes[0];
+        if (this.gameComponent.rules.node.getOwnValue(minimax).value === Number.MAX_SAFE_INTEGER) {
             winner = this.players[1];
-        } else if (this.gameComponent.rules.node.ownValue === Number.MIN_SAFE_INTEGER) {
+        } else if (this.gameComponent.rules.node.getOwnValue(minimax).value === Number.MIN_SAFE_INTEGER) {
             winner = this.players[0];
         } else {
             throw new Error('How the fuck did you notice victory?');
@@ -530,8 +534,10 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
         this.gameComponent.rules.choose(move);
-        if (this.gameComponent.rules.node.isEndGame()) {
-            if (this.gameComponent.rules.node.ownValue === 0) {
+        const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(state, move);
+        if (gameStatus.isEndGame) {
+            if (gameStatus === GameStatus.DRAW) {
                 this.notifyDraw(encodedMove, scorePlayerZero, scorePlayerOne);
             } else {
                 this.notifyVictory(encodedMove, scorePlayerZero, scorePlayerOne);

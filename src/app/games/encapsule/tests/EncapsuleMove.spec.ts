@@ -1,5 +1,5 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleMinimax } from "../EncapsuleMinimax";
 import { EncapsulePartSlice } from '../EncapsulePartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
@@ -20,9 +20,10 @@ describe('EncapsuleMove', () => {
     describe('encode and decode', () => {
         it('should be reversible', () => {
             const rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
-            const firstTurnMoves: MGPMap<EncapsuleMove, EncapsulePartSlice> = rules.getListMoves(rules.node);
-            for (let i: number = 0; i < firstTurnMoves.size(); i++) {
-                const move: EncapsuleMove = firstTurnMoves.getByIndex(i).key;
+            const minimax: EncapsuleMinimax = new EncapsuleMinimax('EncapsuleMinimax');
+            const firstTurnMoves: EncapsuleMove[] = minimax.getListMoves(rules.node);
+            for (let i: number = 0; i < firstTurnMoves.length; i++) {
+                const move: EncapsuleMove = firstTurnMoves[i];
                 const encodedMove: number = move.encode();
                 const decodedMove: EncapsuleMove = EncapsuleMove.decode(encodedMove);
                 expect(decodedMove).toEqual(move);

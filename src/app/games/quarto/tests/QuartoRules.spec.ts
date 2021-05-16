@@ -1,17 +1,20 @@
 import { QuartoRules } from '../QuartoRules';
+import { QuartoMinimax } from "../QuartoMinimax";
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoPartSlice } from '../QuartoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { MGPMap } from 'src/app/utils/MGPMap';
 
 describe('QuartoRules', () => {
+
     let rules: QuartoRules;
+    let minimax: QuartoMinimax;
 
     beforeEach(() => {
         rules = new QuartoRules(QuartoPartSlice);
+        minimax = new QuartoMinimax('QuartoMinimax');
     });
     it('Should create', () => {
         expect(rules).toBeTruthy();
@@ -36,17 +39,17 @@ describe('QuartoRules', () => {
             [QuartoPiece.AAAA, QuartoPiece.ABAB, QuartoPiece.BABB, QuartoPiece.BAAB],
         ], QuartoPiece.toInt);
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 15, QuartoPiece.BAAB);
-        rules.node = new MGPNode(null, null, slice, 0);
+        rules.node = new MGPNode(null, null, slice);
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
-        const possiblesMoves: MGPMap<QuartoMove, QuartoPartSlice> = rules.getListMoves(rules.node);
-        expect(possiblesMoves.size()).toBe(1);
-        expect(possiblesMoves.getByIndex(0).key).toEqual(move);
+        const possiblesMoves: QuartoMove[] = minimax.getListMoves(rules.node);
+        expect(possiblesMoves.length).toBe(1);
+        expect(possiblesMoves[0]).toEqual(move);
         expect(rules.choose(move)).toBeTrue();
         const resultingSlice: QuartoPartSlice = rules.node.gamePartSlice;
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 16, QuartoPiece.NONE);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(rules.getBoardValue(move, expectedSlice)).toEqual(0, 'This should be a draw.');
-        expect(rules.node.isEndGame()).toBeTrue();
+        expect(minimax.getBoardValue(move, expectedSlice).value).toEqual(0, 'This should be a draw.');
+        expect(rules.getGameStatus(rules.node.gamePartSlice).isEndGame).toBeTrue();
     });
     it('Should forbid to give a piece already on the board', () => {
         const board: number[][] = [
@@ -103,7 +106,7 @@ describe('QuartoRules', () => {
         const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice);
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 5, QuartoPiece.AAAB);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = rules.getBoardValue(move, expectedSlice);
+        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
         expect(boardValue).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0.');
     });
     it('Should considered player 1 winner when doing a full line', () => {
@@ -126,7 +129,7 @@ describe('QuartoRules', () => {
         const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice);
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 10, QuartoPiece.AABA);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = rules.getBoardValue(move, expectedSlice);
+        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
         expect(boardValue).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1.');
     });
 });

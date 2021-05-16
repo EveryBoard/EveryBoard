@@ -132,7 +132,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return (iJoinerId == null) || (iJoinerId.doc == null);
     }
     private onGameCancelled() {
-        // TODO: inform that the game has been cancelled
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
         this.router.navigate(['/server']);
     }

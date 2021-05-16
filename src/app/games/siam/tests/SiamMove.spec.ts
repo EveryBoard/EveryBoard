@@ -1,5 +1,4 @@
-import { SiamRules, SiamNode } from '../SiamRules';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { SiamNode, SiamMinimax } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -23,11 +22,10 @@ describe('SiamMove', () => {
         ];
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const node: SiamNode = new MGPNode(null, move, slice, 0);
-        const rules: SiamRules = new SiamRules(SiamPartSlice);
-        const moves: MGPMap<SiamMove, SiamPartSlice> = rules.getListMoves(node);
-        for (let i = 0; i < moves.size(); i++) {
-            const move: SiamMove = moves.getByIndex(i).key;
+        const node: SiamNode = new MGPNode(null, move, slice);
+        const minimax: SiamMinimax = new SiamMinimax('SiamMinimax');
+        const moves: SiamMove[] = minimax.getListMoves(node);
+        for (const move of moves) {
             const encodedMove: number = move.encode();
             const decodedMove: SiamMove = SiamMove.decode(encodedMove);
             expect(decodedMove).toEqual(move);

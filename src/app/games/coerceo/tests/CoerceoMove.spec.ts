@@ -1,7 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { CoerceoPartSlice } from '../CoerceoPartSlice';
 import { CoerceoRules } from '../CoerceoRules';
+import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
 
@@ -73,9 +73,9 @@ describe('CoerceoMove', () => {
         });
         it('CoerceoMove.encode and CoerceoMove.decode should be reversible', () => {
             const rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
-            const moves: MGPMap<CoerceoMove, CoerceoPartSlice> = rules.getListMoves(rules.node);
-            for (let i: number = 0; i < moves.size(); i++) {
-                const move: CoerceoMove = moves.getByIndex(i).key;
+            const minimax: CoerceoMinimax = new CoerceoMinimax('CoerceoMinimax');
+            const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
+            for (const move of moves) {
                 const encodedMove: number = move.encode();
                 const decodedMove: CoerceoMove = CoerceoMove.decode(encodedMove);
                 expect(decodedMove).toEqual(move);

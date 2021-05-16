@@ -3,7 +3,7 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
-import { SiamRules } from 'src/app/games/siam/SiamRules';
+import { SiamMinimax, SiamRules } from 'src/app/games/siam/SiamRules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -11,6 +11,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
+import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 
 @Component({
@@ -21,6 +22,9 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice, SiamLegalityStatus> {
     public static VERBOSE: boolean = false;
 
+    public availableMinimaxes: Minimax<SiamMove, SiamPartSlice, SiamLegalityStatus>[] = [
+        new SiamMinimax('SiamMinimax'),
+    ];
     public readonly CASE_SIZE: number = 100;
     public rules: SiamRules = new SiamRules(SiamPartSlice);
 

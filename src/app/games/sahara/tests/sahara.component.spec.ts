@@ -1,3 +1,4 @@
+import { fakeAsync } from '@angular/core/testing';
 import { SaharaComponent } from '../sahara.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
@@ -5,7 +6,6 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 
 describe('SaharaComponent', () => {
     let componentTestUtils: ComponentTestUtils<SaharaComponent>;

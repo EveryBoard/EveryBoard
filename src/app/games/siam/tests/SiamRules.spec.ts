@@ -1,7 +1,6 @@
-import { SiamRules } from '../SiamRules';
+import { SiamMinimax, SiamRules } from '../SiamRules';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { SiamLegalityStatus } from '../SiamLegalityStatus';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -9,7 +8,10 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 
 describe('SiamRules:', () => {
+
     let rules: SiamRules;
+
+    let minimax: SiamMinimax;
 
     const _: number = SiamPiece.EMPTY.value;
     const M: number = SiamPiece.MOUNTAIN.value;
@@ -26,15 +28,15 @@ describe('SiamRules:', () => {
 
     beforeEach(() => {
         rules = new SiamRules(SiamPartSlice);
+        minimax = new SiamMinimax('SiamMinimax');
     });
     it('Should be created', () => {
         expect(rules).toBeTruthy();
         expect(rules.node.gamePartSlice.turn).toBe(0, 'Game should start a turn 0');
     });
     it('Should provide 44 first turn childs at turn 0', () => {
-        const firstTurnMoves: MGPMap<SiamMove, SiamPartSlice> = rules.getListMoves(rules.node);
-        expect(firstTurnMoves.size()).toEqual(44);
-        expect(firstTurnMoves.getByIndex(0).value.turn).toEqual(1);
+        const firstTurnMoves: SiamMove[] = minimax.getListMoves(rules.node);
+        expect(firstTurnMoves.length).toEqual(44);
     });
     it('Insertion should work', () => {
         const board: number[][] = [
@@ -369,7 +371,7 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = rules.getBoardValue(move, expectedSlice);
+        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
         expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for player 0');
     });
     it('Player 1 pushing player 0 pushing mountain should be a victory for player 0', () => {
@@ -394,7 +396,7 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = rules.getBoardValue(move, expectedSlice);
+        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
         expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for player 1');
     });
     it('Player 0 pushing player 1 on his side pushing mountain should be a victory for player 0', () => {
@@ -419,7 +421,7 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = rules.getBoardValue(move, expectedSlice);
+        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
         expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for player 0');
     });
 });

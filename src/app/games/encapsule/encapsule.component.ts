@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { Move } from '../../jscaip/Move';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleMinimax } from "src/app/games/encapsule/EncapsuleMinimax";
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
@@ -10,6 +11,7 @@ import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegali
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Minimax } from 'src/app/jscaip/Minimax';
 
 export class EncapsuleComponentFailure {
     public static NOT_DROPPABLE: string =`Veuillez choisir une de vos pièces parmi les pièces restantes.`;
@@ -29,6 +31,10 @@ export class EncapsuleComponentFailure {
 export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
                                                               EncapsulePartSlice,
                                                               EncapsuleLegalityStatus> {
+
+    public availableMinimaxes: Minimax<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus>[] = [
+        new EncapsuleMinimax('EncapsuleMinimax'),
+    ];
     public CASE_SIZE: number = 100;
 
     public rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
