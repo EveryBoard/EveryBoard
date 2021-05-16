@@ -41,7 +41,7 @@
                   id="highlight"
                   [attr.width]="CASE_SIZE"
                   [attr.height]="CASE_SIZE"
-                  class="base highlighted" />
+                  class="base highlighted mid-stroke" />
             <ng-container *ngIf="isRectangle(pieceInHand.value) else circle">
                 <rect x="0" y="0"
                       [attr.x]="CASE_SIZE/2 - getPieceSize(pieceInHand.value)"
