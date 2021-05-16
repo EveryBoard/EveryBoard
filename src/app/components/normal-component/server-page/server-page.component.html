@@ -1,24 +1,26 @@
 <mat-tab-group id="group" style="max-height: 100%; height: 100%;">
     <mat-tab id ="currentGamesTab" label="Parties">
         <div id="actualGames" class="box">
-            <table class="table table-hover">
-                <thead>
-                    <tr>
-                        <th class="th" scope="col">Jeu</th>
-                        <th class="th" scope="col">Premier joueur</th>
-                        <th class="th" scope="col">Deuxième joueur</th>
-                        <th class="th" scope="col">Tour</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr *ngFor="let part of activesParts" (click)="joinGame(part.id, part.doc.typeGame)">
-                        <td class="td">{{ part.doc.typeGame }}</td>
-                        <td class="td">{{ part.doc.playerZero }}</td>
-                        <td class="td">{{ part.doc.playerOne || "En attente d'adversaire" }}</td>
-                        <td class="td">{{ part.doc.turn }}</td>
-                    </tr>
-                </tbody>
-            </table>
+            <div class="table-container">
+                <table class="table is-hoverable is-striped">
+                    <thead>
+                        <tr>
+                            <th class="th" scope="col">Jeu</th>
+                            <th class="th" scope="col">Premier joueur</th>
+                            <th class="th" scope="col">Deuxième joueur</th>
+                            <th class="th" scope="col">Tour</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let part of activesParts" (click)="joinGame(part.id, part.doc.typeGame)">
+                            <td class="td">{{ part.doc.typeGame }}</td>
+                            <td class="td">{{ part.doc.playerZero }}</td>
+                            <td class="td">{{ part.doc.playerOne || "En attente d'adversaire" }}</td>
+                            <td class="td">{{ part.doc.turn }}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
         </div>
     </mat-tab>
     <mat-tab id="createGameTab" label="Créer">
