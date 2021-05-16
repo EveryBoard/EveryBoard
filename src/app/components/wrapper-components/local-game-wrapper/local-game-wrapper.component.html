@@ -35,18 +35,20 @@
                 </div>
                 <div class="column is-6">
                     <div class="select">
-                        <select>
+                        <select id="playerOneSelect"
+                                (change)="updatePlayer(1)"
+                                [(ngModel)]="players[1]">
                             <option selected
-                                    (click)="changePlayer(1, 'humain')"
                                     value="humain"> Humain </option>
                             <ng-container *ngFor="let minimax of compo.availableMinimaxes">
-                                <option [value]="minimax.name"
-                                        (click)="changePlayer(1, minimax.name)">{{ minimax.name }}</option>
+                                <option [value]="minimax.name">{{ minimax.name }}</option>
                             </ng-container>
                         </select>
                     </div>
                     <div class="select">
-                        <select *ngIf="players[1] !== 'humain'">
+                        <select *ngIf="players[1] !== 'humain'"
+                                [(ngModel)]="aiDepths[1]"
+                                (change)="updatePlayer(0)">
                             <option selected value="0">Choisissez le niveau</option>
                             <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
                                     [value]="i">Niveau {{ i }}</option>
