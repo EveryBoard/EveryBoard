@@ -73,11 +73,13 @@ describe('LocalGameWrapperComponent', () => {
 
         componentTestUtils.getComponent().showScore = true;
         componentTestUtils.getComponent()['scores'] = [0, 0];
-        componentTestUtils.fixture.detectChanges();
+        componentTestUtils.detectChanges();
 
-        console.log(componentTestUtils.findElement('#playerSelector'));
         componentTestUtils.expectElementToExist('#scoreZero');
         componentTestUtils.expectElementToExist('#scoreOne');
+    }));
+    it('should allow to restart game during the play', fakeAsync(async() => {
+        expect(componentTestUtils.findElement('#restartButton'));
     }));
     it('should allow to restart game at the end', fakeAsync(async() => {
         const board: number[][] = [
@@ -90,9 +92,6 @@ describe('LocalGameWrapperComponent', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 41);
         componentTestUtils.setupSlice(slice);
-
-        expect(componentTestUtils.findElement('#restartButton'))
-            .toBeFalsy('Restart button should be absent during the game');
 
         await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
 

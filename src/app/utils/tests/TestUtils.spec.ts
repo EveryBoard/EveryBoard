@@ -66,7 +66,13 @@ export class SimpleComponentTestUtils<T> {
     private component: T;
     public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
         await TestBed.configureTestingModule({
-            imports: [MatSnackBarModule, RouterTestingModule, ReactiveFormsModule],
+            imports: [
+                MatSnackBarModule,
+                RouterTestingModule.withRoutes([
+                    { path: 'login', component: BlankComponent },
+                ]),
+                ReactiveFormsModule,
+            ],
             declarations: [componentType],
             schemas: [
                 CUSTOM_ELEMENTS_SCHEMA,

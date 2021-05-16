@@ -125,20 +125,6 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public isMountain(pieceValue: number): boolean {
         return pieceValue === SiamPiece.MOUNTAIN.value;
     }
-    public getPieceClasses(x: number, y: number, c: number): string[] {
-        const classes: string[] = [];
-        const coord: Coord = new Coord(x, y);
-
-        let last: Coord = this.lastMove ? this.lastMove.coord : null;
-        const direction: Orthogonal = this.lastMove ? this.lastMove.moveDirection.getOrNull() : null;
-        last = last && direction ? last.getNext(direction) : last;
-        if (coord.equals(last)) {
-            classes.push('highlighted');
-        }
-
-        classes.push(this.getPlayerClass(SiamPiece.getOwner(c)));
-        return classes;
-    }
     public choosingOrientation(x: number, y: number): boolean {
         const coord: Coord = new Coord(x, y);
         if (this.chosenCoord &&
@@ -178,5 +164,20 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         return GameComponentUtils.getArrowTransform(this.CASE_SIZE,
                                                     new Coord(x, y),
                                                     Orthogonal.factory.fromString(orientation));
+    }
+    public getPieceClasses(c: number): string[] {
+        return [this.getPlayerClass(SiamPiece.getOwner(c))];
+    }
+    public getCaseClasses(x: number, y: number): string[] {
+        const coord: Coord = new Coord(x, y);
+
+        let last: Coord = this.lastMove ? this.lastMove.coord : null;
+        const direction: Orthogonal = this.lastMove ? this.lastMove.moveDirection.getOrNull() : null;
+        last = last && direction ? last.getNext(direction) : last;
+        if (coord.equals(last)) {
+            return ['moved'];
+        }
+
+        return [];
     }
 }

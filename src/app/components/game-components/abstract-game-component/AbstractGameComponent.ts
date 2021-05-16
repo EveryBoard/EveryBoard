@@ -58,9 +58,9 @@ export abstract class AbstractGameComponent<M extends Move,
 
     constructor(public snackBar: MatSnackBar) {
     }
-    public message: (msg: string) => void = (msg: string) => {
+    public message(msg: string): void {
         this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
-    };
+    }
     public cancelMove(reason?: string): MGPValidation {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
@@ -89,8 +89,5 @@ export abstract class AbstractGameComponent<M extends Move,
     }
     public getTurn(): number {
         return this.rules.node.gamePartSlice.turn;
-    }
-    public async pass(): Promise<MGPValidation> {
-        throw new Error('AbstractGameComponent.pass should be overriden before being used.');
     }
 }

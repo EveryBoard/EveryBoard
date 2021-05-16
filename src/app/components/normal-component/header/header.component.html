@@ -1,46 +1,54 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <div class="container-fluid">
-        <a class="navbar-brand" [routerLink]="['/']">Pantheon's Game</a>
-        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div class="collapse navbar-collapse" id="navbarSupportedContent">
-            <ul class="navbar-nav me-auto mb-8 mb-lg-0">
-                <li class="nav-item">
-                    <a class="nav-link active" aria-current="page" [routerLink]="['/']">Accueil</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Jouer en ligne</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" [routerLink]="['/server']">Parties en cours</a></li>
-                        <li><a class="dropdown-item" [routerLink]="['/play']">Créer une partie</a></li>
-                    </ul>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Jouer hors ligne</a>
-                    <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <li><a class="dropdown-item" [routerLink]="['/local']">Jouer</a></li>
-                        <li><a class="dropdown-item" [routerLink]="['/didacticial']">Apprendre les règles</a></li>
-                    </ul>
-                </li>
-            </ul>
-            <ul class="navbar-nav">
-                <ng-container *ngIf="userName else connect">
-                    <li class="nav-item dropdown">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-                            {{userName}}
-                        </a>
-                        <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                            <li><a class="dropdown-item" (click)="logout()">Se déconnecter</a></li>
-                        </ul>
-                    </li>
-                </ng-container>
-                <ng-template #connect>
-                    <li>
-                        <a class="nav-link" [routerLink]="['/login']">Se connecter</a>
-                    </li>
-                </ng-template>
-            </ul>
+<nav class="navbar" role="navigation" aria-label="main navigation">
+    <div class="navbar-brand">
+        <a class="navbar-item" [routerLink]="['/']">
+            <img src="assets/images/logo.png" width="28" height="28">
+        </a>
+        <a role="button" class="navbar-burger" aria-label="menu" aria-expanded="false" data-target="navbarBasicExample">
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+            <span aria-hidden="true"></span>
+        </a>
+    </div>
+
+    <div class="navbar-menu">
+        <div class="navbar-start">
+            <a class="navbar-item" [routerLink]="['/']">Accueil</a>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Jouer en ligne</a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" [routerLink]="['/play']">Créer une partie</a>
+                    <a class="navbar-item" [routerLink]="['/server']">Rejoindre une partie</a>
+                </div>
+            </div>
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link">Jouer hors ligne</a>
+                <div class="navbar-dropdown">
+                    <a class="navbar-item" [routerLink]="['/local']">Créer une partie</a>
+                    <a class="navbar-item" [routerLink]="['/didacticial']">Apprendre des règles</a>
+                </div>
+            </div>
         </div>
+    <div class="navbar-end">
+        <div class="navbar-item">
+            <ng-container *ngIf="userName else connect">
+                <div class="navbar-item has-dropdown is-hoverable">
+                    <a class="navbar-link">{{userName}}</a>
+                    <div class="navbar-dropdown">
+                        <a class="navbar-item" id="logout" (click)="logout()">Se déconnecter</a>
+                    </div>
+                </div>
+            </ng-container>
+            <ng-template #connect>
+                <div class="buttons">
+                    <a class="button is-primary" [routerLink]="['/inscription']">
+                        <strong>S'inscrire</strong>
+                    </a>
+                    <a class="button is-light" [routerLink]="['/login']">
+                        Se connecter
+                    </a>
+                </div>
+            </ng-template>
+        </div>
+    </div>
     </div>
 </nav>

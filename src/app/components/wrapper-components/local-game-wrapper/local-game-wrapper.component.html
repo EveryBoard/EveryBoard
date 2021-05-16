@@ -1,14 +1,15 @@
-<div class="d-flex align-items-center">
-    <div id="game" class="container">
-        <div class="row">
-            <div id="board" class="col-sm-8 circled">
-                <app-game-includer></app-game-includer>
+<div class="columns">
+    <div class="column is-3">
+        <div class="box has-text-centered" *ngIf="compo" id="info">
+            <div class="block" id="turnIndicator">
+                <p class="subtitle">Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }}</p>
             </div>
             <div *ngIf="compo" id="info" class="circled col-sm-4">
                 <div class="inforow" id="turnIndicator" style="text-align:center">
                     <h4>Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }}</h4>
                 </div>
-                <div class="container row" id="playerSelector">
+                <div id="playerSelector"
+                     class="container row">
                     <div class="col-sm-6">
                         <select id="playerZeroSelect"
                                 (change)="updatePlayer(0)"
@@ -33,23 +34,20 @@
                            class="text-left"> {{ compo.scores[0] }} points </p>
                     </div>
                     <div class="col-sm-6">
-                        <mat-select>
-                            <mat-option selected
-                                        (click)="changePlayer(1, 'humain')"
-                                        value="humain"> Humain </mat-option>
+                        <select>
+                            <option selected
+                                    (click)="changePlayer(1, 'humain')"
+                                    value="humain"> Humain </option>
                             <ng-container *ngFor="let minimax of compo.availableMinimaxes">
-                                <mat-option [value]="minimax.name"
-                                            (click)="changePlayer(1, minimax.name)">{{ minimax.name }}</mat-option>
+                                <option [value]="minimax.name"
+                                        (click)="changePlayer(1, minimax.name)">{{ minimax.name }}</option>
                             </ng-container>
-                        </mat-select>
-                        <mat-select *ngIf="players[1] !== 'humain'">
-                            <mat-option selected value="0">Choisissez le niveau</mat-option>
-                            <mat-option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
-                                        [value]="i">Niveau {{ i }}</mat-option>
-                        </mat-select>
-                        <p id="scoreOne"
-                           *ngIf="compo.scores"
-                           class="text-right"> {{ compo.scores[1] }} points </p>
+                        </select>
+                        <select *ngIf="players[1] !== 'humain'">
+                            <option selected value="0">Choisissez le niveau</option>
+                            <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
+                                    [value]="i">Niveau {{ i }}</option>
+                        </select>
                     </div>
                 </div>
                 <div class="inforow" id="gameResult" *ngIf="endGame">
@@ -88,6 +86,48 @@
                 </div>
                 <!-- {{ compo.rules.node.ownValue + ' > ' + compo.rules.node.getHopedValue() }} -->
             </div>
+            <div style="visibility: hidden;">
+                <mat-select></mat-select> <!-- TODO: removing this makes some async tests fail, wtf? (when removing, add the "block" class to the select div above) -->
+            </div>
+            <p id="scoreZero"
+               *ngIf="compo.showScore"
+               class="block"> {{ compo.scores[0] }} points </p>
+            <hr/>
+            <p class="is-size-3">vs.</p>
+            <hr/>
+            <p id="scoreOne"
+               *ngIf="compo.scores"
+               class="block"> {{ compo.scores[1] }} points </p>
+            <div class="block" id="gameResult" *ngIf="endGame">
+                <p class="subtitle" *ngIf="winner">{{ winner }} a gagné</p>
+                <p class="subtitle" id="draw" *ngIf="winner == null">Match nul</p>
+            </div>
+            <!-- {{ compo.rules.node.ownValue + ' > ' + compo.rules.node.getHopedValue() }} -->
+        </div>
+        <div class="box" *ngIf="compo">
+            <button id="passButton"
+                    *ngIf="endGame === false && compo.canPass"
+                    class="button is-primary is-fullwidth mb-1"
+                    (click)="compo.pass()">
+                Passer son tour
+            </button>
+            <button id="takeBack"
+                    *ngIf="compo.rules.node.gamePartSlice.turn > 0 && endGame === false"
+                    class="button is-fullwidth mb-1"
+                    (click)="takeBack()">
+                Reprendre un coup
+            </button>
+            <button id="restartButton"
+                    class="button is-fullwidth"
+                    (click)="restartGame()">
+                Recommencer une partie
+            </button>
+        </div>
+
+    </div>
+    <div class="column is-9">
+        <div class="box" id="board">
+            <app-game-includer></app-game-includer>
         </div>
     </div>
 </div>

@@ -1,6 +1,7 @@
 import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
 import { MGPSet } from './MGPSet';
+import { assert } from './utils';
 
 export class MGPMap<K extends Comparable, V extends Comparable> {
     private map: {key: K, value: V}[] = [];
@@ -116,9 +117,7 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
             const key: K = keySet.get(i);
             const left: V = this.get(key).get();
             const right: MGPOptional<V> = other.get(key);
-            if (right.isAbsent()) {
-                return false;
-            }
+            assert(right.isPresent(), 'should not happen: element present in the key set is not in the map');
             if (comparableEquals(left, right.get()) === false) {
                 return false;
             }

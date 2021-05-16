@@ -1,36 +1,30 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
-
-import { HeaderComponent } from './header.component';
-import { RouterTestingModule } from '@angular/router/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
-import { of } from 'rxjs';
+import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { HeaderComponent } from './header.component';
 
-const authenticationServiceStub = {
-    getJoueurObs: () => of({ pseudo: 'Pseudo', verified: true }),
-    getAuthenticatedUser: () => {
-        return { pseudo: 'Pseudo', verified: true };
-    },
-};
 describe('HeaderComponent', () => {
-    let component: HeaderComponent;
+    let testUtils: SimpleComponentTestUtils<HeaderComponent>;
 
-    let fixture: ComponentFixture<HeaderComponent>;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [RouterTestingModule],
-            declarations: [HeaderComponent],
-            providers: [
-                { provide: AuthenticationService, useValue: authenticationServiceStub },
-            ],
-        }).compileComponents();
-    });
-    beforeEach(() => {
-        fixture = TestBed.createComponent(HeaderComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
-    });
-    it('should create', () => {
-        expect(component).toBeTruthy();
-    });
+    it('should create', fakeAsync(async() => {
+        testUtils = await SimpleComponentTestUtils.create(HeaderComponent);
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        testUtils.detectChanges();
+        expect(testUtils.getComponent()).toBeTruthy();
+    }));
+    it('should disconnect when connected user clicks  on the logout button', fakeAsync(async() => {
+        testUtils = await SimpleComponentTestUtils.create(HeaderComponent);
+        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        testUtils.detectChanges();
+        spyOn(testUtils.getComponent().authenticationService, 'disconnect');
+        await testUtils.clickElement('#logout');
+        expect(testUtils.getComponent().authenticationService.disconnect).toHaveBeenCalledTimes(1);
+    }));
+    it('should have empty username when user is not authenticated', fakeAsync(async() => {
+        testUtils = await SimpleComponentTestUtils.create(HeaderComponent);
+        AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
+        testUtils.detectChanges();
+        expect(testUtils.getComponent().userName).toBeNull();
+    }));
 });

@@ -54,7 +54,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
         const classes: string[] = [];
         classes.push(this.getCaseFillClass(this.board[y][x]));
         if (this.victoryCoords.some((c: Coord): boolean => c.equals(coord))) {
-            classes.push('victory');
+            classes.push('victory-stroke');
         } else if (this.last && this.last.equals(coord)) {
             classes.push('lastmove');
         }
