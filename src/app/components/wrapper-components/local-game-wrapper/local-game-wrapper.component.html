@@ -1,12 +1,12 @@
-<div class="columns">
-    <div class="column is-3">
-        <div class="box has-text-centered" *ngIf="compo" id="info">
+<div class="tile is-ancestor">
+    <div class="tile is-3 is-vertical is-parent">
+        <div class="tile is-child box has-text-centered" *ngIf="compo" id="info">
             <div class="block" id="turnIndicator">
                 <p class="subtitle">Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }}</p>
             </div>
             <div id="playerSelector"
                  class="columns">
-                <div class="column is-6">
+                <div class="column is-6 is-vcentered">
                     <div class="select">
                         <select id="playerZeroSelect"
                                 (change)="updatePlayer(0)"
@@ -67,7 +67,7 @@
                 <mat-select></mat-select> <!-- TODO: removing this makes some async tests fail, wtf? (when removing, add the "block" class to the select div above) -->
             </div>
         </div>
-        <div class="box" *ngIf="compo">
+        <div class="tile is-child box is-vcentered" *ngIf="compo">
             <button id="passButton"
                     *ngIf="endGame === false && compo.canPass"
                     class="button is-primary is-fullwidth mb-1"
@@ -88,8 +88,9 @@
         </div>
 
     </div>
-    <div class="column is-9">
-        <div class="box" id="board">
+    <div class="tile is-parent is-9 is-vcentered">
+        <div id="board"
+             class="tile is-child box">
             <app-game-includer></app-game-includer>
         </div>
     </div>
