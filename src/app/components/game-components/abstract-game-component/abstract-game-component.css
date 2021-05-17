@@ -70,10 +70,10 @@
     stroke: orange;
 }
 .victory {
-    fill: green;
+    fill: #e6e600;
 }
 .victory-stroke {
-    stroke: green;
+    stroke: #e6e600;
 }
 .selected {
     stroke: blue;
