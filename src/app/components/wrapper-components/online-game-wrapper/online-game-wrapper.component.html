@@ -6,10 +6,10 @@
 </app-part-creation>
 
 <div id="game"
-     class="columns"
+     class="tile is-ancestor"
      *ngIf="gameStarted">
-    <div class="column is-3">
-        <div class="box has-text-centered">
+    <div class="tile is-3 is-parent">
+        <div class="tile is-child box has-text-centered">
             <div class="block" id="turnIndicator" *ngIf="currentPart">
                 <p class="subtitle">Tour n° {{ currentPart.turn + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
@@ -121,8 +121,9 @@
             </button>
         </div>
     </div>
-    <div class="column is-9">
-        <div id="board" class="box">
+    <div class="tile is-9 is-parent">
+        <div id="board"
+             class="tile is-child box">
             <app-game-includer></app-game-includer>
         </div>
     </div>

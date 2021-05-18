@@ -3,7 +3,7 @@ import { GoPartSlice, GoPiece } from '../GoPartSlice';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 
-describe('GoBoardDatas', () => {
+xdescribe('GoBoardDatas', () => {
     const _: GoPiece = GoPiece.EMPTY;
 
     const X: GoPiece = GoPiece.WHITE;

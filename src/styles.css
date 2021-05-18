@@ -29,3 +29,11 @@ body { margin: 0; font-family: "Roboto", "Helvetica Neue", sans-serif; }
        url('./assets/fonts/roboto-v27-latin-regular.ttf') format('truetype'), /* Safari, Android, iOS */
        url('./assets/fonts/roboto-v27-latin-regular.svg#Roboto') format('svg'); /* Legacy iOS */
 }
+
+
+.tile.is-vcentered {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: center; /* used this for multiple child */
+  align-items: center; /* if an only child */
+}

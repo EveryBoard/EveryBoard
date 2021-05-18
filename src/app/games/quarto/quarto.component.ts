@@ -112,9 +112,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
-        if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) {
-            return ['victory'];
-        }
         if (this.lastMove.equals(coord)) {
             return ['moved'];
         }

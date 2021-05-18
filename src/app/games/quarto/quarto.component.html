@@ -63,9 +63,18 @@
                     [attr.cy]="CASE_SIZE/2"
                     [attr.r]="10" />
         </g>
+        <g *ngFor="let coord of victoriousCoords">
+            <rect id="victory"
+                  x="0" y="0"
+                  [attr.width]="CASE_SIZE"
+                  [attr.height]="CASE_SIZE"
+                  [attr.transform]="'translate(' + (coord.x*CASE_SIZE) + ' ' + (coord.y*CASE_SIZE) + ')'"
+                  class="base no-fill victory-stroke" />
+        </g>
         <g *ngIf="pieceInHand !== null" [attr.transform]="'translate(0 ' + (CASE_SIZE*5) + ')'">
             <text class="text-small">Pièce en main :</text>
-            <g transform="translate(120 0)">
+            <g transform="translate(120 0)"
+               *ngIf="chosen.x === -1">
                 <ng-container *ngIf="isRectangle(pieceInHand.value) else circle">
                     <rect x="0" y="0"
                           [attr.x]="CASE_SIZE/2 - getPieceSize(pieceInHand.value)"
