@@ -1,5 +1,5 @@
 import { NumberTable } from 'src/app/utils/ArrayUtils';
-import { expectFirstStateToBeBetterThanSecond } from 'src/app/utils/tests/TestUtils.spec';
+import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
 import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 
@@ -42,6 +42,6 @@ describe('Coerceo - Minimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
         ];
         const strongState: CoerceoPartSlice = new CoerceoPartSlice(strongBoard, 0, [0, 0], [0, 0]);
-        expectFirstStateToBeBetterThanSecond(weakState, null, strongState, null, minimax);
+        expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
 });

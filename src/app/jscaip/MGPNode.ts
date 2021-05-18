@@ -130,7 +130,7 @@ export class MGPNode<R extends Rules<M, S, L, U>,
     {
         const LOCAL_VERBOSE: boolean = false;
         if (depth < 1 || MGPNode.ruler.getGameStatus(this.gamePartSlice, this.move).isEndGame) {
-            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf : ' + this.myToString(minimax));
+            display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf : ' + this.myToString(minimax) + ' at depth ' + depth);
             return this; // rules - leaf or calculation - leaf
         }
         this.possiblesMoves = this.possiblesMoves = minimax.getListMoves(this, minimax) as M[];
@@ -143,7 +143,8 @@ export class MGPNode<R extends Rules<M, S, L, U>,
                 const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
                 const bestChildDescendant: MGPNode<R, M, S, L, U> = child.alphaBeta(depth - 1, alpha, beta, minimax);
                 const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
-                if (bestChildValue >= maximumExpected) {
+                if (bestChildValue > maximumExpected) {
+                    console.log('found better son for MAX', move.toString(), bestChildValue);
                     maximumExpected = bestChildDescendant.getHopedValue(minimax);
                     alpha = Math.max(maximumExpected, alpha);
                     bestChild = bestChildDescendant;
@@ -161,7 +162,9 @@ export class MGPNode<R extends Rules<M, S, L, U>,
             for (const move of this.possiblesMoves) {
                 const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
                 const bestChildDescendant: MGPNode<R, M, S, L, U> = child.alphaBeta(depth - 1, alpha, beta, minimax);
-                if (bestChildDescendant.getHopedValue(minimax) <= minimumExpected) {
+                const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
+                if (bestChildValue < minimumExpected) {
+                    console.log('found better son for mini', move.toString(), bestChildValue)
                     minimumExpected = bestChildDescendant.getHopedValue(minimax);
                     beta = Math.min(minimumExpected, beta);
                     bestChild = bestChildDescendant;
@@ -212,10 +215,9 @@ export class MGPNode<R extends Rules<M, S, L, U>,
     }
     public getHopedValue(minimax: Minimax<M, S, L, U>): number {
         if (minimax == null) {
-            console.log('getHopedValue sans minimax est null')
-            return null;
+            return null; // TODO: remove, should never want to know that without minimax
         }
-        return this.hopedValue.get(minimax.name).getOrNull();
+        return this.hopedValue.get(minimax.name).get();
     }
     public getOwnValue(minimax: Minimax<M, S, L, U>): U {
         if (minimax == null) {
@@ -237,7 +239,7 @@ export class MGPNode<R extends Rules<M, S, L, U>,
             return 'Node: ' + turn;
         }
         do {
-            const move: string = node.move ? ' >' + node.move.toString().split('e')[2] + '> ' : ' ';
+            const move: string = node.move ? ' >' + node.move.toString() + '> ' : ' ';
             const turn: number = node.gamePartSlice.turn;
             genealogy = move + turn + ' ' + genealogy;
             node = node.mother;
@@ -262,3 +264,4 @@ export class MGPNode<R extends Rules<M, S, L, U>,
         return nbDescendants;
     }
 }
+// TODO: test minimax where all choice at depth 1 are the same value

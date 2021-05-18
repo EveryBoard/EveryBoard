@@ -1,40 +1,17 @@
+import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoPiece } from './GoPartSlice';
-import { Orthogonal } from 'src/app/jscaip/Direction';
-import { display } from 'src/app/utils/utils';
-import { Table } from 'src/app/utils/ArrayUtils';
 
-export class GroupDatas {
-    public static VERBOSE: boolean = false;
+export class GoGroupDatas extends GroupDatas<GoPiece> {
 
-    constructor(public color: GoPiece,
+    constructor(color: GoPiece,
                 public emptyCoords: Coord[],
                 public blackCoords: Coord[],
                 public whiteCoords: Coord[],
                 public deadBlackCoords: Coord[],
-                public deadWhiteCoords: Coord[]) {
-    }
-    public static getGroupDatas(coord: Coord, board: Table<GoPiece>): GroupDatas {
-        display(GroupDatas.VERBOSE, 'GroupDatas.getGroupDatas('+coord+', '+board+')');
-        const color: GoPiece = board[coord.y][coord.x];
-        const groupDatas: GroupDatas = new GroupDatas(color, [], [], [], [], []);
-        return GroupDatas._getGroupDatas(coord, board, groupDatas);
-    }
-    private static _getGroupDatas(coord: Coord, board: Table<GoPiece>, groupDatas: GroupDatas): GroupDatas {
-        display(GroupDatas.VERBOSE, { GroupDatas_getGroupDatas: { groupDatas, coord } });
-        const color: GoPiece = board[coord.y][coord.x];
-        groupDatas.addPawn(coord, color);
-        if (color === groupDatas.color) {
-            for (const direction of Orthogonal.ORTHOGONALS) {
-                const nextCoord: Coord = coord.getNext(direction);
-                if (nextCoord.isInRange(board[0].length, board.length)) {
-                    if (!groupDatas.countains(nextCoord)) {
-                        groupDatas = GroupDatas._getGroupDatas(nextCoord, board, groupDatas);
-                    }
-                }
-            }
-        }
-        return groupDatas;
+                public deadWhiteCoords: Coord[])
+    {
+        super(color);
     }
     public getCoords(): Coord[] {
         if (this.color === GoPiece.BLACK) {
@@ -57,10 +34,6 @@ export class GroupDatas {
                         .concat(this.deadWhiteCoords))));
         return allCoords.some((c: Coord) => c.equals(coord));
     }
-    public selfCountains(coord: Coord): boolean {
-        const ownCoords: Coord[] = this.getCoords();
-        return ownCoords.some((c: Coord) => c.equals(coord));
-    }
     public addPawn(coord: Coord, color: GoPiece): void {
         if (this.countains(coord)) {
             throw new Error('Ce groupe contient déjà ' + coord);
@@ -74,23 +47,11 @@ export class GroupDatas {
         } else if (color === GoPiece.DEAD_WHITE) {
             this.deadWhiteCoords = GroupDatas.insertAsEntryPoint(this.deadWhiteCoords, coord);
         } else if (color === GoPiece.EMPTY ||
-                   color === GoPiece.BLACK_TERRITORY ||
-                   color === GoPiece.WHITE_TERRITORY) {
+            color === GoPiece.BLACK_TERRITORY ||
+            color === GoPiece.WHITE_TERRITORY) {
             this.emptyCoords = GroupDatas.insertAsEntryPoint(this.emptyCoords, coord);
         } else {
             throw new Error('Cette couleur de pion de Go n\'existe pas: ' + color.value);
-        }
-    }
-    public static insertAsEntryPoint(list: Coord[], coord: Coord): Coord[] {
-        if (list.length === 0) {
-            return [coord];
-        } else {
-            const first: Coord = list[0];
-            if (coord.compareTo(first) < 0) {
-                return [coord].concat(list);
-            } else {
-                return list.concat([coord]);
-            }
         }
     }
     public isMonoWrapped(): boolean {

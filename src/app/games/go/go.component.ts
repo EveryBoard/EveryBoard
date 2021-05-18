@@ -2,16 +2,16 @@ import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { GoMove } from 'src/app/games/go/GoMove';
 import { GoRules } from 'src/app/games/go/GoRules';
-import { GoMinimax } from "src/app/games/go/GoMinimax";
+import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
-import { GroupDatas } from 'src/app/games/go/GroupDatas';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 
 @Component({
     selector: 'app-go',
@@ -28,7 +28,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public rules: GoRules = new GoRules(GoPartSlice);
 
-    public boardInfo: GroupDatas;
+    public boardInfo: GroupDatas<GoPiece>;
 
     public ko: Coord;
 

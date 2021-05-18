@@ -342,7 +342,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
 }
 
-export function expectFirstStateToBeBetterThanSecond(weakerState: GamePartSlice,
+export function expectSecondStateToBeBetterThanFirst(weakerState: GamePartSlice,
                                                      weakMove: Move,
                                                      strongerState: GamePartSlice,
                                                      strongMove: Move,

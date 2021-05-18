@@ -13,9 +13,8 @@
                                 [(ngModel)]="players[0]">
                             <option selected
                                     value="humain"> Humain </option>
-                            <ng-container *ngFor="let minimax of compo.availableMinimaxes">
-                                <option [value]="minimax.name">{{ minimax.name }}</option>
-                            </ng-container>
+                            <option *ngFor="let minimax of compo.availableMinimaxes"
+                                    [value]="minimax.name">{{ minimax.name }}</option>
                         </select>
                     </div>
                     <div class="select">
@@ -40,9 +39,8 @@
                                 [(ngModel)]="players[1]">
                             <option selected
                                     value="humain"> Humain </option>
-                            <ng-container *ngFor="let minimax of compo.availableMinimaxes">
-                                <option [value]="minimax.name">{{ minimax.name }}</option>
-                            </ng-container>
+                            <option *ngFor="let minimax of compo.availableMinimaxes"
+                                    [value]="minimax.name">{{ minimax.name }}</option>
                         </select>
                     </div>
                     <div class="select">
@@ -68,6 +66,11 @@
             </div>
         </div>
         <div class="box" *ngIf="compo">
+            <ng-container *ngIf="compo.rules.node.move">
+                <ng-container *ngFor="let minimax of compo.availableMinimaxes">
+                    {{ minimax.getBoardValue(compo.rules.node.move, compo.rules.node.gamePartSlice) }} <br/>
+                </ng-container>
+            </ng-container>
             <button id="passButton"
                     *ngIf="endGame === false && compo.canPass"
                     class="button is-primary is-fullwidth mb-1"

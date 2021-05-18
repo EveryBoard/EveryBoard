@@ -5,10 +5,10 @@ import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
 import { EpaminondasRules } from '../EpaminondasRules';
-import { EpaminondasMinimax } from "../EpaminondasMinimax";
-import { expectFirstStateToBeBetterThanSecond } from 'src/app/utils/tests/TestUtils.spec';
+import { EpaminondasMinimax } from '../EpaminondasMinimax';
+import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
 
-describe('EpaminondasRules - Minimax:', () => {
+describe('EpaminondasMinimax:', () => {
 
     let rules: EpaminondasRules;
     let minimax: EpaminondasMinimax;
@@ -73,6 +73,6 @@ describe('EpaminondasRules - Minimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, O, O, _, _, _, _, _, _, _, _, _, _, _],
         ], 0);
-        expectFirstStateToBeBetterThanSecond(weakerState, null, strongerState, null, minimax);
+        expectSecondStateToBeBetterThanFirst(weakerState, null, strongerState, null, minimax);
     });
 });

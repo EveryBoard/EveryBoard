@@ -1,15 +1,14 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasLegalityStatus } from './epaminondaslegalitystatus';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasPartSlice } from './EpaminondasPartSlice';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 
-
-export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
+export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPartSlice> {
 
     public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const PLAYER: number = node.gamePartSlice.getCurrentPlayer().value;
@@ -27,14 +26,16 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPart
                         let movedPieces: number = 1;
                         let nextCoord: Coord = firstCoord.getNext(direction, 1);
                         while (nextCoord.isInRange(14, 12) &&
-                            slice.getBoardAt(nextCoord) === PLAYER) {
+                            slice.getBoardAt(nextCoord) === PLAYER)
+                        {
                             movedPieces += 1;
                             nextCoord = nextCoord.getNext(direction, 1);
                         }
                         let stepSize: number = 1;
                         while (nextCoord.isInRange(14, 12) &&
                             stepSize <= movedPieces &&
-                            slice.getBoardAt(nextCoord) === EMPTY) {
+                            slice.getBoardAt(nextCoord) === EMPTY)
+                        {
                             move = new EpaminondasMove(x, y, movedPieces, stepSize, direction);
                             moves = this.addMove(moves, move, slice);
 
@@ -43,7 +44,8 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPart
                         }
                         if (nextCoord.isInRange(14, 12) &&
                             stepSize <= movedPieces &&
-                            slice.getBoardAt(nextCoord) === ENNEMY) {
+                            slice.getBoardAt(nextCoord) === ENNEMY)
+                        {
                             move = new EpaminondasMove(x, y, movedPieces, stepSize, direction);
                             moves = this.addMove(moves, move, slice);
                         }
@@ -51,7 +53,7 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPart
                 }
             }
         }
-        return moves;
+        return this.orderMovesByPhalanxSize(moves);
     }
     public addMove(moves: EpaminondasMove[],
                    move: EpaminondasMove,
@@ -64,18 +66,37 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPart
         }
         return moves;
     }
+    public orderMovesByPhalanxSize(moves: EpaminondasMove[]): EpaminondasMove[] {
+        moves.sort((a: EpaminondasMove, b: EpaminondasMove) => {
+            return b.movedPieces - a.movedPieces;
+        });
+        return moves;
+    }
     public getBoardValue(move: EpaminondasMove, slice: EpaminondasPartSlice): NodeUnheritance {
-        const zerosInFirstLine: number = slice.count(Player.ZERO, 0);
-        const onesInLastLine: number = slice.count(Player.ONE, 11);
+        const p0InLine0: number = slice.count(Player.ZERO, 0);
+        const p1InLine11: number = slice.count(Player.ONE, 11);
         if (slice.turn % 2 === 0) {
-            if (zerosInFirstLine > onesInLastLine) {
-                return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
+            if (p0InLine0 > p1InLine11) {
+                return new NodeUnheritance(Player.ZERO.getVictoryValue());
             }
         } else {
-            if (onesInLastLine > zerosInFirstLine) {
-                return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
+            if (p1InLine11 > p0InLine0) {
+                return new NodeUnheritance(Player.ONE.getVictoryValue());
             }
         }
-        return new NodeUnheritance(slice.getPieceCountPlusRowDomination());
+        let lineInvasionsValues: number = 0;
+        let totalPieceZero: number = 0;
+        let totalPieceOne: number = 0;
+        for (let i: number = 0; i < 12; i++) {
+            const zeroPoints: number = slice.count(Player.ZERO, i);
+            const onePoints: number = slice.count(Player.ONE, i);
+            totalPieceZero += zeroPoints;
+            totalPieceOne += onePoints;
+            lineInvasionsValues -= zeroPoints * Math.pow(2, 12 - i);
+            lineInvasionsValues += onePoints * Math.pow(2, i + 1);
+        }
+        let values: number = lineInvasionsValues + totalPieceOne - totalPieceZero;
+        // const nbGroups: number =
+        return new NodeUnheritance(values);
     }
 }
