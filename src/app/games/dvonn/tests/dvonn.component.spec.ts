@@ -7,7 +7,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { JSONValue } from 'src/app/utils/utils';
 import { fakeAsync } from '@angular/core/testing';
-import { DvonnFailure } from "src/app/games/dvonn/DvonnFailure";
+import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('DvonnComponent', () => {
