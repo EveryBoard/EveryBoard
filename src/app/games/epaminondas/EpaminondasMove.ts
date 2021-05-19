@@ -2,11 +2,12 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class EpaminondasMove extends MoveCoord {
-    public constructor(
-        x: number, y: number,
-        public readonly movedPieces: number,
-        public readonly stepSize: number,
-        public readonly direction: Direction) {
+    public constructor(x: number,
+                       y: number,
+                       public readonly movedPieces: number,
+                       public readonly stepSize: number,
+                       public readonly direction: Direction)
+    {
         super(x, y);
         if (this.coord.isNotInRange(14, 12)) {
             throw new Error('Illegal coord outside of board ' + this.coord.toString() + '.');

@@ -4,12 +4,13 @@ import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondas
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
-import { EpaminondasMinimax } from "src/app/games/epaminondas/EpaminondasMinimax";
+import { EpaminondasMinimax } from 'src/app/games/epaminondas/EpaminondasMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
 
 @Component({
     selector: 'app-epaminondas',
@@ -21,7 +22,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                 EpaminondasLegalityStatus>
 {
     public availableMinimaxes: Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus>[] = [
-        new EpaminondasMinimax('EpaminondasMinimax'),
+        new EpaminondasMinimax('Normal'),
+        new PositionalEpaminondasMinimax('Positional'),
     ];
     public NONE: number = Player.NONE.value;
     public CASE_SIZE: number = 100;

@@ -1,10 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
-import { expectFirstStateToBeBetterThanSecond, expectStateToBePreVictory } from 'src/app/utils/tests/TestUtils.spec';
+import { expectSecondStateToBeBetterThanFirst, expectStateToBePreVictory } from 'src/app/utils/tests/TestUtils.spec';
 import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
-import { SixMinimax } from "../SixMinimax";
+import { SixMinimax } from '../SixMinimax';
 
 describe('SixMinimax', () => {
 
@@ -86,7 +86,7 @@ describe('SixMinimax', () => {
                 [O, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 4);
-            expectFirstStateToBeBetterThanSecond(weakerState, move, strongerState, move, minimax);
+            expectSecondStateToBeBetterThanFirst(weakerState, move, strongerState, move, minimax);
         });
         it('should be true with triangle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(1, 3));
@@ -104,7 +104,7 @@ describe('SixMinimax', () => {
                 [O, X, O, O, _],
                 [O, O, O, _, _],
             ], 4);
-            expectFirstStateToBeBetterThanSecond(weakerState, move, strongerState, move, minimax);
+            expectSecondStateToBeBetterThanFirst(weakerState, move, strongerState, move, minimax);
         });
         it('should be true with circle', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(2, 1));
@@ -122,7 +122,7 @@ describe('SixMinimax', () => {
                 [O, _, X, O, O],
                 [O, O, O, O, _],
             ], 4);
-            expectFirstStateToBeBetterThanSecond(weakerState, move, strongerState, move, minimax);
+            expectSecondStateToBeBetterThanFirst(weakerState, move, strongerState, move, minimax);
         });
     });
     describe('4 pieces aligned with two spaces should be better than 4 aligned with two ennemies', () => {
@@ -138,7 +138,7 @@ describe('SixMinimax', () => {
                 [_, X, X, X, X, _],
                 [O, O, O, O, O, O],
             ], 6);
-            expectFirstStateToBeBetterThanSecond(weakerState, move, strongerState, move, minimax);
+            expectSecondStateToBeBetterThanFirst(weakerState, move, strongerState, move, minimax);
         });
     });
     describe('Phase 2', () => {

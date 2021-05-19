@@ -30,7 +30,7 @@ describe('MinimaxTestingRules', () => {
             expect(value).toEqual(i);
         }
     });
-    it('should not create sister-node to winning-node', () => {
+    xit('should not create sister-node to winning-node', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         const bestMove: MinimaxTestingMove = rules.node.findBestMove(5, minimax);

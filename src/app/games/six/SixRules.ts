@@ -17,14 +17,16 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 export class SixNodeUnheritance implements NodeUnheritance {
 
     public equals(o: SixNodeUnheritance): boolean {
-        throw new Error('Method not implemented.');
+        throw new Error('SixNodeUnheritance.equals not implemented.');
     }
     public toString(): string {
-        throw new Error('Method not implemented.');
+        const preVictory: string = this.preVictory ? this.preVictory.toString() : 'null';
+        return 'value: ' + this.value + ', ' +
+               'preVictory: ' + preVictory;
     }
     public constructor(public readonly value: number,
                        public readonly preVictory?: Coord,
-                       public readonly victory?: Coord[]) {} // TODO: ne pas laisser ça passer si ça passe les tests!
+                       public readonly victory?: Coord[]) {} // TODO: ne pas laisser ça passer si ça passe les tests! VEUX TU DIRE, VICTORY IS USELESS ???
 }
 export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus, SixNodeUnheritance> {
 }
