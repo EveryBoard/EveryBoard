@@ -5,7 +5,6 @@ import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
-import { JSONValue } from 'src/app/utils/utils';
 import { fakeAsync } from '@angular/core/testing';
 import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -22,8 +21,8 @@ describe('DvonnComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<DvonnComponent>('Dvonn');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('DvonnComponent should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeDefined();
+        expect(componentTestUtils.getComponent()).withContext('DvonnComponent should be created').toBeDefined();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
         expect((await componentTestUtils.getComponent().pass()).isFailure()).toBeTrue();
@@ -33,7 +32,7 @@ describe('DvonnComponent', () => {
         const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
         await componentTestUtils.expectMoveSuccess('#click_2_1', move);
     }));
-    it('should allow to pass if stuck position', async() => {
+    it('should allow to pass if stuck position', fakeAsync(async() => {
         const board: DvonnBoard = new DvonnBoard([
             [__, __, WW, __, __, __, __, __, __, __, __],
             [__, __, D_, __, __, __, __, __, __, __, __],
@@ -45,11 +44,11 @@ describe('DvonnComponent', () => {
         componentTestUtils.setupSlice(slice);
         expect(componentTestUtils.getComponent().canPass).toBeTrue();
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
-    });
-    it('should disallow choosing an incorrect piece', async() => {
+    }));
+    it('should forbid choosing an incorrect piece', fakeAsync(async() => {
         // select black piece (but white plays first)
         await componentTestUtils.expectClickFailure('#click_1_1', DvonnFailure.NOT_PLAYER_PIECE);
-    });
+    }));
     it('should show disconnection/captures precisely', fakeAsync(async() => {
         // given board with ready disconnection
         const board: DvonnBoard = new DvonnBoard([

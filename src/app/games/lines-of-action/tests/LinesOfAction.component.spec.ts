@@ -2,7 +2,6 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { JSONValue } from 'src/app/utils/utils';
 import { LinesOfActionComponent } from '../LinesOfAction.component';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';

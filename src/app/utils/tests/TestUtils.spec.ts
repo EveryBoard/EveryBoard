@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
@@ -227,6 +227,7 @@ export class ComponentTestUtils<T extends GameComponent> {
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
+            flush();
         }
     }
     public async expectClickForbidden(elementName: string): Promise<void> {
@@ -245,6 +246,7 @@ export class ComponentTestUtils<T extends GameComponent> {
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
+            flush();
         }
     }
     public async expectMoveSuccess(elementName: string,
@@ -255,7 +257,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeDefined();
         if (element == null) {
             return;
         } else {
@@ -305,6 +307,7 @@ export class ComponentTestUtils<T extends GameComponent> {
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
             expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
+            flush();
         }
     }
     public async clickElement(elementName: string): Promise<boolean> {
