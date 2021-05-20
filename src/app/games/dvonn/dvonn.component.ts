@@ -4,7 +4,7 @@ import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnMinimax, DvonnMinimaxMaximizeStacks } from 'src/app/games/dvonn/DvonnMinimax';
+import { DvonnMinimax } from 'src/app/games/dvonn/DvonnMinimax';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -14,6 +14,7 @@ import { HexagonalGameComponent }
     from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Encoder } from 'src/app/jscaip/Encoder';
+import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 
 @Component({
     selector: 'app-dvonn',
@@ -25,7 +26,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
 
     public availableMinimaxes: Minimax<DvonnMove, DvonnPartSlice>[] = [
         new DvonnMinimax('DvonnMinimax'),
-        new DvonnMinimaxMaximizeStacks('DvonnMinimaxMaximizeStacks'),
+        new MaxStacksDvonnMinimax('DvonnMinimaxMaximizeStacks'),
     ];
     private static CASE_SIZE: number = 30;
     public rules: DvonnRules = new DvonnRules(DvonnPartSlice);

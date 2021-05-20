@@ -84,11 +84,11 @@ describe('DvonnRules:', () => {
         }
         expect(rules.isLegal(DvonnMove.of(new Coord(1, 1), new Coord(1, 2)), slice).legal.isSuccess()).toBeFalse();
     });
-    it('should not allow moves for pieces with more than 6 neighbors', () => {
+    it('should forbid moves for pieces with more than 6 neighbors', () => {
         const slice: DvonnPartSlice = rules.node.gamePartSlice;
         expect(rules.isLegal(DvonnMove.of(new Coord(1, 3), new Coord(1, 2)), slice).legal.isSuccess()).toBeFalse();
     });
-    it('should not allow moves from an empty stack', () => {
+    it('should forbid moves from an empty stack', () => {
         const board: DvonnBoard = new DvonnBoard([
             [_, _, _, B, B, B, W, W, B, D, B],
             [_, B, B, W, W, W, B, B, W, B, B],

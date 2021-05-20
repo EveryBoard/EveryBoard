@@ -4,7 +4,7 @@ import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondas
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
-import { EpaminondasMinimax, EpaminondasMinimaxQ, EpaminondasMinimaxQ2 } from 'src/app/games/epaminondas/EpaminondasMinimax';
+import { EpaminondasMinimax } from 'src/app/games/epaminondas/EpaminondasMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
@@ -12,6 +12,7 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
 import { Encoder } from 'src/app/jscaip/Encoder';
+import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 
 @Component({
     selector: 'app-epaminondas',
@@ -25,8 +26,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     public availableMinimaxes: Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus>[] = [
         new EpaminondasMinimax('Normal'),
         new PositionalEpaminondasMinimax('Positional'),
-        new EpaminondasMinimaxQ('Q'),
-        new EpaminondasMinimaxQ2('Q2'),
+        new AttackEpaminondasMinimax('Attack'),
     ];
     public NONE: number = Player.NONE.value;
     public CASE_SIZE: number = 100;

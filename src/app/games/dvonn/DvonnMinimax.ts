@@ -43,30 +43,3 @@ export class DvonnMinimax extends Minimax<DvonnMove, DvonnPartSlice> {
         }
     }
 }
-
-export class DvonnMinimaxMaximizeStacks extends DvonnMinimax {
-    public moveModifier(move: DvonnMove, slice: DvonnPartSlice): number {
-        if (DvonnPieceStack.encoder.decode(slice.getBoardAt(move.end)).belongsTo(slice.getCurrentPlayer())) {
-            return 5;
-        } else {
-            return 1;
-        }
-    }
-    public getBoardValue(move: DvonnMove, slice: DvonnPartSlice): NodeUnheritance {
-        // Board value is percentage of the stacks controlled by the player
-        if (DvonnRules.getMovablePieces(slice).length === 0) {
-            return super.getBoardValue(move, slice);
-        } else {
-            const scores: number[] = DvonnRules.getScores(slice);
-            const pieces: Coord[] = slice.hexaBoard.getAllPieces();
-            const numberOfStacks: number = pieces.length;
-            const player0Stacks: number = pieces.filter((c: Coord): boolean =>
-                slice.hexaBoard.getAt(c).belongsTo(Player.ZERO)).length;
-            const player1Stacks: number = pieces.filter((c: Coord): boolean =>
-                slice.hexaBoard.getAt(c).belongsTo(Player.ONE)).length;
-            return new NodeUnheritance(this.moveModifier(move, slice) *
-                ((player0Stacks * scores[0] * Player.ZERO.getScoreModifier()) +
-                    (player1Stacks * scores[1] * Player.ONE.getScoreModifier()) / numberOfStacks));
-        }
-    }
-}
