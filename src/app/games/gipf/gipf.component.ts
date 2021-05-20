@@ -19,6 +19,7 @@ import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Arrow } from 'src/app/jscaip/Arrow';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 export class GipfComponentFailure {
     public static AMBIGUOUS_CAPTURE_COORD: string =
@@ -79,6 +80,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         this.showScore = true;
         this.constructedSlice = this.rules.node.gamePartSlice;
     }
+    public encoder: Encoder<GipfMove> = GipfMove.encoder;
     public updateBoard(): void {
         const slice: GipfPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
@@ -100,12 +102,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         capture.forEach((c: Coord) => {
             this.captured.push(c);
         });
-    }
-    public decodeMove(encodedMove: JSONValue): GipfMove {
-        return GipfMove.encoder.decode(encodedMove);
-    }
-    public encodeMove(move: GipfMove): JSONValue {
-        return GipfMove.encoder.encode(move);
     }
     public getAllCoords(): Coord[] {
         return this.constructedSlice.hexaBoard.allCoords();

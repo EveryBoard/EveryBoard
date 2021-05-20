@@ -92,19 +92,4 @@ describe('LinesOfActionComponent', () => {
         const component: LinesOfActionComponent = componentTestUtils.getComponent();
         expect(component.getCaseClasses(2, 2)).toEqual(['captured']);
     }));
-    describe('encode/decode', () => {
-        it('should delegate decoding to move', () => {
-            const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 0), new Coord(2, 2));
-            const encodedMove: JSONValue = LinesOfActionMove.encoder.encode(move);
-            spyOn(LinesOfActionMove.encoder, 'decode').and.callThrough();
-            componentTestUtils.getComponent().decodeMove(encodedMove);
-            expect(LinesOfActionMove.encoder.decode).toHaveBeenCalledTimes(1);
-        });
-        it('should delegate encoding to move', () => {
-            const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 0), new Coord(2, 2));
-            spyOn(LinesOfActionMove.encoder, 'encode').and.callThrough();
-            componentTestUtils.getComponent().encodeMove(move);
-            expect(LinesOfActionMove.encoder.encode).toHaveBeenCalledTimes(1);
-        });
-    });
 });

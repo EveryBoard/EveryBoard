@@ -156,14 +156,4 @@ describe('PylosComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_0_1');
         await componentTestUtils.expectClickFailure('#click_2_2_0', 'Must move pieces upward.');
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(PylosMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(0);
-        expect(PylosMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(PylosMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(PylosMove.fromDrop(new PylosCoord(0, 0, 0), []));
-        expect(PylosMove.encode).toHaveBeenCalledTimes(1);
-    });
 });

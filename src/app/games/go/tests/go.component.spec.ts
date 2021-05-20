@@ -56,14 +56,4 @@ describe('GoComponent', () => {
         const secondMove: GoMove = new GoMove(2, 2);
         await componentTestUtils.expectMoveSuccess('#click_2_2', secondMove, undefined, 0, 0);
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(GoMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(5);
-        expect(GoMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(GoMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new GoMove(1, 1));
-        expect(GoMove.encode).toHaveBeenCalledTimes(1);
-    });
 });

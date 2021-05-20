@@ -142,17 +142,4 @@ describe('SixComponent', () => {
 
         await componentTestUtils.expectClickFailure('#neighboor_1_1', SixFailure.CAN_NO_LONGER_DROP);
     }));
-    describe('encode/decode', () => {
-        it('should delegate decoding to move', () => {
-            const encodedMove: JSONValue = SixMove.encoder.encode(SixMove.fromDrop(new Coord(0, 0)));
-            spyOn(SixMove.encoder, 'decode').and.callThrough();
-            componentTestUtils.getComponent().decodeMove(encodedMove);
-            expect(SixMove.encoder.decode).toHaveBeenCalledTimes(1);
-        });
-        it('should delegate encoding to move', () => {
-            spyOn(SixMove.encoder, 'encode').and.callThrough();
-            componentTestUtils.getComponent().encodeMove(SixMove.fromDrop(new Coord(0, 0)));
-            expect(SixMove.encoder.encode).toHaveBeenCalledTimes(1);
-        });
-    });
 });

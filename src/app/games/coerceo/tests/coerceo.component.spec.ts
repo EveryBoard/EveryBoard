@@ -156,16 +156,4 @@ describe('CoerceoComponent:', () => {
         expectCoordToBeOfCapturedFill(8, 6);
         expectCoordToBeOfRemovedFill(10, 7);
     }));
-    describe('encode/decode', () => {
-        it('should delegate decoding to move', () => {
-            spyOn(CoerceoMove, 'decode').and.callThrough();
-            componentTestUtils.getComponent().decodeMove(5);
-            expect(CoerceoMove.decode).toHaveBeenCalledTimes(1);
-        });
-        it('should delegate encoding to move', () => {
-            spyOn(CoerceoMove, 'encode').and.callThrough();
-            componentTestUtils.getComponent().encodeMove(CoerceoMove.fromTilesExchange(new Coord(1, 1)));
-            expect(CoerceoMove.encode).toHaveBeenCalledTimes(1);
-        });
-    });
 });

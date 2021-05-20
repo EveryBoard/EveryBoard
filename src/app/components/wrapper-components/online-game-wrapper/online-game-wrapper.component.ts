@@ -212,7 +212,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             case UpdateType.DOUBLON:
                 return;
             case UpdateType.END_GAME:
-                return this.checkEndgames();
+                return this.checkEndGames();
                 // TODO: might no longer be checkEndGame but "do"EndGame
             case UpdateType.MOVE:
                 return this.doNewMoves(part);
@@ -285,7 +285,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         const listMoves: number[] = part.listMoves;
         while (this.gameComponent.rules.node.gamePartSlice.turn < listMoves.length) {
             currentPartTurn = this.gameComponent.rules.node.gamePartSlice.turn;
-            const chosenMove: Move = this.gameComponent.decodeMove(listMoves[currentPartTurn]);
+            const chosenMove: Move = this.gameComponent.encoder.decode(listMoves[currentPartTurn]);
             const correctDBMove: boolean = this.gameComponent.rules.choose(chosenMove);
             if (correctDBMove === false) {
                 const message: string = 'We received an incorrect db move: ' +
@@ -312,7 +312,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             this.startCountDownFor(currentPlayer);
         }
     }
-    private checkEndgames() {
+    private checkEndGames() {
         // fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
         const currentPart: ICurrentPart = this.currentPart.copy();
         const player: Player = this.currentPart.copy().turn % 2 === 0 ? Player.ZERO : Player.ONE;
@@ -332,33 +332,37 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.endGame = true;
         this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, true);
     }
-    public notifyTimeoutVictory(victoriousPlayer: string): void {
+    public notifyTimeoutVictory(victoriousPlayer: string, loser: string): void {
         this.endGame = true;
 
         const wonPart: ICurrentPart = this.currentPart.copy();
         wonPart.winner = victoriousPlayer;
+        wonPart.loser = loser;
         this.currentPart = Part.of(wonPart);
 
         this.gameService.notifyTimeout(this.currentPartId, victoriousPlayer);
     }
     public notifyVictory(encodedMove: JSONValue, scorePlayerZero: number, scorePlayerOne: number): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
-        let winner: string;
+        const wonPart: ICurrentPart = this.currentPart.copy();
+
         const minimax: Minimax<Move, GamePartSlice> = this.gameComponent.availableMinimaxes[0];
         if (this.gameComponent.rules.node.getOwnValue(minimax).value === Number.MAX_SAFE_INTEGER) {
-            winner = this.players[1];
+            wonPart.winner = this.players[1];
+            wonPart.loser = this.players[0];
         } else if (this.gameComponent.rules.node.getOwnValue(minimax).value === Number.MIN_SAFE_INTEGER) {
-            winner = this.players[0];
+            wonPart.winner = this.players[0];
+            wonPart.loser = this.players[1];
         } else {
             throw new Error('How the fuck did you notice victory?');
         }
         this.endGame = true;
 
-        const wonPart: ICurrentPart = this.currentPart.copy();
-        wonPart.winner = winner;
         this.currentPart = Part.of(wonPart);
 
-        this.gameService.updateDBBoard(this.currentPartId, encodedMove, scorePlayerZero, scorePlayerOne, false, winner);
+        this.gameService.updateDBBoard(this.currentPartId, encodedMove,
+                                       scorePlayerZero, scorePlayerOne,
+                                       false, wonPart.winner, wonPart.loser);
     }
     public canAskTakeBack(): boolean {
         if (this.currentPart == null) {
@@ -530,7 +534,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         }
     }
     public async updateDBBoard(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void> {
-        const encodedMove: JSONValue = this.gameComponent.encodeMove(move);
+        const encodedMove: JSONValue = this.gameComponent.encoder.encode(move);
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
         this.gameComponent.rules.choose(move);
@@ -555,13 +559,13 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         this.stopCountdownsFor(Player.of(player));
         if (player === this.observerRole) {
             // the player has run out of time, he'll notify his own defeat by time
-            this.notifyTimeoutVictory(this.opponent.doc.pseudo);
+            this.notifyTimeoutVictory(this.opponent.doc.pseudo, this.userName);
         } else {
             if (this.endGame) {
                 display(true, 'time might be better handled in the future');
             } else {
                 // the other player has timed out
-                this.notifyTimeoutVictory(this.userName);
+                this.notifyTimeoutVictory(this.userName, this.opponent.doc.pseudo);
                 this.endGame = true;
             }
         }

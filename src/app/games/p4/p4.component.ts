@@ -2,13 +2,13 @@ import { Component } from '@angular/core';
 import { P4PartSlice } from './P4PartSlice';
 import { P4Rules } from './P4Rules';
 import { P4Minimax } from './P4Minimax';
-import { Move } from '../../jscaip/Move';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-p4',
@@ -28,6 +28,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
     private last: Coord;
     private victoryCoords: Coord[] = [];
 
+    public encoder: Encoder<P4Move> = P4Move.encoder;
     public async onClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {
@@ -62,11 +63,5 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
     }
     private getCaseFillClass(content: number): string {
         return this.getPlayerClass(Player.of(content));
-    }
-    public decodeMove(encodedMove: number): Move {
-        return P4Move.decode(encodedMove);
-    }
-    public encodeMove(move: P4Move): number {
-        return P4Move.encode(move);
     }
 }

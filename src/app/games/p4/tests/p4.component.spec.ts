@@ -35,14 +35,4 @@ describe('P4Component', () => {
         componentTestUtils.setupSlice(slice);
         expect(componentTestUtils.getComponent().getCaseClasses(3, 3)).toContain('victory-stroke');
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(P4Move, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(5);
-        expect(P4Move.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(P4Move, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(P4Move.of(5));
-        expect(P4Move.encode).toHaveBeenCalledTimes(1);
-    });
 });

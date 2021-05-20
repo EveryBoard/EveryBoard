@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { ReversiRules } from './ReversiRules';
-import { ReversiMinimax } from "./ReversiMinimax";
+import { ReversiMinimax } from './ReversiMinimax';
 import { ReversiPartSlice } from './ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
@@ -11,6 +11,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-reversi',
@@ -36,6 +37,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         this.canPass = false;
         this.rules = new ReversiRules(ReversiPartSlice);
     }
+    public encoder: Encoder<ReversiMove> = ReversiMove.encoder;
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {
@@ -46,12 +48,6 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
         const chosenMove: ReversiMove = new ReversiMove(x, y);
 
         return await this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores [1]);
-    }
-    public decodeMove(encodedMove: number): ReversiMove {
-        return ReversiMove.decode(encodedMove);
-    }
-    public encodeMove(move: ReversiMove): number {
-        return move.encode();
     }
     public updateBoard(): void {
         const slice: ReversiPartSlice = this.rules.node.gamePartSlice;

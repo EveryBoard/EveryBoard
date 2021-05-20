@@ -13,6 +13,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-siam',
@@ -34,6 +35,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public chosenDirection: MGPOptional<Orthogonal>;
     public chosenOrientation: Orthogonal;
 
+    public encoder: Encoder<SiamMove> = SiamMove.encoder;
     public updateBoard(): void {
         display(SiamComponent.VERBOSE, 'updateBoard');
         const slice: SiamPartSlice = this.rules.node.gamePartSlice;
@@ -45,12 +47,6 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         this.chosenDirection = null;
         this.landingCoord = null;
         this.chosenOrientation = null;
-    }
-    public decodeMove(encodedMove: number): SiamMove {
-        return SiamMove.decode(encodedMove);
-    }
-    public encodeMove(move: SiamMove): number {
-        return move.encode();
     }
     public clickPiece(x: number, y: number): MGPValidation {
         const clickValidity: MGPValidation = this.canUserPlay('#clickPiece_' + x + '_' + y);

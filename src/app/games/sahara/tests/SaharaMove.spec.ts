@@ -1,8 +1,9 @@
 import { SaharaRules } from '../SaharaRules';
-import { SaharaMinimax } from "../SaharaMinimax";
+import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('SaharaMoves', () => {
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
@@ -12,18 +13,8 @@ describe('SaharaMoves', () => {
         const moves: SaharaMove[] = minimax.getListMoves(rules.node);
         expect(moves.length).toEqual(12);
         for (const move of moves) {
-            const encodedMove: number = move.encode();
-            const decodedMove: SaharaMove = SaharaMove.decode(encodedMove);
-            expect(decodedMove).toEqual(move, move.toString() + ' should be correctly translated');
+            NumberEncoderTestUtils.expectToBeCorrect(SaharaMove.encoder, move);
         }
-    });
-    it('should delegate to static method decode', () => {
-        const testMove: SaharaMove = new SaharaMove(new Coord(1, 1), new Coord(2, 1));
-        spyOn(SaharaMove, 'decode').and.callThrough();
-
-        testMove.decode(testMove.encode());
-
-        expect(SaharaMove.decode).toHaveBeenCalledTimes(1);
     });
     it('Should throw error when starting coord is outside the board', () => {
         const start: Coord = new Coord(-1, 0);

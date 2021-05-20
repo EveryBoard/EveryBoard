@@ -95,14 +95,4 @@ describe('QuixoComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_4_4');
         await componentTestUtils.expectMoveSuccess('#chooseDirection_UP', new QuixoMove(4, 4, Orthogonal.UP));
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(QuixoMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(new QuixoMove(0, 0, Orthogonal.DOWN).encode());
-        expect(QuixoMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(QuixoMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new QuixoMove(0, 0, Orthogonal.DOWN));
-        expect(QuixoMove.encode).toHaveBeenCalledTimes(1);
-    });
 });

@@ -13,16 +13,6 @@ describe('MinimaxTestingComponent', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
     });
-    it('should delegate decoding to move', () => {
-        spyOn(MinimaxTestingMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(1);
-        expect(MinimaxTestingMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(MinimaxTestingMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(MinimaxTestingMove.DOWN);
-        expect(MinimaxTestingMove.encode).toHaveBeenCalledTimes(1);
-    });
     it('should allow simple moves', fakeAsync(async() => {
         await componentTestUtils.expectMoveSuccess('#click_down', MinimaxTestingMove.DOWN);
         await componentTestUtils.expectMoveSuccess('#click_right', MinimaxTestingMove.RIGHT);

@@ -15,6 +15,7 @@ import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-tablut',
@@ -47,6 +48,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public lastMove: TablutMove;
 
+    public encoder: Encoder<TablutMove> = TablutMove.encoder;
     public updateBoard(): void {
         display(TablutComponent.VERBOSE, 'tablutComponent.updateBoard');
         this.lastMove = this.rules.node.move;
@@ -124,12 +126,6 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
     }
     public isThrone(x: number, y: number): boolean {
         return TablutRules.isThrone(new Coord(x, y));
-    }
-    public decodeMove(encodedMove: number): TablutMove {
-        return TablutMove.decode(encodedMove);
-    }
-    public encodeMove(move: TablutMove): number {
-        return move.encode();
     }
     public getPieceClasses(x: number, y: number): string[] {
         const classes: string[] = [];

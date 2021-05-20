@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { NumberEncoder } from 'src/app/jscaip/encoder';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { HexaBoard } from 'src/app/jscaip/HexaBoard';
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { GipfPiece } from './GipfPiece';

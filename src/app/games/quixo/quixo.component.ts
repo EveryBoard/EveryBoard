@@ -5,12 +5,13 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
-import { QuixoMinimax } from "src/app/games/quixo/QuixoMinimax";
+import { QuixoMinimax } from 'src/app/games/quixo/QuixoMinimax';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-quixo',
@@ -38,6 +39,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public victoriousCoords: Coord[] = [];
 
+    public encoder: Encoder<QuixoMove> = QuixoMove.encoder;
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;
         this.board = this.slice.board;
@@ -48,12 +50,6 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = null;
-    }
-    public decodeMove(encodedMove: number): QuixoMove {
-        return QuixoMove.decode(encodedMove);
-    }
-    public encodeMove(move: QuixoMove): number {
-        return QuixoMove.encode(move);
     }
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);

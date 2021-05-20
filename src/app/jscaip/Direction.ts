@@ -1,6 +1,6 @@
 import { assert, JSONValue } from 'src/app/utils/utils';
 import { Coord } from './Coord';
-import { Encoder } from './encoder';
+import { Encoder } from './Encoder';
 
 export class DirectionError extends Error {
     constructor(message?: string) {

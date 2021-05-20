@@ -1,4 +1,4 @@
-import { NumberEncoder } from 'src/app/jscaip/encoder';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { Player } from 'src/app/jscaip/Player';
 
 export class GipfPiece {

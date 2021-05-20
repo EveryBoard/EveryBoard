@@ -69,14 +69,4 @@ describe('TablutComponent', () => {
         expect(tablutGameComponent.getRectClasses(1, 0)).toContain('moved');
         expect(tablutGameComponent.getRectClasses(2, 0)).toContain('moved');
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(TablutMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(1);
-        expect(TablutMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(TablutMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new TablutMove(new Coord(1, 1), new Coord(2, 1)));
-        expect(TablutMove.encode).toHaveBeenCalledTimes(1);
-    });
 });

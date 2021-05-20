@@ -27,16 +27,6 @@ describe('EncapsuleComponent', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('EncapsuleComponent should be created');
     });
-    it('should delegate decoding to move', () => {
-        spyOn(EncapsuleMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(0);
-        expect(EncapsuleMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(EncapsuleMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2)));
-        expect(EncapsuleMove.encode).toHaveBeenCalledTimes(1);
-    });
     it('should drop a piece on the board when selecting it and dropping it', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#piece_0_SMALL_BLACK');
 

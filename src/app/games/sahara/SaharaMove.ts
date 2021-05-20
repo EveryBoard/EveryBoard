@@ -2,23 +2,34 @@ import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaPartSlice } from './SaharaPartSlice';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 
 export class SaharaMove extends MoveCoordToCoord {
-    public static encode(move: SaharaMove): number {
-        return move.encode();
-    }
-    public static decode(encodedMove: number): SaharaMove {
-        const ey: number = encodedMove%6;
-        encodedMove -= ey;
-        encodedMove /= 6;
-        const ex: number = encodedMove%11;
-        encodedMove -= ex;
-        encodedMove /=11;
-        const sy: number = encodedMove%6;
-        encodedMove -= sy;
-        encodedMove /= 6;
-        const sx: number = encodedMove;
-        return new SaharaMove(new Coord(sx, sy), new Coord(ex, ey));
+    public static encoder: NumberEncoder<SaharaMove> = new class extends NumberEncoder<SaharaMove> {
+        public maxValue(): number {
+            return (6*11*6*SaharaPartSlice.WIDTH) + (11*6*SaharaPartSlice.HEIGHT) +
+                (6*SaharaPartSlice.WIDTH) + SaharaPartSlice.HEIGHT;
+        }
+        public encodeNumber(move: SaharaMove): number {
+            const ey: number = move.end.y;
+            const ex: number = move.end.x;
+            const sy: number = move.coord.y;
+            const sx: number = move.coord.x;
+            return (6*11*6*sx) + (11*6*sy) + (6*ex) + ey;
+        }
+        public decodeNumber(encodedMove: number): SaharaMove {
+            const ey: number = encodedMove%6;
+            encodedMove -= ey;
+            encodedMove /= 6;
+            const ex: number = encodedMove%11;
+            encodedMove -= ex;
+            encodedMove /=11;
+            const sy: number = encodedMove%6;
+            encodedMove -= sy;
+            encodedMove /= 6;
+            const sx: number = encodedMove;
+            return new SaharaMove(new Coord(sx, sy), new Coord(ex, ey));
+        }
     }
     public static checkDistanceAndLocation(start: Coord, end: Coord): void {
         const dx: number = Math.abs(start.x - end.x);
@@ -59,15 +70,5 @@ export class SaharaMove extends MoveCoordToCoord {
     }
     public toString(): string {
         return 'SaharaMove(' + this.coord + '->' + this.end + ')';
-    }
-    public encode(): number {
-        const ey: number = this.end.y;
-        const ex: number = this.end.x;
-        const sy: number = this.coord.y;
-        const sx: number = this.coord.x;
-        return (6*11*6*sx) + (11*6*sy) + (6*ex) + ey;
-    }
-    public decode(encodedMove: number): SaharaMove {
-        return SaharaMove.decode(encodedMove);
     }
 }

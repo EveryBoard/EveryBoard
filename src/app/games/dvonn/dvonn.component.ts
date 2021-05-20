@@ -4,7 +4,7 @@ import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
-import { DvonnMinimax } from "src/app/games/dvonn/DvonnMinimax";
+import { DvonnMinimax, DvonnMinimaxMaximizeStacks } from 'src/app/games/dvonn/DvonnMinimax';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -13,6 +13,7 @@ import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-dvonn',
@@ -24,6 +25,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
 
     public availableMinimaxes: Minimax<DvonnMove, DvonnPartSlice>[] = [
         new DvonnMinimax('DvonnMinimax'),
+        new DvonnMinimaxMaximizeStacks('DvonnMinimaxMaximizeStacks'),
     ];
     private static CASE_SIZE: number = 30;
     public rules: DvonnRules = new DvonnRules(DvonnPartSlice);
@@ -38,6 +40,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
         new HexaLayout(DvonnComponent.CASE_SIZE * 1.50,
                        new Coord(-DvonnComponent.CASE_SIZE, DvonnComponent.CASE_SIZE * 2),
                        PointyHexaOrientation.INSTANCE);
+    public encoder: Encoder<DvonnMove> = DvonnMove.encoder;
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
@@ -117,12 +120,6 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
         // By construction, only valid moves can be created
         const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
-    }
-    public decodeMove(encodedMove: number): DvonnMove {
-        return DvonnMove.decode(encodedMove);
-    }
-    public encodeMove(move: DvonnMove): number {
-        return DvonnMove.encode(move);
     }
     public getPieceClasses(stack: DvonnPieceStack): string[] {
         if (stack.containsSource() && stack.getSize() === 1) {

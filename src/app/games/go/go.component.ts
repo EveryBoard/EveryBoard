@@ -12,6 +12,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-go',
@@ -38,6 +39,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public captures: Coord[]= [];
 
+    public encoder: Encoder<GoMove> = GoMove.encoder;
+
     constructor(public snackBar: MatSnackBar) {
         super(snackBar);
         this.canPass = true;
@@ -52,12 +55,6 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
         // we stop showing him the last move
         const resultlessMove: GoMove = new GoMove(x, y);
         return this.chooseMove(resultlessMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
-    }
-    public decodeMove(encodedMove: number): GoMove {
-        return GoMove.decode(encodedMove);
-    }
-    public encodeMove(move: GoMove): number {
-        return move.encode();
     }
     public updateBoard(): void {
         display(GoComponent.VERBOSE, 'updateBoard');

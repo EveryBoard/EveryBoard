@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder } from 'src/app/jscaip/encoder';
+import { Encoder } from 'src/app/jscaip/Encoder';
 import { Move } from 'src/app/jscaip/Move';
 import { JSONObject, JSONValue } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';

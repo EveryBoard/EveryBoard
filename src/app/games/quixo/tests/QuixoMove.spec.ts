@@ -3,9 +3,10 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
 import { QuixoNode } from '../QuixoRules';
-import { QuixoMinimax } from "../QuixoMinimax";
+import { QuixoMinimax } from '../QuixoMinimax';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('QuixoMove:', () => {
     const _: number = Player.NONE.value;
@@ -32,7 +33,7 @@ describe('QuixoMove:', () => {
         expect(() => new QuixoMove(2, 4, Orthogonal.DOWN))
             .toThrowError('Invalid direction: pawn on the bottom side can\'t be moved down.');
     });
-    it('QuixoMove.encode and QuixoMove.decode should be reversible', () => {
+    it('QuixoMove.encoder should be correct', () => {
         const board: number[][] = [
             [_, X, _, _, _],
             [_, _, _, _, X],
@@ -46,16 +47,8 @@ describe('QuixoMove:', () => {
         const minimax: QuixoMinimax = new QuixoMinimax('QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);
         for (const move of moves) {
-            const encodedMove: number = move.encode();
-            const decodedMove: QuixoMove = QuixoMove.decode(encodedMove);
-            expect(decodedMove).toEqual(move);
+            NumberEncoderTestUtils.expectToBeCorrect(QuixoMove.encoder, move);
         }
-    });
-    it('should delegate decoding to static method', () => {
-        const testMove: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);
-        spyOn(QuixoMove, 'decode').and.callThrough();
-        testMove.decode(testMove.encode());
-        expect(QuixoMove.decode).toHaveBeenCalledTimes(1);
     });
     it('Should override correctly equals and toString', () => {
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.RIGHT);

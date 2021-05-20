@@ -1,3 +1,4 @@
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { P4Move } from '../P4Move';
 
 describe('P4Move', () => {
@@ -26,20 +27,12 @@ describe('P4Move', () => {
             expect(move1.equals(move2)).toBeFalse();
         });
     });
-    describe('encode and decode', () => {
-        it('should be inverse of each other', () => {
+    describe('encoder', () => {
+        it('should be correct', () => {
             for (let i: number = 0; i < 7; i++) {
                 const move: P4Move = P4Move.of(i);
-                expect(P4Move.decode(move.encode())).toBe(move);
+                NumberEncoderTestUtils.expectToBeCorrect(P4Move.encoder, move);
             }
-        });
-    });
-    describe('decode method', () => {
-        it('should delegate decoding to static method', () => {
-            const move: P4Move = P4Move.of(2);
-            spyOn(P4Move, 'decode').and.callThrough();
-            move.decode(5);
-            expect(P4Move.decode).toHaveBeenCalledTimes(1);
         });
     });
     describe('toString', () => {

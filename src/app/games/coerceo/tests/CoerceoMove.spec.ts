@@ -4,6 +4,7 @@ import { CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoMove, CoerceoStep } from '../CoerceoMove';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('CoerceoMove', () => {
     it('Should distinguish move and capture based on presence or not of capture', () => {
@@ -57,13 +58,7 @@ describe('CoerceoMove', () => {
             expect(deplacement.equals(deplacement)).toBeTrue();
         });
         it('Should forbid non integer number to decode', () => {
-            expect(() => CoerceoMove.decode(0.5)).toThrowError('EncodedMove must be an integer.');
-        });
-        it('should delegate decoding to static method', () => {
-            const testMove: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 5));
-            spyOn(CoerceoMove, 'decode').and.callThrough();
-            testMove.decode(testMove.encode());
-            expect(CoerceoMove.decode).toHaveBeenCalledTimes(1);
+            expect(() => CoerceoMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
         });
         it('should stringify nicely', () => {
             const tileExchange: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(5, 5));
@@ -71,14 +66,12 @@ describe('CoerceoMove', () => {
             expect(tileExchange.toString()).toBe('CoerceoMove((5, 5))');
             expect(deplacement.toString()).toBe('CoerceoMove((5, 5) > RIGHT > (7, 5))');
         });
-        it('CoerceoMove.encode and CoerceoMove.decode should be reversible', () => {
+        it('CoerceoMove.encoder should be correct', () => {
             const rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
             const minimax: CoerceoMinimax = new CoerceoMinimax('CoerceoMinimax');
             const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
             for (const move of moves) {
-                const encodedMove: number = move.encode();
-                const decodedMove: CoerceoMove = CoerceoMove.decode(encodedMove);
-                expect(decodedMove).toEqual(move);
+                NumberEncoderTestUtils.expectToBeCorrect(CoerceoMove.encoder, move);
             }
         });
     });

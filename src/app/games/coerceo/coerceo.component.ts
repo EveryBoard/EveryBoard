@@ -14,6 +14,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-coerceo',
@@ -52,6 +53,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         this.showScore = true;
         this.updateBoard();
     }
+    public encoder: Encoder<CoerceoMove> = CoerceoMove.encoder;
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         this.slice = this.rules.node.gamePartSlice;
@@ -108,12 +110,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         } else {
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE);
         }
-    }
-    public decodeMove(encodedMove: number): Move {
-        return CoerceoMove.decode(encodedMove);
-    }
-    public encodeMove(move: CoerceoMove): number {
-        return CoerceoMove.encode(move);
     }
     public isPyramid(x: number, y: number, caseContent: number): boolean {
         return caseContent === CoerceoPiece.ZERO.value ||
