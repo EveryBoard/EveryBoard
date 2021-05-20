@@ -1,3 +1,6 @@
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Player } from 'src/app/jscaip/Player';
+import { DvonnBoard } from '../DvonnBoard';
 import { DvonnMove } from '../DvonnMove';
 import { DvonnPartSlice } from '../DvonnPartSlice';
 import { DvonnPieceStack } from '../DvonnPieceStack';
@@ -8,7 +11,12 @@ describe('MaxStacksDvonnMinimax', () => {
     let rules: DvonnRules;
     let minimax: MaxStacksDvonnMinimax;
 
+    const _: DvonnPieceStack = DvonnPieceStack.EMPTY;
+    const D: DvonnPieceStack = DvonnPieceStack.SOURCE;
+    // const B: DvonnPieceStack = DvonnPieceStack.PLAYER_ZERO;
+    const BB: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 2, false);
     const W: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
+    const WW: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 
     beforeEach(() => {
         rules = new DvonnRules(DvonnPartSlice);
@@ -18,9 +26,37 @@ describe('MaxStacksDvonnMinimax', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(41);
     });
     it('should consider owning a new stack the best move', () => {
-        const slice: DvonnPartSlice = rules.node.gamePartSlice;
-        const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
-        expect(slice.board[bestMove.end.y][bestMove.end.x]).toBe(DvonnPieceStack.encoder.encodeNumber(W));
+        // B can choose between doubling one of its stack or owning an opponent's stack
+        const board: DvonnBoard = new DvonnBoard([
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, BB, D, BB, D, WW, D, W, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+        ]);
 
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        rules.node = new MGPNode(null, null, slice);
+        const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
+        expect(minimax.getListMoves(rules.node).length).toBe(3); // There are three possible moves
+        // The best is the one that finishes on WW
+        expect(slice.board[bestMove.end.y][bestMove.end.x]).toBe(DvonnPieceStack.encoder.encodeNumber(WW));
+    });
+    it('should prefer owning an opponent piece than a source', () => {
+        // B can choose between doubling one of its stack or owning an opponent's stack
+        const board: DvonnBoard = new DvonnBoard([
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, D, D, BB, D, W, D, W, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _],
+        ]);
+
+        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        rules.node = new MGPNode(null, null, slice);
+        const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
+        expect(minimax.getListMoves(rules.node).length).toBe(2);
+        // The best move is the one that finishes on W
+        expect(slice.board[bestMove.end.y][bestMove.end.x]).toBe(DvonnPieceStack.encoder.encodeNumber(W));
     });
 });
