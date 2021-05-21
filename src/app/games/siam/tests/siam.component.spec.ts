@@ -114,14 +114,4 @@ describe('SiamComponent', () => {
         const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await componentTestUtils.expectMoveSuccess('#chooseDirection_DOWN', move);
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(SiamMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(269);
-        expect(SiamMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(SiamMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new SiamMove(2, 2, MGPOptional.empty(), Orthogonal.UP));
-        expect(SiamMove.encode).toHaveBeenCalledTimes(1);
-    });
 });

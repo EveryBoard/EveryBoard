@@ -1,7 +1,7 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { ComparableObject } from '../utils/Comparable';
-import { Encoder } from './encoder';
+import { Encoder } from './Encoder';
 
 export class Coord implements ComparableObject {
     public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {

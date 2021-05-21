@@ -1,10 +1,19 @@
 import { ComparableObject } from 'src/app/utils/Comparable';
-import { NumberEncoder } from '../encoder';
+import { JSONValue } from 'src/app/utils/utils';
+import { Encoder, NumberEncoder } from '../Encoder';
+
+export class EncoderTestUtils {
+    public static expectToBeCorrect<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {
+        const encoded: JSONValue = encoder.encode(value);
+        const decoded: T = encoder.decode(encoded);
+        expect(decoded.equals(value));
+    }
+}
 
 export class NumberEncoderTestUtils {
     public static expectToBeCorrect<T extends ComparableObject>(encoder: NumberEncoder<T>, value: T): void {
         const encoded: number = encoder.encodeNumber(value);
-        expect(encoded).toBeLessThan(encoder.maxValue());
+        expect(encoded).toBeLessThanOrEqual(encoder.maxValue());
         const decoded: T = encoder.decodeNumber(encoded);
         expect(decoded.equals(value));
     }

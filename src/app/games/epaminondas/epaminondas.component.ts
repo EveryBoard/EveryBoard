@@ -11,6 +11,8 @@ import { Player } from 'src/app/jscaip/Player';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
+import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 
 @Component({
     selector: 'app-epaminondas',
@@ -24,6 +26,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     public availableMinimaxes: Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus>[] = [
         new EpaminondasMinimax('Normal'),
         new PositionalEpaminondasMinimax('Positional'),
+        new AttackEpaminondasMinimax('Attack'),
     ];
     public NONE: number = Player.NONE.value;
     public CASE_SIZE: number = 100;
@@ -45,6 +48,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
 
     private captureds: Coord[] = [];
 
+    public encoder: Encoder<EpaminondasMove> = EpaminondasMove.encoder;
     public updateBoard(): void {
         this.firstPiece = new Coord(-15, -1);
         this.lastPiece = new Coord(-15, -1);
@@ -68,12 +72,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             this.captureds.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
-    }
-    public decodeMove(encodedMove: number): EpaminondasMove {
-        return EpaminondasMove.decode(encodedMove);
-    }
-    public encodeMove(move: EpaminondasMove): number {
-        return EpaminondasMove.encode(move);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);

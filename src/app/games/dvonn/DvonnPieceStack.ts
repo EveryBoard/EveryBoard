@@ -1,5 +1,5 @@
 import { Player } from 'src/app/jscaip/Player';
-import { NumberEncoder } from 'src/app/jscaip/encoder';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 
 export class DvonnPieceStack {
     public static sizeEncoder: NumberEncoder<number> = NumberEncoder.numberEncoder(49);

@@ -1,22 +1,32 @@
 import { Coord } from 'src/app/jscaip/Coord';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoordToCoord } from 'src/app/jscaip/MoveCoordToCoord';
 import { DvonnBoard } from './DvonnBoard';
 
 export class DvonnMove extends MoveCoordToCoord {
     public static PASS: DvonnMove = new DvonnMove(new Coord(-1, -1), new Coord(-2, -2));
-    public static decode(encodedMove: number): DvonnMove {
-        if (encodedMove < 0) return this.PASS;
-        const y2: number = encodedMove % 16;
-        encodedMove = (encodedMove / 16) | 0;
-        const x2: number = encodedMove % 16;
-        encodedMove = (encodedMove / 16) | 0;
-        const y1: number = encodedMove % 16;
-        encodedMove = (encodedMove / 16) | 0;
-        const x1: number = encodedMove % 16;
-        return new DvonnMove(new Coord(x1, y1), new Coord(x2, y2));
-    }
-    public static encode(move: DvonnMove): number {
-        return move.encode();
+    public static encoder: NumberEncoder<DvonnMove> = new class extends NumberEncoder<DvonnMove> {
+        public maxValue(): number {
+            return 10 * 4096 + 4 * 256 + 10 * 16 + 4;
+        }
+        public encodeNumber(move: DvonnMove): number {
+            const x1: number = move.coord.x;
+            const y1: number = move.coord.y;
+            const x2: number = move.end.x;
+            const y2: number = move.end.y;
+            return (x1 * 4096) + (y1 * 256) + (x2 * 16) + y2;
+        }
+        public decodeNumber(encodedMove: number): DvonnMove {
+            if (encodedMove < 0) return DvonnMove.PASS;
+            const y2: number = encodedMove % 16;
+            encodedMove = (encodedMove / 16) | 0;
+            const x2: number = encodedMove % 16;
+            encodedMove = (encodedMove / 16) | 0;
+            const y1: number = encodedMove % 16;
+            encodedMove = (encodedMove / 16) | 0;
+            const x1: number = encodedMove % 16;
+            return new DvonnMove(new Coord(x1, y1), new Coord(x2, y2));
+        }
     }
     private constructor(start: Coord, end: Coord) {
         super(start, end);
@@ -61,16 +71,6 @@ export class DvonnMove extends MoveCoordToCoord {
         } else {
             return Math.abs(this.coord.y - this.end.y);
         }
-    }
-    public encode(): number {
-        const x1: number = this.coord.x;
-        const y1: number = this.coord.y;
-        const x2: number = this.end.x;
-        const y2: number = this.end.y;
-        return (x1 * 4096) + (y1 * 256) + (x2 * 16) + y2;
-    }
-    public decode(encodedMove: number): DvonnMove {
-        return DvonnMove.decode(encodedMove);
     }
     public equals(o: DvonnMove): boolean {
         if (o === this) return true;

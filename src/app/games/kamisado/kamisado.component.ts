@@ -11,6 +11,7 @@ import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 export class KamisadoComponentFailure {
     public static PLAY_WITH_SELECTED_PIECE: string =
@@ -35,6 +36,8 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
     public chosen: Coord = new Coord(-1, -1);
     public chosenAutomatically: boolean = false;
     public canPass: boolean = false;
+
+    public encoder: Encoder<KamisadoMove> = KamisadoMove.encoder;
 
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;
@@ -121,11 +124,5 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         if (!this.chosenAutomatically) {
             this.chosen = new Coord(-1, -1);
         }
-    }
-    public decodeMove(encodedMove: number): KamisadoMove {
-        return KamisadoMove.decode(encodedMove);
-    }
-    public encodeMove(move: KamisadoMove): number {
-        return KamisadoMove.encode(move);
     }
 }

@@ -4,6 +4,8 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { DvonnNode, DvonnRules } from './DvonnRules';
+import { Player } from 'src/app/jscaip/Player';
+import { DvonnPieceStack } from './DvonnPieceStack';
 
 
 export class DvonnMinimax extends Minimax<DvonnMove, DvonnPartSlice> {

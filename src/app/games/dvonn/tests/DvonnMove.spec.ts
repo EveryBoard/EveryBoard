@@ -1,5 +1,6 @@
 import { DvonnMove } from '../DvonnMove';
 import { Coord } from 'src/app/jscaip/Coord';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('DvonnMove', () => {
     it('should toString in a readable way', () => {
@@ -7,17 +8,11 @@ describe('DvonnMove', () => {
         expect(DvonnMove.PASS.toString()).toEqual('DvonnMove.PASS');
     });
     it('should correctly encode and decode coord to coord moves', () => {
-        const move1: DvonnMove = DvonnMove.of(new Coord(3, 2), new Coord(3, 3));
-        const encoded1: number = move1.encode();
-        const decoded1: DvonnMove = DvonnMove.decode(encoded1);
-        expect(decoded1).toEqual(move1);
-        const decoded2: DvonnMove = move1.decode(encoded1);
-        expect(decoded2).toEqual(move1);
+        const move: DvonnMove = DvonnMove.of(new Coord(3, 2), new Coord(3, 3));
+        NumberEncoderTestUtils.expectToBeCorrect(DvonnMove.encoder, move);
     });
     it('should correctly encode and decode PASS', () => {
-        const encodedMove: number = DvonnMove.PASS.encode();
-        const decodedMove: DvonnMove = DvonnMove.decode(encodedMove);
-        expect(decodedMove).toEqual(DvonnMove.PASS);
+        NumberEncoderTestUtils.expectToBeCorrect(DvonnMove.encoder, DvonnMove.PASS);
     });
     it('should force move to start and end inside the board', () => {
         expect(() => DvonnMove.of(new Coord(-1, 2), new Coord(0, 2))).toThrowError();

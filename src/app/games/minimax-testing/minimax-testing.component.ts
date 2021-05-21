@@ -8,6 +8,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MinimaxTestingMinimax } from './MinimaxTestingMinimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-minimax-testing',
@@ -26,6 +27,7 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
 
     public coord: Coord = new Coord(-1, -1);
 
+    public encoder: Encoder<MinimaxTestingMove> = MinimaxTestingMove.encoder;
     public chooseRight(): Promise<MGPValidation> {
         this.canUserPlay('#click_right');
         const chosenMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
@@ -40,11 +42,5 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
         const slice: MinimaxTestingPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
         this.coord = slice.location;
-    }
-    public decodeMove(encodedMove: number): MinimaxTestingMove {
-        return MinimaxTestingMove.decode(encodedMove);
-    }
-    public encodeMove(move: MinimaxTestingMove): number {
-        return MinimaxTestingMove.encode(move);
     }
 }

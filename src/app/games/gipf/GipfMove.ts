@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder } from 'src/app/jscaip/encoder';
+import { Encoder } from 'src/app/jscaip/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { Move } from 'src/app/jscaip/Move';

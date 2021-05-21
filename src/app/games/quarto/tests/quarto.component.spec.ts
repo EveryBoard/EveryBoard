@@ -56,14 +56,4 @@ describe('QuartoComponent', () => {
         const move: QuartoMove = new QuartoMove(3, 3, QuartoPiece.NONE);
         await componentTestUtils.expectMoveSuccess('#chooseCoord_3_3', move);
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(QuartoMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(5);
-        expect(QuartoMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(QuartoMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new QuartoMove(2, 2, QuartoPiece.AABA));
-        expect(QuartoMove.encode).toHaveBeenCalledTimes(1);
-    });
 });

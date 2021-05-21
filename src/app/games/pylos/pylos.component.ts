@@ -3,11 +3,12 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
-import { PylosMinimax } from "src/app/games/pylos/PylosMinimax";
+import { PylosMinimax } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-pylos',
@@ -37,6 +38,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
+    public encoder: Encoder<PylosMove> = PylosMove.encoder;
     public getLevelRange(z: number): number[] {
         switch (z) {
             case 0: return [0, 1, 2, 3];
@@ -204,11 +206,5 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             this.lastFirstCapture = null;
             this.lastSecondCapture = null;
         }
-    }
-    public decodeMove(encodedMove: number): PylosMove {
-        return PylosMove.decode(encodedMove);
-    }
-    public encodeMove(move: PylosMove): number {
-        return PylosMove.encode(move);
     }
 }

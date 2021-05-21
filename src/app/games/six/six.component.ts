@@ -17,6 +17,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
     from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 interface Scale {
     minX: number;
@@ -68,6 +69,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         this.setPieceSize(25);
         this.updateBoard();
     }
+    public encoder: Encoder<SixMove> = SixMove.encoder;
     private setPieceSize(rayon: number): void {
         this.PIECE_SIZE = 2 * rayon;
         this.hexaLayout = new HexaLayout(rayon,
@@ -79,12 +81,6 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         this.selectedPiece = null;
         this.chosenLanding = null;
         this.cuttables = [];
-    }
-    public decodeMove(encodedMove: JSONValue): SixMove {
-        return SixMove.encoder.decode(encodedMove);
-    }
-    public encodeMove(move: SixMove): JSONValue {
-        return SixMove.encoder.encode(move);
     }
     public updateBoard(): void {
         const node: SixNode = this.rules.node;

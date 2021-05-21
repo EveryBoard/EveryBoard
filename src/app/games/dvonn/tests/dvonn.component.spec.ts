@@ -72,18 +72,6 @@ describe('DvonnComponent', () => {
             { x: 4, y: 1, caseContent: W_ },
         ]);
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(DvonnMove, 'decode').and.callThrough();
-        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
-        const encoded: JSONValue = componentTestUtils.getComponent().encodeMove(move);
-        componentTestUtils.getComponent().decodeMove(encoded);
-        expect(DvonnMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(DvonnMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
-        expect(DvonnMove.encode).toHaveBeenCalledTimes(1);
-    });
     it('should allow clicking twice on a piece to deselect it', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
         await componentTestUtils.expectClickSuccess('#click_2_0');

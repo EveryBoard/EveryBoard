@@ -439,23 +439,4 @@ describe('GipfComponent', () => {
         componentTestUtils.setupSlice(slice);
         await componentTestUtils.expectClickFailure('#click_0_6', GipfComponentFailure.NO_DIRECTIONS_AVAILABLE);
     }));
-    describe('encode/decode', () => {
-        it('should delegate decoding to move', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
-                                                               MGPOptional.of(HexaDirection.DOWN));
-            const move: GipfMove = new GipfMove(placement, [], []);
-            const encodedMove: JSONValue = GipfMove.encoder.encode(move);
-            spyOn(GipfMove.encoder, 'decode').and.callThrough();
-            componentTestUtils.getComponent().decodeMove(encodedMove);
-            expect(GipfMove.encoder.decode).toHaveBeenCalledTimes(1);
-        });
-        it('should delegate encoding to move', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
-                                                               MGPOptional.of(HexaDirection.DOWN));
-            const move: GipfMove = new GipfMove(placement, [], []);
-            spyOn(GipfMove.encoder, 'encode').and.callThrough();
-            componentTestUtils.getComponent().encodeMove(move);
-            expect(GipfMove.encoder.encode).toHaveBeenCalledTimes(1);
-        });
-    });
 });

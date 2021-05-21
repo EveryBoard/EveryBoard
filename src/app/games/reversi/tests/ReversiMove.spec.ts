@@ -1,28 +1,17 @@
 import { ReversiRules } from '../ReversiRules';
-import { ReversiMinimax } from "../ReversiMinimax";
+import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('ReversiMove', () => {
-    it('ReversiMove.encode and ReversiMove.decode should be reversible', () => {
+    it('ReversiMove.encoder should be correct', () => {
         const rules: ReversiRules = new ReversiRules(ReversiPartSlice);
         const minimax: ReversiMinimax = new ReversiMinimax('ReversiMinimax');
         const moves: ReversiMove[] = minimax.getListMoves(rules.node);
         moves.push(ReversiMove.PASS);
         for (const move of moves) {
-            const encodedMove: number = move.encode();
-            const decodedMove: ReversiMove = ReversiMove.decode(encodedMove);
-            const reEncodedMove: number = decodedMove.encode();
-            expect(reEncodedMove).toEqual(encodedMove);
-            expect(decodedMove).toEqual(move);
+            NumberEncoderTestUtils.expectToBeCorrect(ReversiMove.encoder, move);
         }
-    });
-    it('should delegate to static method decode', () => {
-        const testMove: ReversiMove = new ReversiMove(1, 1);
-        spyOn(ReversiMove, 'decode').and.callThrough();
-
-        testMove.decode(testMove.encode());
-
-        expect(ReversiMove.decode).toHaveBeenCalledTimes(1);
     });
 });

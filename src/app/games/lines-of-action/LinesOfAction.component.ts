@@ -3,17 +3,17 @@ import { AbstractGameComponent }
     from 'src/app/components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DirectionError } from 'src/app/jscaip/Direction';
-import { Move } from 'src/app/jscaip/Move';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { assert, JSONValue } from 'src/app/utils/utils';
+import { assert } from 'src/app/utils/utils';
 import { LinesOfActionMove } from './LinesOfActionMove';
 import { LinesOfActionRules } from './LinesOfActionRules';
-import { LinesOfActionMinimax } from "./LinesOfActionMinimax";
+import { LinesOfActionMinimax } from './LinesOfActionMinimax';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-linesofaction',
@@ -35,6 +35,8 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
     private selected: MGPOptional<Coord> = MGPOptional.empty();
     private lastMove: MGPOptional<LinesOfActionMove> = MGPOptional.empty();
     private captured: MGPOptional<Coord> = MGPOptional.empty();
+
+    public encoder: Encoder<LinesOfActionMove> = LinesOfActionMove.encoder;
 
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -116,11 +118,4 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
         }
         return classes;
     }
-    public decodeMove(encodedMove: JSONValue): Move {
-        return LinesOfActionMove.encoder.decode(encodedMove);
-    }
-    public encodeMove(move: LinesOfActionMove): JSONValue {
-        return LinesOfActionMove.encoder.encode(move);
-    }
-
 }

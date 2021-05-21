@@ -251,6 +251,7 @@ export class GameService {
         scorePlayerOne: number,
         notifyDraw?: boolean,
         winner?: string,
+        loser?: string,
     ): Promise<void> {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
             partId, encodedMove, scorePlayerZero, scorePlayerOne, notifyDraw, winner } });
@@ -268,6 +269,7 @@ export class GameService {
         };
         if (winner != null) {
             update.winner = winner;
+            update.loser = loser;
             update.result = MGPResult.VICTORY.toInterface();
         } else if (notifyDraw) {
             update.result = MGPResult.DRAW.toInterface();

@@ -1,19 +1,18 @@
 import { TablutRules } from '../TablutRules';
-import { TablutMinimax } from "../TablutMinimax";
+import { TablutMinimax } from '../TablutMinimax';
 import { TablutMove } from '../TablutMove';
 import { TablutPartSlice } from '../TablutPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('TablutMove', () => {
 
-    it('TablutMove.encode and TablutMove.decode should be reversible', () => {
+    it('encoder should be correct', () => {
         const rules: TablutRules = new TablutRules(TablutPartSlice);
         const minimax: TablutMinimax = new TablutMinimax('TablutMinimax');
         const firstTurnMoves: TablutMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
-            const encodedMove: number = move.encode();
-            const decodedMove: TablutMove = TablutMove.decode(encodedMove);
-            expect(decodedMove).toEqual(move);
+            NumberEncoderTestUtils.expectToBeCorrect(TablutMove.encoder, move);
         }
     });
     it('TablutMove creation, as a MoveCoordToCoord, should throw when created immobile', () => {
@@ -30,12 +29,6 @@ describe('TablutMove', () => {
     });
     it('TablutMove must throw if created non-orthogonally', () => {
         expect(() => new TablutMove(new Coord(0, 0), new Coord(1, 1))).toThrowError('TablutMove cannot be diagonal.');
-    });
-    it('should delegate decoding to static method', () => {
-        const testMove: TablutMove = new TablutMove(new Coord(1, 1), new Coord(2, 1));
-        spyOn(TablutMove, 'decode').and.callThrough();
-        testMove.decode(testMove.encode());
-        expect(TablutMove.decode).toHaveBeenCalledTimes(1);
     });
     it('Should override equals and toString correctly', () => {
         const a: Coord = new Coord(0, 0);

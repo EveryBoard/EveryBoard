@@ -1,6 +1,6 @@
 import { MoveCoord } from './MoveCoord';
 import { Coord } from './Coord';
-import { NumberEncoder } from './encoder';
+import { NumberEncoder } from './Encoder';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Direction, DirectionError } from './Direction';
 

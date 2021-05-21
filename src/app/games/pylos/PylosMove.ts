@@ -1,8 +1,42 @@
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Move } from 'src/app/jscaip/Move';
 import { PylosCoord } from './PylosCoord';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 
 export class PylosMove extends Move {
+    public static encoder: NumberEncoder<PylosMove> = new class extends NumberEncoder<PylosMove> {
+        public maxValue(): number {
+            const L: number = 63;
+            const S: number = 64;
+            const F: number = 64;
+            const SC: number = 64;
+            return 64*65*65*SC + 64*65*F + 64*S + L;
+        }
+        public encodeNumber(move: PylosMove): number {
+            // Encoded as second Capture then first then startingCoord then landingCoord
+            const L: number = PylosCoord.encode(move.landingCoord); // from 0 to 63
+
+            const S: number = PylosCoord.encodeOptional(move.startingCoord);
+            const F: number = PylosCoord.encodeOptional(move.firstCapture);
+            const SC: number = PylosCoord.encodeOptional(move.secondCapture);
+
+            return (64*65*65*SC) + (64*65*F) + (64*S) + L;
+        }
+        public decodeNumber(encodedMove: number): PylosMove {
+            const L: PylosCoord = PylosCoord.decode(encodedMove % 64);
+            encodedMove -= (encodedMove % 64); encodedMove /= 64;
+
+            const S: MGPOptional<PylosCoord> = PylosCoord.decodeToOptional(encodedMove % 65);
+            encodedMove -= (encodedMove % 65); encodedMove /= 65;
+
+            const F: MGPOptional<PylosCoord> = PylosCoord.decodeToOptional(encodedMove % 65);
+            encodedMove -= (encodedMove % 65); encodedMove /= 65;
+
+            const SC: MGPOptional<PylosCoord> = PylosCoord.decodeToOptional(encodedMove);
+
+            return new PylosMove(S, L, F, SC);
+        }
+    }
     public static fromClimb(startingCoord: PylosCoord, landingCoord: PylosCoord, captures: PylosCoord[]): PylosMove {
         if (startingCoord == null) {
             throw new Error('PylosMove: Starting Coord can\'t be null  if it\'s when created fromClimb.');
@@ -67,23 +101,6 @@ export class PylosMove extends Move {
                              capturesOptionals.firstCapture,
                              capturesOptionals.secondCapture);
     }
-    public static encode(move: PylosMove): number {
-        return move.encode();
-    }
-    public static decode(encodedMove: number): PylosMove {
-        const L: PylosCoord = PylosCoord.decode(encodedMove % 64);
-        encodedMove -= (encodedMove % 64); encodedMove /= 64;
-
-        const S: MGPOptional<PylosCoord> = PylosCoord.decodeToOptional(encodedMove % 65);
-        encodedMove -= (encodedMove % 65); encodedMove /= 65;
-
-        const F: MGPOptional<PylosCoord> = PylosCoord.decodeToOptional(encodedMove % 65);
-        encodedMove -= (encodedMove % 65); encodedMove /= 65;
-
-        const SC: MGPOptional<PylosCoord> = PylosCoord.decodeToOptional(encodedMove);
-
-        return new PylosMove(S, L, F, SC);
-    }
     private constructor(
         public readonly startingCoord: MGPOptional<PylosCoord>,
         public readonly landingCoord: PylosCoord,
@@ -117,18 +134,5 @@ export class PylosMove extends Move {
             o.secondCapture.equals(this.firstCapture);
         if (firstEquals && secondEquals) return true;
         return firstCrossedEquals && secondCrossedEquals;
-    }
-    public encode(): number {
-        // Encoded as second Capture then first then startingCoord then landingCoord
-        const L: number = PylosCoord.encode(this.landingCoord); // from 0 to 63
-
-        const S: number = PylosCoord.encodeOptional(this.startingCoord);
-        const F: number = PylosCoord.encodeOptional(this.firstCapture);
-        const SC: number = PylosCoord.encodeOptional(this.secondCapture);
-
-        return (64*65*65*SC) + (64*65*F) + (64*S) + L;
-    }
-    public decode(encodedMove: number): Move {
-        return PylosMove.decode(encodedMove);
     }
 }

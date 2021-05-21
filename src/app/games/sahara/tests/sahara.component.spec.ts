@@ -21,16 +21,6 @@ describe('SaharaComponent', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
     });
-    it('should delegate decoding to move', () => {
-        spyOn(SaharaMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(1);
-        expect(SaharaMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(SaharaMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new SaharaMove(new Coord(1, 1), new Coord(2, 1)));
-        expect(SaharaMove.encode).toHaveBeenCalledTimes(1);
-    });
     it('Should play correctly shortest victory', fakeAsync(async() => {
         const board: NumberTable = [
             [N, N, _, X, _, _, _, O, X, N, N],

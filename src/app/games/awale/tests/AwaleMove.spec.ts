@@ -2,25 +2,16 @@ import { AwaleRules } from '../AwaleRules';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { AwaleMove } from '../AwaleMove';
 import { AwalePartSlice } from '../AwalePartSlice';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('AwaleMove', () => {
-    it('AwaleMove.encode and AwaleMove.decode should be reversible', () => {
+    it('AwaleMove.encoder should be correct', () => {
         const rules: AwaleRules = new AwaleRules(AwalePartSlice);
         const minimax: AwaleMinimax = new AwaleMinimax('AwaleMinimax');
         const firstTurnMoves: AwaleMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
-            const encodedMove: number = move.encode();
-            const decodedMove: AwaleMove = AwaleMove.decode(encodedMove);
-            expect(decodedMove).toEqual(move);
+            NumberEncoderTestUtils.expectToBeCorrect(AwaleMove.encoder, move)
         }
-    });
-    it('Should delegate to static method decode', () => {
-        const testMove: AwaleMove = new AwaleMove(1, 1);
-        spyOn(AwaleMove, 'decode').and.callThrough();
-
-        testMove.decode(testMove.encode());
-
-        expect(AwaleMove.decode).toHaveBeenCalledTimes(1);
     });
     it('Should override equals correctly', () => {
         const move: AwaleMove = new AwaleMove(0, 0);
