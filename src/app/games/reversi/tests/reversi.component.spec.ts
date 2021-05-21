@@ -50,14 +50,4 @@ describe('ReversiComponent', () => {
 
         expect(tablutGameComponent.getRectClasses(0, 4)).toEqual(['moved']);
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(ReversiMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(5);
-        expect(ReversiMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(ReversiMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new ReversiMove(1, 1));
-        expect(ReversiMove.encode).toHaveBeenCalledTimes(1);
-    });
 });

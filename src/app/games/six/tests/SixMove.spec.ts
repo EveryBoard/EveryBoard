@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { JSONValue } from 'src/app/utils/utils';
+import { EncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { SixMove } from '../SixMove';
 
 describe('SixMove', () => {
@@ -43,24 +43,15 @@ describe('SixMove', () => {
         it('Should forbid non object to decode', () => {
             expect(() => SixMove.encoder.decode(0.5)).toThrowError('Invalid encodedMove of type number!');
         });
-        it('should delegate decoding to static method', () => {
-            const testMove: SixMove =
-                SixMove.fromCut(new Coord(1, 1), new Coord(0, 0), new Coord(2, 2));
-            spyOn(SixMove.encoder, 'decode').and.callThrough();
-            testMove.decode(testMove.encode());
-            expect(SixMove.encoder.decode).toHaveBeenCalledTimes(1);
-        });
         it('should stringify nicely', () => {
             expect(drop.toString()).toEqual('SixMove((5, 5))');
             expect(deplacement.toString()).toEqual('SixMove((5, 5) > (7, 5))');
             expect(cut.toString()).toEqual('SixMove((5, 5) > (7, 5), keep: (9, 9))');
         });
-        it('SixMove.encode and SixMove.decode should be reversible', () => {
+        it('SixMove.encoder should be correct', () => {
             const moves: SixMove[] = [drop, deplacement, cut];
             for (const move of moves) {
-                const encodedMove: JSONValue = SixMove.encoder.encode(move);
-                const decodedMove: SixMove = SixMove.encoder.decode(encodedMove);
-                expect(decodedMove).toEqual(move);
+                EncoderTestUtils.expectToBeCorrect(SixMove.encoder, move);
             }
         });
     });

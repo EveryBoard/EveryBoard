@@ -1,3 +1,4 @@
+import { fakeAsync } from '@angular/core/testing';
 import { SaharaComponent } from '../sahara.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
@@ -5,7 +6,6 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { fakeAsync } from '@angular/core/testing';
 
 describe('SaharaComponent', () => {
     let componentTestUtils: ComponentTestUtils<SaharaComponent>;
@@ -20,16 +20,6 @@ describe('SaharaComponent', () => {
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
-    });
-    it('should delegate decoding to move', () => {
-        spyOn(SaharaMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(1);
-        expect(SaharaMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(SaharaMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new SaharaMove(new Coord(1, 1), new Coord(2, 1)));
-        expect(SaharaMove.encode).toHaveBeenCalledTimes(1);
     });
     it('Should play correctly shortest victory', fakeAsync(async() => {
         const board: NumberTable = [

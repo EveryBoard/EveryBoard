@@ -21,7 +21,7 @@ export class InscriptionComponent {
         this.authService
             .doRegister(value)
             .then(
-                (res) => this.router.navigate(['/confirm-inscription']),
-                (err) => this.errorMessage = err.message);
+                (_res) => this.router.navigate(['/confirm-inscription']),
+                (err: { message: string }) => this.errorMessage = err.message);
     }
 }

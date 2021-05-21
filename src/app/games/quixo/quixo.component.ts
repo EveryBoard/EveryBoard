@@ -5,10 +5,13 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
-import { GameComponentUtils } from '../../components/game-components/GameComponentUtils';
+import { QuixoMinimax } from 'src/app/games/quixo/QuixoMinimax';
+import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { RulesFailure } from 'src/app/jscaip/Rules';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-quixo',
@@ -17,6 +20,12 @@ import { Player } from 'src/app/jscaip/Player';
 })
 export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice> {
     public static VERBOSE: boolean = false;
+
+
+    public availableMinimaxes: Minimax<QuixoMove, QuixoPartSlice>[] = [
+        new QuixoMinimax('QuixoMinimax'),
+    ];
+    public CASE_SIZE: number = 100;
 
     public rules: QuixoRules = new QuixoRules(QuixoPartSlice);
 
@@ -28,21 +37,19 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public chosenDirection: Orthogonal;
 
+    public victoriousCoords: Coord[] = [];
+
+    public encoder: Encoder<QuixoMove> = QuixoMove.encoder;
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;
         this.board = this.slice.board;
         const move: QuixoMove = this.rules.node.move;
         if (move) this.lastMoveCoord = move.coord;
         else this.lastMoveCoord = null;
+        this.victoriousCoords = QuixoRules.getVictoriousCoords(this.slice);
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = null;
-    }
-    public decodeMove(encodedMove: number): QuixoMove {
-        return QuixoMove.decode(encodedMove);
-    }
-    public encodeMove(move: QuixoMove): number {
-        return QuixoMove.encode(move);
     }
     public getPieceClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
@@ -52,6 +59,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         classes.push(this.getPlayerClass(player));
         if (coord.equals(this.chosenCoord)) classes.push('selected');
         else if (coord.equals(this.lastMoveCoord)) classes.push('lastmove');
+        if (this.victoriousCoords.some((c: Coord): boolean => c.equals(coord))) classes.push('victory-stroke');
         return classes;
     }
     public onBoardClick(x: number, y: number): MGPValidation {
@@ -71,13 +79,13 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
             return MGPValidation.SUCCESS;
         }
     }
-    public getPossiblesDirections(): [number, number, string][] {
-        const infos: [number, number, string][] = [];
-        if (this.chosenCoord.x !== 4) infos.push([2, 1, 'RIGHT']);
-        if (this.chosenCoord.x !== 0) infos.push([0, 1, 'LEFT']);
-        if (this.chosenCoord.y !== 4) infos.push([1, 2, 'DOWN']);
-        if (this.chosenCoord.y !== 0) infos.push([1, 0, 'UP']);
-        return infos;
+    public getPossiblesDirections(): string[] {
+        const directions: string[] = [];
+        if (this.chosenCoord.x !== 4) directions.push('RIGHT');
+        if (this.chosenCoord.x !== 0) directions.push('LEFT');
+        if (this.chosenCoord.y !== 4) directions.push('DOWN');
+        if (this.chosenCoord.y !== 0) directions.push('UP');
+        return directions;
     }
     public async chooseDirection(direction: string): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#chooseDirection_' + direction);
@@ -94,9 +102,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
         this.cancelMove();
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
-    public getTriangleCoordinate(lx: number, ly: number): string {
-        const x: number = this.chosenCoord.x;
-        const y: number = this.chosenCoord.y;
-        return GameComponentUtils.getTriangleCoordinate(x, y, lx, ly);
+    public getArrowTransform(coord: Coord, orientation: string): string {
+        return GameComponentUtils.getArrowTransform(this.CASE_SIZE, coord, Orthogonal.factory.fromString(orientation));
     }
 }

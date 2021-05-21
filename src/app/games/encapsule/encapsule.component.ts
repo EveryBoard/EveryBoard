@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
-import { Move } from '../../jscaip/Move';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
 import { EncapsulePartSlice, EncapsuleCase } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { EncapsulePiece, Size } from 'src/app/games/encapsule/EncapsulePiece';
@@ -10,6 +10,8 @@ import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegali
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 export class EncapsuleComponentFailure {
     public static NOT_DROPPABLE: string =`Veuillez choisir une de vos pièces parmi les pièces restantes.`;
@@ -29,6 +31,10 @@ export class EncapsuleComponentFailure {
 export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
                                                               EncapsulePartSlice,
                                                               EncapsuleLegalityStatus> {
+
+    public availableMinimaxes: Minimax<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus>[] = [
+        new EncapsuleMinimax('EncapsuleMinimax'),
+    ];
     public CASE_SIZE: number = 100;
 
     public rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
@@ -38,6 +44,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
     private chosenPiece: EncapsulePiece;
     private chosenPieceIndex: number;
 
+    public encoder: Encoder<EncapsuleMove> = EncapsuleMove.encoder;
     public updateBoard(): void {
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
@@ -50,12 +57,6 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
             this.lastLandingCoord = null;
             this.lastStartingCoord = MGPOptional.empty();
         }
-    }
-    public decodeMove(encodedMove: number): Move {
-        return EncapsuleMove.decode(encodedMove);
-    }
-    public encodeMove(move: EncapsuleMove): number {
-        return EncapsuleMove.encode(move);
     }
     public getListPieces(content: number): EncapsulePiece[] {
         return EncapsuleCase.decode(content).toList();

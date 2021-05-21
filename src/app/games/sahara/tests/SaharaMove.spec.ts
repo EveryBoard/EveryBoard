@@ -1,29 +1,20 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { SaharaRules } from '../SaharaRules';
+import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('SaharaMoves', () => {
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
         const rules: SaharaRules = new SaharaRules(SaharaPartSlice);
         expect(rules).toBeTruthy();
-        const moves: MGPMap<SaharaMove, SaharaPartSlice> = rules.getListMoves(rules.node);
-        expect(moves.size()).toEqual(12);
-        for (let i: number = 0; i < moves.size(); i++) {
-            const initialMove: SaharaMove = moves.getByIndex(i).key;
-            const encodedMove: number = initialMove.encode();
-            const decodedMove: SaharaMove = SaharaMove.decode(encodedMove);
-            expect(decodedMove).toEqual(initialMove, initialMove.toString() + ' should be correctly translated');
+        const minimax: SaharaMinimax = new SaharaMinimax('SaharaMinimax');
+        const moves: SaharaMove[] = minimax.getListMoves(rules.node);
+        expect(moves.length).toEqual(12);
+        for (const move of moves) {
+            NumberEncoderTestUtils.expectToBeCorrect(SaharaMove.encoder, move);
         }
-    });
-    it('should delegate to static method decode', () => {
-        const testMove: SaharaMove = new SaharaMove(new Coord(1, 1), new Coord(2, 1));
-        spyOn(SaharaMove, 'decode').and.callThrough();
-
-        testMove.decode(testMove.encode());
-
-        expect(SaharaMove.decode).toHaveBeenCalledTimes(1);
     });
     it('Should throw error when starting coord is outside the board', () => {
         const start: Coord = new Coord(-1, 0);

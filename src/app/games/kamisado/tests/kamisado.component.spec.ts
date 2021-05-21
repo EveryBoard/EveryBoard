@@ -2,7 +2,7 @@ import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoColor } from 'src/app/games/kamisado/KamisadoColor';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
-import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoRules';
+import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { KamisadoComponent, KamisadoComponentFailure } from '../kamisado.component';
 import { fakeAsync } from '@angular/core/testing';
@@ -121,14 +121,4 @@ describe('KamisadoComponent', () => {
         // can't select a piece either
         expect((componentTestUtils.getComponent().choosePiece(2, 0)).isSuccess()).toBeFalse();
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(KamisadoMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(5);
-        expect(KamisadoMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(KamisadoMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(KamisadoMove.of(new Coord(0, 7), new Coord(0, 6)));
-        expect(KamisadoMove.encode).toHaveBeenCalledTimes(1);
-    });
 });

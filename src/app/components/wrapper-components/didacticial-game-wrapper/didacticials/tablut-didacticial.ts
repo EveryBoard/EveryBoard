@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
@@ -113,7 +114,7 @@ export const tablutDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _],
         ], 72),
-        [new TablutMove(new Coord(4, 4), new Coord(4, 1))],
+        [new TablutMove(new Coord(3, 3), new Coord(3, 1))],
         'Le Roi est mort, longue vie au Roi. Bravo, vous avez gagné la partie.',
         'Raté.',
     ),

@@ -2,10 +2,9 @@ import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { JSONValue } from 'src/app/utils/utils';
-import { LinesOfActionComponent } from '../LinesOfActionComponent';
+import { LinesOfActionComponent } from '../LinesOfAction.component';
 import { LinesOfActionMove } from '../LinesOfActionMove';
-import { LinesOfActionFailure } from '../LinesOfActionRules';
+import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionComponent', () => {
@@ -92,19 +91,4 @@ describe('LinesOfActionComponent', () => {
         const component: LinesOfActionComponent = componentTestUtils.getComponent();
         expect(component.getCaseClasses(2, 2)).toEqual(['captured']);
     }));
-    describe('encode/decode', () => {
-        it('should delegate decoding to move', () => {
-            const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 0), new Coord(2, 2));
-            const encodedMove: JSONValue = LinesOfActionMove.encoder.encode(move);
-            spyOn(LinesOfActionMove.encoder, 'decode').and.callThrough();
-            componentTestUtils.getComponent().decodeMove(encodedMove);
-            expect(LinesOfActionMove.encoder.decode).toHaveBeenCalledTimes(1);
-        });
-        it('should delegate encoding to move', () => {
-            const move: LinesOfActionMove = new LinesOfActionMove(new Coord(0, 0), new Coord(2, 2));
-            spyOn(LinesOfActionMove.encoder, 'encode').and.callThrough();
-            componentTestUtils.getComponent().encodeMove(move);
-            expect(LinesOfActionMove.encoder.encode).toHaveBeenCalledTimes(1);
-        });
-    });
 });

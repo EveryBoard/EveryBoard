@@ -1,11 +1,10 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
-import { Rules } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { QuixoPartSlice } from './QuixoPartSlice';
 import { QuixoMove } from './QuixoMove';
 
@@ -13,22 +12,6 @@ export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoPart
 
 export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
 
-    public getListMoves(node: QuixoNode): MGPMap<QuixoMove, QuixoPartSlice> {
-        const slice: QuixoPartSlice = node.gamePartSlice;
-        const moves: MGPMap<QuixoMove, QuixoPartSlice> = new MGPMap<QuixoMove, QuixoPartSlice>();
-        const verticalCoords: Coord[] = QuixoRules.getVerticalCoords(node);
-        const horizontalCenterCoords: Coord[] = QuixoRules.getHorizontalCenterCoords(node);
-        const coords: Coord[] = horizontalCenterCoords.concat(verticalCoords);
-        for (const coord of coords) {
-            const possibleDirections: Orthogonal[] = QuixoRules.getPossibleDirections(coord);
-            for (const possibleDirection of possibleDirections) {
-                const newMove: QuixoMove = new QuixoMove(coord.x, coord.y, possibleDirection);
-                const resultingSlice: QuixoPartSlice = QuixoRules.applyLegalMove(newMove, slice, null);
-                moves.put(newMove, resultingSlice);
-            }
-        }
-        return moves;
-    }
     public static getVerticalCoords(node: QuixoNode): Coord[] {
         const currentEnnemy: number = node.gamePartSlice.getCurrentEnnemy().value;
         const verticalCoords: Coord[] = [];
@@ -63,22 +46,6 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
         if (coord.y !== 4) possibleDirections.push(Orthogonal.DOWN);
         return possibleDirections;
     }
-    public getBoardValue(move: QuixoMove, slice: QuixoPartSlice): number {
-        const linesSums: {[key: string]: {[key: number]: number[]}} =
-            QuixoRules.getLinesSums(slice);
-        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
-        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        const currentPlayer: Player = slice.getCurrentPlayer();
-        if (zerosFullestLine === 5) {
-            if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
-                return Number.MIN_SAFE_INTEGER;
-            }
-        }
-        if (onesFullestLine === 5) {
-            return Number.MAX_SAFE_INTEGER;
-        }
-        return onesFullestLine - zerosFullestLine;
-    }
     public static getLinesSums(slice: QuixoPartSlice): {[player: number]: {[lineType: string]: number[]}} {
         const sums: {[player: number]: {[lineType: string]: number[]}} = {};
         sums[Player.ZERO.value] = {
@@ -103,6 +70,35 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
             }
         }
         return sums;
+    }
+    public static getVictoriousCoords(slice: QuixoPartSlice): Coord[] {
+        const lineSums: {[player: number]: {[lineType: string]: number[]}} = QuixoRules.getLinesSums(slice);
+        const coords: Coord[] = [];
+        for (let player: number = 0; player < 2; player++) {
+            for (let i: number = 0; i < 5; i++) {
+                if (lineSums[player].columns[i] === 5) {
+                    for (let j: number = 0; j < 5; j++) {
+                        coords.push(new Coord(i, j));
+                    }
+                }
+                if (lineSums[player].rows[i] === 5) {
+                    for (let j: number = 0; j < 5; j++) {
+                        coords.push(new Coord(j, i));
+                    }
+                }
+            }
+            if (lineSums[player].diagonals[0] === 5) {
+                for (let i: number = 0; i < 5; i++) {
+                    coords.push(new Coord(i, i));
+                }
+            }
+            if (lineSums[player].diagonals[1] === 5) {
+                for (let i: number = 0; i < 5; i++) {
+                    coords.push(new Coord(i, 4-i));
+                }
+            }
+        }
+        return coords;
     }
     public static getFullestLine(playersLinesInfo: {[lineType: string]: number[]}): number {
         const linesScores: number[] = playersLinesInfo.columns.concat(
@@ -129,5 +125,21 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
         } else {
             return { legal: MGPValidation.SUCCESS };
         }
+    }
+    public getGameStatus(slice: QuixoPartSlice): GameStatus {
+        const linesSums: {[key: string]: {[key: number]: number[]}} =
+            QuixoRules.getLinesSums(slice);
+        const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
+        const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
+        const currentPlayer: Player = slice.getCurrentPlayer();
+        if (zerosFullestLine === 5) {
+            if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
+                return GameStatus.ZERO_WON;
+            }
+        }
+        if (onesFullestLine === 5) {
+            return GameStatus.ONE_WON;
+        }
+        return GameStatus.ONGOING;
     }
 }

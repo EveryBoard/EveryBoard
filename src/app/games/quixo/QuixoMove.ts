@@ -1,10 +1,29 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { QuixoFailure } from './QuixoFailure';
 
 export class QuixoMove extends MoveCoord {
+    public static encoder: NumberEncoder<QuixoMove> = new class extends NumberEncoder<QuixoMove> {
+        public maxValue(): number {
+            return 8 + 5 * 4 + 5 * 20;
+        }
+        public encodeNumber(move: QuixoMove): number {
+            const dir: number = move.direction.toInt();
+            const y: number = move.coord.y * 4;
+            const x: number = move.coord.x * 20;
+            return x + y + dir;
+        }
+        public decodeNumber(encodedMove: number): QuixoMove {
+            const direction: Orthogonal = Orthogonal.factory.fromInt(encodedMove % 4);
+            encodedMove -= encodedMove % 4; encodedMove /= 4;
+            const y: number = encodedMove % 5;
+            encodedMove -= encodedMove % 5; encodedMove /= 5;
+            return new QuixoMove(encodedMove, y, direction);
+        }
+    }
     public static isValidCoord(coord: Coord): MGPValidation {
         if (coord.isNotInRange(5, 5)) {
             return MGPValidation.failure('Invalid coord for QuixoMove: ' + coord.toString() + ' is outside the board.');
@@ -13,16 +32,6 @@ export class QuixoMove extends MoveCoord {
             return MGPValidation.failure(QuixoFailure.NO_INSIDE_CLICK);
         }
         return MGPValidation.SUCCESS;
-    }
-    public static encode(move: QuixoMove): number {
-        return move.encode();
-    }
-    public static decode(encodedMove: number): QuixoMove {
-        const direction: Orthogonal = Orthogonal.factory.fromInt(encodedMove % 4);
-        encodedMove -= encodedMove % 4; encodedMove /= 4;
-        const y: number = encodedMove % 5;
-        encodedMove -= encodedMove % 5; encodedMove /= 5;
-        return new QuixoMove(encodedMove, y, direction);
     }
     constructor(x: number, y: number, public readonly direction: Orthogonal) {
         super(x, y);
@@ -49,14 +58,5 @@ export class QuixoMove extends MoveCoord {
         if (o === this) return true;
         if (!o.coord.equals(this.coord)) return false;
         return o.direction === this.direction;
-    }
-    public encode(): number {
-        const dir: number = this.direction.toInt();
-        const y: number = this.coord.y * 4;
-        const x: number = this.coord.x * 20;
-        return x + y + dir;
-    }
-    public decode(encodedMove: number): QuixoMove {
-        return QuixoMove.decode(encodedMove);
     }
 }

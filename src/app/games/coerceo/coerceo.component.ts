@@ -4,14 +4,16 @@ import { TriangularGameComponent }
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
+import { CoerceoMinimax } from 'src/app/games/coerceo/CoerceoMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-coerceo',
@@ -22,6 +24,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
                                                               CoerceoPartSlice,
                                                               LegalityStatus>
 {
+
+    public availableMinimaxes: Minimax<CoerceoMove, CoerceoPartSlice>[] = [
+        new CoerceoMinimax('CoerceoMinimax'),
+    ];
+
     public rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
 
     private slice: CoerceoPartSlice;
@@ -45,6 +52,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         this.showScore = true;
         this.updateBoard();
     }
+    public encoder: Encoder<CoerceoMove> = CoerceoMove.encoder;
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         this.slice = this.rules.node.gamePartSlice;
@@ -101,12 +109,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         } else {
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE);
         }
-    }
-    public decodeMove(encodedMove: number): Move {
-        return CoerceoMove.decode(encodedMove);
-    }
-    public encodeMove(move: CoerceoMove): number {
-        return CoerceoMove.encode(move);
     }
     public isPyramid(x: number, y: number, caseContent: number): boolean {
         return caseContent === CoerceoPiece.ZERO.value ||

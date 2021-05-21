@@ -4,6 +4,7 @@ import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
+import { DvonnMinimax } from 'src/app/games/dvonn/DvonnMinimax';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -11,6 +12,9 @@ import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
+import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 
 @Component({
     selector: 'app-dvonn',
@@ -19,6 +23,11 @@ import { HexagonalGameComponent }
 })
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartSlice> {
+
+    public availableMinimaxes: Minimax<DvonnMove, DvonnPartSlice>[] = [
+        new DvonnMinimax('DvonnMinimax'),
+        new MaxStacksDvonnMinimax('DvonnMinimaxMaximizeStacks'),
+    ];
     private static CASE_SIZE: number = 30;
     public rules: DvonnRules = new DvonnRules(DvonnPartSlice);
     public scores: number[] = [0, 0];
@@ -32,11 +41,12 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
         new HexaLayout(DvonnComponent.CASE_SIZE * 1.50,
                        new Coord(-DvonnComponent.CASE_SIZE, DvonnComponent.CASE_SIZE * 2),
                        PointyHexaOrientation.INSTANCE);
+    public encoder: Encoder<DvonnMove> = DvonnMove.encoder;
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
         this.showScore = true;
-        this.scores = this.rules.getScores(this.rules.node.gamePartSlice);
+        this.scores = DvonnRules.getScores(this.rules.node.gamePartSlice);
         this.hexaBoard = this.rules.node.gamePartSlice.hexaBoard;
     }
     public updateBoard(): void {
@@ -49,7 +59,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
             this.calculateDisconnecteds();
         }
         this.canPass = this.rules.canOnlyPass(slice);
-        this.scores = this.rules.getScores(slice);
+        this.scores = DvonnRules.getScores(slice);
     }
     private calculateDisconnecteds(): void {
         const previousSlice: DvonnPartSlice = this.rules.node.mother.gamePartSlice;
@@ -112,19 +122,13 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
         const move: DvonnMove = DvonnMove.of(chosenPiece, chosenDestination);
         return this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
     }
-    public decodeMove(encodedMove: number): DvonnMove {
-        return DvonnMove.decode(encodedMove);
-    }
-    public encodeMove(move: DvonnMove): number {
-        return DvonnMove.encode(move);
-    }
     public getPieceClasses(stack: DvonnPieceStack): string[] {
         if (stack.containsSource() && stack.getSize() === 1) {
-            return ['other-piece'];
+            return ['other-piece', 'dashed-stroke'];
         }
         const playerColor: string = this.getPlayerClass(stack.getOwner());
         if (stack.containsSource()) {
-            return [playerColor, 'other-piece-stroke'];
+            return [playerColor, 'other-piece-stroke', 'dashed-stroke'];
         }
         return [playerColor];
     }

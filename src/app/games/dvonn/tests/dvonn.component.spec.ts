@@ -5,9 +5,8 @@ import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
-import { JSONValue } from 'src/app/utils/utils';
 import { fakeAsync } from '@angular/core/testing';
-import { DvonnFailure } from 'src/app/games/dvonn/DvonnRules';
+import { DvonnFailure } from 'src/app/games/dvonn/DvonnFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 
 describe('DvonnComponent', () => {
@@ -72,18 +71,6 @@ describe('DvonnComponent', () => {
             { x: 4, y: 1, caseContent: W_ },
         ]);
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(DvonnMove, 'decode').and.callThrough();
-        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
-        const encoded: JSONValue = componentTestUtils.getComponent().encodeMove(move);
-        componentTestUtils.getComponent().decodeMove(encoded);
-        expect(DvonnMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(DvonnMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)));
-        expect(DvonnMove.encode).toHaveBeenCalledTimes(1);
-    });
     it('should allow clicking twice on a piece to deselect it', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_2_0');
         await componentTestUtils.expectClickSuccess('#click_2_0');

@@ -1,30 +1,37 @@
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 
 export class SiamMove extends MoveCoord {
-    public static encode(move: SiamMove): number {
-        const y: number = move.coord.y + 1; // 0 to 6
-        const x: number = move.coord.x + 1; // 0 to 6
-        const moveDirection: number = move.moveDirection.isAbsent() ? 4 : move.moveDirection.get().toInt(); // 0 to 4
-        const landingOrientation: number = move.landingOrientation.toInt();
-        return (245 * landingOrientation) + (49 * moveDirection) + (7 * x) + y;
-    }
-    public static decode(encodedMove: number): SiamMove {
-        const y: number = encodedMove%7;
-        encodedMove -= y;
-        encodedMove/= 7;
-        const x: number = encodedMove%7;
-        encodedMove -= x;
-        encodedMove/= 7;
-        const moveDirectionInt: number = encodedMove % 5;
-        const moveDirection: MGPOptional<Orthogonal> = moveDirectionInt === 4 ?
-            MGPOptional.empty() :
-            MGPOptional.of(Orthogonal.factory.fromInt(moveDirectionInt));
-        encodedMove -= moveDirectionInt;
-        encodedMove /= 5;
-        const landingOrientation: Orthogonal = Orthogonal.factory.fromInt(encodedMove);
-        return new SiamMove(x - 1, y - 1, moveDirection, landingOrientation);
+    public static encoder: NumberEncoder<SiamMove> = new class extends NumberEncoder<SiamMove> {
+        public maxValue(): number {
+            return 245 * 8 + 49 * 8 + 7 * 7 + 7;
+        }
+        public encodeNumber(move: SiamMove): number {
+            const y: number = move.coord.y + 1; // 0 to 6
+            const x: number = move.coord.x + 1; // 0 to 6
+            const moveDirection: number =
+                move.moveDirection.isAbsent() ? 4 : move.moveDirection.get().toInt(); // 0 to 4
+            const landingOrientation: number = move.landingOrientation.toInt();
+            return (245 * landingOrientation) + (49 * moveDirection) + (7 * x) + y;
+        }
+        public decodeNumber(encodedMove: number): SiamMove {
+            const y: number = encodedMove%7;
+            encodedMove -= y;
+            encodedMove/= 7;
+            const x: number = encodedMove%7;
+            encodedMove -= x;
+            encodedMove/= 7;
+            const moveDirectionInt: number = encodedMove % 5;
+            const moveDirection: MGPOptional<Orthogonal> = moveDirectionInt === 4 ?
+                MGPOptional.empty() :
+                MGPOptional.of(Orthogonal.factory.fromInt(moveDirectionInt));
+            encodedMove -= moveDirectionInt;
+            encodedMove /= 5;
+            const landingOrientation: Orthogonal = Orthogonal.factory.fromInt(encodedMove);
+            return new SiamMove(x - 1, y - 1, moveDirection, landingOrientation);
+        }
     }
     constructor(
         readonly x: number,
@@ -56,12 +63,6 @@ export class SiamMove extends MoveCoord {
     }
     public isRotation(): boolean {
         return this.moveDirection.isAbsent();
-    }
-    public encode(): number {
-        return SiamMove.encode(this);
-    }
-    public decode(encodedMove: number): SiamMove {
-        return SiamMove.decode(encodedMove);
     }
     public equals(o: SiamMove): boolean {
         if (this === o) return true;

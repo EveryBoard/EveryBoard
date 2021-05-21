@@ -1,8 +1,9 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { Direction } from 'src/app/jscaip/Direction';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
 import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('EpaminondasMove: ', () => {
     it('Should forbid null values', () => {
@@ -27,24 +28,16 @@ describe('EpaminondasMove: ', () => {
         expect(() => new EpaminondasMove(2, 2, 1, 0, Direction.UP))
             .toThrowError('Step size must be minimum one (got 0).');
     });
-    it('EpaminondasMove.encode and EpaminondasMove.decode should be reversible', () => {
+    it('EpaminondasMove.encoder should be correct', () => {
         const rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
-        const moves: MGPMap<EpaminondasMove, EpaminondasPartSlice> = rules.getListMoves(rules.node);
-        for (let i: number = 0; i < moves.size(); i++) {
-            const move: EpaminondasMove = moves.getByIndex(i).key;
-            const encodedMove: number = move.encode();
-            const decodedMove: EpaminondasMove = EpaminondasMove.decode(encodedMove);
-            expect(decodedMove).toEqual(move);
+        const minimax: EpaminondasMinimax = new EpaminondasMinimax('EpaminondasMinimax');
+        const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
+        for (const move of moves) {
+            NumberEncoderTestUtils.expectToBeCorrect(EpaminondasMove.encoder, move);
         }
     });
     it('Should forbid non integer number to decode', () => {
-        expect(() => EpaminondasMove.decode(0.5)).toThrowError('EncodedMove must be an integer.');
-    });
-    it('should delegate decoding to static method', () => {
-        const testMove: EpaminondasMove = new EpaminondasMove(10, 11, 2, 1, Direction.UP);
-        spyOn(EpaminondasMove, 'decode').and.callThrough();
-        testMove.decode(testMove.encode());
-        expect(EpaminondasMove.decode).toHaveBeenCalledTimes(1);
+        expect(() => EpaminondasMove.encoder.decode(0.5)).toThrowError('EncodedMove must be an integer.');
     });
     it('Should override correctly equals and toString', () => {
         const move: EpaminondasMove = new EpaminondasMove(4, 3, 2, 1, Direction.UP);

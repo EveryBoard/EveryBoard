@@ -23,7 +23,7 @@ export class ChatService implements OnDestroy {
     constructor(private chatDao: ChatDAO) {
         display(ChatService.VERBOSE, 'ChatService.constructor');
     }
-    public async sendMessage(userName: string, lastTurnThen: number, content: string) {
+    public async sendMessage(userName: string, lastTurnThen: number, content: string): Promise<void> {
         if (this.userForbid(this.followedChatId, userName)) {
             display(ChatService.VERBOSE, 'you\'re not allow to sent message here');
             return;
@@ -50,7 +50,7 @@ export class ChatService implements OnDestroy {
                userName === 'null' ||
                userName === 'undefined'; // TODO: implémenter le blocage de chat
     }
-    public startObserving(chatId: string, callback: (iChat: IChatId) => void) {
+    public startObserving(chatId: string, callback: (iChat: IChatId) => void): void {
         display(ChatService.VERBOSE, 'ChatService.startObserving ' + chatId);
 
         if (this.followedChatId == null) {
@@ -59,7 +59,7 @@ export class ChatService implements OnDestroy {
             this.followedChatId = chatId;
             this.followedChatObs = this.chatDao.getObsById(chatId);
             this.followedChatSub = this.followedChatObs
-                .subscribe((onFullFilled) => callback(onFullFilled));
+                .subscribe((onFullFilled: IChatId) => callback(onFullFilled));
         } else if (chatId === this.followedChatId) {
             throw new Error('WTF :: Already observing chat \'' + chatId + '\'');
         } else {
@@ -68,7 +68,7 @@ export class ChatService implements OnDestroy {
             throw new Error('Cannot ask to watch \'' + this.followedChatId + '\' while watching \'' + chatId + '\'');
         }
     }
-    public stopObserving() {
+    public stopObserving(): void {
         if (!this.isObserving()) {
             throw new Error('ChatService.stopObserving should not be called if not observing');
         }
@@ -95,7 +95,7 @@ export class ChatService implements OnDestroy {
     public async set(id: string, chat: IChat): Promise<void> {
         return this.chatDao.set(id, chat);
     }
-    public ngOnDestroy() {
+    public ngOnDestroy(): void {
         if (this.isObserving()) {
             this.stopObserving();
         }

@@ -1,12 +1,15 @@
 import { Component } from '@angular/core';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { AwaleRules } from './AwaleRules';
+import { AwaleMinimax } from './AwaleMinimax';
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from './AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-awale-component',
@@ -14,6 +17,11 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
+
+    public availableMinimaxes: Minimax<AwaleMove, AwalePartSlice, AwaleLegalityStatus>[] = [
+        new AwaleMinimax('AwaleMinimax'),
+    ];
+
     public rules: AwaleRules = new AwaleRules(AwalePartSlice);
 
     public scores: number[] = [0, 0];
@@ -29,6 +37,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         this.showScore = true;
         this.updateBoard();
     }
+    public encoder: Encoder<AwaleMove> = AwaleMove.encoder;
     public updateBoard(): void {
         const slice: AwalePartSlice = this.rules.node.gamePartSlice;
         this.scores = slice.getCapturedCopy();
@@ -86,11 +95,5 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         } else {
             return [];
         }
-    }
-    public decodeMove(encodedMove: number): AwaleMove {
-        return AwaleMove.decode(encodedMove);
-    }
-    public encodeMove(move: AwaleMove): number {
-        return AwaleMove.encode(move);
     }
 }

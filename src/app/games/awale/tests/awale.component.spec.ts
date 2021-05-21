@@ -14,18 +14,6 @@ describe('AwaleComponent', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('AwaleComponent should be created');
     });
-    describe('encode/decode', () => {
-        it('should delegate decoding to move', () => {
-            spyOn(AwaleMove, 'decode').and.callThrough();
-            componentTestUtils.getComponent().decodeMove(5);
-            expect(AwaleMove.decode).toHaveBeenCalledTimes(1);
-        });
-        it('should delegate encoding to move', () => {
-            spyOn(AwaleMove, 'encode').and.callThrough();
-            componentTestUtils.getComponent().encodeMove(new AwaleMove(1, 1));
-            expect(AwaleMove.encode).toHaveBeenCalledTimes(1);
-        });
-    });
     it('should accept simple move for player zero, show captured and moved', fakeAsync(async() => {
         const board: number[][] = [
             [4, 4, 4, 4, 4, 2],

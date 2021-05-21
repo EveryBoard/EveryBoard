@@ -3,6 +3,7 @@ import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
 import { EncapsuleFailure } from 'src/app/games/encapsule/EncapsuleRules';
+import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
 import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
@@ -25,16 +26,6 @@ describe('EncapsuleComponent', () => {
     it('should create', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('EncapsuleComponent should be created');
-    });
-    it('should delegate decoding to move', () => {
-        spyOn(EncapsuleMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(0);
-        expect(EncapsuleMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(EncapsuleMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2)));
-        expect(EncapsuleMove.encode).toHaveBeenCalledTimes(1);
     });
     it('should drop a piece on the board when selecting it and dropping it', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#piece_0_SMALL_BLACK');
@@ -152,7 +143,9 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_2_1', move);
 
         const component: EncapsuleComponent = componentTestUtils.getComponent();
-        expect(component.rules.getBoardValue(move, component.rules.node.gamePartSlice)).toBe(Number.MIN_SAFE_INTEGER);
+        const minimax: EncapsuleMinimax = new EncapsuleMinimax('EncapsuleMinimax');
+
+        expect(minimax.getBoardValue(move, component.rules.node.gamePartSlice).value).toBe(Number.MIN_SAFE_INTEGER);
     }));
     it('should forbid selecting the same coord for destination and origin', fakeAsync(async() => {
         const x: number = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE).encode();

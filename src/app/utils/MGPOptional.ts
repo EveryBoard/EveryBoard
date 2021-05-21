@@ -1,4 +1,4 @@
-import { Encoder } from 'src/app/jscaip/encoder';
+import { Encoder } from 'src/app/jscaip/Encoder';
 import { Comparable, comparableEquals } from './Comparable';
 import { JSONValue } from './utils';
 

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
 import { Direction } from 'src/app/jscaip/Direction';

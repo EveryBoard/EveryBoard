@@ -1,83 +1,100 @@
-<div class="d-flex align-items-center">
-    <div id="game" class="container">
-        <div class="row">
-            <div id="board" class="col-sm-8 circled">
-                <app-game-includer></app-game-includer>
+<div class="tile is-ancestor">
+    <div class="tile is-3 is-vertical is-parent">
+        <div class="tile is-child box has-text-centered" *ngIf="compo" id="info">
+            <div class="block" id="turnIndicator">
+                <p class="subtitle">Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }}</p>
             </div>
-            <div *ngIf="compo" id="info" class="circled col-sm-4">
-                <div class="inforow" id="turnIndicator" style="text-align:center">
-                    <h4>Tour n° {{ compo.rules.node.gamePartSlice.turn + 1 }}</h4>
-                </div>
-                <div class="container row" id="playerSelector">
-                    <div class="col-sm-6">
-                        <mat-select [(value)]="playerZeroValue"
-                                    (selectionChange)="switchPlayerOne()">
-                            <mat-option selected value="0"> Humain </mat-option>
-                            <mat-option value="1"> IA LEVEL 1 </mat-option>
-                            <mat-option value="2"> IA LEVEL 2 </mat-option>
-                            <mat-option value="3"> IA LEVEL 3 </mat-option>
-                            <mat-option value="4"> IA LEVEL 4 </mat-option>
-                            <mat-option value="5"> IA LEVEL 5 </mat-option>
-                            <mat-option value="6"> IA LEVEL 6 </mat-option>
-                            <mat-option value="7"> IA LEVEL 7 </mat-option>
-                        </mat-select>
-                        <p id="scoreZero"
-                           *ngIf="compo.scores"
-                           class="text-left"> {{ compo.scores[0] }} points </p>
+            <div id="playerSelector"
+                 class="columns">
+                <div class="column is-6 is-vcentered">
+                    <div class="select">
+                        <select id="playerZeroSelect"
+                                (change)="updatePlayer(0)"
+                                [(ngModel)]="players[0]">
+                            <option selected
+                                    value="humain"> Humain </option>
+                            <option *ngFor="let minimax of compo.availableMinimaxes"
+                                    [value]="minimax.name">{{ minimax.name }}</option>
+                        </select>
                     </div>
-                    <div class="col-sm-6">
-                        <mat-select [(value)]="playerOneValue"
-                                    (selectionChange)="switchPlayerTwo()">
-                            <mat-option selected value="0"> Humain </mat-option>
-                            <mat-option value="1"> IA LEVEL 1 </mat-option>
-                            <mat-option value="2"> IA LEVEL 2 </mat-option>
-                            <mat-option value="3"> IA LEVEL 3 </mat-option>
-                            <mat-option value="4"> IA LEVEL 4 </mat-option>
-                            <mat-option value="5"> IA LEVEL 5 </mat-option>
-                            <mat-option value="6"> IA LEVEL 6 </mat-option>
-                            <mat-option value="7"> IA LEVEL 7 </mat-option>
-                        </mat-select>
-                        <p id="scoreOne"
-                           *ngIf="compo.scores"
-                           class="text-right"> {{ compo.scores[1] }} points </p>
+                    <div class="select">
+                        <select *ngIf="players[0] !== 'humain'"
+                                id="aiZeroDepthSelect"
+                                [(ngModel)]="aiDepths[0]"
+                                (change)="updatePlayer(0)">
+                            <option selected
+                                    value="0">Choisissez le niveau</option>
+                            <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
+                                    [value]="i">Niveau {{ i }}</option>
+                        </select>
                     </div>
+                    <p id="scoreOne"
+                       *ngIf="compo.scores"
+                       class="block"> {{ compo.scores[0] }} points </p>
                 </div>
-                <div class="inforow" id="gameResult" *ngIf="endGame">
-                    <h4 *ngIf="winner">{{ winner }} a gagné</h4>
-                    <h4 id="draw" *ngIf="winner == null">Match nul</h4>
+                <div class="column is-6">
+                    <div class="select">
+                        <select id="playerOneSelect"
+                                (change)="updatePlayer(1)"
+                                [(ngModel)]="players[1]">
+                            <option selected
+                                    value="humain"> Humain </option>
+                            <option *ngFor="let minimax of compo.availableMinimaxes"
+                                    [value]="minimax.name">{{ minimax.name }}</option>
+                        </select>
+                    </div>
+                    <div class="select">
+                        <select *ngIf="players[1] !== 'humain'"
+                                [(ngModel)]="aiDepths[1]"
+                                (change)="updatePlayer(0)">
+                            <option selected value="0">Choisissez le niveau</option>
+                            <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
+                                    [value]="i">Niveau {{ i }}</option>
+                        </select>
+                    </div>
+                    <p id="scoreZero"
+                       *ngIf="compo.scores"
+                       class="block"> {{ compo.scores[1] }} points </p>
                 </div>
-                <div class="inforow" id="passButtonDiv" *ngIf="endGame === false && compo.canPass">
-                    <button id="passButton"
-                            type="button"
-                            class="btn btn-lg btn-primary w-100"
-                            (click)="compo.pass()"
-                            >
-                        Passer son tour
-                    </button>
-                </div>
-                <div class="inforow"
-                     id="takeBackDiv"
-                     *ngIf="compo.rules.node.gamePartSlice.turn > 0 && endGame === false">
-                    <button id="takeBack"
-                            type="button"
-                            class="btn btn-lg btn-primary w-100"
-                            (click)="takeBack()"
-                            mat-stroked-button>
-                        Reprendre un coup
-                    </button>
-                </div>
-                <div class="inforow"
-                     *ngIf="endGame === true">
-                    <button id="restartButton"
-                            type="button"
-                            class="btn btn-lg btn-primary w-100"
-                            (click)="restartGame()"
-                            mat-stroked-button>
-                        Recommencer une partie
-                    </button>
-                </div>
-                <!-- {{ compo.rules.node.ownValue + ' > ' + compo.rules.node.getHopedValue() }} -->
             </div>
+            <div class="block" id="gameResult" *ngIf="endGame">
+                <h4 *ngIf="winner">{{ winner }} a gagné</h4>
+                <h4 id="draw" *ngIf="winner == null">Match nul</h4>
+            </div>
+            <div style="visibility: hidden;">
+                <mat-select></mat-select> <!-- removing this makes some async tests fail, wtf? (when removing, add the "block" class to the select div above) -->
+            </div>
+        </div>
+        <div class="tile is-child box is-vcentered" *ngIf="compo">
+            <ng-container *ngIf="compo.rules.node.move">
+                <ng-container *ngFor="let minimax of compo.availableMinimaxes">
+                    {{ minimax.name + ': ' + minimax.getBoardValue(compo.rules.node.move, compo.rules.node.gamePartSlice) }} <br/>
+                </ng-container>
+            </ng-container>
+            <button id="passButton"
+                    *ngIf="endGame === false && compo.canPass"
+                    class="button is-primary is-fullwidth mb-1"
+                    (click)="compo.pass()">
+                Passer son tour
+            </button>
+            <button id="takeBack"
+                    *ngIf="compo.rules.node.gamePartSlice.turn > 0 && endGame === false"
+                    class="button is-fullwidth mb-1"
+                    (click)="takeBack()">
+                Reprendre un coup
+            </button>
+            <button id="restartButton"
+                    class="button is-fullwidth"
+                    (click)="restartGame()">
+                Recommencer une partie
+            </button>
+        </div>
+
+    </div>
+    <div class="tile is-parent is-9 is-vcentered">
+        <div id="board"
+             class="tile is-child box">
+            <app-game-includer></app-game-includer>
         </div>
     </div>
 </div>

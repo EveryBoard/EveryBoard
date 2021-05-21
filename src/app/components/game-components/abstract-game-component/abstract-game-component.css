@@ -33,10 +33,13 @@
     stroke: #ffc34d;
 }
 .other-piece {
-    fill: forestgreen;
+    fill: #5c0838;
 }
 .other-piece-stroke {
-    stroke: forestgreen;
+    stroke: #5c0838;
+}
+.dashed-stroke {
+    stroke-dasharray: 2;
 }
 .pre-captured {
     fill: pink;
@@ -66,8 +69,17 @@
 .lastmove {
     stroke: orange;
 }
+.victory {
+    fill: #e6e600;
+}
+.victory-stroke {
+    stroke: #e6e600;
+}
 .selected {
     stroke: blue;
+}
+.selected-fill {
+    fill: blue;
 }
 .clickable {
     stroke: yellow;
@@ -103,6 +115,9 @@
 .text-big {
     font: 50px sans-serif;
 }
+.text-bold {
+    font-weight: bold;
+}
 .text-big-vcenter {
     dy: 17;
 }
@@ -114,4 +129,7 @@
 }
 .text-center {
     text-anchor: middle;
+}
+svg {
+    max-height: calc(100vh - 10rem); /* Full height minus the navbar */
 }

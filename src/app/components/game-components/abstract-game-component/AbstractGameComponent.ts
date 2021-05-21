@@ -7,8 +7,8 @@ import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
-import { JSONValue } from 'src/app/utils/utils';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -20,18 +20,19 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 })
 export abstract class AbstractGameComponent<M extends Move,
                                             S extends GamePartSlice,
-                                            L extends LegalityStatus = LegalityStatus,
-                                            U extends NodeUnheritance = NodeUnheritance> {
+                                            L extends LegalityStatus = LegalityStatus> {
     public readonly STROKE_WIDTH: number = 8;
     public readonly SMALL_STROKE_WIDTH: number = 2;
 
-    public rules: Rules<M, S, L, U>;
+    public rules: Rules<M, S, L>;
 
     public board: NumberTable;
 
     public canPass: boolean;
 
     public showScore: boolean;
+
+    public availableMinimaxes: Minimax<Move, GamePartSlice>[];
 
     public imagesLocation: string = 'assets/images/';
 
@@ -55,9 +56,9 @@ export abstract class AbstractGameComponent<M extends Move,
 
     constructor(public snackBar: MatSnackBar) {
     }
-    public message: (msg: string) => void = (msg: string) => {
+    public message(msg: string): void {
         this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
-    };
+    }
     public cancelMove(reason?: string): MGPValidation {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
@@ -71,9 +72,7 @@ export abstract class AbstractGameComponent<M extends Move,
     public cancelMoveAttempt(): void {
         // Override if need be
     }
-    public abstract decodeMove(encodedMove: JSONValue): Move;
-
-    public abstract encodeMove(move: Move): JSONValue;
+    public abstract encoder: Encoder<M>;
 
     public abstract updateBoard(): void;
 
@@ -86,8 +85,5 @@ export abstract class AbstractGameComponent<M extends Move,
     }
     public getTurn(): number {
         return this.rules.node.gamePartSlice.turn;
-    }
-    public async pass(): Promise<MGPValidation> {
-        throw new Error('AbstractGameComponent.pass should be overriden before being used.');
     }
 }

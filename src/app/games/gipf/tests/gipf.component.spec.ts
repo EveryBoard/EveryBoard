@@ -1,8 +1,7 @@
-import { Arrow, GipfComponent, GipfComponentFailure } from '../gipf.component';
+import { GipfComponent, GipfComponentFailure } from '../gipf.component';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { GipfFailure } from 'src/app/games/gipf/GipfRules';
+import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { JSONValue } from 'src/app/utils/utils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -10,6 +9,7 @@ import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfBoard } from 'src/app/games/gipf/GipfBoard';
 import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
+import { Arrow } from 'src/app/jscaip/Arrow';
 
 describe('GipfComponent', () => {
     let componentTestUtils: ComponentTestUtils<GipfComponent>;
@@ -438,23 +438,4 @@ describe('GipfComponent', () => {
         componentTestUtils.setupSlice(slice);
         await componentTestUtils.expectClickFailure('#click_0_6', GipfComponentFailure.NO_DIRECTIONS_AVAILABLE);
     }));
-    describe('encode/decode', () => {
-        it('should delegate decoding to move', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
-                                                               MGPOptional.of(HexaDirection.DOWN));
-            const move: GipfMove = new GipfMove(placement, [], []);
-            const encodedMove: JSONValue = GipfMove.encoder.encode(move);
-            spyOn(GipfMove.encoder, 'decode').and.callThrough();
-            componentTestUtils.getComponent().decodeMove(encodedMove);
-            expect(GipfMove.encoder.decode).toHaveBeenCalledTimes(1);
-        });
-        it('should delegate encoding to move', () => {
-            const placement: GipfPlacement = new GipfPlacement(new Coord(-3, 0),
-                                                               MGPOptional.of(HexaDirection.DOWN));
-            const move: GipfMove = new GipfMove(placement, [], []);
-            spyOn(GipfMove.encoder, 'encode').and.callThrough();
-            componentTestUtils.getComponent().encodeMove(move);
-            expect(GipfMove.encoder.encode).toHaveBeenCalledTimes(1);
-        });
-    });
 });

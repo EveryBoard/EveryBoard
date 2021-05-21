@@ -1,6 +1,7 @@
 import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
 import { MGPSet } from './MGPSet';
+import { assert } from './utils';
 
 export class MGPMap<K extends Comparable, V extends Comparable> {
     private map: {key: K, value: V}[] = [];
@@ -107,19 +108,19 @@ export class MGPMap<K extends Comparable, V extends Comparable> {
         return newMap;
     }
     public equals(other: MGPMap<K, V>): boolean {
-        const keySet: MGPSet<K> = this.getKeySet();
+        const thisKeySet: MGPSet<K> = this.getKeySet();
         const otherKeySet: MGPSet<K> = other.getKeySet();
-        if (keySet.equals(otherKeySet) === false) {
+        if (thisKeySet.equals(otherKeySet) === false) {
             return false;
         }
-        for (let i: number = 0; i < keySet.size(); i++) {
-            const key: K = keySet.get(i);
-            const left: V = this.get(key).get();
-            const right: MGPOptional<V> = other.get(key);
-            if (right.isAbsent()) {
+        for (let i: number = 0; i < thisKeySet.size(); i++) {
+            const key: K = thisKeySet.get(i);
+            const thisValue: V = this.get(key).get();
+            const otherValue: MGPOptional<V> = other.get(key);
+            if (otherValue.isAbsent()) {
                 return false;
             }
-            if (comparableEquals(left, right.get()) === false) {
+            if (comparableEquals(thisValue, otherValue.get()) === false) {
                 return false;
             }
         }

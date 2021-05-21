@@ -71,6 +71,18 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             return false;
         });
     }
+    public getNumberOfSteps(): number {
+        if (this.steps == null) {
+            return 0;
+        }
+        return this.steps.length;
+    }
+    public getCurrentStepTitle(): string {
+        if (this.steps == null) {
+            return '';
+        }
+        return this.steps[this.stepIndex].title;
+    }
     public ngAfterViewInit(): void {
         display(DidacticialGameWrapperComponent.VERBOSE, 'DidacticialGameWrapperComponent.ngAfterViewInit');
         this.afterGameIncluderViewInit();
@@ -110,11 +122,14 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public startDidacticial(didacticial: DidacticialStep[]): void {
         display(
             DidacticialGameWrapperComponent.VERBOSE,
-            { didacticialGameWrapperComponent_startDidacticial: { didacticial }});
+            { didacticialGameWrapperComponent_startDidacticial: { didacticial } });
         this.steps = didacticial;
         this.tutorialOver = false;
         this.stepFinished = this.getCompletionArray();
         this.showStep(0);
+    }
+    public changeStep(stepIndex: string): void {
+        this.showStep(Number.parseInt(stepIndex, 10));
     }
     private showStep(stepIndex: number): void {
         display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapperComponent.showStep(' + stepIndex + ')');
@@ -124,12 +139,12 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         this.currentMessage = currentStep.instruction;
         this.currentReason = null;
-        this.gameComponent.rules.node = new MGPNode(null, null, currentStep.slice, 0);
+        this.gameComponent.rules.node = new MGPNode(null, null, currentStep.slice);
         this.gameComponent.updateBoard();
         this.cdr.detectChanges();
     }
     public async onLegalUserMove(move: Move): Promise<void> {
-        display(DidacticialGameWrapperComponent.VERBOSE, { didacticialGameWrapper_onLegalUserMove: { move }});
+        display(DidacticialGameWrapperComponent.VERBOSE, { didacticialGameWrapper_onLegalUserMove: { move } });
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         const isLegalMove: boolean = this.gameComponent.rules.choose(move);
         if (isLegalMove) {

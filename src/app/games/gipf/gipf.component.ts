@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GipfRules, GipfFailure } from 'src/app/games/gipf/GipfRules';
+import { GipfRules } from 'src/app/games/gipf/GipfRules';
+import { GipfMinimax } from 'src/app/games/gipf/GipfMinimax';
+import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { FlatHexaOrientation } from 'src/app/jscaip/HexaOrientation';
@@ -8,21 +10,15 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { JSONValue } from 'src/app/utils/utils';
-import { HexagonalGameComponent } from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
+import { HexagonalGameComponent }
+    from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
 import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
-
-export class Arrow {
-    public constructor(public readonly source: Coord,
-                       public readonly destination: Coord,
-                       public readonly x1: number,
-                       public readonly y1: number,
-                       public readonly x2: number,
-                       public readonly y2: number) {}
-}
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { Arrow } from 'src/app/jscaip/Arrow';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 export class GipfComponentFailure {
     public static AMBIGUOUS_CAPTURE_COORD: string =
@@ -42,6 +38,10 @@ export class GipfComponentFailure {
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlice, GipfLegalityStatus> {
+
+    public availableMinimaxes: Minimax<GipfMove, GipfPartSlice, GipfLegalityStatus>[] = [
+        new GipfMinimax('GipfMinimax'),
+    ];
     private static PIECE_SIZE: number = 30;
 
     public rules: GipfRules = new GipfRules(GipfPartSlice);
@@ -79,6 +79,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         this.showScore = true;
         this.constructedSlice = this.rules.node.gamePartSlice;
     }
+    public encoder: Encoder<GipfMove> = GipfMove.encoder;
     public updateBoard(): void {
         const slice: GipfPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
@@ -100,12 +101,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         capture.forEach((c: Coord) => {
             this.captured.push(c);
         });
-    }
-    public decodeMove(encodedMove: JSONValue): GipfMove {
-        return GipfMove.encoder.decode(encodedMove);
-    }
-    public encodeMove(move: GipfMove): JSONValue {
-        return GipfMove.encoder.encode(move);
     }
     public getAllCoords(): Coord[] {
         return this.constructedSlice.hexaBoard.allCoords();
@@ -167,9 +162,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         const capture: GipfCapture = captures[0];
 
         // Capture validity is not checked because by construction the user can only select valid captures
-        this.constructedSlice = this.rules.applyCapture(this.constructedSlice, capture);
+        this.constructedSlice = GipfRules.applyCapture(this.constructedSlice, capture);
         this.markCapture(capture);
-        this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
+        this.possibleCaptures = GipfRules.getPossibleCaptures(this.constructedSlice);
         switch (this.movePhase) {
             case GipfComponent.PHASE_INITIAL_CAPTURE:
                 this.initialCaptures.push(capture);
@@ -192,7 +187,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         return MGPValidation.SUCCESS;
     }
     private moveToInitialCaptureOrPlacementPhase(): MGPValidation {
-        this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
+        this.possibleCaptures = GipfRules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
             this.movePhase = GipfComponent.PHASE_PLACEMENT_COORD;
         } else {
@@ -201,7 +196,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         return MGPValidation.SUCCESS;
     }
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
-        this.possibleCaptures = this.rules.getPossibleCaptures(this.constructedSlice);
+        this.possibleCaptures = GipfRules.getPossibleCaptures(this.constructedSlice);
         if (this.possibleCaptures.length === 0) {
             return this.tryMove(this.initialCaptures, this.placement.get(), this.finalCaptures);
         } else {
@@ -211,8 +206,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
     }
     private computeArrows(placement: Coord): void {
         this.arrows = [];
-        for (const dir of this.rules.getAllDirectionsForEntrance(this.constructedSlice, placement)) {
-            if (this.rules.isLineComplete(this.constructedSlice, placement, dir) === false) {
+        for (const dir of GipfRules.getAllDirectionsForEntrance(this.constructedSlice, placement)) {
+            if (GipfRules.isLineComplete(this.constructedSlice, placement, dir) === false) {
                 const nextCase: Coord = placement.getNext(dir);
                 const center1: Coord = this.getCenter(placement);
                 const center2: Coord = this.getCenter(nextCase);
@@ -246,7 +241,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         }
         this.arrows = [];
         this.currentlyMoved = this.rules.getPiecesMoved(this.constructedSlice, [], this.placement.get());
-        this.constructedSlice = this.rules.applyPlacement(this.constructedSlice, this.placement.get());
+        this.constructedSlice = GipfRules.applyPlacement(this.constructedSlice, this.placement.get());
         return this.moveToFinalCapturePhaseOrTryMove();
     }
     private async tryMove(initialCaptures: ReadonlyArray<GipfCapture>,

@@ -4,8 +4,7 @@ import { QuixoComponent } from '../quixo.component';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GameComponentUtils } from '../../../components/game-components/GameComponentUtils';
-import { RulesFailure } from 'src/app/jscaip/Rules';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
@@ -35,18 +34,13 @@ describe('QuixoComponent', () => {
         expect(componentTestUtils.getComponent().getPieceClasses(4, 4)).toContain('lastmove');
     });
     it('should give correct direction', () => {
-        let possibleDirections: [number, number, string][];
-
         componentTestUtils.getComponent().chosenCoord = new Coord(0, 0);
-        // might want changeDetection
-        possibleDirections = componentTestUtils.getComponent().getPossiblesDirections();
-        expect(possibleDirections).toEqual([[2, 1, 'RIGHT'], [1, 2, 'DOWN']]);
+        expect(componentTestUtils.getComponent().getPossiblesDirections()).toEqual(['RIGHT', 'DOWN']);
 
         componentTestUtils.getComponent().onBoardClick(4, 4);
-        possibleDirections = componentTestUtils.getComponent().getPossiblesDirections();
-        expect(possibleDirections).toEqual([[0, 1, 'LEFT'], [1, 0, 'UP']]);
+        expect(componentTestUtils.getComponent().getPossiblesDirections()).toEqual(['LEFT', 'UP']);
     });
-    it('should cancel move when trying to select ennemy piece', async() => {
+    it('should cancel move when trying to select ennemy piece', fakeAsync(async() => {
         const board: NumberTable = [
             [O, _, _, _, _],
             [_, _, _, _, _],
@@ -58,8 +52,8 @@ describe('QuixoComponent', () => {
         componentTestUtils.setupSlice(state);
 
         await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
-    });
-    it('should cancel move when trying to select center coord', async() => {
+    }));
+    it('should cancel move when trying to select center coord', fakeAsync(async() => {
         const board: NumberTable = [
             [O, _, _, _, _],
             [_, _, _, _, _],
@@ -71,10 +65,10 @@ describe('QuixoComponent', () => {
         componentTestUtils.setupSlice(state);
 
         await componentTestUtils.expectClickFailure('#click_1_1', QuixoFailure.NO_INSIDE_CLICK);
-    });
-    it('should delegate triangleCoord calculation to GameComponentUtils', () => {
+    }));
+    it('should highlight victory', fakeAsync(async() => {
         const board: NumberTable = [
-            [O, _, _, _, _],
+            [O, O, O, O, O],
             [_, _, _, _, _],
             [X, _, _, _, X],
             [_, _, _, _, _],
@@ -83,19 +77,22 @@ describe('QuixoComponent', () => {
         const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
         componentTestUtils.setupSlice(state);
 
-        spyOn(GameComponentUtils, 'getTriangleCoordinate').and.callThrough();
-        componentTestUtils.expectClickSuccess('#click_0_2');
-        componentTestUtils.getComponent().getTriangleCoordinate(2, 1);
-        expect(GameComponentUtils.getTriangleCoordinate).toHaveBeenCalledWith(0, 2, 2, 1);
-    });
-    it('should delegate decoding to move', () => {
-        spyOn(QuixoMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(new QuixoMove(0, 0, Orthogonal.DOWN).encode());
-        expect(QuixoMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(QuixoMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new QuixoMove(0, 0, Orthogonal.DOWN));
-        expect(QuixoMove.encode).toHaveBeenCalledTimes(1);
-    });
+        expect(componentTestUtils.getComponent().getPieceClasses(0, 0)).toContain('victory-stroke');
+        expect(componentTestUtils.getComponent().getPieceClasses(1, 0)).toContain('victory-stroke');
+        expect(componentTestUtils.getComponent().getPieceClasses(2, 0)).toContain('victory-stroke');
+        expect(componentTestUtils.getComponent().getPieceClasses(3, 0)).toContain('victory-stroke');
+        expect(componentTestUtils.getComponent().getPieceClasses(4, 0)).toContain('victory-stroke');
+    }));
+    it('should show insertion directions when clicking on a border case', fakeAsync(async() => {
+        await componentTestUtils.expectClickSuccess('#click_0_0');
+        componentTestUtils.expectElementToExist('#chooseDirection_DOWN');
+    }));
+    it('should allow a simple move', fakeAsync(async() => {
+        await componentTestUtils.expectClickSuccess('#click_4_0');
+        await componentTestUtils.expectMoveSuccess('#chooseDirection_LEFT', new QuixoMove(4, 0, Orthogonal.LEFT));
+    }));
+    it('should allow a simple move upwards', fakeAsync(async() => {
+        await componentTestUtils.expectClickSuccess('#click_4_4');
+        await componentTestUtils.expectMoveSuccess('#chooseDirection_UP', new QuixoMove(4, 4, Orthogonal.UP));
+    }));
 });

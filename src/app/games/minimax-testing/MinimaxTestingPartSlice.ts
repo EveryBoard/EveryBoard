@@ -17,6 +17,18 @@ export class MinimaxTestingPartSlice extends GamePartSlice {
         [+m, +3, +4, -1],
         [-1, +m, +m, -1],
     ];
+    public static readonly BOARD_2: NumberTable = [
+        [+0, +M, -1, -1],
+        [+M, -1, -1, -1],
+        [-1, -1, -1, -1],
+        [-1, -1, -1, -1],
+    ];
+    public static readonly BOARD_3: NumberTable = [
+        [+0, +1, +m, -1],
+        [+1, +m, -1, -1],
+        [+m, -1, -1, -1],
+        [-1, -1, -1, -1],
+    ];
     public static initialBoard: NumberTable = MinimaxTestingPartSlice.BOARD_0;
 
     public constructor(readonly turn: number, readonly location: Coord) {

@@ -1,27 +1,17 @@
 import { MinimaxTestingRules } from '../MinimaxTestingRules';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { MinimaxTestingMove } from '../MinimaxTestingMove';
 import { MinimaxTestingPartSlice } from '../MinimaxTestingPartSlice';
+import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('MinimaxTestingMove', () => {
-    it('MinimaxTestingMove.encode and MinimaxTestingMove.decode should be reversible', () => {
+    it('MinimaxTestingMove.encoder should be correct', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
-        const firstTurnMoves: MGPMap<MinimaxTestingMove, MinimaxTestingPartSlice> = rules.getListMoves(rules.node);
-        for (let i: number = 0; i < firstTurnMoves.size(); i++) {
-            const move: MinimaxTestingMove = firstTurnMoves.getByIndex(i).key;
-            const encodedMove: number = move.encode();
-            const decodedMove: MinimaxTestingMove = MinimaxTestingMove.decode(encodedMove);
-            expect(decodedMove).toEqual(move);
+        const minimax: MinimaxTestingMinimax = new MinimaxTestingMinimax('MinimaxTestingMinimax');
+        const firstTurnMoves: MinimaxTestingMove[] = minimax.getListMoves(rules.node);
+        for (const move of firstTurnMoves) {
+            NumberEncoderTestUtils.expectToBeCorrect(MinimaxTestingMove.encoder, move);
         }
-    });
-
-    it('should delegate to static method decode', () => {
-        const testMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
-        spyOn(MinimaxTestingMove, 'decode').and.callThrough();
-
-        testMove.decode(testMove.encode());
-
-        expect(MinimaxTestingMove.decode).toHaveBeenCalledTimes(1);
     });
 });

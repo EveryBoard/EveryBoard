@@ -1,11 +1,12 @@
-import { SiamRules, SiamNode } from '../SiamRules';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { SiamNode } from '../SiamRules';
+import { SiamMinimax } from '../SiamMinimax';
 import { SiamMove } from '../SiamMove';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { SiamPiece } from '../SiamPiece';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('SiamMove', () => {
     const _: number = SiamPiece.EMPTY.value;
@@ -13,7 +14,7 @@ describe('SiamMove', () => {
 
     const D: number = SiamPiece.WHITE_DOWN.value;
 
-    it('SiamMove.encode and SiamMove.decode should be reversible', () => {
+    it('SiamMove.encoder should be correct', () => {
         const board: number[][] = [
             [_, _, D, _, _],
             [_, _, _, _, _],
@@ -23,24 +24,13 @@ describe('SiamMove', () => {
         ];
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
-        const node: SiamNode = new MGPNode(null, move, slice, 0);
-        const rules: SiamRules = new SiamRules(SiamPartSlice);
-        const moves: MGPMap<SiamMove, SiamPartSlice> = rules.getListMoves(node);
-        for (let i = 0; i < moves.size(); i++) {
-            const move: SiamMove = moves.getByIndex(i).key;
-            const encodedMove: number = move.encode();
-            const decodedMove: SiamMove = SiamMove.decode(encodedMove);
-            expect(decodedMove).toEqual(move);
+        const node: SiamNode = new MGPNode(null, move, slice);
+        const minimax: SiamMinimax = new SiamMinimax('SiamMinimax');
+        const moves: SiamMove[] = minimax.getListMoves(node);
+        for (const move of moves) {
+            NumberEncoderTestUtils.expectToBeCorrect(SiamMove.encoder, move);
         }
     });
-
-    it('should delegate decoding to static method', () => {
-        const testMove: SiamMove = new SiamMove(-1, 0, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        spyOn(SiamMove, 'decode').and.callThrough();
-        testMove.decode(testMove.encode());
-        expect(SiamMove.decode).toHaveBeenCalledTimes(1);
-    });
-
     it('Should force move to end inside the board', () => {
         expect(() => {
             new SiamMove(-1, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);

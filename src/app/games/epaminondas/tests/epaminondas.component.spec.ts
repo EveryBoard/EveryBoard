@@ -435,14 +435,4 @@ describe('EpaminondasComponent:', () => {
         expect(epaminondasComponent.getRectClasses(0, 10)).toEqual(['moved']);
         expect(epaminondasComponent.getRectClasses(0, 11)).toEqual(['moved']);
     }));
-    it('should delegate decoding to move', () => {
-        spyOn(EpaminondasMove, 'decode').and.callThrough();
-        componentTestUtils.getComponent().decodeMove(new EpaminondasMove(11, 0, 2, 1, Direction.UP).encode());
-        expect(EpaminondasMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate encoding to move', () => {
-        spyOn(EpaminondasMove, 'encode').and.callThrough();
-        componentTestUtils.getComponent().encodeMove(new EpaminondasMove(11, 0, 2, 1, Direction.UP));
-        expect(EpaminondasMove.encode).toHaveBeenCalledTimes(1);
-    });
 });

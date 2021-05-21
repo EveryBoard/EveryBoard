@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';

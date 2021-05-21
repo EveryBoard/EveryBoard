@@ -4,10 +4,15 @@ import { EpaminondasLegalityStatus } from 'src/app/games/epaminondas/epaminondas
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
+import { EpaminondasMinimax } from 'src/app/games/epaminondas/EpaminondasMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
+import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 
 @Component({
     selector: 'app-epaminondas',
@@ -18,6 +23,11 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                 EpaminondasPartSlice,
                                                                 EpaminondasLegalityStatus>
 {
+    public availableMinimaxes: Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus>[] = [
+        new EpaminondasMinimax('Normal'),
+        new PositionalEpaminondasMinimax('Positional'),
+        new AttackEpaminondasMinimax('Attack'),
+    ];
     public NONE: number = Player.NONE.value;
     public CASE_SIZE: number = 100;
     public rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
@@ -38,6 +48,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
 
     private captureds: Coord[] = [];
 
+    public encoder: Encoder<EpaminondasMove> = EpaminondasMove.encoder;
     public updateBoard(): void {
         this.firstPiece = new Coord(-15, -1);
         this.lastPiece = new Coord(-15, -1);
@@ -61,12 +72,6 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             this.captureds.push(moved);
             moved = moved.getNext(move.direction, 1);
         }
-    }
-    public decodeMove(encodedMove: number): EpaminondasMove {
-        return EpaminondasMove.decode(encodedMove);
-    }
-    public encodeMove(move: EpaminondasMove): number {
-        return EpaminondasMove.encode(move);
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
@@ -92,7 +97,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 break;
             case ENNEMY:
-                return this.cancelMove('Cette pièce appartient à l\'ennemi, vous devez sélectionner une de vos pièces.');
+                return this.cancelMove(`Cette pièce appartient à l'ennemi, vous devez sélectionner une de vos pièces.`);
             case Player.NONE.value:
                 return this.cancelMove('Cette case est vide, vous devez sélectionner une de vos pièces.');
         }
@@ -233,7 +238,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                             1,
                                                                             direction);
                 const slice: EpaminondasPartSlice = this.rules.node.gamePartSlice;
-                const phalanxValidity: MGPValidation = this.rules.getPhalanxValidity(slice, incompleteMove);
+                const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(slice, incompleteMove);
                 if (phalanxValidity.isFailure()) {
                     return this.cancelMove(phalanxValidity.reason);
                 } else {
@@ -277,8 +282,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                         phalanxSize,
                                                                         1,
                                                                         phalanxDirection);
-            const phalanxValidity: MGPValidation = this.rules.getPhalanxValidity(this.rules.node.gamePartSlice,
-                                                                                 incompleteMove);
+            const phalanxValidity: MGPValidation = EpaminondasRules.getPhalanxValidity(this.rules.node.gamePartSlice,
+                                                                                       incompleteMove);
             if (phalanxValidity.isFailure()) {
                 return this.cancelMove(phalanxValidity.reason);
             } else {

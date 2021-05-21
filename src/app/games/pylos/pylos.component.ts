@@ -3,9 +3,12 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { PylosMove } from 'src/app/games/pylos/PylosMove';
 import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
 import { PylosRules } from 'src/app/games/pylos/PylosRules';
+import { PylosMinimax } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { Encoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-pylos',
@@ -15,6 +18,9 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSlice> {
     public static VERBOSE: boolean = false;
 
+    public availableMinimaxes: Minimax<PylosMove, PylosPartSlice>[] = [
+        new PylosMinimax('PylosMinimax'),
+    ];
     public rules: PylosRules = new PylosRules(PylosPartSlice);
 
     public slice: PylosPartSlice = this.rules.node.gamePartSlice;
@@ -30,6 +36,9 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     public lastMove: PylosMove = null;
 
+    private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
+
+    public encoder: Encoder<PylosMove> = PylosMove.encoder;
     public getLevelRange(z: number): number[] {
         switch (z) {
             case 0: return [0, 1, 2, 3];
@@ -165,11 +174,27 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         if (c.equals(this.chosenLandingCoord)) {
             return this.getPlayerClass(this.slice.getCurrentPlayer());
         }
-        return this.getPlayerClass(Player.of(this.slice.getBoardAt(c)));
+        return this.getPlayerPieceClass(this.slice.getBoardAt(c));
+    }
+    public getPlayerPieceClass(player: number): string {
+        return this.getPlayerClass(Player.of(player));
+    }
+    public getPieceSize(): number {
+        return this.getPieceRay(0);
+    }
+    public getPlayerSidePieces(player: number): number[] {
+        const nPieces: number = this.remainingPieces[player];
+        const pieces: number[] = [];
+        for (let i: number = 0; i < nPieces; i++) {
+            pieces.push(i);
+        }
+        return pieces;
     }
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;
         this.lastMove = this.rules.node.move;
+        const repartition: { [owner: number]: number } = this.slice.getPiecesRepartition();
+        this.remainingPieces = { 0: 15 - repartition[0], 1: 15 - repartition[1] };
         if (this.lastMove) {
             this.lastLandingCoord = this.lastMove.landingCoord;
             this.lastStartingCoord = this.lastMove.startingCoord.getOrNull();
@@ -181,11 +206,5 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             this.lastFirstCapture = null;
             this.lastSecondCapture = null;
         }
-    }
-    public decodeMove(encodedMove: number): PylosMove {
-        return PylosMove.decode(encodedMove);
-    }
-    public encodeMove(move: PylosMove): number {
-        return PylosMove.encode(move);
     }
 }

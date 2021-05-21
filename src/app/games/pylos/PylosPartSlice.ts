@@ -10,11 +10,12 @@ export class PylosPartSlice extends GamePartSlice {
         const board1: number[][] = ArrayUtils.createBiArray(3, 3, Player.NONE.value);
         const board2: number[][] = ArrayUtils.createBiArray(2, 2, Player.NONE.value);
         const board3: number[][] = [[Player.NONE.value]];
-        const turn = 0;
+        const turn: number = 0;
         return new PylosPartSlice([board0, board1, board2, board3], turn);
     }
     constructor(public readonly boards: Table<ReadonlyArray<number>>,
-        turn: number) {
+                turn: number)
+    {
         super([], turn);
     }
     public getBoardAt(coord: PylosCoord): number {
@@ -73,9 +74,9 @@ export class PylosPartSlice extends GamePartSlice {
         ownershipMap[Player.NONE.value] = 0;
         ownershipMap[Player.ZERO.value] = 0;
         ownershipMap[Player.ONE.value] = 0;
-        for (let z = 0; z < 3; z++) {
-            for (let y = 0; y < (4 - z); y++) {
-                for (let x = 0; x < (4 - z); x++) {
+        for (let z: number = 0; z < 3; z++) {
+            for (let y: number = 0; y < (4 - z); y++) {
+                for (let x: number = 0; x < (4 - z); x++) {
                     const c: PylosCoord = new PylosCoord(x, y, z);
                     const v: number = this.getBoardAt(c);
                     ownershipMap[v] = 1 + ownershipMap[v];

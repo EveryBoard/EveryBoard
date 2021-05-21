@@ -1,47 +1,51 @@
-<div class="container">
-    <div class="px-3 py-3 pt-md-5 pb-md-4 mx-auto text-center">
-        <h1 class="display-4">Pantheon's Game</h1>
-        <p class="lead">Pantheon's Game est un site qui permet de jouer et d'apprendre les règles de plus de 15 jeux de stratégie combinatoire à information parfaite.</p>
+<section class="hero">
+    <div class="hero-body">
+        <p class="title">
+            Pantheon's Game
+        </p>
+        <p class="subtitle">
+            Pantheon's Game est un site qui permet de jouer et d'apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.
+        </p>
     </div>
-    <div class="row row-cols-1 row-cols-md-3 mb-3 text-center">
-        <div class="col">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 fw-normal">Liste des jeux</h4>
-                </div>
-                <div class="card-body">
-                    <div class="btn-group-vertical w-100">
-                        <button class="btn btn-lg btn-primary my-1">Voir les jeux disponibles</button>
-                        <button class="btn btn-lg btn-primary">Contribuer au code</button>
+    <div class="columns">
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Liste des jeux</p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <button class="button is-medium is-fullwidth is-primary mb-1">Jeux disponibles</button>
+                        <a class="button is-medium is-fullwidth is-primary" href="https://github.com/MartinREMY42/multi-game-project">Contribuer</a>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 fw-normal">Jouer en ligne</h4>
-                </div>
-                <div class="card-body">
-                    <div class="btn-group-vertical w-100">
-                         <button class="btn btn-lg btn-primary my-1" [routerLink]="['/play']">Créer une partie</button>
-                         <button class="btn btn-lg btn-primary" [routerLink]="['/server']">Voir la liste des parties</button>
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Jouer en ligne</p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/play">Créer une partie</button>
+                        <button class="button is-medium is-fullwidth is-primary" routerLink="/server">Voir la liste des parties</button>
                     </div>
                 </div>
             </div>
         </div>
-        <div class="col">
-            <div class="card mb-4 shadow-sm">
-                <div class="card-header">
-                    <h4 class="my-0 fw-normal">Jouer hors ligne</h4>
-                </div>
-                <div class="card-body">
-                    <div class="btn-group-vertical w-100">
-                        <button class="btn btn-lg btn-primary my-1" [routerLink]="['/local']">Jouer</button>
-                        <button class="btn btn-lg btn-primary" [routerLink]="['/didacticial']">Apprendre</button>
+        <div class="column">
+            <div class="card">
+                <header class="card-header">
+                    <p class="card-header-title">Jouer hors ligne</p>
+                </header>
+                <div class="card-content">
+                    <div class="content">
+                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/local">Jouer</button>
+                        <button class="button is-medium is-fullwidth is-primary" routerLink="/didacticial">Apprendre</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>

@@ -1,8 +1,9 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoPartSlice } from '../KamisadoPartSlice';
 import { KamisadoRules } from '../KamisadoRules';
+import { KamisadoMinimax } from '../KamisadoMinimax';
 import { KamisadoMove } from '../KamisadoMove';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('KamisadoMove', () => {
     it('should toString in a readable way', () => {
@@ -11,23 +12,12 @@ describe('KamisadoMove', () => {
     });
     it('should correctly encode and decode all moves', () => {
         const rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice);
-        const firstTurnMoves: MGPMap<KamisadoMove, KamisadoPartSlice> = rules.getListMoves(rules.node);
-        for (const move of firstTurnMoves.listKeys()) {
-            const encodedMove: number = move.encode();
-            const decodedMove: KamisadoMove = KamisadoMove.decode(encodedMove);
-            expect(decodedMove).toEqual(move);
+        const minimax: KamisadoMinimax = new KamisadoMinimax('KamisadoMinimax');
+        const moves: KamisadoMove[] = minimax.getListMoves(rules.node);
+        moves.push(KamisadoMove.PASS);
+        for (const move of moves) {
+            NumberEncoderTestUtils.expectToBeCorrect(KamisadoMove.encoder, move);
         }
-    });
-    it('should correctly encode and decode PASS', () => {
-        const encodedMove: number = KamisadoMove.PASS.encode();
-        const decodedMove: KamisadoMove = KamisadoMove.decode(encodedMove);
-        expect(decodedMove).toEqual(KamisadoMove.PASS);
-    });
-    it('should delegate decoding to static method', () => {
-        const testMove: KamisadoMove = KamisadoMove.of(new Coord(0, 0), new Coord(1, 1));
-        spyOn(KamisadoMove, 'decode').and.callThrough();
-        testMove.decode(testMove.encode());
-        expect(KamisadoMove.decode).toHaveBeenCalledTimes(1);
     });
     it('should force move to start and end inside the board', () => {
         expect(() => KamisadoMove.of(new Coord(-1, 2), new Coord(2, 2))).toThrowError();

@@ -1,35 +1,54 @@
-<div class="container">
-    <form [formGroup]="loginForm"
-          class="form-signin">
-        <h2 class="form-signin-heading">Connecte toi</h2>
-        <label for="emailId" class="sr-only">Pseudo</label>
-        <input class="form-control"
-               formControlName="email"
-               name='email'
-               placeholder="Email"
-               type="text"
-               required />
-
-        <label for="passwordId" class="sr-only">Password</label>
-        <input id="passwordId"
-               class="form-control"
-               formControlName="password"
-               name="code"
-               placeholder="Password"
-               type="password" />
-
-        <div class="btn-group w-100">
-            <button id="loginButton"
-                    type="submit"
-                    class="btn btn-lg btn-primary"
-                    (click)="loginWithEmail(loginForm.value)" >Connexion</button>
-            <button id="googleButton"
-                    type="submit"
-                    (click)="loginWithGoogle()"
-                    class="btn btn-lg btn-primary">Se connecter avec Google</button>
+<div class="box">
+    <p class="title">Connexion</p>
+    <form [formGroup]="loginForm">
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label" for="email" >Adresse email</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input class="input" type="text" placeholder="Email" formControlName="email" name="email" required />
+                    </div>
+                </div>
+            </div>
         </div>
-        <a class="nav-link" [routerLink]="['/inscription']">Pas encore inscrit? Crée un compte.</a><br/>
-        <span id="errorSpan"
-              style="color:red">{{ errorMessage }}</span><br/>
+        <div class="field is-horizontal">
+            <div class="field-label">
+                <label class="label" for="password">Mot de passe</label>
+            </div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <input class="input" type="password" placeholder="Email" formControlName="password" name="password" required />
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="field is-horizontal">
+            <div class="field-label"></div>
+            <div class="field-body">
+                <div class="field">
+                    <div class="control">
+                        <button class="button is-primary"
+                                id="login-button"
+                                (click)="loginWithEmail(loginForm.value)"
+                                >Connexion</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="errorMessage" class="message is-danger" role="alert">
+            <div class="message-header">Erreur de connexion</div>
+            <div class="message-body" id="errorSpan">{{ errorMessage }}</div>
+        </div>
     </form>
+</div>
+<div class="box">
+    <p class="title">Pas de compte ?</p>
+    <button id="googleButton"
+            type="submit"
+            (click)="loginWithGoogle()"
+            class="button">Se connecter avec Google</button>
+    <button class="button" [routerLink]="['/inscription']">Créer un compte</button>
 </div>

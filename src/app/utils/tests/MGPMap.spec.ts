@@ -127,4 +127,24 @@ describe('MGPMap', () => {
             expect(copy).toEqual(map);
         });
     });
+    describe('equals', () => {
+        it('should detect maps with distinct keys as different', () => {
+            const map1: MGPMap<string, number> = new MGPMap();
+            map1.set('first', 0);
+
+            const map2: MGPMap<string, number> = new MGPMap();
+            map2.set('second', 1);
+
+            expect(map1.equals(map2)).toBeFalse();
+        });
+        it('should detect map with same keys but distinct values as different', () => {
+            const map1: MGPMap<string, number> = new MGPMap();
+            map1.set('first', 0);
+
+            const map2: MGPMap<string, number> = new MGPMap();
+            map2.set('first', 1);
+
+            expect(map1.equals(map2)).toBeFalse();
+        });
+    });
 });

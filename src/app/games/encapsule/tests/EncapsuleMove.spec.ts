@@ -1,9 +1,10 @@
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { EncapsuleRules } from '../EncapsuleRules';
+import { EncapsuleMinimax } from '../EncapsuleMinimax';
 import { EncapsulePartSlice } from '../EncapsulePartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsulePiece } from '../EncapsulePiece';
 import { EncapsuleMove } from '../EncapsuleMove';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('EncapsuleMove', () => {
     it('should construct valid moves with success', () => {
@@ -17,16 +18,18 @@ describe('EncapsuleMove', () => {
     it('should throw when move has the same starting and landing coords', () => {
         expect(() => EncapsuleMove.fromMove(new Coord(2, 1), new Coord(2, 1))).toThrow();
     });
-    describe('encode and decode', () => {
-        it('should be reversible', () => {
+    describe('encoder', () => {
+        it('should be correct for first turn moves', () => {
             const rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
-            const firstTurnMoves: MGPMap<EncapsuleMove, EncapsulePartSlice> = rules.getListMoves(rules.node);
-            for (let i: number = 0; i < firstTurnMoves.size(); i++) {
-                const move: EncapsuleMove = firstTurnMoves.getByIndex(i).key;
-                const encodedMove: number = move.encode();
-                const decodedMove: EncapsuleMove = EncapsuleMove.decode(encodedMove);
-                expect(decodedMove).toEqual(move);
+            const minimax: EncapsuleMinimax = new EncapsuleMinimax('EncapsuleMinimax');
+            const firstTurnMoves: EncapsuleMove[] = minimax.getListMoves(rules.node);
+            for (const move of firstTurnMoves) {
+                NumberEncoderTestUtils.expectToBeCorrect(EncapsuleMove.encoder, move);
             }
+        });
+        it('should be correct for moves', () => {
+            const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2));
+            NumberEncoderTestUtils.expectToBeCorrect(EncapsuleMove.encoder, move);
         });
     });
     describe('equals', () => {
@@ -57,29 +60,5 @@ describe('EncapsuleMove', () => {
             expect(EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(2, 1)).toString()).toBeTruthy();
             expect(EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 1)).toString()).toBeTruthy();
         });
-    });
-    it('should delegate to static method decode', () => {
-        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2));
-        spyOn(EncapsuleMove, 'decode').and.callThrough();
-
-        move.decode(move.encode());
-
-        expect(EncapsuleMove.decode).toHaveBeenCalledTimes(1);
-    });
-    it('should delegate to non-static encode method', () => {
-        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2));
-        spyOn(move, 'encode').and.callThrough();
-
-        EncapsuleMove.encode(move);
-
-        expect(move.encode).toHaveBeenCalledTimes(1);
-    });
-    it('should have involutive encode and decode for move', () => {
-        const move: EncapsuleMove = EncapsuleMove.fromMove(new Coord(1, 1), new Coord(2, 2));
-        expect(EncapsuleMove.decode(move.encode()).equals(move)).toBeTrue();
-    });
-    it('should have involutive encode and decode for drop', () => {
-        const move: EncapsuleMove = EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(2, 2));
-        expect(EncapsuleMove.decode(move.encode()).equals(move)).toBeTrue();
     });
 });

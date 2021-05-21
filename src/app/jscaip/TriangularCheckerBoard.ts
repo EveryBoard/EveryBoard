@@ -22,10 +22,10 @@ export class TriangularCheckerBoard {
     public static getCommonNeighboor(a: Coord, b: Coord): MGPOptional<Coord> {
         const aNeighboors: Coord[] = TriangularCheckerBoard.getNeighboors(a);
         const bNeighboors: Coord[] = TriangularCheckerBoard.getNeighboors(b);
-        let i = 0;
+        let i: number = 0;
         while (i < aNeighboors.length) {
             const aNeighboor: Coord = aNeighboors[i];
-            let j = 0;
+            let j: number = 0;
             while (j < bNeighboors.length) {
                 const bNeighboor: Coord = bNeighboors[j];
                 if (aNeighboor.equals(bNeighboor)) {

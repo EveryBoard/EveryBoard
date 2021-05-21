@@ -1,7 +1,7 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { ComparableObject } from '../utils/Comparable';
-import { Encoder } from './encoder';
+import { Encoder } from './Encoder';
 
 export class Coord implements ComparableObject {
     public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {
@@ -16,9 +16,6 @@ export class Coord implements ComparableObject {
         }
     }
 
-    public static equals(a: Coord, b: Coord): boolean {
-        return a.equals(b);
-    }
     public static getBinarised(n: number): -1 | 0 | 1 {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
         if (n < 0) return -1;

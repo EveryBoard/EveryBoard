@@ -1,28 +1,17 @@
 import { ReversiRules } from '../ReversiRules';
-import { MGPMap } from 'src/app/utils/MGPMap';
+import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('ReversiMove', () => {
-    it('ReversiMove.encode and ReversiMove.decode should be reversible', () => {
+    it('ReversiMove.encoder should be correct', () => {
         const rules: ReversiRules = new ReversiRules(ReversiPartSlice);
-        const moves: MGPMap<ReversiMove, ReversiPartSlice> = rules.getListMoves(rules.node);
-        moves.put(ReversiMove.PASS, new ReversiPartSlice([], 0));
-        for (let i = 0; i < moves.size(); i++) {
-            const move: ReversiMove = moves.getByIndex(i).key;
-            const encodedMove: number = move.encode();
-            const decodedMove: ReversiMove = ReversiMove.decode(encodedMove);
-            const reEncodedMove: number = decodedMove.encode();
-            expect(reEncodedMove).toEqual(encodedMove);
-            expect(decodedMove).toEqual(move);
+        const minimax: ReversiMinimax = new ReversiMinimax('ReversiMinimax');
+        const moves: ReversiMove[] = minimax.getListMoves(rules.node);
+        moves.push(ReversiMove.PASS);
+        for (const move of moves) {
+            NumberEncoderTestUtils.expectToBeCorrect(ReversiMove.encoder, move);
         }
-    });
-    it('should delegate to static method decode', () => {
-        const testMove: ReversiMove = new ReversiMove(1, 1);
-        spyOn(ReversiMove, 'decode').and.callThrough();
-
-        testMove.decode(testMove.encode());
-
-        expect(ReversiMove.decode).toHaveBeenCalledTimes(1);
     });
 });

@@ -1,3 +1,4 @@
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 
@@ -34,7 +35,7 @@ describe('PylosMove', () => {
         const otherMove: PylosMove = PylosMove.fromDrop(coord, [highCoord]);
         expect(PylosMove.changeCapture(move, [highCoord])).toEqual(otherMove);
     });
-    it('PylosMove.encode and PylosMove.decode should be reversible', () => {
+    it('PylosMove.encoder should be correct', () => {
         const initialMoves: PylosMove[] = [
             PylosMove.fromClimb(coord, highCoord, []),
             PylosMove.fromClimb(coord, highCoord, [coord]),
@@ -43,20 +44,9 @@ describe('PylosMove', () => {
             PylosMove.fromDrop(coord, [coord]),
             PylosMove.fromDrop(coord, [highCoord]),
         ];
-        const encodedMoves: number[] = initialMoves.map((move: PylosMove) => move.encode());
-        const decodedMoves: PylosMove[] = encodedMoves.map((value: number) => PylosMove.decode(value));
-        expect(initialMoves).toEqual(decodedMoves);
-    });
-    it('should delegate to static method decode', () => {
-        const testMove: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
-
-        spyOn(PylosMove, 'decode').and.callThrough();
-        testMove.decode(testMove.encode());
-        expect(PylosMove.decode).toHaveBeenCalledTimes(1);
-
-        spyOn(testMove, 'encode').and.callThrough();
-        PylosMove.encode(testMove);
-        expect(testMove.encode).toHaveBeenCalledTimes(1);
+        for (const move of initialMoves) {
+            NumberEncoderTestUtils.expectToBeCorrect(PylosMove.encoder, move);
+        }
     });
     it('Should override toString correctly', () => {
         const lightMove: PylosMove = PylosMove.fromDrop(coord, []);

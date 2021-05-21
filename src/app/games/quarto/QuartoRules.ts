@@ -1,17 +1,17 @@
-import { Rules } from '../../jscaip/Rules';
+import { GameStatus, Rules } from '../../jscaip/Rules';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { QuartoPartSlice } from './QuartoPartSlice';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPiece } from './QuartoPiece';
-import { MGPMap } from 'src/app/utils/MGPMap';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { SCORE } from 'src/app/jscaip/SCORE';
+import { Player } from 'src/app/jscaip/Player';
 
-interface BoardStatus {
+export interface BoardStatus {
     score: SCORE;
     casesSensibles: CaseSensible[];
 }
@@ -157,11 +157,18 @@ class Critere {
             })) + '}';
     }
 }
-interface Line {
-    initialCoord: Coord,
-    direction: Direction
+class Line {
+    public constructor(public readonly initialCoord: Coord,
+                       public readonly direction: Direction) {}
+    public allCoords(): Coord[] {
+        const coords: Coord[] = [];
+        for (let i: number = 0; i < 4; i++) {
+            coords.push(this.initialCoord.getNext(this.direction, i));
+        }
+        return coords;
+    }
 }
-abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice> {}
+export abstract class QuartoNode extends MGPNode<QuartoRules, QuartoMove, QuartoPartSlice> {}
 
 export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
 
@@ -178,20 +185,19 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
     public static VERBOSE: boolean = false;
 
     public static readonly lines: ReadonlyArray<Line> = [
-        { initialCoord: new Coord(0, 0), direction: Direction.DOWN }, // les verticales
-        { initialCoord: new Coord(1, 0), direction: Direction.DOWN },
-        { initialCoord: new Coord(2, 0), direction: Direction.DOWN },
-        { initialCoord: new Coord(3, 0), direction: Direction.DOWN },
-        { initialCoord: new Coord(0, 0), direction: Direction.RIGHT }, // les horizontales
-        { initialCoord: new Coord(0, 1), direction: Direction.RIGHT },
-        { initialCoord: new Coord(0, 2), direction: Direction.RIGHT },
-        { initialCoord: new Coord(0, 3), direction: Direction.RIGHT },
-        { initialCoord: new Coord(0, 0), direction: Direction.DOWN_RIGHT }, // les diagonales
-        { initialCoord: new Coord(0, 3), direction: Direction.UP_RIGHT },
+        new Line(new Coord(0, 0), Direction.DOWN), // les verticales
+        new Line(new Coord(1, 0), Direction.DOWN),
+        new Line(new Coord(2, 0), Direction.DOWN),
+        new Line(new Coord(3, 0), Direction.DOWN),
+        new Line(new Coord(0, 0), Direction.RIGHT), // les horizontales
+        new Line(new Coord(0, 1), Direction.RIGHT),
+        new Line(new Coord(0, 2), Direction.RIGHT),
+        new Line(new Coord(0, 3), Direction.RIGHT),
+        new Line(new Coord(0, 0), Direction.DOWN_RIGHT), // les diagonales
+        new Line(new Coord(0, 3), Direction.UP_RIGHT),
     ];
 
     public node: MGPNode<QuartoRules, QuartoMove, QuartoPartSlice>;
-    // enum boolean {TRUE, FALSE, NULL}
 
     private static isOccupied(qcase: number): boolean {
         return (qcase !== QuartoPiece.NONE.value);
@@ -238,56 +244,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
     public isLegal(move: QuartoMove, slice: QuartoPartSlice): LegalityStatus {
         return { legal: QuartoRules.isLegal(move, slice) };
     }
-    public getListMoves(node: QuartoNode): MGPMap<QuartoMove, QuartoPartSlice> {
-        const listMoves: MGPMap<QuartoMove, QuartoPartSlice> = new MGPMap<QuartoMove, QuartoPartSlice>();
-
-        const slice: QuartoPartSlice = node.gamePartSlice;
-        let moveAppliedPartSlice: QuartoPartSlice;
-
-        const board: number[][] = slice.getCopiedBoard();
-        const pawns: Array<QuartoPiece> = slice.getRemainingPawns();
-        const inHand: QuartoPiece = slice.pieceInHand;
-
-        let nextBoard: number[][];
-        const nextTurn: number = slice.turn + 1;
-
-        for (let y: number = 0; y < 4; y++) {
-            for (let x: number = 0; x < 4; x++) {
-                if (board[y][x] === QuartoPiece.NONE.value) {
-                    nextBoard = slice.getCopiedBoard();
-                    nextBoard[y][x] = inHand.value; // on place la pièce qu'on a en main en (x, y)
-                    if (slice.turn === 15) {
-                        const move: QuartoMove = new QuartoMove(x, y, QuartoPiece.NONE);
-                        moveAppliedPartSlice = new QuartoPartSlice(nextBoard, nextTurn, QuartoPiece.NONE);
-                        listMoves.set(move, moveAppliedPartSlice);
-                        return listMoves;
-                    }
-                    // Pour chaque cases vides
-                    for (const remainingPiece of pawns) { // piece est la pièce qu'on va donner
-                        const move: QuartoMove = new QuartoMove(x, y, remainingPiece); // synthèse du mouvement listé
-                        moveAppliedPartSlice = new QuartoPartSlice(nextBoard, nextTurn, remainingPiece);
-
-                        listMoves.set(move, moveAppliedPartSlice);
-                    }
-                }
-            }
-        }
-        return listMoves;
-    }
-    public getBoardValue(move: QuartoMove, slice: QuartoPartSlice): number {
-        let boardStatus: BoardStatus = {
-            score: SCORE.DEFAULT,
-            casesSensibles: [],
-        };
-        for (const line of QuartoRules.lines) {
-            boardStatus = this.updateBoardStatus(line, slice, boardStatus);
-            if (boardStatus.score === SCORE.VICTORY) {
-                return this.scoreToBoardValue(boardStatus.score, slice.turn);
-            }
-        }
-        return this.scoreToBoardValue(boardStatus.score, slice.turn);
-    }
-    private updateBoardStatus(line: Line, slice: QuartoPartSlice, boardStatus: BoardStatus): BoardStatus {
+    public static updateBoardStatus(line: Line, slice: QuartoPartSlice, boardStatus: BoardStatus): BoardStatus {
         // pour chaque ligne (les horizontales, verticales, puis diagonales)
         if (boardStatus.score === SCORE.PRE_VICTORY) {
             if (this.isThereAVictoriousLine(line, slice)) {
@@ -303,7 +260,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             return newStatus;
         }
     }
-    private isThereAVictoriousLine(line: Line, slice: QuartoPartSlice): boolean {
+    private static isThereAVictoriousLine(line: Line, slice: QuartoPartSlice): boolean {
         // si on a trouvé une pré-victoire
         // la seule chose susceptible de changer le résultat total est une victoire
         let coord: Coord = line.initialCoord;
@@ -324,10 +281,9 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             return false;
         }
     }
-    private searchForVictoryOrPreVictoryInLine(
-        line: Line,
-        slice: QuartoPartSlice,
-        boardStatus: BoardStatus)
+    private static searchForVictoryOrPreVictoryInLine(line: Line,
+                                                      slice: QuartoPartSlice,
+                                                      boardStatus: BoardStatus)
     : BoardStatus
     {
         // on cherche pour une victoire, pré victoire, ou un score normal
@@ -377,16 +333,33 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         }
         return boardStatus;
     }
-    private scoreToBoardValue(score: SCORE, turn: number): number {
-        if (score === SCORE.DEFAULT) {
-            return 0;
-        } else {
-            const isPlayerZeroTurn: boolean = turn % 2 === 0;
-            if (score === SCORE.PRE_VICTORY) {
-                return isPlayerZeroTurn ? Number.MIN_SAFE_INTEGER + 1 : Number.MAX_SAFE_INTEGER - 1;
-            } else {
-                return isPlayerZeroTurn ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
+    public static scoreToGameStatus(score: SCORE, turn: number): GameStatus {
+        const player: Player = Player.of(turn % 2);
+        if (score === SCORE.VICTORY) {
+            return GameStatus.getDefeat(player);
+        }
+        return turn === 16 ? GameStatus.DRAW : GameStatus.ONGOING;
+    }
+    public getGameStatus(state: QuartoPartSlice): GameStatus {
+        let boardStatus: BoardStatus = {
+            score: SCORE.DEFAULT,
+            casesSensibles: [],
+        };
+        for (const line of QuartoRules.lines) {
+            boardStatus = QuartoRules.updateBoardStatus(line, state, boardStatus);
+            if (boardStatus.score === SCORE.VICTORY) {
+                return QuartoRules.scoreToGameStatus(boardStatus.score, state.turn);
             }
         }
+        return QuartoRules.scoreToGameStatus(boardStatus.score, state.turn);
+
+    }
+    public getVictoriousCoords(slice: QuartoPartSlice): Coord[] {
+        for (const line of QuartoRules.lines) {
+            if (QuartoRules.isThereAVictoriousLine(line, slice)) {
+                return line.allCoords();
+            }
+        }
+        return [];
     }
 }

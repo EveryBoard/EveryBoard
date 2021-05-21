@@ -1,9 +1,9 @@
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoPartSlice } from '../QuartoPartSlice';
-import { QuartoRules } from '../QuartoRules';
+import { QuartoMinimax } from '../QuartoMinimax';
 
 describe('QuartoRules - Minimax:', () => {
-    let rules: QuartoRules;
+    let minimax: QuartoMinimax;
 
     const NULL: number = QuartoPiece.NONE.value;
     const AAAA: number = QuartoPiece.AAAA.value;
@@ -12,7 +12,7 @@ describe('QuartoRules - Minimax:', () => {
     const ABBB: number = QuartoPiece.ABBB.value;
 
     beforeEach(() => {
-        rules = new QuartoRules(QuartoPartSlice);
+        minimax = new QuartoMinimax('QuartoMinimax');
     });
     it('Should know that the board value is PRE_VICTORY when pieceInHand match board criteria', () => {
         const board: number[][] = [
@@ -23,6 +23,6 @@ describe('QuartoRules - Minimax:', () => {
         ];
         const pieceInHand: QuartoPiece = QuartoPiece.fromInt(AAAA);
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 3, pieceInHand);
-        expect(rules.getBoardValue(null, slice)).toEqual(Number.MAX_SAFE_INTEGER - 1);
+        expect(minimax.getBoardValue(null, slice).value).toEqual(Number.MAX_SAFE_INTEGER - 1);
     });
 });

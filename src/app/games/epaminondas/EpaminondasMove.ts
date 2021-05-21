@@ -1,12 +1,56 @@
 import { Direction } from 'src/app/jscaip/Direction';
+import { NumberEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 
 export class EpaminondasMove extends MoveCoord {
-    public constructor(
-        x: number, y: number,
-        public readonly movedPieces: number,
-        public readonly stepSize: number,
-        public readonly direction: Direction) {
+    public static encoder: NumberEncoder<EpaminondasMove> = new class extends NumberEncoder<EpaminondasMove> {
+        public maxValue(): number {
+            const direction: number = 7;
+            const stepSize: number = 6;
+            const movedPieces: number = 12;
+            const cy: number = 11;
+            const cx: number = 13;
+            return (cx * 8 * 7 * 13 * 12) + (cy * 8 * 7 * 13) + (movedPieces * 8 * 7) + (stepSize * 8) + direction;
+        }
+        public encodeNumber(move: EpaminondasMove): number {
+            const direction: number = move.direction.toInt(); // Between 0 and 7
+            const stepSize: number = move.stepSize - 1; // Between 1 and 7 => between 0 and 6
+            const movedPieces: number = move.movedPieces -1; // Between 1 and 13 => between 0 and 12
+
+            const cy: number = move.coord.y; // Between 0 and 11
+            const cx: number = move.coord.x; // Between 0 and 13
+            return (cx * 8 * 7 * 13 * 12) + (cy * 8 * 7 * 13) + (movedPieces * 8 * 7) + (stepSize * 8) + direction;
+        }
+        public decodeNumber(encodedMove: number): EpaminondasMove {
+            // encoded as such : cx; cy; movedPiece; stepSize; direction
+            if (encodedMove % 1 !== 0) throw new Error('EncodedMove must be an integer.');
+
+            const direction: number = encodedMove % 8;
+            encodedMove -= direction;
+            encodedMove /= 8;
+
+            const stepSize: number = encodedMove % 7;
+            encodedMove -= stepSize;
+            encodedMove /= 7;
+
+            const movedPieces: number = encodedMove % 13;
+            encodedMove -= movedPieces;
+            encodedMove /= 13;
+
+            const cy: number = encodedMove % 12;
+            encodedMove -= cy;
+            encodedMove /= 12;
+
+            const cx: number = encodedMove;
+            return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, Direction.factory.fromInt(direction));
+        }
+    }
+    public constructor(x: number,
+                       y: number,
+                       public readonly movedPieces: number,
+                       public readonly stepSize: number,
+                       public readonly direction: Direction)
+    {
         super(x, y);
         if (this.coord.isNotInRange(14, 12)) {
             throw new Error('Illegal coord outside of board ' + this.coord.toString() + '.');
@@ -42,43 +86,5 @@ export class EpaminondasMove extends MoveCoord {
         if (this.movedPieces !== o.movedPieces) return false;
         if (this.stepSize !== o.stepSize) return false;
         return this.direction.equals(o.direction);
-    }
-    public encode(): number {
-        const direction: number = this.direction.toInt(); // Between 0 and 7
-        const stepSize: number = this.stepSize - 1; // Between 1 and 7 => between 0 and 6
-        const movedPieces: number = this.movedPieces -1; // Between 1 and 13 => between 0 and 12
-
-        const cy: number = this.coord.y; // Between 0 and 11
-        const cx: number = this.coord.x; // Between 0 and 13
-        return (cx * 8 * 7 * 13 * 12) + (cy * 8 * 7 * 13) + (movedPieces * 8 * 7) + (stepSize * 8) + direction;
-    }
-    public decode(encodedMove: number): EpaminondasMove {
-        return EpaminondasMove.decode(encodedMove);
-    }
-    public static encode(move: EpaminondasMove): number {
-        return move.encode();
-    }
-    public static decode(encodedMove: number): EpaminondasMove {
-        // encoded as such : cx; cy; movedPiece; stepSize; direction
-        if (encodedMove % 1 !== 0) throw new Error('EncodedMove must be an integer.');
-
-        const direction: number = encodedMove % 8;
-        encodedMove -= direction;
-        encodedMove /= 8;
-
-        const stepSize: number = encodedMove % 7;
-        encodedMove -= stepSize;
-        encodedMove /= 7;
-
-        const movedPieces: number = encodedMove % 13;
-        encodedMove -= movedPieces;
-        encodedMove /= 13;
-
-        const cy: number = encodedMove % 12;
-        encodedMove -= cy;
-        encodedMove /= 12;
-
-        const cx: number = encodedMove;
-        return new EpaminondasMove(cx, cy, movedPieces + 1, stepSize + 1, Direction.factory.fromInt(direction));
     }
 }
