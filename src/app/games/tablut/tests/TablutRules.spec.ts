@@ -1,5 +1,5 @@
 import { TablutRules } from '../TablutRules';
-import { TablutMinimax } from "../TablutMinimax";
+import { TablutMinimax } from '../TablutMinimax';
 import { TablutMove } from '../TablutMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';

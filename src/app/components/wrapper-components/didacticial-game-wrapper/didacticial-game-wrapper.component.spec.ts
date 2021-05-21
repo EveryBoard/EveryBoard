@@ -109,7 +109,7 @@ describe('DidacticialGameWrapperComponent', () => {
             wrapper.startDidacticial(didacticial);
 
             // when selecting a step
-            const stepSelection: any = componentTestUtils.findElement('#steps').nativeElement;
+            const stepSelection: HTMLSelectElement = componentTestUtils.findElement('#steps').nativeElement;
             stepSelection.value = stepSelection.options[2].value;
             stepSelection.dispatchEvent(new Event('change'));
             componentTestUtils.detectChanges();

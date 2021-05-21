@@ -1,6 +1,7 @@
 import { assert, JSONValue } from 'src/app/utils/utils';
 
 export abstract class Encoder<T> {
+
     public static of<T>(encode: (t: T) => JSONValue, decode: (n: JSONValue) => T): Encoder<T> {
         return new class extends Encoder<T> {
             public encode(t: T): JSONValue {
@@ -12,11 +13,17 @@ export abstract class Encoder<T> {
         };
     }
     public abstract encode(t: T): JSONValue;
+
     public abstract decode(encoded: JSONValue): T;
 }
 
 export abstract class NumberEncoder<T> extends Encoder<T> {
-    public static ofN<T>(max: number, encodeNumber: (t: T) => number, decodeNumber: (n: number) => T): NumberEncoder<T> {
+
+    public static ofN<T>(max: number,
+                         encodeNumber: (t: T) => number,
+                         decodeNumber: (n: number) => T)
+    : NumberEncoder<T>
+    {
         return new class extends NumberEncoder<T> {
             public maxValue(): number {
                 return max;
@@ -50,6 +57,7 @@ export abstract class NumberEncoder<T> extends Encoder<T> {
 
     public static numberEncoder(max: number): NumberEncoder<number> {
         return new class extends NumberEncoder<number> {
+
             public maxValue(): number {
                 return max;
             }
@@ -69,14 +77,17 @@ export abstract class NumberEncoder<T> extends Encoder<T> {
     }
 
     public abstract maxValue(): number
+
     public shift(): number {
         return this.maxValue() + 1;
     }
     public abstract encodeNumber(t: T): number
+
     public encode(t: T): JSONValue {
         return this.encodeNumber(t);
     }
     public abstract decodeNumber(n: number): T
+
     public decode(n: JSONValue): T {
         assert(typeof n === 'number', 'Invalid encoded number');
         return this.decodeNumber(n as number);

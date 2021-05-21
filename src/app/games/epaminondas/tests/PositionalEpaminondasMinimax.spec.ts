@@ -42,7 +42,6 @@ describe('PositionalEpaminondasMinimax:', () => {
         rules.node = new MGPNode(null, null, slice);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
-        console.log(bestMove)
         expect(bestMove).toEqual(expectedMove);
     });
     it('Should prefer to get near the ennemy line', () => {

@@ -26,7 +26,8 @@ export class SaharaMinimax extends Minimax<SaharaMove, SaharaPartSlice> {
 
                 const upwardTriangle: boolean = (neighboor.y + neighboor.x) % 2 === 0;
                 if (upwardTriangle) {
-                    const farNeighboors: Coord[] = TriangularGameState.getEmptyNeighboors(board, neighboor, SaharaPawn.EMPTY);
+                    const farNeighboors: Coord[] =
+                        TriangularGameState.getEmptyNeighboors(board, neighboor, SaharaPawn.EMPTY);
                     for (const farNeighboor of farNeighboors) {
                         if (!farNeighboor.equals(start)) {
                             const farMove: SaharaMove = new SaharaMove(start, farNeighboor);

@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';

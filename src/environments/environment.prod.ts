@@ -1,3 +1,3 @@
-export const environment = {
+export const environment: unknown = {
     production: true,
 };

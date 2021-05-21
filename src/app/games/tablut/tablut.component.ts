@@ -5,7 +5,7 @@ import { Coord } from '../../jscaip/Coord';
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutPartSlice } from './TablutPartSlice';
 import { TablutRules } from './TablutRules';
-import { TablutMinimax } from "./TablutMinimax";
+import { TablutMinimax } from './TablutMinimax';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';

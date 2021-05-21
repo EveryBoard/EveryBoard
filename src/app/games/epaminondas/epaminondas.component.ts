@@ -97,7 +97,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 break;
             case ENNEMY:
-                return this.cancelMove('Cette pièce appartient à l\'ennemi, vous devez sélectionner une de vos pièces.');
+                return this.cancelMove(`Cette pièce appartient à l'ennemi, vous devez sélectionner une de vos pièces.`);
             case Player.NONE.value:
                 return this.cancelMove('Cette case est vide, vous devez sélectionner une de vos pièces.');
         }

@@ -4,7 +4,7 @@ import { TablutMove } from '../TablutMove';
 import { TablutPartSlice } from '../TablutPartSlice';
 import { TablutCase } from '../TablutCase';
 import { TablutRules } from '../TablutRules';
-import { TablutMinimax } from "../TablutMinimax";
+import { TablutMinimax } from '../TablutMinimax';
 
 describe('TablutRules - Minimax:', () => {
 

@@ -1,6 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
-import { JSONValue } from 'src/app/utils/utils';
 import { SixMove } from '../SixMove';
 
 describe('SixMove', () => {

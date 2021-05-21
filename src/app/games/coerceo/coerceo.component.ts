@@ -4,7 +4,6 @@ import { TriangularGameComponent }
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { Move } from 'src/app/jscaip/Move';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';

@@ -19,7 +19,8 @@ export interface ICurrentPart {
     scorePlayerZero?: number|string; // TODO : implémenter ça
     scorePlayerOne?: number|string; // TODO : implémenter ça aussi en même temps
 
-    historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
+    historic?: string; // id (null si non sauvegardée, id d’une Historique sinon)
+    // l'historique est l'arbre en cas de take et retakes
     listMoves: number[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
     request?: Request;
 }
@@ -134,7 +135,8 @@ export interface PICurrentPart {
     scorePlayerZero?: number|string; // TODO : implémenter ça
     scorePlayerOne?: number|string; // TODO : implémenter ça aussi en même temps
 
-    historic?: string; // id (null si non sauvegardée, id d’une Historique sinon) // l'historique est l'arbre en cas de take et retakes
+    historic?: string; // id (null si non sauvegardée, id d’une Historique sinon)
+    // l'historique est l'arbre en cas de take et retakes
     listMoves?: JSONValue[]; // ONLY VALABLE FOR Game able to encode and decode their move to numbers
     request?: Request;
 }

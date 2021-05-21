@@ -1,5 +1,5 @@
 import { ReversiRules } from '../ReversiRules';
-import { ReversiMinimax } from "../ReversiMinimax";
+import { ReversiMinimax } from '../ReversiMinimax';
 import { ReversiMove } from '../ReversiMove';
 import { ReversiPartSlice } from '../ReversiPartSlice';
 import { Player } from 'src/app/jscaip/Player';

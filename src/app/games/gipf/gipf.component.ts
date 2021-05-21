@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { GipfRules } from 'src/app/games/gipf/GipfRules';
-import { GipfMinimax } from "src/app/games/gipf/GipfMinimax";
+import { GipfMinimax } from 'src/app/games/gipf/GipfMinimax';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -10,7 +10,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
-import { JSONValue } from 'src/app/utils/utils';
 import { HexagonalGameComponent }
     from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';

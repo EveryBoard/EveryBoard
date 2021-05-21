@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { QuartoMove } from './QuartoMove';
 import { QuartoPartSlice } from './QuartoPartSlice';
 import { QuartoRules } from './QuartoRules';
-import { QuartoMinimax } from "./QuartoMinimax";
+import { QuartoMinimax } from './QuartoMinimax';
 import { QuartoPiece } from './QuartoPiece';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -38,7 +38,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
         const move: QuartoMove = this.rules.node.move;
         this.board = slice.getCopiedBoard();
         this.pieceInHand = slice.pieceInHand;
-        this.victoriousCoords = this.rules.getVictoriousCoords(slice);;
+        this.victoriousCoords = this.rules.getVictoriousCoords(slice);
 
         if (move != null) {
             this.lastMove = move.coord;

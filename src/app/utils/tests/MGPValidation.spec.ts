@@ -6,6 +6,7 @@ describe('MGPValidation', () => {
     });
 
     it('Should throw when asking MGPValidation.SUCCESS.getReason()', () => {
-        expect(() => MGPValidation.SUCCESS.getReason()).toThrowError('MGPValidation: Cannot extract failure reason from success.');
+        const expectedError: string = 'MGPValidation: Cannot extract failure reason from success.';
+        expect(() => MGPValidation.SUCCESS.getReason()).toThrowError(expectedError);
     });
 });

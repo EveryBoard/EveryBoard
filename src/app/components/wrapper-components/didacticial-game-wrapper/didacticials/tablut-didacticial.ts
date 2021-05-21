@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
