@@ -4,7 +4,6 @@ import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';
 import { Type } from '@angular/core';
 import { display } from '../utils/utils';
-import { NodeUnheritance } from './NodeUnheritance';
 import { Player } from './Player';
 
 export class GameStatus {
@@ -36,14 +35,13 @@ export class GameStatus {
 }
 export abstract class Rules<M extends Move,
                             S extends GamePartSlice,
-                            L extends LegalityStatus = LegalityStatus,
-                            U extends NodeUnheritance = NodeUnheritance>
+                            L extends LegalityStatus = LegalityStatus>
 {
 
     public constructor(public readonly stateType: Type<S>) {
         this.setInitialBoard();
     }
-    public node: MGPNode<Rules<M, S, L, U>, M, S, L, U>;
+    public node: MGPNode<Rules<M, S, L>, M, S, L>;
     /* The data that represent the status of the game at the current moment, including:
      * the board
      * the turn
@@ -60,7 +58,7 @@ export abstract class Rules<M extends Move,
         display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choix: MGPNode<Rules<M, S, L, U>, M, S, L, U> =
+            const choix: MGPNode<Rules<M, S, L>, M, S, L> =
                 this.node.getSonByMove(move);// let's not doing it twice
             if (choix !== null) {
                 display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
@@ -76,9 +74,9 @@ export abstract class Rules<M extends Move,
         } else display(LOCAL_VERBOSE, 'Rules.choose: Move is legal, let\'s apply it');
 
         const resultingSlice: GamePartSlice = MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
-        const son: MGPNode<Rules<M, S, L, U>, M, S, L, U> = new MGPNode(this.node,
-                                                                        move,
-                                                                        resultingSlice as S);
+        const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(this.node,
+                                                                  move,
+                                                                  resultingSlice as S);
         this.node = son;
         return true;
     };

@@ -9,7 +9,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { SCORE } from 'src/app/jscaip/SCORE';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 
 export interface BoardStatus {
@@ -333,18 +332,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             }
         }
         return boardStatus;
-    }
-    public static scoreToBoardValue(score: SCORE, turn: number): NodeUnheritance {
-        if (score === SCORE.DEFAULT) {
-            return new NodeUnheritance(0);
-        } else {
-            const player: Player = Player.of(turn % 2);
-            if (score === SCORE.PRE_VICTORY) {
-                return new NodeUnheritance(player.getPreVictory());
-            } else {
-                return new NodeUnheritance(player.getDefeatValue());
-            }
-        }
     }
     public static scoreToGameStatus(score: SCORE, turn: number): GameStatus {
         const player: Player = Player.of(turn % 2);

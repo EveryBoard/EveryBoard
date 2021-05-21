@@ -1,4 +1,5 @@
-import { SiamMinimax, SiamRules } from '../SiamRules';
+import { SiamRules } from '../SiamRules';
+import { SiamMinimax } from '../SiamMinimax';
 import { SiamMove } from '../SiamMove';
 import { SiamPiece } from '../SiamPiece';
 import { SiamPartSlice } from '../SiamPartSlice';

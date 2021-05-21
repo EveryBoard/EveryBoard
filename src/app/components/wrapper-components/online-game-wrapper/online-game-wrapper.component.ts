@@ -21,7 +21,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValue } from 'src/app/utils/utils';
 import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/ObjectUtils';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { GameStatus } from 'src/app/jscaip/Rules';
 
@@ -344,10 +343,12 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public notifyVictory(encodedMove: JSONValue, scorePlayerZero: number, scorePlayerOne: number): void {
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
         let winner: string;
-        const minimax: Minimax<Move, GamePartSlice> = this.gameComponent.availableMinimaxes[0];
-        if (this.gameComponent.rules.node.getOwnValue(minimax).value === Number.MAX_SAFE_INTEGER) {
+        const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
+        const move: Move = this.gameComponent.rules.node.move;
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(state, move);
+        if (gameStatus === GameStatus.ONE_WON) {
             winner = this.players[1];
-        } else if (this.gameComponent.rules.node.getOwnValue(minimax).value === Number.MIN_SAFE_INTEGER) {
+        } else if (gameStatus === GameStatus.ZERO_WON) {
             winner = this.players[0];
         } else {
             throw new Error('How the fuck did you notice victory?');

@@ -1,4 +1,5 @@
-import { SiamNode, SiamMinimax } from '../SiamRules';
+import { SiamNode } from '../SiamRules';
+import { SiamMinimax } from '../SiamMinimax';
 import { SiamMove } from '../SiamMove';
 import { SiamPartSlice } from '../SiamPartSlice';
 import { Orthogonal } from 'src/app/jscaip/Direction';

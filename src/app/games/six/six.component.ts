@@ -4,7 +4,7 @@ import { SixGameState } from 'src/app/games/six/SixGameState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
 import { SixNode, SixRules } from 'src/app/games/six/SixRules';
-import { SixMinimax } from "src/app/games/six/SixMinimax";
+import { SixMinimax } from 'src/app/games/six/SixMinimax';
 import { SixLegalityStatus } from 'src/app/games/six/SixLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';

@@ -77,4 +77,22 @@ describe('MinimaxTestingRules', () => {
         expect(initialNode.countDescendants()).toBe(30); // should be 68 without pruning
         expect(minimax.getListMoves).toHaveBeenCalledTimes(24); // should be 69 without pruning
     });
+    describe('Should choose the first one to minimise calculation when all choice are the same value', () => {
+        it('depth = 1', () => {
+            MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_2;
+            const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
+            const bestMove: MinimaxTestingMove = rules.node.findBestMove(1, minimax);
+            expect(bestMove).toEqual(minimax.getListMoves(rules.node)[0]);
+            expect(rules.node.countDescendants()).toEqual(2);
+        });
+        it('depth = 2', () => {
+            MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_3;
+            spyOn(minimax, 'getListMoves').and.callThrough();
+            const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
+            const bestMove: MinimaxTestingMove = rules.node.findBestMove(2, minimax);
+            expect(bestMove).toEqual(minimax.getListMoves(rules.node)[0]);
+            expect(rules.node.countDescendants()).toEqual(3);
+            expect(minimax.getListMoves).toHaveBeenCalledTimes(3);
+        });
+    });
 });

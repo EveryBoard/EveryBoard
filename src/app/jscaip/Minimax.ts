@@ -14,7 +14,7 @@ export abstract class Minimax<M extends Move,
 
     public constructor(public readonly name: string) {
     }
-    public abstract getListMoves(node: MGPNode<Rules<M, S, L, U>, M, S, L, U>,
+    public abstract getListMoves(node: MGPNode<Rules<M, S, L>, M, S, L>,
                                  minimax: Minimax<M, S, L, U>)
     : M[];
     /* has to be implemented for each rule so that the AI can choose amongst theses informations

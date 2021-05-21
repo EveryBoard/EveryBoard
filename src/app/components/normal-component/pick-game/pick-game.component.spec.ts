@@ -16,7 +16,7 @@ describe('PickGameComponent', () => {
     it('should emit an event when a game has been selected', fakeAsync(async() => {
         spyOn(testUtils.getComponent().pickGame, 'emit');
 
-        const gameSelection: any = testUtils.findElement('#gameType').nativeElement;
+        const gameSelection: HTMLSelectElement = testUtils.findElement('#gameType').nativeElement;
         gameSelection.value = gameSelection.options[2].value;
         gameSelection.dispatchEvent(new Event('change'));
         testUtils.detectChanges();

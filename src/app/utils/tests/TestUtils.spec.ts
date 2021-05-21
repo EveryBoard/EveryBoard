@@ -14,7 +14,6 @@ import { AuthenticationService } from '../../services/AuthenticationService';
 import { MGPNode } from '../../jscaip/MGPNode';
 import { GameWrapper } from '../../components/wrapper-components/GameWrapper';
 import { Player } from '../../jscaip/Player';
-import { NodeUnheritance } from '../../jscaip/NodeUnheritance';
 import { AuthenticationServiceMock } from '../../services/tests/AuthenticationService.spec';
 import { OnlineGameWrapperComponent }
     from '../../components/wrapper-components/online-game-wrapper/online-game-wrapper.component';
@@ -114,7 +113,7 @@ export class SimpleComponentTestUtils<T> {
     }
 }
 
-type GameComponent = AbstractGameComponent<Move, GamePartSlice, LegalityStatus, NodeUnheritance>;
+type GameComponent = AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
 
 export class ComponentTestUtils<T extends GameComponent> {
     public fixture: ComponentFixture<GameWrapper>;

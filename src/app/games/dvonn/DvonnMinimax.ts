@@ -14,11 +14,13 @@ export class DvonnMinimax extends Minimax<DvonnMove, DvonnPartSlice> {
     public getListMovesFromSlice(move: DvonnMove, slice: DvonnPartSlice): DvonnMove[] {
         const moves: DvonnMove[] = [];
         // For each movable piece, look at its possible targets
-        DvonnRules.getMovablePieces(slice).forEach((start: Coord) => DvonnRules.pieceTargets(slice, start).forEach((end: Coord) => {
-            const move: DvonnMove = DvonnMove.of(start, end);
-            // the move should be legal by construction, hence we don't check it
-            moves.push(move);
-        }));
+        DvonnRules.getMovablePieces(slice).forEach((start: Coord) => {
+            return DvonnRules.pieceTargets(slice, start).forEach((end: Coord) => {
+                const move: DvonnMove = DvonnMove.of(start, end);
+                // the move should be legal by construction, hence we don't check it
+                moves.push(move);
+            });
+        });
         if (moves.length === 0 && move !== DvonnMove.PASS) {
             moves.push(DvonnMove.PASS);
         }

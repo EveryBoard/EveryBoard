@@ -8,7 +8,6 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { JSONValue } from 'src/app/utils/utils';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Minimax } from 'src/app/jscaip/Minimax';
 
 /* All method are to be implemented by the Concretes Game Component
@@ -21,12 +20,11 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 })
 export abstract class AbstractGameComponent<M extends Move,
                                             S extends GamePartSlice,
-                                            L extends LegalityStatus = LegalityStatus,
-                                            U extends NodeUnheritance = NodeUnheritance> {
+                                            L extends LegalityStatus = LegalityStatus> {
     public readonly STROKE_WIDTH: number = 8;
     public readonly SMALL_STROKE_WIDTH: number = 2;
 
-    public rules: Rules<M, S, L, U>;
+    public rules: Rules<M, S, L>;
 
     public board: NumberTable;
 

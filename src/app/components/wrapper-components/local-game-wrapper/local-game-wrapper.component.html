@@ -62,7 +62,7 @@
                 <h4 id="draw" *ngIf="winner == null">Match nul</h4>
             </div>
             <div style="visibility: hidden;">
-                <mat-select></mat-select> <!-- TODO: removing this makes some async tests fail, wtf? (when removing, add the "block" class to the select div above) -->
+                <mat-select></mat-select> <!-- removing this makes some async tests fail, wtf? (when removing, add the "block" class to the select div above) -->
             </div>
         </div>
         <div class="tile is-child box is-vcentered" *ngIf="compo">

@@ -46,7 +46,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }, 1);
     }
     public updatePlayer(player: 0|1): void {
-        console.log('update player', this.players[player], this.aiDepths[player])
         if (this.players[player] !== 'humain' && this.aiDepths[player] !== '0') {
             this.proposeAIToPlay();
         }

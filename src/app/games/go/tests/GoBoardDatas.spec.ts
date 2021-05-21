@@ -2,6 +2,7 @@ import { BoardDatas, GroupInfos } from '../../../jscaip/BoardDatas';
 import { GoPartSlice, GoPiece } from '../GoPartSlice';
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
+import { GoGroupDatasFactory } from '../GoGroupDatasFactory';
 
 xdescribe('GoBoardDatas', () => {
     const _: GoPiece = GoPiece.EMPTY;
@@ -16,7 +17,7 @@ xdescribe('GoBoardDatas', () => {
     });
     it('should create one big group for initial board', () => {
         const board: Table<GoPiece> = GoPartSlice.getStartingBoard();
-        const datas: BoardDatas = BoardDatas.ofGoPiece(board);
+        const datas: BoardDatas = BoardDatas.ofBoard(board, new GoGroupDatasFactory());
         const allZeroBoard: number[][] = ArrayUtils.createBiArray<number>(GoPartSlice.WIDTH, GoPartSlice.HEIGHT, 0);
         expect(datas.groupIndexes).toEqual(allZeroBoard);
         expect(datas.groups.length).toBe(1);
@@ -32,7 +33,7 @@ xdescribe('GoBoardDatas', () => {
             [_, _, O, _, _],
             [_, _, _, _, _],
         ];
-        const datas: BoardDatas = BoardDatas.ofGoPiece(board);
+        const datas: BoardDatas = BoardDatas.ofBoard(board, new GoGroupDatasFactory());
         const groupIndexes: number[][] = [
             [0, 0, 0, 0, 0],
             [0, 0, 0, 0, 0],

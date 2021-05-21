@@ -3,24 +3,18 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { display } from '../utils/utils';
 import { Direction } from './Direction';
 
-export class GroupInfos {
-    public constructor(readonly coords: ReadonlyArray<Coord>,
-                       readonly neighboorsEP: ReadonlyArray<Coord>) { }
-}
-
 export class BoardDatas {
 
     private constructor(readonly groupIndexes: NumberTable,
                         readonly groups: ReadonlyArray<GroupInfos>) { }
 
-    public static ofGoPiece<T>(board: Table<T>): BoardDatas {
+    public static ofBoard<T>(board: Table<T>, groupDatasFactory: GroupDatasFactory<T>): BoardDatas {
         const groupIndexes: number[][] = ArrayUtils.createBiArray<number>(board[0].length, board.length, -1);
         const groupsDatas: GroupDatas<T>[] = [];
         for (let y: number = 0; y < board.length; y++) {
             for (let x: number = 0; x < board[0].length; x++) {
                 if (groupIndexes[y][x] === -1) {
                     const newGroupEntryPoint: Coord = new Coord(x, y);
-                    let groupDatasFactory: GroupDatasFactory<T>; // = this.getGroupDatasFactory();
                     const newGroupDatas: GroupDatas<T> =
                         groupDatasFactory.getGroupDatas(newGroupEntryPoint, board);
                     const groupCoords: Coord[] = newGroupDatas.getCoords();
@@ -41,6 +35,11 @@ export class BoardDatas {
         }
         return new BoardDatas(groupIndexes, groupsInfos);
     }
+}
+
+export class GroupInfos {
+    public constructor(readonly coords: ReadonlyArray<Coord>,
+                       readonly neighboorsEP: ReadonlyArray<Coord>) { }
 }
 
 export abstract class GroupDatasFactory<T> {

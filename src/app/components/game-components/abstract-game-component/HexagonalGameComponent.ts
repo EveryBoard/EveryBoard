@@ -5,15 +5,13 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { AbstractGameComponent } from './AbstractGameComponent';
 
 @Component({ template: '' })
 export abstract class HexagonalGameComponent<M extends Move,
                                              S extends GamePartSlice,
-                                             L extends LegalityStatus = LegalityStatus,
-                                             U extends NodeUnheritance = NodeUnheritance>
-    extends AbstractGameComponent<M, S, L, U>
+                                             L extends LegalityStatus = LegalityStatus>
+    extends AbstractGameComponent<M, S, L>
 {
 
     public PIECE_SIZE: number = 30;

@@ -6,8 +6,8 @@ import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixLegalityStatus } from '../SixLegalityStatus';
 import { SixFailure } from '../SixFailure';
-import { SixNodeUnheritance, SixRules } from '../SixRules';
-import { SixMinimax } from "../SixMinimax";
+import { SixRules } from '../SixRules';
+import { SixMinimax, SixNodeUnheritance } from '../SixMinimax';
 import { Vector } from 'src/app/jscaip/Direction';
 
 describe('SixRules', () => {
