@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { GipfBoard } from 'src/app/games/gipf/GipfBoard';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';

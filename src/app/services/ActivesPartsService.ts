@@ -36,7 +36,7 @@ export class ActivesPartsService {
         };
         const onDocumentDeleted: (deletedDocs: ICurrentPartId[]) => void = (deletedDocs: ICurrentPartId[]) => {
             const result: ICurrentPartId[] = [];
-            const deletedIds: string[] = deletedDocs.map((doc) => doc.id);
+            const deletedIds: string[] = deletedDocs.map((doc: ICurrentPartId) => doc.id);
             for (const p of this.activesPartsBS.value) {
                 if (!deletedIds.includes(p.id)) {
                     result.push(p);

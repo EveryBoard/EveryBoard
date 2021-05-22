@@ -7,7 +7,6 @@ import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Encoder } from 'src/app/jscaip/Encoder';
 
@@ -21,12 +20,11 @@ import { Encoder } from 'src/app/jscaip/Encoder';
 })
 export abstract class AbstractGameComponent<M extends Move,
                                             S extends GamePartSlice,
-                                            L extends LegalityStatus = LegalityStatus,
-                                            U extends NodeUnheritance = NodeUnheritance> {
+                                            L extends LegalityStatus = LegalityStatus> {
     public readonly STROKE_WIDTH: number = 8;
     public readonly SMALL_STROKE_WIDTH: number = 2;
 
-    public rules: Rules<M, S, L, U>;
+    public rules: Rules<M, S, L>;
 
     public board: NumberTable;
 

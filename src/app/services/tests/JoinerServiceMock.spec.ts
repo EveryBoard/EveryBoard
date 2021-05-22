@@ -1,4 +1,4 @@
-import { IJoinerId } from 'src/app/domain/ijoiner';
+import { IJoiner, IJoinerId } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 
@@ -12,7 +12,7 @@ export class JoinerServiceMock {
     }
     public joinGame(): Promise<void> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.joinGame');
-        return new Promise((resolve) => {
+        return new Promise((resolve: () => void) => {
             resolve();
         });
     }
@@ -36,18 +36,18 @@ export class JoinerServiceMock {
     }
     public async cancelJoining(): Promise<void> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.cancelJoining');
-        return new Promise((resolve) => {
+        return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK
     }
-    public readJoinerById(partId: string) {
+    public readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.readJoinerById');
-        return new Promise((resolve) => {
+        return new Promise((resolve: (j: IJoiner) => void) => {
             resolve({ candidatesNames: ['uniqueCandidate'],
                 creator: 'creator',
                 chosenPlayer: 'uniqueCandidate',
                 firstPlayer: '0',
-                partStatus: '3',
+                partStatus: 3,
                 maximalMoveDuration: 60,
                 totalPartDuration: 300,
                 gameType: 42,
@@ -56,13 +56,13 @@ export class JoinerServiceMock {
     }
     public async setChosenPlayer(pseudo: string): Promise<void> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.setChosenPlayer');
-        return new Promise((resolve) => {
+        return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK
     }
     public async deleteJoiner(): Promise<void> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.deleteJoiner');
-        return new Promise((resolve) => {
+        return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK
     }
@@ -72,7 +72,7 @@ export class JoinerServiceMock {
     : Promise<void>
     {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.proposeConfig');
-        return new Promise((resolve) => {
+        return new Promise((resolve: () => void) => {
             resolve();
         }); // DO REAL MOCK
     }

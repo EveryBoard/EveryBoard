@@ -3,22 +3,22 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
+import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
 import { EpaminondasRules } from '../EpaminondasRules';
-import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 
 describe('AttackEpaminondasMinimax:', () => {
 
     let rules: EpaminondasRules;
-    let minimax: PositionalEpaminondasMinimax;
+    let minimax: AttackEpaminondasMinimax;
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;
     const O: number = Player.ZERO.value;
 
     beforeEach(() => {
         rules = new EpaminondasRules(EpaminondasPartSlice);
-        minimax = new PositionalEpaminondasMinimax('EpaminondasMinimax');
+        minimax = new AttackEpaminondasMinimax('AttackEpaminondasMinimax');
     });
     it('Should propose 114 moves at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(114);

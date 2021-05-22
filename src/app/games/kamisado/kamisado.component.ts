@@ -6,7 +6,7 @@ import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
-import { KamisadoMinimax } from "src/app/games/kamisado/KamisadoMinimax";
+import { KamisadoMinimax } from 'src/app/games/kamisado/KamisadoMinimax';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';

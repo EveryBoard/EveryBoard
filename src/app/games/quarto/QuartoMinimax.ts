@@ -5,10 +5,23 @@ import { SCORE } from 'src/app/jscaip/SCORE';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { QuartoNode, BoardStatus, QuartoRules } from './QuartoRules';
+import { Player } from 'src/app/jscaip/Player';
 
 
 export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
 
+    public static scoreToBoardValue(score: SCORE, turn: number): NodeUnheritance {
+        if (score === SCORE.DEFAULT) {
+            return new NodeUnheritance(0);
+        } else {
+            const player: Player = Player.of(turn % 2);
+            if (score === SCORE.PRE_VICTORY) {
+                return new NodeUnheritance(player.getPreVictory());
+            } else {
+                return new NodeUnheritance(player.getDefeatValue());
+            }
+        }
+    }
     public getListMoves(node: QuartoNode): QuartoMove[] {
         const listMoves: QuartoMove[] = [];
 
@@ -48,9 +61,9 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
         for (const line of QuartoRules.lines) {
             boardStatus = QuartoRules.updateBoardStatus(line, slice, boardStatus);
             if (boardStatus.score === SCORE.VICTORY) {
-                return QuartoRules.scoreToBoardValue(boardStatus.score, slice.turn);
+                return QuartoMinimax.scoreToBoardValue(boardStatus.score, slice.turn);
             }
         }
-        return QuartoRules.scoreToBoardValue(boardStatus.score, slice.turn);
+        return QuartoMinimax.scoreToBoardValue(boardStatus.score, slice.turn);
     }
 }

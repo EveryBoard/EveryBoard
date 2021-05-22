@@ -75,7 +75,7 @@ export class Joiner {
     public equals(j: IJoiner): boolean {
         if (j.candidatesNames == null) return false;
         if (j.candidatesNames.length !== this.candidatesNames.length) return false;
-        for (let i = 0; i < j.candidatesNames.length; i++) {
+        for (let i: number = 0; i < j.candidatesNames.length; i++) {
             if (j.candidatesNames[i] !== this.candidatesNames[i]) {
                 return false;
             }

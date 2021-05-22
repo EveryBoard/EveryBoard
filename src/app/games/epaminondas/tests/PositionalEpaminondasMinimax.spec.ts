@@ -20,7 +20,7 @@ describe('PositionalEpaminondasMinimax:', () => {
         rules = new EpaminondasRules(EpaminondasPartSlice);
         minimax = new PositionalEpaminondasMinimax('EpaminondasMinimax');
     });
-    it('Should propose 114 moves at first turn', () => {
+    xit('Should propose 114 moves at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(114);
     });
     it('Should consider possible capture the best move', () => {
@@ -42,10 +42,9 @@ describe('PositionalEpaminondasMinimax:', () => {
         rules.node = new MGPNode(null, null, slice);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
-        console.log(bestMove)
         expect(bestMove).toEqual(expectedMove);
     });
-    it('Should go forward', () => {
+    it('Should prefer to get near the ennemy line', () => {
         const greaterBoard: NumberTable = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -55,8 +54,8 @@ describe('PositionalEpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, O, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, O, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
             [O, O, O, O, O, O, O, O, O, O, O, O, _, O],
         ];
@@ -68,15 +67,47 @@ describe('PositionalEpaminondasMinimax:', () => {
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, O, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, O, _, _],
-            [_, _, _, _, _, _, _, _, _, _, O, O, _, _],
             [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [O, O, O, O, O, O, O, O, O, O, O, _, _, O],
-            [O, O, O, O, O, O, O, O, O, O, O, _, O, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, O],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, O],
+            [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
+            [O, O, O, O, O, O, O, O, O, O, O, O, _, _],
         ];
         const lesserState: EpaminondasPartSlice = new EpaminondasPartSlice(lesserBoard, 0);
         expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
     });
-    it('Should be symetrical vertically', () => {});
+    it('Should prefer to have aligned piece than higher piece', () => {
+        const greaterBoard: NumberTable = [
+            [X, X, X, X, X, X, X, X, X, X, X, X, _, X],
+            [X, X, X, X, X, X, X, X, X, X, X, X, _, X],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
+            [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
+        ];
+        const greaterState: EpaminondasPartSlice = new EpaminondasPartSlice(greaterBoard, 0);
+        const lesserBoard: NumberTable = [
+            [X, X, X, X, X, X, X, _, X, X, X, X, _, X],
+            [X, X, X, X, X, X, X, _, X, X, X, X, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _, _, _, _, _, _, X],
+            [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
+            [O, O, O, O, O, O, O, _, O, O, O, O, O, O],
+        ];
+        const lesserState: EpaminondasPartSlice = new EpaminondasPartSlice(lesserBoard, 0);
+        expectSecondStateToBeBetterThanFirst(lesserState, null, greaterState, null, minimax);
+    });
 });

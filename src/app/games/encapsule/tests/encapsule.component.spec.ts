@@ -144,7 +144,7 @@ describe('EncapsuleComponent', () => {
 
         const component: EncapsuleComponent = componentTestUtils.getComponent();
         const minimax: EncapsuleMinimax = new EncapsuleMinimax('EncapsuleMinimax');
-        // TODO: move that to minimax test
+
         expect(minimax.getBoardValue(move, component.rules.node.gamePartSlice).value).toBe(Number.MIN_SAFE_INTEGER);
     }));
     it('should forbid selecting the same coord for destination and origin', fakeAsync(async() => {

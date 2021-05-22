@@ -9,7 +9,6 @@ export type RequestCode =
 
 export type Request = { code: RequestCode, data: JSONValue };
 
-
 function make(code: RequestCode, data: JSONValue): Request {
     return { code, data };
 }

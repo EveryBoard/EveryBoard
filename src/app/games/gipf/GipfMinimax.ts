@@ -62,7 +62,9 @@ export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalitySt
                 const intersectsWithFutureIndex: boolean = intersections[index].some((c: number) => c > index);
                 for (const combination of captureCombinations) {
 
-                    const combinationIntersectsWithIndex: boolean = combination.some((c: number) => intersections[index].some((c2: number) => c === c2));
+                    const combinationIntersectsWithIndex: boolean = combination.some((c: number) => {
+                        return intersections[index].some((c2: number) => c === c2);
+                    });
                     if (combinationIntersectsWithIndex === true) {
                         // Don't add it if there is an intersection
                         newCombinations.push(ArrayUtils.copyImmutableArray(combination));

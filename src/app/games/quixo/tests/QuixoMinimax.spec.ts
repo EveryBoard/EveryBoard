@@ -2,7 +2,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
 import { QuixoMove } from '../QuixoMove';
-import { QuixoMinimax } from "../QuixoMinimax";
+import { QuixoMinimax } from '../QuixoMinimax';
 
 describe('QuixoRules - Minimax:', () => {
     let minimax: QuixoMinimax;

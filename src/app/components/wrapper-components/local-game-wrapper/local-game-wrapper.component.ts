@@ -11,6 +11,7 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
 @Component({
     selector: 'app-local-game-wrapper',
@@ -46,7 +47,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         }, 1);
     }
     public updatePlayer(player: 0|1): void {
-        console.log('update player', this.players[player], this.aiDepths[player])
         if (this.players[player] !== 'humain' && this.aiDepths[player] !== '0') {
             this.proposeAIToPlay();
         }
@@ -99,7 +99,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     private getPlayingAI(): Minimax<Move, GamePartSlice> {
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn % 2;
-        return this.gameComponent.availableMinimaxes.find((a) => a.name === this.players[turn]);
+        return this.gameComponent.availableMinimaxes.find((a: Minimax<Move, GamePartSlice, LegalityStatus>) => {
+            return a.name === this.players[turn];
+        });
     }
     public takeBack(): void {
         if (this.gameComponent.rules.node.gamePartSlice.turn > 0) {

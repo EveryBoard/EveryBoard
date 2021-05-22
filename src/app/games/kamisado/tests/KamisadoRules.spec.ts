@@ -5,7 +5,7 @@ import { KamisadoMove } from '../KamisadoMove';
 import { KamisadoPartSlice } from '../KamisadoPartSlice';
 import { KamisadoPiece } from '../KamisadoPiece';
 import { KamisadoRules } from '../KamisadoRules';
-import { KamisadoMinimax } from "../KamisadoMinimax";
+import { KamisadoMinimax } from '../KamisadoMinimax';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';

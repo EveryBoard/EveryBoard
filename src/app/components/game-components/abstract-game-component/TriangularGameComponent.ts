@@ -3,16 +3,14 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { Move } from 'src/app/jscaip/Move';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 import { AbstractGameComponent } from './AbstractGameComponent';
 
 @Component({ template: '' })
 export abstract class TriangularGameComponent<M extends Move,
                                               S extends GamePartSlice,
-                                              L extends LegalityStatus = LegalityStatus,
-                                              U extends NodeUnheritance = NodeUnheritance>
-    extends AbstractGameComponent<M, S, L, U>
+                                              L extends LegalityStatus = LegalityStatus>
+    extends AbstractGameComponent<M, S, L>
 {
 
     public CASE_SIZE: number = 50;

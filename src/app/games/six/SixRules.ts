@@ -11,24 +11,9 @@ import { SixMove } from './SixMove';
 import { SixLegalityStatus } from './SixLegalityStatus';
 import { SixFailure } from './SixFailure';
 import { display } from 'src/app/utils/utils';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 
-export class SixNodeUnheritance implements NodeUnheritance {
-
-    public equals(o: SixNodeUnheritance): boolean {
-        throw new Error('SixNodeUnheritance.equals not implemented.');
-    }
-    public toString(): string {
-        const preVictory: string = this.preVictory ? this.preVictory.toString() : 'null';
-        return 'value: ' + this.value + ', ' +
-               'preVictory: ' + preVictory;
-    }
-    public constructor(public readonly value: number,
-                       public readonly preVictory?: Coord,
-                       public readonly victory?: Coord[]) {} // TODO: ne pas laisser ça passer si ça passe les tests! VEUX TU DIRE, VICTORY IS USELESS ???
-}
-export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus, SixNodeUnheritance> {
+export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus> {
 }
 export interface SixVictorySource {
     typeSource: 'LINE' | 'TRIANGLE_CORNER' | 'TRIANGLE_EDGE' | 'CIRCLE',
@@ -37,8 +22,7 @@ export interface SixVictorySource {
 
 export class SixRules extends Rules<SixMove,
                                     SixGameState,
-                                    SixLegalityStatus,
-                                    SixNodeUnheritance>
+                                    SixLegalityStatus>
 {
 
     public VERBOSE: boolean = false;

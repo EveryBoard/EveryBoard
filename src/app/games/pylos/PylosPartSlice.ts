@@ -10,11 +10,12 @@ export class PylosPartSlice extends GamePartSlice {
         const board1: number[][] = ArrayUtils.createBiArray(3, 3, Player.NONE.value);
         const board2: number[][] = ArrayUtils.createBiArray(2, 2, Player.NONE.value);
         const board3: number[][] = [[Player.NONE.value]];
-        const turn = 0;
+        const turn: number = 0;
         return new PylosPartSlice([board0, board1, board2, board3], turn);
     }
     constructor(public readonly boards: Table<ReadonlyArray<number>>,
-        turn: number) {
+                turn: number)
+    {
         super([], turn);
     }
     public getBoardAt(coord: PylosCoord): number {

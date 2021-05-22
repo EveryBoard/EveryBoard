@@ -121,7 +121,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
     }
     public getGameStatus(state: EncapsulePartSlice): GameStatus {
         if (EncapsuleRules.isVictory(state)) {
-            // TODO: test that real winner win, not last player
             return GameStatus.getVictory(Player.of((state.turn + 1) % 2));
         } else {
             return GameStatus.ONGOING;

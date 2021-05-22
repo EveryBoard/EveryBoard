@@ -16,9 +16,7 @@ export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsulePartSlice,
     public getBoardValue(move: EncapsuleMove, slice: EncapsulePartSlice): NodeUnheritance {
         let boardValue: number;
         if (EncapsuleRules.isVictory(slice)) {
-            boardValue = slice.turn % 2 === 0 ? // TODO test that the real winner wins!
-                Number.MAX_SAFE_INTEGER :
-                Number.MIN_SAFE_INTEGER;
+            boardValue = slice.getCurrentPlayer().getDefeatValue();
         } else {
             boardValue = 0;
         }

@@ -4,7 +4,7 @@ import { Encoder } from './Encoder';
 
 export class DirectionError extends Error {
     constructor(message?: string) {
-        const trueProto = new.target.prototype;
+        const trueProto: DirectionError = new.target.prototype;
         super(message);
         Object.setPrototypeOf(this, trueProto);
     }

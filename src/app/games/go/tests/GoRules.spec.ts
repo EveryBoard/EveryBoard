@@ -7,7 +7,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoRules } from '../GoRules';
-import { GoMinimax } from "../GoMinimax";
+import { GoMinimax } from '../GoMinimax';
 
 describe('GoRules:', () => {
 

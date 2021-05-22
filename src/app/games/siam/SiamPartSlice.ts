@@ -13,9 +13,9 @@ export class SiamPartSlice extends GamePartSlice {
         return new SiamPartSlice(board, 0);
     }
     public countPlayerPawn(): number {
-        let count = 0;
-        for (let y = 0; y < 5; y++) {
-            for (let x = 0; x < 5; x++) {
+        let count: number = 0;
+        for (let y: number = 0; y < 5; y++) {
+            for (let x: number = 0; x < 5; x++) {
                 if (SiamPiece.belongTo(this.board[y][x], this.getCurrentPlayer())) {
                     count++;
                 }

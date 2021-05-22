@@ -7,7 +7,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
-import { SiamMinimax } from '../../siam/SiamRules';
+import { SiamMinimax } from '../../siam/SiamMinimax';
 
 describe('SiamMinimax:', () => {
 

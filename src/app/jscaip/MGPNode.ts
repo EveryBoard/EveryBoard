@@ -4,11 +4,13 @@ import { Rules } from './Rules';
 import { GamePartSlice } from './GamePartSlice';
 import { MGPMap } from '../utils/MGPMap';
 import { LegalityStatus } from './LegalityStatus';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { NodeUnheritance } from './NodeUnheritance';
 import { Minimax } from './Minimax';
+import { MGPSet } from '../utils/MGPSet';
+import { MGPOptional } from '../utils/MGPOptional';
 
-export class MGPNode<R extends Rules<M, S, L, U>,
+export class MGPNode<R extends Rules<M, S, L>,
                      M extends Move,
                      S extends GamePartSlice,
                      L extends LegalityStatus = LegalityStatus,
@@ -22,7 +24,7 @@ export class MGPNode<R extends Rules<M, S, L, U>,
 
     public static VERBOSE: boolean = false;
 
-    public static ruler: Rules<Move, GamePartSlice, LegalityStatus, NodeUnheritance>;
+    public static ruler: Rules<Move, GamePartSlice, LegalityStatus>;
     /* Permet d'obtenir les données propre au jeu et non au minimax, ruler restera l'unique instance d'un set de règles
      * Exemples d'états théorique d'un Node (cours)
      * Feuille - stérile: n'as pas d'enfant après un calcul
@@ -33,11 +35,6 @@ export class MGPNode<R extends Rules<M, S, L, U>,
 
     public static minimaxes: MGPMap<string, Minimax<Move, GamePartSlice>> = new MGPMap();
     // instance fields:
-
-    private possiblesMoves: M[] = null;
-    /* Can countain more move than childs, in case of pruning
-     * should be only calculated once
-     */
 
     private childs: (MGPNode<R, M, S, L, U>[]) | null = null;
     /* null si: on as pas encore crée les potentiels enfant de cette Node
@@ -55,6 +52,11 @@ export class MGPNode<R extends Rules<M, S, L, U>,
      */
 
     private readonly ownValue: MGPMap<string, U> = new MGPMap();
+
+    private readonly possibleMoves: MGPMap<string, MGPSet<M>> = new MGPMap();
+    /* Can countain more move than childs, in case of pruning
+     * should be only calculated once
+     */
 
     // statics methods:
 
@@ -82,7 +84,7 @@ export class MGPNode<R extends Rules<M, S, L, U>,
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'DEFAULT');
         return SCORE.DEFAULT;
     }
-    public static getFirstNode<R extends Rules<M, S, L, U>,
+    public static getFirstNode<R extends Rules<M, S, L>,
                                M extends Move,
                                S extends GamePartSlice,
                                L extends LegalityStatus,
@@ -133,18 +135,16 @@ export class MGPNode<R extends Rules<M, S, L, U>,
             display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf : ' + this.myToString(minimax) + ' at depth ' + depth);
             return this; // rules - leaf or calculation - leaf
         }
-        this.possiblesMoves = this.possiblesMoves = minimax.getListMoves(this, minimax) as M[];
-        this.childs = [];
-        // TODO: make that list MINIMAX_BASED
+        const possibleMoves: M[] = this.getPossibleMoves(minimax);
+        this.childs = []; // TODO: don't have to be destroyed each time
         let bestChild: MGPNode<R, M, S, L, U>;
         if (this.gamePartSlice.turn % 2 === 1) {
             let maximumExpected: number = Number.MIN_SAFE_INTEGER;
-            for (const move of this.possiblesMoves) {
+            for (const move of possibleMoves) {
                 const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
                 const bestChildDescendant: MGPNode<R, M, S, L, U> = child.alphaBeta(depth - 1, alpha, beta, minimax);
                 const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
-                if (bestChildValue > maximumExpected) {
-                    console.log('found better son for MAX', move.toString(), bestChildValue);
+                if (bestChildValue > maximumExpected || bestChild == null) {
                     maximumExpected = bestChildDescendant.getHopedValue(minimax);
                     alpha = Math.max(maximumExpected, alpha);
                     bestChild = bestChildDescendant;
@@ -159,12 +159,11 @@ export class MGPNode<R extends Rules<M, S, L, U>,
             }
         } else {
             let minimumExpected: number = Number.MAX_SAFE_INTEGER;
-            for (const move of this.possiblesMoves) {
+            for (const move of possibleMoves) {
                 const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
                 const bestChildDescendant: MGPNode<R, M, S, L, U> = child.alphaBeta(depth - 1, alpha, beta, minimax);
                 const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
-                if (bestChildValue < minimumExpected) {
-                    console.log('found better son for mini', move.toString(), bestChildValue)
+                if (bestChildValue < minimumExpected || bestChild == null) {
                     minimumExpected = bestChildDescendant.getHopedValue(minimax);
                     beta = Math.min(minimumExpected, beta);
                     bestChild = bestChildDescendant;
@@ -182,6 +181,16 @@ export class MGPNode<R extends Rules<M, S, L, U>,
         this.hopedValue.put(minimax.toString(), bestChildHopedValue);
         return bestChild;
     }
+    private getPossibleMoves(minimax: Minimax<M, S, L, U>): M[] {
+        const currentMoves: MGPOptional<MGPSet<M>> = this.possibleMoves.get(minimax.name);
+        if (currentMoves.isAbsent()) {
+            const moves: M[] = minimax.getListMoves(this, minimax);
+            this.possibleMoves.set(minimax.name, new MGPSet(moves));
+            return moves;
+        } else {
+            return currentMoves.get().getCopy();
+        }
+    }
     private getOrCreateChild(move: M, minimax: Minimax<M, S, L, U>): MGPNode<R, M, S, L, U> {
         let child: MGPNode<R, M, S, L, U> = this.getSonByMove(move);
         if (child == null) {
@@ -196,9 +205,7 @@ export class MGPNode<R extends Rules<M, S, L, U>,
         return child;
     }
     public getSonByMove(move: M): MGPNode<R, M, S, L, U> | null {
-        if (this.childs == null) {
-            throw new Error('Cannot get son of uncalculated node');
-        }
+        assert(this.childs != null, 'Cannot get son of uncalculated node');
         for (const node of this.childs) {
             if (node.move && node.move.equals(move)) {
                 return node;
@@ -214,9 +221,6 @@ export class MGPNode<R extends Rules<M, S, L, U>,
         return almightyMom;
     }
     public getHopedValue(minimax: Minimax<M, S, L, U>): number {
-        if (minimax == null) {
-            return null; // TODO: remove, should never want to know that without minimax
-        }
         return this.hopedValue.get(minimax.name).get();
     }
     public getOwnValue(minimax: Minimax<M, S, L, U>): U {

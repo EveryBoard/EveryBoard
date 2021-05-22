@@ -1,5 +1,5 @@
 import { QuartoRules } from '../QuartoRules';
-import { QuartoMinimax } from "../QuartoMinimax";
+import { QuartoMinimax } from '../QuartoMinimax';
 import { QuartoMove } from '../QuartoMove';
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoPartSlice } from '../QuartoPartSlice';

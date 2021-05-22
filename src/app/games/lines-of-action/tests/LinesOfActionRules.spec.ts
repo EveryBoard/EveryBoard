@@ -6,7 +6,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { LinesOfActionFailure } from '../LinesOfActionFailure';
 import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
-import { LinesOfActionMinimax } from "../LinesOfActionMinimax";
+import { LinesOfActionMinimax } from '../LinesOfActionMinimax';
 import { LinesOfActionState } from '../LinesOfActionState';
 
 describe('LinesOfActionRules', () => {

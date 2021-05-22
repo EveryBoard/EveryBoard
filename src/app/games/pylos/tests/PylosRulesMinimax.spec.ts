@@ -4,7 +4,7 @@ import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosPartSlice } from '../PylosPartSlice';
 import { PylosNode, PylosRules } from '../PylosRules';
-import { PylosMinimax } from "../PylosMinimax";
+import { PylosMinimax } from '../PylosMinimax';
 
 describe('PylosRules - Minimax:', () => {
 

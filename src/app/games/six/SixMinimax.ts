@@ -10,8 +10,22 @@ import { SixLegalityStatus } from './SixLegalityStatus';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { assert, display } from 'src/app/utils/utils';
 import { AlignementMinimax, BoardInfo } from 'src/app/jscaip/AlignementMinimax';
-import { SixVictorySource, SixNode, SixNodeUnheritance, SixRules } from './SixRules';
+import { SixVictorySource, SixNode, SixRules } from './SixRules';
+import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
+export class SixNodeUnheritance implements NodeUnheritance {
+
+    public equals(o: SixNodeUnheritance): boolean {
+        throw new Error('SixNodeUnheritance.equals not implemented.');
+    }
+    public toString(): string {
+        const preVictory: string = this.preVictory ? this.preVictory.toString() : 'null';
+        return 'value: ' + this.value + ', ' +
+               'preVictory: ' + preVictory;
+    }
+    public constructor(public readonly value: number,
+                       public readonly preVictory?: Coord) {}
+}
 
 export class SixMinimax extends AlignementMinimax<SixMove,
                                                   SixGameState,

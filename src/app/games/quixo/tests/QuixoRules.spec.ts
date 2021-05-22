@@ -4,7 +4,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoRules } from '../QuixoRules';
-import { QuixoMinimax } from "../QuixoMinimax";
+import { QuixoMinimax } from '../QuixoMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 
 describe('QuixoRules:', () => {

@@ -8,7 +8,7 @@ import { GipfCapture, GipfMove, GipfPlacement } from '../GipfMove';
 import { GipfPartSlice } from '../GipfPartSlice';
 import { GipfPiece } from '../GipfPiece';
 import { GipfNode, GipfRules } from '../GipfRules';
-import { GipfMinimax } from "../GipfMinimax";
+import { GipfMinimax } from '../GipfMinimax';
 
 describe('GipfRules:', () => {
     // Rules of gipf with the diagrams used in these tests: http://www.gipf.com/gipf/rules/complete_rules.html

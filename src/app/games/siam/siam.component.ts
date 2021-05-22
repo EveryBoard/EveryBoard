@@ -3,7 +3,8 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { SiamMove } from 'src/app/games/siam/SiamMove';
 import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
 import { SiamLegalityStatus } from 'src/app/games/siam/SiamLegalityStatus';
-import { SiamMinimax, SiamRules } from 'src/app/games/siam/SiamRules';
+import { SiamRules } from 'src/app/games/siam/SiamRules';
+import { SiamMinimax } from 'src/app/games/siam/SiamMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SiamPiece } from 'src/app/games/siam/SiamPiece';
 import { Orthogonal } from 'src/app/jscaip/Direction';
