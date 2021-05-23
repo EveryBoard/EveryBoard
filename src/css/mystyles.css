@@ -10207,7 +10207,10 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
 
 .masonry .item {
   margin: 0 0 10pt;
+  /* For Chrome */
   column-break-inside: avoid;
+  /* For Firefox */
+  display: inline-grid;
   page-break-inside: avoid;
 }
 

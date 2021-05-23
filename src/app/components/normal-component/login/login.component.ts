@@ -7,7 +7,6 @@ import { FormGroup, FormControl } from '@angular/forms';
 @Component({
     selector: 'app-login',
     templateUrl: './login.component.html',
-    styleUrls: ['./login.component.css'],
 })
 export class LoginComponent {
     public errorMessage: string;
@@ -31,10 +30,10 @@ export class LoginComponent {
                         this.errorMessage = 'Ce mot de passe est incorrect';
                         break;
                     case 'There is no user record corresponding to this identifier. The user may have been deleted.':
-                        this.errorMessage = 'Cette adresse email n\'as pas de compte sur ce site.';
+                        this.errorMessage = `Cette adresse email n'a pas de compte sur ce site.`;
                         break;
                     case 'Missing or insufficient permissions.':
-                        this.errorMessage = 'Vous devez aller dans vos mail confirmer votre inscription en cliquant sur le lien que nous vous avons envoyé d\'abord.';
+                        this.errorMessage = `Vous devez aller dans vos mail confirmer votre inscription en cliquant sur le lien que nous vous avons envoyé d'abord.`;
                         break;
                     default:
                         this.errorMessage = message;
@@ -50,7 +49,7 @@ export class LoginComponent {
                 this.errorMessage = err.message;
             });
     }
-    private redirect: () => void = () => {
+    private redirect(): void {
         this.router.navigate(['/server']);
     }
 }
