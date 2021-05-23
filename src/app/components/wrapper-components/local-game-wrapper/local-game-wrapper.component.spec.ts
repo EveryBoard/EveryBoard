@@ -1,4 +1,4 @@
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, flush } from '@angular/core/testing';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { Player } from 'src/app/jscaip/Player';
 import { P4Move } from 'src/app/games/p4/P4Move';
@@ -21,18 +21,18 @@ describe('LocalGameWrapperComponent', () => {
     it('should create', () => {
         expect(componentTestUtils.getComponent()).toBeTruthy();
     });
-    it('should have game included after view init', fakeAsync(() => {
+    it('should have game included after view init', () => {
         const gameIncluderTag: DebugElement = componentTestUtils.querySelector('app-game-includer');
         let p4Tag: DebugElement = componentTestUtils.querySelector('app-p4');
-        expect(gameIncluderTag).toBeTruthy('app-game-includer tag should be present at start');
+        expect(gameIncluderTag).withContext('app-game-includer tag should be present at start').toBeTruthy();
 
         p4Tag = componentTestUtils.querySelector('app-p4');
-        expect(p4Tag).toBeTruthy('app-p4 tag should be present after view init');
+        expect(p4Tag).withContext('app-p4 tag should be present after view init').toBeTruthy();
 
-        expect(componentTestUtils.wrapper.gameIncluder).toBeTruthy('gameIncluder should exist after view init');
+        expect(componentTestUtils.wrapper.gameIncluder).withContext('gameIncluder should exist after view init').toBeTruthy();
         expect(componentTestUtils.wrapper.gameComponent)
-            .toBeTruthy('gameComponent should be present once component view init');
-    }));
+            .withContext('gameComponent should be present once component view init').toBeTruthy();
+    });
     it('connected user should be able to play', fakeAsync(async() => {
         const slice: P4PartSlice = componentTestUtils.getComponent().rules.node.gamePartSlice;
         componentTestUtils.setupSlice(slice);
@@ -64,7 +64,7 @@ describe('LocalGameWrapperComponent', () => {
         componentTestUtils.setupSlice(state);
 
         await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
-        expect(componentTestUtils.findElement('#draw')).toBeTruthy('Draw indicator should be present');
+        expect(componentTestUtils.findElement('#draw')).withContext('Draw indicator should be present').toBeTruthy();
     }));
     it('should show score if needed', fakeAsync(async() => {
         componentTestUtils.getComponent().showScore = false;
@@ -78,31 +78,35 @@ describe('LocalGameWrapperComponent', () => {
         componentTestUtils.expectElementToExist('#scoreZero');
         componentTestUtils.expectElementToExist('#scoreOne');
     }));
-    it('should allow to restart game during the play', fakeAsync(async() => {
-        expect(componentTestUtils.findElement('#restartButton'));
-    }));
-    it('should allow to restart game at the end', fakeAsync(async() => {
-        const board: number[][] = [
-            [O, O, O, _, O, O, O],
-            [X, X, X, O, X, X, X],
-            [O, O, O, X, O, O, O],
-            [X, X, X, O, X, X, X],
-            [O, O, O, X, O, O, O],
-            [X, X, X, O, X, X, X],
-        ];
-        const slice: P4PartSlice = new P4PartSlice(board, 41);
-        componentTestUtils.setupSlice(slice);
+    describe('restarting games', () => {
+        it('should allow to restart game during the play', fakeAsync(async() => {
+            expect(componentTestUtils.findElement('#restartButton'));
+            await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
+        }));
+        it('should allow to restart game at the end', fakeAsync(async() => {
+            const board: number[][] = [
+                [O, O, O, _, O, O, O],
+                [X, X, X, O, X, X, X],
+                [O, O, O, X, O, O, O],
+                [X, X, X, O, X, X, X],
+                [O, O, O, X, O, O, O],
+                [X, X, X, O, X, X, X],
+            ];
+            const slice: P4PartSlice = new P4PartSlice(board, 41);
+            componentTestUtils.setupSlice(slice);
 
-        await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
+            await componentTestUtils.expectMoveSuccess('#click_3', P4Move.THREE);
 
-        expect(componentTestUtils.findElement('#restartButton'))
-            .toBeTruthy('Restart button should be present after end game');
+            expect(componentTestUtils.findElement('#restartButton'))
+                .withContext('Restart button should be present after end game').toBeTruthy();
 
-        await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
+            await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
 
-        expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(0);
-        expect(componentTestUtils.findElement('#draw')).toBeFalsy('Draw indicator should be removed');
-    }));
+            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toBe(0);
+            expect(componentTestUtils.findElement('#draw')).withContext('Draw indicator should be removed').toBeFalsy();
+            flush();
+        }));
+    });
     describe('Using AI', () => {
         it('Should show level when non-human player is selected', async() => {
             // 1. Choosing AI
@@ -121,13 +125,28 @@ describe('LocalGameWrapperComponent', () => {
                 spyOn(componentTestUtils.wrapper as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
             selectDepth.value = selectDepth.options[1].value;
             selectDepth.dispatchEvent(new Event('change'));
-            componentTestUtils.fixture.detectChanges();
+            componentTestUtils.detectChanges();
             await componentTestUtils.fixture.whenStable();
             const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;
             expect(aiDepth).toBe('Niveau 1');
-
+            componentTestUtils.detectChanges();
+            await componentTestUtils.fixture.whenStable();
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
             // Once by changing it on the select, once after the AI move and check who is next
         });
+        it('should propose AI to play when restarting game', fakeAsync(async() => {
+            const wrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
+            wrapper.players[0] = 'P4Minimax';
+            wrapper.aiDepths[0] = '1';
+
+            const proposeAIToPlay: jasmine.Spy = spyOn(wrapper, 'proposeAIToPlay').and.callThrough();
+
+            await componentTestUtils.expectInterfaceClickSuccess('#restartButton');
+            componentTestUtils.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+
+            expect(proposeAIToPlay).toHaveBeenCalledTimes(1);
+            flush();
+        }));
     });
 });

@@ -5,7 +5,7 @@ import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { KamisadoComponent, KamisadoComponentFailure } from '../kamisado.component';
-import { fakeAsync } from '@angular/core/testing';
+import { fakeAsync, flush } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
 
@@ -31,6 +31,7 @@ describe('KamisadoComponent', () => {
     });
     it('should not allow to pass initially', fakeAsync(async() => {
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeFalse();
+        flush();
     }));
     it('should allow changing initial choice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7'); // Select initial piece

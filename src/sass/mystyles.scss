@@ -10,4 +10,24 @@ $blue: #3273dc;
 $primary: $blue;
 
 // Import only what you need from Bulma
-@import "./node_modules/bulma/bulma.sass";
+@import "../../node_modules/bulma/bulma.sass";
+
+$gap: 10pt;
+.masonry {
+    column-count: 3;
+    margin: $gap;
+    column-gap: $gap;
+}
+.masonry .item {
+    margin: 0 0 $gap;
+
+    /* For Chrome */
+    column-break-inside: avoid;
+    /* For Firefox */
+    display: inline-grid;
+    page-break-inside: avoid;
+}
+
+html {
+    min-height: 100%;
+}

@@ -11,19 +11,6 @@
         <div class="column">
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title">Liste des jeux</p>
-                </header>
-                <div class="card-content">
-                    <div class="content">
-                        <button class="button is-medium is-fullwidth is-primary mb-1">Jeux disponibles</button>
-                        <a class="button is-medium is-fullwidth is-primary" href="https://github.com/MartinREMY42/multi-game-project">Contribuer</a>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="column">
-            <div class="card">
-                <header class="card-header">
                     <p class="card-header-title">Jouer en ligne</p>
                 </header>
                 <div class="card-content">
@@ -45,6 +32,29 @@
                         <button class="button is-medium is-fullwidth is-primary" routerLink="/didacticial">Apprendre</button>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="masonry">
+        <div class="card item" *ngFor="let game of games">
+            <div class="card-header">
+                <p class="card-header-title">{{ game.name }}</p>
+            </div>
+            <div class="card-image">
+                <figure class="image">
+                    <img src="assets/images/{{ game.urlName }}.png">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="content">
+                    {{ game.description }}
+                </div>
+            </div>
+            <div class="card-footer">
+                <a routerLink="/play/{{ game.urlName }}" class="card-footer-item">Jouer en ligne</a>
+                <a routerLink="/local/{{ game.urlName }}" class="card-footer-item">Jouer hors ligne</a>
+                <a routerLink="/didacticial/{{ game.urlName }}" class="card-footer-item">Apprendre</a>
             </div>
         </div>
     </div>
