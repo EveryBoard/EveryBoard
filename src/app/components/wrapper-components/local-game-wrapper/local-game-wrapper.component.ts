@@ -115,5 +115,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = null;
+        if (this.players[Player.ZERO.value] !== 'humain' && this.aiDepths[Player.ZERO.value] !== '0') {
+            this.proposeAIToPlay();
+        }
     }
 }
