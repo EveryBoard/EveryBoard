@@ -10199,8 +10199,17 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   padding: 3rem 1.5rem 6rem;
 }
 
+@media screen and (max-width: 768px) {
+  .masonry {
+    column-count: 1;
+  }
+}
+@media screen and (min-width: 769px), print {
+  .masonry {
+    column-count: 3;
+  }
+}
 .masonry {
-  column-count: 3;
   margin: 10pt;
   column-gap: 10pt;
 }
