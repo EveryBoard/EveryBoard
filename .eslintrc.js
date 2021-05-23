@@ -40,7 +40,7 @@ module.exports = {
             { 'ignoreDeclarationMerge': true },
         ],
 
-        'max-len': ['warn', { 'code': 120 }],
+        'max-len': ['warn', { 'code': 120, 'ignoreStrings': true, 'ignoreTemplateLiterals': true }],
         'require-jsdoc': ['warn', { 'require': {
             'FunctionDeclaration': false,
             'MethodDefinition': false,
@@ -72,7 +72,7 @@ module.exports = {
             'named': 'never',
             'asyncArrow': 'never',
         }],
-        'brace-style': ['warn'],
+        'brace-style': ['off'],
         'eqeqeq': ['error', 'always', {
             'null': 'ignore',
         }],
