@@ -10198,3 +10198,19 @@ a.has-text-danger-dark:hover, a.has-text-danger-dark:focus {
   background-color: #fafafa;
   padding: 3rem 1.5rem 6rem;
 }
+
+.masonry {
+  column-count: 3;
+  margin: 10pt;
+  column-gap: 10pt;
+}
+
+.masonry .item {
+  margin: 0 0 10pt;
+  column-break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+html {
+  min-height: 100%;
+}

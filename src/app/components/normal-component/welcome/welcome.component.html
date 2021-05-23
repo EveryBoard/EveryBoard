@@ -35,4 +35,27 @@
             </div>
         </div>
     </div>
+
+    <div class="masonry">
+        <div class="card item" *ngFor="let game of games">
+            <div class="card-header">
+                <p class="card-header-title">{{ game.name }}</p>
+            </div>
+            <div class="card-image">
+                <figure class="image">
+                    <img src="assets/images/{{ game.urlName }}.png">
+                </figure>
+            </div>
+            <div class="card-content">
+                <div class="content">
+                    {{ game.description }}
+                </div>
+            </div>
+            <div class="card-footer">
+                <a routerLink="/play/{{ game }}" class="card-footer-item">Jouer en ligne</a>
+                <a routerLink="/local/{{ game }}" class="card-footer-item">Jouer hors ligne</a>
+                <a routerLink="/didacticial/{{ game }}" class="card-footer-item">Apprendre</a>
+            </div>
+        </div>
+    </div>
 </section>
