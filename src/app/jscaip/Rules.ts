@@ -49,7 +49,7 @@ export abstract class Rules<M extends Move,
      * the remaining pawn that you can put on the board...
      */
 
-    public readonly choose: (move: M) => boolean = (move: M): boolean => { // TODO: make a normal function
+    public choose(move: M): boolean {
         /* used by the rules to update board
          * return true if the move was legal, and the node updated
          * return false otherwise
@@ -79,7 +79,7 @@ export abstract class Rules<M extends Move,
                                                                   resultingSlice as S);
         this.node = son;
         return true;
-    };
+    }
     public abstract applyLegalMove(move: M, slice: S, status: L): S;
 
     public abstract isLegal(move: M, slice: S): L;

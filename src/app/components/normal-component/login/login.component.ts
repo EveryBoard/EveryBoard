@@ -22,7 +22,7 @@ export class LoginComponent {
     public loginWithEmail(value: {email: string, password: string}): void {
         this.authenticationService
             .doEmailLogin(value.email, value.password)
-            .then(this.redirect)
+            .then(() => this.redirect())
             .catch((err: { message: string }) => {
                 const message: string = err.message;
                 switch (message) {
@@ -44,7 +44,7 @@ export class LoginComponent {
     public loginWithGoogle(): void {
         this.authenticationService
             .doGoogleLogin()
-            .then(this.redirect)
+            .then(() => this.redirect())
             .catch((err: { message: string }) => {
                 this.errorMessage = err.message;
             });

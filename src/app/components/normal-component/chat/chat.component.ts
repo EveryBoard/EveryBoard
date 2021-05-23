@@ -54,9 +54,9 @@ export class ChatComponent implements OnInit, OnDestroy {
     public loadChatContent(): void {
         display(ChatComponent.VERBOSE, 'User \'' + this.userName + '\' logged, loading chat content');
 
-        this.chatService.startObserving(this.chatId, this.updateMessages);
+        this.chatService.startObserving(this.chatId, (id: IChatId) => this.updateMessages(id));
     }
-    public updateMessages: (iChatId: IChatId) => void = (iChatId: IChatId) => {
+    public updateMessages(iChatId: IChatId): void {
         this.chat = iChatId.doc.messages;
         const nbMessages: number = this.chat.length;
         if (this.visible === false) {
