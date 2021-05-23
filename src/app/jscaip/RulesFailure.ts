@@ -10,5 +10,7 @@ export class RulesFailure {
 
     public static readonly CANNOT_SELF_CAPTURE: string = `Votre case d'arrivée doit être vide ou contenir une pièce ennemie.`;
 
+    public static readonly MUST_LAND_ON_EMPTY_CASE: string = 'Vous devez déposer votre pièce sur une case vide!';
+
     private constructor() {}
 }

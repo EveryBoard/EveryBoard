@@ -10,6 +10,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { Player } from 'src/app/jscaip/Player';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export interface BoardStatus {
     score: SCORE;
@@ -220,7 +221,7 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         const pieceInHand: QuartoPiece = slice.pieceInHand;
         if (QuartoRules.isOccupied(board[y][x])) {
             // on ne joue pas sur une case occupée
-            return MGPValidation.failure('Cannot play on an occupied case.');
+            return MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
         }
         if (pieceToGive === QuartoPiece.NONE) {
             if (slice.turn === 15) {
