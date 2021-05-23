@@ -4,7 +4,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PentagoComponent } from '../Pentago.component';
 import { PentagoMove } from '../PentagoMove';
 
-describe('PentagoComponent:', () => {
+xdescribe('PentagoComponent:', () => {
     let componentTestUtils: ComponentTestUtils<PentagoComponent>;
 
     const _: number = Player.NONE.value;

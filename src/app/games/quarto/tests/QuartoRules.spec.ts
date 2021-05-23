@@ -6,6 +6,7 @@ import { QuartoPartSlice } from '../QuartoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('QuartoRules', () => {
 
@@ -79,7 +80,7 @@ describe('QuartoRules', () => {
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AABA);
         const move: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BBAA);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe('Cannot play on an occupied case.');
+        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
     });
     it('Should allow simple move', () => {
         const move: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
