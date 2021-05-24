@@ -43,29 +43,17 @@ export class OnlineGameCreationComponent implements OnInit, OnDestroy {
         this.selectedGame = pickedGame;
     }
     public async createGame(): Promise<void> {
-        if (this.canCreateGame()) {
+        if (this.gameService.canCreateGame(this.userName)) {
             const gameId: string = await this.gameService.createGame(this.userName, this.selectedGame, '');
             // create Part and Joiner
             this.router.navigate(['/play/' + this.selectedGame, gameId]);
         } else {
-            this.messageError('Vous avez déjà une partie en cours. Terminez là ou annulez là d\'abord!');
+            this.messageError(`Vous avez déjà une partie en cours. Terminez là ou annulez là d'abord!`);
             this.router.navigate(['/server']);
         }
     }
     public messageError(msg: string): void {
         this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
-    }
-    public canCreateGame(): boolean {
-        let i: number = 0;
-        let found: boolean = false;
-        let playerZero: string;
-        let playerOne: string;
-        while ((i < this.activesParts.length) && (!found)) {
-            playerZero = this.activesParts[i].doc.playerZero;
-            playerOne = this.activesParts[i++].doc.playerOne;
-            found = (this.userName === playerZero) || (this.userName === playerOne);
-        }
-        return !found;
     }
     public ngOnDestroy(): void {
         if (this.userNameSub) {

@@ -16,11 +16,27 @@ export class ActivesPartsService {
 
     public activesPartsObs: Observable<ICurrentPartId[]> = this.activesPartsBS.asObservable();
 
+    private activesParts: ICurrentPartId[] = [];
+
     private unsubscribe: () => void;
 
     constructor(private partDao: PartDAO) {
     }
+    public ngOnInit(): void {
+        this.startObserving();
+    }
+    public ngOnDestroy(): void {
+        this.stopObserving();
+    }
+    public subscribe(f: (activeParts: ICurrentPartId[]) => void): void {
+        console.log('subscribing');
+        this.activesPartsObs.subscribe(f);
+    }
+    public getActiveParts(): ICurrentPartId[] {
+        return this.activesParts;
+    }
     public startObserving(): void {
+        console.log('start observing');
         const onDocumentCreated: (createdParts: ICurrentPartId[]) => void = (createdParts: ICurrentPartId[]) => {
             const result: ICurrentPartId[] = this.activesPartsBS.value.concat(...createdParts);
             this.activesPartsBS.next(result);
@@ -49,12 +65,28 @@ export class ActivesPartsService {
                                            onDocumentModified,
                                            onDocumentDeleted);
         this.unsubscribe = this.partDao.observeActivesParts(partObserver);
+        this.activesPartsObs.subscribe((activesParts: ICurrentPartId[]) => {
+            console.log('active part service: got ' + activesParts.length);
+            this.activesParts = activesParts;
+        });
     }
     public stopObserving(): void {
+        console.log('stop observing');
         if (this.unsubscribe == null) {
             throw new Error('Cannot stop observing actives part when you have not started observing');
         }
         this.activesPartsBS.next([]);
         this.unsubscribe();
+    }
+    public hasActivePart(user: string): boolean {
+        for (const part of this.activesParts) {
+            const playerZero: string = part.doc.playerZero;
+            const playerOne: string = part.doc.playerOne;
+            if ((user === playerZero) || (user === playerOne)) {
+                return true;
+            }
+        }
+        return false;
+
     }
 }

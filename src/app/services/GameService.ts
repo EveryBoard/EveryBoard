@@ -78,6 +78,9 @@ export class GameService {
         await this.createChat(gameId); // TODO asynchronous
         return gameId;
     }
+    public canCreateGame(creator: string): boolean {
+        return this.activesPartsService.hasActivePart(creator) === false;
+    }
     public getActivesPartsObs(): Observable<ICurrentPartId[]> {
         // TODO: désabonnements de sûreté aux autres abonnements activesParts
         display(GameService.VERBOSE, 'GameService.getActivesPartsObs');
