@@ -50,8 +50,15 @@ describe('AbstractGameComponent', () => {
             Go: { onClick: [0, 0] },
             Kamisado: { onClick: [0, 0] },
             LinesOfAction: { onClick: [0, 0] },
-            //
+            MinimaxTesting: {
+                chooseRight: [],
+                chooseDown: [],
+            },
             P4: { onClick: [0, 0] },
+            Pentago: {
+                onClick: [0, 0],
+                rotate: [['not relevant', 0, true]],
+            },
             Pylos: { onClick: [0, 0] },
             Quarto: {
                 chooseCoord: [0, 0],

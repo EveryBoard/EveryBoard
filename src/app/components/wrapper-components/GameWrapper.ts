@@ -8,29 +8,9 @@ import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { Move } from '../../jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-
-import { AwaleComponent } from '../../games/awale/awale.component';
-import { CoerceoComponent } from '../../games/coerceo/coerceo.component';
-import { DvonnComponent } from '../../games/dvonn/dvonn.component';
-import { EncapsuleComponent } from '../../games/encapsule/encapsule.component';
-import { EpaminondasComponent } from '../../games/epaminondas/epaminondas.component';
-import { GipfComponent } from '../../games/gipf/gipf.component';
-import { GoComponent } from '../../games/go/go.component';
-import { KamisadoComponent } from '../../games/kamisado/kamisado.component';
-import { LinesOfActionComponent } from 'src/app/games/lines-of-action/LinesOfAction.component';
-import { MinimaxTestingComponent } from '../../games/minimax-testing/minimax-testing.component';
-import { P4Component } from '../../games/p4/p4.component';
-import { PylosComponent } from '../../games/pylos/pylos.component';
-import { QuartoComponent } from '../../games/quarto/quarto.component';
-import { QuixoComponent } from '../../games/quixo/quixo.component';
-import { ReversiComponent } from '../../games/reversi/reversi.component';
-import { SaharaComponent } from '../../games/sahara/sahara.component';
-import { SiamComponent } from '../../games/siam/siam.component';
-import { SixComponent } from '../../games/six/six.component';
-import { TablutComponent } from '../../games/tablut/tablut.component';
-
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
+import { GameInfo } from '../normal-component/pick-game/pick-game.component';
 
 @Component({ template: '' })
 export abstract class GameWrapper {
@@ -63,49 +43,11 @@ export abstract class GameWrapper {
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice>> {
         display(GameWrapper.VERBOSE, 'GameWrapper.getMatchingComponent');
-
-        switch (compoString) {
-            case 'Awale':
-                return AwaleComponent;
-            case 'Coerceo':
-                return CoerceoComponent;
-            case 'Dvonn':
-                return DvonnComponent;
-            case 'Encapsule':
-                return EncapsuleComponent;
-            case 'Epaminondas':
-                return EpaminondasComponent;
-            case 'Go':
-                return GoComponent;
-            case 'Gipf':
-                return GipfComponent;
-            case 'Kamisado':
-                return KamisadoComponent;
-            case 'LinesOfAction':
-                return LinesOfActionComponent;
-            case 'MinimaxTesting':
-                return MinimaxTestingComponent;
-            case 'P4':
-                return P4Component;
-            case 'Pylos':
-                return PylosComponent;
-            case 'Quarto':
-                return QuartoComponent;
-            case 'Quixo':
-                return QuixoComponent;
-            case 'Reversi':
-                return ReversiComponent;
-            case 'Sahara':
-                return SaharaComponent;
-            case 'Siam':
-                return SiamComponent;
-            case 'Six':
-                return SixComponent;
-            case 'Tablut':
-                return TablutComponent;
-            default:
-                throw new Error('Unknown Games are unwrappable');
+        const gameInfo: GameInfo = GameInfo.ALL_GAMES.find((gameInfo: GameInfo) => gameInfo.urlName === compoString);
+        if (gameInfo == null) {
+            throw new Error('Unknown Games are unwrappable');
         }
+        return gameInfo.component;
     }
     protected afterGameIncluderViewInit(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.afterGameIncluderViewInit');

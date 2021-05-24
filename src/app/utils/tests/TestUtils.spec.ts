@@ -256,7 +256,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext('Element "' + elementName + '" should exist.').toBeDefined();
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         if (element == null) {
             return;
         } else {

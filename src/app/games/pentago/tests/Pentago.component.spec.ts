@@ -1,10 +1,12 @@
 import { fakeAsync } from '@angular/core/testing';
 import { Player } from 'src/app/jscaip/Player';
+import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PentagoComponent } from '../Pentago.component';
 import { PentagoMove } from '../PentagoMove';
+import { PentagoState } from '../PentagoState';
 
-xdescribe('PentagoComponent:', () => {
+describe('PentagoComponent:', () => {
     let componentTestUtils: ComponentTestUtils<PentagoComponent>;
 
     const _: number = Player.NONE.value;
@@ -22,6 +24,47 @@ xdescribe('PentagoComponent:', () => {
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
         await componentTestUtils.expectMoveSuccess('#click_1_1', move);
     }));
-    it('Should show a "skip rotation button" when there is both neutral and non-neutral blocks');
-    it('Should display arrows to allow rotating specific block');
+    xit('Should show a "skip rotation button" when there is both neutral and non-neutral blocks', fakeAsync(async() => {
+        await componentTestUtils.expectClickSuccess('#click_0_0');
+        const move: PentagoMove = PentagoMove.rotationless(0, 0);
+        await componentTestUtils.expectMoveSuccess('#skipRotation', move);
+    }));
+    it('Should display arrows to allow rotating specific block', fakeAsync(async() => {
+        await componentTestUtils.expectClickSuccess('#click_0_0');
+        componentTestUtils.expectElementToExist('#currentDrop_0_0');
+        const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, true);
+        await componentTestUtils.expectMoveSuccess('#rotate_0_clockwise', move);
+        // TODO: test that block itself is of moved style
+    }));
+    xit('Should not display arrows on neutral blocks and display dropped piece meanwhile', fakeAsync(async() => {
+        const board: NumberTable = [
+            [_, _, X, _, _, _],
+            [_, O, _, _, _, _],
+            [X, _, X, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+        ];
+        const state: PentagoState = new PentagoState(board, 5);
+        componentTestUtils.setupSlice(state);
+        await componentTestUtils.expectClickSuccess('#click_0_0');
+        componentTestUtils.expectElementNotToExist('#rotate_0_clockwise');
+    }));
+    xit('Should show highlighted winning line', fakeAsync(async() => {
+        const board: NumberTable = [
+            [_, _, _, _, _, _],
+            [X, _, _, _, _, _],
+            [X, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, _, _, _, _, _],
+            [_, X, X, _, _, _],
+        ];
+        const state: PentagoState = new PentagoState(board, 5);
+        componentTestUtils.setupSlice(state);
+        await componentTestUtils.expectClickSuccess('#click_0_5');
+        await componentTestUtils.expectClickSuccess('#rotate_2_clockwise');
+        componentTestUtils.expectElementToExist('#victoryCoord_0_1');
+        componentTestUtils.expectElementToExist('#victoryCoord_0_5');
+    }));
+    it('Should highlight last move');
 });
