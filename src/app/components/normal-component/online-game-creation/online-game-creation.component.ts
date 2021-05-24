@@ -1,9 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
-import { Router } from '@angular/router';
-import { Subscription } from 'rxjs';
-import { ICurrentPartId } from 'src/app/domain/icurrentpart';
-import { AuthenticationService, AuthUser } from 'src/app/services/AuthenticationService';
+import { Component } from '@angular/core';
 import { GameService } from 'src/app/services/GameService';
 
 @Component({
@@ -11,57 +6,16 @@ import { GameService } from 'src/app/services/GameService';
     templateUrl: './online-game-creation.component.html',
     styleUrls: ['./online-game-creation.component.css'],
 })
-export class OnlineGameCreationComponent implements OnInit, OnDestroy {
+export class OnlineGameCreationComponent {
 
     public selectedGame: string;
 
-    public userName: string;
-
-    public activesParts: ICurrentPartId[];
-
-    private userNameSub: Subscription;
-
-    private activesPartsSub: Subscription;
-
-    public constructor(public router: Router,
-                       private gameService: GameService,
-                       private snackBar: MatSnackBar,
-                       private authenticationService: AuthenticationService) {
-    }
-    public ngOnInit(): void {
-        this.userNameSub = this.authenticationService.getJoueurObs()
-            .subscribe((joueur: AuthUser) => {
-                if (joueur == null) this.userName = null;
-                else this.userName = joueur.pseudo;
-            });
-        this.activesPartsSub = this.gameService.getActivesPartsObs()
-            .subscribe((activesParts: ICurrentPartId[]) => {
-                this.activesParts = activesParts;
-            });
+    public constructor(private gameService: GameService) {
     }
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
     }
     public async createGame(): Promise<void> {
-        if (this.gameService.canCreateGame(this.userName)) {
-            const gameId: string = await this.gameService.createGame(this.userName, this.selectedGame, '');
-            // create Part and Joiner
-            this.router.navigate(['/play/' + this.selectedGame, gameId]);
-        } else {
-            this.messageError(`Vous avez déjà une partie en cours. Terminez là ou annulez là d'abord!`);
-            this.router.navigate(['/server']);
-        }
-    }
-    public messageError(msg: string): void {
-        this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
-    }
-    public ngOnDestroy(): void {
-        if (this.userNameSub) {
-            this.userNameSub.unsubscribe();
-        }
-        if (this.activesPartsSub) {
-            this.activesPartsSub.unsubscribe();
-            this.gameService.unSubFromActivesPartsObs();
-        }
+        this.gameService.createGameAndRedirectOrShowError(this.selectedGame);
     }
 }

@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { ICurrentPartId, ICurrentPart } from '../domain/icurrentpart';
@@ -7,7 +7,7 @@ import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 @Injectable({
     providedIn: 'root',
 })
-export class ActivesPartsService {
+export class ActivesPartsService implements OnDestroy {
     /* Actives Parts service
      * this service is used by the Server Component
      */
@@ -21,22 +21,15 @@ export class ActivesPartsService {
     private unsubscribe: () => void;
 
     constructor(private partDao: PartDAO) {
-    }
-    public ngOnInit(): void {
         this.startObserving();
     }
     public ngOnDestroy(): void {
         this.stopObserving();
     }
-    public subscribe(f: (activeParts: ICurrentPartId[]) => void): void {
-        console.log('subscribing');
-        this.activesPartsObs.subscribe(f);
-    }
     public getActiveParts(): ICurrentPartId[] {
         return this.activesParts;
     }
     public startObserving(): void {
-        console.log('start observing');
         const onDocumentCreated: (createdParts: ICurrentPartId[]) => void = (createdParts: ICurrentPartId[]) => {
             const result: ICurrentPartId[] = this.activesPartsBS.value.concat(...createdParts);
             this.activesPartsBS.next(result);
@@ -71,7 +64,6 @@ export class ActivesPartsService {
         });
     }
     public stopObserving(): void {
-        console.log('stop observing');
         if (this.unsubscribe == null) {
             throw new Error('Cannot stop observing actives part when you have not started observing');
         }
