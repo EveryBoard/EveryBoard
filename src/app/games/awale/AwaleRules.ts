@@ -7,7 +7,6 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
-import { GoPartSlice } from '../go/GoPartSlice';
 
 export abstract class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
@@ -190,7 +189,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while ((x !== limite) && (((target = board[y][x]) === 2) || (target === 3)));
         return captured;
     }
-    public getGameStatus(state: GoPartSlice): GameStatus {
+    public static getGameStatus(state: AwalePartSlice, _lastMove: AwaleMove): GameStatus {
         if (state.captured[0] > 24) {
             return GameStatus.ZERO_WON;
         }
@@ -201,5 +200,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
             return GameStatus.DRAW;
         }
         return GameStatus.ONGOING;
+    }
+    public getGameStatus(state: AwalePartSlice, lastMove: AwaleMove): GameStatus {
+        return AwaleRules.getGameStatus(state, lastMove);
     }
 }
