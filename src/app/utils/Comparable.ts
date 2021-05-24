@@ -21,7 +21,18 @@ export function comparableEquals<T extends Comparable>(a: T, b: T): boolean {
             const otherComparable: ComparableObject = b as ComparableObject;
             return comparableValue.equals(otherComparable);
         } else {
-            throw new Error('comparableEquals not implemented with Object that have no equals method!');
+            const aJSON: ComparableJSON = a as ComparableJSON;
+            const bJSON: ComparableJSON = b as ComparableJSON;
+            for (const key of Object.keys(aJSON)) {
+                if (key in bJSON) {
+                    if (comparableEquals(aJSON[key], bJSON[key]) === false) {
+                        return false;
+                    }
+                } else {
+                    return false;
+                }
+            }
+            return true;
         }
     } else {
         return a === b;

@@ -5,6 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { AwaleNode, AwaleRules } from './AwaleRules';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 
 export class AwaleMinimax extends Minimax<AwaleMove, AwalePartSlice, AwaleLegalityStatus> {
@@ -35,14 +36,18 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwalePartSlice, AwaleLegali
         } while (x < 6);
         return choices;
     }
-    public getBoardValue(move: AwaleMove, slice: AwalePartSlice): NodeUnheritance {
+    public getBoardValue(move: AwaleMove, state: AwalePartSlice): NodeUnheritance {
+        const status: GameStatus = AwaleRules.getGameStatus(state, move);
+        if (status.isEndGame) {
+            return new NodeUnheritance(status.winner.getVictoryValue());
+        }
 
-        const player: number = slice.turn % 2;
+        const player: number = state.turn % 2;
         const ennemy: number = (player + 1) % 2;
-        const captured: number[] = slice.getCapturedCopy();
+        const captured: number[] = state.getCapturedCopy();
         const c1: number = captured[1];
         const c0: number = captured[0];
-        const board: number[][] = slice.getCopiedBoard();
+        const board: number[][] = state.getCopiedBoard();
         if (AwaleRules.isStarving(player, board)) { // TODO tester de l'enlever
             if (!AwaleRules.canDistribute(ennemy, board)) {
                 return new NodeUnheritance((c0 > c1) ? Number.MIN_SAFE_INTEGER : Number.MAX_SAFE_INTEGER);

@@ -13,8 +13,20 @@ $primary: $blue;
 @import "../../node_modules/bulma/bulma.sass";
 
 $gap: 10pt;
+
+@media screen and (max-width: 768px) {
+    .masonry {
+        column-count: 1;
+    }
+}
+
+@media screen and (min-width: 769px), print {
+    .masonry {
+        column-count: 3;
+    }
+}
+
 .masonry {
-    column-count: 3;
     margin: $gap;
     column-gap: $gap;
 }

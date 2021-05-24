@@ -119,7 +119,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
         }
         return { legal: MGPValidation.SUCCESS };
     }
-    public getGameStatus(state: CoerceoPartSlice): GameStatus {
+    public static getGameStatus(state: CoerceoPartSlice): GameStatus {
         if (state.captures[0] >= 18) {
             return GameStatus.ZERO_WON;
         }
@@ -127,5 +127,8 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
             return GameStatus.ONE_WON;
         }
         return GameStatus.ONGOING;
+    }
+    public getGameStatus(state: CoerceoPartSlice): GameStatus {
+        return CoerceoRules.getGameStatus(state);
     }
 }
