@@ -50,14 +50,16 @@ export class GameService implements OnDestroy {
                 else this.userName = joueur.pseudo;
             });
     }
-    public async createGameAndRedirectOrShowError(game: string): Promise<void> {
+    public async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
         if (this.canCreateGame(this.userName)) {
             const gameId: string = await this.createGame(this.userName, game, '');
             // create Part and Joiner
             this.router.navigate(['/play/' + game, gameId]);
+            return true;
         } else {
             this.messageError(`Vous avez déjà une partie en cours. Terminez là ou annulez là d'abord!`);
             this.router.navigate(['/server']);
+            return false;
         }
     }
     private messageError(msg: string): void {

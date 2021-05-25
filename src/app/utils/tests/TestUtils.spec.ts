@@ -64,11 +64,12 @@ export class SimpleComponentTestUtils<T> {
     private fixture: ComponentFixture<T>;
     private component: T;
     public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
+        const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
         await TestBed.configureTestingModule({
             imports: [
                 MatSnackBarModule,
                 RouterTestingModule.withRoutes([
-                    { path: 'login', component: BlankComponent },
+                    { path: '**', component: BlankComponent },
                 ]),
                 ReactiveFormsModule,
             ],
@@ -81,6 +82,8 @@ export class SimpleComponentTestUtils<T> {
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
+                { provide: ActivatedRoute, useValue: activatedRouteStub },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -143,6 +146,7 @@ export class ComponentTestUtils<T extends GameComponent> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         await TestBed.configureTestingModule({
             imports: [
+                MatSnackBarModule,
                 AppModule,
                 RouterTestingModule.withRoutes([
                     { path: 'play', component: OnlineGameWrapperComponent },

@@ -11,7 +11,7 @@ export class WelcomeComponent {
 
     public constructor(private gameService: GameService) {
     }
-    public async createGame(game: string): Promise<void> {
+    public async createGame(game: string): Promise<boolean> {
         return this.gameService.createGameAndRedirectOrShowError(game);
     }
 }

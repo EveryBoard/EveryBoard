@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../material-modules';
 
 import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { firebaseConfig } from './firebaseConfig';
@@ -69,6 +69,7 @@ import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tablut/tablut.component';
+import { ActivesPartsService } from './services/ActivesPartsService';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
@@ -164,12 +165,12 @@ const routes: Route [] = [
     ],
     providers: [
         AuthenticationService,
+        ActivesPartsService,
         GameService,
         JoinerService,
         UserService,
         ChatService,
         PartDAO,
-        AngularFirestore,
         AngularFireAuth,
     ],
     bootstrap: [AppComponent],

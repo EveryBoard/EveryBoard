@@ -44,7 +44,7 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public startTutorial(): void {
         this.router.navigate(['didacticial/' + this.selectedGame]);
     }
-    public async createGame(): Promise<void> {
+    public async createGame(): Promise<boolean> {
         return this.gameService.createGameAndRedirectOrShowError(this.selectedGame);
     }
     public getActiveParts(): ICurrentPartId[] {
