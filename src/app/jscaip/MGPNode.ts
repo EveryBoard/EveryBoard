@@ -184,7 +184,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     private getPossibleMoves(minimax: Minimax<M, S, L, U>): M[] {
         const currentMoves: MGPOptional<MGPSet<M>> = this.possibleMoves.get(minimax.name);
         if (currentMoves.isAbsent()) {
-            const moves: M[] = minimax.getListMoves(this, minimax);
+            const moves: M[] = minimax.getListMoves(this);
             this.possibleMoves.set(minimax.name, new MGPSet(moves));
             return moves;
         } else {

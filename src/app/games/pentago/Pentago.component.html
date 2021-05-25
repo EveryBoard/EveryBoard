@@ -21,6 +21,7 @@
                   [attr.ry]="3 * STROKE_WIDTH"
                   [attr.width]="BLOCK_WIDTH"
                   [attr.height]="BLOCK_WIDTH"
+                  [ngClass]="getBlockClasses(blockX, blockY)"
                   stroke="black"
                   [attr.stroke-width]="STROKE_WIDTH"
                   fill="none"
@@ -42,8 +43,8 @@
     </ng-container>
     <circle *ngIf="currentDrop"
             id="currentDrop_{{ currentDrop.x }}_{{ currentDrop.y }}"
-            [attr.cx]="(2 * STROKE_WIDTH) + ((currentDrop.x + 0.5) * CASE_SIZE)"
-            [attr.cy]="(2 * STROKE_WIDTH) + ((currentDrop.y + 0.5) * CASE_SIZE)"
+            [attr.cx]="getCenter(currentDrop.x)"
+            [attr.cy]="getCenter(currentDrop.y)"
             [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
             [ngClass]="rules.node.gamePartSlice.getCurrentPlayer().value === 0 ? 'player0' : 'player1'"
             class="base"
@@ -58,4 +59,31 @@
           [attr.stroke-width]="2 * STROKE_WIDTH"
           marker-end="url(#arrowhead)"
     />
+    <circle *ngFor="let victoryCoord of victoryCoords"
+            id="victoryCoord_{{ victoryCoord.x }}_{{ victoryCoord.y }}"
+            [attr.cx]="getCenter(victoryCoord.x)"
+            [attr.cy]="getCenter(victoryCoord.y)"
+            [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
+            [ngClass]="rules.node.gamePartSlice.getBoardAt(victoryCoord) === 0 ? 'player0' : 'player1'"
+            class="base victory-stroke"
+            [stroke-width]="STROKE_WIDTH"
+    />
+    <g *ngIf="canSkipRotation"
+       id="skipRotation"
+       (click)="skipRotation()">
+       <circle [attr.cx]="BLOCK_SEPARATION"
+               [attr.cy]="BLOCK_SEPARATION"
+               [attr.r]="0.75 * CASE_SIZE"
+               stroke="red"
+               [attr.stroke-width]="2 * STROKE_WIDTH"
+               fill="grey"
+        />
+        <line [attr.x1]="BLOCK_SEPARATION - DIAGONAL_BAR_OFFSET"
+              [attr.y1]="BLOCK_SEPARATION + DIAGONAL_BAR_OFFSET"
+              [attr.x2]="BLOCK_SEPARATION + DIAGONAL_BAR_OFFSET"
+              [attr.y2]="BLOCK_SEPARATION - DIAGONAL_BAR_OFFSET"
+              stroke="red"
+              [attr.stroke-width]="2 * STROKE_WIDTH"
+        />
+    </g>
 </svg>

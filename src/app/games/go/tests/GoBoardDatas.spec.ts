@@ -4,7 +4,7 @@ import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoGroupDatasFactory } from '../GoGroupDatasFactory';
 
-xdescribe('GoBoardDatas', () => {
+describe('GoBoardDatas', () => {
     const _: GoPiece = GoPiece.EMPTY;
 
     const X: GoPiece = GoPiece.WHITE;
