@@ -52,9 +52,9 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a (click)="createGame(game.urlName)" class="card-footer-item">Jouer en ligne</a>
-                <a routerLink="/local/{{ game.urlName }}" class="card-footer-item">Jouer hors ligne</a>
-                <a routerLink="/didacticial/{{ game.urlName }}" class="card-footer-item">Apprendre</a>
+                <a id="playOnline_{{game.urlName}}" (click)="createGame(game.urlName)" class="card-footer-item">Jouer en ligne</a>
+                <a id="playLocally_{{game.urlName}}" (click)="createLocalGame(game.urlName)" class="card-footer-item">Jouer hors ligne</a>
+                <a id="startDidacticial_{{game.urlName}}" (click)="createDidacticial(game.urlName)" class="card-footer-item">Apprendre</a>
             </div>
         </div>
     </div>

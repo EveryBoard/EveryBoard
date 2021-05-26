@@ -1,4 +1,4 @@
-import { Injectable, OnDestroy, OnInit } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { PartDAO } from '../dao/PartDAO';
@@ -23,7 +23,7 @@ import { AuthenticationService, AuthUser } from './AuthenticationService';
     providedIn: 'root',
 })
 export class GameService implements OnDestroy {
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     private followedPartId: string;
 

@@ -59,7 +59,6 @@ export class ActivesPartsService implements OnDestroy {
                                            onDocumentDeleted);
         this.unsubscribe = this.partDao.observeActivesParts(partObserver);
         this.activesPartsObs.subscribe((activesParts: ICurrentPartId[]) => {
-            console.log('active part service: got ' + activesParts.length);
             this.activesParts = activesParts;
         });
     }

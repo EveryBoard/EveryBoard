@@ -64,7 +64,6 @@ export class SimpleComponentTestUtils<T> {
     private fixture: ComponentFixture<T>;
     private component: T;
     public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
-        const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
         await TestBed.configureTestingModule({
             imports: [
                 MatSnackBarModule,
@@ -83,7 +82,6 @@ export class SimpleComponentTestUtils<T> {
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
                 { provide: JoueursDAO, useClass: JoueursDAOMock },
-                { provide: ActivatedRoute, useValue: activatedRouteStub },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -96,6 +94,7 @@ export class SimpleComponentTestUtils<T> {
     private constructor() {}
     public async clickElement(elementName: string): Promise<boolean> {
         const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should exist on the page').toBeDefined();
         if (element == null) {
             return false;
         } else {
