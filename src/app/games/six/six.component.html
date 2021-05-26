@@ -29,7 +29,7 @@
               id="leftCoord_{{ leftCoord.x }}_{{ leftCoord.y }}"
               (click)="onNeighboorClick(leftCoord)"
               [attr.points]="getHexaCoordinates(leftCoord)"
-              class="base no-fill round lastmove mid-stroke"/>
+              class="base round moved mid-stroke"/>
     <polyline *ngIf="lastDrop != null"
               id="lastDrop_{{ lastDrop.x }}_{{ lastDrop.y }}"
               (click)="onPieceClick(lastDrop)"

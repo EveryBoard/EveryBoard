@@ -268,4 +268,3 @@ export class MGPNode<R extends Rules<M, S, L>,
         return nbDescendants;
     }
 }
-// TODO: test minimax where all choice at depth 1 are the same value

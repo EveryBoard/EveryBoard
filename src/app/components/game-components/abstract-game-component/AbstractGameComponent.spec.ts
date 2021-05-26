@@ -11,7 +11,7 @@ import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
 import { PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
-fdescribe('AbstractGameComponent', () => {
+describe('AbstractGameComponent', () => {
     const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub();
 
     let fixture: ComponentFixture<LocalGameWrapperComponent>;
@@ -36,7 +36,7 @@ fdescribe('AbstractGameComponent', () => {
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
     }));
-    fit('Clicks method should refuse when observer click', fakeAsync(async() => {
+    it('Clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
             Awale: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },

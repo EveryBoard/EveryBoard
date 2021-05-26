@@ -52,7 +52,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
     }
     public updateBoard(): void {
         this.board = this.rules.node.gamePartSlice.getCopiedBoard();
-        this.victoryCoords = this.rules.getVictoryCoords(this.rules.node);
+        this.victoryCoords = this.rules.getVictoryCoords(this.rules.node.gamePartSlice);
         const lastMove: PentagoMove = this.rules.node.move;
         if (lastMove) {
             this.movedBlock = lastMove.blockTurned.getOrNull();

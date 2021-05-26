@@ -6,7 +6,7 @@ import { PentagoComponent } from '../Pentago.component';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoState } from '../PentagoState';
 
-fdescribe('PentagoComponent:', () => {
+describe('PentagoComponent:', () => {
     let componentTestUtils: ComponentTestUtils<PentagoComponent>;
 
     const _: number = Player.NONE.value;

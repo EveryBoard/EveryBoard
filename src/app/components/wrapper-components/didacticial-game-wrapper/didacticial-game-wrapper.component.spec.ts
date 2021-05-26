@@ -7,6 +7,7 @@ import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { DebugElement } from '@angular/core';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 describe('DidacticialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -375,13 +376,15 @@ describe('DidacticialGameWrapperComponent', () => {
             const expectedMessage: string = wrapper.COMPLETED_TUTORIAL_MESSAGE;
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            expect(wrapper.successfulSteps).toBe(1);
             expect(currentMessage).toBe(expectedMessage);
             // expect next button to be hidden
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeFalse();
+            componentTestUtils.expectElementNotToExist('#nextButton');
             // expect retry button to be hidden
-            expect(await componentTestUtils.clickElement('#retryButton')).toBeFalse();
+            componentTestUtils.expectElementNotToExist('#retryButton');
             // expect restart button to be here
             expect(await componentTestUtils.clickElement('#restartButton')).toBeTrue();
+            expect(wrapper.successfulSteps).toBe(0);
         }));
         it('Should allow to restart the whole didacticial when finished', fakeAsync(async() => {
             // Given a finish tutorial
@@ -498,10 +501,10 @@ describe('DidacticialGameWrapperComponent', () => {
             tick(10);
 
             // expect to see steps success message on component
-            const expectedMessage: string = 'Perdu.';
-            const currentMessage: string =
-                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
-            expect(currentMessage).toBe(expectedMessage);
+            const expectedReason: string = 'Perdu.';
+            const currentReason: string =
+                componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
+            expect(currentReason).toBe(expectedReason);
         }));
         it('When illegal move is done, toast message should be shown and restart not needed');
 
@@ -740,6 +743,64 @@ describe('DidacticialGameWrapperComponent', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
             expect(wrapper.stepFinished[0]).toBeTrue();
+        }));
+    });
+    describe('DidacticialStep awaiting a predicate', () => {
+        it('Should display MGPValidation.reason when predicate return a failure', fakeAsync(async() => {
+            // Given a DidacticialStep that always fail
+            const didacticial: DidacticialStep[] = [
+                DidacticialStep.fromPredicate(
+                    'title',
+                    'You shall not pass',
+                    QuartoPartSlice.getInitialSlice(),
+                    (move: QuartoMove, resultingState: QuartoPartSlice) => {
+                        return MGPValidation.failure('chocolatine');
+                    },
+                    'Bravo.',
+                ),
+            ];
+            wrapper.startDidacticial(didacticial);
+
+            // when doing a move
+            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            tick(10);
+            const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoPartSlice.getInitialSlice());
+            tick(10);
+
+            // expect to see steps success message on component
+            const expectedReason: string = 'chocolatine';
+            const currentReason: string =
+                componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
+            expect(currentReason).toBe(expectedReason);
+        }));
+        it('Should display successMessage when predicate return MGPValidation.SUCCESS', fakeAsync(async() => {
+            // Given a DidacticialStep with several clics
+            const didacticial: DidacticialStep[] = [
+                DidacticialStep.fromPredicate(
+                    'title',
+                    'No matter what you do, it will be success!',
+                    QuartoPartSlice.getInitialSlice(),
+                    (move: QuartoMove, resultingState: QuartoPartSlice) => {
+                        return MGPValidation.SUCCESS;
+                    },
+                    'Bravo.',
+                ),
+            ];
+            wrapper.startDidacticial(didacticial);
+
+            // when doing a move
+            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            tick(10);
+            const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', move, QuartoPartSlice.getInitialSlice());
+            tick(10);
+
+            // expect to see steps success message on component
+            const expectedMessage: string = 'Bravo.';
+            const currentMessage: string =
+                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            expect(currentMessage).toBe(expectedMessage);
         }));
     });
 });

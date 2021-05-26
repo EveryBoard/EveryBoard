@@ -63,8 +63,7 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
         }
         return PentagoLegalityStatus.SUCCESS;
     }
-    public getVictoryCoords(node: PentagoNode): Coord[] {
-        const state: PentagoState = node.gamePartSlice;
+    public getVictoryCoords(state: PentagoState): Coord[] {
         let victoryCoords: Coord[] = [];
         for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
             const firstValue: number = state.getBoardAt(maybeVictory[0]);
@@ -99,32 +98,10 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
         return victoryCoords;
     }
     public getGameStatus(state: PentagoState, lastMove: PentagoMove): GameStatus {
+        const victoryCoords: Coord[] = this.getVictoryCoords(state);
         const victoryFound: [boolean, boolean] = [false, false];
-        for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
-            const firstValue: number = state.getBoardAt(maybeVictory[0]);
-            if (firstValue !== Player.NONE.value) {
-                let testedCoord: Coord = maybeVictory[0].getNext(maybeVictory[1]);
-                let fourAligned: boolean = true;
-                for (let i: number = 0; i < 3 && fourAligned; i++) {
-                    if (state.getBoardAt(testedCoord) !== firstValue) {
-                        fourAligned = false;
-                    } else {
-                        testedCoord = testedCoord.getNext(maybeVictory[1]);
-                    }
-                }
-                if (fourAligned) {
-                    // check first alignement
-                    if (state.getBoardAt(testedCoord) === firstValue) {
-                        victoryFound[firstValue] = true;
-                    }
-                    if (maybeVictory[2]) {
-                        const coordZero: Coord = maybeVictory[0].getPrevious(maybeVictory[1], 1);
-                        if (state.getBoardAt(coordZero) === firstValue) {
-                            victoryFound[firstValue] = true;
-                        }
-                    }
-                }
-            }
+        for (let i: number = 0; i < victoryCoords.length; i += 5) {
+            victoryFound[state.getBoardAt(victoryCoords[i])] = true;
         }
         if (victoryFound[0] === true) {
             if (victoryFound[1] === true) {

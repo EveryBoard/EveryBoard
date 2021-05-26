@@ -1,6 +1,6 @@
 import { PentagoMove } from '../PentagoMove';
 
-fdescribe('PentagoMove', () => {
+describe('PentagoMove', () => {
 
     it('should throw when rotating inexistant block', () => {
         const expectedError: string = 'This block do not exist: -1';
