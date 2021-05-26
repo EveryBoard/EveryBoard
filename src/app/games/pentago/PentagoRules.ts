@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -8,7 +9,13 @@ import { PentagoLegalityStatus } from './PentagoLegalityStatus';
 import { PentagoMove } from './PentagoMove';
 import { PentagoState } from './PentagoState';
 
+export abstract class PentagoNode extends MGPNode<PentagoRules,
+                                                  PentagoMove,
+                                                  PentagoState,
+                                                  PentagoLegalityStatus> {}
 export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegalityStatus> {
+
+    public static readonly singleton: PentagoRules = new PentagoRules(PentagoState);
 
     public static VICTORY_SOURCE: [Coord, Vector, boolean][] = [
         // [ firstCoordToTest, directionToTest, shouldLookTheCaseBeforeAsWellAsCaseAfter]
@@ -55,6 +62,41 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
             }
         }
         return PentagoLegalityStatus.SUCCESS;
+    }
+    public getVictoryCoords(node: PentagoNode): Coord[] {
+        const state: PentagoState = node.gamePartSlice;
+        let victoryCoords: Coord[] = [];
+        for (const maybeVictory of PentagoRules.VICTORY_SOURCE) {
+            const firstValue: number = state.getBoardAt(maybeVictory[0]);
+            const subVictory: Coord[] = [maybeVictory[0]];
+            if (firstValue !== Player.NONE.value) {
+                let testedCoord: Coord = maybeVictory[0].getNext(maybeVictory[1]);
+                let fourAligned: boolean = true;
+                for (let i: number = 0; i < 3 && fourAligned; i++) {
+                    if (state.getBoardAt(testedCoord) !== firstValue) {
+                        fourAligned = false;
+                    } else {
+                        subVictory.push(testedCoord);
+                        testedCoord = testedCoord.getNext(maybeVictory[1]);
+                    }
+                }
+                if (fourAligned) {
+                    // check first alignement
+                    if (state.getBoardAt(testedCoord) === firstValue) {
+                        subVictory.push(testedCoord);
+                        victoryCoords = victoryCoords.concat(subVictory);
+                    }
+                    if (maybeVictory[2]) {
+                        const coordZero: Coord = maybeVictory[0].getPrevious(maybeVictory[1], 1);
+                        if (state.getBoardAt(coordZero) === firstValue) {
+                            subVictory.push(coordZero);
+                            victoryCoords = victoryCoords.concat(subVictory);
+                        }
+                    }
+                }
+            }
+        }
+        return victoryCoords;
     }
     public getGameStatus(state: PentagoState, lastMove: PentagoMove): GameStatus {
         const victoryFound: [boolean, boolean] = [false, false];

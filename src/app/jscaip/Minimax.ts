@@ -14,9 +14,7 @@ export abstract class Minimax<M extends Move,
 
     public constructor(public readonly name: string) {
     }
-    public abstract getListMoves(node: MGPNode<Rules<M, S, L>, M, S, L>,
-                                 minimax: Minimax<M, S, L, U>)
-    : M[];
+    public abstract getListMoves(node: MGPNode<Rules<M, S, L>, M, S, L>): M[];
     /* has to be implemented for each rule so that the AI can choose amongst theses informations
      * this function could give an incomplete set of data if some of them are redondant
      * or also if some of them are too bad to be interesting to count, as a matter of performance

@@ -61,6 +61,7 @@ import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from './games/lines-of-action/LinesOfAction.component';
 import { MinimaxTestingComponent } from './games/minimax-testing/minimax-testing.component';
 import { P4Component } from './games/p4/p4.component';
+import { PentagoComponent } from './games/pentago/Pentago.component';
 import { PylosComponent } from './games/pylos/pylos.component';
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
@@ -123,6 +124,7 @@ const routes: Route [] = [
         LinesOfActionComponent,
         MinimaxTestingComponent,
         P4Component,
+        PentagoComponent,
         PylosComponent,
         QuartoComponent,
         QuixoComponent,
@@ -143,6 +145,7 @@ const routes: Route [] = [
         LinesOfActionComponent,
         MinimaxTestingComponent,
         P4Component,
+        PentagoComponent,
         PylosComponent,
         QuartoComponent,
         QuixoComponent,

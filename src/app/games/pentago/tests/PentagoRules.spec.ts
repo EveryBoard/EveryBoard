@@ -7,7 +7,7 @@ import { PentagoMove } from '../PentagoMove';
 import { PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
 
-describe('PentagoRules', () => {
+fdescribe('PentagoRules', () => {
 
     let rules: PentagoRules;
     const _: number = Player.NONE.value;

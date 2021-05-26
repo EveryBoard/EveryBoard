@@ -32,6 +32,13 @@ export class GameStatus {
     }
     private constructor(public readonly isEndGame: boolean, public readonly winner: Player) {
     }
+    public toBoardValue(): number {
+        if (this.winner !== Player.NONE) {
+            return this.winner.getVictoryValue();
+        } else {
+            return 0;
+        }
+    }
 }
 export abstract class Rules<M extends Move,
                             S extends GamePartSlice,

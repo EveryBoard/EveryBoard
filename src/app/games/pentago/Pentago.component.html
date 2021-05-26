@@ -1,0 +1,89 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="0 0 670 670">
+    <defs>
+        <marker id="arrowhead"
+                markerWidth="5"
+                markerHeight="3.5"
+                refX="2.5"
+                refY="1.75"
+                orient="auto"
+                fill="blue"
+        >
+            <polygon points="0 0, 5 1.75, 0 3.5" />
+        </marker>
+    </defs>
+    <ng-container *ngFor="let blockY of [0, BLOCK_SEPARATION]; index as by;">
+        <ng-container *ngFor="let blockX of [0, BLOCK_SEPARATION]; index as bx;">
+            <rect [attr.x]="STROKE_WIDTH + blockX"
+                  [attr.y]="STROKE_WIDTH + blockY"
+                  [attr.rx]="3 * STROKE_WIDTH"
+                  [attr.ry]="3 * STROKE_WIDTH"
+                  [attr.width]="BLOCK_WIDTH"
+                  [attr.height]="BLOCK_WIDTH"
+                  [ngClass]="getBlockClasses(blockX, blockY)"
+                  stroke="black"
+                  [attr.stroke-width]="STROKE_WIDTH"
+                  fill="none"
+            />
+            <ng-container *ngFor="let localY of [0, 1, 2]">
+                <ng-container *ngFor="let localX of [0, 1, 2]">
+                    <circle (click)="onClick(3 * bx + localX, 3 * by + localY)"
+                        id="click_{{ 3 * bx + localX }}_{{ 3 * by + localY }}"
+                        [attr.cx]="blockX + (2 * STROKE_WIDTH) + ((localX + 0.5) * CASE_SIZE)"
+                        [attr.cy]="blockY + (2 * STROKE_WIDTH) + ((localY + 0.5) * CASE_SIZE)"
+                        [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
+                        [ngClass]="getCaseClasses(3 * bx + localX, 3 * by + localY)"
+                        class="base"
+                        pointer-events="fill"
+                    />
+                </ng-container>
+            </ng-container>
+        </ng-container>
+    </ng-container>
+    <circle *ngIf="currentDrop"
+            id="currentDrop_{{ currentDrop.x }}_{{ currentDrop.y }}"
+            [attr.cx]="getCenter(currentDrop.x)"
+            [attr.cy]="getCenter(currentDrop.y)"
+            [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
+            [ngClass]="rules.node.gamePartSlice.getCurrentPlayer().value === 0 ? 'player0' : 'player1'"
+            class="base"
+            pointer-events="fill"
+    />
+    <path *ngFor="let arrow of arrows"
+          [attr.d]="arrow[0]"
+          id="rotate_{{ arrow[1] }}_{{ arrow[2] ? 'clockwise' : 'anticlockwise' }}"
+          stroke="blue"
+          fill="none"
+          (click)="rotate(arrow)"
+          [attr.stroke-width]="2 * STROKE_WIDTH"
+          marker-end="url(#arrowhead)"
+    />
+    <circle *ngFor="let victoryCoord of victoryCoords"
+            id="victoryCoord_{{ victoryCoord.x }}_{{ victoryCoord.y }}"
+            [attr.cx]="getCenter(victoryCoord.x)"
+            [attr.cy]="getCenter(victoryCoord.y)"
+            [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
+            [ngClass]="rules.node.gamePartSlice.getBoardAt(victoryCoord) === 0 ? 'player0' : 'player1'"
+            class="base victory-stroke"
+            [stroke-width]="STROKE_WIDTH"
+    />
+    <g *ngIf="canSkipRotation"
+       id="skipRotation"
+       (click)="skipRotation()">
+       <circle [attr.cx]="BLOCK_SEPARATION"
+               [attr.cy]="BLOCK_SEPARATION"
+               [attr.r]="0.75 * CASE_SIZE"
+               stroke="red"
+               [attr.stroke-width]="2 * STROKE_WIDTH"
+               fill="grey"
+        />
+        <line [attr.x1]="BLOCK_SEPARATION - DIAGONAL_BAR_OFFSET"
+              [attr.y1]="BLOCK_SEPARATION + DIAGONAL_BAR_OFFSET"
+              [attr.x2]="BLOCK_SEPARATION + DIAGONAL_BAR_OFFSET"
+              [attr.y2]="BLOCK_SEPARATION - DIAGONAL_BAR_OFFSET"
+              stroke="red"
+              [attr.stroke-width]="2 * STROKE_WIDTH"
+        />
+    </g>
+</svg>
