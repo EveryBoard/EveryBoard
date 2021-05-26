@@ -6,7 +6,6 @@ import { MatStepperModule } from '@angular/material/stepper';
 import { RouterTestingModule } from '@angular/router/testing';
 import { By } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-
 import { PartCreationComponent } from './part-creation.component';
 import { JoinerService } from 'src/app/services/JoinerService';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
@@ -22,6 +21,9 @@ import { JoueursDAO } from 'src/app/dao/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
 import { IJoueur } from 'src/app/domain/iuser';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthenticationService } from 'src/app/services/AuthenticationService';
+import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('PartCreationComponent:', () => {
     let fixture: ComponentFixture<PartCreationComponent>;
@@ -42,7 +44,7 @@ describe('PartCreationComponent:', () => {
     beforeEach(async() => {
         await TestBed.configureTestingModule({
             imports: [
-                MatStepperModule, MatRadioModule, MatSliderModule,
+                MatStepperModule, MatRadioModule, MatSliderModule, MatSnackBarModule,
                 ReactiveFormsModule,
                 RouterTestingModule.withRoutes(
                     [{ path: 'server', component: BlankComponent }],
@@ -51,6 +53,7 @@ describe('PartCreationComponent:', () => {
             ],
             declarations: [PartCreationComponent],
             providers: [
+                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },

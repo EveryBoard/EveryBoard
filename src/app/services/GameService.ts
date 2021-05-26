@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 
 import { PartDAO } from '../dao/PartDAO';
@@ -15,11 +15,14 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValue } from 'src/app/utils/utils';
+import { Router } from '@angular/router';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { AuthenticationService, AuthUser } from './AuthenticationService';
 
 @Injectable({
     providedIn: 'root',
 })
-export class GameService {
+export class GameService implements OnDestroy {
     public static VERBOSE: boolean = false;
 
     private followedPartId: string;
@@ -28,13 +31,46 @@ export class GameService {
 
     private followedPartSub: Subscription;
 
+    private userNameSub: Subscription;
+
+    private userName: string;
+
     constructor(private partDao: PartDAO,
-                private activesPartsService: ActivesPartsService,
+                public activesPartsService: ActivesPartsService,
                 public joinerService: JoinerService,
-                private chatService: ChatService) {
+                private chatService: ChatService,
+                private router: Router,
+                private snackBar: MatSnackBar,
+                private authenticationService: AuthenticationService) {
         display(GameService.VERBOSE, 'GameService.constructor');
+        console.log('subscribing to username');
+        this.userNameSub = this.authenticationService.getJoueurObs()
+            .subscribe((joueur: AuthUser) => {
+                if (joueur == null) this.userName = null;
+                else this.userName = joueur.pseudo;
+            });
     }
-    // on Server Component
+    public async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
+        if (this.canCreateGame(this.userName)) {
+            const gameId: string = await this.createGame(this.userName, game, '');
+            // create Part and Joiner
+            this.router.navigate(['/play/' + game, gameId]);
+            return true;
+        } else {
+            this.messageError(`Vous avez déjà une partie en cours. Terminez là ou annulez là d'abord!`);
+            this.router.navigate(['/server']);
+            return false;
+        }
+    }
+    private messageError(msg: string): void {
+        this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
+    }
+    public ngOnDestroy(): void {
+        if (this.userNameSub) {
+            this.userNameSub.unsubscribe();
+        }
+    }
+
 
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: ICurrentPart = await this.partDao.read(partId);
@@ -77,6 +113,9 @@ export class GameService {
         await this.joinerService.createInitialJoiner(creatorName, gameId);
         await this.createChat(gameId); // TODO asynchronous
         return gameId;
+    }
+    public canCreateGame(creator: string): boolean {
+        return this.activesPartsService.hasActivePart(creator) === false;
     }
     public getActivesPartsObs(): Observable<ICurrentPartId[]> {
         // TODO: désabonnements de sûreté aux autres abonnements activesParts

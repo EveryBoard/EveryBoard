@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { ICurrentPartId, ICurrentPart } from '../domain/icurrentpart';
@@ -7,7 +7,7 @@ import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 @Injectable({
     providedIn: 'root',
 })
-export class ActivesPartsService {
+export class ActivesPartsService implements OnDestroy {
     /* Actives Parts service
      * this service is used by the Server Component
      */
@@ -16,9 +16,18 @@ export class ActivesPartsService {
 
     public activesPartsObs: Observable<ICurrentPartId[]> = this.activesPartsBS.asObservable();
 
+    private activesParts: ICurrentPartId[] = [];
+
     private unsubscribe: () => void;
 
     constructor(private partDao: PartDAO) {
+        this.startObserving();
+    }
+    public ngOnDestroy(): void {
+        this.stopObserving();
+    }
+    public getActiveParts(): ICurrentPartId[] {
+        return this.activesParts;
     }
     public startObserving(): void {
         const onDocumentCreated: (createdParts: ICurrentPartId[]) => void = (createdParts: ICurrentPartId[]) => {
@@ -49,6 +58,9 @@ export class ActivesPartsService {
                                            onDocumentModified,
                                            onDocumentDeleted);
         this.unsubscribe = this.partDao.observeActivesParts(partObserver);
+        this.activesPartsObs.subscribe((activesParts: ICurrentPartId[]) => {
+            this.activesParts = activesParts;
+        });
     }
     public stopObserving(): void {
         if (this.unsubscribe == null) {
@@ -56,5 +68,16 @@ export class ActivesPartsService {
         }
         this.activesPartsBS.next([]);
         this.unsubscribe();
+    }
+    public hasActivePart(user: string): boolean {
+        for (const part of this.activesParts) {
+            const playerZero: string = part.doc.playerZero;
+            const playerOne: string = part.doc.playerOne;
+            if ((user === playerZero) || (user === playerOne)) {
+                return true;
+            }
+        }
+        return false;
+
     }
 }

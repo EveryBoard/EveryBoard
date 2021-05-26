@@ -13,6 +13,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/request';
 import { IJoiner } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
+import { RouterTestingModule } from '@angular/router/testing';
+import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { AuthenticationService } from '../AuthenticationService';
+import { AuthenticationServiceMock } from './AuthenticationService.spec';
 
 describe('GameService', () => {
     let service: GameService;
@@ -21,14 +26,21 @@ describe('GameService', () => {
 
     beforeEach(() => {
         TestBed.configureTestingModule({
+            imports: [
+                MatSnackBarModule,
+                RouterTestingModule.withRoutes([
+                    { path: '**', component: BlankComponent },
+                ]),
+            ],
             providers: [
+                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
             ],
         }).compileComponents();
-        service = TestBed.get(GameService);
-        partDao = TestBed.get(PartDAO);
+        service = TestBed.inject(GameService);
+        partDao = TestBed.inject(PartDAO);
     });
     it('should create', () => {
         expect(service).toBeTruthy();

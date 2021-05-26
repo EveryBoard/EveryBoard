@@ -2,7 +2,7 @@
     <mat-tab id ="currentGamesTab" label="Parties">
         <div id="actualGames" class="box">
             <div class="table-container">
-                <table class="table is-hoverable is-striped">
+                <table class="table is-fullwidth is-hoverable is-striped">
                     <thead>
                         <tr>
                             <th class="th" scope="col">Jeu</th>
@@ -12,7 +12,7 @@
                         </tr>
                     </thead>
                     <tbody>
-                        <tr *ngFor="let part of activesParts" (click)="joinGame(part.id, part.doc.typeGame)">
+                        <tr *ngFor="let part of getActiveParts()" (click)="joinGame(part.id, part.doc.typeGame)">
                             <td class="td">{{ part.doc.typeGame }}</td>
                             <td class="td">{{ part.doc.playerZero }}</td>
                             <td class="td">{{ part.doc.playerOne || "En attente d'adversaire" }}</td>
@@ -42,7 +42,7 @@
                 <div id="onlineUser" class="box" style="min-height: 50vh;">
                     <p> Utilisateurs connectés : </p>
                     <ul>
-                        <li *ngFor="let user of activesUsers">
+                        <li *ngFor="let user of getActiveUsers()">
                             {{ user.doc.pseudo }} :
                             {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
                         </li>
