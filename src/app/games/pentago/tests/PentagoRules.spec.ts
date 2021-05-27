@@ -1,4 +1,5 @@
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
@@ -108,7 +109,7 @@ describe('PentagoRules', () => {
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: PentagoState = rules.applyLegalMove(move, state, status);
         expect(resultingSlice).toEqual(expectedState);
-        const boardStatus: GameStatus = rules.getGameStatus(resultingSlice, move);
+        const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, resultingSlice));
         expect(boardStatus).toEqual(GameStatus.ONGOING, 'Game should not be over');
     });
     it('it should be able to twist any board anti-clockwise', () => {
@@ -135,7 +136,7 @@ describe('PentagoRules', () => {
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: PentagoState = rules.applyLegalMove(move, state, status);
         expect(resultingSlice).toEqual(expectedState);
-        const boardStatus: GameStatus = rules.getGameStatus(resultingSlice, move);
+        const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, resultingSlice));
         expect(boardStatus).toEqual(GameStatus.ONE_WON, 'This should be a victory for player one');
     });
     describe('victories', () => {
@@ -163,7 +164,7 @@ describe('PentagoRules', () => {
             const resultingSlice: PentagoState = rules.applyLegalMove(move, slice, status);
             const expectedSlice: PentagoState = new PentagoState(expectedBoard, 11);
             expect(resultingSlice).toEqual(expectedSlice);
-            const boardStatus: GameStatus = rules.getGameStatus(expectedSlice, move);
+            const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedSlice));
             expect(boardStatus).toEqual(GameStatus.ZERO_WON, 'This should be a victory for player 0');
         });
         it('it should notice draw by end game', () => {
@@ -190,7 +191,7 @@ describe('PentagoRules', () => {
             const resultingSlice: PentagoState = rules.applyLegalMove(move, slice, status);
             const expectedSlice: PentagoState = new PentagoState(expectedBoard, 36);
             expect(resultingSlice).toEqual(expectedSlice);
-            const boardStatus: GameStatus = rules.getGameStatus(expectedSlice, move);
+            const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedSlice));
             expect(boardStatus).toEqual(GameStatus.DRAW, 'This should be a draw');
         });
         it('it should notice draw by double-victory', () => {
@@ -217,7 +218,7 @@ describe('PentagoRules', () => {
             const resultingSlice: PentagoState = rules.applyLegalMove(move, slice, status);
             const expectedSlice: PentagoState = new PentagoState(expectedBoard, 11);
             expect(resultingSlice).toEqual(expectedSlice);
-            const boardStatus: GameStatus = rules.getGameStatus(expectedSlice, move);
+            const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedSlice));
             expect(boardStatus).toEqual(GameStatus.DRAW, 'This should be a draw');
         });
     });

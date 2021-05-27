@@ -354,8 +354,8 @@ export function expectSecondStateToBeBetterThanFirst(weakerState: GamePartSlice,
                                                      minimax: Minimax<Move, GamePartSlice>)
 : void
 {
-    const weakValue: number = minimax.getBoardValue(weakMove, weakerState).value;
-    const strongValue: number = minimax.getBoardValue(strongMove, strongerState).value;
+    const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
+    const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
     expect(weakValue).toBeLessThan(strongValue);
 }
 export function expectStateToBePreVictory(state: GamePartSlice,
@@ -364,7 +364,7 @@ export function expectStateToBePreVictory(state: GamePartSlice,
                                           minimax: Minimax<Move, GamePartSlice>)
 : void
 {
-    const value: number = minimax.getBoardNumericValue(previousMove, state);
+    const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);
 }

@@ -53,7 +53,8 @@ export class QuartoMinimax extends Minimax<QuartoMove, QuartoPartSlice> {
         }
         return listMoves;
     }
-    public getBoardValue(move: QuartoMove, slice: QuartoPartSlice): NodeUnheritance {
+    public getBoardValue(node: QuartoNode): NodeUnheritance {
+        const slice: QuartoPartSlice = node.gamePartSlice;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
             casesSensibles: [],

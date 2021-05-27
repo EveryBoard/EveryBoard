@@ -114,5 +114,5 @@ export abstract class Rules<M extends Move,
         }
         return slice;
     }
-    public abstract getGameStatus(state: S, lastMove: M): GameStatus;
+    public abstract getGameStatus(node: MGPNode<Rules<M, S, L>, M, S, L>): GameStatus;
 }

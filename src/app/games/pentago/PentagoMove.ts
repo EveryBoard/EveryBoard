@@ -1,4 +1,3 @@
-import { Move } from 'src/app/jscaip/Move';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
@@ -46,5 +45,4 @@ export class PentagoMove extends MoveCoord {
         }
         return this.turnedClockwise === o.turnedClockwise;
     }
-
 }

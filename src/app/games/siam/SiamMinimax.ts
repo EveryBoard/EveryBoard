@@ -14,7 +14,9 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 
 export class SiamMinimax extends Minimax<SiamMove, SiamPartSlice, SiamLegalityStatus> {
 
-    public getBoardValue(move: SiamMove, slice: SiamPartSlice): NodeUnheritance {
+    public getBoardValue(node: SiamNode): NodeUnheritance {
+        const move: SiamMove = node.move;
+        const slice: SiamPartSlice = node.gamePartSlice;
         return new NodeUnheritance(SiamRules.getBoardValueInfo(move, slice).boardValue);
     }
     public getListMoves(node: SiamNode): SiamMove[] {

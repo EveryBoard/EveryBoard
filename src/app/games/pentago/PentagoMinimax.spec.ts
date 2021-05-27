@@ -50,8 +50,8 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState, PentagoLe
         }
         return legalRotations;
     }
-    public getBoardValue(move: PentagoMove, slice: PentagoState): NodeUnheritance {
-        return new NodeUnheritance(PentagoRules.singleton.getGameStatus(slice, move).toBoardValue());
+    public getBoardValue(node: PentagoNode): NodeUnheritance {
+        return new NodeUnheritance(PentagoRules.singleton.getGameStatus(node).toBoardValue());
     }
 
 }

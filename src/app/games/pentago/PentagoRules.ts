@@ -97,7 +97,8 @@ export class PentagoRules extends Rules<PentagoMove, PentagoState, PentagoLegali
         }
         return victoryCoords;
     }
-    public getGameStatus(state: PentagoState, lastMove: PentagoMove): GameStatus {
+    public getGameStatus(node: PentagoNode): GameStatus {
+        const state: PentagoState = node.gamePartSlice;
         const victoryCoords: Coord[] = this.getVictoryCoords(state);
         const victoryFound: [boolean, boolean] = [false, false];
         for (let i: number = 0; i < victoryCoords.length; i += 5) {

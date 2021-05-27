@@ -36,12 +36,13 @@ export class AwaleMinimax extends Minimax<AwaleMove, AwalePartSlice, AwaleLegali
         } while (x < 6);
         return choices;
     }
-    public getBoardValue(move: AwaleMove, state: AwalePartSlice): NodeUnheritance {
-        const status: GameStatus = AwaleRules.getGameStatus(state, move);
+    public getBoardValue(node: AwaleNode): NodeUnheritance {
+        const status: GameStatus = AwaleRules.getGameStatus(node);
         if (status.isEndGame) {
             return new NodeUnheritance(status.winner.getVictoryValue());
         }
 
+        const state: AwalePartSlice = node.gamePartSlice;
         const player: number = state.turn % 2;
         const ennemy: number = (player + 1) % 2;
         const captured: number[] = state.getCapturedCopy();

@@ -160,7 +160,8 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         }
         return true;
     }
-    public getGameStatus(state: PylosPartSlice): GameStatus {
+    public getGameStatus(node: PylosNode): GameStatus {
+        const state: PylosPartSlice = node.gamePartSlice;
         const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
         if (ownershipMap[Player.ZERO.value] === 15) {
             return GameStatus.ONE_WON;

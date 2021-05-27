@@ -396,7 +396,8 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [18, 17]);
-            expectToBeVictoryFor(rules, slice, null, Player.ZERO, [minimax]);
+            const node: CoerceoNode = new MGPNode(null, null, slice);
+            expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
         });
         it('Should set minimal value to victory of Player.ONE', () => {
             const board: NumberTable = [
@@ -412,7 +413,8 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [17, 18]);
-            expectToBeVictoryFor(rules, slice, null, Player.ONE, [minimax]);
+            const node: CoerceoNode = new MGPNode(null, null, slice);
+            expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
         });
     });
 });

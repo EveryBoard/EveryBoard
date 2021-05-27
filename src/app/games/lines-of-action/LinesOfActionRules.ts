@@ -177,7 +177,8 @@ export class LinesOfActionRules extends Rules<LinesOfActionMove, LinesOfActionSt
         }
         return targets;
     }
-    public getGameStatus(state: LinesOfActionState): GameStatus {
+    public getGameStatus(node: LinesOfActionNode): GameStatus {
+        const state: LinesOfActionState = node.gamePartSlice;
         const [zero, one]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
         if (zero === 1 && one > 1) {
             return GameStatus.ZERO_WON;

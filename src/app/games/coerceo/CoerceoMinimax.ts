@@ -49,11 +49,12 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoPartSlice> {
         }
         return exchanges;
     }
-    public getBoardValue(move: CoerceoMove, state: CoerceoPartSlice): NodeUnheritance {
-        const status: GameStatus = CoerceoRules.getGameStatus(state);
+    public getBoardValue(node: CoerceoNode): NodeUnheritance {
+        const status: GameStatus = CoerceoRules.getGameStatus(node);
         if (status.isEndGame) {
             return new NodeUnheritance(status.winner.getVictoryValue());
         }
+        const state: CoerceoPartSlice = node.gamePartSlice;
         const piecesByFreedom: number[][] = state.getPiecesByFreedom();
         const piecesScores: number[] = this.getPiecesScore(piecesByFreedom);
         const scoreZero: number = (2 * state.captures[0]) + piecesScores[0];

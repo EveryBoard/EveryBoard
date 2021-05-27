@@ -111,7 +111,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
         if (postDropState.neutralBlocks.length === 4) {
             return this.chooseMove(drop, state, null, null);
         }
-        const gameStatus: GameStatus = this.rules.getGameStatus(this.rules.node.gamePartSlice, null);
+        const gameStatus: GameStatus = this.rules.getGameStatus(this.rules.node);
         this.canSkipRotation = postDropState.neutralBlocks.length > 0 && gameStatus.isEndGame === false;
         this.currentDrop = new Coord(x, y);
         this.displayArrows(postDropState.neutralBlocks);

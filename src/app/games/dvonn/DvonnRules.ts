@@ -156,7 +156,8 @@ export class DvonnRules extends Rules<DvonnMove, DvonnPartSlice> {
         }
         return { legal: MGPValidation.SUCCESS };
     }
-    public getGameStatus(state: DvonnPartSlice): GameStatus {
+    public getGameStatus(node: DvonnNode): GameStatus {
+        const state: DvonnPartSlice = node.gamePartSlice;
         const scores: number[] = DvonnRules.getScores(state);
         if (DvonnRules.getMovablePieces(state).length === 0) {
             // This is the end of the game, boost the score to clearly indicate it

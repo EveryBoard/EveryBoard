@@ -9,6 +9,7 @@ import { GipfPartSlice } from '../GipfPartSlice';
 import { GipfPiece } from '../GipfPiece';
 import { GipfNode, GipfRules } from '../GipfRules';
 import { GipfMinimax } from '../GipfMinimax';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('GipfRules:', () => {
     // Rules of gipf with the diagrams used in these tests: http://www.gipf.com/gipf/rules/complete_rules.html
@@ -476,10 +477,10 @@ describe('GipfRules:', () => {
                 [_, B, _, _, _, _, _],
             ]);
             const slice1: GipfPartSlice = new GipfPartSlice(board, P0Turn, [0, 5], [0, 0]);
-            expect(minimax.getBoardValue(dummyMove, slice1).value)
+            expect(minimax.getBoardValue(new MGPNode(null, dummyMove, slice1)).value)
                 .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
             const slice2: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 0], [0, 0]);
-            expect(minimax.getBoardValue(dummyMove, slice2).value)
+            expect(minimax.getBoardValue(new MGPNode(null, dummyMove, slice2)).value)
                 .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
         });
         it('should favor having captured pieces', () => {
@@ -493,7 +494,7 @@ describe('GipfRules:', () => {
                 [_, B, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 7]);
-            expect(minimax.getBoardValue(dummyMove, slice)).toBeLessThan(0);
+            expect(minimax.getBoardValue(new MGPNode(null, dummyMove, slice))).toBeLessThan(0);
         });
         it('should favor having pieces to play pieces', () => {
             const board: GipfBoard = GipfBoard.of([
@@ -506,7 +507,7 @@ describe('GipfRules:', () => {
                 [_, B, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 7], [0, 0]);
-            expect(minimax.getBoardValue(dummyMove, slice)).toBeLessThan(0);
+            expect(minimax.getBoardValue(new MGPNode(null, dummyMove, slice))).toBeLessThan(0);
         });
         it('should not declare victory when one player does not have pieces left but still has an initial capture', () => {
             const board: GipfBoard = GipfBoard.of([
@@ -519,8 +520,8 @@ describe('GipfRules:', () => {
                 [_, _, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [0, 5], [0, 0]);
-            expect(minimax.getBoardValue(dummyMove, slice)).toBeLessThan(Number.MAX_SAFE_INTEGER);
-            expect(minimax.getBoardValue(dummyMove, slice)).toBeGreaterThan(Number.MIN_SAFE_INTEGER);
+            expect(minimax.getBoardValue(new MGPNode(null, dummyMove, slice))).toBeLessThan(Number.MAX_SAFE_INTEGER);
+            expect(minimax.getBoardValue(new MGPNode(null, dummyMove, slice))).toBeGreaterThan(Number.MIN_SAFE_INTEGER);
         });
     });
     describe('getAllDirectionsForEntrance', () => {

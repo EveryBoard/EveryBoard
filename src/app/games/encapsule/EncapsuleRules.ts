@@ -119,7 +119,8 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newNumberBoard, newTurn, newRemainingPiece);
         return resultingSlice;
     }
-    public getGameStatus(state: EncapsulePartSlice): GameStatus {
+    public getGameStatus(node: EncapsuleNode): GameStatus {
+        const state: EncapsulePartSlice = node.gamePartSlice;
         if (EncapsuleRules.isVictory(state)) {
             return GameStatus.getVictory(Player.of((state.turn + 1) % 2));
         } else {

@@ -30,7 +30,8 @@ export class PylosMinimax extends Minimax<PylosMove, PylosPartSlice> {
         }
         return result;
     }
-    public getBoardValue(move: PylosMove, slice: PylosPartSlice): NodeUnheritance {
+    public getBoardValue(node: PylosNode): NodeUnheritance {
+        const slice: PylosPartSlice = node.gamePartSlice;
         const ownershipMap: { [owner: number]: number; } = slice.getPiecesRepartition();
         if (ownershipMap[Player.ZERO.value] === 15) {
             return new NodeUnheritance(Number.MAX_SAFE_INTEGER);

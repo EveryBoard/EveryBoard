@@ -6,7 +6,8 @@ import { MinimaxTestingNode } from './MinimaxTestingRules';
 
 export class MinimaxTestingMinimax extends Minimax<MinimaxTestingMove, MinimaxTestingPartSlice> {
 
-    public getBoardValue(move: MinimaxTestingMove, slice: MinimaxTestingPartSlice): NodeUnheritance {
+    public getBoardValue(node: MinimaxTestingNode): NodeUnheritance {
+        const slice: MinimaxTestingPartSlice = node.gamePartSlice;
         return new NodeUnheritance(slice.getBoardAt(slice.location));
     }
     public getListMoves(n: MinimaxTestingNode): MinimaxTestingMove[] {
