@@ -1,4 +1,4 @@
-import { PentagoMinimax } from '../PentagoMinimax.spec';
+import { PentagoMinimax } from '../PentagoMinimax';
 import { PentagoRules } from '../PentagoRules';
 import { PentagoState } from '../PentagoState';
 
@@ -11,7 +11,7 @@ describe('PentagoMinimax', () => {
         rules = new PentagoRules(PentagoState);
         minimax = new PentagoMinimax('PentagoMinimax');
     });
-    it('Should propose 100 move at first turn like a stupid thing', () => {
-        expect(minimax.getListMoves(rules.node).length).toBe(100);
+    it('Should propose 6 moves at first turn', () => {
+        expect(minimax.getListMoves(rules.node).length).toBe(36);
     });
 });
