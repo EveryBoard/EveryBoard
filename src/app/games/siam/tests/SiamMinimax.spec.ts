@@ -41,7 +41,7 @@ describe('SiamMinimax:', () => {
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(3, 3, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(minimax.getBoardValue(move, slice).value)
+        expect(minimax.getBoardValue(new MGPNode(null, move, slice)).value)
             .toBeLessThan(0, 'First player should be considered as closer to victory');
     });
     it('Board value test: Should know who is closer to win (2)', () => {
@@ -54,7 +54,7 @@ describe('SiamMinimax:', () => {
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(2, 5, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
-        expect(minimax.getBoardValue(move, slice).value)
+        expect(minimax.getBoardValue(new MGPNode(null, move, slice)).value)
             .toBeLessThan(0, 'First player should be considered as closer to victory');
     });
     xit('Best choice test: Should choose victory immediately', () => {
@@ -151,7 +151,7 @@ describe('SiamMinimax:', () => {
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        const boardValue: number = minimax.getBoardValue(move, slice).value;
+        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, slice)).value;
         expect(boardValue).toBeLessThan(0);
     });
     it('Board value test: Symetry test', () => {
@@ -164,10 +164,10 @@ describe('SiamMinimax:', () => {
         ];
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(1, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
-        const boardValue: number = minimax.getBoardValue(move, slice).value;
+        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, slice)).value;
 
         const symetrySlice: SiamPartSlice = new SiamPartSlice(board, 1);
-        const symetryBoardValue: number = minimax.getBoardValue(move, symetrySlice).value;
+        const symetryBoardValue: number = minimax.getBoardValue(new MGPNode(null, move, symetrySlice)).value;
         expect(boardValue).toEqual(-1 * symetryBoardValue, 'Both board value should have same absolute value');
     });
     it('Logical test: Should get option for first turn', () => {

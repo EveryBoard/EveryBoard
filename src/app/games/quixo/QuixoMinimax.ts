@@ -24,7 +24,8 @@ export class QuixoMinimax extends Minimax<QuixoMove, QuixoPartSlice> {
         }
         return moves;
     }
-    public getBoardValue(move: QuixoMove, slice: QuixoPartSlice): NodeUnheritance {
+    public getBoardValue(node: QuixoNode): NodeUnheritance {
+        const slice: QuixoPartSlice = node.gamePartSlice;
         const linesSums: { [key: string]: { [key: number]: number[]; }; } = QuixoRules.getLinesSums(slice);
         const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
         const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);

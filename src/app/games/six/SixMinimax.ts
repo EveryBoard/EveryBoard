@@ -131,7 +131,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         }
         return false;
     }
-    public getListDrop(state: SixGameState, legalLandings: Coord[]): SixMove[] {
+    public getListDrop(_state: SixGameState, legalLandings: Coord[]): SixMove[] {
         const drops: SixMove[] = [];
         for (const landing of legalLandings) {
             const drop: SixMove = SixMove.fromDrop(landing);
@@ -147,7 +147,9 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const start: MGPSet<Coord> = state.pieces.groupByValue().get(CURRENT_PLAYER).get();
         return this.getDeplacementFrom(state, start, legalLandings);
     }
-    public getBoardValue(move: SixMove, slice: SixGameState): SixNodeUnheritance {
+    public getBoardValue(node: SixNode): SixNodeUnheritance {
+        const move: SixMove = node.move;
+        const slice: SixGameState = node.gamePartSlice;
         const LAST_PLAYER: Player = slice.getCurrentEnnemy();
         const victoryValue: number = LAST_PLAYER.getVictoryValue();
         const shapeInfo: BoardInfo = this.calculateBoardValue(move, slice);

@@ -126,12 +126,13 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
             return { legal: MGPValidation.SUCCESS };
         }
     }
-    public getGameStatus(slice: QuixoPartSlice): GameStatus {
+    public getGameStatus(node: QuixoNode): GameStatus {
+        const state: QuixoPartSlice = node.gamePartSlice;
         const linesSums: {[key: string]: {[key: number]: number[]}} =
-            QuixoRules.getLinesSums(slice);
+            QuixoRules.getLinesSums(state);
         const zerosFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ZERO.value]);
         const onesFullestLine: number = QuixoRules.getFullestLine(linesSums[Player.ONE.value]);
-        const currentPlayer: Player = slice.getCurrentPlayer();
+        const currentPlayer: Player = state.getCurrentPlayer();
         if (zerosFullestLine === 5) {
             if (currentPlayer === Player.ZERO || onesFullestLine < 5) {
                 return GameStatus.ZERO_WON;

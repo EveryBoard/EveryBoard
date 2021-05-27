@@ -8,6 +8,8 @@ import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
 import { CoerceoFailure } from '../CoerceoFailure';
 import { CoerceoNode, CoerceoRules } from '../CoerceoRules';
 import { CoerceoMinimax } from '../CoerceoMinimax';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('CoerceoRules', () => {
 
@@ -394,7 +396,8 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [18, 17]);
-            expect(minimax.getBoardValue(null, slice).value).toBe(Number.MIN_SAFE_INTEGER);
+            const node: CoerceoNode = new MGPNode(null, null, slice);
+            expectToBeVictoryFor(rules, node, Player.ZERO, [minimax]);
         });
         it('Should set minimal value to victory of Player.ONE', () => {
             const board: NumberTable = [
@@ -410,7 +413,8 @@ describe('CoerceoRules', () => {
                 [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             ];
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [17, 18]);
-            expect(minimax.getBoardValue(null, slice).value).toBe(Number.MAX_SAFE_INTEGER);
+            const node: CoerceoNode = new MGPNode(null, null, slice);
+            expectToBeVictoryFor(rules, node, Player.ONE, [minimax]);
         });
     });
 });

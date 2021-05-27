@@ -12,7 +12,8 @@ export class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoPartSlice> {
         return KamisadoRules.getListMovesFromSlice(node.gamePartSlice);
     }
     // Returns the value of the board, as the difference of distance to the win
-    public getBoardValue(move: KamisadoMove, slice: KamisadoPartSlice): NodeUnheritance {
+    public getBoardValue(node: KamisadoNode): NodeUnheritance {
+        const slice: KamisadoPartSlice = node.gamePartSlice;
         const player: Player = slice.getCurrentPlayer();
         if (KamisadoRules.canOnlyPass(slice) && slice.alreadyPassed) {
             return new NodeUnheritance(player.getDefeatValue());

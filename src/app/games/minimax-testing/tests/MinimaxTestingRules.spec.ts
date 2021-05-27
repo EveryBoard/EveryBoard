@@ -16,7 +16,7 @@ describe('MinimaxTestingRules', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         expect(rules.choose(MinimaxTestingMove.RIGHT)).toBeTrue();
-        expect(minimax.getBoardValue(rules.node.move, rules.node.gamePartSlice).value)
+        expect(minimax.getBoardValue(rules.node).value)
             .toEqual(Player.ONE.getVictoryValue());
     });
     it('IA should avoid loosing 4 move in a row', () => {
@@ -26,7 +26,7 @@ describe('MinimaxTestingRules', () => {
         for (let i: number = 1; i < 5; i++) {
             bestMove = rules.node.findBestMove(1, minimax);
             rules.choose(bestMove);
-            const value: number = minimax.getBoardValue(rules.node.move, rules.node.gamePartSlice).value;
+            const value: number = minimax.getBoardValue(rules.node).value;
             expect(value).toEqual(i);
         }
     });

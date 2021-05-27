@@ -10,7 +10,8 @@ export class LinesOfActionMinimax extends Minimax<LinesOfActionMove, LinesOfActi
     public getListMoves(node: LinesOfActionNode): LinesOfActionMove[] {
         return LinesOfActionRules.getListMovesFromState(node.gamePartSlice);
     }
-    public getBoardValue(move: LinesOfActionMove, state: LinesOfActionState): NodeUnheritance {
+    public getBoardValue(node: LinesOfActionNode): NodeUnheritance {
+        const state: LinesOfActionState = node.gamePartSlice;
         const [zero, one]: [number, number] = LinesOfActionRules.getNumberOfGroups(state);
         if (zero === 1 && one > 1) {
             return new NodeUnheritance(Player.ZERO.getVictoryValue());

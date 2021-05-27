@@ -189,7 +189,8 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         } while ((x !== limite) && (((target = board[y][x]) === 2) || (target === 3)));
         return captured;
     }
-    public static getGameStatus(state: AwalePartSlice, _lastMove: AwaleMove): GameStatus {
+    public static getGameStatus(node: AwaleNode): GameStatus {
+        const state: AwalePartSlice = node.gamePartSlice;
         if (state.captured[0] > 24) {
             return GameStatus.ZERO_WON;
         }
@@ -201,7 +202,7 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         }
         return GameStatus.ONGOING;
     }
-    public getGameStatus(state: AwalePartSlice, lastMove: AwaleMove): GameStatus {
-        return AwaleRules.getGameStatus(state, lastMove);
+    public getGameStatus(node: AwaleNode): GameStatus {
+        return AwaleRules.getGameStatus(node);
     }
 }

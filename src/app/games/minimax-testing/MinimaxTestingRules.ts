@@ -34,7 +34,8 @@ export class MinimaxTestingRules extends Rules<MinimaxTestingMove, MinimaxTestin
         }
         return { legal: MGPValidation.SUCCESS };
     }
-    public getGameStatus(state: MinimaxTestingPartSlice): GameStatus {
+    public getGameStatus(node: MinimaxTestingNode): GameStatus {
+        const state: MinimaxTestingPartSlice = node.gamePartSlice;
         const currentValue: number = state.getBoardAt(state.location);
         if (currentValue === Player.ZERO.getVictoryValue()) {
             return GameStatus.ZERO_WON;

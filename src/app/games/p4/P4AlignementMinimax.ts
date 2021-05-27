@@ -30,7 +30,7 @@ export class P4AlignementMinimax extends AlignementMinimax<P4Move, P4PartSlice, 
     public getListMoves(node: P4Node): P4Move[] {
         throw new Error('Method not implemented.'); // TODO
     }
-    public getBoardValue(move: P4Move, slice: P4PartSlice): NodeUnheritance {
+    public getBoardValue(node: P4Node): NodeUnheritance {
         throw new Error('Method not implemented.'); // TODO
     }
 }

@@ -341,7 +341,8 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
         }
         return turn === 16 ? GameStatus.DRAW : GameStatus.ONGOING;
     }
-    public getGameStatus(state: QuartoPartSlice): GameStatus {
+    public getGameStatus(node: QuartoNode): GameStatus {
+        const state: QuartoPartSlice = node.gamePartSlice;
         let boardStatus: BoardStatus = {
             score: SCORE.DEFAULT,
             casesSensibles: [],
@@ -353,7 +354,6 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
             }
         }
         return QuartoRules.scoreToGameStatus(boardStatus.score, state.turn);
-
     }
     public getVictoriousCoords(slice: QuartoPartSlice): Coord[] {
         for (const line of QuartoRules.lines) {

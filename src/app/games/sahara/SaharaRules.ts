@@ -74,8 +74,8 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
             return { legal: MGPValidation.SUCCESS };
         }
     }
-    public getGameStatus(slice: SaharaPartSlice): GameStatus {
-        const board: SaharaPawn[][] = slice.getCopiedBoard();
+    public getGameStatus(node: SaharaNode): GameStatus {
+        const board: SaharaPawn[][] = node.gamePartSlice.getCopiedBoard();
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
         if (zeroFreedoms[0] === 0) {

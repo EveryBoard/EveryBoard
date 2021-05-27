@@ -106,7 +106,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             this.leftCoord = null;
         }
         const state: SixGameState = this.rules.node.gamePartSlice;
-        if (this.rules.getGameStatus(state, lastMove).isEndGame) {
+        if (this.rules.getGameStatus(this.rules.node).isEndGame) {
             this.victoryCoords = this.rules.getShapeVictory(lastMove, state);
         }
         this.disconnecteds = this.getDisconnected();

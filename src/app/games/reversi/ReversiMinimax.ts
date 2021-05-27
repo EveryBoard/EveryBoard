@@ -9,7 +9,8 @@ import { ReversiRules, ReversiNode } from './ReversiRules';
 
 export class ReversiMinimax extends Minimax<ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {
 
-    public getBoardValue(move: ReversiMove, slice: ReversiPartSlice): NodeUnheritance {
+    public getBoardValue(node: ReversiNode): NodeUnheritance {
+        const slice: ReversiPartSlice = node.gamePartSlice;
         const gameIsEnded: boolean = ReversiRules.isGameEnded(slice);
         const board: number[][] = slice.getCopiedBoard();
         let player0Count: number = 0;

@@ -5,6 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasPartSlice } from './EpaminondasPartSlice';
+import { EpaminondasNode } from './EpaminondasRules';
 
 export class AttackEpaminondasMinimax extends EpaminondasMinimax {
     private readonly DOMINANCE_FACTOR: number = 20;
@@ -125,7 +126,8 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
             biggestOne * Player.ONE.getScoreModifier()) * this.MOBILITY_FACTOR;
     }
 
-    public getBoardValue(move: EpaminondasMove, slice: EpaminondasPartSlice): NodeUnheritance {
+    public getBoardValue(node: EpaminondasNode): NodeUnheritance {
+        const slice: EpaminondasPartSlice = node.gamePartSlice;
         const zerosInFirstLine: number = slice.count(Player.ZERO, 0);
         const onesInLastLine: number = slice.count(Player.ONE, 11);
         if (slice.turn % 2 === 0) {

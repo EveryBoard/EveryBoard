@@ -64,7 +64,8 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPart
         }
         return moves;
     }
-    public getBoardValue(move: EpaminondasMove, slice: EpaminondasPartSlice): NodeUnheritance {
+    public getBoardValue(node: EpaminondasNode): NodeUnheritance {
+        const slice: EpaminondasPartSlice = node.gamePartSlice;
         const zerosInFirstLine: number = slice.count(Player.ZERO, 0);
         const onesInLastLine: number = slice.count(Player.ONE, 11);
         if (slice.turn % 2 === 0) {

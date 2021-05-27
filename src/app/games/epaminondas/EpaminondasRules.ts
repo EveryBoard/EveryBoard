@@ -119,7 +119,8 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         const resultingSlice: EpaminondasPartSlice = new EpaminondasPartSlice(status.newBoard, slice.turn + 1);
         return resultingSlice;
     }
-    public getGameStatus(state: EpaminondasPartSlice): GameStatus {
+    public getGameStatus(node: EpaminondasNode): GameStatus {
+        const state: EpaminondasPartSlice = node.gamePartSlice;
         const zerosInFirstLine: number = state.count(Player.ZERO, 0);
         const onesInLastLine: number = state.count(Player.ONE, 11);
         if (state.turn % 2 === 0) {

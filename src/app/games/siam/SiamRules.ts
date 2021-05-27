@@ -516,11 +516,11 @@ export class SiamRules extends _SiamRules {
         const insertedPiece: SiamPiece = this.getInsertedPiece(coord, slice.getCurrentPlayer());
         return insertedPiece.getDirection();
     }
-    public getGameStatus(slice: SiamPartSlice, move: SiamMove): GameStatus {
+    public getGameStatus(node: SiamNode): GameStatus {
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
-            SiamRules.getMountainsRowsAndColumns(slice);
+            SiamRules.getMountainsRowsAndColumns(node.gamePartSlice);
 
-        const winner: Player = SiamRules.getWinner(slice, move, mountainsInfo.nbMountain);
+        const winner: Player = SiamRules.getWinner(node.gamePartSlice, node.move, mountainsInfo.nbMountain);
         if (winner === Player.NONE) {
             return GameStatus.ONGOING;
         } else {

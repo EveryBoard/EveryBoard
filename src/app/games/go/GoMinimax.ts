@@ -31,7 +31,8 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
             return [];
         }
     }
-    public getBoardValue(move: GoMove, slice: GoPartSlice): NodeUnheritance {
+    public getBoardValue(node: GoNode): NodeUnheritance {
+        const slice: GoPartSlice = node.gamePartSlice;
         const LOCAL_VERBOSE: boolean = false;
 
         display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getBoardValue');

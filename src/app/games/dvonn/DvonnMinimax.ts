@@ -25,7 +25,8 @@ export class DvonnMinimax extends Minimax<DvonnMove, DvonnPartSlice> {
         }
         return moves;
     }
-    public getBoardValue(move: DvonnMove, slice: DvonnPartSlice): NodeUnheritance {
+    public getBoardValue(node: DvonnNode): NodeUnheritance {
+        const slice: DvonnPartSlice = node.gamePartSlice;
         // Board value is the total number of pieces controlled by player 0 - by player 1
         const scores: number[] = DvonnRules.getScores(slice);
         if (DvonnRules.getMovablePieces(slice).length === 0) {
