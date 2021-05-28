@@ -44,7 +44,10 @@ describe('PartCreationComponent:', () => {
     beforeEach(async() => {
         await TestBed.configureTestingModule({
             imports: [
-                MatStepperModule, MatRadioModule, MatSliderModule, MatSnackBarModule,
+                MatStepperModule,
+                MatRadioModule,
+                MatSliderModule,
+                MatSnackBarModule,
                 ReactiveFormsModule,
                 RouterTestingModule.withRoutes(
                     [{ path: 'server', component: BlankComponent }],

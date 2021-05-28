@@ -105,7 +105,7 @@
                     <p class="title" *ngIf="(currentPart.winner !== userName) && (observerRole < 2)"> Vous avez perdu </p>
                     <p class="title" *ngIf="observerRole >= 2"> Victoire de {{ currentPart.winner }} </p>
                 </div>
-                <!-- TODO: Mettre "vous avez gagné" en titre, et l'eplication en normal -->
+                <!-- TODO: Mettre "vous avez gagné" en titre, et l'explication en normal -->
                 <div *ngIf="currentPart.isTimeout()">
                     <p class="title" id="youWonIndicator" *ngIf="(currentPart.winner === userName)"> {{ currentPart.getLoser() }} a épuisé son temps. Vous avez gagné. </p>
                     <p class="title" *ngIf="(currentPart.winner !== userName) && (observerRole < 2)"> Vous avez dépassé la limite de temps </p>

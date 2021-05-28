@@ -15,7 +15,7 @@ import { display } from 'src/app/utils/utils';
 export class ServerPageComponent implements OnInit, OnDestroy {
     public static VERBOSE: boolean = false;
 
-    public activesUsers: IJoueurId[];
+    public activeUsers: IJoueurId[];
 
     public selectedGame: string;
 
@@ -28,9 +28,16 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     public ngOnInit(): void {
         display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnInit');
         this.activesUsersSub = this.userService.getActivesUsersObs()
-            .subscribe((activesUsers: IJoueurId[]) => {
-                this.activesUsers = activesUsers;
+            .subscribe((activeUsers: IJoueurId[]) => {
+                this.activeUsers = activeUsers;
             });
+    }
+    public ngOnDestroy(): void {
+        display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
+        if (this.activesUsersSub) {
+            this.activesUsersSub.unsubscribe();
+            this.userService.unSubFromActivesUsersObs();
+        }
     }
     public pickGame(pickedGame: string): void {
         this.selectedGame = pickedGame;
@@ -49,15 +56,5 @@ export class ServerPageComponent implements OnInit, OnDestroy {
     }
     public getActiveParts(): ICurrentPartId[] {
         return this.gameService.activesPartsService.getActiveParts();
-    }
-    public getActiveUsers(): IJoueurId[] {
-        return this.activesUsers;
-    }
-    public ngOnDestroy(): void {
-        display(ServerPageComponent.VERBOSE, 'serverPageComponent.ngOnDestroy');
-        if (this.activesUsersSub) {
-            this.activesUsersSub.unsubscribe();
-            this.userService.unSubFromActivesUsersObs();
-        }
     }
 }
