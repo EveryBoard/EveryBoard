@@ -97,5 +97,7 @@ export class PentagoState extends GamePartSlice {
         }
         return new PentagoState(newBoard, this.turn + 1);
     }
-
+    public blockIsNeutral(blockIndex: number): boolean {
+        return this.neutralBlocks.includes(blockIndex);
+    }
 }

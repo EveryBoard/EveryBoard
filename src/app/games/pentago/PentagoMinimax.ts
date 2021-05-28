@@ -11,11 +11,13 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState, PentagoLe
 
     public getListMoves(node: PentagoNode): PentagoMove[] {
         const moves: PentagoMove[] = [];
+        const preDropNeutralBlocks: number[] = node.gamePartSlice.neutralBlocks;
         const legalDrops: Coord[] = this.getLegalDrops(node.gamePartSlice);
         for (const legalDrop of legalDrops) {
             const drop: PentagoMove = PentagoMove.rotationless(legalDrop.x, legalDrop.y);
             const postDropState: PentagoState = node.gamePartSlice.applyLegalDrop(drop);
-            const legalRotations: [number, boolean][] = this.getLegalRotations(postDropState);
+            const legalRotations: [number, boolean][] = this.getLegalRotations(postDropState,
+                                                                               preDropNeutralBlocks);
             for (const legalRotation of legalRotations) {
                 moves.push(PentagoMove.withRotation(legalDrop.x,
                                                     legalDrop.y,
@@ -27,6 +29,11 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState, PentagoLe
             }
         }
         return moves;
+    }
+    public getBlockOfCoord(coord: Coord): number {
+        const blockX: number = coord.x < 3 ? 0 : 1;
+        const blockY: number = coord.y < 3 ? 0 : 1;
+        return blockY * 2 + blockX;
     }
     public getLegalDrops(state: PentagoState): Coord[] {
         const legalDrops: Coord[] = [];
@@ -40,12 +47,18 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState, PentagoLe
         }
         return legalDrops;
     }
-    public getLegalRotations(postDropState: PentagoState): [number, boolean][] {
+    public getLegalRotations(postDropState: PentagoState, preDropNeutralBlocks: number[]): [number, boolean][] {
         const legalRotations: [number, boolean][] = [];
         for (let blockIndex: number = 0; blockIndex < 4; blockIndex++) {
-            if (postDropState.neutralBlocks.includes(blockIndex) === false) {
-                legalRotations.push([blockIndex, true]);
-                legalRotations.push([blockIndex, false]);
+            if (postDropState.blockIsNeutral(blockIndex) === false) {
+                if (preDropNeutralBlocks.includes(blockIndex)) { // just deneutralised
+                    if (postDropState.neutralBlocks.length === 0) { // we have to rotate it
+                        legalRotations.push([blockIndex, true]);
+                    }
+                } else {
+                    legalRotations.push([blockIndex, true]);
+                    legalRotations.push([blockIndex, false]);
+                }
             }
         }
         return legalRotations;

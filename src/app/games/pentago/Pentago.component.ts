@@ -9,7 +9,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { PentagoLegalityStatus } from './PentagoLegalityStatus';
-import { PentagoMinimax } from './PentagoMinimax.spec';
+import { PentagoMinimax } from './PentagoMinimax';
 import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoState } from './PentagoState';
