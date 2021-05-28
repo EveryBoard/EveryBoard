@@ -6,7 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from '../DvonnBoard';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { DvonnNode, DvonnRules } from '../DvonnRules';
+import { DvonnRules } from '../DvonnRules';
 import { DvonnFailure } from '../DvonnFailure';
 import { DvonnMinimax } from '../DvonnMinimax';
 import { GameStatus } from 'src/app/jscaip/Rules';

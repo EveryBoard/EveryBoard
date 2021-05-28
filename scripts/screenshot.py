@@ -7,24 +7,9 @@ options = Options()
 options.headless = True
 driver = webdriver.Chrome(options=options)
 
-games = ['Awale',
-        'Coerceo',
-        'Dvonn',
-        'Encapsule',
-        'Epaminondas',
-        'Gipf',
-        'Go',
-        'Kamisado',
-        'LinesOfAction',
-        'P4',
-        'Pylos',
-        'Quarto',
-        'Quixo',
-        'Reversi',
-        'Sahara',
-        'Siam',
-        'Six',
-        'Tablut']
+games = []
+with open('scripts/games.txt') as f:
+    games = f.read().splitlines()
 
 for game in games:
     print('Screenshotting ' + game)

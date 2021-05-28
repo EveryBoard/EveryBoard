@@ -85,10 +85,10 @@ describe('GipfComponent', () => {
 
         await componentTestUtils.expectClickSuccess('#click_3_3');
 
-        componentTestUtils.expectElementToHaveClasses('#click_3_2', ['base', 'captured']);
-        componentTestUtils.expectElementToHaveClasses('#click_3_3', ['base', 'captured']);
-        componentTestUtils.expectElementToHaveClasses('#click_3_4', ['base', 'captured']);
-        componentTestUtils.expectElementToHaveClasses('#click_3_5', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#case_3_2', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#case_3_3', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#case_3_4', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#case_3_5', ['base', 'captured']);
     }));
     it('should make pieces disappear upon selection of a capture', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -250,10 +250,10 @@ describe('GipfComponent', () => {
 
         await componentTestUtils.expectMoveSuccess('#click_0_4', move);
 
-        componentTestUtils.expectElementToHaveClasses('#click_3_2', ['base', 'captured']);
-        componentTestUtils.expectElementToHaveClasses('#click_3_3', ['base', 'captured']);
-        componentTestUtils.expectElementToHaveClasses('#click_3_4', ['base', 'captured']);
-        componentTestUtils.expectElementToHaveClasses('#click_3_5', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#case_3_2', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#case_3_3', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#case_3_4', ['base', 'captured']);
+        componentTestUtils.expectElementToHaveClasses('#case_3_5', ['base', 'captured']);
     }));
     it('should update the number of pieces available', fakeAsync(async() => {
         const board: GipfBoard = GipfBoard.of([
@@ -376,8 +376,8 @@ describe('GipfComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_4_4');
         await componentTestUtils.expectClickFailure('#click_3_3', GipfFailure.NOT_PART_OF_CAPTURE);
 
-        componentTestUtils.expectElementToHaveClasses('#click_4_5', ['base']);
-        componentTestUtils.expectElementToHaveClasses('#click_3_3', ['base']);
+        componentTestUtils.expectElementToHaveClasses('#case_4_5', ['base']);
+        componentTestUtils.expectElementToHaveClasses('#case_3_3', ['base']);
         expect(componentTestUtils.getComponent().arrows.length).toBe(0);
     }));
     it('should recompute captures upon intersecting captures', fakeAsync(async() => {
