@@ -43,7 +43,6 @@ export class GameService implements OnDestroy {
                 private snackBar: MatSnackBar,
                 private authenticationService: AuthenticationService) {
         display(GameService.VERBOSE, 'GameService.constructor');
-        console.log('subscribing to username');
         this.userNameSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur: AuthUser) => {
                 if (joueur == null) this.userName = null;

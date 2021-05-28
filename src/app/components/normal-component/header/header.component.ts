@@ -23,7 +23,6 @@ export class HeaderComponent implements OnInit, OnDestroy {
             });
     }
     public async logout(): Promise<void> {
-        console.log('logging out');
         await this.authenticationService.disconnect();
         this.router.navigate(['/login']);
     }

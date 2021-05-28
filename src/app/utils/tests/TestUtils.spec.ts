@@ -335,8 +335,8 @@ export class ComponentTestUtils<T extends GameComponent> {
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy(elementName + ' was expected to exist');
-        const elementClasses: string[] = element.children[0].attributes.class.split(' ').sort();
+        expect(element).withContext(elementName + ' was expected to exist').toBeDefined();
+        const elementClasses: string[] = element.attributes.class.split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
     }
     public findElement(elementName: string): DebugElement {
