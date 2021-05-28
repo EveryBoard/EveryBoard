@@ -1,7 +1,6 @@
 import { MGPOptional } from './MGPOptional';
 import { Comparable, comparableEquals } from './Comparable';
 import { MGPSet } from './MGPSet';
-import { assert } from './utils';
 
 export class MGPMap<K extends Comparable, V extends Comparable> {
     private map: {key: K, value: V}[] = [];

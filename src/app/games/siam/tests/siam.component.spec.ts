@@ -115,7 +115,7 @@ describe('SiamComponent', () => {
 
         expect(componentTestUtils.expectElementToHaveClasses('#insertAt__4_4', ['base', 'moved']));
         expect(componentTestUtils.expectElementToHaveClasses('#insertAt__3_4', ['base', 'moved']));
-        expect(componentTestUtils.expectElementToHaveClasses('#insertAt__2_4', ['base', ]));
+        expect(componentTestUtils.expectElementToHaveClasses('#insertAt__2_4', ['base']));
     }));
     it('should decide outing orientation automatically', fakeAsync(async() => {
         const board: NumberTable = [

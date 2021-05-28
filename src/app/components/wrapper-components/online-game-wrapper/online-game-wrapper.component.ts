@@ -21,7 +21,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValue } from 'src/app/utils/utils';
 import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/ObjectUtils';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { GameStatus } from 'src/app/jscaip/Rules';
 
 export class UpdateType {

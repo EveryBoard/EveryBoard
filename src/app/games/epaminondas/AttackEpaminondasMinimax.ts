@@ -3,7 +3,6 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
-import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasPartSlice } from './EpaminondasPartSlice';
 import { EpaminondasNode } from './EpaminondasRules';
 
