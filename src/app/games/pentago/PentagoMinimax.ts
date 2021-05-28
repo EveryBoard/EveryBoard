@@ -5,9 +5,9 @@ import { Player } from 'src/app/jscaip/Player';
 import { PentagoLegalityStatus } from './PentagoLegalityStatus';
 import { PentagoMove } from './PentagoMove';
 import { PentagoNode, PentagoRules } from './PentagoRules';
-import { PentagoState } from './PentagoState';
+import { PentagoGameState } from './PentagoGameState';
 
-export class PentagoMinimax extends Minimax<PentagoMove, PentagoState, PentagoLegalityStatus> {
+export class PentagoMinimax extends Minimax<PentagoMove, PentagoGameState, PentagoLegalityStatus> {
 
     public getListMoves(node: PentagoNode): PentagoMove[] {
         const moves: PentagoMove[] = [];
@@ -15,7 +15,7 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState, PentagoLe
         const legalDrops: Coord[] = this.getLegalDrops(node.gamePartSlice);
         for (const legalDrop of legalDrops) {
             const drop: PentagoMove = PentagoMove.rotationless(legalDrop.x, legalDrop.y);
-            const postDropState: PentagoState = node.gamePartSlice.applyLegalDrop(drop);
+            const postDropState: PentagoGameState = node.gamePartSlice.applyLegalDrop(drop);
             const legalRotations: [number, boolean][] = this.getLegalRotations(postDropState,
                                                                                preDropNeutralBlocks);
             for (const legalRotation of legalRotations) {
@@ -35,7 +35,7 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState, PentagoLe
         const blockY: number = coord.y < 3 ? 0 : 1;
         return blockY * 2 + blockX;
     }
-    public getLegalDrops(state: PentagoState): Coord[] {
+    public getLegalDrops(state: PentagoGameState): Coord[] {
         const legalDrops: Coord[] = [];
         for (let y: number = 0; y < 6; y++) {
             for (let x: number = 0; x < 6; x++) {
@@ -47,7 +47,7 @@ export class PentagoMinimax extends Minimax<PentagoMove, PentagoState, PentagoLe
         }
         return legalDrops;
     }
-    public getLegalRotations(postDropState: PentagoState, preDropNeutralBlocks: number[]): [number, boolean][] {
+    public getLegalRotations(postDropState: PentagoGameState, preDropNeutralBlocks: number[]): [number, boolean][] {
         const legalRotations: [number, boolean][] = [];
         for (let blockIndex: number = 0; blockIndex < 4; blockIndex++) {
             if (postDropState.blockIsNeutral(blockIndex) === false) {

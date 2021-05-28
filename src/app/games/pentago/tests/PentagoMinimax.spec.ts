@@ -1,6 +1,6 @@
 import { PentagoMinimax } from '../PentagoMinimax';
 import { PentagoRules } from '../PentagoRules';
-import { PentagoState } from '../PentagoState';
+import { PentagoGameState } from '../PentagoGameState';
 
 describe('PentagoMinimax', () => {
 
@@ -8,7 +8,7 @@ describe('PentagoMinimax', () => {
     let minimax: PentagoMinimax;
 
     beforeEach(() => {
-        rules = new PentagoRules(PentagoState);
+        rules = new PentagoRules(PentagoGameState);
         minimax = new PentagoMinimax('PentagoMinimax');
     });
     it('Should propose 6 moves at first turn', () => {

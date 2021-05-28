@@ -5,7 +5,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { PentagoMove } from './PentagoMove';
 
-export class PentagoState extends GamePartSlice {
+export class PentagoGameState extends GamePartSlice {
 
     public static ROTATION_MAP: [Coord, Coord][] = [
         [new Coord(-1, -1), new Coord(1, -1)],
@@ -17,7 +17,7 @@ export class PentagoState extends GamePartSlice {
         [new Coord(-1, 1), new Coord(-1, -1)],
         [new Coord(-1, 0), new Coord(0, -1)],
     ];
-    public static getInitialSlice(): PentagoState {
+    public static getInitialSlice(): PentagoGameState {
         const _: number = Player.NONE.value;
         const initialBoard: NumberTable = [
             [_, _, _, _, _, _],
@@ -27,7 +27,7 @@ export class PentagoState extends GamePartSlice {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        return new PentagoState(initialBoard, 0);
+        return new PentagoGameState(initialBoard, 0);
     }
     public readonly neutralBlocks: number[];
 
@@ -49,7 +49,7 @@ export class PentagoState extends GamePartSlice {
         return Player.of(this.board[coord.y][coord.x]);
     }
     private getBlockNeutrality(blockIndex: number): boolean {
-        const center: Coord = PentagoState.getBlockCenter(blockIndex);
+        const center: Coord = PentagoGameState.getBlockCenter(blockIndex);
         const initialUp: Player = this.getPieceAt(center.getNext(Direction.UP, 1));
         const initialDiagonal: Player = this.getPieceAt(center.getNext(Direction.UP_LEFT, 1));
         // Testing edges
@@ -69,25 +69,25 @@ export class PentagoState extends GamePartSlice {
         const cy: number = 1 + (blockIndex < 2 ? 0 : 3);
         return new Coord(cx, cy);
     }
-    public applyLegalDrop(move: PentagoMove): PentagoState {
+    public applyLegalDrop(move: PentagoMove): PentagoGameState {
         const newBoard: number[][] = this.getCopiedBoard();
         newBoard[move.coord.y][move.coord.x] = this.getCurrentPlayer().value;
-        return new PentagoState(newBoard, this.turn);
+        return new PentagoGameState(newBoard, this.turn);
     }
-    public applyLegalMove(move: PentagoMove): PentagoState {
-        const postDropState: PentagoState = this.applyLegalDrop(move);
+    public applyLegalMove(move: PentagoMove): PentagoGameState {
+        const postDropState: PentagoGameState = this.applyLegalDrop(move);
         const newBoard: number[][] = postDropState.getCopiedBoard();
         if (move.blockTurned.isPresent()) {
-            const blockCenter: Coord = PentagoState.getBlockCenter(move.blockTurned.get());
+            const blockCenter: Coord = PentagoGameState.getBlockCenter(move.blockTurned.get());
             if (move.turnedClockwise) {
-                for (const translation of PentagoState.ROTATION_MAP) {
+                for (const translation of PentagoGameState.ROTATION_MAP) {
                     const oldCoord: Coord = translation[0].getNext(blockCenter);
                     const newCoord: Coord = translation[1].getNext(blockCenter);
                     const oldValue: number = postDropState.getBoardAt(oldCoord);
                     newBoard[newCoord.y][newCoord.x] = oldValue;
                 }
             } else {
-                for (const translation of PentagoState.ROTATION_MAP) {
+                for (const translation of PentagoGameState.ROTATION_MAP) {
                     const oldCoord: Coord = translation[1].getNext(blockCenter);
                     const newCoord: Coord = translation[0].getNext(blockCenter);
                     const oldValue: number = postDropState.getBoardAt(oldCoord);
@@ -95,7 +95,7 @@ export class PentagoState extends GamePartSlice {
                 }
             }
         }
-        return new PentagoState(newBoard, this.turn + 1);
+        return new PentagoGameState(newBoard, this.turn + 1);
     }
     public blockIsNeutral(blockIndex: number): boolean {
         return this.neutralBlocks.includes(blockIndex);

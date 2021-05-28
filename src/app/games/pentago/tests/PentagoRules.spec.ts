@@ -6,7 +6,7 @@ import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { PentagoFailure } from '../PentagoFailure';
 import { PentagoMove } from '../PentagoMove';
 import { PentagoRules } from '../PentagoRules';
-import { PentagoState } from '../PentagoState';
+import { PentagoGameState } from '../PentagoGameState';
 
 describe('PentagoRules', () => {
 
@@ -16,7 +16,7 @@ describe('PentagoRules', () => {
     const X: number = Player.ONE.value;
 
     beforeEach(() => {
-        rules = new PentagoRules(PentagoState);
+        rules = new PentagoRules(PentagoGameState);
     });
     it('it should be illegal to drop piece on occupied case', () => {
         const board: number[][] = [
@@ -27,7 +27,7 @@ describe('PentagoRules', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoState = new PentagoState(board, 1);
+        const state: PentagoGameState = new PentagoGameState(board, 1);
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
@@ -41,7 +41,7 @@ describe('PentagoRules', () => {
             [_, X, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoState = new PentagoState(board, 1);
+        const state: PentagoGameState = new PentagoGameState(board, 1);
         const move: PentagoMove = PentagoMove.withRotation(4, 1, 3, true);
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(PentagoFailure.CANNOT_ROTATE_NEUTRAL_BLOCK);
@@ -55,7 +55,7 @@ describe('PentagoRules', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoState = new PentagoState(board, 3);
+        const state: PentagoGameState = new PentagoGameState(board, 3);
         const move: PentagoMove = PentagoMove.rotationless(0, 0);
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.reason).toBe(PentagoFailure.MUST_CHOOSE_BLOCK_TO_ROTATE);
@@ -69,7 +69,7 @@ describe('PentagoRules', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoState = new PentagoState(board, 3);
+        const state: PentagoGameState = new PentagoGameState(board, 3);
         const expectedBoard: number[][] = [
             [_, _, _, O, _, _],
             [_, X, _, _, _, _],
@@ -78,11 +78,11 @@ describe('PentagoRules', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const expectedState: PentagoState = new PentagoState(expectedBoard, 4);
+        const expectedState: PentagoGameState = new PentagoGameState(expectedBoard, 4);
         const move: PentagoMove = PentagoMove.rotationless(1, 1);
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: PentagoState = rules.applyLegalMove(move, state, status);
+        const resultingSlice: PentagoGameState = rules.applyLegalMove(move, state, status);
         expect(resultingSlice).toEqual(expectedState);
     });
     it('it should be able to twist any block clockwise', () => {
@@ -94,7 +94,7 @@ describe('PentagoRules', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoState = new PentagoState(board, 4);
+        const state: PentagoGameState = new PentagoGameState(board, 4);
         const expectedBoard: number[][] = [
             [_, _, O, O, _, _],
             [_, X, _, _, _, _],
@@ -103,11 +103,11 @@ describe('PentagoRules', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const expectedState: PentagoState = new PentagoState(expectedBoard, 5);
+        const expectedState: PentagoGameState = new PentagoGameState(expectedBoard, 5);
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, true);
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: PentagoState = rules.applyLegalMove(move, state, status);
+        const resultingSlice: PentagoGameState = rules.applyLegalMove(move, state, status);
         expect(resultingSlice).toEqual(expectedState);
         const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, resultingSlice));
         expect(boardStatus).toEqual(GameStatus.ONGOING, 'Game should not be over');
@@ -121,7 +121,7 @@ describe('PentagoRules', () => {
             [_, X, _, _, _, _],
             [_, X, _, _, _, _],
         ];
-        const state: PentagoState = new PentagoState(board, 4);
+        const state: PentagoGameState = new PentagoGameState(board, 4);
         const expectedBoard: number[][] = [
             [_, _, _, O, _, _],
             [_, X, _, _, _, _],
@@ -130,11 +130,11 @@ describe('PentagoRules', () => {
             [_, X, _, _, _, _],
             [_, X, _, _, _, _],
         ];
-        const expectedState: PentagoState = new PentagoState(expectedBoard, 5);
+        const expectedState: PentagoGameState = new PentagoGameState(expectedBoard, 5);
         const move: PentagoMove = PentagoMove.withRotation(0, 0, 0, false);
         const status: LegalityStatus = rules.isLegal(move, state);
         expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: PentagoState = rules.applyLegalMove(move, state, status);
+        const resultingSlice: PentagoGameState = rules.applyLegalMove(move, state, status);
         expect(resultingSlice).toEqual(expectedState);
         const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, resultingSlice));
         expect(boardStatus).toEqual(GameStatus.ONE_WON, 'This should be a victory for player one');
@@ -157,12 +157,12 @@ describe('PentagoRules', () => {
                 [O, _, _, _, _, _],
                 [_, _, _, _, _, _],
             ];
-            const slice: PentagoState = new PentagoState(board, 10);
+            const slice: PentagoGameState = new PentagoGameState(board, 10);
             const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, true);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: PentagoState = rules.applyLegalMove(move, slice, status);
-            const expectedSlice: PentagoState = new PentagoState(expectedBoard, 11);
+            const resultingSlice: PentagoGameState = rules.applyLegalMove(move, slice, status);
+            const expectedSlice: PentagoGameState = new PentagoGameState(expectedBoard, 11);
             expect(resultingSlice).toEqual(expectedSlice);
             const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedSlice));
             expect(boardStatus).toEqual(GameStatus.ZERO_WON, 'This should be a victory for player 0');
@@ -184,12 +184,12 @@ describe('PentagoRules', () => {
                 [X, O, X, O, X, X],
                 [X, O, X, X, O, O],
             ];
-            const slice: PentagoState = new PentagoState(board, 35);
+            const slice: PentagoGameState = new PentagoGameState(board, 35);
             const move: PentagoMove = PentagoMove.withRotation(4, 5, 3, false);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: PentagoState = rules.applyLegalMove(move, slice, status);
-            const expectedSlice: PentagoState = new PentagoState(expectedBoard, 36);
+            const resultingSlice: PentagoGameState = rules.applyLegalMove(move, slice, status);
+            const expectedSlice: PentagoGameState = new PentagoGameState(expectedBoard, 36);
             expect(resultingSlice).toEqual(expectedSlice);
             const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedSlice));
             expect(boardStatus).toEqual(GameStatus.DRAW, 'This should be a draw');
@@ -211,12 +211,12 @@ describe('PentagoRules', () => {
                 [O, _, _, _, _, X],
                 [O, _, _, _, _, O],
             ];
-            const slice: PentagoState = new PentagoState(board, 10);
+            const slice: PentagoGameState = new PentagoGameState(board, 10);
             const move: PentagoMove = PentagoMove.withRotation(5, 5, 0, true);
             const status: LegalityStatus = rules.isLegal(move, slice);
             expect(status.legal.isSuccess()).toBeTrue();
-            const resultingSlice: PentagoState = rules.applyLegalMove(move, slice, status);
-            const expectedSlice: PentagoState = new PentagoState(expectedBoard, 11);
+            const resultingSlice: PentagoGameState = rules.applyLegalMove(move, slice, status);
+            const expectedSlice: PentagoGameState = new PentagoGameState(expectedBoard, 11);
             expect(resultingSlice).toEqual(expectedSlice);
             const boardStatus: GameStatus = rules.getGameStatus(new MGPNode(null, move, expectedSlice));
             expect(boardStatus).toEqual(GameStatus.DRAW, 'This should be a draw');

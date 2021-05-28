@@ -4,7 +4,7 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { PentagoComponent } from '../Pentago.component';
 import { PentagoMove } from '../PentagoMove';
-import { PentagoState } from '../PentagoState';
+import { PentagoGameState } from '../PentagoGameState';
 
 describe('PentagoComponent:', () => {
     let componentTestUtils: ComponentTestUtils<PentagoComponent>;
@@ -45,7 +45,7 @@ describe('PentagoComponent:', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoState = new PentagoState(board, 5);
+        const state: PentagoGameState = new PentagoGameState(board, 5);
         componentTestUtils.setupSlice(state);
         await componentTestUtils.expectClickSuccess('#click_0_0');
         componentTestUtils.expectElementNotToExist('#rotate_0_clockwise');
@@ -59,7 +59,7 @@ describe('PentagoComponent:', () => {
             [_, _, _, _, _, _],
             [_, X, X, _, _, _],
         ];
-        const state: PentagoState = new PentagoState(board, 5);
+        const state: PentagoGameState = new PentagoGameState(board, 5);
         componentTestUtils.setupSlice(state);
         await componentTestUtils.expectClickSuccess('#click_0_5');
         const move: PentagoMove = PentagoMove.withRotation(0, 5, 2, true);
@@ -92,7 +92,7 @@ describe('PentagoComponent:', () => {
             [_, _, _, _, _, _],
             [_, _, _, _, _, _],
         ];
-        const state: PentagoState = new PentagoState(board, 5);
+        const state: PentagoGameState = new PentagoGameState(board, 5);
         componentTestUtils.setupSlice(state);
         await componentTestUtils.expectClickSuccess('#click_0_1');
         const move: PentagoMove = PentagoMove.withRotation(0, 1, 1, false);
