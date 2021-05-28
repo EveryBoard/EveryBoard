@@ -69,6 +69,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         this.updateBoard();
     }
     public encoder: Encoder<SixMove> = SixMove.encoder;
+
     private setPieceSize(rayon: number): void {
         this.PIECE_SIZE = 2 * rayon;
         this.hexaLayout = new HexaLayout(rayon,
@@ -92,6 +93,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             this.leftCoord = null;
             this.lastDrop = null;
             this.victoryCoords = [];
+            this.disconnecteds = [];
         }
         this.pieces = this.state.pieces.listKeys();
         this.neighboors = this.getEmptyNeighboors();
