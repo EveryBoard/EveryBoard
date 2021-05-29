@@ -10,10 +10,10 @@ describe('AwaleComponent', () => {
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<AwaleComponent>('Awale');
     }));
-    it('should create', async() => {
+    it('should create', fakeAsync(async() => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('AwaleComponent should be created');
-    });
+    }));
     it('should accept simple move for player zero, show captured and moved', fakeAsync(async() => {
         const board: number[][] = [
             [4, 4, 4, 4, 4, 2],

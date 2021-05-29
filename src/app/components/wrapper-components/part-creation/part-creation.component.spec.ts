@@ -41,10 +41,13 @@ describe('PartCreationComponent:', () => {
         state: 'online',
     };
 
-    beforeEach(async() => {
+    beforeEach(fakeAsync(async() => {
         await TestBed.configureTestingModule({
             imports: [
-                MatStepperModule, MatRadioModule, MatSliderModule, MatSnackBarModule,
+                MatStepperModule,
+                MatRadioModule,
+                MatSliderModule,
+                MatSnackBarModule,
                 ReactiveFormsModule,
                 RouterTestingModule.withRoutes(
                     [{ path: 'server', component: BlankComponent }],
@@ -70,8 +73,8 @@ describe('PartCreationComponent:', () => {
         await chatDAOMock.set('joinerId', { messages: [], status: 'I don\'t have a clue TODO' });
         await joueursDAOMock.set('opponent', OPPONENT);
         await partDAOMock.set('joinerId', PartMocks.INITIAL.copy());
-    });
-    it('(0) Player arrival on component should call joinGame and startObserving', async() => {
+    }));
+    it('(0) Player arrival on component should call joinGame and startObserving', fakeAsync(async() => {
         component.userName = 'creator';
         const joinerService: JoinerService = TestBed.get(JoinerService);
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.copy());
@@ -84,8 +87,8 @@ describe('PartCreationComponent:', () => {
         expect(joinerService.joinGame).toHaveBeenCalledTimes(1);
         expect(joinerService.startObserving).toHaveBeenCalledTimes(1);
         expect(component).toBeTruthy('PartCreationComponent should have been created');
-    });
-    it('(1) Joiner arrival should make candidate choice possible for creator', async() => {
+    }));
+    it('(1) Joiner arrival should make candidate choice possible for creator', fakeAsync(async() => {
         component.userName = 'creator';
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -99,8 +102,8 @@ describe('PartCreationComponent:', () => {
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
         expect(fixture.debugElement.query(By.css('#chooseCandidate')))
             .toBeTruthy('Choosing candidate should be possible after first candidate arrival');
-    });
-    it('(2) Joiner arrival should change joiner doc', async() => {
+    }));
+    it('(2) Joiner arrival should change joiner doc', fakeAsync(async() => {
         component.userName = 'firstCandidate';
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.copy());
 
@@ -108,8 +111,8 @@ describe('PartCreationComponent:', () => {
         await fixture.whenStable();
 
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
-    });
-    it('(3) (4) Candidate choice should change joiner doc and make config proposal possible', async() => {
+    }));
+    it('(3) (4) Candidate choice should change joiner doc and make config proposal possible', fakeAsync(async() => {
         component.userName = 'creator';
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -129,7 +132,7 @@ describe('PartCreationComponent:', () => {
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_CHOSEN_PLAYER.copy());
         expect(fixture.debugElement.query(By.css('#proposeConfig')))
             .toBeTruthy('Choosing candidate should become possible after chosenPlayer is set');
-    });
+    }));
     describe('Handshake end', () => {
         it('when chosenPlayer leaves lobby, part creation should go back from start', fakeAsync(async() => {
             component.userName = 'creator';
@@ -175,7 +178,7 @@ describe('PartCreationComponent:', () => {
             expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.copy());
         }));
     });
-    it('(8) Config proposal should make config acceptation possible for joiner', async() => {
+    it('(8) Config proposal should make config acceptation possible for joiner', fakeAsync(async() => {
         component.userName = 'firstCandidate';
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -192,8 +195,8 @@ describe('PartCreationComponent:', () => {
 
         expect(fixture.debugElement.query(By.css('#acceptConfig')))
             .toBeTruthy('Config proposal should make config acceptation possible');
-    });
-    it('(9) Config proposal by creator should change joiner doc', async() => {
+    }));
+    it('(9) Config proposal by creator should change joiner doc', fakeAsync(async() => {
         component.userName = 'creator';
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.copy());
         fixture.detectChanges();
@@ -210,8 +213,8 @@ describe('PartCreationComponent:', () => {
         fixture.detectChanges();
 
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_PROPOSED_CONFIG.copy());
-    });
-    it('(10) Config acceptation by joiner should change joiner doc and part doc', async() => {
+    }));
+    it('(10) Config acceptation by joiner should change joiner doc and part doc', fakeAsync(async() => {
         component.userName = 'firstCandidate';
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.copy());
         fixture.detectChanges(); // joiner arrival
@@ -235,7 +238,7 @@ describe('PartCreationComponent:', () => {
         const expectedPart: ICurrentPart = PartMocks.STARTING.copy();
         expectedPart.beginning = currentPart.beginning;
         expect(currentPart).toEqual(expectedPart);
-    });
+    }));
     afterEach(fakeAsync(async() => {
         fixture.destroy();
         await fixture.whenStable();

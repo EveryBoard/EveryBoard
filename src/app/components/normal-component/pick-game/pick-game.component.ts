@@ -26,10 +26,10 @@ import { AbstractGameComponent } from '../../game-components/abstract-game-compo
 export class GameInfo {
     // Games sorted by creation date
     public static ALL_GAMES: GameInfo[] = [
-        new GameInfo('MinimaxTesting', 'MinimaxTesting', MinimaxTestingComponent, new Date('1970-01-01')),
+        new GameInfo('MinimaxTesting', 'MinimaxTesting', MinimaxTestingComponent, new Date('1970-01-01'), '', false),
 
         new GameInfo('Puissance 4', 'P4', P4Component, new Date('2018-08-28')),
-        new GameInfo('Awalé', 'Awale', AwaleComponent, new Date('2018-11-29'), 'Description'), // 93 days after P4
+        new GameInfo('Awalé', 'Awale', AwaleComponent, new Date('2018-11-29')), // 93 days after P4
         new GameInfo('Quarto', 'Quarto', QuartoComponent, new Date('2018-12-09')), // 10 days after Awale
         new GameInfo('Tablut', 'Tablut', TablutComponent, new Date('2018-12-27')), // 26 days after Quarto
         new GameInfo('Reversi', 'Reversi', ReversiComponent, new Date('2019-01-16')), // 20 days after Tablut)
@@ -55,7 +55,8 @@ export class GameInfo {
                        public readonly urlName: string,
                        public readonly component: Type<AbstractGameComponent<Move, GamePartSlice>>,
                        public readonly creationDate: Date,
-                       public readonly description?: string) {
+                       public readonly description: string = '',
+                       public readonly display: boolean = true) {
     }
 }
 
@@ -68,8 +69,9 @@ export class PickGameComponent {
 
     public readonly gameNameList: ReadonlyArray<string> =
         GameInfo.ALL_GAMES
-            .map((game: GameInfo): string => game.urlName)
-            .filter((name: string) => name !== 'MinimaxTesting');
+            .filter((game: GameInfo) => game.display === true)
+            .map((game: GameInfo): string => game.urlName);
+
 
     @Output('pickGame') pickGame: EventEmitter<string> = new EventEmitter<string>();
 

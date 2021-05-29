@@ -42,7 +42,7 @@
                 <div id="onlineUser" class="box" style="min-height: 50vh;">
                     <p> Utilisateurs connectés : </p>
                     <ul>
-                        <li *ngFor="let user of getActiveUsers()">
+                        <li *ngFor="let user of activeUsers">
                             {{ user.doc.pseudo }} :
                             {{ (1000*user.doc.last_changed.seconds) | date:'HH:mm:ss':'+0100'}}
                         </li>

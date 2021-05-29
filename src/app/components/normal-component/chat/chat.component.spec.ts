@@ -1,4 +1,4 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { ComponentFixture, fakeAsync, TestBed } from '@angular/core/testing';
 import { FormsModule } from '@angular/forms';
 
 import { ChatComponent } from './chat.component';
@@ -50,7 +50,7 @@ describe('ChatComponent', () => {
     it('should create', () => {
         expect(component).toBeTruthy();
     });
-    it('should not load message for unlogged user', async() => {
+    it('should not load message for unlogged user', fakeAsync(async() => {
         spyOn(chatService, 'startObserving');
         spyOn(chatService, 'stopObserving');
         spyOn(component, 'showDisconnectedChat');
@@ -65,8 +65,8 @@ describe('ChatComponent', () => {
         component.ngOnDestroy();
         await fixture.whenStable();
         expect(chatService.stopObserving).toHaveBeenCalledTimes(0);
-    });
-    it('should propose to hide chat when chat is visible, and work', async() => {
+    }));
+    it('should propose to hide chat when chat is visible, and work', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         fixture.detectChanges();
         let switchButton: DebugElement = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
@@ -83,8 +83,8 @@ describe('ChatComponent', () => {
         expect(chat).toBeFalsy('Chat should be invisible after calling hideChat');
         component.ngOnDestroy();
         await fixture.whenStable();
-    });
-    it('should propose to show chat when chat is hidden, and work', async() => {
+    }));
+    it('should propose to show chat when chat is hidden, and work', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         fixture.detectChanges();
         component.switchChatVisibility();
@@ -104,8 +104,8 @@ describe('ChatComponent', () => {
         expect(chat).toBeTruthy('Chat should be visible after calling show');
         component.ngOnDestroy();
         await fixture.whenStable();
-    });
-    it('should show how many messages where sent since you hide the chat', async() => {
+    }));
+    it('should show how many messages where sent since you hide the chat', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         fixture.detectChanges();
         component.switchChatVisibility();
@@ -123,8 +123,8 @@ describe('ChatComponent', () => {
 
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         expect(switchButton.nativeElement.innerText).toEqual('Afficher chat (1 nouveau(x) message(s))');
-    });
-    it('should reset new messages count once messages have been read', async() => {
+    }));
+    it('should reset new messages count once messages have been read', fakeAsync(async() => {
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
         fixture.detectChanges();
         component.switchChatVisibility();
@@ -140,7 +140,7 @@ describe('ChatComponent', () => {
 
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         expect(switchButton.nativeElement.innerText).toEqual('Réduire le chat (0 nouveau(x) message(s))');
-    });
+    }));
     afterAll(() => {
         component.ngOnDestroy();
     });

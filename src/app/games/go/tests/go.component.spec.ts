@@ -25,7 +25,7 @@ describe('GoComponent', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
     });
-    it('Should allow to pass twice, then use "pass" as the method to "accept"', async() => {
+    it('Should allow to pass twice, then use "pass" as the method to "accept"', fakeAsync(async() => {
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Passed
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Counting
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Accept
@@ -33,7 +33,7 @@ describe('GoComponent', () => {
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Finished
 
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeFalse();
-    });
+    }));
     it('Should show captures', fakeAsync(async() => {
         const board: Table<GoPiece> = [
             [O, X, _, _, _],

@@ -53,20 +53,20 @@ describe('GameService', () => {
         service.startObserving('partId', myCallback);
         expect(partDao.getObsById).toHaveBeenCalled();
     });
-    it('startObserving should throw exception when called while observing ', async() => {
+    it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
         await partDao.set('myJoinerId', PartMocks.INITIAL.copy());
 
         expect(() => {
             service.startObserving('myJoinerId', (iPart: ICurrentPartId) => {});
             service.startObserving('myJoinerId', (iPart: ICurrentPartId) => {});
         }).toThrowError('GameService.startObserving should not be called while already observing a game');
-    });
+    }));
     it('should delegate delete to PartDAO', () => {
         spyOn(partDao, 'delete');
         service.deletePart('partId');
         expect(partDao.delete).toHaveBeenCalled();
     });
-    it('should forbid to accept a take back that the player proposed himself', async() => {
+    it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
         const part: ICurrentPart = {
             typeGame: 'Quarto',
             playerZero: 'creator',
@@ -89,7 +89,7 @@ describe('GameService', () => {
         const secondError: string = await getError(Player.ONE);
         expect(firstError).toEqual('Assertion failure: Illegal to accept your own request.');
         expect(secondError).toEqual('Assertion failure: Illegal to accept your own request.');
-    });
+    }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
         const joiner: IJoiner = {
             candidatesNames: [],

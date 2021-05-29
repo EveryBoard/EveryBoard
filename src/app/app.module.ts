@@ -168,7 +168,6 @@ const routes: Route [] = [
     ],
     providers: [
         AuthenticationService,
-        ActivesPartsService,
         GameService,
         JoinerService,
         UserService,
