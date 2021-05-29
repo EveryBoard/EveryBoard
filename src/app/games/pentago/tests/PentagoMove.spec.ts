@@ -1,3 +1,4 @@
+import { JSONValue } from 'src/app/utils/utils';
 import { PentagoMove } from '../PentagoMove';
 
 describe('PentagoMove', () => {
@@ -33,5 +34,18 @@ describe('PentagoMove', () => {
         expect(move.equals(secondDiff)).toBeFalse();
         expect(move.equals(thirdDiff)).toBeFalse();
         expect(move.equals(noDiff)).toBeTrue();
+    });
+    it('Should translate move correctly', () => {
+        const moves: PentagoMove[] = [
+            PentagoMove.rotationless(2, 3),
+            PentagoMove.withRotation(2, 3, 3, true),
+            PentagoMove.withRotation(2, 3, 3, false),
+            PentagoMove.withRotation(2, 3, 0, false),
+        ];
+        for (const move of moves) {
+            const encodedMove: JSONValue = PentagoMove.encoder.encode(move);
+            const decodedMove: PentagoMove = PentagoMove.encoder.decode(encodedMove);
+            expect(move.equals(decodedMove)).toBeTrue();
+        }
     });
 });
