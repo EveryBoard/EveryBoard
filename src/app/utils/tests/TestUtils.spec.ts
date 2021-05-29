@@ -94,7 +94,7 @@ export class SimpleComponentTestUtils<T> {
     private constructor() {}
     public async clickElement(elementName: string): Promise<boolean> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' should exist on the page').toBeDefined();
+        expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
         if (element == null) {
             return false;
         } else {
@@ -335,7 +335,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' was expected to exist').toBeDefined();
+        expect(element).withContext(elementName + ' was expected to exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
     }

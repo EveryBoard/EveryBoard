@@ -6,7 +6,7 @@
 		"sourceMap": true,
 		"declaration": false,
 		"module": "es2020",
-    "moduleResolution": "node",
+        "moduleResolution": "node",
 		"experimentalDecorators": true,
 		"target": "es5",
 		"typeRoots": [
@@ -16,11 +16,11 @@
 			"es2017",
 			"dom"
 		],
-            "paths": {
-                "core-js/es7/reflect": [
-                    "node_modules/core-js/proposals/reflect-metadata",
-                ],
-                "core-js/es6/*": ["node_modules/core-js/es"]
+        "paths": {
+            "core-js/es7/reflect": [
+                "node_modules/core-js/proposals/reflect-metadata",
+            ],
+            "core-js/es6/*": ["node_modules/core-js/es"]
 	    }
-        }
+    }
 }
