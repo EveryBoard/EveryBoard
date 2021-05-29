@@ -85,6 +85,7 @@ describe('JoinerService', () => {
         expect(dao.update).toHaveBeenCalled();
     }));
     it('cancelJoining should throw when there was no observed joiner', fakeAsync(async() => {
+
         let threw: boolean = false;
 
         try {

@@ -23,7 +23,7 @@ export class PentagoMove extends MoveCoord {
 
             const coord: Coord = Coord.encoder.decode(casted['coord']);
             const nullableBlockTurned: number = casted['blockTurned'] as number;
-            if (nullableBlockTurned) {
+            if (nullableBlockTurned != null) {
                 const turnedClockwise: boolean = casted['turnedClockwise'] as boolean;
                 return PentagoMove.withRotation(coord.x,
                                                 coord.y,

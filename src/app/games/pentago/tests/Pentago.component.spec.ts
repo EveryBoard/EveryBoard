@@ -101,4 +101,5 @@ describe('PentagoComponent:', () => {
         expect(component.getBlockClasses(1, 0)).toEqual(['moved']);
         expect(component.getCaseClasses(0, 1)).toEqual(['player1', 'lastmove']);
     }));
+    it('Should forbid to move piece while arrow are displayed');
 });
