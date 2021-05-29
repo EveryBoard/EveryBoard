@@ -1,6 +1,6 @@
 /* eslint-disable max-len */
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
+import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
@@ -28,7 +28,7 @@ export const dvonnDidacticial: DidacticialStep[] = [
          Il y a donc six directions possibles.
          Le joueur avec les piles foncées commence.
          Vous jouez avec Foncé, cliquez sur une pile puis déplacez la d'une case.`,
-        DvonnPartSlice.getInitialSlice(),
+        DvonnGameState.getInitialSlice(),
         'Bravo.',
     ),
     DidacticialStep.fromMove(
@@ -36,7 +36,7 @@ export const dvonnDidacticial: DidacticialStep[] = [
         `Les pièces rouges sont appelées “sources”.
          Quand une pile n’est plus directement ou indirectement connectée à une source, elle est enlevée du plateau.
          Vous jouez Foncé, déplacez votre pièce sur la source.`,
-        new DvonnPartSlice(new DvonnBoard([
+        new DvonnGameState(new DvonnBoard([
             [__, __, SO, __, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
             [__, __, X4, __, __, __, __, X1, SO, __, __],
@@ -53,7 +53,7 @@ export const dvonnDidacticial: DidacticialStep[] = [
         'Fin de partie',
         `Quand plus aucun mouvement n’est possible, la partie est finie et le joueur avec le plus de points gagne.
          Faites votre dernier mouvement!`,
-        new DvonnPartSlice(new DvonnBoard([
+        new DvonnGameState(new DvonnBoard([
             [__, __, SO, __, __, __, __, __, __, __, __],
             [__, __, O1, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, SO, O4, __],

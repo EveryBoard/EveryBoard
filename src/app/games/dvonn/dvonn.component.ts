@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
-import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
+import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
 import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
 import { DvonnMinimax } from 'src/app/games/dvonn/DvonnMinimax';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
@@ -22,14 +22,14 @@ import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 
-export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartSlice> {
+export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameState> {
 
-    public availableMinimaxes: Minimax<DvonnMove, DvonnPartSlice>[] = [
+    public availableMinimaxes: Minimax<DvonnMove, DvonnGameState>[] = [
         new DvonnMinimax('DvonnMinimax'),
         new MaxStacksDvonnMinimax('DvonnMinimaxMaximizeStacks'),
     ];
     private static CASE_SIZE: number = 30;
-    public rules: DvonnRules = new DvonnRules(DvonnPartSlice);
+    public rules: DvonnRules = new DvonnRules(DvonnGameState);
     public scores: number[] = [0, 0];
     public lastMove: DvonnMove = null;
     public chosen: Coord = null;
@@ -50,7 +50,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
         this.hexaBoard = this.rules.node.gamePartSlice.hexaBoard;
     }
     public updateBoard(): void {
-        const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
+        const slice: DvonnGameState = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
         this.hexaBoard = slice.hexaBoard;
         this.lastMove = this.rules.node.move;
@@ -62,8 +62,8 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnPartS
         this.scores = DvonnRules.getScores(slice);
     }
     private calculateDisconnecteds(): void {
-        const previousSlice: DvonnPartSlice = this.rules.node.mother.gamePartSlice;
-        const slice: DvonnPartSlice = this.rules.node.gamePartSlice;
+        const previousSlice: DvonnGameState = this.rules.node.mother.gamePartSlice;
+        const slice: DvonnGameState = this.rules.node.gamePartSlice;
         for (let y: number = 0; y < slice.hexaBoard.height; y++) {
             for (let x: number = 0; x < slice.hexaBoard.width; x++) {
                 const coord: Coord = new Coord(x, y);

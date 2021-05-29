@@ -13,13 +13,10 @@ describe('ServerPageComponent', () => {
         testUtils = await SimpleComponentTestUtils.create(ServerPageComponent);
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
     }));
-    it('should create', () => {
+    it('should create', fakeAsync(async() => {
         expect(testUtils.getComponent()).toBeDefined();
         testUtils.getComponent().ngOnInit();
-
-        expect(testUtils.getComponent()['userNameSub']).toBeDefined(); // This is inspecting a private field (TODO: clean)
-        flush();
-    });
+    }));
     it('should rely on game service to create online games', fakeAsync(async() => {
         const gameService: GameService = TestBed.inject(GameService);
         spyOn(gameService, 'createGameAndRedirectOrShowError');

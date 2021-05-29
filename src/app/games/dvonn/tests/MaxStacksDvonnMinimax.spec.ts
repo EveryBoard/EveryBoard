@@ -2,7 +2,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from '../DvonnBoard';
 import { DvonnMove } from '../DvonnMove';
-import { DvonnPartSlice } from '../DvonnPartSlice';
+import { DvonnGameState } from '../DvonnGameState';
 import { DvonnPieceStack } from '../DvonnPieceStack';
 import { DvonnRules } from '../DvonnRules';
 import { MaxStacksDvonnMinimax } from '../MaxStacksDvonnMinimax';
@@ -19,7 +19,7 @@ describe('MaxStacksDvonnMinimax', () => {
     const WW: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 2, false);
 
     beforeEach(() => {
-        rules = new DvonnRules(DvonnPartSlice);
+        rules = new DvonnRules(DvonnGameState);
         minimax = new MaxStacksDvonnMinimax('MaxStacksDvonnMinimax');
     });
     it('should propose 41 moves at first turn', () => {
@@ -35,7 +35,7 @@ describe('MaxStacksDvonnMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
         ]);
 
-        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        const slice: DvonnGameState = new DvonnGameState(board, 0, false);
         rules.node = new MGPNode(null, null, slice);
         const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
         expect(minimax.getListMoves(rules.node).length).toBe(3); // There are three possible moves
@@ -52,7 +52,7 @@ describe('MaxStacksDvonnMinimax', () => {
             [_, _, _, _, _, _, _, _, _, _, _],
         ]);
 
-        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        const slice: DvonnGameState = new DvonnGameState(board, 0, false);
         rules.node = new MGPNode(null, null, slice);
         const bestMove: DvonnMove = rules.node.findBestMove(1, minimax);
         expect(minimax.getListMoves(rules.node).length).toBe(2);
