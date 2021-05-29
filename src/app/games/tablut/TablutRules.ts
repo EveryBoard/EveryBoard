@@ -561,8 +561,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         const player: Player = slice.getCurrentPlayer();
         return TablutRules.tryMove(player, move, board);
     }
-    public getGameStatus(slice: TablutPartSlice): GameStatus {
-        const board: number[][] = slice.getCopiedBoard();
+    public getGameStatus(node: TablutNode): GameStatus {
+        const board: number[][] = node.gamePartSlice.getCopiedBoard();
 
         const winner: MGPOptional<Player> = TablutRules.getWinner(board);
         if (winner.isPresent()) {

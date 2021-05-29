@@ -7,6 +7,7 @@ import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
 import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('EpaminondasRules:', () => {
     let rules: EpaminondasRules;
@@ -199,7 +200,7 @@ describe('EpaminondasRules:', () => {
         const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(minimax.getBoardValue(move, expectedSlice).value)
+        expect(minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value)
             .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
     it('Should declare second player winner if his pawn survive one turn on first line', () => {
@@ -238,7 +239,7 @@ describe('EpaminondasRules:', () => {
         const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(minimax.getBoardValue(move, expectedSlice).value)
+        expect(minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value)
             .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
     it('Should not consider first player winner if both player have one piece on their landing line', () => {
@@ -277,7 +278,7 @@ describe('EpaminondasRules:', () => {
         const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
+        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
         expect(boardValue).not.toEqual(Number.MIN_SAFE_INTEGER, 'This should not be a victory for player 0');
         expect(boardValue).not.toEqual(Number.MAX_SAFE_INTEGER, 'This should not be a victory for player 1');
     });

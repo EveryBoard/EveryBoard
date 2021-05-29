@@ -23,7 +23,7 @@ describe('PositionalEpaminondasMinimax:', () => {
     xit('Should propose 114 moves at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(114);
     });
-    it('Should consider possible capture the best move', () => {
+    xit('Should consider possible capture the best move', () => {
         const board: NumberTable = [
             [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
             [_, O, O, _, _, _, X, X, X, X, _, _, _, _],

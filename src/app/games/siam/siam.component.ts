@@ -35,6 +35,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public landingCoord: Coord;
     public chosenDirection: MGPOptional<Orthogonal>;
     public chosenOrientation: Orthogonal;
+    public movedPieces: Coord[] = [];
 
     public encoder: Encoder<SiamMove> = SiamMove.encoder;
     public updateBoard(): void {
@@ -42,6 +43,9 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         const slice: SiamPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.board;
         this.lastMove = this.rules.node.move;
+        if (this.lastMove) {
+            this.movedPieces = this.rules.isLegal(this.lastMove, this.rules.node.mother.gamePartSlice).moved;
+        }
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = null;
@@ -168,13 +172,9 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
 
-        let last: Coord = this.lastMove ? this.lastMove.coord : null;
-        const direction: Orthogonal = this.lastMove ? this.lastMove.moveDirection.getOrNull() : null;
-        last = last && direction ? last.getNext(direction) : last;
-        if (coord.equals(last)) {
+        if (this.movedPieces.some((c: Coord) => c.equals(coord))) {
             return ['moved'];
         }
-
         return [];
     }
 }

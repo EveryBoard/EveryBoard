@@ -7,7 +7,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { MaterialModule } from '../material-modules';
 
 import { AngularFireModule } from '@angular/fire';
-import { AngularFirestoreModule, AngularFirestore } from '@angular/fire/firestore';
+import { AngularFirestoreModule } from '@angular/fire/firestore';
 import { AngularFireAuth } from '@angular/fire/auth';
 
 import { firebaseConfig } from './firebaseConfig';
@@ -61,6 +61,7 @@ import { KamisadoComponent } from './games/kamisado/kamisado.component';
 import { LinesOfActionComponent } from './games/lines-of-action/LinesOfAction.component';
 import { MinimaxTestingComponent } from './games/minimax-testing/minimax-testing.component';
 import { P4Component } from './games/p4/p4.component';
+import { PentagoComponent } from './games/pentago/Pentago.component';
 import { PylosComponent } from './games/pylos/pylos.component';
 import { QuartoComponent } from './games/quarto/quarto.component';
 import { QuixoComponent } from './games/quixo/quixo.component';
@@ -122,6 +123,7 @@ const routes: Route [] = [
         LinesOfActionComponent,
         MinimaxTestingComponent,
         P4Component,
+        PentagoComponent,
         PylosComponent,
         QuartoComponent,
         QuixoComponent,
@@ -142,6 +144,7 @@ const routes: Route [] = [
         LinesOfActionComponent,
         MinimaxTestingComponent,
         P4Component,
+        PentagoComponent,
         PylosComponent,
         QuartoComponent,
         QuixoComponent,
@@ -169,7 +172,6 @@ const routes: Route [] = [
         UserService,
         ChatService,
         PartDAO,
-        AngularFirestore,
         AngularFireAuth,
     ],
     bootstrap: [AppComponent],

@@ -18,8 +18,8 @@ describe('TablutComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<TablutComponent>('Tablut');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeDefined();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeDefined();
     });
     it('Should cancel move when clicking on opponent piece', fakeAsync( async() => {
         await componentTestUtils.expectClickFailure('#click_4_4', 'Cette pièce ne vous appartient pas.');
@@ -28,23 +28,16 @@ describe('TablutComponent', () => {
         const message: string = 'Pour votre premier clic, choisissez une de vos pièces.';
         await componentTestUtils.expectClickFailure('#click_0_0', message);
     }));
-    it('Should allow simple move', async() => {
+    it('Should allow simple move', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_4_1');
         const move: TablutMove = new TablutMove(new Coord(4, 1), new Coord(0, 1));
         await componentTestUtils.expectMoveSuccess('#click_0_1', move);
-    });
-    it('Diagonal move attempt should not throw', async() => {
+    }));
+    it('Diagonal move attempt should not throw', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_3_0');
-        let threw: boolean = false;
-        try {
-            const message: string = 'TablutMove cannot be diagonal.';
-            await componentTestUtils.expectClickFailure('#click_4_1', message);
-        } catch (error) {
-            threw = true;
-        } finally {
-            expect(threw).toBeFalse();
-        }
-    });
+        const message: string = 'TablutMove cannot be diagonal.';
+        expect(async() => await componentTestUtils.expectClickFailure('#click_4_1', message)).not.toThrow();
+    }));
     it('Should show captured piece and left cases', fakeAsync(async() => {
         const board: number[][] = [
             [_, A, _, _, _, _, _, _, _],

@@ -5,6 +5,7 @@ import { SixGameState } from '../SixGameState';
 import { SixMove } from '../SixMove';
 import { SixNode, SixRules } from '../SixRules';
 import { SixMinimax } from '../SixMinimax';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('SixMinimax', () => {
 
@@ -68,7 +69,8 @@ describe('SixMinimax', () => {
             const state: SixGameState = SixGameState.fromRepresentation(board, 9);
             const move: SixMove = SixMove.fromDrop(new Coord(2, 3));
             rules.node = new SixNode(null, null, state);
-            const boardValue: { value: number, preVictory?: Coord } = minimax.getBoardValue(move, state);
+            const boardValue: { value: number, preVictory?: Coord } =
+                minimax.getBoardValue(new MGPNode(null, move, state));
             expect(boardValue.preVictory).toBeUndefined();
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
@@ -174,13 +176,13 @@ describe('SixMinimax', () => {
             const move: SixMove = SixMove.fromDrop(new Coord(0, 5));
             expect(rules.choose(move)).toBeTrue();
 
-            expect(rules.getGameStatus(rules.node.gamePartSlice, rules.node.move).isEndGame).toBeFalse();
+            expect(rules.getGameStatus(rules.node).isEndGame).toBeFalse();
             const bestMove: SixMove = rules.node.findBestMove(1, minimax);
             expect(bestMove).toEqual(SixMove.fromDeplacement(new Coord(0, 0), new Coord(0, 6)));
             expect(rules.node.countDescendants()).toBe(1);
 
             expect(rules.choose(bestMove)).toBeTrue();
-            expect(rules.getGameStatus(rules.node.gamePartSlice, rules.node.move).isEndGame).toBeFalse();
+            expect(rules.getGameStatus(rules.node).isEndGame).toBeFalse();
         });
         // TODO: comparing what's best between that calculation and Phase 1 one
         it('Score after 40th turn should be a substraction of the number of piece', () => {
@@ -188,7 +190,7 @@ describe('SixMinimax', () => {
                 [X, X, X, X, O, O, O, O, O],
                 [X, X, X, X, O, O, O, O, O],
             ], 40);
-            expect(minimax.getBoardNumericValue(SixMove.fromDrop(new Coord(1, 1)), state)).toBe(2);
+            expect(minimax.getBoardNumericValue(new MGPNode(null, SixMove.fromDrop(new Coord(1, 1)), state))).toBe(2);
         });
     });
 });

@@ -11,9 +11,10 @@ import { GipfRules, GipfNode } from './GipfRules';
 
 export class GipfMinimax extends Minimax<GipfMove, GipfPartSlice, GipfLegalityStatus> {
 
-    public getBoardValue(move: GipfMove, slice: GipfPartSlice): NodeUnheritance {
-        const score0: MGPOptional<number> = GipfRules.getPlayerScore(slice, Player.ZERO);
-        const score1: MGPOptional<number> = GipfRules.getPlayerScore(slice, Player.ONE);
+    public getBoardValue(node: GipfNode): NodeUnheritance {
+        const state: GipfPartSlice = node.gamePartSlice;
+        const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
+        const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);
         if (score0.isAbsent()) {
             return new NodeUnheritance(Player.ONE.getVictoryValue());
         } else if (score1.isAbsent()) {

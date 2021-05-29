@@ -42,7 +42,7 @@ describe('SiamComponent', () => {
         const move: SiamMove = new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         await componentTestUtils.expectMoveSuccess('#chooseOrientation_DOWN', move);
     }));
-    it('Should not allow to move ennemy pieces', async() => {
+    it('Should not allow to move ennemy pieces', fakeAsync(async() => {
         const board: NumberTable = [
             [_, _, _, _, _],
             [_, _, _, _, _],
@@ -54,7 +54,7 @@ describe('SiamComponent', () => {
         componentTestUtils.setupSlice(slice);
 
         await componentTestUtils.expectClickFailure('#clickPiece_4_4', 'Can\'t choose ennemy\'s pieces');
-    });
+    }));
     it('should cancel move when trying to insert while having selected a piece', fakeAsync(async() => {
         const board: NumberTable = [
             [U, _, _, _, _],
@@ -98,6 +98,24 @@ describe('SiamComponent', () => {
 
         const move: SiamMove = new SiamMove(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
         await expectMoveLegality(move);
+    }));
+    it('should highlight all moved pieces upon push', fakeAsync(async() => {
+        const board: NumberTable = [
+            [_, _, _, _, _],
+            [_, _, _, _, _],
+            [_, M, M, M, _],
+            [_, _, _, _, _],
+            [_, _, _, _, U],
+        ];
+        const slice: SiamPartSlice = new SiamPartSlice(board, 0);
+        componentTestUtils.setupSlice(slice);
+
+        const move: SiamMove = new SiamMove(5, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT);
+        await expectMoveLegality(move);
+
+        expect(componentTestUtils.expectElementToHaveClasses('#insertAt__4_4', ['base', 'moved']));
+        expect(componentTestUtils.expectElementToHaveClasses('#insertAt__3_4', ['base', 'moved']));
+        expect(componentTestUtils.expectElementToHaveClasses('#insertAt__2_4', ['base']));
     }));
     it('should decide outing orientation automatically', fakeAsync(async() => {
         const board: NumberTable = [

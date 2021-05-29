@@ -355,7 +355,8 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
         return score0.isAbsent() ||
                score1.isAbsent();
     }
-    public getGameStatus(state: GipfPartSlice): GameStatus {
+    public getGameStatus(node: GipfNode): GameStatus {
+        const state: GipfPartSlice = node.gamePartSlice;
         const score0: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ZERO);
         const score1: MGPOptional<number> = GipfRules.getPlayerScore(state, Player.ONE);
         if (score0.isAbsent()) {

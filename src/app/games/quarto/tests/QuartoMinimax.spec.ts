@@ -1,6 +1,7 @@
 import { QuartoPiece } from '../QuartoPiece';
 import { QuartoPartSlice } from '../QuartoPartSlice';
 import { QuartoMinimax } from '../QuartoMinimax';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('QuartoRules - Minimax:', () => {
     let minimax: QuartoMinimax;
@@ -23,6 +24,6 @@ describe('QuartoRules - Minimax:', () => {
         ];
         const pieceInHand: QuartoPiece = QuartoPiece.fromInt(AAAA);
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 3, pieceInHand);
-        expect(minimax.getBoardValue(null, slice).value).toEqual(Number.MAX_SAFE_INTEGER - 1);
+        expect(minimax.getBoardValue(new MGPNode(null, null, slice)).value).toEqual(Number.MAX_SAFE_INTEGER - 1);
     });
 });

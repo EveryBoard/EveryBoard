@@ -68,7 +68,7 @@
         <div class="tile is-child box is-vcentered" *ngIf="compo">
             <ng-container *ngIf="compo.rules.node.move">
                 <ng-container *ngFor="let minimax of compo.availableMinimaxes">
-                    {{ minimax.name + ': ' + minimax.getBoardValue(compo.rules.node.move, compo.rules.node.gamePartSlice) }} <br/>
+                    {{ minimax.name + ': ' + minimax.getBoardValue(compo.rules.node) }} <br/>
                 </ng-container>
             </ng-container>
             <button id="passButton"

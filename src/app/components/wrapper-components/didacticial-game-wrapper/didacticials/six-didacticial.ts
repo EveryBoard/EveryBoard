@@ -3,6 +3,7 @@ import { SixGameState } from 'src/app/games/six/SixGameState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DidacticialStep } from '../DidacticialStep';
 
 const _: number = Player.NONE.value;
@@ -60,7 +61,7 @@ export const sixDidacticial: DidacticialStep[] = [
         `Bravo!`,
         'Raté!',
     ),
-    DidacticialStep.informational(
+    DidacticialStep.fromPredicate(
         'Deuxième phase',
         `Quand après 40 tours, toutes vos pièces sont placées, on passe en deuxième phase.
          Il faut maintenant déplacer ses pièces, en prenant garde à ne pas enlever une pièce qui empêchait l'adversaire de gagner.
@@ -68,16 +69,26 @@ export const sixDidacticial: DidacticialStep[] = [
          Dès qu'au moins un joueur tombe en dessous des 6 pièces, la partie est finie et le joueur qui a le moins de pièces perds.
          `,
         SixGameState.fromRepresentation([
-            [_, _, _, _, _, _, _, X, _, _],
-            [_, _, _, _, X, X, O, _, _, O],
-            [_, _, _, _, O, O, O, O, X, _],
-            [_, _, _, _, X, X, _, X, O, _],
-            [_, O, X, X, O, O, X, _, _, _],
-            [O, O, O, O, X, X, X, _, _, _],
-            [X, X, O, _, X, X, O, O, _, _],
-            [_, O, _, O, O, _, _, _, _, _],
-            [X, X, X, X, _, _, _, _, _, _],
-            [_, O, _, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, X, _],
+            [_, _, _, _, X, _, O, _, _],
+            [_, _, _, _, O, O, _, _, _],
+            [_, _, _, _, X, X, _, X, O],
+            [_, O, X, X, O, O, X, _, _],
+            [O, O, O, O, X, X, X, _, _],
+            [X, X, O, _, X, X, O, O, _],
+            [_, O, _, O, O, _, _, _, _],
+            [X, X, X, X, _, _, _, _, _],
+            [_, O, _, _, _, _, _, _, _],
         ], 40),
+        (move: SixMove, resultingState: SixGameState) => {
+            if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
+                return MGPValidation.failure(`Vous avez bien déconnecté une pièce adversaire, mais également la votre, et donc, vous perdez autant de point que l'adversaire, ce qui n'est pas spécialement avantageux!`);
+            } else if (new Coord(6, 1).equals(move.start.getOrNull())) {
+                return MGPValidation.SUCCESS;
+            } else {
+                return MGPValidation.failure('Ce mouvement ne déconnecte pas du jeu de pièces adverses! Réessayez avec une autre pièce!');
+            }
+        },
+        'Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire!',
     ),
 ];

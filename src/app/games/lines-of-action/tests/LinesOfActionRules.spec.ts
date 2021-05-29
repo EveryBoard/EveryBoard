@@ -8,6 +8,7 @@ import { LinesOfActionMove } from '../LinesOfActionMove';
 import { LinesOfActionNode, LinesOfActionRules } from '../LinesOfActionRules';
 import { LinesOfActionMinimax } from '../LinesOfActionMinimax';
 import { LinesOfActionState } from '../LinesOfActionState';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('LinesOfActionRules', () => {
 
@@ -23,7 +24,7 @@ describe('LinesOfActionRules', () => {
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();
-        expect(minimax.getBoardValue(rules.node.move, rules.node.gamePartSlice).value).toEqual(0);
+        expect(minimax.getBoardValue(rules.node).value).toEqual(0);
     });
     it('should forbid moving a piece of the opponent', () => {
         const state: LinesOfActionState = LinesOfActionState.getInitialSlice();
@@ -274,7 +275,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.of(Player.ONE));
-        expect(minimax.getBoardValue(undefined, state).value).toBe(Player.ONE.getVictoryValue());
+        expect(minimax.getBoardValue(new MGPNode(null, null, state)).value).toBe(Player.ONE.getVictoryValue());
     });
     it('should win when all the player\'s pieces are connected, in any direction', () => {
         const board: number[][] = [
@@ -289,7 +290,7 @@ describe('LinesOfActionRules', () => {
         ];
         const state: LinesOfActionState = new LinesOfActionState(board, 0);
         expect(LinesOfActionRules.getVictory(state)).toEqual(MGPOptional.of(Player.ZERO));
-        expect(minimax.getBoardValue(undefined, state).value).toBe(Player.ZERO.getVictoryValue());
+        expect(minimax.getBoardValue(new MGPNode(null, null, state)).value).toBe(Player.ZERO.getVictoryValue());
     });
     it('should draw on simultaneous connections', () => {
         const board: number[][] = [

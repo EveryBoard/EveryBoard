@@ -115,7 +115,7 @@ describe('GoRules:', () => {
         expect(resultingSlice).toEqual(expectedSlice, 'resultingSlice');
         expect(rules.isLegal(new GoMove(1, 0), resultingSlice).legal.isSuccess()).toBeFalse();
     });
-    it('snap back should be legal TODO: Enhance', () => {
+    it('snap back should be legal', () => {
         expect(rules.choose(new GoMove(2, 4))).toBeTrue(); expect(rules.choose(new GoMove(3, 4))).toBeTrue();
         expect(rules.choose(new GoMove(2, 3))).toBeTrue(); expect(rules.choose(new GoMove(3, 3))).toBeTrue();
         expect(rules.choose(new GoMove(3, 2))).toBeTrue(); expect(rules.choose(GoMove.PASS)).toBeTrue();
@@ -349,7 +349,7 @@ describe('GoRules:', () => {
 
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
 
-        expect(rules.getGameStatus(rules.node.gamePartSlice).isEndGame).toBeTrue();
+        expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
         expect(rules.node.gamePartSlice.phase).toBe(Phase.FINISHED, 'Phase should have been switched to \'FINISHED\'');
     });
     it('simply shared board should be simple to calculate', () => {
@@ -404,6 +404,6 @@ describe('GoRules:', () => {
         expect(rules.choose(new GoMove(4, 2))).toBeTrue();
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
         expect(rules.choose(GoMove.ACCEPT)).toBeTrue();
-        expect(minimax.getBoardValue(rules.node.move, rules.node.gamePartSlice).value).toBe(0);
+        expect(minimax.getBoardValue(rules.node).value).toBe(0);
     });
 });

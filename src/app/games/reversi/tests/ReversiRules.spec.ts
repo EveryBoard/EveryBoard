@@ -92,7 +92,7 @@ describe('ReversiRules', () => {
         const resultingSlice: ReversiPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: ReversiPartSlice = new ReversiPartSlice(expectedBoard, 60);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(minimax.getBoardValue(move, expectedSlice).value)
+        expect(minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value)
             .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
     });
 });

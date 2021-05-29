@@ -152,9 +152,10 @@ export class SixRules extends Rules<SixMove,
             kept: null,
         };
     }
-    public getGameStatus(state: SixGameState, lastMove: SixMove): GameStatus {
+    public getGameStatus(node: SixNode): GameStatus {
+        const state: SixGameState = node.gamePartSlice;
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
-        const shapeVictory: Coord[] = this.getShapeVictory(lastMove, state);
+        const shapeVictory: Coord[] = this.getShapeVictory(node.move, state);
         if (shapeVictory.length === 6) {
             return GameStatus.getVictory(LAST_PLAYER);
         }

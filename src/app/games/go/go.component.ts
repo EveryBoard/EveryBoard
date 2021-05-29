@@ -41,7 +41,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public encoder: Encoder<GoMove> = GoMove.encoder;
 
-    constructor(public snackBar: MatSnackBar) {
+    constructor(snackBar: MatSnackBar) {
         super(snackBar);
         this.canPass = true;
         this.showScore = true;

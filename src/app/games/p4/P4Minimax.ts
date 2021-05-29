@@ -9,7 +9,8 @@ export class P4Minimax extends Minimax<P4Move, P4PartSlice> {
     public getListMoves(node: P4Node): P4Move[] {
         return P4Rules.getListMoves(node);
     }
-    public getBoardValue(move: P4Move, slice: P4PartSlice): NodeUnheritance {
+    public getBoardValue(node: P4Node): NodeUnheritance {
+        const slice: P4PartSlice = node.gamePartSlice;
         display(P4Rules.VERBOSE, {
             text: 'P4Rules instance methods getBoardValue called',
             board: slice.getCopiedBoard(),

@@ -71,6 +71,6 @@ describe('PylosRules - Minimax:', () => {
 
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(2, 2, 1), []);
-        expect(minimax.getBoardValue(move, slice).value).toBe(0);
+        expect(minimax.getBoardValue(new MGPNode(null, move, slice)).value).toBe(0);
     });
 });

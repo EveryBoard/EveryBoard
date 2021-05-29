@@ -6,6 +6,7 @@ import { QuartoPartSlice } from '../QuartoPartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('QuartoRules', () => {
 
@@ -48,8 +49,8 @@ describe('QuartoRules', () => {
         const resultingSlice: QuartoPartSlice = rules.node.gamePartSlice;
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 16, QuartoPiece.NONE);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(minimax.getBoardValue(move, expectedSlice).value).toEqual(0, 'This should be a draw.');
-        expect(rules.getGameStatus(rules.node.gamePartSlice).isEndGame).toBeTrue();
+        expect(minimax.getBoardValue(rules.node).value).toEqual(0, 'This should be a draw.');
+        expect(rules.getGameStatus(rules.node).isEndGame).toBeTrue();
     });
     it('Should forbid to give a piece already on the board', () => {
         const board: number[][] = [
@@ -79,7 +80,7 @@ describe('QuartoRules', () => {
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AABA);
         const move: QuartoMove = new QuartoMove(0, 3, QuartoPiece.BBAA);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe('Cannot play on an occupied case.');
+        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
     });
     it('Should allow simple move', () => {
         const move: QuartoMove = new QuartoMove(2, 2, QuartoPiece.AAAB);
@@ -106,7 +107,7 @@ describe('QuartoRules', () => {
         const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice);
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 5, QuartoPiece.AAAB);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
+        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
         expect(boardValue).toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0.');
     });
     it('Should considered player 1 winner when doing a full line', () => {
@@ -129,7 +130,7 @@ describe('QuartoRules', () => {
         const resultingSlice: QuartoPartSlice = rules.applyLegalMove(move, slice);
         const expectedSlice: QuartoPartSlice = new QuartoPartSlice(expectedBoard, 10, QuartoPiece.AABA);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
+        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
         expect(boardValue).toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1.');
     });
 });

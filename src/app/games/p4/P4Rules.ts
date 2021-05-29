@@ -188,7 +188,8 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
         }
         return { legal: MGPValidation.SUCCESS };
     }
-    public getGameStatus(state: P4PartSlice): GameStatus {
+    public getGameStatus(node: P4Node): GameStatus {
+        const state: P4PartSlice = node.gamePartSlice;
         for (let x: number = 0; x < 7; x++) {
             // for every column, starting from the bottom of each column
             for (let y: number = 5; y !== -1 && state.board[y][x] !== Player.NONE.value; y--) {

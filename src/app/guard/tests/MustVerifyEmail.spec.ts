@@ -1,3 +1,4 @@
+import { fakeAsync } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { of } from 'rxjs';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
@@ -20,23 +21,23 @@ describe('EmailVerified', () => {
     it('should create', () => {
         expect(guard).toBeTruthy();
     });
-    it('should move unconnected user to login page and refuse them', async() => {
+    it('should move unconnected user to login page and refuse them', fakeAsync(async() => {
         authService.getJoueurObs = () => of(AuthenticationService.NOT_CONNECTED);
 
         expect(await guard.canActivate()).toBeFalse();
 
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
-    });
-    it('should move verified user to login page and refuse them', async() => {
+    }));
+    it('should move verified user to login page and refuse them', fakeAsync(async() => {
         authService.getJoueurObs = () => of({ pseudo: 'JeanMichelNouveau user', verified: true });
 
         expect(await guard.canActivate()).toBeFalse();
 
         expect(router.navigate).toHaveBeenCalledWith(['/login']);
-    });
-    it('should accept logged unverified user', async() => {
+    }));
+    it('should accept logged unverified user', fakeAsync(async() => {
         authService.getJoueurObs = () => of({ pseudo: 'JeanJaja ToujoursLà', verified: false });
 
         expect(await guard.canActivate()).toBeTrue();
-    });
+    }));
 });

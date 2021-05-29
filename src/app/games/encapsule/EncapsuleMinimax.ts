@@ -13,7 +13,8 @@ import { EncapsuleRules, EncapsuleNode } from './EncapsuleRules';
 
 export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
-    public getBoardValue(move: EncapsuleMove, slice: EncapsulePartSlice): NodeUnheritance {
+    public getBoardValue(node: EncapsuleNode): NodeUnheritance {
+        const slice: EncapsulePartSlice = node.gamePartSlice;
         let boardValue: number;
         if (EncapsuleRules.isVictory(slice)) {
             boardValue = slice.getCurrentPlayer().getDefeatValue();

@@ -21,7 +21,6 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValue } from 'src/app/utils/utils';
 import { getDiff, getDiffChangesNumber, ObjectDifference } from 'src/app/utils/ObjectUtils';
-import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { GameStatus } from 'src/app/jscaip/Rules';
 
 export class UpdateType {
@@ -345,9 +344,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.notifyVictory');
         const wonPart: ICurrentPart = this.currentPart.copy();
 
-        const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
-        const move: Move = this.gameComponent.rules.node.move;
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(state, move);
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus === GameStatus.ONE_WON) {
             wonPart.winner = this.players[1];
             wonPart.loser = this.players[0];
@@ -539,8 +536,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         display(OnlineGameWrapperComponent.VERBOSE, 'OnlineGameWrapperComponent.updateDBBoard(' + move.toString() +
                                                     ', ' + scorePlayerZero + ', ' + scorePlayerOne + ')');
         this.gameComponent.rules.choose(move);
-        const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(state, move);
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame) {
             if (gameStatus === GameStatus.DRAW) {
                 this.notifyDraw(encodedMove, scorePlayerZero, scorePlayerOne);

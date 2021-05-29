@@ -1,129 +1,46 @@
-import { ComponentFixture, fakeAsync, flush, TestBed } from '@angular/core/testing';
-import { RouterTestingModule } from '@angular/router/testing';
-import { CUSTOM_ELEMENTS_SCHEMA } from '@angular/core';
-import { MatTabsModule } from '@angular/material/tabs';
-import { FormsModule } from '@angular/forms';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { MatSnackBarModule } from '@angular/material/snack-bar';
-import { of } from 'rxjs';
+import { fakeAsync, flush, TestBed } from '@angular/core/testing';
 import { ServerPageComponent } from './server-page.component';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
-import { UserService } from 'src/app/services/UserService';
-import { GameService } from 'src/app/services/GameService';
-import { JoueursDAO } from 'src/app/dao/JoueursDAO';
-import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
-import { PartDAO } from 'src/app/dao/PartDAO';
-import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
-import { JoinerDAO } from 'src/app/dao/JoinerDAO';
-import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
-import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { Router } from '@angular/router';
+import { GameService } from 'src/app/services/GameService';
 
 describe('ServerPageComponent', () => {
-    let component: ServerPageComponent;
+    let testUtils: SimpleComponentTestUtils<ServerPageComponent>;
 
-    let authenticationService: AuthenticationService;
-    let gameService: GameService;
-    let userService: UserService;
-
-    let fixture: ComponentFixture<ServerPageComponent>;
-
-    beforeEach(() => {
-        TestBed.configureTestingModule({
-            imports: [
-                MatTabsModule,
-                MatSnackBarModule,
-                FormsModule,
-                RouterTestingModule,
-                BrowserAnimationsModule,
-            ],
-            declarations: [
-                ServerPageComponent,
-            ],
-            schemas: [
-                CUSTOM_ELEMENTS_SCHEMA,
-            ],
-            providers: [
-                { provide: JoueursDAO, useClass: JoueursDAOMock },
-                { provide: PartDAO, useClass: PartDAOMock },
-                { provide: JoinerDAO, useClass: JoinerDAOMock },
-                { provide: ChatDAO, useClass: ChatDAOMock },
-
-                { provide: AuthenticationService, useClass: AuthenticationServiceMock },
-            ],
-        }).compileComponents();
-        fixture = TestBed.createComponent(ServerPageComponent);
-        component = fixture.componentInstance;
-        authenticationService = TestBed.get(AuthenticationService);
-        gameService = TestBed.get(GameService);
-        userService = TestBed.get(UserService);
+    beforeEach(fakeAsync(async() => {
+        testUtils = await SimpleComponentTestUtils.create(ServerPageComponent);
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
-    });
+    }));
     it('should create', fakeAsync(async() => {
-        expect(component).toBeTruthy();
+        expect(testUtils.getComponent()).toBeDefined();
+        testUtils.getComponent().ngOnInit();
 
-        component.ngOnInit();
-
-        expect(component['userNameSub']).toBeDefined(); // This is inspecting a private field (TODO: clean)
         flush();
     }));
-    it('should subscribe to three observable on init', fakeAsync(async() => {
+    it('should rely on game service to create online games', fakeAsync(async() => {
+        const gameService: GameService = TestBed.inject(GameService);
+        spyOn(gameService, 'createGameAndRedirectOrShowError');
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
+        testUtils.getComponent().ngOnInit();
 
-        expect(component.userName).toBeUndefined();
-        spyOn(authenticationService, 'getJoueurObs').and.callThrough();
-        spyOn(gameService, 'getActivesPartsObs').and.callThrough();
-        spyOn(userService, 'getActivesUsersObs').and.callThrough();
+        testUtils.getComponent().pickGame('Awale');
+        testUtils.getComponent().createGame();
+        testUtils.detectChanges();
 
-        expect(authenticationService.getJoueurObs).not.toHaveBeenCalled();
-        expect(gameService.getActivesPartsObs).not.toHaveBeenCalled();
-        expect(userService.getActivesUsersObs).not.toHaveBeenCalled();
+        expect(gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Awale');
 
-        component.ngOnInit();
-
-        expect(component.userName).toBe(AuthenticationServiceMock.CONNECTED.pseudo);
-        expect(authenticationService.getJoueurObs).toHaveBeenCalledTimes(1);
-        expect(gameService.getActivesPartsObs).toHaveBeenCalledTimes(1);
-        expect(userService.getActivesUsersObs).toHaveBeenCalledTimes(1);
-    }));
-    it('should be legal for any logged user to create game when there is none', fakeAsync(async() => {
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-        component.ngOnInit();
-
-        expect(component.canCreateGame()).toBeTrue();
-    }));
-    it('should be illegal to create game for a player already in game', fakeAsync(async() => {
-        // TODO: fix that he provoque a bug, by coding "observingWhere" on FirebaseDAOMock
-        AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
-        gameService.getActivesPartsObs(); // Call is here to avoid that unscrubscription throw error
-        spyOn(gameService, 'getActivesPartsObs').and.returnValue(of([
-            {
-                id: 'partId',
-                doc: {
-                    typeGame: 'P4',
-                    playerZero: AuthenticationServiceMock.CONNECTED.pseudo,
-                    turn: -1,
-                    listMoves: [],
-                },
-            }]));
-        component.ngOnInit();
-
-        expect(component.canCreateGame()).toBeFalse();
-        flush();
     }));
     it('Should be legal for unlogged user to create local game', fakeAsync(async() => {
+        const router: Router = TestBed.inject(Router);
         AuthenticationServiceMock.setUser(AuthenticationService.NOT_CONNECTED);
-        spyOn(component.router, 'navigate');
-        component.ngOnInit();
+        spyOn(router, 'navigate');
+        testUtils.getComponent().ngOnInit();
 
-        component.playLocally();
-        await fixture.whenStable();
+        testUtils.getComponent().playLocally();
+        testUtils.detectChanges();
 
-        expect(component.router.navigate).toHaveBeenCalledWith(['local/undefined']);
+        expect(router.navigate).toHaveBeenCalledWith(['local/undefined']);
     }));
-    afterAll(async() => {
-        fixture.destroy();
-        await fixture.whenStable();
-    });
 });

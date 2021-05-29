@@ -5,6 +5,7 @@ import { PylosMove } from '../PylosMove';
 import { PylosPartSlice } from '../PylosPartSlice';
 import { PylosRules } from '../PylosRules';
 import { PylosMinimax } from '../PylosMinimax';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('PylosRules:', () => {
 
@@ -268,7 +269,7 @@ describe('PylosRules:', () => {
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status);
-        expect(minimax.getBoardValue(move, resultingSlice).value).toBe(Number.MAX_SAFE_INTEGER);
+        expect(minimax.getBoardValue(new MGPNode(null, move, resultingSlice)).value).toBe(Number.MAX_SAFE_INTEGER);
     });
     it('should declare looser Player.ONE when he put his 15th ball', () => {
         const board: number[][][] = [
@@ -294,6 +295,6 @@ describe('PylosRules:', () => {
         const status: LegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.isSuccess()).toBeTrue();
         const resultingSlice: PylosPartSlice = rules.applyLegalMove(move, slice, status);
-        expect(minimax.getBoardValue(move, resultingSlice).value).toBe(Number.MIN_SAFE_INTEGER);
+        expect(minimax.getBoardValue(new MGPNode(null, move, resultingSlice)).value).toBe(Number.MIN_SAFE_INTEGER);
     });
 });

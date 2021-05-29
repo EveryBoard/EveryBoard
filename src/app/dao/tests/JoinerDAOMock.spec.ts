@@ -4,6 +4,7 @@ import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 import { display } from 'src/app/utils/utils';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
+import { fakeAsync } from '@angular/core/testing';
 
 type JoinerOS = ObservableSubject<IJoinerId>
 
@@ -37,7 +38,7 @@ describe('JoinerDAOMock', () => {
         callCount = 0;
         lastJoiner = null;
     });
-    it('Total update should update', async() => {
+    it('Total update should update', fakeAsync(async() => {
         await joinerDaoMock.set('joinerId', JoinerMocks.INITIAL.copy());
 
         expect(lastJoiner).toBeNull();
@@ -57,8 +58,8 @@ describe('JoinerDAOMock', () => {
 
         expect(callCount).toEqual(2);
         expect(lastJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
-    });
-    it('Partial update should update', async() => {
+    }));
+    it('Partial update should update', fakeAsync(async() => {
         await joinerDaoMock.set('joinerId', JoinerMocks.INITIAL.copy());
 
         expect(callCount).toEqual(0);
@@ -78,5 +79,5 @@ describe('JoinerDAOMock', () => {
 
         expect(callCount).toEqual(2);
         expect(lastJoiner).toEqual(JoinerMocks.WITH_FIRST_CANDIDATE.copy());
-    });
+    }));
 });

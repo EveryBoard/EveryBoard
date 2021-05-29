@@ -38,7 +38,9 @@ export class SiamRules extends _SiamRules {
                 display(SiamRules.VERBOSE, 'Move is insertion');
                 const insertionInfo: {insertedPiece: number, legal: MGPValidation} =
                     this.isLegalInsertion(move.coord, slice);
-                if (insertionInfo.legal.isFailure()) return { legal: insertionInfo.legal, resultingBoard: null };
+                if (insertionInfo.legal.isFailure()) {
+                    return SiamLegalityStatus.failure(insertionInfo.legal.getReason());
+                }
                 movingPiece = insertionInfo.insertedPiece;
             } else {
                 display(SiamRules.VERBOSE, 'Move is forward');
@@ -65,6 +67,7 @@ export class SiamRules extends _SiamRules {
     public static isLegalForwarding(move: SiamMove, slice: SiamPartSlice, firstPiece: number): SiamLegalityStatus {
         display(SiamRules.VERBOSE, { isLegalForwarding: { move: move.toString(), slice, firstPiece } });
 
+        const movedPieces: Coord[] = [];
         let movingPiece: number = SiamPiece.of(move.landingOrientation, slice.getCurrentPlayer()).value;
         const pushingDir: Orthogonal = move.moveDirection.get();
         let landingCoord: Coord = move.coord.getNext(pushingDir);
@@ -82,6 +85,7 @@ export class SiamRules extends _SiamRules {
         const resultingBoard: number[][] = slice.getCopiedBoard();
         if (move.coord.isInRange(5, 5)) {
             resultingBoard[move.coord.y][move.coord.x] = SiamPiece.EMPTY.value;
+            movedPieces.push(move.coord);
         }
         let pushingPossible: boolean = landingCoord.isInRange(5, 5) &&
                                        movingPiece !== SiamPiece.EMPTY.value;
@@ -96,6 +100,7 @@ export class SiamRules extends _SiamRules {
             const tmpPiece: number = resultingBoard[landingCoord.y][landingCoord.x];
             if (tmpPiece === SiamPiece.MOUNTAIN.value) totalForce -= 0.9;
             resultingBoard[landingCoord.y][landingCoord.x] = movingPiece;
+            movedPieces.push(landingCoord);
             movingPiece = tmpPiece;
             landingCoord = landingCoord.getNext(pushingDir);
             currentDirection = SiamPiece.getNullableDirection(movingPiece);
@@ -118,7 +123,7 @@ export class SiamRules extends _SiamRules {
         }
 
         display(SiamRules.VERBOSE, 'This move is a legal push: '+resultingBoard);
-        return { legal: MGPValidation.SUCCESS, resultingBoard };
+        return { legal: MGPValidation.SUCCESS, resultingBoard, moved: movedPieces };
     }
     public static isStraight(piece: number, move: SiamMove): boolean {
         const siamPiece: SiamPiece = SiamPiece.decode(piece);
@@ -133,11 +138,11 @@ export class SiamRules extends _SiamRules {
         const currentPiece: number = slice.getBoardAt(c);
         const currentPlayer: Player = slice.getCurrentPlayer();
         if (SiamPiece.getDirection(currentPiece) === rotation.landingOrientation) {
-            return { legal: MGPValidation.failure('wrong rotation direction'), resultingBoard: null };
+            return SiamLegalityStatus.failure('wrong rotation direction');
         }
         const resultingBoard: number[][] = slice.getCopiedBoard();
         resultingBoard[c.y][c.x] = SiamPiece.of(rotation.landingOrientation, currentPlayer).value;
-        return { legal: MGPValidation.SUCCESS, resultingBoard };
+        return { legal: MGPValidation.SUCCESS, resultingBoard, moved: [c] };
     }
     public applyLegalMove(move: SiamMove,
                           slice: SiamPartSlice,
@@ -516,11 +521,11 @@ export class SiamRules extends _SiamRules {
         const insertedPiece: SiamPiece = this.getInsertedPiece(coord, slice.getCurrentPlayer());
         return insertedPiece.getDirection();
     }
-    public getGameStatus(slice: SiamPartSlice, move: SiamMove): GameStatus {
+    public getGameStatus(node: SiamNode): GameStatus {
         const mountainsInfo: { rows: number[], columns: number[], nbMountain: number } =
-            SiamRules.getMountainsRowsAndColumns(slice);
+            SiamRules.getMountainsRowsAndColumns(node.gamePartSlice);
 
-        const winner: Player = SiamRules.getWinner(slice, move, mountainsInfo.nbMountain);
+        const winner: Player = SiamRules.getWinner(node.gamePartSlice, node.move, mountainsInfo.nbMountain);
         if (winner === Player.NONE) {
             return GameStatus.ONGOING;
         } else {

@@ -7,6 +7,7 @@ import { SiamLegalityStatus } from '../SiamLegalityStatus';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('SiamRules:', () => {
 
@@ -372,7 +373,7 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
+        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
         expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for player 0');
     });
     it('Player 1 pushing player 0 pushing mountain should be a victory for player 0', () => {
@@ -397,7 +398,7 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
+        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
         expect(boardValue).toEqual(Player.ONE.getVictoryValue(), 'This should be a victory for player 1');
     });
     it('Player 0 pushing player 1 on his side pushing mountain should be a victory for player 0', () => {
@@ -422,7 +423,7 @@ describe('SiamRules:', () => {
         const resultingSlice: SiamPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: SiamPartSlice = new SiamPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = minimax.getBoardValue(move, expectedSlice).value;
+        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
         expect(boardValue).toEqual(Player.ZERO.getVictoryValue(), 'This should be a victory for player 0');
     });
 });

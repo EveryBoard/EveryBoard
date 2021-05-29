@@ -229,13 +229,14 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         const [furthest0, furthest1]: [number, number] = this.getFurthestPiecePositions(slice);
         return furthest0 === 0 || furthest1 === 7;
     }
-    public getGameStatus(slice: KamisadoPartSlice): GameStatus {
-        const player: Player = slice.getCurrentPlayer();
-        if (KamisadoRules.canOnlyPass(slice) && slice.alreadyPassed) {
+    public getGameStatus(node: KamisadoNode): GameStatus {
+        const state: KamisadoPartSlice = node.gamePartSlice;
+        const player: Player = state.getCurrentPlayer();
+        if (KamisadoRules.canOnlyPass(state) && state.alreadyPassed) {
             return GameStatus.getDefeat(player);
         }
 
-        const [furthest0, furthest1]: [number, number] = KamisadoRules.getFurthestPiecePositions(slice);
+        const [furthest0, furthest1]: [number, number] = KamisadoRules.getFurthestPiecePositions(state);
         // Board value is how far my piece is - how far my opponent piece is, except in case of victory
         if (furthest1 === 7) {
             return GameStatus.ONE_WON;

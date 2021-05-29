@@ -82,7 +82,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         return this.playerCanOnlyPass(state) &&
                this.nextPlayerCantOnlyPass(state);
     }
-    public getGameStatus(state: ReversiPartSlice): GameStatus {
+    public getGameStatus(node: ReversiNode): GameStatus {
+        const state: ReversiPartSlice = node.gamePartSlice;
         const gameIsEnded: boolean = ReversiRules.isGameEnded(state);
         if (gameIsEnded === false) {
             return GameStatus.ONGOING;

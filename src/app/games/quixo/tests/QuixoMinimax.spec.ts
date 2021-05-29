@@ -3,6 +3,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoMinimax } from '../QuixoMinimax';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
 
 describe('QuixoRules - Minimax:', () => {
     let minimax: QuixoMinimax;
@@ -24,6 +25,6 @@ describe('QuixoRules - Minimax:', () => {
         ];
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
         const move: QuixoMove = new QuixoMove(0, 2, Orthogonal.RIGHT);
-        expect(minimax.getBoardValue(move, slice).value).toEqual(-1);
+        expect(minimax.getBoardValue(new MGPNode(null, move, slice)).value).toEqual(-1);
     });
 });

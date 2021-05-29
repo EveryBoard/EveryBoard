@@ -17,7 +17,9 @@
         <g (click)="onClick(case)"
            id="click_{{ case.x }}_{{ case.y }}">
             <polyline [attr.points]="getHexaCoordinates(case)"
-                      class="base {{getCaseClass(case)}}"
+                      id="case_{{ case.x }}_{{ case.y }}"
+                      [ngClass]="getCaseClass(case)"
+                      class="base"
                       stroke-linecap="round"/>
             <circle *ngIf="isPiece(case)"
                     [attr.cx]="getCenter(case).x"

@@ -61,9 +61,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public updateBoard(): void {
         this.gameComponent.updateBoard();
-        const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
-        const move: Move = this.gameComponent.rules.node.move;
-        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(state, move);
+        const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner !== Player.NONE) {
@@ -78,9 +76,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             // bot's turn
             setTimeout(() => {
                 // called only when it's AI's Turn
-                const state: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
-                const move: Move = this.gameComponent.rules.node.move;
-                const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(state, move);
+                const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
                 if (gameStatus === GameStatus.ONGOING) {
                     const turn: number = this.gameComponent.rules.node.gamePartSlice.turn % 2;
                     const currentAiDepth: number = Number.parseInt(this.aiDepths[turn % 2]);
@@ -115,5 +111,8 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.gameComponent.updateBoard();
         this.endGame = false;
         this.winner = null;
+        if (this.players[Player.ZERO.value] !== 'humain' && this.aiDepths[Player.ZERO.value] !== '0') {
+            this.proposeAIToPlay();
+        }
     }
 }

@@ -10,7 +10,7 @@ describe('AwaleMove', () => {
         const minimax: AwaleMinimax = new AwaleMinimax('AwaleMinimax');
         const firstTurnMoves: AwaleMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
-            NumberEncoderTestUtils.expectToBeCorrect(AwaleMove.encoder, move)
+            NumberEncoderTestUtils.expectToBeCorrect(AwaleMove.encoder, move);
         }
     });
     it('Should override equals correctly', () => {

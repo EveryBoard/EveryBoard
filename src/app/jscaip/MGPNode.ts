@@ -131,7 +131,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     : MGPNode<R, M, S, L, U>
     {
         const LOCAL_VERBOSE: boolean = false;
-        if (depth < 1 || MGPNode.ruler.getGameStatus(this.gamePartSlice, this.move).isEndGame) {
+        if (depth < 1 || MGPNode.ruler.getGameStatus(this).isEndGame) {
             display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'isLeaf : ' + this.myToString(minimax) + ' at depth ' + depth);
             return this; // rules - leaf or calculation - leaf
         }
@@ -184,7 +184,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     private getPossibleMoves(minimax: Minimax<M, S, L, U>): M[] {
         const currentMoves: MGPOptional<MGPSet<M>> = this.possibleMoves.get(minimax.name);
         if (currentMoves.isAbsent()) {
-            const moves: M[] = minimax.getListMoves(this, minimax);
+            const moves: M[] = minimax.getListMoves(this);
             this.possibleMoves.set(minimax.name, new MGPSet(moves));
             return moves;
         } else {
@@ -196,7 +196,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         if (child == null) {
             const status: L = MGPNode.ruler.isLegal(move, this.gamePartSlice) as L;
             const state: S = MGPNode.ruler.applyLegalMove(move, this.gamePartSlice, status) as S;
-            const value: U = minimax.getBoardValue(move, state);
+            const value: U = minimax.getBoardValue(new MGPNode(null, move, state));
             const valueMap: MGPMap<string, U> = new MGPMap();
             valueMap.set(minimax.toString(), value);
             child = new MGPNode(this, move, state, valueMap);
@@ -230,7 +230,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         }
         let ownValue: U = this.ownValue.get(minimax.name).getOrNull();
         if (ownValue == null) {
-            ownValue = minimax.getBoardValue(this.move, this.gamePartSlice);
+            ownValue = minimax.getBoardValue(this);
             this.ownValue.set(minimax.name, ownValue);
         }
         return ownValue;
@@ -268,4 +268,3 @@ export class MGPNode<R extends Rules<M, S, L>,
         return nbDescendants;
     }
 }
-// TODO: test minimax where all choice at depth 1 are the same value

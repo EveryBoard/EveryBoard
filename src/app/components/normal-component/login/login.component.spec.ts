@@ -66,7 +66,7 @@ describe('LoginComponent', () => {
                 'Ce mot de passe est incorrect');
             expectErrorToInduceMessage(
                 'There is no user record corresponding to this identifier. The user may have been deleted.',
-                'Cette adresse email n\'as pas de compte sur ce site.');
+                `Cette adresse email n'a pas de compte sur ce site.`);
             expectErrorToInduceMessage(
                 'Missing or insufficient permissions.',
                 'Vous devez aller dans vos mail confirmer votre inscription en cliquant sur le lien que nous vous avons envoyé d\'abord.');

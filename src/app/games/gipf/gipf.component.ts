@@ -20,18 +20,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { Encoder } from 'src/app/jscaip/Encoder';
 
-export class GipfComponentFailure {
-    public static AMBIGUOUS_CAPTURE_COORD: string =
-        `Veuillez sélectionner une autre case de la capture que vous souhaitez prendre,
-         celle-ci appartient à deux captures.`
-    public static NOT_PART_OF_CAPTURE: string =
-        `Veuillez sélectionner une capture.`;
-    public static CLICK_FURTHER_THAN_ONE_COORD: string =
-        `Veuillez sélectionner une destination à une distance de 1 de l'entrée.`;
-    public static NO_DIRECTIONS_AVAILABLE: string =
-        `Veuillez sélectionner une autre case, toutes les lignes pour ce placement sont complètes.`
-}
-
 @Component({
     selector: 'app-gipf',
     templateUrl: './gipf.component.html',
@@ -136,7 +124,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
                 const entrance: Coord = this.placementEntrance.get();
                 try {
                     if (entrance.getDistance(coord) !== 1) {
-                        return this.cancelMove(GipfComponentFailure.CLICK_FURTHER_THAN_ONE_COORD);
+                        return this.cancelMove(GipfFailure.CLICK_FURTHER_THAN_ONE_COORD);
                     }
                     const direction: HexaDirection = HexaDirection.factory.fromMove(entrance, coord);
                     return this.selectPlacementDirection(MGPOptional.of(direction));
@@ -155,9 +143,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         if (captures.length > 1) {
             // Two captures contain this coordinate
             // We don't let the user choose it as it is ambiguous
-            return this.cancelMove(GipfComponentFailure.AMBIGUOUS_CAPTURE_COORD);
+            return this.cancelMove(GipfFailure.AMBIGUOUS_CAPTURE_COORD);
         } else if (captures.length === 0) {
-            return this.cancelMove(GipfComponentFailure.NOT_PART_OF_CAPTURE);
+            return this.cancelMove(GipfFailure.NOT_PART_OF_CAPTURE);
         }
         const capture: GipfCapture = captures[0];
 
@@ -228,7 +216,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
             this.movePhase = GipfComponent.PHASE_PLACEMENT_DIRECTION;
             this.computeArrows(coord);
             if (this.arrows.length === 0) {
-                this.cancelMove(GipfComponentFailure.NO_DIRECTIONS_AVAILABLE);
+                this.cancelMove(GipfFailure.NO_DIRECTIONS_AVAILABLE);
             }
         }
         return MGPValidation.SUCCESS;

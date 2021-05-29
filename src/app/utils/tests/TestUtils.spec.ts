@@ -1,5 +1,5 @@
 import { Component, CUSTOM_ELEMENTS_SCHEMA, DebugElement, Type } from '@angular/core';
-import { ComponentFixture, TestBed, tick } from '@angular/core/testing';
+import { ComponentFixture, flush, TestBed, tick } from '@angular/core/testing';
 import { By } from '@angular/platform-browser';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { GamePartSlice } from '../../jscaip/GamePartSlice';
@@ -68,7 +68,7 @@ export class SimpleComponentTestUtils<T> {
             imports: [
                 MatSnackBarModule,
                 RouterTestingModule.withRoutes([
-                    { path: 'login', component: BlankComponent },
+                    { path: '**', component: BlankComponent },
                 ]),
                 ReactiveFormsModule,
             ],
@@ -81,6 +81,7 @@ export class SimpleComponentTestUtils<T> {
                 { provide: PartDAO, useClass: PartDAOMock },
                 { provide: JoinerDAO, useClass: JoinerDAOMock },
                 { provide: ChatDAO, useClass: ChatDAOMock },
+                { provide: JoueursDAO, useClass: JoueursDAOMock },
             ],
         }).compileComponents();
         AuthenticationServiceMock.setUser(AuthenticationServiceMock.CONNECTED);
@@ -93,6 +94,7 @@ export class SimpleComponentTestUtils<T> {
     private constructor() {}
     public async clickElement(elementName: string): Promise<boolean> {
         const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
         if (element == null) {
             return false;
         } else {
@@ -143,6 +145,7 @@ export class ComponentTestUtils<T extends GameComponent> {
         const activatedRouteStub: ActivatedRouteStub = new ActivatedRouteStub(game, 'joinerId');
         await TestBed.configureTestingModule({
             imports: [
+                MatSnackBarModule,
                 AppModule,
                 RouterTestingModule.withRoutes([
                     { path: 'play', component: OnlineGameWrapperComponent },
@@ -226,6 +229,7 @@ export class ComponentTestUtils<T extends GameComponent> {
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
+            flush();
         }
     }
     public async expectClickForbidden(elementName: string): Promise<void> {
@@ -244,6 +248,7 @@ export class ComponentTestUtils<T extends GameComponent> {
             this.canUserPlaySpy.calls.reset();
             expect(this.chooseMoveSpy).not.toHaveBeenCalled();
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(clickValidity.reason);
+            flush();
         }
     }
     public async expectMoveSuccess(elementName: string,
@@ -254,7 +259,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -304,6 +309,7 @@ export class ComponentTestUtils<T extends GameComponent> {
             expect(this.cancelMoveSpy).toHaveBeenCalledOnceWith(reason);
             this.cancelMoveSpy.calls.reset();
             expect(this.onLegalUserMoveSpy).not.toHaveBeenCalled();
+            flush();
         }
     }
     public async clickElement(elementName: string): Promise<boolean> {
@@ -329,8 +335,8 @@ export class ComponentTestUtils<T extends GameComponent> {
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy(elementName + ' was expected to exist');
-        const elementClasses: string[] = element.children[0].attributes.class.split(' ').sort();
+        expect(element).withContext(elementName + ' was expected to exist').toBeTruthy();
+        const elementClasses: string[] = element.attributes.class.split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
     }
     public findElement(elementName: string): DebugElement {
@@ -348,8 +354,8 @@ export function expectSecondStateToBeBetterThanFirst(weakerState: GamePartSlice,
                                                      minimax: Minimax<Move, GamePartSlice>)
 : void
 {
-    const weakValue: number = minimax.getBoardValue(weakMove, weakerState).value;
-    const strongValue: number = minimax.getBoardValue(strongMove, strongerState).value;
+    const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
+    const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
     expect(weakValue).toBeLessThan(strongValue);
 }
 export function expectStateToBePreVictory(state: GamePartSlice,
@@ -358,7 +364,7 @@ export function expectStateToBePreVictory(state: GamePartSlice,
                                           minimax: Minimax<Move, GamePartSlice>)
 : void
 {
-    const value: number = minimax.getBoardNumericValue(previousMove, state);
+    const value: number = minimax.getBoardNumericValue(new MGPNode(null, previousMove, state));
     const expectedValue: number = player.getPreVictory();
     expect(value).toBe(expectedValue);
 }

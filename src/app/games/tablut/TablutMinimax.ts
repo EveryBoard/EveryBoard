@@ -8,7 +8,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { TablutNode, TablutRules } from './TablutRules';
 
-
 export class TablutMinimax extends Minimax<TablutMove, TablutPartSlice, TablutLegalityStatus> {
 
     public getListMoves(node: TablutNode): TablutMove[] {
@@ -22,7 +21,8 @@ export class TablutMinimax extends Minimax<TablutMove, TablutPartSlice, TablutLe
 
         return TablutRules.getPlayerListMoves(currentPlayer, currentBoard);
     }
-    public getBoardValue(move: TablutMove, slice: TablutPartSlice): NodeUnheritance {
+    public getBoardValue(node: TablutNode): NodeUnheritance {
+        const slice: TablutPartSlice = node.gamePartSlice;
         // 1. is the king escaped ?
         // 2. is the king captured ?
         // 3. is one player immobilised ?

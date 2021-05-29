@@ -32,6 +32,13 @@ export class GameStatus {
     }
     private constructor(public readonly isEndGame: boolean, public readonly winner: Player) {
     }
+    public toBoardValue(): number {
+        if (this.winner !== Player.NONE) {
+            return this.winner.getVictoryValue();
+        } else {
+            return 0;
+        }
+    }
 }
 export abstract class Rules<M extends Move,
                             S extends GamePartSlice,
@@ -49,7 +56,7 @@ export abstract class Rules<M extends Move,
      * the remaining pawn that you can put on the board...
      */
 
-    public readonly choose: (move: M) => boolean = (move: M): boolean => { // TODO: make a normal function
+    public choose(move: M): boolean {
         /* used by the rules to update board
          * return true if the move was legal, and the node updated
          * return false otherwise
@@ -79,7 +86,7 @@ export abstract class Rules<M extends Move,
                                                                   resultingSlice as S);
         this.node = son;
         return true;
-    };
+    }
     public abstract applyLegalMove(move: M, slice: S, status: L): S;
 
     public abstract isLegal(move: M, slice: S): L;
@@ -107,5 +114,5 @@ export abstract class Rules<M extends Move,
         }
         return slice;
     }
-    public abstract getGameStatus(state: S, lastMove: M): GameStatus;
+    public abstract getGameStatus(node: MGPNode<Rules<M, S, L>, M, S, L>): GameStatus;
 }

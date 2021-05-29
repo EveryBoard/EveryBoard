@@ -46,7 +46,8 @@ export class SaharaMinimax extends Minimax<SaharaMove, SaharaPartSlice> {
         }
         return moves;
     }
-    public getBoardValue(move: SaharaMove, slice: SaharaPartSlice): NodeUnheritance {
+    public getBoardValue(node: SaharaNode): NodeUnheritance {
+        const slice: SaharaPartSlice = node.gamePartSlice;
         const board: SaharaPawn[][] = slice.getCopiedBoard();
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);

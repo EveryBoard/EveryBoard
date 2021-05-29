@@ -513,7 +513,8 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                                switchedSlice.koCoord,
                                switchedSlice.phase);
     }
-    public getGameStatus(state: GoPartSlice): GameStatus {
+    public getGameStatus(node: GoNode): GameStatus {
+        const state: GoPartSlice = node.gamePartSlice;
         if (state.phase === Phase.FINISHED) {
             if (state.captured[0] > state.captured[1]) {
                 return GameStatus.ZERO_WON;

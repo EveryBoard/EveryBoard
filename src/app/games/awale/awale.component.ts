@@ -38,6 +38,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         this.updateBoard();
     }
     public encoder: Encoder<AwaleMove> = AwaleMove.encoder;
+
     public updateBoard(): void {
         const slice: AwalePartSlice = this.rules.node.gamePartSlice;
         this.scores = slice.getCapturedCopy();
