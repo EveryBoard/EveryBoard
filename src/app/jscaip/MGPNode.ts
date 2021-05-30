@@ -9,6 +9,7 @@ import { NodeUnheritance } from './NodeUnheritance';
 import { Minimax } from './Minimax';
 import { MGPSet } from '../utils/MGPSet';
 import { MGPOptional } from '../utils/MGPOptional';
+import { Player } from './Player';
 
 export let createdNodes: number = 0;
 
@@ -141,42 +142,29 @@ export class MGPNode<R extends Rules<M, S, L>,
         const possibleMoves: M[] = this.getPossibleMoves(minimax);
         this.childs = []; // TODO: don't have to be destroyed each time
         let bestChild: MGPNode<R, M, S, L, U>;
-        if (this.gamePartSlice.turn % 2 === 1) {
-            let maximumExpected: number = Number.MIN_SAFE_INTEGER;
-            for (const move of possibleMoves) {
-                const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
-                const bestChildDescendant: MGPNode<R, M, S, L, U> = child.alphaBeta(depth - 1, alpha, beta, minimax);
-                const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
-                if (bestChildValue > maximumExpected || bestChild == null) {
-                    maximumExpected = bestChildDescendant.getHopedValue(minimax);
-                    alpha = Math.max(maximumExpected, alpha);
-                    bestChild = bestChildDescendant;
-                    if (alpha >= beta) {
-                        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'is pruned : ' +
-                            this.myToString(minimax) + ' after calculating ' + bestChild.myToString(minimax));
-                        const bestChildHopedValue: number = bestChild.getHopedValue(minimax);
-                        this.hopedValue.put(minimax.name, bestChildHopedValue);
-                        return bestChildDescendant;
-                    }
+        const currentPlayer: Player = this.gamePartSlice.getCurrentPlayer();
+        let extremumExpected: number =
+            currentPlayer === Player.ZERO ? Number.MAX_SAFE_INTEGER : Number.MIN_SAFE_INTEGER;
+        const compare: (x: number, y: number) => boolean =
+            currentPlayer === Player.ZERO ? ((x: number, y: number) => x < y) : ((x: number, y: number) => x > y);
+        for (const move of possibleMoves) {
+            const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
+            const bestChildDescendant: MGPNode<R, M, S, L, U> = child.alphaBeta(depth - 1, alpha, beta, minimax);
+            const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
+            if (compare(bestChildValue, extremumExpected) || bestChild == null) {
+                extremumExpected = bestChildDescendant.getHopedValue(minimax);
+                if (currentPlayer === Player.ZERO) {
+                    beta = Math.min(extremumExpected, beta);
+                } else {
+                    alpha = Math.max(extremumExpected, alpha);
                 }
-            }
-        } else {
-            let minimumExpected: number = Number.MAX_SAFE_INTEGER;
-            for (const move of possibleMoves) {
-                const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
-                const bestChildDescendant: MGPNode<R, M, S, L, U> = child.alphaBeta(depth - 1, alpha, beta, minimax);
-                const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
-                if (bestChildValue < minimumExpected || bestChild == null) {
-                    minimumExpected = bestChildDescendant.getHopedValue(minimax);
-                    beta = Math.min(minimumExpected, beta);
-                    bestChild = bestChildDescendant;
-                    if (alpha >= beta) {
-                        display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'is pruned : ' +
-                            this.myToString(minimax) + ' after calculating ' + bestChild.myToString(minimax));
-                        const bestChildHopedValue: number = bestChild.getHopedValue(minimax);
-                        this.hopedValue.put(minimax.name, bestChildHopedValue);
-                        return bestChildDescendant;
-                    }
+                bestChild = bestChildDescendant;
+                if (alpha >= beta) {
+                    display(MGPNode.VERBOSE || LOCAL_VERBOSE, 'is pruned : ' +
+                        this.myToString(minimax) + ' after calculating ' + bestChild.myToString(minimax));
+                    const bestChildHopedValue: number = bestChild.getHopedValue(minimax);
+                    this.hopedValue.put(minimax.name, bestChildHopedValue);
+                    return bestChildDescendant;
                 }
             }
         }
