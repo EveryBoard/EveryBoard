@@ -4,8 +4,6 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { DvonnNode, DvonnRules } from './DvonnRules';
 import { DvonnGameState } from './DvonnGameState';
-import { DvonnPieceStack } from './DvonnPieceStack';
-import { Player } from 'src/app/jscaip/Player';
 
 export class DvonnMinimax extends Minimax<DvonnMove, DvonnGameState> {
 
@@ -20,20 +18,6 @@ export class DvonnMinimax extends Minimax<DvonnMove, DvonnGameState> {
                 // the move should be legal by construction, hence we don't check it
                 moves.push(move);
             });
-        });
-        const opponent: Player = state.getCurrentPlayer().getOpponent();
-        moves.sort((move1: DvonnMove, move2: DvonnMove): number => {
-            const stack1: DvonnPieceStack = state.hexaBoard.getAt(move1.end);
-            const stack2: DvonnPieceStack = state.hexaBoard.getAt(move2.end);
-            const ennemies1: number = stack1.belongsTo(opponent) ? stack1.getSize() : 0;
-            const ennemies2: number = stack2.belongsTo(opponent) ? stack2.getSize() : 0;
-            if (ennemies1 < ennemies2) {
-                return -1;
-            } else if (ennemies1 > ennemies2) {
-                return 1;
-            } else {
-                return 0;
-            }
         });
         if (moves.length === 0 && lastMove !== DvonnMove.PASS) {
             moves.push(DvonnMove.PASS);

@@ -10,6 +10,8 @@ import { Minimax } from './Minimax';
 import { MGPSet } from '../utils/MGPSet';
 import { MGPOptional } from '../utils/MGPOptional';
 
+export let createdNodes: number = 0;
+
 export class MGPNode<R extends Rules<M, S, L>,
                      M extends Move,
                      S extends GamePartSlice,
@@ -111,6 +113,7 @@ export class MGPNode<R extends Rules<M, S, L>,
         } else {
             this.ownValue = new MGPMap();
         }
+        createdNodes++;
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, this.myToString(null));
     }
     public findBestMove(readingDepth: number, minimax: Minimax<M, S, L, U>): M {

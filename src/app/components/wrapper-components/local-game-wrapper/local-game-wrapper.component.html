@@ -70,6 +70,7 @@
                 <ng-container *ngFor="let minimax of compo.availableMinimaxes">
                     {{ minimax.name + ': ' + minimax.getBoardValue(compo.rules.node) }} <br/>
                 </ng-container>
+                Created {{ getCreatedNodes() }} nodes.
             </ng-container>
             <button id="passButton"
                     *ngIf="endGame === false && compo.canPass"
