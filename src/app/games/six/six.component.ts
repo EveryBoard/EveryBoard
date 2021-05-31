@@ -17,6 +17,7 @@ import { HexagonalGameComponent }
     from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { Encoder } from 'src/app/jscaip/Encoder';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 interface Scale {
     minX: number;
@@ -192,6 +193,9 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         if (this.state.turn < 40) {
             return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
         } else if (this.chosenLanding == null) {
+            if (this.state.getPieceAt(piece) === this.state.getCurrentEnnemy()) {
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+            }
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;
         } else {

@@ -37,6 +37,7 @@ export const siamDidacticial: DidacticialStep[] = [
          2. Cliquez sur une des 4 petites flèches apparues sur la case d'arrivée de la pièce insérée.
          Cela indiquera la direction dans laquelle sera orientée votre pièce.`,
         SiamPartSlice.getInitialSlice(),
+        new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
         'Bravo',
     ),
     DidacticialStep.fromMove(

@@ -50,7 +50,7 @@ export const sixDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         'Victoires (triangle)',
-        `Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un cercle avec vos 6 de pièces, et gagnez la partie.`,
+        `Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un triangle avec vos 6 de pièces, et gagnez la partie.`,
         SixGameState.fromRepresentation([
             [_, _, _, X, _, _],
             [_, O, X, O, O, O],
@@ -66,7 +66,6 @@ export const sixDidacticial: DidacticialStep[] = [
         `Quand après 40 tours, toutes vos pièces sont placées, on passe en deuxième phase.
          Il faut maintenant déplacer ses pièces, en prenant garde à ne pas enlever une pièce qui empêchait l'adversaire de gagner.
          Dorénavant, si après un déplacement un ou plusieurs groupe de pièce est déconnecté du plus grand groupe de pièce, ces petits groupes de pièces sont enlevés définitivement du jeu.
-         Dès qu'au moins un joueur tombe en dessous des 6 pièces, la partie est finie et le joueur qui a le moins de pièces perds.
          `,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, _, _, X, _],
@@ -80,6 +79,7 @@ export const sixDidacticial: DidacticialStep[] = [
             [X, X, X, X, _, _, _, _, _],
             [_, O, _, _, _, _, _, _, _],
         ], 40),
+        SixMove.fromDeplacement(new Coord(6, 1), new Coord(6, 2)),
         (move: SixMove, resultingState: SixGameState) => {
             if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
                 return MGPValidation.failure(`Vous avez bien déconnecté une pièce adversaire, mais également la votre, et donc, vous perdez autant de point que l'adversaire, ce qui n'est pas spécialement avantageux!`);
@@ -90,5 +90,59 @@ export const sixDidacticial: DidacticialStep[] = [
             }
         },
         'Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire!',
+    ),
+    DidacticialStep.fromPredicate(
+        'Victoire par déconnection',
+        `Lors de la seconde phase de jeu, en plus des victoires normales (ligne, rond, triangle), on peux gagner par déconnection.
+         Si à un moment du jeu, l'un des deux joueurs n'as plus assez de pièce pour gagner (il en a donc 6 ou moins), la partie s'arrête.
+         Celui qui a le plus de pièces à gagné, et en cas d'égalité, c'est match nul.
+         Ici, le joueur foncé peut gagner. Faites-le.`,
+        SixGameState.fromRepresentation([
+            [_, _, _, _, _, X],
+            [_, _, _, _, O, X],
+            [_, _, _, O, O, O],
+            [_, _, O, _, X, _],
+            [X, X, _, _, _, _],
+            [O, X, _, _, _, _],
+            [O, _, _, _, _, _],
+        ], 40),
+        SixMove.fromDeplacement(new Coord(2, 3), new Coord(6, 2)),
+        (move: SixMove, resultingState: SixGameState) => {
+            if (new Coord(2, 3).equals(move.start.getOrNull())) {
+                return MGPValidation.SUCCESS;
+            } else {
+                return MGPValidation.failure('Ce mouvement ne déconnecte pas du jeu de pièces adverses! Réessayez avec une autre pièce!');
+            }
+        },
+        'Bravo, vous avez gagné!',
+    ),
+    DidacticialStep.fromPredicate(
+        'Déconnection spéciale',
+        `Lors d'une déconnection, deux à plusieurs groupes peuvent faire la même taille, auquel cas, un clic en plus sera nécessaire pour indiquer lequel vous souhaitez garder. Vous jouez Foncé, créer un mouvement de la sorte!`,
+        SixGameState.fromRepresentation([
+            [_, _, _, _, _, X],
+            [_, _, _, _, O, X],
+            [_, _, _, X, O, O],
+            [O, _, O, _, _, X],
+            [X, X, _, _, _, _],
+            [O, O, _, _, _, _],
+            [O, _, _, _, _, _],
+        ], 40),
+        SixMove.fromCut(new Coord(2, 3), new Coord(2, 5), new Coord(2, 5)),
+        (move: SixMove, resultingState: SixGameState) => {
+            if (move.keep.isAbsent()) {
+                return MGPValidation.failure(`Ce mouvement n'as pas coupé le plateau en deux parties égales`);
+            }
+            if (new Coord(2, 3).equals(move.start.getOrNull())) {
+                if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
+                    return MGPValidation.failure(`Raté! Vous avez bien coupé le plateau en deux mais vous avez choisi de conserver la moitié ou vous êtes en minorité, vous avez donc perdu! Réessayez!`);
+                } else {
+                    return MGPValidation.SUCCESS;
+                }
+            } else {
+                return MGPValidation.failure('Ce mouvement ne déconnecte pas du jeu de pièces adverses! Réessayez avec une autre pièce!');
+            }
+        },
+        'Bravo, vous avez gagné!',
     ),
 ];

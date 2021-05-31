@@ -594,6 +594,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'title',
                     'instruction',
                     QuartoPartSlice.getInitialSlice(),
+                    new QuartoMove(0, 0, QuartoPiece.BABA),
                     'Bravo.',
                 ),
             ];
@@ -753,6 +754,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'title',
                     'You shall not pass',
                     QuartoPartSlice.getInitialSlice(),
+                    new QuartoMove(1, 1, QuartoPiece.BAAB),
                     (move: QuartoMove, resultingState: QuartoPartSlice) => {
                         return MGPValidation.failure('chocolatine');
                     },
@@ -781,6 +783,7 @@ describe('DidacticialGameWrapperComponent', () => {
                     'title',
                     'No matter what you do, it will be success!',
                     QuartoPartSlice.getInitialSlice(),
+                    new QuartoMove(1, 1, QuartoPiece.BAAB),
                     (move: QuartoMove, resultingState: QuartoPartSlice) => {
                         return MGPValidation.SUCCESS;
                     },
@@ -801,6 +804,44 @@ describe('DidacticialGameWrapperComponent', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
+        }));
+    });
+    describe('showSolution', () => {
+        it('Should work with Didacticial step other than "list of moves"', fakeAsync(async() => {
+            // Given a DidacticialStep on which we failed to success
+            const solutionMove: QuartoMove = new QuartoMove(1, 1, QuartoPiece.BAAB);
+            const didacticial: DidacticialStep[] = [
+                DidacticialStep.fromPredicate(
+                    'title',
+                    'You will have to ask me for solution anyway',
+                    QuartoPartSlice.getInitialSlice(),
+                    solutionMove,
+                    (move: QuartoMove, resultingState: QuartoPartSlice) => {
+                        return MGPValidation.failure('what did I say ?');
+                    },
+                    'Bravo.',
+                ),
+            ];
+            wrapper.startDidacticial(didacticial);
+            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            tick(10);
+            const proposedMove: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
+            await componentTestUtils.expectMoveSuccess('#choosePiece_15', proposedMove, QuartoPartSlice.getInitialSlice());
+            tick(10);
+
+            // When clicking "Show Solution"
+            expect(await componentTestUtils.clickElement('#showSolutionButton')).toBeTrue();
+
+            // Expect the step proposed move to have been done
+            expect(componentTestUtils.getComponent().rules.node.move).toEqual(solutionMove);
+            expect(componentTestUtils.getComponent().rules.node.gamePartSlice.turn).toEqual(1);
+            // expect 'solution' message to be shown
+            const currentMessage: string =
+                componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
+            expect(currentMessage).toBe('Bravo.');
+            // expect step not to be considered a success
+            expect(wrapper.stepFinished[wrapper.stepIndex])
+                .toBeFalse();
         }));
     });
 });

@@ -181,7 +181,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = null;
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
-            return MGPValidation.failure('Step finished.');
+            return MGPValidation.failure('Étape finie!');
         }
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
@@ -243,7 +243,12 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public async showSolution(): Promise<void> {
         display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.showSolution()');
         const step: DidacticialStep = this.steps[this.stepIndex];
-        const awaitedMove: Move = step.acceptedMoves[0];
+        let awaitedMove: Move;
+        if (step.acceptedMoves && step.acceptedMoves.length > 0) {
+            awaitedMove = step.acceptedMoves[0];
+        } else {
+            awaitedMove = step.solutionMove;
+        }
         this.showStep(this.stepIndex);
         this.gameComponent.rules.choose(awaitedMove);
         this.gameComponent.updateBoard();

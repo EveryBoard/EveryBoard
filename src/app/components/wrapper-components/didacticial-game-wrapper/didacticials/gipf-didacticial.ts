@@ -29,6 +29,7 @@ export const gipfDidacticial: DidacticialStep[] = [
          Une poussée est interdite dans une rangée complète.
          Vous jouez Foncé, insérez une pièce.`,
         GipfPartSlice.getInitialSlice(),
+        new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
         'Bravo.',
     ),
     DidacticialStep.fromMove(
