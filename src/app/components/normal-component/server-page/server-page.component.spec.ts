@@ -16,8 +16,6 @@ describe('ServerPageComponent', () => {
     it('should create', fakeAsync(async() => {
         expect(testUtils.getComponent()).toBeDefined();
         testUtils.getComponent().ngOnInit();
-
-        flush();
     }));
     it('should rely on game service to create online games', fakeAsync(async() => {
         const gameService: GameService = TestBed.inject(GameService);

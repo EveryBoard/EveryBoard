@@ -2,7 +2,7 @@ import { DvonnComponent } from '../dvonn.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { DvonnMove } from 'src/app/games/dvonn/DvonnMove';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
-import { DvonnPartSlice } from 'src/app/games/dvonn/DvonnPartSlice';
+import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
 import { Player } from 'src/app/jscaip/Player';
 import { DvonnBoard } from 'src/app/games/dvonn/DvonnBoard';
 import { fakeAsync } from '@angular/core/testing';
@@ -40,7 +40,7 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ]);
-        const slice: DvonnPartSlice = new DvonnPartSlice(board, 0, false);
+        const slice: DvonnGameState = new DvonnGameState(board, 0, false);
         componentTestUtils.setupSlice(slice);
         expect(componentTestUtils.getComponent().canPass).toBeTrue();
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue();
@@ -58,7 +58,7 @@ describe('DvonnComponent', () => {
             [__, __, __, __, __, __, __, __, __, __, __],
             [__, __, __, __, __, __, __, __, __, __, __],
         ]);
-        componentTestUtils.setupSlice(new DvonnPartSlice(board, 0, false));
+        componentTestUtils.setupSlice(new DvonnGameState(board, 0, false));
 
         // When doing that disconnection
         await componentTestUtils.expectClickSuccess('#click_3_1');

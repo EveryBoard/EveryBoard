@@ -6,7 +6,7 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/UserService';
 import { display } from 'src/app/utils/utils';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { createdNodes, MGPNode } from 'src/app/jscaip/MGPNode';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus } from 'src/app/jscaip/Rules';
@@ -36,6 +36,9 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         this.players = ['humain', 'humain'];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
+    }
+    public getCreatedNodes(): number {
+        return createdNodes;
     }
     public ngAfterViewInit(): void {
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.ngAfterViewInit');
