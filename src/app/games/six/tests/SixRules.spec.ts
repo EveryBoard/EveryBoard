@@ -10,6 +10,7 @@ import { SixRules } from '../SixRules';
 import { SixMinimax, SixNodeUnheritance } from '../SixMinimax';
 import { Vector } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('SixRules', () => {
 
@@ -129,7 +130,7 @@ describe('SixRules', () => {
             const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 2), new Coord(2, 1));
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe('Cannot move ennemy piece!');
+            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
         });
         it('Should forbid moving empty piece', () => {
             const board: NumberTable = [

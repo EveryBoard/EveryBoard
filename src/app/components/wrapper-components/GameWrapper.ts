@@ -82,11 +82,10 @@ export abstract class GameWrapper {
         this.canPass = this.gameComponent.canPass;
     }
     public receiveValidMove: (m: Move, s: GamePartSlice, s0: number, s1: number) => Promise<MGPValidation> =
-    async(
-        move: Move,
-        slice: GamePartSlice,
-        scorePlayerZero: number,
-        scorePlayerOne: number): Promise<MGPValidation> =>
+    async(move: Move,
+          slice: GamePartSlice,
+          scorePlayerZero: number,
+          scorePlayerOne: number): Promise<MGPValidation> =>
     {
         const LOCAL_VERBOSE: boolean = false;
         display(GameWrapper.VERBOSE || LOCAL_VERBOSE, {

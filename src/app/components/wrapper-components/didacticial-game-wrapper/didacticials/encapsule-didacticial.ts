@@ -35,6 +35,7 @@ export const encapsuleDidacticial: DidacticialStep[] = [
         `Ceci est le plateau de départ. Vous jouez foncé.
          Choisissez une des pièces sur le côté du plateau est placez là sur le plateau.`,
         EncapsulePartSlice.getInitialSlice(),
+        EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1)),
         'Bravo !'),
     DidacticialStep.fromMove(
         'Déplacement',

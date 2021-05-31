@@ -48,6 +48,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
          Vous jouez en premier, donc avec les pièces foncées, vous pouvez faire votre premier déplacement:
          Cliquez sur la pièce de votre choix, et cliquez sur sa case d'arrivée.`,
         KamisadoPartSlice.getInitialSlice(),
+        KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
         `Parfait! Notez bien que chacune de vos pièces a une couleur différente.`,
     ),
     DidacticialStep.fromMove(

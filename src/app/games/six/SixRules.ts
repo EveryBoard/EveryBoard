@@ -12,6 +12,7 @@ import { SixLegalityStatus } from './SixLegalityStatus';
 import { SixFailure } from './SixFailure';
 import { display } from 'src/app/utils/utils';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export class SixNode extends MGPNode<SixRules, SixMove, SixGameState, SixLegalityStatus> {
 }
@@ -82,7 +83,7 @@ export class SixRules extends Rules<SixMove,
             case Player.NONE:
                 return { legal: MGPValidation.failure('Cannot move empty coord!'), kept: null };
             case state.getCurrentEnnemy():
-                return { legal: MGPValidation.failure('Cannot move ennemy piece!'), kept: null };
+                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE), kept: null };
         }
         const piecesAfterDeplacement: MGPMap<Coord, Player> = SixGameState.deplacePiece(state, move);
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =

@@ -28,13 +28,22 @@ export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestin
     public coord: Coord = new Coord(-1, -1);
 
     public encoder: Encoder<MinimaxTestingMove> = MinimaxTestingMove.encoder;
-    public chooseRight(): Promise<MGPValidation> {
-        this.canUserPlay('#click_right');
+
+    public async chooseRight(): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_right');
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
         const chosenMove: MinimaxTestingMove = MinimaxTestingMove.RIGHT;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }
-    public chooseDown(): Promise<MGPValidation> {
-        this.canUserPlay('#click_down');
+    public async chooseDown(): Promise<MGPValidation> {
+        const clickValidity: MGPValidation = this.canUserPlay('#click_down');
+        if (clickValidity.isFailure()) {
+            return this.cancelMove(clickValidity.getReason());
+        }
+
         const chosenMove: MinimaxTestingMove = MinimaxTestingMove.DOWN;
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
     }

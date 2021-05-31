@@ -10,6 +10,7 @@ export const awaleDidacticial: DidacticialStep[] = [
          Comme vous jouez en premier, les 6 maisons du haut vous appartiennent.
          Cliquez sur l'une d'entre elles pour en distribuer les graines`,
         AwalePartSlice.getInitialSlice(),
+        new AwaleMove(0, 0),
         `Voilà, regardez les 4 maisons suivant la maison choisie dans l’ordre horlogé, elle comptent maintenant 5 graines.
          C’est comme cela que les graines se distribuent:
          une à une à partir de la maison suivante dans l’ordre horlogé de la maison d’où elles viennent!`,
@@ -21,6 +22,7 @@ export const awaleDidacticial: DidacticialStep[] = [
             [0, 0, 0, 0, 0, 0],
             [0, 12, 0, 0, 0, 0],
         ], 1, [0, 0]),
+        new AwaleMove(1, 1),
         'Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines)!',
     ),
     DidacticialStep.fromMove(
@@ -91,6 +93,7 @@ export const awaleDidacticial: DidacticialStep[] = [
             [0, 0, 0, 0, 0, 0],
             [0, 1, 2, 4, 4, 5],
         ], 1, [0, 0]),
+        new AwaleMove(3, 1),
         'Bravo. Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux! C’est souvent un bon moyen d’avoir des captures faciles!',
     ),
     DidacticialStep.anyMove(
@@ -101,6 +104,7 @@ export const awaleDidacticial: DidacticialStep[] = [
             [0, 0, 0, 0, 0, 1],
             [0, 1, 2, 3, 4, 4],
         ], 0, [0, 0]),
+        new AwaleMove(5, 0),
         `Aussi, dès qu'un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son camp.
          Ici, c'était au premier joueur de jouer et joueur deux a récolté toutes les graines restantes.`,
     ),

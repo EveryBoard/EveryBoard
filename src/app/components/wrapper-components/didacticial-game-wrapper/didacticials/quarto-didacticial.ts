@@ -33,6 +33,7 @@ export const quartoDidacticial: DidacticialStep[] = [
             [16, 8, 16, 16],
             [16, 16, 16, 16],
         ], 7, QuartoPiece.ABAA),
+        new QuartoMove(2, 2, QuartoPiece.BAAB),
         'Parfait!',
     ),
     DidacticialStep.fromMove(

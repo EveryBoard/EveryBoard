@@ -29,6 +29,7 @@ export const dvonnDidacticial: DidacticialStep[] = [
          Le joueur avec les piles foncées commence.
          Vous jouez avec Foncé, cliquez sur une pile puis déplacez la d'une case.`,
         DvonnGameState.getInitialSlice(),
+        DvonnMove.of(new Coord(2, 0), new Coord(3, 0)),
         'Bravo.',
     ),
     DidacticialStep.fromMove(

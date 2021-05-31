@@ -7,6 +7,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { SixComponent } from '../six.component';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('SixComponent', () => {
     let componentTestUtils: ComponentTestUtils<SixComponent>;
@@ -22,6 +23,15 @@ describe('SixComponent', () => {
         expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
         expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
     });
+    it('should cancel move when clicking on ennemy piece', fakeAsync(async() => {
+        const board: NumberTable = [
+            [O],
+        ];
+        const state: SixGameState = SixGameState.fromRepresentation(board, 41);
+        componentTestUtils.setupSlice(state);
+
+        await componentTestUtils.expectClickFailure('#piece_0_0', RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+    }));
     it('Should drop before 40th turn', fakeAsync(async() => {
         componentTestUtils.fixture.detectChanges();
         const move: SixMove = SixMove.fromDrop(new Coord(0, 2));
@@ -140,5 +150,22 @@ describe('SixComponent', () => {
         componentTestUtils.setupSlice(state);
 
         await componentTestUtils.expectClickFailure('#neighboor_1_1', SixFailure.CAN_NO_LONGER_DROP);
+    }));
+    it('should still allow to click on ennemy piece after 40th as a third click', fakeAsync(async() => {
+        const board: NumberTable = [
+            [O],
+            [X],
+            [O],
+            [X],
+            [O],
+            [X],
+        ];
+        const state: SixGameState = SixGameState.fromRepresentation(board, 40);
+        componentTestUtils.setupSlice(state);
+
+        await componentTestUtils.expectClickSuccess('#piece_0_2');
+        await componentTestUtils.expectClickSuccess('#neighboor_0_-1');
+        const move: SixMove = SixMove.fromCut(new Coord(0, 2), new Coord(0, -1), new Coord(0, 1));
+        await componentTestUtils.expectMoveSuccess('#piece_0_1', move);
     }));
 });

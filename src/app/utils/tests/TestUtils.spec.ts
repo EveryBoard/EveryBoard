@@ -269,11 +269,14 @@ export class ComponentTestUtils<T extends GameComponent> {
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(
-                move, moveSlice, this.getScore(scoreZero), this.getScore(scoreOne));
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move,
+                                                                moveSlice,
+                                                                this.getScore(scoreZero),
+                                                                this.getScore(scoreOne));
             this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(
-                move, this.getScore(scoreZero), this.getScore(scoreOne));
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move,
+                                                                     this.getScore(scoreZero),
+                                                                     this.getScore(scoreOne));
             this.onLegalUserMoveSpy.calls.reset();
         }
     }

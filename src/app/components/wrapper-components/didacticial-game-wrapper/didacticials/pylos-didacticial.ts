@@ -25,6 +25,7 @@ export const pylosDidacticial: DidacticialStep[] = [
          Les ronds gris sont les cases sur lesquelles vous pouvez déposez vos pièces.
          Cliquez sur une de ces cases pour déposer une pièce.`,
         PylosPartSlice.getInitialSlice(),
+        PylosMove.fromDrop(new PylosCoord(1, 1, 0), []),
         'Voilà, aussi simplement que ça.',
     ),
     DidacticialStep.fromMove(

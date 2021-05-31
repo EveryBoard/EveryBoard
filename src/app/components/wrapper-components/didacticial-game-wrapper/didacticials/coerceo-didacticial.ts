@@ -29,6 +29,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         Vous jouez en premier, vous jouez donc Foncé, faites n'importe quel déplacement.
         Note: peut importe ce que vous faites, aucunes de vos pièces ne peuvent être capturée pendant votre tour.`,
         CoerceoPartSlice.getInitialSlice(),
+        CoerceoMove.fromCoordToCoord(new Coord(3, 5), new Coord(5, 5)),
         'Bravo, voyons les captures maintenant.',
     ),
     DidacticialStep.fromMove(
