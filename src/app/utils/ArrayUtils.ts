@@ -49,4 +49,17 @@ export class ArrayUtils {
         }
         return retour;
     }
+    public static sortByDescending<T>(array: T[], by: (t: T) => number): void {
+        array.sort((t1: T, t2: T): number => {
+            const v1: number = by(t1);
+            const v2: number = by(t2);
+            if (v1 < v2) {
+                return 1; // sort from higher to lower
+            } else if (v1 > v2) {
+                return -1;
+            } else {
+                return 0;
+            }
+        });
+    }
 }

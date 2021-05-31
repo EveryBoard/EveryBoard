@@ -6,8 +6,14 @@ import { Direction } from '../../jscaip/Direction';
 import { ReversiMove } from './ReversiMove';
 import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+
+export class ReversiMoveWithSwitched {
+    public constructor(public readonly move: ReversiMove,
+                       public readonly switched: number) {
+    }
+}
 
 export class ReversiNode extends MGPNode<ReversiRules, ReversiMove, ReversiPartSlice, ReversiLegalityStatus> {}
 
@@ -99,10 +105,10 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         return GameStatus.DRAW;
     }
     public static playerCanOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
-        const currentPlayerChoices: ReversiMove[] = this.getListMoves(reversiPartSlice);
+        const currentPlayerChoices: ReversiMoveWithSwitched[] = this.getListMoves(reversiPartSlice);
         // if the current player cannot start, then the part is ended
         return (currentPlayerChoices.length === 1) &&
-                currentPlayerChoices[0].equals(ReversiMove.PASS);
+                currentPlayerChoices[0].move.equals(ReversiMove.PASS);
     }
     public static nextPlayerCantOnlyPass(reversiPartSlice: ReversiPartSlice): boolean {
         const nextBoard: number[][] = reversiPartSlice.getCopiedBoard();
@@ -110,8 +116,8 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         const nextPartSlice: ReversiPartSlice = new ReversiPartSlice(nextBoard, nextTurn);
         return this.playerCanOnlyPass(nextPartSlice);
     }
-    public static getListMoves(slice: ReversiPartSlice): ReversiMove[] {
-        const moves: ReversiMove[] = [];
+    public static getListMoves(slice: ReversiPartSlice): ReversiMoveWithSwitched[] {
+        const moves: ReversiMoveWithSwitched[] = [];
 
         let nextBoard: number[][];
 
@@ -132,13 +138,11 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
                         if (result.length > 0) {
                             // there was switched piece and hence, a legal move
                             for (const switched of result) {
-                                if (player === slice.getBoardAt(switched)) {
-                                    alert(switched + 'was already switched!');
-                                }
+                                assert(player !== slice.getBoardAt(switched), switched + 'was already switched!');
                                 nextBoard[switched.y][switched.x] = player;
                             }
                             nextBoard[y][x] = player;
-                            moves.push(move);
+                            moves.push(new ReversiMoveWithSwitched(move, result.length));
                         }
                     }
                 }
@@ -147,7 +151,7 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
         if (moves.length === 0) {
             // when the user cannot start, his only move is to pass, which he cannot do otherwise
             // board unchanged, only the turn changed "pass"
-            moves.push(ReversiMove.PASS);
+            moves.push(new ReversiMoveWithSwitched(ReversiMove.PASS, 0));
         }
         return moves;
     }
