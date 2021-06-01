@@ -55,8 +55,8 @@ export class PylosMove extends Move {
         }
         return newMove;
     }
-    public static checkCaptures(captures: PylosCoord[]):
-        { firstCapture: MGPOptional<PylosCoord>, secondCapture: MGPOptional<PylosCoord> }
+    public static checkCaptures(captures: PylosCoord[])
+    : { firstCapture: MGPOptional<PylosCoord>, secondCapture: MGPOptional<PylosCoord> }
     {
         let firstCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
         let secondCapture: MGPOptional<PylosCoord> = MGPOptional.empty();
@@ -101,13 +101,16 @@ export class PylosMove extends Move {
                              capturesOptionals.firstCapture,
                              capturesOptionals.secondCapture);
     }
-    private constructor(
-        public readonly startingCoord: MGPOptional<PylosCoord>,
-        public readonly landingCoord: PylosCoord,
-        public readonly firstCapture: MGPOptional<PylosCoord>,
-        public readonly secondCapture: MGPOptional<PylosCoord>) {
+    private constructor(public readonly startingCoord: MGPOptional<PylosCoord>,
+                        public readonly landingCoord: PylosCoord,
+                        public readonly firstCapture: MGPOptional<PylosCoord>,
+                        public readonly secondCapture: MGPOptional<PylosCoord>)
+    {
         super();
         if (landingCoord == null) throw new Error('PylosMove: Landing Coord can\'t be null.');
+    }
+    public isClimb(): boolean {
+        return this.startingCoord.isPresent();
     }
     public toString(): string {
         const startingCoord: string = this.startingCoord.isAbsent() ? '-' : this.startingCoord.get().toShortString();

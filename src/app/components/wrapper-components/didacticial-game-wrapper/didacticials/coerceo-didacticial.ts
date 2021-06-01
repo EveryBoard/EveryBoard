@@ -50,16 +50,19 @@ export const coerceoDidacticial: DidacticialStep[] = [
             [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
             [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
         ], 3, [0, 0], [0, 0]),
-        [CoerceoMove.fromCoordToCoord(new Coord(5, 2), new Coord(4, 1))],
-        'Bravo !',
+        [
+            CoerceoMove.fromCoordToCoord(new Coord(5, 2), new Coord(4, 1)),
+            CoerceoMove.fromCoordToCoord(new Coord(3, 4), new Coord(4, 3)),
+        ],
+        'Bravo!',
         `Raté, vous n'avez pas capturé de pièces!`,
     ),
     DidacticialStep.fromMove(
         `Gagner une tuile`,
         `Quand une tuile est quittée, elle devient potentiellement enlevable du plateau.
-         Pour qu'elle soit enlevée, il faut que trois de ses bords voisins soient libres.
-         Notez que si une tuile vide, voisine d'une tuile qu'on vient de retirer, devient retirable, elle sera aussi retirée.
-         Par exemple, ci-dessous, en quittant la tuile du haut, celle-ci restera connectée,
+         Pour qu'elle soit enlevée, il faut que trois de ses bords soient libres, et qu'ils soient l'un à côté de l'autre.
+         Notez que si une tuile vide, voisine d'une tuile qu'on vient de retirer, devient retirable, elle sera retirée.
+         Par exemple, ci-dessous, en quittant sa tuile le pion foncé le plus haut ne déconnectera pas celle-ci!
          Mais en quittant la tuile en bas à gauche, deux tuiles seront enlevées.
          Effectuez un mouvement pour récupérer deux tuiles.`,
         new CoerceoPartSlice([
@@ -110,23 +113,24 @@ export const coerceoDidacticial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         `Capture spéciale`,
         `Dès qu'une tuile est enlevée du plateau pendant votre tour, certaines pièces de l'adversaires peuvent n'avoir plus aucunes cases voisines libre, elle seront alors capturées !
-        Si cela arrivait à l'une de vos pièces, celle-ci resterait cependant sur le plateau.`,
+        Si cela arrivait à l'une de vos pièces, celle-ci resterait cependant sur le plateau.
+        Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le!`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
+            [N, N, N, N, N, N, _, _, O, N, N, N, N, N, N],
+            [N, N, N, _, _, O, _, _, _, N, N, N, N, N, N],
+            [N, N, N, _, O, X, _, X, _, N, N, N, N, N, N],
+            [N, N, N, _, X, O, _, _, _, N, N, N, N, N, N],
+            [N, N, N, _, _, X, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
-            [N, N, N, _, _, O, N, N, N, N, N, N, N, N, N],
-            [N, N, N, _, _, _, _, _, _, N, N, N, N, N, N],
-            [N, N, N, _, _, _, X, _, X, N, N, N, N, N, N],
-            [N, N, N, _, _, X, _, _, _, N, N, N, N, N, N],
-            [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
-        ], 1, [0, 2], [0, 0]),
+        ], 1, [0, 0], [0, 0]),
         [
-            CoerceoMove.fromTilesExchange(new Coord(5, 5)),
+            CoerceoMove.fromCoordToCoord(new Coord(6, 7), new Coord(4, 7)),
         ],
-        'Bravo!',
-        `C'est bien gentil de se déplacer mais en cliquant sur la pièce vous l'aurez immédiatement!`,
+        `Bravo! Voyez, votre pièce a perdu sa dernière liberté quand vous avez récupéré la tuile, mais est restée car c'était votre tour, celle de l'adversaire a disparu car la capture de la tuile lui a enlevé une liberté il ne lui en restait plus!`,
+        `Raté!`,
     ),
 ];
