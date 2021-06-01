@@ -3,7 +3,7 @@ import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';
 import { Type } from '@angular/core';
-import { display } from '../utils/utils';
+import { assert, display } from '../utils/utils';
 import { Player } from './Player';
 
 export class GameStatus {
@@ -17,6 +17,7 @@ export class GameStatus {
     public static readonly ONGOING: GameStatus = new GameStatus(false, Player.NONE);
 
     public static getVictory(nonNonePlayer: Player): GameStatus {
+        assert(nonNonePlayer !== Player.NONE, 'getVictory called with Player.NONE');
         if (nonNonePlayer === Player.ZERO) {
             return GameStatus.ZERO_WON;
         } else {
@@ -24,6 +25,7 @@ export class GameStatus {
         }
     }
     public static getDefeat(nonNonePlayer: Player): GameStatus {
+        assert(nonNonePlayer !== Player.NONE, 'getVictory called with Player.NONE');
         if (nonNonePlayer === Player.ZERO) {
             return GameStatus.ONE_WON;
         } else {
