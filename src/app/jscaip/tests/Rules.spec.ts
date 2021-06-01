@@ -23,3 +23,19 @@ export function expectToBeVictoryFor<M extends Move,
     }
 }
 
+
+export function expectToBeDraw<M extends Move,
+                               S extends GamePartSlice,
+                               L extends LegalityStatus,
+                               U extends NodeUnheritance>(
+    rules: Rules<M, S, L>,
+    node: MGPNode<Rules<M, S, L>, M, S, L, U>,
+    minimaxes: Minimax<M, S>[])
+: void
+{
+    expect(rules.getGameStatus(node)).toBe(GameStatus.DRAW);
+    for (const minimax of minimaxes) {
+        expect(minimax.getBoardValue(node).value).toBe(0);
+    }
+}
+
