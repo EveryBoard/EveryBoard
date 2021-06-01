@@ -11,7 +11,10 @@ import { MGPSet } from '../utils/MGPSet';
 import { MGPOptional } from '../utils/MGPOptional';
 import { Player } from './Player';
 
-export let createdNodes: number = 0;
+export class MGPNodeStats {
+    public static createdNodes: number = 0;
+    public static minimaxTime: number = 0;
+}
 
 export class MGPNode<R extends Rules<M, S, L>,
                      M extends Move,
@@ -114,10 +117,11 @@ export class MGPNode<R extends Rules<M, S, L>,
         } else {
             this.ownValue = new MGPMap();
         }
-        createdNodes++;
+        MGPNodeStats.createdNodes++;
         display(MGPNode.VERBOSE || LOCAL_VERBOSE, this.myToString(null));
     }
     public findBestMove(readingDepth: number, minimax: Minimax<M, S, L, U>): M {
+        const startTime: number = new Date().getTime();
         let bestDescendant: MGPNode<R, M, S, L, U> = this.alphaBeta(readingDepth,
                                                                     Number.MIN_SAFE_INTEGER,
                                                                     Number.MAX_SAFE_INTEGER,
@@ -126,6 +130,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             bestDescendant = bestDescendant.mother;
             readingDepth--;
         }
+        MGPNodeStats.minimaxTime += new Date().getTime() - startTime;
         return bestDescendant.move;
     }
     public alphaBeta(depth: number,
