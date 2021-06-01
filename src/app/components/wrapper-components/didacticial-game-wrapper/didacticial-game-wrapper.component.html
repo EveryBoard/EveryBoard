@@ -22,7 +22,7 @@
                         class="button is-primary mr-3 mb-1"
                         *ngIf="tutorialOver === false"
                         (click)="next()"
-                        >{{ steps && steps[stepIndex].isInformation() ? 'Continuer' : 'Suivant' }}</button>
+                >{{ steps && steps[stepIndex].isInformation() ? 'Vu' : (stepFinished && stepFinished[stepIndex] ? 'Continuer' : 'Passer') }}</button>
                 <button id="restartButton"
                         class="button"
                         *ngIf="tutorialOver"

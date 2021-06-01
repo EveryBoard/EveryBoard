@@ -735,7 +735,7 @@ describe('DidacticialGameWrapperComponent', () => {
             // when clicking "Next Button"
             const nextButtonMessage: string =
                 componentTestUtils.findElement('#nextButton').nativeElement.innerHTML;
-            expect(nextButtonMessage).toBe('Continuer');
+            expect(nextButtonMessage).toBe('Vu');
             expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
 
             // expect to see next step on component

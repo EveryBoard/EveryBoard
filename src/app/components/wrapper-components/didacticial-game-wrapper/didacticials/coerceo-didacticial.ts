@@ -50,7 +50,10 @@ export const coerceoDidacticial: DidacticialStep[] = [
             [N, N, N, _, _, X, _, _, _, X, _, _, N, N, N],
             [N, N, N, N, N, N, X, _, X, N, N, N, N, N, N],
         ], 3, [0, 0], [0, 0]),
-        [CoerceoMove.fromCoordToCoord(new Coord(5, 2), new Coord(4, 1))],
+        [
+            CoerceoMove.fromCoordToCoord(new Coord(5, 2), new Coord(4, 1)),
+            CoerceoMove.fromCoordToCoord(new Coord(3, 4), new Coord(4, 3)),
+        ],
         'Bravo!',
         `Raté, vous n'avez pas capturé de pièces!`,
     ),
@@ -59,7 +62,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         `Quand une tuile est quittée, elle devient potentiellement enlevable du plateau.
          Pour qu'elle soit enlevée, il faut que trois de ses bords voisins soient libres.
          Notez que si une tuile vide, voisine d'une tuile qu'on vient de retirer, devient retirablerable, elle peut l'être.
-         Par exemple, ci-dessous, en quittant la tuile du haut, celle-ci restera connectée,
+         Par exemple, ci-dessous, en quittant sa tuile le pion foncé le plus haut ne déconnectera pas celle-ci!
          Mais en quittant la tuile en bas à gauche, deux tuiles seront enlevées. Faite-le.`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
