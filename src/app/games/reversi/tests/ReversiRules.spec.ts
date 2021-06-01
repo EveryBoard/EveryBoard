@@ -6,6 +6,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ReversiLegalityStatus } from '../ReversiLegalityStatus';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
 
 describe('ReversiRules', () => {
     const _: number = Player.NONE.value;
@@ -92,7 +93,6 @@ describe('ReversiRules', () => {
         const resultingSlice: ReversiPartSlice = rules.applyLegalMove(move, slice, status);
         const expectedSlice: ReversiPartSlice = new ReversiPartSlice(expectedBoard, 60);
         expect(resultingSlice).toEqual(expectedSlice);
-        expect(minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value)
-            .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
+        expectToBeVictoryFor(rules, new MGPNode(null, move, expectedSlice), Player.ONE, [minimax]);
     });
 });
