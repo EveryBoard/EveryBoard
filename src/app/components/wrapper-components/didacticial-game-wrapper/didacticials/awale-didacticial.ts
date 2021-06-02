@@ -88,7 +88,7 @@ export const awaleDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         'Nourir est obligatoire',
         `"Affamer" est interdit, c'est-à-dire: si votre adversaire n'a plus de graines et que vous savez lui en donner une ou plusieurs, vous êtes obligé de le faire.
-         Allez-y !`,
+         Allez-y !`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],
             [0, 1, 2, 4, 4, 5],
@@ -105,7 +105,7 @@ export const awaleDidacticial: DidacticialStep[] = [
             [0, 1, 2, 3, 4, 4],
         ], 0, [0, 0]),
         new AwaleMove(5, 0),
-        `Aussi, dès qu'un joueur ne peut plus jouer. L’autre joueur capture toutes les graines dans son propre camp.
+        `Aussi, dès qu'un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp.
          Ici, c'était au premier joueur de jouer et joueur deux a récolté toutes les graines restantes.`,
     ),
 ];
