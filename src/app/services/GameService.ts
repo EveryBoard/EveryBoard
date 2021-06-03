@@ -53,7 +53,7 @@ export class GameService implements OnDestroy {
             this.router.navigate(['/play/' + game, gameId]);
             return true;
         } else {
-            this.messageError(`Vous avez déjà une partie en cours. Terminez là ou annulez là d'abord!`);
+            this.messageError(`Vous avez déjà une partie en cours. Terminez la ou annulez la d'abord !`);
             this.router.navigate(['/server']);
             return false;
         }
