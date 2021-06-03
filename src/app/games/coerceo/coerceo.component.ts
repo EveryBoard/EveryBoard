@@ -13,7 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-coerceo',
@@ -52,7 +52,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         this.showScore = true;
         this.updateBoard();
     }
-    public encoder: Encoder<CoerceoMove> = CoerceoMove.encoder;
+    public encoder: MoveEncoder<CoerceoMove> = CoerceoMove.encoder;
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         this.slice = this.rules.node.gamePartSlice;

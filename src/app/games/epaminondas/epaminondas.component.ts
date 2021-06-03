@@ -11,7 +11,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 
 @Component({
@@ -48,7 +48,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
 
     private captureds: Coord[] = [];
 
-    public encoder: Encoder<EpaminondasMove> = EpaminondasMove.encoder;
+    public encoder: MoveEncoder<EpaminondasMove> = EpaminondasMove.encoder;
     public updateBoard(): void {
         this.firstPiece = new Coord(-15, -1);
         this.lastPiece = new Coord(-15, -1);

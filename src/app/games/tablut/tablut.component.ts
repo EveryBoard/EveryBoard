@@ -15,7 +15,7 @@ import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { Encoder, MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-tablut',
@@ -48,7 +48,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public lastMove: TablutMove;
 
-    public encoder: Encoder<TablutMove> = TablutMove.encoder;
+    public encoder: MoveEncoder<TablutMove> = TablutMove.encoder;
     public updateBoard(): void {
         display(TablutComponent.VERBOSE, 'tablutComponent.updateBoard');
         this.lastMove = this.rules.node.move;

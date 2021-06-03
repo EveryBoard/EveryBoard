@@ -1,5 +1,6 @@
 import { Player } from 'src/app/jscaip/Player';
 import { JSONValue } from 'src/app/utils/utils';
+import { JSONObject } from 'src/app/utils/utils';
 
 export type RequestCode =
     'DrawProposed' | 'DrawAccepted' | 'DrawRefused' |
@@ -7,7 +8,9 @@ export type RequestCode =
     'TakeBackAsked' | 'TakeBackAccepted' | 'TakeBackRefused' |
     'RematchProposed' | 'RematchAccepted';
 
-export class Request {
+export class Request implements JSONObject {
+    [key: string]: JSONValue; // Index signature to type to JSONObject
+
     public static drawProposed: (player: Player) => Request = makeWithPlayer('DrawProposed');
     public static drawAccepted: Request = make('DrawAccepted', {});
     public static drawRefused: (player: Player) => Request = makeWithPlayer('DrawRefused');

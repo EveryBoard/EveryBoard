@@ -11,7 +11,7 @@
     <div class="tile is-3 is-parent">
         <div class="tile is-child box has-text-centered">
             <div class="block" id="turnIndicator" *ngIf="currentPart">
-                <p class="subtitle">Tour n° {{ currentPart.turn + 1 }}</p>
+                <p class="subtitle">Tour n° {{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
                     C'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}
                 </p>
@@ -98,22 +98,22 @@
             <div class="block" id="winnerIndicator" *ngIf="endGame">
                 <hr/>
                 <div *ngIf="currentPart.isDraw()">
-                    <p class="title" *ngIf="currentPart.winner == null"> Match nul </p>
+                    <p class="title" *ngIf="currentPart.getWinner() == null"> Match nul </p>
                 </div>
                 <div *ngIf="currentPart.isWin()">
-                    <p class="title" id="youWonIndicator" *ngIf="currentPart.winner === userName"> Vous avez gagné </p>
-                    <p class="title" *ngIf="(currentPart.winner !== userName) && (observerRole < 2)"> Vous avez perdu </p>
-                    <p class="title" *ngIf="observerRole >= 2"> Victoire de {{ currentPart.winner }} </p>
+                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner() === userName"> Vous avez gagné </p>
+                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)"> Vous avez perdu </p>
+                    <p class="title" *ngIf="observerRole >= 2"> Victoire de {{ currentPart.getWinner() }} </p>
                 </div>
                 <!-- TODO: Mettre "vous avez gagné" en titre, et l'explication en normal -->
                 <div *ngIf="currentPart.isTimeout()">
-                    <p class="title" id="youWonIndicator" *ngIf="(currentPart.winner === userName)"> {{ currentPart.getLoser() }} a épuisé son temps. Vous avez gagné. </p>
-                    <p class="title" *ngIf="(currentPart.winner !== userName) && (observerRole < 2)"> Vous avez dépassé la limite de temps </p>
+                    <p class="title" id="youWonIndicator" *ngIf="(currentPart.getWinner() === userName)"> {{ currentPart.getLoser() }} a épuisé son temps. Vous avez gagné. </p>
+                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)"> Vous avez dépassé la limite de temps </p>
                     <p class="title" *ngIf="observerRole >= 2"> Limite de temps dépassée par {{ currentPart.getLoser() }} </p>
                 </div>
                 <div *ngIf="currentPart.isResign()">
-                    <p class="title" *ngIf="(currentPart.winner !== userName) && (observerRole < 2)"> Vous avez abandonné </p>
-                    <p class="title" *ngIf="observerRole >= 2 || currentPart.winner === userName"> {{ currentPart.getLoser() }} a abandonné </p>
+                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)"> Vous avez abandonné </p>
+                    <p class="title" *ngIf="observerRole >= 2 || currentPart.getWinner() === userName"> {{ currentPart.getLoser() }} a abandonné </p>
                 </div>
 
             </div>
@@ -147,7 +147,7 @@
     <div id="chat"
          class="box" >
         <app-chat [chatId]="currentPartId"
-                  [turn]="currentPart?.turn"></app-chat>
+                  [turn]="currentPart?.getTurn()"></app-chat>
     </div>
 </div>
 

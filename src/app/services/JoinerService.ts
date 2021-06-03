@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { IJoiner, IJoinerId, PIJoiner } from '../domain/ijoiner';
+import { IJoiner, IJoinerId } from '../domain/ijoiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 
@@ -90,7 +90,7 @@ export class JoinerService {
             } else {
                 throw new Error('someone that was nor candidate nor chosenPlayer just left the chat: ' + userName);
             }
-            const modification: PIJoiner = {
+            const modification: Partial<IJoiner> = {
                 chosenPlayer,
                 partStatus,
                 candidatesNames: joinersList,
@@ -99,7 +99,7 @@ export class JoinerService {
         }
     }
     public async updateCandidatesNames(candidatesNames: string[]): Promise<void> {
-        const modification: PIJoiner = { candidatesNames };
+        const modification: Partial<IJoiner> = { candidatesNames };
         return this.joinerDao.update(this.observedJoinerId, modification);
     }
     public async deleteJoiner(): Promise<void> {
@@ -142,7 +142,7 @@ export class JoinerService {
         if (keepHimInLobby) {
             candidatesList.push(chosenPlayer);
         }
-        const modification: PIJoiner = {
+        const modification: Partial<IJoiner> = {
             chosenPlayer: '',
             candidatesNames: candidatesList,
             partStatus: 0,
@@ -195,7 +195,7 @@ export class JoinerService {
 
         return this.joinerDao.set(partId, joiner);
     }
-    public updateJoinerById(partId: string, update: PIJoiner): Promise<void> {
+    public updateJoinerById(partId: string, update: Partial<IJoiner>): Promise<void> {
         display(JoinerService.VERBOSE, { joinerService_updateJoinerById: { partId, update } });
 
         return this.joinerDao.update(partId, update);

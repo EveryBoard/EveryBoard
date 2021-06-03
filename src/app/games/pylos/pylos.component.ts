@@ -8,7 +8,7 @@ import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 
 @Component({
@@ -40,7 +40,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
-    public encoder: Encoder<PylosMove> = PylosMove.encoder;
+    public encoder: MoveEncoder<PylosMove> = PylosMove.encoder;
 
     public getLevelRange(z: number): number[] {
         switch (z) {

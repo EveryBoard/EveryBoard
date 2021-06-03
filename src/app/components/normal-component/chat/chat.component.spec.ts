@@ -13,7 +13,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
 import { By } from '@angular/platform-browser';
 import { DebugElement } from '@angular/core';
-import { PIChat } from 'src/app/domain/ichat';
+import { IChat } from 'src/app/domain/ichat';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 
 describe('ChatComponent', () => {
@@ -129,7 +129,7 @@ describe('ChatComponent', () => {
         fixture.detectChanges();
         component.switchChatVisibility();
         fixture.detectChanges();
-        const chat: PIChat = { messages: [{ sender: 'roger', content: 'Saluuuut', lastTurnThen: 0, postedTime: 5 }] };
+        const chat: Partial<IChat> = { messages: [{ sender: 'roger', content: 'Saluuuut', lastTurnThen: 0, postedTime: 5 }] };
         await chatDAO.update('fauxChat', chat);
         fixture.detectChanges();
         let switchButton: DebugElement = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));

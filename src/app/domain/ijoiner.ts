@@ -1,5 +1,6 @@
-export interface IJoiner {
+import { JSONObject } from '../utils/utils';
 
+export interface IJoiner extends JSONObject {
     candidatesNames: string[]; // TODO: give default empty value
     creator: string;
     chosenPlayer: string; // TODO: make optional
@@ -111,31 +112,4 @@ export interface IJoinerId {
     id: string;
 
     doc: IJoiner;
-}
-export interface PIJoiner {
-
-    candidatesNames?: string[];
-    creator?: string;
-    chosenPlayer?: string;
-    firstPlayer?: string;
-    /* 0: the creator
-     * 1: the chosenPlayer
-     * 2: random
-     */
-
-    partStatus?: number;
-    /* 0 : part created, no chosenPlayer                                                               => waiting for acceptable candidate
-     * 1 : part created, chosenPlayer selected, no config proposed                                     => waiting the creator to propose config
-     * 2 : part created, chosenPlayer selected, config proposed by the creator                         => waiting the joiner to accept them
-     * 3 : part created, chosenPlayer selected, config proposed by the created, accepted by the joiner => Part Started
-     * 4 : part finished
-     */
-
-    maximalMoveDuration?: number;
-    totalPartDuration?: number;
-    gameType?: number;
-    /* pedagogic part
-     * ranked part
-     * friendly part
-     */
 }

@@ -16,7 +16,7 @@ import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
-import { ICurrentPart } from 'src/app/domain/icurrentpart';
+import { IPart } from 'src/app/domain/icurrentpart';
 import { JoueursDAO } from 'src/app/dao/JoueursDAO';
 import { JoueursDAOMock } from 'src/app/dao/tests/JoueursDAOMock.spec';
 import { IJoueur } from 'src/app/domain/iuser';
@@ -72,7 +72,7 @@ describe('PartCreationComponent:', () => {
         component.partId = 'joinerId';
         await chatDAOMock.set('joinerId', { messages: [], status: 'I don\'t have a clue TODO' });
         await joueursDAOMock.set('opponent', OPPONENT);
-        await partDAOMock.set('joinerId', PartMocks.INITIAL.copy());
+        await partDAOMock.set('joinerId', PartMocks.INITIAL.doc);
     }));
     it('(0) Player arrival on component should call joinGame and startObserving', fakeAsync(async() => {
         component.userName = 'creator';
@@ -234,9 +234,8 @@ describe('PartCreationComponent:', () => {
 
         expect(component.gameStartNotification.emit).toHaveBeenCalledWith(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
         expect(component.currentJoiner).toEqual(JoinerMocks.WITH_ACCEPTED_CONFIG.copy());
-        const currentPart: ICurrentPart = partDAOMock.getStaticDB().get('joinerId').get().subject.value.doc;
-        const expectedPart: ICurrentPart = PartMocks.STARTING.copy();
-        expectedPart.beginning = currentPart.beginning;
+        const currentPart: IPart = partDAOMock.getStaticDB().get('joinerId').get().subject.value.doc;
+        const expectedPart: IPart = {...PartMocks.STARTING.doc, beginning: currentPart.beginning};
         expect(currentPart).toEqual(expectedPart);
     }));
     afterEach(fakeAsync(async() => {

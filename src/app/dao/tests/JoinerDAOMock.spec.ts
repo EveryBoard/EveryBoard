@@ -1,4 +1,4 @@
-import { IJoinerId, IJoiner, PIJoiner } from 'src/app/domain/ijoiner';
+import { IJoinerId, IJoiner } from 'src/app/domain/ijoiner';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 import { display } from 'src/app/utils/utils';
@@ -8,7 +8,7 @@ import { fakeAsync } from '@angular/core/testing';
 
 type JoinerOS = ObservableSubject<IJoinerId>
 
-export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner, PIJoiner> {
+export class JoinerDAOMock extends FirebaseFirestoreDAOMock<IJoiner> {
     public static VERBOSE: boolean = false;
 
     private static joinerDB: MGPMap<string, JoinerOS>;

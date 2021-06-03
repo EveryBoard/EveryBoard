@@ -8,7 +8,7 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-p4',
@@ -28,7 +28,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
     private last: Coord;
     private victoryCoords: Coord[] = [];
 
-    public encoder: Encoder<P4Move> = P4Move.encoder;
+    public encoder: MoveEncoder<P4Move> = P4Move.encoder;
     public async onClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {

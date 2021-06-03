@@ -1,4 +1,4 @@
-import { ICurrentPart, PICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
+import { ICurrentPartId, IPart } from 'src/app/domain/icurrentpart';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 import { MGPMap } from 'src/app/utils/MGPMap';
@@ -7,7 +7,7 @@ import { display } from 'src/app/utils/utils';
 
 type PartOS = ObservableSubject<ICurrentPartId>
 
-export class PartDAOMock extends FirebaseFirestoreDAOMock<ICurrentPart, PICurrentPart> {
+export class PartDAOMock extends FirebaseFirestoreDAOMock<IPart> {
     public static VERBOSE: boolean = false;
 
     private static partDB: MGPMap<string, PartOS>;
@@ -22,7 +22,7 @@ export class PartDAOMock extends FirebaseFirestoreDAOMock<ICurrentPart, PICurren
     public resetStaticDB(): void {
         PartDAOMock.partDB = new MGPMap();
     }
-    public observeActivesParts(callback: FirebaseCollectionObserver<ICurrentPart>): () => void {
+    public observeActivesParts(callback: FirebaseCollectionObserver<IPart>): () => void {
         return () => {}; // TODO, observingWhere should be coded!
     }
 }

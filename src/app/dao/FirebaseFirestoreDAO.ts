@@ -1,21 +1,19 @@
-import { AngularFirestore, DocumentReference, CollectionReference } from '@angular/fire/firestore';
-
+import { AngularFirestore, DocumentReference, CollectionReference, Action, DocumentSnapshot } from '@angular/fire/firestore';
 import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
 import firebase from 'firebase/app';
 import 'firebase/firestore';
-
-import { display } from 'src/app/utils/utils';
+import { display, JSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
+import { DomainWrapper } from '../domain/DomainWrapper';
 
-export interface IFirebaseFirestoreDAO<T, PT> {
+export interface IFirebaseFirestoreDAO<T extends JSONObject> {
 
     create(newElement: T): Promise<string>;
 
     read(id: string): Promise<T>;
 
-    update(id: string, modification: PT): Promise<void>;
+    update(id: string, modification: Partial<T>): Promise<void>;
 
     delete(messageId: string): Promise<void>;
 
@@ -29,26 +27,20 @@ export interface IFirebaseFirestoreDAO<T, PT> {
         callback: FirebaseCollectionObserver<T>): () => void;
 }
 
-export abstract class FirebaseFirestoreDAO<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
+export abstract class FirebaseFirestoreDAO<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
     public static VERBOSE: boolean = false;
-
-    // T is a full element
-
-    // PT is a partially full element
-
-    // Simple CRUDS
 
     constructor(private readonly collectionName: string, protected afs: AngularFirestore) {}
 
     public async create(newElement: T): Promise<string> {
-        const docRef: DocumentReference = await this.afs.collection<T>(this.collectionName).add(newElement);
+        const docRef: DocumentReference = await this.afs.collection<T>(this.collectionName).add({ ...newElement });
         return docRef.id;
     }
     public async read(id: string): Promise<T> {
         const docSnapshot = await this.afs.collection<T>(this.collectionName).doc(id).ref.get();
         return docSnapshot.data() as T;
     }
-    public async update(id: string, modification: PT): Promise<void> {
+    public async update(id: string, modification: Partial<T>): Promise<void> {
         return this.afs.collection(this.collectionName).doc<T>(id).ref.update(modification);
     }
     public delete(messageId: string): Promise<void> {
@@ -61,7 +53,7 @@ export abstract class FirebaseFirestoreDAO<T, PT> implements IFirebaseFirestoreD
 
     public getObsById(id: string): Observable<{ id: string, doc: T}> {
         return this.afs.doc(this.collectionName + '/' + id).snapshotChanges()
-            .pipe(map((actions) => {
+            .pipe(map((actions: Action<DocumentSnapshot<T>>) => {
                 return {
                     doc: actions.payload.data() as T,
                     id,

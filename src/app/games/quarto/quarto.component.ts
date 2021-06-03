@@ -8,7 +8,7 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-quarto',
@@ -32,7 +32,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
     public victoriousCoords: Coord[] = [];
 
-    public encoder: Encoder<QuartoMove> = QuartoMove.encoder;
+    public encoder: MoveEncoder<QuartoMove> = QuartoMove.encoder;
     public updateBoard(): void {
         const slice: QuartoPartSlice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;

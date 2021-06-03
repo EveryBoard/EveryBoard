@@ -9,7 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-awale-component',
@@ -37,7 +37,7 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         this.showScore = true;
         this.updateBoard();
     }
-    public encoder: Encoder<AwaleMove> = AwaleMove.encoder;
+    public encoder: MoveEncoder<AwaleMove> = AwaleMove.encoder;
 
     public updateBoard(): void {
         const slice: AwalePartSlice = this.rules.node.gamePartSlice;

@@ -11,7 +11,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 export class EncapsuleComponentFailure {
     public static NOT_DROPPABLE: string =`Veuillez choisir une de vos pièces parmi les pièces restantes.`;
@@ -44,7 +44,7 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
     private chosenPiece: EncapsulePiece;
     private chosenPieceIndex: number;
 
-    public encoder: Encoder<EncapsuleMove> = EncapsuleMove.encoder;
+    public encoder: MoveEncoder<EncapsuleMove> = EncapsuleMove.encoder;
     public updateBoard(): void {
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();
