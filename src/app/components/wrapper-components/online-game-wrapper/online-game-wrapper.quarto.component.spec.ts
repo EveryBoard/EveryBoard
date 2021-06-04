@@ -92,7 +92,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await joinerDAO.update('joinerId', {
             partStatus: PartStatus.PLAYER_CHOSEN.value,
             candidates: [],
-            chosenPlayer: 'firstCandidate'
+            chosenPlayer: 'firstCandidate',
         });
         // TODO: replace by real actor action (chooseCandidate)
         componentTestUtils.detectChanges();
@@ -101,7 +101,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         if (shorterGlobalChrono) {
             await joinerDAO.update('joinerId', {
                 partStatus: PartStatus.PART_STARTED.value,
-                maximalMoveDuration: 120
+                maximalMoveDuration: 120,
             });
         } else {
             await joinerDAO.update('joinerId', {
@@ -601,7 +601,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should display when the opponent resigned', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        const move1: number = QuartoMove.encoder.encodeNumber(new QuartoMove(2, 2, QuartoPiece.BBBA));
         await doMove(FIRST_MOVE, true);
         await TestBed.inject(GameService).resign('joinerId', CREATOR.pseudo, OPPONENT.pseudo);
         expect(componentTestUtils.findElement('#resignIndicator'));
