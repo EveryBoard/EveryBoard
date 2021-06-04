@@ -114,7 +114,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         `Capture spéciale`,
         `Dès qu'une tuile est enlevée du plateau pendant votre tour, certaines pièces de l'adversaires peuvent n'avoir plus aucunes cases voisines libre, elle seront alors capturées !
         Si cela arrivait à l'une de vos pièces, celle-ci resterait cependant sur le plateau.
-        Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le!`,
+        Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le !`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -128,9 +128,10 @@ export const coerceoDidacticial: DidacticialStep[] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
         ], 1, [0, 0], [0, 0]),
         [
-            CoerceoMove.fromCoordToCoord(new Coord(6, 7), new Coord(4, 7)),
+            CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(6, 5)),
+            CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(8, 5)),
         ],
-        `Bravo! Voyez, votre pièce a perdu sa dernière liberté quand vous avez récupéré la tuile, mais est restée car c'était votre tour, celle de l'adversaire a disparu car la capture de la tuile lui a enlevé une liberté il ne lui en restait plus!`,
-        `Raté!`,
+        `Bravo ! Voyez, votre pièce a perdu sa dernière liberté quand vous avez récupéré la tuile, mais est restée car c'était votre tour, celle de l'adversaire a disparu car la capture de la tuile lui a enlevé une liberté il ne lui en restait plus!`,
+        `Raté !`,
     ),
 ];
