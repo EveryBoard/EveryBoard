@@ -1,4 +1,4 @@
-import { assert, JSONValue } from 'src/app/utils/utils';
+import { assert, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 
 export abstract class Encoder<T> {
 
@@ -17,7 +17,19 @@ export abstract class Encoder<T> {
     public abstract decode(encoded: JSONValue): T;
 }
 
-export abstract class NumberEncoder<T> extends Encoder<T> {
+export abstract class MoveEncoder<T> extends Encoder<T> {
+    public encode(t: T): JSONValue {
+        return this.encodeMove(t);
+    }
+    public abstract encodeMove(t: T): JSONValueWithoutArray;
+    public decode(n: JSONValue): T {
+        assert(Array.isArray(n) === false, 'MoveEncoder.decode called with an array');
+        return this.decodeMove(n as JSONValueWithoutArray);
+    }
+    public abstract decodeMove(encoded: JSONValueWithoutArray): T;
+}
+
+export abstract class NumberEncoder<T> extends MoveEncoder<T> {
 
     public static ofN<T>(max: number,
                          encodeNumber: (t: T) => number,
@@ -83,12 +95,12 @@ export abstract class NumberEncoder<T> extends Encoder<T> {
     }
     public abstract encodeNumber(t: T): number
 
-    public encode(t: T): JSONValue {
+    public encodeMove(t: T): JSONValueWithoutArray {
         return this.encodeNumber(t);
     }
     public abstract decodeNumber(n: number): T
 
-    public decode(n: JSONValue): T {
+    public decodeMove(n: JSONValueWithoutArray): T {
         assert(typeof n === 'number', 'Invalid encoded number');
         return this.decodeNumber(n as number);
     }

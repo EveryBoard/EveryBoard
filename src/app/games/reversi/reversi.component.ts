@@ -10,7 +10,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Direction } from 'src/app/jscaip/Direction';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-reversi',
@@ -36,7 +36,7 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
             new ReversiMinimax(this.rules, 'ReversiMinimax'),
         ];
     }
-    public encoder: Encoder<ReversiMove> = ReversiMove.encoder;
+    public encoder: MoveEncoder<ReversiMove> = ReversiMove.encoder;
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {

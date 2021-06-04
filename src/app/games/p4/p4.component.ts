@@ -7,8 +7,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder } from 'src/app/jscaip/Encoder';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-p4',
@@ -25,7 +25,7 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
     private last: Coord;
     private victoryCoords: Coord[] = [];
 
-    public encoder: Encoder<P4Move> = P4Move.encoder;
+    public encoder: MoveEncoder<P4Move> = P4Move.encoder;
 
     public constructor(snackBar: MatSnackBar) {
         super(snackBar);

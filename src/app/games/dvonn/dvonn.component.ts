@@ -12,7 +12,7 @@ import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 
 @Component({
@@ -38,7 +38,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
         new HexaLayout(DvonnComponent.CASE_SIZE * 1.50,
                        new Coord(-DvonnComponent.CASE_SIZE, DvonnComponent.CASE_SIZE * 2),
                        PointyHexaOrientation.INSTANCE);
-    public encoder: Encoder<DvonnMove> = DvonnMove.encoder;
+    public encoder: MoveEncoder<DvonnMove> = DvonnMove.encoder;
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);

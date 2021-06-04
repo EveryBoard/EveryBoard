@@ -14,10 +14,10 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
-import { Encoder } from 'src/app/jscaip/Encoder';
 import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TablutLegalityStatus } from './TablutLegalityStatus';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-tablut',
@@ -46,7 +46,7 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public lastMove: TablutMove;
 
-    public encoder: Encoder<TablutMove> = TablutMove.encoder;
+    public encoder: MoveEncoder<TablutMove> = TablutMove.encoder;
 
     public constructor(snackBar: MatSnackBar) {
         super(snackBar);

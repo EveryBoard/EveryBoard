@@ -17,7 +17,7 @@ import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
 import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-gipf',
@@ -66,7 +66,7 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         this.showScore = true;
         this.constructedSlice = this.rules.node.gamePartSlice;
     }
-    public encoder: Encoder<GipfMove> = GipfMove.encoder;
+    public encoder: MoveEncoder<GipfMove> = GipfMove.encoder;
     public updateBoard(): void {
         const slice: GipfPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();

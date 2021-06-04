@@ -6,7 +6,7 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/UserService';
 import { display } from 'src/app/utils/utils';
-import { createdNodes, MGPNode } from 'src/app/jscaip/MGPNode';
+import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus } from 'src/app/jscaip/Rules';
@@ -38,7 +38,10 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
     }
     public getCreatedNodes(): number {
-        return createdNodes;
+        return MGPNodeStats.createdNodes;
+    }
+    public getMinimaxTime(): number {
+        return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.ngAfterViewInit');

@@ -8,7 +8,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -73,7 +73,7 @@ export abstract class AbstractGameComponent<M extends Move,
     public cancelMoveAttempt(): void {
         // Override if need be
     }
-    public abstract encoder: Encoder<M>;
+    public abstract encoder: MoveEncoder<M>;
 
     public abstract updateBoard(): void;
 

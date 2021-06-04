@@ -17,7 +17,7 @@ export const gipfDidacticial: DidacticialStep[] = [
         `Le but du jeu est de capturer les pièces de l'adversaire afin qu'il ne puisse plus jouer.
          Voici la configuration initiale du plateau.
          Chaque joueur a 12 pièces en réserve et 3 sur le plateau.
-         Dès qu'à son tour, un joueur n'a plus de pièces dans sa réserve, il ne sait plus jouer, et perd.
+         Dès qu'à son tour un joueur n'a plus de pièces dans sa réserve, il ne sait plus jouer et perd.
          Le premier joueur possède les pièces foncées, le deuxième les pièces claires.`,
         GipfPartSlice.getInitialSlice(),
     ),
@@ -105,8 +105,8 @@ export const gipfDidacticial: DidacticialStep[] = [
         `Ici, vous aurez une capture à faire au début de votre tour.
          Elle a été provoquée par un mouvement de votre adversaire lors de son tour de jeu
          (bien que ce plateau soit fictif à des fins pédagogiques).
-         Et après le bon mouvement, vous pourrez faire deux captures différentes dans le même tour!
-         Gardez à l'esprit que le plus utile d'une capture, est de capturer les pièces ennemies!`,
+         En effectuant ensuite le bon mouvement, vous pourrez faire deux captures supplémentaires !
+         Gardez à l'esprit que le plus utile d'une capture, est de capturer les pièces ennemies !`,
         new GipfPartSlice(GipfBoard.of([
             [_, _, _, O, _, _, O],
             [_, _, _, O, _, _, O],
@@ -167,8 +167,34 @@ export const gipfDidacticial: DidacticialStep[] = [
                     ]),
                 ],
             ),
+            new GipfMove(
+                new GipfPlacement(new Coord(3, 6), MGPOptional.of(HexaDirection.UP)),
+                [new GipfCapture([
+                    new Coord(6, 0),
+                    new Coord(6, 1),
+                    new Coord(6, 2),
+                    new Coord(6, 3),
+                ])],
+                [
+                    new GipfCapture([
+                        new Coord(1, 2),
+                        new Coord(2, 2),
+                        new Coord(3, 2),
+                        new Coord(4, 2),
+                        new Coord(5, 2),
+                    ]),
+                    new GipfCapture([
+                        new Coord(0, 5),
+                        new Coord(1, 5),
+                        new Coord(2, 5),
+                        new Coord(3, 5),
+                        new Coord(4, 5),
+                    ]),
+
+                ],
+            ),
         ],
-        `Bravo, vous avez récupéré 4 de vos pièces et capturé 2 pièces de l'adversaire.
+        `Bravo, vous avez récupéré plusieur 12 de vos pièces et capturé 2 pièces de l'adversaire.
          Le maximum possible étant 3 par captures.`,
         'Raté, la capture optimale capture 2 pièces adverses.',
     ),

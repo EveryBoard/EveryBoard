@@ -10,7 +10,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -42,7 +42,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
 
     private captureds: Coord[] = [];
 
-    public encoder: Encoder<EpaminondasMove> = EpaminondasMove.encoder;
+    public encoder: MoveEncoder<EpaminondasMove> = EpaminondasMove.encoder;
 
     public constructor(snackBar: MatSnackBar) {
         super(snackBar);

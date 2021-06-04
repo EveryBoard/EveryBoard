@@ -9,10 +9,10 @@ import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { ChatDAO } from 'src/app/dao/ChatDAO';
-import { ICurrentPart } from 'src/app/domain/icurrentpart';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
+import { IPart, Part } from 'src/app/domain/icurrentpart';
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
     /* Life cycle summary
@@ -29,7 +29,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
     let wrapper: OnlineGameWrapperComponent;
 
-    async function prepareComponent(initialJoiner: IJoiner, initialPart: ICurrentPart): Promise<void> {
+    async function prepareComponent(initialJoiner: IJoiner, initialPart: IPart): Promise<void> {
         await TestBed.get(JoinerDAO).set('joinerId', initialJoiner);
         await TestBed.get(PartDAO).set('joinerId', initialPart);
         await TestBed.get(ChatDAO).set('joinerId', { messages: [], status: 'I don\'t have a clue' });
@@ -43,7 +43,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
     describe('for creator', () => {
         it('Initialisation should lead to child component PartCreation to call JoinerService', fakeAsync(async() => {
-            await prepareComponent(JoinerMocks.INITIAL.copy(), PartMocks.INITIAL.copy());
+            await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
             const joinerService: JoinerService = TestBed.get(JoinerService);
 
             spyOn(joinerService, 'joinGame').and.callThrough();
@@ -60,7 +60,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(joinerService.startObserving).toHaveBeenCalledTimes(1);
         }));
         it('Initialisation on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
-            await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy(), PartMocks.INITIAL.copy());
+            await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.doc, PartMocks.INITIAL.doc);
             componentTestUtils.detectChanges();
 
             spyOn(wrapper, 'startGame').and.callThrough();
@@ -74,7 +74,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(wrapper.maximalMoveDuration);
         }));
         it('Some tags are needed before initialisation', fakeAsync(async() => {
-            await prepareComponent(JoinerMocks.INITIAL.copy(), PartMocks.INITIAL.copy());
+            await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
             expect(wrapper).toBeTruthy();
             const partCreationTag: DebugElement = componentTestUtils.querySelector('app-part-creation');
             const gameIncluderTag: DebugElement = componentTestUtils.querySelector('app-game-includer');
@@ -91,7 +91,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(1);
         }));
         it('Some ids are needed before initialisation', fakeAsync(async() => {
-            await prepareComponent(JoinerMocks.INITIAL.copy(), PartMocks.INITIAL.copy());
+            await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
             const partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
             const gameId: DebugElement = componentTestUtils.findElement('#game');
             const chatId: DebugElement = componentTestUtils.findElement('#chat');
@@ -105,7 +105,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             tick(1);
         }));
         it('Initialisation should make appear PartCreationComponent', fakeAsync(async() => {
-            await prepareComponent(JoinerMocks.INITIAL.copy(), PartMocks.INITIAL.copy());
+            await prepareComponent(JoinerMocks.INITIAL.doc, PartMocks.INITIAL.doc);
             let partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
             expect(partCreationId).toBeFalsy('partCreation id should be absent before ngOnInit');
 
@@ -116,7 +116,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             expect(partCreationId).toBeTruthy('partCreation id should be present after ngOnInit');
         }));
         it('StartGame should replace PartCreationComponent by GameIncluderComponent', fakeAsync(async() => {
-            await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy(), PartMocks.INITIAL.copy());
+            await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.doc, PartMocks.INITIAL.doc);
             componentTestUtils.detectChanges();
             tick();
 
@@ -133,7 +133,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             flush();
         }));
         it('stage three should make the game component appear at last', fakeAsync(async() => {
-            await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy(), PartMocks.INITIAL.copy());
+            await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.doc, PartMocks.INITIAL.doc);
             componentTestUtils.detectChanges();
             tick();
 
@@ -150,7 +150,7 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
     });
     describe('for chosenPlayer', () => {
         it('StartGame should replace PartCreationComponent by GameIncluderComponent', fakeAsync(async() => {
-            await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.copy(), PartMocks.INITIAL.copy());
+            await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.doc, PartMocks.INITIAL.doc);
             componentTestUtils.detectChanges();
             tick();
 

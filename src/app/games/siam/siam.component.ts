@@ -13,8 +13,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
-import { Encoder } from 'src/app/jscaip/Encoder';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-siam',
@@ -34,7 +34,7 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public chosenOrientation: Orthogonal;
     public movedPieces: Coord[] = [];
 
-    public encoder: Encoder<SiamMove> = SiamMove.encoder;
+    public encoder: MoveEncoder<SiamMove> = SiamMove.encoder;
 
     public constructor(snackBar: MatSnackBar) {
         super(snackBar);

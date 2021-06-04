@@ -7,8 +7,8 @@ import 'firebase/firestore';
 import 'firebase/database';
 import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 
-import { PIJoueur } from '../domain/iuser';
 import { display } from 'src/app/utils/utils';
+import { IJoueur } from '../domain/iuser';
 
 interface ConnectivityStatus {
     state: string,
@@ -62,9 +62,9 @@ export class AuthenticationService implements OnDestroy {
     private updateUserDataAndGoToServer({ uid, email, displayName, emailVerified }: firebase.User): Promise<void> {
         display(AuthenticationService.VERBOSE, 'AuthenticationService.updateUserDataAndGoToServer(' + email + ')');
         // Sets user data to firestore on login
-        const userRef: AngularFirestoreDocument<PIJoueur> = this.afs.doc(`joueurs/${uid}`);
+        const userRef: AngularFirestoreDocument<Partial<IJoueur>> = this.afs.doc(`joueurs/${uid}`);
 
-        const data: PIJoueur = {
+        const data: Partial<IJoueur> = {
             email,
             displayName,
             pseudo: displayName || email,

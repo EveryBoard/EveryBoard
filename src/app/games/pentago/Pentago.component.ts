@@ -4,7 +4,7 @@ import { AbstractGameComponent }
     from 'src/app/components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Vector } from 'src/app/jscaip/Direction';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
@@ -26,7 +26,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
 
     public rules: PentagoRules = new PentagoRules(PentagoGameState); // TODO: genericity
 
-    public encoder: Encoder<PentagoMove> = PentagoMove.encoder;
+    public encoder: MoveEncoder<PentagoMove> = PentagoMove.encoder;
 
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;

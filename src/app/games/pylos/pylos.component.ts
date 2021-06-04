@@ -7,7 +7,7 @@ import { PylosMinimax } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -35,7 +35,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
-    public encoder: Encoder<PylosMove> = PylosMove.encoder;
+    public encoder: MoveEncoder<PylosMove> = PylosMove.encoder;
 
     public constructor(snackBar: MatSnackBar) {
         super(snackBar);

@@ -10,8 +10,8 @@ import { SaharaMinimax } from 'src/app/games/sahara/SaharaMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Encoder } from 'src/app/jscaip/Encoder';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-sahara',
@@ -27,7 +27,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
 
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
-    public encoder: Encoder<SaharaMove> = SaharaMove.encoder;
+    public encoder: MoveEncoder<SaharaMove> = SaharaMove.encoder;
 
     public constructor(snackBar: MatSnackBar) {
         super(snackBar);

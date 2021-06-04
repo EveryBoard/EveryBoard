@@ -10,8 +10,8 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { Encoder } from 'src/app/jscaip/Encoder';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-quixo',
@@ -33,7 +33,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public victoriousCoords: Coord[] = [];
 
-    public encoder: Encoder<QuixoMove> = QuixoMove.encoder;
+    public encoder: MoveEncoder<QuixoMove> = QuixoMove.encoder;
 
     public constructor(snackBar: MatSnackBar) {
         super(snackBar);

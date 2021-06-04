@@ -1,7 +1,7 @@
-export interface IMessage {
-    /* This model is not a collection/table in DB, it's a model contained in a chat
-     *
-     */
+import { JSONObject } from '../utils/utils';
+
+export interface IMessage extends JSONObject {
+    // This model is not a collection/table in DB, it's a model contained in a chat
     content: string;
     sender: string;
     postedTime: number; // timeStamp of the publication time

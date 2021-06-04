@@ -11,7 +11,7 @@ import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-go',
@@ -33,7 +33,7 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public captures: Coord[]= [];
 
-    public encoder: Encoder<GoMove> = GoMove.encoder;
+    public encoder: MoveEncoder<GoMove> = GoMove.encoder;
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);

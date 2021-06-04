@@ -15,7 +15,7 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
     from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 interface Scale {
@@ -68,7 +68,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         this.setPieceSize(25);
         this.updateBoard();
     }
-    public encoder: Encoder<SixMove> = SixMove.encoder;
+    public encoder: MoveEncoder<SixMove> = SixMove.encoder;
 
     private setPieceSize(rayon: number): void {
         this.PIECE_SIZE = 2 * rayon;

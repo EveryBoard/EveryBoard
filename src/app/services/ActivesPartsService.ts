@@ -1,7 +1,7 @@
 import { Injectable, OnDestroy } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
-import { ICurrentPartId, ICurrentPart } from '../domain/icurrentpart';
+import { ICurrentPartId, IPart } from '../domain/icurrentpart';
 import { FirebaseCollectionObserver } from '../dao/FirebaseCollectionObserver';
 
 @Injectable({
@@ -53,7 +53,7 @@ export class ActivesPartsService implements OnDestroy {
             }
             this.activesPartsBS.next(result);
         };
-        const partObserver: FirebaseCollectionObserver<ICurrentPart> =
+        const partObserver: FirebaseCollectionObserver<IPart> =
             new FirebaseCollectionObserver(onDocumentCreated,
                                            onDocumentModified,
                                            onDocumentDeleted);

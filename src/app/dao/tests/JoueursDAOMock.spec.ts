@@ -1,13 +1,13 @@
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
-import { IJoueurId, IJoueur, PIJoueur } from 'src/app/domain/iuser';
+import { IJoueurId, IJoueur } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { display } from 'src/app/utils/utils';
 import { FirebaseFirestoreDAOMock } from './FirebaseFirestoreDAOMock.spec';
 
 type JoueursOS = ObservableSubject<IJoueurId>
 
-export class JoueursDAOMock extends FirebaseFirestoreDAOMock<IJoueur, PIJoueur> {
+export class JoueursDAOMock extends FirebaseFirestoreDAOMock<IJoueur> {
     public static VERBOSE: boolean = false;
 
     private static joueursDB: MGPMap<string, JoueursOS>;

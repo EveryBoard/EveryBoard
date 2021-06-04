@@ -1,5 +1,5 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { Encoder, MoveEncoder } from 'src/app/jscaip/Encoder';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { HexaLine } from 'src/app/jscaip/HexaLine';
 import { Move } from 'src/app/jscaip/Move';
@@ -119,8 +119,8 @@ export class GipfPlacement {
 }
 
 export class GipfMove extends Move {
-    public static encoder: Encoder<GipfMove> = new class extends Encoder<GipfMove> {
-        public encode(move: GipfMove): JSONValue {
+    public static encoder: MoveEncoder<GipfMove> = new class extends MoveEncoder<GipfMove> {
+        public encodeMove(move: GipfMove): JSONValueWithoutArray {
             const encoded: JSONValue = {
                 placement: GipfPlacement.encoder.encode(move.placement),
             };
@@ -134,7 +134,7 @@ export class GipfMove extends Move {
 
             return encoded;
         }
-        public decode(encoded: JSONValue): GipfMove {
+        public decodeMove(encoded: JSONValueWithoutArray): GipfMove {
             const casted: JSONObject = encoded as JSONObject;
             assert(casted.placement != null, 'Invalid encoded GipfMove');
 
