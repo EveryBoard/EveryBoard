@@ -88,7 +88,7 @@ export class GameService implements OnDestroy {
             playerZero: creatorName,
             playerOne: chosenPlayer,
             turn: -1,
-            result: MGPResult.UNACHIEVED.toInterface(),
+            result: MGPResult.UNACHIEVED.value,
             listMoves: [],
         };
         return this.partDao.create(newPart);
@@ -207,7 +207,7 @@ export class GameService implements OnDestroy {
     }
     public acceptDraw(partId: string): Promise<void> {
         return this.partDao.update(partId, {
-            result: MGPResult.DRAW.toInterface(),
+            result: MGPResult.DRAW.value,
             request: null,
         });
     }

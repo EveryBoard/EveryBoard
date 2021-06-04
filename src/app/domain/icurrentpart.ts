@@ -53,25 +53,22 @@ export interface ICurrentPartId {
 
     doc: IPart;
 }
-export class MGPResult {
-    public static DRAW: MGPResult = new MGPResult(0);
-
-    public static RESIGN: MGPResult = new MGPResult(1);
-
-    public static ESCAPE: MGPResult = new MGPResult(2);
-
-    public static VICTORY: MGPResult = new MGPResult(3);
-
-    public static TIMEOUT: MGPResult = new MGPResult(4);
-
-    public static UNACHIEVED: MGPResult = new MGPResult(5);
-
-    public static AGREED_DRAW: MGPResult = new MGPResult(6);
-
-    private constructor(public readonly value: number) {}
-
-    public toInterface(): IMGPResult {
-        return this.value;
-    }
-}
 export type IMGPResult = number;
+export class MGPResult {
+    public static readonly DRAW: MGPResult = new MGPResult(0);
+
+    public static readonly RESIGN: MGPResult = new MGPResult(1);
+
+    public static readonly ESCAPE: MGPResult = new MGPResult(2);
+
+    public static readonly VICTORY: MGPResult = new MGPResult(3);
+
+    public static readonly TIMEOUT: MGPResult = new MGPResult(4);
+
+    public static readonly UNACHIEVED: MGPResult = new MGPResult(5);
+
+    public static readonly AGREED_DRAW: MGPResult = new MGPResult(6);
+
+    private constructor(public readonly value: IMGPResult) {}
+}
+

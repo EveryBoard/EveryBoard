@@ -105,23 +105,4 @@ describe('GameService', () => {
 
         expect(service.joinerService.acceptConfig).toHaveBeenCalled();
     }));
-    it('startGameWithConfig should throw when firstPlayer is not a value of FIRST_PLAYER enum', fakeAsync(async() => {
-        const joiner: IJoiner = {
-            candidates: [],
-            creator: 'creator',
-            chosenPlayer: 'hisFriend',
-            partStatus: 2,
-            firstPlayer: 'somethingElse',
-        };
-        spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
-        spyOn(partDao, 'update').and.returnValue(null);
-
-        let errorMessage: string;
-        try {
-            await service.acceptConfig('somePart', joiner);
-        } catch (error) {
-            errorMessage = error.message;
-        }
-        expect(errorMessage).toEqual('Invalid value for FirstPlayer: somethingElse.');
-    }));
 });

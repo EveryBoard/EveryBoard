@@ -6,7 +6,7 @@ export interface IJoiner extends JSONObject {
     readonly creator: NonNullable<string>;
     readonly chosenPlayer: NonNullable<string>; // TODO: make optional
     readonly whoStart?: string;
-    readonly firstPlayer?: string; // TODO: take inspiration from request
+    readonly firstPlayer?: IFirstPlayer;
     /* 0: the creator
      * 1: the chosenPlayer
      * 2: random
@@ -36,10 +36,10 @@ export interface IJoinerId {
     doc: IJoiner;
 }
 
-// TODO: clean class and its used
+export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';
 export class FirstPlayer {
 
-    private constructor(public value: string) {}
+    private constructor(public value: IFirstPlayer) {}
 
     public static readonly CREATOR: FirstPlayer = new FirstPlayer('CREATOR');
 
@@ -47,6 +47,8 @@ export class FirstPlayer {
 
     public static readonly CHOSEN_PLAYER: FirstPlayer = new FirstPlayer('CHOSEN_PLAYER');
 
+    // TODO: remove the need for this (only used once)
+    // TODO: add tests to cover the error case
     public static of(value: string): FirstPlayer {
         switch (value) {
             case 'CREATOR': return FirstPlayer.CREATOR;
@@ -55,6 +57,7 @@ export class FirstPlayer {
             default: throw new Error('Invalid value for FirstPlayer: ' + value + '.');
         }
     }
+
 
     public getOpponent(): FirstPlayer {
         switch (this) {

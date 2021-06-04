@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Input, OnDestroy, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { IJoiner, IJoinerId } from '../../../domain/ijoiner';
+import { FirstPlayer, IJoiner, IJoinerId } from '../../../domain/ijoiner';
 import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
 import { JoinerService } from '../../../services/JoinerService';
@@ -258,7 +258,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const maxMoveDur: number = this.configFormGroup.get('maximalMoveDuration').value;
         const firstPlayer: string = this.configFormGroup.get('firstPlayer').value;
         const totalPartDuration: number = this.configFormGroup.get('totalPartDuration').value;
-        return this.joinerService.proposeConfig(maxMoveDur, firstPlayer, totalPartDuration);
+        return this.joinerService.proposeConfig(maxMoveDur, FirstPlayer.of(firstPlayer), totalPartDuration);
     }
     public acceptConfig(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.acceptConfig');

@@ -281,7 +281,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
             listMoves: [move0, move1, move2, move3, winningMove].map(QuartoMove.encoder.encodeNumber),
             turn: 5, scorePlayerZero: null, scorePlayerOne: null, request: null,
-            winner: 'creator', loser: 'firstCandidate', result: MGPResult.VICTORY.toInterface(),
+            winner: 'creator', loser: 'firstCandidate', result: MGPResult.VICTORY.value,
         });
         expect(componentTestUtils.findElement('#youWonIndicator'))
             .toBeTruthy('Component should show who is the winner.');
@@ -478,7 +478,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             tick(1);
             expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
-                result: MGPResult.DRAW.toInterface(),
+                result: MGPResult.DRAW.value,
                 request: null,
             });
 
@@ -493,7 +493,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
 
             tick(1);
             expect(partDAO.update).toHaveBeenCalledWith('joinerId', {
-                result: MGPResult.DRAW.toInterface(),
+                result: MGPResult.DRAW.value,
                 request: null,
             });
         }));

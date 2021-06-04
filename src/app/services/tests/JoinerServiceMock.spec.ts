@@ -47,7 +47,7 @@ export class JoinerServiceMock {
                 candidates: ['uniqueCandidate'],
                 creator: 'creator',
                 chosenPlayer: 'uniqueCandidate',
-                firstPlayer: '0',
+                firstPlayer: 'CREATOR',
                 partStatus: 3,
                 maximalMoveDuration: 60,
                 totalPartDuration: 300,

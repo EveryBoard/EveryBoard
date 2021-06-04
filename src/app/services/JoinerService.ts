@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { IJoiner, IJoinerId } from '../domain/ijoiner';
+import { FirstPlayer, IJoiner, IJoinerId } from '../domain/ijoiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
@@ -9,13 +9,13 @@ import { ArrayUtils } from '../utils/ArrayUtils';
     providedIn: 'root',
 })
 export class JoinerService {
-    public static VERBOSE: boolean = true;
+    public static VERBOSE: boolean = false;
 
     public static readonly EMPTY_JOINER: IJoiner = {
         creator: null,
         candidates: [],
         chosenPlayer: '',
-        firstPlayer: '0', // par défaut: le créateur
+        firstPlayer: 'CREATOR', // par défaut: le créateur
         partStatus: 0, // en attente de tout
     };
 
@@ -149,7 +149,10 @@ export class JoinerService {
         };
         return this.joinerDao.update(this.observedJoinerId, modification);
     }
-    public proposeConfig(maximalMoveDuration: number, firstPlayer: string, totalPartDuration: number): Promise<void> {
+    public proposeConfig(maximalMoveDuration: number,
+                         firstPlayer: FirstPlayer,
+                         totalPartDuration: number)
+    : Promise<void> {
         display(JoinerService.VERBOSE,
                 { joinerService_proposeConfig: { maximalMoveDuration, firstPlayer, totalPartDuration } });
         display(JoinerService.VERBOSE, 'this.followedJoinerId: ' + this.observedJoinerId);
@@ -160,7 +163,7 @@ export class JoinerService {
             // timeoutMinimalDuration: timeout,
             maximalMoveDuration: maximalMoveDuration,
             totalPartDuration: totalPartDuration,
-            firstPlayer: firstPlayer,
+            firstPlayer: firstPlayer.value,
         });
     }
     public acceptConfig(): Promise<void> {
