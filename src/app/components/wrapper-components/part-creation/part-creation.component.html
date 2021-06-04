@@ -5,7 +5,7 @@
             <mat-horizontal-stepper id="creatorDiv" linear #stepper *ngIf="userIsCreator">
                 <mat-step [stepControl]="opponentFormGroup" editable="false">
                     <ng-template matStepLabel>Sélection d'un adversaire</ng-template>
-                    <div *ngIf="currentJoiner.candidatesNames.length === 0 else chooseCandidate">
+                    <div *ngIf="currentJoiner.candidates.length === 0 else chooseCandidate">
                         Attendez qu'un utilisateur vous rejoigne!
                     </div>
                     <ng-template #chooseCandidate>
@@ -14,7 +14,7 @@
                                              formControlName="chosenOpponent"
                                              required>
                                 <mat-radio-button class="example-radio-button"
-                                                  *ngFor="let joinerName of currentJoiner.candidatesNames"
+                                                  *ngFor="let joinerName of currentJoiner.candidates"
                                                   [value]="joinerName">
                                     {{joinerName}}
                                 </mat-radio-button>
@@ -122,7 +122,7 @@
                         id="selected_{{currentJoiner.chosenPlayer}}">
                         <p><b> {{ currentJoiner.chosenPlayer }} </b></p>
                     </li>
-                    <li *ngFor="let joinerName of currentJoiner.candidatesNames"
+                    <li *ngFor="let joinerName of currentJoiner.candidates"
                         id="presenceOf_{{joinerName}}">
                         <p> {{ joinerName }} </p>
                     </li>

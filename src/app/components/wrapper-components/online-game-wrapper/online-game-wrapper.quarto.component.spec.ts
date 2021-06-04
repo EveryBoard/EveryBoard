@@ -23,6 +23,7 @@ import { IJoueur } from 'src/app/domain/iuser';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { GameService } from 'src/app/services/GameService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
@@ -78,7 +79,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         AuthenticationServiceMock.setUser(user);
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
-        await prepareComponent(JoinerMocks.INITIAL.copy());
+        await prepareComponent(JoinerMocks.INITIAL.doc);
         componentTestUtils.detectChanges();
         tick(1);
         componentTestUtils.bindGameComponent();
@@ -86,9 +87,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         const partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
         expect(partCreationId).toBeTruthy('partCreation id should be present after ngOnInit');
         expect(wrapper.partCreation).toBeTruthy('partCreation field should also be present');
-        await joinerDAO.update('joinerId', { candidatesNames: ['firstCandidate'] });
+        await joinerDAO.update('joinerId', { candidates: ['firstCandidate'] });
         componentTestUtils.detectChanges();
-        await joinerDAO.update('joinerId', { partStatus: 1, candidatesNames: [], chosenPlayer: 'firstCandidate' });
+        await joinerDAO.update('joinerId', { partStatus: 1, candidates: [], chosenPlayer: 'firstCandidate' });
         // TODO: replace by real actor action (chooseCandidate)
         componentTestUtils.detectChanges();
         await wrapper.partCreation.proposeConfig();
@@ -173,7 +174,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.partCreation).toBeFalsy('partCreation field should be absent after config accepted');
         expect(componentTestUtils.getComponent())
             .toBeFalsy('gameComponent field should be absent after config accepted and async ms finished');
-
         tick(1);
 
         quartoTag = componentTestUtils.querySelector('app-quarto');
@@ -588,6 +588,14 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(partDAO.update).not.toHaveBeenCalled();
 
         tick(wrapper.maximalMoveDuration);
+    }));
+    it('Should display when the opponent resigned', fakeAsync(async() => {
+        await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+        tick(1);
+        const move1: number = QuartoMove.encoder.encodeNumber(new QuartoMove(2, 2, QuartoPiece.BBBA));
+        await doMove(FIRST_MOVE, true);
+        await TestBed.inject(GameService).resign('joinerId', CREATOR.pseudo, OPPONENT.pseudo);
+        expect(componentTestUtils.findElement('#resignIndicator'));
     }));
     it('Should allow player to pass when gameComponent allows it', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });

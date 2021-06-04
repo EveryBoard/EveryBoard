@@ -229,7 +229,7 @@ export class GameService implements OnDestroy {
             firstPlayer = FirstPlayer.CREATOR;
         }
         const newJoiner: IJoiner = {
-            candidatesNames: iJoiner.candidatesNames,
+            candidates: iJoiner.candidates,
             creator: iJoiner.creator,
             chosenPlayer: iJoiner.chosenPlayer,
             firstPlayer: firstPlayer.value,
@@ -302,7 +302,7 @@ export class GameService implements OnDestroy {
             scorePlayerZero,
             scorePlayerOne,
             request: null,
-        }
+        };
         if (winner != null) {
             update = {
                 ...update,

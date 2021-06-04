@@ -43,7 +43,8 @@ export class JoinerServiceMock {
     public readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.readJoinerById');
         return new Promise((resolve: (j: IJoiner) => void) => {
-            resolve({ candidatesNames: ['uniqueCandidate'],
+            resolve({
+                candidates: ['uniqueCandidate'],
                 creator: 'creator',
                 chosenPlayer: 'uniqueCandidate',
                 firstPlayer: '0',

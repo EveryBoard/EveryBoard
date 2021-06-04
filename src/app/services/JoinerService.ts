@@ -2,21 +2,21 @@ import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { IJoiner, IJoinerId } from '../domain/ijoiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
+import { ArrayUtils } from '../utils/ArrayUtils';
 
 @Injectable({
     providedIn: 'root',
 })
 export class JoinerService {
-    public static VERBOSE: boolean = false;
+    public static VERBOSE: boolean = true;
 
     public static readonly EMPTY_JOINER: IJoiner = {
         creator: null,
-        candidatesNames: [],
+        candidates: [],
         chosenPlayer: '',
-        // abandonned feature timeoutMinimalDuration: 60,
         firstPlayer: '0', // par défaut: le créateur
-        partStatus: 0, // en attente de tout, TODO: constantifier ça aussi !
+        partStatus: 0, // en attente de tout
     };
 
     private observedJoinerId: string;
@@ -56,14 +56,14 @@ export class JoinerService {
         if (!joiner) {
             throw new Error('No Joiner Received from DAO');
         }
-        const joinerList: string[] = joiner.candidatesNames;
+        const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
         if (joinerList.includes(userName)) {
             throw new Error('JoinerService.joinGame was called by a user already in the game');
         } else if (userName === joiner.creator) {
             return Promise.resolve();
         } else {
             joinerList[joinerList.length] = userName;
-            return this.joinerDao.update(partId, { candidatesNames: joinerList });
+            return this.joinerDao.update(partId, { candidates: joinerList });
         }
     }
     public async cancelJoining(userName: string): Promise<void> {
@@ -77,7 +77,7 @@ export class JoinerService {
         if (joiner == null) {
             throw new Error('DAO Did not found a joiner with id ' + this.observedJoinerId);
         } else {
-            const joinersList: string[] = joiner.candidatesNames;
+            const joinersList: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
             const indexLeaver: number = joinersList.indexOf(userName);
             let chosenPlayer: string = joiner.chosenPlayer;
             let partStatus: number = joiner.partStatus;
@@ -93,13 +93,13 @@ export class JoinerService {
             const modification: Partial<IJoiner> = {
                 chosenPlayer,
                 partStatus,
-                candidatesNames: joinersList,
+                candidates: joinersList,
             };
             return this.joinerDao.update(this.observedJoinerId, modification);
         }
     }
-    public async updateCandidatesNames(candidatesNames: string[]): Promise<void> {
-        const modification: Partial<IJoiner> = { candidatesNames };
+    public async updateCandidates(candidates: string[]): Promise<void> {
+        const modification: Partial<IJoiner> = { candidates };
         return this.joinerDao.update(this.observedJoinerId, modification);
     }
     public async deleteJoiner(): Promise<void> {
@@ -115,23 +115,23 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.setChosenPlayer(' + chosenPlayerPseudo + ')');
 
         const joiner: IJoiner = await this.joinerDao.read(this.observedJoinerId);
-        const candidatesNames: string[] = joiner.candidatesNames;
-        const chosenPlayerIndex: number = candidatesNames.indexOf(chosenPlayerPseudo);
+        const candidates: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
+        const chosenPlayerIndex: number = candidates.indexOf(chosenPlayerPseudo);
         if (chosenPlayerIndex < 0 ) {
             throw new Error('Cannot choose player, ' + chosenPlayerPseudo + ' is not in the room');
         }
 
         // if user is still present, take him off the candidate list
-        candidatesNames.splice(chosenPlayerIndex, 1);
+        candidates.splice(chosenPlayerIndex, 1);
         const oldChosenPlayer: string = joiner.chosenPlayer;
         if (oldChosenPlayer !== '') {
             // if there is a previous chosenPlayer, put him in the candidates list
-            candidatesNames.push(oldChosenPlayer);
+            candidates.push(oldChosenPlayer);
             // so he don't just disappear
         }
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: 1,
-            candidatesNames,
+            candidates,
             chosenPlayer: chosenPlayerPseudo,
         });
     }
@@ -144,7 +144,7 @@ export class JoinerService {
         }
         const modification: Partial<IJoiner> = {
             chosenPlayer: '',
-            candidatesNames: candidatesList,
+            candidates: candidatesList,
             partStatus: 0,
         };
         return this.joinerDao.update(this.observedJoinerId, modification);
@@ -153,6 +153,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE,
                 { joinerService_proposeConfig: { maximalMoveDuration, firstPlayer, totalPartDuration } });
         display(JoinerService.VERBOSE, 'this.followedJoinerId: ' + this.observedJoinerId);
+        assert(this.observedJoinerId !== undefined, 'observedJoinerId is undefined');
 
         return this.joinerDao.update(this.observedJoinerId, {
             partStatus: 2,

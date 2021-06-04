@@ -183,7 +183,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             new FirebaseCollectionObserver(onDocumentCreated,
                                            onDocumentModified,
                                            onDocumentDeleted);
-        for (const candidateName of joiner.candidatesNames) {
+        for (const candidateName of joiner.candidates) {
             if (this.candidateSubscription.get(candidateName).isAbsent()) {
                 const comparableSubscription: ComparableSubscription = {
                     subscription: this.userService.observeUserByPseudo(candidateName, callback),
@@ -196,7 +196,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         for (const oldCandidate of this.candidateSubscription.listKeys()) {
             if (oldCandidate.toString() !== joiner.chosenPlayer) {
-                if (joiner.candidatesNames.includes(oldCandidate.toString()) === false) {
+                if (joiner.candidates.includes(oldCandidate.toString()) === false) {
                     this.unsubscribeFrom(oldCandidate.toString());
                 }
             }
@@ -204,16 +204,16 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private removeUserFromLobby(userPseudo: string): Promise<void> {
         if (userPseudo === this.currentJoiner.chosenPlayer) {
-            return this.joinerService.unselectChosenPlayer(this.currentJoiner.candidatesNames,
+            return this.joinerService.unselectChosenPlayer(this.currentJoiner.candidates,
                                                            this.currentJoiner.chosenPlayer,
                                                            false);
         } else {
-            const index: number = this.currentJoiner.candidatesNames.indexOf(userPseudo);
+            const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
             if (index !== -1) {
-                const beforeUser: string[] = this.currentJoiner.candidatesNames.slice(0, index);
-                const afterUser: string[] = this.currentJoiner.candidatesNames.slice(index, -1);
-                const candidatesNames: string[] = beforeUser.concat(afterUser);
-                this.joinerService.updateCandidatesNames(candidatesNames);
+                const beforeUser: string[] = this.currentJoiner.candidates.slice(0, index);
+                const afterUser: string[] = this.currentJoiner.candidates.slice(index, -1);
+                const candidates: string[] = beforeUser.concat(afterUser);
+                this.joinerService.updateCandidates(candidates);
             }
         }
     }
@@ -241,7 +241,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.router.navigate(['/server']);
     }
     public unselectChosenPlayer(): void {
-        this.joinerService.unselectChosenPlayer(this.currentJoiner.candidatesNames,
+        this.joinerService.unselectChosenPlayer(this.currentJoiner.candidates,
                                                 this.currentJoiner.chosenPlayer,
                                                 true);
     }

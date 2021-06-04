@@ -3,7 +3,7 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { GameService } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { of } from 'rxjs';
-import { ICurrentPartId, IPart, MGPResult, Part } from 'src/app/domain/icurrentpart';
+import { ICurrentPartId, MGPResult, Part } from 'src/app/domain/icurrentpart';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
@@ -57,8 +57,8 @@ describe('GameService', () => {
         await partDao.set('myJoinerId', PartMocks.INITIAL.doc);
 
         expect(() => {
-            service.startObserving('myJoinerId', (iPart: ICurrentPartId) => {});
-            service.startObserving('myJoinerId', (iPart: ICurrentPartId) => {});
+            service.startObserving('myJoinerId', (_iPart: ICurrentPartId) => {});
+            service.startObserving('myJoinerId', (_iPart: ICurrentPartId) => {});
         }).toThrowError('GameService.startObserving should not be called while already observing a game');
     }));
     it('should delegate delete to PartDAO', () => {
@@ -92,7 +92,7 @@ describe('GameService', () => {
     }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
         const joiner: IJoiner = {
-            candidatesNames: [],
+            candidates: [],
             creator: 'creator',
             chosenPlayer: 'hisFriend',
             partStatus: 2,
@@ -107,7 +107,7 @@ describe('GameService', () => {
     }));
     it('startGameWithConfig should throw when firstPlayer is not a value of FIRST_PLAYER enum', fakeAsync(async() => {
         const joiner: IJoiner = {
-            candidatesNames: [],
+            candidates: [],
             creator: 'creator',
             chosenPlayer: 'hisFriend',
             partStatus: 2,

@@ -112,8 +112,10 @@
                     <p class="title" *ngIf="observerRole >= 2"> Limite de temps dépassée par {{ currentPart.getLoser() }} </p>
                 </div>
                 <div *ngIf="currentPart.isResign()">
-                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)"> Vous avez abandonné </p>
-                    <p class="title" *ngIf="observerRole >= 2 || currentPart.getWinner() === userName"> {{ currentPart.getLoser() }} a abandonné </p>
+                    <p class="title" id="resignIndicator"
+                       *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)"> Vous avez abandonné </p>
+                    <p class="title" id="resignIndicator"
+                       *ngIf="observerRole >= 2 || currentPart.getWinner() === userName"> {{ currentPart.getLoser() }} a abandonné </p>
                 </div>
 
             </div>
