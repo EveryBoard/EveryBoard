@@ -318,7 +318,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             this.stopCountdownsFor(player);
         } else if ([MGPResult.DRAW, MGPResult.RESIGN, MGPResult.TIMEOUT]
             .some((result: MGPResult) => result.value === currentPart.doc.result)) {
-            display(OnlineGameWrapperComponent.VERBOSE, 'endGame est true et winner est ' + currentPart.doc.winner);
+            display(OnlineGameWrapperComponent.VERBOSE, 'endGame est true et winner est ' + currentPart.getWinner());
             this.stopCountdownsFor(player);
         } else {
             assert(false, 'Should not be here');
@@ -352,7 +352,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
 
         this.gameService.updateDBBoard(this.currentPartId, encodedMove,
                                        scorePlayerZero, scorePlayerOne,
-                                       false, this.currentPart.doc.winner, this.currentPart.doc.loser);
+                                       false, this.currentPart.getWinner(), this.currentPart.getLoser());
     }
     public canAskTakeBack(): boolean {
         if (this.currentPart == null) {

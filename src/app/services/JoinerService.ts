@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { FirstPlayer, IJoiner, IJoinerId } from '../domain/ijoiner';
+import { FirstPlayer, IJoiner, IJoinerId, PartStatus } from '../domain/ijoiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
@@ -15,8 +15,8 @@ export class JoinerService {
         creator: null,
         candidates: [],
         chosenPlayer: '',
-        firstPlayer: 'CREATOR', // par défaut: le créateur
-        partStatus: 0, // en attente de tout
+        firstPlayer: FirstPlayer.CREATOR.value, // by default: creator
+        partStatus: PartStatus.PART_CREATED.value,
     };
 
     private observedJoinerId: string;
@@ -84,7 +84,7 @@ export class JoinerService {
             if (chosenPlayer === userName) {
                 // if the chosenPlayer leave, we're back to partStatus 0 (waiting for a chosenPlayer)
                 chosenPlayer = '';
-                partStatus = 0;
+                partStatus = PartStatus.PART_CREATED.value;
             } else if (indexLeaver >= 0) { // candidate including chosenPlayer
                 joinersList.splice(indexLeaver, 1);
             } else {
@@ -130,7 +130,7 @@ export class JoinerService {
             // so he don't just disappear
         }
         return this.joinerDao.update(this.observedJoinerId, {
-            partStatus: 1,
+            partStatus: PartStatus.PLAYER_CHOSEN.value,
             candidates,
             chosenPlayer: chosenPlayerPseudo,
         });
@@ -145,7 +145,7 @@ export class JoinerService {
         const modification: Partial<IJoiner> = {
             chosenPlayer: '',
             candidates: candidatesList,
-            partStatus: 0,
+            partStatus: PartStatus.PART_CREATED.value,
         };
         return this.joinerDao.update(this.observedJoinerId, modification);
     }
@@ -159,7 +159,7 @@ export class JoinerService {
         assert(this.observedJoinerId !== undefined, 'observedJoinerId is undefined');
 
         return this.joinerDao.update(this.observedJoinerId, {
-            partStatus: 2,
+            partStatus: PartStatus.CONFIG_PROPOSED.value,
             // timeoutMinimalDuration: timeout,
             maximalMoveDuration: maximalMoveDuration,
             totalPartDuration: totalPartDuration,
@@ -173,7 +173,7 @@ export class JoinerService {
             throw new Error('Can\'t acceptConfig when no joiner doc observed !!');
         }
 
-        return this.joinerDao.update(this.observedJoinerId, { partStatus: 3 });
+        return this.joinerDao.update(this.observedJoinerId, { partStatus: PartStatus.PART_STARTED.value });
     }
     public stopObserving(): void {
         display(JoinerService.VERBOSE,

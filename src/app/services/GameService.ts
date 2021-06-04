@@ -2,7 +2,7 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
 import { PartDAO } from '../dao/PartDAO';
 import { MGPResult, ICurrentPartId, IPart, Part } from '../domain/icurrentpart';
-import { FirstPlayer, IJoiner } from '../domain/ijoiner';
+import { FirstPlayer, IJoiner, PartStatus } from '../domain/ijoiner';
 import { JoinerService } from './JoinerService';
 import { ActivesPartsService } from './ActivesPartsService';
 import { ChatService } from './ChatService';
@@ -233,7 +233,7 @@ export class GameService implements OnDestroy {
             creator: iJoiner.creator,
             chosenPlayer: iJoiner.chosenPlayer,
             firstPlayer: firstPlayer.value,
-            partStatus: 3, // already started
+            partStatus: PartStatus.PART_STARTED.value,
             maximalMoveDuration: iJoiner.maximalMoveDuration,
             totalPartDuration: iJoiner.totalPartDuration,
         };
