@@ -2,7 +2,7 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { QuixoPartSlice } from '../QuixoPartSlice';
-import { QuixoNode } from '../QuixoRules';
+import { QuixoNode, QuixoRules } from '../QuixoRules';
 import { QuixoMinimax } from '../QuixoMinimax';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoFailure } from '../QuixoFailure';
@@ -44,7 +44,8 @@ describe('QuixoMove:', () => {
         const move: QuixoMove = new QuixoMove(0, 0, Orthogonal.DOWN);
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
         const node: QuixoNode = new MGPNode(null, move, slice);
-        const minimax: QuixoMinimax = new QuixoMinimax('QuixoMinimax');
+        const rules: QuixoRules = new QuixoRules(QuixoPartSlice);
+        const minimax: QuixoMinimax = new QuixoMinimax(rules, 'QuixoMinimax');
         const moves: QuixoMove[] = minimax.getListMoves(node);
         for (const move of moves) {
             NumberEncoderTestUtils.expectToBeCorrect(QuixoMove.encoder, move);

@@ -37,7 +37,7 @@ describe('DvonnRules:', () => {
 
     beforeEach(() => {
         rules = new DvonnRules(DvonnGameState);
-        minimax = new DvonnMinimax('DvonnMinimax');
+        minimax = new DvonnMinimax(rules, 'DvonnMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

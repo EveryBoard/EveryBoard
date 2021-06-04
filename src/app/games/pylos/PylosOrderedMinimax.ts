@@ -1,13 +1,8 @@
-import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
-import { PylosPartSlice } from './PylosPartSlice';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
-import { PylosNode, PylosRules } from './PylosRules';
-import { GameStatus } from 'src/app/jscaip/Rules';
-import { Player } from 'src/app/jscaip/Player';
+import { PylosNode } from './PylosRules';
+import { PylosMinimax } from './PylosMinimax';
 
-export class PylosOrderedMinimax extends Minimax<PylosMove, PylosPartSlice> {
+export class PylosOrderedMinimax extends PylosMinimax {
 
     public static countStoneUsed(move: PylosMove): number {
         let stoneUsed: number = move.isClimb() ? 0 : 1;
@@ -33,25 +28,8 @@ export class PylosOrderedMinimax extends Minimax<PylosMove, PylosPartSlice> {
         return value;
     }
     public getListMoves(node: PylosNode): PylosMove[] {
-        const slice: PylosPartSlice = node.gamePartSlice;
-        const result: PylosMove[] = [];
-        const sliceInfo: { freeToMove: PylosCoord[]; landable: PylosCoord[]; } = PylosRules.getSliceInfo(slice);
-        const climbings: PylosMove[] = PylosRules.getClimbingMoves(sliceInfo);
-        const drops: PylosMove[] = PylosRules.getDropMoves(sliceInfo);
-        const moves: PylosMove[] = climbings.concat(drops);
-        for (const move of moves) {
-            let possiblesCaptures: PylosCoord[][] = [[]];
-            if (PylosRules.canCapture(slice, move.landingCoord)) {
-                possiblesCaptures = PylosRules.getPossibleCaptures(sliceInfo.freeToMove,
-                                                                   move.startingCoord,
-                                                                   move.landingCoord);
-            }
-            for (const possiblesCapture of possiblesCaptures) {
-                const newMove: PylosMove = PylosMove.changeCapture(move, possiblesCapture);
-                result.push(newMove);
-            }
-        }
-        return this.orderMoves(result);
+        const moves: PylosMove[] = PylosMinimax.getListMoves(node);
+        return this.orderMoves(moves);
     }
     public orderMoves(moves: PylosMove[]): PylosMove[] {
         return moves.sort((a: PylosMove, b: PylosMove) => {
@@ -61,14 +39,5 @@ export class PylosOrderedMinimax extends Minimax<PylosMove, PylosPartSlice> {
             const emplacementB: number = PylosOrderedMinimax.sumMoveEmplacementByValue(b);
             return (captureA + emplacementA) - (captureB + emplacementB);
         });
-    }
-    public getBoardValue(node: PylosNode): NodeUnheritance {
-        const gameStatus: GameStatus = PylosRules.getGameStatus(node);
-        if (gameStatus.isEndGame) {
-            return new NodeUnheritance(gameStatus.toBoardValue());
-        } else {
-            const ownershipMap: { [owner: number]: number; } = node.gamePartSlice.getPiecesRepartition();
-            return new NodeUnheritance(ownershipMap[Player.ZERO.value] - ownershipMap[Player.ONE.value]);
-        }
     }
 }

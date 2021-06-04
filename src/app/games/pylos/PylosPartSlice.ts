@@ -5,6 +5,7 @@ import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 
 export class PylosPartSlice extends GamePartSlice {
+
     public static getInitialSlice(): PylosPartSlice {
         const board0: number[][] = ArrayUtils.createBiArray(4, 4, Player.NONE.value);
         const board1: number[][] = ArrayUtils.createBiArray(3, 3, Player.NONE.value);

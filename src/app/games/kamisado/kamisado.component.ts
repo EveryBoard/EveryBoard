@@ -10,8 +10,8 @@ import { KamisadoMinimax } from 'src/app/games/kamisado/KamisadoMinimax';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Encoder } from 'src/app/jscaip/Encoder';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 export class KamisadoComponentFailure {
     public static PLAY_WITH_SELECTED_PIECE: string =
@@ -26,10 +26,6 @@ export class KamisadoComponentFailure {
 
 export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, KamisadoPartSlice> {
 
-    public availableMinimaxes: Minimax<KamisadoMove, KamisadoPartSlice>[] = [
-        new KamisadoMinimax('KamisadoMinimax'),
-    ];
-    public rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice);
     public CASE_SIZE: number = 75;
     public UNOCCUPIED: number = KamisadoPiece.NONE.getValue();
     public lastMove: KamisadoMove = null;
@@ -39,6 +35,13 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public encoder: Encoder<KamisadoMove> = KamisadoMove.encoder;
 
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new KamisadoRules(KamisadoPartSlice);
+        this.availableMinimaxes = [
+            new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
+        ];
+    }
     public backgroundColor(x: number, y: number): string {
         return KamisadoBoard.getColorAt(x, y).rgb;
     }

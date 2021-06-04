@@ -20,7 +20,7 @@ describe('MaxStacksDvonnMinimax', () => {
 
     beforeEach(() => {
         rules = new DvonnRules(DvonnGameState);
-        minimax = new MaxStacksDvonnMinimax('MaxStacksDvonnMinimax');
+        minimax = new MaxStacksDvonnMinimax(rules, 'MaxStacksDvonnMinimax');
     });
     it('should propose 41 moves at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(41);

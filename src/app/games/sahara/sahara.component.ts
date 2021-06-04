@@ -10,8 +10,8 @@ import { SaharaMinimax } from 'src/app/games/sahara/SaharaMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Encoder } from 'src/app/jscaip/Encoder';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-sahara',
@@ -21,11 +21,6 @@ import { Encoder } from 'src/app/jscaip/Encoder';
 export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaPartSlice> {
     public static VERBOSE: boolean = false;
 
-    public availableMinimaxes: Minimax<SaharaMove, SaharaPartSlice>[] = [
-        new SaharaMinimax('SaharaMinimax'),
-    ];
-    public rules: SaharaRules = new SaharaRules(SaharaPartSlice);
-
     public lastCoord: Coord = new Coord(-2, -2);
 
     public lastMoved: Coord = new Coord(-2, -2);
@@ -33,6 +28,14 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
     public chosenCoord: MGPOptional<Coord> = MGPOptional.empty();
 
     public encoder: Encoder<SaharaMove> = SaharaMove.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new SaharaRules(SaharaPartSlice);
+        this.availableMinimaxes = [
+            new SaharaMinimax(this.rules, 'SaharaMinimax'),
+        ];
+    }
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
     }

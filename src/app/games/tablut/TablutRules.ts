@@ -100,7 +100,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         }
         return MGPValidation.SUCCESS;
     }
-    private static tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, board: number[][]): Coord {
+    public static tryCapture(player: Player, landingPawn: Coord, d: Orthogonal, board: number[][]): Coord {
         /* landingPawn is the piece that just moved
          * d the direction in witch we look for capture
          * return the captured coord, or null if no capture possible
@@ -414,7 +414,8 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
             foundDestination = depart.getNext(dir, 1);
             let obstacleFound: boolean = false;
             while (foundDestination.isInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH) &&
-                   obstacleFound === false) {
+                   obstacleFound === false)
+            {
                 const destinationEmpty: boolean = this.getAbsoluteOwner(foundDestination, board) === Player.NONE;
                 if (destinationEmpty) {
                     if (TablutRules.isThrone(foundDestination)) {
@@ -496,23 +497,38 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         }
         return listMoves;
     }
+    public static getGameStatus(node: TablutNode): GameStatus {
+        const board: number[][] = node.gamePartSlice.getCopiedBoard();
+
+        const winner: MGPOptional<Player> = TablutRules.getWinner(board);
+        if (winner.isPresent()) {
+            return GameStatus.getVictory(winner.get());
+        }
+        return GameStatus.ONGOING;
+    }
     public static getWinner(board: number[][]): MGPOptional<Player> {
+        const LOCAL_VERBOSE: boolean = false;
         const optionalKingCoord: MGPOptional<Coord> = TablutRules.getKingCoord(board);
         if (optionalKingCoord.isAbsent()) {
+            display(LOCAL_VERBOSE, 'The king is dead, victory to invader');
             // the king is dead, long live the king
             return MGPOptional.of(TablutRules.getInvader());
         }
         const kingCoord: Coord = optionalKingCoord.get();
         if (TablutRules.isExternalThrone(kingCoord)) {
+            display(LOCAL_VERBOSE, 'The king escape, victory to defender');
             // king reached one corner !
             return MGPOptional.of(TablutRules.getDefender());
         }
         if (TablutRules.isPlayerImmobilised(Player.ZERO, board)) {
+            display(LOCAL_VERBOSE, 'Zero has no move, victory to one');
             return MGPOptional.of(Player.ONE);
         }
         if (TablutRules.isPlayerImmobilised(Player.ONE, board)) {
+            display(LOCAL_VERBOSE, 'One has no move, victory to zero');
             return MGPOptional.of(Player.ZERO);
         }
+        display(LOCAL_VERBOSE, 'no victory');
         return MGPOptional.empty();
     }
     // instance methods :
@@ -562,12 +578,6 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         return TablutRules.tryMove(player, move, board);
     }
     public getGameStatus(node: TablutNode): GameStatus {
-        const board: number[][] = node.gamePartSlice.getCopiedBoard();
-
-        const winner: MGPOptional<Player> = TablutRules.getWinner(board);
-        if (winner.isPresent()) {
-            return GameStatus.getVictory(winner.get());
-        }
-        return GameStatus.ONGOING;
+        return TablutRules.getGameStatus(node);
     }
 }

@@ -12,7 +12,6 @@ import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Encoder } from 'src/app/jscaip/Encoder';
 import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 
@@ -24,12 +23,10 @@ import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 
 export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameState> {
 
-    public availableMinimaxes: Minimax<DvonnMove, DvonnGameState>[] = [
-        new DvonnMinimax('DvonnMinimax'),
-        new MaxStacksDvonnMinimax('DvonnMinimaxMaximizeStacks'),
-    ];
     private static CASE_SIZE: number = 30;
     public rules: DvonnRules = new DvonnRules(DvonnGameState);
+    // TODO: enhance genericity so this can go to the constructor AND canOnlyPass be recognize/found
+
     public scores: number[] = [0, 0];
     public lastMove: DvonnMove = null;
     public chosen: Coord = null;
@@ -45,6 +42,10 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
+        this.availableMinimaxes= [
+            new DvonnMinimax(this.rules, 'DvonnMinimax'),
+            new MaxStacksDvonnMinimax(this.rules, 'DvonnMinimaxMaximizeStacks'),
+        ];
         this.showScore = true;
         this.scores = DvonnRules.getScores(this.rules.node.gamePartSlice);
         this.hexaBoard = this.rules.node.gamePartSlice.hexaBoard;

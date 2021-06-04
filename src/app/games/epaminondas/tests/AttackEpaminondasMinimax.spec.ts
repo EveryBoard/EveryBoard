@@ -18,7 +18,7 @@ describe('AttackEpaminondasMinimax:', () => {
 
     beforeEach(() => {
         rules = new EpaminondasRules(EpaminondasPartSlice);
-        minimax = new AttackEpaminondasMinimax('AttackEpaminondasMinimax');
+        minimax = new AttackEpaminondasMinimax(rules, 'AttackEpaminondasMinimax');
     });
     it('Should propose 114 moves at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(114);

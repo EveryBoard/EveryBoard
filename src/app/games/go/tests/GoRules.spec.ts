@@ -28,7 +28,7 @@ describe('GoRules:', () => {
     });
     beforeEach(() => {
         rules = new GoRules(GoPartSlice);
-        minimax = new GoMinimax('GoMinimax');
+        minimax = new GoMinimax(rules, 'GoMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

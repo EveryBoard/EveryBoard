@@ -18,7 +18,7 @@ describe('QuixoRules:', () => {
 
     beforeEach(() => {
         rules = new QuixoRules(QuixoPartSlice);
-        minimax = new QuixoMinimax('QuixoMinimax');
+        minimax = new QuixoMinimax(rules, 'QuixoMinimax');
     });
     it('Should forbid player to start a move with opponents piece', () => {
         const board: number[][] = [

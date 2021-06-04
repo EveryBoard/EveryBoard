@@ -18,7 +18,7 @@ describe('EpaminondasRules:', () => {
 
     beforeEach(() => {
         rules = new EpaminondasRules(EpaminondasPartSlice);
-        minimax = new EpaminondasMinimax('EpaminondasMinimax');
+        minimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
     });
     it('Should forbid phalanx to go outside the board (body)', () => {
         const board: NumberTable = [

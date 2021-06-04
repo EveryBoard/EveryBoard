@@ -12,7 +12,7 @@ describe('AwaleMinimax:', () => {
 
     beforeEach(() => {
         rules = new AwaleRules(AwalePartSlice);
-        minimax = new AwaleMinimax('AwaleMinimax');
+        minimax = new AwaleMinimax(rules, 'AwaleMinimax');
     });
     it('should not throw at first choice', () => {
         const bestMove: AwaleMove = rules.node.findBestMove(2, minimax);

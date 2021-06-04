@@ -6,7 +6,7 @@ import { PylosPartSlice } from '../PylosPartSlice';
 import { PylosNode, PylosRules } from '../PylosRules';
 import { PylosMinimax } from '../PylosMinimax';
 
-describe('PylosRules - Minimax:', () => {
+describe('PylosMinimax:', () => {
 
     let rules: PylosRules;
     let minimax: PylosMinimax;
@@ -19,7 +19,7 @@ describe('PylosRules - Minimax:', () => {
 
     beforeEach(() => {
         rules = new PylosRules(PylosPartSlice);
-        minimax = new PylosMinimax('PylosMinimax');
+        minimax = new PylosMinimax(rules, 'PylosMinimax');
     });
 
     it('Should provide 16 drops at first turn', () => {

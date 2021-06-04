@@ -2,8 +2,9 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
 import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
 import { CoerceoMinimax } from '../CoerceoMinimax';
+import { CoerceoRules } from '../CoerceoRules';
 
-describe('Coerceo - Minimax', () => {
+describe('CoerceoMinimax', () => {
 
     let minimax: CoerceoMinimax;
 
@@ -13,7 +14,8 @@ describe('Coerceo - Minimax', () => {
     const X: number = CoerceoPiece.ONE.value;
 
     beforeEach(() => {
-        minimax = new CoerceoMinimax('CoerceoMinimax');
+        const rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
+        minimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
     });
     it('Should prefer a board where he has more freedom', () => {
         const weakBoard: NumberTable = [

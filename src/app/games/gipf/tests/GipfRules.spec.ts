@@ -25,7 +25,7 @@ describe('GipfRules:', () => {
 
     beforeEach(() => {
         rules = new GipfRules(GipfPartSlice);
-        minimax = new GipfMinimax('GipfMinimax');
+        minimax = new GipfMinimax(rules, 'GipfMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

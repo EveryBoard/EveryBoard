@@ -14,7 +14,7 @@ describe('SaharaRules', () => {
 
     beforeEach(() => {
         rules = new SaharaRules(SaharaPartSlice);
-        minimax = new SaharaMinimax('SaharaMinimax');
+        minimax = new SaharaMinimax(rules, 'SaharaMinimax');
     });
     it('SaharaRules should be created', () => {
         expect(rules).toBeTruthy();

@@ -7,7 +7,7 @@ import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 describe('GoMove', () => {
     it('GoMove.encoder should be correct', () => {
         const rules: GoRules = new GoRules(GoPartSlice);
-        const minimax: GoMinimax = new GoMinimax('GoMinimax');
+        const minimax: GoMinimax = new GoMinimax(rules, 'GoMinimax');
         const firstTurnMoves: GoMove[] = minimax.getListMoves(rules.node);
         firstTurnMoves.push(GoMove.PASS);
         firstTurnMoves.push(GoMove.ACCEPT);

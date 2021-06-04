@@ -76,13 +76,15 @@ export abstract class Rules<M extends Move,
             }
         }
         display(LOCAL_VERBOSE, 'Rules.choose: current node has no moves or is pruned, let\'s verify ourselves');
-        const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
+        const status: L = this.isLegal(move, this.node.gamePartSlice);
         if (status.legal.isFailure()) {
             display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + status.legal.getReason());
             return false;
-        } else display(LOCAL_VERBOSE, 'Rules.choose: Move is legal, let\'s apply it');
+        } else {
+            display(LOCAL_VERBOSE, 'Rules.choose: Move is legal, let\'s apply it');
+        }
 
-        const resultingSlice: GamePartSlice = MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
+        const resultingSlice: GamePartSlice = this.applyLegalMove(move, this.node.gamePartSlice, status);
         const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(this.node,
                                                                   move,
                                                                   resultingSlice as S);

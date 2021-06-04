@@ -61,8 +61,11 @@ export class ActivatedRouteStub {
 }
 
 export class SimpleComponentTestUtils<T> {
+
     private fixture: ComponentFixture<T>;
+
     private component: T;
+
     public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
         await TestBed.configureTestingModule({
             imports: [
@@ -90,8 +93,8 @@ export class SimpleComponentTestUtils<T> {
         testUtils.component = testUtils.fixture.componentInstance;
         return testUtils;
     }
-
     private constructor() {}
+
     public async clickElement(elementName: string): Promise<boolean> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
@@ -359,6 +362,7 @@ export function expectSecondStateToBeBetterThanFirst(weakerState: GamePartSlice,
 {
     const weakValue: number = minimax.getBoardValue(new MGPNode(null, weakMove, weakerState)).value;
     const strongValue: number = minimax.getBoardValue(new MGPNode(null, strongMove, strongerState)).value;
+    console.log(weakValue, ' < ', strongValue)
     expect(weakValue).toBeLessThan(strongValue);
 }
 export function expectStateToBePreVictory(state: GamePartSlice,

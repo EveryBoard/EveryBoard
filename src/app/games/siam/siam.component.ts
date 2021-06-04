@@ -12,9 +12,9 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
 import { Encoder } from 'src/app/jscaip/Encoder';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-siam',
@@ -22,13 +22,10 @@ import { Encoder } from 'src/app/jscaip/Encoder';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice, SiamLegalityStatus> {
+
     public static VERBOSE: boolean = false;
 
-    public availableMinimaxes: Minimax<SiamMove, SiamPartSlice, SiamLegalityStatus>[] = [
-        new SiamMinimax('SiamMinimax'),
-    ];
     public readonly CASE_SIZE: number = 100;
-    public rules: SiamRules = new SiamRules(SiamPartSlice);
 
     public lastMove: SiamMove;
     public chosenCoord: Coord;
@@ -38,6 +35,14 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
     public movedPieces: Coord[] = [];
 
     public encoder: Encoder<SiamMove> = SiamMove.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new SiamRules(SiamPartSlice);
+        this.availableMinimaxes = [
+            new SiamMinimax(this.rules, 'SiamMinimax'),
+        ];
+    }
     public updateBoard(): void {
         display(SiamComponent.VERBOSE, 'updateBoard');
         const slice: SiamPartSlice = this.rules.node.gamePartSlice;

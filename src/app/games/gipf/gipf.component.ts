@@ -16,7 +16,6 @@ import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMov
 import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
 import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { Encoder } from 'src/app/jscaip/Encoder';
 
@@ -27,12 +26,9 @@ import { Encoder } from 'src/app/jscaip/Encoder';
 })
 export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlice, GipfLegalityStatus> {
 
-    public availableMinimaxes: Minimax<GipfMove, GipfPartSlice, GipfLegalityStatus>[] = [
-        new GipfMinimax('GipfMinimax'),
-    ];
     private static PIECE_SIZE: number = 30;
 
-    public rules: GipfRules = new GipfRules(GipfPartSlice);
+    public rules: GipfRules = new GipfRules(GipfPartSlice); // TODO that new genericity
 
     public scores: number[] = [0, 0];
 
@@ -64,6 +60,9 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
+        this.availableMinimaxes = [
+            new GipfMinimax(this.rules, 'GipfMinimax'),
+        ];
         this.showScore = true;
         this.constructedSlice = this.rules.node.gamePartSlice;
     }

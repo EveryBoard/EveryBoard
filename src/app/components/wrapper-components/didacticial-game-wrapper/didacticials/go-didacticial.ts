@@ -143,7 +143,7 @@ export const goDidacticial: DidacticialStep[] = [
         `Maintenant, si Clair essaye de recapturer la pierre que Foncé vient de poser, il rendrait au goban son état précédent, ouvrant la porte à une partie sans fin.
          L'emplacement de cette pièce est donc marqué d'un rectangle rouge, pour rapeller que c'est une intersection interdite.
          Cette règle s'appelle le Ko.
-         Toute l'astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n'ait pas le temps de protéger sa dernière pierre, afin que Clair puissr la recapturer.`,
+         Toute l'astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n'ait pas le temps de protéger sa dernière pierre, afin que Clair puisse la recapturer.`,
         'Raté.',
     ),
     DidacticialStep.fromMove(

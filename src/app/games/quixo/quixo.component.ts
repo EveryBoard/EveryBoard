@@ -10,8 +10,8 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { Encoder } from 'src/app/jscaip/Encoder';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-quixo',
@@ -21,15 +21,9 @@ import { Encoder } from 'src/app/jscaip/Encoder';
 export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSlice> {
     public static VERBOSE: boolean = false;
 
-
-    public availableMinimaxes: Minimax<QuixoMove, QuixoPartSlice>[] = [
-        new QuixoMinimax('QuixoMinimax'),
-    ];
     public CASE_SIZE: number = 100;
 
-    public rules: QuixoRules = new QuixoRules(QuixoPartSlice);
-
-    public slice: QuixoPartSlice = this.rules.node.gamePartSlice;
+    public slice: QuixoPartSlice;
 
     public lastMoveCoord: Coord = new Coord(-1, -1);
 
@@ -40,6 +34,15 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
     public victoriousCoords: Coord[] = [];
 
     public encoder: Encoder<QuixoMove> = QuixoMove.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new QuixoRules(QuixoPartSlice);
+        this.slice = this.rules.node.gamePartSlice;
+        this.availableMinimaxes = [
+            new QuixoMinimax(this.rules, 'QuixoMinimax'),
+        ];
+    }
     public updateBoard(): void {
         this.slice = this.rules.node.gamePartSlice;
         this.board = this.slice.board;
