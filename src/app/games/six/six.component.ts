@@ -15,7 +15,6 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
     from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
@@ -34,12 +33,9 @@ interface Scale {
 })
 export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, SixLegalityStatus> {
 
-    public availableMinimaxes: Minimax<SixMove, SixGameState, SixLegalityStatus>[] = [
-        new SixMinimax('SixMinimax'),
-    ];
     public readonly CONCRETE_WIDTH: number = 1000;
     public readonly CONCRETE_HEIGHT: number = 800;
-    public rules: SixRules = new SixRules(SixGameState);
+    public rules: SixRules = new SixRules(SixGameState); // TODO: genericity
     public state: SixGameState;
 
     public pieces: Coord[];
@@ -59,13 +55,16 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public Y_OFFSET: number;
     public PIECE_SIZE: number = 30;
 
-    public hexaLayout: HexaLayout =
-        new HexaLayout(this.PIECE_SIZE * 1.50,
-                       new Coord(this.PIECE_SIZE * 2, 0),
-                       FlatHexaOrientation.INSTANCE);
+    public hexaLayout: HexaLayout;
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
+        this.availableMinimaxes = [
+            new SixMinimax(this.rules, 'SixMinimax'),
+        ];
+        this.hexaLayout = new HexaLayout(this.PIECE_SIZE * 1.50,
+                                         new Coord(this.PIECE_SIZE * 2, 0),
+                                         FlatHexaOrientation.INSTANCE);
         this.setPieceSize(25);
         this.updateBoard();
     }

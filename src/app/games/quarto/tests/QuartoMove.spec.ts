@@ -8,7 +8,7 @@ import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 describe('QuartoMove', () => {
     it('QuartoMove.encoder should be correct', () => {
         const rules: QuartoRules = new QuartoRules(QuartoPartSlice);
-        const minimax: QuartoMinimax = new QuartoMinimax('QuartoMinimax');
+        const minimax: QuartoMinimax = new QuartoMinimax(rules, 'QuartoMinimax');
         const firstTurnMoves: QuartoMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
             NumberEncoderTestUtils.expectToBeCorrect(QuartoMove.encoder, move);

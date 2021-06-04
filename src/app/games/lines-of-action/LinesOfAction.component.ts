@@ -12,7 +12,7 @@ import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionMinimax } from './LinesOfActionMinimax';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
@@ -22,14 +22,10 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 })
 export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionMove, LinesOfActionState> {
 
-    public availableMinimaxes: Minimax<LinesOfActionMove, LinesOfActionState>[] = [
-        new LinesOfActionMinimax('LinesOfActionMinimax'),
-    ];
     public CASE_SIZE: number = 100;
     public STROKE_WIDTH: number = 8;
     public INDICATOR_SIZE: number = 20;
     public EMPTY: number = Player.NONE.value;
-    public rules: LinesOfActionRules = new LinesOfActionRules(LinesOfActionState);
     public targets: Coord[] = [];
     public state: LinesOfActionState;
     private selected: MGPOptional<Coord> = MGPOptional.empty();
@@ -38,6 +34,13 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
 
     public encoder: MoveEncoder<LinesOfActionMove> = LinesOfActionMove.encoder;
 
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new LinesOfActionRules(LinesOfActionState);
+        this.availableMinimaxes = [
+            new LinesOfActionMinimax(this.rules, 'LinesOfActionMinimax'),
+        ];
+    }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y);
         if (clickValidity.isFailure()) {

@@ -9,7 +9,7 @@ describe('PentagoMinimax', () => {
 
     beforeEach(() => {
         rules = new PentagoRules(PentagoGameState);
-        minimax = new PentagoMinimax('PentagoMinimax');
+        minimax = new PentagoMinimax(rules, 'PentagoMinimax');
     });
     it('Should propose 36 moves at first turn', () => {
         expect(minimax.getListMoves(rules.node).length).toBe(36);

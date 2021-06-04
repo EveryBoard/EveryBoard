@@ -23,7 +23,7 @@ describe('SixRules', () => {
 
     beforeEach(() => {
         rules = new SixRules(SixGameState);
-        minimax = new SixMinimax('SixMinimax');
+        minimax = new SixMinimax(rules, 'SixMinimax');
     });
     describe('chooseMove', () => {
         it('should have boardInfo after first move', () => {

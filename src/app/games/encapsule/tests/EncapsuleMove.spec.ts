@@ -21,7 +21,7 @@ describe('EncapsuleMove', () => {
     describe('encoder', () => {
         it('should be correct for first turn moves', () => {
             const rules: EncapsuleRules = new EncapsuleRules(EncapsulePartSlice);
-            const minimax: EncapsuleMinimax = new EncapsuleMinimax('EncapsuleMinimax');
+            const minimax: EncapsuleMinimax = new EncapsuleMinimax(rules, 'EncapsuleMinimax');
             const firstTurnMoves: EncapsuleMove[] = minimax.getListMoves(rules.node);
             for (const move of firstTurnMoves) {
                 NumberEncoderTestUtils.expectToBeCorrect(EncapsuleMove.encoder, move);

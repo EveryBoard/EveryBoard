@@ -30,7 +30,7 @@ describe('SiamRules:', () => {
 
     beforeEach(() => {
         rules = new SiamRules(SiamPartSlice);
-        minimax = new SiamMinimax('SiamMinimax');
+        minimax = new SiamMinimax(rules, 'SiamMinimax');
     });
     it('Should be created', () => {
         expect(rules).toBeTruthy();

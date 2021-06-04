@@ -7,7 +7,7 @@ import { QuartoPiece } from './QuartoPiece';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Minimax } from 'src/app/jscaip/Minimax';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
@@ -17,10 +17,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 })
 export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
 
-    public availableMinimaxes: Minimax<QuartoMove, QuartoPartSlice>[] = [
-        new QuartoMinimax('QuartoMinimax'),
-    ];
-    public rules: QuartoRules = new QuartoRules(QuartoPartSlice);
+    public rules: QuartoRules = new QuartoRules(QuartoPartSlice); // TODO: genericity
 
     public CASE_SIZE: number = 100;
     public EMPTY: number = QuartoPiece.NONE.value;
@@ -33,6 +30,13 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public victoriousCoords: Coord[] = [];
 
     public encoder: MoveEncoder<QuartoMove> = QuartoMove.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.availableMinimaxes = [
+            new QuartoMinimax(this.rules, 'QuartoMinimax'),
+        ];
+    }
     public updateBoard(): void {
         const slice: QuartoPartSlice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;

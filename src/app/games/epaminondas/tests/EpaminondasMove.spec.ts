@@ -30,7 +30,7 @@ describe('EpaminondasMove: ', () => {
     });
     it('EpaminondasMove.encoder should be correct', () => {
         const rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
-        const minimax: EpaminondasMinimax = new EpaminondasMinimax('EpaminondasMinimax');
+        const minimax: EpaminondasMinimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
         const moves: EpaminondasMove[] = minimax.getListMoves(rules.node);
         for (const move of moves) {
             NumberEncoderTestUtils.expectToBeCorrect(EpaminondasMove.encoder, move);

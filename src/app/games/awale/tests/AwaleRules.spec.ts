@@ -12,7 +12,7 @@ describe('AwaleRules', () => {
 
     beforeEach(() => {
         rules = new AwaleRules(AwalePartSlice);
-        minimax = new AwaleMinimax('AwaleMinimax');
+        minimax = new AwaleMinimax(rules, 'AwaleMinimax');
     });
     it('should capture', () => {
         const board: number[][] = [

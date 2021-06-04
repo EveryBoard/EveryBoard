@@ -15,7 +15,7 @@ describe('ReversiMinimax', () => {
 
     beforeEach(() => {
         rules = new ReversiRules(ReversiPartSlice);
-        minimax = new ReversiMinimax('ReversiMinimax');
+        minimax = new ReversiMinimax(rules, 'ReversiMinimax');
     });
     it('should not throw at first choice', () => {
         const bestMove: ReversiMove = rules.node.findBestMove(2, minimax);

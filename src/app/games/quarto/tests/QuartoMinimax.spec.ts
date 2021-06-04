@@ -2,8 +2,9 @@ import { QuartoPiece } from '../QuartoPiece';
 import { QuartoPartSlice } from '../QuartoPartSlice';
 import { QuartoMinimax } from '../QuartoMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { QuartoRules } from '../QuartoRules';
 
-describe('QuartoRules - Minimax:', () => {
+describe('QuartoMinimax:', () => {
     let minimax: QuartoMinimax;
 
     const NULL: number = QuartoPiece.NONE.value;
@@ -13,7 +14,8 @@ describe('QuartoRules - Minimax:', () => {
     const ABBB: number = QuartoPiece.ABBB.value;
 
     beforeEach(() => {
-        minimax = new QuartoMinimax('QuartoMinimax');
+        const rules: QuartoRules = new QuartoRules(QuartoPartSlice);
+        minimax = new QuartoMinimax(rules, 'QuartoMinimax');
     });
     it('Should know that the board value is PRE_VICTORY when pieceInHand match board criteria', () => {
         const board: number[][] = [

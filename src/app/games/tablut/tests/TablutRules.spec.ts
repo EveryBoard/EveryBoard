@@ -20,7 +20,7 @@ describe('TablutRules', () => {
 
     beforeEach(() => {
         rules = new TablutRules(TablutPartSlice);
-        minimax = new TablutMinimax('TablutMinimax');
+        minimax = new TablutMinimax(rules, 'TablutMinimax');
     });
     it('Should be created', () => {
         expect(rules).toBeTruthy();

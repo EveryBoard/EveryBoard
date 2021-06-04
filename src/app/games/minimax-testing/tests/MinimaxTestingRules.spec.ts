@@ -6,22 +6,24 @@ import { Player } from 'src/app/jscaip/Player';
 
 describe('MinimaxTestingRules', () => {
 
-    const minimax: MinimaxTestingMinimax = new MinimaxTestingMinimax('MinimaxTesting');
+    let rules: MinimaxTestingRules;
+    let minimax: MinimaxTestingMinimax;
 
+    beforeEach(() => {
+        rules = new MinimaxTestingRules(MinimaxTestingPartSlice);
+        minimax = new MinimaxTestingMinimax(rules, 'MinimaxTesting');
+    });
     it('should be created', () => {
-        const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         expect(rules).toBeTruthy();
     });
     it('should be a victory of second player', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
-        const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         expect(rules.choose(MinimaxTestingMove.RIGHT)).toBeTrue();
         expect(minimax.getBoardValue(rules.node).value)
             .toEqual(Player.ONE.getVictoryValue());
     });
     it('IA should avoid loosing 4 move in a row', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
-        const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         let bestMove: MinimaxTestingMove;
         for (let i: number = 1; i < 5; i++) {
             bestMove = rules.node.findBestMove(1, minimax);
@@ -32,7 +34,6 @@ describe('MinimaxTestingRules', () => {
     });
     xit('should not create sister-node to winning-node', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
-        const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         const bestMove: MinimaxTestingMove = rules.node.findBestMove(5, minimax);
         expect(bestMove).toEqual(MinimaxTestingMove.DOWN);
         expect(rules.node.getHopedValue(minimax)).toEqual(Number.MIN_SAFE_INTEGER);
@@ -40,7 +41,6 @@ describe('MinimaxTestingRules', () => {
     });
     it('IA(depth=1) should create exactly 2 child at each turn before reaching the border', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_0;
-        const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         const initialNode: MinimaxTestingNode = rules.node;
         let bestMove: MinimaxTestingMove;
         for (let i: number = 1; i <= 3; i++) {
@@ -51,7 +51,6 @@ describe('MinimaxTestingRules', () => {
     });
     it('Minimax should prune', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_0;
-        const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         const initialNode: MinimaxTestingNode = rules.node;
         spyOn(minimax, 'getBoardValue').and.callThrough();
         spyOn(minimax, 'getListMoves').and.callThrough();
@@ -66,7 +65,6 @@ describe('MinimaxTestingRules', () => {
     });
     it('Should not go further than the end game', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_0;
-        const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         const initialNode: MinimaxTestingNode = rules.node;
         spyOn(minimax, 'getBoardValue').and.callThrough();
         spyOn(minimax, 'getListMoves').and.callThrough();
@@ -80,7 +78,6 @@ describe('MinimaxTestingRules', () => {
     describe('Should choose the first one to minimise calculation when all choice are the same value', () => {
         it('depth = 1', () => {
             MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_2;
-            const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
             const bestMove: MinimaxTestingMove = rules.node.findBestMove(1, minimax);
             expect(bestMove).toEqual(minimax.getListMoves(rules.node)[0]);
             expect(rules.node.countDescendants()).toEqual(2);
@@ -88,7 +85,6 @@ describe('MinimaxTestingRules', () => {
         it('depth = 2', () => {
             MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_3;
             spyOn(minimax, 'getListMoves').and.callThrough();
-            const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
             const bestMove: MinimaxTestingMove = rules.node.findBestMove(2, minimax);
             expect(bestMove).toEqual(minimax.getListMoves(rules.node)[0]);
             expect(rules.node.countDescendants()).toEqual(3);

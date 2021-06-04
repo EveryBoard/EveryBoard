@@ -14,26 +14,23 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder, MoveEncoder } from 'src/app/jscaip/Encoder';
+import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TablutLegalityStatus } from './TablutLegalityStatus';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-tablut',
     templateUrl: './tablut.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice> {
+export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, TablutLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
-    public availableMinimaxes: Minimax<TablutMove, TablutPartSlice>[] = [
-        new TablutMinimax('TablutMinimax'),
-    ];
     public readonly CASE_SIZE: number = 100;
 
     public NONE: number = TablutCase.UNOCCUPIED.value;
-
-    public rules: TablutRules = new TablutRules(TablutPartSlice);
 
     public throneCoords: Coord[] = [
         new Coord(0, 0),
@@ -43,17 +40,36 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         new Coord(8, 8),
     ];
     private captureds: Coord[] = [];
+    private threateneds: Coord[] = [];
 
     public chosen: Coord = new Coord(-1, -1);
 
     public lastMove: TablutMove;
 
     public encoder: MoveEncoder<TablutMove> = TablutMove.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new TablutRules(TablutPartSlice);
+        this.availableMinimaxes = [
+            new TablutMinimax(this.rules, 'TablutMinimax'),
+            new TablutPieceAndInfluenceMinimax(this.rules, 'TablutPieceAndInfluenceMinimax'),
+        ];
+    }
     public updateBoard(): void {
         display(TablutComponent.VERBOSE, 'tablutComponent.updateBoard');
         this.lastMove = this.rules.node.move;
         this.board = this.rules.node.gamePartSlice.getCopiedBoard();
 
+        const m: TablutPieceAndInfluenceMinimax = this.availableMinimaxes[1] as TablutPieceAndInfluenceMinimax;
+        this.threateneds = [];
+        for (let y: number = 0; y < TablutRulesConfig.WIDTH; y++) {
+            for (let x: number = 0; x < TablutRulesConfig.WIDTH; x++) {
+                if (m.isThreatened(new Coord(x, y), this.rules.node.gamePartSlice)) {
+                    this.threateneds.push(new Coord(x, y));
+                }
+            }
+        }
         this.captureds = [];
         if (this.lastMove) {
             this.showPreviousMove();

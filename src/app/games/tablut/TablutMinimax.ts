@@ -12,12 +12,12 @@ export class TablutMinimax extends Minimax<TablutMove, TablutPartSlice, TablutLe
 
     public getListMoves(node: TablutNode): TablutMove[] {
         const LOCAL_VERBOSE: boolean = false;
-        display(TablutRules.VERBOSE || LOCAL_VERBOSE, { TablutRules_getListMoves: { node } });
+        display(TablutRules.VERBOSE || LOCAL_VERBOSE, { TablutMinimax_getListMoves: { node } });
 
-        const slice: TablutPartSlice = node.gamePartSlice;
+        const state: TablutPartSlice = node.gamePartSlice;
 
-        const currentBoard: number[][] = slice.getCopiedBoard();
-        const currentPlayer: Player = slice.getCurrentPlayer();
+        const currentBoard: number[][] = state.getCopiedBoard();
+        const currentPlayer: Player = state.getCurrentPlayer();
 
         return TablutRules.getPlayerListMoves(currentPlayer, currentBoard);
     }

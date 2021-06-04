@@ -18,7 +18,7 @@ describe('SixMinimax', () => {
 
     beforeEach(() => {
         rules = new SixRules(SixGameState);
-        minimax = new SixMinimax('SixMinimax');
+        minimax = new SixMinimax(rules, 'SixMinimax');
     });
     describe('pre-victories', () => {
         it('Should pass forcing move to children node to minimise calculations', () => {

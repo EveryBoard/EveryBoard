@@ -28,7 +28,7 @@ describe('EncapsuleRules', () => {
 
     beforeEach(() => {
         rules = new EncapsuleRules(EncapsulePartSlice);
-        minimax = new EncapsuleMinimax('EncapsuleMinimax');
+        minimax = new EncapsuleMinimax(rules, 'EncapsuleMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

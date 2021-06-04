@@ -16,7 +16,7 @@ describe('P4Rules', () => {
 
     beforeEach(() => {
         rules = new P4Rules(P4PartSlice);
-        minimax = new P4Minimax('P4Minimax');
+        minimax = new P4Minimax(rules, 'P4Minimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

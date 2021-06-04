@@ -4,15 +4,17 @@ import { QuixoPartSlice } from '../QuixoPartSlice';
 import { QuixoMove } from '../QuixoMove';
 import { QuixoMinimax } from '../QuixoMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { QuixoRules } from '../QuixoRules';
 
-describe('QuixoRules - Minimax:', () => {
+describe('QuixoMinimax:', () => {
     let minimax: QuixoMinimax;
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;
     const O: number = Player.ZERO.value;
 
     beforeEach(() => {
-        minimax = new QuixoMinimax('QuixoMinimax');
+        const rules: QuixoRules = new QuixoRules(QuixoPartSlice);
+        minimax = new QuixoMinimax(rules, 'QuixoMinimax');
     });
 
     it('Should calcule board value according to longest line differences', () => {

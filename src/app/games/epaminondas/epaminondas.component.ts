@@ -9,10 +9,10 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-epaminondas',
@@ -23,14 +23,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                                                                 EpaminondasPartSlice,
                                                                 EpaminondasLegalityStatus>
 {
-    public availableMinimaxes: Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus>[] = [
-        new EpaminondasMinimax('Normal'),
-        new PositionalEpaminondasMinimax('Positional'),
-        new AttackEpaminondasMinimax('Attack'),
-    ];
     public NONE: number = Player.NONE.value;
     public CASE_SIZE: number = 100;
-    public rules: EpaminondasRules = new EpaminondasRules(EpaminondasPartSlice);
 
     public firstPiece: Coord = new Coord(-15, -1);
 
@@ -49,6 +43,16 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     private captureds: Coord[] = [];
 
     public encoder: MoveEncoder<EpaminondasMove> = EpaminondasMove.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new EpaminondasRules(EpaminondasPartSlice);
+        this.availableMinimaxes = [
+            new EpaminondasMinimax(this.rules, 'Normal'),
+            new PositionalEpaminondasMinimax(this.rules, 'Positional'),
+            new AttackEpaminondasMinimax(this.rules, 'Attack'),
+        ];
+    }
     public updateBoard(): void {
         this.firstPiece = new Coord(-15, -1);
         this.lastPiece = new Coord(-15, -1);

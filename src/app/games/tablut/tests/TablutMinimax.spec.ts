@@ -6,7 +6,7 @@ import { TablutCase } from '../TablutCase';
 import { TablutRules } from '../TablutRules';
 import { TablutMinimax } from '../TablutMinimax';
 
-describe('TablutRules - Minimax:', () => {
+describe('TablutMinimax:', () => {
 
     let rules: TablutRules;
     const _: number = TablutCase.UNOCCUPIED.value;
@@ -33,7 +33,7 @@ describe('TablutRules - Minimax:', () => {
         rules.node = new MGPNode(null, null, slice);
         const winnerMove: TablutMove = new TablutMove(new Coord(3, 0), new Coord(8, 0));
 
-        const minimax: TablutMinimax = new TablutMinimax('TablutMinimax');
+        const minimax: TablutMinimax = new TablutMinimax(rules, 'TablutMinimax');
         const bestMove: TablutMove = rules.node.findBestMove(1, minimax);
         expect(bestMove).toEqual(winnerMove);
     });

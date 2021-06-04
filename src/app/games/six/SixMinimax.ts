@@ -39,7 +39,8 @@ export class SixMinimax extends AlignementMinimax<SixMove,
 
     public static getInstance(): SixMinimax {
         if (SixMinimax.INSTANCE == null) {
-            SixMinimax.INSTANCE = new SixMinimax('SixMinimax');
+            const rules: SixRules = new SixRules(SixGameState);
+            SixMinimax.INSTANCE = new SixMinimax(rules, 'SixMinimax');
         }
         return SixMinimax.INSTANCE;
     }

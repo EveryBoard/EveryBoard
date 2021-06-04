@@ -9,7 +9,7 @@ describe('SaharaMoves', () => {
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
         const rules: SaharaRules = new SaharaRules(SaharaPartSlice);
         expect(rules).toBeTruthy();
-        const minimax: SaharaMinimax = new SaharaMinimax('SaharaMinimax');
+        const minimax: SaharaMinimax = new SaharaMinimax(rules, 'SaharaMinimax');
         const moves: SaharaMove[] = minimax.getListMoves(rules.node);
         expect(moves.length).toEqual(12);
         for (const move of moves) {

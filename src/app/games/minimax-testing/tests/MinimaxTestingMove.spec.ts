@@ -8,7 +8,7 @@ describe('MinimaxTestingMove', () => {
     it('MinimaxTestingMove.encoder should be correct', () => {
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_1;
         const rules: MinimaxTestingRules = new MinimaxTestingRules(MinimaxTestingPartSlice);
-        const minimax: MinimaxTestingMinimax = new MinimaxTestingMinimax('MinimaxTestingMinimax');
+        const minimax: MinimaxTestingMinimax = new MinimaxTestingMinimax(rules, 'MinimaxTestingMinimax');
         const firstTurnMoves: MinimaxTestingMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
             NumberEncoderTestUtils.expectToBeCorrect(MinimaxTestingMove.encoder, move);

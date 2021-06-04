@@ -18,7 +18,7 @@ describe('ReversiRules', () => {
 
     beforeEach(() => {
         rules = new ReversiRules(ReversiPartSlice);
-        minimax = new ReversiMinimax('ReversiMinimax');
+        minimax = new ReversiMinimax(rules, 'ReversiMinimax');
     });
     it('ReversiRules should be created', () => {
         expect(rules).toBeTruthy();

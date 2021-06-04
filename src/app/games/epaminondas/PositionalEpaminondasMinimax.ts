@@ -11,7 +11,10 @@ import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasPartSlice } from './EpaminondasPartSlice';
 import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 
-export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPartSlice> {
+export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
+                                                          EpaminondasPartSlice,
+                                                          EpaminondasLegalityStatus>
+{
 
     public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const PLAYER: Player = node.gamePartSlice.getCurrentPlayer();

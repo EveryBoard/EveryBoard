@@ -24,7 +24,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
                                                             PentagoLegalityStatus>
 {
 
-    public rules: PentagoRules = new PentagoRules(PentagoGameState);
+    public rules: PentagoRules = new PentagoRules(PentagoGameState); // TODO: genericity
 
     public encoder: MoveEncoder<PentagoMove> = PentagoMove.encoder;
 
@@ -46,13 +46,12 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
         super(snackBar);
         this.updateBoard();
         this.availableMinimaxes = [
-            new PentagoMinimax('PentagoMinimax'),
+            new PentagoMinimax(this.rules, 'PentagoMinimax'),
         ];
         this.BLOCK_WIDTH = (3 * this.CASE_SIZE) + (2 * this.STROKE_WIDTH);
         this.BLOCK_SEPARATION = (this.BLOCK_WIDTH + 2 * this.STROKE_WIDTH);
         this.DIAGONAL_BAR_OFFSET = Math.cos(Math.PI / 4) * 0.75 * this.CASE_SIZE;
         this.ARROWS = this.generateArrowsCoord();
-        console.log(this.ARROWS);
     }
     public updateBoard(): void {
         this.board = this.rules.node.gamePartSlice.getCopiedBoard();
@@ -184,7 +183,6 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
     }
     public getBlockClasses(x: number, y: number): string[] {
         const blockIndex: number = x + 2 * y;
-        console.log(x, y, blockIndex, this.movedBlock)
         if (blockIndex === this.movedBlock) {
             return ['moved'];
         }
