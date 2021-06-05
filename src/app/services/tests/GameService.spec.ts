@@ -11,7 +11,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/request';
-import { IJoiner } from 'src/app/domain/ijoiner';
+import { FirstPlayer, IJoiner, PartStatus } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
@@ -95,8 +95,8 @@ describe('GameService', () => {
             candidates: [],
             creator: 'creator',
             chosenPlayer: 'hisFriend',
-            partStatus: 2,
-            firstPlayer: 'CREATOR',
+            partStatus: PartStatus.CONFIG_PROPOSED.value,
+            firstPlayer: FirstPlayer.CREATOR.value,
         };
         spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);

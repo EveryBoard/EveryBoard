@@ -35,7 +35,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         `Capture`,
         `Chaque pièce a trois cases triangulaires voisines (2 sur les bords).
-         Quand toutes les cases voisines sauf une sont occupées, et qu'un ennemi vient se déplacer sur cette dernière case libre, votre pièce est capturée !
+         Quand toutes les cases voisines sauf une sont occupées, et qu'un ennemi vient se déplacer sur cette dernière case libre, votre pièce est capturée !
          Cependant, il est possible pour un joueur de se placer entre 3 pièces adversaires (ou 2 contre un bord) sans être capturé.
          Vous jouez clair, effectuez une capture`,
         new CoerceoPartSlice([
@@ -108,13 +108,13 @@ export const coerceoDidacticial: DidacticialStep[] = [
             CoerceoMove.fromTilesExchange(new Coord(5, 5)),
         ],
         'Bravo !',
-        `C'est bien gentil de se déplacer mais en cliquant sur la pièce vous l'aurez immédiatement !`,
+        `C'est bien gentil de se déplacer mais en cliquant sur la pièce vous l'aurez immédiatement !`,
     ),
     DidacticialStep.fromMove(
         `Capture spéciale`,
-        `Dès qu'une tuile est enlevée du plateau pendant votre tour, certaines pièces de l'adversaires peuvent n'avoir plus aucunes cases voisines libre, elle seront alors capturées !
+        `Dès qu'une tuile est enlevée du plateau pendant votre tour, certaines pièces de l'adversaires peuvent n'avoir plus aucunes cases voisines libre, elle seront alors capturées !
         Si cela arrivait à l'une de vos pièces, celle-ci resterait cependant sur le plateau.
-        Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le!`,
+        Un coup démontrant ces deux choses est faisable pour le joueur clair, faites-le !`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
@@ -128,9 +128,10 @@ export const coerceoDidacticial: DidacticialStep[] = [
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
         ], 1, [0, 0], [0, 0]),
         [
-            CoerceoMove.fromCoordToCoord(new Coord(6, 7), new Coord(4, 7)),
+            CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(6, 5)),
+            CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(8, 5)),
         ],
-        `Bravo! Voyez, votre pièce a perdu sa dernière liberté quand vous avez récupéré la tuile, mais est restée car c'était votre tour, celle de l'adversaire a disparu car la capture de la tuile lui a enlevé une liberté il ne lui en restait plus!`,
-        `Raté!`,
+        `Bravo ! Voyez, votre pièce a perdu sa dernière liberté quand vous avez récupéré la tuile, mais est restée car c'était votre tour, celle de l'adversaire a disparu car la capture de la tuile lui a enlevé une liberté il ne lui en restait plus!`,
+        `Raté !`,
     ),
 ];

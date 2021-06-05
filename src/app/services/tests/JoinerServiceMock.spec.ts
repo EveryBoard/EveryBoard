@@ -1,4 +1,4 @@
-import { IJoiner, IJoinerId } from 'src/app/domain/ijoiner';
+import { FirstPlayer, IJoiner, IJoinerId, PartStatus } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 
@@ -47,8 +47,8 @@ export class JoinerServiceMock {
                 candidates: ['uniqueCandidate'],
                 creator: 'creator',
                 chosenPlayer: 'uniqueCandidate',
-                firstPlayer: 'CREATOR',
-                partStatus: 3,
+                firstPlayer: FirstPlayer.CREATOR.value,
+                partStatus: PartStatus.PART_STARTED.value,
                 maximalMoveDuration: 60,
                 totalPartDuration: 300,
                 gameType: 42,

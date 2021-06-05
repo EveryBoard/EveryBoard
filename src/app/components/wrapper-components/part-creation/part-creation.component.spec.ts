@@ -24,6 +24,7 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
+import { FirstPlayer, PartStatus } from 'src/app/domain/ijoiner';
 
 describe('PartCreationComponent:', () => {
     let fixture: ComponentFixture<PartCreationComponent>;
@@ -146,7 +147,11 @@ describe('PartCreationComponent:', () => {
 
             expect(fixture.debugElement.query(By.css('#selected_firstCandidate')))
                 .toBeTruthy('First candidate should appear');
-            await joinerDAOMock.update('joinerId', { partStatus: 0, chosenPlayer: '', candidates: [] });
+            await joinerDAOMock.update('joinerId', {
+                partStatus: PartStatus.PART_CREATED.value,
+                chosenPlayer: '',
+                candidates: []
+            });
             fixture.detectChanges();
 
             expect(fixture.debugElement.query(By.css('#selected_firstCandidate')))
@@ -183,14 +188,21 @@ describe('PartCreationComponent:', () => {
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
         fixture.detectChanges();
         await fixture.whenStable();
-        await joinerDAOMock.update('joinerId',
-                                   { partStatus: 1, candidates: [], chosenPlayer: 'firstCandidate' });
+        await joinerDAOMock.update('joinerId', {
+            partStatus: PartStatus.PLAYER_CHOSEN.value,
+            candidates: [],
+            chosenPlayer: 'firstCandidate',
+        });
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.css('#acceptConfig')))
             .toBeFalsy('Config acceptation should not be possible before config proposal');
-        await joinerDAOMock.update('joinerId',
-                                   { partStatus: 2, maximalMoveDuration: 10, totalPartDuration: 60, firstPlayer: 'CREATOR' });
+        await joinerDAOMock.update('joinerId', {
+            partStatus: PartStatus.CONFIG_PROPOSED.value,
+            maximalMoveDuration: 10,
+            totalPartDuration: 60,
+            firstPlayer: FirstPlayer.CREATOR.value,
+        });
         fixture.detectChanges();
 
         expect(fixture.debugElement.query(By.css('#acceptConfig')))
@@ -203,8 +215,11 @@ describe('PartCreationComponent:', () => {
         await fixture.whenStable();
         await joinerDAOMock.update('joinerId', { candidates: ['firstCandidate'] });
         await fixture.whenStable();
-        await joinerDAOMock.update('joinerId',
-                                   { partStatus: 1, candidates: [], chosenPlayer: 'firstCandidate' });
+        await joinerDAOMock.update('joinerId', {
+            partStatus: PartStatus.PLAYER_CHOSEN.value,
+            candidates: [],
+            chosenPlayer: 'firstCandidate'
+        });
         // TODO: replace by real actor action (chooseCandidate)
         await fixture.whenStable();
         fixture.detectChanges();
@@ -219,11 +234,18 @@ describe('PartCreationComponent:', () => {
         await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
         fixture.detectChanges(); // joiner arrival
         await fixture.whenStable();
-        await joinerDAOMock.update('joinerId',
-                                   { partStatus: 1, candidates: [], chosenPlayer: 'firstCandidate' });
+        await joinerDAOMock.update('joinerId', {
+            partStatus: PartStatus.PLAYER_CHOSEN.value,
+            candidates: [],
+            chosenPlayer: 'firstCandidate',
+        });
         await fixture.whenStable();
-        await joinerDAOMock.update('joinerId',
-                                   { partStatus: 2, maximalMoveDuration: 10, totalPartDuration: 60, firstPlayer: 'CREATOR' });
+        await joinerDAOMock.update('joinerId', {
+            partStatus: PartStatus.CONFIG_PROPOSED.value,
+            maximalMoveDuration: 10,
+            totalPartDuration: 60,
+            firstPlayer: FirstPlayer.CREATOR.value,
+        });
         await fixture.whenStable();
         fixture.detectChanges();
         spyOn(component.gameStartNotification, 'emit');

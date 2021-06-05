@@ -3,7 +3,7 @@ import { DebugElement } from '@angular/core';
 import { OnlineGameWrapperComponent, UpdateType } from './online-game-wrapper.component';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
-import { IJoiner } from 'src/app/domain/ijoiner';
+import { IJoiner, PartStatus } from 'src/app/domain/ijoiner';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
@@ -89,15 +89,24 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         expect(wrapper.partCreation).toBeTruthy('partCreation field should also be present');
         await joinerDAO.update('joinerId', { candidates: ['firstCandidate'] });
         componentTestUtils.detectChanges();
-        await joinerDAO.update('joinerId', { partStatus: 1, candidates: [], chosenPlayer: 'firstCandidate' });
+        await joinerDAO.update('joinerId', {
+            partStatus: PartStatus.PLAYER_CHOSEN.value,
+            candidates: [],
+            chosenPlayer: 'firstCandidate',
+        });
         // TODO: replace by real actor action (chooseCandidate)
         componentTestUtils.detectChanges();
         await wrapper.partCreation.proposeConfig();
         componentTestUtils.detectChanges();
         if (shorterGlobalChrono) {
-            await joinerDAO.update('joinerId', { partStatus: 3, maximalMoveDuration: 120 });
+            await joinerDAO.update('joinerId', {
+                partStatus: PartStatus.PART_STARTED.value,
+                maximalMoveDuration: 120,
+            });
         } else {
-            await joinerDAO.update('joinerId', { partStatus: 3 });
+            await joinerDAO.update('joinerId', {
+                partStatus: PartStatus.PART_STARTED.value,
+            });
         }
         await partDAO.update('joinerId', { playerOne: 'firstCandidate', turn: 0, beginning: Date.now() });
         componentTestUtils.detectChanges();
@@ -114,10 +123,10 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         componentTestUtils.detectChanges();
         tick(1);
         return result;
-    };
+    }
     async function askTakeBack(): Promise<boolean> {
         return await componentTestUtils.clickElement('#askTakeBackButton');
-    };
+    }
     const acceptTakeBack: () => Promise<boolean> = async() => {
         return await componentTestUtils.clickElement('#acceptTakeBackButton');
     };
@@ -592,7 +601,6 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     it('Should display when the opponent resigned', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         tick(1);
-        const move1: number = QuartoMove.encoder.encodeNumber(new QuartoMove(2, 2, QuartoPiece.BBBA));
         await doMove(FIRST_MOVE, true);
         await TestBed.inject(GameService).resign('joinerId', CREATOR.pseudo, OPPONENT.pseudo);
         expect(componentTestUtils.findElement('#resignIndicator'));

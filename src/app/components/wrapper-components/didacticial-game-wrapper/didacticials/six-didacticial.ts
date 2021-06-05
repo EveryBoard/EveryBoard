@@ -14,7 +14,7 @@ export const sixDidacticial: DidacticialStep[] = [
 
     DidacticialStep.informational(
         'Six',
-        `Le six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un bloc discontinu.
+        `Le six est une jeu sans plateau, où les pièces sont placées les unes à côtés des autres, en un bloc continu.
          Chaque joueur a 21 pièces à lui, 2 étant déjà placée sur le plateau.
          Le but principal du jeu est de former l'une des trois formes gagnantes avec vos pièces.`,
         SixGameState.getInitialSlice(),
@@ -66,6 +66,7 @@ export const sixDidacticial: DidacticialStep[] = [
         `Quand après 40 tours, toutes vos pièces sont placées, on passe en deuxième phase.
          Il faut maintenant déplacer ses pièces, en prenant garde à ne pas enlever une pièce qui empêchait l'adversaire de gagner.
          Dorénavant, si après un déplacement un ou plusieurs groupe de pièce est déconnecté du plus grand groupe de pièce, ces petits groupes de pièces sont enlevés définitivement du jeu.
+         Vous joués foncé, effectuez un déplacement qui déconnecte une pièce de votre adversaire.
          `,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, _, _, X, _],
@@ -82,19 +83,19 @@ export const sixDidacticial: DidacticialStep[] = [
         SixMove.fromDeplacement(new Coord(6, 1), new Coord(6, 2)),
         (move: SixMove, resultingState: SixGameState) => {
             if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
-                return MGPValidation.failure(`Vous avez bien déconnecté une pièce adversaire, mais également la votre, et donc, vous perdez autant de point que l'adversaire, ce qui n'est pas spécialement avantageux!`);
+                return MGPValidation.failure(`Vous avez bien déconnecté une pièce adversaire, mais également la votre, et donc, vous perdez autant de point que l'adversaire, ce qui n'est pas spécialement avantageux !`);
             } else if (new Coord(6, 1).equals(move.start.getOrNull())) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure('Ce mouvement ne déconnecte pas du jeu de pièces adverses! Réessayez avec une autre pièce!');
+                return MGPValidation.failure('Ce mouvement ne déconnecte pas exactement une pièce adverse! Réessayez avec une autre pièce !');
             }
         },
-        'Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire!',
+        'Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire !',
     ),
     DidacticialStep.fromPredicate(
         'Victoire par déconnection',
         `Lors de la seconde phase de jeu, en plus des victoires normales (ligne, rond, triangle), on peux gagner par déconnection.
-         Si à un moment du jeu, l'un des deux joueurs n'as plus assez de pièce pour gagner (il en a donc 6 ou moins), la partie s'arrête.
+         Si à un moment du jeu, l'un des deux joueurs n'a plus assez de pièce pour gagner (il en a donc moins de 6), la partie s'arrête.
          Celui qui a le plus de pièces à gagné, et en cas d'égalité, c'est match nul.
          Ici, le joueur foncé peut gagner. Faites-le.`,
         SixGameState.fromRepresentation([

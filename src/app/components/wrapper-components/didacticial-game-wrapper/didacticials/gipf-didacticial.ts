@@ -194,7 +194,7 @@ export const gipfDidacticial: DidacticialStep[] = [
                 ],
             ),
         ],
-        `Bravo, vous avez récupéré plusieur 12 de vos pièces et capturé 2 pièces de l'adversaire.
+        `Bravo, vous avez récupéré 12 de vos pièces et capturé 2 pièces de l'adversaire.
          Le maximum possible étant 3 par captures.`,
         'Raté, la capture optimale capture 2 pièces adverses.',
     ),

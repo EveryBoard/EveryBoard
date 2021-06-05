@@ -105,7 +105,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             chosenOpponent: ['', Validators.required],
         });
         this.configFormGroup = this.formBuilder.group({
-            firstPlayer: ['CREATOR', Validators.required],
+            firstPlayer: [FirstPlayer.CREATOR.value, Validators.required],
             maximalMoveDuration: [10, Validators.required],
             totalPartDuration: [60, Validators.required],
         });

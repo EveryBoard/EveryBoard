@@ -7,23 +7,12 @@ export interface IJoiner extends JSONObject {
     readonly chosenPlayer: NonNullable<string>; // TODO: make optional
     readonly whoStart?: string;
     readonly firstPlayer?: IFirstPlayer;
-    /* 0: the creator
-     * 1: the chosenPlayer
-     * 2: random
-     */
 
-    // TODO: make specific datatype for this
-    partStatus: NonNullable<number>;
-    /* 0 : part created, no chosenPlayer                                                               => waiting for acceptable candidate
-     * 1 : part created, chosenPlayer selected, no config proposed                                     => waiting the creator to propose config
-     * 2 : part created, chosenPlayer selected, config proposed by the creator                         => waiting the joiner to accept them
-     * 3 : part created, chosenPlayer selected, config proposed by the created, accepted by the joiner => Part Started
-     * 4 : part finished
-     */
+    readonly partStatus: NonNullable<IPartStatus>;
 
     // cancel feature for cause of smart phone bugs timeoutMinimalDuration: number;
-    maximalMoveDuration?: number;
-    totalPartDuration?: number;
+    readonly maximalMoveDuration?: number;
+    readonly totalPartDuration?: number;
 }
 export class Joiner implements DomainWrapper<IJoiner> {
     public constructor(public readonly doc: IJoiner) {
@@ -47,8 +36,7 @@ export class FirstPlayer {
 
     public static readonly CHOSEN_PLAYER: FirstPlayer = new FirstPlayer('CHOSEN_PLAYER');
 
-    // TODO: remove the need for this (only used once)
-    // TODO: add tests to cover the error case
+    // TODO: remove the need for this? (only used once)
     public static of(value: string): FirstPlayer {
         switch (value) {
             case 'CREATOR': return FirstPlayer.CREATOR;
@@ -57,14 +45,19 @@ export class FirstPlayer {
             default: throw new Error('Invalid value for FirstPlayer: ' + value + '.');
         }
     }
+}
 
+export type IPartStatus = number;
+export class PartStatus {
+    private constructor(public value: IPartStatus) {}
+    // part created, no chosenPlayer => waiting for acceptable candidate
+    public static PART_CREATED: PartStatus = new PartStatus(0);
+    // part created, chosenPlayer selected, no config proposed => waiting the creator to propose config
+    public static PLAYER_CHOSEN: PartStatus = new PartStatus(1);
+    // part created, chosenPlayer selected, config proposed by the creator => waiting the joiner to accept them
+    public static CONFIG_PROPOSED: PartStatus = new PartStatus(2);
+    // part created, chosenPlayer selected, config proposed by the created, accepted by the joiner => part started
+    public static PART_STARTED: PartStatus = new PartStatus(3);
 
-    public getOpponent(): FirstPlayer {
-        switch (this) {
-            case FirstPlayer.CREATOR: return FirstPlayer.CHOSEN_PLAYER;
-            case FirstPlayer.CHOSEN_PLAYER: return FirstPlayer.CREATOR;
-            default: throw new Error('getOpponent called on invalid first player');
-        }
-    }
-
+    public static PART_FINISHED: PartStatus = new PartStatus(4);
 }

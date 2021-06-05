@@ -1,4 +1,4 @@
-import { Joiner } from './ijoiner';
+import { FirstPlayer, Joiner, PartStatus } from './ijoiner';
 
 export class JoinerMocks {
     public static readonly INITIAL: Joiner =
@@ -6,8 +6,8 @@ export class JoinerMocks {
             candidates: [],
             creator: 'creator',
             chosenPlayer: '',
-            firstPlayer: 'CREATOR',
-            partStatus: 0,
+            firstPlayer: FirstPlayer.CREATOR.value,
+            partStatus: PartStatus.PART_CREATED.value,
         });
 
     public static readonly WITH_FIRST_CANDIDATE: Joiner =
@@ -15,8 +15,8 @@ export class JoinerMocks {
             candidates: ['firstCandidate'],
             creator: 'creator',
             chosenPlayer: '',
-            firstPlayer: 'CREATOR',
-            partStatus: 0,
+            firstPlayer: FirstPlayer.CREATOR.value,
+            partStatus: PartStatus.PART_CREATED.value,
         });
 
     public static readonly WITH_SECOND_CANDIDATE: Joiner =
@@ -24,8 +24,8 @@ export class JoinerMocks {
             candidates: ['firstCandidate', 'secondCandidate'],
             creator: 'creator',
             chosenPlayer: '',
-            firstPlayer: 'CREATOR',
-            partStatus: 0,
+            firstPlayer: FirstPlayer.CREATOR.value,
+            partStatus: PartStatus.PART_CREATED.value,
         });
 
     public static readonly WITH_CHOSEN_PLAYER: Joiner =
@@ -33,8 +33,8 @@ export class JoinerMocks {
             candidates: [],
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
-            firstPlayer: 'CREATOR',
-            partStatus: 1,
+            firstPlayer: FirstPlayer.CREATOR.value,
+            partStatus: PartStatus.PLAYER_CHOSEN.value,
         });
 
     public static readonly WITH_PROPOSED_CONFIG: Joiner =
@@ -42,10 +42,10 @@ export class JoinerMocks {
             candidates: [],
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
-            firstPlayer: 'CREATOR',
-            partStatus: 2,
+            firstPlayer: FirstPlayer.CREATOR.value,
+            partStatus: PartStatus.CONFIG_PROPOSED.value,
             maximalMoveDuration: 10,
-            totalPartDuration: 60
+            totalPartDuration: 60,
         });
 
     public static readonly WITH_ACCEPTED_CONFIG: Joiner =
@@ -53,8 +53,8 @@ export class JoinerMocks {
             candidates: [],
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
-            firstPlayer: 'CREATOR',
-            partStatus: 3,
+            firstPlayer: FirstPlayer.CREATOR.value,
+            partStatus: PartStatus.PART_STARTED.value,
             maximalMoveDuration: 10,
             totalPartDuration: 60,
         });
