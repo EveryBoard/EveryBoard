@@ -149,6 +149,7 @@ export class MGPNode<R extends Rules<M, S, L>,
             return this; // rules - leaf or calculation - leaf
         }
         const possibleMoves: M[] = this.getPossibleMoves(minimax);
+        assert(possibleMoves.length > 0, 'Minimax ' + minimax.name + ' should give move, received nones!');
         this.childs = this.childs || [];
         let bestChild: MGPNode<R, M, S, L, U>;
         const currentPlayer: Player = this.gamePartSlice.getCurrentPlayer();

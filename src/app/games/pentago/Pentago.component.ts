@@ -26,7 +26,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
 
     public rules: PentagoRules = new PentagoRules(PentagoGameState); // TODO: genericity
 
-    public encoder: MoveEncoder<PentagoMove> = PentagoMove.encoder;
+    public encoder: MoveEncoder<PentagoMove>; // = PentagoMove.encoder;
 
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;

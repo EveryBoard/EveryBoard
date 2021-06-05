@@ -109,7 +109,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public isRemaining(pawn: number): boolean {
         return QuartoPartSlice.isGivable(QuartoPiece.fromInt(pawn), this.board, this.pieceInHand);
     }
-
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.lastMove.equals(coord)) {

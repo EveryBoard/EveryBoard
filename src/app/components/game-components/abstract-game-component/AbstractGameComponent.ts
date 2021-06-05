@@ -20,9 +20,15 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 })
 export abstract class AbstractGameComponent<M extends Move,
                                             S extends GamePartSlice,
-                                            L extends LegalityStatus = LegalityStatus> {
+                                            L extends LegalityStatus = LegalityStatus>
+{
+
+    public abstract encoder: MoveEncoder<M>;
+
     public CASE_SIZE: number = 100;
+
     public readonly STROKE_WIDTH: number = 8;
+
     public readonly SMALL_STROKE_WIDTH: number = 2;
 
     public rules: Rules<M, S, L>;
@@ -73,7 +79,6 @@ export abstract class AbstractGameComponent<M extends Move,
     public cancelMoveAttempt(): void {
         // Override if need be
     }
-    public abstract encoder: MoveEncoder<M>;
 
     public abstract updateBoard(): void;
 
