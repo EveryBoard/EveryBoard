@@ -29,6 +29,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { HumanDuration } from '../TimeUtils';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({})
 export class BlankComponent {}
@@ -74,8 +76,12 @@ export class SimpleComponentTestUtils<T> {
                     { path: '**', component: BlankComponent },
                 ]),
                 ReactiveFormsModule,
+                BrowserAnimationsModule,
             ],
-            declarations: [componentType],
+            declarations: [
+                componentType,
+                HumanDuration,
+            ],
             schemas: [
                 CUSTOM_ELEMENTS_SCHEMA,
             ],
@@ -115,6 +121,12 @@ export class SimpleComponentTestUtils<T> {
     }
     public findElement(elementName: string): DebugElement {
         return this.fixture.debugElement.query(By.css(elementName));
+    }
+    public destroy(): void {
+        return this.fixture.destroy();
+    }
+    public async whenStable(): Promise<void> {
+        return this.fixture.whenStable();
     }
 }
 
