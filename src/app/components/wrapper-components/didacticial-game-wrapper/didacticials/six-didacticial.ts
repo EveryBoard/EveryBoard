@@ -66,7 +66,7 @@ export const sixDidacticial: DidacticialStep[] = [
         `Quand après 40 tours, toutes vos pièces sont placées, on passe en deuxième phase.
          Il faut maintenant déplacer ses pièces, en prenant garde à ne pas enlever une pièce qui empêchait l'adversaire de gagner.
          Dorénavant, si après un déplacement un ou plusieurs groupe de pièce est déconnecté du plus grand groupe de pièce, ces petits groupes de pièces sont enlevés définitivement du jeu.
-         Vous joués foncé, effectuez un déplacement qui déconnecte une pièce de votre adversaire.
+         Vous jouez Foncé, effectuez un déplacement qui déconnecte une pièce de votre adversaire.
          `,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, _, _, X, _],
