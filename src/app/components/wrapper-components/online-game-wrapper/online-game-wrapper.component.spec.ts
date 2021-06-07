@@ -12,7 +12,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { P4Component } from 'src/app/games/p4/p4.component';
-import { IPart, Part } from 'src/app/domain/icurrentpart';
+import { IPart } from 'src/app/domain/icurrentpart';
 
 describe('OnlineGameWrapperComponent Lifecycle', () => {
     /* Life cycle summary

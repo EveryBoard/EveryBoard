@@ -5,7 +5,6 @@ import firebase from 'firebase/app';
 import 'firebase/firestore';
 import { display, JSONObject } from 'src/app/utils/utils';
 import { FirebaseCollectionObserver } from './FirebaseCollectionObserver';
-import { DomainWrapper } from '../domain/DomainWrapper';
 
 export interface IFirebaseFirestoreDAO<T extends JSONObject> {
 

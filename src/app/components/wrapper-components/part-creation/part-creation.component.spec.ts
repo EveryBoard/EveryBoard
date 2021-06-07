@@ -150,7 +150,7 @@ describe('PartCreationComponent:', () => {
             await joinerDAOMock.update('joinerId', {
                 partStatus: PartStatus.PART_CREATED.value,
                 chosenPlayer: '',
-                candidates: []
+                candidates: [],
             });
             fixture.detectChanges();
 
@@ -218,7 +218,7 @@ describe('PartCreationComponent:', () => {
         await joinerDAOMock.update('joinerId', {
             partStatus: PartStatus.PLAYER_CHOSEN.value,
             candidates: [],
-            chosenPlayer: 'firstCandidate'
+            chosenPlayer: 'firstCandidate',
         });
         // TODO: replace by real actor action (chooseCandidate)
         await fixture.whenStable();

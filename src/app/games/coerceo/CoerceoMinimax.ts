@@ -52,7 +52,7 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoPartSlice> {
     public getBoardValue(node: CoerceoNode): NodeUnheritance {
         const status: GameStatus = CoerceoRules.getGameStatus(node);
         if (status.isEndGame) {
-            return new NodeUnheritance(status.winner.getVictoryValue());
+            return NodeUnheritance.fromWinner(status.winner);
         }
         const state: CoerceoPartSlice = node.gamePartSlice;
         const piecesByFreedom: number[][] = state.getPiecesByFreedom();

@@ -71,7 +71,7 @@ export const sixDidacticial: DidacticialStep[] = [
         SixGameState.fromRepresentation([
             [_, _, _, _, _, _, _, X, _],
             [_, _, _, _, X, _, O, _, _],
-            [_, _, _, _, O, O, _, _, _],
+            [_, _, _, _, O, O, O, _, _],
             [_, _, _, _, X, X, _, X, O],
             [_, O, X, X, O, O, X, _, _],
             [O, O, O, O, X, X, X, _, _],
@@ -87,7 +87,7 @@ export const sixDidacticial: DidacticialStep[] = [
             } else if (new Coord(6, 1).equals(move.start.getOrNull())) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure('Ce mouvement ne déconnecte pas exactement une pièce adverse! Réessayez avec une autre pièce !');
+                return MGPValidation.failure('Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez avec une autre pièce !');
             }
         },
         'Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire !',

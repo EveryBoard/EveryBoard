@@ -158,12 +158,10 @@ export class MGPNode<R extends Rules<M, S, L>,
         const newValueIsBetter: (newValue: number, currentValue: number) => boolean =
             currentPlayer === Player.ZERO ? ((a: number, b: number) => a < b) : ((a: number, b: number) => a > b);
         for (const move of possibleMoves) {
-            console.log(this.myToString(minimax), ' has ', possibleMoves.length, ' over ', MGPNodeStats.createdNodes)
             const child: MGPNode<R, M, S, L, U> = this.getOrCreateChild(move, minimax);
             const bestChildDescendant: MGPNode<R, M, S, L, U> = child.alphaBeta(depth - 1, alpha, beta, minimax);
             const bestChildValue: number = bestChildDescendant.getHopedValue(minimax);
             if (newValueIsBetter(bestChildValue, extremumExpected) || bestChild == null) {
-                console.log(bestChildValue, ' is now the best', this.myToString(minimax), MGPNodeStats.createdNodes);
                 extremumExpected = bestChildDescendant.getHopedValue(minimax);
                 if (currentPlayer === Player.ZERO) {
                     beta = Math.min(extremumExpected, beta);
@@ -178,8 +176,6 @@ export class MGPNode<R extends Rules<M, S, L>,
                     this.hopedValue.put(minimax.name, bestChildHopedValue);
                     return bestChildDescendant;
                 }
-            } else {
-                console.log(bestChildValue, ' rejected', this.myToString(minimax), MGPNodeStats.createdNodes);
             }
         }
         const bestChildHopedValue: number = bestChild.hopedValue.get(minimax.toString()).get();
@@ -199,7 +195,6 @@ export class MGPNode<R extends Rules<M, S, L>,
     private getOrCreateChild(move: M, minimax: Minimax<M, S, L, U>): MGPNode<R, M, S, L, U> {
         let child: MGPNode<R, M, S, L, U> = this.getSonByMove(move);
         if (child == null) {
-            // TODO DELETE console.log('créer un fils a ', this.myToString(minimax))
             const status: L = minimax.ruler.isLegal(move, this.gamePartSlice);
             const state: S = minimax.ruler.applyLegalMove(move, this.gamePartSlice, status);
             child = new MGPNode(this, move, state, minimax);

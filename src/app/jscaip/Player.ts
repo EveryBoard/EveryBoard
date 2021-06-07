@@ -20,7 +20,9 @@ export class Player implements ComparableObject {
             default: throw new Error('Unknown Player value ' + value);
         }
     }
-
+    public static fromTurn(turn: number): Player {
+        return turn % 2 === 0 ? Player.ZERO : Player.ONE;
+    }
     private constructor(public readonly value: number) {}
 
     public toString(): string {

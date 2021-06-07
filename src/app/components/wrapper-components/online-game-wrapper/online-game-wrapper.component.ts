@@ -299,7 +299,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
         if (this.didUserPlay(currentEnnemy)) {
             this.pauseCountDownsFor(currentEnnemy);
         }
-        const currentPlayer: Player = part.doc.turn % 2 === 0 ? Player.ZERO : Player.ONE;
+        const currentPlayer: Player = Player.fromTurn(part.doc.turn);
         if (this.didUserPlay(currentPlayer)) {
             display(OnlineGameWrapperComponent.VERBOSE,
                     'OnlineGameWrapperComponent.onCurrentPartUpdate: changing current player');
@@ -311,7 +311,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     private checkEndGames() {
         // fonctionne pour l'instant avec la victoire normale, l'abandon, et le timeout !
         const currentPart: Part = this.currentPart;
-        const player: Player = currentPart.doc.turn % 2 === 0 ? Player.ZERO : Player.ONE;
+        const player: Player = Player.fromTurn(currentPart.doc.turn);
         this.endGame = true;
         if (MGPResult.VICTORY.value === currentPart.doc.result) {
             this.doNewMoves(this.currentPart);

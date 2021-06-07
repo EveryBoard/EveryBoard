@@ -24,7 +24,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         `Deplacement`,
         `Pour effectuer un déplacement, il faut:
         1. Cliquer sur l'une de vos pièces.
-        2. Cliquer sur l'une des cases triangulaires libres les plus proches de votre pièce.
+        2. Cliquer sur l'une des cases triangulaires encadrées en jaune.
         Note, vous pouvez passer à travers les pièces adverse.
         Vous jouez en premier, vous jouez donc Foncé, faites n'importe quel déplacement.
         Note: peut importe ce que vous faites, aucunes de vos pièces ne peuvent être capturée pendant votre tour.`,
