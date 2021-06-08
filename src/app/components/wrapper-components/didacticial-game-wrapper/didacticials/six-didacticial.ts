@@ -22,7 +22,7 @@ export const sixDidacticial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         'Victoires (ligne)',
         `Sur ce plateau, en plaçant votre pièce au bon endroit, vous alignez six de vos pièces, et gagnez la partie.
-         Vous jouez le joueur foncé.`,
+         Vous jouez Foncé.`,
         SixGameState.fromRepresentation([
             [O, X, X, X, X, O],
             [_, O, X, _, O, _],
@@ -37,7 +37,7 @@ export const sixDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         'Victoires (rond)',
-        `Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un cercle avec vos 6 de pièces, et gagnez la partie.`,
+        `Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un cercle avec 6 de vos pièces, et gagnez la partie.`,
         SixGameState.fromRepresentation([
             [_, _, _, X, _, _],
             [_, _, X, X, O, O],
@@ -50,7 +50,7 @@ export const sixDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         'Victoires (triangle)',
-        `Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un triangle avec vos 6 de pièces, et gagnez la partie.`,
+        `Sur ce plateau, en plaçant votre pièce au bon endroit, vous dessinez un triangle avec 6 de vos pièces, et gagnez la partie.`,
         SixGameState.fromRepresentation([
             [_, _, _, X, _, _],
             [_, O, X, O, O, O],
@@ -70,7 +70,7 @@ export const sixDidacticial: DidacticialStep[] = [
          `,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, _, _, X, _],
-            [_, _, _, _, X, _, O, _, _],
+            [_, _, _, _, _, _, O, _, _],
             [_, _, _, _, O, O, O, _, _],
             [_, _, _, _, X, X, _, X, O],
             [_, O, X, X, O, O, X, _, _],
@@ -80,11 +80,14 @@ export const sixDidacticial: DidacticialStep[] = [
             [X, X, X, X, _, _, _, _, _],
             [_, O, _, _, _, _, _, _, _],
         ], 40),
-        SixMove.fromDeplacement(new Coord(6, 1), new Coord(6, 2)),
+        SixMove.fromDeplacement(new Coord(6, 1), new Coord(5, 1)),
         (move: SixMove, resultingState: SixGameState) => {
             if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
                 return MGPValidation.failure(`Vous avez bien déconnecté une pièce adversaire, mais également la votre, et donc, vous perdez autant de point que l'adversaire, ce qui n'est pas spécialement avantageux !`);
-            } else if (new Coord(6, 1).equals(move.start.getOrNull())) {
+            }
+            if (new Coord(6, 1).equals(move.start.getOrNull()) &&
+                resultingState.getPieceAt((new Coord(7, 0)).getNext(resultingState.offset)) === Player.NONE)
+            {
                 return MGPValidation.SUCCESS;
             } else {
                 return MGPValidation.failure('Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez avec une autre pièce !');
