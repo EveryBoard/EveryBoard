@@ -17,9 +17,6 @@ export class TablutPartSlice extends GamePartSlice {
         const DEFENDERS: number = TablutCase.DEFENDERS.value;
         const INVADERS: number = TablutCase.INVADERS.value;
 
-        // board[0][2] = INVADERS; board[4][2] = INVADERS;
-        // board[2][2] = DEFENDERS; TODO DELETE
-        //////
         board[4][4] = TablutPartSlice.INVADER_START ? PLAYER_ONE_KING : PLAYER_ZERO_KING;
 
         board[3][4] = DEFENDERS; board[5][4] = DEFENDERS; board[4][3] = DEFENDERS; board[4][5] = DEFENDERS;

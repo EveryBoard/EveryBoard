@@ -35,7 +35,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
 
     public readonly CONCRETE_WIDTH: number = 1000;
     public readonly CONCRETE_HEIGHT: number = 800;
-    public rules: SixRules = new SixRules(SixGameState); // TODO: genericity
+    public rules: SixRules = new SixRules(SixGameState);
     public state: SixGameState;
 
     public pieces: Coord[];

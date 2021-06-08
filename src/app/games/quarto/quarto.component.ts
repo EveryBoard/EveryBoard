@@ -17,7 +17,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 })
 export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
 
-    public rules: QuartoRules = new QuartoRules(QuartoPartSlice); // TODO: genericity
+    public rules: QuartoRules = new QuartoRules(QuartoPartSlice);
 
     public CASE_SIZE: number = 100;
     public EMPTY: number = QuartoPiece.NONE.value;

@@ -24,9 +24,9 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
                                                             PentagoLegalityStatus>
 {
 
-    public rules: PentagoRules = new PentagoRules(PentagoGameState); // TODO: genericity
+    public rules: PentagoRules = new PentagoRules(PentagoGameState);
 
-    public encoder: MoveEncoder<PentagoMove>; // = PentagoMove.encoder;
+    public encoder: MoveEncoder<PentagoMove> = PentagoMove.encoder;
 
     public readonly BLOCK_WIDTH: number;
     public readonly BLOCK_SEPARATION: number;
@@ -146,38 +146,6 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
                     return arrow[1] === blockIndex;
                 });
                 this.arrows = this.arrows.concat(arrows);
-            }
-        }
-    }
-    private _displayArrows(neutralBlocks: number[]): void {
-        this.arrows = [];
-        for (let blockIndex: number = 0; blockIndex < 4; blockIndex++) {
-            if (neutralBlocks.includes(blockIndex) === false) {
-                const bx: number = blockIndex % 2;
-                const by: number = blockIndex < 2 ? 0 : 1;
-                const localOffset: number = (2 * this.STROKE_WIDTH) + (0.5 * this.CASE_SIZE);
-                const anticlockwiseX: number = bx * this.BLOCK_SEPARATION + localOffset;
-                const anticlockwiseY: number = by * this.BLOCK_SEPARATION + localOffset;
-                let arrowPath: string =
-                    'M ' +
-                    (anticlockwiseX + (0.75 * this.CASE_SIZE)) + ' ' +
-                    (anticlockwiseY - (0.25 * this.CASE_SIZE)) +
-                    ' q ' +
-                    (- this.CASE_SIZE) + ' ' +
-                    '0 ' +
-                    (- this.CASE_SIZE) + ' ' +
-                    this.CASE_SIZE;
-                this.arrows.push([arrowPath, blockIndex, false]);
-                arrowPath =
-                    'M ' +
-                    (anticlockwiseX + (1.25 * this.CASE_SIZE)) + ' ' +
-                    (anticlockwiseY - (0.25 * this.CASE_SIZE)) +
-                    ' q ' +
-                    this.CASE_SIZE + ' ' +
-                    '0 ' +
-                    this.CASE_SIZE + ' ' +
-                    this.CASE_SIZE;
-                this.arrows.push([arrowPath, blockIndex, true]);
             }
         }
     }

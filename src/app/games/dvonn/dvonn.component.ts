@@ -25,7 +25,6 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
 
     private static CASE_SIZE: number = 30;
     public rules: DvonnRules = new DvonnRules(DvonnGameState);
-    // TODO: enhance genericity so this can go to the constructor AND canOnlyPass be recognize/found
 
     public scores: number[] = [0, 0];
     public lastMove: DvonnMove = null;

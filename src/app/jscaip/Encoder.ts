@@ -18,10 +18,12 @@ export abstract class Encoder<T> {
 }
 
 export abstract class MoveEncoder<T> extends Encoder<T> {
+
     public encode(t: T): JSONValue {
         return this.encodeMove(t);
     }
     public abstract encodeMove(t: T): JSONValueWithoutArray;
+
     public decode(n: JSONValue): T {
         assert(Array.isArray(n) === false, 'MoveEncoder.decode called with an array');
         return this.decodeMove(n as JSONValueWithoutArray);
@@ -48,7 +50,6 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
             }
         };
     }
-
     public static booleanEncoder: NumberEncoder<boolean> = new class extends NumberEncoder<boolean> {
         public maxValue(): number {
             return 1;

@@ -2,7 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MoveCoord } from 'src/app/jscaip/MoveCoord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
+import { JSONObject, JSONValueWithoutArray } from 'src/app/utils/utils';
 
 export class PentagoMove extends MoveCoord {
 
