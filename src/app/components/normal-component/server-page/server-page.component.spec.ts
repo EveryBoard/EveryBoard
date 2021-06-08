@@ -1,4 +1,4 @@
-import { fakeAsync, flush, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed } from '@angular/core/testing';
 import { ServerPageComponent } from './server-page.component';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
@@ -16,8 +16,6 @@ describe('ServerPageComponent', () => {
     it('should create', fakeAsync(async() => {
         expect(testUtils.getComponent()).toBeDefined();
         testUtils.getComponent().ngOnInit();
-
-        flush();
     }));
     it('should rely on game service to create online games', fakeAsync(async() => {
         const gameService: GameService = TestBed.inject(GameService);

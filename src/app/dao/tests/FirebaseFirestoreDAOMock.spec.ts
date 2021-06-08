@@ -3,21 +3,15 @@ import { Observable, BehaviorSubject, Subscription } from 'rxjs';
 import firebase from 'firebase/app';
 import 'firebase/firestore';
 
-import { display } from 'src/app/utils/utils';
+import { display, JSONObject } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { FirebaseCollectionObserver } from '../FirebaseCollectionObserver';
 import { IFirebaseFirestoreDAO } from '../FirebaseFirestoreDAO';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { ObservableSubject } from 'src/app/utils/ObservableSubject';
 
-export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirestoreDAO<T, PT> {
+export abstract class FirebaseFirestoreDAOMock<T extends JSONObject> implements IFirebaseFirestoreDAO<T> {
     public static VERBOSE: boolean = false;
-
-    // T is a full element
-
-    // PT is a partially full element
-
-    // Simple CRUDS
 
     constructor(
         private readonly collectionName: string,
@@ -77,7 +71,7 @@ export abstract class FirebaseFirestoreDAOMock<T, PT> implements IFirebaseFirest
         }
         return Promise.resolve();
     }
-    public async update(id: string, update: PT): Promise<void> {
+    public async update(id: string, update: Partial<T>): Promise<void> {
         display(this.VERBOSE || FirebaseFirestoreDAOMock.VERBOSE,
                 this.collectionName + '.update(' + id + ', ' + JSON.stringify(update) + ')');
 

@@ -6,7 +6,7 @@ import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/UserService';
 import { display } from 'src/app/utils/utils';
-import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { GameStatus } from 'src/app/jscaip/Rules';
@@ -24,7 +24,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     public aiDepths: [string, string] = ['0', '0'];
     public winner: string = null;
 
-    public botTimeOut: number = 1000; // this.aiDepth * 500;
+    public botTimeOut: number = 1000;
 
     constructor(componentFactoryResolver: ComponentFactoryResolver,
                 actRoute: ActivatedRoute,
@@ -36,6 +36,12 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         this.players = ['humain', 'humain'];
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapper.constructor');
+    }
+    public getCreatedNodes(): number {
+        return MGPNodeStats.createdNodes;
+    }
+    public getMinimaxTime(): number {
+        return MGPNodeStats.minimaxTime;
     }
     public ngAfterViewInit(): void {
         display(LocalGameWrapperComponent.VERBOSE, 'LocalGameWrapperComponent.ngAfterViewInit');

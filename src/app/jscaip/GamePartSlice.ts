@@ -29,7 +29,7 @@ export abstract class GamePartSlice implements ComparableObject {
         return ArrayUtils.copyBiArray(this.board);
     }
     public getCurrentPlayer(): Player {
-        return this.turn % 2 === 0 ? Player.ZERO : Player.ONE;
+        return Player.fromTurn(this.turn);
     }
     public getCurrentEnnemy(): Player {
         return this.turn % 2 === 1 ? Player.ZERO : Player.ONE;

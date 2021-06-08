@@ -24,7 +24,7 @@ describe('CoerceoRules', () => {
 
     beforeEach(() => {
         rules = new CoerceoRules(CoerceoPartSlice);
-        minimax = new CoerceoMinimax('CoerceoMinimax');
+        minimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
     });
     describe('Deplacement', () => {
         it('Should forbid to start move from outside the board', () => {

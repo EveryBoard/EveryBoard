@@ -9,7 +9,7 @@ describe('TablutMove', () => {
 
     it('encoder should be correct', () => {
         const rules: TablutRules = new TablutRules(TablutPartSlice);
-        const minimax: TablutMinimax = new TablutMinimax('TablutMinimax');
+        const minimax: TablutMinimax = new TablutMinimax(rules, 'TablutMinimax');
         const firstTurnMoves: TablutMove[] = minimax.getListMoves(rules.node);
         for (const move of firstTurnMoves) {
             NumberEncoderTestUtils.expectToBeCorrect(TablutMove.encoder, move);

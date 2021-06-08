@@ -15,8 +15,8 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { HexagonalGameComponent }
     from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 interface Scale {
     minX: number;
@@ -33,9 +33,6 @@ interface Scale {
 })
 export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, SixLegalityStatus> {
 
-    public availableMinimaxes: Minimax<SixMove, SixGameState, SixLegalityStatus>[] = [
-        new SixMinimax('SixMinimax'),
-    ];
     public readonly CONCRETE_WIDTH: number = 1000;
     public readonly CONCRETE_HEIGHT: number = 800;
     public rules: SixRules = new SixRules(SixGameState);
@@ -58,17 +55,20 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public Y_OFFSET: number;
     public PIECE_SIZE: number = 30;
 
-    public hexaLayout: HexaLayout =
-        new HexaLayout(this.PIECE_SIZE * 1.50,
-                       new Coord(this.PIECE_SIZE * 2, 0),
-                       FlatHexaOrientation.INSTANCE);
+    public hexaLayout: HexaLayout;
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
+        this.availableMinimaxes = [
+            new SixMinimax(this.rules, 'SixMinimax'),
+        ];
+        this.hexaLayout = new HexaLayout(this.PIECE_SIZE * 1.50,
+                                         new Coord(this.PIECE_SIZE * 2, 0),
+                                         FlatHexaOrientation.INSTANCE);
         this.setPieceSize(25);
         this.updateBoard();
     }
-    public encoder: Encoder<SixMove> = SixMove.encoder;
+    public encoder: MoveEncoder<SixMove> = SixMove.encoder;
 
     private setPieceSize(rayon: number): void {
         this.PIECE_SIZE = 2 * rayon;
@@ -192,6 +192,9 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         if (this.state.turn < 40) {
             return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
         } else if (this.chosenLanding == null) {
+            if (this.state.getPieceAt(piece) === this.state.getCurrentEnnemy()) {
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+            }
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;
         } else {

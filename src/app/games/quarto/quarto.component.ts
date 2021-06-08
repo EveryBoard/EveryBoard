@@ -7,8 +7,8 @@ import { QuartoPiece } from './QuartoPiece';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-quarto',
@@ -17,9 +17,6 @@ import { Encoder } from 'src/app/jscaip/Encoder';
 })
 export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPartSlice> {
 
-    public availableMinimaxes: Minimax<QuartoMove, QuartoPartSlice>[] = [
-        new QuartoMinimax('QuartoMinimax'),
-    ];
     public rules: QuartoRules = new QuartoRules(QuartoPartSlice);
 
     public CASE_SIZE: number = 100;
@@ -32,7 +29,14 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
     public victoriousCoords: Coord[] = [];
 
-    public encoder: Encoder<QuartoMove> = QuartoMove.encoder;
+    public encoder: MoveEncoder<QuartoMove> = QuartoMove.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.availableMinimaxes = [
+            new QuartoMinimax(this.rules, 'QuartoMinimax'),
+        ];
+    }
     public updateBoard(): void {
         const slice: QuartoPartSlice = this.rules.node.gamePartSlice;
         const move: QuartoMove = this.rules.node.move;
@@ -105,7 +109,6 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
     public isRemaining(pawn: number): boolean {
         return QuartoPartSlice.isGivable(QuartoPiece.fromInt(pawn), this.board, this.pieceInHand);
     }
-
     public getCaseClasses(x: number, y: number): string[] {
         const coord: Coord = new Coord(x, y);
         if (this.lastMove.equals(coord)) {

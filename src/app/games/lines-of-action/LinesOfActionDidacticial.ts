@@ -33,6 +33,7 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
          Notez la présence d'un indicateur d'aide qui indique où une pièce peut aterrir quand vous la sélectionnez.
          Vous jouez Foncé, faites le premier déplacement !`,
         LinesOfActionState.getInitialSlice(),
+        new LinesOfActionMove(new Coord(1, 7), new Coord(1, 5)),
         `Super !`,
     ),
     DidacticialStep.fromMove(
@@ -77,11 +78,11 @@ export const linesOfActionDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         'Déplacement',
-        `Voici une configuration différente. Sélectionnez la pièce foncée au milieu (ligne 4, colonne 4) 
+        `Voici une configuration différente. Sélectionnez la pièce foncée au milieu (ligne 4, colonne 4)
          et observez bien les déplacements possibles.
          Horizontalement, elle se déplace d'une case car elle est seule sur cette ligne.
          Verticalement, elle se déplace de trois cases car il y a en tout trois pièces sur cette ligne verticale.
-         Mais elle ne peut qu'aller vers le haut, car vers le bas la case d'aterrisage est occupée par une autre 
+         Mais elle ne peut qu'aller vers le haut, car vers le bas la case d'aterrisage est occupée par une autre
          de vos pièces.
          Diagonalement, un seul mouvement est possible : sur la diagonale qui contient trois pièces, dans la seule
          direction où on ne doit pas sauter au dessus d'une pièce adverse.

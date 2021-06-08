@@ -3,7 +3,7 @@ import { fakeAsync, TestBed } from '@angular/core/testing';
 import { GameService } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { of } from 'rxjs';
-import { ICurrentPart, ICurrentPartId } from 'src/app/domain/icurrentpart';
+import { ICurrentPartId, MGPResult, Part } from 'src/app/domain/icurrentpart';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
@@ -11,7 +11,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/request';
-import { IJoiner } from 'src/app/domain/ijoiner';
+import { FirstPlayer, IJoiner, PartStatus } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
@@ -54,11 +54,11 @@ describe('GameService', () => {
         expect(partDao.getObsById).toHaveBeenCalled();
     });
     it('startObserving should throw exception when called while observing ', fakeAsync(async() => {
-        await partDao.set('myJoinerId', PartMocks.INITIAL.copy());
+        await partDao.set('myJoinerId', PartMocks.INITIAL.doc);
 
         expect(() => {
-            service.startObserving('myJoinerId', (iPart: ICurrentPartId) => {});
-            service.startObserving('myJoinerId', (iPart: ICurrentPartId) => {});
+            service.startObserving('myJoinerId', (_iPart: ICurrentPartId) => {});
+            service.startObserving('myJoinerId', (_iPart: ICurrentPartId) => {});
         }).toThrowError('GameService.startObserving should not be called while already observing a game');
     }));
     it('should delegate delete to PartDAO', () => {
@@ -67,36 +67,36 @@ describe('GameService', () => {
         expect(partDao.delete).toHaveBeenCalled();
     });
     it('should forbid to accept a take back that the player proposed himself', fakeAsync(async() => {
-        const part: ICurrentPart = {
-            typeGame: 'Quarto',
-            playerZero: 'creator',
-            playerOne: 'joiner',
-            turn: 2,
-            listMoves: [107, 161],
-            request: Request.takeBackAsked(Player.ZERO),
-        };
-        const getError: (player: Player) => Promise<string> = async(player: Player) => {
-            let errorMessage: string;
-            try {
-                await service.acceptTakeBack('joinerId', part, player);
-            } catch (error) {
-                errorMessage = error.message;
-            }
-            return errorMessage;
-        };
-        const firstError: string = await getError(Player.ZERO);
-        part.request = Request.takeBackAsked(Player.ONE);
-        const secondError: string = await getError(Player.ONE);
-        expect(firstError).toEqual('Assertion failure: Illegal to accept your own request.');
-        expect(secondError).toEqual('Assertion failure: Illegal to accept your own request.');
+        for (const player of [Player.ZERO, Player.ONE]) {
+            const part: Part = new Part({
+                typeGame: 'Quarto',
+                playerZero: 'creator',
+                playerOne: 'joiner',
+                turn: 2,
+                listMoves: [107, 161],
+                request: Request.takeBackAsked(player),
+                result: MGPResult.UNACHIEVED.value,
+            });
+            const getError: (player: Player) => Promise<string> = async(player: Player) => {
+                let errorMessage: string;
+                try {
+                    await service.acceptTakeBack('joinerId', part, player);
+                } catch (error) {
+                    errorMessage = error.message;
+                }
+                return errorMessage;
+            };
+            const error: string = await getError(player);
+            expect(error).toEqual('Assertion failure: Illegal to accept your own request.');
+        }
     }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
         const joiner: IJoiner = {
-            candidatesNames: [],
+            candidates: [],
             creator: 'creator',
             chosenPlayer: 'hisFriend',
-            partStatus: 2,
-            firstPlayer: 'CREATOR',
+            partStatus: PartStatus.CONFIG_PROPOSED.value,
+            firstPlayer: FirstPlayer.CREATOR.value,
         };
         spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);
@@ -104,24 +104,5 @@ describe('GameService', () => {
         await service.acceptConfig('partId', joiner);
 
         expect(service.joinerService.acceptConfig).toHaveBeenCalled();
-    }));
-    it('startGameWithConfig should throw when firstPlayer is not a value of FIRST_PLAYER enum', fakeAsync(async() => {
-        const joiner: IJoiner = {
-            candidatesNames: [],
-            creator: 'creator',
-            chosenPlayer: 'hisFriend',
-            partStatus: 2,
-            firstPlayer: 'somethingElse',
-        };
-        spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
-        spyOn(partDao, 'update').and.returnValue(null);
-
-        let errorMessage: string;
-        try {
-            await service.acceptConfig('somePart', joiner);
-        } catch (error) {
-            errorMessage = error.message;
-        }
-        expect(errorMessage).toEqual('Invalid value for FirstPlayer: somethingElse.');
     }));
 });

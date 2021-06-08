@@ -12,6 +12,7 @@ export class DidacticialStep {
                                    null,
                                    null,
                                    null,
+                                   null,
                                    null);
     }
     public static fromMove(title: string,
@@ -26,6 +27,7 @@ export class DidacticialStep {
                                    instruction,
                                    state,
                                    acceptedMoves,
+                                   acceptedMoves[0],
                                    null,
                                    null,
                                    successMessage,
@@ -43,6 +45,7 @@ export class DidacticialStep {
                                    instruction,
                                    state,
                                    null,
+                                   null,
                                    acceptedClicks,
                                    null,
                                    successMessage,
@@ -51,6 +54,7 @@ export class DidacticialStep {
     public static anyMove(title: string,
                           instruction: string,
                           state: GamePartSlice,
+                          solutionMove: Move,
                           successMessage: string,
     ): DidacticialStep
     {
@@ -58,6 +62,7 @@ export class DidacticialStep {
                                    instruction,
                                    state,
                                    [],
+                                   solutionMove,
                                    null,
                                    null,
                                    successMessage,
@@ -66,6 +71,7 @@ export class DidacticialStep {
     public static fromPredicate(title: string,
                                 instruction: string,
                                 state: GamePartSlice,
+                                solutionMove: Move,
                                 predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
                                 successMessage: string,
     ): DidacticialStep
@@ -74,6 +80,7 @@ export class DidacticialStep {
                                    instruction,
                                    state,
                                    null,
+                                   solutionMove,
                                    null,
                                    predicate,
                                    successMessage,
@@ -83,6 +90,7 @@ export class DidacticialStep {
                        public readonly instruction: string,
                        public readonly state: GamePartSlice,
                        public readonly acceptedMoves: ReadonlyArray<Move>,
+                       public readonly solutionMove: Move,
                        public readonly acceptedClicks: ReadonlyArray<string>,
                        public readonly predicate: (move: Move, resultingState: GamePartSlice) => MGPValidation,
                        public readonly successMessage: string,

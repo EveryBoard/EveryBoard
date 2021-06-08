@@ -28,7 +28,7 @@ describe('JoinerService', () => {
         expect(dao.getObsById).toHaveBeenCalled();
     }));
     it('startObserving should throw exception when called while observing ', fakeAsync(() => {
-        service.set('myJoinerId', JoinerMocks.INITIAL.copy());
+        service.set('myJoinerId', JoinerMocks.INITIAL.doc);
         service.startObserving('myJoinerId', (iJoinerId: IJoinerId) => {});
 
         expect(() => {
@@ -42,17 +42,17 @@ describe('JoinerService', () => {
     });
     it('set should be delegated to JoinerDAO', () => {
         spyOn(dao, 'set');
-        service.set('partId', JoinerMocks.INITIAL.copy());
+        service.set('partId', JoinerMocks.INITIAL.doc);
         expect(dao.set).toHaveBeenCalled();
     });
     it('update should delegated to JoinerDAO', () => {
         spyOn(dao, 'update');
-        service.updateJoinerById('partId', JoinerMocks.INITIAL.copy());
+        service.updateJoinerById('partId', JoinerMocks.INITIAL.doc);
         expect(dao.update).toHaveBeenCalled();
     });
     it('joinGame should throw when called by a candidate already in the game', fakeAsync(async() => {
-        dao.set('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.copy());
-        const candidateName: string = JoinerMocks.WITH_FIRST_CANDIDATE.copy().candidatesNames[0];
+        dao.set('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.doc);
+        const candidateName: string = JoinerMocks.WITH_FIRST_CANDIDATE.doc.candidates[0];
         const expectedError: string = 'JoinerService.joinGame was called by a user already in the game';
 
         let erreur: string = '';
@@ -65,19 +65,19 @@ describe('JoinerService', () => {
         }
     }));
     it('joinGame should not update joiner when called by the creator', fakeAsync(async() => {
-        dao.set('joinerId', JoinerMocks.INITIAL.copy());
+        dao.set('joinerId', JoinerMocks.INITIAL.doc);
         spyOn(dao, 'update').and.callThrough();
         expect(dao.update).not.toHaveBeenCalled();
 
-        await service.joinGame('joinerId', JoinerMocks.INITIAL.copy().creator);
+        await service.joinGame('joinerId', JoinerMocks.INITIAL.doc.creator);
 
         const resultingJoiner: IJoiner = await dao.read('joinerId');
 
         expect(dao.update).not.toHaveBeenCalled();
-        expect(resultingJoiner).toEqual(JoinerMocks.INITIAL.copy());
+        expect(resultingJoiner).toEqual(JoinerMocks.INITIAL.doc);
     }));
     it('joinGame should be delegated to JoinerDAO', fakeAsync(async() => {
-        dao.set('joinerId', JoinerMocks.INITIAL.copy());
+        dao.set('joinerId', JoinerMocks.INITIAL.doc);
         spyOn(dao, 'update');
 
         await service.joinGame('joinerId', 'some totally new user');
@@ -98,9 +98,9 @@ describe('JoinerService', () => {
         }
     }));
     it('cancelJoining should delegate update to DAO', fakeAsync(async() => {
-        dao.set('joinerId', JoinerMocks.INITIAL.copy());
-        service.startObserving('joinerId', (iJoiner: IJoinerId) => {});
-        service.joinGame('joinerId', 'someone totally new');
+        dao.set('joinerId', JoinerMocks.INITIAL.doc);
+        service.startObserving('joinerId', (_iJoiner: IJoinerId) => {});
+        await service.joinGame('joinerId', 'someone totally new');
 
         spyOn(dao, 'update');
 
@@ -109,18 +109,18 @@ describe('JoinerService', () => {
         expect(dao.update).toHaveBeenCalled();
     }));
     it('cancelJoining should start as new when chosenPlayer leaves', fakeAsync(async() => {
-        dao.set('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER.copy());
+        dao.set('joinerId', JoinerMocks.WITH_CHOSEN_PLAYER.doc);
         let currentIJoiner: IJoiner;
         service.startObserving('joinerId', (newJoinerReceived: IJoinerId) => {
             currentIJoiner = newJoinerReceived.doc;
         });
         await service.cancelJoining('firstCandidate');
-        expect(currentIJoiner).toEqual(JoinerMocks.INITIAL.copy(), 'Should be as new');
+        expect(currentIJoiner).toEqual(JoinerMocks.INITIAL.doc, 'Should be as new');
     }));
     it('cancelJoining should throw when called by someone who is nor candidate nor chosenPlayer', fakeAsync(async() => {
-        dao.set('joinerId', JoinerMocks.INITIAL.copy());
-        service.startObserving('joinerId', (iJoiner: IJoinerId) => {});
-        service.joinGame('joinerId', 'whoever');
+        dao.set('joinerId', JoinerMocks.INITIAL.doc);
+        service.startObserving('joinerId', (_iJoiner: IJoinerId) => {});
+        await service.joinGame('joinerId', 'whoever');
 
         let threw: boolean = false;
         let errorMessage: string;

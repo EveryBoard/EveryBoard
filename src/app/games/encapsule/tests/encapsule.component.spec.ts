@@ -144,7 +144,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_2_1', move);
 
         const component: EncapsuleComponent = componentTestUtils.getComponent();
-        const minimax: EncapsuleMinimax = new EncapsuleMinimax('EncapsuleMinimax');
+        const minimax: EncapsuleMinimax = new EncapsuleMinimax(component.rules, 'EncapsuleMinimax');
 
         expect(minimax.getBoardValue(new MGPNode(null, move, component.rules.node.gamePartSlice)).value)
             .toBe(Number.MIN_SAFE_INTEGER);

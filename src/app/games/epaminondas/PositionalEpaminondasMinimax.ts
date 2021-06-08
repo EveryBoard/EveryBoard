@@ -4,13 +4,17 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { EpaminondasGroupDatasFactory } from './EpaminondasGroupData';
 import { EpaminondasLegalityStatus } from './epaminondaslegalitystatus';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasPartSlice } from './EpaminondasPartSlice';
 import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 
-export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPartSlice> {
+export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
+                                                          EpaminondasPartSlice,
+                                                          EpaminondasLegalityStatus>
+{
 
     public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const PLAYER: Player = node.gamePartSlice.getCurrentPlayer();
@@ -70,8 +74,8 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove, Epami
         return moves;
     }
     public orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[]): EpaminondasMove[] {
-        moves.sort((a: EpaminondasMove, b: EpaminondasMove) => {
-            return b.movedPieces - a.movedPieces;
+        ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
+            return move.movedPieces;
         });
         if (moves.length > 40) {
             const evenMoves: EpaminondasMove[] = moves.filter((move: EpaminondasMove, index: number) => {

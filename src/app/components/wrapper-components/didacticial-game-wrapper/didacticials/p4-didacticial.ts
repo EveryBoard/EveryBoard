@@ -15,6 +15,7 @@ export const p4Didacticial: DidacticialStep[] = [
         'Déposez une pièce',
         'Cliquez sur n’importe quelle case d’une colonne.',
         P4PartSlice.getInitialSlice(),
+        P4Move.THREE,
         'Comme vous voyez, la pièce va toujours tomber tout en bas de la colonne.',
     ),
     DidacticialStep.fromMove(

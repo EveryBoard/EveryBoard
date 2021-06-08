@@ -12,7 +12,8 @@ export abstract class Minimax<M extends Move,
                               U extends NodeUnheritance = NodeUnheritance> implements ComparableObject
 {
 
-    public constructor(public readonly name: string) {
+    public constructor(public readonly ruler: Rules<M, S, L>,
+                       public readonly name: string) {
     }
     public abstract getListMoves(node: MGPNode<Rules<M, S, L>, M, S, L>): M[];
     /* has to be implemented for each rule so that the AI can choose amongst theses informations

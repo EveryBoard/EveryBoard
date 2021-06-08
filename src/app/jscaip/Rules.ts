@@ -3,7 +3,7 @@ import { Move } from './Move';
 import { GamePartSlice } from './GamePartSlice';
 import { LegalityStatus } from './LegalityStatus';
 import { Type } from '@angular/core';
-import { display } from '../utils/utils';
+import { assert, display } from '../utils/utils';
 import { Player } from './Player';
 
 export class GameStatus {
@@ -17,6 +17,7 @@ export class GameStatus {
     public static readonly ONGOING: GameStatus = new GameStatus(false, Player.NONE);
 
     public static getVictory(nonNonePlayer: Player): GameStatus {
+        assert(nonNonePlayer !== Player.NONE, 'getVictory called with Player.NONE');
         if (nonNonePlayer === Player.ZERO) {
             return GameStatus.ZERO_WON;
         } else {
@@ -24,6 +25,7 @@ export class GameStatus {
         }
     }
     public static getDefeat(nonNonePlayer: Player): GameStatus {
+        assert(nonNonePlayer !== Player.NONE, 'getVictory called with Player.NONE');
         if (nonNonePlayer === Player.ZERO) {
             return GameStatus.ONE_WON;
         } else {
@@ -74,13 +76,15 @@ export abstract class Rules<M extends Move,
             }
         }
         display(LOCAL_VERBOSE, 'Rules.choose: current node has no moves or is pruned, let\'s verify ourselves');
-        const status: LegalityStatus = this.isLegal(move, this.node.gamePartSlice);
+        const status: L = this.isLegal(move, this.node.gamePartSlice);
         if (status.legal.isFailure()) {
             display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + status.legal.getReason());
             return false;
-        } else display(LOCAL_VERBOSE, 'Rules.choose: Move is legal, let\'s apply it');
+        } else {
+            display(LOCAL_VERBOSE, 'Rules.choose: Move is legal, let\'s apply it');
+        }
 
-        const resultingSlice: GamePartSlice = MGPNode.ruler.applyLegalMove(move, this.node.gamePartSlice, status);
+        const resultingSlice: GamePartSlice = this.applyLegalMove(move, this.node.gamePartSlice, status);
         const son: MGPNode<Rules<M, S, L>, M, S, L> = new MGPNode(this.node,
                                                                   move,
                                                                   resultingSlice as S);

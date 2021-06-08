@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 670 670">
+     viewBox="-100 -100 870 870">
     <defs>
         <marker id="arrowhead"
                 markerWidth="5"
@@ -21,7 +21,7 @@
                   [attr.ry]="3 * STROKE_WIDTH"
                   [attr.width]="BLOCK_WIDTH"
                   [attr.height]="BLOCK_WIDTH"
-                  [ngClass]="getBlockClasses(blockX, blockY)"
+                  [ngClass]="getBlockClasses(bx, by)"
                   stroke="black"
                   [attr.stroke-width]="STROKE_WIDTH"
                   fill="none"
@@ -29,13 +29,13 @@
             <ng-container *ngFor="let localY of [0, 1, 2]">
                 <ng-container *ngFor="let localX of [0, 1, 2]">
                     <circle (click)="onClick(3 * bx + localX, 3 * by + localY)"
-                        id="click_{{ 3 * bx + localX }}_{{ 3 * by + localY }}"
-                        [attr.cx]="blockX + (2 * STROKE_WIDTH) + ((localX + 0.5) * CASE_SIZE)"
-                        [attr.cy]="blockY + (2 * STROKE_WIDTH) + ((localY + 0.5) * CASE_SIZE)"
-                        [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
-                        [ngClass]="getCaseClasses(3 * bx + localX, 3 * by + localY)"
-                        class="base"
-                        pointer-events="fill"
+                            id="click_{{ 3 * bx + localX }}_{{ 3 * by + localY }}"
+                            [attr.cx]="blockX + (2 * STROKE_WIDTH) + ((localX + 0.5) * CASE_SIZE)"
+                            [attr.cy]="blockY + (2 * STROKE_WIDTH) + ((localY + 0.5) * CASE_SIZE)"
+                            [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
+                            [ngClass]="getCaseClasses(3 * bx + localX, 3 * by + localY)"
+                            class="base"
+                            pointer-events="fill"
                     />
                 </ng-container>
             </ng-container>

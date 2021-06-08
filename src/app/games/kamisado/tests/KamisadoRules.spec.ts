@@ -30,7 +30,7 @@ describe('KamisadoRules:', () => {
 
     beforeEach(() => {
         rules = new KamisadoRules(KamisadoPartSlice);
-        minimax = new KamisadoMinimax('KamisadoMinimax');
+        minimax = new KamisadoMinimax(rules, 'KamisadoMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

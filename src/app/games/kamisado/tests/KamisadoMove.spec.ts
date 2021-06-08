@@ -12,7 +12,7 @@ describe('KamisadoMove', () => {
     });
     it('should correctly encode and decode all moves', () => {
         const rules: KamisadoRules = new KamisadoRules(KamisadoPartSlice);
-        const minimax: KamisadoMinimax = new KamisadoMinimax('KamisadoMinimax');
+        const minimax: KamisadoMinimax = new KamisadoMinimax(rules, 'KamisadoMinimax');
         const moves: KamisadoMove[] = minimax.getListMoves(rules.node);
         moves.push(KamisadoMove.PASS);
         for (const move of moves) {

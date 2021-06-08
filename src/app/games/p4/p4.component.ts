@@ -7,8 +7,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { P4Move } from 'src/app/games/p4/P4Move';
 import { Player } from 'src/app/jscaip/Player';
 import { Coord } from 'src/app/jscaip/Coord';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-p4',
@@ -16,19 +16,24 @@ import { Encoder } from 'src/app/jscaip/Encoder';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
+
     public static VERBOSE: boolean = false;
 
-    public availableMinimaxes: Minimax<P4Move, P4PartSlice>[] = [
-        new P4Minimax('P4Minimax'),
-    ];
     public EMPTY_CASE: number = Player.NONE.value;
     public CASE_SIZE: number = 100;
     public STROKE_WIDTH: number = 8;
-    public rules: P4Rules = new P4Rules(P4PartSlice);
     private last: Coord;
     private victoryCoords: Coord[] = [];
 
-    public encoder: Encoder<P4Move> = P4Move.encoder;
+    public encoder: MoveEncoder<P4Move> = P4Move.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new P4Rules(P4PartSlice);
+        this.availableMinimaxes = [
+            new P4Minimax(this.rules, 'P4Minimax'),
+        ];
+    }
     public async onClick(x: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + x);
         if (clickValidity.isFailure()) {

@@ -68,7 +68,7 @@ describe('CoerceoMove', () => {
         });
         it('CoerceoMove.encoder should be correct', () => {
             const rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
-            const minimax: CoerceoMinimax = new CoerceoMinimax('CoerceoMinimax');
+            const minimax: CoerceoMinimax = new CoerceoMinimax(rules, 'CoerceoMinimax');
             const moves: CoerceoMove[] = minimax.getListMoves(rules.node);
             for (const move of moves) {
                 NumberEncoderTestUtils.expectToBeCorrect(CoerceoMove.encoder, move);

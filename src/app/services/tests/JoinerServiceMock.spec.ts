@@ -1,4 +1,4 @@
-import { IJoiner, IJoinerId } from 'src/app/domain/ijoiner';
+import { FirstPlayer, IJoiner, IJoinerId, PartStatus } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { display } from 'src/app/utils/utils';
 
@@ -43,11 +43,12 @@ export class JoinerServiceMock {
     public readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerServiceMock.VERBOSE, 'JoinerServiceMock.readJoinerById');
         return new Promise((resolve: (j: IJoiner) => void) => {
-            resolve({ candidatesNames: ['uniqueCandidate'],
+            resolve({
+                candidates: ['uniqueCandidate'],
                 creator: 'creator',
                 chosenPlayer: 'uniqueCandidate',
-                firstPlayer: '0',
-                partStatus: 3,
+                firstPlayer: FirstPlayer.CREATOR.value,
+                partStatus: PartStatus.PART_STARTED.value,
                 maximalMoveDuration: 60,
                 totalPartDuration: 300,
                 gameType: 42,

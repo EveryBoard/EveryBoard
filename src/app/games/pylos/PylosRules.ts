@@ -101,6 +101,31 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
     : PylosPartSlice {
         return slice.applyLegalMove(move);
     }
+    public static isValidCapture(slice: PylosPartSlice, move: PylosMove, capture: PylosCoord): boolean {
+        const currentPlayer: number = slice.getCurrentPlayer().value;
+        if (!capture.equals(move.landingCoord) &&
+            slice.getBoardAt(capture) !== currentPlayer) {
+            return false;
+        }
+        const supportedPieces: PylosCoord[] = capture.getHigherPieces()
+            .filter((p: PylosCoord) => slice.getBoardAt(p) !== Player.NONE.value &&
+                                       p.equals(move.firstCapture.get()) === false);
+        if (supportedPieces.length > 0) {
+            return false;
+        }
+        return true;
+    }
+    public static getGameStatus(node: PylosNode): GameStatus {
+        const state: PylosPartSlice = node.gamePartSlice;
+        const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
+        if (ownershipMap[Player.ZERO.value] === 15) {
+            return GameStatus.ONE_WON;
+        } else if (ownershipMap[Player.ONE.value] === 15) {
+            return GameStatus.ZERO_WON;
+        } else {
+            return GameStatus.ONGOING;
+        }
+    }
     public applyLegalMove(move: PylosMove,
                           slice: PylosPartSlice,
                           status: LegalityStatus)
@@ -146,29 +171,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         }
         return { legal: MGPValidation.SUCCESS };
     }
-    public static isValidCapture(slice: PylosPartSlice, move: PylosMove, capture: PylosCoord): boolean {
-        const currentPlayer: number = slice.getCurrentPlayer().value;
-        if (!capture.equals(move.landingCoord) &&
-            slice.getBoardAt(capture) !== currentPlayer) {
-            return false;
-        }
-        const supportedPieces: PylosCoord[] = capture.getHigherPieces()
-            .filter((p: PylosCoord) => slice.getBoardAt(p) !== Player.NONE.value &&
-                                       p.equals(move.firstCapture.get()) === false);
-        if (supportedPieces.length > 0) {
-            return false;
-        }
-        return true;
-    }
     public getGameStatus(node: PylosNode): GameStatus {
-        const state: PylosPartSlice = node.gamePartSlice;
-        const ownershipMap: { [owner: number]: number } = state.getPiecesRepartition();
-        if (ownershipMap[Player.ZERO.value] === 15) {
-            return GameStatus.ONE_WON;
-        } else if (ownershipMap[Player.ONE.value] === 15) {
-            return GameStatus.ZERO_WON;
-        } else {
-            return GameStatus.ONGOING;
-        }
+        return PylosRules.getGameStatus(node);
     }
 }

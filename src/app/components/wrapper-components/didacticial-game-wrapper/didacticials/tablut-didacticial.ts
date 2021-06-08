@@ -33,6 +33,7 @@ export const tablutDidacticial: DidacticialStep[] = [
          Pour déplacer une pièce, cliquez dessus, puis sur sa destination.
          Ceci est le plateau initial, faites le premier mouvement.`,
         TablutPartSlice.getInitialSlice(),
+        new TablutMove(new Coord(4, 1), new Coord(1, 1)),
         'Bravo',
     ),
     DidacticialStep.fromMove(

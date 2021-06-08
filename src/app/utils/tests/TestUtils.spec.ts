@@ -61,8 +61,11 @@ export class ActivatedRouteStub {
 }
 
 export class SimpleComponentTestUtils<T> {
+
     private fixture: ComponentFixture<T>;
+
     private component: T;
+
     public static async create<T>(componentType: Type<T>): Promise<SimpleComponentTestUtils<T>> {
         await TestBed.configureTestingModule({
             imports: [
@@ -90,8 +93,8 @@ export class SimpleComponentTestUtils<T> {
         testUtils.component = testUtils.fixture.componentInstance;
         return testUtils;
     }
-
     private constructor() {}
+
     public async clickElement(elementName: string): Promise<boolean> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).withContext(elementName + ' should exist on the page').toBeTruthy();
@@ -269,11 +272,14 @@ export class ComponentTestUtils<T extends GameComponent> {
             this.fixture.detectChanges();
             expect(this.canUserPlaySpy).toHaveBeenCalledOnceWith(elementName);
             this.canUserPlaySpy.calls.reset();
-            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(
-                move, moveSlice, this.getScore(scoreZero), this.getScore(scoreOne));
+            expect(this.chooseMoveSpy).toHaveBeenCalledOnceWith(move,
+                                                                moveSlice,
+                                                                this.getScore(scoreZero),
+                                                                this.getScore(scoreOne));
             this.chooseMoveSpy.calls.reset();
-            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(
-                move, this.getScore(scoreZero), this.getScore(scoreOne));
+            expect(this.onLegalUserMoveSpy).toHaveBeenCalledOnceWith(move,
+                                                                     this.getScore(scoreZero),
+                                                                     this.getScore(scoreOne));
             this.onLegalUserMoveSpy.calls.reset();
         }
     }

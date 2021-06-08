@@ -14,26 +14,25 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
+import { MatSnackBar } from '@angular/material/snack-bar';
+import { TablutLegalityStatus } from './TablutLegalityStatus';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
+import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceThenControl';
 
 @Component({
     selector: 'app-tablut',
     templateUrl: './tablut.component.html',
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
-export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice> {
+export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPartSlice, TablutLegalityStatus> {
 
     public static VERBOSE: boolean = false;
 
-    public availableMinimaxes: Minimax<TablutMove, TablutPartSlice>[] = [
-        new TablutMinimax('TablutMinimax'),
-    ];
     public readonly CASE_SIZE: number = 100;
 
     public NONE: number = TablutCase.UNOCCUPIED.value;
-
-    public rules: TablutRules = new TablutRules(TablutPartSlice);
 
     public throneCoords: Coord[] = [
         new Coord(0, 0),
@@ -48,7 +47,18 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public lastMove: TablutMove;
 
-    public encoder: Encoder<TablutMove> = TablutMove.encoder;
+    public encoder: MoveEncoder<TablutMove> = TablutMove.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new TablutRules(TablutPartSlice);
+        this.availableMinimaxes = [
+            new TablutMinimax(this.rules, 'DummyBot'),
+            new TablutPieceAndInfluenceMinimax(this.rules, 'Piece > Influence'),
+            new TablutPieceAndControlMinimax(this.rules, 'Piece > Control'),
+            new TablutEscapeThenPieceAndControlMinimax(this.rules, 'Escape > Piece > Control'),
+        ];
+    }
     public updateBoard(): void {
         display(TablutComponent.VERBOSE, 'tablutComponent.updateBoard');
         this.lastMove = this.rules.node.move;

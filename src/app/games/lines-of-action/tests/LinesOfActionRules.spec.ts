@@ -20,7 +20,7 @@ describe('LinesOfActionRules', () => {
 
     beforeEach(() => {
         rules = new LinesOfActionRules(LinesOfActionState);
-        minimax = new LinesOfActionMinimax('LinesOfActionMinimax');
+        minimax = new LinesOfActionMinimax(rules, 'LinesOfActionMinimax');
     });
     it('should be created', () => {
         expect(rules).toBeTruthy();

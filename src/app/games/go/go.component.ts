@@ -10,9 +10,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
-import { Minimax } from 'src/app/jscaip/Minimax';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-go',
@@ -22,12 +21,7 @@ import { Encoder } from 'src/app/jscaip/Encoder';
 export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLegalityStatus> {
     public static VERBOSE: boolean = false;
 
-    public availableMinimaxes: Minimax<GoMove, GoPartSlice, GoLegalityStatus>[] = [
-        new GoMinimax('GoMinimax'),
-    ];
     public scores: number[] = [0, 0];
-
-    public rules: GoRules = new GoRules(GoPartSlice);
 
     public boardInfo: GroupDatas<GoPiece>;
 
@@ -39,10 +33,14 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public captures: Coord[]= [];
 
-    public encoder: Encoder<GoMove> = GoMove.encoder;
+    public encoder: MoveEncoder<GoMove> = GoMove.encoder;
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
+        this.rules = new GoRules(GoPartSlice);
+        this.availableMinimaxes = [
+            new GoMinimax(this.rules, 'GoMinimax'),
+        ];
         this.canPass = true;
         this.showScore = true;
     }

@@ -1,9 +1,10 @@
-export interface Time {
+import { JSONObject } from '../utils/utils';
+
+export interface Time extends JSONObject {
     seconds: number;
 }
 
-// TODO IJoueur and PIJoueur are the same interface, they should be merged
-export interface IJoueur {
+export interface IJoueur extends JSONObject {
     pseudo: string;
     email?: string;
     displayName?: string;
@@ -13,17 +14,7 @@ export interface IJoueur {
     state?: string;
 }
 
-export interface PIJoueur {
-    pseudo?: string;
-    email?: string;
-    displayName?: string;
-    // eslint-disable-next-line camelcase
-    last_changed?: Time;
-    emailVerified?: boolean;
-    state?: string;
-}
-
-export interface IJoueurId {
+export interface IJoueurId extends JSONObject {
     id: string;
     doc: IJoueur;
 }

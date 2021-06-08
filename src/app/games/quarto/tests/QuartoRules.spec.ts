@@ -15,7 +15,7 @@ describe('QuartoRules', () => {
 
     beforeEach(() => {
         rules = new QuartoRules(QuartoPartSlice);
-        minimax = new QuartoMinimax('QuartoMinimax');
+        minimax = new QuartoMinimax(rules, 'QuartoMinimax');
     });
     it('Should create', () => {
         expect(rules).toBeTruthy();

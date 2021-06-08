@@ -25,11 +25,8 @@ describe('SiamMinimax:', () => {
     const r: number = SiamPiece.BLACK_RIGHT.value;
     const d: number = SiamPiece.BLACK_DOWN.value;
 
-    beforeAll(() => {
-        MGPNode.ruler = new SiamRules(SiamPartSlice);
-    });
     beforeEach(() => {
-        minimax = new SiamMinimax('SiamMinimax');
+        minimax = new SiamMinimax(new SiamRules(SiamPartSlice), 'SiamMinimax');
     });
     it('Board value test: Should know who is closer to win (1)', () => {
         const board: number[][] = [

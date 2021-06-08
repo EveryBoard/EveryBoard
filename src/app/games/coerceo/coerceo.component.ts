@@ -12,8 +12,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 
 @Component({
     selector: 'app-coerceo',
@@ -24,12 +23,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
                                                               CoerceoPartSlice,
                                                               LegalityStatus>
 {
-
-    public availableMinimaxes: Minimax<CoerceoMove, CoerceoPartSlice>[] = [
-        new CoerceoMinimax('CoerceoMinimax'),
-    ];
-
-    public rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);
 
     private slice: CoerceoPartSlice;
 
@@ -49,10 +42,15 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
 
     constructor(snackBar: MatSnackBar) {
         super(snackBar);
+        this.rules = new CoerceoRules(CoerceoPartSlice);
+        this.availableMinimaxes = [
+            new CoerceoMinimax(this.rules, 'CoerceoMinimax'),
+        ];
+
         this.showScore = true;
         this.updateBoard();
     }
-    public encoder: Encoder<CoerceoMove> = CoerceoMove.encoder;
+    public encoder: MoveEncoder<CoerceoMove> = CoerceoMove.encoder;
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         this.slice = this.rules.node.gamePartSlice;

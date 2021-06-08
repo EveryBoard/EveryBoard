@@ -7,8 +7,9 @@ import { PylosMinimax } from 'src/app/games/pylos/PylosMinimax';
 import { PylosCoord } from 'src/app/games/pylos/PylosCoord';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { Minimax } from 'src/app/jscaip/Minimax';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { PylosOrderedMinimax } from './PylosOrderedMinimax';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
     selector: 'app-pylos',
@@ -16,14 +17,10 @@ import { Encoder } from 'src/app/jscaip/Encoder';
     styleUrls: ['../../components/game-components/abstract-game-component/abstract-game-component.css'],
 })
 export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSlice> {
+
     public static VERBOSE: boolean = false;
 
-    public availableMinimaxes: Minimax<PylosMove, PylosPartSlice>[] = [
-        new PylosMinimax('PylosMinimax'),
-    ];
-    public rules: PylosRules = new PylosRules(PylosPartSlice);
-
-    public slice: PylosPartSlice = this.rules.node.gamePartSlice;
+    public slice: PylosPartSlice;
 
     public lastLandingCoord: PylosCoord = null;
     public lastStartingCoord: PylosCoord = null;
@@ -38,7 +35,17 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
 
     private remainingPieces: { [owner: number]: number } = { 0: 15, 1: 15 };
 
-    public encoder: Encoder<PylosMove> = PylosMove.encoder;
+    public encoder: MoveEncoder<PylosMove> = PylosMove.encoder;
+
+    public constructor(snackBar: MatSnackBar) {
+        super(snackBar);
+        this.rules = new PylosRules(PylosPartSlice);
+        this.slice = this.rules.node.gamePartSlice;
+        this.availableMinimaxes = [
+            new PylosMinimax(this.rules, 'PylosMinimax'),
+            new PylosOrderedMinimax(this.rules, 'PylosOrderedMinimax'),
+        ];
+    }
     public getLevelRange(z: number): number[] {
         switch (z) {
             case 0: return [0, 1, 2, 3];

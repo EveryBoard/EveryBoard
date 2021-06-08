@@ -1,9 +1,9 @@
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { DvonnBoard } from './DvonnBoard';
 
-export class DvonnPartSlice extends GamePartSlice {
-    public static getInitialSlice(): DvonnPartSlice {
-        return new DvonnPartSlice(DvonnBoard.balancedBoard(), 0, false);
+export class DvonnGameState extends GamePartSlice {
+    public static getInitialSlice(): DvonnGameState {
+        return new DvonnGameState(DvonnBoard.balancedBoard(), 0, false);
     }
     public constructor(
         public readonly hexaBoard: DvonnBoard,

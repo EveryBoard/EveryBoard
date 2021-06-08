@@ -4,12 +4,14 @@ import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { KamisadoNode, KamisadoRules } from './KamisadoRules';
-
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 export class KamisadoMinimax extends Minimax<KamisadoMove, KamisadoPartSlice> {
 
     public getListMoves(node: KamisadoNode): KamisadoMove[] {
-        return KamisadoRules.getListMovesFromSlice(node.gamePartSlice);
+        const moves: KamisadoMove[] = KamisadoRules.getListMovesFromSlice(node.gamePartSlice);
+        ArrayUtils.sortByDescending(moves, (move: KamisadoMove): number => move.length());
+        return moves;
     }
     // Returns the value of the board, as the difference of distance to the win
     public getBoardValue(node: KamisadoNode): NodeUnheritance {

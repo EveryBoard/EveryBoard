@@ -1,20 +1,20 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Encoder } from 'src/app/jscaip/Encoder';
+import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { Move } from 'src/app/jscaip/Move';
-import { JSONObject, JSONValue } from 'src/app/utils/utils';
+import { JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 
 export class SixMove extends Move {
 
-    public static encoder: Encoder<SixMove> = new class extends Encoder<SixMove> {
-        public encode(move: SixMove): JSONValue {
+    public static encoder: MoveEncoder<SixMove> = new class extends MoveEncoder<SixMove> {
+        public encodeMove(move: SixMove): JSONValueWithoutArray {
             return {
                 start: move.start.isPresent() ? Coord.encoder.encode(move.start.get()) : null,
                 landing: Coord.encoder.encode(move.landing),
                 keep: move.keep.isPresent() ? Coord.encoder.encode(move.keep.get()) : null,
             };
         }
-        public decode(encoded: JSONValue): SixMove {
+        public decodeMove(encoded: JSONValueWithoutArray): SixMove {
             const casted: JSONObject = encoded as JSONObject;
             if (typeof encoded !== 'object') {
                 throw new Error('Invalid encodedMove of type ' + typeof encoded + '!');

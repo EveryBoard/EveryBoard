@@ -7,6 +7,7 @@ import { EpaminondasPartSlice } from './EpaminondasPartSlice';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 
 export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
@@ -51,6 +52,9 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPart
                 }
             }
         }
+        ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
+            return move.stepSize; // Best for normal, might not be best for others!
+        });
         return moves;
     }
     public addMove(moves: EpaminondasMove[],

@@ -1,4 +1,4 @@
-import { SiamNode } from '../SiamRules';
+import { SiamNode, SiamRules } from '../SiamRules';
 import { SiamMinimax } from '../SiamMinimax';
 import { SiamMove } from '../SiamMove';
 import { SiamPartSlice } from '../SiamPartSlice';
@@ -25,7 +25,8 @@ describe('SiamMove', () => {
         const move: SiamMove = new SiamMove(0, 0, MGPOptional.of(Orthogonal.DOWN), Orthogonal.UP);
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const node: SiamNode = new MGPNode(null, move, slice);
-        const minimax: SiamMinimax = new SiamMinimax('SiamMinimax');
+        const rules: SiamRules = new SiamRules(SiamPartSlice);
+        const minimax: SiamMinimax = new SiamMinimax(rules, 'SiamMinimax');
         const moves: SiamMove[] = minimax.getListMoves(node);
         for (const move of moves) {
             NumberEncoderTestUtils.expectToBeCorrect(SiamMove.encoder, move);

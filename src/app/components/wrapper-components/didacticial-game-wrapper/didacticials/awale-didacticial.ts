@@ -6,22 +6,24 @@ export const awaleDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         'Distribuer',
         `L’awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
-         Laissez moi vous montrer comment se distribuent les graines.
+         Nous allons voir comment se distribuent les graines.
          Comme vous jouez en premier, les 6 maisons du haut vous appartiennent.
-         Cliquez sur l'une d'entre elles pour en distribuer les graines`,
+         Cliquez sur l'une d'entre elles pour en distribuer les graines, elles seront distribués dans le sens horaires, à raison d'une graine par maison.`,
         AwalePartSlice.getInitialSlice(),
+        new AwaleMove(0, 0),
         `Voilà, regardez les 4 maisons suivant la maison choisie dans l’ordre horlogé, elle comptent maintenant 5 graines.
          C’est comme cela que les graines se distribuent:
          une à une à partir de la maison suivante dans l’ordre horlogé de la maison d’où elles viennent!`,
     ),
     DidacticialStep.anyMove(
         'Grosse distribution',
-        'Vous êtes maintenant le joueur 2 (en bas). Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe. Distribuez cette grosse maison.',
+        'Vous êtes maintenant le joueur 2 (en bas). Quand il y a assez de graines pour faire un tour complet, quelque chose d’autre se passe. Distribuez la maison qui contient 12 graines.',
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],
             [0, 12, 0, 0, 0, 0],
         ], 1, [0, 0]),
-        'Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines)!',
+        new AwaleMove(1, 1),
+        'Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines) !',
     ),
     DidacticialStep.fromMove(
         'Capture simple',
@@ -40,7 +42,7 @@ export const awaleDidacticial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         'Capture composée possible',
         `En distribuant votre maison la plus à gauche, vous ferez passer une première maison de 2 à 3 graines, et la deuxième de 1 à 2.
-         Ces deux maisons, étant consécutives, seront donc toutes les deux capturables.
+         Ces deux maisons, étant consécutives, seront donc toutes les deux capturées.
          Capturez-les.`,
         new AwalePartSlice([
             [2, 1, 0, 0, 1, 0],
@@ -74,24 +76,25 @@ export const awaleDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         'Ne pas affamer',
-        'Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire! Lancez-vous !',
+        'Vous avez une très belle capture qui semble possible, il semble que vous pouviez capturer tous les pions de l’adversaire ! Lancez-vous !',
         new AwalePartSlice([
             [1, 1, 1, 1, 1, 0],
             [5, 0, 0, 1, 0, 0],
         ], 1, [0, 0]),
         [new AwaleMove(0, 1)],
-        'Malheureusement, c’est interdit, car sinon l’adversaire ne pourrait pas jouer après vous. À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée!',
+        'Malheureusement, vous ne pouvez pas capturer, car sinon l’adversaire ne pourrait pas jouer après vous. À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée!',
         'Perdu. Recommencez',
     ),
     DidacticialStep.anyMove(
         'Nourir est obligatoire',
         `"Affamer" est interdit, c'est-à-dire: si votre adversaire n'a plus de graines et que vous savez lui en donner une ou plusieurs, vous êtes obligé de le faire.
-         Allez-y!`,
+         Allez-y !`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],
             [0, 1, 2, 4, 4, 5],
         ], 1, [0, 0]),
-        'Bravo. Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux! C’est souvent un bon moyen d’avoir des captures faciles!',
+        new AwaleMove(3, 1),
+        'Bravo. Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux ! C’est souvent un bon moyen d’avoir des captures faciles !',
     ),
     DidacticialStep.anyMove(
         'Fin de partie',
@@ -101,7 +104,8 @@ export const awaleDidacticial: DidacticialStep[] = [
             [0, 0, 0, 0, 0, 1],
             [0, 1, 2, 3, 4, 4],
         ], 0, [0, 0]),
-        `Aussi, dès qu'un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son camp.
+        new AwaleMove(5, 0),
+        `Aussi, dès qu'un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp.
          Ici, c'était au premier joueur de jouer et joueur deux a récolté toutes les graines restantes.`,
     ),
 ];

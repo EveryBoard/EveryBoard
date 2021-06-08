@@ -18,7 +18,7 @@ describe('PylosRules:', () => {
 
     beforeEach(() => {
         rules = new PylosRules(PylosPartSlice);
-        minimax = new PylosMinimax('PylosMinimax');
+        minimax = new PylosMinimax(rules, 'PylosMinimax');
     });
     it('should forbid move who\'se landing coord is not empty', () => {
         const board: number[][][] = [
