@@ -50,6 +50,8 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
         this.lastMove = this.rules.node.move;
         if (this.lastMove) {
             this.movedPieces = this.rules.isLegal(this.lastMove, this.rules.node.mother.gamePartSlice).moved;
+        } else {
+            this.movedPieces = [];
         }
     }
     public cancelMoveAttempt(): void {

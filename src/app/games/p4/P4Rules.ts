@@ -57,10 +57,10 @@ export class P4Rules extends Rules<P4Move, P4PartSlice> {
     }
     public static getLowestUnoccupiedCase(board: NumberTable, x: number): number {
         let y: number = 0;
-        while (y < 5 && board[y + 1][x] === Player.NONE.value) {
+        while (y < 6 && board[y][x] === Player.NONE.value) {
             y++;
         }
-        return y;
+        return y - 1;
     }
     public static getNumberOfFreeSpacesAndAllies(board: NumberTable,
                                                  i: Coord,

@@ -26,7 +26,7 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 })
 export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlice, GipfLegalityStatus> {
 
-    private static PIECE_SIZE: number = 30;
+    private static PIECE_SIZE: number = 40;
 
     public rules: GipfRules = new GipfRules(GipfPartSlice); // TODO that new genericity
 

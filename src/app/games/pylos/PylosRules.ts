@@ -8,6 +8,7 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosPartSlice } from './PylosPartSlice';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export class PylosNode extends MGPNode<Rules<PylosMove, PylosPartSlice>,
                                        PylosMove,
@@ -135,7 +136,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
     }
     public isLegal(move: PylosMove, slice: PylosPartSlice): LegalityStatus {
         if (slice.getBoardAt(move.landingCoord) !== Player.NONE.value) {
-            return { legal: MGPValidation.failure('move does not land on empty target') };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE) };
         }
 
         const startingCoord: PylosCoord = move.startingCoord.getOrNull();

@@ -17,9 +17,9 @@
                     [ngClass]="getPieceClasses(caseContent)"
                     class="base mid-stroke"/>
             <polygon *ngIf="caseContent.containsSource()"
-                     class="other-piece"
+                     class="other-piece-light"
                      points="157.055,0 90.798,196.319 164.417,196.319 88.344,400 289.571,159.509 218.405,159.509 311.656,0"
-                     [attr.transform]="'translate(' + (getCenter(coord).x-3) + ' ' + (getCenter(coord).y-12) + ') scale(0.07)'"/>
+                     [attr.transform]="caseContent.getSize() === 1 ? ('translate(' + (getCenter(coord).x-18) + ' ' + (getCenter(coord).y-16) + ') scale(0.10)') : ('translate(' + (getCenter(coord).x-3) + ' ' + (getCenter(coord).y-12) + ') scale(0.07)')"/>
             <text *ngIf="caseContent.getSize() > 1"
                   (click)="onClick(coord.x, coord.y)"
                   [attr.x]="caseContent.containsSource() ? getCenter(coord).x-7 : getCenter(coord).x"

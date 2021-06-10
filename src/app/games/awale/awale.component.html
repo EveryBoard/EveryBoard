@@ -1,25 +1,32 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 600 200"
+     viewBox="-45 -20 700 260"
      preserveAspectRatio="xMidYMid meet"
      >
+    <rect x="-40" y="-15"
+          ry="115" rx="115"
+          width="680" height="250"
+          fill="blue"
+          class="base"
+    />
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let content of line; index as x;">
             <circle id="click_{{x}}_{{y}}"
                     (click)="onClick(x, y)"
                     [attr.cx]="50 + 100*x"
-                    [attr.cy]="50 + 100*y"
+                    [attr.cy]="50 + 120*y"
                     r="46"
                     [ngClass]="getCaseClasses(x, y)"
                     class="base"
             />
             <text (click)="onClick(x, y)"
                   [attr.x]="50 + 100*x"
-                  [attr.y]="66 + 100*y"
+                  [attr.y]="66 + 120*y"
                   class="text-big text-center"
             >
                 {{ content }}
             </text>
         </g>
     </g>
+    <line x1="-40" y1="110" x2="640" y2="110" class="base" />
 </svg>

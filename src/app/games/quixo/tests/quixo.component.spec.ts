@@ -31,7 +31,7 @@ describe('QuixoComponent', () => {
         expect(componentTestUtils.getComponent().getPieceClasses(0, 0)).toContain('selected');
 
         componentTestUtils.getComponent().lastMoveCoord = new Coord(4, 4);
-        expect(componentTestUtils.getComponent().getPieceClasses(4, 4)).toContain('lastmove');
+        expect(componentTestUtils.getComponent().getPieceClasses(4, 4)).toContain('last-move');
     });
     it('should give correct direction', () => {
         componentTestUtils.getComponent().chosenCoord = new Coord(0, 0);

@@ -73,7 +73,7 @@ describe('PentagoComponent:', () => {
         await componentTestUtils.expectMoveSuccess('#rotate_3_clockwise', move);
         const component: PentagoComponent = componentTestUtils.getComponent();
         expect(component.getBlockClasses(1, 1)).toEqual(['moved']);
-        expect(component.getCaseClasses(3, 5)).toEqual(['player0', 'lastmove']);
+        expect(component.getCaseClasses(3, 5)).toEqual(['player0', 'last-move']);
     }));
     it('Should highlight last move (with rotation of last drop, anticlockwise)', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_5');
@@ -81,7 +81,7 @@ describe('PentagoComponent:', () => {
         await componentTestUtils.expectMoveSuccess('#rotate_2_anticlockwise', move);
         const component: PentagoComponent = componentTestUtils.getComponent();
         expect(component.getBlockClasses(0, 1)).toEqual(['moved']);
-        expect(component.getCaseClasses(2, 5)).toEqual(['player0', 'lastmove']);
+        expect(component.getCaseClasses(2, 5)).toEqual(['player0', 'last-move']);
     }));
     it('Should highlight last move (with rotation, but not of last drop)', fakeAsync(async() => {
         const board: NumberTable = [
@@ -99,6 +99,6 @@ describe('PentagoComponent:', () => {
         await componentTestUtils.expectMoveSuccess('#rotate_1_anticlockwise', move);
         const component: PentagoComponent = componentTestUtils.getComponent();
         expect(component.getBlockClasses(1, 0)).toEqual(['moved']);
-        expect(component.getCaseClasses(0, 1)).toEqual(['player1', 'lastmove']);
+        expect(component.getCaseClasses(0, 1)).toEqual(['player1', 'last-move']);
     }));
 });

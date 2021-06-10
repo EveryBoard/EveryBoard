@@ -3,15 +3,17 @@
      viewBox="0 0 800 1000"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let player of [0, 1];">
-        <text x="0" [attr.y]="850+22+(getPieceSize()+10)*player" class="text-small">Pièces du joueur {{player+1}}</text>
+        <text x="0"
+              [attr.y]="850+22+(getPieceSize()+10)*player"
+              class="text-medium">Pièces du joueur {{ player + 1 }}</text>
         <g *ngFor="let p of getPlayerSidePieces(player);">
             <circle id="piece_{{ player }}_{{ p }}"
-                    [attr.cx]="170+(p * getPieceSize()/3)"
-                    [attr.cy]="850+20+(getPieceSize()+5)*player"
+                    [attr.cx]="350 + (p * getPieceSize()/3)"
+                    [attr.cy]="850 + 12 + (getPieceSize() + 5) * player"
                     [attr.r]="getPieceSize()/3"
                     [ngClass]="getPlayerPieceClass(player)"
                     class="base small-stroke"
-                    />
+            />
         </g>
     </g>
 
@@ -19,13 +21,14 @@
         <g *ngFor="let y of getLevelRange(z)">
             <g *ngFor="let x of getLevelRange(z)">
                 <ng-container *ngIf="isDrawable(x, y, z)">
-                    <circle id="click_{{x}}_{{y}}_{{z}}"
-                            (click)="onClick(x, y, z)"
-                            [attr.r]="getPieceRay(z)"
-                            [attr.cx]="getPieceCx(x, y, z)"
-                            [attr.cy]="getPieceCy(x, y, z)"
-                            [ngClass]="getCaseClasses(x, y, z)"
-                            class="base"
+                    <rect id="click_{{x}}_{{y}}_{{z}}"
+                          (click)="onClick(x, y, z)"
+                          [attr.width]="getPieceRay(z) * 2"
+                          [attr.height]="getPieceRay(z) * 2"
+                          [attr.x]="getPieceCx(x, y, z) - getPieceRay(z)"
+                          [attr.y]="getPieceCy(x, y, z) - getPieceRay(z)"
+                          [ngClass]="getCaseClasses(x, y, z)"
+                          class="base"
                     />
                     <circle *ngIf="isOccupied(x, y, z)"
                             (click)="onClick(x, y, z)"

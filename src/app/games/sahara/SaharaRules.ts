@@ -11,6 +11,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice> {}
 
@@ -57,11 +58,11 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
         const movedPawn: SaharaPawn = slice.getBoardAt(move.coord);
         if (movedPawn !== slice.getCurrentPlayer().value) {
             display(SaharaRules.VERBOSE, 'This move is illegal because it is not the current player\'s turn.');
-            return { legal: MGPValidation.failure('move pawned not owned by current player') };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE) };
         }
         const landingCase: SaharaPawn = slice.getBoardAt(move.end);
         if (landingCase !== SaharaPawn.EMPTY) {
-            return { legal: MGPValidation.failure('Vous devez arriver sur une case vide.') };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE) };
         }
         const commonNeighboor: MGPOptional<Coord> = TriangularCheckerBoard.getCommonNeighboor(move.coord, move.end);
         if (commonNeighboor.isPresent()) {
@@ -78,6 +79,9 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
         const board: SaharaPawn[][] = node.gamePartSlice.getCopiedBoard();
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
+        return SaharaRules.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
+    }
+    public static getGameStatusFromFreedoms(zeroFreedoms: number[], oneFreedoms: number[]): GameStatus {
         if (zeroFreedoms[0] === 0) {
             return GameStatus.ONE_WON;
         } else if (oneFreedoms[0] === 0) {

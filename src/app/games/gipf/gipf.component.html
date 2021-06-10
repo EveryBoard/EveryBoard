@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 530 640"
+     viewBox="0 -10 708 854"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <marker id="arrowhead" markerWidth="10" markerHeight="7"
@@ -53,15 +53,17 @@
     </g>
 
     <g *ngFor="let player of [0, 1];">
-        <text x="0" [attr.y]="22+(getPieceSize()+10)*player" class="text-small">Pièces du joueur {{player+1}}</text>
+        <text x="0"
+              [attr.y]="20 + (getPieceSize() + 10) * player"
+              class="text-medium">Pièces du joueur {{ player + 1}}</text>
         <g *ngFor="let p of getPlayerSidePieces(player);">
             <circle id="piece_{{ player }}_{{ p }}"
-                    [attr.cx]="150+(p * getPieceSize()/3)"
-                    [attr.cy]="20+(getPieceSize()+5)*player"
-                    [attr.r]="getPieceSize()/3"
+                    [attr.cx]="350 + (p * getPieceSize() * 0.5)"
+                    [attr.cy]="15 + (getPieceSize() + 10) * player"
+                    [attr.r]="getPieceSize() * 0.5"
                     [ngClass]="getSidePieceClass(player)"
                     class="base small-stroke"
-                    />
+            />
         </g>
     </g>
 

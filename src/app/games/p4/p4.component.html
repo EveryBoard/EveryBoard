@@ -1,18 +1,41 @@
 <svg  xmlns="http://www.w3.org/2000/svg"
       width="100%" height="auto"
-      viewBox="0 0 700 600"
+      viewBox="-4 -4 708 608"
       preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let currentCase of line; index as x;">
-            <circle (click)="onClick(x)"
-                    id="click_{{ x }}"
+            <rect id="click_{{ x }}"
+                  (click)="onClick(x)"
+                  [attr.x]="CASE_SIZE * x"
+                  [attr.y]="CASE_SIZE * y"
+                  [attr.width]="CASE_SIZE"
+                  [attr.height]="CASE_SIZE"
+                  class="base"
+            />
+            <circle *ngIf="currentCase != EMPTY_CASE"
                     [attr.cx]="(CASE_SIZE * x) + (CASE_SIZE / 2)"
                     [attr.cy]="(CASE_SIZE * y) + (CASE_SIZE / 2)"
-                    [attr.r]="(CASE_SIZE - STROKE_WIDTH) / 2"
-                    [ngClass]="getCaseClasses(x, y)"
+                    [attr.r]="(CASE_SIZE / 2) - STROKE_WIDTH"
+                    [ngClass]="getCaseFillClass(x, y)"
                     class="base"
                     pointer-events="fill"
             />
         </g>
     </g>
+    <rect *ngIf="last"
+          [attr.x]="CASE_SIZE * last.x"
+          [attr.y]="CASE_SIZE * last.y"
+          [attr.width]="CASE_SIZE"
+          [attr.height]="CASE_SIZE"
+          class="base no-fill last-move mid-stroke"
+    />
+    <rect *ngFor="let coord of victoryCoords"
+          id="click_{{ x }}"
+          (click)="onClick(x)"
+          [attr.x]="CASE_SIZE * coord.x"
+          [attr.y]="CASE_SIZE * coord.y"
+          [attr.width]="CASE_SIZE"
+          [attr.height]="CASE_SIZE"
+          class="base no-fill victory-stroke mid-stroke"
+    />
 </svg>
