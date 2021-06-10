@@ -1,13 +1,23 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { SaharaRules } from '../SaharaRules';
+import { SaharaNode, SaharaRules } from '../SaharaRules';
 import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { SaharaPawn } from '../SaharaPawn';
 import { MGPSet } from 'src/app/utils/MGPSet';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('SaharaRules', () => {
+
+    const N: number = SaharaPawn.NONE;
+    const O: number = SaharaPawn.BLACK;
+    const X: number = SaharaPawn.WHITE;
+    const _: number = SaharaPawn.EMPTY;
 
     let rules: SaharaRules;
     let minimax: SaharaMinimax;
@@ -56,5 +66,24 @@ describe('SaharaRules', () => {
     });
     it('Bouncing on occupied case should be illegal', () => {
         expect(rules.choose(new SaharaMove(new Coord(7, 0), new Coord(8, 1)))).toBeFalse();
+    });
+    it('Should forbid moving ennemy piece', () => {
+        const state: SaharaPartSlice = SaharaPartSlice.getInitialSlice();
+        const move: SaharaMove = new SaharaMove(new Coord(3, 0), new Coord(4, 0));
+        const status: LegalityStatus = rules.isLegal(move, state);
+        expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+    });
+    it('Should see that Player.ONE won', () => {
+        const board: number[][] = [
+            [N, N, O, _, _, _, X, O, X, N, N],
+            [N, _, _, _, _, _, _, _, _, _, N],
+            [X, _, _, _, _, _, _, _, _, _, O],
+            [O, _, _, _, _, _, _, _, _, _, X],
+            [N, _, _, _, _, _, _, _, _, _, N],
+            [N, N, X, O, _, _, _, X, O, N, N],
+        ];
+        const state: SaharaPartSlice = new SaharaPartSlice(board, 4);
+        const node: SaharaNode = new MGPNode(null, null, state);
+        expectToBeVictoryFor(rules, node, Player.ONE, [new SaharaMinimax(rules, '')]);
     });
 });

@@ -35,6 +35,9 @@
 .other-piece {
     fill: #5c0838;
 }
+.other-piece-light {
+    fill: #8d2660;
+}
 .other-piece-stroke {
     stroke: #5c0838;
 }
@@ -66,7 +69,7 @@
 .highlighted {
     stroke: #e6e600;
 }
-.lastmove {
+.last-move {
     stroke: orange;
 }
 .victory {

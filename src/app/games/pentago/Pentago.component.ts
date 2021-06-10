@@ -160,7 +160,7 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
         const player: string = this.getPlayerClass(Player.of(this.board[y][x]));
         classes.push(player);
         if (new Coord(x, y).equals(this.lastDrop)) {
-            classes.push('lastmove');
+            classes.push('last-move');
         }
         return classes;
     }

@@ -22,11 +22,18 @@
                 />
             </ng-template>
             <polyline *ngIf="caseContent !== NONE"
-                      id="line_{{ x }}_{{ y }}"
+                      id="dark_line_{{ x }}_{{ y }}"
                       [attr.points]="getLineCoordinate(x, y)"
-                      class="base no-fill"
-                      stroke-linecap="round" />
-
+                      stroke-linecap="round"
+                      stroke="black"
+                      stroke-width="10"
+            />
+            <polyline *ngIf="caseContent !== NONE"
+                      id="dark_line_{{ x }}_{{ y }}"
+                      [attr.points]="getLineCoordinate(x, y)"
+                      stroke-linecap="round"
+                      stroke="white"
+            />
         </g>
     </g>
     <polyline *ngFor="let hl of highlights"
@@ -34,10 +41,10 @@
               class="base no-fill highlighted" />
     <polyline *ngIf="lastStart.isPresent()"
               [attr.points]="getTriangleCoordinate(lastStart.get().x, lastStart.get().y)"
-              class="base no-fill lastmove" />
+              class="base no-fill last-move" />
     <polyline *ngIf="lastEnd.isPresent()"
               [attr.points]="getTriangleCoordinate(lastEnd.get().x, lastEnd.get().y)"
-              class="base no-fill lastmove" />
+              class="base no-fill last-move" />
     <polyline *ngIf="chosenCoord.isPresent()"
               [attr.points]="getTriangleCoordinate(chosenCoord.get().x, chosenCoord.get().y)"
               class="base no-fill selected" />

@@ -1,23 +1,27 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 650 650"
+     viewBox="0 -3 650 656"
      preserveAspectRatio="xMidYMid meet">
+    <rect x="0" y="0"
+          width="650" height="650"
+          stroke="black"
+          stroke-width="3"
+          fill="lightgrey"
+    />
     <g *ngFor="let line of board; index as y;">
         <g *ngFor="let caseContent of line; index as x;">
             <g *ngIf="caseIsFull(x, y) else empty">
-                <rect id="click_{{x}}_{{y}}"
-                      width="50" height="50"
-                      [attr.x]="50*x" [attr.y]="50*y"
-                      class="base no-stroke"/>
-                <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
+                <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
+                        [attr.r]="22"
                         (click)="onClick(x, y);"
                         [ngClass]="getCaseClass(x, y)"
-                        class="base"
-                        />
+                        class="base mid-stroke"
+                />
                 <circle *ngIf="isLastCase(x, y)"
-                        [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y" [attr.r]="20"
-                        class="base no-fill highlighted"
-                        />
+                        [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
+                        [attr.r]="22"
+                        class="base no-fill mid-stroke highlighted"
+                />
                 <!-- TODO: draw after everything else -->
                 <line *ngIf="isDead(x, y)"
                       (click)="onClick(x, y);"
@@ -35,11 +39,11 @@
                 <line [attr.x1]="50*x"      [attr.y1]="25 + 50*y"
                       [attr.x2]="50 + 50*x" [attr.y2]="25 + 50*y"
                       (click)="onClick(x, y);"
-                      class="base"/>
+                      class="base mid-stroke"/>
                 <line [attr.x1]="25 + 50*x" [attr.y1]="50*y"
                       [attr.x2]="25 + 50*x" [attr.y2]="50 + 50*y"
                       (click)="onClick(x, y);"
-                      class="base"/>
+                      class="base mid-stroke"/>
                 <circle *ngIf="isTerritory(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="10"
@@ -49,9 +53,10 @@
         </g>
     </g>
     <rect *ngIf="isThereAKo();"
-          width="30" height="30"
-          [attr.x]="10 + 50*ko.x" [attr.y]="10 + 50*ko.y"
-          class="highlighted"
+          width="25" height="25"
+          [attr.x]="12.5 + 50 * ko.x" [attr.y]="12.5 + 50 * ko.y"
+          class="captured-stroke mid-stroke"
+          fill="none"
     />
     <circle *ngFor="let capture of captures"
             [attr.cx]="25 + 50*capture.x" [attr.cy]="25 + 50*capture.y"

@@ -35,15 +35,13 @@ export class SaharaMove extends MoveCoordToCoord {
         const dx: number = Math.abs(start.x - end.x);
         const dy: number = Math.abs(start.y - end.y);
         const distance: number = dx+dy;
-        if (distance === 0) {
-            throw new Error('Move cannot be static.');
-        } else if (distance === 1) {
+        if (distance === 1) {
             const fakeNeighboors: Coord = TriangularCheckerBoard.getFakeNeighboors(start);
             if (end.equals(fakeNeighboors)) {
                 throw new Error(start.toString() + ' and ' + end.toString() + ' are not neighboors.');
             }
         } else if (distance === 2) {
-            if ((start.x + start.y)%2 === 0) {
+            if ((start.x + start.y) % 2 === 0) {
                 throw new Error('Can only bounce twice when started on a white triangle.');
             }
             if (start.x === end.x) {

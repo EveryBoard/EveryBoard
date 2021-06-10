@@ -6,6 +6,7 @@ import { PylosPartSlice } from '../PylosPartSlice';
 import { PylosRules } from '../PylosRules';
 import { PylosMinimax } from '../PylosMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('PylosRules:', () => {
 
@@ -39,10 +40,10 @@ describe('PylosRules:', () => {
             ],
         ];
 
-        const slice: PylosPartSlice = new PylosPartSlice(board, 0);
+        const state: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
-        const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        const status: LegalityStatus = rules.isLegal(move, state);
+        expect(status.legal.reason).toEqual(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
     });
     it('should forbid move who\'se starting coord is not a player\'s piece', () => {
         const board: number[][][] = [

@@ -170,4 +170,17 @@ describe('P4Rules', () => {
 
         expect(P4Rules.getBoardValue(slice1).value).toBeLessThan(P4Rules.getBoardValue(slice2).value);
     });
+    it('should know where the lowest case is', () => {
+        const board: number[][] = [
+            [_, _, _, X, _, _, _],
+            [_, _, O, O, _, _, _],
+            [_, _, X, X, _, _, _],
+            [_, _, O, O, _, _, _],
+            [_, _, X, X, _, _, _],
+            [_, _, O, O, _, _, _],
+        ];
+        expect(P4Rules.getLowestUnoccupiedCase(board, 0)).toBe(5);
+        expect(P4Rules.getLowestUnoccupiedCase(board, 2)).toBe(0);
+        expect(P4Rules.getLowestUnoccupiedCase(board, 3)).toBe(-1);
+    });
 });

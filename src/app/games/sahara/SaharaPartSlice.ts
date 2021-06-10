@@ -2,6 +2,7 @@ import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { SaharaPawn } from './SaharaPawn';
 
 export class SaharaPartSlice extends GamePartSlice {
+
     public static HEIGHT: number = 6;
 
     public static WIDTH: number = 11;

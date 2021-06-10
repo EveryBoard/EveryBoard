@@ -6,6 +6,7 @@ import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('SaharaComponent', () => {
     let componentTestUtils: ComponentTestUtils<SaharaComponent>;
@@ -53,7 +54,7 @@ describe('SaharaComponent', () => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_2_0');
         const move: SaharaMove = new SaharaMove(new Coord(2, 0), new Coord(3, 0));
-        await componentTestUtils.expectMoveFailure('#click_3_0', 'Vous devez arriver sur une case vide.', move);
+        await componentTestUtils.expectMoveFailure('#click_3_0', RulesFailure.MUST_LAND_ON_EMPTY_CASE, move);
     }));
     it('should not allow to bounce on occupied brown case', fakeAsync(async() => {
         // given initial board
@@ -67,5 +68,10 @@ describe('SaharaComponent', () => {
         await componentTestUtils.expectClickSuccess('#click_0_3');
         const reason: string = 'Vous pouvez vous déplacer maximum de 2 cases, pas de 3.';
         await componentTestUtils.expectClickFailure('#click_2_2', reason);
+    }));
+    it('should change selected piece when clicking twice in a row on current player pieces', fakeAsync(async() => {
+        // given initial board
+        await componentTestUtils.expectClickSuccess('#click_2_0');
+        await componentTestUtils.expectClickSuccess('#click_7_0');
     }));
 });

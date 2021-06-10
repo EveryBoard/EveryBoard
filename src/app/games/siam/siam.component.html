@@ -3,28 +3,31 @@
      viewBox="0 0 700 700"
      preserveAspectRatio="xMidYMid meet">
     <defs>
-        <polygon id="triangle" points="0 -3.5, 10 0, 0 3.5"/>
+        <polygon id="triangle" points="0 -6, 10 0, 0 6"/>
         <polygon id="arrow" points="30 7, 30 50, 10 50, 50 93, 90 50, 70 50, 70 7, 27.5 7" />
         <polygon id="mountain" points="5 95, 16 68, 24 76, 48 28, 64 60, 72 44, 95 95, 5 95" />
     </defs>
-    <g *ngFor="let n of [0, 1, 2, 3, 4]">
-        <use *ngFor="let orientation of [['DOWN', n, -1], ['UP', n, 5], ['RIGHT', -1, n], ['LEFT', 5, n]]"
-             xlink:href="#arrow"
-             id="insertAt_{{orientation[1]}}_{{orientation[2]}}"
-             (click)="insertAt(orientation[1], orientation[2])"
-             [attr.transform]="getInsertionArrowTransform(orientation[1]+1, orientation[2]+1, orientation[0])"
-             class="base mid-stroke"/>
-    </g>
+    <ng-container *ngIf="isPlayerTurn()">
+        <g *ngFor="let n of [0, 1, 2, 3, 4]">
+            <use *ngFor="let orientation of [['DOWN', n, -1], ['UP', n, 5], ['RIGHT', -1, n], ['LEFT', 5, n]]"
+                 xlink:href="#arrow"
+                 id="insertAt_{{orientation[1]}}_{{orientation[2]}}"
+                 (click)="insertAt(orientation[1], orientation[2])"
+                 [attr.transform]="getInsertionArrowTransform(orientation[1]+1, orientation[2]+1, orientation[0])"
+                 class="base mid-stroke"/>
+        </g>
+    </ng-container>
     <g *ngFor="let line of board; index as y">
         <g *ngFor="let c of line; index as x">
-            <rect id="insertAt__{{ x }}_{{ y }}"
+            <rect id="insertAt_{{ x }}_{{ y }}"
                   (click)="insertAt(x, y)"
-                  [attr.x]="CASE_SIZE*(x+1)"
-                  [attr.y]="CASE_SIZE*(y+1)"
+                  [attr.x]="CASE_SIZE * (x + 1)"
+                  [attr.y]="CASE_SIZE * (y + 1)"
                   [attr.width]="CASE_SIZE"
                   [attr.height]="CASE_SIZE"
                   [ngClass]="getCaseClasses(x, y)"
-                  class="base" />
+                  class="base"
+            />
             <g *ngIf="isPiece(c)">
                 <use xlink:href="#arrow"
                      id="clickPiece_{{x}}_{{y}}"

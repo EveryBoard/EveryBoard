@@ -6,6 +6,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
 
 describe('SaharaMoves', () => {
+
     it('SaharaMoves should be created bidirectionnaly encodable/decodable', () => {
         const rules: SaharaRules = new SaharaRules(SaharaPartSlice);
         expect(rules).toBeTruthy();
@@ -51,5 +52,12 @@ describe('SaharaMoves', () => {
         const end: Coord = new Coord(1, 2);
         const expectedError: string = start.toString() + ' and ' + end.toString() + ' have no intermediary neighboors.';
         expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
+    });
+    it('Should throw when called with static move', () => {
+        expect(() => new SaharaMove(new Coord(0, 0), new Coord(0, 0))).toThrowError('MoveCoordToCoord cannot be static.');
+    });
+    it('should be equal to itself', () => {
+        const move: SaharaMove = new SaharaMove(new Coord(0, 0), new Coord(1, 0));
+        expect(move.equals(move)).toBeTrue();
     });
 });

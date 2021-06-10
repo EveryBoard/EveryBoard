@@ -34,7 +34,7 @@
               id="lastDrop_{{ lastDrop.x }}_{{ lastDrop.y }}"
               (click)="onPieceClick(lastDrop)"
               [attr.points]="getHexaCoordinates(lastDrop)"
-              class="base no-fill round lastmove mid-stroke" />
+              class="base no-fill round last-move mid-stroke" />
     <!-- HIGHLIGHTS -->
     <polyline *ngIf="selectedPiece != null"
               id="selectedPiece_{{ selectedPiece.x }}_{{ selectedPiece.y }}"
@@ -46,8 +46,16 @@
               id="victoryCoord_{{ victoryCoord.x }}_{{ victoryCoord.y }}"
               [attr.points]="getHexaCoordinates(victoryCoord)"
               class="base no-fill round highlighted mid-stroke" />
-    <polyline *ngFor="let cuttable of cuttables"
-              id="cuttable_{{ cuttable.x }}_{{ cuttable.y }}"
-              [attr.points]="getHexaCoordinates(cuttable)"
-              class="base no-fill round capturable" />
+    <g *ngFor="let cuttableGroup of cuttableGroups"
+       pointer-events="fill"
+       class="capturable">
+        <g *ngFor="let cuttable of cuttableGroup"
+           (click)="onPieceClick(cuttable)">
+            <polyline id="cuttable_{{ cuttable.x }}_{{ cuttable.y }}"
+                      [attr.points]="getHexaCoordinates(cuttable)"
+                      class="no-fill"
+                      stroke-linecap="round"
+            />
+        </g>
+    </g>
 </svg>

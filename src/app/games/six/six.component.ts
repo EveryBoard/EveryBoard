@@ -40,7 +40,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
 
     public pieces: Coord[];
     public disconnecteds: Coord[] = [];
-    public cuttables: Coord[] = [];
+    public cuttableGroups: Coord[][] = [];
     public victoryCoords: Coord[];
     public neighboors: Coord[];
     public leftCoord: Coord = null;
@@ -80,7 +80,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
     public cancelMoveAttempt(): void {
         this.selectedPiece = null;
         this.chosenLanding = null;
-        this.cuttables = [];
+        this.cuttableGroups = [];
     }
     public updateBoard(): void {
         const node: SixNode = this.rules.node;
@@ -240,10 +240,10 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         const groupsAfterMove: MGPSet<MGPSet<Coord>> =
             SixGameState.getGroups(piecesAfterDeplacement, deplacement.start.get());
         const biggerGroups: MGPSet<MGPSet<Coord>> = SixRules.getBiggerGroups(groupsAfterMove);
-        this.cuttables = [];
+        this.cuttableGroups = [];
         for (let i: number = 0; i < biggerGroups.size(); i++) {
-            const subList: Coord[] = biggerGroups.get(i).getCopy();
-            this.cuttables = this.cuttables.concat(subList);
+            const cuttableGroup: Coord[] = biggerGroups.get(i).getCopy();
+            this.cuttableGroups.push(cuttableGroup);
         }
     }
     public getSelectedPieceClass(): string {

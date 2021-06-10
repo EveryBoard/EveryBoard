@@ -7,6 +7,7 @@ import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { SaharaNode, SaharaRules } from './SaharaRules';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 
 export class SaharaMinimax extends Minimax<SaharaMove, SaharaPartSlice> {
@@ -51,10 +52,9 @@ export class SaharaMinimax extends Minimax<SaharaMove, SaharaPartSlice> {
         const board: SaharaPawn[][] = slice.getCopiedBoard();
         const zeroFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ZERO);
         const oneFreedoms: number[] = SaharaRules.getBoardValuesFor(board, Player.ONE);
-        if (zeroFreedoms[0] === 0) {
-            return new NodeUnheritance(Player.ONE.getVictoryValue());
-        } else if (oneFreedoms[0] === 0) {
-            return new NodeUnheritance(Player.ZERO.getVictoryValue());
+        const gameStatus: GameStatus = SaharaRules.getGameStatusFromFreedoms(zeroFreedoms, oneFreedoms);
+        if (gameStatus.isEndGame) {
+            return NodeUnheritance.fromWinner(gameStatus.winner);
         }
         let i: number = 0;
         while (i < 6 && zeroFreedoms[i] === oneFreedoms[i]) {
