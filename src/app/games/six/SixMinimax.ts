@@ -64,7 +64,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         }
     }
     private createForcedDrop(unheritance: SixNodeUnheritance): SixMove[] {
-        display(this.VERBOSE, { called: 'SixRules.createForceDrop', unheritance });
+        display(this.VERBOSE, { called: 'SixMinimax.createForceDrop', unheritance });
         const forcedMove: SixMove[] = [];
         const move: SixMove = SixMove.fromDrop(unheritance.preVictory);
         forcedMove.push(move);
@@ -153,7 +153,15 @@ export class SixMinimax extends AlignementMinimax<SixMove,
         const slice: SixGameState = node.gamePartSlice;
         const LAST_PLAYER: Player = slice.getCurrentEnnemy();
         const victoryValue: number = LAST_PLAYER.getVictoryValue();
-        const shapeInfo: BoardInfo = this.calculateBoardValue(move, slice);
+        let shapeInfo: BoardInfo = {
+            status: SCORE.DEFAULT,
+            victory: null,
+            preVictory: MGPOptional.empty(),
+            sum: 0,
+        };
+        if (move) {
+            shapeInfo = this.calculateBoardValue(move, slice);
+        }
         let preVictory: Coord | null;
         if (shapeInfo.status === SCORE.DEFAULT) {
             preVictory = shapeInfo.preVictory.getOrNull();
@@ -380,7 +388,7 @@ export class SixMinimax extends AlignementMinimax<SixMove,
     }
     public getBoardInfoForCircle(index: number, lastDrop: Coord, state: SixGameState, boardInfo: BoardInfo): BoardInfo {
         display(this.VERBOSE,
-                { called: 'SixRules.getBoardInfoForCircle', index, lastDrop, state, boardInfo });
+                { called: 'SixMinimaw.getBoardInfoForCircle', index, lastDrop, state, boardInfo });
         const LAST_ENNEMY: Player = state.getCurrentPlayer();
         const initialDirection: HexaDirection = HexaDirection.factory.all[index];
         const testedCoords: Coord[] = [lastDrop];
@@ -395,13 +403,13 @@ export class SixMinimax extends AlignementMinimax<SixMove,
             const dirIndex: number = (index + testedCoords.length) % 6;
             testedCoords.push(testCoord);
             const dir: HexaDirection = HexaDirection.factory.all[dirIndex];
-            testCoord = testCoord.getNext(dir, 1);
             if (testedPiece === Player.NONE) {
                 subSum += 0.16; // roughly 1/6
                 lastEmpty = testCoord;
             } else {
                 subSum++;
             }
+            testCoord = testCoord.getNext(dir, 1);
         }
         return this.getBoardInfoResult(subSum, lastEmpty, testedCoords, boardInfo);
     }

@@ -28,14 +28,16 @@
                       [attr.x1]="50*x"      [attr.y1]="50*y"
                       [attr.x2]="50 + 50*x" [attr.y2]="50 + 50*y"
                       class="base no-fill captured-stroke"
-                      />
+                />
             </g>
             <ng-template #empty>
                 <rect id="click_{{x}}_{{y}}"
                       width="50" height="50"
                       [attr.x]="50*x" [attr.y]="50*y"
                       (click)="onClick(x, y);"
-                      class="base no-stroke"/>
+                      class="base no-stroke"
+                      fill-opacity="0"
+                />
                 <line [attr.x1]="50*x"      [attr.y1]="25 + 50*y"
                       [attr.x2]="50 + 50*x" [attr.y2]="25 + 50*y"
                       (click)="onClick(x, y);"
