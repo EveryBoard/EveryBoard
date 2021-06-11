@@ -4,6 +4,7 @@ import { SaharaMove } from '../SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { SaharaFailure } from '../SaharaFailure';
 
 describe('SaharaMoves', () => {
 
@@ -44,7 +45,7 @@ describe('SaharaMoves', () => {
     it('Should throw error when trying to bounce on white triangle', () => {
         const start: Coord = new Coord(0, 0);
         const end: Coord = new Coord(2, 0);
-        const expectedError: string = 'Can only bounce twice when started on a white triangle.';
+        const expectedError: string = SaharaFailure.CAN_ONLY_REBOUNCE_ON_BLACK;
         expect(() => new SaharaMove(start, end)).toThrowError(expectedError);
     });
     it('Should throw error when distance is 2 but common neighboors is the fake neighboors', () => {

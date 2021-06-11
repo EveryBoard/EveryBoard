@@ -3,6 +3,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaPartSlice } from './SaharaPartSlice';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
+import { SaharaFailure } from './SaharaFailure';
 
 export class SaharaMove extends MoveCoordToCoord {
     public static encoder: NumberEncoder<SaharaMove> = new class extends NumberEncoder<SaharaMove> {
@@ -42,7 +43,7 @@ export class SaharaMove extends MoveCoordToCoord {
             }
         } else if (distance === 2) {
             if ((start.x + start.y) % 2 === 0) {
-                throw new Error('Can only bounce twice when started on a white triangle.');
+                throw new Error(SaharaFailure.CAN_ONLY_REBOUNCE_ON_BLACK);
             }
             if (start.x === end.x) {
                 throw new Error(start.toString() + ' and ' + end.toString() + ' have no intermediary neighboors.');
