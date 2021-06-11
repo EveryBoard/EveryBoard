@@ -7,6 +7,7 @@ import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { SaharaFailure } from '../SaharaFailure';
 
 describe('SaharaComponent', () => {
     let componentTestUtils: ComponentTestUtils<SaharaComponent>;
@@ -60,7 +61,7 @@ describe('SaharaComponent', () => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_7_0');
         const move: SaharaMove = new SaharaMove(new Coord(7, 0), new Coord(8, 1));
-        const reason: string = 'Vous ne pouvez rebondir que sur les cases rouges!';
+        const reason: string = SaharaFailure.CAN_ONLY_REBOUNCE_ON_EMPTY_CASE;
         await componentTestUtils.expectMoveFailure('#click_8_1', reason, move);
     }));
     it('should not allow invalid moves', fakeAsync(async() => {

@@ -12,6 +12,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { TriangularGameState } from 'src/app/jscaip/TriangularGameState';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { SaharaFailure } from './SaharaFailure';
 
 export class SaharaNode extends MGPNode<SaharaRules, SaharaMove, SaharaPartSlice> {}
 
@@ -69,7 +70,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
             if (slice.getBoardAt(commonNeighboor.get()) === SaharaPawn.EMPTY) {
                 return { legal: MGPValidation.SUCCESS };
             } else {
-                return { legal: MGPValidation.failure('Vous ne pouvez rebondir que sur les cases rouges!') };
+                return { legal: MGPValidation.failure(SaharaFailure.CAN_ONLY_REBOUNCE_ON_EMPTY_CASE) };
             }
         } else {
             return { legal: MGPValidation.SUCCESS };
