@@ -38,7 +38,6 @@ export abstract class AlignementMinimax<M extends Move,
                 newBoardInfo = this.getBoardInfo(victorySource, move, state, boardInfo);
             }
             if (newBoardInfo.status === SCORE.VICTORY) {
-                // return state.getCurrentEnnemy().getVictoryValue();
                 return newBoardInfo;
             }
             boardInfo = {

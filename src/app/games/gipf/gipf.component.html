@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 -10 708 854"
+     viewBox="0 -12 708 854"
      preserveAspectRatio="xMidYMid meet">
     <defs>
         <marker id="arrowhead" markerWidth="10" markerHeight="7"
@@ -30,7 +30,6 @@
         </g>
     </g>
 
-
     <g *ngFor="let capture of possibleCaptures; index as i;"
        pointer-events="fill"
        class="capturable">
@@ -54,12 +53,12 @@
 
     <g *ngFor="let player of [0, 1];">
         <text x="0"
-              [attr.y]="20 + (getPieceSize() + 10) * player"
+              [attr.y]="20 + (getPieceSize() + 12) * player"
               class="text-medium">Pièces du joueur {{ player + 1}}</text>
         <g *ngFor="let p of getPlayerSidePieces(player);">
             <circle id="piece_{{ player }}_{{ p }}"
                     [attr.cx]="350 + (p * getPieceSize() * 0.5)"
-                    [attr.cy]="15 + (getPieceSize() + 10) * player"
+                    [attr.cy]="10 + (getPieceSize() + 10) * player"
                     [attr.r]="getPieceSize() * 0.5"
                     [ngClass]="getSidePieceClass(player)"
                     class="base small-stroke"
@@ -67,12 +66,12 @@
         </g>
     </g>
 
-    <g *ngIf="inserted">
-        <line [attr.x1]="inserted.x1"
-              [attr.y1]="inserted.y1"
-              [attr.x2]="inserted.x2"
-              [attr.y2]="inserted.y2"
-              class="arrow moved-stroke"
-              marker-end="url(#arrowhead-moved)" />
-    </g>
+    <line *ngIf="inserted"
+          [attr.x1]="inserted.x1"
+          [attr.y1]="inserted.y1"
+          [attr.x2]="inserted.x2"
+          [attr.y2]="inserted.y2"
+          class="arrow moved-stroke"
+          marker-end="url(#arrowhead-moved)"
+    />
 </svg>

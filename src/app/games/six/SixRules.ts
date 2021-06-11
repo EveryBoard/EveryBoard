@@ -43,7 +43,7 @@ export class SixRules extends Rules<SixMove,
         }
     }
     public isLegal(move: SixMove, slice: SixGameState): SixLegalityStatus {
-        display(this.VERBOSE, { called: 'SixRules.isLegal', move, slice });
+        display(this.VERBOSE, { called: 'SixRules.isLegal', move: move.landing.toString(), slice });
         const landingLegality: MGPValidation = slice.isIllegalLandingZone(move.landing, move.start.getOrNull());
         if (landingLegality.isFailure()) {
             return { legal: landingLegality, kept: null };
@@ -55,16 +55,16 @@ export class SixRules extends Rules<SixMove,
         }
     }
     public static getLegalLandings(state: SixGameState): Coord[] {
-        const neighboors: Coord[] = [];
+        const neighboors: MGPSet<Coord> = new MGPSet();
         for (const piece of state.pieces.listKeys()) {
             for (const dir of HexaDirection.factory.all) {
                 const neighboor: Coord = piece.getNext(dir, 1);
                 if (state.getPieceAt(neighboor) === Player.NONE) {
-                    neighboors.push(neighboor);
+                    neighboors.add(neighboor);
                 }
             }
         }
-        return neighboors;
+        return neighboors.getCopy();
     }
     public isLegalDrop(move: SixMove, slice: SixGameState): SixLegalityStatus {
         if (move.isDrop() === false) {
@@ -156,7 +156,10 @@ export class SixRules extends Rules<SixMove,
     public getGameStatus(node: SixNode): GameStatus {
         const state: SixGameState = node.gamePartSlice;
         const LAST_PLAYER: Player = state.getCurrentEnnemy();
-        const shapeVictory: Coord[] = this.getShapeVictory(node.move, state);
+        let shapeVictory: Coord[] = [];
+        if (node.move) {
+            shapeVictory = this.getShapeVictory(node.move, state);
+        }
         if (shapeVictory.length === 6) {
             return GameStatus.getVictory(LAST_PLAYER);
         }

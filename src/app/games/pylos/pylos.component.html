@@ -9,7 +9,7 @@
         <g *ngFor="let p of getPlayerSidePieces(player);">
             <circle id="piece_{{ player }}_{{ p }}"
                     [attr.cx]="350 + (p * getPieceSize()/3)"
-                    [attr.cy]="850 + 12 + (getPieceSize() + 5) * player"
+                    [attr.cy]="850 + 12 + (getPieceSize() + 6) * player"
                     [attr.r]="getPieceSize()/3"
                     [ngClass]="getPlayerPieceClass(player)"
                     class="base small-stroke"

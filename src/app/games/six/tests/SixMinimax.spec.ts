@@ -74,6 +74,19 @@ describe('SixMinimax', () => {
             expect(boardValue.preVictory).toBeUndefined();
             expect(boardValue.value).toBe(Player.ZERO.getPreVictory());
         });
+        it('shound point the right preVictory coord with circle', () => {
+            const board: number[][] = [
+                [_, O, _, X],
+                [O, _, O, _],
+                [O, O, _, _],
+            ];
+            const state: SixGameState = SixGameState.fromRepresentation(board, 9);
+            const move: SixMove = SixMove.fromDrop(new Coord(1, 0));
+            rules.node = new SixNode(null, null, state);
+            const boardValue: { value: number, preVictory?: Coord } =
+                minimax.getBoardValue(new MGPNode(null, move, state));
+            expect(boardValue.preVictory).toEqual(new Coord(2, 0));
+        });
     });
     describe('4 pieces aligned is better than 3 pieces aligned', () => {
         it('should be true with lines', () => {
