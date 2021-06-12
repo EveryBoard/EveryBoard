@@ -8,7 +8,7 @@ import { P4Component } from 'src/app/games/p4/p4.component';
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { DebugElement } from '@angular/core';
 
-fdescribe('LocalGameWrapperComponent', () => {
+describe('LocalGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
@@ -105,7 +105,7 @@ fdescribe('LocalGameWrapperComponent', () => {
             flush();
         }));
     });
-    fdescribe('Using AI', () => {
+    describe('Using AI', () => {
         it('Should show level when non-human player is selected, and propose ai to play', async() => {
             // 1. Choosing AI
             const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerZeroSelect').nativeElement;
