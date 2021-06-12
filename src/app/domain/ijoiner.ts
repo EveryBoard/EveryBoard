@@ -5,15 +5,15 @@ export interface IJoiner extends JSONObject {
     readonly candidates: NonNullable<Array<string>>; // TODO: give default empty value
     readonly creator: NonNullable<string>;
     readonly chosenPlayer: NonNullable<string>; // TODO: make optional
-    readonly whoStart?: string;
-    readonly firstPlayer?: IFirstPlayer;
-
     readonly partStatus: NonNullable<IPartStatus>;
 
-    // cancel feature for cause of smart phone bugs timeoutMinimalDuration: number;
+    readonly whoStart?: string;
+    readonly firstPlayer?: IFirstPlayer;
+    readonly partType?: IPartType
     readonly maximalMoveDuration?: number;
     readonly totalPartDuration?: number;
 }
+
 export class Joiner implements DomainWrapper<IJoiner> {
     public constructor(public readonly doc: IJoiner) {
     }
@@ -24,7 +24,6 @@ export interface IJoinerId {
 
     doc: IJoiner;
 }
-
 export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';
 export class FirstPlayer {
 
@@ -43,6 +42,25 @@ export class FirstPlayer {
             case 'RANDOM': return FirstPlayer.RANDOM;
             case 'CHOSEN_PLAYER': return FirstPlayer.CHOSEN_PLAYER;
             default: throw new Error('Invalid value for FirstPlayer: ' + value + '.');
+        }
+    }
+}
+export type IPartType = 'STANDARD' | 'BLITZ' | 'CUSTOM';
+export class PartType {
+    private constructor(public value: IPartType) {}
+
+    public static readonly STANDARD: PartType = new PartType('STANDARD');
+
+    public static readonly BLITZ: PartType = new PartType('BLITZ');
+
+    public static readonly CUSTOM: PartType = new PartType('CUSTOM');
+
+    public static of(value: string): PartType {
+        switch (value) {
+            case 'STANDARD': return PartType.STANDARD;
+            case 'BLITZ': return PartType.BLITZ;
+            case 'CUSTOM': return PartType.CUSTOM;
+            default: throw new Error('Invalid part type: ' + value + '.');
         }
     }
 }

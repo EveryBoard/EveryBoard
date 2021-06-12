@@ -1,133 +1,213 @@
-<div *ngIf="currentJoiner"
-     class="columns">
-    <div class="column is-9">
-        <div id="gameConfig" class="box">
-            <mat-horizontal-stepper id="creatorDiv" linear #stepper *ngIf="userIsCreator">
-                <mat-step [stepControl]="opponentFormGroup" editable="false">
-                    <ng-template matStepLabel>Sélection d'un adversaire</ng-template>
-                    <div *ngIf="currentJoiner.candidates.length === 0 else chooseCandidate">
-                        Attendez qu'un utilisateur vous rejoigne!
-                    </div>
-                    <ng-template #chooseCandidate>
-                        <form id="chooseCandidate" [formGroup]="opponentFormGroup">
-                            <mat-radio-group class="example-radio-group"
-                                             formControlName="chosenOpponent"
-                                             required>
-                                <mat-radio-button class="example-radio-button"
-                                                  *ngFor="let joinerName of currentJoiner.candidates"
-                                                  [value]="joinerName">
-                                    {{joinerName}}
-                                </mat-radio-button>
-                            </mat-radio-group>
-                            <div *ngIf="opponentFormGroup.get('chosenOpponent').value !== ''">
-                                <button (click)="setChosenPlayer(opponentFormGroup.get('chosenOpponent').value)"
-                                        mat-button
-                                        matStepperNext>
-                                    Jouer contre {{ opponentFormGroup.get('chosenOpponent').value }}
-                                </button>
-                                <button (click)="unselectChosenPlayer()"
-                                        mat-button>
-                                    Annuler
-                                </button>
-                            </div>
-                        </form>
-                    </ng-template>
-                </mat-step>
-
-                <mat-step [stepControl]="configFormGroup" editable="false">
-                    <form id="proposeConfig"
-                          *ngIf="currentJoiner.chosenPlayer"
-                          [formGroup]="configFormGroup">
-                        <ng-template matStepLabel>Configurez la partie</ng-template>
-                        <mat-radio-group class="example-radio-group" formControlName="firstPlayer" required>
-                            <mat-radio-button class="example-radio-button" value="CREATOR"> Vous commencez </mat-radio-button>
-                            <mat-radio-button class="example-radio-button" value="CHOSEN_PLAYER"> {{ currentJoiner.chosenPlayer }} commence </mat-radio-button>
-                            <mat-radio-button class="example-radio-button" value="RANDOM"> Premier joueur au hasard </mat-radio-button>
-                        </mat-radio-group>
-                        <div> Durée maximum d'un tour :
-                            <mat-slider
-                                class="example-margin"
-                                formControlName="maximalMoveDuration"
-                                [min]="10" [max]="300" [step]="10"
-                                [thumbLabel]="true"
-                                required>
-                            </mat-slider>
-                        </div>
-                        <div> Durée maximum de la partie (par joueur) :
-                            <mat-slider
-                                class="example-margin"
-                                formControlName="totalPartDuration"
-                                [min]="60" [max]="3600" [step]="30"
-                                [thumbLabel]="true"
-                                required>
-                            </mat-slider>
-                        </div>
-                        <div>
-                            <!-- <button mat-button matStepperPrevious (click)="unselectChosenPlayer()"> Changer d'adversaire
-                                 </button>-->
-                            <button mat-button matStepperNext (click)="proposeConfig()"> Proposer config</button>
-                        </div>
-                    </form>
-                </mat-step>
-
-                <mat-step editable="false">
-                    <ng-template matStepLabel>Done</ng-template>
-                    Attendez la confirmation de {{ currentJoiner.chosenPlayer }}
-                    La partie commencera automatiquement
-                    <!--<div>
-                        <button mat-button matStepperPrevious>Revenir sur la config</button>
-                    </div>-->
-                </mat-step>
-            </mat-horizontal-stepper>
-
-            <div id="chosenPlayerDiv" *ngIf="userIsChosenPlayer">
-                <h3> Vous avez été choisi comme adversaire !</h3>
-                <div id="whoPlaysFirst">
-                    <h4 *ngIf="!proposalSent">
-                        {{ currentJoiner.creator }} est en train de choisir la configuration de la partie
-                    </h4>
-                    <div id="acceptConfig" *ngIf="proposalSent">
-                        <h4 *ngIf="currentJoiner.firstPlayer === 'CREATOR'">
-                            {{ currentJoiner.creator }} propose que tu commences
-                        </h4>
-                        <h4 *ngIf="currentJoiner.firstPlayer === 'CHOSEN_PLAYER'">
-                            {{ currentJoiner.creator }} propose qu'il commence
-                        </h4>
-                        <h4 *ngIf="currentJoiner.firstPlayer === 'RANDOM'">
-                            {{ currentJoiner.creator }} propose que le premier joueur soit choisi au hasard
-                        </h4>
-                        <h4> Il propose : {{ currentJoiner.maximalMoveDuration }}s/tour maximum </h4>
-                        <h4> Et : {{ currentJoiner.totalPartDuration }}s/joueur maximum </h4>
-                        <button mat-button
-                                (click)="acceptConfig()"
-                                [disabled]="acceptingDisabled">
-                            Accepter et commencer
+<div *ngIf="joinerObs | async as joiner"
+     class="box">
+    <div *ngIf="userName === joiner.creator">
+        <h1 class="title">Création d'une partie</h1>
+        <form [formGroup]="configFormGroup">
+            <fieldset [disabled]="!(canEditConfigObs | async)">
+                <div class="field">
+                    <label class="label" for="firstPlayer">Premier joueur</label>
+                    <div class="buttons has-addons">
+                        <button class="button"
+                                id="firstPlayerRandom"
+                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'RANDOM') && 'is-primary'"
+                                (click)="selectFirstPlayer('RANDOM')"
+                                >Au hasard</button>
+                        <button class="button"
+                                id="firstPlayerCreator"
+                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'CREATOR') && 'is-primary'"
+                                (click)="selectFirstPlayer('CREATOR')"
+                                >Vous</button>
+                        <button class="button"
+                                id="firstPlayerOpponent"
+                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'CHOSEN_PLAYER') && 'is-primary'"
+                                (click)="selectFirstPlayer('CHOSEN_PLAYER')"
+                                >
+                            <ng-container *ngIf="joiner.chosenPlayer else opponentWithoutName"> {{ joiner.chosenPlayer }}</ng-container>
+                            <ng-template #opponentWithoutName> L'adversaire</ng-template>
                         </button>
                     </div>
                 </div>
+                <div class="field">
+                    <label class="label" for="firstPlayer">Type de partie</label>
+                    <div class="buttons has-addons">
+                        <div class="button dropdown is-hoverable"
+                             id="partTypeStandard"
+                             [ngClass]="(configFormGroup.get('partType').value === 'STANDARD') && 'is-primary'"
+                             (click)="selectPartType('STANDARD')"
+                             >
+                            <div class="dropdown-trigger">
+                                <span>Standard</span>
+                            </div>
+                            <div class="dropdown-menu" role="menu">
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item">
+                                        <p>
+                                            Durée maximale d'un tour: <strong>{{ NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
+                                            Durée maximale de la partie: <strong>{{ NORMAL_PART_DURATION | humanDuration }} par joueur</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="button dropdown is-hoverable"
+                             id="partTypeBlitz"
+                             [ngClass]="(configFormGroup.get('partType').value === 'BLITZ') && 'is-primary'"
+                             (click)="selectPartType('BLITZ')">
+                            <div class="dropdown-trigger">
+                                <span>Blitz</span>
+                            </div>
+                            <div class="dropdown-menu" role="menu">
+                                <div class="dropdown-content">
+                                    <div class="dropdown-item">
+                                        <p>
+                                            Durée maximale d'un tour: <strong>{{ BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
+                                            Durée maximale de la partie: <strong>{{ BLITZ_PART_DURATION | humanDuration }} par joueur</strong>
+                                        </p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button class="button"
+                                id="partTypeCustom"
+                                [ngClass]="(configFormGroup.get('partType').value === 'CUSTOM') && 'is-primary'"
+                                (click)="selectPartType('CUSTOM')"
+                                >Personnalisée</button>
+                    </div>
+                </div>
+                <div id="customTime" *ngIf="showCustomTimeObs | async">
+                    <div class="field">
+                        <label class="label" for="maximalMoveDuration">Durée maximale d'un tour: <output>{{ configFormGroup.get('maximalMoveDuration').value | humanDuration }}</output></label>
+                        <div class="control">
+                            <input class="slider is-circle is-primary"
+                                   step="10"
+                                   min="10" max="300"
+                                   name="maximalMoveDuration"
+                                   formControlName="maximalMoveDuration" type="range">
+                        </div>
+                    </div>
+                    <div class="field">
+                        <label class="label" for="totalPartDuration">Durée maximale de la partie: <output>{{ configFormGroup.get('totalPartDuration').value | humanDuration }} par joueur</output></label>
+                        <div class="control">
+                            <input class="slider is-circle is-primary"
+                                   step="10"
+                                   min="10" max="3600"
+                                   name="totalPartDuration"
+                                   formControlName="totalPartDuration"
+                                   type="range">
+                        </div>
+                    </div>
+                </div>
+                <div class="field">
+                    <label class="label">Adversaire</label>
+                    <div class="control">
+                        <div *ngIf="joiner.candidates.length === 0 else chooseCandidate">
+                            Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<br/>
+                            Attendez qu'un adversaire vous rejoigne pour pouvoir en choisir un.
+                        </div>
+                        <ng-template #chooseCandidate>
+                            Cliquez sur l'adversaire contre lequel vous souhaitez jouer.
+                            <div class="table-container"
+                                 id="chooseCandidate">
+                                <table class="table is-fullwidth is-hoverable is-striped">
+                                    <thead>
+                                        <tr>
+                                            <th class="th" scope="col">Nom</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngFor="let candidate of joiner.candidates"
+                                            (click)="selectOpponent(candidate)"
+                                            id="presenceOf_{{ candidate }}">
+                                            <td class="td"
+                                                [ngClass]="configFormGroup.get('chosenOpponent').value === candidate && 'is-selected'"
+                                                [id]="configFormGroup.get('chosenOpponent').value === candidate && ('selected_' + candidate) || 'candidate_' + candidate"
+                                                >{{ candidate }}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </ng-template>
+                    </div>
+                </div>
+            </fieldset>
+            <div class="field">
+                <div class="buttons has-addons">
+                    <button class="button is-primary"
+                            [disabled]="!(canProposeConfigObs | async)"
+                            (click)="proposeConfig()"
+                            id="proposeConfig"
+                            >Proposer la configuration</button>
+                    <button class="button"
+                            id="reviewConfig"
+                            *ngIf="canReviewConfigObs | async"
+                            (click)="reviewConfig()"
+                            >Changer la configuration</button>
+                    <button class="button"
+                            id="cancel"
+                            (click)="cancelAndLeave()"
+                            >Annuler la partie</button>
+                </div>
             </div>
+        </form>
+    </div>
 
-            <div id="guestDiv" *ngIf="!userIsCreator && !userIsChosenPlayer">
-                Adversaire choisi : {{ currentJoiner.chosenPlayer }}
+    <div *ngIf="userIsChosenPlayerObs | async">
+        <div class="message is-primary">
+            <div class="message-header">
+                <p>Proposition de configuration</p>
+            </div>
+            <div class="message-body">
+                <div *ngIf="userIsModifyingConfigObs | async else configProposal"
+                     class="content">
+                    <p>
+                        Vous avez été choisi comme adversaire<br/>
+                        {{ joiner.creator }} est en train de modifier la configuration
+                    </p>
+                </div>
+                <ng-template #configProposal>
+                    <div class="content">
+                        <p>
+                            {{ currentJoiner.creator }} propose de faire une partie
+                            <ng-container *ngIf="joiner.partType === 'STANDARD'">standard</ng-container>
+                            <ng-container *ngIf="joiner.partType === 'BLITZ'">rapide</ng-container>
+                            <ng-container *ngIf="joiner.partType === 'CUSTOM'">personnalisée</ng-container>
+                            où :
+                        </p>
+                        <ul>
+                            <li>
+                                <span *ngIf="joiner.firstPlayer === 'CREATOR'">
+                                    {{ currentJoiner.creator }} joue en premier
+                                </span>
+                                <span *ngIf="joiner.firstPlayer === 'CHOSEN_PLAYER'">
+                                    vous jouez en premier
+                                </span>
+                                <span *ngIf="joiner.firstPlayer === 'RANDOM'">
+                                    le premier joueur est tiré au hasard
+                                </span>
+                            </li>
+                            <li>un tour dure maximum <strong>{{ joiner.maximalMoveDuration | humanDuration }} </strong></li>
+                            <li>la partie dure maximum <strong>{{ joiner.totalPartDuration | humanDuration }} par joueur</strong></li>
+                        </ul>
+                        <button class="button is-primary"
+                                (click)="acceptConfig()"
+                                id="acceptConfig">
+                            Accepter et commencer
+                        </button>
+                    </div>
+                </ng-template>
             </div>
         </div>
     </div>
-
-    <div id="joiners" class="column is-3">
-        <div class="box">
-            <div class="content">
-                <h4> Joueurs présents : </h4>
-                <ul>
-                    <li *ngIf="currentJoiner.chosenPlayer"
-                        id="selected_{{currentJoiner.chosenPlayer}}">
-                        <p><b> {{ currentJoiner.chosenPlayer }} </b></p>
-                    </li>
-                    <li *ngFor="let joinerName of currentJoiner.candidates"
-                        id="presenceOf_{{joinerName}}">
-                        <p> {{ joinerName }} </p>
-                    </li>
-                </ul>
-            </div>
+    <div *ngIf="userIsObserverObs | async"
+         class="message is-primary">
+        <div class="message-header">
+            <p>Un instant...</p>
+        </div>
+        <div class="message-body">
+            <p>
+                <span *ngIf="!proposalSent">{{ joiner.creator }} est en train de configurer la partie.</span>
+                <span *ngIf="proposalSent">{{ joiner.creator }} a proposé une configuration à {{ joiner.chosenPlayer }}</span>
+            </p>
         </div>
     </div>
 </div>

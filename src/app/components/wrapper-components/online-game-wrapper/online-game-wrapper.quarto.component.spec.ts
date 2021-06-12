@@ -90,8 +90,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await joinerDAO.update('joinerId', { candidates: ['firstCandidate'] });
         componentTestUtils.detectChanges();
         await joinerDAO.update('joinerId', {
-            partStatus: PartStatus.PLAYER_CHOSEN.value,
-            candidates: [],
+            partStatus: PartStatus.PART_CREATED.value,
+            candidates: ['firstCandidate'],
             chosenPlayer: 'firstCandidate',
         });
         // TODO: replace by real actor action (chooseCandidate)
@@ -101,7 +101,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         if (shorterGlobalChrono) {
             await joinerDAO.update('joinerId', {
                 partStatus: PartStatus.PART_STARTED.value,
-                maximalMoveDuration: 120,
+                totalPartDuration: 10,
             });
         } else {
             await joinerDAO.update('joinerId', {
@@ -541,7 +541,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalled();
         }));
-        it('should stop player\'s local chrono when local global', fakeAsync(async() => {
+        it('should stop player\'s local chrono when global reach end', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
             tick(1);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -560,7 +560,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalled();
         }));
-        it('should stop ennemy\'s local chrono when local global', fakeAsync(async() => {
+        it('should stop ennemy\'s local chrono when global reach end', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
             tick(1);
             await doMove(FIRST_MOVE, true);
