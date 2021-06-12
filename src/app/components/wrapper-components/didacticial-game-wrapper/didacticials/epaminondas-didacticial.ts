@@ -86,7 +86,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
         `Pour capturer une phalange ennemie:
          1. Il faut que celle-ci soit alignée avec la phalange en déplacement.
          2. Qu'elle soit strictement plus courte.
-         3. Que la première pièce de votre phalange aterrisse sur la première pièce rencontrée de la phalange à capturer.
+         3. Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.
          Capturez la phalange.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, _, _, _, X, X, X, X, X, X],

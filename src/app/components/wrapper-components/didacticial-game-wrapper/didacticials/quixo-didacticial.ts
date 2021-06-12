@@ -20,10 +20,10 @@ export const quixoDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         'A quoi ressemble un mouvement (sans animation)',
-        `Quand c'est à votre tour de jouer:
-         1. Cliquez sur une de vos pièces ou une pièce neutre, il est interdit de choisir une pièce de l'adversaire.
+        `Quand c'est à votre tour de jouer :
+         Premièrement, cliquez sur une de vos pièces ou une pièce neutre, il est interdit de choisir une pièce de l'adversaire.
          Notez que vous ne pouvez choisir qu'une pièce sur le bord du plateau.
-         2. Choisissez une direction dans laquelle l'envoyer (en cliquant sur la flèche).
+         Deuxièmement, choisissez une direction dans laquelle l'envoyer (en cliquant sur la flèche).
          Il faudra imaginer que la pièce que vous avez choisie a été déplacée jusqu'au bout du plateau dans la direction choisie.
          Une fois arrivée au bout, toutes les pièces vont se glisser d'une case dans la direction inverse à celle qu'a pris votre pièce.
          Après cela, si elle était neutre, la pièce devient la votre et prend votre couleur.

@@ -13,14 +13,16 @@
                       [attr.height]="CASE_SIZE"
                       class="base-no-fill"
                       [attr.fill]="backgroundColor(x, y)"
-                      fill-opacity="0.7"/>
+                      fill-opacity="0.7"
+                />
                 <!-- Piece -->
                 <circle *ngIf="caseContent !== UNOCCUPIED"
                         [attr.cx]="CASE_SIZE/2 + (x * CASE_SIZE)"
                         [attr.cy]="CASE_SIZE/2 + (y * CASE_SIZE)"
                         [attr.fill]="pieceColor(caseContent)"
                         [attr.r]="CASE_SIZE/3"
-                        class="base-no-fill"/>
+                        class="base-no-fill"
+                />
                 <rect *ngIf="caseContent !== UNOCCUPIED"
                       [attr.x]="CASE_SIZE/2 + (x * CASE_SIZE) - CASE_SIZE/8"
                       [attr.y]="CASE_SIZE/2 + (y * CASE_SIZE) - CASE_SIZE/8"
@@ -30,8 +32,7 @@
                       [attr.height]="CASE_SIZE/4"
                       [ngClass]="piecePlayerClass(caseContent)"
                       class="no-stroke"
-                      />
-
+                />
             </g>
         </g>
     </g>
@@ -46,7 +47,7 @@
               [attr.y]="lastMove.end.y * CASE_SIZE"
               [attr.width]="CASE_SIZE"
               [attr.height]="CASE_SIZE"
-              class="base no-fill highlighted"/>
+              class="base no-fill mid-stroke highlighted"/>
     </g>
     <!-- Highlight selected piece -->
     <circle *ngIf="chosen !== null"

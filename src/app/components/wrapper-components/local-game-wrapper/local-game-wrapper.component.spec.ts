@@ -8,7 +8,7 @@ import { P4Component } from 'src/app/games/p4/p4.component';
 import { LocalGameWrapperComponent } from './local-game-wrapper.component';
 import { DebugElement } from '@angular/core';
 
-describe('LocalGameWrapperComponent', () => {
+fdescribe('LocalGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<P4Component>;
     const O: number = Player.ZERO.value;
     const X: number = Player.ONE.value;
@@ -34,8 +34,6 @@ describe('LocalGameWrapperComponent', () => {
             .withContext('gameComponent should be present once component view init').toBeTruthy();
     });
     it('connected user should be able to play', fakeAsync(async() => {
-        const slice: P4PartSlice = componentTestUtils.getComponent().rules.node.gamePartSlice;
-        componentTestUtils.setupSlice(slice);
         await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
     }));
     it('should allow to go back one move', fakeAsync(async() => {
@@ -107,8 +105,8 @@ describe('LocalGameWrapperComponent', () => {
             flush();
         }));
     });
-    describe('Using AI', () => {
-        it('Should show level when non-human player is selected', async() => {
+    fdescribe('Using AI', () => {
+        it('Should show level when non-human player is selected, and propose ai to play', async() => {
             // 1. Choosing AI
             const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerZeroSelect').nativeElement;
             componentTestUtils.expectElementNotToExist('#aiZeroDepthSelect');
@@ -148,5 +146,26 @@ describe('LocalGameWrapperComponent', () => {
             expect(proposeAIToPlay).toHaveBeenCalledTimes(1);
             flush();
         }));
+        it('should propose AI 2 to play when selecting her just before her turn', async() => {
+            // given wrapper on which a first move have been done
+            await componentTestUtils.expectMoveSuccess('#click_4', P4Move.FOUR);
+
+            // when clicking on AI then it's level
+            const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerOneSelect').nativeElement;
+            selectAI.value = selectAI.options[1].value;
+            selectAI.dispatchEvent(new Event('change'));
+            componentTestUtils.fixture.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+            const selectDepth: HTMLSelectElement = componentTestUtils.findElement('#aiOneDepthSelect').nativeElement;
+            const proposeAIToPlay: jasmine.Spy =
+                spyOn(componentTestUtils.wrapper as LocalGameWrapperComponent, 'proposeAIToPlay').and.callThrough();
+            selectDepth.value = selectDepth.options[1].value;
+            selectDepth.dispatchEvent(new Event('change'));
+            componentTestUtils.detectChanges();
+            await componentTestUtils.fixture.whenStable();
+
+            // then it should have proposed AI to play
+            expect(proposeAIToPlay).toHaveBeenCalledTimes(2);
+        });
     });
 });

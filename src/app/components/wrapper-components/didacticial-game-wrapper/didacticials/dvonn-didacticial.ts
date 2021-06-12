@@ -23,7 +23,7 @@ export const dvonnDidacticial: DidacticialStep[] = [
          Son propriétaire est celui dont une pièce est au sommet de la pile.
          Seul son propriétaire peut déplacer la pile.
          Il ne peut pas la déplacer si elle est entourée par 6 autres piles.
-         Il la déplace d’autant de cases que sa hauteur, en ligne droite, et doit aterrir sur une case occupée.
+         Il la déplace d’autant de cases que sa hauteur, en ligne droite, et doit atterrir sur une case occupée.
          Cette ligne droite ne peut pas passer le long de l'arête de deux cases voisines, comme le ferait un déplacement vertical.
          Il y a donc six directions possibles.
          Le joueur avec les piles foncées commence.

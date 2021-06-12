@@ -27,7 +27,7 @@ const Br: number = KamisadoPiece.ONE.BROWN.getValue();
 export const kamisadoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         'But du jeu',
-        `Au Kamisado, il y a deux façons de gagner: soit en plaçant une de vos pièces sur la ligne de départ de
+        `Au Kamisado, il y a deux façons de gagner : soit en plaçant une de vos pièces sur la ligne de départ de
          l'adversaire, soit en forçant l'adversaire à faire un coup qui bloque la partie.
          Ici, le joueur foncé gagne car il a sa pièce brune sur la ligne de départ du joueur clair, en haut à gauche.`,
         new KamisadoPartSlice(5, KamisadoColor.ORANGE, MGPOptional.empty(), false, [
@@ -45,7 +45,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
         'Plateau de départ et déplacement initial',
         `Voici le plateau de départ.
          Au Kamisado, les pièces ne peuvent se déplacer que vers l'avant, verticalement ou diagonalement.
-         Vous jouez en premier, donc avec les pièces foncées, vous pouvez faire votre premier déplacement:
+         Vous jouez en premier, donc avec les pièces foncées, vous pouvez faire votre premier déplacement.
          Cliquez sur la pièce de votre choix, et cliquez sur sa case d'arrivée.`,
         KamisadoPartSlice.getInitialSlice(),
         KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
@@ -69,9 +69,12 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [__, __, __, __, __, __, __, __],
             [br, gr, re, ye, pi, pu, __, or],
         ]),
-        [KamisadoMove.of(new Coord(3, 0), new Coord(3, 6))],
+        [
+            KamisadoMove.of(new Coord(3, 0), new Coord(3, 6)),
+            KamisadoMove.of(new Coord(3, 0), new Coord(4, 1)),
+        ],
         'Parfait!',
-        `Vous n'avez pas avancé votre pièce rose sur la case bleue!`,
+        `Vous n'avez pas avancé votre pièce rose sur une case bleue!`,
     ),
     DidacticialStep.informational(
         'Blocage',
@@ -108,11 +111,13 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [br, gr, __, __, __, __, bl, or],
         ]),
         [KamisadoMove.of(new Coord(2, 4), new Coord(0, 2))],
-        `Parfait! Clair est obligé d'avancer son pion vert sur la case orange, vous obligeant à joueur avec
-         votre pion orange. Hors, votre pion orange est bloqué et vous devez donc passer votre tour. Clair
-         devra ensuite aussi passer son tour car son pion orange est aussi bloqué : la partie est totalement
-         bloquée. Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie. Ici, Clair aura déplacé
-         sa pièce verte en dernier, vous êtes donc vainqueurs !`,
+        `Parfait!
+         Clair est obligé d'avancer son pion vert sur la case orange, vous obligeant à joueur avec votre pion orange.
+         Dès lors, votre pion orange sera bloqué et vous devrez donc passer votre tour.
+         Clair devra ensuite aussi passer son tour car son pion orange est aussi bloqué :
+         la partie est totalement bloquée.
+         Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
+         Ici, Clair aura déplacé sa pièce verte en dernier, vous êtes donc vainqueur !`,
         `Raté !`,
     ),
 ];

@@ -63,7 +63,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.gameComponent.rules.choose(move);
         this.updateBoard();
         this.proposeAIToPlay();
-        return Promise.resolve();
     }
     public updateBoard(): void {
         this.gameComponent.updateBoard();
