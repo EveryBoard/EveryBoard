@@ -10,9 +10,9 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
 import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 interface ComparableSubscription {
     subscription: () => void,
@@ -25,7 +25,6 @@ interface ComparableSubscription {
 })
 export class PartCreationComponent implements OnInit, OnDestroy {
     // TODO: add "message displayer service" that contains .message
-    // TODO: remove CONFIG_PROPOSED
 
     // Lifecycle:
     // 1. Creator chooses config and opponent
@@ -74,7 +73,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public chatService: ChatService,
                        public userService: UserService,
                        public formBuilder: FormBuilder,
-                       public snackBar: MatSnackBar) {
+                       public messageDisplayer: MessageDisplayer) {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed for ' + this.userName);
     }
     public async ngOnInit(): Promise<void> {
@@ -189,11 +188,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     public async cancelAndLeave(): Promise<void> {
         await this.cancelGameCreation();
-        this.message('Partie annulée');
+        this.messageDisplayer.infoMessage('Partie annulée');
         await this.router.navigate(['server']);
-    }
-    public message(msg: string): void {
-        this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
     }
     private async cancelGameCreation(): Promise<void> {
         // callable only by the creator
@@ -372,7 +368,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const candidates: string[] = beforeUser.concat(afterUser);
         if (userPseudo === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.message(`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
+            this.messageDisplayer.infoMessage(`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
             this.joinerService.updateCandidates(candidates);

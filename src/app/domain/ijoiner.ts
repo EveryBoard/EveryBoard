@@ -70,8 +70,6 @@ export class PartStatus {
     private constructor(public value: IPartStatus) {}
     // part created, no chosenPlayer => waiting for acceptable candidate
     public static PART_CREATED: PartStatus = new PartStatus(0);
-    // part created, chosenPlayer selected, no config proposed => waiting the creator to propose config
-    public static PLAYER_CHOSEN: PartStatus = new PartStatus(1);
     // part created, chosenPlayer selected, config proposed by the creator => waiting the joiner to accept them
     public static CONFIG_PROPOSED: PartStatus = new PartStatus(2);
     // part created, chosenPlayer selected, config proposed by the created, accepted by the joiner => part started

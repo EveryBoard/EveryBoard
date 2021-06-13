@@ -6,9 +6,9 @@ import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from './AwalePartSlice';
 import { AwaleLegalityStatus } from 'src/app/games/awale/AwaleLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-awale-component',
@@ -25,8 +25,8 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
     private moved: Coord[] = [];
 
-    constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new AwaleRules(AwalePartSlice);
         this.availableMinimaxes = [
             new AwaleMinimax(this.rules, 'AwaleMinimax'),

@@ -7,8 +7,8 @@ import { QuartoPiece } from './QuartoPiece';
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-quarto',
@@ -24,18 +24,20 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
 
     public chosen: Coord = new Coord(-1, -1);
     public lastMove: Coord = new Coord(-1, -1);
+    public pieceInHand: QuartoPiece;
     // the piece that the current user must place on the board
-    public pieceInHand: QuartoPiece = this.rules.node.gamePartSlice.pieceInHand;
     public pieceToGive: QuartoPiece = QuartoPiece.NONE; // the piece that the user wants to give to the opponent
     public victoriousCoords: Coord[] = [];
 
     public encoder: MoveEncoder<QuartoMove> = QuartoMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.availableMinimaxes = [
             new QuartoMinimax(this.rules, 'QuartoMinimax'),
         ];
+        this.pieceInHand = this.rules.node.gamePartSlice.pieceInHand;
+
     }
     public updateBoard(): void {
         const slice: QuartoPartSlice = this.rules.node.gamePartSlice;

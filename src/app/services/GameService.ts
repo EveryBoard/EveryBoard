@@ -13,8 +13,8 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { assert, display, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { Router } from '@angular/router';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AuthenticationService, AuthUser } from './AuthenticationService';
+import { MessageDisplayer } from './message-displayer/MessageDisplayer';
 
 @Injectable({
     providedIn: 'root',
@@ -37,7 +37,7 @@ export class GameService implements OnDestroy {
                 public joinerService: JoinerService,
                 private chatService: ChatService,
                 private router: Router,
-                private snackBar: MatSnackBar,
+                private messageDisplayer: MessageDisplayer,
                 private authenticationService: AuthenticationService) {
         display(GameService.VERBOSE, 'GameService.constructor');
         this.userNameSub = this.authenticationService.getJoueurObs()
@@ -53,20 +53,16 @@ export class GameService implements OnDestroy {
             this.router.navigate(['/play/' + game, gameId]);
             return true;
         } else {
-            this.messageError(`Vous avez déjà une partie en cours. Terminez la ou annulez la d'abord !`);
+            this.messageDisplayer.infoMessage(`Vous avez déjà une partie en cours. Terminez la ou annulez la d'abord !`);
             this.router.navigate(['/server']);
             return false;
         }
-    }
-    private messageError(msg: string): void {
-        this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
     }
     public ngOnDestroy(): void {
         if (this.userNameSub) {
             this.userNameSub.unsubscribe();
         }
     }
-
 
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: IPart = await this.partDao.read(partId);

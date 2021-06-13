@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { AbstractGameComponent }
     from 'src/app/components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from 'src/app/jscaip/Coord';
@@ -13,6 +12,7 @@ import { PentagoMinimax } from './PentagoMinimax';
 import { PentagoMove } from './PentagoMove';
 import { PentagoRules } from './PentagoRules';
 import { PentagoGameState } from './PentagoGameState';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-pentago',
@@ -42,8 +42,8 @@ export class PentagoComponent extends AbstractGameComponent<PentagoMove,
 
     public ARROWS: [string, number, boolean][];
 
-    constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.updateBoard();
         this.availableMinimaxes = [
             new PentagoMinimax(this.rules, 'PentagoMinimax'),

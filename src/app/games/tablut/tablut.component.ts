@@ -15,11 +15,11 @@ import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { TablutLegalityStatus } from './TablutLegalityStatus';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
 import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceThenControl';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-tablut',
@@ -49,8 +49,8 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public encoder: MoveEncoder<TablutMove> = TablutMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new TablutRules(TablutPartSlice);
         this.availableMinimaxes = [
             new TablutMinimax(this.rules, 'DummyBot'),

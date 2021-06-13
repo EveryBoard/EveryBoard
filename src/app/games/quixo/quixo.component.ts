@@ -10,8 +10,8 @@ import { GameComponentUtils } from 'src/app/components/game-components/GameCompo
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { Player } from 'src/app/jscaip/Player';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-quixo',
@@ -35,8 +35,8 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
 
     public encoder: MoveEncoder<QuixoMove> = QuixoMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new QuixoRules(QuixoPartSlice);
         this.slice = this.rules.node.gamePartSlice;
         this.availableMinimaxes = [
