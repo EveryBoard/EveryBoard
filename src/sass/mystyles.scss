@@ -42,12 +42,30 @@ html {
 
 .snackbar-info {
     background-color: $primary;
+    color: black;
+}
+
+.snacbar-info, .mat-button {
+    color: black;
+    background-color: white;
 }
 
 .snackbar-error {
     background-color: $danger;
+    color: black;
+}
+
+.snacbar-error, .mat-button {
+    color: black;
+    background-color: white;
 }
 
 .snackbar-game {
     background-color: $warning;
+    color: black;
+}
+
+.snacbar-game, .mat-button {
+    color: black;
+    background-color: white;
 }

@@ -10229,12 +10229,30 @@ html {
 
 .snackbar-info {
   background-color: #3273dc;
+  color: black;
+}
+
+.snacbar-info, .mat-button {
+  color: black;
+  background-color: white;
 }
 
 .snackbar-error {
   background-color: #f14668;
+  color: black;
+}
+
+.snacbar-error, .mat-button {
+  color: black;
+  background-color: white;
 }
 
 .snackbar-game {
   background-color: #ffdd57;
+  color: black;
+}
+
+.snacbar-game, .mat-button {
+  color: black;
+  background-color: white;
 }

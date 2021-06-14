@@ -123,7 +123,9 @@
                                             <td class="td"
                                                 [id]="configFormGroup.get('chosenOpponent').value === candidate && ('selected_' + candidate) || 'candidate_' + candidate"
                                                 >{{ candidate }}</td>
-                                            <td class="td"><button class="button is-primary">Sélectionner</button></td>
+                                            <td class="td">
+                                                <button *ngIf="configFormGroup.get('chosenOpponent').value !== candidate"
+                                                        class="button is-primary">Sélectionner</button></td>
                                         </tr>
                                     </tbody>
                                 </table>
