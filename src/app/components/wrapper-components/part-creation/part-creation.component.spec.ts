@@ -237,8 +237,14 @@ describe('PartCreationComponent:', () => {
         await testUtils.whenStable();
         testUtils.detectChanges();
 
-        expect(component.gameStartNotification.emit).toHaveBeenCalledWith(JoinerMocks.WITH_ACCEPTED_CONFIG.doc);
-        expect(component.currentJoiner).toEqual(JoinerMocks.WITH_ACCEPTED_CONFIG.doc);
+        expect(component.gameStartNotification.emit).toHaveBeenCalledWith({
+            ...JoinerMocks.WITH_ACCEPTED_CONFIG.doc,
+            firstPlayer: FirstPlayer.CREATOR.value,
+        });
+        expect(component.currentJoiner).toEqual({
+            ...JoinerMocks.WITH_ACCEPTED_CONFIG.doc,
+            firstPlayer: FirstPlayer.CREATOR.value,
+        });
         const currentPart: IPart = partDAOMock.getStaticDB().get('joinerId').get().subject.value.doc;
         const expectedPart: IPart = { ...PartMocks.STARTING.doc, beginning: currentPart.beginning };
         expect(currentPart).toEqual(expectedPart);
