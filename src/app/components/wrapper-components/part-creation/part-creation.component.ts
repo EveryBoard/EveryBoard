@@ -45,11 +45,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public gameStarted: boolean = false;
     // notify that the game has started, a thing evaluated with the joiner doc game status
 
-    public NORMAL_MOVE_DURATION: number = 2 * 60;
-    public NORMAL_PART_DURATION: number = 30 * 60;
-    public BLITZ_MOVE_DURATION: number = 30;
-    public BLITZ_PART_DURATION: number = 15 * 60;
-
     public currentJoiner: IJoiner = null;
     public joinerObs: Observable<IJoiner>;
     public canEditConfigObs: Observable<boolean>;
@@ -140,30 +135,36 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private createForms() {
         this.configFormGroup = this.formBuilder.group({
             firstPlayer: [FirstPlayer.RANDOM.value, Validators.required],
-            maximalMoveDuration: [this.NORMAL_MOVE_DURATION, Validators.required],
+            maximalMoveDuration: [PartType.NORMAL_MOVE_DURATION, Validators.required],
             partType: ['STANDARD', Validators.required],
-            totalPartDuration: [this.NORMAL_PART_DURATION, Validators.required],
+            totalPartDuration: [PartType.NORMAL_PART_DURATION, Validators.required],
             chosenOpponent: ['', Validators.required],
         });
     }
-    public selectFirstPlayer(firstPlayer: IFirstPlayer): void {
+    public selectFirstPlayer(firstPlayer: IFirstPlayer): Promise<void> {
         this.configFormGroup.get('firstPlayer').setValue(firstPlayer);
+        return this.joinerService.setFirstPlayer(firstPlayer);
     }
-    public selectPartType(partType: IPartType): void {
+    public selectPartType(partType: IPartType): Promise<void> {
+        this.configFormGroup.get('partType').setValue(partType);
         switch (partType) {
             case 'STANDARD':
-                this.configFormGroup.get('maximalMoveDuration').setValue(this.NORMAL_MOVE_DURATION);
-                this.configFormGroup.get('totalPartDuration').setValue(this.NORMAL_PART_DURATION);
-                this.configFormGroup.get('partType').setValue('NORMAL');
-                return;
+                this.configFormGroup.get('maximalMoveDuration').setValue(PartType.NORMAL_MOVE_DURATION);
+                this.configFormGroup.get('totalPartDuration').setValue(PartType.NORMAL_PART_DURATION);
+                return this.joinerService.setPartType(partType,
+                                                      PartType.NORMAL_MOVE_DURATION,
+                                                      PartType.NORMAL_PART_DURATION);
             case 'BLITZ':
-                this.configFormGroup.get('maximalMoveDuration').setValue(this.BLITZ_MOVE_DURATION);
-                this.configFormGroup.get('totalPartDuration').setValue(this.BLITZ_PART_DURATION);
-                this.configFormGroup.get('partType').setValue('BLITZ');
-                return;
+                this.configFormGroup.get('maximalMoveDuration').setValue(PartType.BLITZ_MOVE_DURATION);
+                this.configFormGroup.get('totalPartDuration').setValue(PartType.BLITZ_PART_DURATION);
+                return this.joinerService.setPartType(partType,
+                                                      PartType.BLITZ_MOVE_DURATION,
+                                                      PartType.BLITZ_PART_DURATION);
             case 'CUSTOM':
                 this.configFormGroup.get('partType').setValue('CUSTOM');
-                return;
+                return this.joinerService.setPartType(partType,
+                                                      this.configFormGroup.get('maximalMoveDuration').value,
+                                                      this.configFormGroup.get('totalPartDuration').value);
         }
     }
     public selectOpponent(player: string): void {

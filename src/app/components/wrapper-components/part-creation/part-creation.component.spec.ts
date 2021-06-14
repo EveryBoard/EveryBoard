@@ -11,7 +11,7 @@ import { IPart } from 'src/app/domain/icurrentpart';
 import { JoueursDAO } from 'src/app/dao/JoueursDAO';
 import { IJoueur } from 'src/app/domain/iuser';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { FirstPlayer, IJoiner, PartStatus } from 'src/app/domain/ijoiner';
+import { FirstPlayer, IJoiner, PartStatus, PartType } from 'src/app/domain/ijoiner';
 import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
@@ -266,16 +266,16 @@ describe('PartCreationComponent:', () => {
             testUtils.clickElement('#partTypeBlitz');
             testUtils.detectChanges();
 
-            expect(component.configFormGroup.get('maximalMoveDuration').value).toBe(component.BLITZ_MOVE_DURATION);
-            expect(component.configFormGroup.get('totalPartDuration').value).toBe(component.BLITZ_PART_DURATION);
+            expect(component.configFormGroup.get('maximalMoveDuration').value).toBe(PartType.BLITZ_MOVE_DURATION);
+            expect(component.configFormGroup.get('totalPartDuration').value).toBe(PartType.BLITZ_PART_DURATION);
         });
         it('should update the timings when reselecting normal part', () => {
             testUtils.clickElement('#partTypeBlitz');
             testUtils.clickElement('#partTypeStandard');
             testUtils.detectChanges();
 
-            expect(component.configFormGroup.get('maximalMoveDuration').value).toBe(component.NORMAL_MOVE_DURATION);
-            expect(component.configFormGroup.get('totalPartDuration').value).toBe(component.NORMAL_PART_DURATION);
+            expect(component.configFormGroup.get('maximalMoveDuration').value).toBe(PartType.NORMAL_MOVE_DURATION);
+            expect(component.configFormGroup.get('totalPartDuration').value).toBe(PartType.NORMAL_PART_DURATION);
         });
         it('should dispatch to joiner service when clicking on review config button', fakeAsync(async() => {
             await joinerDAOMock.update('joinerId', {
@@ -385,6 +385,31 @@ describe('PartCreationComponent:', () => {
         await testUtils.whenStable();
 
         expect(joinerService.startObserving).not.toHaveBeenCalled();
+    }));
+    fit('should remember settings after a joiner update', fakeAsync(async() => {
+        component.userName = 'creator';
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
+        testUtils.detectChanges();
+        await testUtils.whenStable();
+        tick();
+        testUtils.detectChanges();
+        await testUtils.whenStable();
+        tick();
+
+        expectAsync(testUtils.clickElement('#firstPlayerCreator')).toBeResolvedTo(true);
+        expectAsync(testUtils.clickElement('#partTypeBlitz')).toBeResolvedTo(true);
+
+        // new candidate appears
+        await joinerDAOMock.update('joinerId', {
+            candidates: ['firstCandidate'],
+        });
+
+        testUtils.detectChanges();
+        await testUtils.whenStable();
+        tick();
+
+        testUtils.expectElementToHaveClass('#firstPlayerCreator', 'is-selected');
+        testUtils.expectElementToHaveClass('#partTypeBlitz', 'is-selected');
     }));
 
     afterEach(fakeAsync(async() => {

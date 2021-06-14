@@ -9,17 +9,17 @@
                     <div class="buttons has-addons">
                         <button class="button"
                                 id="firstPlayerRandom"
-                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'RANDOM') && 'is-primary'"
+                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'RANDOM') && ['is-primary', 'is-selected']"
                                 (click)="selectFirstPlayer('RANDOM')"
                                 >Au hasard</button>
                         <button class="button"
                                 id="firstPlayerCreator"
-                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'CREATOR') && 'is-primary'"
+                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'CREATOR') && ['is-primary', 'is-selected']"
                                 (click)="selectFirstPlayer('CREATOR')"
                                 >Vous</button>
                         <button class="button"
                                 id="firstPlayerOpponent"
-                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'CHOSEN_PLAYER') && 'is-primary'"
+                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'CHOSEN_PLAYER') && ['is-primary', 'is-selected']"
                                 (click)="selectFirstPlayer('CHOSEN_PLAYER')"
                                 >
                             <ng-container *ngIf="joiner.chosenPlayer else opponentWithoutName"> {{ joiner.chosenPlayer }}</ng-container>
@@ -32,7 +32,7 @@
                     <div class="buttons has-addons">
                         <div class="button dropdown is-hoverable"
                              id="partTypeStandard"
-                             [ngClass]="(configFormGroup.get('partType').value === 'STANDARD') && 'is-primary'"
+                             [ngClass]="(configFormGroup.get('partType').value === 'STANDARD') && ['is-primary', 'is-selected']"
                              (click)="selectPartType('STANDARD')"
                              >
                             <div class="dropdown-trigger">
@@ -51,7 +51,7 @@
                         </div>
                         <div class="button dropdown is-hoverable"
                              id="partTypeBlitz"
-                             [ngClass]="(configFormGroup.get('partType').value === 'BLITZ') && 'is-primary'"
+                             [ngClass]="(configFormGroup.get('partType').value === 'BLITZ') && ['is-primary', 'is-selected']"
                              (click)="selectPartType('BLITZ')">
                             <div class="dropdown-trigger">
                                 <span>Blitz</span>
@@ -69,7 +69,7 @@
                         </div>
                         <button class="button"
                                 id="partTypeCustom"
-                                [ngClass]="(configFormGroup.get('partType').value === 'CUSTOM') && 'is-primary'"
+                                [ngClass]="(configFormGroup.get('partType').value === 'CUSTOM') && ['is-primary', 'is-selected']"
                                 (click)="selectPartType('CUSTOM')"
                                 >Personnalisée</button>
                     </div>

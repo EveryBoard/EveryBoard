@@ -55,6 +55,11 @@ export class PartType {
 
     public static readonly CUSTOM: PartType = new PartType('CUSTOM');
 
+    public static NORMAL_MOVE_DURATION: number = 2 * 60;
+    public static NORMAL_PART_DURATION: number = 30 * 60;
+    public static BLITZ_MOVE_DURATION: number = 30;
+    public static BLITZ_PART_DURATION: number = 15 * 60;
+
     public static of(value: string): PartType {
         switch (value) {
             case 'STANDARD': return PartType.STANDARD;

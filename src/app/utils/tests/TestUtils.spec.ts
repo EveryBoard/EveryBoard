@@ -128,6 +128,13 @@ export class SimpleComponentTestUtils<T> {
     public async whenStable(): Promise<void> {
         return this.fixture.whenStable();
     }
+    public expectElementToHaveClass(elementName: string, class_: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' was expected to exist').toBeTruthy();
+        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        expect(elementClasses).toContain(class_);
+    }
+
 }
 
 type GameComponent = AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
