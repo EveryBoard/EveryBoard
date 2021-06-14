@@ -112,16 +112,18 @@
                                     <thead>
                                         <tr>
                                             <th class="th" scope="col">Nom</th>
+                                            <th class="th" scope="col">Actions</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr *ngFor="let candidate of joiner.candidates"
                                             (click)="selectOpponent(candidate)"
+                                            [ngClass]="configFormGroup.get('chosenOpponent').value === candidate && 'is-selected'"
                                             id="presenceOf_{{ candidate }}">
                                             <td class="td"
-                                                [ngClass]="configFormGroup.get('chosenOpponent').value === candidate && 'is-selected'"
                                                 [id]="configFormGroup.get('chosenOpponent').value === candidate && ('selected_' + candidate) || 'candidate_' + candidate"
                                                 >{{ candidate }}</td>
+                                            <td class="td"><button class="button is-primary">Sélectionner</button></td>
                                         </tr>
                                     </tbody>
                                 </table>

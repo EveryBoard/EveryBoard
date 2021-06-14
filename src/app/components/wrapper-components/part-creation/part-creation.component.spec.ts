@@ -316,6 +316,31 @@ describe('PartCreationComponent:', () => {
             expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
             expect(router.navigate).toHaveBeenCalledWith(['server']);
         }));
+        it('should remember settings after a joiner update', fakeAsync(async() => {
+            component.userName = 'creator';
+            await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
+            testUtils.detectChanges();
+            await testUtils.whenStable();
+            tick();
+            testUtils.detectChanges();
+            await testUtils.whenStable();
+            tick();
+
+            expectAsync(testUtils.clickElement('#firstPlayerCreator')).toBeResolvedTo(true);
+            expectAsync(testUtils.clickElement('#partTypeBlitz')).toBeResolvedTo(true);
+
+            // new candidate appears
+            await joinerDAOMock.update('joinerId', {
+                candidates: ['firstCandidate'],
+            });
+
+            testUtils.detectChanges();
+            await testUtils.whenStable();
+            tick();
+
+            testUtils.expectElementToHaveClass('#firstPlayerCreator', 'is-selected');
+            testUtils.expectElementToHaveClass('#partTypeBlitz', 'is-selected');
+        }));
     });
     it('should update candidate list when a non-chosen player leaves', fakeAsync(async() => {
         component.userName = 'creator';
@@ -386,32 +411,6 @@ describe('PartCreationComponent:', () => {
 
         expect(joinerService.startObserving).not.toHaveBeenCalled();
     }));
-    fit('should remember settings after a joiner update', fakeAsync(async() => {
-        component.userName = 'creator';
-        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
-        testUtils.detectChanges();
-        await testUtils.whenStable();
-        tick();
-        testUtils.detectChanges();
-        await testUtils.whenStable();
-        tick();
-
-        expectAsync(testUtils.clickElement('#firstPlayerCreator')).toBeResolvedTo(true);
-        expectAsync(testUtils.clickElement('#partTypeBlitz')).toBeResolvedTo(true);
-
-        // new candidate appears
-        await joinerDAOMock.update('joinerId', {
-            candidates: ['firstCandidate'],
-        });
-
-        testUtils.detectChanges();
-        await testUtils.whenStable();
-        tick();
-
-        testUtils.expectElementToHaveClass('#firstPlayerCreator', 'is-selected');
-        testUtils.expectElementToHaveClass('#partTypeBlitz', 'is-selected');
-    }));
-
     afterEach(fakeAsync(async() => {
         testUtils.destroy();
         await testUtils.whenStable();
