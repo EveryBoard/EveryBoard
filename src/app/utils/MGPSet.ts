@@ -60,4 +60,8 @@ export class MGPSet<T extends Comparable> implements ComparableObject {
         }
         return result;
     }
+    public removeAndCopy(element: T): MGPSet<T> {
+        const copySet: T[] = this.getCopy().filter((value: T) => comparableEquals(value, element) === false);
+        return new MGPSet(copySet);
+    }
 }

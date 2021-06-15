@@ -4,7 +4,7 @@ import { MinimaxTestingMove } from '../MinimaxTestingMove';
 import { MinimaxTestingMinimax } from '../MinimaxTestingMinimax';
 import { Player } from 'src/app/jscaip/Player';
 
-describe('MinimaxTestingRules', () => {
+fdescribe('MinimaxTestingRules', () => {
 
     let rules: MinimaxTestingRules;
     let minimax: MinimaxTestingMinimax;
@@ -39,7 +39,7 @@ describe('MinimaxTestingRules', () => {
         expect(rules.node.getHopedValue(minimax)).toEqual(Number.MIN_SAFE_INTEGER);
         expect(rules.node.countDescendants()).toEqual(10);
     });
-    it('IA(depth=1) should create exactly 2 child at each turn before reaching the border', () => {
+    fit('IA(depth=1) should create exactly 2 child at each turn before reaching the border', () => { // eisenbugged?
         MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_0;
         const initialNode: MinimaxTestingNode = rules.node;
         let bestMove: MinimaxTestingMove;

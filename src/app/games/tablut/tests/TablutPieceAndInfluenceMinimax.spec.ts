@@ -8,7 +8,8 @@ import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUt
 import { TablutCase } from '../TablutCase';
 import { TablutMove } from '../TablutMove';
 import { TablutPartSlice } from '../TablutPartSlice';
-import { PieceThreat, TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinimax';
+import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinimax';
+import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutRules } from '../TablutRules';
 
 describe('TablutPieceAndInfluenceMinimax', () => {
@@ -173,8 +174,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             ];
             const state: TablutPartSlice = new TablutPartSlice(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.filterThreatMap(threatMap, state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(minimax.isThreatened(new Coord(0, 1), state, filteredThreatMap)).toBeTrue();
         });
         it('should see threats coming straight', () => {
@@ -191,8 +192,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             ];
             const state: TablutPartSlice = new TablutPartSlice(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.filterThreatMap(threatMap, state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(minimax.isThreatened(new Coord(0, 4), state, filteredThreatMap)).toBeTrue();
         });
         it('should see threats coming sideways', () => {
@@ -209,26 +210,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             ];
             const state: TablutPartSlice = new TablutPartSlice(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.filterThreatMap(threatMap, state);
-            expect(minimax.isThreatened(new Coord(0, 4), state, filteredThreatMap)).toBeTrue();
-        });
-        it('should see threats coming sideways', () => {
-            const board: NumberTable = [
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, X, _, _, _, _, _],
-                [O, _, _, _, T, _, _, _, _],
-                [X, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-                [_, _, _, _, _, _, _, _, _],
-            ];
-            const state: TablutPartSlice = new TablutPartSlice(board, 0);
-            const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.filterThreatMap(threatMap, state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(minimax.isThreatened(new Coord(0, 4), state, filteredThreatMap)).toBeTrue();
         });
         it('should not consider king threatened by one piece only', () => {
@@ -245,8 +228,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             ];
             const state: TablutPartSlice = new TablutPartSlice(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.filterThreatMap(threatMap, state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(minimax.isThreatened(new Coord(3, 4), state, filteredThreatMap)).toBeFalse();
         });
         it('should not consider opponent-threatened piece as threats', () => {
@@ -263,12 +246,12 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             ];
             const state: TablutPartSlice = new TablutPartSlice(board, 1);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.filterThreatMap(threatMap, state);
-            const expectedMap: MGPMap<Coord, MGPSet<PieceThreat>> = new MGPMap();
-            const expectedThreats: PieceThreat[] = [
-                new PieceThreat(new Coord(4, 3), new MGPSet([new Coord(2, 4)])),
-                new PieceThreat(new Coord(3, 4), new MGPSet([new Coord(4, 2)])),
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
+            const expectedMap: MGPMap<Coord, MGPSet<SandwichThreat>> = new MGPMap();
+            const expectedThreats: SandwichThreat[] = [
+                new SandwichThreat(new Coord(4, 3), new MGPSet([new Coord(2, 4)])),
+                new SandwichThreat(new Coord(3, 4), new MGPSet([new Coord(4, 2)])),
             ];
             expectedMap.set(new Coord(3, 3), new MGPSet(expectedThreats));
             expect(filteredThreatMap.equals(expectedMap)).toBeTrue();
@@ -287,8 +270,8 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             ];
             const state: TablutPartSlice = new TablutPartSlice(board, 0);
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
-            const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.getThreatMap(state, pieces);
-            const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = minimax.filterThreatMap(threatMap, state);
+            const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
+            const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
             expect(minimax.isThreatened(new Coord(4, 5), state, filteredThreatMap)).toBeFalse();
         });
     });

@@ -13,6 +13,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { CoerceoPiecesThreatTilesMinimax } from './CoerceoPiecesThreatTilesMinimax';
 
 @Component({
     selector: 'app-coerceo',
@@ -24,7 +25,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
                                                               LegalityStatus>
 {
 
-    private slice: CoerceoPartSlice;
+    private state: CoerceoPartSlice;
 
     public CASE_SIZE: number = 100;
 
@@ -44,7 +45,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         super(snackBar);
         this.rules = new CoerceoRules(CoerceoPartSlice);
         this.availableMinimaxes = [
-            new CoerceoMinimax(this.rules, 'CoerceoMinimax'),
+            new CoerceoMinimax(this.rules, 'Normal'),
+            new CoerceoPiecesThreatTilesMinimax(this.rules, 'Piece > Threat'),
         ];
 
         this.showScore = true;
@@ -53,9 +55,9 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
     public encoder: MoveEncoder<CoerceoMove> = CoerceoMove.encoder;
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
-        this.slice = this.rules.node.gamePartSlice;
-        this.scores = this.slice.captures;
-        this.tiles = this.slice.tiles;
+        this.state = this.rules.node.gamePartSlice;
+        this.scores = this.state.captures;
+        this.tiles = this.state.tiles;
         const move: CoerceoMove = this.rules.node.move;
         if (move) {
             this.lastStart = move.start;
@@ -67,7 +69,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         this.board = this.rules.node.gamePartSlice.board;
     }
     private showHighlight() {
-        this.highlights = this.slice.getLegalLandings(this.chosenCoord.get());
+        this.highlights = this.state.getLegalLandings(this.chosenCoord.get());
     }
     public cancelMoveAttempt(): void {
         this.chosenCoord = MGPOptional.empty();
@@ -86,11 +88,11 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         }
     }
     private async firstClick(coord: Coord): Promise<MGPValidation> {
-        const clickedPiece: number = this.slice.getBoardAt(coord);
-        if (clickedPiece === this.slice.getCurrentEnnemy().value) {
+        const clickedPiece: number = this.state.getBoardAt(coord);
+        if (clickedPiece === this.state.getCurrentEnnemy().value) {
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(coord);
-            return this.chooseMove(move, this.slice, this.slice.captures[0], this.slice.captures[1]);
-        } else if (clickedPiece === this.slice.getCurrentPlayer().value) {
+            return this.chooseMove(move, this.state, this.state.captures[0], this.state.captures[1]);
+        } else if (clickedPiece === this.state.getCurrentPlayer().value) {
             this.chosenCoord = MGPOptional.of(coord);
             this.showHighlight();
         } else {
@@ -103,7 +105,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
             return MGPValidation.SUCCESS;
         } if (this.highlights.some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoMove.fromCoordToCoord(this.chosenCoord.get(), coord);
-            return this.chooseMove(move, this.slice, this.slice.captures[0], this.slice.captures[1]);
+            return this.chooseMove(move, this.state, this.state.captures[0], this.state.captures[1]);
         } else {
             return this.cancelMove(CoerceoFailure.INVALID_DISTANCE);
         }

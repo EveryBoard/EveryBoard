@@ -8,7 +8,8 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { TablutCase } from './TablutCase';
 import { TablutPartSlice } from './TablutPartSlice';
-import { PieceThreat, TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
+import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
+import { PieceThreat } from '../../jscaip/PieceThreat';
 import { TablutNode, TablutRules } from './TablutRules';
 import { TablutRulesConfig } from './TablutRulesConfig';
 
