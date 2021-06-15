@@ -10,8 +10,8 @@ import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegali
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 export class EncapsuleComponentFailure {
     public static NOT_DROPPABLE: string =`Veuillez choisir une de vos pièces parmi les pièces restantes.`;
@@ -42,8 +42,8 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
 
     public encoder: MoveEncoder<EncapsuleMove> = EncapsuleMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new EncapsuleRules(EncapsulePartSlice);
         this.availableMinimaxes = [
             new EncapsuleMinimax(this.rules, 'EncapsuleMinimax'),

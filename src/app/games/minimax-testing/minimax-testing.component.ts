@@ -7,25 +7,21 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimaxTestingMinimax } from './MinimaxTestingMinimax';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-minimax-testing',
     templateUrl: './minimax-testing.component.html',
     styleUrls: [],
 })
-export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove,
-                                                                   MinimaxTestingPartSlice,
-                                                                   LegalityStatus> {
-    /** ************************* Common Fields **************************/
-
+export class MinimaxTestingComponent extends AbstractGameComponent<MinimaxTestingMove, MinimaxTestingPartSlice> {
     public coord: Coord = new Coord(-1, -1);
 
     public encoder: MoveEncoder<MinimaxTestingMove> = MinimaxTestingMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new MinimaxTestingRules(MinimaxTestingPartSlice);
         this.availableMinimaxes = [
             new MinimaxTestingMinimax(this.rules, 'MinimaxTestingMinimax'),

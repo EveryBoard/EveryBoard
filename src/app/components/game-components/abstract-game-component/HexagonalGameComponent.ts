@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
@@ -18,9 +17,6 @@ export abstract class HexagonalGameComponent<M extends Move,
 
     public abstract hexaLayout: HexaLayout;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
-    }
     public getHexaCoordinates(coord: Coord): string {
         let desc: string = '';
         const coords: ReadonlyArray<Coord> = this.hexaLayout.getHexaCoordinates(coord);

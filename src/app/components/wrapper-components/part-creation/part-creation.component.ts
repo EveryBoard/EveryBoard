@@ -10,9 +10,9 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
 import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 interface ComparableSubscription {
     subscription: () => void,
@@ -25,7 +25,6 @@ interface ComparableSubscription {
 })
 export class PartCreationComponent implements OnInit, OnDestroy {
     // TODO: add "message displayer service" that contains .message
-    // TODO: remove CONFIG_PROPOSED
 
     // Lifecycle:
     // 1. Creator chooses config and opponent
@@ -45,11 +44,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     @Output('gameStartNotification') gameStartNotification: EventEmitter<IJoiner> = new EventEmitter<IJoiner>();
     public gameStarted: boolean = false;
     // notify that the game has started, a thing evaluated with the joiner doc game status
-
-    public NORMAL_MOVE_DURATION: number = 2 * 60;
-    public NORMAL_PART_DURATION: number = 30 * 60;
-    public BLITZ_MOVE_DURATION: number = 30;
-    public BLITZ_PART_DURATION: number = 15 * 60;
 
     public currentJoiner: IJoiner = null;
     public joinerObs: Observable<IJoiner>;
@@ -74,7 +68,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                        public chatService: ChatService,
                        public userService: UserService,
                        public formBuilder: FormBuilder,
-                       public snackBar: MatSnackBar) {
+                       public messageDisplayer: MessageDisplayer) {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent constructed for ' + this.userName);
     }
     public async ngOnInit(): Promise<void> {
@@ -141,30 +135,36 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private createForms() {
         this.configFormGroup = this.formBuilder.group({
             firstPlayer: [FirstPlayer.RANDOM.value, Validators.required],
-            maximalMoveDuration: [this.NORMAL_MOVE_DURATION, Validators.required],
+            maximalMoveDuration: [PartType.NORMAL_MOVE_DURATION, Validators.required],
             partType: ['STANDARD', Validators.required],
-            totalPartDuration: [this.NORMAL_PART_DURATION, Validators.required],
+            totalPartDuration: [PartType.NORMAL_PART_DURATION, Validators.required],
             chosenOpponent: ['', Validators.required],
         });
     }
-    public selectFirstPlayer(firstPlayer: IFirstPlayer): void {
+    public selectFirstPlayer(firstPlayer: IFirstPlayer): Promise<void> {
         this.configFormGroup.get('firstPlayer').setValue(firstPlayer);
+        return this.joinerService.setFirstPlayer(firstPlayer);
     }
-    public selectPartType(partType: IPartType): void {
+    public selectPartType(partType: IPartType): Promise<void> {
+        this.configFormGroup.get('partType').setValue(partType);
         switch (partType) {
             case 'STANDARD':
-                this.configFormGroup.get('maximalMoveDuration').setValue(this.NORMAL_MOVE_DURATION);
-                this.configFormGroup.get('totalPartDuration').setValue(this.NORMAL_PART_DURATION);
-                this.configFormGroup.get('partType').setValue('NORMAL');
-                return;
+                this.configFormGroup.get('maximalMoveDuration').setValue(PartType.NORMAL_MOVE_DURATION);
+                this.configFormGroup.get('totalPartDuration').setValue(PartType.NORMAL_PART_DURATION);
+                return this.joinerService.setPartType(partType,
+                                                      PartType.NORMAL_MOVE_DURATION,
+                                                      PartType.NORMAL_PART_DURATION);
             case 'BLITZ':
-                this.configFormGroup.get('maximalMoveDuration').setValue(this.BLITZ_MOVE_DURATION);
-                this.configFormGroup.get('totalPartDuration').setValue(this.BLITZ_PART_DURATION);
-                this.configFormGroup.get('partType').setValue('BLITZ');
-                return;
+                this.configFormGroup.get('maximalMoveDuration').setValue(PartType.BLITZ_MOVE_DURATION);
+                this.configFormGroup.get('totalPartDuration').setValue(PartType.BLITZ_PART_DURATION);
+                return this.joinerService.setPartType(partType,
+                                                      PartType.BLITZ_MOVE_DURATION,
+                                                      PartType.BLITZ_PART_DURATION);
             case 'CUSTOM':
                 this.configFormGroup.get('partType').setValue('CUSTOM');
-                return;
+                return this.joinerService.setPartType(partType,
+                                                      this.configFormGroup.get('maximalMoveDuration').value,
+                                                      this.configFormGroup.get('totalPartDuration').value);
         }
     }
     public selectOpponent(player: string): void {
@@ -189,11 +189,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     public async cancelAndLeave(): Promise<void> {
         await this.cancelGameCreation();
-        this.message('Partie annulée');
+        this.messageDisplayer.infoMessage('Partie annulée');
         await this.router.navigate(['server']);
-    }
-    public message(msg: string): void {
-        this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
     }
     private async cancelGameCreation(): Promise<void> {
         // callable only by the creator
@@ -372,7 +369,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const candidates: string[] = beforeUser.concat(afterUser);
         if (userPseudo === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.message(`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
+            this.messageDisplayer.infoMessage(`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
             this.joinerService.updateCandidates(candidates);

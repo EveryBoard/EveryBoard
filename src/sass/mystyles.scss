@@ -1,15 +1,11 @@
 @charset "utf-8";
 
-// Import a Google Font
 @import url('https://fonts.googleapis.com/css?family=Nunito:400,700');
 
-// Set your brand colors
-$blue: #3273dc;
+$primary: #3273dc;
+$danger: #f14668;
+$warning: #ffdd57;
 
-// Update Bulma's global variables
-$primary: $blue;
-
-// Import only what you need from Bulma
 @import "../../node_modules/bulma/bulma.sass";
 
 $gap: 10pt;
@@ -42,4 +38,34 @@ $gap: 10pt;
 
 html {
     min-height: 100%;
+}
+
+.snackbar-info {
+    background-color: $primary;
+    color: black;
+}
+
+.snacbar-info, .mat-button {
+    color: black;
+    background-color: white;
+}
+
+.snackbar-error {
+    background-color: $danger;
+    color: black;
+}
+
+.snacbar-error, .mat-button {
+    color: black;
+    background-color: white;
+}
+
+.snackbar-game {
+    background-color: $warning;
+    color: black;
+}
+
+.snacbar-game, .mat-button {
+    color: black;
+    background-color: white;
 }

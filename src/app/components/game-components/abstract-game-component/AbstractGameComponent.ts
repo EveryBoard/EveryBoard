@@ -2,13 +2,13 @@ import { Move } from '../../../jscaip/Move';
 import { Rules } from '../../../jscaip/Rules';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { Component } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { Player } from 'src/app/jscaip/Player';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 /* All method are to be implemented by the Concretes Game Component
  * Except chooseMove which must be set by the GameWrapper
@@ -61,16 +61,16 @@ export abstract class AbstractGameComponent<M extends Move,
      *      - if it's offline, he'll tell the game-component what the bot have done
      */
 
-    constructor(public snackBar: MatSnackBar) {
+    constructor(public messageDisplayer: MessageDisplayer) {
     }
     public message(msg: string): void {
-        this.snackBar.open(msg, 'Ok!', { duration: 3000, verticalPosition: 'top' });
+        this.messageDisplayer.gameMessage(msg);
     }
     public cancelMove(reason?: string): MGPValidation {
         this.cancelMoveAttempt();
         this.cancelMoveOnWrapper(reason);
         if (reason) {
-            this.message(reason);
+            this.messageDisplayer.gameMessage(reason);
             return MGPValidation.failure(reason);
         } else {
             return MGPValidation.SUCCESS;

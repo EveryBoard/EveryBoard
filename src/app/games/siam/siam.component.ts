@@ -13,8 +13,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { display } from 'src/app/utils/utils';
 import { GameComponentUtils } from 'src/app/components/game-components/GameComponentUtils';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-siam',
@@ -36,8 +36,8 @@ export class SiamComponent extends AbstractGameComponent<SiamMove, SiamPartSlice
 
     public encoder: MoveEncoder<SiamMove> = SiamMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new SiamRules(SiamPartSlice);
         this.availableMinimaxes = [
             new SiamMinimax(this.rules, 'SiamMinimax'),

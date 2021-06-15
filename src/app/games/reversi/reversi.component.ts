@@ -6,11 +6,11 @@ import { ReversiPartSlice } from './ReversiPartSlice';
 import { ReversiMove } from 'src/app/games/reversi/ReversiMove';
 import { ReversiLegalityStatus } from 'src/app/games/reversi/ReversiLegalityStatus';
 import { Coord } from 'src/app/jscaip/Coord';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Player } from 'src/app/jscaip/Player';
 import { Direction } from 'src/app/jscaip/Direction';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-reversi',
@@ -27,8 +27,8 @@ export class ReversiComponent extends AbstractGameComponent<ReversiMove, Reversi
 
     private captureds: Coord[] = [];
 
-    constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.showScore = true;
         this.canPass = false;
         this.rules = new ReversiRules(ReversiPartSlice);

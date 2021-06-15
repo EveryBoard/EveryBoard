@@ -12,7 +12,7 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-epaminondas',
@@ -44,8 +44,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
 
     public encoder: MoveEncoder<EpaminondasMove> = EpaminondasMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new EpaminondasRules(EpaminondasPartSlice);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),

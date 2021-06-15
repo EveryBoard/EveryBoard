@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { GipfRules } from 'src/app/games/gipf/GipfRules';
 import { GipfMinimax } from 'src/app/games/gipf/GipfMinimax';
 import { GipfFailure } from 'src/app/games/gipf/GipfFailure';
@@ -18,6 +17,7 @@ import { GipfLegalityStatus } from 'src/app/games/gipf/GipfLegalityStatus';
 import { GipfPiece } from 'src/app/games/gipf/GipfPiece';
 import { Arrow } from 'src/app/jscaip/Arrow';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-gipf',
@@ -58,8 +58,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
-    constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.availableMinimaxes = [
             new GipfMinimax(this.rules, 'GipfMinimax'),
         ];

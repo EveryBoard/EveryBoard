@@ -6,12 +6,12 @@ import { GoMinimax } from 'src/app/games/go/GoMinimax';
 import { GoPartSlice, Phase, GoPiece } from 'src/app/games/go/GoPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
 import { GoLegalityStatus } from 'src/app/games/go/GoLegalityStatus';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GroupDatas } from 'src/app/jscaip/BoardDatas';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-go',
@@ -35,8 +35,8 @@ export class GoComponent extends AbstractGameComponent<GoMove, GoPartSlice, GoLe
 
     public encoder: MoveEncoder<GoMove> = GoMove.encoder;
 
-    constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new GoRules(GoPartSlice);
         this.availableMinimaxes = [
             new GoMinimax(this.rules, 'GoMinimax'),

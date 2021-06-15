@@ -74,7 +74,7 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             KamisadoMove.of(new Coord(3, 0), new Coord(4, 1)),
         ],
         'Parfait!',
-        `Vous n'avez pas avancé votre pièce rose sur une case bleue!`,
+        `Vous n'avez pas avancé votre pièce rose sur une case bleue !`,
     ),
     DidacticialStep.informational(
         'Blocage',

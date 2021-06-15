@@ -12,8 +12,8 @@ import { LinesOfActionRules } from './LinesOfActionRules';
 import { LinesOfActionMinimax } from './LinesOfActionMinimax';
 import { LinesOfActionFailure } from './LinesOfActionFailure';
 import { LinesOfActionState } from './LinesOfActionState';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-linesofaction',
@@ -34,8 +34,8 @@ export class LinesOfActionComponent extends AbstractGameComponent<LinesOfActionM
 
     public encoder: MoveEncoder<LinesOfActionMove> = LinesOfActionMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new LinesOfActionRules(LinesOfActionState);
         this.availableMinimaxes = [
             new LinesOfActionMinimax(this.rules, 'LinesOfActionMinimax'),

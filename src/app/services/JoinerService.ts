@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Observable, Subscription } from 'rxjs';
-import { FirstPlayer, IJoiner, IJoinerId, IPartType, PartStatus, PartType } from '../domain/ijoiner';
+import { FirstPlayer, IFirstPlayer, IJoiner, IJoinerId, IPartType, PartStatus, PartType } from '../domain/ijoiner';
 import { JoinerDAO } from '../dao/JoinerDAO';
 import { assert, display } from 'src/app/utils/utils';
 import { ArrayUtils } from '../utils/ArrayUtils';
@@ -141,6 +141,22 @@ export class JoinerService {
 
         return this.joinerDao.update(this.observedJoinerId, {
             chosenPlayer: player,
+        });
+    }
+    public setFirstPlayer(firstPlayer: IFirstPlayer): Promise<void> {
+        display(JoinerService.VERBOSE, `JoinerService.setFirstPlayer(${firstPlayer})`);
+        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
+
+        return this.joinerDao.update(this.observedJoinerId, { firstPlayer, });
+    }
+    public setPartType(partType: IPartType, maximalMoveDuration: number, totalPartDuration: number): Promise<void> {
+        display(JoinerService.VERBOSE, `JoinerService.setPartType(${partType}, ${maximalMoveDuration}, ${totalPartDuration})`);
+        assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
+
+        return this.joinerDao.update(this.observedJoinerId, {
+            partType,
+            maximalMoveDuration,
+            totalPartDuration,
         });
     }
     public async reviewConfig(): Promise<void> {

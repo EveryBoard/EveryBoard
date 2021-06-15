@@ -6,7 +6,7 @@ export class JoinerMocks {
             candidates: [],
             creator: 'creator',
             chosenPlayer: '',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
             partStatus: PartStatus.PART_CREATED.value,
         });
 
@@ -15,7 +15,7 @@ export class JoinerMocks {
             candidates: ['firstCandidate'],
             creator: 'creator',
             chosenPlayer: '',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
             partStatus: PartStatus.PART_CREATED.value,
         });
 
@@ -24,7 +24,7 @@ export class JoinerMocks {
             candidates: ['firstCandidate', 'secondCandidate'],
             creator: 'creator',
             chosenPlayer: '',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
             partStatus: PartStatus.PART_CREATED.value,
         });
 
@@ -33,7 +33,7 @@ export class JoinerMocks {
             candidates: ['firstCandidate'],
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
             partStatus: PartStatus.PART_CREATED.value,
         });
 
@@ -43,7 +43,7 @@ export class JoinerMocks {
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
             partType: 'STANDARD',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             maximalMoveDuration: 120,
             totalPartDuration: 1800,
@@ -54,7 +54,7 @@ export class JoinerMocks {
             candidates: ['firstCandidate'],
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
             partStatus: PartStatus.PART_STARTED.value,
             maximalMoveDuration: 120,
             totalPartDuration: 1800,

@@ -8,12 +8,12 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoNode, CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
 import { CoerceoMinimax } from 'src/app/games/coerceo/CoerceoMinimax';
+import { CoerceoPiecesThreatTilesMinimax } from './CoerceoPiecesThreatTilesMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
-import { CoerceoPiecesThreatTilesMinimax } from './CoerceoPiecesThreatTilesMinimax';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 @Component({
     selector: 'app-coerceo',
@@ -41,8 +41,8 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
 
     public highlights: Coord[] = [];
 
-    constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new CoerceoRules(CoerceoPartSlice);
         this.availableMinimaxes = [
             new CoerceoMinimax(this.rules, 'Normal'),

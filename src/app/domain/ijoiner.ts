@@ -55,6 +55,11 @@ export class PartType {
 
     public static readonly CUSTOM: PartType = new PartType('CUSTOM');
 
+    public static NORMAL_MOVE_DURATION: number = 2 * 60;
+    public static NORMAL_PART_DURATION: number = 30 * 60;
+    public static BLITZ_MOVE_DURATION: number = 30;
+    public static BLITZ_PART_DURATION: number = 15 * 60;
+
     public static of(value: string): PartType {
         switch (value) {
             case 'STANDARD': return PartType.STANDARD;
@@ -70,8 +75,6 @@ export class PartStatus {
     private constructor(public value: IPartStatus) {}
     // part created, no chosenPlayer => waiting for acceptable candidate
     public static PART_CREATED: PartStatus = new PartStatus(0);
-    // part created, chosenPlayer selected, no config proposed => waiting the creator to propose config
-    public static PLAYER_CHOSEN: PartStatus = new PartStatus(1);
     // part created, chosenPlayer selected, config proposed by the creator => waiting the joiner to accept them
     public static CONFIG_PROPOSED: PartStatus = new PartStatus(2);
     // part created, chosenPlayer selected, config proposed by the created, accepted by the joiner => part started
