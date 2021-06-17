@@ -1,6 +1,3 @@
-/* eslint-disable max-len */
-// eslint-disable-next-line quotes
-
 export class RulesFailure {
 
     public static readonly CANNOT_CHOOSE_ENEMY_PIECE: string = $localize`Vous ne pouvez pas choisir une pièce de l'ennemi.`;

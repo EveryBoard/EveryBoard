@@ -5,8 +5,8 @@ import { DidacticialStep } from '../DidacticialStep';
 
 export const quartoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        'But du jeu',
-        `Quarto est un jeu d'alignement.
+        $localize`But du jeu`,
+        $localize`Quarto est un jeu d'alignement.
          Le but d'aligner quatre pièces qui possèdent au moins un point commun:
          leur couleur (claire ou foncée),
          leur taille (grande ou petite),
@@ -21,8 +21,8 @@ export const quartoDidacticial: DidacticialStep[] = [
         ], 7, QuartoPiece.ABAB),
     ),
     DidacticialStep.anyMove(
-        'Placement',
-        `Chaque placement se fait en deux étapes: placer la pièce qu'on a en main en cliquant sur une case du plateau,
+        $localize`Placement`,
+        $localize`Chaque placement se fait en deux étapes: placer la pièce qu'on a en main en cliquant sur une case du plateau,
          et choisir une pièce que l'adversaire devra placer, en cliquant sur une des pièces affichées à droite.
          Si vous préférez, l'ordre inverse est également possible.
          Gardez juste à l'esprit que le deuxième clic valide le mouvement.
@@ -34,11 +34,11 @@ export const quartoDidacticial: DidacticialStep[] = [
             [16, 16, 16, 16],
         ], 7, QuartoPiece.ABAA),
         new QuartoMove(2, 2, QuartoPiece.BAAB),
-        'Parfait!',
+        $localize`Parfait!`,
     ),
     DidacticialStep.fromMove(
-        'Situation',
-        `Nous avons ici une situation délicate. Analysez bien le plateau et jouer votre coup,
+        $localize`Situation`,
+        $localize`Nous avons ici une situation délicate. Analysez bien le plateau et jouer votre coup,
          en faisant particulièrement attention de ne pas permettre à l'adversaire de l'emporter au prochain coup.`,
         new QuartoPartSlice([
             [15, 14, 13, 16],
@@ -47,7 +47,7 @@ export const quartoDidacticial: DidacticialStep[] = [
             [16, 16, 16, 16],
         ], 7, QuartoPiece.AABA),
         [new QuartoMove(3, 3, QuartoPiece.AABB)],
-        'Bien joué!',
-        'Raté!',
+        $localize`Bien joué!`,
+        $localize`Raté!`,
     ),
 ];

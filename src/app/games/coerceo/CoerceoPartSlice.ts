@@ -162,31 +162,40 @@ export class CoerceoPartSlice extends TriangularGameState {
         return true;
     }
     public isDeconnectable(tile: Coord): boolean {
-        const connectedSidesIndexes: number[] = this.getPresentNeighboorTilesIndexes(tile);
-        if (connectedSidesIndexes.length > 3) {
+        const neighboorsIndex: number[] = this.getPresentNeighboorTilesRelativeIndexes(tile);
+        if (neighboorsIndex.length > 3) {
             return false;
         }
+        let holeCount: number = 0;
         let i: number = 1;
-        while (i < connectedSidesIndexes.length) {
-            if (connectedSidesIndexes[i - 1] === connectedSidesIndexes[i] - 1 ||
-                (connectedSidesIndexes[0] === 0 && connectedSidesIndexes[connectedSidesIndexes.length - 1] === 5))
-            {
-                i++;
-            } else {
-                return false;
+        while (i < neighboorsIndex.length) {
+            if (this.areNeighboor(neighboorsIndex[i - 1], neighboorsIndex[i]) === false) {
+                holeCount += 1;
             }
+            i++;
         }
-        return true;
+        if (this.areNeighboor(neighboorsIndex[0], neighboorsIndex[neighboorsIndex.length - 1]) === false) {
+            holeCount += 1;
+        }
+        return holeCount <= 1;
     }
-    public getPresentNeighboorTilesIndexes(tile: Coord): number[] {
+    private areNeighboor(smallTileIndex: number, bigTileIndex: number): boolean {
+        return smallTileIndex + 1 === bigTileIndex ||
+               (smallTileIndex === 0 && bigTileIndex === 5);
+    }
+    public getPresentNeighboorTilesRelativeIndexes(tile: Coord): number[] {
         const neighboorsIndexes: number[] = [];
+        let firstIndex: number;
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoPartSlice.NEIGHBOORS_TILES_DIRECTIONS[i];
             const neighboorTile: Coord = tile.getNext(vector, 1);
             if (neighboorTile.isInRange(15, 10) &&
                 this.getBoardAt(neighboorTile) !== CoerceoPiece.NONE.value)
             {
-                neighboorsIndexes.push(i);
+                if (firstIndex == null) {
+                    firstIndex = i;
+                }
+                neighboorsIndexes.push(i - firstIndex);
             }
         }
         return neighboorsIndexes;

@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
 import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
@@ -12,8 +11,8 @@ const A: number = TablutCase.PLAYER_ONE_KING.value;
 
 export const tablutDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        'But du jeu',
-        `Le Tablut est un jeu de stratégie auquel jouaient les Vikings.
+        $localize`But du jeu`,
+        $localize`Le Tablut est un jeu de stratégie auquel jouaient les Vikings.
          Le but du jeu pour les deux joueurs n'est pas le même.
          L'attaquant joue en premier, ses pièces (foncées) sont placées proches des bords.
          Son but est de capturer le roi, qui est tout au centre du plateau.
@@ -23,8 +22,8 @@ export const tablutDidacticial: DidacticialStep[] = [
         TablutPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
-        'Déplacement',
-        `Au Tablut, toutes les pièces se déplacent de la même façon.
+        $localize`Déplacement`,
+        $localize`Au Tablut, toutes les pièces se déplacent de la même façon.
          De façon équivalente aux tours aux échecs, une pièce se déplace:
          1. D'autant de case qu'elle veut.
          2. Sans passer à travers ou s'arrêter sur une autre pièce.
@@ -34,11 +33,11 @@ export const tablutDidacticial: DidacticialStep[] = [
          Ceci est le plateau initial, faites le premier mouvement.`,
         TablutPartSlice.getInitialSlice(),
         new TablutMove(new Coord(4, 1), new Coord(1, 1)),
-        'Bravo',
+        $localize`Bravo`,
     ),
     DidacticialStep.fromMove(
-        'Comment capturer un simple soldat (1/2)',
-        `Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l'exception du roi.
+        $localize`Comment capturer un simple soldat (1/2)`,
+        $localize`Toutes les pièces, attaquantes comme défenseuses, sont des soldats, à l'exception du roi.
          Pour les capturer, il faut en prendre une en sandwich entre deux de vos soldats.
          En s'approchant trop, un pion de l'envahisseur s'est mis en danger.
          Capturez-le.`,
@@ -57,12 +56,12 @@ export const tablutDidacticial: DidacticialStep[] = [
             new TablutMove(new Coord(2, 4), new Coord(2, 3)),
             new TablutMove(new Coord(4, 2), new Coord(3, 2)),
         ],
-        'Bravo, ça lui apprendra!',
-        'Raté, vous avez raté l\'occasion de capturer un adversaire',
+        $localize`Bravo, ça lui apprendra!`,
+        $localize`Raté, vous avez raté l'occasion de capturer un adversaire`,
     ),
     DidacticialStep.fromMove(
-        'Comment capturer un simple soldat (2/2)',
-        `Un deuxième moyen de capturer un soldat, est contre un trône vide.
+        $localize`Comment capturer un simple soldat (2/2)`,
+        $localize`Un deuxième moyen de capturer un soldat, est contre un trône vide.
          Le Roi a quitté son poste, et mis en danger un de ses soldats.
          Capturez le.`,
         new TablutPartSlice([
@@ -77,12 +76,12 @@ export const tablutDidacticial: DidacticialStep[] = [
             [_, _, _, x, x, x, _, _, _],
         ], 12),
         [new TablutMove(new Coord(1, 4), new Coord(2, 4))],
-        'Bravo, un défenseur en moins, mais gardez quand même un oeil sur le roi, c\'est le plus important.',
-        'Raté, vous n\'avez pas fait le mouvement demandé.',
+        $localize`Bravo, un défenseur en moins, mais gardez quand même un oeil sur le roi, c'est le plus important.`,
+        $localize`Raté, vous n'avez pas fait le mouvement demandé.`,
     ),
     DidacticialStep.fromMove(
-        'Comment capturer le roi (1/2)',
-        `Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus.
+        $localize`Comment capturer le roi (1/2)`,
+        $localize`Pour capturer le roi, deux soldats ne sont pas suffisant, il en faut plus.
          Pour la première solution, il faut simplement que les 4 cases voisines (horizontalement et verticalement) soient occupées par vos soldats.
          Ceci fonctionne également si le roi est assis sur son trône.`,
         new TablutPartSlice([
@@ -97,12 +96,12 @@ export const tablutDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _, _],
         ], 72),
         [new TablutMove(new Coord(3, 4), new Coord(2, 4))],
-        'Bravo, vous avez gagné la partie.',
-        'Raté, vous avez laissé fuir le roi.',
+        $localize`Bravo, vous avez gagné la partie.`,
+        $localize`Raté, vous avez laissé fuir le roi.`,
     ),
     DidacticialStep.fromMove(
-        'Comment capturer le roi (2/2)',
-        `Un autre moyen de capturer le roi est de l'immobiliser à 3 contre un bord.
+        $localize`Comment capturer le roi (2/2)`,
+        $localize`Un autre moyen de capturer le roi est de l'immobiliser à 3 contre un bord.
          Notez qu'un roi n'est pas capturable sur une case voisine à un trône.`,
         new TablutPartSlice([
             [_, _, x, A, x, _, _, _, _],
@@ -116,7 +115,7 @@ export const tablutDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, _, _],
         ], 72),
         [new TablutMove(new Coord(3, 3), new Coord(3, 1))],
-        'Le Roi est mort, longue vie au Roi. Bravo, vous avez gagné la partie.',
-        'Raté.',
+        $localize`Le Roi est mort, longue vie au Roi. Bravo, vous avez gagné la partie.`,
+        $localize`Raté.`,
     ),
 ];

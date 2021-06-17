@@ -26,8 +26,8 @@ const Br: number = KamisadoPiece.ONE.BROWN.getValue();
 
 export const kamisadoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        'But du jeu',
-        `Au Kamisado, il y a deux façons de gagner : soit en plaçant une de vos pièces sur la ligne de départ de
+        $localize`But du jeu`,
+        $localize`Au Kamisado, il y a deux façons de gagner : soit en plaçant une de vos pièces sur la ligne de départ de
          l'adversaire, soit en forçant l'adversaire à faire un coup qui bloque la partie.
          Ici, le joueur foncé gagne car il a sa pièce brune sur la ligne de départ du joueur clair, en haut à gauche.`,
         new KamisadoPartSlice(5, KamisadoColor.ORANGE, MGPOptional.empty(), false, [
@@ -42,18 +42,18 @@ export const kamisadoDidacticial: DidacticialStep[] = [
         ]),
     ),
     DidacticialStep.anyMove(
-        'Plateau de départ et déplacement initial',
-        `Voici le plateau de départ.
+        $localize`Plateau de départ et déplacement initial`,
+        $localize`Voici le plateau de départ.
          Au Kamisado, les pièces ne peuvent se déplacer que vers l'avant, verticalement ou diagonalement.
          Vous jouez en premier, donc avec les pièces foncées, vous pouvez faire votre premier déplacement.
          Cliquez sur la pièce de votre choix, et cliquez sur sa case d'arrivée.`,
         KamisadoPartSlice.getInitialSlice(),
         KamisadoMove.of(new Coord(7, 7), new Coord(3, 3)),
-        `Parfait! Notez bien que chacune de vos pièces a une couleur différente.`,
+        $localize`Parfait! Notez bien que chacune de vos pièces a une couleur différente.`,
     ),
     DidacticialStep.fromMove(
-        'Déplacement',
-        `Considérons maintenant le coup du joueur clair, après le déplacement de la pièce bleue.
+        $localize`Déplacement`,
+        $localize`Considérons maintenant le coup du joueur clair, après le déplacement de la pièce bleue.
          Tous les déplacements après le déplacement initial se font obligatoirement à partir de la pièce correspondant
          à la couleur sur laquelle le dernier déplacement s'est terminé.
          Ici, le déplacement précédent s'étant terminé sur une case rose, c'est donc au pion rose de se déplacer.
@@ -73,12 +73,12 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             KamisadoMove.of(new Coord(3, 0), new Coord(3, 6)),
             KamisadoMove.of(new Coord(3, 0), new Coord(4, 1)),
         ],
-        'Parfait!',
-        `Vous n'avez pas avancé votre pièce rose sur une case bleue!`,
+        $localize`Parfait!`,
+        $localize`Vous n'avez pas avancé votre pièce rose sur une case bleue !`,
     ),
     DidacticialStep.informational(
-        'Blocage',
-        `Foncé s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
+        $localize`Blocage`,
+        $localize`Foncé s'est déplacé sur une autre case rose, et vous oblige donc à déplacer votre pièce rose.
          Cependant, votre pièce rose est bloquée ! Dans ce cas ci, vous êtes obligé de passer votre tour.
          Foncé devra jouer son prochain tour en déplaçant lui-même sa pièce rose.`,
         new KamisadoPartSlice(1, KamisadoColor.PINK, MGPOptional.of(new Coord(3, 6)), false, [
@@ -93,8 +93,8 @@ export const kamisadoDidacticial: DidacticialStep[] = [
         ]),
     ),
     DidacticialStep.fromMove(
-        'Victoire par blocage',
-        `À tout moment, si un joueur provoque un blocage total du jeu, il perd.
+        $localize`Victoire par blocage`,
+        $localize`À tout moment, si un joueur provoque un blocage total du jeu, il perd.
          C'est-à-dire que si un joueur oblige son adversaire à déplacer une pièce que l'adversaire ne peut bouger,
          et que lui-même ne peut pas déplacer sa pièce de la même couleur, il perd.
          Ici, en jouant avec les pions foncés,
@@ -111,13 +111,13 @@ export const kamisadoDidacticial: DidacticialStep[] = [
             [br, gr, __, __, __, __, bl, or],
         ]),
         [KamisadoMove.of(new Coord(2, 4), new Coord(0, 2))],
-        `Parfait!
+        $localize`Parfait!
          Clair est obligé d'avancer son pion vert sur la case orange, vous obligeant à joueur avec votre pion orange.
          Dès lors, votre pion orange sera bloqué et vous devrez donc passer votre tour.
          Clair devra ensuite aussi passer son tour car son pion orange est aussi bloqué :
          la partie est totalement bloquée.
          Dans ce cas, le dernier joueur à avoir déplacé une pièce perd la partie.
          Ici, Clair aura déplacé sa pièce verte en dernier, vous êtes donc vainqueur !`,
-        `Raté !`,
+        $localize`Raté !`,
     ),
 ];
