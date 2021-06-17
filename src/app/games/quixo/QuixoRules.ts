@@ -7,6 +7,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { QuixoPartSlice } from './QuixoPartSlice';
 import { QuixoMove } from './QuixoMove';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export abstract class QuixoNode extends MGPNode<QuixoRules, QuixoMove, QuixoPartSlice> {}
 
@@ -121,7 +122,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
     }
     public isLegal(move: QuixoMove, slice: QuixoPartSlice): LegalityStatus {
         if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) {
-            return { legal: MGPValidation.failure('piece owned by ennemy player') };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
         } else {
             return { legal: MGPValidation.SUCCESS };
         }

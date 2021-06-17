@@ -8,6 +8,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { DebugElement } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('DidacticialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -526,7 +527,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 ),
             ];
             wrapper.startDidacticial(didacticial);
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', 'Choisissez une case vide.');
+            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
             tick(10);
 
             // expect to see cancelMove reason as message
@@ -534,10 +535,9 @@ describe('DidacticialGameWrapperComponent', () => {
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const expectedReason: string = 'Choisissez une case vide.';
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
-            expect(currentReason).toBe(expectedReason);
+            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
             // expect click to be still possible
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
             tick(10);
@@ -681,17 +681,16 @@ describe('DidacticialGameWrapperComponent', () => {
             wrapper.startDidacticial(didacticial);
 
             // When doing invalid click
-            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', 'Choisissez une case vide.');
+            await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
 
             // expect to see cancelMove reason as message
             const expectedMessage: string = 'Perdu.';
             const currentMessage: string =
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
-            const expectedReason: string = 'Choisissez une case vide.';
             const currentReason: string =
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
-            expect(currentReason).toBe(expectedReason);
+            expect(currentReason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
             // expect click to be still possible
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
         }));
@@ -734,7 +733,7 @@ describe('DidacticialGameWrapperComponent', () => {
             wrapper.startDidacticial(didacticial);
             // when clicking "Next Button"
             const nextButtonMessage: string =
-                componentTestUtils.findElement('#nextButton').nativeElement.innerHTML;
+                componentTestUtils.findElement('#nextButton').nativeElement.textContent;
             expect(nextButtonMessage).toBe('Vu');
             expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
 

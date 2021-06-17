@@ -24,8 +24,6 @@ interface ComparableSubscription {
     styleUrls: ['../../../../../node_modules/bulma-slider/dist/css/bulma-slider.min.css'],
 })
 export class PartCreationComponent implements OnInit, OnDestroy {
-    // TODO: add "message displayer service" that contains .message
-
     // Lifecycle:
     // 1. Creator chooses config and opponent
     // 2. Creator click on "proposing the config"
@@ -81,6 +79,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // We will be redirected by the GameWrapper
             return Promise.resolve();
         }
+        // TODO: use pipe(share())
         this.joinerObs = this.joinerService.observe(this.partId).pipe(map((id: IJoinerId): IJoiner => {
             return id.doc;
         }));

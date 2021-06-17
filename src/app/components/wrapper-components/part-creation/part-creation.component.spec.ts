@@ -66,6 +66,7 @@ describe('PartCreationComponent:', () => {
         testUtils.detectChanges();
         await testUtils.whenStable();
 
+        // TODO: use testUtils.expectElementToExist
         expect(testUtils.findElement('#chooseCandidate'))
             .withContext('Choosing candidate should be impossible before there is candidate')
             .toBeFalsy();

@@ -13,12 +13,14 @@
             <div class="block" id="turnIndicator" *ngIf="currentPart">
                 <p class="subtitle">Tour n° {{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
-                    C'est à {{ currentPlayer===userName ? 'vous' : currentPlayer }}
+                    <ng-container i18n>C'est à</ng-container>
+                    <ng-container *ngIf="currentPlayer === userName else otherPlayer">vous</ng-container>
+                    <ng-template #otherPlayer>{{ currentPlayer }}</ng-template>
                 </p>
             </div>
             <div class="block" *ngIf="players">
                 <p id="playerZeroIndicator" [ngStyle]="getPlayerNameFontColor(0)">{{ players[0] }}</p>
-                <p id="scoreZeroIndicator" *ngIf="currentPart && compo && compo.showScore">{{ compo.scores[0] }} points</p>
+                <p id="scoreZeroIndicator" *ngIf="currentPart && compo && compo.showScore" i18n>{{ compo.scores[0] }} points</p>
                 <app-count-down #chronoZeroGlobal
                                 [dangerTimeLimit]="60*1000"
                                 debugName="ZERO Global"
@@ -30,7 +32,7 @@
                                 (outOfTimeAction)="reachedOutOfTime(0)">
                 </app-count-down>
             </div>
-            <p class="is-size-3">vs.</p>
+            <p class="is-size-3" i18n>vs.</p>
             <div class="block" *ngIf="players">
                 <p id="playerOneIndicator" [ngStyle]="getPlayerNameFontColor(1)">{{ players[1] }}</p>
                 <p id="scoreOneIndicator" *ngIf="currentPart && compo && compo.showScore">{{ compo.scores[1] }} points</p>
@@ -49,91 +51,91 @@
             <button class="button is-fullwidth mb-1"
                     id="resignButton"
                     *ngIf="endGame === false && opponent && isPlaying()"
-                    (click)="resign()">
+                    (click)="resign()" i18n>
                 Abandonner
             </button>
             <button class="button is-fullwidth mb-1"
                     id="proposeDrawButton"
                     *ngIf="canProposeDraw()"
-                    (click)="proposeDraw()">
+                    (click)="proposeDraw()" i18n>
                 Proposer un match nul
             </button>
             <button class="button is-warning is-fullwidht mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
                     id="acceptDrawButton"
-                    (click)="acceptDraw()">
+                    (click)="acceptDraw()" i18n>
                 Accepter un match nul
             </button>
             <button class="button is-warning is-fullwidht mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForDrawResponse()"
                     id="refuseDrawButton"
-                    (click)="refuseDraw()">
+                    (click)="refuseDraw()" i18n>
                 Refuser un match nul
             </button>
             <button class="button is-fullwidth mb-1"
                     *ngIf="endGame === false && observerRole < 2 && compo.canPass && (currentPlayer===userName)"
                     id="passButton"
-                    (click)="compo.pass()">
+                    (click)="compo.pass()" i18n>
                 Passer son tour
             </button>
             <button class="button is-warning is-fullwidth mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
                     id="acceptTakeBackButton"
-                    (click)="acceptTakeBack()">
+                    (click)="acceptTakeBack()" i18n>
                 Autoriser à reprendre un tour
             </button>
             <button class="button is-warning is-fullwidth mb-1"
                     *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse()"
                     color="warn"
                     id="refuseTakeBackButton"
-                    (click)="refuseTakeBack()">
+                    (click)="refuseTakeBack()" i18n>
                 Refuser de reprendre un tour
             </button>
             <button class="button is-fullwidth"
                     *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse() === false && canAskTakeBack()"
                     id="askTakeBackButton"
-                    (click)="askTakeBack()">
+                    (click)="askTakeBack()" i18n>
                 Demander à reprendre un coup
             </button>
             <div class="block" id="winnerIndicator" *ngIf="endGame">
                 <hr/>
                 <div *ngIf="currentPart.isDraw()">
-                    <p class="title" *ngIf="currentPart.getWinner() == null"> Match nul </p>
+                    <p class="title" *ngIf="currentPart.getWinner() == null" i18n>Match nul</p>
                 </div>
                 <div *ngIf="currentPart.isWin()">
-                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner() === userName"> Vous avez gagné </p>
-                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)"> Vous avez perdu </p>
-                    <p class="title" *ngIf="observerRole >= 2"> Victoire de {{ currentPart.getWinner() }} </p>
+                    <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner() === userName" i18n>Vous avez gagné.</p>
+                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)" i18n>Vous avez perdu.</p>
+                    <p class="title" *ngIf="observerRole >= 2" i18n>Victoire de {{ currentPart.getWinner() }}.</p>
                 </div>
                 <!-- TODO: Mettre "vous avez gagné" en titre, et l'explication en normal -->
                 <div *ngIf="currentPart.isTimeout()">
-                    <p class="title" id="youWonIndicator" *ngIf="(currentPart.getWinner() === userName)"> {{ currentPart.getLoser() }} a épuisé son temps. Vous avez gagné. </p>
-                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)"> Vous avez dépassé la limite de temps </p>
-                    <p class="title" *ngIf="observerRole >= 2"> Limite de temps dépassée par {{ currentPart.getLoser() }} </p>
+                    <p class="title" id="youWonIndicator" *ngIf="(currentPart.getWinner() === userName)" i18n>{{ currentPart.getLoser() }} a épuisé son temps. Vous avez gagné.</p>
+                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)" i18n>Vous avez dépassé la limite de temps.</p>
+                    <p class="title" *ngIf="observerRole >= 2" i18n>{{ currentPart.getLoser() }} a épuisé son temps.</p>
                 </div>
                 <div *ngIf="currentPart.isResign()">
                     <p class="title" id="resignIndicator"
-                       *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)"> Vous avez abandonné </p>
+                       *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)" i18n>Vous avez abandonné.</p>
                     <p class="title" id="resignIndicator"
-                       *ngIf="observerRole >= 2 || currentPart.getWinner() === userName"> {{ currentPart.getLoser() }} a abandonné </p>
+                       *ngIf="observerRole >= 2 || currentPart.getWinner() === userName" i18n>{{ currentPart.getLoser() }} a abandonné.</p>
                 </div>
 
             </div>
             <button class="button is-primary is-fullwidth mb-1"
                     *ngIf="endGame"
                     id="backToServerButton"
-                    routerLink="server">
-                Retour au serveur
+                    routerLink="server" i18n>
+                Retour au serveurp
             </button>
             <button class="button is-fullwidth mb-1"
                     id="proposeRematchDiv"
                     *ngIf="endGame && observerRole < 2 && rematchProposed === false"
-                    (click)="proposeRematch()">
+                    (click)="proposeRematch()" i18n>
                 Proposer un rematch
             </button>
             <button class="button is-fullwidth is-warning"
                     id="acceptRematchDiv" *ngIf="endGame && observerRole < 2 && rematchProposed && opponentProposedRematch"
-                    (click)="acceptRematch()">
+                    (click)="acceptRematch()" i18n>
                 Accepter le rematch
             </button>
         </div>

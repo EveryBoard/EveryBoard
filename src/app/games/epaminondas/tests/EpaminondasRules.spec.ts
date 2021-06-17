@@ -8,6 +8,7 @@ import { EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { EpaminondasFailure } from '../EpaminondasFailure';
 
 describe('EpaminondasRules:', () => {
     let rules: EpaminondasRules;
@@ -39,7 +40,7 @@ describe('EpaminondasRules:', () => {
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 1, 1, Direction.DOWN);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.getReason())
-            .toBe('La distance de déplacement de votre phalange la fait sortir du plateau.');
+            .toBe(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD);
     });
     it('Should forbid phalanx to go outside the board (head)', () => {
         const board: NumberTable = [
@@ -60,7 +61,7 @@ describe('EpaminondasRules:', () => {
         const move: EpaminondasMove = new EpaminondasMove(1, 11, 2, 2, Direction.UP_LEFT);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.getReason())
-            .toBe('La distance de déplacement de votre phalange la fait sortir du plateau.');
+            .toBe(EpaminondasFailure.PHALANX_IS_LEAVING_BOARD);
     });
     it('Should forbid invalid phalanx (phalanx containing coord outside the board)', () => {
         const board: NumberTable = [
@@ -80,7 +81,7 @@ describe('EpaminondasRules:', () => {
         const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 1, Direction.DOWN);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe('Cette phalange contient des pièces en dehors du plateau.');
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD);
     });
     it('Should forbid phalanx to pass through other pieces', () => {
         const board: NumberTable = [
@@ -100,7 +101,7 @@ describe('EpaminondasRules:', () => {
         const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 3, 3, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe('Il y a quelque chose dans le chemin de votre phalange.');
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.SOMETHING_IN_PHALANX_WAY);
     });
     it('Should forbid to capture greater phalanx', () => {
         const board: NumberTable = [
@@ -120,8 +121,7 @@ describe('EpaminondasRules:', () => {
         const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason())
-            .toBe('Votre phalange doit être plus grande que celle qu\'elle tente de capturer.');
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE);
     });
     it('Should forbid to capture same sized phalanx', () => {
         const board: NumberTable = [
@@ -141,8 +141,7 @@ describe('EpaminondasRules:', () => {
         const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
         const move: EpaminondasMove = new EpaminondasMove(0, 11, 2, 2, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason())
-            .toBe('Votre phalange doit être plus grande que celle qu\'elle tente de capturer.');
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_SHOULD_BE_GREATER_TO_CAPTURE);
     });
     it('Should forbid to capture your own pieces phalanx', () => {
         const board: NumberTable = [
@@ -201,7 +200,8 @@ describe('EpaminondasRules:', () => {
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);
         expect(minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value)
-            .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
+            .withContext('This should be a victory for player 0')
+            .toEqual(Number.MIN_SAFE_INTEGER);
     });
     it('Should declare second player winner if his pawn survive one turn on first line', () => {
         const board: NumberTable = [
@@ -240,7 +240,8 @@ describe('EpaminondasRules:', () => {
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
         expect(minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value)
-            .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
+            .withContext('This should be a victory for player 1')
+            .toEqual(Number.MAX_SAFE_INTEGER);
     });
     it('Should not consider first player winner if both player have one piece on their landing line', () => {
         const board: NumberTable = [
@@ -279,8 +280,8 @@ describe('EpaminondasRules:', () => {
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
         expect(resultingSlice).toEqual(expectedSlice);
         const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).not.toEqual(Number.MIN_SAFE_INTEGER, 'This should not be a victory for player 0');
-        expect(boardValue).not.toEqual(Number.MAX_SAFE_INTEGER, 'This should not be a victory for player 1');
+        expect(boardValue).withContext('This should not be a victory for player 0').not.toEqual(Number.MIN_SAFE_INTEGER);
+        expect(boardValue).withContext('This should not be a victory for player 1').not.toEqual(Number.MAX_SAFE_INTEGER);
     });
     it('Should forbid moving ennemy pieces', () => {
         const board: NumberTable = [
@@ -300,7 +301,7 @@ describe('EpaminondasRules:', () => {
         const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 1);
         const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.UP);
         const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe('Une phalange ne peut pas contenir de pièces ennemies.');
+        expect(status.legal.getReason()).toBe(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE);
     });
     it('Should allow legal move', () => {
         const board: NumberTable = [

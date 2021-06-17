@@ -79,7 +79,7 @@ describe('CoerceoRules', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         });
         it('Should forbid to move empty pieces', () => {
             const board: NumberTable = [
@@ -255,7 +255,7 @@ describe('CoerceoRules', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(6, 6));
             const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe('Cannot capture your own pieces!');
+            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES);
         });
         it('Should forbid capturing empty case', () => {
             const board: NumberTable = [
@@ -273,7 +273,7 @@ describe('CoerceoRules', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(7, 7));
             const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe('Cannot capture empty coord!');
+            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY);
         });
         it('Should forbid capturing coord of removed tile', () => {
             const board: NumberTable = [
@@ -291,7 +291,7 @@ describe('CoerceoRules', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 2], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromTilesExchange(new Coord(0, 0));
             const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe('Cannot capture coord of removed tile!');
+            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_CAPTURE_FROM_REMOVED);
         });
         it('Should remove piece captured by tiles exchange, removing tile but no one win it', () => {
             const board: NumberTable = [

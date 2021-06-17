@@ -10,6 +10,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { PylosOrderedMinimax } from './PylosOrderedMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { PylosFailure } from './PylosFailure';
 
 @Component({
     selector: 'app-pylos',
@@ -75,7 +77,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         } else if (clickedPiece === Player.NONE.value) {
             return await this.onEmptyCaseClick(clickedCoord);
         } else {
-            return this.cancelMove('Can\'t click on ennemy pieces.');
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         }
     }
     private async onPieceClick(clickedCoord: PylosCoord): Promise<MGPValidation> {
@@ -122,7 +124,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
                 this.chosenLandingCoord = clickedCoord;
                 return this.concludeMoveWithCapture([]);
             } else {
-                return this.cancelMove('Must move pieces upward.');
+                return this.cancelMove(PylosFailure.MUST_MOVE_UPWARD);
             }
         }
     }

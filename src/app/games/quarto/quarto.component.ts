@@ -9,6 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 @Component({
     selector: 'app-quarto',
@@ -78,7 +79,7 @@ export class QuartoComponent extends AbstractGameComponent<QuartoMove, QuartoPar
             }
         } else {
             // the user chose an occupied place of the board, so an illegal move, so we cancel all
-            return this.cancelMove('Choisissez une case vide.');
+            return this.cancelMove(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
         }
     }
     public async choosePiece(givenPiece: number): Promise<MGPValidation> {

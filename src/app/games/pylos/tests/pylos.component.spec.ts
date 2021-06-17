@@ -5,6 +5,8 @@ import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
 import { Player } from 'src/app/jscaip/Player';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { PylosFailure } from '../PylosFailure';
 
 describe('PylosComponent', () => {
     let componentTestUtils: ComponentTestUtils<PylosComponent>;
@@ -17,8 +19,8 @@ describe('PylosComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<PylosComponent>('Pylos');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should allow droping piece on occupable case', fakeAsync(async() => {
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), []);
@@ -45,7 +47,7 @@ describe('PylosComponent', () => {
         const initialSlice: PylosPartSlice = new PylosPartSlice(initialBoard, 0);
         componentTestUtils.setupSlice(initialSlice);
 
-        await componentTestUtils.expectClickFailure('#click_0_0_0', 'Can\'t click on ennemy pieces.');
+        await componentTestUtils.expectClickFailure('#click_0_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
     it('should allow climbing', fakeAsync(async() => {
         const initialBoard: number[][][] = [
@@ -154,6 +156,6 @@ describe('PylosComponent', () => {
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#click_0_0_1');
-        await componentTestUtils.expectClickFailure('#click_2_2_0', 'Must move pieces upward.');
+        await componentTestUtils.expectClickFailure('#click_2_2_0', PylosFailure.MUST_MOVE_UPWARD);
     }));
 });

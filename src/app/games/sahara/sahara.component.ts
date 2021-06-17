@@ -13,6 +13,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { SaharaFailure } from './SaharaFailure';
 
 @Component({
     selector: 'app-sahara',
@@ -66,12 +67,12 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
     }
     private choosePiece(x: number, y: number): MGPValidation {
         if (this.board[y][x] === SaharaPawn.EMPTY) { // Did not select pyramid
-            return this.cancelMove('Vous devez d\'abord choisir une de vos pyramides!');
+            return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST);
         } else if (this.getTurn() % 2 === this.board[y][x]) { // selected his own pyramid
             this.chosenCoord = MGPOptional.of(new Coord(x, y));
             return MGPValidation.SUCCESS;
         } else { // Selected ennemy pyramid
-            return this.cancelMove('Vous devez choisir une de vos pyramides!');
+            return this.cancelMove(SaharaFailure.MUST_CHOOSE_OWN_PYRAMID);
         }
     }
     public updateBoard(): void {

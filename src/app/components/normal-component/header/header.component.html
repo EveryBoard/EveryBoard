@@ -12,19 +12,19 @@
 
     <div class="navbar-menu">
         <div class="navbar-start">
-            <a class="navbar-item" [routerLink]="['/']">Accueil</a>
+            <a class="navbar-item" [routerLink]="['/']" i18n>Accueil</a>
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">Jouer en ligne</a>
+                <a class="navbar-link" i18n>Jouer en ligne</a>
                 <div class="navbar-dropdown">
-                    <a class="navbar-item" [routerLink]="['/play']">Créer une partie</a>
-                    <a class="navbar-item" [routerLink]="['/server']">Rejoindre une partie</a>
+                    <a class="navbar-item" [routerLink]="['/play']" i18n>Créer une partie</a>
+                    <a class="navbar-item" [routerLink]="['/server']" i18n>Rejoindre une partie</a>
                 </div>
             </div>
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link">Jouer hors ligne</a>
+                <a class="navbar-link" i18n>Jouer hors ligne</a>
                 <div class="navbar-dropdown">
-                    <a class="navbar-item" [routerLink]="['/local']">Créer une partie</a>
-                    <a class="navbar-item" [routerLink]="['/didacticial']">Apprendre des règles</a>
+                    <a class="navbar-item" [routerLink]="['/local']" i18n>Créer une partie</a>
+                    <a class="navbar-item" [routerLink]="['/didacticial']" i18n>Apprendre des règles</a>
                 </div>
             </div>
         </div>
@@ -34,16 +34,16 @@
                 <div class="navbar-item has-dropdown is-hoverable">
                     <a class="navbar-link">{{userName}}</a>
                     <div class="navbar-dropdown">
-                        <a class="navbar-item" id="logout" (click)="logout()">Se déconnecter</a>
+                        <a class="navbar-item" id="logout" (click)="logout()" i18n>Se déconnecter</a>
                     </div>
                 </div>
             </ng-container>
             <ng-template #connect>
                 <div class="buttons">
                     <a class="button is-primary" [routerLink]="['/inscription']">
-                        <strong>S'inscrire</strong>
+                        <strong i18n>S'inscrire</strong>
                     </a>
-                    <a class="button is-light" [routerLink]="['/login']">
+                    <a class="button is-light" [routerLink]="['/login']" i18n>
                         Se connecter
                     </a>
                 </div>

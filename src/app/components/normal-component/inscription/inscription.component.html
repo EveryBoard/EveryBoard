@@ -3,7 +3,7 @@
     <form [formGroup]="inscriptionForm">
         <div class="field is-horizontal">
             <div class="field-label">
-                <label class="label" for="email" >Email</label>
+                <label class="label" for="email" i18n>Email</label>
             </div>
             <div class="field-body">
                 <div class="field">
@@ -15,7 +15,7 @@
         </div>
         <div class="field is-horizontal">
             <div class="field-label">
-                <label class="label" for="passwordId">Mot de passe</label>
+                <label class="label" for="passwordId" i18n>Mot de passe</label>
             </div>
             <div class="field-body">
                 <div class="field">
@@ -37,14 +37,14 @@
                     <div class="control">
                         <button id="registerButton"
                                 class="button is-primary"
-                                (click)="tryRegister(inscriptionForm.value)">S'inscrire</button>
+                                (click)="tryRegister(inscriptionForm.value)" i18n>S'inscrire</button>
                     </div>
                 </div>
             </div>
         </div>
-        <p>Un email de confirmation vous sera envoyé pour valider votre compte</p>
+        <p i18n>Un email de confirmation vous sera envoyé pour valider votre compte</p>
         <div *ngIf="errorMessage" class="message is-danger" role="alert">
-            <div class="message-header">Erreur de connexion</div>
+            <div class="message-header" i18n>Erreur de connexion</div>
             <div class="message-body" id="errorMessage">{{ errorMessage }}</div>
         </div>
     </form>

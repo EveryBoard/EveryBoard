@@ -181,7 +181,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = null;
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
-            return MGPValidation.failure('Étape finie!');
+            return MGPValidation.failure($localize`Étape finie!`);
         }
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
@@ -198,7 +198,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             }, 10);
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure('Cette étape n\'attends pas de mouvements de votre part.');
+            return MGPValidation.failure($localize`Cette étape n'attends pas de mouvements de votre part.`);
         }
     }
     public onCancelMove: (reason?: string) => void = (reason?: string) => {

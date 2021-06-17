@@ -45,7 +45,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
     }
     public applyLegalMove(move: SaharaMove,
                           slice: SaharaPartSlice,
-                          status: LegalityStatus)
+                          _status: LegalityStatus)
     : SaharaPartSlice
     {
         display(SaharaRules.VERBOSE, 'Legal move ' + move.toString() + ' applied');
@@ -59,7 +59,7 @@ export class SaharaRules extends Rules<SaharaMove, SaharaPartSlice> {
         const movedPawn: SaharaPawn = slice.getBoardAt(move.coord);
         if (movedPawn !== slice.getCurrentPlayer().value) {
             display(SaharaRules.VERBOSE, 'This move is illegal because it is not the current player\'s turn.');
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
         }
         const landingCase: SaharaPawn = slice.getBoardAt(move.end);
         if (landingCase !== SaharaPawn.EMPTY) {
