@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
 import { JoinerService } from '../../../services/JoinerService';
 import { ChatService } from '../../../services/ChatService';
-import { assert, display, warning } from 'src/app/utils/utils';
+import { assert, display, handleError } from 'src/app/utils/utils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
 import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
@@ -279,7 +279,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             for (const user of foundUsers) {
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
                     // TODO: this should not happen but it does!
-                    warning('callback: what the hell ' + user.doc.pseudo + ' is already offline!');
+                    handleError('callback: what the hell ' + user.doc.pseudo + ' is already offline!');
                 }
             }
         };
@@ -292,7 +292,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
             // This should not happen in practice, but if it does we can safely remove the joiner
-            warning('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
+            handleError('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
             for (const user of deletedUsers) {
                 if (user.doc.pseudo === joiner.creator) {
@@ -314,7 +314,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 if (user.doc.state === 'offline') {
                     // TODO: this should not happen but it does!
                     // Removing the user from the lobby hampers part creation when it happens
-                    warning('callback: what the hell ' + user.doc.pseudo + ' is already offline!');
+                    handleError('callback: what the hell ' + user.doc.pseudo + ' is already offline!');
                     // this.removeUserFromLobby(user.doc.pseudo);
                 }
             }
@@ -328,7 +328,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
-            warning('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
+            handleError('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
             for (const user of deletedUsers) {
                 this.removeUserFromLobby(user.doc.pseudo);

@@ -378,13 +378,8 @@ describe('PartCreationComponent:', () => {
     it('should not start observing joiner if part does not exist', fakeAsync(async() => {
         component.userName = 'creator';
         component.partId = 'does not exist';
-        const promise: Promise<IJoiner> =
-            new Promise((resolve: (joiner: IJoiner) => void,
-                         _reject: (error: Error) => void) => {
-                resolve(null);
-            });
         const joinerDAOMock: JoinerDAO = TestBed.inject(JoinerDAO);
-        spyOn(joinerDAOMock, 'read').and.returnValue(promise);
+        spyOn(joinerDAOMock, 'read').and.returnValue(Promise.resolve(null));
         const joinerService: JoinerService = TestBed.inject(JoinerService);
         spyOn(joinerService, 'startObserving');
 
