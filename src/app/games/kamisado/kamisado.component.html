@@ -2,8 +2,8 @@
       width="100%" height="auto"
       viewBox="0 0 600 600"
       preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of board; index as y;">
-        <g *ngFor="let caseContent of line; index as x;">
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let caseContent of line; index as x">
             <g id="click_{{ x }}_{{ y }}"
                (click)="onClick(x, y)">
                 <!-- Background -->

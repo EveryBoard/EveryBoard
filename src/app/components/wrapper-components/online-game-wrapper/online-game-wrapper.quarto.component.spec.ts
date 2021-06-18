@@ -541,7 +541,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(0);
             expect(wrapper.chronoZeroGlobal.stop).toHaveBeenCalled();
         }));
-        it('should stop player\'s local chrono when global reach end', fakeAsync(async() => {
+        it('should stop player\'s local chrono when global chrono reach end', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
             tick(1);
             spyOn(wrapper, 'reachedOutOfTime').and.callThrough();
@@ -560,7 +560,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             expect(wrapper.reachedOutOfTime).toHaveBeenCalledOnceWith(1);
             expect(wrapper.chronoOneGlobal.stop).toHaveBeenCalled();
         }));
-        it('should stop ennemy\'s local chrono when global reach end', fakeAsync(async() => {
+        it('should stop ennemy\'s local chrono when global chrono reach end', fakeAsync(async() => {
             await prepareStartedGameFor({ pseudo: 'creator', verified: true }, true);
             tick(1);
             await doMove(FIRST_MOVE, true);

@@ -43,7 +43,7 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, _, O, _, N, N, N, N, N, N],
         ];
-        const strongState: CoerceoPartSlice = new CoerceoPartSlice(strongBoard, 0, [0, 0], [0, 0]);
+        const strongState: CoerceoPartSlice = new CoerceoPartSlice(strongBoard, 0, [0, 0], [0, 1]);
         expectSecondStateToBeBetterThanFirst(weakState, null, strongState, null, minimax);
     });
     it('Should prefer board with more safe pieces', () => {

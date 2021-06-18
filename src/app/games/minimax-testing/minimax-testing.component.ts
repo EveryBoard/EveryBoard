@@ -4,7 +4,6 @@ import { MinimaxTestingRules } from 'src/app/games/minimax-testing/MinimaxTestin
 import { MinimaxTestingPartSlice } from 'src/app/games/minimax-testing/MinimaxTestingPartSlice';
 import { MinimaxTestingMove } from 'src/app/games/minimax-testing/MinimaxTestingMove';
 import { Coord } from 'src/app/jscaip/Coord';
-import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MinimaxTestingMinimax } from './MinimaxTestingMinimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';

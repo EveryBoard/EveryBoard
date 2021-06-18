@@ -87,7 +87,7 @@
             </g>
         </g>
     </g>
-    <g *ngFor="let coord of getClickables();">
+    <g *ngFor="let coord of getClickables()">
         <rect id="click_{{ coord.x }}_{{ coord.y }}"
               (click)="onClick(coord.x, coord.y)"
               [attr.x]="CASE_SIZE*coord.x"

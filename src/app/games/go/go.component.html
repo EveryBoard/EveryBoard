@@ -8,12 +8,12 @@
           stroke-width="3"
           fill="lightgrey"
     />
-    <g *ngFor="let line of board; index as y;">
-        <g *ngFor="let caseContent of line; index as x;">
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let caseContent of line; index as x">
             <g *ngIf="caseIsFull(x, y) else empty">
                 <circle [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="22"
-                        (click)="onClick(x, y);"
+                        (click)="onClick(x, y)"
                         [ngClass]="getCaseClass(x, y)"
                         class="base mid-stroke"
                 />
@@ -24,7 +24,7 @@
                 />
                 <!-- TODO: draw after everything else -->
                 <line *ngIf="isDead(x, y)"
-                      (click)="onClick(x, y);"
+                      (click)="onClick(x, y)"
                       [attr.x1]="50*x"      [attr.y1]="50*y"
                       [attr.x2]="50 + 50*x" [attr.y2]="50 + 50*y"
                       class="base no-fill captured-stroke"
@@ -34,34 +34,36 @@
                 <rect id="click_{{x}}_{{y}}"
                       width="50" height="50"
                       [attr.x]="50*x" [attr.y]="50*y"
-                      (click)="onClick(x, y);"
+                      (click)="onClick(x, y)"
                       class="base no-stroke"
                       fill-opacity="0"
                 />
                 <line [attr.x1]="50*x"      [attr.y1]="25 + 50*y"
                       [attr.x2]="50 + 50*x" [attr.y2]="25 + 50*y"
-                      (click)="onClick(x, y);"
+                      (click)="onClick(x, y)"
                       class="base mid-stroke"/>
                 <line [attr.x1]="25 + 50*x" [attr.y1]="50*y"
                       [attr.x2]="25 + 50*x" [attr.y2]="50 + 50*y"
-                      (click)="onClick(x, y);"
+                      (click)="onClick(x, y)"
                       class="base mid-stroke"/>
                 <circle *ngIf="isTerritory(x, y)"
                         [attr.cx]="25 + 50*x" [attr.cy]="25 + 50*y"
                         [attr.r]="10"
                         [attr.class]="caseContent === 6 ? 'player1' : 'player0'"
-                        (click)="onClick(x, y);" />
+                        (click)="onClick(x, y)"
+                />
             </ng-template>
         </g>
     </g>
-    <rect *ngIf="isThereAKo();"
+    <rect *ngIf="isThereAKo()"
           width="25" height="25"
           [attr.x]="12.5 + 50 * ko.x" [attr.y]="12.5 + 50 * ko.y"
           class="captured-stroke mid-stroke"
           fill="none"
     />
     <circle *ngFor="let capture of captures"
-            [attr.cx]="25 + 50*capture.x" [attr.cy]="25 + 50*capture.y"
+            (click)="onClick(capture.x, capture.y)"
+            [attr.cx]="25 + 50 * capture.x" [attr.cy]="25 + 50 * capture.y"
             [attr.r]="7"
             class="captured"
     />

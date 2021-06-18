@@ -23,7 +23,7 @@
             />
         </g>
     </g>
-    <g *ngFor="let coord of getHighlightedCoords();">
+    <g *ngFor="let coord of getHighlightedCoords()">
         <rect (click)="onClick(coord.x, coord.y)"
               [attr.x] = "CASE_SIZE*coord.x+STROKE_WIDTH"
               [attr.y] = "CASE_SIZE*coord.y+STROKE_WIDTH"

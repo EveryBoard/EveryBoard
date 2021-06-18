@@ -141,11 +141,14 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         }
 
         const startingCoord: PylosCoord = move.startingCoord.getOrNull();
-        const currentPlayer: number = slice.getCurrentPlayer().value;
+        const ENNEMY: number = slice.getCurrentEnnemy().value;
 
         if (startingCoord != null) {
-            if (slice.getBoardAt(startingCoord) !== currentPlayer) {
-                return { legal: MGPValidation.failure(PylosFailure.SHOULD_START_FROM_PLAYER_PIECE) };
+            const startingPiece: number = slice.getBoardAt(startingCoord);
+            if (startingPiece === ENNEMY) {
+                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
+            } else if (startingPiece === Player.NONE.value) {
+                return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };
             }
 
             const supportedPieces: PylosCoord[] = startingCoord.getHigherPieces()
