@@ -15,7 +15,7 @@ export class JoinerService {
         creator: null,
         candidates: [],
         chosenPlayer: '',
-        firstPlayer: FirstPlayer.CREATOR.value, // by default: creator
+        firstPlayer: FirstPlayer.RANDOM.value,
         partStatus: PartStatus.PART_CREATED.value,
     };
 
@@ -61,13 +61,13 @@ export class JoinerService {
         }
         const joinerList: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
         if (joinerList.includes(userName)) {
-            // Player probably opened a second tab, he can do that but he does not join a game twice
-            return true;
+            throw new Error('JoinerService.joinGame was called by a user already in the game');
         } else if (userName === joiner.creator) {
             return true;
         } else {
             joinerList[joinerList.length] = userName;
             await this.joinerDao.update(partId, { candidates: joinerList });
+            return true;
         }
     }
     public async cancelJoining(userName: string): Promise<void> {
@@ -79,8 +79,8 @@ export class JoinerService {
         }
         const joiner: IJoiner = await this.joinerDao.read(this.observedJoinerId);
         if (joiner == null) {
-            // When can this ever happen? We should have joined the game and then the game has been deleted?
-            throw new Error('DAO Did not found a joiner with id ' + this.observedJoinerId);
+            // The part does not exist, so we can consider that we succesfully cancelled joining
+            return;
         } else {
             const candidates: string[] = ArrayUtils.copyImmutableArray(joiner.candidates);
             const indexLeaver: number = candidates.indexOf(userName);
@@ -147,7 +147,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, `JoinerService.setFirstPlayer(${firstPlayer})`);
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
 
-        return this.joinerDao.update(this.observedJoinerId, { firstPlayer, });
+        return this.joinerDao.update(this.observedJoinerId, { firstPlayer });
     }
     public setPartType(partType: IPartType, maximalMoveDuration: number, totalPartDuration: number): Promise<void> {
         display(JoinerService.VERBOSE, `JoinerService.setPartType(${partType}, ${maximalMoveDuration}, ${totalPartDuration})`);

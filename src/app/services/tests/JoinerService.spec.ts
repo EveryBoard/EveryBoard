@@ -39,12 +39,12 @@ describe('JoinerService', () => {
     });
     it('read should be delegated to JoinerDAO', fakeAsync(async() => {
         spyOn(dao, 'read');
-        service.readJoinerById('myJoinerId');
+        await service.readJoinerById('myJoinerId');
         expect(dao.read).toHaveBeenCalled();
     }));
     it('set should be delegated to JoinerDAO', fakeAsync(async() => {
         spyOn(dao, 'set');
-        service.set('partId', JoinerMocks.INITIAL.doc);
+        await service.set('partId', JoinerMocks.INITIAL.doc);
         expect(dao.set).toHaveBeenCalled();
     }));
     it('update should delegated to JoinerDAO', fakeAsync(async() => {
@@ -61,13 +61,14 @@ describe('JoinerService', () => {
         });
     }));
     describe('joinGame', () => {
-        it('should not throw when called by a candidate already in the game', fakeAsync(async() => {
+        it('should throw when called by a candidate already in the game', fakeAsync(async() => {
             // This was considered as "should throw an error", but this is wrong:
             // if the candidate opens two tabs to the same part,
             // its JS console should not be filled with errors, he should see the same page!
             dao.set('joinerId', JoinerMocks.WITH_FIRST_CANDIDATE.doc);
             const candidateName: string = JoinerMocks.WITH_FIRST_CANDIDATE.doc.candidates[0];
-            await expectAsync(service.joinGame('joinerId', candidateName)).toBeResolved();
+            const expectedError: Error = new Error('JoinerService.joinGame was called by a user already in the game');
+            expectAsync(service.joinGame('joinerId', candidateName)).toBeRejectedWith(expectedError);
         }));
         it('should not update joiner when called by the creator', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.INITIAL.doc);
@@ -91,12 +92,13 @@ describe('JoinerService', () => {
         }));
         it('should return false when joining an invalid joiner', fakeAsync(async() => {
             spyOn(dao, 'read').and.returnValue(null);
-            await expectAsync(service.joinGame('invalidJoinerId', 'creator')).toBeResolvedTo(false);
+            expectAsync(service.joinGame('invalidJoinerId', 'creator')).toBeResolvedTo(false);
         }));
     });
     describe('cancelJoining', () => {
         it('cancelJoining should throw when there was no observed joiner', fakeAsync(async() => {
-            await expectAsync(service.cancelJoining('whoever')).toBeRejectedWith(new Error('cannot cancel joining when not observing a joiner'));
+            const expectedError: Error = new Error('cannot cancel joining when not observing a joiner')
+            expectAsync(service.cancelJoining('whoever')).toBeRejectedWith(expectedError);
         }));
         it('should delegate update to DAO', fakeAsync(async() => {
             dao.set('joinerId', JoinerMocks.INITIAL.doc);
@@ -123,7 +125,7 @@ describe('JoinerService', () => {
             service.startObserving('joinerId', (_iJoiner: IJoinerId) => {});
             await service.joinGame('joinerId', 'whoever');
 
-            await expectAsync(service.cancelJoining('who is that')).toBeRejectedWith(new Error('someone that was nor candidate nor chosenPlayer just left the chat: who is that'));
+            expectAsync(service.cancelJoining('who is that')).toBeRejectedWith(new Error('someone that was nor candidate nor chosenPlayer just left the chat: who is that'));
         }));
     });
     describe('updateCandidates', () => {
