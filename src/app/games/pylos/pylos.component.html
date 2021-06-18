@@ -1,46 +1,61 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 0 800 1000"
+     viewBox="0 -4 800 1008"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let player of [0, 1];">
+    <g *ngFor="let player of [0, 1]">
         <text x="0"
               [attr.y]="850+22+(getPieceSize()+10)*player"
               class="text-medium">Pièces du joueur {{ player + 1 }}</text>
-        <g *ngFor="let p of getPlayerSidePieces(player);">
+        <g *ngFor="let p of getPlayerSidePieces(player)">
             <circle id="piece_{{ player }}_{{ p }}"
                     [attr.cx]="350 + (p * getPieceSize()/3)"
                     [attr.cy]="850 + 12 + (getPieceSize() + 6) * player"
-                    [attr.r]="getPieceSize()/3"
+                    [attr.r]="getPieceSize() / 3"
                     [ngClass]="getPlayerPieceClass(player)"
                     class="base small-stroke"
             />
         </g>
     </g>
 
+    <rect x="0" y="0"
+          width="800" height="800"
+          class="base"
+    />
     <g *ngFor="let z of [0, 1, 2]">
         <g *ngFor="let y of getLevelRange(z)">
             <g *ngFor="let x of getLevelRange(z)">
                 <ng-container *ngIf="isDrawable(x, y, z)">
-                    <rect id="click_{{x}}_{{y}}_{{z}}"
-                          (click)="onClick(x, y, z)"
-                          [attr.width]="getPieceRay(z) * 2"
-                          [attr.height]="getPieceRay(z) * 2"
-                          [attr.x]="getPieceCx(x, y, z) - getPieceRay(z)"
-                          [attr.y]="getPieceCy(x, y, z) - getPieceRay(z)"
-                          [ngClass]="getCaseClasses(x, y, z)"
-                          class="base"
-                    />
-                    <circle *ngIf="isOccupied(x, y, z)"
-                            (click)="onClick(x, y, z)"
-                            [attr.r]="getPieceRay(z) - 16"
+                    <circle *ngIf="isOccupied(x, y, z) else onlyRect"
+                            id="piece_{{ x }}_{{ y }}_{{ z }}"
+                            (click)="onPieceClick(x, y, z)"
+                            [attr.r]="getPieceRay(z) - STROKE_WIDTH"
                             [attr.cx]="getPieceCx(x, y, z)"
                             [attr.cy]="getPieceCy(x, y, z)"
                             [ngClass]="getPieceClasses(x, y, z)"
                             class="base"
                     />
+                    <ng-template #onlyRect>
+                        <rect id="drop_{{ x }}_{{ y }}_{{ z }}"
+                              (click)="onDrop(x, y, z)"
+                              [attr.width]="getPieceRay(z) * 2"
+                              [attr.height]="getPieceRay(z) * 2"
+                              [attr.x]="getPieceCx(x, y, z) - getPieceRay(z)"
+                              [attr.y]="getPieceCy(x, y, z) - getPieceRay(z)"
+                              [ngClass]="getCaseClasses(x, y, z)"
+                              class="base"
+                        />
+                    </ng-template>
                 </ng-container>
             </g>
         </g>
     </g>
+    <rect *ngIf="highCapture"
+          id="highCapture_{{ highCapture.x }}_{{ highCapture.y }}_{{ highCapture.z }}"
+          [attr.width]="getPieceRay(highCapture.z) * 2"
+          [attr.height]="getPieceRay(highCapture.z) * 2"
+          [attr.x]="getPieceCx(highCapture.x, highCapture.y, highCapture.z) - getPieceRay(highCapture.z)"
+          [attr.y]="getPieceCy(highCapture.x, highCapture.y, highCapture.z) - getPieceRay(highCapture.z)"
+          class="base captured"
+    />
 </svg>
 

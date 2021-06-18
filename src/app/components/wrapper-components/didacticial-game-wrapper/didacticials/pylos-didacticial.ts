@@ -22,7 +22,7 @@ export const pylosDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         'Déposer une pièce',
         `Quand c'est votre tour, vous avez toujours l'option de déposer une de vos pièces sur une case vide.
-         Les ronds gris sont les cases sur lesquelles vous pouvez déposez vos pièces.
+         Les rectangles gris sont les cases sur lesquelles vous pouvez déposez vos pièces.
          Cliquez sur une de ces cases pour déposer une pièce.`,
         PylosPartSlice.getInitialSlice(),
         PylosMove.fromDrop(new PylosCoord(1, 1, 0), []),
@@ -31,10 +31,10 @@ export const pylosDidacticial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         'Grimper',
         `Quand 4 pièces forment un carré, il est possible de placer une cinquième pièce dessus.
-         Cependant, à ce moment là, se crée une opportunité d'économiser une pièce.
-         Pour ce faire, il faut faire un déplacement au lieu d'un placement.
-         1. Cliquez sur votre pièce en bas à droite.
-         2. Cliquez sur la case vide au dessus des 4 autres.`,
+         Cependant, à ce moment là, se crée une opportunité d'économiser une pièce en "grimpant" au lieu de déposer.
+         Pour grimper :
+         1. Cliquez sur une de vos pièces libres et plus basse que la case d'atterrissage.
+         2. Cliquez sur une case vide plus haute.`,
         new PylosPartSlice([
             [
                 [O, X, _, _],

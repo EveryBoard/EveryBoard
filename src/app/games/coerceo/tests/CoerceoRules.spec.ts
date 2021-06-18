@@ -97,7 +97,7 @@ describe('CoerceoRules', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 0, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(7, 7), CoerceoStep.UP_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe(CoerceoFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
+            expect(status.legal.getReason()).toBe(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
         });
         it('Should forbid to land on occupied piece', () => {
             const board: NumberTable = [

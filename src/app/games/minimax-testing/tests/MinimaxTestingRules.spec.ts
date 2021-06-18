@@ -78,14 +78,14 @@ describe('MinimaxTestingRules', () => {
     describe('Should choose the first one to minimise calculation when all choice are the same value', () => {
         it('depth = 1', () => {
             MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_2;
-            const bestMove: MinimaxTestingMove = rules.node.findBestMove(1, minimax);
+            const bestMove: MinimaxTestingMove = rules.node.findBestMove(1, minimax, false);
             expect(bestMove).toEqual(minimax.getListMoves(rules.node)[0]);
             expect(rules.node.countDescendants()).toEqual(2);
         });
         it('depth = 2', () => {
             MinimaxTestingPartSlice.initialBoard = MinimaxTestingPartSlice.BOARD_3;
             spyOn(minimax, 'getListMoves').and.callThrough();
-            const bestMove: MinimaxTestingMove = rules.node.findBestMove(2, minimax);
+            const bestMove: MinimaxTestingMove = rules.node.findBestMove(2, minimax, false);
             expect(bestMove).toEqual(minimax.getListMoves(rules.node)[0]);
             expect(rules.node.countDescendants()).toEqual(3);
             expect(minimax.getListMoves).toHaveBeenCalledTimes(3);

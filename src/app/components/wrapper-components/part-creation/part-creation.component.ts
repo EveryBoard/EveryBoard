@@ -126,8 +126,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Promise.resolve();
     }
     private checkInputs() {
-        assert(this.userName != null && this.userName !== '' && this.userName !== 'undefined' && this.userName !== 'null',
-               // TODO: what if my username is 'null'?
+        assert(this.userName != null && this.userName !== '',
                'PartCreationComponent should not be created with an empty userName');
         assert(this.partId != null && this.partId !== '' && this.partId !== 'undefined' && this.partId !== 'null',
                'PartCreationComponent should not be created with an empty partId');

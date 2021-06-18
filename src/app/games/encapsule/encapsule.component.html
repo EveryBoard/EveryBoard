@@ -2,8 +2,8 @@
      width="100%" height="auto"
      viewBox="0 0 1000 320"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of board; index as y;">
-        <g *ngFor="let caseContent of line; index as x;">
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let caseContent of line; index as x">
             <rect id="click_{{ x }}_{{ y }}"
                   (click)="onBoardClick(x, y)"
                   [attr.x]="CASE_SIZE*x+STROKE_WIDTH"
@@ -13,7 +13,7 @@
                   [ngClass]="getRectClasses(x, y)"
                   class="base"
                   />
-            <circle *ngFor="let piece of getListPieces(caseContent);"
+            <circle *ngFor="let piece of getListPieces(caseContent)"
                     (click)="onBoardClick(x, y)"
                     [attr.r]="getPieceRadius(piece)"
                     [attr.cx]="CASE_SIZE*x+STROKE_WIDTH + CASE_SIZE/2"
@@ -23,7 +23,7 @@
                     />
         </g>
     </g>
-    <g *ngFor="let coord of getHighlightedCases();">
+    <g *ngFor="let coord of getHighlightedCases()">
         <rect (click)="onBoardClick(coord.x, coord.y)"
               [attr.x]="CASE_SIZE*coord.x+STROKE_WIDTH"
               [attr.y]="CASE_SIZE*coord.y+STROKE_WIDTH"

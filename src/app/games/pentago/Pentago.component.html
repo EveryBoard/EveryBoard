@@ -13,8 +13,8 @@
             <polygon points="0 0, 5 1.75, 0 3.5" />
         </marker>
     </defs>
-    <ng-container *ngFor="let blockY of [0, BLOCK_SEPARATION]; index as by;">
-        <ng-container *ngFor="let blockX of [0, BLOCK_SEPARATION]; index as bx;">
+    <ng-container *ngFor="let blockY of [0, BLOCK_SEPARATION]; index as by">
+        <ng-container *ngFor="let blockX of [0, BLOCK_SEPARATION]; index as bx">
             <rect [attr.x]="STROKE_WIDTH + blockX"
                   [attr.y]="STROKE_WIDTH + blockY"
                   [attr.rx]="3 * STROKE_WIDTH"

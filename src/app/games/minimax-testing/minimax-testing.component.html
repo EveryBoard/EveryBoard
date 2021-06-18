@@ -1,6 +1,6 @@
 <table>
-    <tr *ngFor="let line of board; index as y;">
-        <td *ngFor="let currentCase of line; index as x;">
+    <tr *ngFor="let line of board; index as y">
+        <td *ngFor="let currentCase of line; index as x">
             <ng-container *ngIf="coord.x === x && coord.y === y">(</ng-container>
             {{ currentCase }}
             <ng-container *ngIf="coord.x === x && coord.y === y">)</ng-container>

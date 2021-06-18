@@ -39,7 +39,7 @@
                 </button>
                 <div class="select">
                     <select id="steps" (change)="changeStep($event.target.value)">
-                        <ng-container *ngFor="let step of steps; index as i;">
+                        <ng-container *ngFor="let step of steps; index as i">
                             <ng-container *ngIf="i === stepIndex else otherstep">
                                 <option id="step_{{ i }}" [value]="i" selected>{{ step.title }}</option>
                             </ng-container>
