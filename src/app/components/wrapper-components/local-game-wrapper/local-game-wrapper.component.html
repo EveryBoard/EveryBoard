@@ -77,18 +77,21 @@
             <button id="passButton"
                     *ngIf="endGame === false && compo.canPass"
                     class="button is-primary is-fullwidth mb-1"
-                    (click)="compo.pass()">
+                    (click)="compo.pass()"
+                    i18n>
                 Passer son tour
             </button>
             <button id="takeBack"
                     *ngIf="compo.rules.node.gamePartSlice.turn > 0 && endGame === false"
                     class="button is-fullwidth mb-1"
-                    (click)="takeBack()">
+                    (click)="takeBack()"
+                    i18n>
                 Reprendre un coup
             </button>
             <button id="restartButton"
                     class="button is-fullwidth"
-                    (click)="restartGame()">
+                    (click)="restartGame()"
+                    i18n>
                 Recommencer une partie
             </button>
         </div>

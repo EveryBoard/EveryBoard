@@ -80,7 +80,7 @@ describe('ChatComponent', () => {
         switchButton = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         chat = fixture.debugElement.query(By.css('#chatForm'));
         expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (0 nouveau(x) message(s))');
-        expect(chat).withContext('Chat should be invisible after calling hideChat').toBeTruthy();
+        expect(chat).withContext('Chat should be invisible after calling hideChat').toBeFalsy();
         component.ngOnDestroy();
         await fixture.whenStable();
     }));
@@ -93,7 +93,7 @@ describe('ChatComponent', () => {
         let switchButton: DebugElement = fixture.debugElement.query(By.css('#switchChatVisibilityButton'));
         let chat: DebugElement = fixture.debugElement.query(By.css('#chatForm'));
         expect(switchButton.nativeElement.innerText).toEqual('Afficher le chat (0 nouveau(x) message(s))');
-        expect(chat).withContext('Chat should be hidden').toBeTruthy();
+        expect(chat).withContext('Chat should be hidden').toBeFalsy();
 
         component.switchChatVisibility();
         fixture.detectChanges();

@@ -10,7 +10,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
 import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
-import { map } from 'rxjs/operators';
+import { map, share } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
@@ -79,10 +79,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // We will be redirected by the GameWrapper
             return Promise.resolve();
         }
-        // TODO: use pipe(share())
         this.joinerObs = this.joinerService.observe(this.partId).pipe(map((id: IJoinerId): IJoiner => {
             return id.doc;
-        }));
+        }), share());
         this.canReviewConfigObs = this.joinerObs.pipe(map((joiner: IJoiner): boolean => {
             return joiner.partStatus === PartStatus.CONFIG_PROPOSED.value;
         }));

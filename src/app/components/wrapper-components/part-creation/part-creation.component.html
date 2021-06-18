@@ -54,14 +54,14 @@
                              [ngClass]="(configFormGroup.get('partType').value === 'BLITZ') && ['is-primary', 'is-selected']"
                              (click)="selectPartType('BLITZ')">
                             <div class="dropdown-trigger">
-                                <span>Blitz</span>
+                                <span i18n>Blitz</span>
                             </div>
                             <div class="dropdown-menu" role="menu">
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Durée maximale d'un tour:</ng-container> <strong>{{ BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Durée maximale de la partie:</ng-container> <strong>{{ BLITZ_PART_DURATION | humanDuration }} par joueur</strong>
+                                            <ng-container i18n>Durée maximale d'un tour :</ng-container> <strong>{{ BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
+                                            <ng-container i18n>Durée maximale de la partie :</ng-container> <strong>{{ BLITZ_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
                                         </p>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div id="customTime" *ngIf="showCustomTimeObs | async">
                     <div class="field">
-                        <label class="label" for="maximalMoveDuration"><ng-container i18n>Durée maximale d'un tour:</ng-container> <output>{{ configFormGroup.get('maximalMoveDuration').value | humanDuration }}</output></label>
+                        <label class="label" for="maximalMoveDuration"><ng-container i18n>Durée maximale d'un tour :</ng-container> <output>{{ configFormGroup.get('maximalMoveDuration').value | humanDuration }}</output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
