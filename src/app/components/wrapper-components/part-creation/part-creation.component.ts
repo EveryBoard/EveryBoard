@@ -33,8 +33,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     // PageCreationComponent is always a child of OnlineGame component (one to one)
     // they need common data so that the parent calculates/retrieves the data then share it
     // with the part creation component
-
     public static VERBOSE: boolean = false;
+
+    public BLITZ_PART_DURATION: number = PartType.BLITZ_PART_DURATION;
+    public BLITZ_MOVE_DURATION: number = PartType.BLITZ_MOVE_DURATION;
+    public NORMAL_PART_DURATION: number = PartType.NORMAL_PART_DURATION;
+    public NORMAL_MOVE_DURATION: number = PartType.NORMAL_MOVE_DURATION;
 
     @Input() partId: NonNullable<string>;
     @Input() userName: NonNullable<string>;
@@ -81,7 +85,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         this.joinerObs = this.joinerService.observe(this.partId).pipe(map((id: IJoinerId): IJoiner => {
             return id.doc;
-        }), share());
+        }));
         this.canReviewConfigObs = this.joinerObs.pipe(map((joiner: IJoiner): boolean => {
             return joiner.partStatus === PartStatus.CONFIG_PROPOSED.value;
         }));
@@ -184,11 +188,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                 FirstPlayer.of(firstPlayer),
                                                 totalPartDuration);
     }
-    public async cancelAndLeave(): Promise<void> {
-        await this.cancelGameCreation();
-        this.messageDisplayer.infoMessage('Partie annulée');
-        await this.router.navigate(['server']);
-    }
     private async cancelGameCreation(): Promise<void> {
         // callable only by the creator
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
@@ -227,7 +226,8 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
-        this.router.navigate(['/server']);
+        this.messageDisplayer.infoMessage('La partie a été annulée');
+        this.router.navigate(['server']);
     }
     private isGameStarted(joiner: IJoiner): boolean {
         return joiner && (joiner.partStatus === PartStatus.PART_STARTED.value);
@@ -244,7 +244,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         if (this.userName === joiner.creator) {
             this.observeCandidates(joiner);
-        } else if (this.currentJoiner == null || this.currentJoiner.creator == null) {
+        } else {
             this.observeCreator(joiner);
         }
         this.currentJoiner = joiner;
@@ -276,16 +276,17 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
+                console.log({user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
-                    // TODO: this should not happen but it does!
-                    handleError('callback: what the hell ' + user.doc.pseudo + ' is already offline!');
+                    // creator is offline, remove this part
+                    this.cancelGameCreation();
                 }
             }
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
-                    this.cancelAndLeave();
+                    this.cancelGameCreation();
                 }
             }
         };
@@ -295,7 +296,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                     JSON.stringify(deletedUsers));
             for (const user of deletedUsers) {
                 if (user.doc.pseudo === joiner.creator) {
-                    this.cancelAndLeave();
+                    this.cancelGameCreation();
                 }
             }
         };
@@ -360,7 +361,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     }
     private removeUserFromLobby(userPseudo: string): Promise<void> {
         const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
-        assert(index !== -1, 'PartCreationComponent.removeUserFromLobby trying to remove a user that is not in the lobby!');
+        if (index === -1) {
+            // User already not in the lobby (could be caused by two updates to the same offline user)
+            return;
+        }
         const beforeUser: string[] = this.currentJoiner.candidates.slice(0, index);
         const afterUser: string[] = this.currentJoiner.candidates.slice(index, -1);
         const candidates: string[] = beforeUser.concat(afterUser);

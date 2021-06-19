@@ -375,6 +375,8 @@ describe('PartCreationComponent:', () => {
         expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
         expect(router.navigate).toHaveBeenCalledWith(['server']);
     }));
+    it('should delete part when creator is not there');
+    it('should show a message to observer when game is deleted');
     it('should not start observing joiner if part does not exist', fakeAsync(async() => {
         component.userName = 'creator';
         component.partId = 'does not exist';

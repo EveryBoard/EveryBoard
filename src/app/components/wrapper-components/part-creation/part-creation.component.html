@@ -42,8 +42,8 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Durée maximale d'un tour:</ng-container> <strong>{{ NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Durée maximale de la partie:</ng-container> <strong>{{ NORMAL_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
+                                            <ng-container i18n>Durée maximale d'un tour :</ng-container> <strong>{{ NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
+                                            <ng-container i18n>Durée maximale de la partie :</ng-container> <strong>{{ NORMAL_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
                                         </p>
                                     </div>
                                 </div>
@@ -76,7 +76,7 @@
                 </div>
                 <div id="customTime" *ngIf="showCustomTimeObs | async">
                     <div class="field">
-                        <label class="label" for="maximalMoveDuration"><ng-container i18n>Durée maximale d'un tour :</ng-container> <output>{{ configFormGroup.get('maximalMoveDuration').value | humanDuration }}</output></label>
+                        <label class="label" for="maximalMoveDuration"><ng-container i18n>Durée maximale d'un tour :</ng-container> <output>{{ configFormGroup.get('maximalMoveDuration').valueChanges | async | humanDuration }}</output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="totalPartDuration"><ng-container i18n>Durée maximale de la partie:</ng-container> <output>{{ configFormGroup.get('totalPartDuration').value | humanDuration }} <ng-container i18n>par joueur</ng-container></output></label>
+                        <label class="label" for="totalPartDuration"><ng-container i18n>Durée maximale de la partie :</ng-container> <output>{{ configFormGroup.get('totalPartDuration').value | humanDuration }} <ng-container i18n>par joueur</ng-container></output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -148,7 +148,7 @@
                             i18n>Changer la configuration</button>
                     <button class="button"
                             id="cancel"
-                            (click)="cancelAndLeave()"
+                            (click)="cancelGameCreation()"
                             i18n>Annuler la partie</button>
                 </div>
             </div>
