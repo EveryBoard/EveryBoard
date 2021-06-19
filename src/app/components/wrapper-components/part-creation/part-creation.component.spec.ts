@@ -16,7 +16,7 @@ import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 
-fdescribe('PartCreationComponent:', () => {
+describe('PartCreationComponent:', () => {
     let testUtils: SimpleComponentTestUtils<PartCreationComponent>;
     let component: PartCreationComponent;
 
@@ -303,7 +303,7 @@ fdescribe('PartCreationComponent:', () => {
             expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
 
         }));
-        fit('should reroute to server when game is cancelled', fakeAsync(async() => {
+        it('should reroute to server when game is cancelled', fakeAsync(async() => {
             const router: Router = TestBed.inject(Router);
             spyOn(router, 'navigate');
 
