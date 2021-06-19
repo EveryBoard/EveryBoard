@@ -11,12 +11,12 @@ import { IPart } from 'src/app/domain/icurrentpart';
 import { JoueursDAO } from 'src/app/dao/JoueursDAO';
 import { IJoueur } from 'src/app/domain/iuser';
 import { SimpleComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { FirstPlayer, IJoiner, PartStatus, PartType } from 'src/app/domain/ijoiner';
+import { FirstPlayer, PartStatus, PartType } from 'src/app/domain/ijoiner';
 import { Router } from '@angular/router';
 import { GameService } from 'src/app/services/GameService';
 import { ChatService } from 'src/app/services/ChatService';
 
-describe('PartCreationComponent:', () => {
+fdescribe('PartCreationComponent:', () => {
     let testUtils: SimpleComponentTestUtils<PartCreationComponent>;
     let component: PartCreationComponent;
 
@@ -282,7 +282,7 @@ describe('PartCreationComponent:', () => {
                 partStatus: PartStatus.PART_CREATED.value,
             });
         }));
-        it('should delete the game, joiner, chat and reroute to server when cancelling game', fakeAsync(async() => {
+        it('should delete the game, joiner and chat when cancelling game', fakeAsync(async() => {
             const router: Router = TestBed.inject(Router);
             const gameService: GameService = TestBed.inject(GameService);
             const joinerService: JoinerService = TestBed.inject(JoinerService);
@@ -295,11 +295,26 @@ describe('PartCreationComponent:', () => {
             expectAsync(testUtils.clickElement('#cancel')).toBeResolvedTo(true);
             testUtils.detectChanges();
             await testUtils.whenStable();
+            testUtils.detectChanges();
             tick(1);
 
             expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
             expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
             expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
+
+        }));
+        fit('should reroute to server when game is cancelled', fakeAsync(async() => {
+            const router: Router = TestBed.inject(Router);
+            spyOn(router, 'navigate');
+
+            // TODO: should use joinerDAOMock.delete('joinerId'), but that method is broken
+            testUtils.getComponent()['onCurrentJoinerUpdate'](null);
+
+            testUtils.detectChanges();
+            await testUtils.whenStable();
+            testUtils.detectChanges();
+            tick(1);
+
             expect(router.navigate).toHaveBeenCalledWith(['server']);
         }));
         it('should remember settings after a joiner update', fakeAsync(async() => {
@@ -356,14 +371,12 @@ describe('PartCreationComponent:', () => {
         testUtils.detectChanges();
         tick();
 
-        const router: Router = TestBed.inject(Router);
         const gameService: GameService = TestBed.inject(GameService);
         const joinerService: JoinerService = TestBed.inject(JoinerService);
         const chatService: ChatService = TestBed.inject(ChatService);
         spyOn(gameService, 'deletePart');
         spyOn(joinerService, 'deleteJoiner');
         spyOn(chatService, 'deleteChat');
-        spyOn(router, 'navigate');
 
         await joueursDAOMock.update('creator', { state: 'offline' });
         testUtils.detectChanges();
@@ -373,10 +386,27 @@ describe('PartCreationComponent:', () => {
         expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
         expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
         expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
-        expect(router.navigate).toHaveBeenCalledWith(['server']);
     }));
-    it('should delete part when creator is not there');
-    it('should show a message to observer when game is deleted');
+    it('should delete part when creator is not there', fakeAsync(async() => {
+        component.userName = 'firstCandidate';
+        await joueursDAOMock.update('creator', { state: 'offline' });
+        await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);
+        const gameService: GameService = TestBed.inject(GameService);
+        const joinerService: JoinerService = TestBed.inject(JoinerService);
+        const chatService: ChatService = TestBed.inject(ChatService);
+        spyOn(gameService, 'deletePart');
+        spyOn(joinerService, 'deleteJoiner');
+        spyOn(chatService, 'deleteChat');
+
+        testUtils.detectChanges();
+        await testUtils.whenStable();
+        testUtils.detectChanges();
+        tick();
+
+        expect(gameService.deletePart).toHaveBeenCalledWith('joinerId');
+        expect(joinerService.deleteJoiner).toHaveBeenCalledWith();
+        expect(chatService.deleteChat).toHaveBeenCalledWith('joinerId');
+    }));
     it('should not start observing joiner if part does not exist', fakeAsync(async() => {
         component.userName = 'creator';
         component.partId = 'does not exist';

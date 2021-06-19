@@ -189,7 +189,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                 totalPartDuration);
     }
     private async cancelGameCreation(): Promise<void> {
-        // callable only by the creator
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 
         await this.gameService.deletePart(this.partId);
@@ -209,7 +208,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
                     then: JSON.stringify(iJoinerId) } });
-        if (this.isGameCanceled(iJoinerId)) {
+        if (this.isGameCancelled(iJoinerId)) {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
             return this.onGameCancelled();
@@ -221,7 +220,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private isGameCanceled(joinerId: IJoinerId): boolean {
+    private isGameCancelled(joinerId: IJoinerId): boolean {
         return (joinerId == null) || (joinerId.doc == null);
     }
     private onGameCancelled() {
