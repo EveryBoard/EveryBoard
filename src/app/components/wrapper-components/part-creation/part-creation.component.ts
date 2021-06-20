@@ -275,7 +275,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
-                console.log({user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
                     // creator is offline, remove this part
                     this.cancelGameCreation();
@@ -310,16 +309,17 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: JSON.stringify(joiner) });
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
+                console.log({created: user})
                 if (user.doc.state === 'offline') {
                     // TODO: this should not happen but it does!
-                    // Removing the user from the lobby hampers part creation when it happens
+                    this.removeUserFromLobby(user.doc.pseudo);
                     handleError('callback: what the hell ' + user.doc.pseudo + ' is already offline!');
-                    // this.removeUserFromLobby(user.doc.pseudo);
                 }
             }
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
+                console.log({modified: user})
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(user.doc.pseudo);
                 }
@@ -330,6 +330,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             handleError('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
             for (const user of deletedUsers) {
+                console.log({deleted: user})
                 this.removeUserFromLobby(user.doc.pseudo);
             }
         };
@@ -359,6 +360,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private removeUserFromLobby(userPseudo: string): Promise<void> {
+        console.log({removing: userPseudo})
         const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
         if (index === -1) {
             // User already not in the lobby (could be caused by two updates to the same offline user)
