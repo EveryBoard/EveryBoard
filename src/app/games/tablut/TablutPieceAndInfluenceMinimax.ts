@@ -124,20 +124,6 @@ export class TablutPieceAndInfluenceMinimax extends TablutMinimax {
         }
         return threats;
     }
-    public isThreatened(coord: Coord,
-                        state: TablutPartSlice,
-                        filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>>)
-    : boolean
-    { // TODO: same for the king
-        if (state.getBoardAt(coord) === TablutCase.UNOCCUPIED.value) {
-            return false;
-        }
-        const filteredThreats: MGPSet<SandwichThreat> = filteredThreatMap.get(coord).getOrNull();
-        if (filteredThreats == null) {
-            return false;
-        }
-        return this.isThreatReal(coord, state, filteredThreats.getCopy());
-    }
     public isAThreat(coord: Coord, state: TablutPartSlice, ennemy: Player): boolean {
         if (coord.isNotInRange(TablutRulesConfig.WIDTH, TablutRulesConfig.WIDTH)) {
             return false;

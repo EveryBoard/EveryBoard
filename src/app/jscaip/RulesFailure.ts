@@ -12,7 +12,5 @@ export class RulesFailure {
 
     public static readonly MUST_LAND_ON_EMPTY_CASE: string = 'Vous devez déposer votre pièce sur une case vide!';
 
-    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = 'vous avez sélectionné une case vide, vous devez sélectionner l\'une de vos pièces.'
-
-    private constructor() {}
+    public static readonly MUST_CHOOSE_OWN_PIECE_NOT_EMPTY: string = 'vous avez sélectionné une case vide, vous devez sélectionner l\'une de vos pièces.';
 }

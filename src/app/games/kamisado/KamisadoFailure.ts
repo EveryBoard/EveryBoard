@@ -13,7 +13,5 @@ export class KamisadoFailure {
 
     public static readonly MOVE_BLOCKED: string = `Ce mouvement est obstrué.`;
 
-    public static readonly GAME_ENDED: string = `La partie est finie.`
-
-    private constructor() {}
+    public static readonly GAME_ENDED: string = `La partie est finie.`;
 }

@@ -12,7 +12,7 @@ import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinima
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutRules } from '../TablutRules';
 
-describe('TablutPieceAndInfluenceMinimax', () => {
+fdescribe('TablutPieceAndInfluenceMinimax', () => {
 
     let minimax: TablutPieceAndInfluenceMinimax;
     const _: number = TablutCase.UNOCCUPIED.value;
@@ -176,7 +176,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
-            expect(minimax.isThreatened(new Coord(0, 1), state, filteredThreatMap)).toBeTrue();
+            expect(filteredThreatMap.containsKey(new Coord(0, 1))).toBeTrue();
         });
         it('should see threats coming straight', () => {
             const board: NumberTable = [
@@ -194,7 +194,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
-            expect(minimax.isThreatened(new Coord(0, 4), state, filteredThreatMap)).toBeTrue();
+            expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
         });
         it('should see threats coming sideways', () => {
             const board: NumberTable = [
@@ -212,7 +212,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
-            expect(minimax.isThreatened(new Coord(0, 4), state, filteredThreatMap)).toBeTrue();
+            expect(filteredThreatMap.containsKey(new Coord(0, 4))).toBeTrue();
         });
         it('should not consider king threatened by one piece only', () => {
             const board: NumberTable = [
@@ -230,7 +230,7 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
-            expect(minimax.isThreatened(new Coord(3, 4), state, filteredThreatMap)).toBeFalse();
+            expect(filteredThreatMap.containsKey(new Coord(3, 4))).toBeFalse();
         });
         it('should not consider opponent-threatened piece as threats', () => {
             const board: NumberTable = [
@@ -272,11 +272,11 @@ describe('TablutPieceAndInfluenceMinimax', () => {
             const pieces: MGPMap<Player, MGPSet<Coord>> = minimax.getPiecesMap(state);
             const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = minimax.filterThreatMap(threatMap, state);
-            expect(minimax.isThreatened(new Coord(4, 5), state, filteredThreatMap)).toBeFalse();
+            expect(filteredThreatMap.containsKey(new Coord(4, 5))).toBeFalse();
         });
     });
-    describe('Victory', () => {
-        xit('Should choose king escape, at depth 1 and more', () => {
+    fdescribe('Victory', () => {
+        fit('Should choose king escape, at depth 1 and more', () => {
             const board: NumberTable = [
                 [_, T, _, _, _, _, _, O, _],
                 [_, _, _, O, _, _, _, _, _],

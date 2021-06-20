@@ -13,6 +13,4 @@ export class LinesOfActionFailure {
     public static readonly PIECE_CANNOT_MOVE: string = `Cette pièce n'a aucun mouvement possible, choisissez-en une autre.`;
 
     public static readonly INVALID_DIRECTION: string = `Un mouvement dois se faire selon une direction orthogonale ou diagonale.`;
-
-    private constructor() {}
 }

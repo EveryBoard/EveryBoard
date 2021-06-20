@@ -41,6 +41,10 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
 
     public highlights: Coord[] = [];
 
+    public encoder: MoveEncoder<CoerceoMove> = CoerceoMove.encoder;
+
+    public threateneds: Coord[] = [];
+    public threateners: Coord[] = [];
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new CoerceoRules(CoerceoPartSlice);
@@ -52,7 +56,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         this.showScore = true;
         this.updateBoard();
     }
-    public encoder: MoveEncoder<CoerceoMove> = CoerceoMove.encoder;
+
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         this.state = this.rules.node.gamePartSlice;

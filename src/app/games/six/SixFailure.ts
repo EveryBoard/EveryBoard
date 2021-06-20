@@ -14,6 +14,4 @@ export class SixFailure {
     public static readonly CANNOT_KEEP_EMPTY_COORD: string = 'Vous ne pouver choisir une pièce vide, choisissez un des plus grands groupes!';
 
     public static readonly MUST_DROP_NEXT_TO_OTHER_PIECE: string = 'Vous devez faire atterir cette pièce à côté d\'une autre pièce!';
-
-    private constructor() {}
 }
