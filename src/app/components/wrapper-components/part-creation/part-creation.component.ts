@@ -10,7 +10,7 @@ import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
 import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
 import { FirebaseCollectionObserver } from 'src/app/dao/FirebaseCollectionObserver';
-import { map, share } from 'rxjs/operators';
+import { map } from 'rxjs/operators';
 import { combineLatest, Observable } from 'rxjs';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
@@ -275,6 +275,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
+                console.log({created: user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
                     // creator is offline, remove this part
                     this.cancelGameCreation();
@@ -283,6 +284,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
+                console.log({modified: user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
                     this.cancelGameCreation();
                 }
@@ -291,8 +293,9 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
             // This should not happen in practice, but if it does we can safely remove the joiner
             handleError('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
-                    JSON.stringify(deletedUsers));
+                JSON.stringify(deletedUsers));
             for (const user of deletedUsers) {
+                console.log({deleted: user})
                 if (user.doc.pseudo === joiner.creator) {
                     this.cancelGameCreation();
                 }
@@ -308,6 +311,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private observeCandidates(joiner: IJoiner): void {
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: JSON.stringify(joiner) });
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
+            console.log({foundUsers})
             for (const user of foundUsers) {
                 console.log({created: user})
                 if (user.doc.state === 'offline') {
@@ -318,6 +322,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
+            console.log({modifiedUsers})
             for (const user of modifiedUsers) {
                 console.log({modified: user})
                 if (user.doc.state === 'offline') {
@@ -326,6 +331,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         };
         const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
+            console.log({deletedUsers})
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             handleError('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
@@ -339,6 +345,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                            onDocumentModified,
                                            onDocumentDeleted);
         for (const candidateName of joiner.candidates) {
+            console.log({candidateName})
             if (this.candidateSubscription.get(candidateName).isAbsent()) {
                 // Subscribe to every new candidate
                 const comparableSubscription: ComparableSubscription = {
@@ -347,14 +354,16 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                         throw new Error('ObservableSubscription should not be used');
                     },
                 };
+                console.log({subscribing: candidateName})
                 this.candidateSubscription.set(candidateName, comparableSubscription);
             }
         }
         for (const oldCandidate of this.candidateSubscription.listKeys()) {
             // Unsubscribe old candidates
-            if (oldCandidate.toString() !== joiner.chosenPlayer) {
-                if (joiner.candidates.includes(oldCandidate.toString()) === false) {
-                    this.unsubscribeFrom(oldCandidate.toString());
+            console.log({oldCandidate})
+            if (oldCandidate !== joiner.chosenPlayer) {
+                if (joiner.candidates.includes(oldCandidate) === false) {
+                    this.unsubscribeFrom(oldCandidate);
                 }
             }
         }
@@ -371,14 +380,15 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const candidates: string[] = beforeUser.concat(afterUser);
         if (userPseudo === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage(`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
+            this.messageDisplayer.infoMessage($localize`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
             this.joinerService.updateCandidates(candidates);
         }
     }
     private unsubscribeFrom(userPseudo: string): void {
-        this.candidateSubscription.get(userPseudo).get().subscription();
+        const subscription: ComparableSubscription = this.candidateSubscription.delete(userPseudo);
+        subscription.subscription();
     }
     public acceptConfig(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.acceptConfig');

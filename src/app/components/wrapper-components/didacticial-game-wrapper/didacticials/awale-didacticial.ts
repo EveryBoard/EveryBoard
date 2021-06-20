@@ -22,7 +22,7 @@ export const awaleDidacticial: DidacticialStep[] = [
             [0, 12, 0, 0, 0, 0],
         ], 1, [0, 0]),
         new AwaleMove(1, 1),
-        $localize`Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines) !`,
+        $localize`Voyez, la maison distribuée n’a pas été reremplie et la distribution a continué immédiatement à la maison suivante (qui contient donc deux graines) !`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture simple`,
