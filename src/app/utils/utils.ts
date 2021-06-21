@@ -10,7 +10,7 @@ export function display(verbose: boolean, message: unknown): void {
     if (verbose) console.log(message);
 }
 
-export function handleError(message: unknown): void {
+export function handleError(message: string): void {
     throw new Error('Encountered error: ' + message);
 }
 
