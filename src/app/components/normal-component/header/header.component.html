@@ -10,7 +10,7 @@
         </a>
     </div>
 
-    <div id="menu" class="navbar-menu" [ngClass]="showMenu ? 'is-active' : ''">
+    <div id="menu" class="navbar-menu" [ngClass]="showMenu ? 'is-active' : ''" (click)="showMenu = !showMenu">
         <div class="navbar-start">
             <a class="navbar-item" [routerLink]="['/']" i18n>Accueil</a>
             <div class="navbar-item has-dropdown is-hoverable">
