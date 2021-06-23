@@ -8,6 +8,7 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoRules } from '../GoRules';
 import { GoMinimax } from '../GoMinimax';
+import { GoFailure } from '../GoFailure';
 
 describe('GoRules:', () => {
 
@@ -113,7 +114,7 @@ describe('GoRules:', () => {
         const koCoord: MGPOptional<Coord> = MGPOptional.of(new Coord(1, 0));
         const expectedSlice: GoPartSlice = new GoPartSlice(expectedBoard, [1, 0], 1, koCoord, Phase.PLAYING);
         expect(resultingSlice).toEqual(expectedSlice, 'resultingSlice');
-        expect(rules.isLegal(new GoMove(1, 0), resultingSlice).legal.isSuccess()).toBeFalse();
+        expect(rules.isLegal(new GoMove(1, 0), resultingSlice).legal.reason).toBe(GoFailure.ILLEGAL_KO);
     });
     it('snap back should be legal', () => {
         expect(rules.choose(new GoMove(2, 4))).toBeTrue(); expect(rules.choose(new GoMove(3, 4))).toBeTrue();

@@ -58,6 +58,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
     private placementEntrance: MGPOptional<Coord> = MGPOptional.empty();
     private finalCaptures: GipfCapture[] = [];
 
+    public encoder: MoveEncoder<GipfMove> = GipfMove.encoder;
+
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.availableMinimaxes = [
@@ -66,7 +68,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         this.showScore = true;
         this.constructedSlice = this.rules.node.gamePartSlice;
     }
-    public encoder: MoveEncoder<GipfMove> = GipfMove.encoder;
     public updateBoard(): void {
         const slice: GipfPartSlice = this.rules.node.gamePartSlice;
         this.board = slice.getCopiedBoard();

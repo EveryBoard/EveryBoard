@@ -16,5 +16,5 @@ export class DvonnFailure {
 
     public static readonly INVALID_MOVE_LENGTH: string = `La distance effectuée par le mouvement doit correspondre à la taille de la pile de pièces.`;
 
-    public static readonly EMPTY_TARGET_STACK: string = `Le déplacement doit se terminée sur une case occupée.`;
+    public static readonly EMPTY_TARGET_STACK: string = `Le déplacement doit se terminer sur une case occupée.`;
 }

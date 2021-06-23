@@ -12,7 +12,7 @@ import { TablutPieceAndInfluenceMinimax } from '../TablutPieceAndInfluenceMinima
 import { SandwichThreat } from '../../../jscaip/PieceThreat';
 import { TablutRules } from '../TablutRules';
 
-fdescribe('TablutPieceAndInfluenceMinimax', () => {
+describe('TablutPieceAndInfluenceMinimax', () => {
 
     let minimax: TablutPieceAndInfluenceMinimax;
     const _: number = TablutCase.UNOCCUPIED.value;
@@ -275,11 +275,11 @@ fdescribe('TablutPieceAndInfluenceMinimax', () => {
             expect(filteredThreatMap.containsKey(new Coord(4, 5))).toBeFalse();
         });
     });
-    fdescribe('Victory', () => {
-        fit('Should choose king escape, at depth 1 and more', () => {
+    describe('Victory', () => {
+        it('Should choose king escape, at depth 1 and more', () => {
             const board: NumberTable = [
                 [_, T, _, _, _, _, _, O, _],
-                [_, _, _, O, _, _, _, _, _],
+                [_, O, _, O, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _],

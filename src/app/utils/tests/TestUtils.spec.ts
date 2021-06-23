@@ -254,14 +254,14 @@ export class ComponentTestUtils<T extends GameComponent> {
             flush();
         }
     }
-    public async expectClickForbidden(elementName: string): Promise<void> {
+    public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
         expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
         if (element == null) {
             return;
         } else {
             const clickValidity: MGPValidation = this.gameComponent.canUserPlay(elementName);
-            expect(clickValidity.isSuccess()).toBeFalse();
+            expect(clickValidity.reason).toBe(reason);
             this.canUserPlaySpy.calls.reset();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();

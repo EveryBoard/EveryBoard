@@ -35,7 +35,6 @@ describe('AwaleMinimax:', () => {
         ];
         const state: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
         const node: MGPNode<AwaleRules, AwaleMove, AwalePartSlice> = new MGPNode(null, null, state);
-        console.clear();
         const bestMove: AwaleMove = node.findBestMove(2, minimax);
         expect(bestMove).toEqual(new AwaleMove(4, 0));
     });

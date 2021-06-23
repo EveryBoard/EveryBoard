@@ -167,8 +167,7 @@ export class CoerceoPartSlice extends TriangularGameState {
             return false;
         }
         let holeCount: number = 0;
-        let i: number = 1;
-        while (i < neighboorsIndex.length) {
+        for (let i: number = 1; i < neighboorsIndex.length; i++) {
             if (this.areNeighboor(neighboorsIndex[i - 1], neighboorsIndex[i]) === false) {
                 holeCount += 1;
             }

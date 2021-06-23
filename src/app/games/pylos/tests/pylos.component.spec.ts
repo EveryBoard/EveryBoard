@@ -95,9 +95,12 @@ describe('PylosComponent', () => {
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#drop_1_1_0'); // drop
-        await componentTestUtils.expectClickSuccess('#piece_0_0_0'); // capture
-        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), [new PylosCoord(0, 0, 0)]);
-        await componentTestUtils.expectMoveSuccess('#piece_0_0_0', move); // confirm capture
+        await componentTestUtils.expectClickSuccess('#piece_1_1_0'); // capture
+        const pylosGameComponent: PylosComponent = componentTestUtils.getComponent();
+        const expectedClasses: string[] = ['player0', 'selected', 'pre-captured'];
+        expect(pylosGameComponent.getPieceClasses(1, 1, 0)).toEqual(expectedClasses);
+        const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), [new PylosCoord(1, 1, 0)]);
+        await componentTestUtils.expectMoveSuccess('#piece_1_1_0', move); // confirm capture
     }));
     it('should allow captured two pieces, and show capture during move and after', fakeAsync(async() => {
         const initialBoard: number[][][] = [
@@ -123,7 +126,7 @@ describe('PylosComponent', () => {
         await componentTestUtils.expectClickSuccess('#drop_1_1_0');
         await componentTestUtils.expectClickSuccess('#piece_0_0_0');
         const pylosGameComponent: PylosComponent = componentTestUtils.getComponent();
-        expect(pylosGameComponent.getCaseClasses(0, 0, 0)).toEqual(['pre-captured']);
+        expect(pylosGameComponent.getPieceClasses(0, 0, 0)).toEqual(['player0', 'pre-captured']);
         const captures: PylosCoord[] = [new PylosCoord(0, 0, 0), new PylosCoord(0, 1, 0)];
 
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(1, 1, 0), captures);
@@ -184,7 +187,4 @@ describe('PylosComponent', () => {
         await componentTestUtils.expectMoveSuccess('#piece_1_1_0', move);
         componentTestUtils.expectElementToExist('#highCapture_0_0_1');
     }));
-    it('should show capture highlight during capture, instead of previously square-style');
-    it('when showing a capture after a climb, old piece should already be showed as left');
-    it('should not show "first capture not valid" but say it in french');
 });

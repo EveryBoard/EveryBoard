@@ -7,6 +7,7 @@ import { QuixoRules } from '../QuixoRules';
 import { QuixoMinimax } from '../QuixoMinimax';
 import { Coord } from 'src/app/jscaip/Coord';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('QuixoRules:', () => {
 
@@ -31,7 +32,7 @@ describe('QuixoRules:', () => {
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
     });
     it('Should always put moved piece to currentPlayer symbol', () => {
         const board: number[][] = [

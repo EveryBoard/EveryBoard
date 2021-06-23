@@ -12,6 +12,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export class KamisadoComponentFailure {
     public static PLAY_WITH_SELECTED_PIECE: string =
@@ -109,9 +110,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             return this.cancelMove(KamisadoFailure.GAME_ENDED);
         }
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
-        const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
-        if (!piece.belongsTo(player)) {
-            return this.cancelMove(KamisadoFailure.NOT_PIECE_OF_PLAYER);
+        const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
+        if (piece.belongsTo(ennemy)) {
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;

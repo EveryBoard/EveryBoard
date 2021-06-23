@@ -199,8 +199,9 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
 
         return { legal: MGPValidation.SUCCESS, computedSlice: sliceAfterFinalCaptures };
     }
-    private capturesValidity(slice: GipfPartSlice, captures: ReadonlyArray<GipfCapture>):
-    MGPValidation {
+    private capturesValidity(slice: GipfPartSlice, captures: ReadonlyArray<GipfCapture>)
+    : MGPValidation
+    {
         let updatedSlice: GipfPartSlice = slice;
         for (const capture of captures) {
             const validity: MGPValidation = this.captureValidity(updatedSlice, capture);

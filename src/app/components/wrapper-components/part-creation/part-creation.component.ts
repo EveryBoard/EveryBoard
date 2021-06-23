@@ -173,7 +173,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     public async reviewConfig(): Promise<void> {
         return this.joinerService.reviewConfig();
     }
-
     public async proposeConfig(): Promise<void> {
         const chosenPlayer: string = this.configFormGroup.get('chosenOpponent').value;
         const partType: string = this.configFormGroup.get('partType').value;

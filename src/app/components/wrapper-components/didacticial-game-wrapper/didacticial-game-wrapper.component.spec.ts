@@ -8,6 +8,7 @@ import { fakeAsync, tick } from '@angular/core/testing';
 import { QuartoComponent } from '../../../games/quarto/quarto.component';
 import { DebugElement } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { DidacticialFailure } from './DidacticialFailure';
 
 describe('DidacticialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -204,7 +205,7 @@ describe('DidacticialGameWrapperComponent', () => {
             tick(10);
 
             // when clicking again
-            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2');
+            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2', DidacticialFailure.STEP_FINISHED);
             tick(10);
 
             // expect to see still the steps success message on component
@@ -709,7 +710,7 @@ describe('DidacticialGameWrapperComponent', () => {
             wrapper.startDidacticial(didacticial);
 
             // when clicking
-            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2');
+            await componentTestUtils.expectClickForbidden('#chooseCoord_2_2', DidacticialFailure.INFORMATIONAL_STEP);
 
             // expect to see still the steps success message on component
             const expectedMessage: string = 'instruction 0';

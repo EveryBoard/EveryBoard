@@ -10,6 +10,9 @@ import { GipfPiece } from '../GipfPiece';
 import { GipfNode, GipfRules } from '../GipfRules';
 import { GipfMinimax } from '../GipfMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { GipfFailure } from '../GipfFailure';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { Player } from 'src/app/jscaip/Player';
 
 describe('GipfRules:', () => {
     // Rules of gipf with the diagrams used in these tests: http://www.gipf.com/gipf/rules/complete_rules.html
@@ -48,13 +51,14 @@ describe('GipfRules:', () => {
         });
     });
     describe('isLegal and applyLegalMove', () => {
+
         it('should forbit placements on non-border cases', () => {
             const slice: GipfPartSlice = rules.node.gamePartSlice;
             const placement: GipfPlacement = new GipfPlacement(new Coord(3, 3), MGPOptional.empty());
             const move: GipfMove = new GipfMove(placement, [], []);
 
             const legality: GipfLegalityStatus = rules.isLegal(move, slice);
-            expect(legality.legal.isSuccess()).toBeFalse();
+            expect(legality.legal.reason).toBe(GipfFailure.PLACEMENT_NOT_ON_BORDER);
         });
         it('should require a direction when placing a piece on an occupied case', () => {
             const slice: GipfPartSlice = rules.node.gamePartSlice;
@@ -62,7 +66,7 @@ describe('GipfRules:', () => {
             const move: GipfMove = new GipfMove(placement, [], []);
 
             const legality: GipfLegalityStatus = rules.isLegal(move, slice);
-            expect(legality.legal.isSuccess()).toBeFalse();
+            expect(legality.legal.reason).toBe(GipfFailure.PLACEMENT_WITHOUT_DIRECTION);
         });
         it('should allow simple move without direction when target coord is empty', () => {
             const slice: GipfPartSlice = rules.node.gamePartSlice;
@@ -88,7 +92,6 @@ describe('GipfRules:', () => {
                 expect(content).toEqual(expectedBoard.getAt(c));
             });
         });
-
         it('should allow simple moves without captures when possible', () => {
             // This is diagram 2a in the rules of Gipf
             const board: GipfBoard = GipfBoard.of([
@@ -131,24 +134,40 @@ describe('GipfRules:', () => {
                 [_, _, _, _, _, _, A],
                 [_, _, _, _, _, A, _],
                 [A, B, A, A, B, B, A],
-                [_, B, _, A, _, _, _],
+                [A, B, _, A, _, _, _],
                 [B, A, B, B, _, _, _],
-                [_, A, _, _, _, _, _],
+                [B, A, _, _, _, _, _],
             ]);
             const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
             const invalidPlacements: GipfPlacement[] = [
                 new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
-                new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.UP_LEFT)),
-                new GipfPlacement(new Coord(6, 1), MGPOptional.of(HexaDirection.DOWN_LEFT)),
                 new GipfPlacement(new Coord(0, 3), MGPOptional.of(HexaDirection.DOWN_RIGHT)),
-                new GipfPlacement(new Coord(6, 3), MGPOptional.of(HexaDirection.UP_RIGHT)),
+                new GipfPlacement(new Coord(6, 1), MGPOptional.of(HexaDirection.DOWN_LEFT)),
+                new GipfPlacement(new Coord(0, 6), MGPOptional.of(HexaDirection.UP_LEFT)),
+                new GipfPlacement(new Coord(6, 3), MGPOptional.of(HexaDirection.UP_LEFT)),
                 new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.UP_RIGHT)),
             ];
             for (const placement of invalidPlacements) {
                 const move: GipfMove = new GipfMove(placement, [], []);
-                const legality: GipfLegalityStatus = rules.isLegal(move, slice);
-                expect(legality.legal.isSuccess()).toBeFalse();
+                const status: GipfLegalityStatus = rules.isLegal(move, slice);
+                expect(status.legal.reason).toBe(GipfFailure.PLACEMENT_ON_COMPLETE_LINE);
             }
+        });
+        it('should refuse moves with invalid direction', () => {
+            const board: GipfBoard = GipfBoard.of([
+                [_, _, _, B, B, B, A],
+                [_, _, _, _, _, _, A],
+                [_, _, _, _, _, A, _],
+                [A, B, A, A, B, B, A],
+                [A, _, _, A, _, _, _],
+                [_, A, _, B, _, _, _],
+                [_, A, _, _, _, _, _],
+            ]);
+            const slice: GipfPartSlice = new GipfPartSlice(board, P0Turn, [5, 5], [0, 0]);
+            const placement: GipfPlacement = new GipfPlacement(new Coord(1, 6), MGPOptional.of(HexaDirection.UP_LEFT));
+            const move: GipfMove = new GipfMove(placement, [], []);
+            const status: GipfLegalityStatus = rules.isLegal(move, slice);
+            expect(status.legal.reason).toBe(GipfFailure.INVALID_PLACEMENT_DIRECTION);
         });
         it('should force to capture consecutive pieces', () => {
             // This is diagram 4 in the rules of Gipf
@@ -200,7 +219,7 @@ describe('GipfRules:', () => {
 
             const moveWithoutCapture: GipfMove = new GipfMove(placement, [], []);
             const noCaptureLegality: GipfLegalityStatus = rules.isLegal(moveWithoutCapture, resultingSlice);
-            expect(noCaptureLegality.legal.isSuccess()).toBeFalse();
+            expect(noCaptureLegality.legal.reason).toBe(GipfFailure.MISSING_CAPTURES);
 
             const capture: GipfCapture = new GipfCapture([
                 new Coord(2, 3), new Coord(3, 3), new Coord(4, 3), new Coord(5, 3), new Coord(6, 3),
@@ -209,7 +228,6 @@ describe('GipfRules:', () => {
             const captureLegality: GipfLegalityStatus = rules.isLegal(moveWithCapture, resultingSlice);
             expect(captureLegality.legal.isSuccess()).toBeTrue();
         });
-
         it('should let player choose between intersecting captures', () => {
             // This is diagram 6
             const board: GipfBoard = GipfBoard.of([
@@ -236,7 +254,7 @@ describe('GipfRules:', () => {
 
             const moveWithoutCapture: GipfMove = new GipfMove(placement, [], []);
             const noCaptureLegality: GipfLegalityStatus = rules.isLegal(moveWithoutCapture, slice);
-            expect(noCaptureLegality.legal.isSuccess()).toBeFalse();
+            expect(noCaptureLegality.legal.reason).toBe(GipfFailure.MISSING_CAPTURES);
 
             const moveWithCapture1: GipfMove = new GipfMove(placement, [capture1], []);
             const capture1Legality: GipfLegalityStatus = rules.isLegal(moveWithCapture1, slice);
@@ -248,7 +266,7 @@ describe('GipfRules:', () => {
 
             const moveWithBothCaptures: GipfMove = new GipfMove(placement, [capture1, capture2], []);
             const capturesLegality: GipfLegalityStatus = rules.isLegal(moveWithBothCaptures, slice);
-            expect(capturesLegality.legal.isSuccess()).toBeFalse();
+            expect(capturesLegality.legal.reason).toBe(GipfFailure.CAPTURE_MUST_BE_ALIGNED);
         });
         it('should force both players to capture when possible', () => {
             // This is the board before diagram 7
@@ -267,7 +285,7 @@ describe('GipfRules:', () => {
                                                                 MGPOptional.of(HexaDirection.DOWN_RIGHT));
 
             const moveANoCapture: GipfMove = new GipfMove(placementA, [], []);
-            expect(rules.isLegal(moveANoCapture, slice).legal.isSuccess()).toBeFalse();
+            expect(rules.isLegal(moveANoCapture, slice).legal.reason).toBe(GipfFailure.MISSING_CAPTURES);
 
             const captureA: GipfCapture = new GipfCapture([
                 new Coord(2, 6), new Coord(2, 5), new Coord(2, 4), new Coord(2, 3), new Coord(2, 2),
@@ -283,7 +301,7 @@ describe('GipfRules:', () => {
             const placementB: GipfPlacement = new GipfPlacement(new Coord(3, 0),
                                                                 MGPOptional.of(HexaDirection.DOWN_RIGHT));
             const moveBNoCapture: GipfMove = new GipfMove(placementB, [], []);
-            expect(rules.isLegal(moveBNoCapture, resultingSlice).legal.isSuccess()).toBeFalse();
+            expect(rules.isLegal(moveBNoCapture, resultingSlice).legal.reason).toBe(GipfFailure.MISSING_CAPTURES);
 
             const captureB: GipfCapture = new GipfCapture([
                 new Coord(3, 4), new Coord(4, 3), new Coord(5, 2), new Coord(6, 1),
@@ -312,14 +330,14 @@ describe('GipfRules:', () => {
             ]);
             const move1: GipfMove = new GipfMove(placement, [capture1], []);
             const legality1: GipfLegalityStatus = rules.isLegal(move1, slice);
-            expect(legality1.legal.isSuccess()).toBeFalse();
+            expect(legality1.legal.reason).toBe(GipfFailure.INVALID_CAPTURED_PIECES);
 
             const capture2: GipfCapture = new GipfCapture([
                 new Coord(1, 6), new Coord(1, 5), new Coord(1, 3), new Coord(1, 4),
             ]);
             const move2: GipfMove = new GipfMove(placement, [capture2], []);
             const legality2: GipfLegalityStatus = rules.isLegal(move2, slice);
-            expect(legality2.legal.isSuccess()).toBeFalse();
+            expect(legality2.legal.reason).toBe(GipfFailure.CAPTURE_MUST_BE_ALIGNED);
         });
         it('should not allow invalid final captures', () => {
             const board: GipfBoard = GipfBoard.of([
@@ -340,7 +358,7 @@ describe('GipfRules:', () => {
             ]);
             const move: GipfMove = new GipfMove(placement, [], [capture]);
             const legality: GipfLegalityStatus = rules.isLegal(move, slice);
-            expect(legality.legal.isSuccess()).toBeFalse();
+            expect(legality.legal.reason).toBe(GipfFailure.INVALID_CAPTURED_PIECES);
         });
         it('should correctly apply move even if the results are not cached in the legality status', () => {
             const board: GipfBoard = GipfBoard.of([
@@ -378,6 +396,7 @@ describe('GipfRules:', () => {
         });
     });
     describe('applyPlacement', () => {
+
         it('should not allow applying placements where a piece already is no direction is given', () => {
             const slice: GipfPartSlice = rules.node.gamePartSlice;
             const placement: GipfPlacement = new GipfPlacement(new Coord(6, 3), MGPOptional.empty());
@@ -385,6 +404,7 @@ describe('GipfRules:', () => {
         });
     });
     describe('getListMoves', () => {
+
         it('should have 30 moves on the initial slice', () => {
             expect(minimax.getListMoves(rules.node).length).toBe(30);
         });
@@ -477,11 +497,11 @@ describe('GipfRules:', () => {
                 [_, B, _, _, _, _, _],
             ]);
             const slice1: GipfPartSlice = new GipfPartSlice(board, P0Turn, [0, 5], [0, 0]);
-            expect(minimax.getBoardValue(new MGPNode(null, dummyMove, slice1)).value)
-                .toEqual(Number.MAX_SAFE_INTEGER, 'This should be a victory for player 1');
+            const node1: GipfNode = new MGPNode(null, dummyMove, slice1);
+            expectToBeVictoryFor(rules, node1, Player.ONE, [minimax]);
             const slice2: GipfPartSlice = new GipfPartSlice(board, P1Turn, [5, 0], [0, 0]);
-            expect(minimax.getBoardValue(new MGPNode(null, dummyMove, slice2)).value)
-                .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
+            const node2: GipfNode = new MGPNode(null, dummyMove, slice2);
+            expectToBeVictoryFor(rules, node2, Player.ZERO, [minimax]);
         });
         it('should favor having captured pieces', () => {
             const board: GipfBoard = GipfBoard.of([

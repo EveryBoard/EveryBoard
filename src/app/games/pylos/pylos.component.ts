@@ -63,24 +63,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             return true;
         }
     }
-    private async onClick(x: number, y: number, z: number): Promise<MGPValidation> {
-        const clickValidity: MGPValidation = this.canUserPlay('#click_' + x + '_' + y + '_' + z);
-        if (clickValidity.isFailure()) {
-            return this.cancelMove(clickValidity.getReason());
-        }
-        const clickedCoord: PylosCoord = new PylosCoord(x, y, z);
-        const clickedPiece: number = this.state.getBoardAt(clickedCoord);
-        const coordIsAPiece: boolean = clickedPiece === this.state.getCurrentPlayer().value;
-        const coordIsChosenLandingCoord: boolean = clickedCoord.equals(this.chosenLandingCoord);
-        if (coordIsAPiece || coordIsChosenLandingCoord) {
-            return await this.onPieceClick(x, y, z);
-        } else if (clickedPiece === Player.NONE.value) {
-            return await this.onDrop(x, y, z);
-        } else {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
-        }
-    }
-    private async onPieceClick(x: number, y: number, z: number): Promise<MGPValidation> {
+    public async onPieceClick(x: number, y: number, z: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#piece_' + x + '_' + y + '_' + z);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -95,16 +78,15 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             // Starting do describe a climbing move
             this.chosenStartingCoord = clickedCoord;
             return MGPValidation.SUCCESS;
-        } else {
-            // Starting to select capture
-            if (this.chosenFirstCapture == null) { // First capture
-                this.chosenFirstCapture = clickedCoord;
-                return MGPValidation.SUCCESS;
-            } else if (clickedCoord.equals(this.chosenFirstCapture)) {
-                return this.concludeMoveWithCapture([this.chosenFirstCapture]);
-            } else { // Last capture
-                return this.concludeMoveWithCapture([this.chosenFirstCapture, clickedCoord]);
-            }
+        }
+        // Starting to select capture
+        if (this.chosenFirstCapture == null) { // First capture
+            this.chosenFirstCapture = clickedCoord;
+            return MGPValidation.SUCCESS;
+        } else if (clickedCoord.equals(this.chosenFirstCapture)) {
+            return this.concludeMoveWithCapture([this.chosenFirstCapture]);
+        } else { // Last capture
+            return this.concludeMoveWithCapture([this.chosenFirstCapture, clickedCoord]);
         }
     }
     private async concludeMoveWithCapture(captures: PylosCoord[]): Promise<MGPValidation> {
@@ -125,7 +107,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         this.chosenLandingCoord = null;
         this.chosenFirstCapture = null;
     }
-    private async onDrop(x: number, y: number, z: number): Promise<MGPValidation> {
+    public async onDrop(x: number, y: number, z: number): Promise<MGPValidation> {
         const clickValidity: MGPValidation = this.canUserPlay('#drop_' + x + '_' + y + '_' + z);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -135,7 +117,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             this.chosenLandingCoord = clickedCoord;
             return MGPValidation.SUCCESS; // now player can click on his captures
         } else {
-            if (this.isCapturelesMoveFinished(clickedCoord)) {
+            if (this.isCapturelessMoveFinished(clickedCoord)) {
                 this.chosenLandingCoord = clickedCoord;
                 return this.concludeMoveWithCapture([]);
             } else {
@@ -143,7 +125,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
             }
         }
     }
-    private isCapturelesMoveFinished(clickedCoord: PylosCoord): boolean {
+    private isCapturelessMoveFinished(clickedCoord: PylosCoord): boolean {
         if (this.chosenStartingCoord == null) {
             // Drop without capture
             return true;
@@ -161,11 +143,7 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
                 return ['moved'];
             }
         }
-        if (coord.equals(this.chosenFirstCapture)) {
-            return ['pre-captured'];
-        } else {
-            return [];
-        }
+        return [];
     }
     public getPieceRay(z: number): number {
         return 90 + (z * 5);
@@ -187,12 +165,12 @@ export class PylosComponent extends AbstractGameComponent<PylosMove, PylosPartSl
         const classes: string[] = [this.getPieceFillClass(c)];
         if (c.equals(this.lastLandingCoord) || c.equals(this.lastStartingCoord)) {
             classes.push('highlighted');
-        } else if (c.equals(this.chosenStartingCoord) || c.equals(this.chosenLandingCoord)) {
+        }
+        if (c.equals(this.chosenStartingCoord) || c.equals(this.chosenLandingCoord)) {
             classes.push('selected');
-        } else if (c.equals(this.lastFirstCapture) || c.equals(this.lastSecondCapture)) {
-            classes.push('last-move');
-        } else if (c.equals(this.chosenFirstCapture)) {
-            return ['pre-captured'];
+        }
+        if (c.equals(this.chosenFirstCapture)) {
+            classes.push('pre-captured');
         }
         return classes;
     }

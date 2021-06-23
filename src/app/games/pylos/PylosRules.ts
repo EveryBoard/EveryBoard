@@ -10,7 +10,20 @@ import { PylosMove } from './PylosMove';
 import { PylosPartSlice } from './PylosPartSlice';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-export class PylosNode extends MGPNode<Rules<PylosMove, PylosPartSlice>,
+export class PylosFailure {
+
+    public static readonly MOVE_DOES_NOT_HAVE_SUPPORT: string = 'move does not have supported pieces';
+
+    public static readonly LANDING_IMPOSSIBLE: string = 'landing coord is not landable';
+
+    public static readonly CANNOT_CAPTURE: string = 'cannot capture';
+
+    public static readonly FIRST_CAPTURE_INVALID: string = 'first capture invalid';
+
+    public static readonly SECOND_CAPTURE_INVALID: string = 'first capture invalid';
+}
+
+export class PylosNode extends MGPNode<PylosRules,
                                        PylosMove,
                                        PylosPartSlice> {}
 
@@ -154,24 +167,24 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
                 .filter((p: PylosCoord) => slice.getBoardAt(p) !== Player.NONE.value ||
                                            p.equals(move.landingCoord));
             if (supportedPieces.length > 0) {
-                return { legal: MGPValidation.failure('move does not have supported pieces') };
+                return { legal: MGPValidation.failure(PylosFailure.MOVE_DOES_NOT_HAVE_SUPPORT) };
             }
         }
         if (!slice.isLandable(move.landingCoord)) {
-            return { legal: MGPValidation.failure('landing coord is not landable') };
+            return { legal: MGPValidation.failure(PylosFailure.LANDING_IMPOSSIBLE) };
         }
 
         if (move.firstCapture.isPresent()) {
             if (!PylosRules.canCapture(slice, move.landingCoord)) {
-                return { legal: MGPValidation.failure('cannot capture') };
+                return { legal: MGPValidation.failure(PylosFailure.CANNOT_CAPTURE) };
             }
 
             if (PylosRules.isValidCapture(slice, move, move.firstCapture.get())) {
                 if (move.secondCapture.isPresent() &&
                     !PylosRules.isValidCapture(slice, move, move.secondCapture.get())) {
-                    return { legal: MGPValidation.failure('second capture is not valid') };
+                    return { legal: MGPValidation.failure(PylosFailure.FIRST_CAPTURE_INVALID) };
                 }
-            } else return { legal: MGPValidation.failure('first capture is not valid') };
+            } else return { legal: MGPValidation.failure(PylosFailure.SECOND_CAPTURE_INVALID) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

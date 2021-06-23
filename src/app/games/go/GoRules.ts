@@ -14,15 +14,11 @@ import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { GoGroupDatasFactory } from './GoGroupDatasFactory';
+import { GoFailure } from './GoFailure';
 
 export abstract class GoNode extends MGPNode<GoRules, GoMove, GoPartSlice, GoLegalityStatus> {}
 
 export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
-
-    public static readonly CANNOT_PASS_AFTER_PASSED_PHASE: MGPValidation = MGPValidation.failure(
-        'We are nor in playing nor in passed phase, you must mark stone as dead or alive or accept current board.');
-    public static readonly CANNOT_ACCEPT_BEFORE_COUNTING_PHRASE: MGPValidation = MGPValidation.failure(
-        'not countig or not accept');
 
     public static VERBOSE: boolean = false;
 
@@ -33,19 +29,18 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
         if (GoRules.isPass(move)) {
             const playing: boolean = slice.phase === Phase.PLAYING;
             const passed: boolean = slice.phase === Phase.PASSED;
-            display(
-                GoRules.VERBOSE ||LOCAL_VERBOSE,
-                'GoRules.isLegal at ' + slice.phase + ((playing || passed) ? ' forbid' : ' allowed') +
-                ' passing on ' + slice.getCopiedBoard());
+            display(GoRules.VERBOSE ||LOCAL_VERBOSE,
+                    'GoRules.isLegal at ' + slice.phase + ((playing || passed) ? ' forbid' : ' allowed') +
+                    ' passing on ' + slice.getCopiedBoard());
             return {
-                legal: (playing || passed) ? MGPValidation.SUCCESS : GoRules.CANNOT_PASS_AFTER_PASSED_PHASE,
+                legal: (playing || passed) ? MGPValidation.SUCCESS : GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE,
                 capturedCoords: [],
             };
         } else if (GoRules.isAccept(move)) {
             const counting: boolean = slice.phase === Phase.COUNTING;
             const accept: boolean = slice.phase === Phase.ACCEPT;
             return {
-                legal: (counting || accept) ? MGPValidation.SUCCESS : GoRules.CANNOT_ACCEPT_BEFORE_COUNTING_PHRASE,
+                legal: (counting || accept) ? MGPValidation.SUCCESS : GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHRASE,
                 capturedCoords: [],
             };
         }
@@ -53,7 +48,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             display(GoRules.VERBOSE ||LOCAL_VERBOSE, 'GoRules.isLegal: move is marking');
             const legal: boolean = GoRules.isLegalDeadMarking(move, slice);
             return {
-                legal: legal ? MGPValidation.SUCCESS : RulesFailure.MUST_CLICK_ON_EMPTY_CASE,
+                legal: legal ? MGPValidation.SUCCESS : MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE),
                 capturedCoords: [],
             };
         } else {
@@ -75,9 +70,9 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
 
         const boardCopy: GoPiece[][] = slice.getCopiedBoardGoPiece();
         if (GoRules.isOccupied(move.coord, boardCopy)) {
-            return GoLegalityStatus.failure('illegal ecrasement');
+            return GoLegalityStatus.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
         } else if (GoRules.isKo(move, slice)) {
-            return GoLegalityStatus.failure('illegal ko');
+            return GoLegalityStatus.failure(GoFailure.ILLEGAL_KO);
         }
         if ([Phase.COUNTING, Phase.ACCEPT].includes(slice.phase)) {
             slice = GoRules.resurrectStones(slice);
