@@ -11,6 +11,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { SCORE } from 'src/app/jscaip/SCORE';
 import { Player } from 'src/app/jscaip/Player';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { QuartoFailure } from './QuartoFailure';
 
 export interface BoardStatus {
     score: SCORE;
@@ -228,15 +229,15 @@ export class QuartoRules extends Rules<QuartoMove, QuartoPartSlice> {
                 // on doit donner une pièce ! sauf au dernier tour
                 return MGPValidation.SUCCESS;
             }
-            return MGPValidation.failure('You must give a piece.');
+            return MGPValidation.failure(QuartoFailure.MUST_GIVE_A_PIECE);
         }
         if (!QuartoPartSlice.isPlacable(pieceToGive, board)) {
             // la piece est déjà sur le plateau
-            return MGPValidation.failure('That piece is already on the board.');
+            return MGPValidation.failure(QuartoFailure.PIECE_ALREADY_ON_BOARD);
         }
         if (pieceInHand === pieceToGive) {
             // la pièce donnée est la même que celle en main, c'est illégal
-            return MGPValidation.failure('You cannot give the piece that was in your hands.');
+            return MGPValidation.failure(QuartoFailure.CANNOT_GIVE_PIECE_IN_HAND);
         }
         return MGPValidation.SUCCESS;
     }

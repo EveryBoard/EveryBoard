@@ -11,7 +11,6 @@ import { ActivesPartsService } from 'src/app/services/ActivesPartsService';
 @Component({
     selector: 'app-server-page',
     templateUrl: './server-page.component.html',
-    styleUrls: ['./server-page.component.css'],
 })
 export class ServerPageComponent implements OnInit, OnDestroy {
     public static VERBOSE: boolean = false;

@@ -130,11 +130,19 @@ export class SimpleComponentTestUtils<T> {
     }
     public expectElementToHaveClass(elementName: string, class_: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' was expected to exist').toBeTruthy();
+        expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
         expect(elementClasses).toContain(class_);
     }
-
+    public expectElementNotToExist(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should not exist').toBeNull();
+    }
+    public expectElementToExist(elementName: string): DebugElement {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should exist').toBeTruthy();
+        return element;
+    }
 }
 
 type GameComponent = AbstractGameComponent<Move, GamePartSlice, LegalityStatus>;
@@ -229,7 +237,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         element.triggerEventHandler('click', null);
         await this.fixture.whenStable();
         this.fixture.detectChanges();
@@ -239,7 +247,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public async expectClickFailure(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -256,7 +264,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -318,7 +326,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -350,17 +358,17 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeNull();
+        expect(element).withContext(elementName + ' should not to exist').toBeNull();
     }
     public expectElementToExist(elementName: string): DebugElement {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy(elementName + ' was expected to exist');
+        expect(element).withContext(elementName + ' should exist').toBeTruthy();
         return element;
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' was expected to exist').toBeTruthy();
+        expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
     }

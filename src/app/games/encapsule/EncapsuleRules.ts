@@ -10,19 +10,10 @@ import { display } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { EncapsuleMove } from './EncapsuleMove';
 import { EncapsulePiece } from './EncapsulePiece';
+import { EncapsuleFailure } from './EncapsuleFailure';
 
 export class EncapsuleNode
     extends MGPNode<EncapsuleRules, EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {}
-
-export class EncapsuleFailure {
-
-    public static WRONG_COLOR: string = `Veuillez utiliser une pièce à votre couleur.`;
-
-    public static NOT_REMAINING_PIECE: string = 'Veuillez utiliser une des pièces restantes.'
-
-    public static INVALID_PLACEMENT: string =
-        'Vous devez placer votre pièce sur une case vide ou sur une pièce plus petite.'
-}
 
 export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 

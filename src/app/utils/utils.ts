@@ -10,8 +10,8 @@ export function display(verbose: boolean, message: unknown): void {
     if (verbose) console.log(message);
 }
 
-export function warning(message: unknown): void {
-    console.log(message);
+export function handleError(message: string): void {
+    throw new Error('Encountered error: ' + message);
 }
 
 export function assert(condition: boolean, message: string): void {

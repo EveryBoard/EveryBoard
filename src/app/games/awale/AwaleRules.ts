@@ -7,6 +7,7 @@ import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { Coord } from 'src/app/jscaip/Coord';
+import { AwaleFailure } from './AwaleFailure';
 
 export class AwaleNode extends MGPNode<AwaleRules, AwaleMove, AwalePartSlice, AwaleLegalityStatus> {}
 
@@ -57,17 +58,16 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
         const ennemi: number = (turn + 1) % 2;
 
         if (y !== player) {
-            return AwaleLegalityStatus.failure('you cannot distribute from the ennemy\'s home');
-            // on ne distribue que ses maisons
+            return AwaleLegalityStatus.failure(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME);
         }
         const x: number = move.coord.x;
         if (resultingBoard[y][x] === 0) {
-            return AwaleLegalityStatus.failure('You must choose a non-empty house to distribute.');
+            return AwaleLegalityStatus.failure(AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE);
         }
 
         if (!AwaleRules.doesDistribute(x, y, resultingBoard) && AwaleRules.isStarving(ennemi, resultingBoard) ) {
             // you can distribute but you don't, illegal move
-            return AwaleLegalityStatus.failure('you can distribute but you don\'t');
+            return AwaleLegalityStatus.failure(AwaleFailure.SHOULD_DISTRIBUTE);
         }
         // arrived here you can distribute this house
         // but we'll have to check if you can capture

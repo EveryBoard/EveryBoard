@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { GipfBoard } from 'src/app/games/gipf/GipfBoard';
 import { GipfCapture, GipfMove, GipfPlacement } from 'src/app/games/gipf/GipfMove';
 import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
@@ -13,8 +12,8 @@ const O: GipfPiece = GipfPiece.PLAYER_ZERO;
 const X: GipfPiece = GipfPiece.PLAYER_ONE;
 export const gipfDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        'But du jeu',
-        `Le but du jeu est de capturer les pièces de l'adversaire afin qu'il ne puisse plus jouer.
+        $localize`But du jeu`,
+        $localize`Le but du jeu est de capturer les pièces de l'adversaire afin qu'il ne puisse plus jouer.
          Voici la configuration initiale du plateau.
          Chaque joueur a 12 pièces en réserve et 3 sur le plateau.
          Dès qu'à son tour un joueur n'a plus de pièces dans sa réserve, il ne sait plus jouer et perd.
@@ -22,19 +21,19 @@ export const gipfDidacticial: DidacticialStep[] = [
         GipfPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
-        'Pousser',
-        `Les pièces ne peuvent entrer sur le plateau que par l'extérieur.
+        $localize`Pousser`,
+        $localize`Les pièces ne peuvent entrer sur le plateau que par l'extérieur.
          1. Cliquez sur une case sur le bord du plateau.
          2. Si cette case était occupée, cliquez ensuite sur la flèche représentant la direction dans laquelle pousser la/les pièces déjà présentes dans la rangée.
          Une poussée est interdite dans une rangée complète.
          Vous jouez Foncé, insérez une pièce.`,
         GipfPartSlice.getInitialSlice(),
         new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
-        'Bravo.',
+        $localize`Bravo.`,
     ),
     DidacticialStep.fromMove(
-        'Capture (1/3)',
-        `Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
+        $localize`Capture (1/3)`,
+        $localize`Pour faire une capture, il faut aligner 4 de ses propres pièces, qui seront les 4 premières capturées.
          Il y a plusieurs choses à savoir sur une capture :
          1. Quand 4 pièces sont capturées, toutes les pièces directement alignées avec ces 4 pièces le sont également.
          2. Dès qu'il y a une case vide dans la ligne, la capture s'arrête.
@@ -65,13 +64,13 @@ export const gipfDidacticial: DidacticialStep[] = [
                 new Coord(3, 3),
             ])],
         )],
-        `Bravo, vous avez récupéré 4 de vos pièces, mais ce n'est pas la capture la plus utile.
+        $localize`Bravo, vous avez récupéré 4 de vos pièces, mais ce n'est pas la capture la plus utile.
          Voyons maintenant la vraie utilité d'une capture.`,
-        'Raté.',
+        $localize`Raté.`,
     ),
     DidacticialStep.fromMove(
-        'Capture (2/3)',
-        `Ici, il est possible de capturer de trois façons différentes.
+        $localize`Capture (2/3)`,
+        $localize`Ici, il est possible de capturer de trois façons différentes.
          L'une ne permet aucune capture de pièce adverse.
          L'autre permet une capture de pièce adverse.
          La dernière en permet deux, choisissez cette dernière.`,
@@ -96,13 +95,13 @@ export const gipfDidacticial: DidacticialStep[] = [
                 new Coord(3, 6),
             ])],
         )],
-        `Bravo, vous avez récupéré 4 de vos pièces et capturé 2 pièces de l'adversaire.
+        $localize`Bravo, vous avez récupéré 4 de vos pièces et capturé 2 pièces de l'adversaire.
          Le maximum possible étant 3 par captures.`,
-        'Raté, la capture optimale capture 2 pièces adverses.',
+        $localize`Raté, la capture optimale capture 2 pièces adverses.`,
     ),
     DidacticialStep.fromMove(
-        'Capture (3/3)',
-        `Ici, vous aurez une capture à faire au début de votre tour.
+        $localize`Capture (3/3)`,
+        $localize`Ici, vous aurez une capture à faire au début de votre tour.
          Elle a été provoquée par un mouvement de votre adversaire lors de son tour de jeu
          (bien que ce plateau soit fictif à des fins pédagogiques).
          En effectuant ensuite le bon mouvement, vous pourrez faire deux captures supplémentaires !
@@ -194,8 +193,8 @@ export const gipfDidacticial: DidacticialStep[] = [
                 ],
             ),
         ],
-        `Bravo, vous avez récupéré 12 de vos pièces et capturé 2 pièces de l'adversaire.
+        $localize`Bravo, vous avez récupéré 12 de vos pièces et capturé 2 pièces de l'adversaire.
          Le maximum possible étant 3 par captures.`,
-        'Raté, la capture optimale capture 2 pièces adverses.',
+        $localize`Raté, la capture optimale capture 2 pièces adverses.`,
     ),
 ];

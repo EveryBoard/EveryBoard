@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
 import { QuixoMove } from 'src/app/games/quixo/QuixoMove';
 import { Orthogonal } from 'src/app/jscaip/Direction';
@@ -11,16 +10,16 @@ const X: number = Player.ONE.value;
 
 export const quixoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        'But du jeu',
-        `Au Quixo, le but du jeu est d'aligner 5 de vos pièces.
+        $localize`But du jeu`,
+        $localize`Au Quixo, le but du jeu est d'aligner 5 de vos pièces.
          Le premier joueur contrôle les pièces foncées, le deuxième les claires.
          Le plateau est constitué de 25 pièces réparties en un carré de 5x5.
          Chaque pièce a un face neutre, une face claire et une face foncée.`,
         QuixoPartSlice.getInitialSlice(),
     ),
     DidacticialStep.fromMove(
-        'A quoi ressemble un mouvement (sans animation)',
-        `Quand c'est à votre tour de jouer :
+        $localize`A quoi ressemble un mouvement (sans animation)`,
+        $localize`Quand c'est à votre tour de jouer :
          Premièrement, cliquez sur une de vos pièces ou une pièce neutre, il est interdit de choisir une pièce de l'adversaire.
          Notez que vous ne pouvez choisir qu'une pièce sur le bord du plateau.
          Deuxièmement, choisissez une direction dans laquelle l'envoyer (en cliquant sur la flèche).
@@ -36,13 +35,13 @@ export const quixoDidacticial: DidacticialStep[] = [
             [O, O, O, O, _],
         ], 1),
         [new QuixoMove(4, 4, Orthogonal.LEFT)],
-        `Voyez comme les quatre pièces foncées ont été déplacées d'une case à droite.
+        $localize`Voyez comme les quatre pièces foncées ont été déplacées d'une case à droite.
          La pièce neutre, elle, s'est déplacé de 4 cases à gauche et est devenue claire.`,
-        'Raté.',
+        $localize`Raté.`,
     ),
     DidacticialStep.fromMove(
-        'Victoire',
-        `Vous savez déjà tout ce qu'il faut pour jouer, il ne manque qu'une spécificité.
+        $localize`Victoire`,
+        $localize`Vous savez déjà tout ce qu'il faut pour jouer, il ne manque qu'une spécificité.
          Si vous créez une ligne de 5 pièces vous appartenant, vous gagnez.
          Si vous créez une ligne de 5 pièces ennemies, vous perdez.
          Si vous créez les deux, vous perdez aussi!
@@ -56,7 +55,7 @@ export const quixoDidacticial: DidacticialStep[] = [
             [X, O, _, X, O],
         ], 31),
         [new QuixoMove(3, 0, Orthogonal.DOWN)],
-        'Bravo, vous avez gagné!',
-        'Perdu.',
+        $localize`Bravo, vous avez gagné!`,
+        $localize`Perdu.`,
     ),
 ];

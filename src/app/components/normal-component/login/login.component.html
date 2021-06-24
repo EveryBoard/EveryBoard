@@ -1,9 +1,9 @@
 <div class="box">
-    <p class="title">Connexion</p>
+    <p class="title" i18n>Connexion</p>
     <form [formGroup]="loginForm">
         <div class="field is-horizontal">
             <div class="field-label">
-                <label class="label" for="email" >Adresse email</label>
+                <label class="label" for="email" i18n>Adresse email</label>
             </div>
             <div class="field-body">
                 <div class="field">
@@ -15,7 +15,7 @@
         </div>
         <div class="field is-horizontal">
             <div class="field-label">
-                <label class="label" for="password">Mot de passe</label>
+                <label class="label" for="password" i18n>Mot de passe</label>
             </div>
             <div class="field-body">
                 <div class="field">
@@ -39,7 +39,7 @@
             </div>
         </div>
         <div *ngIf="errorMessage" class="message is-danger" role="alert">
-            <div class="message-header">Erreur de connexion</div>
+            <div class="message-header" i18n>Erreur de connexion</div>
             <div class="message-body" id="errorSpan">{{ errorMessage }}</div>
         </div>
     </form>
@@ -49,6 +49,6 @@
     <button id="googleButton"
             type="submit"
             (click)="loginWithGoogle()"
-            class="button">Se connecter avec Google</button>
-    <button class="button" [routerLink]="['/inscription']">Créer un compte</button>
+            class="button" i18n>Se connecter avec Google</button>
+    <button class="button" [routerLink]="['/inscription']" i18n>Créer un compte</button>
 </div>

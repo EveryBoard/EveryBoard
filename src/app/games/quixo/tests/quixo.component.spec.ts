@@ -51,7 +51,7 @@ describe('QuixoComponent', () => {
         const state: QuixoPartSlice = new QuixoPartSlice(board, 3);
         componentTestUtils.setupSlice(state);
 
-        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
     it('should cancel move when trying to select center coord', fakeAsync(async() => {
         const board: NumberTable = [

@@ -88,13 +88,13 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
             return { legal: MGPValidation.failure(CoerceoFailure.NOT_ENOUGH_TILES_TO_EXCHANGE) };
         }
         if (slice.getBoardAt(move.capture.get()) === CoerceoPiece.NONE.value) {
-            return { legal: MGPValidation.failure('Cannot capture coord of removed tile!') };
+            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_REMOVED) };
         }
         if (slice.getBoardAt(move.capture.get()) === CoerceoPiece.EMPTY.value) {
-            return { legal: MGPValidation.failure('Cannot capture empty coord!') };
+            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_FROM_EMPTY) };
         }
         if (slice.getBoardAt(move.capture.get()) === slice.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure('Cannot capture your own pieces!') };
+            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_CAPTURE_OWN_PIECES) };
         }
         return { legal: MGPValidation.SUCCESS };
     }
@@ -112,7 +112,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
             return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };
         }
         if (slice.getBoardAt(move.start.get()) === slice.getCurrentEnnemy().value) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
         }
         if (slice.getBoardAt(move.landingCoord.get()) === slice.getCurrentPlayer().value) {
             return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_LAND_ON_ALLY) };

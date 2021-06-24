@@ -5,6 +5,7 @@ import { TablutCase } from 'src/app/games/tablut/TablutCase';
 import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('TablutComponent', () => {
     let componentTestUtils: ComponentTestUtils<TablutComponent>;
@@ -22,7 +23,7 @@ describe('TablutComponent', () => {
         expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeDefined();
     });
     it('Should cancel move when clicking on opponent piece', fakeAsync( async() => {
-        await componentTestUtils.expectClickFailure('#click_4_4', 'Cette pièce ne vous appartient pas.');
+        await componentTestUtils.expectClickFailure('#click_4_4', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
     it('Should cancel move when first click on empty case', fakeAsync( async() => {
         const message: string = 'Pour votre premier clic, choisissez une de vos pièces.';

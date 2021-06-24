@@ -193,7 +193,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
         } else if (this.chosenLanding == null) {
             if (this.state.getPieceAt(piece) === this.state.getCurrentEnnemy()) {
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
             }
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;

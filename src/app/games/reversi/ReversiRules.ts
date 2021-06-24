@@ -8,6 +8,8 @@ import { ReversiLegalityStatus } from './ReversiLegalityStatus';
 import { Player } from 'src/app/jscaip/Player';
 import { assert, display } from 'src/app/utils/utils';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { ReversiFailure } from './ReversiFailure';
 
 export class ReversiMoveWithSwitched {
     public constructor(public readonly move: ReversiMove,
@@ -165,18 +167,19 @@ export class ReversiRules extends Rules<ReversiMove, ReversiPartSlice, ReversiLe
             return {
                 legal: ReversiRules.playerCanOnlyPass(slice) ?
                     MGPValidation.SUCCESS :
-                    MGPValidation.failure('player can only pass'),
+                    MGPValidation.failure(RulesFailure.CAN_ONLY_PASS),
                 switched: null,
             };
         }
         if (board[move.coord.y][move.coord.x] !== Player.NONE.value) {
             display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: non, on ne peux pas jouer sur une case occupée');
-            return { legal: MGPValidation.failure('occupied case'), switched: null };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE), switched: null };
         }
         const switched: Coord[] = ReversiRules.getAllSwitcheds(move, turn, board);
         display(ReversiRules.VERBOSE, 'ReversiRules.isLegal: '+ switched.length + ' element(s) switched');
         return {
-            legal: (switched.length === 0) ? MGPValidation.failure('no elements switched') : MGPValidation.SUCCESS,
+            legal: (switched.length === 0) ?
+                MGPValidation.failure(ReversiFailure.NO_ELEMENT_SWITCHED) : MGPValidation.SUCCESS,
             switched,
         };
     }

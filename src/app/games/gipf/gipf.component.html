@@ -54,7 +54,7 @@
     <g *ngFor="let player of [0, 1]">
         <text x="0"
               [attr.y]="20 + (getPieceSize() + 12) * player"
-              class="text-medium">Pièces du joueur {{ player + 1}}</text>
+              class="text-medium" i18n>Pièces du joueur {{ player + 1}}</text>
         <g *ngFor="let p of getPlayerSidePieces(player)">
             <circle id="piece_{{ player }}_{{ p }}"
                     [attr.cx]="350 + (p * getPieceSize() * 0.5)"

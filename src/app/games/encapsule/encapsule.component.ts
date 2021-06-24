@@ -12,16 +12,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
-
-export class EncapsuleComponentFailure {
-    public static NOT_DROPPABLE: string =`Veuillez choisir une de vos pièces parmi les pièces restantes.`;
-    public static INVALID_PIECE_SELECTED: string =
-        `Veuillez sélectionner une de vos pièces ou une case où vous avez la pièce la plus grande.`;
-    public static SAME_DEST_AS_ORIGIN: string =
-        `Veuillez sélectionner une case différente de la case d'origine du mouvement.`;
-    public static END_YOUR_MOVE: string =
-        `Vous effectuez un déplacement, choisissez votre case de destination.`;
-}
+import { EncapsuleFailure } from './EncapsuleFailure';
 
 @Component({
     selector: 'app-encapsule',
@@ -83,11 +74,11 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
                 return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             } else if (slice.getAt(clickedCoord).belongsTo(slice.getCurrentPlayer()) === false) {
-                return this.cancelMove(EncapsuleComponentFailure.INVALID_PIECE_SELECTED);
+                return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED);
             }
         } else {
             if (this.chosenCoord.equals(clickedCoord)) {
-                return this.cancelMove(EncapsuleComponentFailure.SAME_DEST_AS_ORIGIN);
+                return this.cancelMove(EncapsuleFailure.SAME_DEST_AS_ORIGIN);
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
@@ -108,13 +99,13 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
 
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (slice.isDroppable(piece) === false) {
-            return this.cancelMove(EncapsuleComponentFailure.NOT_DROPPABLE);
+            return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE);
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
             this.chosenPieceIndex = index;
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(EncapsuleComponentFailure.END_YOUR_MOVE);
+            return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE);
         }
     }
     public getRectClasses(x: number, y: number): string {

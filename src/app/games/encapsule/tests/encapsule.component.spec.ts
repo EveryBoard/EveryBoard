@@ -1,14 +1,14 @@
-import { EncapsuleComponent, EncapsuleComponentFailure } from '../encapsule.component';
+import { EncapsuleComponent } from '../encapsule.component';
 import { EncapsuleMove } from 'src/app/games/encapsule/EncapsuleMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { EncapsuleCase, EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
-import { EncapsuleFailure } from 'src/app/games/encapsule/EncapsuleRules';
 import { EncapsuleMinimax } from 'src/app/games/encapsule/EncapsuleMinimax';
 import { Player } from 'src/app/jscaip/Player';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { EncapsuleFailure } from '../EncapsuleFailure';
 
 describe('EncapsuleComponent', () => {
     let componentTestUtils: ComponentTestUtils<EncapsuleComponent>;
@@ -35,7 +35,7 @@ describe('EncapsuleComponent', () => {
         await componentTestUtils.expectMoveSuccess('#click_0_0', move);
     }));
     it('should forbid clicking directly on the board without selecting a piece', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_0', EncapsuleComponentFailure.INVALID_PIECE_SELECTED);
+        await componentTestUtils.expectClickFailure('#click_0_0', EncapsuleFailure.INVALID_PIECE_SELECTED);
     }));
     it('should allow dropping a piece on a smaller one', fakeAsync(async() => {
         const x: number = new EncapsuleCase(Player.ONE, Player.NONE, Player.NONE).encode();
@@ -71,7 +71,7 @@ describe('EncapsuleComponent', () => {
     it('should forbid selecting a piece from the other player', fakeAsync(async() => {
         componentTestUtils.setupSlice(new EncapsulePartSlice(emptyBoard, P0Turn, [EncapsulePiece.SMALL_WHITE]));
 
-        await componentTestUtils.expectClickFailure('#piece_1_SMALL_WHITE', EncapsuleComponentFailure.NOT_DROPPABLE);
+        await componentTestUtils.expectClickFailure('#piece_1_SMALL_WHITE', EncapsuleFailure.NOT_DROPPABLE);
     }));
     it('should move a piece when clicking on the piece and clicking on its destination coord', fakeAsync(async() => {
         const x: number = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE).encode();
@@ -96,7 +96,7 @@ describe('EncapsuleComponent', () => {
         ];
         componentTestUtils.setupSlice(new EncapsulePartSlice(board, P0Turn, []));
 
-        await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleComponentFailure.INVALID_PIECE_SELECTED);
+        await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleFailure.INVALID_PIECE_SELECTED);
     }));
     it('should allow moving a piece on top of a smaller one', fakeAsync(async() => {
         const x: number = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE).encode();
@@ -160,7 +160,7 @@ describe('EncapsuleComponent', () => {
 
         await componentTestUtils.expectClickSuccess('#click_0_1');
 
-        await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleComponentFailure.SAME_DEST_AS_ORIGIN);
+        await componentTestUtils.expectClickFailure('#click_0_1', EncapsuleFailure.SAME_DEST_AS_ORIGIN);
     }));
     it('should forbid selecting a remaining piece is a move is being constructed', fakeAsync(async() => {
         const x: number = new EncapsuleCase(Player.NONE, Player.ZERO, Player.NONE).encode();
@@ -173,6 +173,6 @@ describe('EncapsuleComponent', () => {
 
         await componentTestUtils.expectClickSuccess('#click_0_1');
 
-        await componentTestUtils.expectClickFailure('#piece_0_SMALL_BLACK', EncapsuleComponentFailure.END_YOUR_MOVE);
+        await componentTestUtils.expectClickFailure('#piece_0_SMALL_BLACK', EncapsuleFailure.END_YOUR_MOVE);
     }));
 });

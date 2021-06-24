@@ -5,6 +5,7 @@ import { QuartoPiece } from 'src/app/games/quarto/QuartoPiece';
 import { QuartoPartSlice } from 'src/app/games/quarto/QuartoPartSlice';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('QuartoComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -16,8 +17,8 @@ describe('QuartoComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<QuartoComponent>('Quarto');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('Component should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('Component should be created').toBeTruthy();
     });
     it('should forbid clicking on occupied case', fakeAsync(async() => {
         const board: number[][] = [
@@ -28,7 +29,7 @@ describe('QuartoComponent', () => {
         ];
         const slice: QuartoPartSlice = new QuartoPartSlice(board, 1, QuartoPiece.AAAB);
         componentTestUtils.setupSlice(slice);
-        await componentTestUtils.expectClickFailure('#chooseCoord_0_0', 'Choisissez une case vide.');
+        await componentTestUtils.expectClickFailure('#chooseCoord_0_0', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
     }));
     it('should accept move when choosing piece then choosing coord', fakeAsync(async() => {
         const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.AAAB);

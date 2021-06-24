@@ -14,6 +14,7 @@ import { HexagonalGameComponent }
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 @Component({
     selector: 'app-dvonn',
@@ -87,7 +88,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
         if (this.canPass) {
             return await this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
-            return MGPValidation.failure('User cannot pass');
+            return MGPValidation.failure(RulesFailure.CANNOT_PASS);
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

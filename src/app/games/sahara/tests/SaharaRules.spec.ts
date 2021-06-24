@@ -71,7 +71,7 @@ describe('SaharaRules', () => {
         const state: SaharaPartSlice = SaharaPartSlice.getInitialSlice();
         const move: SaharaMove = new SaharaMove(new Coord(3, 0), new Coord(4, 0));
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+        expect(status.legal.reason).toEqual(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     });
     it('Should see that Player.ONE won', () => {
         const board: number[][] = [

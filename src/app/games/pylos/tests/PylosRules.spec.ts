@@ -91,7 +91,7 @@ describe('PylosRules:', () => {
         const state: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(0, 0, 0), new PylosCoord(2, 2, 1), []);
         const status: LegalityStatus = rules.isLegal(move, state);
-        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     });
     it('should forbid move who\'se landing coord is not landable (not on the floor, not over 4 lower pieces)', () => {
         const board: number[][][] = [

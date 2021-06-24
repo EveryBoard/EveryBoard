@@ -122,7 +122,7 @@ export class QuixoRules extends Rules<QuixoMove, QuixoPartSlice> {
     }
     public isLegal(move: QuixoMove, slice: QuixoPartSlice): LegalityStatus {
         if (slice.getBoardAt(move.coord) === slice.getCurrentEnnemy().value) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
         } else {
             return { legal: MGPValidation.SUCCESS };
         }

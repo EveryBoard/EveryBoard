@@ -22,8 +22,8 @@ export class P4Component extends AbstractGameComponent<P4Move, P4PartSlice> {
     public EMPTY_CASE: number = Player.NONE.value;
     public CASE_SIZE: number = 100;
     public STROKE_WIDTH: number = 8;
-    private last: Coord;
-    private victoryCoords: Coord[] = [];
+    public last: Coord;
+    public victoryCoords: Coord[] = [];
 
     public encoder: MoveEncoder<P4Move> = P4Move.encoder;
 

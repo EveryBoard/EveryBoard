@@ -14,11 +14,6 @@ import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
-export class KamisadoComponentFailure {
-    public static PLAY_WITH_SELECTED_PIECE: string =
-        `Vous devez jouer avec la pièce déjà séléctionnée.`;
-}
-
 @Component({
     selector: 'app-kamisado',
     templateUrl: './kamisado.component.html',
@@ -95,7 +90,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             if (piece.belongsTo(player)) {
                 // Player clicked on another of its pieces, select it if he can
                 if (this.chosenAutomatically) {
-                    return this.cancelMove(KamisadoComponentFailure.PLAY_WITH_SELECTED_PIECE);
+                    return this.cancelMove(KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
                 } else {
                     this.chosen = new Coord(x, y);
                     return MGPValidation.SUCCESS;

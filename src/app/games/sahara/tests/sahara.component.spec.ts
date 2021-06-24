@@ -44,12 +44,12 @@ describe('SaharaComponent', () => {
     it('should not allow to click on empty case when no pyramid selected', fakeAsync(async() => {
         // given initial board
         // when clicking on empty case, expect move to be refused
-        await componentTestUtils.expectClickFailure('#click_2_2', 'Vous devez d\'abord choisir une de vos pyramides!');
+        await componentTestUtils.expectClickFailure('#click_2_2', SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST);
     }));
     it('should not allow to select ennemy pyramid', fakeAsync(async() => {
         // given initial board
         // when clicking on empty case, expect move to be refused
-        await componentTestUtils.expectClickFailure('#click_0_4', 'Vous devez choisir une de vos pyramides!');
+        await componentTestUtils.expectClickFailure('#click_0_4', SaharaFailure.MUST_CHOOSE_OWN_PYRAMID);
     }));
     it('should not allow to land on ennemy pyramid', fakeAsync(async() => {
         // given initial board

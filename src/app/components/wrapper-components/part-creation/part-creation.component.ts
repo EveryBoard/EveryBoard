@@ -5,7 +5,7 @@ import { Router } from '@angular/router';
 import { GameService } from '../../../services/GameService';
 import { JoinerService } from '../../../services/JoinerService';
 import { ChatService } from '../../../services/ChatService';
-import { assert, display, warning } from 'src/app/utils/utils';
+import { assert, display, handleError } from 'src/app/utils/utils';
 import { MGPMap } from 'src/app/utils/MGPMap';
 import { UserService } from 'src/app/services/UserService';
 import { IJoueur, IJoueurId } from 'src/app/domain/iuser';
@@ -24,8 +24,6 @@ interface ComparableSubscription {
     styleUrls: ['../../../../../node_modules/bulma-slider/dist/css/bulma-slider.min.css'],
 })
 export class PartCreationComponent implements OnInit, OnDestroy {
-    // TODO: add "message displayer service" that contains .message
-
     // Lifecycle:
     // 1. Creator chooses config and opponent
     // 2. Creator click on "proposing the config"
@@ -35,8 +33,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     // PageCreationComponent is always a child of OnlineGame component (one to one)
     // they need common data so that the parent calculates/retrieves the data then share it
     // with the part creation component
-
     public static VERBOSE: boolean = false;
+
+    public BLITZ_PART_DURATION: number = PartType.BLITZ_PART_DURATION;
+    public BLITZ_MOVE_DURATION: number = PartType.BLITZ_MOVE_DURATION;
+    public NORMAL_PART_DURATION: number = PartType.NORMAL_PART_DURATION;
+    public NORMAL_MOVE_DURATION: number = PartType.NORMAL_MOVE_DURATION;
 
     @Input() partId: NonNullable<string>;
     @Input() userName: NonNullable<string>;
@@ -128,7 +130,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private checkInputs() {
         assert(this.userName != null && this.userName !== '',
                'PartCreationComponent should not be created with an empty userName');
-        assert(this.partId != null && this.partId !== '' && this.partId !== 'undefined' && this.partId !== 'null',
+        assert(this.partId != null && this.partId !== '',
                'PartCreationComponent should not be created with an empty partId');
     }
     private createForms() {
@@ -185,13 +187,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                                 FirstPlayer.of(firstPlayer),
                                                 totalPartDuration);
     }
-    public async cancelAndLeave(): Promise<void> {
-        await this.cancelGameCreation();
-        this.messageDisplayer.infoMessage('Partie annulée');
-        await this.router.navigate(['server']);
-    }
     private async cancelGameCreation(): Promise<void> {
-        // callable only by the creator
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.cancelGameCreation');
 
         await this.gameService.deletePart(this.partId);
@@ -211,7 +207,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
                     then: JSON.stringify(iJoinerId) } });
-        if (this.isGameCanceled(iJoinerId)) {
+        if (this.isGameCancelled(iJoinerId)) {
             display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
             return this.onGameCancelled();
@@ -223,12 +219,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             }
         }
     }
-    private isGameCanceled(joinerId: IJoinerId): boolean {
+    private isGameCancelled(joinerId: IJoinerId): boolean {
         return (joinerId == null) || (joinerId.doc == null);
     }
     private onGameCancelled() {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameCancelled');
-        this.router.navigate(['/server']);
+        this.messageDisplayer.infoMessage('La partie a été annulée');
+        this.router.navigate(['server']);
     }
     private isGameStarted(joiner: IJoiner): boolean {
         return joiner && (joiner.partStatus === PartStatus.PART_STARTED.value);
@@ -245,7 +242,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
 
         if (this.userName === joiner.creator) {
             this.observeCandidates(joiner);
-        } else if (this.currentJoiner == null || this.currentJoiner.creator == null) {
+        } else {
             this.observeCreator(joiner);
         }
         this.currentJoiner = joiner;
@@ -277,26 +274,29 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
+                console.log({created: user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
-                    // TODO: this should not happen but it does!
-                    warning('callback: what the hell ' + user.doc.pseudo + ' is already offline!');
+                    // creator is offline, remove this part
+                    this.cancelGameCreation();
                 }
             }
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
+                console.log({modified: user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
-                    this.cancelAndLeave();
+                    this.cancelGameCreation();
                 }
             }
         };
         const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
             // This should not happen in practice, but if it does we can safely remove the joiner
-            warning('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
-                    JSON.stringify(deletedUsers));
+            handleError('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
+                JSON.stringify(deletedUsers));
             for (const user of deletedUsers) {
+                console.log({deleted: user})
                 if (user.doc.pseudo === joiner.creator) {
-                    this.cancelAndLeave();
+                    this.cancelGameCreation();
                 }
             }
         };
@@ -310,27 +310,32 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     private observeCandidates(joiner: IJoiner): void {
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: JSON.stringify(joiner) });
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
+            console.log({foundUsers})
             for (const user of foundUsers) {
+                console.log({created: user})
                 if (user.doc.state === 'offline') {
                     // TODO: this should not happen but it does!
-                    // Removing the user from the lobby hampers part creation when it happens
-                    warning('callback: what the hell ' + user.doc.pseudo + ' is already offline!');
-                    // this.removeUserFromLobby(user.doc.pseudo);
+                    this.removeUserFromLobby(user.doc.pseudo);
+                    handleError('callback: what the hell ' + user.doc.pseudo + ' is already offline!');
                 }
             }
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
+            console.log({modifiedUsers})
             for (const user of modifiedUsers) {
+                console.log({modified: user})
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(user.doc.pseudo);
                 }
             }
         };
         const onDocumentDeleted: (deletedUsers: IJoueurId[]) => void = (deletedUsers: IJoueurId[]) => {
+            console.log({deletedUsers})
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
-            warning('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
+            handleError('OnlineGameWrapper: Opnponents were deleted, what sorcery is this: ' +
                     JSON.stringify(deletedUsers));
             for (const user of deletedUsers) {
+                console.log({deleted: user})
                 this.removeUserFromLobby(user.doc.pseudo);
             }
         };
@@ -339,6 +344,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                                            onDocumentModified,
                                            onDocumentDeleted);
         for (const candidateName of joiner.candidates) {
+            console.log({candidateName})
             if (this.candidateSubscription.get(candidateName).isAbsent()) {
                 // Subscribe to every new candidate
                 const comparableSubscription: ComparableSubscription = {
@@ -347,34 +353,41 @@ export class PartCreationComponent implements OnInit, OnDestroy {
                         throw new Error('ObservableSubscription should not be used');
                     },
                 };
+                console.log({subscribing: candidateName})
                 this.candidateSubscription.set(candidateName, comparableSubscription);
             }
         }
         for (const oldCandidate of this.candidateSubscription.listKeys()) {
             // Unsubscribe old candidates
-            if (oldCandidate.toString() !== joiner.chosenPlayer) {
-                if (joiner.candidates.includes(oldCandidate.toString()) === false) {
-                    this.unsubscribeFrom(oldCandidate.toString());
+            console.log({oldCandidate})
+            if (oldCandidate !== joiner.chosenPlayer) {
+                if (joiner.candidates.includes(oldCandidate) === false) {
+                    this.unsubscribeFrom(oldCandidate);
                 }
             }
         }
     }
     private removeUserFromLobby(userPseudo: string): Promise<void> {
+        console.log({removing: userPseudo})
         const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
-        assert(index !== -1, 'PartCreationComponent.removeUserFromLobby trying to remove a user that is not in the lobby!');
+        if (index === -1) {
+            // User already not in the lobby (could be caused by two updates to the same offline user)
+            return;
+        }
         const beforeUser: string[] = this.currentJoiner.candidates.slice(0, index);
         const afterUser: string[] = this.currentJoiner.candidates.slice(index, -1);
         const candidates: string[] = beforeUser.concat(afterUser);
         if (userPseudo === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage(`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
+            this.messageDisplayer.infoMessage($localize`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
             this.joinerService.updateCandidates(candidates);
         }
     }
     private unsubscribeFrom(userPseudo: string): void {
-        this.candidateSubscription.get(userPseudo).get().subscription();
+        const subscription: ComparableSubscription = this.candidateSubscription.delete(userPseudo);
+        subscription.subscription();
     }
     public acceptConfig(): Promise<void> {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.acceptConfig');

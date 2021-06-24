@@ -76,7 +76,7 @@ export class QuixoComponent extends AbstractGameComponent<QuixoMove, QuixoPartSl
             return this.cancelMove(coordLegality.reason);
         }
         if (this.board[y][x] === this.slice.getCurrentEnnemy().value) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         } else {
             this.chosenCoord = clickedCoord;
             return MGPValidation.SUCCESS;

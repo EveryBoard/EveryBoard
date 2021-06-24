@@ -33,14 +33,16 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
                     'GoRules.isLegal at ' + slice.phase + ((playing || passed) ? ' forbid' : ' allowed') +
                     ' passing on ' + slice.getCopiedBoard());
             return {
-                legal: (playing || passed) ? MGPValidation.SUCCESS : GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE,
+                legal: (playing || passed) ? MGPValidation.SUCCESS :
+                    MGPValidation.failure(GoFailure.CANNOT_PASS_AFTER_PASSED_PHASE),
                 capturedCoords: [],
             };
         } else if (GoRules.isAccept(move)) {
             const counting: boolean = slice.phase === Phase.COUNTING;
             const accept: boolean = slice.phase === Phase.ACCEPT;
             return {
-                legal: (counting || accept) ? MGPValidation.SUCCESS : GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHRASE,
+                legal: (counting || accept) ? MGPValidation.SUCCESS :
+                    MGPValidation.failure(GoFailure.CANNOT_ACCEPT_BEFORE_COUNTING_PHRASE),
                 capturedCoords: [],
             };
         }
@@ -89,7 +91,7 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             boardCopy[move.coord.y][move.coord.x] = GoPiece.EMPTY;
 
             if (isSuicide) {
-                return GoLegalityStatus.failure('illegal suicide');
+                return GoLegalityStatus.failure(GoFailure.CANNOT_COMMIT_SUICIDE);
             } else {
                 return { legal: MGPValidation.SUCCESS, capturedCoords: [] };
             }

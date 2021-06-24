@@ -9,19 +9,7 @@ import { PylosCoord } from './PylosCoord';
 import { PylosMove } from './PylosMove';
 import { PylosPartSlice } from './PylosPartSlice';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
-
-export class PylosFailure {
-
-    public static readonly MOVE_DOES_NOT_HAVE_SUPPORT: string = 'move does not have supported pieces';
-
-    public static readonly LANDING_IMPOSSIBLE: string = 'landing coord is not landable';
-
-    public static readonly CANNOT_CAPTURE: string = 'cannot capture';
-
-    public static readonly FIRST_CAPTURE_INVALID: string = 'first capture invalid';
-
-    public static readonly SECOND_CAPTURE_INVALID: string = 'first capture invalid';
-}
+import { PylosFailure } from './PylosFailure';
 
 export class PylosNode extends MGPNode<PylosRules,
                                        PylosMove,
@@ -111,7 +99,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
     }
     public static applyLegalMove(move: PylosMove,
                                  slice: PylosPartSlice,
-                                 status: LegalityStatus)
+                                 _status: LegalityStatus)
     : PylosPartSlice {
         return slice.applyLegalMove(move);
     }
@@ -158,7 +146,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         if (startingCoord != null) {
             const startingPiece: number = slice.getBoardAt(startingCoord);
             if (startingPiece === ENNEMY) {
-                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE) };
+                return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
             } else if (startingPiece === Player.NONE.value) {
                 return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY) };
             }
@@ -167,11 +155,11 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
                 .filter((p: PylosCoord) => slice.getBoardAt(p) !== Player.NONE.value ||
                                            p.equals(move.landingCoord));
             if (supportedPieces.length > 0) {
-                return { legal: MGPValidation.failure(PylosFailure.MOVE_DOES_NOT_HAVE_SUPPORT) };
+                return { legal: MGPValidation.failure(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES) };
             }
         }
         if (!slice.isLandable(move.landingCoord)) {
-            return { legal: MGPValidation.failure(PylosFailure.LANDING_IMPOSSIBLE) };
+            return { legal: MGPValidation.failure(PylosFailure.CANNOT_LAND) };
         }
 
         if (move.firstCapture.isPresent()) {
@@ -182,9 +170,9 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
             if (PylosRules.isValidCapture(slice, move, move.firstCapture.get())) {
                 if (move.secondCapture.isPresent() &&
                     !PylosRules.isValidCapture(slice, move, move.secondCapture.get())) {
-                    return { legal: MGPValidation.failure(PylosFailure.FIRST_CAPTURE_INVALID) };
+                    return { legal: MGPValidation.failure(PylosFailure.INVALID_SECOND_CAPTURE) };
                 }
-            } else return { legal: MGPValidation.failure(PylosFailure.SECOND_CAPTURE_INVALID) };
+            } else return { legal: MGPValidation.failure(PylosFailure.INVALID_FIRST_CAPTURE) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

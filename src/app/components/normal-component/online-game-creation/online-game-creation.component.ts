@@ -4,7 +4,6 @@ import { GameService } from 'src/app/services/GameService';
 @Component({
     selector: 'app-online-game-creation',
     templateUrl: './online-game-creation.component.html',
-    styleUrls: ['./online-game-creation.component.css'],
 })
 export class OnlineGameCreationComponent {
 
