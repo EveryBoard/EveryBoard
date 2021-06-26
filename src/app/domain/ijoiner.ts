@@ -7,11 +7,10 @@ export interface IJoiner extends JSONObject {
     readonly chosenPlayer: NonNullable<string>; // TODO: make optional
     readonly partStatus: NonNullable<IPartStatus>;
 
-    readonly whoStart?: string;
-    readonly firstPlayer?: IFirstPlayer;
-    readonly partType?: IPartType
-    readonly maximalMoveDuration?: number;
-    readonly totalPartDuration?: number;
+    readonly firstPlayer: NonNullable<IFirstPlayer>;
+    readonly partType: NonNullable<IPartType>
+    readonly maximalMoveDuration: NonNullable<number>;
+    readonly totalPartDuration: NonNullable<number>;
 }
 
 export class Joiner implements DomainWrapper<IJoiner> {

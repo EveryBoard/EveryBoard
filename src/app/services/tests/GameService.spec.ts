@@ -18,6 +18,7 @@ import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
 import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthenticationService } from '../AuthenticationService';
 import { AuthenticationServiceMock } from './AuthenticationService.spec';
+import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
 
 describe('GameService', () => {
     let service: GameService;
@@ -91,13 +92,7 @@ describe('GameService', () => {
         }
     }));
     it('acceptConfig should delegate to joinerService and call startGameWithConfig', fakeAsync(async() => {
-        const joiner: IJoiner = {
-            candidates: [],
-            creator: 'creator',
-            chosenPlayer: 'hisFriend',
-            partStatus: PartStatus.CONFIG_PROPOSED.value,
-            firstPlayer: FirstPlayer.CREATOR.value,
-        };
+        const joiner: IJoiner = JoinerMocks.WITH_PROPOSED_CONFIG.doc;
         spyOn(service.joinerService, 'acceptConfig').and.returnValue(null);
         spyOn(partDao, 'update').and.returnValue(null);
 
