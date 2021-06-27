@@ -13,7 +13,7 @@
             <div class="block" id="turnIndicator" *ngIf="currentPart">
                 <p class="subtitle">Tour n° {{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
-                    <ng-container i18n>C'est à</ng-container>
+                    <ng-container i18n>C'est à </ng-container>
                     <ng-container *ngIf="currentPlayer === userName else otherPlayer" i18n>vous</ng-container>
                     <ng-template #otherPlayer>{{ currentPlayer }}</ng-template>
                 </p>

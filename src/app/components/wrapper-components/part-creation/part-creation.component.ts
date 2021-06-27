@@ -375,7 +375,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             return;
         }
         const beforeUser: string[] = this.currentJoiner.candidates.slice(0, index);
-        const afterUser: string[] = this.currentJoiner.candidates.slice(index, -1);
+        const afterUser: string[] = this.currentJoiner.candidates.slice(index + 1);
         const candidates: string[] = beforeUser.concat(afterUser);
         if (userPseudo === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
