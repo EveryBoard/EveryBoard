@@ -229,6 +229,7 @@ export class GameService implements OnDestroy {
             creator: iJoiner.creator,
             chosenPlayer: iJoiner.chosenPlayer,
             firstPlayer: firstPlayer.value,
+            partType: iJoiner.partType,
             partStatus: PartStatus.PART_STARTED.value,
             maximalMoveDuration: iJoiner.maximalMoveDuration,
             totalPartDuration: iJoiner.totalPartDuration,

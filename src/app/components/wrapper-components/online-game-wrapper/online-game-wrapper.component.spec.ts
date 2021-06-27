@@ -47,17 +47,17 @@ describe('OnlineGameWrapperComponent Lifecycle', () => {
             const joinerService: JoinerService = TestBed.get(JoinerService);
 
             spyOn(joinerService, 'joinGame').and.callThrough();
-            spyOn(joinerService, 'startObserving').and.callThrough();
+            spyOn(joinerService, 'observe').and.callThrough();
             expect(wrapper.currentPartId).not.toBeDefined();
             expect(joinerService.joinGame).not.toHaveBeenCalled();
-            expect(joinerService.startObserving).not.toHaveBeenCalled();
+            expect(joinerService.observe).not.toHaveBeenCalled();
 
             componentTestUtils.detectChanges();
             tick();
 
             expect(wrapper.currentPartId).toBeDefined();
             expect(joinerService.joinGame).toHaveBeenCalledTimes(1);
-            expect(joinerService.startObserving).toHaveBeenCalledTimes(1);
+            expect(joinerService.observe).toHaveBeenCalledTimes(1);
         }));
         it('Initialisation on accepted config should lead to PartCreationComponent to call startGame', fakeAsync(async() => {
             await prepareComponent(JoinerMocks.WITH_ACCEPTED_CONFIG.doc, PartMocks.INITIAL.doc);

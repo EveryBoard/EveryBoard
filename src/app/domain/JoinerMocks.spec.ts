@@ -1,4 +1,4 @@
-import { FirstPlayer, Joiner, PartStatus } from './ijoiner';
+import { FirstPlayer, Joiner, PartStatus, PartType } from './ijoiner';
 
 export class JoinerMocks {
     public static readonly INITIAL: Joiner =
@@ -7,7 +7,10 @@ export class JoinerMocks {
             creator: 'creator',
             chosenPlayer: '',
             firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 
     public static readonly WITH_FIRST_CANDIDATE: Joiner =
@@ -16,7 +19,10 @@ export class JoinerMocks {
             creator: 'creator',
             chosenPlayer: '',
             firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 
     public static readonly WITH_SECOND_CANDIDATE: Joiner =
@@ -25,7 +31,10 @@ export class JoinerMocks {
             creator: 'creator',
             chosenPlayer: '',
             firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 
     public static readonly WITH_CHOSEN_PLAYER: Joiner =
@@ -34,7 +43,10 @@ export class JoinerMocks {
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
             firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 
     public static readonly WITH_PROPOSED_CONFIG: Joiner =
@@ -42,8 +54,8 @@ export class JoinerMocks {
             candidates: ['firstCandidate'],
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
-            partType: 'STANDARD',
             firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.CONFIG_PROPOSED.value,
             maximalMoveDuration: 120,
             totalPartDuration: 1800,
@@ -55,6 +67,7 @@ export class JoinerMocks {
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
             firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_STARTED.value,
             maximalMoveDuration: 120,
             totalPartDuration: 1800,

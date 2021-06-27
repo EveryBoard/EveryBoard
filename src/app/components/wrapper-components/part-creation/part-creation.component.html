@@ -1,28 +1,28 @@
-<div *ngIf="joinerObs | async as joiner"
+<div *ngIf="viewInfo"
      class="box">
-    <div *ngIf="userName === joiner.creator">
+    <div *ngIf="viewInfo.userIsCreator">
         <h1 class="title" i18n>Création d'une partie</h1>
         <form [formGroup]="configFormGroup">
-            <fieldset [disabled]="!(canEditConfigObs | async)">
+            <fieldset [disabled]="!viewInfo.canEditConfig">
                 <div class="field">
                     <label class="label" for="firstPlayer" i18n>Premier joueur</label>
                     <div class="buttons has-addons">
                         <button class="button"
                                 id="firstPlayerRandom"
-                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'RANDOM') && ['is-primary', 'is-selected']"
+                                [ngClass]="(viewInfo.firstPlayer === 'RANDOM') && ['is-primary', 'is-selected']"
                                 (click)="selectFirstPlayer('RANDOM')"
                                 i18n>Au hasard</button>
                         <button class="button"
                                 id="firstPlayerCreator"
-                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'CREATOR') && ['is-primary', 'is-selected']"
+                                [ngClass]="(viewInfo.firstPlayer === 'CREATOR') && ['is-primary', 'is-selected']"
                                 (click)="selectFirstPlayer('CREATOR')"
                                 i18n>Vous</button>
                         <button class="button"
                                 id="firstPlayerOpponent"
-                                [ngClass]="(configFormGroup.get('firstPlayer').value === 'CHOSEN_PLAYER') && ['is-primary', 'is-selected']"
+                                [ngClass]="(viewInfo.firstPlayer === 'CHOSEN_PLAYER') && ['is-primary', 'is-selected']"
                                 (click)="selectFirstPlayer('CHOSEN_PLAYER')"
                                 >
-                            <ng-container *ngIf="joiner.chosenPlayer else opponentWithoutName"> {{ joiner.chosenPlayer }}</ng-container>
+                            <ng-container *ngIf="viewInfo.chosenOpponent else opponentWithoutName"> {{ viewInfo.chosenOpponent }}</ng-container>
                             <ng-template #opponentWithoutName i18n>L'adversaire</ng-template>
                         </button>
                     </div>
@@ -32,7 +32,7 @@
                     <div class="buttons has-addons">
                         <div class="button dropdown is-hoverable"
                              id="partTypeStandard"
-                             [ngClass]="(configFormGroup.get('partType').value === 'STANDARD') && ['is-primary', 'is-selected']"
+                             [ngClass]="(viewInfo.partType === 'STANDARD') && ['is-primary', 'is-selected']"
                              (click)="selectPartType('STANDARD')"
                              >
                             <div class="dropdown-trigger">
@@ -42,8 +42,8 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Durée maximale d'un tour :</ng-container> <strong>{{ NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Durée maximale de la partie :</ng-container> <strong>{{ NORMAL_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
+                                            <ng-container i18n>Durée maximale d'un tour : </ng-container><strong>{{ NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
+                                            <ng-container i18n>Durée maximale de la partie : </ng-container> <strong>{{ NORMAL_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
                                         </p>
                                     </div>
                                 </div>
@@ -51,7 +51,7 @@
                         </div>
                         <div class="button dropdown is-hoverable"
                              id="partTypeBlitz"
-                             [ngClass]="(configFormGroup.get('partType').value === 'BLITZ') && ['is-primary', 'is-selected']"
+                             [ngClass]="(viewInfo.partType === 'BLITZ') && ['is-primary', 'is-selected']"
                              (click)="selectPartType('BLITZ')">
                             <div class="dropdown-trigger">
                                 <span i18n>Blitz</span>
@@ -60,8 +60,8 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Durée maximale d'un tour :</ng-container> <strong>{{ BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Durée maximale de la partie :</ng-container> <strong>{{ BLITZ_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
+                                            <ng-container i18n>Durée maximale d'un tour : </ng-container> <strong>{{ BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
+                                            <ng-container i18n>Durée maximale de la partie : </ng-container> <strong>{{ BLITZ_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
                                         </p>
                                     </div>
                                 </div>
@@ -69,14 +69,14 @@
                         </div>
                         <button class="button"
                                 id="partTypeCustom"
-                                [ngClass]="(configFormGroup.get('partType').value === 'CUSTOM') && ['is-primary', 'is-selected']"
+                                [ngClass]="(viewInfo.partType === 'CUSTOM') && ['is-primary', 'is-selected']"
                                 (click)="selectPartType('CUSTOM')"
                                 i18n>Personnalisée</button>
                     </div>
                 </div>
-                <div id="customTime" *ngIf="showCustomTimeObs | async">
+                <div id="customTime" *ngIf="viewInfo.showCustomTime">
                     <div class="field">
-                        <label class="label" for="maximalMoveDuration"><ng-container i18n>Durée maximale d'un tour :</ng-container> <output>{{ configFormGroup.get('maximalMoveDuration').valueChanges | async | humanDuration }}</output></label>
+                        <label class="label" for="maximalMoveDuration"><ng-container i18n>Durée maximale d'un tour :</ng-container> <output>{{ viewInfo.maximalMoveDuration | humanDuration }}</output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="totalPartDuration"><ng-container i18n>Durée maximale de la partie :</ng-container> <output>{{ configFormGroup.get('totalPartDuration').value | humanDuration }} <ng-container i18n>par joueur</ng-container></output></label>
+                        <label class="label" for="totalPartDuration"><ng-container i18n>Durée maximale de la partie :</ng-container> <output>{{ viewInfo.totalPartDuration | humanDuration }} <ng-container i18n>par joueur</ng-container></output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -100,7 +100,7 @@
                 <div class="field">
                     <label class="label">Adversaire</label>
                     <div class="control">
-                        <div *ngIf="joiner.candidates.length === 0 else chooseCandidate" i18n>
+                        <div *ngIf="viewInfo.candidates.length === 0 else chooseCandidate" i18n>
                             Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<br/>
                             Attendez qu'un adversaire vous rejoigne pour pouvoir en choisir un.
                         </div>
@@ -116,15 +116,15 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr *ngFor="let candidate of joiner.candidates"
+                                        <tr *ngFor="let candidate of viewInfo.candidates"
                                             (click)="selectOpponent(candidate)"
-                                            [ngClass]="configFormGroup.get('chosenOpponent').value === candidate && 'is-selected'"
+                                            [ngClass]="viewInfo.chosenOpponent === candidate && 'is-selected'"
                                             id="presenceOf_{{ candidate }}">
                                             <td class="td"
-                                                [id]="configFormGroup.get('chosenOpponent').value === candidate && ('selected_' + candidate) || 'candidate_' + candidate"
+                                                [id]="viewInfo.chosenOpponent === candidate && ('selected_' + candidate) || 'candidate_' + candidate"
                                                 >{{ candidate }}</td>
                                             <td class="td">
-                                                <button *ngIf="configFormGroup.get('chosenOpponent').value !== candidate"
+                                                <button *ngIf="viewInfo.chosenOpponent !== candidate"
                                                         class="button is-primary" i18n>Sélectionner</button></td>
                                         </tr>
                                     </tbody>
@@ -137,13 +137,13 @@
             <div class="field">
                 <div class="buttons has-addons">
                     <button class="button is-primary"
-                            [disabled]="!(canProposeConfigObs | async)"
+                            [disabled]="!(viewInfo.canProposeConfig)"
                             (click)="proposeConfig()"
                             id="proposeConfig"
                             i18n>Proposer la configuration</button>
                     <button class="button"
                             id="reviewConfig"
-                            *ngIf="canReviewConfigObs | async"
+                            *ngIf="viewInfo.canReviewConfig"
                             (click)="reviewConfig()"
                             i18n>Changer la configuration</button>
                     <button class="button"
@@ -155,42 +155,42 @@
         </form>
     </div>
 
-    <div *ngIf="userIsChosenPlayerObs | async">
+    <div *ngIf="viewInfo.userIsChosenOpponent">
         <div class="message is-primary">
             <div class="message-header">
                 <p i18n>Proposition de configuration</p>
             </div>
             <div class="message-body">
-                <div *ngIf="userIsModifyingConfigObs | async else configProposal"
+                <div *ngIf="viewInfo.creatorIsModifyingConfig else configProposal"
                      class="content">
                     <p i18n>
                         Vous avez été choisi comme adversaire<br/>
-                        {{ joiner.creator }} est en train de modifier la configuration
+                        {{ viewInfo.creator }} est en train de modifier la configuration
                     </p>
                 </div>
                 <ng-template #configProposal>
                     <div class="content">
                         <p>
-                            <ng-container i18n>{{ currentJoiner.creator }} propose de faire une partie</ng-container>
-                            <ng-container *ngIf="joiner.partType === 'STANDARD'" i18n>standard</ng-container>
-                            <ng-container *ngIf="joiner.partType === 'BLITZ'" i18n>rapide</ng-container>
-                            <ng-container *ngIf="joiner.partType === 'CUSTOM'" i18n>personnalisée</ng-container>
+                            <ng-container i18n>{{ viewInfo.creator }} propose de faire une partie </ng-container>
+                            <ng-container *ngIf="viewInfo.partType === 'STANDARD'" i18n>standard</ng-container>
+                            <ng-container *ngIf="viewInfo.partType === 'BLITZ'" i18n>rapide</ng-container>
+                            <ng-container *ngIf="viewInfo.partType === 'CUSTOM'" i18n>personnalisée</ng-container>
                             où :
                         </p>
                         <ul>
                             <li>
-                                <span *ngIf="joiner.firstPlayer === 'CREATOR'" i18n>
-                                    {{ currentJoiner.creator }} joue en premier
+                                <span *ngIf="viewInfo.firstPlayer === 'CREATOR'" i18n>
+                                    {{ viewInfo.creator }} joue en premier
                                 </span>
-                                <span *ngIf="joiner.firstPlayer === 'CHOSEN_PLAYER'" i18n>
+                                <span *ngIf="viewInfo.firstPlayer === 'CHOSEN_PLAYER'" i18n>
                                     vous jouez en premier
                                 </span>
-                                <span *ngIf="joiner.firstPlayer === 'RANDOM'" i18n>
+                                <span *ngIf="viewInfo.firstPlayer === 'RANDOM'" i18n>
                                     le premier joueur est tiré au hasard
                                 </span>
                             </li>
-                            <li><ng-container i18n>un tour dure maximum</ng-container> <strong>{{ joiner.maximalMoveDuration | humanDuration }} </strong></li>
-                            <li><ng-container i18n>la partie dure maximum</ng-container> <strong>{{ joiner.totalPartDuration | humanDuration }} <ng-container i18n>par joueur</ng-container></strong></li>
+                            <li><ng-container i18n>un tour dure maximum </ng-container><strong>{{ viewInfo.maximalMoveDuration | humanDuration }} </strong></li>
+                            <li><ng-container i18n>la partie dure maximum </ng-container><strong>{{ viewInfo.totalPartDuration | humanDuration }} <ng-container i18n>par joueur</ng-container></strong></li>
                         </ul>
                         <button class="button is-primary"
                                 (click)="acceptConfig()"
@@ -202,15 +202,15 @@
             </div>
         </div>
     </div>
-    <div *ngIf="userIsObserverObs | async"
+    <div *ngIf="viewInfo.userIsObserver"
          class="message is-primary">
         <div class="message-header">
             <p i18n>Un instant...</p>
         </div>
         <div class="message-body">
             <p>
-                <ng-container *ngIf="userIsModifyingConfigObs | async else proposalSent" i18n>{{ joiner.creator }} est en train de configurer la partie.</ng-container>
-                <ng-template #proposalSent i18n>{{ joiner.creator }} a proposé une configuration à {{ joiner.chosenPlayer }}.</ng-template>
+                <ng-container *ngIf="viewInfo.creatorIsModifyingConfig else proposalSent" i18n>{{ viewInfo.creator }} est en train de configurer la partie.</ng-container>
+                <ng-template #proposalSent i18n>{{ viewInfo.creator }} a proposé une configuration à {{ viewInfo.chosenOpponent }}.</ng-template>
             </p>
         </div>
     </div>

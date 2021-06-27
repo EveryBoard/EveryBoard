@@ -16,7 +16,10 @@ export class JoinerService {
         candidates: [],
         chosenPlayer: '',
         firstPlayer: FirstPlayer.RANDOM.value,
+        partType: PartType.STANDARD.value,
         partStatus: PartStatus.PART_CREATED.value,
+        maximalMoveDuration: PartType.NORMAL_MOVE_DURATION,
+        totalPartDuration: PartType.NORMAL_PART_DURATION,
     };
 
     private observedJoinerId: string;
@@ -27,6 +30,7 @@ export class JoinerService {
         display(JoinerService.VERBOSE, 'JoinerService.constructor');
     }
     public observe(joinerId: string): Observable<IJoinerId> {
+        this.observedJoinerId = joinerId;
         return this.joinerDao.getObsById(joinerId);
     }
     public startObserving(joinerId: string, callback: (iJoinerId: IJoinerId) => void): void {
