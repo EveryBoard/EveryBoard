@@ -194,7 +194,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         //   - start piece should be owned by the current player
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, start);
         if (piece.belongsTo(slice.getCurrentEnnemy())) {
-            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE) };
+            return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
         }
         //  - start case should contain a piece of the right color (or any color can be played)
         if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {

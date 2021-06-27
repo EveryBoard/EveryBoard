@@ -107,7 +107,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
         const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
         if (piece.belongsTo(ennemy)) {
-            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;

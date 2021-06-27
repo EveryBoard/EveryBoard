@@ -3,10 +3,11 @@ import { Player } from 'src/app/jscaip/Player';
 import { PylosCoord } from '../PylosCoord';
 import { PylosMove } from '../PylosMove';
 import { PylosPartSlice } from '../PylosPartSlice';
-import { PylosFailure, PylosRules } from '../PylosRules';
+import { PylosRules } from '../PylosRules';
 import { PylosMinimax } from '../PylosMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { PylosFailure } from '../PylosFailure';
 
 describe('PylosRules:', () => {
 
@@ -115,7 +116,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toBe(PylosFailure.LANDING_IMPOSSIBLE);
+        expect(status.legal.reason).toBe(PylosFailure.CANNOT_LAND);
     });
     it('should forbid move who capture without having formed a squared', () => {
         const board: number[][][] = [
@@ -165,12 +166,12 @@ describe('PylosRules:', () => {
 
         const move: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0), [new PylosCoord(2, 2, 0)]);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toBe(PylosFailure.FIRST_CAPTURE_INVALID);
+        expect(status.legal.reason).toBe(PylosFailure.INVALID_FIRST_CAPTURE);
 
         const otherMove: PylosMove = PylosMove.fromDrop(new PylosCoord(0, 0, 0),
                                                         [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)]);
         const otherStatus: LegalityStatus = rules.isLegal(otherMove, slice);
-        expect(otherStatus.legal.reason).toBe(PylosFailure.SECOND_CAPTURE_INVALID);
+        expect(otherStatus.legal.reason).toBe(PylosFailure.INVALID_SECOND_CAPTURE);
     });
     it('should allow legal capture to include landing piece', () => {
         const board: number[][][] = [
@@ -218,7 +219,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 1, 0), new PylosCoord(0, 0, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toBe(PylosFailure.MOVE_DOES_NOT_HAVE_SUPPORT);
+        expect(status.legal.reason).toBe(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES);
     });
     it('should forbid piece to climb when supporting', () => {
         const board: number[][][] = [
@@ -242,7 +243,7 @@ describe('PylosRules:', () => {
         const slice: PylosPartSlice = new PylosPartSlice(board, 0);
         const move: PylosMove = PylosMove.fromClimb(new PylosCoord(1, 0, 0), new PylosCoord(0, 1, 1), []);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toBe(PylosFailure.MOVE_DOES_NOT_HAVE_SUPPORT);
+        expect(status.legal.reason).toBe(PylosFailure.SHOULD_HAVE_SUPPORTING_PIECES);
     });
     it('should allow legal capture to include piece supporting previously captured stone', () => {
         const board: number[][][] = [

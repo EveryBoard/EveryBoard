@@ -13,9 +13,9 @@ import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 
 export class CoerceoPiecesThreatTilesMinimax extends CoerceoMinimax {
 
-    public static readonly SCORE_BY_THREATENED_PIECE: number = 20;
+    public static readonly SCORE_BY_THREATENED_PIECE: number = 1000;
 
-    public static readonly SCORE_BY_SAFE_PIECE: number = 20 * 19;
+    public static readonly SCORE_BY_SAFE_PIECE: number = 1000 * 1000;
 
     public getBoardValue(node: CoerceoNode): NodeUnheritance {
         const status: GameStatus = CoerceoRules.getGameStatus(node);

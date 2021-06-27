@@ -5,30 +5,15 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { CoerceoNode, CoerceoRules } from './CoerceoRules';
 import { GameStatus } from 'src/app/jscaip/Rules';
+import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 
 
 export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoPartSlice> {
 
     public getListMoves(node: CoerceoNode): CoerceoMove[] {
-        const moves: CoerceoMove[] = this.getListDeplacement(node);
-        return moves.concat(this.getListExchanges(node));
-    }
-    public getListDeplacement(node: CoerceoNode): CoerceoMove[] {
-        const deplacements: CoerceoMove[] = [];
-        const slice: CoerceoPartSlice = node.gamePartSlice;
-        for (let y: number = 0; y < 10; y++) {
-            for (let x: number = 0; x < 15; x++) {
-                const start: Coord = new Coord(x, y);
-                if (slice.getBoardAt(start) === slice.getCurrentPlayer().value) {
-                    const legalLandings: Coord[] = slice.getLegalLandings(start);
-                    for (const end of legalLandings) {
-                        const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);
-                        deplacements.push(move);
-                    }
-                }
-            }
-        }
-        return deplacements;
+        let moves: CoerceoMove[] = this.getListExchanges(node);
+        moves = moves.concat(this.getListDeplacement(node));
+        return this.putCaptureFirst(node, moves);
     }
     public getListExchanges(node: CoerceoNode): CoerceoMove[] {
         const exchanges: CoerceoMove[] = [];
@@ -48,6 +33,23 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoPartSlice> {
             }
         }
         return exchanges;
+    }
+    public getListDeplacement(node: CoerceoNode): CoerceoMove[] {
+        const deplacements: CoerceoMove[] = [];
+        const slice: CoerceoPartSlice = node.gamePartSlice;
+        for (let y: number = 0; y < 10; y++) {
+            for (let x: number = 0; x < 15; x++) {
+                const start: Coord = new Coord(x, y);
+                if (slice.getBoardAt(start) === slice.getCurrentPlayer().value) {
+                    const legalLandings: Coord[] = slice.getLegalLandings(start);
+                    for (const end of legalLandings) {
+                        const move: CoerceoMove = CoerceoMove.fromCoordToCoord(start, end);
+                        deplacements.push(move);
+                    }
+                }
+            }
+        }
+        return deplacements;
     }
     public getBoardValue(node: CoerceoNode): NodeUnheritance {
         const status: GameStatus = CoerceoRules.getGameStatus(node);
@@ -72,5 +74,22 @@ export class CoerceoMinimax extends Minimax<CoerceoMove, CoerceoPartSlice> {
             (1 * piecesScores[1]) +
             (3 * piecesScores[2]) +
             (3 * piecesScores[3]);
+    }
+    public putCaptureFirst(node: CoerceoNode, moves: CoerceoMove[]): CoerceoMove[] {
+        ArrayUtils.sortByDescending(moves, (move: CoerceoMove) => {
+            return this.moveCapturesList(node, move).length;
+        });
+        return moves;
+    }
+    public moveCapturesList(node: CoerceoNode, move: CoerceoMove): Coord[] {
+        if (move.isTileExchange()) {
+            return [move.capture.get()];
+        } else {
+            // Move the piece
+            const afterDeplacement: CoerceoPartSlice = node.gamePartSlice.applyLegalDeplacement(move);
+            // removes emptied tiles
+            const afterTilesRemoved: CoerceoPartSlice = afterDeplacement.removeTilesIfNeeded(move.start.get(), true);
+            return afterTilesRemoved.getCapturedNeighbors(move.landingCoord.get());
+        }
     }
 }

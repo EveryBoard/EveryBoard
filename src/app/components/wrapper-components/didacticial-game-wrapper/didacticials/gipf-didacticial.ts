@@ -29,7 +29,7 @@ export const gipfDidacticial: DidacticialStep[] = [
          Vous jouez Foncé, insérez une pièce.`,
         GipfPartSlice.getInitialSlice(),
         new GipfMove(new GipfPlacement(new Coord(3, 0), MGPOptional.of(HexaDirection.DOWN)), [], []),
-        $localize`Bravo.`,
+        $localize`Bravo !`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture (1/3)`,
@@ -66,7 +66,7 @@ export const gipfDidacticial: DidacticialStep[] = [
         )],
         $localize`Bravo, vous avez récupéré 4 de vos pièces, mais ce n'est pas la capture la plus utile.
          Voyons maintenant la vraie utilité d'une capture.`,
-        $localize`Raté.`,
+        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture (2/3)`,

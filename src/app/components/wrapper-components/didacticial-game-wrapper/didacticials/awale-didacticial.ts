@@ -35,7 +35,7 @@ export const awaleDidacticial: DidacticialStep[] = [
             [1, 0, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [new AwaleMove(0, 1)],
-        $localize`Bravo. Il s'agissait ici d'une capture simple, voyons maintenant une capture composée.`,
+        $localize`Bravo ! Il s'agissait ici d'une capture simple, voyons maintenant une capture composée.`,
         $localize`Perdu. Recommencez et distribuez la maison la plus à gauche.`,
     ),
     DidacticialStep.fromMove(
@@ -70,7 +70,7 @@ export const awaleDidacticial: DidacticialStep[] = [
             [1, 3, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [new AwaleMove(1, 1)],
-        $localize`Bravo. Constatez que la capture s'est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons!`,
+        $localize`Bravo ! Constatez que la capture s'est interrompue en arrivant dans votre territoire, on ne peut pas capturer ses propres maisons!`,
         $localize`Vous n'avez capturé qu'une seule maison, recommencez!`,
     ),
     DidacticialStep.fromMove(
@@ -93,7 +93,7 @@ export const awaleDidacticial: DidacticialStep[] = [
             [0, 1, 2, 4, 4, 5],
         ], 1, [0, 0]),
         new AwaleMove(3, 1),
-        $localize`Bravo. Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux ! C’est souvent un bon moyen d’avoir des captures faciles !`,
+        $localize`Bravo ! Notez que vous pouvez choisir de lui en donner le moins possible si cela vous arrange mieux ! C’est souvent un bon moyen d’avoir des captures faciles !`,
     ),
     DidacticialStep.anyMove(
         $localize`Fin de partie`,

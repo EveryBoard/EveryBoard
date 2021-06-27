@@ -39,8 +39,8 @@ export const saharaDidacticial: DidacticialStep[] = [
          2. Cliquez ensuite sur la case en dessous, pour y déplacer votre pyramide.`,
         SaharaPartSlice.getInitialSlice(),
         [new SaharaMove(new Coord(2, 0), new Coord(2, 1))],
-        $localize`Bravo`,
-        $localize`Raté.
+        $localize`Bravo !`,
+        $localize`Raté !
          Vous n'avez pas déplacé la pyramide demandée.
          Cependant c'est un déplacement légal, donc j'imagine que vous pouvez aller jouer maintenant!`,
     ),
@@ -67,7 +67,7 @@ export const saharaDidacticial: DidacticialStep[] = [
             new SaharaMove(c, new Coord(6, 3)),
             new SaharaMove(c, new Coord(4, 3)),
         ],
-        $localize`Bravo.`,
-        $localize`Raté.`,
+        $localize`Bravo !`,
+        $localize`Raté !`,
     ),
 ];

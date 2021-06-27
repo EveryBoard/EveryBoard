@@ -53,12 +53,12 @@ export const pylosDidacticial: DidacticialStep[] = [
             ],
         ], 0),
         [PylosMove.fromClimb(new PylosCoord(3, 3, 0), new PylosCoord(0, 0, 1), [])],
-        $localize`Bravo.
+        $localize`Bravo !
          Notes importantes:
          1. On ne peut déplacer une pièce qui est en dessous d'une autre.
          2. Naturellement, on ne peut pas déplacer les pièces adverses.
          3. Un déplacement ne peut se faire que quand la case d'arrivée est plus haute que la case de départ.`,
-        $localize`Raté`,
+        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Carré (1/3)`,
@@ -93,7 +93,7 @@ export const pylosDidacticial: DidacticialStep[] = [
             PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(1, 1, 0)]),
         ],
         $localize`Bravo, vous avez économisé une pièce.`,
-        $localize`Raté.`,
+        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Carré (2/3)`,
@@ -118,7 +118,7 @@ export const pylosDidacticial: DidacticialStep[] = [
         ], 0),
         [PylosMove.fromDrop(new PylosCoord(0, 1, 0), [new PylosCoord(0, 0, 0), new PylosCoord(1, 0, 0)])],
         $localize`Bravo, vous avez économisé deux pièces.`,
-        $localize`Raté.`,
+        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Carré (3/3)`,
@@ -145,6 +145,6 @@ export const pylosDidacticial: DidacticialStep[] = [
         ], 0),
         [PylosMove.fromDrop(new PylosCoord(0, 0, 1), [new PylosCoord(0, 0, 1), new PylosCoord(0, 0, 0)])],
         $localize`Bravo, vous avez économisé deux pièces. Vous êtes maintenant prêt à jouer.`,
-        $localize`Raté.`,
+        $localize`Raté !`,
     ),
 ];

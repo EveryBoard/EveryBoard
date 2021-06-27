@@ -37,7 +37,7 @@ export const quixoDidacticial: DidacticialStep[] = [
         [new QuixoMove(4, 4, Orthogonal.LEFT)],
         $localize`Voyez comme les quatre pièces foncées ont été déplacées d'une case à droite.
          La pièce neutre, elle, s'est déplacé de 4 cases à gauche et est devenue claire.`,
-        $localize`Raté.`,
+        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Victoire`,

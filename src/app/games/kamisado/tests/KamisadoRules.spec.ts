@@ -396,7 +396,7 @@ describe('KamisadoRules:', () => {
         const slice: KamisadoPartSlice =
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
-        expect(rules.isLegal(move, slice).legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+        expect(rules.isLegal(move, slice).legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     });
     it('should not allow moving a piece that does not have the right color', () => {
         const board: number[][] = [

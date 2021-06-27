@@ -82,7 +82,7 @@
                 Passer son tour
             </button>
             <button id="takeBack"
-                    *ngIf="compo.rules.node.gamePartSlice.turn > 0 && endGame === false"
+                    *ngIf="compo.rules.node.gamePartSlice.turn > 0"
                     class="button is-fullwidth mb-1"
                     (click)="takeBack()"
                     i18n>

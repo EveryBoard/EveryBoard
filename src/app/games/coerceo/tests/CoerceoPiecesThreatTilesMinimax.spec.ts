@@ -176,9 +176,11 @@ describe('CoerceoPiecesThreatTilesMinimax', () => {
             const threatMap: MGPMap<Coord, PieceThreat> = minimax.getThreatMap(state, pieces);
             const filteredThreatMap: MGPMap<Coord, PieceThreat> = minimax.filterThreatMap(threatMap, state);
             expect(filteredThreatMap.containsKey(new Coord(6, 6)))
-                .withContext('Current player piece should not be considered threatened').toBeFalse();
+                .withContext('Current player piece should not be considered threatened')
+                .toBeFalse();
             expect(filteredThreatMap.containsKey(new Coord(7, 6)))
-                .withContext('Opponent pieces should be considered threatened').toBeTrue();
+                .withContext('Opponent pieces should be considered threatened')
+                .toBeTrue();
         });
         it('should not consider ensandwiched piece as threats', () => {
             const board: NumberTable = [

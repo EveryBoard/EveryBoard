@@ -143,7 +143,7 @@ export const goDidacticial: DidacticialStep[] = [
          L'emplacement de cette pièce est donc marqué d'un rectangle rouge, pour rapeller que c'est une intersection interdite.
          Cette règle s'appelle le Ko.
          Toute l'astuce pour Clair consiste, à essayer de créer une menace suffisamment grave pour que Foncé ait intérêt à y répondre immédiatement, et n'ait pas le temps de protéger sa dernière pierre, afin que Clair puisse la recapturer.`,
-        $localize`Raté.`,
+        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Fin de partie`,

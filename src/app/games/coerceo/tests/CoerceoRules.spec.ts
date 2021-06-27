@@ -115,7 +115,7 @@ describe('CoerceoRules', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice(board, 1, [0, 0], [0, 0]);
             const move: CoerceoMove = CoerceoMove.fromDeplacement(new Coord(6, 6), CoerceoStep.DOWN_RIGHT);
             const status: LegalityStatus = rules.isLegal(move, slice);
-            expect(status.legal.getReason()).toBe(CoerceoFailure.CANNOT_LAND_ON_ALLY);
+            expect(status.legal.getReason()).toBe(RulesFailure.MUST_LAND_ON_EMPTY_CASE);
         });
         it('Should remove pieces captured by deplacement', () => {
             const board: NumberTable = [

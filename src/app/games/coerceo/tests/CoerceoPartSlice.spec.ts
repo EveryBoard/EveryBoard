@@ -23,6 +23,11 @@ describe('CoerceoPartSlice', () => {
             spyOn(slice, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 1, 2]);
             expect(slice.isDeconnectable(null)).toBeTrue();
         });
+        it('Should not deconnect when 3 splitted neighboor (v v _ v _ _)', () => {
+            const slice: CoerceoPartSlice = new CoerceoPartSlice([], 0, [0, 0], [0, 0]);
+            spyOn(slice, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 1, 3]);
+            expect(slice.isDeconnectable(null)).toBeFalse();
+        });
         it('Should not deconnect when 3 splitted neighboor (v _ v v _ _)', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice([], 0, [0, 0], [0, 0]);
             spyOn(slice, 'getPresentNeighboorTilesRelativeIndexes').and.returnValue([0, 2, 3]);

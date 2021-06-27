@@ -55,7 +55,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
     public applyLegalDeplacement(
         move: CoerceoMove,
         slice: CoerceoPartSlice,
-        status: LegalityStatus)
+        _status: LegalityStatus)
     : CoerceoPartSlice
     {
         // Move the piece
@@ -115,7 +115,7 @@ export class CoerceoRules extends Rules<CoerceoMove, CoerceoPartSlice> {
             return { legal: MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE) };
         }
         if (slice.getBoardAt(move.landingCoord.get()) === slice.getCurrentPlayer().value) {
-            return { legal: MGPValidation.failure(CoerceoFailure.CANNOT_LAND_ON_ALLY) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_LAND_ON_EMPTY_CASE) };
         }
         return { legal: MGPValidation.SUCCESS };
     }

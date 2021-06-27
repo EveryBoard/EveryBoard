@@ -48,6 +48,6 @@ export const quartoDidacticial: DidacticialStep[] = [
         ], 7, QuartoPiece.AABA),
         [new QuartoMove(3, 3, QuartoPiece.AABB)],
         $localize`Bien joué!`,
-        $localize`Raté!`,
+        $localize`Raté !`,
     ),
 ];

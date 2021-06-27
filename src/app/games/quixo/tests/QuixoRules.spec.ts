@@ -32,7 +32,7 @@ describe('QuixoRules:', () => {
         const slice: QuixoPartSlice = new QuixoPartSlice(board, 0);
         const move: QuixoMove = new QuixoMove(4, 2, Orthogonal.LEFT);
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+        expect(status.legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     });
     it('Should always put moved piece to currentPlayer symbol', () => {
         const board: number[][] = [

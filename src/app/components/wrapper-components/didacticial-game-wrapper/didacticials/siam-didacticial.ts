@@ -38,7 +38,7 @@ export const siamDidacticial: DidacticialStep[] = [
          Cela indiquera la direction dans laquelle sera orientée votre pièce.`,
         SiamPartSlice.getInitialSlice(),
         new SiamMove(2, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN),
-        $localize`Bravo`,
+        $localize`Bravo !`,
     ),
     DidacticialStep.fromMove(
         $localize`Déplacer une pièce`,
@@ -60,7 +60,7 @@ export const siamDidacticial: DidacticialStep[] = [
         ], 0),
         [new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.DOWN)],
         $localize`Bravo, vous avez fait un dérapage!`,
-        $localize`Raté.`,
+        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Sortir une pièce`,
@@ -95,8 +95,8 @@ export const siamDidacticial: DidacticialStep[] = [
             [_, _, r, l, L],
         ], 0),
         [new SiamMove(4, 4, MGPOptional.of(Orthogonal.LEFT), Orthogonal.LEFT)],
-        $localize`Bravo`,
-        $localize`Raté`,
+        $localize`Bravo !`,
+        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Victoire`,

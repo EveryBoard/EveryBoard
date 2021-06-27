@@ -74,11 +74,11 @@ export const epaminondasDidacticial: DidacticialStep[] = [
         [
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
             new EpaminondasMove(0, 11, 2, 2, Direction.UP)],
-        $localize`Bravo.
+        $localize`Bravo !
          Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
          Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
          Il ne peut y avoir ni ennemis ni trous dans la phalange.`,
-        $localize`Raté`,
+        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture`,

@@ -31,7 +31,7 @@ export const reversiDidacticial: DidacticialStep[] = [
          Faites n'importe quel mouvement.`,
         ReversiPartSlice.getInitialSlice(),
         new ReversiMove(2, 4),
-        $localize`Bravo`,
+        $localize`Bravo !`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture (2/2)`,
@@ -49,7 +49,7 @@ export const reversiDidacticial: DidacticialStep[] = [
             [_, O, X, O, X, O, _, _],
         ], 1),
         [new ReversiMove(0, 7)],
-        $localize`Bravo`,
+        $localize`Bravo !`,
         $localize`Un peu plus en bas et un peu plus à gauche, s'il vous plaît.`,
     ),
     DidacticialStep.informational(

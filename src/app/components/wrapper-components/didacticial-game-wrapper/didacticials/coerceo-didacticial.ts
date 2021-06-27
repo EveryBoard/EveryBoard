@@ -53,7 +53,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(5, 2), new Coord(4, 1)),
             CoerceoMove.fromCoordToCoord(new Coord(3, 4), new Coord(4, 3)),
         ],
-        $localize`Bravo!`,
+        $localize`Bravo !`,
         $localize`Raté, vous n'avez pas capturé de pièces!`,
     ),
     DidacticialStep.fromMove(
