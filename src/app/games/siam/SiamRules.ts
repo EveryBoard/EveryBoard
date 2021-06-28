@@ -26,7 +26,7 @@ export class SiamRules extends _SiamRules {
 
         if (!move.isInsertion()) {
             const movedPiece: number = slice.getBoardAt(move.coord);
-            if (SiamPiece.belongTo(movedPiece, slice.getCurrentEnnemy())) {
+            if (!SiamPiece.belongTo(movedPiece, slice.getCurrentPlayer())) {
                 return SiamLegalityStatus.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
             }
         }

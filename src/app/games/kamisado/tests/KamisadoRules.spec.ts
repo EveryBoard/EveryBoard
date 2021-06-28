@@ -114,7 +114,7 @@ describe('KamisadoRules:', () => {
         expect(status.legal.reason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
     });
     it('should not allow vertical moves with an obstacle', () => {
-        const board1: number[][] = [
+        const board: number[][] = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -124,15 +124,12 @@ describe('KamisadoRules:', () => {
             [r, _, _, _, _, _, _, _],
             [R, _, _, _, _, _, _, _],
         ];
-        const slice: KamisadoPartSlice =
-            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board1);
-        rules.node = new MGPNode(null, null, slice);
-        const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
-        const status1: LegalityStatus = rules.isLegal(move1, slice);
-        expect(status1.legal.reason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
-        const move2: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 5));
-        const status2: LegalityStatus = rules.isLegal(move2, slice);
-        expect(status2.legal.reason).toBe(KamisadoFailure.MOVE_BLOCKED);
+        const state: KamisadoPartSlice =
+            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        rules.node = new MGPNode(null, null, state);
+        const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 5));
+        const status: LegalityStatus = rules.isLegal(move, state);
+        expect(status.legal.reason).toBe(KamisadoFailure.MOVE_BLOCKED);
     });
     it('should not allow backward moves', () => {
         const board: number[][] = [
@@ -396,7 +393,7 @@ describe('KamisadoRules:', () => {
         const slice: KamisadoPartSlice =
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
-        expect(rules.isLegal(move, slice).legal.reason).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
+        expect(rules.isLegal(move, slice).legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
     });
     it('should not allow moving a piece that does not have the right color', () => {
         const board: number[][] = [

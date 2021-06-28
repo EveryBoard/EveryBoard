@@ -105,7 +105,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             case ENNEMY:
                 return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
             case Player.NONE.value:
-                return this.cancelMove(EpaminondasFailure.MUST_SELECT_PIECE);
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
         }
     }
     private hidePreviousMove() {

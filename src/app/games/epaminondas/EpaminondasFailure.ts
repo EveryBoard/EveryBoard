@@ -6,8 +6,6 @@ export class EpaminondasFailure {
 
     public static readonly PHALANX_SHOULD_BE_GREATER_TO_CAPTURE: string = $localize`Votre phalange doit être plus grande que celle qu'elle tente de capturer.`;
 
-    public static readonly MUST_SELECT_PIECE: string = $localize`Cette case est vide, vous devez sélectionner une de vos pièces.`;
-
     public static readonly CASE_NOT_ALIGNED_WITH_SELECTED: string = $localize`Cette case n'est pas alignée avec la pièce sélectionnée.`;
 
     public static readonly SINGLE_PIECE_MUST_MOVE_BY_ONE: string = $localize`Une pièce seule ne peut se déplacer que d'une case.`;

@@ -43,8 +43,6 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
 
     public encoder: MoveEncoder<CoerceoMove> = CoerceoMove.encoder;
 
-    public threateneds: Coord[] = [];
-    public threateners: Coord[] = [];
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.rules = new CoerceoRules(CoerceoPartSlice);

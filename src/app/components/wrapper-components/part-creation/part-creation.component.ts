@@ -56,10 +56,11 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     // with the part creation component
     public static VERBOSE: boolean = false;
 
-    public BLITZ_PART_DURATION: number = PartType.BLITZ_PART_DURATION;
-    public BLITZ_MOVE_DURATION: number = PartType.BLITZ_MOVE_DURATION;
-    public NORMAL_PART_DURATION: number = PartType.NORMAL_PART_DURATION;
-    public NORMAL_MOVE_DURATION: number = PartType.NORMAL_MOVE_DURATION;
+    // public BLITZ_PART_DURATION: number = PartType.BLITZ_PART_DURATION;
+    // public BLITZ_MOVE_DURATION: number = PartType.BLITZ_MOVE_DURATION;
+    // public NORMAL_PART_DURATION: number = PartType.NORMAL_PART_DURATION;
+    // public NORMAL_MOVE_DURATION: number = PartType.NORMAL_MOVE_DURATION;
+    public partType: typeof PartType = PartType;
 
     @Input() partId: NonNullable<string>;
     @Input() userName: NonNullable<string>;
@@ -217,15 +218,13 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Promise.resolve();
     }
     private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
-        display(PartCreationComponent.VERBOSE,
+        display(PartCreationComponent.VERBOSE || true,
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
                     then: JSON.stringify(iJoinerId) } });
-        console.log({iJoinerId})
         if (this.isGameCancelled(iJoinerId)) {
-            display(PartCreationComponent.VERBOSE,
+            display(PartCreationComponent.VERBOSE || true,
                     'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
-            console.log('game has been cancelled')
             return this.onGameCancelled();
         } else {
             this.updateJoiner(iJoinerId.doc);
@@ -254,8 +253,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameStarted finished');
     }
     private updateJoiner(joiner: IJoiner): void {
-        display(PartCreationComponent.VERBOSE, 'PartCreationComponent.updateJoiner');
-        console.log({updatedJoiner: joiner})
+        display(PartCreationComponent.VERBOSE || true, { PartCreationComponent_updateJoiner: { joiner } });
 
         if (this.userName === joiner.creator) {
             this.observeCandidates(joiner);
@@ -314,8 +312,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.creatorSubscription = this.userService.observeUserByPseudo(joiner.creator, callback);
     }
     private observeCandidates(joiner: IJoiner): void {
-        display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: JSON.stringify(joiner) });
-        console.log({observeCandidates: joiner})
+        display(PartCreationComponent.VERBOSE || true, { PartCreation_observeCandidates: JSON.stringify(joiner) });
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
                 console.log({created: user})
@@ -370,7 +367,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         console.log({removing: userPseudo, currentJoiner: this.currentJoiner})
         const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
         if (index === -1) {
-            console.log('not in lobby')
+            display(true, userPseudo + ' is not in the lobby!');
             // User already not in the lobby (could be caused by two updates to the same offline user)
             return;
         }

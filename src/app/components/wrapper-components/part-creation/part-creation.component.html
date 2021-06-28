@@ -42,8 +42,8 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Durée maximale d'un tour : </ng-container><strong>{{ NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Durée maximale de la partie : </ng-container> <strong>{{ NORMAL_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
+                                            <ng-container i18n>Durée maximale d'un tour : </ng-container><strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
+                                            <ng-container i18n>Durée maximale de la partie : </ng-container> <strong>{{ partType.NORMAL_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
                                         </p>
                                     </div>
                                 </div>
@@ -60,8 +60,8 @@
                                 <div class="dropdown-content">
                                     <div class="dropdown-item">
                                         <p>
-                                            <ng-container i18n>Durée maximale d'un tour : </ng-container> <strong>{{ BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Durée maximale de la partie : </ng-container> <strong>{{ BLITZ_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
+                                            <ng-container i18n>Durée maximale d'un tour : </ng-container> <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
+                                            <ng-container i18n>Durée maximale de la partie : </ng-container> <strong>{{ partType.BLITZ_PART_DURATION | humanDuration }} <ng-container i18n>par joueur</ng-container></strong>
                                         </p>
                                     </div>
                                 </div>

@@ -13,9 +13,7 @@
             <div class="block" id="turnIndicator" *ngIf="currentPart">
                 <p class="subtitle">Tour n° {{ currentPart.getTurn() + 1 }}</p>
                 <p class="subtitle" id="currentPlayerIndicator" *ngIf="endGame === false">
-                    <ng-container i18n>C'est à </ng-container>
-                    <ng-container *ngIf="currentPlayer === userName else otherPlayer" i18n>vous</ng-container>
-                    <ng-template #otherPlayer>{{ currentPlayer }}</ng-template>
+                    C'est à {{ currentPlayer === userName ? 'vous' : currentPlayer }}
                 </p>
             </div>
             <div class="block" *ngIf="players">
@@ -115,7 +113,6 @@
                     <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)" i18n>Vous avez perdu.</p>
                     <p class="title" *ngIf="observerRole >= 2" i18n>Victoire de {{ currentPart.getWinner() }}.</p>
                 </div>
-                <!-- TODO: Mettre "vous avez gagné" en titre, et l'explication en normal -->
                 <div *ngIf="currentPart.isTimeout()">
                     <p class="title" id="youWonIndicator" *ngIf="(currentPart.getWinner() === userName)" i18n>{{ currentPart.getLoser() }} a épuisé son temps. Vous avez gagné.</p>
                     <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)" i18n>Vous avez dépassé la limite de temps.</p>
@@ -165,4 +162,3 @@
                   [turn]="currentPart?.getTurn()"></app-chat>
     </div>
 </div>
-
