@@ -1,4 +1,4 @@
-import { FirstPlayer, Joiner, PartStatus } from './ijoiner';
+import { FirstPlayer, Joiner, PartStatus, PartType } from './ijoiner';
 
 export class JoinerMocks {
     public static readonly INITIAL: Joiner =
@@ -6,8 +6,11 @@ export class JoinerMocks {
             candidates: [],
             creator: 'creator',
             chosenPlayer: '',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 
     public static readonly WITH_FIRST_CANDIDATE: Joiner =
@@ -15,8 +18,11 @@ export class JoinerMocks {
             candidates: ['firstCandidate'],
             creator: 'creator',
             chosenPlayer: '',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 
     public static readonly WITH_SECOND_CANDIDATE: Joiner =
@@ -24,38 +30,46 @@ export class JoinerMocks {
             candidates: ['firstCandidate', 'secondCandidate'],
             creator: 'creator',
             chosenPlayer: '',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 
     public static readonly WITH_CHOSEN_PLAYER: Joiner =
         new Joiner({
-            candidates: [],
+            candidates: ['firstCandidate'],
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
-            firstPlayer: FirstPlayer.CREATOR.value,
-            partStatus: PartStatus.PLAYER_CHOSEN.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
+            partStatus: PartStatus.PART_CREATED.value,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 
     public static readonly WITH_PROPOSED_CONFIG: Joiner =
         new Joiner({
-            candidates: [],
+            candidates: ['firstCandidate'],
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.CONFIG_PROPOSED.value,
-            maximalMoveDuration: 10,
-            totalPartDuration: 60,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 
     public static readonly WITH_ACCEPTED_CONFIG: Joiner =
         new Joiner({
-            candidates: [],
+            candidates: ['firstCandidate'],
             creator: 'creator',
             chosenPlayer: 'firstCandidate',
-            firstPlayer: FirstPlayer.CREATOR.value,
+            firstPlayer: FirstPlayer.RANDOM.value,
+            partType: PartType.STANDARD.value,
             partStatus: PartStatus.PART_STARTED.value,
-            maximalMoveDuration: 10,
-            totalPartDuration: 60,
+            maximalMoveDuration: 120,
+            totalPartDuration: 1800,
         });
 }

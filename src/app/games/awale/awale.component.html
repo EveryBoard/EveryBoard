@@ -9,8 +9,8 @@
           fill="blue"
           class="base"
     />
-    <g *ngFor="let line of board; index as y;">
-        <g *ngFor="let content of line; index as x;">
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let content of line; index as x">
             <circle id="click_{{x}}_{{y}}"
                     (click)="onClick(x, y)"
                     [attr.cx]="50 + 100*x"

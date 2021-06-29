@@ -5,6 +5,7 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { P4Move } from '../P4Move';
 import { P4Minimax } from '../P4Minimax';
+import { P4Failure } from '../P4Failure';
 
 describe('P4Rules', () => {
 
@@ -146,7 +147,8 @@ describe('P4Rules', () => {
         ];
         const slice: P4PartSlice = new P4PartSlice(board, 12);
         const move: P4Move = P4Move.of(0);
-        expect(rules.isLegal(move, slice).legal.isFailure()).toBeTrue();
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.reason).toBe(P4Failure.COLUMN_IS_FULL);
     });
     it('should assign greater score to center column', () => {
         const board1: number[][] = [

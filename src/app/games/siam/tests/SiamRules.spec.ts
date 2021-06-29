@@ -8,6 +8,8 @@ import { Orthogonal } from 'src/app/jscaip/Direction';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { SiamFailure } from '../SiamFailure';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('SiamRules:', () => {
 
@@ -97,7 +99,7 @@ describe('SiamRules:', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
     });
     it('Side pushing should work', () => {
         const board: number[][] = [
@@ -202,7 +204,7 @@ describe('SiamRules:', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(2, 4, MGPOptional.empty(), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(SiamFailure.ILLEGAL_ROTATION);
     });
     it('Moving in a direction different from the piece should be legal', () => {
         const board: number[][] = [
@@ -238,7 +240,7 @@ describe('SiamRules:', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH);
     });
     it('One vs one push should not work even if one of the involved is at the border', () => {
         const board: number[][] = [
@@ -251,7 +253,7 @@ describe('SiamRules:', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 3, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH);
     });
     it('Two vs one push should work', () => {
         const board: number[][] = [
@@ -287,7 +289,7 @@ describe('SiamRules:', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH);
     });
     it('Pushing while changing direction should be impossible', () => {
         const board: number[][] = [
@@ -300,7 +302,7 @@ describe('SiamRules:', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 4, MGPOptional.of(Orthogonal.UP), Orthogonal.LEFT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(SiamFailure.ILLEGAL_PUSH);
     });
     it('6 insertions should be impossible', () => {
         const board: number[][] = [
@@ -313,7 +315,7 @@ describe('SiamRules:', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, -1, MGPOptional.of(Orthogonal.DOWN), Orthogonal.DOWN);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(SiamFailure.NO_REMAINING_PIECE_TO_INSERT);
     });
     it('Pushing several mountains should be illegal', () => {
         const board: number[][] = [
@@ -326,7 +328,7 @@ describe('SiamRules:', () => {
         const slice: SiamPartSlice = new SiamPartSlice(board, 0);
         const move: SiamMove = new SiamMove(0, 2, MGPOptional.of(Orthogonal.RIGHT), Orthogonal.RIGHT);
         const status: SiamLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(SiamFailure.NOT_ENOUGH_FORCE_TO_PUSH);
     });
     it('Two pusher can push two mountain', () => {
         const board: number[][] = [

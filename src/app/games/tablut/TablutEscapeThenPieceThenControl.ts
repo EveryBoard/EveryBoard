@@ -1,6 +1,7 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { Orthogonal } from 'src/app/jscaip/Direction';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
+import { SandwichThreat } from 'src/app/jscaip/PieceThreat';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
@@ -9,7 +10,6 @@ import { MGPSet } from 'src/app/utils/MGPSet';
 import { TablutCase } from './TablutCase';
 import { TablutPartSlice } from './TablutPartSlice';
 import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
-import { PieceThreat } from './TablutPieceAndInfluenceMinimax';
 import { TablutNode, TablutRules } from './TablutRules';
 import { TablutRulesConfig } from './TablutRulesConfig';
 
@@ -43,8 +43,8 @@ export class TablutEscapeThenPieceAndControlMinimax extends TablutPieceAndContro
         let threatenedScore: number = 0;
         let controlScore: number = 0;
         const pieceMap: MGPMap<Player, MGPSet<Coord>> = this.getPiecesMap(state);
-        const threatMap: MGPMap<Coord, MGPSet<PieceThreat>> = this.getThreatMap(state, pieceMap);
-        const filteredThreatMap: MGPMap<Coord, MGPSet<PieceThreat>> = this.filterThreatMap(threatMap, state);
+        const threatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.getThreatMap(state, pieceMap);
+        const filteredThreatMap: MGPMap<Coord, MGPSet<SandwichThreat>> = this.filterThreatMap(threatMap, state);
         for (const owner of [Player.ZERO, Player.ONE]) {
             const controlleds: MGPSet<Coord> = new MGPSet();
             for (const coord of pieceMap.get(owner).get().getCopy()) {

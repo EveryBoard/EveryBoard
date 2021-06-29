@@ -10,13 +10,9 @@ import { KamisadoMinimax } from 'src/app/games/kamisado/KamisadoMinimax';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { Player } from 'src/app/jscaip/Player';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
-
-export class KamisadoComponentFailure {
-    public static PLAY_WITH_SELECTED_PIECE: string =
-        `Vous devez jouer avec la pièce déjà séléctionnée.`;
-}
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 @Component({
     selector: 'app-kamisado',
@@ -35,8 +31,8 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
 
     public encoder: MoveEncoder<KamisadoMove> = KamisadoMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new KamisadoRules(KamisadoPartSlice);
         this.availableMinimaxes = [
             new KamisadoMinimax(this.rules, 'KamisadoMinimax'),
@@ -94,7 +90,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             if (piece.belongsTo(player)) {
                 // Player clicked on another of its pieces, select it if he can
                 if (this.chosenAutomatically) {
-                    return this.cancelMove(KamisadoComponentFailure.PLAY_WITH_SELECTED_PIECE);
+                    return this.cancelMove(KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
                 } else {
                     this.chosen = new Coord(x, y);
                     return MGPValidation.SUCCESS;
@@ -109,9 +105,9 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
             return this.cancelMove(KamisadoFailure.GAME_ENDED);
         }
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(this.rules.node.gamePartSlice.board, new Coord(x, y));
-        const player: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
-        if (!piece.belongsTo(player)) {
-            return this.cancelMove(KamisadoFailure.NOT_PIECE_OF_PLAYER);
+        const ennemy: Player = this.rules.node.gamePartSlice.getCurrentEnnemy();
+        if (piece.belongsTo(ennemy)) {
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         }
         this.chosen = new Coord(x, y);
         return MGPValidation.SUCCESS;

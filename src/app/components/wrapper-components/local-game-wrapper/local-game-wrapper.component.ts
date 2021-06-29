@@ -63,7 +63,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         this.gameComponent.rules.choose(move);
         this.updateBoard();
         this.proposeAIToPlay();
-        return Promise.resolve();
     }
     public updateBoard(): void {
         this.gameComponent.updateBoard();
@@ -71,7 +70,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner !== Player.NONE) {
-                this.winner = 'Joueur ' + (gameStatus.winner.value + 1);
+                this.winner = $localize`Joueur ${gameStatus.winner.value + 1}`;
             }
         }
     }

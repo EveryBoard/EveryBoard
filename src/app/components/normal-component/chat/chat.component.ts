@@ -8,7 +8,6 @@ import { display } from 'src/app/utils/utils';
 @Component({
     selector: 'app-chat',
     templateUrl: './chat.component.html',
-    styleUrls: ['./chat.component.css'],
 })
 export class ChatComponent implements OnInit, OnDestroy {
     public static VERBOSE: boolean = false;
@@ -69,7 +68,7 @@ export class ChatComponent implements OnInit, OnDestroy {
     public showDisconnectedChat(): void {
         const msg: IMessage = {
             sender: 'fake',
-            content: 'vous devez être connecté pour voir le chat...',
+            content: $localize`vous devez être connecté pour voir le chat...`,
             postedTime: Date.now(),
             lastTurnThen: null,
         };

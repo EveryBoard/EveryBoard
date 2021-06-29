@@ -101,31 +101,40 @@ export class CoerceoPartSlice extends TriangularGameState {
     }
     public doDeplacementCaptures(move: CoerceoMove): CoerceoPartSlice {
         display(CoerceoPartSlice.VERBOSE, { coerceoPartSlice_doDeplacementCaptures: { object: this, move } });
-        const threatenedCoords: Coord[] = TriangularCheckerBoard.getNeighboors(move.landingCoord.get());
+        const captureds: Coord[] = this.getCapturedNeighbors(move.landingCoord.get());
         let resultingSlice: CoerceoPartSlice = this;
-        for (const threatened of threatenedCoords) {
-            if (threatened.isInRange(15, 10)) {
-                resultingSlice = resultingSlice.captureIfNeeded(threatened);
-            }
+        for (const captured of captureds) {
+            resultingSlice = resultingSlice.capture(captured);
         }
         return resultingSlice;
     }
-    public captureIfNeeded(coord: Coord): CoerceoPartSlice {
-        display(CoerceoPartSlice.VERBOSE, { coerceoPartSlice_captureIfNeeded: { object: this, coord } });
-        if (this.getBoardAt(coord) === this.getCurrentEnnemy().value) {
-            const newBoard: number[][] = this.getCopiedBoard();
-            const newCaptures: [number, number] = [this.captures[0], this.captures[1]];
-            const remainingFreedom: Coord[] =
-                TriangularGameState.getEmptyNeighboors(newBoard, coord, CoerceoPiece.EMPTY.value);
-            if (remainingFreedom.length === 0) {
-                display(CoerceoPartSlice.VERBOSE, coord.toString() + ' has been captured');
-                newBoard[coord.y][coord.x] = CoerceoPiece.EMPTY.value;
-                newCaptures[this.getCurrentPlayer().value] += 1;
+    public getCapturedNeighbors(coord: Coord): Coord[] {
+        const ENEMY: number = this.getCurrentEnnemy().value;
+        const neighbors: Coord[] = TriangularCheckerBoard.getNeighboors(coord);
+        return neighbors.filter((neighbor: Coord) => {
+            if (neighbor.isNotInRange(15, 10)) {
+                return false;
             }
-            return new CoerceoPartSlice(newBoard, this.turn, this.tiles, newCaptures);
-        } else {
-            return this;
-        }
+            if (this.getBoardAt(neighbor) === ENEMY) {
+                return this.isSurrounded(neighbor);
+            }
+            return false;
+        });
+    }
+    public isSurrounded(coord: Coord): boolean {
+        const newBoard: number[][] = this.getCopiedBoard();
+        const remainingFreedom: Coord[] =
+            TriangularGameState.getEmptyNeighboors(newBoard, coord, CoerceoPiece.EMPTY.value);
+        return remainingFreedom.length === 0;
+    }
+    public capture(coord: Coord): CoerceoPartSlice {
+        display(CoerceoPartSlice.VERBOSE, { coerceoPartSlice_captureIfNeeded: { object: this, coord } });
+        const newBoard: number[][] = this.getCopiedBoard();
+        const newCaptures: [number, number] = [this.captures[0], this.captures[1]];
+        display(CoerceoPartSlice.VERBOSE, coord.toString() + ' has been captured');
+        newBoard[coord.y][coord.x] = CoerceoPiece.EMPTY.value;
+        newCaptures[this.getCurrentPlayer().value] += 1;
+        return new CoerceoPartSlice(newBoard, this.turn, this.tiles, newCaptures);
     }
     public removeTilesIfNeeded(tile: Coord, countTiles: boolean): CoerceoPartSlice {
         display(CoerceoPartSlice.VERBOSE,
@@ -136,13 +145,15 @@ export class CoerceoPartSlice extends TriangularGameState {
             this.isDeconnectable(currentTile))
         {
             resultingSlice = this.deconnectTile(currentTile, countTiles);
-            const neighboors: Coord[] = CoerceoPartSlice.getPresentNeighboorEntrances(currentTile);
-            for (const neighboor of neighboors) {
-                const caseContent: number = resultingSlice.getBoardAt(neighboor);
+            const neighbors: Coord[] = CoerceoPartSlice.getPresentNeighboorEntrances(currentTile);
+            for (const neighbor of neighbors) {
+                const caseContent: number = resultingSlice.getBoardAt(neighbor);
                 if (caseContent === CoerceoPiece.EMPTY.value) {
-                    resultingSlice = resultingSlice.removeTilesIfNeeded(neighboor, countTiles);
-                } else if (caseContent === this.getCurrentEnnemy().value) {
-                    resultingSlice = resultingSlice.captureIfNeeded(neighboor);
+                    resultingSlice = resultingSlice.removeTilesIfNeeded(neighbor, countTiles);
+                } else if (caseContent === this.getCurrentEnnemy().value &&
+                           resultingSlice.isSurrounded(neighbor))
+                {
+                    resultingSlice = resultingSlice.capture(neighbor);
                 }
             }
         }
@@ -162,31 +173,38 @@ export class CoerceoPartSlice extends TriangularGameState {
         return true;
     }
     public isDeconnectable(tile: Coord): boolean {
-        const connectedSidesIndexes: number[] = this.getPresentNeighboorTilesIndexes(tile);
-        if (connectedSidesIndexes.length > 3) {
+        const neighboorsIndex: number[] = this.getPresentNeighboorTilesRelativeIndexes(tile);
+        if (neighboorsIndex.length > 3) {
             return false;
         }
-        let i: number = 1;
-        while (i < connectedSidesIndexes.length) {
-            if (connectedSidesIndexes[i - 1] === connectedSidesIndexes[i] - 1 ||
-                (connectedSidesIndexes[0] === 0 && connectedSidesIndexes[connectedSidesIndexes.length - 1] === 5))
-            {
-                i++;
-            } else {
-                return false;
+        let holeCount: number = 0;
+        for (let i: number = 1; i < neighboorsIndex.length; i++) {
+            if (this.areNeighboor(neighboorsIndex[i - 1], neighboorsIndex[i]) === false) {
+                holeCount += 1;
             }
         }
-        return true;
+        if (this.areNeighboor(neighboorsIndex[0], neighboorsIndex[neighboorsIndex.length - 1]) === false) {
+            holeCount += 1;
+        }
+        return holeCount <= 1;
     }
-    public getPresentNeighboorTilesIndexes(tile: Coord): number[] {
+    private areNeighboor(smallTileIndex: number, bigTileIndex: number): boolean {
+        return smallTileIndex + 1 === bigTileIndex ||
+               (smallTileIndex === 0 && bigTileIndex === 5);
+    }
+    public getPresentNeighboorTilesRelativeIndexes(tile: Coord): number[] {
         const neighboorsIndexes: number[] = [];
+        let firstIndex: number;
         for (let i: number = 0; i < 6; i++) {
             const vector: Vector = CoerceoPartSlice.NEIGHBOORS_TILES_DIRECTIONS[i];
             const neighboorTile: Coord = tile.getNext(vector, 1);
             if (neighboorTile.isInRange(15, 10) &&
                 this.getBoardAt(neighboorTile) !== CoerceoPiece.NONE.value)
             {
-                neighboorsIndexes.push(i);
+                if (firstIndex == null) {
+                    firstIndex = i;
+                }
+                neighboorsIndexes.push(i - firstIndex);
             }
         }
         return neighboorsIndexes;

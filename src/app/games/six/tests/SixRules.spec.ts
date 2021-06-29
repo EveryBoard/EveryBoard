@@ -130,7 +130,7 @@ describe('SixRules', () => {
             const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(0, 2), new Coord(2, 1));
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+            expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         });
         it('Should forbid moving empty piece', () => {
             const board: NumberTable = [
@@ -191,7 +191,7 @@ describe('SixRules', () => {
             const state: SixGameState = SixGameState.fromRepresentation(board, 42);
             const move: SixMove = SixMove.fromDeplacement(new Coord(2, 2), new Coord(4, 3));
             const status: LegalityStatus = rules.isLegal(move, state);
-            expect(status.legal.getReason()).toBe('Several groups are of same size, you must pick the one to keep!');
+            expect(status.legal.getReason()).toBe(SixFailure.MUST_CUT);
         });
         it('Should refuse deconnection of different sized group with group mentionned in move', () => {
             const board: NumberTable = [

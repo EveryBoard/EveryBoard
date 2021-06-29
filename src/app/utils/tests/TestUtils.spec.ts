@@ -29,6 +29,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { LocalGameWrapperComponent }
     from '../../components/wrapper-components/local-game-wrapper/local-game-wrapper.component';
 import { Minimax } from 'src/app/jscaip/Minimax';
+import { HumanDuration } from '../TimeUtils';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 @Component({})
 export class BlankComponent {}
@@ -74,8 +76,12 @@ export class SimpleComponentTestUtils<T> {
                     { path: '**', component: BlankComponent },
                 ]),
                 ReactiveFormsModule,
+                BrowserAnimationsModule,
             ],
-            declarations: [componentType],
+            declarations: [
+                componentType,
+                HumanDuration,
+            ],
             schemas: [
                 CUSTOM_ELEMENTS_SCHEMA,
             ],
@@ -115,6 +121,27 @@ export class SimpleComponentTestUtils<T> {
     }
     public findElement(elementName: string): DebugElement {
         return this.fixture.debugElement.query(By.css(elementName));
+    }
+    public destroy(): void {
+        return this.fixture.destroy();
+    }
+    public async whenStable(): Promise<void> {
+        return this.fixture.whenStable();
+    }
+    public expectElementToHaveClass(elementName: string, class_: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should exist').toBeTruthy();
+        const elementClasses: string[] = element.attributes.class.split(' ').sort();
+        expect(elementClasses).toContain(class_);
+    }
+    public expectElementNotToExist(elementName: string): void {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should not exist').toBeNull();
+    }
+    public expectElementToExist(elementName: string): DebugElement {
+        const element: DebugElement = this.findElement(elementName);
+        expect(element).withContext(elementName + ' should exist').toBeTruthy();
+        return element;
     }
 }
 
@@ -210,7 +237,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public async expectInterfaceClickSuccess(elementName: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         element.triggerEventHandler('click', null);
         await this.fixture.whenStable();
         this.fixture.detectChanges();
@@ -220,7 +247,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public async expectClickFailure(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -235,14 +262,14 @@ export class ComponentTestUtils<T extends GameComponent> {
             flush();
         }
     }
-    public async expectClickForbidden(elementName: string): Promise<void> {
+    public async expectClickForbidden(elementName: string, reason: string): Promise<void> {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         if (element == null) {
             return;
         } else {
             const clickValidity: MGPValidation = this.gameComponent.canUserPlay(elementName);
-            expect(clickValidity.isSuccess()).toBeFalse();
+            expect(clickValidity.reason).toBe(reason);
             this.canUserPlaySpy.calls.reset();
             element.triggerEventHandler('click', null);
             await this.fixture.whenStable();
@@ -299,7 +326,7 @@ export class ComponentTestUtils<T extends GameComponent> {
     : Promise<void>
     {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy('Element "' + elementName + '" don\'t exists.');
+        expect(element).withContext('Element "' + elementName + '" should exist.').toBeTruthy();
         if (element == null) {
             return;
         } else {
@@ -331,17 +358,17 @@ export class ComponentTestUtils<T extends GameComponent> {
     }
     public expectElementNotToExist(elementName: string): void {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeNull();
+        expect(element).withContext(elementName + ' should not to exist').toBeNull();
     }
     public expectElementToExist(elementName: string): DebugElement {
         const element: DebugElement = this.findElement(elementName);
-        expect(element).toBeTruthy(elementName + ' was expected to exist');
+        expect(element).withContext(elementName + ' should exist').toBeTruthy();
         return element;
     }
     public expectElementToHaveClasses(elementName: string, classes: string[]): void {
         const classesSorted: string[] = [...classes].sort();
         const element: DebugElement = this.findElement(elementName);
-        expect(element).withContext(elementName + ' was expected to exist').toBeTruthy();
+        expect(element).withContext(elementName + ' should exist').toBeTruthy();
         const elementClasses: string[] = element.attributes.class.split(' ').sort();
         expect(elementClasses).toEqual(classesSorted);
     }

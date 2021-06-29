@@ -18,8 +18,8 @@ const Mb: number = new EncapsuleCase(Player.NONE, Player.ONE, Player.ZERO).encod
 
 export const encapsuleDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        'But du jeu',
-        `Le but du jeu à Encapsule est d'aligner trois de vos pièces.
+        $localize`But du jeu`,
+        $localize`Le but du jeu à Encapsule est d'aligner trois de vos pièces.
          Ici nous avons une victoire du joueur foncé.`,
         new EncapsulePartSlice([
             [s, S, B],
@@ -31,15 +31,15 @@ export const encapsuleDidacticial: DidacticialStep[] = [
             EncapsulePiece.BIG_WHITE,
         ])),
     DidacticialStep.anyMove(
-        'Placement',
-        `Ceci est le plateau de départ. Vous jouez foncé.
+        $localize`Placement`,
+        $localize`Ceci est le plateau de départ. Vous jouez foncé.
          Choisissez une des pièces sur le côté du plateau est placez là sur le plateau.`,
         EncapsulePartSlice.getInitialSlice(),
         EncapsuleMove.fromDrop(EncapsulePiece.SMALL_BLACK, new Coord(1, 1)),
-        'Bravo !'),
+        $localize`Bravo !`),
     DidacticialStep.fromMove(
-        'Déplacement',
-        `Un autre type de coup à Encapsule est de déplacer une de ses pièces déjà sur le plateau.
+        $localize`Déplacement`,
+        $localize`Un autre type de coup à Encapsule est de déplacer une de ses pièces déjà sur le plateau.
          Cliquez sur votre pièce foncée et puis sur n'importe quel emplacement vide du plateau.`,
         new EncapsulePartSlice([
             [s, B, _],
@@ -55,11 +55,11 @@ export const encapsuleDidacticial: DidacticialStep[] = [
             EncapsuleMove.fromMove(new Coord(0, 0), new Coord(1, 2)),
             EncapsuleMove.fromMove(new Coord(0, 0), new Coord(2, 2)),
         ],
-        'Bravo !',
-        'Raté, réessayez.'),
+        $localize`Bravo !`,
+        $localize`Raté, réessayez.`),
     DidacticialStep.fromMove(
-        'Spécificité',
-        `À Encapsule, les pièces s'encapsulent les unes sur les autres.
+        $localize`Spécificité`,
+        $localize`À Encapsule, les pièces s'encapsulent les unes sur les autres.
          Il est donc possible d'avoir jusqu'à trois pièces par case !
          Cependant, seulement la plus grosse pièce de chaque case compte :
          il n'est pas possible de gagner avec une pièce « cachée » par une pièce plus grande.
@@ -76,6 +76,6 @@ export const encapsuleDidacticial: DidacticialStep[] = [
             EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.BIG_WHITE,
         ]),
         [EncapsuleMove.fromMove(new Coord(0, 1), new Coord(2, 2))],
-        'Bravo !',
-        'Raté, réessayez.'),
+        $localize`Bravo !`,
+        $localize`Raté, réessayez.`),
 ];

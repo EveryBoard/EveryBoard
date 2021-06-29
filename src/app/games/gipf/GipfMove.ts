@@ -193,4 +193,3 @@ export class GipfMove extends Move {
         return GipfMove.encoder.decode(encodedMove);
     }
 }
-

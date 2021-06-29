@@ -4,10 +4,11 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { KamisadoPiece } from 'src/app/games/kamisado/KamisadoPiece';
 import { KamisadoFailure } from 'src/app/games/kamisado/KamisadoFailure';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
-import { KamisadoComponent, KamisadoComponentFailure } from '../kamisado.component';
+import { KamisadoComponent } from '../kamisado.component';
 import { fakeAsync, flush } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { KamisadoMove } from 'src/app/games/kamisado/KamisadoMove';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('KamisadoComponent', () => {
     let componentTestUtils: ComponentTestUtils<KamisadoComponent>;
@@ -30,7 +31,7 @@ describe('KamisadoComponent', () => {
         expect(componentTestUtils.getComponent().chosen.equals(new Coord(-1, -1))).toBeTrue();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
-        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeFalse();
+        expect((await componentTestUtils.getComponent().pass()).reason).toBe(KamisadoFailure.CANT_PASS);
         flush();
     }));
     it('should allow changing initial choice', fakeAsync(async() => {
@@ -75,7 +76,7 @@ describe('KamisadoComponent', () => {
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         componentTestUtils.setupSlice(slice);
 
-        await componentTestUtils.expectClickFailure('#click_0_7', KamisadoComponentFailure.PLAY_WITH_SELECTED_PIECE);
+        await componentTestUtils.expectClickFailure('#click_0_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
     }));
     it('should forbid selecting a piece if one is already pre-selected', fakeAsync(async() => {
         const board: number[][] = [
@@ -92,7 +93,7 @@ describe('KamisadoComponent', () => {
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         componentTestUtils.setupSlice(slice);
 
-        await componentTestUtils.expectClickFailure('#click_1_7', KamisadoComponentFailure.PLAY_WITH_SELECTED_PIECE);
+        await componentTestUtils.expectClickFailure('#click_1_7', KamisadoFailure.PLAY_WITH_SELECTED_PIECE);
     }));
     it('should forbid moving to invalid location', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_7');
@@ -100,7 +101,7 @@ describe('KamisadoComponent', () => {
         await componentTestUtils.expectMoveFailure('#click_5_4', KamisadoFailure.DIRECTION_NOT_ALLOWED, move);
     }));
     it('should forbid choosing an incorrect piece', fakeAsync(async() => {
-        await componentTestUtils.expectClickFailure('#click_0_0', KamisadoFailure.NOT_PIECE_OF_PLAYER);
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
     it('should forbid choosing a piece at end of the game', fakeAsync(async() => {
         const board: number[][] = [
@@ -120,6 +121,6 @@ describe('KamisadoComponent', () => {
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 0));
         await componentTestUtils.expectMoveFailure('#click_0_0', KamisadoFailure.GAME_ENDED, move);
         // can't select a piece either
-        expect((componentTestUtils.getComponent().choosePiece(2, 0)).isSuccess()).toBeFalse();
+        expect((componentTestUtils.getComponent().choosePiece(2, 0)).reason).toBe(KamisadoFailure.GAME_ENDED);
     }));
 });

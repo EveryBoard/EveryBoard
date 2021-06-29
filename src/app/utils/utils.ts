@@ -6,6 +6,12 @@ export type JSONValue = JSONPrimitive | JSONObject | Array<JSONValueWithoutArray
 export type JSONValueWithoutArray = JSONPrimitive | JSONObject
 export type JSONObject = { [member: string]: JSONValue };
 
+export class Utils {
+    public static handleError(message: string): void {
+        throw new Error('Encountered error: ' + message);
+    }
+}
+
 export function display(verbose: boolean, message: unknown): void {
     if (verbose) console.log(message);
 }

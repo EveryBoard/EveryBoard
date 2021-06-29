@@ -12,6 +12,8 @@ export class HeaderComponent implements OnInit, OnDestroy {
 
     private joueurSub: Subscription;
 
+    public showMenu: boolean = false;
+
     constructor(public router: Router,
                 public authenticationService: AuthenticationService) {
     }

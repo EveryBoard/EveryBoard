@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { SixGameState } from 'src/app/games/six/SixGameState';
 import { SixMove } from 'src/app/games/six/SixMove';
 import { SixFailure } from 'src/app/games/six/SixFailure';
@@ -17,6 +16,7 @@ import { HexagonalGameComponent }
     from '../../components/game-components/abstract-game-component/HexagonalGameComponent';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 
 interface Scale {
     minX: number;
@@ -57,8 +57,8 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
 
     public hexaLayout: HexaLayout;
 
-    constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.availableMinimaxes = [
             new SixMinimax(this.rules, 'SixMinimax'),
         ];
@@ -193,7 +193,7 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
             return this.cancelMove(SixFailure.NO_DEPLACEMENT_BEFORE_TURN_40);
         } else if (this.chosenLanding == null) {
             if (this.state.getPieceAt(piece) === this.state.getCurrentEnnemy()) {
-                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENNEMY_PIECE);
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
             }
             this.selectedPiece = piece;
             return MGPValidation.SUCCESS;

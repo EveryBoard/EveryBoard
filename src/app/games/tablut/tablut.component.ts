@@ -1,5 +1,4 @@
 import { Component } from '@angular/core';
-
 import { AbstractGameComponent } from '../../components/game-components/abstract-game-component/AbstractGameComponent';
 import { Coord } from '../../jscaip/Coord';
 import { TablutMove } from 'src/app/games/tablut/TablutMove';
@@ -15,11 +14,13 @@ import { TablutRulesConfig } from 'src/app/games/tablut/TablutRulesConfig';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
 import { TablutPieceAndInfluenceMinimax } from './TablutPieceAndInfluenceMinimax';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { TablutLegalityStatus } from './TablutLegalityStatus';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { TablutPieceAndControlMinimax } from './TablutPieceAndControlMinimax';
 import { TablutEscapeThenPieceAndControlMinimax } from './TablutEscapeThenPieceThenControl';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { TablutFailure } from './TablutFailure';
 
 @Component({
     selector: 'app-tablut',
@@ -49,8 +50,8 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
 
     public encoder: MoveEncoder<TablutMove> = TablutMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new TablutRules(TablutPartSlice);
         this.availableMinimaxes = [
             new TablutMinimax(this.rules, 'DummyBot'),
@@ -115,10 +116,10 @@ export class TablutComponent extends AbstractGameComponent<TablutMove, TablutPar
         display(TablutComponent.VERBOSE, 'TablutComponent.choosePiece');
 
         if (this.board[y][x] === TablutCase.UNOCCUPIED.value) {
-            return this.cancelMove('Pour votre premier clic, choisissez une de vos pièces.');
+            return this.cancelMove(TablutFailure.CHOOSE_OWN_PIECE);
         }
         if (!this.pieceBelongToCurrentPlayer(x, y)) {
-            return this.cancelMove('Cette pièce ne vous appartient pas.');
+            return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         }
 
         this.chosen = new Coord(x, y);

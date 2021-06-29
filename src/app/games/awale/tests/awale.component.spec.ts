@@ -3,6 +3,7 @@ import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 import { fakeAsync } from '@angular/core/testing';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
+import { AwaleFailure } from '../AwaleFailure';
 
 describe('AwaleComponent', () => {
     let componentTestUtils: ComponentTestUtils<AwaleComponent>;
@@ -11,8 +12,8 @@ describe('AwaleComponent', () => {
         componentTestUtils = await ComponentTestUtils.forGame<AwaleComponent>('Awale');
     }));
     it('should create', fakeAsync(async() => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('AwaleComponent should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('AwaleComponent should be created').toBeTruthy();
     }));
     it('should accept simple move for player zero, show captured and moved', fakeAsync(async() => {
         const board: number[][] = [
@@ -38,7 +39,8 @@ describe('AwaleComponent', () => {
         componentTestUtils.setupSlice(slice);
 
         const move: AwaleMove = new AwaleMove(0, 0);
-        const message: string = 'You must choose a non-empty house to distribute.';
-        await componentTestUtils.expectMoveFailure('#click_0_0', message, move, undefined, 0, 0);
+        await componentTestUtils.expectMoveFailure('#click_0_0',
+                                                   AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE,
+                                                   move, undefined, 0, 0);
     }));
 });

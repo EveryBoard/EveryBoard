@@ -97,10 +97,10 @@ export abstract class GameWrapper {
             },
         });
         if (!this.isPlayerTurn()) {
-            return MGPValidation.failure('It is not your turn.');
+            return MGPValidation.failure($localize`It is not your turn.`);
         }
         if (this.endGame) {
-            return MGPValidation.failure('Game is finished.');
+            return MGPValidation.failure($localize`Game is finished.`);
         }
         const legality: LegalityStatus = this.gameComponent.rules.isLegal(move, slice);
         if (legality.legal.isFailure()) {
@@ -114,17 +114,16 @@ export abstract class GameWrapper {
     }
     public abstract onLegalUserMove(move: Move, scorePlayerZero: number, scorePlayerOne: number): Promise<void>;
 
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    public onUserClick: (elementName: string) => MGPValidation = (elementName: string) => {
+    public onUserClick: (elementName: string) => MGPValidation = (_elementName: string) => {
         // TODO: Not the same logic to use in Online and Local, make abstract
         if (this.observerRole > 1) {
-            const message: string = 'cloning feature will be added soon. Meanwhile, you can\'t click on the board';
+            const message: string = $localize`cloning feature will be added soon. Meanwhile, you can\'t click on the board`;
             return MGPValidation.failure(message);
         }
         if (this.isPlayerTurn()) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure('It is not your turn');
+            return MGPValidation.failure($localize`It is not your turn`);
         }
     }
     public onCancelMove(): void {

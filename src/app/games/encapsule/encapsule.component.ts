@@ -10,18 +10,9 @@ import { EncapsuleLegalityStatus } from 'src/app/games/encapsule/EncapsuleLegali
 import { Player } from 'src/app/jscaip/Player';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
-
-export class EncapsuleComponentFailure {
-    public static NOT_DROPPABLE: string =`Veuillez choisir une de vos pièces parmi les pièces restantes.`;
-    public static INVALID_PIECE_SELECTED: string =
-        `Veuillez sélectionner une de vos pièces ou une case où vous avez la pièce la plus grande.`;
-    public static SAME_DEST_AS_ORIGIN: string =
-        `Veuillez sélectionner une case différente de la case d'origine du mouvement.`;
-    public static END_YOUR_MOVE: string =
-        `Vous effectuez un déplacement, choisissez votre case de destination.`;
-}
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { EncapsuleFailure } from './EncapsuleFailure';
 
 @Component({
     selector: 'app-encapsule',
@@ -42,8 +33,8 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
 
     public encoder: MoveEncoder<EncapsuleMove> = EncapsuleMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new EncapsuleRules(EncapsulePartSlice);
         this.availableMinimaxes = [
             new EncapsuleMinimax(this.rules, 'EncapsuleMinimax'),
@@ -83,11 +74,11 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
                     EncapsuleMove.fromDrop(this.chosenPiece, clickedCoord);
                 return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, null, null);
             } else if (slice.getAt(clickedCoord).belongsTo(slice.getCurrentPlayer()) === false) {
-                return this.cancelMove(EncapsuleComponentFailure.INVALID_PIECE_SELECTED);
+                return this.cancelMove(EncapsuleFailure.INVALID_PIECE_SELECTED);
             }
         } else {
             if (this.chosenCoord.equals(clickedCoord)) {
-                return this.cancelMove(EncapsuleComponentFailure.SAME_DEST_AS_ORIGIN);
+                return this.cancelMove(EncapsuleFailure.SAME_DEST_AS_ORIGIN);
             } else {
                 const chosenMove: EncapsuleMove =
                     EncapsuleMove.fromMove(this.chosenCoord, clickedCoord);
@@ -108,13 +99,13 @@ export class EncapsuleComponent extends AbstractGameComponent<EncapsuleMove,
 
         const slice: EncapsulePartSlice = this.rules.node.gamePartSlice;
         if (slice.isDroppable(piece) === false) {
-            return this.cancelMove(EncapsuleComponentFailure.NOT_DROPPABLE);
+            return this.cancelMove(EncapsuleFailure.NOT_DROPPABLE);
         } else if (this.chosenCoord == null) {
             this.chosenPiece = piece;
             this.chosenPieceIndex = index;
             return MGPValidation.SUCCESS;
         } else {
-            return this.cancelMove(EncapsuleComponentFailure.END_YOUR_MOVE);
+            return this.cancelMove(EncapsuleFailure.END_YOUR_MOVE);
         }
     }
     public getRectClasses(x: number, y: number): string {

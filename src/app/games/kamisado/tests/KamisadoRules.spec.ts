@@ -10,6 +10,8 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { Player } from 'src/app/jscaip/Player';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { KamisadoFailure } from '../KamisadoFailure';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('KamisadoRules:', () => {
 
@@ -93,7 +95,7 @@ describe('KamisadoRules:', () => {
         expect(minimax.getBoardValue(new MGPNode(null, move2, expectedSlice2)).value)
             .toEqual(Number.MIN_SAFE_INTEGER, 'This should be a victory for player 0');
     });
-    it('should not allow vertical moves with an obstacle', () => {
+    it('should not allow moves landing on occupied case', () => {
         const board1: number[][] = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -107,12 +109,27 @@ describe('KamisadoRules:', () => {
         const slice: KamisadoPartSlice =
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board1);
         rules.node = new MGPNode(null, null, slice);
-        const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
-        const status1: LegalityStatus = rules.isLegal(move1, slice);
-        expect(status1.legal.isSuccess()).toBeFalse();
-        const move2: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 5));
-        const status2: LegalityStatus = rules.isLegal(move2, slice);
-        expect(status2.legal.isSuccess()).toBeFalse();
+        const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 6));
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.reason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+    });
+    it('should not allow vertical moves with an obstacle', () => {
+        const board: number[][] = [
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [_, _, _, _, _, _, _, _],
+            [r, _, _, _, _, _, _, _],
+            [R, _, _, _, _, _, _, _],
+        ];
+        const state: KamisadoPartSlice =
+            new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
+        rules.node = new MGPNode(null, null, state);
+        const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(0, 5));
+        const status: LegalityStatus = rules.isLegal(move, state);
+        expect(status.legal.reason).toBe(KamisadoFailure.MOVE_BLOCKED);
     });
     it('should not allow backward moves', () => {
         const board: number[][] = [
@@ -130,10 +147,10 @@ describe('KamisadoRules:', () => {
         rules.node = new MGPNode(null, null, slice);
         const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(0, 7));
         const status1: LegalityStatus = rules.isLegal(move1, slice);
-        expect(status1.legal.isSuccess()).toBeFalse();
+        expect(status1.legal.reason).toBe(KamisadoFailure.DIRECTION_NOT_ALLOWED);
         const move2: KamisadoMove = KamisadoMove.of(new Coord(0, 6), new Coord(1, 7));
         const status2: LegalityStatus = rules.isLegal(move2, slice);
-        expect(status2.legal.isSuccess()).toBeFalse();
+        expect(status2.legal.reason).toBe(KamisadoFailure.DIRECTION_NOT_ALLOWED);
     });
     it('should allow diagonal moves without obstacles', () => {
         const board: number[][] = [
@@ -201,10 +218,10 @@ describe('KamisadoRules:', () => {
         rules.node = new MGPNode(null, null, slice);
         const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(1, 6));
         const status1: LegalityStatus = rules.isLegal(move1, slice);
-        expect(status1.legal.isSuccess()).toBeFalse();
+        expect(status1.legal.reason).toBe(RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
         const move2: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(7, 0));
         const status2: LegalityStatus = rules.isLegal(move2, slice);
-        expect(status2.legal.isSuccess()).toBeFalse();
+        expect(status2.legal.reason).toBe(KamisadoFailure.MOVE_BLOCKED);
     });
     it('should only allow to pass in a stuck position', () => {
         const board: number[][] = [
@@ -245,7 +262,7 @@ describe('KamisadoRules:', () => {
         rules.node = new MGPNode(null, null, slice);
         const move: KamisadoMove = KamisadoMove.PASS;
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeFalse();
+        expect(status.legal.reason).toBe(KamisadoFailure.CANT_PASS);
     });
     it('should detect victory', () => {
         const board: number[][] = [
@@ -362,7 +379,7 @@ describe('KamisadoRules:', () => {
         expect(minimax.getBoardValue(new MGPNode(null, KamisadoMove.PASS, slice4)).value)
             .toEqual(Number.MIN_SAFE_INTEGER);
     });
-    it('should not allow moving a piece that does not belong to the current player', () => {
+    it('should forbid moving opponent pieces', () => {
         const board: number[][] = [
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -375,10 +392,8 @@ describe('KamisadoRules:', () => {
         ];
         const slice: KamisadoPartSlice =
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
-        const move1: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
-        expect(rules.isLegal(move1, slice).legal.isSuccess()).toBeFalse();
-        const move2: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 4));
-        expect(rules.isLegal(move2, slice).legal.isSuccess()).toBeFalse();
+        const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
+        expect(rules.isLegal(move, slice).legal.reason).toBe(RulesFailure.MUST_CHOOSE_PLAYER_PIECE);
     });
     it('should not allow moving a piece that does not have the right color', () => {
         const board: number[][] = [
@@ -394,7 +409,7 @@ describe('KamisadoRules:', () => {
         const slice: KamisadoPartSlice =
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 2), new Coord(0, 0));
-        expect(rules.isLegal(move, slice).legal.isSuccess()).toBeFalse();
+        expect(rules.isLegal(move, slice).legal.reason).toBe(KamisadoFailure.NOT_RIGHT_COLOR);
     });
     it('should not allow moving a piece in a non-linear direction', () => {
         const board: number[][] = [
@@ -410,7 +425,7 @@ describe('KamisadoRules:', () => {
         const slice: KamisadoPartSlice =
             new KamisadoPartSlice(6, KamisadoColor.RED, MGPOptional.of(new Coord(0, 7)), false, board);
         const move: KamisadoMove = KamisadoMove.of(new Coord(0, 7), new Coord(3, 5));
-        expect(rules.isLegal(move, slice).legal.isSuccess()).toBeFalse();
+        expect(rules.isLegal(move, slice).legal.reason).toBe(KamisadoFailure.DIRECTION_NOT_ALLOWED);
     });
     it('should assign board values based on positions', () => {
         const board: number[][] = [

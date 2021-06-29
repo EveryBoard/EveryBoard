@@ -17,6 +17,7 @@ import { P4Failure } from './P4Failure';
 export abstract class P4Node extends MGPNode<P4Rules, P4Move, P4PartSlice> {}
 
 export class P4Rules extends Rules<P4Move, P4PartSlice> {
+
     public static VERBOSE: boolean = false;
 
     public static getVictoriousCoords(slice: P4PartSlice): Coord[] {

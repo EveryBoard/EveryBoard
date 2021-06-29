@@ -27,13 +27,13 @@ export class LoginComponent {
                 const message: string = err.message;
                 switch (message) {
                     case 'The password is invalid or the user does not have a password.':
-                        this.errorMessage = 'Ce mot de passe est incorrect';
+                        this.errorMessage = $localize`Ce mot de passe est incorrect`;
                         break;
                     case 'There is no user record corresponding to this identifier. The user may have been deleted.':
-                        this.errorMessage = `Cette adresse email n'a pas de compte sur ce site.`;
+                        this.errorMessage = $localize`Cette adresse email n'a pas de compte sur ce site.`;
                         break;
                     case 'Missing or insufficient permissions.':
-                        this.errorMessage = `Vous devez aller dans vos mail confirmer votre inscription en cliquant sur le lien que nous vous avons envoyé d'abord.`;
+                        this.errorMessage = $localize`Vous devez aller dans vos mail confirmer votre inscription en cliquant sur le lien que nous vous avons envoyé d'abord.`;
                         break;
                     default:
                         this.errorMessage = message;

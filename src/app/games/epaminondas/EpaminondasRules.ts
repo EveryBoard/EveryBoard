@@ -41,14 +41,14 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
         const ENNEMY: number = slice.getCurrentEnnemy().value;
         while (soldierIndex < move.movedPieces) {
             if (coord.isNotInRange(14, 12)) {
-                return MGPValidation.failure('Cette phalange contient des pièces en dehors du plateau.');
+                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD);
             }
             caseContent = slice.getBoardAt(coord);
             if (caseContent === Player.NONE.value) {
-                return MGPValidation.failure('Une phalange ne peut pas contenir cases vides.');
+                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE);
             }
             if (caseContent === ENNEMY) {
-                return MGPValidation.failure('Une phalange ne peut pas contenir de pièces ennemies.');
+                return MGPValidation.failure(EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE);
             }
             coord = coord.getNext(move.direction, 1);
             soldierIndex++;

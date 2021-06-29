@@ -12,7 +12,9 @@ import { AbstractGameComponent } from '../../components/game-components/abstract
 import { PositionalEpaminondasMinimax } from './PositionalEpaminondasMinimax';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { AttackEpaminondasMinimax } from './AttackEpaminondasMinimax';
-import { MatSnackBar } from '@angular/material/snack-bar';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { EpaminondasFailure } from './EpaminondasFailure';
 
 @Component({
     selector: 'app-epaminondas',
@@ -44,8 +46,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
 
     public encoder: MoveEncoder<EpaminondasMove> = EpaminondasMove.encoder;
 
-    public constructor(snackBar: MatSnackBar) {
-        super(snackBar);
+    public constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
         this.rules = new EpaminondasRules(EpaminondasPartSlice);
         this.availableMinimaxes = [
             new EpaminondasMinimax(this.rules, 'Normal'),
@@ -101,9 +103,9 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                 this.phalanxValidLandings = this.getPhalanxValidLandings();
                 break;
             case ENNEMY:
-                return this.cancelMove(`Cette pièce appartient à l'ennemi, vous devez sélectionner une de vos pièces.`);
+                return this.cancelMove(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
             case Player.NONE.value:
-                return this.cancelMove('Cette case est vide, vous devez sélectionner une de vos pièces.');
+                return this.cancelMove(RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
         }
     }
     private hidePreviousMove() {
@@ -222,7 +224,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         const ENNEMY: number = this.rules.node.gamePartSlice.getCurrentEnnemy().value;
         const PLAYER: number = this.rules.node.gamePartSlice.getCurrentPlayer().value;
         if (!clicked.isAlignedWith(this.firstPiece)) {
-            return this.cancelMove('Cette case n\'est pas alignée avec la pièce sélectionnée.');
+            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED);
         }
         const distance: number = clicked.getDistance(this.firstPiece);
         const direction: Direction = this.firstPiece.getDirectionToward(clicked);
@@ -231,10 +233,10 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
                 if (distance === 1) {
                     return this.tryMove(new EpaminondasMove(this.firstPiece.x, this.firstPiece.y, 1, 1, direction));
                 } else {
-                    return this.cancelMove('Une pièce seule ne peut se déplacer que d\'une case.');
+                    return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE);
                 }
             case ENNEMY:
-                return this.cancelMove('Une pièce seule ne peut pas capturer.');
+                return this.cancelMove(EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE);
             case PLAYER:
                 const incompleteMove: EpaminondasMove = new EpaminondasMove(this.firstPiece.x,
                                                                             this.firstPiece.y,
@@ -265,7 +267,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             return this.moveLastPiece(PLAYER);
         }
         if (!clicked.isAlignedWith(this.firstPiece)) {
-            return this.cancelMove('Cette case n\'est pas alignée avec la direction de la phalange.');
+            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
         }
         let phalanxDirection: Direction = Direction.factory.fromMove(this.firstPiece, this.lastPiece);
         const phalanxLanding: Direction = Direction.factory.fromMove(this.firstPiece, clicked);
@@ -276,7 +278,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
             phalanxDirection = phalanxLanding;
         }
         if (phalanxDirection !== phalanxLanding) {
-            return this.cancelMove('Cette case n\'est pas alignée avec la direction de la phalange.');
+            return this.cancelMove(EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
         }
         if (this.board[y][x] === PLAYER) {
             this.lastPiece = clicked;

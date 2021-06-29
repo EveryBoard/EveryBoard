@@ -65,18 +65,22 @@ export abstract class Rules<M extends Move,
          */
         const LOCAL_VERBOSE: boolean = false;
         display(LOCAL_VERBOSE, 'Rules.choose: ' + move.toString() + ' was proposed');
+        const status: L = this.isLegal(move, this.node.gamePartSlice);
         if (this.node.hasMoves()) { // if calculation has already been done by the AI
             display(LOCAL_VERBOSE, 'Rules.choose: current node has moves');
-            const choix: MGPNode<Rules<M, S, L>, M, S, L> =
-                this.node.getSonByMove(move);// let's not doing it twice
+            const choix: MGPNode<Rules<M, S, L>, M, S, L> = this.node.getSonByMove(move);
+            // let's not doing it twice
             if (choix !== null) {
+                if (status.legal.isFailure()) {
+                    display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + status.legal.getReason());
+                    return false;
+                }
                 display(LOCAL_VERBOSE, 'Rules.choose: and this proposed move is found in the list, so it is legal');
                 this.node = choix; // qui devient le plateau actuel
                 return true;
             }
         }
         display(LOCAL_VERBOSE, 'Rules.choose: current node has no moves or is pruned, let\'s verify ourselves');
-        const status: L = this.isLegal(move, this.node.gamePartSlice);
         if (status.legal.isFailure()) {
             display(LOCAL_VERBOSE, 'Rules.choose: Move is illegal: ' + status.legal.getReason());
             return false;

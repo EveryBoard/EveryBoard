@@ -13,6 +13,8 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { TablutLegalityStatus } from './TablutLegalityStatus';
 import { RelativePlayer } from 'src/app/jscaip/RelativePlayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { TablutFailure } from './TablutFailure';
 
 export abstract class TablutNode extends MGPNode<TablutRules, TablutMove, TablutPartSlice, TablutLegalityStatus> {}
 
@@ -68,23 +70,23 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
     private static getMoveValidity(player: Player, move: TablutMove, board: number[][]): MGPValidation {
         const cOwner: RelativePlayer = this.getRelativeOwner(player, move.coord, board);
         if (cOwner === RelativePlayer.NONE) {
-            return MGPValidation.failure('pawn coord unoccupied');
+            return MGPValidation.failure(TablutFailure.CHOOSE_OWN_PIECE);
         }
         if (cOwner === RelativePlayer.ENNEMY) {
-            return MGPValidation.failure('moving opponent piece');
+            return MGPValidation.failure(RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
         }
 
         const landingCoordOwner: RelativePlayer = this.getRelativeOwner(player, move.end, board);
         if (landingCoordOwner !== RelativePlayer.NONE) {
-            return MGPValidation.failure('landing on occupied case');
+            return MGPValidation.failure(TablutFailure.LANDING_ON_OCCUPIED_CASE);
         }
         if (this.isThrone(move.end)) {
             if (this.isKing(board[move.coord.y][move.coord.x])) {
                 if (this.isCentralThrone(move.end) && this.CASTLE_IS_LEFT_FOR_GOOD) {
-                    return MGPValidation.failure('castle is left for good');
+                    return MGPValidation.failure(TablutFailure.THRONE_IS_LEFT_FOR_GOOD);
                 }
             } else {
-                return MGPValidation.failure('Les soldats n\'ont pas le droit de se poser sur le throne.');
+                return MGPValidation.failure(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE);
             }
         }
 
@@ -94,7 +96,7 @@ export class TablutRules extends Rules<TablutMove, TablutPartSlice, TablutLegali
         let c: Coord = move.coord.getNext(dir); // the inspected coord
         for (let i: number = 1; i < dist; i++) {
             if (board[c.y][c.x] !== TablutCase.UNOCCUPIED.value) {
-                return MGPValidation.failure('something in the way');
+                return MGPValidation.failure(TablutFailure.SOMETHING_IN_THE_WAY);
             }
             c = c.getNext(dir);
         }

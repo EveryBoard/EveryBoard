@@ -12,6 +12,7 @@ import { Player } from 'src/app/jscaip/Player';
 import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { KamisadoFailure } from './KamisadoFailure';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 export class KamisadoNode extends MGPNode<KamisadoRules, KamisadoMove, KamisadoPartSlice> { }
 
@@ -193,7 +194,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         //   - start piece should be owned by the current player
         const piece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, start);
         if (!piece.belongsTo(slice.getCurrentPlayer())) {
-            return { legal: MGPValidation.failure(KamisadoFailure.NOT_PIECE_OF_PLAYER) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CHOOSE_PLAYER_PIECE) };
         }
         //  - start case should contain a piece of the right color (or any color can be played)
         if (colorToPlay !== KamisadoColor.ANY && piece.color !== colorToPlay) {
@@ -202,7 +203,7 @@ export class KamisadoRules extends Rules<KamisadoMove, KamisadoPartSlice> {
         //  - end case should be empty
         const endPiece: KamisadoPiece = KamisadoBoard.getPieceAt(slice.board, end);
         if (!endPiece.isEmpty()) {
-            return { legal: MGPValidation.failure(KamisadoFailure.END_CASE_NOT_EMPTY) };
+            return { legal: MGPValidation.failure(RulesFailure.MUST_CLICK_ON_EMPTY_CASE) };
         }
         //  - all steps between start and end should be empty
         try {

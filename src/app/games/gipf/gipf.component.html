@@ -13,7 +13,7 @@
         </marker>
     </defs>
 
-    <g *ngFor="let case of getAllCoords();">
+    <g *ngFor="let case of getAllCoords()">
         <g (click)="onClick(case)"
            id="click_{{ case.x }}_{{ case.y }}">
             <polyline [attr.points]="getHexaCoordinates(case)"
@@ -30,10 +30,10 @@
         </g>
     </g>
 
-    <g *ngFor="let capture of possibleCaptures; index as i;"
+    <g *ngFor="let capture of possibleCaptures; index as i"
        pointer-events="fill"
        class="capturable">
-        <g *ngFor="let case of capture.capturedCases;">
+        <g *ngFor="let case of capture.capturedCases">
             <polyline [attr.points]="getHexaCoordinates(case)"
                       (click)="onClick(case)"
                       class="no-fill"
@@ -41,7 +41,7 @@
         </g>
     </g>
 
-    <g *ngFor="let arrow of arrows;">
+    <g *ngFor="let arrow of arrows">
         <line [attr.x1]="arrow.x1"
               [attr.y1]="arrow.y1"
               [attr.x2]="arrow.x2"
@@ -51,11 +51,11 @@
               (click)="onClick(arrow.destination)"/>
     </g>
 
-    <g *ngFor="let player of [0, 1];">
+    <g *ngFor="let player of [0, 1]">
         <text x="0"
               [attr.y]="20 + (getPieceSize() + 12) * player"
-              class="text-medium">Pièces du joueur {{ player + 1}}</text>
-        <g *ngFor="let p of getPlayerSidePieces(player);">
+              class="text-medium" i18n>Pièces du joueur {{ player + 1 }}</text>
+        <g *ngFor="let p of getPlayerSidePieces(player)">
             <circle id="piece_{{ player }}_{{ p }}"
                     [attr.cx]="350 + (p * getPieceSize() * 0.5)"
                     [attr.cy]="10 + (getPieceSize() + 10) * player"

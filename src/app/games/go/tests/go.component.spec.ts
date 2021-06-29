@@ -6,6 +6,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 describe('GoComponent', () => {
     let componentTestUtils: ComponentTestUtils<GoComponent>;
@@ -32,7 +33,7 @@ describe('GoComponent', () => {
 
         expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeTrue(); // Finished
 
-        expect((await componentTestUtils.getComponent().pass()).isSuccess()).toBeFalse();
+        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS);
     }));
     it('Should show captures', fakeAsync(async() => {
         const board: Table<GoPiece> = [

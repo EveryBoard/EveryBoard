@@ -40,7 +40,6 @@ export class UpdateType {
 @Component({
     selector: 'app-online-game-wrapper',
     templateUrl: './online-game-wrapper.component.html',
-    styleUrls: ['./online-game-wrapper.component.css'],
 })
 export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, AfterViewInit, OnDestroy {
     public static VERBOSE: boolean = false;

@@ -7,6 +7,8 @@ import { EpaminondasComponent } from '../epaminondas.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { EpaminondasFailure } from '../EpaminondasFailure';
 
 describe('EpaminondasComponent:', () => {
     let componentTestUtils: ComponentTestUtils<EpaminondasComponent>;
@@ -30,16 +32,14 @@ describe('EpaminondasComponent:', () => {
         componentTestUtils = await ComponentTestUtils.forGame<EpaminondasComponent>('Epaminondas');
     }));
     it('should create', () => {
-        expect(componentTestUtils.wrapper).toBeTruthy('Wrapper should be created');
-        expect(componentTestUtils.getComponent()).toBeTruthy('EpaminondasComponent should be created');
+        expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('EpaminondasComponent should be created').toBeTruthy();
     });
     it('Should cancelMove when clicking on empty case at first', fakeAsync(async() => {
-        const reason: string = 'Cette case est vide, vous devez sélectionner une de vos pièces.';
-        await componentTestUtils.expectClickFailure('#click_5_5', reason);
+        await componentTestUtils.expectClickFailure('#click_5_5', RulesFailure.MUST_CHOOSE_OWN_PIECE_NOT_EMPTY);
     }));
     it('Should not accept ennemy click as a move first click', fakeAsync(async() => {
-        const reason: string = 'Cette pièce appartient à l\'ennemi, vous devez sélectionner une de vos pièces.';
-        await componentTestUtils.expectClickFailure('#click_0_0', reason);
+        await componentTestUtils.expectClickFailure('#click_0_0', RulesFailure.CANNOT_CHOOSE_ENEMY_PIECE);
     }));
     it('Should show possible next click (after first click)', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -68,8 +68,7 @@ describe('EpaminondasComponent:', () => {
     }));
     it('Should cancel move when clicking on non aligned pice', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_11');
-        const reason: string = 'Cette case n\'est pas alignée avec la pièce sélectionnée.';
-        await componentTestUtils.expectClickFailure('#click_2_10', reason);
+        await componentTestUtils.expectClickFailure('#click_2_10', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_SELECTED);
     }));
     it('Should move firstPiece one step when clicking next to it without lastPiece selected', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_10');
@@ -78,8 +77,7 @@ describe('EpaminondasComponent:', () => {
     }));
     it('Should not move single piece two step', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_0_10');
-        const reason: string = 'Une pièce seule ne peut se déplacer que d\'une case.';
-        await componentTestUtils.expectClickFailure('#click_0_8', reason);
+        await componentTestUtils.expectClickFailure('#click_0_8', EpaminondasFailure.SINGLE_PIECE_MUST_MOVE_BY_ONE);
     }));
     it('Should not allow single piece to capture', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -100,8 +98,7 @@ describe('EpaminondasComponent:', () => {
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#click_0_9');
-        const reason: string = 'Une pièce seule ne peut pas capturer.';
-        await componentTestUtils.expectClickFailure('#click_0_8', reason);
+        await componentTestUtils.expectClickFailure('#click_0_8', EpaminondasFailure.SINGLE_PIECE_CANNOT_CAPTURE);
     }));
     it('Should deselect first piece when clicked (and no last piece exist)', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -147,7 +144,7 @@ describe('EpaminondasComponent:', () => {
         componentTestUtils.setupSlice(initialSlice);
 
         await componentTestUtils.expectClickSuccess('#click_0_11');
-        await componentTestUtils.expectClickFailure('#click_0_9', 'Une phalange ne peut pas contenir cases vides.');
+        await componentTestUtils.expectClickFailure('#click_0_9', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_EMPTY_CASE);
     }));
     it('Should select all soldier between first selected and new click, and show valid extension and capture both way', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -329,8 +326,7 @@ describe('EpaminondasComponent:', () => {
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
 
-        const reason: string = 'Cette case n\'est pas alignée avec la direction de la phalange.';
-        await componentTestUtils.expectClickFailure('#click_1_7', reason);
+        await componentTestUtils.expectClickFailure('#click_1_7', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
     }));
     it('Should cancelMove when third click is not aligned with phalange direction', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -353,8 +349,7 @@ describe('EpaminondasComponent:', () => {
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
 
-        const reason: string = 'Cette case n\'est pas alignée avec la direction de la phalange.';
-        await componentTestUtils.expectClickFailure('#click_2_9', reason);
+        await componentTestUtils.expectClickFailure('#click_2_9', EpaminondasFailure.CASE_NOT_ALIGNED_WITH_PHALANX);
     }));
     it('Should cancelMove when third click is an invalid extension', fakeAsync(async() => {
         const initialBoard: NumberTable = [
@@ -377,8 +372,7 @@ describe('EpaminondasComponent:', () => {
         await componentTestUtils.expectClickSuccess('#click_0_11');
         await componentTestUtils.expectClickSuccess('#click_0_9');
 
-        const reason: string = 'Une phalange ne peut pas contenir de pièces ennemies.';
-        await componentTestUtils.expectClickFailure('#click_0_7', reason);
+        await componentTestUtils.expectClickFailure('#click_0_7', EpaminondasFailure.PHALANX_CANNOT_CONTAIN_ENEMY_PIECE);
     }));
     it('Should change first soldier coord when last click was a phalanx extension in the opposite direction of the phalanx', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_1_10');

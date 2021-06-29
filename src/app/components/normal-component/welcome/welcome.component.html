@@ -1,22 +1,22 @@
 <section class="hero">
     <div class="hero-body">
-        <p class="title">
-            Pantheon's Game
+        <p class="title" i18n>
+            AwesomeBoard
         </p>
-        <p class="subtitle">
-            Pantheon's Game est un site qui permet de jouer et d'apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.
+        <p class="subtitle" i18n>
+            AwesomeBoard est un site qui permet de jouer et d'apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.
         </p>
     </div>
     <div class="columns">
         <div class="column">
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title">Jouer en ligne</p>
+                    <p class="card-header-title" i18n>Jouer en ligne</p>
                 </header>
                 <div class="card-content">
                     <div class="content">
-                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/play">Créer une partie</button>
-                        <button class="button is-medium is-fullwidth is-primary" routerLink="/server">Voir la liste des parties</button>
+                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/play" i18n>Créer une partie</button>
+                        <button class="button is-medium is-fullwidth is-primary" routerLink="/server" i18n>Voir la liste des parties</button>
                     </div>
                 </div>
             </div>
@@ -24,12 +24,12 @@
         <div class="column">
             <div class="card">
                 <header class="card-header">
-                    <p class="card-header-title">Jouer hors ligne</p>
+                    <p class="card-header-title" i18n>Jouer hors ligne</p>
                 </header>
                 <div class="card-content">
                     <div class="content">
-                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/local">Jouer</button>
-                        <button class="button is-medium is-fullwidth is-primary" routerLink="/didacticial">Apprendre</button>
+                        <button class="button is-medium is-fullwidth is-primary mb-1" routerLink="/local" i18n>Jouer</button>
+                        <button class="button is-medium is-fullwidth is-primary" routerLink="/didacticial" i18n>Apprendre</button>
                     </div>
                 </div>
             </div>
@@ -52,9 +52,9 @@
                 </div>
             </div>
             <div class="card-footer">
-                <a id="playOnline_{{game.urlName}}" (click)="createGame(game.urlName)" class="card-footer-item">Jouer en ligne</a>
-                <a id="playLocally_{{game.urlName}}" (click)="createLocalGame(game.urlName)" class="card-footer-item">Jouer hors ligne</a>
-                <a id="startDidacticial_{{game.urlName}}" (click)="createDidacticial(game.urlName)" class="card-footer-item">Apprendre</a>
+                <a id="playOnline_{{game.urlName}}" (click)="createGame(game.urlName)" class="card-footer-item" i18n>Jouer en ligne</a>
+                <a id="playLocally_{{game.urlName}}" (click)="createLocalGame(game.urlName)" class="card-footer-item" i18n>Jouer hors ligne</a>
+                <a id="startDidacticial_{{game.urlName}}" (click)="createDidacticial(game.urlName)" class="card-footer-item" i18n>Apprendre</a>
             </div>
         </div>
     </div>

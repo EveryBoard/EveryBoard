@@ -2,10 +2,10 @@
      width="100%" height="auto"
      viewBox="0 0 300 300"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let line of board; index as y;">
-        <g *ngFor="let caseContent of line; index as x;"
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let caseContent of line; index as x"
            id="click_{{x}}_{{y}}"
-           (click)="onClick(x, y);">
+           (click)="onClick(x, y)">
             <g *ngIf="caseContent === 0 || caseContent === 1">
                 <polyline [attr.points]="getPyramidCoordinate(x, y)"
                           [ngClass]="getPlayerClassFor(x, y)"

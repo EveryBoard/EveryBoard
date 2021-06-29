@@ -2,7 +2,7 @@
      width="100%" height="auto"
      viewBox="0 0 875 380"
      preserveAspectRatio="xMidYMid meet">
-    <g *ngFor="let coord of hexaBoard.allCoords();">
+    <g *ngFor="let coord of hexaBoard.allCoords()">
         <g *ngFor="let caseContent of [hexaBoard.getAt(coord)]"
            id="click_{{ coord.x }}_{{ coord.y }}"
            (click)="onClick(coord.x, coord.y)">

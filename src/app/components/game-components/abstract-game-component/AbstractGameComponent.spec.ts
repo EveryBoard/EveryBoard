@@ -60,7 +60,10 @@ describe('AbstractGameComponent', () => {
                 rotate: [['not relevant', 0, true]],
                 skipRotation: [],
             },
-            Pylos: { onClick: [0, 0] },
+            Pylos: {
+                onPieceClick: [0, 0, 0],
+                onDrop: [0, 0, 0],
+            },
             Quarto: {
                 chooseCoord: [0, 0],
                 choosePiece: [0],

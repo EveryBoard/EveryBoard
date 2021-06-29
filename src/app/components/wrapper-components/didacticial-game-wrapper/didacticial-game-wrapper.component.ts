@@ -31,6 +31,7 @@ import { siamDidacticial } from './didacticials/siam-didacticial';
 import { sixDidacticial } from './didacticials/six-didacticial';
 import { tablutDidacticial } from './didacticials/tablut-didacticial';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { DidacticialFailure } from './DidacticialFailure';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -181,7 +182,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onUserClick(' + elementName + ')');
         this.currentReason = null;
         if (this.stepFinished[this.stepIndex] || this.moveAttemptMade) {
-            return MGPValidation.failure('Étape finie!');
+            return MGPValidation.failure(DidacticialFailure.STEP_FINISHED);
         }
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         if (currentStep.isClick()) {
@@ -198,7 +199,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             }, 10);
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure('Cette étape n\'attends pas de mouvements de votre part.');
+            return MGPValidation.failure(DidacticialFailure.INFORMATIONAL_STEP);
         }
     }
     public onCancelMove: (reason?: string) => void = (reason?: string) => {

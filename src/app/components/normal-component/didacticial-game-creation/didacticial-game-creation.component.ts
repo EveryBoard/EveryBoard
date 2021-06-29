@@ -4,7 +4,6 @@ import { Router } from '@angular/router';
 @Component({
     selector: 'app-didacticial-game-creation',
     templateUrl: './didacticial-game-creation.component.html',
-    styleUrls: ['./didacticial-game-creation.component.css'],
 })
 export class DidacticialGameCreationComponent {
 

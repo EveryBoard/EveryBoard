@@ -5,15 +5,14 @@ export interface IJoiner extends JSONObject {
     readonly candidates: NonNullable<Array<string>>; // TODO: give default empty value
     readonly creator: NonNullable<string>;
     readonly chosenPlayer: NonNullable<string>; // TODO: make optional
-    readonly whoStart?: string;
-    readonly firstPlayer?: IFirstPlayer;
-
     readonly partStatus: NonNullable<IPartStatus>;
 
-    // cancel feature for cause of smart phone bugs timeoutMinimalDuration: number;
-    readonly maximalMoveDuration?: number;
-    readonly totalPartDuration?: number;
+    readonly firstPlayer: NonNullable<IFirstPlayer>;
+    readonly partType: NonNullable<IPartType>
+    readonly maximalMoveDuration: NonNullable<number>;
+    readonly totalPartDuration: NonNullable<number>;
 }
+
 export class Joiner implements DomainWrapper<IJoiner> {
     public constructor(public readonly doc: IJoiner) {
     }
@@ -24,7 +23,6 @@ export interface IJoinerId {
 
     doc: IJoiner;
 }
-
 export type IFirstPlayer = 'CREATOR' | 'RANDOM' | 'CHOSEN_PLAYER';
 export class FirstPlayer {
 
@@ -46,14 +44,36 @@ export class FirstPlayer {
         }
     }
 }
+export type IPartType = 'STANDARD' | 'BLITZ' | 'CUSTOM';
+export class PartType {
+    private constructor(public value: IPartType) {}
+
+    public static readonly STANDARD: PartType = new PartType('STANDARD');
+
+    public static readonly BLITZ: PartType = new PartType('BLITZ');
+
+    public static readonly CUSTOM: PartType = new PartType('CUSTOM');
+
+    public static NORMAL_MOVE_DURATION: number = 2 * 60;
+    public static NORMAL_PART_DURATION: number = 30 * 60;
+    public static BLITZ_MOVE_DURATION: number = 30;
+    public static BLITZ_PART_DURATION: number = 15 * 60;
+
+    public static of(value: string): PartType {
+        switch (value) {
+            case 'STANDARD': return PartType.STANDARD;
+            case 'BLITZ': return PartType.BLITZ;
+            case 'CUSTOM': return PartType.CUSTOM;
+            default: throw new Error('Invalid part type: ' + value + '.');
+        }
+    }
+}
 
 export type IPartStatus = number;
 export class PartStatus {
     private constructor(public value: IPartStatus) {}
     // part created, no chosenPlayer => waiting for acceptable candidate
     public static PART_CREATED: PartStatus = new PartStatus(0);
-    // part created, chosenPlayer selected, no config proposed => waiting the creator to propose config
-    public static PLAYER_CHOSEN: PartStatus = new PartStatus(1);
     // part created, chosenPlayer selected, config proposed by the creator => waiting the joiner to accept them
     public static CONFIG_PROPOSED: PartStatus = new PartStatus(2);
     // part created, chosenPlayer selected, config proposed by the created, accepted by the joiner => part started

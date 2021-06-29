@@ -3,7 +3,8 @@
     <button id="switchChatVisibilityButton"
             class="button"
             (click)="switchChatVisibility()">
-            {{ visible ? "Réduire le chat" : "Afficher chat" }} ({{ this.unreadMessages }} nouveau(x) message(s))
+        <ng-container *ngIf="visible else showChat" i18n>Réduire le chat</ng-container>
+        <ng-template #showChat i18n>Afficher le chat</ng-template> ({{ this.unreadMessages }}<ng-container i18n> nouveau(x) message(s)</ng-container>)
     </button>
 
     <form id="chatForm" *ngIf="visible" class="example-form" >
@@ -28,7 +29,7 @@
                    [ngModelOptions]="{standalone: true}">
             <mat-icon matSuffix (click)="sendMessage()">send</mat-icon>
             <mat-hint align="start">
-                <strong>Soyez courtois lol</strong>
+                <strong i18n>Soyez courtois lol</strong>
             </mat-hint>
             <mat-hint align="end">
                 {{message.value.length}} / 128

@@ -40,7 +40,7 @@ export const pentagoDidacticial: DidacticialStep[] = [
                 return MGPValidation.SUCCESS;
             }
         },
-        `Bravo!`,
+        `Bravo !`,
     ),
     DidacticialStep.fromPredicate(
         `Mouvement avec rotation`,
@@ -54,6 +54,6 @@ export const pentagoDidacticial: DidacticialStep[] = [
                 return MGPValidation.failure(`Vous avez effectué un mouvement sans rotation, recommencez!`);
             }
         },
-        `Bravo! Note: si tout les blocs sont neutre après que vous ayez déposé votre pièce, il n'y aura pas de rotation!`,
+        `Bravo ! Note: si tout les blocs sont neutre après que vous ayez déposé votre pièce, il n'y aura pas de rotation!`,
     ),
 ];

@@ -82,11 +82,15 @@ describe('DvonnRules:', () => {
         for (const coord of movablePieces2) {
             expect(slice2.hexaBoard.getAt(coord).belongsTo(Player.ONE)).toBeTrue();
         }
-        expect(rules.isLegal(DvonnMove.of(new Coord(1, 1), new Coord(1, 2)), slice).legal.isSuccess()).toBeFalse();
+        const move: DvonnMove = DvonnMove.of(new Coord(1, 1), new Coord(1, 2));
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.reason).toBe(DvonnFailure.NOT_PLAYER_PIECE);
     });
     it('should forbid moves for pieces with more than 6 neighbors', () => {
         const slice: DvonnGameState = rules.node.gamePartSlice;
-        expect(rules.isLegal(DvonnMove.of(new Coord(1, 3), new Coord(1, 2)), slice).legal.isSuccess()).toBeFalse();
+        const move: DvonnMove = DvonnMove.of(new Coord(1, 3), new Coord(1, 2));
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.reason).toBe(DvonnFailure.TOO_MANY_NEIGHBORS);
     });
     it('should forbid moves from an empty stack', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -157,7 +161,8 @@ describe('DvonnRules:', () => {
         for (const move of moves) {
             expect(board.getAt(move.end).isEmpty()).toBeFalse();
         }
-        expect(rules.isLegal(DvonnMove.of(new Coord(3, 1), new Coord(3, 2)), slice).legal.isSuccess()).toBeFalse();
+        const move: DvonnMove = DvonnMove.of(new Coord(3, 1), new Coord(3, 2));
+        expect(rules.isLegal(move, slice).legal.reason).toBe(DvonnFailure.EMPTY_TARGET_STACK);
     });
     it('should move stacks as a whole, by as many spaces as there are pieces in the stack', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -172,7 +177,9 @@ describe('DvonnRules:', () => {
         for (const move of moves) {
             expect(move.length()).toEqual(board.getAt(move.coord).getSize());
         }
-        expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(3, 0)), slice).legal.isSuccess()).toBeFalse();
+        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(3, 0));
+        const status: LegalityStatus = rules.isLegal(move, slice);
+        expect(status.legal.reason).toBe(DvonnFailure.INVALID_MOVE_LENGTH);
     });
     it('should not allow moves that end on an empty space', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -203,11 +210,14 @@ describe('DvonnRules:', () => {
             // every movable piece should belong to the current player
             expect(stack.belongsTo(slice.getCurrentPlayer())).toBeTrue();
         }
-        expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(2, 4)), slice).legal.isSuccess()).toBeFalse();
+        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 4));
+        expect(rules.isLegal(move, slice).legal.reason).toBe(DvonnFailure.INVALID_MOVE_LENGTH);
     });
     it('should not allow to pass turns if moves are possible', () => {
         const slice: DvonnGameState = rules.node.gamePartSlice;
-        expect(rules.isLegal(DvonnMove.PASS, slice).legal.isSuccess()).toBeFalse();
+        expect(rules.isLegal(DvonnMove.PASS, slice).legal.reason).toBe(DvonnFailure.INVALID_COORD);
+        // TODO: le message devrait correspondre à la raison de son apparition
+        // (l'user ne peut pas passer car il doit jouer, pas à cause de la coord)
     });
     it('should allow to pass turn if no moves are possible', () => {
         const board: DvonnBoard = new DvonnBoard([
@@ -222,7 +232,8 @@ describe('DvonnRules:', () => {
         expect(moves.length).toEqual(1);
         expect(moves[0]).toEqual(DvonnMove.PASS);
         expect(rules.isLegal(DvonnMove.PASS, slice).legal.isSuccess()).toBeTrue();
-        expect(rules.isLegal(DvonnMove.of(new Coord(2, 0), new Coord(2, 1)), slice).legal.isSuccess()).toBeFalse();
+        const move: DvonnMove = DvonnMove.of(new Coord(2, 0), new Coord(2, 1));
+        expect(rules.isLegal(move, slice).legal.reason).toBe(DvonnFailure.CAN_ONLY_PASS);
     });
     it('should remove of the board any portion disconnected from a source', () => {
         const board: DvonnBoard = new DvonnBoard([

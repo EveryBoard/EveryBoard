@@ -7,13 +7,14 @@ import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
 import { DvonnMinimax } from 'src/app/games/dvonn/DvonnMinimax';
 import { DvonnPieceStack } from 'src/app/games/dvonn/DvonnPieceStack';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { MatSnackBar } from '@angular/material/snack-bar';
 import { HexaLayout } from 'src/app/jscaip/HexaLayout';
 import { PointyHexaOrientation } from 'src/app/jscaip/HexaOrientation';
 import { HexagonalGameComponent }
     from 'src/app/components/game-components/abstract-game-component/HexagonalGameComponent';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MaxStacksDvonnMinimax } from './MaxStacksDvonnMinimax';
+import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 
 @Component({
     selector: 'app-dvonn',
@@ -39,9 +40,9 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
                        PointyHexaOrientation.INSTANCE);
     public encoder: MoveEncoder<DvonnMove> = DvonnMove.encoder;
 
-    constructor(snackBar: MatSnackBar) {
-        super(snackBar);
-        this.availableMinimaxes= [
+    constructor(messageDisplayer: MessageDisplayer) {
+        super(messageDisplayer);
+        this.availableMinimaxes = [
             new DvonnMinimax(this.rules, 'DvonnMinimax'),
             new MaxStacksDvonnMinimax(this.rules, 'DvonnMinimaxMaximizeStacks'),
         ];
@@ -87,7 +88,7 @@ export class DvonnComponent extends HexagonalGameComponent<DvonnMove, DvonnGameS
         if (this.canPass) {
             return await this.chooseMove(DvonnMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
-            return MGPValidation.failure('User cannot pass');
+            return MGPValidation.failure(RulesFailure.CANNOT_PASS);
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {
