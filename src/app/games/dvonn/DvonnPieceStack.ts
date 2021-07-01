@@ -3,26 +3,12 @@ import { NumberEncoder } from 'src/app/jscaip/Encoder';
 
 export class DvonnPieceStack {
     public static sizeEncoder: NumberEncoder<number> = NumberEncoder.numberEncoder(49);
-    public static encoder: NumberEncoder<DvonnPieceStack> = new class extends NumberEncoder<DvonnPieceStack> {
-        public maxValue(): number {
-            return (DvonnPieceStack.sizeEncoder.maxValue() *
-                Player.numberEncoder.shift() * Player.numberEncoder.maxValue() *
-                NumberEncoder.booleanEncoder.shift() * NumberEncoder.booleanEncoder.maxValue());
-        }
-        public encodeNumber(stack: DvonnPieceStack): number {
-            return ((DvonnPieceStack.sizeEncoder.encodeNumber(stack.size) *
-                Player.numberEncoder.shift() + Player.numberEncoder.encodeNumber(stack.owner)) *
-                NumberEncoder.booleanEncoder.shift() + NumberEncoder.booleanEncoder.encodeNumber(stack.source));
-        }
-        public decodeNumber(encoded: number): DvonnPieceStack {
-            const sourceN: number = encoded % NumberEncoder.booleanEncoder.shift();
-            encoded = (encoded - sourceN) / NumberEncoder.booleanEncoder.shift();
-            const playerN: number = encoded % Player.numberEncoder.shift();
-            encoded = (encoded - playerN) / Player.numberEncoder.shift();
-            const size: number = encoded;
-            return new DvonnPieceStack(Player.of(playerN), size, NumberEncoder.booleanEncoder.decode(sourceN));
-        }
-    }
+    public static encoder: NumberEncoder<DvonnPieceStack> = NumberEncoder.ofCombination(
+        [NumberEncoder.booleanEncoder, Player.numberEncoder, DvonnPieceStack.sizeEncoder],
+        (stack: DvonnPieceStack): [boolean, Player, number] => [stack.source, stack.owner, stack.size],
+        ([hasSource, owner, size]: [boolean, Player, number]): DvonnPieceStack => {
+            return new DvonnPieceStack(owner, size, hasSource);
+        })
     public static MAX_SIZE: number = 49; // The maximal possible size for a stack
     public static EMPTY: DvonnPieceStack = new DvonnPieceStack(Player.NONE, 0, false);
     public static PLAYER_ZERO: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 1, false);

@@ -70,6 +70,7 @@ import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tablut/tablut.component';
+import { YinshComponent } from './games/yinsh/Yinsh.component';
 import { HumanDuration } from './utils/TimeUtils';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
@@ -133,6 +134,7 @@ const routes: Route [] = [
         SiamComponent,
         SixComponent,
         TablutComponent,
+        YinshComponent,
 
         HumanDuration,
     ],
@@ -156,6 +158,7 @@ const routes: Route [] = [
         SiamComponent,
         SixComponent,
         TablutComponent,
+        YinshComponent,
     ],
     imports: [
         BrowserModule,

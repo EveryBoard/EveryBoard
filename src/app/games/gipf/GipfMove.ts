@@ -6,9 +6,9 @@ import { Move } from 'src/app/jscaip/Move';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
+import { arrayEquals } from 'src/app/utils/Comparable';
 
 export class GipfCapture {
-    // Encodes a capture as: initial case, direction, length
     public static encoder: Encoder<GipfCapture> = new class extends Encoder<GipfCapture> {
         public encode(capture: GipfCapture): JSONValue {
             return capture.capturedCases.map((coord: Coord): JSONValueWithoutArray => {
@@ -175,15 +175,8 @@ export class GipfMove extends Move {
     public equals(other: GipfMove): boolean {
         if (this === other) return true;
         if (this.placement.equals(other.placement) === false) return false;
-        if (this.captureEquals(this.initialCaptures, other.initialCaptures) === false) return false;
-        if (this.captureEquals(this.finalCaptures, other.finalCaptures) === false) return false;
-        return true;
-    }
-    private captureEquals(c1: ReadonlyArray<GipfCapture>, c2: ReadonlyArray<GipfCapture>): boolean {
-        if (c1.length !== c2.length) return false;
-        for (let i: number = 0; i < c1.length; i++) {
-            if (c1[i].equals(c2[i]) === false) return false;
-        }
+        if (arrayEquals(this.initialCaptures, other.initialCaptures) === false) return false;
+        if (arrayEquals(this.finalCaptures, other.finalCaptures) === false) return false;
         return true;
     }
     public encode(): JSONValue {

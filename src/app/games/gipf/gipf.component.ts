@@ -36,7 +36,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
     public arrows: Arrow[] = [];
     public captured: Coord[] = [];
     public moved: Coord[] = [];
-    public currentlyMoved: Coord[] = [];
 
     public hexaLayout: HexaLayout =
         new HexaLayout(GipfComponent.PIECE_SIZE * 1.50,
@@ -77,7 +76,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
             this.inserted = this.arrowTowards(lastMove.placement.coord, lastMove.placement.direction.get());
         }
         this.cancelMoveAttempt();
-        this.moveToInitialCaptureOrPlacementPhase();
     }
     private arrowTowards(placement: Coord, direction: HexaDirection): Arrow {
         const previous: Coord = placement.getNext(direction.getOpposite());
@@ -228,7 +226,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
             return this.cancelMove(validity.getReason());
         }
         this.arrows = [];
-        this.currentlyMoved = this.rules.getPiecesMoved(this.constructedSlice, [], this.placement.get());
         this.constructedSlice = GipfRules.applyPlacement(this.constructedSlice, this.placement.get());
         return this.moveToFinalCapturePhaseOrTryMove();
     }
@@ -257,7 +254,6 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         this.placementEntrance = MGPOptional.empty();
         this.placement = MGPOptional.empty();
 
-        this.currentlyMoved = [];
         this.arrows = [];
 
         this.moveToInitialCaptureOrPlacementPhase();

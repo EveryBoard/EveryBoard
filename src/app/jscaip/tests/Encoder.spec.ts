@@ -1,6 +1,7 @@
 import { ComparableObject } from 'src/app/utils/Comparable';
 import { JSONValue } from 'src/app/utils/utils';
 import { Encoder, NumberEncoder } from '../Encoder';
+import { Player } from '../Player';
 
 export class EncoderTestUtils {
     public static expectToBeCorrect<T extends ComparableObject>(encoder: Encoder<T>, value: T): void {
@@ -53,6 +54,22 @@ describe('NumberEncoder', () => {
         });
         it('should delegate decoding to decode function', () => {
             expect(encoder.decodeNumber(0)).toBe(magicNumber);
+        });
+    });
+    describe('ofCombination', () => {
+        class T implements ComparableObject {
+            public constructor(public field1: boolean, public field2: number, public field3: Player) {}
+            public equals(t: T): boolean {
+                return this.field1 === t.field1 && this.field2 === t.field2 && this.field3 === t.field3;
+            }
+        }
+        const encoder: NumberEncoder<T> = NumberEncoder.ofCombination(
+            [NumberEncoder.booleanEncoder, NumberEncoder.numberEncoder(5), Player.numberEncoder],
+            (t: T): [boolean, number, Player] => [t.field1, t.field2, t.field3],
+            ([field1, field2, field3]: [boolean, number, Player]): T => new T(field1, field2, field3));
+        it('should successfully encode and decode', () => {
+            NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(true, 3, Player.ONE));
+            NumberEncoderTestUtils.expectToBeCorrect(encoder, new T(false, 2, Player.ONE));
         });
     });
 });

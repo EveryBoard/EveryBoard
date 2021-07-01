@@ -31,6 +31,10 @@ export abstract class MoveEncoder<T> extends Encoder<T> {
     public abstract decodeMove(encoded: JSONValueWithoutArray): T;
 }
 
+// Used internally. If T = [A, B, C], then
+// NumberEncoderArray<T> = [NumberEncoder<A>, NumberEncoder<B>, NumberEncoder<C>]
+type NumberEncoderArray<T> = { [P in keyof T]: NumberEncoder<T[P]> };
+
 export abstract class NumberEncoder<T> extends MoveEncoder<T> {
 
     public static ofN<T>(max: number,
@@ -67,6 +71,39 @@ export abstract class NumberEncoder<T> extends MoveEncoder<T> {
             throw new Error('Invalid encoded boolean');
         }
     };
+
+
+    public static ofCombination<T, Fields>(encoders: NumberEncoderArray<Fields>,
+                                           encode: (t: T) => Fields,
+                                           decode: (fields: Fields) => T): NumberEncoder<T> {
+        return new class extends NumberEncoder<T> {
+            public maxValue(): number {
+                let max: number = 0;
+                Object.keys(encoders).forEach((key: string): void => {
+                    max = max * encoders[key].shift() + encoders[key].maxValue();
+                });
+                return max;
+            }
+            public encodeNumber(t: T): number {
+                const fields: Fields = encode(t);
+                let n: number = 0;
+                Object.keys(fields).forEach((key: string): void => {
+                    n = n * encoders[key].shift() + encoders[key].encode(fields[key]);
+                });
+                return n;
+            }
+            public decodeNumber(n: number): T {
+                const fields: Record<string, unknown> = {};
+                let encoded: number = n;
+                Object.keys(encoders).reverse().forEach((key: string): void => {
+                    const fieldN: number = encoded % encoders[key].shift();
+                    encoded = (encoded - fieldN) / encoders[key].shift();
+                    fields[key] = encoders[key].decode(fieldN);
+                });
+                return decode(fields as Fields);
+            }
+        };
+    }
 
     public static numberEncoder(max: number): NumberEncoder<number> {
         return new class extends NumberEncoder<number> {
