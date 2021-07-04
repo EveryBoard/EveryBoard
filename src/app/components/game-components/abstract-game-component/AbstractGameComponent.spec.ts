@@ -85,6 +85,7 @@ describe('AbstractGameComponent', () => {
                 onNeighboorClick: [0, 0],
             },
             Tablut: { onClick: [0, 0] },
+            Yinsh: { onClick: [0, 0] },
         };
         const refusal: MGPValidation =
             MGPValidation.failure('cloning feature will be added soon. Meanwhile, you can\'t click on the board');

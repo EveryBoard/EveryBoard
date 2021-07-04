@@ -33,15 +33,23 @@ export class HexaBoard<T> {
         if (coord.x < 0 || coord.x >= width || coord.y < 0 || coord.y >= height) {
             return false;
         }
-        if (coord.y <= halfHeight) {
+        if (coord.y < halfHeight) {
             if (excludedCases[coord.y] != null) {
                 return coord.x > excludedCases[coord.y]-1;
             } else {
                 return true;
             }
-        } else {
+        } else if (coord.y > halfHeight) {
             if (excludedCases[height-1 - coord.y] != null) {
                 return (width-1-coord.x) > excludedCases[height-1 - coord.y]-1;
+            } else {
+                return true;
+            }
+        } else {
+            // coord.y = halfHeight
+            console.log({x: coord.x, y: coord.y, excluded1: excludedCases[coord.y], excluded2: excludedCases[height-1 - coord.y]})
+            if (excludedCases[coord.y] != null) {
+                return coord.x > excludedCases[coord.y]-1 && (width-1-coord.x) > excludedCases[height-1 - coord.y]-1;
             } else {
                 return true;
             }
@@ -60,7 +68,7 @@ export class HexaBoard<T> {
                        public readonly height: number,
                        public readonly excludedCases: ReadonlyArray<number>,
                        public readonly empty: T) {
-        if (this.excludedCases.length >= this.height/2) {
+        if (this.excludedCases.length >= (this.height/2)+1) {
             throw new Error('Invalid excluded cases specification for HexaBoard.');
         }
     }

@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="0 250 1050 1060"
+     preserveAspectRatio="xMidYMid meet">
+    <g *ngFor="let line of viewInfo.caseInfo; index as y">
+        <g *ngFor="let caseInfo of viewInfo.caseInfo[y]; index as x">
+            <g *ngIf="caseInfo != null"
+               (click)="onClick(caseInfo.coord)"
+               id="click_{{ x }}_{{ y }}">
+                <polyline [attr.points]="caseInfo.coordinates"
+                          id="case_{{ x }}_{{ y }}"
+                          [ngClass]="caseInfo.caseClass"
+                          class="base"
+                          stroke-linecap="round"/>
+                <circle *ngIf="caseInfo.isPiece"
+                        [attr.cx]="caseInfo.center.x"
+                        [attr.cy]="caseInfo.center.y"
+                        [attr.r]="viewInfo.pieceSize"
+                        [ngClass]="caseInfo.pieceClass"
+                        class="base"/>
+            </g>
+        </g>
+    </g>
+    <g *ngFor="let capture of viewInfo.possibleCaptures; index as i"
+       pointer-events="fill"
+       class="capturable">
+        <g *ngFor="let case of capture.capturedCases">
+            <polyline [attr.points]="viewInfo[case.y][case.x].coordinates"
+                      (click)="onClick(case)"
+                      class="no-fill"
+                      stroke-linecap="round" />
+        </g>
+    </g>
+
+</svg>
