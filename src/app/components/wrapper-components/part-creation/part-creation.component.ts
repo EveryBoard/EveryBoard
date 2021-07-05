@@ -49,7 +49,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     // 1. Creator chooses config and opponent
     // 2. Creator click on "proposing the config"
     // 3a. Chosen opponent accepts the config -> part starts
-    // 3b. Creator clicks on "modifying config"" -> back to 1, with the current config and opponent
+    // 3b. Creator clicks on "modifying config" -> back to 1, with the current config and opponent
 
     // PageCreationComponent is always a child of OnlineGame component (one to one)
     // they need common data so that the parent calculates/retrieves the data then share it
@@ -218,12 +218,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Promise.resolve();
     }
     private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
-        display(PartCreationComponent.VERBOSE || true,
+        display(PartCreationComponent.VERBOSE,
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
                     then: JSON.stringify(iJoinerId) } });
         if (this.isGameCancelled(iJoinerId)) {
-            display(PartCreationComponent.VERBOSE || true,
+            display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
             return this.onGameCancelled();
         } else {
@@ -253,7 +253,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameStarted finished');
     }
     private updateJoiner(joiner: IJoiner): void {
-        display(PartCreationComponent.VERBOSE || true, { PartCreationComponent_updateJoiner: { joiner } });
+        display(PartCreationComponent.VERBOSE, { PartCreationComponent_updateJoiner: { joiner } });
 
         if (this.userName === joiner.creator) {
             this.observeCandidates(joiner);
@@ -279,7 +279,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
-                console.log({created: user, state: user.doc.state})
+                console.log({ inside: 'observeCreator.onDocumentCreated', user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
                     // creator is offline, remove this part
                     this.cancelGameCreation();
@@ -288,7 +288,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
-                console.log({modified: user, state: user.doc.state})
+                console.log({ inside: 'observeCreator.onDocumentModified', user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
                     this.cancelGameCreation();
                 }
@@ -298,7 +298,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // This should not happen in practice, but if it does we can safely remove the joiner
             for (const user of deletedUsers) {
                 Utils.handleError('OnlineGameWrapper: Creator was deleted' + user.doc.pseudo);
-                console.log({deleted: user, state: user.doc.state})
+                console.log({ inside: 'observeCreator.onDocumentDeleted', user})
                 if (user.doc.pseudo === joiner.creator) {
                     this.cancelGameCreation();
                 }
@@ -312,10 +312,10 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.creatorSubscription = this.userService.observeUserByPseudo(joiner.creator, callback);
     }
     private observeCandidates(joiner: IJoiner): void {
-        display(PartCreationComponent.VERBOSE || true, { PartCreation_observeCandidates: JSON.stringify(joiner) });
+        display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
-                console.log({created: user})
+                console.log({ inside: 'observeCandidates.onDocumentCreated', user})
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(user.doc.pseudo);
                     Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' is already offline!');
@@ -324,7 +324,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
-                console.log({modified: user})
+                console.log({ inside: 'observeCandidates.onDocumentModified', user})
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(user.doc.pseudo);
                 }
@@ -334,7 +334,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
                 Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' was deleted');
-                console.log({deleted: user})
+                console.log({ inside: 'observeCandidates.onDocumentDeleted', user})
                 this.removeUserFromLobby(user.doc.pseudo);
             }
         };
@@ -364,7 +364,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private removeUserFromLobby(userPseudo: string): Promise<void> {
-        console.log({removing: userPseudo, currentJoiner: this.currentJoiner})
+        console.log({ called: 'OnlineGameWrapper.removeUserFromLobby', userPseudo, currentJoiner: this.currentJoiner})
         const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
         if (index === -1) {
             display(true, userPseudo + ' is not in the lobby!');
