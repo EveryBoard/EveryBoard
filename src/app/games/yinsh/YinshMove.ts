@@ -1,6 +1,7 @@
 import { GipfCapture } from 'src/app/games/gipf/GipfMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Encoder, MoveEncoder } from 'src/app/jscaip/Encoder';
+import { HexaDirection } from 'src/app/jscaip/HexaDirection';
 import { Move } from 'src/app/jscaip/Move';
 import { arrayEquals } from 'src/app/utils/Comparable';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -15,9 +16,10 @@ export class YinshCapture extends GipfCapture {
         }
         super(captured);
     }
-    public static from(start: Coord, end: Coord): YinshCapture {
+    public static of(start: Coord, end: Coord): YinshCapture {
         const coords: Coord[] = [];
-        for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(end)) {
+        const dir: HexaDirection = HexaDirection.factory.fromMove(start, end);
+        for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
             coords.push(cur);
         }
         coords.push(end);
@@ -33,10 +35,11 @@ export class YinshMove extends Move {
                 moveStart: Coord.encoder.encode(move.start),
                 moveEnd: YinshMove.coordOptionalEncoder.encode(move.end),
             };
-            move.initialCaptures.map((c: GipfCapture, i: number) => {
+            move.initialCaptures.map((c: YinshCapture, i: number) => {
+                // We rely on Gipf's capture encoder
                 encoded['initialCapture' + i] = GipfCapture.encoder.encode(c);
             });
-            move.finalCaptures.map((c: GipfCapture, i: number) => {
+            move.finalCaptures.map((c: YinshCapture, i: number) => {
                 encoded['finalCapture' + i] = GipfCapture.encoder.encode(c);
             });
 
@@ -44,12 +47,12 @@ export class YinshMove extends Move {
         }
         public decodeMove(encoded: JSONValueWithoutArray): YinshMove {
             const casted: JSONObject = encoded as JSONObject;
-            assert(casted.start != null, 'Invalid encoded YinshMove');
+            assert(casted.moveStart != null, 'Invalid encoded YinshMove');
 
             return new YinshMove(this.decodeArray(casted, 'initialCapture', GipfCapture.encoder.decode),
-                                 this.decodeArray(casted, 'finalCapture', GipfCapture.encoder.decode),
-                                 Coord.encoder.decode(casted.start),
-                                 YinshMove.coordOptionalEncoder.decode(casted.end));
+                                 Coord.encoder.decode(casted.moveStart),
+                                 YinshMove.coordOptionalEncoder.decode(casted.moveEnd),
+                                 this.decodeArray(casted, 'finalCapture', GipfCapture.encoder.decode));
         }
         private decodeArray<T>(v: JSONObject, name: string, decode: (v: JSONValue) => T): T[] {
             const array: T[] = [];
@@ -60,9 +63,9 @@ export class YinshMove extends Move {
         }
     }
     public constructor(public readonly initialCaptures: ReadonlyArray<YinshCapture>,
-                       public readonly finalCaptures: ReadonlyArray<YinshCapture>,
                        public readonly start: Coord,
-                       public readonly end: MGPOptional<Coord>) {
+                       public readonly end: MGPOptional<Coord>,
+                       public readonly finalCaptures: ReadonlyArray<YinshCapture>) {
         super();
     }
     public isInitialPlacement(): boolean {
@@ -74,6 +77,7 @@ export class YinshMove extends Move {
         if (this.end.equals(other.end) === false) return false;
         if (arrayEquals(this.initialCaptures, other.initialCaptures) === false) return false;
         if (arrayEquals(this.finalCaptures, other.finalCaptures) === false) return false;
+        return true;
     }
     public toString(): string {
         return 'YinshMove([' +
@@ -82,7 +86,7 @@ export class YinshMove extends Move {
             this.end.toString() + ', [' +
             this.capturesToString(this.finalCaptures) + '])';
     }
-    private capturesToString(captures: ReadonlyArray<GipfCapture>): string {
+    private capturesToString(captures: ReadonlyArray<YinshCapture>): string {
         let str: string = '';
         for (const capture of captures) {
             if (str !== '') {

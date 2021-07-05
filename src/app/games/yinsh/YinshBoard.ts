@@ -11,6 +11,16 @@ export class YinshBoard extends HexaBoard<YinshPiece> {
     public static EMPTY: YinshBoard =
         new YinshBoard(ArrayUtils.createBiArray(YinshBoard.WIDTH, YinshBoard.HEIGHT, YinshPiece.EMPTY));
 
+    public static of(table: Table<YinshPiece>): YinshBoard {
+        return new YinshBoard(table);
+    }
+
+    public constructor(public readonly contents: Table<YinshPiece>) {
+        super(contents, YinshBoard.WIDTH, YinshBoard.HEIGHT, YinshBoard.EXCLUDED_CASES, YinshPiece.EMPTY);
+    }
+    public toNumberTable(): NumberTable {
+        return ArrayUtils.mapBiArray(this.contents, YinshPiece.encoder.encodeNumber);
+    }
     public isOnBoard(coord: Coord): boolean {
         if (HexaBoard.isOnBoard(coord, YinshBoard.WIDTH, YinshBoard.HEIGHT, YinshBoard.EXCLUDED_CASES) === false) {
             return false;
@@ -20,12 +30,5 @@ export class YinshBoard extends HexaBoard<YinshPiece> {
             return false;
         }
         return true;
-    }
-
-    public constructor(public readonly contents: Table<YinshPiece>) {
-        super(contents, YinshBoard.WIDTH, YinshBoard.HEIGHT, YinshBoard.EXCLUDED_CASES, YinshPiece.EMPTY);
-    }
-    public toNumberTable(): NumberTable {
-        return ArrayUtils.mapBiArray(this.contents, YinshPiece.encoder.encodeNumber);
     }
 }

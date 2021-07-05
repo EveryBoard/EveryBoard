@@ -1,7 +1,9 @@
 import { GipfFailure } from '../gipf/GipfFailure';
 
 export class YinshFailure {
-    public static readonly PLACEMENT_AFTER_INITIAL_PHASE: string = $localize`You cannot perform a placement after turn 10.`;
+    public static readonly PLACEMENT_AFTER_INITIAL_PHASE: string = $localize`Vous ne pouvez pas placer d'anneau sans placer de marqueurs après le dixième tour.`;
+
+    public static readonly NO_MARKERS_IN_INITIAL_PHASE: string = $localize`Vous ne pouvez pas passez vos marquers avant d'avoir placé tous vos anneaux.`;
 
     public static readonly MISSING_CAPTURES: string = GipfFailure.MISSING_CAPTURES;
 

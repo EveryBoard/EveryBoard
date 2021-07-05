@@ -247,7 +247,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
                 for (let cur: Coord = linePortion.start;
                     cur.getDistance(linePortion.end) >= 5;
                     cur = cur.getNext(linePortion.dir)) {
-                    captures.push(YinshCapture.from(cur, cur.getNext(linePortion.dir, 5)));
+                    captures.push(YinshCapture.of(cur, cur.getNext(linePortion.dir, 5)));
                 }
             });
         return captures;

@@ -59,4 +59,11 @@ export class MGPOptional<T extends Comparable> {
         }
         return comparableEquals(this.value, other.value);
     }
+    public toString(): string {
+        if (this.isAbsent()) {
+            return 'MGPOptional.empty()';
+        } else {
+            return `MGPOptional.of(${this.value.toString()})`;
+        }
+    }
 }

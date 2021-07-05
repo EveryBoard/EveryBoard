@@ -200,9 +200,9 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     }
     private async tryMove(): Promise<MGPValidation> {
         const move: YinshMove = new YinshMove(this.initialCaptures,
-                                              this.finalCaptures,
                                               this.moveStart.get(),
-                                              this.moveEnd);
+                                              this.moveEnd,
+                                              this.finalCaptures);
         const validity: MGPValidation = await this.chooseMove(move, this.rules.node.gamePartSlice, null, null);
         return validity;
     }
