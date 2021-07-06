@@ -58,7 +58,7 @@ export abstract class GameWrapper {
         this.gameComponent.board = this.gameComponent.rules.node.gamePartSlice.getCopiedBoard();
     }
     protected createGameComponent(): void {
-        display(GameWrapper.VERBOSE || true, 'GameWrapper.createGameComponent');
+        display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
         assert(this.gameIncluder != null, 'GameIncluder should be present');
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');

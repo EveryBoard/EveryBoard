@@ -293,9 +293,9 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
             this.stopCountdownsFor(player);
         } else {
             const endGameResults: MGPResult[] = [MGPResult.DRAW, MGPResult.RESIGN, MGPResult.TIMEOUT];
-            const resultIsInCluded: boolean =
-                endGameResults.some((result: MGPResult) => result.value === currentPart.doc.result)
-            assert(resultIsInCluded === true, 'Unknown type of end game');
+            const resultIsIncluded: boolean =
+                endGameResults.some((result: MGPResult) => result.value === currentPart.doc.result);
+            assert(resultIsIncluded === true, 'Unknown type of end game');
             display(OnlineGameWrapperComponent.VERBOSE, 'endGame est true et winner est ' + currentPart.getWinner());
             this.stopCountdownsFor(player);
         }

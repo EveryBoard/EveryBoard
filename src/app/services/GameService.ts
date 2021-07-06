@@ -235,9 +235,9 @@ export class GameService implements OnDestroy {
         const newJoiner: IJoiner = {
             ...iJoiner, // 5 attributes unchanged
 
-            candidates: [], // they'll join again we the component reload
+            candidates: [], // they'll join again when the component reload
 
-            firstPlayer: firstPlayer.value, // first player changed so the other one start
+            firstPlayer: firstPlayer.value, // first player changed so the other one starts
             partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
         const rematchId: string = await this.joinerService.createJoiner(newJoiner);
