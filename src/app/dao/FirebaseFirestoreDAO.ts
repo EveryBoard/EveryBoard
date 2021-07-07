@@ -46,6 +46,7 @@ export abstract class FirebaseFirestoreDAO<T extends JSONObject> implements IFir
         return this.afs.collection(this.collectionName).doc<T>(messageId).ref.delete();
     }
     public set(id: string, element: T): Promise<void> {
+        display(FirebaseFirestoreDAO.VERBOSE, { called: this.collectionName + '.set', id, element });
         return this.afs.collection(this.collectionName).doc<T>(id).set(element);
     }
     // Collection Observer
@@ -62,7 +63,8 @@ export abstract class FirebaseFirestoreDAO<T extends JSONObject> implements IFir
     public observingWhere(field: string,
                           condition: firebase.firestore.WhereFilterOp,
                           value: any,
-                          callback: FirebaseCollectionObserver<T>): () => void
+                          callback: FirebaseCollectionObserver<T>)
+    : () => void
     {
         let collection: CollectionReference | firebase.firestore.Query<firebase.firestore.DocumentData> =
             this.afs.collection(this.collectionName).ref;

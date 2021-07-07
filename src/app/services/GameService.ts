@@ -15,11 +15,20 @@ import { assert, display, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { Router } from '@angular/router';
 import { AuthenticationService, AuthUser } from './AuthenticationService';
 import { MessageDisplayer } from './message-displayer/MessageDisplayer';
+import { GameServiceMessages } from './GameServiceMessages';
+
+export interface StartingPartConfig extends Partial<IPart> {
+    playerZero: string,
+    playerOne: string,
+    turn: number,
+    beginning: number,
+}
 
 @Injectable({
     providedIn: 'root',
 })
 export class GameService implements OnDestroy {
+
     public static VERBOSE: boolean = false;
 
     private followedPartId: string;
@@ -32,13 +41,14 @@ export class GameService implements OnDestroy {
 
     private userName: string;
 
-    constructor(private partDao: PartDAO,
+    constructor(public partDao: PartDAO,
                 public activesPartsService: ActivesPartsService,
                 public joinerService: JoinerService,
                 private chatService: ChatService,
-                private router: Router,
-                private messageDisplayer: MessageDisplayer,
-                private authenticationService: AuthenticationService) {
+                public router: Router,
+                public messageDisplayer: MessageDisplayer,
+                private authenticationService: AuthenticationService)
+    {
         display(GameService.VERBOSE, 'GameService.constructor');
         this.userNameSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur: AuthUser) => {
@@ -47,13 +57,13 @@ export class GameService implements OnDestroy {
             });
     }
     public async createGameAndRedirectOrShowError(game: string): Promise<boolean> {
-        if (this.canCreateGame(this.userName)) {
-            const gameId: string = await this.createGame(this.userName, game, '');
+        if (this.canCreateGame(this.userName) === true) {
+            const gameId: string = await this.createPartJoinerAndChat(this.userName, game, '');
             // create Part and Joiner
             this.router.navigate(['/play/' + game, gameId]);
             return true;
         } else {
-            this.messageDisplayer.infoMessage(`Vous avez déjà une partie en cours. Terminez la ou annulez la d'abord !`);
+            this.messageDisplayer.infoMessage(GameServiceMessages.ALREADY_INGAME);
             this.router.navigate(['/server']);
             return false;
         }
@@ -63,7 +73,6 @@ export class GameService implements OnDestroy {
             this.userNameSub.unsubscribe();
         }
     }
-
     public async getPartValidity(partId: string, gameType: string): Promise<MGPValidation> {
         const part: IPart = await this.partDao.read(partId);
         if (part == null) {
@@ -75,7 +84,7 @@ export class GameService implements OnDestroy {
             return MGPValidation.failure('WRONG_GAME_TYPE');
         }
     }
-    protected createPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
+    protected createUnstartedPart(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
         display(GameService.VERBOSE,
                 'GameService.createPart(' + creatorName + ', ' + typeGame + ', ' + chosenPlayer + ')');
 
@@ -98,12 +107,12 @@ export class GameService implements OnDestroy {
         };
         return this.chatService.set(chatId, newChat);
     }
-    public async createGame(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
+    public async createPartJoinerAndChat(creatorName: string, typeGame: string, chosenPlayer: string): Promise<string> {
         display(GameService.VERBOSE, 'GameService.createGame(' + creatorName + ', ' + typeGame + ')');
 
-        const gameId: string = await this.createPart(creatorName, typeGame, chosenPlayer) as string;
+        const gameId: string = await this.createUnstartedPart(creatorName, typeGame, chosenPlayer) as string;
         await this.joinerService.createInitialJoiner(creatorName, gameId);
-        await this.createChat(gameId); // TODO asynchronous
+        await this.createChat(gameId);
         return gameId;
     }
     public canCreateGame(creator: string): boolean {
@@ -125,7 +134,11 @@ export class GameService implements OnDestroy {
 
     private startGameWithConfig(partId: string, joiner: IJoiner): Promise<void> {
         display(GameService.VERBOSE, 'GameService.startGameWithConfig(' + partId + ', ' + JSON.stringify(joiner));
-
+        const modification: StartingPartConfig = this.getStartingConfig(joiner);
+        return this.partDao.update(partId, modification);
+    }
+    public getStartingConfig(joiner: IJoiner): StartingPartConfig
+    {
         let whoStarts: FirstPlayer = FirstPlayer.of(joiner.firstPlayer);
         if (whoStarts === FirstPlayer.RANDOM) {
             if (Math.random() < 0.5) {
@@ -143,20 +156,16 @@ export class GameService implements OnDestroy {
             playerZero = joiner.chosenPlayer;
             playerOne = joiner.creator;
         }
-        const modification: Partial<IPart> = {
+        return {
             playerZero,
             playerOne,
             turn: 0,
             beginning: Date.now(),
         };
-        return this.partDao.update(partId, modification);
     }
     public async deletePart(partId: string): Promise<void> {
         display(GameService.VERBOSE, 'GameService.deletePart(' + partId + ')');
-
-        if (partId == null) {
-            throw new Error('Can\'t delete id for partId = null');
-        }
+        assert(partId != null, 'Can\'t delete id for partId = null');
         return this.partDao.delete(partId);
     }
     public async acceptConfig(partId: string, joiner: IJoiner): Promise<void> {
@@ -214,10 +223,9 @@ export class GameService implements OnDestroy {
         return this.sendRequest(partId, Request.rematchProposed(player));
     }
     public async acceptRematch(part: ICurrentPartId): Promise<void> {
-        display(GameService.VERBOSE, 'GameService.acceptRematch(' + JSON.stringify(part) + ')');
+        display(GameService.VERBOSE, { called: 'GameService.acceptRematch(', part });
 
         const iJoiner: IJoiner = await this.joinerService.readJoinerById(part.id);
-        const rematchId: string = await this.createGame(iJoiner.creator, part.doc.typeGame, iJoiner.chosenPlayer);
         let firstPlayer: FirstPlayer;
         if (part.doc.playerZero === iJoiner.creator) {
             firstPlayer = FirstPlayer.CHOSEN_PLAYER; // so he won't start this one
@@ -225,16 +233,23 @@ export class GameService implements OnDestroy {
             firstPlayer = FirstPlayer.CREATOR;
         }
         const newJoiner: IJoiner = {
-            candidates: iJoiner.candidates,
-            creator: iJoiner.creator,
-            chosenPlayer: iJoiner.chosenPlayer,
-            firstPlayer: firstPlayer.value,
-            partType: iJoiner.partType,
-            partStatus: PartStatus.PART_STARTED.value,
-            maximalMoveDuration: iJoiner.maximalMoveDuration,
-            totalPartDuration: iJoiner.totalPartDuration,
+            ...iJoiner, // 5 attributes unchanged
+
+            candidates: [], // they'll join again when the component reload
+
+            firstPlayer: firstPlayer.value, // first player changed so the other one starts
+            partStatus: PartStatus.PART_STARTED.value, // game ready to start
         };
-        await this.joinerService.updateJoinerById(rematchId, newJoiner);
+        const rematchId: string = await this.joinerService.createJoiner(newJoiner);
+        const startingConfig: StartingPartConfig = this.getStartingConfig(newJoiner);
+        const newPart: IPart = {
+            typeGame: part.doc.typeGame,
+            result: MGPResult.UNACHIEVED.value,
+            listMoves: [],
+            ...startingConfig,
+        };
+        await this.partDao.set(rematchId, newPart);
+        await this.createChat(rematchId);
         return this.sendRequest(part.id, Request.rematchAccepted(part.doc.typeGame, rematchId));
     }
     public askTakeBack(partId: string, player: Player): Promise<void> {
@@ -267,25 +282,23 @@ export class GameService implements OnDestroy {
     public stopObserving(): void {
         display(GameService.VERBOSE, 'GameService.stopObserving();');
 
-        if (this.followedPartId == null) {
-            throw new Error('!!! GameService.stopObserving: we already stop watching doc');
-        } else {
-            display(GameService.VERBOSE, 'stopped watching joiner ' + this.followedPartId + ']');
+        assert(this.followedPartId != null, '!!! GameService.stopObserving: we already stop watching doc');
 
-            this.followedPartId = null;
-            this.followedPartSub.unsubscribe();
-            this.followedPartObs = null;
-        }
+        display(GameService.VERBOSE, 'stopped watching joiner ' + this.followedPartId + ']');
+
+        this.followedPartId = null;
+        this.followedPartSub.unsubscribe();
+        this.followedPartObs = null;
     }
-    public async updateDBBoard(
-        partId: string,
-        encodedMove: JSONValueWithoutArray,
-        scorePlayerZero: number,
-        scorePlayerOne: number,
-        notifyDraw?: boolean,
-        winner?: string,
-        loser?: string,
-    ): Promise<void> {
+    public async updateDBBoard(partId: string,
+                               encodedMove: JSONValueWithoutArray,
+                               scorePlayerZero: number,
+                               scorePlayerOne: number,
+                               notifyDraw?: boolean,
+                               winner?: string,
+                               loser?: string)
+    : Promise<void>
+    {
         display(GameService.VERBOSE, { gameService_updateDBBoard: {
             partId, encodedMove, scorePlayerZero, scorePlayerOne, notifyDraw, winner } });
 
@@ -315,5 +328,4 @@ export class GameService implements OnDestroy {
         }
         return await this.partDao.update(partId, update);
     }
-
 }

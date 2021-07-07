@@ -426,7 +426,8 @@ describe('PartCreationComponent:', () => {
         expect(router.navigate).toHaveBeenCalledWith(['server']);
     }));
     it('should see candidate disappear and reappear if candidates disconnects and reconnects');
-    xdescribe('graceful handling of unexpected situations', () => {
+
+    describe('graceful handling of unexpected situations', () => {
         beforeEach(() => {
             spyOn(Utils, 'handleError').and.callFake((): void => {
                 return;
@@ -459,7 +460,7 @@ describe('PartCreationComponent:', () => {
 
             expect(Utils.handleError).toHaveBeenCalledWith('OnlineGameWrapper: Creator was deleted: creator');
         }));
-        it('should remove candidate from lobby if it directly appears offline', fakeAsync(async() => {
+        xit('should remove candidate from lobby if it directly appears offline', fakeAsync(async() => {
             component.userName = 'creator';
             await joueursDAOMock.set('opponent', { ...OPPONENT, state: 'offline' });
             await joinerDAOMock.set('joinerId', { ...JoinerMocks.INITIAL.doc, candidates: ['firstCandidate'] });
@@ -473,7 +474,7 @@ describe('PartCreationComponent:', () => {
 
             expect(Utils.handleError).toHaveBeenCalledWith('OnlineGameWrapper: firstCandidate is already offline!');
         }));
-        it('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
+        xit('should not fail if an user has to be removed from the lobby but is not in it', fakeAsync(async() => {
             // This could happen if we receive twice the same update to a user that needs to be removed
             component.userName = 'creator';
             await joinerDAOMock.set('joinerId', JoinerMocks.INITIAL.doc);

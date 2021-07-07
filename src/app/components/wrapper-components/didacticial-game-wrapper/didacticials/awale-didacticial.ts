@@ -48,7 +48,7 @@ export const awaleDidacticial: DidacticialStep[] = [
             [2, 0, 0, 0, 1, 0],
         ], 1, [0, 0]),
         [new AwaleMove(0, 1)],
-        $localize`Bravo, vous gagnez 3 point dans la première maison plus 2 dans la seconde!`,
+        $localize`Bravo, vous gagnez 3 points dans la première maison plus 2 dans la seconde!`,
         $localize`Perdu. Recommencez.`,
     ),
     DidacticialStep.fromMove(
@@ -82,7 +82,7 @@ export const awaleDidacticial: DidacticialStep[] = [
         ], 1, [0, 0]),
         [new AwaleMove(0, 1)],
         $localize`Malheureusement, vous ne pouvez pas capturer, car sinon l’adversaire ne pourrait pas jouer après vous. À ces moments là, le mouvement est autorisé mais la capture n’est pas effectuée!`,
-        $localize`Perdu. Recommencez`,
+        $localize`Perdu. Recommencez.`,
     ),
     DidacticialStep.anyMove(
         $localize`Nourir est obligatoire`,

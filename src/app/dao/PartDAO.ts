@@ -10,6 +10,7 @@ import { display } from 'src/app/utils/utils';
     providedIn: 'root',
 })
 export class PartDAO extends FirebaseFirestoreDAO<IPart> {
+
     public static VERBOSE: boolean = false;
 
     constructor(protected afs: AngularFirestore) {
