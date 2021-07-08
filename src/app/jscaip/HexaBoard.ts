@@ -47,7 +47,6 @@ export class HexaBoard<T> {
             }
         } else {
             // coord.y = halfHeight
-            console.log({x: coord.x, y: coord.y, excluded1: excludedCases[coord.y], excluded2: excludedCases[height-1 - coord.y]})
             if (excludedCases[coord.y] != null) {
                 return coord.x > excludedCases[coord.y]-1 && (width-1-coord.x) > excludedCases[height-1 - coord.y]-1;
             } else {
@@ -85,7 +84,14 @@ export class HexaBoard<T> {
         if (equalT(this.empty, other.empty) === false) {
             return false;
         }
-        // TODO: check excludedCases
+        if (this.excludedCases.length !== other.excludedCases.length) {
+            return false;
+        }
+        for (let i: number = 0; i < this.excludedCases.length; i++) {
+            if (this.excludedCases[i] !== other.excludedCases[i]) {
+                return false;
+            }
+        }
         for (const coord of this.allCoords()) {
             if (equalT(this.getAtUnsafe(coord), other.getAtUnsafe(coord)) === false) {
                 return false;

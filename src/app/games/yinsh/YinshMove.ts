@@ -10,20 +10,45 @@ import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/ut
 // A capture at Yinsh is just like a capture at Gipf, with the only difference
 // that it needs to be of length 5 rather than 4
 export class YinshCapture extends GipfCapture {
-    public constructor(captured: ReadonlyArray<Coord>) {
-        if (captured.length !== 5) {
-            throw new Error('YinshCapture must capture exactly 5 pieces');
+    public static encoder: Encoder<YinshCapture> = new class extends Encoder<YinshCapture> {
+        public encode(capture: YinshCapture): JSONValue {
+            return {
+                captured: capture.capturedCases.map((coord: Coord): JSONValueWithoutArray => {
+                    return Coord.encoder.encode(coord) as JSONValueWithoutArray;
+                }),
+                ringTaken: Coord.encoder.encode(capture.ringTaken),
+            };
         }
-        super(captured);
-    }
-    public static of(start: Coord, end: Coord): YinshCapture {
+        public decode(encoded: JSONValue): YinshCapture {
+            const casted: JSONObject = encoded as JSONObject;
+            assert(casted.captured != null && casted.ringTaken != null, 'Invalid encoded YinshCapture');
+            return new YinshCapture(
+                (casted.captured as Array<JSONValueWithoutArray>).map((c: JSONValueWithoutArray): Coord => {
+                    return Coord.encoder.decode(c);
+                }),
+                Coord.encoder.decode(casted.ringTaken));
+        }
+    };
+    public static of(start: Coord, end: Coord, ringTaken: Coord): YinshCapture {
         const coords: Coord[] = [];
         const dir: HexaDirection = HexaDirection.factory.fromMove(start, end);
         for (let cur: Coord = start; cur.equals(end) === false; cur = cur.getNext(dir)) {
             coords.push(cur);
         }
         coords.push(end);
-        return new YinshCapture(coords);
+        return new YinshCapture(coords, ringTaken);
+    }
+    public constructor(captured: ReadonlyArray<Coord>,
+                       public readonly ringTaken: Coord) {
+        super(captured);
+        if (captured.length !== 5) {
+            throw new Error('YinshCapture must capture exactly 5 pieces');
+        }
+    }
+    public equals(other: YinshCapture): boolean {
+        if (super.equals(other) === false) return false;
+        if (this.ringTaken.equals(other.ringTaken) === false) return false;
+        return true;
     }
 }
 
@@ -36,11 +61,10 @@ export class YinshMove extends Move {
                 moveEnd: YinshMove.coordOptionalEncoder.encode(move.end),
             };
             move.initialCaptures.map((c: YinshCapture, i: number) => {
-                // We rely on Gipf's capture encoder
-                encoded['initialCapture' + i] = GipfCapture.encoder.encode(c);
+                encoded['initialCapture' + i] = YinshCapture.encoder.encode(c);
             });
             move.finalCaptures.map((c: YinshCapture, i: number) => {
-                encoded['finalCapture' + i] = GipfCapture.encoder.encode(c);
+                encoded['finalCapture' + i] = YinshCapture.encoder.encode(c);
             });
 
             return encoded;
@@ -49,10 +73,10 @@ export class YinshMove extends Move {
             const casted: JSONObject = encoded as JSONObject;
             assert(casted.moveStart != null, 'Invalid encoded YinshMove');
 
-            return new YinshMove(this.decodeArray(casted, 'initialCapture', GipfCapture.encoder.decode),
+            return new YinshMove(this.decodeArray(casted, 'initialCapture', YinshCapture.encoder.decode),
                                  Coord.encoder.decode(casted.moveStart),
                                  YinshMove.coordOptionalEncoder.decode(casted.moveEnd),
-                                 this.decodeArray(casted, 'finalCapture', GipfCapture.encoder.decode));
+                                 this.decodeArray(casted, 'finalCapture', YinshCapture.encoder.decode));
         }
         private decodeArray<T>(v: JSONObject, name: string, decode: (v: JSONValue) => T): T[] {
             const array: T[] = [];
