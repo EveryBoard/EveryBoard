@@ -10,6 +10,18 @@ import { DebugElement } from '@angular/core';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DidacticialFailure } from './DidacticialFailure';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
+import { Move } from 'src/app/jscaip/Move';
+import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
+import { sixDidacticial, SixDidacticialMessages } from './didacticials/six-didacticial';
+import { SixMove } from 'src/app/games/six/SixMove';
+import { Coord } from 'src/app/jscaip/Coord';
+import { Rules } from 'src/app/jscaip/Rules';
+import { SixRules } from 'src/app/games/six/SixRules';
+import { SixGameState } from 'src/app/games/six/SixGameState';
+import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
+import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
+import { PentagoGameState } from 'src/app/games/pentago/PentagoGameState';
+import { pentagoDidacticial } from 'src/app/games/pentago/pentago.didacticial';
 
 describe('DidacticialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -508,8 +520,34 @@ describe('DidacticialGameWrapperComponent', () => {
                 componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
             expect(currentReason).toBe(expectedReason);
         }));
-        it('When illegal move is done, toast message should be shown and restart not needed');
+        it('When illegal move is done, toast message should be shown and restart not needed', fakeAsync(async() => {
+            // given didacticial awaiting any move, but mocking rules to make it mark a move illegal
+            const didacticial: DidacticialStep[] = [
+                DidacticialStep.anyMove(
+                    'title',
+                    'instruction',
+                    QuartoPartSlice.getInitialSlice(),
+                    new QuartoMove(0, 0, QuartoPiece.BABA),
+                    'Bravo !',
+                ),
+            ];
+            wrapper.startDidacticial(didacticial);
 
+            // when doing a (virtually) illegal move
+            const error: string = 'message de la erreur monsieur...';
+            spyOn(wrapper.gameComponent.rules, 'isLegal').and.returnValue({ legal: MGPValidation.failure(error) });
+            await componentTestUtils.expectClickSuccess('#chooseCoord_0_0');
+            tick(10);
+            const move: QuartoMove = new QuartoMove(0, 0, QuartoPiece.BBBB);
+            await componentTestUtils.expectMoveFailure('#choosePiece_15', error, move);
+            tick(10);
+
+            // expect to see message error
+            const expectedReason: string = error;
+            const currentReason: string =
+                componentTestUtils.findElement('#currentReason').nativeElement.innerHTML;
+            expect(currentReason).toBe(expectedReason);
+        }));
         it('When illegal click is tried, toast message should be shown and restart not needed', fakeAsync(async() => {
             // Given a DidacticialStep on which illegal move has been tried
             const didacticial: DidacticialStep[] = [
@@ -543,7 +581,7 @@ describe('DidacticialGameWrapperComponent', () => {
             expect(componentTestUtils.getComponent().canUserPlay('#chooseCoord_0_0').isSuccess()).toBeTrue();
             tick(10);
         }));
-        it('Should propose to see the solution When move attempt done', fakeAsync(async() => {
+        it('Should propose to see the solution when move attempt done', fakeAsync(async() => {
             // Given a didacticial on which a non-awaited move has been done
             const awaitedMove: QuartoMove = new QuartoMove(3, 3, QuartoPiece.BBAA);
             const stepInitialTurn: number = 0;
@@ -840,8 +878,53 @@ describe('DidacticialGameWrapperComponent', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe('Bravo !');
             // expect step not to be considered a success
-            expect(wrapper.stepFinished[wrapper.stepIndex])
-                .toBeFalse();
+            expect(wrapper.stepFinished[wrapper.stepIndex]).toBeFalse();
+        }));
+    });
+    describe('Didacticials', () => {
+        it('Should make sure than predicate step have healthy behaviors', fakeAsync(async() => {
+            const stepExpectations: [Rules<Move, GamePartSlice>, DidacticialStep, Move, MGPValidation][] = [
+                [
+                    new PentagoRules(PentagoGameState),
+                    pentagoDidacticial[2],
+                    pentagoDidacticial[2].solutionMove,
+                    MGPValidation.SUCCESS,
+                ], [
+                    new PentagoRules(PentagoGameState),
+                    pentagoDidacticial[3],
+                    pentagoDidacticial[3].solutionMove,
+                    MGPValidation.SUCCESS,
+                ], [
+                    new SixRules(SixGameState),
+                    sixDidacticial[4],
+                    sixDidacticial[4].solutionMove,
+                    MGPValidation.SUCCESS,
+                ], [
+                    new SixRules(SixGameState),
+                    sixDidacticial[4],
+                    SixMove.fromDeplacement(new Coord(6, 1), new Coord(7, 1)),
+                    MGPValidation.failure(SixDidacticialMessages.MOVEMENT_NOT_DISCONNECTING),
+                ], [
+                    new SixRules(SixGameState),
+                    sixDidacticial[5],
+                    sixDidacticial[5].solutionMove,
+                    MGPValidation.SUCCESS,
+                ], [
+                    new SixRules(SixGameState),
+                    sixDidacticial[6],
+                    sixDidacticial[6].solutionMove,
+                    MGPValidation.SUCCESS,
+                ],
+            ];
+            for (const stepExpectation of stepExpectations) {
+                const rules: Rules<Move, GamePartSlice> = stepExpectation[0];
+                const step: DidacticialStep = stepExpectation[1];
+                const move: Move = stepExpectation[2];
+                const validation: MGPValidation = stepExpectation[3];
+                const status: LegalityStatus = rules.isLegal(move, step.state);
+                const state: GamePartSlice = rules.applyLegalMove(move, step.state, status);
+                expect(step.predicate(move, state)).toEqual(validation);
+            }
         }));
     });
 });
