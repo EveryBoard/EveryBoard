@@ -36,6 +36,7 @@ export class YinshCapture extends GipfCapture {
             coords.push(cur);
         }
         coords.push(end);
+        console.log({captureLength: coords.length, start, end})
         return new YinshCapture(coords, ringTaken);
     }
     public constructor(captured: ReadonlyArray<Coord>,

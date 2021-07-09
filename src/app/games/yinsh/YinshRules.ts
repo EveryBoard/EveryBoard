@@ -83,7 +83,9 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         return new YinshGameState(board, state.sideRings, state.turn);
     }
     public isLegal(move: YinshMove, state: YinshGameState): YinshLegalityStatus {
+        console.log({isLegal: move})
         if (move.isInitialPlacement()) {
+            console.log('initial')
             return { legal: this.initialPlacementValidity(state, move.start) };
         }
         if (state.turn < 10) {
@@ -199,10 +201,11 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;
         } else {
+            console.log({linePortions});
             return MGPValidation.failure(YinshFailure.MISSING_CAPTURES);
         }
     }
-    public getLinePortionsWithAtLeastFivePiecesOfPlayer(state: YinshGameState, player: Player):
+    private getLinePortionsWithAtLeastFivePiecesOfPlayer(state: YinshGameState, player: Player):
     ReadonlyArray<{ start: Coord, end: Coord, dir: HexaDirection}> {
         const linePortions: { start: Coord, end: Coord, dir: HexaDirection}[] = [];
         state.hexaBoard.allLines().forEach((line: HexaLine) => {
@@ -214,7 +217,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         });
         return linePortions;
     }
-    public getLinePortionWithAtLeastFivePiecesOfPlayer(state: YinshGameState, player: Player, line: HexaLine)
+    private getLinePortionWithAtLeastFivePiecesOfPlayer(state: YinshGameState, player: Player, line: HexaLine)
     : MGPOptional<{ start: Coord, end: Coord, dir: HexaDirection}>
     {
         let consecutives: number = 0;
@@ -223,20 +226,23 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         let start: Coord = coord;
         let cur: Coord;
         for (cur = coord; state.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
-            if (state.hexaBoard.getAt(cur).player === player) {
+            const piece: YinshPiece = state.hexaBoard.getAt(cur);
+            if (piece.player === player && piece.isRing === false) {
+                console.log({playerPieceAt: cur, piece})
                 if (consecutives === 0) {
                     start = cur;
                 }
                 consecutives += 1;
             } else {
                 if (consecutives >= 5) {
-                    // There can only be one portion with at least 5 pieces
-                    return MGPOptional.of({ start, end: cur, dir });
+                    // There can only be one portion with at least 5 pieces, we found it
+                    break;
                 }
                 consecutives = 0;
             }
         }
         if (consecutives >= 5) {
+            console.log('found')
             return MGPOptional.of({ start, end: cur, dir });
         }
         return MGPOptional.empty();
@@ -249,7 +255,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
                 for (let cur: Coord = linePortion.start;
                     cur.getDistance(linePortion.end) >= 5;
                     cur = cur.getNext(linePortion.dir)) {
-                    captures.push(YinshCapture.of(cur, cur.getNext(linePortion.dir, 5), new Coord(-1, -1)));
+                    captures.push(YinshCapture.of(cur, cur.getNext(linePortion.dir, 4), new Coord(-1, -1)));
                 }
             });
         return captures;

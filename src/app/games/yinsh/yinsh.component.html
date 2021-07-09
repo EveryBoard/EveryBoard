@@ -9,14 +9,14 @@
                id="click_{{ x }}_{{ y }}">
                 <polyline [attr.points]="caseInfo.coordinates"
                           id="case_{{ x }}_{{ y }}"
-                          [ngClass]="caseInfo.caseClass"
+                          [ngClass]="caseInfo.caseClasses"
                           class="base"
                           stroke-linecap="round"/>
                 <circle *ngIf="caseInfo.isPiece"
                         [attr.cx]="caseInfo.center.x"
                         [attr.cy]="caseInfo.center.y"
                         [attr.r]="viewInfo.pieceSize"
-                        [ngClass]="caseInfo.pieceClass"
+                        [ngClass]="caseInfo.pieceClasses"
                         class="base"/>
             </g>
         </g>

@@ -17,8 +17,8 @@ import { YinshRules } from './YinshRules';
 interface CaseInfo {
     coord: Coord,
     coordinates: string,
-    caseClass: string,
-    pieceClasses: string,
+    caseClasses: string[],
+    pieceClasses: string[],
     isPiece: boolean,
     center: Coord,
 }
@@ -26,6 +26,7 @@ interface CaseInfo {
 interface ViewInfo {
     caseInfo: CaseInfo[][],
     possibleCaptures: YinshCapture[],
+    pieceSize: number,
 }
 
 @Component({
@@ -49,10 +50,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     private constructedState: YinshGameState = null;
 
-    private movePhase: 'INITIAL_CAPTURE' | 'FINAL_CAPTURE' | 'MOVE_START' | 'MOVE_END' = 'MOVE_START';
+    private movePhase: 'INITIAL_CAPTURE' | 'FINAL_CAPTURE' | 'RING_SELECTION' | 'MOVE_START' | 'MOVE_END' = 'MOVE_START';
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
     private moveEnd: MGPOptional<Coord> = MGPOptional.empty();
+    private ringTaken: MGPOptional<Coord> = MGPOptional.empty();
     private initialCaptures: YinshCapture[] = [];
     private finalCaptures: YinshCapture[] = [];
 
@@ -60,7 +62,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     private moved: Coord[] = [];
 
-    public viewInfo: ViewInfo = { caseInfo: [], possibleCaptures: [] };
+    public viewInfo: ViewInfo = { caseInfo: [], possibleCaptures: [], pieceSize: YinshComponent.PIECE_SIZE };
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -77,8 +79,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 coord,
                 coordinates: this.getHexaCoordinates(coord),
                 center: this.getCenter(coord),
-                caseClass: '',
-                pieceClasses: '',
+                caseClasses: [],
+                pieceClasses: [],
                 isPiece: false,
             };
         });
@@ -92,24 +94,28 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     }
     public updateViewInfo(): void {
         this.constructedState.hexaBoard.allCoords().forEach((coord: Coord): void => {
-            this.viewInfo.caseInfo[coord.y][coord.x].caseClass = this.getCaseClass(coord);
-            this.viewInfo.caseInfo[coord.y][coord.x].pieceClasses = this.getPieceClass(coord);
+            this.viewInfo.caseInfo[coord.y][coord.x].caseClasses = this.getCaseClasses(coord);
+            this.viewInfo.caseInfo[coord.y][coord.x].pieceClasses = this.getPieceClasses(coord);
             this.viewInfo.caseInfo[coord.y][coord.x].isPiece =
                 this.constructedState.hexaBoard.getAt(coord) !== YinshPiece.EMPTY;
         });
     }
-    public getCaseClass(coord: Coord): string {
+    public getCaseClasses(coord: Coord): string[] {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
-            return 'captured';
+            return ['captured'];
         } else if (this.moved.some((c: Coord) => c.equals(coord))) {
-            return 'moved';
+            return ['moved'];
         } else {
-            return '';
+            return [];
         }
     }
-    public getPieceClass(coord: Coord): string {
+    public getPieceClasses(coord: Coord): string[] {
         const piece: YinshPiece = this.constructedState.hexaBoard.getAt(coord);
-        return this.getPlayerClass(piece.player);
+        if (piece.isRing) {
+            return [this.getPlayerClass(piece.player) + '-stroke', 'no-fill'];
+        } else {
+            return [this.getPlayerClass(piece.player)];
+        }
     }
     public cancelMoveAttempt(): void {
         this.constructedState = this.rules.node.gamePartSlice;
@@ -117,12 +123,14 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         this.moved = [];
 
         const move: YinshMove = this.rules.node.move;
-        if (move.isInitialPlacement()) {
-            this.moved = [move.start];
-        } else {
-            this.moved = [move.start, move.end.get()];
-            move.initialCaptures.forEach((c: YinshCapture) => this.markCapture(c));
-            move.finalCaptures.forEach((c: YinshCapture) => this.markCapture(c));
+        if (move !== null) {
+            if (move.isInitialPlacement()) {
+                this.moved = [move.start];
+            } else {
+                this.moved = [move.start, move.end.get()];
+                move.initialCaptures.forEach((c: YinshCapture) => this.markCapture(c));
+                move.finalCaptures.forEach((c: YinshCapture) => this.markCapture(c));
+            }
         }
 
         this.initialCaptures = [];
@@ -137,15 +145,19 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         });
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
+        console.log('moving to initial phase')
         this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
+        console.log({captures: this.viewInfo.possibleCaptures.length})
         if (this.viewInfo.possibleCaptures.length === 0) {
             this.movePhase = 'MOVE_START';
         } else {
             this.movePhase = 'INITIAL_CAPTURE';
         }
+        console.log({newPhase: this.movePhase})
         return MGPValidation.SUCCESS;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
+        console.log({click: coord, phase: this.movePhase});
         const clickValidity: MGPValidation = this.canUserPlay('#click_' + coord.x + '_' + coord.y);
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
@@ -154,6 +166,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             case 'INITIAL_CAPTURE':
             case 'FINAL_CAPTURE':
                 return this.selectCapture(coord);
+            case 'RING_SELECTION':
+                return this.selectRing(coord);
             case 'MOVE_START':
                 return this.selectMoveStart(coord);
             case 'MOVE_END':
@@ -161,6 +175,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         }
     }
     private async selectCapture(coord: Coord): Promise<MGPValidation> {
+        console.log({selectCapture: coord})
         const captures: YinshCapture[] = [];
         this.viewInfo.possibleCaptures.forEach((candidate: YinshCapture) => {
             if (candidate.contains(coord)) {
@@ -177,24 +192,33 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         this.constructedState = this.rules.applyCapture(this.constructedState, capture);
         this.markCapture(capture);
         this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
+        this.updateViewInfo();
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE':
                 this.initialCaptures.push(capture);
                 if (this.viewInfo.possibleCaptures.length === 0) {
-                    return this.moveToMovePhase();
+                    return this.moveToRingSelectionPhase();
                 } else {
                     return MGPValidation.SUCCESS;
                 }
             case 'FINAL_CAPTURE':
                 this.finalCaptures.push(capture);
                 if (this.viewInfo.possibleCaptures.length === 0) {
-                    return this.tryMove();
+                    return this.moveToRingSelectionPhase();
                 } else {
                     return MGPValidation.SUCCESS;
                 }
         }
     }
+    private moveToRingSelectionPhase(coord): MGPValidation {
+        this.movePhase = 'RING_SELECTION';
+        return MGPValidation.SUCCESS;
+    }
+    private async selectRing(coord: Coord): Promise<MGPValidation> {
+        // TODO
+    }
     private moveToMovePhase(): MGPValidation {
+        console.log('moveToMove');
         this.movePhase = 'MOVE_START';
         return MGPValidation.SUCCESS;
     }
@@ -207,27 +231,36 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         return validity;
     }
     private async selectMoveStart(coord: Coord): Promise<MGPValidation> {
-        const validity: MGPValidation = this.rules.moveStartValidity(this.constructedState, coord);
-        if (validity.isFailure()) {
-            return this.cancelMove(validity.getReason());
-        }
-        this.moveStart = MGPOptional.of(coord);
         if (this.constructedState.turn < 10) {
+            const validity: MGPValidation = this.rules.initialPlacementValidity(this.constructedState, coord);
+            if (validity.isFailure()) {
+                return this.cancelMove(validity.getReason());
+            }
+            this.moveStart = MGPOptional.of(coord);
             return this.tryMove();
         } else {
+            const validity: MGPValidation = this.rules.moveStartValidity(this.constructedState, coord);
+            if (validity.isFailure()) {
+                return this.cancelMove(validity.getReason());
+            }
+            this.moveStart = MGPOptional.of(coord);
             this.movePhase = 'MOVE_END';
         }
         return MGPValidation.SUCCESS;
     }
     private async selectMoveEnd(coord: Coord): Promise<MGPValidation> {
+        console.log({moveEnd: coord})
         const validity: MGPValidation = this.rules.moveValidity(this.constructedState, this.moveStart.get(), coord);
         if (validity.isFailure()) {
             return this.cancelMove(validity.getReason());
         }
         this.moveEnd = MGPOptional.of(coord);
+        this.constructedState = this.rules.applyMoveAndFlip(this.constructedState, this.moveStart.get(), coord);
+        this.updateViewInfo();
         return this.moveToFinalCapturePhaseOrTryMove();
     }
     private async moveToFinalCapturePhaseOrTryMove(): Promise<MGPValidation> {
+        console.log('moveToFinal');
         this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
         if (this.viewInfo.possibleCaptures.length === 0) {
             return this.tryMove();
