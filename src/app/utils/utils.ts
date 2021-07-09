@@ -13,7 +13,9 @@ export class Utils {
 }
 
 export function display(verbose: boolean, message: unknown): void {
-    if (verbose) console.log(message);
+    if (verbose) {
+        console.log(message);
+    }
 }
 
 export function assert(condition: boolean, message: string): void {

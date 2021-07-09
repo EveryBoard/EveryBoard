@@ -279,7 +279,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
-                console.log({ inside: 'observeCreator.onDocumentCreated', user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
                     // creator is offline, remove this part
                     this.cancelGameCreation();
@@ -288,7 +287,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
-                console.log({ inside: 'observeCreator.onDocumentModified', user})
                 if (user.doc.pseudo === joiner.creator && user.doc.state === 'offline') {
                     this.cancelGameCreation();
                 }
@@ -298,7 +296,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // This should not happen in practice, but if it does we can safely remove the joiner
             for (const user of deletedUsers) {
                 Utils.handleError('OnlineGameWrapper: Creator was deleted' + user.doc.pseudo);
-                console.log({ inside: 'observeCreator.onDocumentDeleted', user})
                 if (user.doc.pseudo === joiner.creator) {
                     this.cancelGameCreation();
                 }
@@ -315,7 +312,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
-                console.log({ inside: 'observeCandidates.onDocumentCreated', user})
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(user.doc.pseudo);
                     Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' is already offline!');
@@ -324,7 +320,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         };
         const onDocumentModified: (modifiedUsers: IJoueurId[]) => void = (modifiedUsers: IJoueurId[]) => {
             for (const user of modifiedUsers) {
-                console.log({ inside: 'observeCandidates.onDocumentModified', user})
                 if (user.doc.state === 'offline') {
                     this.removeUserFromLobby(user.doc.pseudo);
                 }
@@ -334,7 +329,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
             // This should not happen in practice, but if it does we can safely remove the user from the lobby
             for (const user of deletedUsers) {
                 Utils.handleError('OnlineGameWrapper: ' + user.doc.pseudo + ' was deleted');
-                console.log({ inside: 'observeCandidates.onDocumentDeleted', user})
                 this.removeUserFromLobby(user.doc.pseudo);
             }
         };
@@ -364,7 +358,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         }
     }
     private removeUserFromLobby(userPseudo: string): Promise<void> {
-        console.log({ called: 'OnlineGameWrapper.removeUserFromLobby', userPseudo, currentJoiner: this.currentJoiner})
         const index: number = this.currentJoiner.candidates.indexOf(userPseudo);
         if (index === -1) {
             display(true, userPseudo + ' is not in the lobby!');

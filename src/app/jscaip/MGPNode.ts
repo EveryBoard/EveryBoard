@@ -234,10 +234,8 @@ export class MGPNode<R extends Rules<M, S, L>,
         return this.hopedValue.get(minimax.name).get();
     }
     public getOwnValue(minimax: Minimax<M, S, L, U>): U {
-        if (minimax == null) {
-            console.log('jeu sans ia');
-            return new NodeUnheritance(0) as U;
-        }
+        assert(minimax != null, 'Cannot got game value without minimax provided');
+
         let ownValue: U = this.ownValue.get(minimax.name).getOrNull();
         if (ownValue == null) {
             ownValue = minimax.getBoardValue(this);
