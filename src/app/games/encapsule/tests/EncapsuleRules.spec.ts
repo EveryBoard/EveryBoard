@@ -100,7 +100,6 @@ describe('EncapsuleRules', () => {
             O0, O0, O1, O2, O2,
             X0, X1, X2,
         ]);
-        console.log(EncapsuleCase.decode(X__).getBiggest().getPlayer())
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
         const node: EncapsuleNode = new MGPNode(null, move, expectedState);
@@ -173,7 +172,7 @@ describe('EncapsuleRules', () => {
             [___, ___, XO_],
         ];
         const expectedState: EncapsulePartSlice = new EncapsulePartSlice(expectedBoard, 3, remainingPieces);
-        expect(status.legal.isSuccess()).toBeTrue(); console.log(status.legal.reason)
+        expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
     });
     it('should forbid moving pieces on a piece with the same size', () => {

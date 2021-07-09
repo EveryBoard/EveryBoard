@@ -39,7 +39,6 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                 board[line[2].y][line[2].x]];
             victory = EncapsuleRules.isVictoriousLine(cases);
         }
-        console.log(victory)
         return victory;
     }
     public static isVictoriousLine(cases: EncapsuleCase[]): MGPOptional<Player> {
