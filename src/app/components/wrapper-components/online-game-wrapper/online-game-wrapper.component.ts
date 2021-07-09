@@ -333,7 +333,7 @@ export class OnlineGameWrapperComponent extends GameWrapper implements OnInit, A
     public canAskTakeBack(): boolean {
         if (this.isPlaying() === false) {
             return false;
-        } if (this.currentPart == null) {
+        } else if (this.currentPart == null) {
             return false;
         } else if (this.currentPart.doc.turn <= this.observerRole) {
             return false;
