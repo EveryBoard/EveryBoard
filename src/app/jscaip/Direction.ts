@@ -102,8 +102,7 @@ export abstract class BaseDirection {
         if (this.x === -1 && this.y === -1) return 4;
         if (this.x === 1 && this.y === -1) return 5;
         if (this.x === -1 && this.y === 1) return 6;
-        if (this.x === 1 && this.y === 1) return 7;
-        throw new DirectionError('Invalid direction');
+        else return 7;
     }
     public toString(): string {
         if (this.x === 0 && this.y === -1) return 'UP';
@@ -113,8 +112,18 @@ export abstract class BaseDirection {
         if (this.x === -1 && this.y === -1) return 'UP_LEFT';
         if (this.x === 1 && this.y === -1) return 'UP_RIGHT';
         if (this.x === -1 && this.y === 1) return 'DOWN_LEFT';
-        if (this.x === 1 && this.y === 1) return 'DOWN_RIGHT';
-        throw new DirectionError('Invalid direction');
+        else return 'DOWN_RIGHT';
+    }
+}
+
+export class DirectionEncoder extends Encoder<Direction> {
+
+    public encode(dir: Direction): string {
+        return dir.toString();
+    }
+    public decode(encoded: JSONValue): Direction {
+        assert(typeof encoded === 'string', 'Invalid encoded direction');
+        return Direction.factory.fromString(encoded as string);
     }
 }
 
@@ -141,13 +150,9 @@ export class Direction extends BaseDirection {
             ];
         };
     public static readonly DIRECTIONS: ReadonlyArray<Direction> = Direction.factory.all;
-    public static readonly encoder: Encoder<Direction> =
-        Encoder.of((dir: Direction) => {
-            return dir.toString();
-        }, (encoded: JSONValue) => {
-            assert(typeof encoded === 'string', 'Invalid encoded direction');
-            return Direction.factory.fromString(encoded as string);
-        });
+
+    public static readonly encoder: Encoder<Direction> = new DirectionEncoder();
+
     private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
         super();
     }
@@ -158,7 +163,16 @@ export class Direction extends BaseDirection {
         return Direction.factory.of(-this.x, -this.y);
     }
 }
+export class OrthogonalEncoder extends Encoder<Orthogonal> {
 
+    public encode(dir: Orthogonal): string {
+        return dir.toString();
+    }
+    public decode(encoded: JSONValue): Orthogonal {
+        assert(typeof encoded === 'string', 'Invalid encoded orthogonal');
+        return Orthogonal.factory.fromString(encoded as string);
+    }
+}
 export class Orthogonal extends BaseDirection {
     public static readonly UP: Orthogonal = new Orthogonal(0, -1);
     public static readonly RIGHT: Orthogonal = new Orthogonal(1, 0);
@@ -182,13 +196,8 @@ export class Orthogonal extends BaseDirection {
             }
         };
     public static readonly ORTHOGONALS: ReadonlyArray<Orthogonal> = Orthogonal.factory.all;
-    public static readonly encoder: Encoder<Orthogonal> =
-        Encoder.of((dir: Orthogonal) => {
-            return dir.toString();
-        }, (encoded: JSONValue) => {
-            assert(typeof encoded === 'string', 'Invalid encoded orthogonal direction');
-            return Orthogonal.factory.fromString(encoded as string);
-        });
+
+    public static readonly encoder: Encoder<Orthogonal> = new OrthogonalEncoder();
 
     private constructor(public readonly x: 0|1|-1, public readonly y: 0|1|-1) {
         super();
