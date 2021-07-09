@@ -27,6 +27,9 @@ describe('Direction', () => {
                 expect(Direction.factory.fromDelta(-5, 0)).toBe(Direction.LEFT);
                 expect(Direction.factory.fromDelta(1, 1)).toBe(Direction.DOWN_RIGHT);
             });
+            it('should throw when trying static move', () => {
+                expect(() => Direction.factory.fromDelta(0, 0)).toThrowError('Invalid direction from static move');
+            });
         });
         describe('fromMove', () => {
             it('should construct a direction corresponding to a move', () => {
@@ -123,8 +126,16 @@ describe('Direction', () => {
             expect(Direction.UP.equals(Direction.DOWN)).toBeFalse();
         });
     });
-    describe('toInt', () => {});
-    describe('toString', () => {});
+    describe('Encoder', () => {
+        it('should encode by calling Direction.toString', () => {
+            const dir: Direction = Direction.DOWN;
+            expect(Direction.encoder.encode(dir)).toEqual(dir.toString());
+        });
+        it('should decode by calling Direction.factory.fromString', () => {
+            const dir: string = Direction.DOWN.toString();
+            expect(Direction.encoder.decode(dir)).toEqual(Direction.factory.fromString(dir));
+        });
+    });
 });
 
 describe('Orthogonal', () => {
@@ -143,6 +154,16 @@ describe('Orthogonal', () => {
                 expect(() => Orthogonal.factory.of(2, 1)).toThrow();
                 expect(() => Orthogonal.factory.of(1, 1)).toThrow();
             });
+        });
+    });
+    describe('Encoder', () => {
+        it('should encode by calling Orthogonal.toString', () => {
+            const dir: Orthogonal = Orthogonal.DOWN;
+            expect(Orthogonal.encoder.encode(dir)).toEqual(dir.toString());
+        });
+        it('should decode by calling Orthogonal.factory.fromString', () => {
+            const dir: string = Orthogonal.DOWN.toString();
+            expect(Orthogonal.encoder.decode(dir)).toEqual(Orthogonal.factory.fromString(dir));
         });
     });
 });

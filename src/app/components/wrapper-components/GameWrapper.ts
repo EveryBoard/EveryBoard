@@ -9,8 +9,9 @@ import { Move } from '../../jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
+import { Player } from 'src/app/jscaip/Player';
 
 @Component({ template: '' })
 export abstract class GameWrapper {
@@ -37,8 +38,7 @@ export abstract class GameWrapper {
                 protected actRoute: ActivatedRoute,
                 public router: Router,
                 protected userService: UserService,
-                protected authenticationService: AuthenticationService,
-    ) {
+                protected authenticationService: AuthenticationService) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice>> {
@@ -59,7 +59,7 @@ export abstract class GameWrapper {
     }
     protected createGameComponent(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
-        display(GameWrapper.VERBOSE && this.gameIncluder == null, 'GameIncluder should be present');
+        assert(this.gameIncluder != null, 'GameIncluder should be present');
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
         const component: Type<AbstractGameComponent<Move, GamePartSlice>> =
@@ -116,7 +116,7 @@ export abstract class GameWrapper {
 
     public onUserClick: (elementName: string) => MGPValidation = (_elementName: string) => {
         // TODO: Not the same logic to use in Online and Local, make abstract
-        if (this.observerRole > 1) {
+        if (this.observerRole === Player.NONE.value) {
             const message: string = $localize`cloning feature will be added soon. Meanwhile, you can\'t click on the board`;
             return MGPValidation.failure(message);
         }
@@ -130,7 +130,7 @@ export abstract class GameWrapper {
         // Non needed by default'
     }
     public isPlayerTurn: () => boolean = () => {
-        if (this.observerRole > 1) {
+        if (this.observerRole === Player.NONE.value) {
             return false;
         }
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;

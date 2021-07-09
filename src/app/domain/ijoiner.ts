@@ -4,7 +4,8 @@ import { DomainWrapper } from './DomainWrapper';
 export interface IJoiner extends JSONObject {
     readonly candidates: NonNullable<Array<string>>; // TODO: give default empty value
     readonly creator: NonNullable<string>;
-    readonly chosenPlayer: NonNullable<string>; // TODO: make optional
+    readonly chosenPlayer: NonNullable<string>;
+    // TODO: make optional, since first value set is '', a non-null way to say null
     readonly partStatus: NonNullable<IPartStatus>;
 
     readonly firstPlayer: NonNullable<IFirstPlayer>;

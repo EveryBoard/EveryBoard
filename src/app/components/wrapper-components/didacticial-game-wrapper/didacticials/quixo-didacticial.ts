@@ -56,6 +56,6 @@ export const quixoDidacticial: DidacticialStep[] = [
         ], 31),
         [new QuixoMove(3, 0, Orthogonal.DOWN)],
         $localize`Bravo, vous avez gagné!`,
-        $localize`Perdu.`,
+        $localize`Raté !`,
     ),
 ];

@@ -49,7 +49,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     // 1. Creator chooses config and opponent
     // 2. Creator click on "proposing the config"
     // 3a. Chosen opponent accepts the config -> part starts
-    // 3b. Creator clicks on "modifying config"" -> back to 1, with the current config and opponent
+    // 3b. Creator clicks on "modifying config" -> back to 1, with the current config and opponent
 
     // PageCreationComponent is always a child of OnlineGame component (one to one)
     // they need common data so that the parent calculates/retrieves the data then share it
@@ -218,12 +218,12 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         return Promise.resolve();
     }
     private onCurrentJoinerUpdate(iJoinerId: IJoinerId) {
-        display(PartCreationComponent.VERBOSE || true,
+        display(PartCreationComponent.VERBOSE,
                 { PartCreationComponent_onCurrentJoinerUpdate: {
                     before: JSON.stringify(this.currentJoiner),
                     then: JSON.stringify(iJoinerId) } });
         if (this.isGameCancelled(iJoinerId)) {
-            display(PartCreationComponent.VERBOSE || true,
+            display(PartCreationComponent.VERBOSE,
                     'PartCreationComponent.onCurrentJoinerUpdate: LAST UPDATE : the game is cancelled');
             return this.onGameCancelled();
         } else {
@@ -253,7 +253,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         display(PartCreationComponent.VERBOSE, 'PartCreationComponent.onGameStarted finished');
     }
     private updateJoiner(joiner: IJoiner): void {
-        display(PartCreationComponent.VERBOSE || true, { PartCreationComponent_updateJoiner: { joiner } });
+        display(PartCreationComponent.VERBOSE, { PartCreationComponent_updateJoiner: { joiner } });
 
         if (this.userName === joiner.creator) {
             this.observeCandidates(joiner);
@@ -309,7 +309,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.creatorSubscription = this.userService.observeUserByPseudo(joiner.creator, callback);
     }
     private observeCandidates(joiner: IJoiner): void {
-        display(PartCreationComponent.VERBOSE || true, { PartCreation_observeCandidates: JSON.stringify(joiner) });
+        display(PartCreationComponent.VERBOSE, { PartCreation_observeCandidates: joiner });
         const onDocumentCreated: (foundUser: IJoueurId[]) => void = (foundUsers: IJoueurId[]) => {
             for (const user of foundUsers) {
                 if (user.doc.state === 'offline') {

@@ -26,9 +26,9 @@ export const reversiDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.anyMove(
         $localize`Capture (1/2)`,
-        $localize`Au début de la partie, voici la configuration des pièces.
-         Pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.
-         Faites n'importe quel mouvement.`,
+        $localize`Au début de la partie, les pièces sont placées comme ceci.
+        Pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.
+        Faites n'importe quel mouvement.`,
         ReversiPartSlice.getInitialSlice(),
         new ReversiMove(2, 4),
         $localize`Bravo !`,

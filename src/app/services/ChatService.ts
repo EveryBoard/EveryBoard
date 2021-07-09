@@ -63,8 +63,6 @@ export class ChatService implements OnDestroy {
         } else if (chatId === this.followedChatId) {
             throw new Error('WTF :: Already observing chat \'' + chatId + '\'');
         } else {
-            // this.stopObserving();
-            // this.startObserving(chatId, callback); // TODO: remove comments
             throw new Error('Cannot ask to watch \'' + this.followedChatId + '\' while watching \'' + chatId + '\'');
         }
     }

@@ -106,7 +106,6 @@ export class JoinerService {
             return this.joinerDao.update(this.observedJoinerId, modification);
         }
     }
-
     public async updateCandidates(candidates: string[]): Promise<void> {
         display(JoinerService.VERBOSE, 'JoinerService.reviewConfig');
         assert(this.observedJoinerId != null, 'JoinerService is not observing a joiner');
@@ -124,7 +123,8 @@ export class JoinerService {
                                maximalMoveDuration: number,
                                firstPlayer: FirstPlayer,
                                totalPartDuration: number)
-    : Promise<void> {
+    : Promise<void>
+    {
         display(JoinerService.VERBOSE,
                 { joinerService_proposeConfig: { maximalMoveDuration, firstPlayer, totalPartDuration } });
         display(JoinerService.VERBOSE, 'this.followedJoinerId: ' + this.observedJoinerId);
@@ -195,6 +195,11 @@ export class JoinerService {
         this.observedJoinerId = null;
         this.observedJoinerSub.unsubscribe();
         this.observedJoinerObs = null;
+    }
+    public async createJoiner(joiner: IJoiner): Promise<string> {
+        display(JoinerService.VERBOSE, 'JoinerService.create(' + JSON.stringify(joiner) + ')');
+
+        return this.joinerDao.create(joiner);
     }
     public async readJoinerById(partId: string): Promise<IJoiner> {
         display(JoinerService.VERBOSE, 'JoinerService.readJoinerById(' + partId + ')');
