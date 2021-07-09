@@ -30,7 +30,7 @@ export const pentagoDidacticial: DidacticialStep[] = [
         `Mouvement simple`,
         `Chacun à son tour, les joueurs posent une pièce sur le plateau, et effectuent éventuellement une rotation d'un bloc. Tant qu'il existe des blocs neutres, c'est à dire des blocs qui ne changeraient pas après avoir été tournés, l'option de ne pas effectueur de rotation est acceptée. Pour ce faire il faut cliquer sur le rond barré qui apparaît au centre du plateau quand c'est possible. Faites-le.`,
         PentagoGameState.getInitialSlice(),
-        PentagoMove.rotationless(1, 1),
+        PentagoMove.rotationless(2, 2),
         (move: PentagoMove, resultingState: PentagoGameState) => {
             if (move.blockTurned.isPresent()) {
                 return MGPValidation.failure(`Vous avez effectué un mouvement avec rotation, cette étape du didacticiel concerne les tours sans rotations!`);

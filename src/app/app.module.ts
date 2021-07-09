@@ -71,6 +71,7 @@ import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tablut/tablut.component';
 import { HumanDuration } from './utils/TimeUtils';
+import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
@@ -80,6 +81,7 @@ const routes: Route [] = [
     { path: 'inscription', component: InscriptionComponent },
     { path: 'confirm-inscription', component: ConfirmInscriptionComponent, canActivate: [MustVerifyEmail] },
     { path: 'notFound', component: NotFoundComponent, canActivate: [EmailVerified] },
+    { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [EmailVerified] },
 
     { path: 'play', component: OnlineGameCreationComponent, canActivate: [EmailVerified] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
@@ -103,6 +105,7 @@ const routes: Route [] = [
         PartCreationComponent,
         InscriptionComponent,
         NotFoundComponent,
+        NextGameLoadingComponent,
         CountDownComponent,
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,

@@ -48,7 +48,7 @@
             <hr/>
             <button class="button is-fullwidth mb-1"
                     id="resignButton"
-                    *ngIf="endGame === false && opponent && isPlaying()"
+                    *ngIf="canResign()"
                     (click)="resign()"
                     i18n>
                 Abandonner
@@ -75,7 +75,7 @@
                 Refuser un match nul
             </button>
             <button class="button is-fullwidth mb-1"
-                    *ngIf="endGame === false && observerRole < 2 && compo.canPass && (currentPlayer===userName)"
+                    *ngIf="endGame === false && isPlaying() && compo.canPass && (currentPlayer===userName)"
                     id="passButton"
                     (click)="compo.pass()"
                     i18n>
@@ -110,19 +110,19 @@
                 </div>
                 <div *ngIf="currentPart.isWin()">
                     <p class="title" id="youWonIndicator" *ngIf="currentPart.getWinner() === userName" i18n>Vous avez gagné.</p>
-                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)" i18n>Vous avez perdu.</p>
-                    <p class="title" *ngIf="observerRole >= 2" i18n>Victoire de {{ currentPart.getWinner() }}.</p>
+                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && isPlaying()" i18n>Vous avez perdu.</p>
+                    <p class="title" *ngIf="observerRole === 2" i18n>Victoire de {{ currentPart.getWinner() }}.</p>
                 </div>
                 <div *ngIf="currentPart.isTimeout()">
                     <p class="title" id="youWonIndicator" *ngIf="(currentPart.getWinner() === userName)" i18n>{{ currentPart.getLoser() }} a épuisé son temps. Vous avez gagné.</p>
-                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)" i18n>Vous avez dépassé la limite de temps.</p>
-                    <p class="title" *ngIf="observerRole >= 2" i18n>{{ currentPart.getLoser() }} a épuisé son temps.</p>
+                    <p class="title" *ngIf="(currentPart.getWinner() !== userName) && isPlaying()" i18n>Vous avez dépassé la limite de temps.</p>
+                    <p class="title" *ngIf="observerRole === 2" i18n>{{ currentPart.getLoser() }} a épuisé son temps.</p>
                 </div>
                 <div *ngIf="currentPart.isResign()">
                     <p class="title" id="resignIndicator"
-                       *ngIf="(currentPart.getWinner() !== userName) && (observerRole < 2)" i18n>Vous avez abandonné.</p>
+                       *ngIf="(currentPart.getWinner() !== userName) && isPlaying()" i18n>Vous avez abandonné.</p>
                     <p class="title" id="resignIndicator"
-                       *ngIf="observerRole >= 2 || currentPart.getWinner() === userName" i18n>{{ currentPart.getLoser() }} a abandonné.</p>
+                       *ngIf="observerRole === 2 || currentPart.getWinner() === userName" i18n>{{ currentPart.getLoser() }} a abandonné.</p>
                 </div>
 
             </div>
@@ -133,15 +133,16 @@
                     i18n>
                 Retour au serveur
             </button>
-            <button class="button is-fullwidth mb-1"
-                    id="proposeRematchDiv"
-                    *ngIf="endGame && observerRole < 2 && rematchProposed === false"
+            <button id="proposeRematchButton"
+                    class="button is-fullwidth mb-1"
+                    *ngIf="endGame && isPlaying() && rematchProposed === false"
                     (click)="proposeRematch()"
                     i18n>
                 Proposer un rematch
             </button>
             <button class="button is-fullwidth is-warning"
-                    id="acceptRematchDiv" *ngIf="endGame && observerRole < 2 && rematchProposed && opponentProposedRematch"
+                    id="acceptRematchButton"
+                    *ngIf="endGame && isPlaying() && rematchProposed && opponentProposedRematch"
                     (click)="acceptRematch()"
                     i18n>
                 Accepter le rematch

@@ -9,19 +9,14 @@ import { EncapsulePiece } from './EncapsulePiece';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { EncapsuleRules, EncapsuleNode } from './EncapsuleRules';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 
 export class EncapsuleMinimax extends Minimax<EncapsuleMove, EncapsulePartSlice, EncapsuleLegalityStatus> {
 
     public getBoardValue(node: EncapsuleNode): NodeUnheritance {
-        const slice: EncapsulePartSlice = node.gamePartSlice;
-        let boardValue: number;
-        if (EncapsuleRules.isVictory(slice)) {
-            boardValue = slice.getCurrentPlayer().getDefeatValue();
-        } else {
-            boardValue = 0;
-        }
-        return new NodeUnheritance(boardValue);
+        const status: GameStatus = EncapsuleRules.getGameStatus(node);
+        return new NodeUnheritance(status.toBoardValue());
     }
     public getListMoves(n: EncapsuleNode): EncapsuleMove[] {
         const moves: EncapsuleMove[] = [];

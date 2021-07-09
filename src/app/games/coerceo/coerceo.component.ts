@@ -105,7 +105,7 @@ export class CoerceoComponent extends TriangularGameComponent<CoerceoMove,
         if (coord.equals(this.chosenCoord.get())) {
             this.cancelMoveAttempt();
             return MGPValidation.SUCCESS;
-        } if (this.highlights.some((c: Coord) => c.equals(coord))) {
+        } else if (this.highlights.some((c: Coord) => c.equals(coord))) {
             const move: CoerceoMove = CoerceoMove.fromCoordToCoord(this.chosenCoord.get(), coord);
             return this.chooseMove(move, this.state, this.state.captures[0], this.state.captures[1]);
         } else {

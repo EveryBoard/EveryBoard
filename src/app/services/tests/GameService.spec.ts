@@ -1,9 +1,9 @@
 import { fakeAsync, TestBed } from '@angular/core/testing';
 
-import { GameService } from '../GameService';
+import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
 import { of } from 'rxjs';
-import { ICurrentPartId, MGPResult, Part } from 'src/app/domain/icurrentpart';
+import { ICurrentPartId, IPart, MGPResult, Part } from 'src/app/domain/icurrentpart';
 import { PartDAOMock } from 'src/app/dao/tests/PartDAOMock.spec';
 import { JoinerDAOMock } from 'src/app/dao/tests/JoinerDAOMock.spec';
 import { ChatDAOMock } from 'src/app/dao/tests/ChatDAOMock.spec';
@@ -11,7 +11,7 @@ import { ChatDAO } from 'src/app/dao/ChatDAO';
 import { PartMocks } from 'src/app/domain/PartMocks.spec';
 import { Player } from 'src/app/jscaip/Player';
 import { Request } from 'src/app/domain/request';
-import { FirstPlayer, IJoiner, PartStatus } from 'src/app/domain/ijoiner';
+import { IJoiner, PartType } from 'src/app/domain/ijoiner';
 import { JoinerDAO } from 'src/app/dao/JoinerDAO';
 import { RouterTestingModule } from '@angular/router/testing';
 import { BlankComponent } from 'src/app/utils/tests/TestUtils.spec';
@@ -19,6 +19,8 @@ import { MatSnackBarModule } from '@angular/material/snack-bar';
 import { AuthenticationService } from '../AuthenticationService';
 import { AuthenticationServiceMock } from './AuthenticationService.spec';
 import { JoinerMocks } from 'src/app/domain/JoinerMocks.spec';
+import { GameServiceMessages } from '../GameServiceMessages';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 describe('GameService', () => {
     let service: GameService;
@@ -32,6 +34,7 @@ describe('GameService', () => {
                 RouterTestingModule.withRoutes([
                     { path: '**', component: BlankComponent },
                 ]),
+                BrowserAnimationsModule,
             ],
             providers: [
                 { provide: AuthenticationService, useClass: AuthenticationServiceMock },
@@ -100,4 +103,160 @@ describe('GameService', () => {
 
         expect(service.joinerService.acceptConfig).toHaveBeenCalled();
     }));
+    describe('createGameAndRedirectOrShowError', () => {
+        it('should show toast and navigate when creator cannot create game', fakeAsync(async() => {
+            spyOn(service.router, 'navigate').and.callThrough();
+            spyOn(service.messageDisplayer, 'infoMessage').and.callThrough();
+            spyOn(service, 'canCreateGame').and.returnValue(false);
+
+            // when calling it
+            expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
+
+            // it should toast, and navigate
+            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);
+            expect(service.router.navigate).toHaveBeenCalledOnceWith(['/server']);
+        }));
+    });
+    describe('getStartingConfig', () => {
+        it('should put creator first when math.random() is below 0.5', fakeAsync(async() => {
+            // given a joiner config asking random start
+            const joiner: IJoiner = {
+                candidates: ['joiner'],
+                chosenPlayer: 'joiner',
+                creator: 'creator',
+                firstPlayer: 'RANDOM',
+                maximalMoveDuration: 10,
+                partStatus: 3,
+                partType: PartType.BLITZ.value,
+                totalPartDuration: 25,
+            };
+
+            // when calling getStartingConfig
+            spyOn(Math, 'random').and.returnValue(0.4);
+            const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
+
+            // then we should have a creator starting the game
+            expect(startConfig.playerZero).toBe(joiner.creator);
+            expect(startConfig.playerOne).toBe(joiner.chosenPlayer);
+        }));
+        it('should put chosen player first when math.random() is over 0.5', fakeAsync(async() => {
+            // given a joiner config asking random start
+            const joiner: IJoiner = {
+                candidates: ['joiner'],
+                chosenPlayer: 'joiner',
+                creator: 'creator',
+                firstPlayer: 'RANDOM',
+                maximalMoveDuration: 10,
+                partStatus: 3,
+                partType: PartType.BLITZ.value,
+                totalPartDuration: 25,
+            };
+
+            // when calling getStartingConfig
+            spyOn(Math, 'random').and.returnValue(0.6);
+            const startConfig: StartingPartConfig = service.getStartingConfig(joiner);
+
+            // then we should have a creator starting the game
+            expect(startConfig.playerZero).toBe(joiner.chosenPlayer);
+            expect(startConfig.playerOne).toBe(joiner.creator);
+        }));
+    });
+    describe('rematch', () => {
+        it('should send request when proposing a rematch', fakeAsync(async() => {
+            spyOn(service, 'sendRequest').and.callFake(() => null);
+
+            await service.proposeRematch('partId', Player.ZERO);
+
+            expect(service.sendRequest).toHaveBeenCalledTimes(1);
+        }));
+        it('should start with the other player when first player mentionned in previous game', fakeAsync(async() => {
+            // given a previous match with creator starting
+            const lastPart: ICurrentPartId = {
+                id: 'partId',
+                doc: {
+                    listMoves: [1, 2],
+                    playerZero: 'creator',
+                    playerOne: 'joiner',
+                    result: MGPResult.VICTORY.value,
+                    turn: 2,
+                    typeGame: 'laMarelle',
+                    beginning: 17001025123456,
+                    lastMove: 2,
+                    loser: 'creator',
+                    winner: 'joiner',
+                    request: Request.rematchProposed(Player.ZERO),
+                },
+            };
+            const lastGameJoiner: IJoiner = {
+                candidates: ['joiner'],
+                chosenPlayer: 'joiner',
+                creator: 'creator',
+                firstPlayer: 'CREATOR',
+                maximalMoveDuration: 10,
+                partStatus: 3,
+                partType: PartType.BLITZ.value,
+                totalPartDuration: 25,
+            };
+            spyOn(service, 'sendRequest').and.callFake(() => null);
+            spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
+            let called: boolean = false;
+            spyOn(service.partDao, 'set').and.callFake(async(id: string, element: IPart) => {
+                expect(element.playerZero).toEqual(lastPart.doc.playerOne);
+                expect(element.playerOne).toEqual(lastPart.doc.playerZero);
+                called = true;
+            });
+
+            // when accepting rematch
+            await service.acceptRematch(lastPart);
+
+            // then we should have a part created with playerOne and playerZero switched
+            expect(called).toBeTrue();
+        }));
+        it('should start with the other player when first player was random', fakeAsync(async() => {
+            // given a previous match with creator starting
+            const lastPart: ICurrentPartId = {
+                id: 'partId',
+                doc: {
+                    listMoves: [1, 2],
+                    playerZero: 'joiner',
+                    playerOne: 'creator',
+                    result: MGPResult.VICTORY.value,
+                    turn: 2,
+                    typeGame: 'laMarelle',
+                    beginning: 17001025123456,
+                    lastMove: 2,
+                    loser: 'creator',
+                    winner: 'joiner',
+                    request: Request.rematchProposed(Player.ZERO),
+                },
+            };
+            const lastGameJoiner: IJoiner = {
+                candidates: ['joiner'],
+                chosenPlayer: 'joiner',
+                creator: 'creator',
+                firstPlayer: 'RANDOM',
+                maximalMoveDuration: 10,
+                partStatus: 3,
+                partType: PartType.BLITZ.value,
+                totalPartDuration: 25,
+            };
+            spyOn(service, 'sendRequest').and.callFake(() => null);
+            spyOn(service.joinerService, 'readJoinerById').and.returnValue(Promise.resolve(lastGameJoiner));
+            let called: boolean = false;
+            spyOn(service.partDao, 'set').and.callFake(async(id: string, element: IPart) => {
+                expect(element.playerZero).toEqual(lastPart.doc.playerOne);
+                expect(element.playerOne).toEqual(lastPart.doc.playerZero);
+                called = true;
+            });
+
+            // when accepting rematch
+            await service.acceptRematch(lastPart);
+
+            // then we should have a part created with playerOne and playerZero switched
+            expect(called).toBeTrue();
+        }));
+    });
+    afterEach(() => {
+        service.ngOnDestroy();
+    });
 });
