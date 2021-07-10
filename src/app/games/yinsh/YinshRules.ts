@@ -52,17 +52,31 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         return computedState;
     }
     public applyCapture(state: YinshGameState, capture: YinshCapture): YinshGameState {
+        const board: YinshBoard = this.applyCaptureWithoutTakingRing(state, capture);
+        return this.takeRing(new YinshGameState(board, state.sideRings, state.turn), capture.ringTaken);
+    }
+    public takeRing(state: YinshGameState, ringTaken: Coord): YinshGameState {
         const player: number = state.getCurrentPlayer().value;
-        let board: YinshBoard = state.hexaBoard;
+        const board: YinshBoard = state.hexaBoard.setAt(ringTaken, YinshPiece.EMPTY);
         const sideRings: [number, number] = [state.sideRings[0], state.sideRings[1]];
+        sideRings[player] += 1;
+        return new YinshGameState(board, sideRings, state.turn);
+    }
+    public applyCaptureWithoutTakingRing(state: YinshGameState, capture: YinshCapture): YinshBoard {
         // Take all markers
+        let board: YinshBoard = state.hexaBoard;
         capture.forEach((coord: Coord) => {
             board = board.setAt(coord, YinshPiece.EMPTY);
         });
-        // Take the ring
-        board = board.setAt(capture.ringTaken, YinshPiece.EMPTY);
-        sideRings[player] += 1;
-        return new YinshGameState(board, sideRings, state.turn);
+        return board;
+    }
+    public ringSelectionValidity(state: YinshGameState, coord: Coord): MGPValidation {
+        const player: number = state.getCurrentPlayer().value;
+        if (state.hexaBoard.getAt(coord) === YinshPiece.RINGS[player]) {
+            return MGPValidation.SUCCESS;
+        } else {
+            return MGPValidation.failure(YinshFailure.CAPTURE_SHOULD_TAKE_RING);
+        }
     }
     public applyMoveAndFlip(state: YinshGameState, start: Coord, end: Coord): YinshGameState {
         const player: number = state.getCurrentPlayer().value;
@@ -83,9 +97,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         return new YinshGameState(board, state.sideRings, state.turn);
     }
     public isLegal(move: YinshMove, state: YinshGameState): YinshLegalityStatus {
-        console.log({isLegal: move})
         if (move.isInitialPlacement()) {
-            console.log('initial')
             return { legal: this.initialPlacementValidity(state, move.start) };
         }
         if (state.turn < 10) {
@@ -201,7 +213,6 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         if (linePortions.length === 0) {
             return MGPValidation.SUCCESS;
         } else {
-            console.log({linePortions});
             return MGPValidation.failure(YinshFailure.MISSING_CAPTURES);
         }
     }
@@ -228,7 +239,6 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         for (cur = coord; state.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
             const piece: YinshPiece = state.hexaBoard.getAt(cur);
             if (piece.player === player && piece.isRing === false) {
-                console.log({playerPieceAt: cur, piece})
                 if (consecutives === 0) {
                     start = cur;
                 }
@@ -242,7 +252,6 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
             }
         }
         if (consecutives >= 5) {
-            console.log('found')
             return MGPOptional.of({ start, end: cur, dir });
         }
         return MGPOptional.empty();

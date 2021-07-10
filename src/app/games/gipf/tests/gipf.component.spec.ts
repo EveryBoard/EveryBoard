@@ -25,7 +25,7 @@ describe('GipfComponent', () => {
     }));
     it('should create', () => {
         expect(componentTestUtils.wrapper).withContext('Wrapper should be created').toBeTruthy();
-        expect(componentTestUtils.getComponent()).withContextn('GipfComponent should be created').toBeTruthy();
+        expect(componentTestUtils.getComponent()).withContext('GipfComponent should be created').toBeTruthy();
     });
     it('should fail on selecting an invalid direction', fakeAsync(async() => {
         await componentTestUtils.expectClickSuccess('#click_3_6');

@@ -29,7 +29,7 @@ export class YinshFailure {
 
     public static readonly INVALID_CAPTURE: string = $localize`Une capture doit se composer d'exactement 5 marqueurs.`;
 
-    public static readonly CAPTURE_SHOULD_TAKE_RING: string = $localize`Quand vous capturez des marqueurs, vous devez reprendre un de vos anneaux également.`;
+    public static readonly CAPTURE_SHOULD_TAKE_RING: string = $localize`Quand vous capturez des marqueurs, vous devez reprendre l'un de vos anneaux en cliquant dessus.`;
 
     private constructor() {}
 }

@@ -36,7 +36,6 @@ export class YinshCapture extends GipfCapture {
             coords.push(cur);
         }
         coords.push(end);
-        console.log({captureLength: coords.length, start, end})
         return new YinshCapture(coords, ringTaken);
     }
     public constructor(captured: ReadonlyArray<Coord>,
@@ -45,6 +44,9 @@ export class YinshCapture extends GipfCapture {
         if (captured.length !== 5) {
             throw new Error('YinshCapture must capture exactly 5 pieces');
         }
+    }
+    public setRingTaken(coord: Coord): YinshCapture {
+        return new YinshCapture(this.capturedCases, coord);
     }
     public equals(other: YinshCapture): boolean {
         if (super.equals(other) === false) return false;

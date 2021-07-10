@@ -50,11 +50,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     private constructedState: YinshGameState = null;
 
-    private movePhase: 'INITIAL_CAPTURE' | 'FINAL_CAPTURE' | 'RING_SELECTION' | 'MOVE_START' | 'MOVE_END' = 'MOVE_START';
+    private movePhase: 'INITIAL_CAPTURE' | 'FINAL_CAPTURE' | 'INITIAL_CAPTURE_SELECT_RING' | 'FINAL_CAPTURE_SELECT_RING' | 'MOVE_START' | 'MOVE_END'
+        = 'MOVE_START';
 
     private moveStart: MGPOptional<Coord> = MGPOptional.empty();
     private moveEnd: MGPOptional<Coord> = MGPOptional.empty();
-    private ringTaken: MGPOptional<Coord> = MGPOptional.empty();
+    private currentCapture: MGPOptional<YinshCapture> = MGPOptional.empty();
     private initialCaptures: YinshCapture[] = [];
     private finalCaptures: YinshCapture[] = [];
 
@@ -145,15 +146,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         });
     }
     private moveToInitialCaptureOrMovePhase(): MGPValidation {
-        console.log('moving to initial phase')
         this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
-        console.log({captures: this.viewInfo.possibleCaptures.length})
         if (this.viewInfo.possibleCaptures.length === 0) {
             this.movePhase = 'MOVE_START';
         } else {
             this.movePhase = 'INITIAL_CAPTURE';
         }
-        console.log({newPhase: this.movePhase})
         return MGPValidation.SUCCESS;
     }
     public async onClick(coord: Coord): Promise<MGPValidation> {
@@ -166,7 +164,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             case 'INITIAL_CAPTURE':
             case 'FINAL_CAPTURE':
                 return this.selectCapture(coord);
-            case 'RING_SELECTION':
+            case 'INITIAL_CAPTURE_SELECT_RING':
+            case 'FINAL_CAPTURE_SELECT_RING':
                 return this.selectRing(coord);
             case 'MOVE_START':
                 return this.selectMoveStart(coord);
@@ -188,34 +187,51 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             return this.cancelMove(YinshFailure.NOT_PART_OF_CAPTURE);
         }
         const capture: YinshCapture = captures[0];
-
-        this.constructedState = this.rules.applyCapture(this.constructedState, capture);
+        this.currentCapture = MGPOptional.of(capture);
+        this.constructedState = new YinshGameState(
+            this.rules.applyCaptureWithoutTakingRing(this.constructedState, capture),
+            this.constructedState.sideRings,
+            this.constructedState.turn);
         this.markCapture(capture);
-        this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
-        this.updateViewInfo();
+
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE':
+                this.movePhase = 'INITIAL_CAPTURE_SELECT_RING';
+                return MGPValidation.SUCCESS;
+            case 'FINAL_CAPTURE':
+                this.movePhase = 'FINAL_CAPTURE_SELECT_RING';
+                return MGPValidation.SUCCESS;
+        }
+    }
+    private async selectRing(coord: Coord): Promise<MGPValidation> {
+        console.log({selectRing: coord})
+        const validity: MGPValidation = this.rules.ringSelectionValidity(this.constructedState, coord);
+        if (validity.isFailure()) {
+            return this.cancelMove(validity.getReason());
+        }
+        this.constructedState = this.rules.takeRing(this.constructedState, coord);
+        const capture: YinshCapture = this.currentCapture.get().setRingTaken(coord);
+        this.currentCapture = MGPOptional.empty();
+
+        this.viewInfo.possibleCaptures = this.rules.getPossibleCaptures(this.constructedState);
+        this.updateViewInfo();
+
+        switch (this.movePhase) {
+            case 'INITIAL_CAPTURE_SELECT_RING':
                 this.initialCaptures.push(capture);
                 if (this.viewInfo.possibleCaptures.length === 0) {
-                    return this.moveToRingSelectionPhase();
+                    return this.moveToMovePhase();
                 } else {
                     return MGPValidation.SUCCESS;
                 }
             case 'FINAL_CAPTURE':
                 this.finalCaptures.push(capture);
                 if (this.viewInfo.possibleCaptures.length === 0) {
-                    return this.moveToRingSelectionPhase();
+                    return this.tryMove();
                 } else {
                     return MGPValidation.SUCCESS;
                 }
         }
-    }
-    private moveToRingSelectionPhase(coord): MGPValidation {
-        this.movePhase = 'RING_SELECTION';
-        return MGPValidation.SUCCESS;
-    }
-    private async selectRing(coord: Coord): Promise<MGPValidation> {
-        // TODO
     }
     private moveToMovePhase(): MGPValidation {
         console.log('moveToMove');
