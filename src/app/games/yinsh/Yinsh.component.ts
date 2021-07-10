@@ -224,7 +224,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 } else {
                     return MGPValidation.SUCCESS;
                 }
-            case 'FINAL_CAPTURE':
+            case 'FINAL_CAPTURE_SELECT_RING':
                 this.finalCaptures.push(capture);
                 if (this.viewInfo.possibleCaptures.length === 0) {
                     return this.tryMove();

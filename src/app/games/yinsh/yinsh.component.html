@@ -25,7 +25,7 @@
        pointer-events="fill"
        class="capturable">
         <g *ngFor="let case of capture.capturedCases">
-            <polyline [attr.points]="viewInfo[case.y][case.x].coordinates"
+            <polyline [attr.points]="viewInfo.caseInfo[case.y][case.x].coordinates"
                       (click)="onClick(case)"
                       class="no-fill"
                       stroke-linecap="round" />

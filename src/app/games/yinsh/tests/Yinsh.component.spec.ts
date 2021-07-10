@@ -30,6 +30,8 @@ fdescribe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_3_2', move);
             testUtils.expectElementToHaveClasses('#case_3_2', ['base', 'moved']);
         }));
+        it('should show ring placed with a moved background', fakeAsync(async() => {
+        }));
         it('should forbid placing a ring on an occupied space', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
                 [_, _, _, _, _, _, _, _, _, _, _],
@@ -47,6 +49,8 @@ fdescribe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [4, 5], 1);
             testUtils.setupSlice(state);
             await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
+        }));
+        it('should decrease the number of rings shown on the side when a ring is placed', fakeAsync(async() => {
         }));
     });
     describe('Main phase', () => {
@@ -71,6 +75,8 @@ fdescribe('YinshComponent', () => {
                                                   []);
             await testUtils.expectClickSuccess('#click_3_2');
             await testUtils.expectMoveSuccess('#click_3_3', move);
+        }));
+        it('should fill the ring selected at the beginning of a move', fakeAsync(async() => {
         }));
         it('should enable selecting capture by first clicking the capture group, then the ring taken', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
@@ -98,9 +104,19 @@ fdescribe('YinshComponent', () => {
             await testUtils.expectClickSuccess('#click_4_2'); // select the other ring
             await testUtils.expectMoveSuccess('#click_4_3', move); // move it
         }));
+        it('should highlight possible captures', fakeAsync(async() => {
+        }));
+        it('should make captured pieces disappear and show their background in red', fakeAsync(async() => {
+        }));
         it('should support multiple captures', fakeAsync(async() => {
         }));
         it('should show the number of rings of each player', fakeAsync(async() => {
+        }));
+        it('should increase the number of rings shown when a player makes a capture', fakeAsync(async() => {
+        }));
+        it('should remove highlights upon move cancellation', fakeAsync(async() => {
+        }));
+        it('should recompute captures upon intersecting captures', fakeAsync(async() => {
         }));
     });
 });
