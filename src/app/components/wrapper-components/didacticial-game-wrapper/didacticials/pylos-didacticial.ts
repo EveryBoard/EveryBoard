@@ -15,8 +15,7 @@ export const pylosDidacticial: DidacticialStep[] = [
          Dès qu'un joueur dépose sa dernière pièce, il perd immédiatement la partie.
          Voici à quoi ressemble le plateau initial, un plateau de 4 x 4 cases.
          Celui-ci deviendra une pyramide petit à petit.
-         Ce plateau sera rempli par les pièces dans votre réserve, au nombre de 15 chacun.
-         $localize`,
+         Ce plateau sera rempli par les pièces dans votre réserve, au nombre de 15 chacun.`,
         PylosPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
