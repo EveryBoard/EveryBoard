@@ -23,6 +23,7 @@
         </g>
     </g>
     <g *ngFor="let capture of viewInfo.possibleCaptures; index as i"
+       id="capture_{{ i }}"
        pointer-events="fill"
        class="capturable">
         <g *ngFor="let case of capture.capturedCases">

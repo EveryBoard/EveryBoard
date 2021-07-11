@@ -128,9 +128,11 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         const piece: YinshPiece = this.constructedState.hexaBoard.getAt(coord);
         if (piece.isRing) {
             const playerClass: string = this.getPlayerClass(piece.player);
-            const classes: string[] = [playerClass + '-stroke', 'no-fill'];
+            const classes: string[] = [playerClass + '-stroke'];
             if (this.moveStart.isPresent() && this.moveStart.get().equals(coord)) {
                 classes.push(playerClass);
+            } else {
+                classes.push('no-fill');
             }
             return classes;
         } else {
@@ -155,8 +157,10 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
         this.initialCaptures = [];
         this.finalCaptures = [];
+        this.currentCapture = MGPOptional.empty();
         this.moveStart = MGPOptional.empty();
         this.moveEnd = MGPOptional.empty();
+        this.updateViewInfo();
         this.moveToInitialCaptureOrMovePhase();
     }
     private markCapture(capture: YinshCapture): void {
@@ -212,6 +216,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             this.constructedState.sideRings,
             this.constructedState.turn);
         this.markCapture(capture);
+        this.updateViewInfo();
 
         switch (this.movePhase) {
             case 'INITIAL_CAPTURE':
