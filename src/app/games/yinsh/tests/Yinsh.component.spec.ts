@@ -30,8 +30,6 @@ fdescribe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_3_2', move);
             testUtils.expectElementToHaveClasses('#case_3_2', ['base', 'moved']);
         }));
-        it('should show ring placed with a moved background', fakeAsync(async() => {
-        }));
         it('should forbid placing a ring on an occupied space', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([
                 [_, _, _, _, _, _, _, _, _, _, _],
@@ -51,6 +49,10 @@ fdescribe('YinshComponent', () => {
             await testUtils.expectClickFailure('#click_3_2', RulesFailure.MUST_CLICK_ON_EMPTY_CASE);
         }));
         it('should decrease the number of rings shown on the side when a ring is placed', fakeAsync(async() => {
+            const move: YinshMove = new YinshMove([], new Coord(3, 2), MGPOptional.empty(), []);
+            testUtils.expectElementToExist('#player_0_sideRing_5');
+            await testUtils.expectMoveSuccess('#click_3_2', move);
+            testUtils.expectElementNotToExist('#player_0_sideRing_5');
         }));
     });
     describe('Main phase', () => {
@@ -77,6 +79,25 @@ fdescribe('YinshComponent', () => {
             await testUtils.expectMoveSuccess('#click_3_3', move);
         }));
         it('should fill the ring selected at the beginning of a move', fakeAsync(async() => {
+            const board: YinshBoard = YinshBoard.of([
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, A, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            testUtils.setupSlice(state);
+            testUtils.expectElementNotToHaveClass('#piece_3_2', 'player0');
+            await testUtils.expectClickSuccess('#click_3_2');
+            testUtils.expectElementToHaveClass('#piece_3_2', 'player0');
+            testUtils.expectElementToHaveClass('#piece_3_2', 'player0-stroke');
         }));
         it('should enable selecting capture by first clicking the capture group, then the ring taken', fakeAsync(async() => {
             const board: YinshBoard = YinshBoard.of([

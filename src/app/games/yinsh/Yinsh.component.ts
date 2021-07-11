@@ -27,6 +27,8 @@ interface ViewInfo {
     caseInfo: CaseInfo[][],
     possibleCaptures: YinshCapture[],
     pieceSize: number,
+    sideRings: [number[], number[]], // for each player: array of [1, 2, 3] means 3 rings to show
+    sideRingClass: [string, string],
 }
 
 @Component({
@@ -63,7 +65,13 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
 
     private moved: Coord[] = [];
 
-    public viewInfo: ViewInfo = { caseInfo: [], possibleCaptures: [], pieceSize: YinshComponent.PIECE_SIZE };
+    public viewInfo: ViewInfo = {
+        caseInfo: [],
+        possibleCaptures: [],
+        pieceSize: YinshComponent.PIECE_SIZE,
+        sideRings: [[1, 2, 3, 4, 5], [1, 2, 3, 4, 5]],
+        sideRingClass: ['player0-stroke', 'player1-stroke'],
+    };
 
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
@@ -100,6 +108,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             this.viewInfo.caseInfo[coord.y][coord.x].isPiece =
                 this.constructedState.hexaBoard.getAt(coord) !== YinshPiece.EMPTY;
         });
+        for (let player: number = 0; player < 2; player++) {
+            this.viewInfo.sideRings[player] = [];
+            for (let i: number = this.constructedState.sideRings[player]; i > 0; i--) {
+                this.viewInfo.sideRings[player].push(i);
+            }
+        }
     }
     public getCaseClasses(coord: Coord): string[] {
         if (this.captured.some((c: Coord) => c.equals(coord))) {
@@ -113,7 +127,12 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     public getPieceClasses(coord: Coord): string[] {
         const piece: YinshPiece = this.constructedState.hexaBoard.getAt(coord);
         if (piece.isRing) {
-            return [this.getPlayerClass(piece.player) + '-stroke', 'no-fill'];
+            const playerClass: string = this.getPlayerClass(piece.player);
+            const classes: string[] = [playerClass + '-stroke', 'no-fill'];
+            if (this.moveStart.isPresent() && this.moveStart.get().equals(coord)) {
+                classes.push(playerClass);
+            }
+            return classes;
         } else {
             return [this.getPlayerClass(piece.player)];
         }
@@ -260,6 +279,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
                 return this.cancelMove(validity.getReason());
             }
             this.moveStart = MGPOptional.of(coord);
+            this.updateViewInfo();
             this.movePhase = 'MOVE_END';
         }
         return MGPValidation.SUCCESS;

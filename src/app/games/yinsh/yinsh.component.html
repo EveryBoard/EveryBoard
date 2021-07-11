@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg"
      width="100%" height="auto"
-     viewBox="0 250 1050 1060"
+     viewBox="0 250 1065 1060"
      preserveAspectRatio="xMidYMid meet">
     <g *ngFor="let line of viewInfo.caseInfo; index as y">
         <g *ngFor="let caseInfo of viewInfo.caseInfo[y]; index as x">
@@ -13,6 +13,7 @@
                           class="base"
                           stroke-linecap="round"/>
                 <circle *ngIf="caseInfo.isPiece"
+                        id="piece_{{ x }}_{{ y }}"
                         [attr.cx]="caseInfo.center.x"
                         [attr.cy]="caseInfo.center.y"
                         [attr.r]="viewInfo.pieceSize"
@@ -31,5 +32,13 @@
                       stroke-linecap="round" />
         </g>
     </g>
-
+    <g *ngFor="let player of [0, 1]">
+        <circle *ngFor="let ring of viewInfo.sideRings[player]"
+                id="player_{{ player }}_sideRing_{{ ring }}"
+                [attr.cx]="(player === 0 ? 0 : 770) + 1.2*viewInfo.pieceSize*ring"
+                [attr.cy]="(player === 0 ? 300 : 1260)"
+                [attr.r]="viewInfo.pieceSize"
+                [ngClass]="viewInfo.sideRingClass[player]"
+                class="base no-fill"/>
+    </g>
 </svg>
