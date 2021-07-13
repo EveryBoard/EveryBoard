@@ -1,5 +1,6 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaBoard } from 'src/app/jscaip/HexaBoard';
+import { Player } from 'src/app/jscaip/Player';
 import { ArrayUtils, NumberTable, Table } from 'src/app/utils/ArrayUtils';
 import { YinshPiece } from './YinshPiece';
 
@@ -30,5 +31,14 @@ export class YinshBoard extends HexaBoard<YinshPiece> {
             return false;
         }
         return true;
+    }
+    public getRingCoords(player: Player): Coord[] {
+        const rings: Coord[] = [];
+        this.forEachCoord((coord: Coord, content: YinshPiece): void => {
+            if (content.isRing && content.player === player) {
+                rings.push(coord);
+            }
+        });
+        return rings;
     }
 }

@@ -1,4 +1,4 @@
-import { fakeAsync, tick } from '@angular/core/testing';
+import { fakeAsync } from '@angular/core/testing';
 import { Coord } from 'src/app/jscaip/Coord';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
@@ -10,13 +10,11 @@ import { YinshGameState } from '../YinshGameState';
 import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 
-fdescribe('YinshComponent', () => {
+describe('YinshComponent', () => {
     let testUtils: ComponentTestUtils<YinshComponent>;
     const _: YinshPiece = YinshPiece.EMPTY;
     const a: YinshPiece = YinshPiece.MARKER_ZERO;
     const A: YinshPiece = YinshPiece.RING_ZERO;
-    const b: YinshPiece = YinshPiece.MARKER_ONE;
-    const B: YinshPiece = YinshPiece.RING_ONE;
 
     beforeEach(fakeAsync(async() => {
         testUtils = await ComponentTestUtils.forGame<YinshComponent>('Yinsh');
@@ -233,7 +231,7 @@ fdescribe('YinshComponent', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
             testUtils.setupSlice(state);
 
-            await testUtils.expectClickFailure('#click_4_2', YinshFailure.MISSING_CAPTURES);
+            await testUtils.expectClickFailure('#click_4_2', YinshFailure.NOT_PART_OF_CAPTURE);
         }));
         it('should show the number of rings of each player', fakeAsync(async() => {
             const state: YinshGameState = new YinshGameState(YinshBoard.EMPTY, [2, 1], 10);
@@ -301,11 +299,41 @@ fdescribe('YinshComponent', () => {
             testUtils.expectElementToExist('#capture_2');
             testUtils.expectElementNotToExist('#capture_3');
 
-            await testUtils.expectClickSuccess('#click_3_3');
+            await testUtils.expectClickSuccess('#click_3_3'); // capture
+            await testUtils.expectClickSuccess('#click_3_2'); // select the ring
 
             testUtils.expectElementToExist('#capture_0');
             testUtils.expectElementNotToExist('#capture_1');
             testUtils.expectElementNotToExist('#capture_2');
+        }));
+        it('should highlight the rings instead of the captures after selecting a capture', fakeAsync(async() => {
+            const board: YinshBoard = YinshBoard.of([
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, A, A, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, a, a, a, a, a, a, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            testUtils.setupSlice(state);
+
+            testUtils.expectElementNotToExist('#ring_0');
+            testUtils.expectElementToExist('#capture_0');
+
+            await testUtils.expectClickSuccess('#click_3_3'); // capture
+
+            testUtils.expectElementNotToExist('#capture_0');
+            testUtils.expectElementToExist('#ring_0');
+            testUtils.expectElementToExist('#ring_1');
+            testUtils.expectElementNotToExist('#ring_2');
+
+
         }));
     });
 });
