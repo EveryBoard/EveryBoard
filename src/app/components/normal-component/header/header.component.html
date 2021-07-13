@@ -28,7 +28,16 @@
                 </div>
             </div>
         </div>
-    <div class="navbar-end">
+        <div class="navbar-end">
+            <div class="navbar-item has-dropdown is-hoverable">
+                <a class="navbar-link" i18n>{{ currentLanguage }}</a>
+                <div class="navbar-dropdown">
+                    <a *ngFor="let language of availableLanguages"
+                       class="navbar-item"
+                       (click)="changeLanguage(language)" i18n>{{ language }}</a>
+                </div>
+            </div>
+        </div>
         <div class="navbar-item">
             <ng-container *ngIf="userName else connect">
                 <div class="navbar-item has-dropdown is-hoverable">
