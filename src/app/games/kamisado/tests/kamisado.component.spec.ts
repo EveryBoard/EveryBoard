@@ -31,7 +31,7 @@ describe('KamisadoComponent', () => {
         expect(componentTestUtils.getComponent().chosen.equals(new Coord(-1, -1))).toBeTrue();
     });
     it('should not allow to pass initially', fakeAsync(async() => {
-        expect((await componentTestUtils.getComponent().pass()).reason).toBe(KamisadoFailure.CANT_PASS);
+        expect((await componentTestUtils.getComponent().pass()).reason).toBe(RulesFailure.CANNOT_PASS);
         flush();
     }));
     it('should allow changing initial choice', fakeAsync(async() => {

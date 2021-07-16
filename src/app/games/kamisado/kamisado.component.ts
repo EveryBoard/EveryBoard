@@ -70,7 +70,7 @@ export class KamisadoComponent extends AbstractGameComponent<KamisadoMove, Kamis
         if (this.canPass) {
             return this.chooseMove(KamisadoMove.PASS, this.rules.node.gamePartSlice, null, null);
         } else {
-            return this.cancelMove(KamisadoFailure.CANT_PASS);
+            return this.cancelMove(RulesFailure.CANNOT_PASS);
         }
     }
     public async onClick(x: number, y: number): Promise<MGPValidation> {

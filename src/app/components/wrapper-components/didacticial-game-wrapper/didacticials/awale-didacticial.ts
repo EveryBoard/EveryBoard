@@ -86,8 +86,7 @@ export const awaleDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.anyMove(
         $localize`Nourir est obligatoire`,
-        $localize`"Affamer" est interdit, c'est-à-dire: si votre adversaire n'a plus de graines et que vous savez lui en donner une ou plusieurs, vous êtes obligé de le faire.
-         Allez-y !`,
+        $localize`"You cannot let another player starve: if your opponent has no seeds anymore and if you can give one or more to him, you have to do it. Go ahead!`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],
             [0, 1, 2, 4, 4, 5],

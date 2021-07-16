@@ -53,7 +53,7 @@ export class GameInfo {
     public static ALL_GAMES: GameInfo[] = [
         new GameInfo('MinimaxTesting', 'MinimaxTesting', MinimaxTestingComponent, new Date('1970-01-01'), '', false),
 
-        new GameInfo($localize`Puissance 4`, 'P4', P4Component, new Date('2018-08-28'), GameDescription.P4),
+        new GameInfo($localize`Four in a Row`, 'P4', P4Component, new Date('2018-08-28'), GameDescription.P4),
         new GameInfo($localize`Awalé`, 'Awale', AwaleComponent, new Date('2018-11-29'), GameDescription.AWALE), // 93 days after P4
         new GameInfo($localize`Quarto`, 'Quarto', QuartoComponent, new Date('2018-12-09')), // 10 days after Awale
         new GameInfo($localize`Tablut`, 'Tablut', TablutComponent, new Date('2018-12-27'), GameDescription.TABLUT), // 26 days after Quarto

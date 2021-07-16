@@ -12,19 +12,19 @@
 
     <div id="menu" class="navbar-menu" [ngClass]="showMenu ? 'is-active' : ''" (click)="showMenu = !showMenu">
         <div class="navbar-start">
-            <a class="navbar-item" [routerLink]="['/']" i18n>Accueil</a>
+            <a class="navbar-item" [routerLink]="['/']" i18n>Home</a>
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" i18n>Jouer en ligne</a>
+                <a class="navbar-link" i18n>Play online</a>
                 <div class="navbar-dropdown">
-                    <a class="navbar-item" [routerLink]="['/play']" i18n>Créer une partie</a>
-                    <a class="navbar-item" [routerLink]="['/server']" i18n>Rejoindre une partie</a>
+                    <a class="navbar-item" [routerLink]="['/play']" i18n>Create a game</a>
+                    <a class="navbar-item" [routerLink]="['/server']" i18n>Join a game</a>
                 </div>
             </div>
             <div class="navbar-item has-dropdown is-hoverable">
-                <a class="navbar-link" i18n>Jouer hors ligne</a>
+                <a class="navbar-link" i18n>Play offline</a>
                 <div class="navbar-dropdown">
-                    <a class="navbar-item" [routerLink]="['/local']" i18n>Créer une partie</a>
-                    <a class="navbar-item" [routerLink]="['/didacticial']" i18n>Apprendre des règles</a>
+                    <a class="navbar-item" [routerLink]="['/local']" i18n>Create a game</a>
+                    <a class="navbar-item" [routerLink]="['/didacticial']" i18n>Learn the rules</a>
                 </div>
             </div>
         </div>
@@ -42,17 +42,17 @@
                     <div class="navbar-item has-dropdown is-hoverable">
                         <a class="navbar-link">{{userName}}</a>
                         <div class="navbar-dropdown">
-                            <a class="navbar-item" id="logout" (click)="logout()" i18n>Se déconnecter</a>
+                            <a class="navbar-item" id="logout" (click)="logout()" i18n>Log out</a>
                         </div>
                     </div>
                 </ng-container>
                 <ng-template #connect>
                     <div class="buttons">
                         <a class="button is-primary" [routerLink]="['/inscription']">
-                            <strong i18n>S'inscrire</strong>
+                            <strong i18n>Sign up</strong>
                         </a>
                         <a class="button is-light" [routerLink]="['/login']" i18n>
-                            Se connecter
+                            Log in
                         </a>
                     </div>
                 </ng-template>

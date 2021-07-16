@@ -70,7 +70,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (gameStatus.isEndGame === true) {
             this.endGame = true;
             if (gameStatus.winner !== Player.NONE) {
-                this.winner = $localize`Joueur ${gameStatus.winner.value + 1}`;
+                this.winner = $localize`Player ${gameStatus.winner.value + 1}`;
             }
         }
     }

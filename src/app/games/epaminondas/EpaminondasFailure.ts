@@ -1,23 +1,23 @@
 export class EpaminondasFailure {
 
-    public static readonly PHALANX_IS_LEAVING_BOARD: string = $localize`La distance de déplacement de votre phalange la fait sortir du plateau.`;
+    public static readonly PHALANX_IS_LEAVING_BOARD: string = $localize`The move distance of youh phalanx puts it out of the board.`;
 
-    public static readonly SOMETHING_IN_PHALANX_WAY: string = $localize`Il y a quelque chose dans le chemin de votre phalange.`;
+    public static readonly SOMETHING_IN_PHALANX_WAY: string = $localize`There is something in the way of your phalanx.`;
 
     public static readonly PHALANX_SHOULD_BE_GREATER_TO_CAPTURE: string = $localize`Votre phalange doit être plus grande que celle qu'elle tente de capturer.`;
 
-    public static readonly CASE_NOT_ALIGNED_WITH_SELECTED: string = $localize`Cette case n'est pas alignée avec la pièce sélectionnée.`;
+    public static readonly CASE_NOT_ALIGNED_WITH_SELECTED: string = $localize`This case is not aligned with the selected piece.`;
 
-    public static readonly SINGLE_PIECE_MUST_MOVE_BY_ONE: string = $localize`Une pièce seule ne peut se déplacer que d'une case.`;
+    public static readonly SINGLE_PIECE_MUST_MOVE_BY_ONE: string = $localize`A single piece can only move by one case.`;
 
-    public static readonly SINGLE_PIECE_CANNOT_CAPTURE: string = $localize`Une pièce seule ne peut pas capturer.`;
+    public static readonly SINGLE_PIECE_CANNOT_CAPTURE: string = $localize`A single piece cannot make a capture.`;
 
-    public static readonly CASE_NOT_ALIGNED_WITH_PHALANX: string = $localize`Cette case n'est pas alignée avec la direction de la phalange.`;
+    public static readonly CASE_NOT_ALIGNED_WITH_PHALANX: string = $localize`This case is not aligned with the direction of the phalanx.`;
 
-    public static readonly PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD: string = $localize`Une phalange ne peut pas contenir de pièce hors du plateau.`;
+    public static readonly PHALANX_CANNOT_CONTAIN_PIECES_OUTSIDE_BOARD: string = $localize`A phalanx can't contain pieces outside of the board.`;
 
-    public static readonly PHALANX_CANNOT_CONTAIN_EMPTY_CASE: string = $localize`Une phalange ne peut pas contenir case vide.`;
+    public static readonly PHALANX_CANNOT_CONTAIN_EMPTY_CASE: string = $localize`A phalanx can't contain an empty case.`;
 
-    public static readonly PHALANX_CANNOT_CONTAIN_ENEMY_PIECE: string = $localize`Une phalange ne peut pas contenir de pièce ennemie.`;
+    public static readonly PHALANX_CANNOT_CONTAIN_ENEMY_PIECE: string = $localize`A phalanx can't contain an piece of the opponent.`;
 
 }

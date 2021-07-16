@@ -2,7 +2,7 @@
     <div class="tile is-3 is-vertical is-parent">
         <div class="tile is-child box has-text-centered" *ngIf="compo" id="info">
             <div class="block" id="turnIndicator">
-                <p class="subtitle" i18n>Tour n°{{ compo.rules.node.gamePartSlice.turn + 1 }}</p>
+                <p class="subtitle" i18n>Turn n°{{ compo.rules.node.gamePartSlice.turn + 1 }}</p>
             </div>
             <div id="playerSelector"
                  class="columns">
@@ -12,7 +12,7 @@
                                 (change)="updatePlayer(0)"
                                 [(ngModel)]="players[0]">
                             <option selected
-                                    value="humain" i18n>Humain</option>
+                                    value="humain" i18n>Human</option>
                             <option *ngFor="let minimax of compo.availableMinimaxes"
                                     [value]="minimax.name">{{ minimax.name }}</option>
                         </select>
@@ -23,9 +23,9 @@
                                 [(ngModel)]="aiDepths[0]"
                                 (change)="updatePlayer(0)">
                             <option selected
-                                    value="0" i18n>Choisissez le niveau</option>
+                                    value="0" i18n>Pick the level</option>
                             <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
-                                    [value]="i" i18n>Niveau {{ i }}</option>
+                                    [value]="i" i18n>Level {{ i }}</option>
                         </select>
                     </div>
                     <p id="scoreOne"
@@ -38,7 +38,7 @@
                                 (change)="updatePlayer(1)"
                                 [(ngModel)]="players[1]">
                             <option selected
-                                    value="humain"> Humain </option>
+                                    value="humain">Human</option>
                             <option *ngFor="let minimax of compo.availableMinimaxes"
                                     [value]="minimax.name">{{ minimax.name }}</option>
                         </select>
@@ -48,9 +48,9 @@
                                 id="aiOneDepthSelect"
                                 [(ngModel)]="aiDepths[1]"
                                 (change)="updatePlayer(1)">
-                            <option selected value="0" i18n>Choisissez le niveau</option>
+                            <option selected value="0" i18n>Pick the level</option>
                             <option *ngFor="let i of [1, 2, 3, 4, 5, 6, 7]"
-                                    [value]="i" i18n>Niveau {{ i }}</option>
+                                    [value]="i" i18n>Level {{ i }}</option>
                         </select>
                     </div>
                     <p id="scoreZero"
@@ -59,8 +59,8 @@
                 </div>
             </div>
             <div class="block" id="gameResult" *ngIf="endGame">
-                <h4 *ngIf="winner" i18n>{{ winner }} a gagné</h4>
-                <h4 id="draw" *ngIf="winner == null" i18n>Match nul</h4>
+                <h4 *ngIf="winner" i18n>{{ winner }} won</h4>
+                <h4 id="draw" *ngIf="winner == null" i18n>Draw</h4>
             </div>
             <div style="visibility: hidden;">
                 <mat-select></mat-select> <!-- removing this makes some async tests fail, wtf? (when removing, add the "block" class to the select div above) -->
@@ -79,20 +79,20 @@
                     class="button is-primary is-fullwidth mb-1"
                     (click)="compo.pass()"
                     i18n>
-                Passer son tour
+                Passer a turn
             </button>
             <button id="takeBack"
                     *ngIf="compo.rules.node.gamePartSlice.turn > 0"
                     class="button is-fullwidth mb-1"
                     (click)="takeBack()"
                     i18n>
-                Reprendre un coup
+                Take move back
             </button>
             <button id="restartButton"
                     class="button is-fullwidth"
                     (click)="restartGame()"
                     i18n>
-                Recommencer une partie
+                Restart game
             </button>
         </div>
 

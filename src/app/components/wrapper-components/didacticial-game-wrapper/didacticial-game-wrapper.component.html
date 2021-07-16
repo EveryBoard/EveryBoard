@@ -7,7 +7,7 @@
                 <p id='currentMessage'>{{ currentMessage }}</p>
             </div>
             <div *ngIf="currentReason" class="message is-danger" role="alert">
-                <div class="message-header" i18n>Échec</div>
+                <div class="message-header" i18n>Failure</div>
                 <div id="currentReason" class="message-body">{{ currentReason }}</div>
             </div>
             <div class="block">
@@ -16,19 +16,19 @@
                         *ngIf="tutorialOver === false && ((stepFinished && stepFinished[stepIndex] === true) || moveAttemptMade)"
                         (click)="retry()"
                         i18n>
-                    Essayez à nouveau
+                    Try again
                 </button>
                 <button id="nextButton"
                         class="button is-primary mr-3 mb-1"
                         *ngIf="tutorialOver === false"
                         (click)="next()"
                         >
-                    <ng-container *ngIf="steps && steps[stepIndex].isInformation() else notInfo" i18n>Vu</ng-container>
+                    <ng-container *ngIf="steps && steps[stepIndex].isInformation() else notInfo" i18n>Ok</ng-container>
                     <ng-template #notInfo>
-                        <ng-container *ngIf="stepFinished && stepFinished[stepIndex] else notFinished" i18n>Continuer</ng-container>
+                        <ng-container *ngIf="stepFinished && stepFinished[stepIndex] else notFinished" i18n>Continue</ng-container>
                     </ng-template>
                     <ng-template #notFinished>
-                        <ng-container i18n>Passer</ng-container>
+                        <ng-container i18n>Pass</ng-container>
                     </ng-template>
                 </button>
                 <button id="restartButton"
@@ -36,14 +36,14 @@
                         *ngIf="tutorialOver"
                         (click)="start()"
                         i18n>
-                    Recommencer
+                    Try again
                 </button>
                 <button id="showSolutionButton"
                         class="button"
                         *ngIf="moveAttemptMade && stepFinished[stepIndex] === false"
                         (click)="showSolution()"
                         i18n>
-                    Voir la solution
+                    See solution
                 </button>
                 <div class="select">
                     <select id="steps" (change)="changeStep($event.target.value)">

@@ -1,24 +1,24 @@
 export class GipfFailure {
 
-    public static readonly CAPTURE_MUST_BE_ALIGNED: string = $localize`Une capture ne peut que se faire si 4 pièces de votre couleurs sont alignées, ce n'est pas le cas.`;
+    public static readonly CAPTURE_MUST_BE_ALIGNED: string = $localize`You can only capture when 4 of your pieces are aligned, and it is not the case..`;
 
-    public static readonly INVALID_CAPTURED_PIECES: string = $localize`Veuillez choisir une capture valide qui contient 4 pièces ou plus.`;
+    public static readonly INVALID_CAPTURED_PIECES: string = $localize`You must select a valid capture tha tcontains 4 pieces of more.`;
 
-    public static readonly MISSING_CAPTURES: string = $localize`Il vous reste des captures à effectuer.`;
+    public static readonly MISSING_CAPTURES: string = $localize`There are captures remaining.`;
 
-    public static readonly PLACEMENT_NOT_ON_BORDER: string = $localize`Les pièces doivent être placée sur une case du bord du plateau.`;
+    public static readonly PLACEMENT_NOT_ON_BORDER: string = $localize`Pieces must be inserted in cases on the border of the board.`;
 
-    public static readonly INVALID_PLACEMENT_DIRECTION: string = $localize`Veuillez choisir une direction valide pour le déplacement.`;
+    public static readonly INVALID_PLACEMENT_DIRECTION: string = $localize`You must select a valid placement direction.`;
 
-    public static readonly PLACEMENT_WITHOUT_DIRECTION: string = $localize`Veuillez choisir un placement avec une direction.`;
+    public static readonly PLACEMENT_WITHOUT_DIRECTION: string = $localize`You must select a placement alongside the insertion case.`;
 
-    public static readonly PLACEMENT_ON_COMPLETE_LINE: string = $localize`Veuillez effectuer un placement sur une ligne non complète.`;
+    public static readonly PLACEMENT_ON_COMPLETE_LINE: string = $localize`You cannot place a piece on a complete line.`;
 
-    public static readonly AMBIGUOUS_CAPTURE_COORD: string = $localize`Veuillez sélectionner une autre case de la capture que vous souhaitez prendre, celle-ci appartient à deux captures.`;
+    public static readonly AMBIGUOUS_CAPTURE_COORD: string = $localize`This case belongs to two captures. Please select another case in the capture you'd like to take.`;
 
-    public static readonly NOT_PART_OF_CAPTURE: string = $localize`Veuillez sélectionner une capture.`;
+    public static readonly NOT_PART_OF_CAPTURE: string = $localize`You must pick a capture.`;
 
-    public static readonly CLICK_FURTHER_THAN_ONE_COORD: string = $localize`Veuillez sélectionner une destination à une distance de 1 de l'entrée.`;
+    public static readonly CLICK_FURTHER_THAN_ONE_COORD: string = $localize`You must select a destination case at a distance of 1 from the entrance.`;
 
-    public static readonly NO_DIRECTIONS_AVAILABLE: string = $localize`Veuillez sélectionner une autre case, toutes les lignes pour ce placement sont complètes.`;
+    public static readonly NO_DIRECTIONS_AVAILABLE: string = $localize`You cannot insert a piece here, as all lines are full. Select another case.`;
 }

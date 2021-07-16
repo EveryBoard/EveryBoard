@@ -262,7 +262,7 @@ describe('KamisadoRules:', () => {
         rules.node = new MGPNode(null, null, slice);
         const move: KamisadoMove = KamisadoMove.PASS;
         const status: LegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.reason).toBe(KamisadoFailure.CANT_PASS);
+        expect(status.legal.reason).toBe(RulesFailure.CANNOT_PASS);
     });
     it('should detect victory', () => {
         const board: number[][] = [

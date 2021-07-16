@@ -1,16 +1,14 @@
 export class KamisadoFailure {
 
-    public static readonly CANT_PASS: string = $localize`Vous n'êtes pas autorisé à passer, vous pouvez toujours vous déplacer.`;
+    public static readonly NOT_RIGHT_COLOR: string = $localize`This piece is not of the color you have to play.`;
 
-    public static readonly NOT_RIGHT_COLOR: string = $localize`La pièce n'est pas de la couleur à jouer.`;
+    public static readonly END_CASE_NOT_EMPTY: string = $localize`You must move to an empty case.`;
 
-    public static readonly END_CASE_NOT_EMPTY: string = $localize`Vous devez vous déplacer vers une case vide.`;
+    public static readonly DIRECTION_NOT_ALLOWED: string = $localize`You can only move forward, orthogonally or diagonally.`;
 
-    public static readonly DIRECTION_NOT_ALLOWED: string = $localize`Vous ne pouvez pas vous déplacer que vers l'avant orthogonalement ou diagonalement.`;
+    public static readonly MOVE_BLOCKED: string = $localize`This move is blocked by another piece.`;
 
-    public static readonly MOVE_BLOCKED: string = $localize`Ce mouvement est obstrué.`;
+    public static readonly GAME_ENDED: string = $localize`The game has ended.`
 
-    public static readonly GAME_ENDED: string = $localize`La partie est finie.`
-
-    public static readonly PLAY_WITH_SELECTED_PIECE: string = $localize`Vous devez jouer avec la pièce déjà séléctionnée.`;
+    public static readonly PLAY_WITH_SELECTED_PIECE: string = $localize`You must play with the selected piece.`;
 }

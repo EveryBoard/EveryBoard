@@ -369,7 +369,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         const candidates: string[] = beforeUser.concat(afterUser);
         if (userPseudo === this.currentJoiner.chosenPlayer) {
             // The chosen player has been removed, the user will have to review the config
-            this.messageDisplayer.infoMessage($localize`${userPseudo} a quitté la partie, veuillez choisir un autre adversaire`);
+            this.messageDisplayer.infoMessage($localize`${userPseudo} left the game, please pick another opponent.`);
             return this.joinerService.reviewConfigRemoveChosenPlayerAndUpdateCandidates(candidates);
         } else {
             this.joinerService.updateCandidates(candidates);
