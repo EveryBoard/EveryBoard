@@ -1,4 +1,4 @@
-yexport class RulesFailure {
+export class RulesFailure {
 
     public static readonly CANNOT_CHOOSE_ENEMY_PIECE: string = $localize`You cannot pick a piece from the opponent.`;
 
