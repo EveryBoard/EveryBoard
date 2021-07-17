@@ -2,8 +2,8 @@
 <xliff version="1.2" xmlns="urn:oasis:names:tc:xliff:document:1.2">
   <file source-language="en-US" datatype="plaintext" original="ng2.template">
     <body>
-      <trans-unit id="2490633696913805638" datatype="html">
-        <source> new message(s) test</source>
+      <trans-unit id="3155002290360228820" datatype="html">
+        <source> new message(s)</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/chat/chat.component.ts</context>
           <context context-type="linenumber">28,31</context>
@@ -27,7 +27,7 @@
         <source>Enter your message here</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/chat/chat.component.ts</context>
-          <context context-type="linenumber">64,69</context>
+          <context context-type="linenumber">64,68</context>
         </context-group>
       </trans-unit>
       <trans-unit id="8357348345728938526" datatype="html">
