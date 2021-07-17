@@ -28,7 +28,7 @@ module.exports = {
                 'parameter': true,
             },
         ],
-        '@typescript-eslint/strict-boolean-expressions': ['error'],
+//        '@typescript-eslint/strict-boolean-expressions': ['error'],
         '@typescript-eslint/no-empty-function': ['off'],
         '@typescript-eslint/no-namespace': ['off'],
         '@typescript-eslint/ban-types': [

@@ -2,6 +2,7 @@ import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { Subscription } from 'rxjs';
+import { environment } from 'src/environments/environment';
 
 @Component({
     selector: 'app-header',
@@ -21,7 +22,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
                 public authenticationService: AuthenticationService) {
     }
     public ngOnInit(): void {
-        this.currentLanguage = (navigator.language || localStorage.getItem('locale') || 'fr').slice(0, 2);
+        this.currentLanguage = (localStorage.getItem('locale') || navigator.language || 'fr').slice(0, 2);
         this.joueurSub = this.authenticationService.getJoueurObs()
             .subscribe((joueur: { pseudo: string, verified: boolean}) => {
                 if (joueur) this.userName = joueur.pseudo;
@@ -35,7 +36,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public changeLanguage(language: string): void {
         localStorage.setItem('locale', language);
         // Reload app for selected language
-        window.open('/', '_self');
+        window.open(environment.root, '_self');
     }
     public ngOnDestroy(): void {
         this.joueurSub.unsubscribe();

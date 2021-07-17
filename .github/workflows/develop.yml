@@ -12,7 +12,7 @@ jobs:
     strategy:
       matrix:
         node-version: [12.x]
-        base-href: [/board-dev/]
+        configuration: [dev]
 
     steps:
       - name: Checkout the repository
@@ -45,7 +45,7 @@ jobs:
       - name: Launch tests
         run: npm run test:ci
       - name: Build
-        run: npm run build -- --base-href=${{ matrix.base-href }}
+        run: npm run build -- --configuration=${{ matrix.configuration }}
       - name: Deploy develop
         uses: burnett01/rsync-deployments@4.1
         with:

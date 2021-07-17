@@ -1,2 +1,2 @@
 #!/bin/sh
-npx xlf-merge messages.fr.xlf --convert json && mv messages.fr.json src/assets/fr.json
+npx xlf-merge messages.xlf --convert json && mv messages.json src/assets/fr.json

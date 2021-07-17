@@ -9,7 +9,6 @@ import { loadTranslations } from '@angular/localize';
 const validLocales: string[] = ['en', 'fr'];
 const foundLocale: string = localStorage.getItem('locale') || navigator.language || 'fr';
 const locale: string = foundLocale.slice(0, 2); // from en-US or fr-BE, we only want en or fr
-console.log('found locale: ' + locale);
 
 function bootstrapApp(): void {
     if (environment.production) {
@@ -21,7 +20,7 @@ function bootstrapApp(): void {
 }
 
 if (locale !== 'en' && validLocales.some((validLocale: string): boolean => validLocale === locale) ) {
-    fetch('/assets/' + locale + '.json')
+    fetch(environment.root + 'assets/' + locale + '.json')
         .then((response: Response) => {
             if (!response.ok) {
                 return { 'locale': 'en', 'translations': {} };
