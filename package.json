@@ -5,6 +5,7 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
+    "prebuild": "npx xlf-merge translations/messages.fr.xlf --convert json -o src/assets/fr.json",
     "test": "ng test --code-coverage",
     "test:ci": "ng test --watch=false --browsers=ChromeHeadlessCustom",
     "lint": "eslint --ext ts ./",

@@ -112,7 +112,7 @@
       </trans-unit>
       <trans-unit id="2615338817912103674" datatype="html">
         <source>Play offline</source>
-        <target>Rejoindre une partie</target>
+        <target>Jouer hors ligne</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/header/header.component.ts</context>
           <context context-type="linenumber">45</context>
@@ -168,6 +168,7 @@
       </trans-unit>
       <trans-unit id="4768749765465246664" datatype="html">
         <source>Email</source>
+        <target>Email</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/inscription/inscription.component.ts</context>
           <context context-type="linenumber">24,25</context>
@@ -179,6 +180,7 @@
       </trans-unit>
       <trans-unit id="1431416938026210429" datatype="html">
         <source>Password</source>
+        <target>Mot de passe</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/inscription/inscription.component.ts</context>
           <context context-type="linenumber">28</context>
@@ -190,6 +192,7 @@
       </trans-unit>
       <trans-unit id="6752513541305588427" datatype="html">
         <source>An email will be sent to confirm your account</source>
+        <target>Un email de confirmation vous sera envoyé pour valider votre compte</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/inscription/inscription.component.ts</context>
           <context context-type="linenumber">28</context>
@@ -197,6 +200,7 @@
       </trans-unit>
       <trans-unit id="77522255637065336" datatype="html">
         <source>Connection error</source>
+        <target>Erreur de connexion</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/inscription/inscription.component.ts</context>
           <context context-type="linenumber">28</context>
@@ -208,6 +212,7 @@
       </trans-unit>
       <trans-unit id="2336550011721758066" datatype="html">
         <source>Log in</source>
+        <target>Se connecter</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/login/login.component.ts</context>
           <context context-type="linenumber">25,27</context>
@@ -215,6 +220,7 @@
       </trans-unit>
       <trans-unit id="1539269211696237484" datatype="html">
         <source>This password is incorrect</source>
+        <target>Ce mot de passe est incorrect</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/login/login.component.ts</context>
           <context context-type="linenumber">30,31</context>
@@ -222,6 +228,7 @@
       </trans-unit>
       <trans-unit id="7218792481997014186" datatype="html">
         <source>This email address has no account on this website</source>
+        <target>Cette adresse email n'a pas de compte sur ce site.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/login/login.component.ts</context>
           <context context-type="linenumber">33,34</context>
@@ -229,6 +236,7 @@
       </trans-unit>
       <trans-unit id="1988081660757251720" datatype="html">
         <source>You must click the confirmation link that you should have received by email.</source>
+        <target>Cette adresse email n'a pas de compte sur ce site.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/login/login.component.ts</context>
           <context context-type="linenumber">36,37</context>
@@ -236,6 +244,7 @@
       </trans-unit>
       <trans-unit id="8999284073934392732" datatype="html">
         <source>Login with Google</source>
+        <target>Se connecter avec Google</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/login/login.component.ts</context>
           <context context-type="linenumber">56</context>
@@ -243,6 +252,7 @@
       </trans-unit>
       <trans-unit id="7762039054063004692" datatype="html">
         <source> The replay game is loading, please wait, it should not take long.</source>
+        <target> Le rematch est en cours de chargement. Vous serez redirigé dans un instant.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/next-game-loading/next-game-loading.component.ts</context>
           <context context-type="linenumber">9</context>
@@ -250,6 +260,7 @@
       </trans-unit>
       <trans-unit id="5120671221766405888" datatype="html">
         <source>Game does not exist</source>
+        <target>Partie inexistante</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/not-found/not-found.component.ts</context>
           <context context-type="linenumber">9</context>
@@ -257,13 +268,15 @@
       </trans-unit>
       <trans-unit id="5769704000858519890" datatype="html">
         <source>The game you tried to join does not exist anymore.</source>
+        <target>La partie que vous avez essayé de rejoindre n'existe pas ou n'existe plus !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/not-found/not-found.component.ts</context>
           <context context-type="linenumber">9</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8673402084220467014" datatype="html">
-        <source> Créer partie en ligne</source>
+      <trans-unit id="2282880173884549212" datatype="html">
+        <source> Create an online game</source>
+        <target> Créer une partie en ligne</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/online-game-creation/online-game-creation.component.ts</context>
           <context context-type="linenumber">21</context>
@@ -271,6 +284,7 @@
       </trans-unit>
       <trans-unit id="9057005735468371209" datatype="html">
         <source>The international version of the more famous african strategy game!</source>
+        <target>La version internationale du jeu de stratégie africain le plus connu !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">28,30</context>
@@ -278,6 +292,7 @@
       </trans-unit>
       <trans-unit id="7930050431770016664" datatype="html">
         <source>An enhanced tic-tac-toe where piece can encapsule other and prevent them to win.</source>
+        <target>Un morpion amélioré dans lequel les pièces peuvent encapsuler d'autres pour les empêcher de gagner.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">30,32</context>
@@ -285,6 +300,7 @@
       </trans-unit>
       <trans-unit id="5603917373179983167" datatype="html">
         <source>An antiquity-war inspired game. Be the first to pierce ennemy lines!</source>
+        <target>Un jeu inspiré des guerres antiques. Soyez le premier à percer les lignes ennemies !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">32,34</context>
@@ -292,6 +308,7 @@
       </trans-unit>
       <trans-unit id="6676975125770922470" datatype="html">
         <source>The oldest strategy game still practiced widely. A territory control game.</source>
+        <target>Le plus ancien jeu de stratégie encore répandu. Un jeu de contrôle territorial.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">34,36</context>
@@ -299,6 +316,7 @@
       </trans-unit>
       <trans-unit id="287142221400627248" datatype="html">
         <source>The classical 4 in a row game!</source>
+        <target>Le jeu classique de puissance 4.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">36,38</context>
@@ -306,6 +324,7 @@
       </trans-unit>
       <trans-unit id="8330952092999509271" datatype="html">
         <source>Drop a piece, then rotate the board, first to align 5 of his pieces win!</source>
+        <target>Déposez une piece, ensuite tournez le plateau, et soyez le premier à aligner 5 pièces pour gagner</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">38,40</context>
@@ -313,6 +332,7 @@
       </trans-unit>
       <trans-unit id="3798499751517521657" datatype="html">
         <source>Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loose!</source>
+        <target>Superposez vos pièces et utilisez deux mécaniques de jeux pour les conserver. Le premier joueur n'ayant plus de pièces perd !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">40,42</context>
@@ -320,6 +340,7 @@
       </trans-unit>
       <trans-unit id="9201555561927008433" datatype="html">
         <source>Immobilize one of your ennemy&apos;s pyramids before he immobilize one of yours!</source>
+        <target>Immobiliser une pyramide de votre ennemi avant qu'il n'immobilise l'une des vôtres !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">42,44</context>
@@ -327,6 +348,7 @@
       </trans-unit>
       <trans-unit id="1409973335731836872" datatype="html">
         <source>Be the first to push a mountain out of the board!</source>
+        <target>Soyez le premier à pousser une montagne hors du plateau !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">44,46</context>
@@ -334,6 +356,7 @@
       </trans-unit>
       <trans-unit id="7236845266291530009" datatype="html">
         <source>Put your hexagonals pieces next to another one, and create one of the 3 victorious shapes to win!</source>
+        <target>Placez vos pièces hexagonales l'une à côté des autres et créez une des 3 formes victorieuses pour gagner !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">46,48</context>
@@ -341,6 +364,7 @@
       </trans-unit>
       <trans-unit id="4713908844197056478" datatype="html">
         <source>The vikings checkers! Invaders must capture the King, defender must make him escape!</source>
+        <target>Le jeu de dames Viking ! L'attaquant doit capturer le roi, le défenseur doit lui permettre de s'échapper !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">48,49</context>
@@ -348,6 +372,7 @@
       </trans-unit>
       <trans-unit id="718535138834335364" datatype="html">
         <source>Four in a Row</source>
+        <target>Puissance 4</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">56</context>
@@ -355,6 +380,7 @@
       </trans-unit>
       <trans-unit id="1525715186822490677" datatype="html">
         <source>Awalé</source>
+        <target>Awalé</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">57</context>
@@ -362,6 +388,7 @@
       </trans-unit>
       <trans-unit id="8844589419403065948" datatype="html">
         <source>Quarto</source>
+        <target>Quarto</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">58</context>
@@ -369,6 +396,7 @@
       </trans-unit>
       <trans-unit id="8322068603814456434" datatype="html">
         <source>Tablut</source>
+        <target>Tablut</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">59</context>
@@ -376,6 +404,7 @@
       </trans-unit>
       <trans-unit id="3244681266393689381" datatype="html">
         <source>Reversi</source>
+        <target>Reversi</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">60</context>
@@ -383,6 +412,7 @@
       </trans-unit>
       <trans-unit id="7297944290589265560" datatype="html">
         <source>Go</source>
+        <target>Go</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">61</context>
@@ -390,6 +420,7 @@
       </trans-unit>
       <trans-unit id="8208823537494951803" datatype="html">
         <source>Encapsule</source>
+        <target>Encapsule</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">62</context>
@@ -397,6 +428,7 @@
       </trans-unit>
       <trans-unit id="4883858894354428469" datatype="html">
         <source>Siam</source>
+        <target>Siam</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">63</context>
@@ -404,6 +436,7 @@
       </trans-unit>
       <trans-unit id="5046769358659448397" datatype="html">
         <source>Sahara</source>
+        <target>Sahara</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">64</context>
@@ -411,6 +444,7 @@
       </trans-unit>
       <trans-unit id="7602922439944541721" datatype="html">
         <source>Pylos</source>
+        <target>Pylos</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">65</context>
@@ -418,6 +452,7 @@
       </trans-unit>
       <trans-unit id="773015283188822187" datatype="html">
         <source>Kamisado</source>
+        <target>Kamisado</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">66</context>
@@ -425,6 +460,7 @@
       </trans-unit>
       <trans-unit id="8323142856025602350" datatype="html">
         <source>Quixo</source>
+        <target>Quixo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">67</context>
@@ -432,6 +468,7 @@
       </trans-unit>
       <trans-unit id="8191425615273627117" datatype="html">
         <source>Dvonn</source>
+        <target>Dvonn</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">68</context>
@@ -439,6 +476,7 @@
       </trans-unit>
       <trans-unit id="7644192101130519142" datatype="html">
         <source>Epaminondas</source>
+        <target>Epaminondas</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">69</context>
@@ -446,6 +484,7 @@
       </trans-unit>
       <trans-unit id="4541467181400942955" datatype="html">
         <source>Gipf</source>
+        <target>Gipf</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">70</context>
@@ -453,6 +492,7 @@
       </trans-unit>
       <trans-unit id="1147571728036986329" datatype="html">
         <source>Coerceo</source>
+        <target>Coerceo</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">71</context>
@@ -460,6 +500,7 @@
       </trans-unit>
       <trans-unit id="3553471239341143775" datatype="html">
         <source>Six</source>
+        <target>Six</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">72</context>
@@ -471,6 +512,7 @@
       </trans-unit>
       <trans-unit id="240931235644942730" datatype="html">
         <source>Lines of Action</source>
+        <target>Lines of Action</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">73</context>
@@ -478,6 +520,7 @@
       </trans-unit>
       <trans-unit id="3574809577617204460" datatype="html">
         <source>Pentago</source>
+        <target>Pentago</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">74</context>
@@ -485,6 +528,7 @@
       </trans-unit>
       <trans-unit id="4643591148728960560" datatype="html">
         <source>Game</source>
+        <target>Jeu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/server-page/server-page.component.ts</context>
           <context context-type="linenumber">30,31</context>
@@ -492,6 +536,7 @@
       </trans-unit>
       <trans-unit id="3710582909570607859" datatype="html">
         <source>First player</source>
+        <target>Premier joueur</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/server-page/server-page.component.ts</context>
           <context context-type="linenumber">43,46</context>
@@ -503,6 +548,7 @@
       </trans-unit>
       <trans-unit id="4060021930998903329" datatype="html">
         <source>Second player</source>
+        <target>Deuxième joueur</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/server-page/server-page.component.ts</context>
           <context context-type="linenumber">57,59</context>
@@ -510,6 +556,7 @@
       </trans-unit>
       <trans-unit id="8503767092684163333" datatype="html">
         <source>Turn</source>
+        <target>Tour</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/server-page/server-page.component.ts</context>
           <context context-type="linenumber">62</context>
@@ -517,6 +564,7 @@
       </trans-unit>
       <trans-unit id="2009811124619716606" datatype="html">
         <source>Create an online game</source>
+        <target>Créer une partie en ligne</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/server-page/server-page.component.ts</context>
           <context context-type="linenumber">62</context>
@@ -528,6 +576,7 @@
       </trans-unit>
       <trans-unit id="325889877575115737" datatype="html">
         <source>Connected users :</source>
+        <target>Utilisateurs connectés :</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/server-page/server-page.component.ts</context>
           <context context-type="linenumber">62</context>
@@ -535,6 +584,7 @@
       </trans-unit>
       <trans-unit id="689957366051097321" datatype="html">
         <source>Waiting for opponent</source>
+        <target>En attente d'adversaire</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/server-page/server-page.component.ts</context>
           <context context-type="linenumber">62</context>
@@ -542,6 +592,7 @@
       </trans-unit>
       <trans-unit id="7079545056368231407" datatype="html">
         <source>See the game list</source>
+        <target>Voir la liste des parties</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/welcome/welcome.component.html</context>
           <context context-type="linenumber">39,43</context>
@@ -549,6 +600,7 @@
       </trans-unit>
       <trans-unit id="8564202903947049539" datatype="html">
         <source>Play</source>
+        <target>Jouer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/welcome/welcome.component.html</context>
           <context context-type="linenumber">61,64</context>
@@ -556,6 +608,7 @@
       </trans-unit>
       <trans-unit id="6899134966533859260" datatype="html">
         <source>Learn</source>
+        <target>Apprendre</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/welcome/welcome.component.html</context>
           <context context-type="linenumber">64</context>
@@ -567,6 +620,7 @@
       </trans-unit>
       <trans-unit id="4626939509035677878" datatype="html">
         <source> AwesomBoard </source>
+        <target> AwesomBoard </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/welcome/welcome.component.ts</context>
           <context context-type="linenumber">22,24</context>
@@ -574,6 +628,7 @@
       </trans-unit>
       <trans-unit id="6425440499209555941" datatype="html">
         <source> AwesomBoard is a website a platform to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn. </source>
+        <target> AwesomBoard est un site qui permet de jouer et d'apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprends donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/welcome/welcome.component.ts</context>
           <context context-type="linenumber">26</context>
@@ -581,6 +636,7 @@
       </trans-unit>
       <trans-unit id="4005579048990110948" datatype="html">
         <source>It is not your turn.</source>
+        <target>Ce n'est pas votre tour.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
           <context context-type="linenumber">100,101</context>
@@ -588,6 +644,7 @@
       </trans-unit>
       <trans-unit id="6976459996912108024" datatype="html">
         <source>Game is finished.</source>
+        <target>La partie est terminée.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
           <context context-type="linenumber">103,104</context>
@@ -595,6 +652,7 @@
       </trans-unit>
       <trans-unit id="4272154488962455395" datatype="html">
         <source>cloning feature will be added soon. Meanwhile, you can&apos;t click on the board</source>
+        <target>Vous ne pouvez pas cliquer sur le plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
           <context context-type="linenumber">120,121</context>
@@ -602,6 +660,7 @@
       </trans-unit>
       <trans-unit id="784099850780099493" datatype="html">
         <source>It is not your turn</source>
+        <target>Ce n'est pas votre tour.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
           <context context-type="linenumber">126,127</context>
@@ -609,6 +668,7 @@
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
         <source>Step finished!</source>
+        <target>Étape finie !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialFailure.ts</context>
           <context context-type="linenumber">4,6</context>
@@ -616,6 +676,7 @@
       </trans-unit>
       <trans-unit id="5395533573244657143" datatype="html">
         <source>This step is not expecting any move from your part.</source>
+        <target>Cette étape n'attends pas de mouvement de votre part.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialFailure.ts</context>
           <context context-type="linenumber">6,7</context>
@@ -623,6 +684,7 @@
       </trans-unit>
       <trans-unit id="6439401135646542284" datatype="html">
         <source>Failure</source>
+        <target>Raté</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component.ts</context>
           <context context-type="linenumber">58,60</context>
@@ -630,6 +692,7 @@
       </trans-unit>
       <trans-unit id="5717355661357017349" datatype="html">
         <source> Try again </source>
+        <target> Essayer à nouveau </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component.ts</context>
           <context context-type="linenumber">72,77</context>
@@ -641,6 +704,7 @@
       </trans-unit>
       <trans-unit id="8720977247725652816" datatype="html">
         <source>Ok</source>
+        <target>Vu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component.ts</context>
           <context context-type="linenumber">90,93</context>
@@ -648,6 +712,7 @@
       </trans-unit>
       <trans-unit id="6962699013778688473" datatype="html">
         <source>Continue</source>
+        <target>Continuer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component.ts</context>
           <context context-type="linenumber">103,106</context>
@@ -655,6 +720,7 @@
       </trans-unit>
       <trans-unit id="4552397654536129176" datatype="html">
         <source>Pass</source>
+        <target>Passer</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component.ts</context>
           <context context-type="linenumber">120,122</context>
@@ -662,6 +728,7 @@
       </trans-unit>
       <trans-unit id="562381694553808783" datatype="html">
         <source> See solution </source>
+        <target> Voir la solution </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/didacticial-game-wrapper/didacticial-game-wrapper.component.ts</context>
           <context context-type="linenumber">146,147</context>

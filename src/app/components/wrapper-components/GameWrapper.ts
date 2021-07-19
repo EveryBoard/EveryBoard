@@ -123,7 +123,7 @@ export abstract class GameWrapper {
         if (this.isPlayerTurn()) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure($localize`It is not your turn`);
+            return MGPValidation.failure($localize`It is not your turn.`);
         }
     }
     public onCancelMove(): void {
