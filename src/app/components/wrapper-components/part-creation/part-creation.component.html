@@ -43,7 +43,7 @@
                                     <div class="dropdown-item">
                                         <p>
                                             <ng-container i18n>Maximal turn duration: </ng-container><strong>{{ partType.NORMAL_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Maximal part duration: </ng-container> <strong>{{ partType.NORMAL_PART_DURATION | humanDuration }} <ng-container i18n>per player</ng-container></strong>
+                                            <ng-container i18n>Maximal game duration: </ng-container> <strong>{{ partType.NORMAL_PART_DURATION | humanDuration }} <ng-container i18n>per player</ng-container></strong>
                                         </p>
                                     </div>
                                 </div>
@@ -61,7 +61,7 @@
                                     <div class="dropdown-item">
                                         <p>
                                             <ng-container i18n>Maximal turn duration: </ng-container> <strong>{{ partType.BLITZ_MOVE_DURATION | humanDuration }}</strong><br/>
-                                            <ng-container i18n>Maximal part duration : </ng-container> <strong>{{ partType.BLITZ_PART_DURATION | humanDuration }} <ng-container i18n>per player</ng-container></strong>
+                                            <ng-container i18n>Maximal game duration: </ng-container> <strong>{{ partType.BLITZ_PART_DURATION | humanDuration }} <ng-container i18n>per player</ng-container></strong>
                                         </p>
                                     </div>
                                 </div>
@@ -86,7 +86,7 @@
                         </div>
                     </div>
                     <div class="field">
-                        <label class="label" for="totalPartDuration"><ng-container i18n>Maximal part duration :</ng-container> <output>{{ viewInfo.totalPartDuration | humanDuration }} <ng-container i18n>per player</ng-container></output></label>
+                        <label class="label" for="totalPartDuration"><ng-container i18n>Maximal game duration:</ng-container> <output>{{ viewInfo.totalPartDuration | humanDuration }} <ng-container i18n>per player</ng-container></output></label>
                         <div class="control">
                             <input class="slider is-circle is-primary"
                                    step="10"
@@ -140,16 +140,16 @@
                             [disabled]="!(viewInfo.canProposeConfig)"
                             (click)="proposeConfig()"
                             id="proposeConfig"
-                            i18n>Propose the configuration</button>
+                            i18n>Propose configuration</button>
                     <button class="button"
                             id="reviewConfig"
                             *ngIf="viewInfo.canReviewConfig"
                             (click)="reviewConfig()"
-                            i18n>Change the configuration</button>
+                            i18n>Change configuration</button>
                     <button class="button"
                             id="cancel"
                             (click)="cancelGameCreation()"
-                            i18n>Cancel the game</button>
+                            i18n>Cancel game</button>
                 </div>
             </div>
         </form>
@@ -175,7 +175,7 @@
                             <ng-container *ngIf="viewInfo.partType === 'STANDARD'" i18n>standard</ng-container>
                             <ng-container *ngIf="viewInfo.partType === 'BLITZ'" i18n>blitz</ng-container>
                             <ng-container *ngIf="viewInfo.partType === 'CUSTOM'" i18n>custom</ng-container>
-                            <ng-container i18n>game, where :</ng-container>
+                            <ng-container i18n>game, where:</ng-container>
                         </p>
                         <ul>
                             <li>

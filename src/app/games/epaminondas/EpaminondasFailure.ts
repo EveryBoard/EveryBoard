@@ -4,7 +4,7 @@ export class EpaminondasFailure {
 
     public static readonly SOMETHING_IN_PHALANX_WAY: string = $localize`There is something in the way of your phalanx.`;
 
-    public static readonly PHALANX_SHOULD_BE_GREATER_TO_CAPTURE: string = $localize`Votre phalange doit être plus grande que celle qu'elle tente de capturer.`;
+    public static readonly PHALANX_SHOULD_BE_GREATER_TO_CAPTURE: string = $localize`Your phalanx must be bigger than the one you are capturing.`;
 
     public static readonly CASE_NOT_ALIGNED_WITH_SELECTED: string = $localize`This case is not aligned with the selected piece.`;
 

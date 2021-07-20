@@ -77,7 +77,7 @@
                     id="refuseDrawButton"
                     (click)="refuseDraw()"
                     i18n>
-                Reect draw
+                Reject draw
             </button>
             <button class="button is-fullwidth mb-1"
                     *ngIf="endGame === false && isPlaying() && compo.canPass && (currentPlayer===userName)"
@@ -99,7 +99,7 @@
                     id="refuseTakeBackButton"
                     (click)="refuseTakeBack()"
                     i18n>
-                Reject take pback
+                Reject take back
             </button>
             <button class="button is-fullwidth"
                     *ngIf="endGame === false && isOpponentWaitingForTakeBackResponse() === false && canAskTakeBack()"

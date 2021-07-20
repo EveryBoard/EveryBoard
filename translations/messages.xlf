@@ -287,8 +287,8 @@
           <context context-type="linenumber">36,38</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8330952092999509271" datatype="html">
-        <source>Drop a piece, then rotate the board, first to align 5 of his pieces win!</source>
+      <trans-unit id="6400849177958832653" datatype="html">
+        <source>Drop a piece, then rotate the board, be the first to align 5 of your pieces to win!</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">38,40</context>
@@ -568,6 +568,10 @@
           <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
           <context context-type="linenumber">100,101</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
+          <context context-type="linenumber">126,127</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="6976459996912108024" datatype="html">
         <source>Game is finished.</source>
@@ -581,13 +585,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
           <context context-type="linenumber">120,121</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="784099850780099493" datatype="html">
-        <source>It is not your turn</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
-          <context context-type="linenumber">126,127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
@@ -2909,14 +2906,18 @@
         <source> Restart game </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
-          <context context-type="linenumber">81,84</context>
+          <context context-type="linenumber">81,85</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="349220502259721473" datatype="html">
-        <source> Passer a turn </source>
+      <trans-unit id="6980197840325276209" datatype="html">
+        <source> Pass a turn </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
           <context context-type="linenumber">100,102</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
+          <context context-type="linenumber">105,106</context>
         </context-group>
       </trans-unit>
       <trans-unit id="363427143833076602" datatype="html">
@@ -2975,18 +2976,11 @@
           <context context-type="linenumber">79,82</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3995164305280944204" datatype="html">
-        <source> Reect draw </source>
+      <trans-unit id="2984356495884926241" datatype="html">
+        <source> Reject draw </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">91,94</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="6980197840325276209" datatype="html">
-        <source> Pass a turn </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
-          <context context-type="linenumber">105,106</context>
         </context-group>
       </trans-unit>
       <trans-unit id="101333213054798052" datatype="html">
@@ -2996,11 +2990,11 @@
           <context context-type="linenumber">117,118</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3007286462548205548" datatype="html">
-        <source> Reject take pback </source>
+      <trans-unit id="719941689314037005" datatype="html">
+        <source> Reject take back </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
-          <context context-type="linenumber">123,124</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
@@ -3129,8 +3123,8 @@
           <context context-type="linenumber">140,141</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3841825701290475877" datatype="html">
-        <source>Change the configuration</source>
+      <trans-unit id="326145407473587685" datatype="html">
+        <source>Change configuration</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">150,152</context>
@@ -3157,8 +3151,8 @@
           <context context-type="linenumber">178,167</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3408370521380288957" datatype="html">
-        <source>game, where :</source>
+      <trans-unit id="4419402400362962130" datatype="html">
+        <source>game, where:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">179,182</context>
@@ -3313,11 +3307,15 @@
           <context context-type="linenumber">159,161</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="17343658808973313" datatype="html">
-        <source>Maximal part duration: </source>
+      <trans-unit id="1825754272138575872" datatype="html">
+        <source>Maximal game duration: </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">130,132</context>
+        </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
+          <context context-type="linenumber">169,171</context>
         </context-group>
       </trans-unit>
       <trans-unit id="4073116770334354573" datatype="html">
@@ -3327,13 +3325,6 @@
           <context context-type="linenumber">148,149</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2555236184905191663" datatype="html">
-        <source>Maximal part duration : </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
-          <context context-type="linenumber">169,171</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source>
         <context-group purpose="location">
@@ -3341,18 +3332,18 @@
           <context context-type="linenumber">186,187</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2643298757337906298" datatype="html">
-        <source>Propose the configuration</source>
+      <trans-unit id="1612262766071402559" datatype="html">
+        <source>Propose configuration</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">196,197</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5389136508020653846" datatype="html">
-        <source>Cancel the game</source>
+      <trans-unit id="6482290849972032593" datatype="html">
+        <source>Cancel game</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
-          <context context-type="linenumber">205,206</context>
+          <context context-type="linenumber">203,206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6102520113052735150" datatype="html">
@@ -3366,14 +3357,14 @@
         <source>Maximal turn duration:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
-          <context context-type="linenumber">227,229</context>
+          <context context-type="linenumber">227,228</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="1941013065180695072" datatype="html">
-        <source>Maximal part duration :</source>
+      <trans-unit id="919799632623109347" datatype="html">
+        <source>Maximal game duration:</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
-          <context context-type="linenumber">240,242</context>
+          <context context-type="linenumber">240,241</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3474603094089099622" datatype="html">
@@ -3418,8 +3409,8 @@
           <context context-type="linenumber">3,5</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="9059336569352831324" datatype="html">
-        <source>You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it..</source>
+      <trans-unit id="117738177627572036" datatype="html">
+        <source>You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/coerceo/CoerceoFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3565,8 +3556,8 @@
           <context context-type="linenumber">5,7</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5559537486499872195" datatype="html">
-        <source>Votre phalange doit être plus grande que celle qu&apos;elle tente de capturer.</source>
+      <trans-unit id="5389576774289628382" datatype="html">
+        <source>Your phalanx must be bigger than the one you are capturing.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3621,8 +3612,8 @@
           <context context-type="linenumber">21,23</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8183145231490018490" datatype="html">
-        <source>You can only capture when 4 of your pieces are aligned, and it is not the case..</source>
+      <trans-unit id="2282084492361398122" datatype="html">
+        <source>You can only capture when 4 of your pieces are aligned, and it is not the case.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -4094,8 +4085,15 @@
           <context context-type="linenumber">7,9</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="7277656953237335293" datatype="html">
-        <source>You must drop your piece on an empty case..</source>
+      <trans-unit id="6986218395331151516" datatype="html">
+        <source>You must pick one of your pieces.</source>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8217216836943122905" datatype="html">
+        <source>You must drop your piece on an empty case.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
           <context context-type="linenumber">11,13</context>

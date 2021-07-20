@@ -322,8 +322,8 @@
           <context context-type="linenumber">36,38</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8330952092999509271" datatype="html">
-        <source>Drop a piece, then rotate the board, first to align 5 of his pieces win!</source>
+      <trans-unit id="6400849177958832653" datatype="html">
+        <source>Drop a piece, then rotate the board, be the first to align 5 of your pieces to win!</source>
         <target>Déposez une piece, ensuite tournez le plateau, et soyez le premier à aligner 5 pièces pour gagner</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
@@ -641,6 +641,10 @@
           <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
           <context context-type="linenumber">100,101</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
+          <context context-type="linenumber">126,127</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="6976459996912108024" datatype="html">
         <source>Game is finished.</source>
@@ -656,14 +660,6 @@
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
           <context context-type="linenumber">120,121</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="784099850780099493" datatype="html">
-        <source>It is not your turn</source>
-        <target>Ce n'est pas votre tour.</target>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wrapper-components/GameWrapper.ts</context>
-          <context context-type="linenumber">126,127</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6594123400599013490" datatype="html">
@@ -2925,6 +2921,7 @@
       </trans-unit>
       <trans-unit id="7800061171704298797" datatype="html">
         <source>Human</source>
+        <target>Humain</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
           <context context-type="linenumber">15,16</context>
@@ -2932,6 +2929,7 @@
       </trans-unit>
       <trans-unit id="6063984594211340121" datatype="html">
         <source>Pick the level</source>
+        <target>Choisissez le niveau</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
           <context context-type="linenumber">25,27</context>
@@ -2943,6 +2941,7 @@
       </trans-unit>
       <trans-unit id="8800476882871783599" datatype="html">
         <source>Level <x id="INTERPOLATION" equiv-text="{{ i }}"/></source>
+        <target>Niveau <x id="INTERPOLATION" equiv-text="{{ i }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
           <context context-type="linenumber">38,28</context>
@@ -2954,6 +2953,7 @@
       </trans-unit>
       <trans-unit id="3272612818120648715" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ compo.scores[0] }}"/> points</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ compo.scores[0] }}"/> points</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
           <context context-type="linenumber">40,33</context>
@@ -2973,6 +2973,7 @@
       </trans-unit>
       <trans-unit id="8739046962840362623" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ winner }}"/> won</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ winner }}"/> a gagné</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
           <context context-type="linenumber">69,62</context>
@@ -2980,6 +2981,7 @@
       </trans-unit>
       <trans-unit id="8647687729200262691" datatype="html">
         <source>Draw</source>
+        <target>Match nul</targt>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
           <context context-type="linenumber">71,72</context>
@@ -2991,20 +2993,27 @@
       </trans-unit>
       <trans-unit id="208845294817677439" datatype="html">
         <source> Restart game </source>
+        <target> Recommencer une partie </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
-          <context context-type="linenumber">81,84</context>
+          <context context-type="linenumber">81,85</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="349220502259721473" datatype="html">
-        <source> Passer a turn </source>
+      <trans-unit id="6980197840325276209" datatype="html">
+        <source> Pass a turn </source>
+        <target> Passer un tour </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
           <context context-type="linenumber">100,102</context>
         </context-group>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
+          <context context-type="linenumber">105,106</context>
+        </context-group>
       </trans-unit>
       <trans-unit id="363427143833076602" datatype="html">
         <source> Take move back </source>
+        <target> Reprendre un coup </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.html</context>
           <context context-type="linenumber">107</context>
@@ -3012,6 +3021,7 @@
       </trans-unit>
       <trans-unit id="1944212987695444934" datatype="html">
         <source>Turn n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gamePartSlice.turn + 1 }}"/></source>
+        <source>Tour n°<x id="INTERPOLATION" equiv-text="{{ compo.rules.node.gamePartSlice.turn + 1 }}"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.ts</context>
           <context context-type="linenumber">37</context>
@@ -3019,6 +3029,7 @@
       </trans-unit>
       <trans-unit id="5675185658977082941" datatype="html">
         <source>Player <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
+        <source>Joueur <x id="PH" equiv-text="gameStatus.winner.value + 1"/></source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/local-game-wrapper/local-game-wrapper.component.ts</context>
           <context context-type="linenumber">73</context>
@@ -3026,6 +3037,7 @@
       </trans-unit>
       <trans-unit id="515727987845404926" datatype="html">
         <source> It is your turn. </source>
+        <target> Ce n'est pas votre tour. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">24,25</context>
@@ -3033,6 +3045,7 @@
       </trans-unit>
       <trans-unit id="1992339978981826120" datatype="html">
         <source> It is <x id="INTERPOLATION" equiv-text="{{ currentPlayer }}"/>&apos;s turn. </source>
+        <target> C'est le tour de <x id="INTERPOLATION" equiv-text="{{ currentPlayer }}"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">34,20</context>
@@ -3040,6 +3053,7 @@
       </trans-unit>
       <trans-unit id="5217544685559946950" datatype="html">
         <source> Resign </source>
+        <target> Abandonner </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">50,52</context>
@@ -3047,6 +3061,7 @@
       </trans-unit>
       <trans-unit id="4084373978972803762" datatype="html">
         <source> Propose a draw </source>
+        <target> Proposr un match nul </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">66,69</context>
@@ -3054,41 +3069,39 @@
       </trans-unit>
       <trans-unit id="772509734777361990" datatype="html">
         <source> Accept draw </source>
+        <target> Accepter un match nul </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">79,82</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="3995164305280944204" datatype="html">
-        <source> Reect draw </source>
+      <trans-unit id="2984356495884926241" datatype="html">
+        <source> Reject draw </source>
+        <target> Refuser un match nul </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">91,94</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6980197840325276209" datatype="html">
-        <source> Pass a turn </source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
-          <context context-type="linenumber">105,106</context>
-        </context-group>
-      </trans-unit>
       <trans-unit id="101333213054798052" datatype="html">
         <source> Accept take back </source>
+        <target> Autoriser à reprendre un coup </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">117,118</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3007286462548205548" datatype="html">
-        <source> Reject take pback </source>
+        <source> Reject take back </source>
+        <target> Refuser à reprendre un coup </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
-          <context context-type="linenumber">123,124</context>
+          <context context-type="linenumber">123</context>
         </context-group>
       </trans-unit>
       <trans-unit id="1601597703777069856" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit. You won.</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a épuisé son temps. Vous avez gagné.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">126,122</context>
@@ -3096,6 +3109,7 @@
       </trans-unit>
       <trans-unit id="7814033294193818165" datatype="html">
         <source>You reached your time limit.</source>
+        <target>Vous avez épuisé votre temps.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">128,130</context>
@@ -3103,6 +3117,7 @@
       </trans-unit>
       <trans-unit id="2658606681190400847" datatype="html">
         <source> Ask to take back one move </source>
+        <target> Demander à reprendre un coup </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">130,134</context>
@@ -3110,6 +3125,7 @@
       </trans-unit>
       <trans-unit id="2826140657122926749" datatype="html">
         <source>You resigned.</source>
+        <target>Vous avez abandonné.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">131,135</context>
@@ -3117,6 +3133,7 @@
       </trans-unit>
       <trans-unit id="2324913504104154958" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has reached their time limit.</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a épuisé sa limite de temps.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">143,124</context>
@@ -3124,6 +3141,7 @@
       </trans-unit>
       <trans-unit id="1913653344423124733" datatype="html">
         <source> Go back to server </source>
+        <target> Retourner au serveur </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">143,146</context>
@@ -3131,6 +3149,7 @@
       </trans-unit>
       <trans-unit id="7250880851290385128" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> has resigned.</source>
+        <source><x id="INTERPOLATION" equiv-text="{{ currentPart.getLoser() }}"/> a abandonné.</source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">148,130</context>
@@ -3138,6 +3157,7 @@
       </trans-unit>
       <trans-unit id="1327264446321721454" datatype="html">
         <source> Propose to replay the game </source>
+        <source> Proposer un rematch </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">159,165</context>
@@ -3145,6 +3165,7 @@
       </trans-unit>
       <trans-unit id="7815479892408473764" datatype="html">
         <source>You won.</source>
+        <target>Vous avez gagné.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">160,164</context>
@@ -3152,6 +3173,7 @@
       </trans-unit>
       <trans-unit id="860662988722297223" datatype="html">
         <source>You lost.</source>
+        <target>Vous avez perdu.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">171</context>
@@ -3159,6 +3181,7 @@
       </trans-unit>
       <trans-unit id="4077326990043792033" datatype="html">
         <source> Accept to replay the game </source>
+        <target> Accepter le rematch </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.html</context>
           <context context-type="linenumber">171</context>
@@ -3173,6 +3196,7 @@
       </trans-unit>
       <trans-unit id="715032829765584790" datatype="html">
         <source>vs.</source>
+        <target>vs.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.ts</context>
           <context context-type="linenumber">80,82</context>
@@ -3180,6 +3204,7 @@
       </trans-unit>
       <trans-unit id="5716137659647839531" datatype="html">
         <source>Turn n° <x id="INTERPOLATION" equiv-text="{{ currentPart.getTurn() + 1 }}"/></source>
+        <target>Tour n° <x id="INTERPOLATION" equiv-text="{{ currentPart.getTurn() + 1 }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/online-game-wrapper/online-game-wrapper.component.ts</context>
           <context context-type="linenumber">91</context>
@@ -3187,6 +3212,7 @@
       </trans-unit>
       <trans-unit id="5056292777668083757" datatype="html">
         <source>Click on the opponent against which you would like to play.</source>
+        <target>Cliquez sur l'adversaire contre lequel vous souhaitez jouer.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">112,115</context>
@@ -3194,6 +3220,7 @@
       </trans-unit>
       <trans-unit id="8953033926734869941" datatype="html">
         <source>Name</source>
+        <target>Nom</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">121,122</context>
@@ -3201,6 +3228,7 @@
       </trans-unit>
       <trans-unit id="3193976279273491157" datatype="html">
         <source>Actions</source>
+        <target>Actions</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">127,128</context>
@@ -3208,13 +3236,15 @@
       </trans-unit>
       <trans-unit id="8698515801873408462" datatype="html">
         <source>Pick</source>
+        <target>Sélectionner</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">140,141</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3841825701290475877" datatype="html">
-        <source>Change the configuration</source>
+        <source>Change configuration</source>
+        <target>Chaner la configuration</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">150,152</context>
@@ -3222,6 +3252,7 @@
       </trans-unit>
       <trans-unit id="4046928906081232002" datatype="html">
         <source>Configuration proposal</source>
+        <target>Proposition de configuration</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">166,168</context>
@@ -3229,6 +3260,7 @@
       </trans-unit>
       <trans-unit id="1717852736755060898" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> proposes to play a </source>
+        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> propose une partie </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">177,174</context>
@@ -3236,13 +3268,15 @@
       </trans-unit>
       <trans-unit id="3962623157898068441" datatype="html">
         <source> You have been selected as the opponent.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is modifying the configuration. </source>
+        <source> Vous avez été sélectionné comme advrsaire..<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> est en train de modifier la configuration. </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">178,167</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3408370521380288957" datatype="html">
-        <source>game, where :</source>
+        <source>game, where:</source>
+        <target>où :</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">179,182</context>
@@ -3250,6 +3284,7 @@
       </trans-unit>
       <trans-unit id="8910936652326773097" datatype="html">
         <source>a turn lasts at most </source>
+        <target>un tour dure maximum </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">189,192</context>
@@ -3257,6 +3292,7 @@
       </trans-unit>
       <trans-unit id="8575796229050083313" datatype="html">
         <source> you play first </source>
+        <target> vous jouez en premier </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">192</context>
@@ -3264,6 +3300,7 @@
       </trans-unit>
       <trans-unit id="4100836436246650741" datatype="html">
         <source>the game lasts at most </source>
+        <target>la partie dure maximum </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">196,198</context>
@@ -3271,6 +3308,7 @@
       </trans-unit>
       <trans-unit id="6328752226411869823" datatype="html">
         <source> the first player is random </source>
+        <target> le premier joueur est tiré au sort </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">198,202</context>
@@ -3278,6 +3316,7 @@
       </trans-unit>
       <trans-unit id="5176672264547312712" datatype="html">
         <source>per player</source>
+        <target>par joueur</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">212,213</context>
@@ -3297,6 +3336,7 @@
       </trans-unit>
       <trans-unit id="7265061399015519876" datatype="html">
         <source>One moment...</source>
+        <target>Un instant...</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">213,214</context>
@@ -3304,6 +3344,7 @@
       </trans-unit>
       <trans-unit id="54097432341676457" datatype="html">
         <source> Accept and start </source>
+        <target> Accepter et commencer </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">218</context>
@@ -3311,6 +3352,7 @@
       </trans-unit>
       <trans-unit id="4218388977213486334" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> has proposed a configuration to <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> a proposé une configuration à <x id="INTERPOLATION_1" equiv-text="{{ viewInfo.chosenOpponent }}"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">218,213</context>
@@ -3318,6 +3360,7 @@
       </trans-unit>
       <trans-unit id="5068486659312004369" datatype="html">
         <source><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> is configuring the game.</source>
+        <target><x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> est en train de configurer la partie.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">218,212</context>
@@ -3325,6 +3368,7 @@
       </trans-unit>
       <trans-unit id="4301395065979241317" datatype="html">
         <source>standard</source>
+        <target>standard</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">218</context>
@@ -3332,6 +3376,7 @@
       </trans-unit>
       <trans-unit id="4002042094548821129" datatype="html">
         <source>blitz</source>
+        <target>blitz</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">218</context>
@@ -3339,6 +3384,7 @@
       </trans-unit>
       <trans-unit id="4412958068611913614" datatype="html">
         <source>custom</source>
+        <target>personnalisée</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">218</context>
@@ -3346,6 +3392,7 @@
       </trans-unit>
       <trans-unit id="6855081011526391729" datatype="html">
         <source> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> plays first </source>
+        <target> <x id="INTERPOLATION" equiv-text="{{ viewInfo.creator }}"/> joue en premier </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.html</context>
           <context context-type="linenumber">218,183</context>
@@ -3353,6 +3400,7 @@
       </trans-unit>
       <trans-unit id="353130366888208691" datatype="html">
         <source>Game creation</source>
+        <target>Création de partie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">59,61</context>
@@ -3360,6 +3408,7 @@
       </trans-unit>
       <trans-unit id="1102665189929883417" datatype="html">
         <source>Random</source>
+        <target>Aléatoire</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">87,88</context>
@@ -3367,6 +3416,7 @@
       </trans-unit>
       <trans-unit id="720557322859638078" datatype="html">
         <source>You</source>
+        <target>Vous</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">96,97</context>
@@ -3374,6 +3424,7 @@
       </trans-unit>
       <trans-unit id="3691607884455851073" datatype="html">
         <source>Game type</source>
+        <target>Type de jeu</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">106,108</context>
@@ -3381,6 +3432,7 @@
       </trans-unit>
       <trans-unit id="2798807656507405918" datatype="html">
         <source>Standard</source>
+        <target>Standard</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">113,114</context>
@@ -3388,6 +3440,7 @@
       </trans-unit>
       <trans-unit id="3120304451891406993" datatype="html">
         <source>Maximal turn duration: </source>
+        <target>Durée maximale d'un tour : </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">121,122</context>
@@ -3397,50 +3450,53 @@
           <context context-type="linenumber">159,161</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="17343658808973313" datatype="html">
-        <source>Maximal part duration: </source>
+      <trans-unit id="1825754272138575872" datatype="html">
+        <source>Maximal game duration: </source>
+        <target>Durée maximale de la partie : </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">130,132</context>
         </context-group>
-      </trans-unit>
-      <trans-unit id="4073116770334354573" datatype="html">
-        <source>Blitz</source>
-        <context-group purpose="location">
-          <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
-          <context context-type="linenumber">148,149</context>
-        </context-group>
-      </trans-unit>
-      <trans-unit id="2555236184905191663" datatype="html">
-        <source>Maximal part duration : </source>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">169,171</context>
         </context-group>
       </trans-unit>
+      <trans-unit id="4073116770334354573" datatype="html">
+        <source>Blitz</source>
+        <target>Blitz</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
+          <context context-type="linenumber">148,149</context>
+        </context-group>
+      </trans-unit>
       <trans-unit id="7590013429208346303" datatype="html">
         <source>Custom</source>
+        <target>Personnalisée</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">186,187</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="2643298757337906298" datatype="html">
-        <source>Propose the configuration</source>
+      <trans-unit id="1612262766071402559" datatype="html">
+        <source>Propose configuration</source>
+        <target>Proposer la configuration</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">196,197</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5389136508020653846" datatype="html">
-        <source>Cancel the game</source>
+      <trans-unit id="6482290849972032593" datatype="html">
+        <source>Cancel game</source>
+        <target>Annuler la partie</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
-          <context context-type="linenumber">205,206</context>
+          <context context-type="linenumber">203,206</context>
         </context-group>
       </trans-unit>
       <trans-unit id="6102520113052735150" datatype="html">
         <source>The opponent</source>
+        <target>L'adversaire</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">215,216</context>
@@ -3448,20 +3504,23 @@
       </trans-unit>
       <trans-unit id="2755842411588115135" datatype="html">
         <source>Maximal turn duration:</source>
+        <target>Durée maximale d'un tour :</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
-          <context context-type="linenumber">227,229</context>
+          <context context-type="linenumber">227,228</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="1941013065180695072" datatype="html">
-        <source>Maximal part duration :</source>
+      <trans-unit id="919799632623109347" datatype="html">
+        <source>Maximal game duration:</source>
+        <target>Durée maximale de la partie :</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
-          <context context-type="linenumber">240,242</context>
+          <context context-type="linenumber">240,241</context>
         </context-group>
       </trans-unit>
       <trans-unit id="3474603094089099622" datatype="html">
         <source> Potential opponents that join the game will appear here.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Wait for an opponent to join, so that you can pick one. </source>
+        <target> Les adversaires potentiels qui rejoignent la partie apparaîtront ici.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Attendez qu'un adversaire vous rejoigne pour pouvoir en choisir un. </target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">269</context>
@@ -3469,6 +3528,7 @@
       </trans-unit>
       <trans-unit id="7137133530752645682" datatype="html">
         <source><x id="PH" equiv-text="userPseudo"/> left the game, please pick another opponent.</source>
+        <target><x id="PH" equiv-text="userPseudo"/> a quitté la partie, veuillez choisir un autre adversaire.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/wrapper-components/part-creation/part-creation.component.ts</context>
           <context context-type="linenumber">372</context>
@@ -3476,6 +3536,7 @@
       </trans-unit>
       <trans-unit id="1299772099949111249" datatype="html">
         <source>You cannot distribute from the enemy&apos;s home.</source>
+        <target>Vous ne pouvez pas distribuer depuis les maisons ennemies.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/awale/AwaleFailure.ts</context>
           <context context-type="linenumber">2,4</context>
@@ -3483,6 +3544,7 @@
       </trans-unit>
       <trans-unit id="4189334243342030215" datatype="html">
         <source>You should choose a non-empty house to distribute.</source>
+        <target>Vous devez choisir une maison contenant des graines à distribuer.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/awale/AwaleFailure.ts</context>
           <context context-type="linenumber">4,6</context>
@@ -3490,6 +3552,7 @@
       </trans-unit>
       <trans-unit id="271201472468525420" datatype="html">
         <source>You should distribute but you do not.</source>
+        <target>Vous devez distribuer mais vous ne le faites pas.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/awale/AwaleFailure.ts</context>
           <context context-type="linenumber">6,8</context>
@@ -3497,13 +3560,15 @@
       </trans-unit>
       <trans-unit id="8041478089077572634" datatype="html">
         <source>Invalid move distance: your piece must land on one of the closest six triangles with the same color.</source>
+        <target>Distance de déplacement illégal, votre pion doit atterir sur l'un des six triangles de même couleur les plus proches.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/coerceo/CoerceoFailure.ts</context>
           <context context-type="linenumber">3,5</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="9059336569352831324" datatype="html">
-        <source>You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it..</source>
+      <trans-unit id="117738177627572036" datatype="html">
+        <source>You do not have enough tiles to exchange in order to capture this piece. Pick one of your piece and move it.</source>
+        <target>Vous n'avez pas assez de tuiles à échanger pour capturer cette pièce. Choisissez une de vos pièces et déplacez-la.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/coerceo/CoerceoFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3511,6 +3576,7 @@
       </trans-unit>
       <trans-unit id="6928762188180587282" datatype="html">
         <source>Your first click must be on the piece that you want to move, or on a piece of your opponent that you want to exchange against two tiles.</source>
+        <target>Votre premier clic doit être sur une de vos pièce pour la déplacer, ou sur une pièce ennemie pour l'échanger contre deux tuiles.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/coerceo/CoerceoFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3518,6 +3584,7 @@
       </trans-unit>
       <trans-unit id="6829098107854171134" datatype="html">
         <source>You cannot capture on a removed tile.</source>
+        <target>Vous ne pouvez pas capturer depuis une tuile supprimée.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/coerceo/CoerceoFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -3525,6 +3592,7 @@
       </trans-unit>
       <trans-unit id="7912425794839124402" datatype="html">
         <source>You cannot capture from an empty case.</source>
+        <target>Vous ne pouvez pas capturer depuis une case vide.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/coerceo/CoerceoFailure.ts</context>
           <context context-type="linenumber">11,13</context>
@@ -3532,6 +3600,7 @@
       </trans-unit>
       <trans-unit id="1137390440747939689" datatype="html">
         <source>You cannot capture your own pieces.</source>
+        <target>Vous ne pouvez pas capturer vos propres pièces.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/coerceo/CoerceoFailure.ts</context>
           <context context-type="linenumber">13,15</context>
@@ -3539,6 +3608,7 @@
       </trans-unit>
       <trans-unit id="2559409853005498554" datatype="html">
         <source>Invalid coordinate, please select a piece on the board.</source>
+        <target>Coordonnée invalide, veuillez sélectionner un pièce sur le plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/dvonn/DvonnFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3546,6 +3616,7 @@
       </trans-unit>
       <trans-unit id="5012524143343727947" datatype="html">
         <source>You must select a piece or a stack of your color.</source>
+        <target>Veuillez choisir une des piles vous appartenant.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/dvonn/DvonnFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3553,6 +3624,7 @@
       </trans-unit>
       <trans-unit id="2246582083078468892" datatype="html">
         <source>You must select a non-empty stack.</source>
+        <target>Veuillez choisir une pile qui n'est pas vide.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/dvonn/DvonnFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3560,6 +3632,7 @@
       </trans-unit>
       <trans-unit id="6722757334881312495" datatype="html">
         <source>This stack cannot be moved because all 6 of its neighbors are not empty. You must select a stack with strictly less than 6 neighbors.</source>
+        <target>Cette pile ne peut pas se déplacer car les 6 cases voisines sont occupées. Veuillez choisir une pièce avec strictement moins de 6 pièces voisines.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/dvonn/DvonnFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -3567,6 +3640,7 @@
       </trans-unit>
       <trans-unit id="5168553898318691665" datatype="html">
         <source>This piece cannot move because its move would never end on another piece.</source>
+        <target>Cette pile ne peut pas se déplacer car les 6 cases voisines sont occupées. Veuillez choisir une pièce avec strictement moins de 6 pièces voisines.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/dvonn/DvonnFailure.ts</context>
           <context context-type="linenumber">11,13</context>
@@ -3574,6 +3648,7 @@
       </trans-unit>
       <trans-unit id="936435613496447162" datatype="html">
         <source>The length of the move must be equal to the size of the stack.</source>
+        <target>La distance effectuée par le mouvement doit correspondre à la taille de la pile de pièces.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/dvonn/DvonnFailure.ts</context>
           <context context-type="linenumber">13,15</context>
@@ -3581,6 +3656,7 @@
       </trans-unit>
       <trans-unit id="1541194927190009464" datatype="html">
         <source>The move must end on an occupied case.</source>
+        <target>Le déplacement doit se terminer sur une case occupée.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/dvonn/DvonnFailure.ts</context>
           <context context-type="linenumber">15,16</context>
@@ -3588,6 +3664,7 @@
       </trans-unit>
       <trans-unit id="4338680680211212504" datatype="html">
         <source>You must pick a piece of your own color.</source>
+        <target>Veuillez utiliser une pièce à votre couleur.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/encapsule/EncapsuleFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3595,6 +3672,7 @@
       </trans-unit>
       <trans-unit id="7742194598110022040" datatype="html">
         <source>You must pick one of the remaining pieces.</source>
+        <target>Veuillez utiliser une des pièces restantes.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/encapsule/EncapsuleFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3602,6 +3680,7 @@
       </trans-unit>
       <trans-unit id="1115304670559099393" datatype="html">
         <source>You must put your piece on an empty case or on a smaller piece.</source>
+        <target>Vous devez placer votre pièce sur une case vide ou sur une pièce plus petite.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/encapsule/EncapsuleFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3609,6 +3688,7 @@
       </trans-unit>
       <trans-unit id="5649666705061470825" datatype="html">
         <source>You must pick your piece among the remaining ones.</source>
+        <target>Veuillez choisir une de vos pièces parmi les pièces restantes.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/encapsule/EncapsuleFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -3616,6 +3696,7 @@
       </trans-unit>
       <trans-unit id="5765710314681730614" datatype="html">
         <source>You must pick one of your piece or one case where you have the largest piece.</source>
+        <target>Veuillez sélectionner une de vos pièces ou une case où vous avez la pièce la plus grande.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/encapsule/EncapsuleFailure.ts</context>
           <context context-type="linenumber">11,13</context>
@@ -3623,6 +3704,7 @@
       </trans-unit>
       <trans-unit id="8687283741772762439" datatype="html">
         <source>You must select a different landing case than the case where the move originates from.</source>
+        <target>Veuillez sélectionner une case différente de la case d'origine du mouvement.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/encapsule/EncapsuleFailure.ts</context>
           <context context-type="linenumber">13,15</context>
@@ -3630,6 +3712,7 @@
       </trans-unit>
       <trans-unit id="6641393138492176155" datatype="html">
         <source>You are performing a move, you must select a landing case.</source>
+        <target>Vous effectuez un déplacement, choisissez votre case de destination.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/encapsule/EncapsuleFailure.ts</context>
           <context context-type="linenumber">15,16</context>
@@ -3637,6 +3720,7 @@
       </trans-unit>
       <trans-unit id="5286654284500475712" datatype="html">
         <source>The move distance of youh phalanx puts it out of the board.</source>
+        <target>La distance de déplacement de votre phalange la fait sortir du plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3644,13 +3728,15 @@
       </trans-unit>
       <trans-unit id="9197994342964027306" datatype="html">
         <source>There is something in the way of your phalanx.</source>
+        <target>La distance de déplacement de votre phalange la fait sortir du plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">5,7</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="5559537486499872195" datatype="html">
-        <source>Votre phalange doit être plus grande que celle qu&apos;elle tente de capturer.</source>
+      <trans-unit id="5389576774289628382" datatype="html">
+        <source>Your phalanx must be bigger than the one you are capturing.</source>
+        <target>Votre phalange doit être plus grande que celle qu&apos;elle tente de capturer.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3658,6 +3744,7 @@
       </trans-unit>
       <trans-unit id="1701716594504823738" datatype="html">
         <source>This case is not aligned with the selected piece.</source>
+        <target>Cette case n'est pas alignée avec la pièce sélectionnée.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -3665,6 +3752,7 @@
       </trans-unit>
       <trans-unit id="6295939632068558083" datatype="html">
         <source>A single piece can only move by one case.</source>
+        <target>Une pièce seule ne peut bouger que d'une case.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">11,13</context>
@@ -3672,6 +3760,7 @@
       </trans-unit>
       <trans-unit id="3099022711875888574" datatype="html">
         <source>A single piece cannot make a capture.</source>
+        <target>Une pièce seule ne peut pas effectuer de capture.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">13,15</context>
@@ -3679,6 +3768,7 @@
       </trans-unit>
       <trans-unit id="5544439737860351447" datatype="html">
         <source>This case is not aligned with the direction of the phalanx.</source>
+        <target>Cette pièce n'est pas alignée avec la direction de la phalange</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">15,17</context>
@@ -3686,6 +3776,7 @@
       </trans-unit>
       <trans-unit id="5279717712059022209" datatype="html">
         <source>A phalanx can&apos;t contain pieces outside of the board.</source>
+        <target>Une phalange ne peut pas contenir de pièces hors du plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">17,19</context>
@@ -3693,6 +3784,7 @@
       </trans-unit>
       <trans-unit id="5277656779558415819" datatype="html">
         <source>A phalanx can&apos;t contain an empty case.</source>
+        <target>Une phalange ne peut pas contenir de cases vides.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">19,21</context>
@@ -3700,13 +3792,15 @@
       </trans-unit>
       <trans-unit id="3236442670175894362" datatype="html">
         <source>A phalanx can&apos;t contain an piece of the opponent.</source>
+        <target>Une phalange ne peut pas contenir de pièces de l'adversaire.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/epaminondas/EpaminondasFailure.ts</context>
           <context context-type="linenumber">21,23</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="8183145231490018490" datatype="html">
-        <source>You can only capture when 4 of your pieces are aligned, and it is not the case..</source>
+      <trans-unit id="2282084492361398122" datatype="html">
+        <source>You can only capture when 4 of your pieces are aligned, and it is not the case.</source>
+        <target>Une capture ne peut que se faire si 4 pièces de votre couleurs sont alignées, ce n'est pas le cas.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3714,6 +3808,7 @@
       </trans-unit>
       <trans-unit id="148955503986855726" datatype="html">
         <source>You must select a valid capture tha tcontains 4 pieces of more.</source>
+        <target>Veuillez choisir une capture valide qui contient 4 pièces ou plus.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3721,6 +3816,7 @@
       </trans-unit>
       <trans-unit id="8805744649589430247" datatype="html">
         <source>There are captures remaining.</source>
+        <target>Il vous reste des captures à effectuer.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3728,6 +3824,7 @@
       </trans-unit>
       <trans-unit id="4066335336000889411" datatype="html">
         <source>Pieces must be inserted in cases on the border of the board.</source>
+        <target>Les pièces doivent être placée sur une case du bord du plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -3735,6 +3832,7 @@
       </trans-unit>
       <trans-unit id="7875793227562861246" datatype="html">
         <source>You must select a valid placement direction.</source>
+        <target>Veuillez choisir une direction valide pour le déplacement.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">11,13</context>
@@ -3742,6 +3840,7 @@
       </trans-unit>
       <trans-unit id="7499755057028129050" datatype="html">
         <source>You must select a placement alongside the insertion case.</source>
+        <target>Veuillez choisir un placement avec une direction.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">13,15</context>
@@ -3749,6 +3848,7 @@
       </trans-unit>
       <trans-unit id="1848361274892061756" datatype="html">
         <source>You cannot place a piece on a complete line.</source>
+        <target>Veuillez effectuer un placement sur une ligne non complète.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">15,17</context>
@@ -3756,6 +3856,7 @@
       </trans-unit>
       <trans-unit id="8465153363902778945" datatype="html">
         <source>This case belongs to two captures. Please select another case in the capture you&apos;d like to take.</source>
+        <target>Veuillez sélectionner une autre case de la capture que vous souhaitez prendre, celle-ci appartient à deux captures.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">17,19</context>
@@ -3763,6 +3864,7 @@
       </trans-unit>
       <trans-unit id="8407980394441393807" datatype="html">
         <source>You must pick a capture.</source>
+        <target>Veuillez sélectionner une capture.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">19,21</context>
@@ -3770,6 +3872,7 @@
       </trans-unit>
       <trans-unit id="2286360594537932764" datatype="html">
         <source>You must select a destination case at a distance of 1 from the entrance.</source>
+        <target>Veuillez sélectionner une destination à une distance de 1 de l'entrée.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">21,23</context>
@@ -3777,6 +3880,7 @@
       </trans-unit>
       <trans-unit id="8273473311441149953" datatype="html">
         <source>You cannot insert a piece here, as all lines are full. Select another case.</source>
+        <target>Veuillez sélectionner une autre case, toutes les lignes pour ce placement sont complètes.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/GipfFailure.ts</context>
           <context context-type="linenumber">23,24</context>
@@ -3784,6 +3888,7 @@
       </trans-unit>
       <trans-unit id="998488653973742143" datatype="html">
         <source>Pieces of player <x id="INTERPOLATION" equiv-text="{{ player + 1 }}"/></source>
+        <target>Pièces du joueur <x id="INTERPOLATION" equiv-text="{{ player + 1 }}"/></target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/gipf/gipf.component.ts</context>
           <context context-type="linenumber">43</context>
@@ -3795,6 +3900,7 @@
       </trans-unit>
       <trans-unit id="4623213661894302841" datatype="html">
         <source>This move is a ko, you must play somewhere else before you can play in this case.</source>
+        <target>Ce mouvement est un ko, vous devez jouer ailleurs avant de pouvoir rejouer dans cette case.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/go/GoFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3802,6 +3908,7 @@
       </trans-unit>
       <trans-unit id="9197288705784594537" datatype="html">
         <source>We are not in playing nor in passed phase, you must mark stone as dead or alive or accept current board.</source>
+        <target>Nous ne sommes ni dans la phase jeu ni de passage, vous devez marquer une pièce comme vivante ou morte, ou accepter le tableau actuel.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/go/GoFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3809,6 +3916,7 @@
       </trans-unit>
       <trans-unit id="8693884034133977854" datatype="html">
         <source>Not countig or not accept.</source>
+        <target>Pas de comptage ou d'acceptation.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/go/GoFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3823,6 +3931,7 @@
       </trans-unit>
       <trans-unit id="3878972107071324960" datatype="html">
         <source>You cannot commit suicide.</source>
+        <target>Vous ne pouvez pas vous suicider.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/go/GoFailure.ts</context>
           <context context-type="linenumber">11,12</context>
@@ -3830,6 +3939,7 @@
       </trans-unit>
       <trans-unit id="3643526530572280396" datatype="html">
         <source>This piece is not of the color you have to play.</source>
+        <target>La pièce n'est pas de la couleur à jouer.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/kamisado/KamisadoFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3837,6 +3947,7 @@
       </trans-unit>
       <trans-unit id="5092181672584194050" datatype="html">
         <source>You must move to an empty case.</source>
+        <target>Vous devez vous déplacer vers une case vide.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/kamisado/KamisadoFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3844,6 +3955,7 @@
       </trans-unit>
       <trans-unit id="945155491646703687" datatype="html">
         <source>You can only move forward, orthogonally or diagonally.</source>
+        <target>Vous ne pouvez pas vous déplacer que vers l'avant orthogonalement ou diagonalement.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/kamisado/KamisadoFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3851,6 +3963,7 @@
       </trans-unit>
       <trans-unit id="551820034442685617" datatype="html">
         <source>This move is blocked by another piece.</source>
+        <target>Ce mouvement est obstrué.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/kamisado/KamisadoFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -3858,6 +3971,7 @@
       </trans-unit>
       <trans-unit id="3568920234618711065" datatype="html">
         <source>The game has ended.</source>
+        <target>La partie est finie.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/kamisado/KamisadoFailure.ts</context>
           <context context-type="linenumber">11,13</context>
@@ -3865,6 +3979,7 @@
       </trans-unit>
       <trans-unit id="1699965787783859469" datatype="html">
         <source>You must play with the selected piece.</source>
+        <target>Vous devez jouer avec la pièce déjà séléctionnée.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/kamisado/KamisadoFailure.ts</context>
           <context context-type="linenumber">13,14</context>
@@ -3872,6 +3987,7 @@
       </trans-unit>
       <trans-unit id="6387863170048380356" datatype="html">
         <source>Your move should have a length equal to the number of pieces that exist on the same line.</source>
+        <target>Vous devez vous effectuer un déplacement de longueur égale au nombre de pièces présente sur la ligne de votre déplacement.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/lines-of-action/LinesOfActionFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3879,6 +3995,7 @@
       </trans-unit>
       <trans-unit id="3931959709762726685" datatype="html">
         <source>You cannot jump over the opponent&apos;s pieces.</source>
+        <target>Vous ne pouvez pas passer au dessus d'une pièce ennemie.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/lines-of-action/LinesOfActionFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3886,6 +4003,7 @@
       </trans-unit>
       <trans-unit id="1549682374526776641" datatype="html">
         <source>You must select one of your pieces.</source>
+        <target>Veuillez sélectionner une de vos propres pièces.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/lines-of-action/LinesOfActionFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3893,6 +4011,7 @@
       </trans-unit>
       <trans-unit id="1376498600372177047" datatype="html">
         <source>This piece has no possible move, select another one.</source>
+        <target>Cette pièce n'a aucun mouvement possible, choisissez-en une autre.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/lines-of-action/LinesOfActionFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -3900,6 +4019,7 @@
       </trans-unit>
       <trans-unit id="1586272441819129629" datatype="html">
         <source>A move must be orthogonal or diagonal</source>
+        <target>Un mouvement dois se faire selon une direction orthogonale ou diagonale.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/lines-of-action/LinesOfActionFailure.ts</context>
           <context context-type="linenumber">11,12</context>
@@ -3907,6 +4027,7 @@
       </trans-unit>
       <trans-unit id="8220333311843814635" datatype="html">
         <source>This column is full. Put your piece in a non-full column.</source>
+        <target>Veuillez placer votre pièce dans une colonne non remplie.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/p4/P4Failure.ts</context>
           <context context-type="linenumber">3,4</context>
@@ -3914,6 +4035,7 @@
       </trans-unit>
       <trans-unit id="7427526746704736834" datatype="html">
         <source>If the block to turn is neutral, please just use rotationless move.</source>
+        <target>Si le block à tourner est neutre, veuillez utiliser un déplacement sans rotation.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/pentago/PentagoFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3921,6 +4043,7 @@
       </trans-unit>
       <trans-unit id="8527080130603276604" datatype="html">
         <source>No block is neutral, you must pick a block to rotate.</source>
+        <target>Aucun bloc n'étant neutre, vous devez choisir un bloc à faire tourner.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/pentago/PentagoFailure.ts</context>
           <context context-type="linenumber">5,6</context>
@@ -3928,6 +4051,7 @@
       </trans-unit>
       <trans-unit id="682762602217958961" datatype="html">
         <source>You must move your pieces upward.</source>
+        <target>Vous devez déplacer vos pièces vert le haut.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/pylos/PylosFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3935,6 +4059,7 @@
       </trans-unit>
       <trans-unit id="6176283295432118415" datatype="html">
         <source>You must start your move from one of your pieces.</source>
+        <target>Vous devez commencer votre mouvment depuis l'une de vos pièces.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/pylos/PylosFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3942,6 +4067,7 @@
       </trans-unit>
       <trans-unit id="155508093542570099" datatype="html">
         <source>Your move must have supporting pieces.</source>
+        <target>Votre mouvement doit avoir des piècs qui le supportent.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/pylos/PylosFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -3949,6 +4075,7 @@
       </trans-unit>
       <trans-unit id="3368649873659055707" datatype="html">
         <source>You cannot land there.</source>
+        <target>Vous ne pouvez pas aterrir ici.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/pylos/PylosFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -3956,6 +4083,7 @@
       </trans-unit>
       <trans-unit id="70110199629015603" datatype="html">
         <source>You cannot capture.</source>
+        <target>Vous ne pouvez pas capturer.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/pylos/PylosFailure.ts</context>
           <context context-type="linenumber">11,13</context>
@@ -3963,6 +4091,7 @@
       </trans-unit>
       <trans-unit id="1880810010962851052" datatype="html">
         <source>Your first capture is invalid.</source>
+        <target>Votre première capture est invalide.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/pylos/PylosFailure.ts</context>
           <context context-type="linenumber">13,15</context>
@@ -3970,6 +4099,7 @@
       </trans-unit>
       <trans-unit id="8839913211108039860" datatype="html">
         <source>Your second capture is invalid.</source>
+        <target>Votre seconde capture est invalide.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/pylos/PylosFailure.ts</context>
           <context context-type="linenumber">15,16</context>
@@ -3977,6 +4107,7 @@
       </trans-unit>
       <trans-unit id="5796940069053691279" datatype="html">
         <source>You must give a piece.</source>
+        <target>Vous devez donner une pièce à l'adversaire.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/quarto/QuartoFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -3984,6 +4115,7 @@
       </trans-unit>
       <trans-unit id="2211348294853632908" datatype="html">
         <source>That piece is already on the board.</source>
+        <target>Cette pièce est déjà sur le plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/quarto/QuartoFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -3991,6 +4123,7 @@
       </trans-unit>
       <trans-unit id="6246016939611902421" datatype="html">
         <source>You cannot give the piece that was in your hands.</source>
+        <target>Vous ne pouvez pas donner la pièce qui était dans vos mains.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/quarto/QuartoFailure.ts</context>
           <context context-type="linenumber">7,8</context>
@@ -3998,6 +4131,7 @@
       </trans-unit>
       <trans-unit id="1888585381205610800" datatype="html">
         <source>You must pick a case from the border of the board.</source>
+        <target>Case invalide, cliquez sur une case de l'extérieur du plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/quixo/QuixoFailure.ts</context>
           <context context-type="linenumber">3,4</context>
@@ -4005,6 +4139,7 @@
       </trans-unit>
       <trans-unit id="2829152398724302132" datatype="html">
         <source>Your move should switch at least one piece.</source>
+        <target>Votre mouvement doit faire se retourner au moins une pièce.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/reversi/ReversiFailure.ts</context>
           <context context-type="linenumber">3,4</context>
@@ -4012,6 +4147,7 @@
       </trans-unit>
       <trans-unit id="1803127538576890588" datatype="html">
         <source>You can only rebounce on dark cases.</source>
+        <target>On ne peux rebondir que sur les cases foncées.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/sahara/SaharaFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -4019,6 +4155,7 @@
       </trans-unit>
       <trans-unit id="1687206469582777898" datatype="html">
         <source>You can only rebound on empty cases.</source>
+        <target>Vous ne pouvez rebondir que sur les cases vides.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/sahara/SaharaFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -4026,6 +4163,7 @@
       </trans-unit>
       <trans-unit id="366304395805128715" datatype="html">
         <source>You must pick one of your pyramids first.</source>
+        <target>Vous devez d'abord choisir une de vos pyramides.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/sahara/SaharaFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -4033,6 +4171,7 @@
       </trans-unit>
       <trans-unit id="6312339673351478538" datatype="html">
         <source>You must pick one of your pyramids.</source>
+        <target>Vous devez choisir une de vos pyramides.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/sahara/SaharaFailure.ts</context>
           <context context-type="linenumber">9,10</context>
@@ -4040,6 +4179,7 @@
       </trans-unit>
       <trans-unit id="6486537372042375859" datatype="html">
         <source>You can move of up to two cases, not of <x id="PH" equiv-text="distance"/>.</source>
+        <target>Vous pouvez vous déplacer maximum de 2 cases, pas de <x id="PH" equiv-text="distance"/>.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/sahara/SaharaMove.ts</context>
           <context context-type="linenumber">52</context>
@@ -4047,6 +4187,7 @@
       </trans-unit>
       <trans-unit id="5162969671337604607" datatype="html">
         <source>You cannot insert a piece, all your pieces are already on the board.</source>
+        <target>Vous ne pouvez plus insérer, toutes vos pièces sont déjà sur le plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/siam/SiamFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -4054,6 +4195,7 @@
       </trans-unit>
       <trans-unit id="9023282926383098639" datatype="html">
         <source>You do not have enough force to push.</source>
+        <target>Vous ne pouvez pas pousser, vous n'avez pas assez de force.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/siam/SiamFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -4061,6 +4203,7 @@
       </trans-unit>
       <trans-unit id="2764100637673917767" datatype="html">
         <source>You cannot turn and move forward at the same time.</source>
+        <target>Vous ne pouvez pas tourner et avancer en même temps.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/siam/SiamFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -4068,6 +4211,7 @@
       </trans-unit>
       <trans-unit id="2533760570032755409" datatype="html">
         <source>Your push is invalid: it is either not straight, is not pushing anything, or is leaving the board.</source>
+        <target>Votre poussé est invalide: elle n'est pas droite, ne pousse rien, ou sort du plateau.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/siam/SiamFailure.ts</context>
           <context context-type="linenumber">9,10</context>
@@ -4075,6 +4219,7 @@
       </trans-unit>
       <trans-unit id="7107364486507912038" datatype="html">
         <source>You cannot move yet. Pick a case where you will put a new piece.</source>
+        <target>Vous ne pouvez pas encore effectuer de déplacement. Choisissez une case où déposer une pièce.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/six/SixFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -4082,6 +4227,7 @@
       </trans-unit>
       <trans-unit id="4851986227613573606" datatype="html">
         <source>Several groups are of same size, you must pick the one to keep.</source>
+        <target>Il y a plusieurs groupes de la même taille, vous devez en choisir un à garder.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/six/SixFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -4089,6 +4235,7 @@
       </trans-unit>
       <trans-unit id="586640917828080274" datatype="html">
         <source>You cannot choose which part to keep when one is smaller than the other.</source>
+        <target>Vous ne pouvez pas choisir un groupe à garder quand l'un est plus petit que l'autre.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/six/SixFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -4096,6 +4243,7 @@
       </trans-unit>
       <trans-unit id="8942923511988910642" datatype="html">
         <source>You cannot put new pieces anymore. Pick a piece to move.</source>
+        <target>Vous ne pouvez plus déposer de pièces, choisissez d'abord une pièce à déplacer.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/six/SixFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -4103,6 +4251,7 @@
       </trans-unit>
       <trans-unit id="1582776814244416485" datatype="html">
         <source>You must choose one of the biggest groups to keep it.</source>
+        <target>Vous devez choisir un des plus grands groupes pour le conserver.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/six/SixFailure.ts</context>
           <context context-type="linenumber">11,13</context>
@@ -4110,6 +4259,7 @@
       </trans-unit>
       <trans-unit id="2393396397477731629" datatype="html">
         <source>You cannot pick an empty case. Pick one of the biggest groups.</source>
+        <target>Vous ne pouver choisir une pièce vide, choisissez un des plus grands groupes.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/six/SixFailure.ts</context>
           <context context-type="linenumber">13,15</context>
@@ -4117,6 +4267,7 @@
       </trans-unit>
       <trans-unit id="4110234759792602964" datatype="html">
         <source>You must put this piece next to another piece.</source>
+        <target>Vous devez faire atterir cette pièce à côté d'une autre pièce.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/six/SixFailure.ts</context>
           <context context-type="linenumber">15,16</context>
@@ -4124,6 +4275,7 @@
       </trans-unit>
       <trans-unit id="1960981802689860827" datatype="html">
         <source>For your first click, pick one of your pieces.</source>
+        <target>Pour votre premier clic, choisissez une de vos pièces.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/tablut/TablutFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -4131,6 +4283,7 @@
       </trans-unit>
       <trans-unit id="7993748371708187543" datatype="html">
         <source>You cannot land on an occupied case.</source>
+        <target>Vous ne pouvez pas aterrir sur une case occupée.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/tablut/TablutFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -4138,6 +4291,7 @@
       </trans-unit>
       <trans-unit id="299718976758118618" datatype="html">
         <source>Once you left the central throne, you cannot return to it.</source>
+        <target>Une fois que vous avez quitté le trône central, vous ne pouvez pas y retourner.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/tablut/TablutFailure.ts</context>
           <context context-type="linenumber">7,9</context>
@@ -4145,6 +4299,7 @@
       </trans-unit>
       <trans-unit id="1513340614663053294" datatype="html">
         <source>Soldiers cannot sit on the throne.</source>
+        <target>Les soldats n'ont pas le droit de se poser sur le throne.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/tablut/TablutFailure.ts</context>
           <context context-type="linenumber">9,11</context>
@@ -4152,6 +4307,7 @@
       </trans-unit>
       <trans-unit id="5525790446318724698" datatype="html">
         <source>Something is in the way.</source>
+        <target>Le chemin est obstrué.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/games/tablut/TablutFailure.ts</context>
           <context context-type="linenumber">11,12</context>
@@ -4159,6 +4315,7 @@
       </trans-unit>
       <trans-unit id="3294765785219703641" datatype="html">
         <source>You cannot pick a piece from the opponent.</source>
+        <target>Vous ne pouvez pas choisir une pièce de l'ennemi.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
           <context context-type="linenumber">3,5</context>
@@ -4166,6 +4323,7 @@
       </trans-unit>
       <trans-unit id="4487014416852462120" datatype="html">
         <source>You must click on an empty case.</source>
+        <target>Vous devez cliquer sur une case vide.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
           <context context-type="linenumber">5,7</context>
@@ -4173,13 +4331,23 @@
       </trans-unit>
       <trans-unit id="7620420835402511255" datatype="html">
         <source>Your landing case should be empty or contain a piece of the opponent.</source>
+        <target>Votre case d'arrivée doit être vide ou contenir une pièce ennemie.</target>/
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
           <context context-type="linenumber">7,9</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="7277656953237335293" datatype="html">
-        <source>You must drop your piece on an empty case..</source>
+      <trans-unit id="6986218395331151516" datatype="html">
+        <source>You must pick one of your pieces.</source>
+        <target>Vous devez sélectionner l'une de vos piècs.</target>
+        <context-group purpose="location">
+          <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
+          <context context-type="linenumber">9,11</context>
+        </context-group>
+      </trans-unit>
+      <trans-unit id="8217216836943122905" datatype="html">
+        <source>You must drop your piece on an empty case.</source>
+        <target>Vous devez déposer votre pièce sur une case vide.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
           <context context-type="linenumber">11,13</context>
@@ -4187,6 +4355,7 @@
       </trans-unit>
       <trans-unit id="2056314675813734949" datatype="html">
         <source>You cannot pass your turn.</source>
+        <target>Vous ne pouvez pas passer votre tour.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
           <context context-type="linenumber">13,15</context>
@@ -4194,6 +4363,7 @@
       </trans-unit>
       <trans-unit id="5019447873100403310" datatype="html">
         <source>You must pass your turn.</source>
+        <target>Vous êtes obligés de passer votre tour.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
           <context context-type="linenumber">15,17</context>
@@ -4201,6 +4371,7 @@
       </trans-unit>
       <trans-unit id="2052764182353187708" datatype="html">
         <source>You have selected an empty case, you must select one of your own pieces.</source>
+        <target>Vous avez sélectionné une case vide, vous devez sélectionner l'une de vos pièces.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/jscaip/RulesFailure.ts</context>
           <context context-type="linenumber">17,18</context>
@@ -4208,6 +4379,7 @@
       </trans-unit>
       <trans-unit id="7463436103435995523" datatype="html">
         <source>You are already in a game. Finish it or cancel it first.</source>
+        <target>Vous avez déjà une partie en cours. Terminez la ou annulez la d'abord.</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/services/GameServiceMessages.ts</context>
           <context context-type="linenumber">3,4</context>
