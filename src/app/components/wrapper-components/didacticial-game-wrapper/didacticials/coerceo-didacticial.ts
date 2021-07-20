@@ -1,12 +1,13 @@
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
-import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
+import { CoerceoPartSlice } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-const _: number = CoerceoPiece.EMPTY.value;
-const N: number = CoerceoPiece.NONE.value;
-const O: number = CoerceoPiece.ZERO.value;
-const X: number = CoerceoPiece.ONE.value;
+const _: number = FourStatePiece.EMPTY.value;
+const N: number = FourStatePiece.NONE.value;
+const O: number = FourStatePiece.ZERO.value;
+const X: number = FourStatePiece.ONE.value;
 
 export const coerceoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(

@@ -67,10 +67,14 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
                         .get()
                         .getNextValid(horizontal)
                         .getOrNull();
-                    if (secondNeighboors && slice.getBoardAt(secondNeighboors) === currentPlayer) {
+                    if (secondNeighboors != null &&
+                        slice.getBoardAt(secondNeighboors) === currentPlayer)
+                    {
                         const thirdDirection: Orthogonal = vertical.getOpposite();
                         const thirdNeighboors: PylosCoord = secondNeighboors.getNextValid(thirdDirection).get();
-                        if (slice.getBoardAt(thirdNeighboors) === currentPlayer) return true;
+                        if (slice.getBoardAt(thirdNeighboors) === currentPlayer) {
+                            return true;
+                        }
                     }
                 }
             }
@@ -163,7 +167,7 @@ export class PylosRules extends Rules<PylosMove, PylosPartSlice> {
         }
 
         if (move.firstCapture.isPresent()) {
-            if (!PylosRules.canCapture(slice, move.landingCoord)) {
+            if (PylosRules.canCapture(slice, move.landingCoord) === false) {
                 return { legal: MGPValidation.failure(PylosFailure.CANNOT_CAPTURE) };
             }
 

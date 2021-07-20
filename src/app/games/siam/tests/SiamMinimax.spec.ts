@@ -83,7 +83,7 @@ describe('SiamMinimax:', () => {
         const bestMove: SiamMove = new SiamMove(3, 2, MGPOptional.of(Orthogonal.UP), Orthogonal.UP);
         expect(chosenMove).toEqual(bestMove);
     });
-    it('Best choice test: Pushing from outside could be considered the best option', () => {
+    it('Best choice test: Pushing from outside should be considered the best option', () => {
         const board: number[][] = [
             [_, _, _, d, _],
             [_, _, _, d, _],

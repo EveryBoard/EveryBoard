@@ -1,17 +1,18 @@
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
-import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
+import { CoerceoPartSlice } from '../CoerceoPartSlice';
 import { CoerceoMinimax } from '../CoerceoMinimax';
 import { CoerceoRules } from '../CoerceoRules';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 describe('CoerceoMinimax', () => {
 
     let minimax: CoerceoMinimax;
 
-    const _: number = CoerceoPiece.EMPTY.value;
-    const N: number = CoerceoPiece.NONE.value;
-    const O: number = CoerceoPiece.ZERO.value;
-    const X: number = CoerceoPiece.ONE.value;
+    const _: number = FourStatePiece.EMPTY.value;
+    const N: number = FourStatePiece.NONE.value;
+    const O: number = FourStatePiece.ZERO.value;
+    const X: number = FourStatePiece.ONE.value;
 
     beforeEach(() => {
         const rules: CoerceoRules = new CoerceoRules(CoerceoPartSlice);

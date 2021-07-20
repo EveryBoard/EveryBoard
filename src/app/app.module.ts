@@ -49,7 +49,10 @@ import { OnlineGameCreationComponent }
     from './components/normal-component/online-game-creation/online-game-creation.component';
 import { DidacticialGameCreationComponent }
     from './components/normal-component/didacticial-game-creation/didacticial-game-creation.component';
+import { HumanDuration } from './utils/TimeUtils';
+import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 
+import { AbaloneComponent } from './games/abalone/abalone.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
@@ -70,8 +73,6 @@ import { SaharaComponent } from './games/sahara/sahara.component';
 import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tablut/tablut.component';
-import { HumanDuration } from './utils/TimeUtils';
-import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
@@ -116,6 +117,7 @@ const routes: Route [] = [
         OnlineGameCreationComponent,
         DidacticialGameCreationComponent,
 
+        AbaloneComponent,
         AwaleComponent,
         CoerceoComponent,
         DvonnComponent,
@@ -140,6 +142,7 @@ const routes: Route [] = [
         HumanDuration,
     ],
     entryComponents: [
+        AbaloneComponent,
         AwaleComponent,
         DvonnComponent,
         EncapsuleComponent,

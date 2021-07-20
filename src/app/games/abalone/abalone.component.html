@@ -1,0 +1,49 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="100%" height="auto"
+     viewBox="-165 0 470 500"
+     preserveAspectRatio="xMidYMid meet">
+     <defs>
+        <marker id="arrowhead" markerWidth="10" markerHeight="7"
+                refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" />
+        </marker>
+        <marker id="arrowhead-moved" markerWidth="10" markerHeight="7"
+                refX="5" refY="3.5" orient="auto">
+            <polygon points="0 0, 10 3.5, 0 7" class="moved moved-stroke"/>
+        </marker>
+    </defs>
+
+    <g *ngFor="let line of board; index as y">
+        <g *ngFor="let c of line; index as x">
+            <g *ngIf="isBoard(c)">
+                <polyline id="case_{{ x }}_{{ y }}"
+                          [ngClass]="getCaseClasses(x, y)"
+                          class="base"
+                          [attr.points]="getHexaCoordinatesFor(x, y)"
+                          stroke-linecap="round"
+                          (click)="onCaseClick(x, y)"
+                />
+                <circle *ngIf="isPiece(c)"
+                        id="piece_{{ x }}_{{ y }}"
+                        (click)="onPieceClick(x, y)"
+                        [attr.cx]="getCenterFor(x, y).x"
+                        [attr.cy]="getCenterFor(x, y).y"
+                        [attr.r]="PIECE_SIZE * 0.5"
+                        [ngClass]="getPieceClasses(x, y)"
+                        class="base"
+                />
+            </g>
+        </g>
+    </g>
+    <g *ngFor="let arrow of directions">
+        <line id="direction_{{ arrow.dir.toString() }}"
+              [attr.x1]="arrow.startCenter.x"
+              [attr.y1]="arrow.startCenter.y"
+              [attr.x2]="arrow.landingCenter.x"
+              [attr.y2]="arrow.landingCenter.y"
+              class="arrow"
+              marker-end="url(#arrowhead)"
+              (click)="chooseDirection(arrow.dir)"
+        />
+    </g>
+</svg>

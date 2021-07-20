@@ -1,8 +1,8 @@
 export class EncapsuleFailure {
 
-    public static readonly WRONG_COLOR: string = $localize`Veuillez utiliser une pièce à votre couleur.`;
+    public static readonly WRONG_COLOR: string = $localize`Veuillez utiliser une de vos pièces.`;
 
-    public static readonly NOT_REMAINING_PIECE: string = $localize`Veuillez utiliser une des pièces restantes.`;
+    public static readonly PIECE_OUT_OF_STOCK: string = $localize`Vous n'avez plus de pièces de ce type.`;
 
     public static readonly INVALID_PLACEMENT: string = $localize`Vous devez placer votre pièce sur une case vide ou sur une pièce plus petite.`;
 

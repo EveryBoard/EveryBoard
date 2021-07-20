@@ -8,12 +8,12 @@ import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
 import { SaharaMinimax } from 'src/app/games/sahara/SaharaMinimax';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { Player } from 'src/app/jscaip/Player';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
 import { SaharaFailure } from './SaharaFailure';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 @Component({
     selector: 'app-sahara',
@@ -51,7 +51,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
             return this.choosePiece(x, y);
         } else { // Must choose empty landing case
             const currentPlayer: Player = this.rules.node.gamePartSlice.getCurrentPlayer();
-            const PLAYER: number = currentPlayer === Player.ZERO ? SaharaPawn.BLACK : SaharaPawn.WHITE;
+            const PLAYER: number = currentPlayer === Player.ZERO ? FourStatePiece.ZERO.value : FourStatePiece.ONE.value;
             if (this.board[y][x] === PLAYER) {
                 this.chosenCoord = MGPOptional.of(new Coord(x, y));
                 return MGPValidation.SUCCESS;
@@ -66,7 +66,7 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
         }
     }
     private choosePiece(x: number, y: number): MGPValidation {
-        if (this.board[y][x] === SaharaPawn.EMPTY) { // Did not select pyramid
+        if (this.board[y][x] === FourStatePiece.EMPTY.value) { // Did not select pyramid
             return this.cancelMove(SaharaFailure.MUST_CHOOSE_PYRAMID_FIRST);
         } else if (this.getTurn() % 2 === this.board[y][x]) { // selected his own pyramid
             this.chosenCoord = MGPOptional.of(new Coord(x, y));
@@ -78,12 +78,12 @@ export class SaharaComponent extends TriangularGameComponent<SaharaMove, SaharaP
     public updateBoard(): void {
         this.chosenCoord = MGPOptional.empty();
         const move: SaharaMove = this.rules.node.move;
-        if (move) {
-            this.lastCoord = move.coord;
-            this.lastMoved = move.end;
-        } else {
+        if (move == null) {
             this.lastCoord = null;
             this.lastMoved = null;
+        } else {
+            this.lastCoord = move.coord;
+            this.lastMoved = move.end;
         }
         this.board = this.rules.node.gamePartSlice.board;
     }

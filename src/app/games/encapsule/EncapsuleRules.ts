@@ -65,13 +65,13 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                 return EncapsuleLegalityStatus.failure(EncapsuleFailure.WRONG_COLOR);
             }
             if (slice.isInRemainingPieces(movingPiece) === false) {
-                return EncapsuleLegalityStatus.failure(EncapsuleFailure.NOT_REMAINING_PIECE);
+                return EncapsuleLegalityStatus.failure(EncapsuleFailure.PIECE_OUT_OF_STOCK);
             }
         } else {
             const startingCoord: Coord = move.startingCoord.get();
             const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
-            if (!slice.pieceBelongsToCurrentPlayer(movingPiece)) {
+            if (slice.pieceBelongsToCurrentPlayer(movingPiece) === false) {
                 return EncapsuleLegalityStatus.failure(EncapsuleFailure.WRONG_COLOR);
             }
         }

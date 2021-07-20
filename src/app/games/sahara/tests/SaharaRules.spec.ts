@@ -4,20 +4,20 @@ import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaMove } from '../SaharaMove';
 import { SaharaPartSlice } from '../SaharaPartSlice';
 import { TriangularCheckerBoard } from 'src/app/jscaip/TriangularCheckerBoard';
-import { SaharaPawn } from '../SaharaPawn';
 import { MGPSet } from 'src/app/utils/MGPSet';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 describe('SaharaRules', () => {
 
-    const N: number = SaharaPawn.NONE;
-    const O: number = SaharaPawn.BLACK;
-    const X: number = SaharaPawn.WHITE;
-    const _: number = SaharaPawn.EMPTY;
+    const N: number = FourStatePiece.NONE.value;
+    const O: number = FourStatePiece.ZERO.value;
+    const X: number = FourStatePiece.ONE.value;
+    const _: number = FourStatePiece.EMPTY.value;
 
     let rules: SaharaRules;
     let minimax: SaharaMinimax;
@@ -57,9 +57,11 @@ describe('SaharaRules', () => {
     it('Shortest victory simulation', () => {
         expect(rules.choose(new SaharaMove(new Coord(0, 3), new Coord(1, 4)))).toBeTrue();
         expect(rules.node.gamePartSlice.getBoardAt(new Coord(1, 4)))
-            .toBe(SaharaPawn.BLACK, 'Just moved black piece should be in her landing spot');
+            .withContext('Just moved black piece should be in her landing spot')
+            .toBe(FourStatePiece.ZERO.value);
         expect(rules.node.gamePartSlice.getBoardAt(new Coord(0, 3)))
-            .toBe(SaharaPawn.EMPTY, 'Just moved black piece should have left her initial spot');
+            .withContext('Just moved black piece should have left her initial spot')
+            .toBe(FourStatePiece.EMPTY.value);
         expect(rules.choose(new SaharaMove(new Coord(3, 0), new Coord(4, 0)))).toBeTrue();
         expect(rules.choose(new SaharaMove(new Coord(1, 4), new Coord(2, 4)))).toBeTrue();
         expect(rules.node.getOwnValue(minimax).value).toBe(Number.MIN_SAFE_INTEGER, 'Should be victory');

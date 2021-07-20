@@ -1,13 +1,13 @@
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
-import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { Coord } from 'src/app/jscaip/Coord';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { DidacticialStep } from '../DidacticialStep';
 
-const N: number = SaharaPawn.NONE;
-const O: number = SaharaPawn.BLACK;
-const X: number = SaharaPawn.WHITE;
-const _: number = SaharaPawn.EMPTY;
+const N: number = FourStatePiece.NONE.value;
+const O: number = FourStatePiece.ZERO.value;
+const X: number = FourStatePiece.ONE.value;
+const _: number = FourStatePiece.EMPTY.value;
 const c: Coord = new Coord(5, 2);
 export const saharaDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(

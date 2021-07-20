@@ -9,6 +9,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { MoveEncoder } from 'src/app/jscaip/Encoder';
 import { MessageDisplayer } from 'src/app/services/message-displayer/MessageDisplayer';
+import { AwaleFailure } from './AwaleFailure';
 
 @Component({
     selector: 'app-awale-component',
@@ -44,7 +45,8 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
 
         this.board = slice.getCopiedBoard();
         if (lastMove != null) {
-            this.last = lastMove.coord;
+            const lastPlayer: number = slice.getCurrentEnnemy().value;
+            this.last = new Coord(lastMove.x, lastPlayer);
             this.showPreviousMove();
         } else {
             this.last = null;
@@ -76,9 +78,12 @@ export class AwaleComponent extends AbstractGameComponent<AwaleMove, AwalePartSl
         if (clickValidity.isFailure()) {
             return this.cancelMove(clickValidity.getReason());
         }
+        if (y !== this.rules.node.gamePartSlice.getCurrentPlayer().value) {
+            return this.cancelMove(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME);
+        }
         this.last = new Coord(-1, -1); // now the user stop try to do a move
         // we stop showing him the last move
-        const chosenMove: AwaleMove = new AwaleMove(x, y);
+        const chosenMove: AwaleMove = AwaleMove.from(x);
         // let's confirm on java-server-side that the move is legal
         return this.chooseMove(chosenMove, this.rules.node.gamePartSlice, this.scores[0], this.scores[1]);
     }
