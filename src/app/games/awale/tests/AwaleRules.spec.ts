@@ -6,6 +6,8 @@ import { expectToBeDraw, expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules
 import { Player } from 'src/app/jscaip/Player';
 import { AwaleMinimax } from '../AwaleMinimax';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { AbaloneFailure } from '../../abalone/AbaloneFailure';
+import { AwaleFailure } from '../AwaleFailure';
 
 describe('AwaleRules', () => {
     let rules: AwaleRules;
@@ -58,6 +60,43 @@ describe('AwaleRules', () => {
         expect(resultingState).toEqual(expectedState);
         const node: AwaleNode = new MGPNode(null, move, resultingState);
         expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+    });
+    it('should forbid non-feeding move', () => {
+        // given a board in which the player could and should feed his opponent
+        const board: number[][] = [
+            [1, 0, 0, 0, 0, 1],
+            [0, 0, 0, 0, 0, 0],
+        ];
+        const state: AwalePartSlice = new AwalePartSlice(board, 0, [23, 23]);
+
+        // when he does not
+        const move: AwaleMove = AwaleMove.ZERO;
+        const status: AwaleLegalityStatus = rules.isLegal(move, state);
+
+        // then the move is illegal
+        expect(status.legal.reason).toBe(AwaleFailure.SHOULD_DISTRIBUTE);
+    });
+    it('shoud distribute but not capture in case of would-starve move', () => {
+        // given a board in which the player could capture all opponents seeds
+        const board: number[][] = [
+            [1, 0, 0, 0, 0, 2],
+            [0, 0, 0, 0, 1, 1],
+        ];
+        const state: AwalePartSlice = new AwalePartSlice(board, 0, [0, 0]);
+
+        // when player does a would-starve move
+        const move: AwaleMove = AwaleMove.FIVE;
+        const status: AwaleLegalityStatus = rules.isLegal(move, state);
+        const resultingState: AwalePartSlice = rules.applyLegalMove(move, state, status);
+
+        // then, the distribution should be done but not the capture
+        const expectedBoard: number[][] = [
+            [1, 0, 0, 0, 0, 0],
+            [0, 0, 0, 0, 2, 2],
+        ];
+        const expectedState: AwalePartSlice = new AwalePartSlice(expectedBoard, 1, [0, 0]);
+        expect(status.legal.isSuccess()).toBeTrue();
+        expect(resultingState).toEqual(expectedState);
     });
     describe('getGameStatus', () => {
         it('should identify victory for player 0', () => {

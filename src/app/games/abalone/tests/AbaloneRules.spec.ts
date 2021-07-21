@@ -127,7 +127,7 @@ describe('AbaloneRules', () => {
         // Then the move should be forbidden
         expect(status.legal.reason).toBe(AbaloneFailure.CANNOT_MOVE_MORE_THAN_THREE_PIECES);
     });
-    it('should refuse moving group of piece bigger smaller than the enemy', () => {
+    it(`should refuse moving group of piece smaller than the enemy's group`, () => {
         // Given a board with 4 piece aligned
         const board: number[][] = [
             [N, N, N, N, _, _, _, _, _],
@@ -229,7 +229,7 @@ describe('AbaloneRules', () => {
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
     });
-    it('should declare player zero winner when he push a sixth enemy piece out of the board', () => {
+    it('should declare player zero winner when he push a 6th enemy piece out of the board', () => {
         const winningBoard: number[][] = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, _, _, _, _, _, _],
@@ -245,7 +245,7 @@ describe('AbaloneRules', () => {
         const node: AbaloneNode = new MGPNode(null, null, winningState);
         expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
     });
-    it('should declare player one when he push a fifth enemy piece out of the board', () => {
+    it('should declare player one winner when he push a 6th enemy piece out of the board', () => {
         const winningBoard: number[][] = [
             [N, N, N, N, X, X, X, X, X],
             [N, N, N, X, X, X, X, X, X],
@@ -286,8 +286,8 @@ describe('AbaloneRules', () => {
         expect(status.legal.isSuccess()).toBeTrue();
         expect(resultingState).toEqual(expectedState);
     });
-    it('should refuse entraved translation', () => {
-        // Given a board with possible entraved translation
+    it('should refuse blocked translation', () => {
+        // Given a board with possible blocked translation
         const board: number[][] = [
             [N, N, N, N, _, _, _, _, _],
             [N, N, N, _, _, _, _, _, _],

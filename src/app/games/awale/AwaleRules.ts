@@ -55,23 +55,19 @@ export class AwaleRules extends Rules<AwaleMove, AwalePartSlice, AwaleLegalitySt
 
         const player: number = turn % 2;
         const enemy: number = (turn + 1) % 2;
-        const y: number = player;
 
-        if (y !== player) {
-            return AwaleLegalityStatus.failure(AwaleFailure.CANNOT_DISTRIBUTE_FROM_ENEMY_HOME);
-        }
         const x: number = move.x;
-        if (resultingBoard[y][x] === 0) {
+        if (resultingBoard[player][x] === 0) {
             return AwaleLegalityStatus.failure(AwaleFailure.MUST_CHOOSE_NONEMPTY_HOUSE);
         }
 
-        if (!AwaleRules.doesDistribute(x, y, resultingBoard) && AwaleRules.isStarving(enemy, resultingBoard) ) {
+        if (!AwaleRules.doesDistribute(x, player, resultingBoard) && AwaleRules.isStarving(enemy, resultingBoard) ) {
             // you can distribute but you don't, illegal move
             return AwaleLegalityStatus.failure(AwaleFailure.SHOULD_DISTRIBUTE);
         }
         // arrived here you can distribute this house
         // but we'll have to check if you can capture
-        const lastCase: Coord = AwaleRules.distribute(x, y, resultingBoard);
+        const lastCase: Coord = AwaleRules.distribute(x, player, resultingBoard);
         // do the distribution and retrieve the landing part
         // of the last stone
         const landingCamp: number = lastCase.y;

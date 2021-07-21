@@ -236,7 +236,7 @@ describe('AbaloneComponent', () => {
             expect(compo.getCaseClasses(3, 6)).toEqual(['moved']);
             expect(compo.getCaseClasses(4, 6)).toEqual(['moved']);
         }));
-        it('should refuse extension two long', fakeAsync(async() => {
+        it('should refuse too long extension', fakeAsync(async() => {
             // given initial board with two case selected
             await componentTestUtils.expectClickSuccess('#piece_0_7');
             await componentTestUtils.expectClickSuccess('#piece_1_7');

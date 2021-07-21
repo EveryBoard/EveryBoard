@@ -2,7 +2,7 @@ export class PylosFailure {
 
     public static readonly MUST_MOVE_UPWARD: string = $localize`Vous devez déplacer vos pièces vers le haut.`;
 
-    public static readonly SHOULD_START_FROM_PLAYER_PIECE: string = $localize`Votre mouvement devrais commencer avec une de vos pièces!`;
+    public static readonly SHOULD_START_FROM_PLAYER_PIECE: string = $localize`Votre mouvement devrait commencer avec une de vos pièces!`;
 
     public static readonly SHOULD_HAVE_SUPPORTING_PIECES: string = $localize`move does not have supported pieces`;
 

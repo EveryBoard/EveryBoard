@@ -26,7 +26,7 @@ import { AbstractGameComponent } from '../../game-components/abstract-game-compo
 
 class GameDescription {
 
-    public static readonly ABALONE: string = $localize`Utilisez des méchaniques simples pour pousser 6 pièces adverses hors du plateau!`;
+    public static readonly ABALONE: string = $localize`Utilisez des mécaniques simples pour pousser 6 pièces adverses hors du plateau!`;
 
     public static readonly AWALE: string = $localize`The international version of the more famous african strategy game!`;
 
