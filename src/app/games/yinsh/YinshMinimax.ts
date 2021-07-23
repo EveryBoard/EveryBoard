@@ -71,8 +71,8 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
         const moves: {start: Coord, end: Coord}[] = [];
         this.getRingCoords(state).forEach((coord: Coord): void => {
             for (const dir of HexaDirection.factory.all) {
-                for (let cur: Coord = coord; state.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
-                    if (state.hexaBoard.getAt(cur) !== YinshPiece.EMPTY) {
+                for (let cur: Coord = coord.getNext(dir); state.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
+                    if (state.hexaBoard.getAt(cur) === YinshPiece.EMPTY) {
                         moves.push({ start: coord, end: cur });
                     }
                 }
@@ -81,9 +81,10 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
         return moves;
     }
     private getRingCoords(state: YinshGameState): Coord[] {
+        const player: number = state.getCurrentPlayer().value;
         const coords: Coord[] = [];
         state.hexaBoard.forEachCoord((coord: Coord, content: YinshPiece): void => {
-            if (YinshPiece.RINGS.some((ring: YinshPiece) => ring === content)) {
+            if (content === YinshPiece.RINGS[player]) {
                 coords.push(coord);
             }
         });
