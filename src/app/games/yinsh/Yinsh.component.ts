@@ -10,6 +10,7 @@ import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { YinshFailure } from './YinshFailure';
 import { YinshGameState } from './YinshGameState';
 import { YinshLegalityStatus } from './YinshLegalityStatus';
+import { YinshMinimax } from './YinshMinimax';
 import { YinshCapture, YinshMove } from './YinshMove';
 import { YinshPiece } from './YinshPiece';
 import { YinshRules } from './YinshRules';
@@ -78,7 +79,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
     constructor(messageDisplayer: MessageDisplayer) {
         super(messageDisplayer);
         this.availableMinimaxes = [
-            // TODO
+            new YinshMinimax(this.rules, 'YinshMinimax'),
         ];
         this.showScore = true;
         this.constructedState = this.rules.node.gamePartSlice;

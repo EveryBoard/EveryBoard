@@ -87,6 +87,12 @@ describe('YinshMinimax', () => {
             rules.node = new YinshNode(null, null, state);
             expect(minimax.getListMoves(rules.node).length).toBe(14);
         });
+        it('cannot list moves that try to flip a ring', () => {
+        });
+        it('should not list moves that jump over two non-joined groups of pieces', () => {
+        });
+        it('should take a ring when it is capturing', () => {
+        });
     });
     describe('getBoardValue', () => {
         it('should assign higher values for the player with most rings', () => {

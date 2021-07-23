@@ -63,15 +63,25 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
     private getPossibleCaptureCombinations(state: YinshGameState): ReadonlyArray<ReadonlyArray<YinshCapture>> {
         const rules: YinshRules = this.ruler as YinshRules;
         const possibleCaptures: YinshCapture[] = rules.getPossibleCaptures(state);
+        const ringCoords: Coord[] = this.getRingCoords(state);
         return GipfMinimax.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures)
-            .map((captures: GipfCapture[]): YinshCapture[] =>
-                captures.map((capture: GipfCapture): YinshCapture => capture as YinshCapture));
+            .map((captures: GipfCapture[]): YinshCapture[] => {
+                return captures.map((capture: GipfCapture): YinshCapture[] => {
+                    return ringCoords.map((ringTaken: Coord): YinshCapture => {
+                        return new YinshCapture(capture.capturedCases, ringTaken);
+                    });
+                }).reduce((accumulator: YinshCapture[], captures: YinshCapture[]): YinshCapture[] => {
+                    return accumulator.concat(captures);
+                }, []);
+            });
     }
     private getRingMoves(state: YinshGameState): {start: Coord, end: Coord}[] {
         const moves: {start: Coord, end: Coord}[] = [];
         this.getRingCoords(state).forEach((coord: Coord): void => {
             for (const dir of HexaDirection.factory.all) {
-                for (let cur: Coord = coord.getNext(dir); state.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
+                for (let cur: Coord = coord.getNext(dir);
+                    state.hexaBoard.isOnBoard(cur) && state.hexaBoard.getAt(cur).isRing === false;
+                    cur = cur.getNext(dir)) {
                     if (state.hexaBoard.getAt(cur) === YinshPiece.EMPTY) {
                         moves.push({ start: coord, end: cur });
                     }
