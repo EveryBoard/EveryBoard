@@ -22,13 +22,7 @@ export const abaloneDidacticial: DidacticialStep[] = [
         Pour vos déplacement vous avez donc au maximum à choisir parmis 6 directions.
         Les trois pièces à déplacer doivent être alignées et immédiatement voisines et atterrir sur des cases vides (sauf pour pousser, ce que nous verrons plus tard).
         Pour effectuer un déplacement, cliquez sur une de vos pièces, puis cliquez sur une flèche pour choisir sa direction.
-        Vous jouez Foncé, faites n'importe quel movement!
-
-        Each turn, move one, two, or three pieces, either in the direction they're aligned in, either by doing a side step.
-        For your moves, you have up to six choices of direction.
-        The three moving pieces must be aligned and immediately neighboors, and land on empty cases (except for pushes, which we'll cover later).
-        To do a move, click on one of your pieces, then click on an arrows to choose its direction.
-        You play the dark, do any move!`,
+        Vous jouez Foncé, faites n'importe quel movement!`,
         AbaloneGameState.getInitialSlice(),
         AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.UP),
         $localize`Bravo!`,

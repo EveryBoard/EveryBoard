@@ -27,10 +27,10 @@ describe('AbaloneMove', () => {
         const up: Coord = new Coord(0, 0);
         const down: Coord = new Coord(0, 2);
         const distortedMove: AbaloneMove = AbaloneMove.fromDoubleCoord(up, down, HexaDirection.DOWN);
-        const secondDistordedMove: AbaloneMove = AbaloneMove.fromDoubleCoord(down, up, HexaDirection.DOWN);
+        const secondDistortedMove: AbaloneMove = AbaloneMove.fromDoubleCoord(down, up, HexaDirection.DOWN);
         const simpleMove: AbaloneMove = AbaloneMove.fromSingleCoord(up, HexaDirection.DOWN);
         expect(simpleMove.equals(distortedMove)).toBeTrue();
-        expect(simpleMove.equals(secondDistordedMove)).toBeTrue();
+        expect(simpleMove.equals(secondDistortedMove)).toBeTrue();
 
         const distortedMove2: AbaloneMove = AbaloneMove.fromDoubleCoord(up, down, HexaDirection.UP);
         const simpleMove2: AbaloneMove = AbaloneMove.fromSingleCoord(down, HexaDirection.UP);
