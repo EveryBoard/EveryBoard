@@ -5,11 +5,11 @@ import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { GameWrapper } from 'src/app/components/wrapper-components/GameWrapper';
 import { Move } from 'src/app/jscaip/Move';
 import { UserService } from 'src/app/services/UserService';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { MGPNode, MGPNodeStats } from 'src/app/jscaip/MGPNode';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { Minimax } from 'src/app/jscaip/Minimax';
-import { GameStatus } from 'src/app/jscaip/Rules';
+import { GameStatus, Rules } from 'src/app/jscaip/Rules';
 import { Player } from 'src/app/jscaip/Player';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 
@@ -19,9 +19,11 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
     changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LocalGameWrapperComponent extends GameWrapper implements AfterViewInit {
+
     public static VERBOSE: boolean = false;
 
     public aiDepths: [string, string] = ['0', '0'];
+
     public winner: string = null;
 
     public botTimeOut: number = 1000;
@@ -80,21 +82,7 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
         if (playingMinimax != null) {
             // bot's turn
             setTimeout(() => {
-                // called only when it's AI's Turn
-                const gameStatus: GameStatus = this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node);
-                if (gameStatus === GameStatus.ONGOING) {
-                    const turn: number = this.gameComponent.rules.node.gamePartSlice.turn % 2;
-                    const currentAiDepth: number = Number.parseInt(this.aiDepths[turn % 2]);
-                    const aiMove: Move =
-                        this.gameComponent.rules.node.findBestMove(currentAiDepth, playingMinimax);
-                    if (this.gameComponent.rules.choose(aiMove)) {
-                        this.updateBoard();
-                        this.cdr.detectChanges();
-                        this.proposeAIToPlay();
-                    } else {
-                        throw new Error('AI choosed illegal move (' + aiMove.toString() + ')');
-                    }
-                }
+                this.doAIMove(playingMinimax);
             }, this.botTimeOut);
         }
     }
@@ -104,11 +92,34 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
             return a.name === this.players[turn];
         });
     }
-    public takeBack(): void {
-        if (this.gameComponent.rules.node.gamePartSlice.turn > 0) {
-            this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
-            this.gameComponent.updateBoard();
+    public doAIMove(playingMinimax: Minimax<Move, GamePartSlice>): void {
+        // called only when it's AI's Turn
+        const ruler: Rules<Move, GamePartSlice, LegalityStatus> = this.gameComponent.rules;
+        const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
+        assert(gameStatus === GameStatus.ONGOING, 'IA should not try to play when game is over!');
+        const turn: number = ruler.node.gamePartSlice.turn % 2;
+        const currentAiDepth: number = Number.parseInt(this.aiDepths[turn % 2]);
+        const aiMove: Move = ruler.node.findBestMove(currentAiDepth, playingMinimax);
+        if (ruler.choose(aiMove)) {
+            this.updateBoard();
+            this.cdr.detectChanges();
+            this.proposeAIToPlay();
+        } else {
+            throw new Error('AI choosed illegal move (' + aiMove.toString() + ')');
         }
+    }
+    public canTakeBack(): boolean {
+        return this.gameComponent.rules.node.gamePartSlice.turn > 0;
+    }
+    public takeBack(): void {
+        this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
+        if (this.isAITurn()) {
+            this.gameComponent.rules.node = this.gameComponent.rules.node.mother;
+        }
+        this.gameComponent.updateBoard();
+    }
+    private isAITurn(): boolean {
+        return this.getPlayingAI() != null;
     }
     public restartGame(): void {
         const state: GamePartSlice = this.gameComponent.rules.stateType['getInitialSlice']();
