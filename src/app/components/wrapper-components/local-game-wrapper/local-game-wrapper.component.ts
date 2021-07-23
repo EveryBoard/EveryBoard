@@ -94,7 +94,6 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     public doAIMove(playingMinimax: Minimax<Move, GamePartSlice>): void {
         // called only when it's AI's Turn
-        console.log('jai fait le mouvement de ta mèèèère!')
         const ruler: Rules<Move, GamePartSlice, LegalityStatus> = this.gameComponent.rules;
         const gameStatus: GameStatus = ruler.getGameStatus(ruler.node);
         assert(gameStatus === GameStatus.ONGOING, 'IA should not try to play when game is over!');
