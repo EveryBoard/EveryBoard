@@ -35,7 +35,7 @@ class GameDescription {
 
     public static readonly P4: string = $localize`The classical 4 in a row game!`;
 
-    public static readonly PENTAGO: string = $localize`Drop a piece, then rotate the board, be the first to align 5 of your pieces to win!`;
+    public static readonly PENTAGO: string = $localize`Drop a piece, then rotate the board. The first player to align 5 pieces wins!`;
 
     public static readonly PYLOS: string = $localize`Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loose!`;
 

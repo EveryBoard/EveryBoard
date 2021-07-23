@@ -8,7 +8,7 @@
             <div class="field-body">
                 <div class="field">
                     <div class="control">
-                        <input class="input" formControlName="email" name='email' placeholder="Email" type="text" required />
+                        <input class="input" formControlName="email" name='email' placeholder-i18n placeholder="Email" type="text" required />
                     </div>
                 </div>
             </div>
@@ -24,7 +24,7 @@
                                class="input"
                                formControlName="password"
                                name="code"
-                               placeholder="Password"
+                               placeholder-i18n placeholder="Password"
                                type="password" />
                     </div>
                 </div>
@@ -42,7 +42,7 @@
                 </div>
             </div>
         </div>
-        <p i18n>An email will be sent to confirm your account</p>
+        <p i18n>A confirmation email will be sent to validate your account</p>
         <div *ngIf="errorMessage" class="message is-danger" role="alert">
             <div class="message-header" i18n>Connection error</div>
             <div class="message-body" id="errorMessage">{{ errorMessage }}</div>

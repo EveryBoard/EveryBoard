@@ -16,7 +16,7 @@ export class HeaderComponent implements OnInit, OnDestroy {
     public showMenu: boolean = false;
 
     public currentLanguage: string;
-    public availableLanguages: string[] = ['fr', 'en'];
+    public availableLanguages: string[] = ['FR', 'EN'];
 
     constructor(public router: Router,
                 public authenticationService: AuthenticationService) {
