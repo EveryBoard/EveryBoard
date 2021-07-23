@@ -10,7 +10,7 @@ const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;
 const X: number = FourStatePiece.ONE.value;
 
-export const abaloneDidacticial: DidacticialStep[] = [
+export const abaloneTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Plateau initial`,
         $localize`À l'Abalone, le but du jeu est d'être le premier joueur à pousser 6 pièces adverses en dehors du plateau. Voyons voir comment!`,
