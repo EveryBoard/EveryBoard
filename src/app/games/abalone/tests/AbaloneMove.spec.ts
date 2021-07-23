@@ -1,6 +1,10 @@
 import { Coord } from 'src/app/jscaip/Coord';
 import { HexaDirection } from 'src/app/jscaip/HexaDirection';
+import { NumberEncoderTestUtils } from 'src/app/jscaip/tests/Encoder.spec';
+import { AbaloneDummyMinimax } from '../AbaloneDummyMinimax';
+import { AbaloneGameState } from '../AbaloneGameState';
 import { AbaloneMove } from '../AbaloneMove';
+import { AbaloneNode, AbaloneRules } from '../AbaloneRules';
 
 describe('AbaloneMove', () => {
 
@@ -57,5 +61,13 @@ describe('AbaloneMove', () => {
         const error: string = 'Invalid direction';
         expect(() => AbaloneMove.fromDoubleCoord(new Coord(0, 0), new Coord(1, 1), HexaDirection.UP))
             .toThrowError(error);
+    });
+    it('AbaloneMove.encoder should be correct', () => {
+        const rules: AbaloneRules = new AbaloneRules(AbaloneGameState);
+        const minimax: AbaloneDummyMinimax = new AbaloneDummyMinimax(rules, 'dummy');
+        const firstTurnMoves: AbaloneMove[] = minimax.getListMoves(rules.node);
+        for (const move of firstTurnMoves) {
+            NumberEncoderTestUtils.expectToBeCorrect(AbaloneMove.encoder, move);
+        }
     });
 });

@@ -36,7 +36,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         $localize`Capture`,
         $localize`Chaque pièce a trois cases triangulaires voisines (2 sur les bords).
          Quand toutes les cases voisines sauf une sont occupées, et qu'un ennemi vient se déplacer sur cette dernière case libre, votre pièce est capturée !
-         Cependant, il est possible pour un joueur de se placer entre 3 pièces adversaires (ou 2 contre un bord) sans être capturé.
+         Cependant, il est possible pour un joueur de se placer entre 3 pièces adverses (ou 2 contre un bord) sans être capturé.
          Vous jouez clair, effectuez une capture`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],

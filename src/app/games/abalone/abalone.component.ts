@@ -36,7 +36,7 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
 
     public hexaLayout: HexaLayout;
 
-    public encoder: MoveEncoder<AbaloneMove>;
+    public encoder: MoveEncoder<AbaloneMove> = AbaloneMove.encoder;
 
     public moveds: Coord[] = [];
 
@@ -169,8 +169,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
             }
             const isLegal: LegalityStatus = this.rules.isLegal(theoritical, state);
             if (isLegal.legal.isSuccess()) {
-                const firstPieceCenter: Coord = this.getCenter(firstPiece);
-                const pointedCenter: Coord = this.getCenter(pointed);
+                const firstPieceCenter: Coord = this.getCenterAt(firstPiece);
+                const pointedCenter: Coord = this.getCenterAt(pointed);
                 const arrow: HexaDirArrow = new HexaDirArrow(firstPieceCenter,
                                                              pointedCenter,
                                                              pointed,

@@ -46,9 +46,7 @@ export class AbaloneDummyMinimax extends Minimax<AbaloneMove, AbaloneGameState, 
                 }
             }
         }
-        const filteredMoves: AbaloneMove[] = new MGPSet(moves).getCopy();
-        console.table(filteredMoves.map((m: AbaloneMove) => m.toString()));
-        return filteredMoves;
+        return new MGPSet(moves).getCopy();
     }
     private isAcceptablePush(move: AbaloneMove, state: AbaloneGameState): boolean {
         const scores: [number, number] = state.getScores();
