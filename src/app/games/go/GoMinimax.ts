@@ -19,16 +19,14 @@ export class GoMinimax extends Minimax<GoMove, GoPartSlice, GoLegalityStatus> {
             currentSlice.phase === Phase.PASSED) {
             playingMoves.push(GoMove.PASS);
             return playingMoves;
-        } else if (currentSlice.phase === Phase.COUNTING ||
-            currentSlice.phase === Phase.ACCEPT) {
+        } else {
             display(GoRules.VERBOSE || LOCAL_VERBOSE, 'GoRules.getListMoves in counting phase');
             const markingMoves: GoMove[] = GoRules.getCountingMovesList(currentSlice);
             if (markingMoves.length === 0) {
-                markingMoves.push(GoMove.ACCEPT);
+                return [GoMove.ACCEPT];
+            } else {
+                return markingMoves;
             }
-            return markingMoves;
-        } else {
-            return [];
         }
     }
     public getBoardValue(node: GoNode): NodeUnheritance {

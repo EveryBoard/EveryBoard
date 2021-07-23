@@ -11,6 +11,7 @@ import { assert, display } from 'src/app/utils/utils';
 import { DidacticialStep } from './DidacticialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
+import { abaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
 import { awaleDidacticial } from './didacticials/awale-didacticial';
 import { coerceoDidacticial } from './didacticials/coerceo-didacticial';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
@@ -92,6 +93,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public getDidacticial(): DidacticialStep[] {
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
         const didacticials: { [key: string]: DidacticialStep[] } = {
+            Abalone: abaloneTutorial,
             Awale: awaleDidacticial,
             Coerceo: coerceoDidacticial,
             Dvonn: dvonnDidacticial,
@@ -242,7 +244,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.showSolution()');
         const step: DidacticialStep = this.steps[this.stepIndex];
         let awaitedMove: Move;
-        if (step.acceptedMoves && step.acceptedMoves.length > 0) {
+        if (step.acceptedMoves != null && step.acceptedMoves.length > 0) {
             awaitedMove = step.acceptedMoves[0];
         } else {
             awaitedMove = step.solutionMove;

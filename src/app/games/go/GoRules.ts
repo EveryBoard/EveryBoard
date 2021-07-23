@@ -518,7 +518,6 @@ export class GoRules extends Rules<GoMove, GoPartSlice, GoLegalityStatus> {
             } else if (state.captured[1] > state.captured[0]) {
                 return GameStatus.ONE_WON;
             } else {
-                // TODO: should not append in go, add 0.5 to black score!
                 return GameStatus.DRAW;
             }
         } else {

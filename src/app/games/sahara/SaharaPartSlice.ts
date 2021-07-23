@@ -1,5 +1,5 @@
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
-import { SaharaPawn } from './SaharaPawn';
 
 export class SaharaPartSlice extends GamePartSlice {
 
@@ -8,10 +8,10 @@ export class SaharaPartSlice extends GamePartSlice {
     public static WIDTH: number = 11;
 
     public static getInitialSlice(): SaharaPartSlice {
-        const N: number = SaharaPawn.NONE;
-        const O: number = SaharaPawn.BLACK;
-        const X: number = SaharaPawn.WHITE;
-        const _: number = SaharaPawn.EMPTY;
+        const N: number = FourStatePiece.NONE.value;
+        const O: number = FourStatePiece.ZERO.value;
+        const X: number = FourStatePiece.ONE.value;
+        const _: number = FourStatePiece.EMPTY.value;
         const board: number[][] = [
             [N, N, O, X, _, _, _, O, X, N, N],
             [N, _, _, _, _, _, _, _, _, _, N],

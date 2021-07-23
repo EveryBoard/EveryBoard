@@ -1,4 +1,5 @@
 import { Component, EventEmitter, Output, Type } from '@angular/core';
+import { AbaloneComponent } from 'src/app/games/abalone/abalone.component';
 import { AwaleComponent } from 'src/app/games/awale/awale.component';
 import { CoerceoComponent } from 'src/app/games/coerceo/coerceo.component';
 import { DvonnComponent } from 'src/app/games/dvonn/dvonn.component';
@@ -24,6 +25,8 @@ import { Move } from 'src/app/jscaip/Move';
 import { AbstractGameComponent } from '../../game-components/abstract-game-component/AbstractGameComponent';
 
 class GameDescription {
+
+    public static readonly ABALONE: string = $localize`Utilisez des mécaniques simples pour pousser 6 pièces adverses hors du plateau!`;
 
     public static readonly AWALE: string = $localize`The international version of the more famous african strategy game!`;
 
@@ -72,6 +75,7 @@ export class GameInfo {
         new GameInfo($localize`Six`, 'Six', SixComponent, new Date('2021-04-08'), GameDescription.SIX), // 18 days after Coerceo
         new GameInfo($localize`Lines of Action`, 'LinesOfAction', LinesOfActionComponent, new Date('2020-04-28')), // 65 days after Gipf *Quentin
         new GameInfo($localize`Pentago`, 'Pentago', PentagoComponent, new Date('2021-05-23'), GameDescription.PENTAGO), // 25 days after Six
+        new GameInfo($localize`Abalone`, 'Abalone', AbaloneComponent, new Date('2021-07-13'), GameDescription.ABALONE),
     ].sort((a: GameInfo, b: GameInfo) => a.name.localeCompare(b.name));
     // After Gipf: median = 26d; average = 34d
     // 9d 10d 12d 13d 18d - 18d 20d 22d (25d 26d) 26d 49d 65d - 76d 93d 4m 7m 11m

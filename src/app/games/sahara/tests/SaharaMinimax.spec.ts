@@ -1,7 +1,7 @@
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
 import { SaharaMinimax } from '../SaharaMinimax';
 import { SaharaPartSlice } from '../SaharaPartSlice';
-import { SaharaPawn } from '../SaharaPawn';
 import { SaharaRules } from '../SaharaRules';
 
 describe('SaharaMinimax', () => {
@@ -9,10 +9,10 @@ describe('SaharaMinimax', () => {
     let minimax: SaharaMinimax;
     let rules: SaharaRules;
 
-    const N: number = SaharaPawn.NONE;
-    const O: number = SaharaPawn.BLACK;
-    const X: number = SaharaPawn.WHITE;
-    const _: number = SaharaPawn.EMPTY;
+    const N: number = FourStatePiece.NONE.value;
+    const O: number = FourStatePiece.ZERO.value;
+    const X: number = FourStatePiece.ONE.value;
+    const _: number = FourStatePiece.EMPTY.value;
 
     beforeEach(() => {
         rules = new SaharaRules(SaharaPartSlice);
