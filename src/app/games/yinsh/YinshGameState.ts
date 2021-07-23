@@ -11,7 +11,11 @@ export class YinshGameState extends GamePartSlice {
                        turn: number) {
         super(hexaBoard.toNumberTable(), turn);
     }
+    public isInitialPlacementPhase(): boolean {
+        return this.turn < 10;
+    }
     public equals(other: YinshGameState): boolean {
+        if (this === other) return true;
         if (this.turn !== other.turn) return false;
         if (this.sideRings[0] !== other.sideRings[0]) return false;
         if (this.sideRings[1] !== other.sideRings[1]) return false;

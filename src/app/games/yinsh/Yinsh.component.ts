@@ -212,6 +212,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         const captures: YinshCapture[] = [];
         this.viewInfo.possibleCaptures.forEach((candidate: YinshCapture) => {
             if (candidate.contains(coord)) {
+                console.log({coord, capture: candidate.toString()})
                 captures.push(candidate);
             }
         });
@@ -285,7 +286,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         return validity;
     }
     private async selectMoveStart(coord: Coord): Promise<MGPValidation> {
-        if (this.constructedState.turn < 10) {
+        if (this.constructedState.isInitialPlacementPhase()) {
             const validity: MGPValidation = this.rules.initialPlacementValidity(this.constructedState, coord);
             if (validity.isFailure()) {
                 return this.cancelMove(validity.getReason());
@@ -309,7 +310,7 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             return this.cancelMove(validity.getReason());
         }
         this.moveEnd = MGPOptional.of(coord);
-        this.constructedState = this.rules.applyMoveAndFlip(this.constructedState, this.moveStart.get(), coord);
+        this.constructedState = this.rules.applyRingMoveAndFlip(this.constructedState, this.moveStart.get(), coord);
         this.updateViewInfo();
         return this.moveToFinalCapturePhaseOrTryMove();
     }
@@ -320,6 +321,5 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         } else {
             this.movePhase = 'FINAL_CAPTURE';
         }
-        return MGPValidation.SUCCESS;
     }
 }

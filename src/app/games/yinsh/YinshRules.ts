@@ -28,7 +28,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
             const stateAfterInitialCaptures: YinshGameState =
                 this.applyCaptures(state, move.initialCaptures);
             const stateAfterMoveAndFlip: YinshGameState =
-                this.applyMoveAndFlip(stateAfterInitialCaptures, move.start, move.end.get());
+                this.applyRingMoveAndFlip(stateAfterInitialCaptures, move.start, move.end.get());
             const stateAfterFinalCaptures: YinshGameState =
                 this.applyCaptures(stateAfterMoveAndFlip, move.finalCaptures);
             stateWithoutTurn = stateAfterFinalCaptures;
@@ -78,7 +78,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
             return MGPValidation.failure(YinshFailure.CAPTURE_SHOULD_TAKE_RING);
         }
     }
-    public applyMoveAndFlip(state: YinshGameState, start: Coord, end: Coord): YinshGameState {
+    public applyRingMoveAndFlip(state: YinshGameState, start: Coord, end: Coord): YinshGameState {
         const player: number = state.getCurrentPlayer().value;
         let board: YinshBoard = state.hexaBoard;
         // Move ring from start (only the marker remains) to
@@ -100,7 +100,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         if (move.isInitialPlacement()) {
             return { legal: this.initialPlacementValidity(state, move.start) };
         }
-        if (state.turn < 10) {
+        if (state.isInitialPlacementPhase()) {
             return { legal: MGPValidation.failure(YinshFailure.NO_MARKERS_IN_INITIAL_PHASE) };
         }
 
@@ -115,14 +115,14 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         if (moveValidity.isFailure()) {
             return { legal: moveValidity };
         }
-        const stateAfterMove: YinshGameState =
-            this.applyMoveAndFlip(stateAfterInitialCaptures, move.start, move.end.get());
+        const stateAfterRingMove: YinshGameState =
+            this.applyRingMoveAndFlip(stateAfterInitialCaptures, move.start, move.end.get());
 
-        const finalCapturesValidity: MGPValidation = this.capturesValidity(stateAfterMove, move.finalCaptures);
+        const finalCapturesValidity: MGPValidation = this.capturesValidity(stateAfterRingMove, move.finalCaptures);
         if (finalCapturesValidity.isFailure()) {
             return { legal: finalCapturesValidity };
         }
-        const stateAfterFinalCaptures: YinshGameState = this.applyCaptures(stateAfterMove, move.finalCaptures);
+        const stateAfterFinalCaptures: YinshGameState = this.applyCaptures(stateAfterRingMove, move.finalCaptures);
 
         const noMoreCapturesValidity: MGPValidation = this.noMoreCapturesValidity(stateAfterFinalCaptures);
         if (noMoreCapturesValidity.isFailure()) {
@@ -132,7 +132,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         return { legal: MGPValidation.SUCCESS, computedState: stateAfterFinalCaptures };
     }
     public initialPlacementValidity(state: YinshGameState, coord: Coord): MGPValidation {
-        if (state.turn >= 10) {
+        if (state.isInitialPlacementPhase() !== true) {
             return MGPValidation.failure(YinshFailure.PLACEMENT_AFTER_INITIAL_PHASE);
         }
         if (state.hexaBoard.getAt(coord) !== YinshPiece.EMPTY) {
@@ -270,8 +270,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         return captures;
     }
     public getGameStatus(node: YinshNode): GameStatus {
-        if (node.gamePartSlice.turn < 10) {
-            // Still in initial placing phase
+        if (node.gamePartSlice.isInitialPlacementPhase()) {
             return GameStatus.ONGOING;
         }
         if (node.gamePartSlice.sideRings[0] >= 3) {

@@ -31,5 +31,4 @@ export class YinshFailure {
 
     public static readonly CAPTURE_SHOULD_TAKE_RING: string = $localize`Quand vous capturez des marqueurs, vous devez reprendre l'un de vos anneaux en cliquant dessus.`;
 
-    private constructor() {}
 }

@@ -70,7 +70,7 @@ describe('YinshMove', () => {
             expect(move.equals(new YinshMove([], new Coord(3, 3), MGPOptional.empty(), []))).toBeFalse();
         });
         it('should consider move with different end to be different', () => {
-            expect(move.equals(new YinshMove([], new Coord(3, 3), MGPOptional.of(new Coord(6, 3)), []))).toBeFalse();
+            expect(move.equals(new YinshMove([], new Coord(2, 3), MGPOptional.of(new Coord(6, 3)), []))).toBeFalse();
         });
         it('should consider moves with different initial captures different', () => {
             const move2: YinshMove = new YinshMove([capture], new Coord(2, 3), MGPOptional.empty(), []);
