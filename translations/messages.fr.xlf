@@ -190,8 +190,8 @@
           <context context-type="linenumber">42,45</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6752513541305588427" datatype="html">
-        <source>An email will be sent to confirm your account</source>
+      <trans-unit id="5939693457139759683" datatype="html">
+        <source>A confirmation email will be sent to validate your account</source>
         <target>Un email de confirmation vous sera envoyé pour valider votre compte</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/inscription/inscription.component.ts</context>
@@ -322,9 +322,9 @@
           <context context-type="linenumber">36,38</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6400849177958832653" datatype="html">
-        <source>Drop a piece, then rotate the board, be the first to align 5 of your pieces to win!</source>
-        <target>Déposez une piece, ensuite tournez le plateau, et soyez le premier à aligner 5 pièces pour gagner</target>
+      <trans-unit id="6377255794894182998" datatype="html">
+        <source>Drop a piece, then rotate the board. The first player to align 5 pieces wins!</source>
+        <target>Déposez une piece, ensuite tournez le plateau, et soyez le premier à aligner 5 pièces pour gagner !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/pick-game/pick-game.component.ts</context>
           <context context-type="linenumber">38,40</context>
@@ -626,8 +626,8 @@
           <context context-type="linenumber">22,24</context>
         </context-group>
       </trans-unit>
-      <trans-unit id="6425440499209555941" datatype="html">
-        <source> AwesomBoard is a website a platform to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn. </source>
+      <trans-unit id="8728202368025201849" datatype="html">
+        <source> AwesomBoard is a website to play and learn the rules of various abstract strategy games with perfect information.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> Such games are games that do not include any randomness, agility, or hidden information. These games are played by two players, turn by turn. </source>
         <target> AwesomBoard est un site qui permet de jouer et d'apprendre les règles de nombreux jeux de stratégie combinatoire à information parfaite.<x id="LINE_BREAK" ctype="lb" equiv-text="&lt;br/&gt;"/> On comprends donc là dedans les jeux ne faisant intervenir ni hasard, ni agilité, ni informations cachées, et uniquement des jeux deux joueurs et tours par tours !</target>
         <context-group purpose="location">
           <context context-type="sourcefile">src/app/components/normal-component/welcome/welcome.component.ts</context>
