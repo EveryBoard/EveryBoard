@@ -1,7 +1,9 @@
+import { Coord } from 'src/app/jscaip/Coord';
 import { Player } from 'src/app/jscaip/Player';
 import { YinshBoard } from '../YinshBoard';
 import { YinshGameState } from '../YinshGameState';
 import { YinshMinimax } from '../YinshMinimax';
+import { YinshCapture, YinshMove } from '../YinshMove';
 import { YinshPiece } from '../YinshPiece';
 import { YinshNode, YinshRules } from '../YinshRules';
 
@@ -68,7 +70,7 @@ describe('YinshMinimax', () => {
             rules.node = new YinshNode(null, null, state);
             expect(minimax.getListMoves(rules.node).length).toBe(18);
         });
-        it('should have 14 moves on a board with a possible capture', () => {
+        it('should have 11 moves on a board with a possible capture', () => {
             const board: YinshBoard = YinshBoard.of([
                 [_, _, _, _, _, _, _, _, _, _, _],
                 [_, _, _, _, _, _, _, _, _, _, _],
@@ -85,13 +87,70 @@ describe('YinshMinimax', () => {
             const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
 
             rules.node = new YinshNode(null, null, state);
-            expect(minimax.getListMoves(rules.node).length).toBe(14);
+            expect(minimax.getListMoves(rules.node).length).toBe(11);
         });
         it('cannot list moves that try to flip a ring', () => {
+            const board: YinshBoard = YinshBoard.of([
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, A, _, _, _, _, _, _, _],
+                [_, _, _, B, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+
+            rules.node = new YinshNode(null, null, state);
+            expect(minimax.getListMoves(rules.node).length).toBe(10);
+
         });
         it('should not list moves that jump over two non-joined groups of pieces', () => {
+            const board: YinshBoard = YinshBoard.of([
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, A, _, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+
+            rules.node = new YinshNode(null, null, state);
+            expect(minimax.getListMoves(rules.node).length).toBe(11);
         });
         it('should take a ring when it is capturing', () => {
+            const board: YinshBoard = YinshBoard.of([
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, A, _, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+
+            rules.node = new YinshNode(null, null, state);
+            for (const move of minimax.getListMoves(rules.node)) {
+                move.initialCaptures.forEach((capture: YinshCapture): void =>
+                    expect(capture.ringTaken.equals(new Coord(-1, -1))).toBeFalse());
+                move.finalCaptures.forEach((capture: YinshCapture): void =>
+                    expect(capture.ringTaken.equals(new Coord(-1, -1))).toBeFalse());
+            }
         });
     });
     describe('getBoardValue', () => {

@@ -9,6 +9,11 @@ const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 
+export class SixDidacticialMessages {
+
+    public static readonly MOVEMENT_NOT_DISCONNECTING: string = $localize`Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez avec une autre pièce !`;
+}
+
 export const sixDidacticial: DidacticialStep[] = [
 
     DidacticialStep.informational(
@@ -65,8 +70,7 @@ export const sixDidacticial: DidacticialStep[] = [
         $localize`Quand après 40 tours, toutes vos pièces sont placées, on passe en deuxième phase.
          Il faut maintenant déplacer ses pièces, en prenant garde à ne pas enlever une pièce qui empêchait l'adversaire de gagner.
          Dorénavant, si après un déplacement un ou plusieurs groupe de pièce est déconnecté du plus grand groupe de pièce, ces petits groupes de pièces sont enlevés définitivement du jeu.
-         Vous jouez Foncé, effectuez un déplacement qui déconnecte une pièce de votre adversaire.
-         $localize`,
+         Vous jouez Foncé, effectuez un déplacement qui déconnecte une pièce de votre adversaire.`,
         SixGameState.fromRepresentation([
             [_, _, _, _, _, _, _, X, _],
             [_, _, _, _, _, _, O, _, _],
@@ -81,15 +85,12 @@ export const sixDidacticial: DidacticialStep[] = [
         ], 40),
         SixMove.fromDeplacement(new Coord(6, 1), new Coord(5, 1)),
         (move: SixMove, resultingState: SixGameState) => {
-            if (resultingState.getPieceAt(move.landing.getNext(resultingState.offset)) === Player.NONE) {
-                return MGPValidation.failure($localize`Vous avez bien déconnecté une pièce adversaire, mais également la votre, et donc, vous perdez autant de point que l'adversaire, ce qui n'est pas spécialement avantageux !`);
-            }
             if (new Coord(6, 1).equals(move.start.getOrNull()) &&
-                resultingState.getPieceAt((new Coord(7, 0)).getNext(resultingState.offset)) === Player.NONE)
+                resultingState.getPieceAt(new Coord(7, 0).getNext(resultingState.offset)) === Player.NONE)
             {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure($localize`Ce mouvement ne déconnecte pas de pièce adverse ! Réessayez avec une autre pièce !`);
+                return MGPValidation.failure(SixDidacticialMessages.MOVEMENT_NOT_DISCONNECTING);
             }
         },
         $localize`Bravo, vous avez fait perdre une pièce à votre adversaire et vous êtes rapproché potentiellement de la victoire !`,

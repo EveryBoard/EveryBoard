@@ -4,11 +4,13 @@ import { ActivatedRoute } from '@angular/router';
 import { RouterTestingModule } from '@angular/router/testing';
 import { AppModule } from 'src/app/app.module';
 import { EncapsulePiece } from 'src/app/games/encapsule/EncapsulePiece';
+import { Direction } from 'src/app/jscaip/Direction';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { AuthenticationServiceMock } from 'src/app/services/tests/AuthenticationService.spec';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { ActivatedRouteStub } from 'src/app/utils/tests/TestUtils.spec';
 import { PickGameComponent } from '../../normal-component/pick-game/pick-game.component';
+import { GameWrapperMessages } from '../../wrapper-components/GameWrapper';
 import { LocalGameWrapperComponent } from '../../wrapper-components/local-game-wrapper/local-game-wrapper.component';
 
 describe('AbstractGameComponent', () => {
@@ -38,6 +40,11 @@ describe('AbstractGameComponent', () => {
     }));
     it('Clicks method should refuse when observer click', fakeAsync(async() => {
         const clickableMethods: { [gameName: string]: { [methodName: string]: unknown[] } } = {
+            Abalone: {
+                onPieceClick: [0, 0],
+                onCaseClick: [0, 0],
+                chooseDirection: [Direction.UP],
+            },
             Awale: { onClick: [0, 0] },
             Coerceo: { onClick: [0, 0] },
             Dvonn: { onClick: [0, 0] },
@@ -87,8 +94,8 @@ describe('AbstractGameComponent', () => {
             Tablut: { onClick: [0, 0] },
             Yinsh: { onClick: [0, 0] },
         };
-        const refusal: MGPValidation =
-            MGPValidation.failure('cloning feature will be added soon. Meanwhile, you can\'t click on the board');
+        const refusal: MGPValidation = MGPValidation.failure(GameWrapperMessages.NO_CLONING_FEATURE);
+
         for (const gameName of gameList) {
             const game: { [methodName: string]: unknown[] } = clickableMethods[gameName];
             if (game == null) {

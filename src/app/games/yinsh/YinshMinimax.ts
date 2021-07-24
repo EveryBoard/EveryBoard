@@ -79,11 +79,24 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
         const moves: {start: Coord, end: Coord}[] = [];
         this.getRingCoords(state).forEach((coord: Coord): void => {
             for (const dir of HexaDirection.factory.all) {
+                let pieceSeen: boolean = false;
                 for (let cur: Coord = coord.getNext(dir);
-                    state.hexaBoard.isOnBoard(cur) && state.hexaBoard.getAt(cur).isRing === false;
+                    state.hexaBoard.isOnBoard(cur);
                     cur = cur.getNext(dir)) {
-                    if (state.hexaBoard.getAt(cur) === YinshPiece.EMPTY) {
+                    const piece: YinshPiece = state.hexaBoard.getAt(cur);
+                    console.log({cur, piece})
+                    if (piece === YinshPiece.EMPTY) {
                         moves.push({ start: coord, end: cur });
+                        if (pieceSeen) {
+                            // can only land directly after the piece group
+                            break;
+                        }
+                    } else if (piece.isRing) {
+                        // cannot land on rings nor after them
+                        break;
+                    } else {
+                        // track whether we have seen pieces, as we can only jump above one group
+                        pieceSeen = true;
                     }
                 }
             }

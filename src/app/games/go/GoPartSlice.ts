@@ -102,12 +102,11 @@ export class GoPartSlice extends GamePartSlice {
     public static mapNumberBoard(board: NumberTable): GoPiece[][] {
         return ArrayUtils.mapBiArray<number, GoPiece>(board, GoPiece.of);
     }
-    public constructor(
-        board: Table<GoPiece>,
-        captured: number[],
-        turn: number,
-        koCoord: MGPOptional<Coord>,
-        phase: Phase)
+    public constructor(board: Table<GoPiece>,
+                       captured: number[],
+                       turn: number,
+                       koCoord: MGPOptional<Coord>,
+                       phase: Phase)
     {
         const intBoard: number[][] = GoPartSlice.mapGoPieceBoard(board);
         super(intBoard, turn);

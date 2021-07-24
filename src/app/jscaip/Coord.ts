@@ -1,9 +1,11 @@
 import { Direction, Vector } from 'src/app/jscaip/Direction';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 import { ComparableObject } from '../utils/Comparable';
+import { MGPOptional } from '../utils/MGPOptional';
 import { Encoder } from './Encoder';
 
 export class Coord implements ComparableObject {
+
     public static encoder: Encoder<Coord> = new class extends Encoder<Coord> {
         public encode(coord: Coord): JSONValueWithoutArray {
             return { x: coord.x, y: coord.y };
@@ -15,7 +17,6 @@ export class Coord implements ComparableObject {
             return new Coord(casted.x as number, casted.y as number);
         }
     }
-
     public static getBinarised(n: number): -1 | 0 | 1 {
         // return a value as -1 if negatif, 0 if nul, 1 if positive
         if (n < 0) return -1;
@@ -117,12 +118,27 @@ export class Coord implements ComparableObject {
         const dy: number = Math.abs(c.y - this.y);
         return Math.max(dx, dy);
     }
+    public isHexagonalyAlignedWith(coord: Coord): boolean {
+        const sdx: number = this.x - coord.x;
+        const sdy: number = this.y - coord.y;
+        if (sdx === sdy) return false;
+        if (sdx === -sdy) return true;
+        if (sdx*sdy === 0) return true;
+        return false;
+    }
     public isAlignedWith(coord: Coord): boolean {
         const dx: number = Math.abs(this.x - coord.x);
         const dy: number = Math.abs(this.y - coord.y);
         if (dx === dy) return true;
         if (dx*dy === 0) return true;
         return false;
+    }
+    public tryGetDirection(coord: Coord): MGPOptional<Direction> {
+        if (this.isAlignedWith(coord)) {
+            return MGPOptional.of(this.getDirectionToward(coord));
+        } else {
+            return MGPOptional.empty();
+        }
     }
     public getVectorToward(c: Coord): Coord {
         const dx: number = c.x - this.x;

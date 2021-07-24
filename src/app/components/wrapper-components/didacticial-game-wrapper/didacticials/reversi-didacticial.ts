@@ -26,9 +26,9 @@ export const reversiDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.anyMove(
         $localize`Capture (1/2)`,
-        $localize`Au début de la partie, voici la configuration des pièces.
-         Pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.
-         Faites n'importe quel mouvement.`,
+        $localize`Au début de la partie, les pièces sont placées comme ceci.
+        Pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.
+        Faites n'importe quel mouvement en cliquant pour déposer votre pièce. Le joueur foncé commence.`,
         ReversiPartSlice.getInitialSlice(),
         new ReversiMove(2, 4),
         $localize`Bravo !`,
@@ -55,7 +55,7 @@ export const reversiDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Passer son tour`,
         $localize`Si, à son tour de jeu, un joueur n'a aucun mouvement lui permettant de capturer une pièce, il est obligé de passer son tour.
-         Si d'aventure le joueur suivant ne savait pas jouer non plus, la partie terminerait avant que la plateau ne soit rempli, et les points seraient décomptés de la façon habituelle.`,
+         Si d'aventure le joueur suivant ne savait pas jouer non plus, la partie terminerait avant que le plateau ne soit rempli, et les points seraient décomptés de la façon habituelle.`,
         new ReversiPartSlice([
             [X, O, O, O, O, O, X, O],
             [O, X, X, X, X, X, X, O],

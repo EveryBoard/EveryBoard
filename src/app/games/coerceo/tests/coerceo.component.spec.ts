@@ -2,18 +2,19 @@ import { CoerceoComponent } from '../coerceo.component';
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { Coord } from 'src/app/jscaip/Coord';
 import { CoerceoFailure } from 'src/app/games/coerceo/CoerceoFailure';
-import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
+import { CoerceoPartSlice } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { fakeAsync } from '@angular/core/testing';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 describe('CoerceoComponent:', () => {
     let componentTestUtils: ComponentTestUtils<CoerceoComponent>;
 
-    const _: number = CoerceoPiece.EMPTY.value;
-    const N: number = CoerceoPiece.NONE.value;
-    const O: number = CoerceoPiece.ZERO.value;
-    const X: number = CoerceoPiece.ONE.value;
+    const _: number = FourStatePiece.EMPTY.value;
+    const N: number = FourStatePiece.NONE.value;
+    const O: number = FourStatePiece.ZERO.value;
+    const X: number = FourStatePiece.ONE.value;
 
     function getScore(player: number): number {
         return componentTestUtils.getComponent().rules.node.gamePartSlice['captures'][player];

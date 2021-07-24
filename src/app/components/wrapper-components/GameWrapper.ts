@@ -9,9 +9,16 @@ import { Move } from '../../jscaip/Move';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { GameInfo } from '../normal-component/pick-game/pick-game.component';
+import { Player } from 'src/app/jscaip/Player';
 
+export class GameWrapperMessages {
+
+    public static readonly NOT_YOUR_TURN: string = $localize`Ce n'est pas votre tour !`;
+
+    public static readonly NO_CLONING_FEATURE: string = $localize`Clôner une partie n'est pas encore possible. Cette fonctionnalité pour être implémentée dans un futur incertain.`;
+}
 @Component({ template: '' })
 export abstract class GameWrapper {
     public static VERBOSE: boolean = false;
@@ -22,7 +29,7 @@ export abstract class GameWrapper {
 
     public gameComponent: AbstractGameComponent<Move, GamePartSlice>;
 
-    public userName: string = this.authenticationService.getAuthenticatedUser() &&
+    public userName: string = this.authenticationService.getAuthenticatedUser() != null &&
                               this.authenticationService.getAuthenticatedUser().pseudo // TODO, clean that;
 
     public players: string[] = [null, null];
@@ -37,8 +44,7 @@ export abstract class GameWrapper {
                 protected actRoute: ActivatedRoute,
                 public router: Router,
                 protected userService: UserService,
-                protected authenticationService: AuthenticationService,
-    ) {
+                protected authenticationService: AuthenticationService) {
         display(GameWrapper.VERBOSE, 'GameWrapper.constructed: ' + (this.gameIncluder!=null));
     }
     public getMatchingComponent(compoString: string): Type<AbstractGameComponent<Move, GamePartSlice>> {
@@ -59,7 +65,7 @@ export abstract class GameWrapper {
     }
     protected createGameComponent(): void {
         display(GameWrapper.VERBOSE, 'GameWrapper.createGameComponent');
-        display(GameWrapper.VERBOSE && this.gameIncluder == null, 'GameIncluder should be present');
+        assert(this.gameIncluder != null, 'GameIncluder should be present');
 
         const compoString: string = this.actRoute.snapshot.paramMap.get('compo');
         const component: Type<AbstractGameComponent<Move, GamePartSlice>> =
@@ -97,7 +103,7 @@ export abstract class GameWrapper {
             },
         });
         if (!this.isPlayerTurn()) {
-            return MGPValidation.failure($localize`It is not your turn.`);
+            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN);
         }
         if (this.endGame) {
             return MGPValidation.failure($localize`Game is finished.`);
@@ -117,21 +123,21 @@ export abstract class GameWrapper {
 
     public onUserClick: (elementName: string) => MGPValidation = (_elementName: string) => {
         // TODO: Not the same logic to use in Online and Local, make abstract
-        if (this.observerRole > 1) {
-            const message: string = $localize`cloning feature will be added soon. Meanwhile, you can\'t click on the board`;
+        if (this.observerRole === Player.NONE.value) {
+            const message: string = GameWrapperMessages.NO_CLONING_FEATURE;
             return MGPValidation.failure(message);
         }
         if (this.isPlayerTurn()) {
             return MGPValidation.SUCCESS;
         } else {
-            return MGPValidation.failure($localize`It is not your turn`);
+            return MGPValidation.failure(GameWrapperMessages.NOT_YOUR_TURN);
         }
     }
     public onCancelMove(): void {
         // Non needed by default'
     }
     public isPlayerTurn: () => boolean = () => {
-        if (this.observerRole > 1) {
+        if (this.observerRole === Player.NONE.value) {
             return false;
         }
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn;

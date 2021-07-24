@@ -79,8 +79,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
     }
     private arrowTowards(placement: Coord, direction: HexaDirection): Arrow {
         const previous: Coord = placement.getNext(direction.getOpposite());
-        const center: Coord = this.getCenter(placement);
-        const previousCenter: Coord = this.getCenter(previous);
+        const center: Coord = this.getCenterAt(placement);
+        const previousCenter: Coord = this.getCenterAt(previous);
         return new Arrow(previous, placement, previousCenter.x, previousCenter.y, center.x, center.y);
     }
     private markCapture(capture: GipfCapture): void {
@@ -195,8 +195,8 @@ export class GipfComponent extends HexagonalGameComponent<GipfMove, GipfPartSlic
         for (const dir of GipfRules.getAllDirectionsForEntrance(this.constructedSlice, placement)) {
             if (GipfRules.isLineComplete(this.constructedSlice, placement, dir) === false) {
                 const nextCase: Coord = placement.getNext(dir);
-                const center1: Coord = this.getCenter(placement);
-                const center2: Coord = this.getCenter(nextCase);
+                const center1: Coord = this.getCenterAt(placement);
+                const center2: Coord = this.getCenterAt(nextCase);
                 this.arrows.push(new Arrow(placement, nextCase, center1.x, center1.y, center2.x, center2.y));
             }
         }

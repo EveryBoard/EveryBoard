@@ -24,6 +24,7 @@ import { AuthenticationServiceMock } from 'src/app/services/tests/Authentication
 import { QuartoComponent } from 'src/app/games/quarto/quarto.component';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { GameService } from 'src/app/services/GameService';
+import { AuthUser } from 'src/app/services/AuthenticationService';
 
 describe('OnlineGameWrapperComponent of Quarto:', () => {
     /* Life cycle summary
@@ -60,7 +61,16 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         },
         state: 'online',
     };
-
+    const OBSERVER: IJoueur = {
+        pseudo: 'jeanJaja',
+        displayName: 'JeanJaja',
+        email: 'jeanJaja@mgp.team',
+        emailVerified: true,
+        last_changed: {
+            seconds: Date.now() / 1000,
+        },
+        state: 'online',
+    };
     const prepareComponent: (initialJoiner: IJoiner) => Promise<void> = async(initialJoiner: IJoiner) => {
         partDAO = TestBed.get(PartDAO);
         joinerDAO = TestBed.get(JoinerDAO);
@@ -70,12 +80,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await partDAO.set('joinerId', PartMocks.INITIAL.doc);
         await joueurDAO.set('firstCandidateDocId', OPPONENT);
         await joueurDAO.set('creatorDocId', CREATOR);
+        await joueurDAO.set(OBSERVER.pseudo, OBSERVER);
         await chatDAOMock.set('joinerId', { messages: [], status: 'I don\'t have a clue' });
         return Promise.resolve();
     };
-    const prepareStartedGameFor: (user: {pseudo: string, verified: boolean},
-                                  shorterGlobalChrono?: boolean) => Promise<void> =
-    async(user: {pseudo: string, verified: boolean}, shorterGlobalChrono?: boolean) => {
+    const prepareStartedGameFor: (user: AuthUser, shorterGlobalChrono?: boolean) => Promise<void> =
+    async(user: AuthUser, shorterGlobalChrono?: boolean) => {
         AuthenticationServiceMock.setUser(user);
         componentTestUtils.prepareFixture(OnlineGameWrapperComponent);
         wrapper = componentTestUtils.wrapper as OnlineGameWrapperComponent;
@@ -85,8 +95,12 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         componentTestUtils.bindGameComponent();
 
         const partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
-        expect(partCreationId).toBeTruthy('partCreation id should be present after ngOnInit');
-        expect(wrapper.partCreation).toBeTruthy('partCreation field should also be present');
+        expect(partCreationId)
+            .withContext('partCreation id should be present after ngOnInit')
+            .toBeTruthy();
+        expect(wrapper.partCreation)
+            .withContext('partCreation field should also be present')
+            .toBeTruthy();
         await joinerDAO.update('joinerId', { candidates: ['firstCandidate'] });
         componentTestUtils.detectChanges();
         await joinerDAO.update('joinerId', {
@@ -135,7 +149,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
     };
     const receiveRequest: (request: Request) => Promise<void> = async(request: Request) => {
         await partDAO.update('joinerId', { request });
-        componentTestUtils.detectChanges(); tick(1);
+        componentTestUtils.detectChanges();
+        tick(1);
     };
     const receiveNewMoves: (moves: number[]) => Promise<void> = async(moves: number[]) => {
         await partDAO.update('joinerId', {
@@ -161,7 +176,7 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         }
     };
     beforeEach(fakeAsync(async() => {
-        componentTestUtils = await ComponentTestUtils.basic('Quarto');
+        componentTestUtils = await ComponentTestUtils.forGame('Quarto');
     }));
     it('Should be able to prepare a started game for creator', fakeAsync(async() => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
@@ -178,17 +193,27 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await prepareStartedGameFor({ pseudo: 'creator', verified: true });
         const partCreationId: DebugElement = componentTestUtils.findElement('#partCreation');
         let quartoTag: DebugElement = componentTestUtils.querySelector('app-quarto');
-        expect(partCreationId).toBeFalsy('partCreation id should be absent after config accepted');
-        expect(quartoTag).toBeFalsy('quarto tag should be absent before config accepted and async ms finished');
-        expect(wrapper.partCreation).toBeFalsy('partCreation field should be absent after config accepted');
+        expect(partCreationId)
+            .withContext('partCreation id should be absent after config accepted')
+            .toBeFalsy();
+        expect(quartoTag)
+            .withContext('quarto tag should be absent before config accepted and async ms finished')
+            .toBeFalsy();
+        expect(wrapper.partCreation)
+            .withContext('partCreation field should be absent after config accepted')
+            .toBeFalsy();
         expect(componentTestUtils.getComponent())
-            .toBeFalsy('gameComponent field should be absent after config accepted and async ms finished');
+            .withContext('gameComponent field should be absent after config accepted and async ms finished')
+            .toBeFalsy();
         tick(1);
 
         quartoTag = componentTestUtils.querySelector('app-quarto');
-        expect(quartoTag).toBeTruthy('quarto tag should be present after config accepted and async millisec finished');
+        expect(quartoTag)
+            .withContext('quarto tag should be present after config accepted and async millisec finished')
+            .toBeTruthy();
         expect(wrapper.gameComponent)
-            .toBeTruthy('gameComponent field should also be present after config accepted and async millisec finished');
+            .withContext('gameComponent field should also be present after config accepted and async millisec finished')
+            .toBeTruthy();
         tick(wrapper.maximalMoveDuration);
     }));
     it('Should allow simple move', fakeAsync(async() => {
@@ -293,7 +318,8 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             winner: 'creator', loser: 'firstCandidate', result: MGPResult.VICTORY.value,
         });
         expect(componentTestUtils.findElement('#youWonIndicator'))
-            .toBeTruthy('Component should show who is the winner.');
+            .withContext('Component should show who is the winner.')
+            .toBeTruthy();
     }));
     describe('Take Back', () => {
         it('Should send take back request when player ask to', fakeAsync(async() => {
@@ -589,7 +615,9 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
         await doMove(FIRST_MOVE, true);
         const move1: number = QuartoMove.encoder.encodeNumber(new QuartoMove(2, 2, QuartoPiece.BBBA));
         await receiveNewMoves([FIRST_MOVE_ENCODED, move1]);
-        expect(await componentTestUtils.clickElement('#resignButton')).toBeTruthy('Should be possible to resign');
+        expect(await componentTestUtils.clickElement('#resignButton'))
+            .withContext('Should be possible to resign')
+            .toBeTruthy();
 
         spyOn(partDAO, 'update').and.callThrough();
         const move2: QuartoMove = new QuartoMove(2, 3, QuartoPiece.ABBA);
@@ -699,6 +727,107 @@ describe('OnlineGameWrapperComponent of Quarto:', () => {
             });
             expect(wrapper.getUpdateType(update)).toBe(UpdateType.MOVE);
             tick(wrapper.maximalMoveDuration + 1);
+        }));
+    });
+    describe('rematch', () => {
+        it('should show propose button only when game is ended', fakeAsync(async() => {
+            // given a game that is not finished
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            componentTestUtils.detectChanges();
+            componentTestUtils.expectElementNotToExist('#proposeRematchButton');
+
+            // when it is finished
+            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1);
+
+            // then it should allow to propose rematch
+            componentTestUtils.expectElementToExist('#proposeRematchButton');
+        }));
+        it('should sent proposal request when proposing', fakeAsync(async() => {
+            // given an ended game
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            componentTestUtils.detectChanges();
+            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1);
+
+            // when the propose rematch button is clicked
+            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
+            spyOn(wrapper.gameService, 'proposeRematch').and.callThrough();
+            await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
+
+            // then the gameService must be called
+            expect(wrapper.gameService.proposeRematch).toHaveBeenCalledOnceWith('joinerId', Player.ZERO);
+        }));
+        it('should show accept/refuse button when proposition has been sent', fakeAsync(async() => {
+            // given an ended game
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            componentTestUtils.detectChanges();
+            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1);
+
+            // when request is received
+            componentTestUtils.expectElementNotToExist('#acceptRematchButton');
+            await receiveRequest(Request.rematchProposed(Player.ONE));
+
+            // then accept/refuse buttons must be shown
+            componentTestUtils.expectElementToExist('#acceptRematchButton');
+        }));
+        it('should sent accepting request when user accept rematch', fakeAsync(async() => {
+            // give a part with rematch request send by opponent
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            componentTestUtils.detectChanges();
+            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1);
+            await receiveRequest(Request.rematchProposed(Player.ONE));
+
+            // when accepting it
+            const wrapper: OnlineGameWrapperComponent = componentTestUtils.wrapper as OnlineGameWrapperComponent;
+            spyOn(wrapper.gameService, 'acceptRematch').and.callThrough();
+            await componentTestUtils.expectInterfaceClickSuccess('#acceptRematchButton');
+
+            // then it should have called acceptRematch
+            expect(wrapper.gameService.acceptRematch).toHaveBeenCalledTimes(1);
+        }));
+        it('should redirect to new part when rematch is accepted', fakeAsync(async() => {
+            // give a part with rematch request send by you
+            await prepareStartedGameFor({ pseudo: 'creator', verified: true });
+            tick(1);
+            componentTestUtils.detectChanges();
+            await componentTestUtils.expectInterfaceClickSuccess('#resignButton');
+            tick(1);
+            await componentTestUtils.expectInterfaceClickSuccess('#proposeRematchButton');
+
+            // when opponent accept it
+            spyOn(componentTestUtils.wrapper.router, 'navigate');
+            await receiveRequest(Request.rematchAccepted('Quarto', 'nextPartId'));
+
+            // then it should redirect to new part
+            const first: string = '/nextGameLoading';
+            const second: string = '/play/Quarto/nextPartId';
+            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith([first]);
+            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith([second]);
+        }));
+    });
+    describe('Non Player Experience', () => {
+        it('Should not be able to do anything', fakeAsync(async() => {
+            await prepareStartedGameFor({ pseudo: OBSERVER.pseudo, verified: true });
+            spyOn(componentTestUtils.wrapper as OnlineGameWrapperComponent, 'startCountDownFor').and.callFake(() => null);
+
+            const forbiddenFunctionNames: string[] = [
+                'canProposeDraw',
+                'canAskTakeBack',
+                'acceptRematch',
+                'proposeRematch',
+                'canResign',
+            ];
+            for (const name of forbiddenFunctionNames) {
+                expect(componentTestUtils.wrapper[name]()).toBeFalse();
+            }
+            tick(wrapper.maximalMoveDuration);
         }));
     });
 });

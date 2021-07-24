@@ -17,9 +17,9 @@ export function expectToBeVictoryFor<M extends Move,
     minimaxes: Minimax<M, S>[])
 : void
 {
-    expect(rules.getGameStatus(node)).toBe(GameStatus.getVictory(player));
+    expect(rules.getGameStatus(node)).toEqual(GameStatus.getVictory(player));
     for (const minimax of minimaxes) {
-        expect(minimax.getBoardValue(node).value).toBe(player.getVictoryValue());
+        expect(minimax.getBoardValue(node).value).toEqual(player.getVictoryValue());
     }
 }
 

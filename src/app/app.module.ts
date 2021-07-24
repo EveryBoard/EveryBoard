@@ -49,7 +49,10 @@ import { OnlineGameCreationComponent }
     from './components/normal-component/online-game-creation/online-game-creation.component';
 import { DidacticialGameCreationComponent }
     from './components/normal-component/didacticial-game-creation/didacticial-game-creation.component';
+import { HumanDuration } from './utils/TimeUtils';
+import { NextGameLoadingComponent } from './components/normal-component/next-game-loading/next-game-loading.component';
 
+import { AbaloneComponent } from './games/abalone/abalone.component';
 import { AwaleComponent } from './games/awale/awale.component';
 import { CoerceoComponent } from './games/coerceo/coerceo.component';
 import { DvonnComponent } from './games/dvonn/dvonn.component';
@@ -71,7 +74,6 @@ import { SiamComponent } from './games/siam/siam.component';
 import { SixComponent } from './games/six/six.component';
 import { TablutComponent } from './games/tablut/tablut.component';
 import { YinshComponent } from './games/yinsh/Yinsh.component';
-import { HumanDuration } from './utils/TimeUtils';
 
 // time scp -C -r ./dist/pantheonsgame/* gaviall@awesom.eu:/home/gaviall/www/pantheonsgame/
 
@@ -81,6 +83,7 @@ const routes: Route [] = [
     { path: 'inscription', component: InscriptionComponent },
     { path: 'confirm-inscription', component: ConfirmInscriptionComponent, canActivate: [MustVerifyEmail] },
     { path: 'notFound', component: NotFoundComponent, canActivate: [EmailVerified] },
+    { path: 'nextGameLoading', component: NextGameLoadingComponent, canActivate: [EmailVerified] },
 
     { path: 'play', component: OnlineGameCreationComponent, canActivate: [EmailVerified] },
     { path: 'play/:compo/:id', component: OnlineGameWrapperComponent, canActivate: [EmailVerified] },
@@ -104,6 +107,7 @@ const routes: Route [] = [
         PartCreationComponent,
         InscriptionComponent,
         NotFoundComponent,
+        NextGameLoadingComponent,
         CountDownComponent,
         OnlineGameWrapperComponent,
         LocalGameWrapperComponent,
@@ -114,6 +118,7 @@ const routes: Route [] = [
         OnlineGameCreationComponent,
         DidacticialGameCreationComponent,
 
+        AbaloneComponent,
         AwaleComponent,
         CoerceoComponent,
         DvonnComponent,
@@ -139,6 +144,7 @@ const routes: Route [] = [
         HumanDuration,
     ],
     entryComponents: [
+        AbaloneComponent,
         AwaleComponent,
         DvonnComponent,
         EncapsuleComponent,

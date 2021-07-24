@@ -160,7 +160,6 @@ export class GipfMove extends Move {
             return array;
         }
     }
-
     public constructor(public readonly placement: GipfPlacement,
                        public readonly initialCaptures: ReadonlyArray<GipfCapture>,
                        public readonly finalCaptures: ReadonlyArray<GipfCapture>) {

@@ -1,12 +1,13 @@
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
-import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
+import { CoerceoPartSlice } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-const _: number = CoerceoPiece.EMPTY.value;
-const N: number = CoerceoPiece.NONE.value;
-const O: number = CoerceoPiece.ZERO.value;
-const X: number = CoerceoPiece.ONE.value;
+const _: number = FourStatePiece.EMPTY.value;
+const N: number = FourStatePiece.NONE.value;
+const O: number = FourStatePiece.ZERO.value;
+const X: number = FourStatePiece.ONE.value;
 
 export const coerceoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
@@ -35,7 +36,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         $localize`Capture`,
         $localize`Chaque pièce a trois cases triangulaires voisines (2 sur les bords).
          Quand toutes les cases voisines sauf une sont occupées, et qu'un ennemi vient se déplacer sur cette dernière case libre, votre pièce est capturée !
-         Cependant, il est possible pour un joueur de se placer entre 3 pièces adversaires (ou 2 contre un bord) sans être capturé.
+         Cependant, il est possible pour un joueur de se placer entre 3 pièces adverses (ou 2 contre un bord) sans être capturé.
          Vous jouez clair, effectuez une capture`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],

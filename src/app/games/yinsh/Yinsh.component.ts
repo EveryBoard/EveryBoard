@@ -89,8 +89,8 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
             }
             this.viewInfo.caseInfo[coord.y][coord.x] = {
                 coord,
-                coordinates: this.getHexaCoordinates(coord),
-                center: this.getCenter(coord),
+                coordinates: this.getHexaCoordsAt(coord),
+                center: this.getCenterAt(coord),
                 caseClasses: [],
                 pieceClasses: [],
                 isPiece: false,

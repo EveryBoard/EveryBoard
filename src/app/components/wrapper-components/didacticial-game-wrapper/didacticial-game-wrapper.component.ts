@@ -7,10 +7,11 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Move } from 'src/app/jscaip/Move';
 import { AuthenticationService } from 'src/app/services/AuthenticationService';
 import { UserService } from 'src/app/services/UserService';
-import { display } from 'src/app/utils/utils';
+import { assert, display } from 'src/app/utils/utils';
 import { DidacticialStep } from './DidacticialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
+import { abaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
 import { awaleDidacticial } from './didacticials/awale-didacticial';
 import { coerceoDidacticial } from './didacticials/coerceo-didacticial';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
@@ -92,6 +93,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
     public getDidacticial(): DidacticialStep[] {
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
         const didacticials: { [key: string]: DidacticialStep[] } = {
+            Abalone: abaloneTutorial,
             Awale: awaleDidacticial,
             Coerceo: coerceoDidacticial,
             Dvonn: dvonnDidacticial,
@@ -147,29 +149,26 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         display(DidacticialGameWrapperComponent.VERBOSE, { didacticialGameWrapper_onLegalUserMove: { move } });
         const currentStep: DidacticialStep = this.steps[this.stepIndex];
         const isLegalMove: boolean = this.gameComponent.rules.choose(move);
-        if (isLegalMove) {
-            display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onLegalUserMove: legal move');
-            this.gameComponent.updateBoard();
-            this.moveAttemptMade = true;
-            if (currentStep.isPredicate()) {
-                const resultingState: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
-                const moveValidity: MGPValidation = currentStep.predicate(move, resultingState);
-                if (moveValidity.isSuccess()) {
-                    this.showStepSuccess();
-                } else {
-                    this.currentReason = moveValidity.getReason();
-                }
-            } else if (currentStep.isAnyMove() || currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
-                display(DidacticialGameWrapperComponent.VERBOSE,
-                        'didacticialGameWrapper.onLegalUserMove: awaited move!');
+        assert(isLegalMove, 'It should be impossible to call onLegalUserMove with an illegal move');
+        display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.onLegalUserMove: legal move');
+        this.gameComponent.updateBoard();
+        this.moveAttemptMade = true;
+        if (currentStep.isPredicate()) {
+            const resultingState: GamePartSlice = this.gameComponent.rules.node.gamePartSlice;
+            const moveValidity: MGPValidation = currentStep.predicate(move, resultingState);
+            if (moveValidity.isSuccess()) {
                 this.showStepSuccess();
             } else {
-                display(DidacticialGameWrapperComponent.VERBOSE,
-                        'didacticialGameWrapper.onLegalUserMove: not the move that was awaited.');
-                this.currentReason = currentStep.failureMessage;
+                this.currentReason = moveValidity.getReason();
             }
+        } else if (currentStep.isAnyMove() || currentStep.acceptedMoves.some((m: Move) => m.equals(move))) {
+            display(DidacticialGameWrapperComponent.VERBOSE,
+                    'didacticialGameWrapper.onLegalUserMove: awaited move!');
+            this.showStepSuccess();
         } else {
-            this.currentMessage = currentStep.failureMessage;
+            display(DidacticialGameWrapperComponent.VERBOSE,
+                    'didacticialGameWrapper.onLegalUserMove: not the move that was awaited.');
+            this.currentReason = currentStep.failureMessage;
         }
         this.cdr.detectChanges();
     }
@@ -245,7 +244,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         display(DidacticialGameWrapperComponent.VERBOSE, 'didacticialGameWrapper.showSolution()');
         const step: DidacticialStep = this.steps[this.stepIndex];
         let awaitedMove: Move;
-        if (step.acceptedMoves && step.acceptedMoves.length > 0) {
+        if (step.acceptedMoves != null && step.acceptedMoves.length > 0) {
             awaitedMove = step.acceptedMoves[0];
         } else {
             awaitedMove = step.solutionMove;

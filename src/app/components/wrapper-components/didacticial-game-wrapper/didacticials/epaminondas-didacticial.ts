@@ -9,7 +9,7 @@ const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 export const epaminondasDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        $localize`Plateau de départ`,
+        $localize`Plateau initial`,
         $localize`Ceci est le plateau de départ.
          La ligne tout en haut est la ligne de départ de Clair.
          La ligne tout en bas est la ligne de départ de Foncé.`,

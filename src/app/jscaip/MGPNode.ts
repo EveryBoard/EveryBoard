@@ -113,7 +113,7 @@ export class MGPNode<R extends Rules<M, S, L>,
          */
         const LOCAL_VERBOSE: boolean = false;
         this.ownValue = new MGPMap<string, U>();
-        if (minimaxCreator) {
+        if (minimaxCreator != null) {
             const firstValue: U = minimaxCreator.getBoardValue(this);
             this.ownValue.set(minimaxCreator.name, firstValue);
             this.hopedValue.set(minimaxCreator.name, firstValue.value);
@@ -217,7 +217,7 @@ export class MGPNode<R extends Rules<M, S, L>,
     public getSonByMove(move: M): MGPNode<R, M, S, L, U> | null {
         assert(this.childs != null, 'Cannot get son of uncalculated node');
         for (const node of this.childs) {
-            if (node.move && node.move.equals(move)) {
+            if (node.move != null && node.move.equals(move)) {
                 return node;
             }
         }
@@ -234,10 +234,8 @@ export class MGPNode<R extends Rules<M, S, L>,
         return this.hopedValue.get(minimax.name).get();
     }
     public getOwnValue(minimax: Minimax<M, S, L, U>): U {
-        if (minimax == null) {
-            console.log('jeu sans ia');
-            return new NodeUnheritance(0) as U;
-        }
+        assert(minimax != null, 'Cannot got game value without minimax provided');
+
         let ownValue: U = this.ownValue.get(minimax.name).getOrNull();
         if (ownValue == null) {
             ownValue = minimax.getBoardValue(this);
@@ -253,11 +251,11 @@ export class MGPNode<R extends Rules<M, S, L>,
             return 'NodeInitial: ' + turn;
         }
         do {
-            const move: string = node.move ? ' > ' + node.move.toString() + '> ' : ' ';
+            const move: string = node.move == null ? ' ' : ' > ' + node.move.toString() + '> ';
             const turn: number = node.gamePartSlice.turn;
             genealogy = move + turn + ' ' + genealogy;
             node = node.mother;
-        } while (node);
+        } while (node != null);
         return 'Node: ' + genealogy;
     }
     public hasMoves(): boolean {

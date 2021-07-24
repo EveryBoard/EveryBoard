@@ -1,17 +1,8 @@
 import { Coord } from 'src/app/jscaip/Coord';
-import { Player } from 'src/app/jscaip/Player';
 import { Table } from 'src/app/utils/ArrayUtils';
-import { CoerceoPartSlice, CoerceoPiece } from '../CoerceoPartSlice';
+import { CoerceoPartSlice } from '../CoerceoPartSlice';
 
 describe('CoerceoPartSlice', () => {
-    describe('CoerceoPiece', () => {
-        describe('playerOf', () => {
-            it('Should throw when called with anything else than Player.ONE or Player.ZERO', () => {
-                expect(() => CoerceoPiece.ofPlayer(Player.NONE))
-                    .toThrowError('CoerceoPiece.ofPlayer can only be called with Player.ZERO and Player.ONE.');
-            });
-        });
-    });
     describe('isDeconnectable', () => {
         it('Should not deconnect tile with more than 3 neighboor (v _ _ v v v)', () => {
             const slice: CoerceoPartSlice = new CoerceoPartSlice([], 0, [0, 0], [0, 0]);

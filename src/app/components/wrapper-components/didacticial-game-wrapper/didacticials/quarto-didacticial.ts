@@ -38,7 +38,7 @@ export const quartoDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Situation`,
-        $localize`Nous avons ici une situation délicate. Analysez bien le plateau et jouer votre coup,
+        $localize`Nous avons ici une situation délicate. Analysez bien le plateau et jouez votre coup,
          en faisant particulièrement attention de ne pas permettre à l'adversaire de l'emporter au prochain coup.`,
         new QuartoPartSlice([
             [15, 14, 13, 16],

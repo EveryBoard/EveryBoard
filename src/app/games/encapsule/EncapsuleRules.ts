@@ -27,12 +27,12 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         [new Coord(0, 0), new Coord(1, 1), new Coord(2, 2)],
         [new Coord(0, 2), new Coord(1, 1), new Coord(2, 0)],
     ];
-    public static isVictory(slice: EncapsulePartSlice): boolean {
+    public static isVictory(slice: EncapsulePartSlice): MGPOptional<Player> {
         const board: EncapsuleCase[][] = ArrayUtils.copyBiArray(slice.toCaseBoard());
-        let victory: boolean = false;
+        let victory: MGPOptional<Player> = MGPOptional.empty();
         let i: number = 0;
         let line: Coord[];
-        while (!victory && i<8) {
+        while (victory.isAbsent() && i<8) {
             line = EncapsuleRules.LINES[i++];
             const cases: EncapsuleCase[] = [board[line[0].y][line[0].x],
                 board[line[1].y][line[1].x],
@@ -41,11 +41,18 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         }
         return victory;
     }
-    public static isVictoriousLine(cases: EncapsuleCase[]): boolean {
+    public static isVictoriousLine(cases: EncapsuleCase[]): MGPOptional<Player> {
         const pieces: EncapsulePiece[] = cases.map((c: EncapsuleCase) => c.getBiggest());
         const owner: Player[] = pieces.map((piece: EncapsulePiece) => piece.getPlayer());
-        if (owner[0] === Player.NONE) return false;
-        return (owner[0] === owner[1]) && (owner[1] === owner[2]);
+        if (owner[0] === Player.NONE) {
+            return MGPOptional.empty();
+        } else {
+            if ((owner[0] === owner[1]) && (owner[1] === owner[2])) {
+                return MGPOptional.of(owner[0]);
+            } else {
+                return MGPOptional.empty();
+            }
+        }
     }
     public static isLegal(move: EncapsuleMove, slice: EncapsulePartSlice): EncapsuleLegalityStatus {
         const LOCAL_VERBOSE: boolean = false;
@@ -58,13 +65,13 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
                 return EncapsuleLegalityStatus.failure(EncapsuleFailure.WRONG_COLOR);
             }
             if (slice.isInRemainingPieces(movingPiece) === false) {
-                return EncapsuleLegalityStatus.failure(EncapsuleFailure.NOT_REMAINING_PIECE);
+                return EncapsuleLegalityStatus.failure(EncapsuleFailure.PIECE_OUT_OF_STOCK);
             }
         } else {
             const startingCoord: Coord = move.startingCoord.get();
             const startingCase: EncapsuleCase = EncapsuleCase.decode(boardCopy[startingCoord.y][startingCoord.x]);
             movingPiece = startingCase.getBiggest();
-            if (!slice.pieceBelongsToCurrentPlayer(movingPiece)) {
+            if (slice.pieceBelongsToCurrentPlayer(movingPiece) === false) {
                 return EncapsuleLegalityStatus.failure(EncapsuleFailure.WRONG_COLOR);
             }
         }
@@ -110,12 +117,16 @@ export class EncapsuleRules extends Rules<EncapsuleMove, EncapsulePartSlice, Enc
         const resultingSlice: EncapsulePartSlice = new EncapsulePartSlice(newNumberBoard, newTurn, newRemainingPiece);
         return resultingSlice;
     }
-    public getGameStatus(node: EncapsuleNode): GameStatus {
+    public static getGameStatus(node: EncapsuleNode): GameStatus {
         const state: EncapsulePartSlice = node.gamePartSlice;
-        if (EncapsuleRules.isVictory(state)) {
-            return GameStatus.getVictory(Player.of((state.turn + 1) % 2));
+        const winner: MGPOptional<Player> = EncapsuleRules.isVictory(state);
+        if (winner.isPresent()) {
+            return GameStatus.getVictory(winner.get());
         } else {
             return GameStatus.ONGOING;
         }
+    }
+    public getGameStatus(node: EncapsuleNode): GameStatus {
+        return EncapsuleRules.getGameStatus(node);
     }
 }
