@@ -8,6 +8,7 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
+import { GameStatus } from 'src/app/jscaip/Rules';
 
 
 export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
@@ -69,19 +70,11 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPart
         return moves;
     }
     public getBoardValue(node: EpaminondasNode): NodeUnheritance {
-        const slice: EpaminondasPartSlice = node.gamePartSlice;
-        const zerosInFirstLine: number = slice.count(Player.ZERO, 0);
-        const onesInLastLine: number = slice.count(Player.ONE, 11);
-        if (slice.turn % 2 === 0) {
-            if (zerosInFirstLine > onesInLastLine) {
-                return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
-            }
-        } else {
-            if (onesInLastLine > zerosInFirstLine) {
-                return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
-            }
+        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        if (gameStatus.isEndGame) {
+            return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        return new NodeUnheritance(this.getPieceCountPlusRowDomination(slice));
+        return new NodeUnheritance(this.getPieceCountPlusRowDomination(node.gamePartSlice));
     }
     public getPieceCountPlusRowDomination(state: EpaminondasPartSlice): number {
         const SCORE_BY_PIECE: number = 14*13*11;

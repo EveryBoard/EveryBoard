@@ -46,6 +46,7 @@ export class FirstPlayer {
     }
 }
 export type IPartType = 'STANDARD' | 'BLITZ' | 'CUSTOM';
+
 export class PartType {
     private constructor(public value: IPartType) {}
 

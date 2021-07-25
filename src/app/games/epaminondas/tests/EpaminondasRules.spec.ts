@@ -4,22 +4,30 @@ import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasLegalityStatus } from '../epaminondaslegalitystatus';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
-import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { EpaminondasMinimax } from '../EpaminondasMinimax';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { EpaminondasFailure } from '../EpaminondasFailure';
+import { expectToBeVictoryFor } from 'src/app/jscaip/tests/Rules.spec';
+import { Minimax } from 'src/app/jscaip/Minimax';
+import { AttackEpaminondasMinimax } from '../AttackEpaminondasMinimax';
+import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 
 describe('EpaminondasRules:', () => {
     let rules: EpaminondasRules;
-    let minimax: EpaminondasMinimax;
+    let minimaxes: Minimax<EpaminondasMove, EpaminondasPartSlice>[];
     const _: number = Player.NONE.value;
     const X: number = Player.ONE.value;
     const O: number = Player.ZERO.value;
 
     beforeEach(() => {
         rules = new EpaminondasRules(EpaminondasPartSlice);
-        minimax = new EpaminondasMinimax(rules, 'EpaminondasMinimax');
+        minimaxes = [
+            new AttackEpaminondasMinimax(rules, 'Attack'),
+            new EpaminondasMinimax(rules, 'Epaminondas'),
+            new PositionalEpaminondasMinimax(rules, 'Positional'),
+        ];
     });
     it('Should forbid phalanx to go outside the board (body)', () => {
         const board: NumberTable = [
@@ -163,126 +171,6 @@ describe('EpaminondasRules:', () => {
         const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
         expect(status.legal.getReason()).toBe(RulesFailure.CANNOT_SELF_CAPTURE);
     });
-    it('Should declare first player winner if his pawn survive one turn on last line', () => {
-        const board: NumberTable = [
-            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ];
-        const expectedBoard: NumberTable = [
-            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ];
-        const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 1);
-        const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Direction.DOWN);
-        const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
-        const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
-        expect(resultingSlice).toEqual(expectedSlice);
-        expect(minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value)
-            .withContext('This should be a victory for player 0')
-            .toEqual(Number.MIN_SAFE_INTEGER);
-    });
-    it('Should declare second player winner if his pawn survive one turn on first line', () => {
-        const board: NumberTable = [
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ];
-        const expectedBoard: NumberTable = [
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ];
-        const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
-        const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Direction.UP);
-        const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
-        const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 1);
-        expect(resultingSlice).toEqual(expectedSlice);
-        expect(minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value)
-            .withContext('This should be a victory for player 1')
-            .toEqual(Number.MAX_SAFE_INTEGER);
-    });
-    it('Should not consider first player winner if both player have one piece on their landing line', () => {
-        const board: NumberTable = [
-            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ];
-        const expectedBoard: NumberTable = [
-            [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
-            [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
-        ];
-        const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 1);
-        const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.DOWN);
-        const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.isSuccess()).toBeTrue();
-        const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
-        const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
-        expect(resultingSlice).toEqual(expectedSlice);
-        const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
-        expect(boardValue).withContext('This should not be a victory for player 0').not.toEqual(Number.MIN_SAFE_INTEGER);
-        expect(boardValue).withContext('This should not be a victory for player 1').not.toEqual(Number.MAX_SAFE_INTEGER);
-    });
     it('Should forbid moving ennemy pieces', () => {
         const board: NumberTable = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
@@ -377,6 +265,204 @@ describe('EpaminondasRules:', () => {
         const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 1);
         expect(resultingSlice).toEqual(expectedSlice);
     });
-    it('Should declare first player winner when last soldier of second player has been captured');
-    it('Should declare second player winner when last soldier of first player has been captured');
+    describe('Victories', () => {
+        it('Should declare first player winner if his pawn survive one turn on last line', () => {
+            const board: NumberTable = [
+                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const expectedBoard: NumberTable = [
+                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 1);
+            const move: EpaminondasMove = new EpaminondasMove(0, 9, 1, 1, Direction.DOWN);
+            const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
+            expect(status.legal.isSuccess()).toBeTrue();
+            const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
+            const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
+            expect(resultingSlice).toEqual(expectedSlice);
+            const node: EpaminondasNode = new MGPNode(null, move, expectedSlice);
+            expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        });
+        it('Should declare second player winner if his pawn survive one turn on first line', () => {
+            const board: NumberTable = [
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const expectedBoard: NumberTable = [
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
+            const move: EpaminondasMove = new EpaminondasMove(0, 2, 1, 1, Direction.UP);
+            const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
+            expect(status.legal.isSuccess()).toBeTrue();
+            const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
+            const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 1);
+            expect(resultingSlice).toEqual(expectedSlice);
+            const node: EpaminondasNode = new MGPNode(null, move, expectedSlice);
+            expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        });
+        it('Should not consider first player winner if both player have one piece on their landing line', () => {
+            const board: NumberTable = [
+                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const expectedBoard: NumberTable = [
+                [O, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [X, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 1);
+            const move: EpaminondasMove = new EpaminondasMove(0, 10, 1, 1, Direction.DOWN);
+            const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
+            expect(status.legal.isSuccess()).toBeTrue();
+            const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
+            const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
+            expect(resultingSlice).toEqual(expectedSlice);
+            for (const minimax of minimaxes) {
+                const boardValue: number = minimax.getBoardValue(new MGPNode(null, move, expectedSlice)).value;
+                expect(boardValue).withContext('This should not be a victory for player 0').not.toEqual(Number.MIN_SAFE_INTEGER);
+                expect(boardValue).withContext('This should not be a victory for player 1').not.toEqual(Number.MAX_SAFE_INTEGER);
+            }
+        });
+        it('Should declare player zero winner when last soldier of opponent has been captured', () => {
+            const board: NumberTable = [
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [X, O, O, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const expectedBoard: NumberTable = [
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [O, O, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 0);
+            const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
+            const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
+            expect(status.legal.reason).toBeNull();
+            const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
+            const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 1);
+            expect(resultingSlice).toEqual(expectedSlice);
+            const node: EpaminondasNode = new MGPNode(null, move, expectedSlice);
+            expectToBeVictoryFor(rules, node, Player.ZERO, minimaxes);
+        });
+        it('Should declare player one winner when last soldier of opponent has been captured', () => {
+            const board: NumberTable = [
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [O, X, X, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const expectedBoard: NumberTable = [
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [X, X, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _, _, _, _],
+            ];
+            const slice: EpaminondasPartSlice = new EpaminondasPartSlice(board, 1);
+            const move: EpaminondasMove = new EpaminondasMove(2, 9, 2, 1, Direction.LEFT);
+            const status: EpaminondasLegalityStatus = rules.isLegal(move, slice);
+            expect(status.legal.reason).toBeNull();
+            const resultingSlice: EpaminondasPartSlice = rules.applyLegalMove(move, slice, status);
+            const expectedSlice: EpaminondasPartSlice = new EpaminondasPartSlice(expectedBoard, 2);
+            expect(resultingSlice).toEqual(expectedSlice);
+            const node: EpaminondasNode = new MGPNode(null, move, expectedSlice);
+            expectToBeVictoryFor(rules, node, Player.ONE, minimaxes);
+        });
+    });
 });

@@ -4,6 +4,7 @@ import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
+import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { EpaminondasGroupDatasFactory } from './EpaminondasGroupData';
 import { EpaminondasLegalityStatus } from './epaminondaslegalitystatus';
@@ -86,19 +87,11 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         return moves;
     }
     public getBoardValue(node: EpaminondasNode): NodeUnheritance {
-        const slice: EpaminondasPartSlice = node.gamePartSlice;
-        const p0InLine0: number = slice.count(Player.ZERO, 0);
-        const p1InLine11: number = slice.count(Player.ONE, 11);
-        if (slice.turn % 2 === 0) {
-            if (p0InLine0 > p1InLine11) {
-                return new NodeUnheritance(Player.ZERO.getVictoryValue());
-            }
-        } else {
-            if (p1InLine11 > p0InLine0) {
-                return new NodeUnheritance(Player.ONE.getVictoryValue());
-            }
+        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        if (gameStatus.isEndGame) {
+            return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        return new NodeUnheritance(this.getPieceCountThenSupportThenAvdancement(slice));
+        return new NodeUnheritance(this.getPieceCountThenSupportThenAvdancement(node.gamePartSlice));
     }
     public getSumOfAvancementTimesGroupSize(state: EpaminondasPartSlice): number {
         let zeroScore: number = 0;
