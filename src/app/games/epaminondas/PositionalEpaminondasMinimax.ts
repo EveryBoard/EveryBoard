@@ -8,6 +8,7 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
 import { EpaminondasGroupDatasFactory } from './EpaminondasGroupData';
 import { EpaminondasLegalityStatus } from './epaminondaslegalitystatus';
+import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasPartSlice } from './EpaminondasPartSlice';
 import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
@@ -18,80 +19,35 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
 {
 
     public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
-        const PLAYER: Player = node.gamePartSlice.getCurrentPlayer();
-        const ENNEMY: number = node.gamePartSlice.getCurrentEnnemy().value;
-        const EMPTY: number = Player.NONE.value;
-
-        let moves: EpaminondasMove[] = [];
-        const slice: EpaminondasPartSlice = node.gamePartSlice;
-        let move: EpaminondasMove;
-        for (let y: number = 0; y < 12; y++) {
-            for (let x: number = 0; x < 14; x++) {
-                const firstCoord: Coord = new Coord(x, y);
-                if (slice.getBoardAt(firstCoord) === PLAYER.value) {
-                    for (const direction of Direction.DIRECTIONS) {
-                        let movedPieces: number = 1;
-                        let nextCoord: Coord = firstCoord.getNext(direction, 1);
-                        while (nextCoord.isInRange(14, 12) &&
-                            slice.getBoardAt(nextCoord) === PLAYER.value)
-                        {
-                            movedPieces += 1;
-                            nextCoord = nextCoord.getNext(direction, 1);
-                        }
-                        let stepSize: number = 1;
-                        while (nextCoord.isInRange(14, 12) &&
-                            stepSize <= movedPieces &&
-                            slice.getBoardAt(nextCoord) === EMPTY)
-                        {
-                            move = new EpaminondasMove(x, y, movedPieces, stepSize, direction);
-                            moves = this.addMove(moves, move, slice);
-
-                            stepSize++;
-                            nextCoord = nextCoord.getNext(direction, 1);
-                        }
-                        if (nextCoord.isInRange(14, 12) &&
-                            stepSize <= movedPieces &&
-                            slice.getBoardAt(nextCoord) === ENNEMY)
-                        {
-                            move = new EpaminondasMove(x, y, movedPieces, stepSize, direction);
-                            moves = this.addMove(moves, move, slice);
-                        }
-                    }
-                }
-            }
-        }
-        return this.orderMovesByPhalanxSizeAndFilter(moves);
-        // return moves;
+        const moves: EpaminondasMove[] = EpaminondasMinimax.getListMoves(node);
+        return this.orderMovesByPhalanxSizeAndFilter(moves, node.gamePartSlice);
     }
-    public addMove(moves: EpaminondasMove[],
-                   move: EpaminondasMove,
-                   slice: EpaminondasPartSlice)
-    : EpaminondasMove[]
-    {
-        const legality: EpaminondasLegalityStatus = EpaminondasRules.isLegal(move, slice);
-        if (legality.legal.isSuccess()) {
-            moves.push(move);
-        }
-        return moves;
-    }
-    public orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[]): EpaminondasMove[] {
+    public orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], state: EpaminondasPartSlice): EpaminondasMove[] {
         ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
             return move.movedPieces;
         });
         if (moves.length > 40) {
-            const evenMoves: EpaminondasMove[] = moves.filter((move: EpaminondasMove, index: number) => {
-                return ((move.movedPieces) * Math.random()) > 1;
+            const evenMoves: EpaminondasMove[] = moves.filter((move: EpaminondasMove) => {
+                if (this.moveIsCapture(move, state)) {
+                    return true;
+                } else {
+                    return ((move.movedPieces) * Math.random()) > 1;
+                }
             });
             return evenMoves;
         }
         return moves;
+    }
+    public moveIsCapture(move: EpaminondasMove, state: EpaminondasPartSlice): boolean {
+        const landing: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
+        return state.board[landing.y][landing.x] === state.getCurrentEnnemy().value;
     }
     public getBoardValue(node: EpaminondasNode): NodeUnheritance {
         const gameStatus: GameStatus = this.ruler.getGameStatus(node);
         if (gameStatus.isEndGame) {
             return new NodeUnheritance(gameStatus.toBoardValue());
         }
-        return new NodeUnheritance(this.getPieceCountThenSupportThenAvdancement(node.gamePartSlice));
+        return new NodeUnheritance(this.getPieceCountThenSupportThenAdvancement(node.gamePartSlice));
     }
     public getSumOfAvancementTimesGroupSize(state: EpaminondasPartSlice): number {
         let zeroScore: number = 0;
@@ -116,9 +72,11 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         }
         return oneScore - zeroScore;
     }
-    public getPieceCountThenSupportThenAvdancement(state: EpaminondasPartSlice): number {
-        const SCORE_BY_PIECE: number = 25*13;
-        const SCORE_BY_ALIGNEMENT: number = 13;
+    public getPieceCountThenSupportThenAdvancement(state: EpaminondasPartSlice): number {
+        const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * 12;
+        const SCORE_BY_ALIGNEMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13
+        const MAX_NUMBER_OF_ALIGNEMENT: number = (24*16) + (4*15);
+        const SCORE_BY_PIECE: number = (MAX_NUMBER_OF_ALIGNEMENT * SCORE_BY_ALIGNEMENT) + 1; // OLDLY 25*13
         let total: number = 0;
         for (let y: number = 0; y < 12; y++) {
             for (let x: number = 0; x < 14; x++) {

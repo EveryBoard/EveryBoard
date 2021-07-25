@@ -22,7 +22,7 @@ export const abaloneTutorial: DidacticialStep[] = [
         Pour vos déplacement vous avez donc au maximum à choisir parmis 6 directions.
         Les trois pièces à déplacer doivent être alignées et immédiatement voisines et atterrir sur des cases vides (sauf pour pousser, ce que nous verrons plus tard).
         Pour effectuer un déplacement, cliquez sur une de vos pièces, puis cliquez sur une flèche pour choisir sa direction.
-        Vous jouez Foncé, faites n'importe quel movement!`,
+        Vous jouez Foncé, faites n'importe quel mouvement!`,
         AbaloneGameState.getInitialSlice(),
         AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.UP),
         $localize`Bravo!`,
@@ -31,7 +31,9 @@ export const abaloneTutorial: DidacticialStep[] = [
         $localize`Pousser`,
         $localize`Pour pousser une pièce, vous devez déplacer au moins deux de vos pièces.
         Pour pousser deux pièces, vous devez déplacer trois de vos pièces.
-        Si une de vos pièces bloque la poussée, celle-ci sera impossible`,
+        Si une de vos pièces est placée juste après une pièce adverse que vous pousser, pousser sera alors interdit.
+        Vous ne pouvez pas déplacer quatre pièces.
+        Une seule "poussée" vers là droite est possible içi, trouvez là (vous jouez Foncé).`,
         new AbaloneGameState([
             [N, N, N, N, _, O, O, X, X],
             [N, N, N, _, _, _, _, _, _],
@@ -44,7 +46,7 @@ export const abaloneTutorial: DidacticialStep[] = [
             [_, _, O, _, _, N, N, N, N],
         ], 0),
         [AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.DOWN_RIGHT)],
-        $localize`Bravo !`,
+        $localize`Bravo ! Vous savez tout ce qu'il faut pour commencer une partie!`,
         $localize`Raté !`,
     ),
 ];

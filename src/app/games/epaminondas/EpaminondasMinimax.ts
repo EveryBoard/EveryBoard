@@ -13,7 +13,7 @@ import { GameStatus } from 'src/app/jscaip/Rules';
 
 export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPartSlice, EpaminondasLegalityStatus> {
 
-    public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
+    public static getListMoves(node: EpaminondasNode): EpaminondasMove[] {
         const PLAYER: number = node.gamePartSlice.getCurrentPlayer().value;
         const ENNEMY: number = node.gamePartSlice.getCurrentEnnemy().value;
         const EMPTY: number = Player.NONE.value;
@@ -53,20 +53,24 @@ export class EpaminondasMinimax extends Minimax<EpaminondasMove, EpaminondasPart
                 }
             }
         }
-        ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
-            return move.stepSize; // Best for normal, might not be best for others!
-        });
         return moves;
     }
-    public addMove(moves: EpaminondasMove[],
-                   move: EpaminondasMove,
-                   slice: EpaminondasPartSlice)
+    public static addMove(moves: EpaminondasMove[],
+                          move: EpaminondasMove,
+                          state: EpaminondasPartSlice)
     : EpaminondasMove[]
     {
-        const legality: EpaminondasLegalityStatus = EpaminondasRules.isLegal(move, slice);
+        const legality: EpaminondasLegalityStatus = EpaminondasRules.isLegal(move, state);
         if (legality.legal.isSuccess()) {
             moves.push(move);
         }
+        return moves;
+    }
+    public getListMoves(node: EpaminondasNode): EpaminondasMove[] {
+        const moves: EpaminondasMove[] = EpaminondasMinimax.getListMoves(node);
+        ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
+            return move.stepSize; // Best for normal, might not be best for others!
+        });
         return moves;
     }
     public getBoardValue(node: EpaminondasNode): NodeUnheritance {
