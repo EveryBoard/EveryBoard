@@ -16,7 +16,7 @@ import { awaleDidacticial } from './didacticials/awale-didacticial';
 import { coerceoDidacticial } from './didacticials/coerceo-didacticial';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
 import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
-import { encapsuleDidacticial } from './didacticials/encapsule-didacticial';
+import { encapsuleTutorial } from './didacticials/encapsule-tutorial';
 import { gipfDidacticial } from './didacticials/gipf-didacticial';
 import { goDidacticial } from './didacticials/go-didacticial';
 import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
@@ -97,7 +97,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Awale: awaleDidacticial,
             Coerceo: coerceoDidacticial,
             Dvonn: dvonnDidacticial,
-            Encapsule: encapsuleDidacticial,
+            Encapsule: encapsuleTutorial,
             Epaminondas: epaminondasDidacticial,
             Gipf: gipfDidacticial,
             Go: goDidacticial,
