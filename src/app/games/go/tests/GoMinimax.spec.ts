@@ -1,4 +1,5 @@
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { Table } from 'src/app/utils/ArrayUtils';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GoMinimax } from '../GoMinimax';
 import { GoMove } from '../GoMove';
@@ -9,24 +10,46 @@ describe('GoMinimax', () => {
 
     let minimax: GoMinimax;
 
+    const X: GoPiece = GoPiece.WHITE;
+    const O: GoPiece = GoPiece.BLACK;
+    const u: GoPiece = GoPiece.DEAD_BLACK;
+    const w: GoPiece = GoPiece.WHITE_TERRITORY;
+    const _: GoPiece = GoPiece.EMPTY;
+
     beforeEach(() => {
         const rules: GoRules = new GoRules(GoPartSlice);
         minimax = new GoMinimax(rules, 'Dummy');
     });
 
     describe('getListMove', () => {
-        it('should count as many move as empty case at first turn, + PASS', () => {
-            const initialNode: GoNode = new MGPNode(null, null, GoPartSlice.getInitialSlice());
+        it('should count as many move as empty case in Phase.PLAYING turn, + PASS', () => {
+            const board: Table<GoPiece> = [
+                [_, X, _, _, _],
+                [X, _, _, _, _],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+                [_, _, _, _, _],
+            ];
+            const state: GoPartSlice = new GoPartSlice(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
+            const initialNode: GoNode = new MGPNode(null, null, state);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
-            expect(moves.length).toBe(GoPartSlice.WIDTH * GoPartSlice.HEIGHT + 1);
+            expect(moves.length).toBe(23);
             expect(moves.some((m: GoMove) => m.equals(GoMove.PASS))).toBeTrue();
         });
-        it('should only have GoMove.ACCEPT in COUNTING Phase when agreeing on the result', () => {
+        it('should only have GoMove.ACCEPT in ACCEPT Phase when agreeing on the result', () => {
             const initialBoard: GoPiece[][] =
                 GoPartSlice.mapNumberBoard(GoPartSlice.getInitialSlice().getCopiedBoard());
             const state: GoPartSlice = new GoPartSlice(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new MGPNode(null, null, state);
-            spyOn(GoRules, 'getCountingMovesList').and.returnValue([]);
+            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            expect(moves).toEqual([GoMove.ACCEPT]);
+        });
+        it('should only have GoMove.ACCEPT in COUNTNG Phase when agreeing on the result', () => {
+            const initialBoard: GoPiece[][] =
+                GoPartSlice.mapNumberBoard(GoPartSlice.getInitialSlice().getCopiedBoard());
+            const state: GoPartSlice = new GoPartSlice(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
+            const initialNode: GoNode = new MGPNode(null, null, state);
+            spyOn(minimax, 'getCountingMovesList').and.returnValue([]);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([GoMove.ACCEPT]);
         });
@@ -35,9 +58,36 @@ describe('GoMinimax', () => {
                 GoPartSlice.mapNumberBoard(GoPartSlice.getInitialSlice().getCopiedBoard());
             const state: GoPartSlice = new GoPartSlice(initialBoard, [0, 0], 0, MGPOptional.empty(), Phase.ACCEPT);
             const initialNode: GoNode = new MGPNode(null, null, state);
-            spyOn(GoRules, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
+            spyOn(minimax, 'getCountingMovesList').and.returnValue([new GoMove(1, 1)]);
             const moves: GoMove[] = minimax.getListMoves(initialNode);
             expect(moves).toEqual([new GoMove(1, 1)]);
         });
+        it('should want to switch dead piece when it consider those pieces alive', () => {
+            const board: Table<GoPiece> = [
+                [u, w, w, X, w],
+                [X, X, X, X, X],
+                [_, _, _, _, _],
+                [_, _, _, O, _],
+                [_, _, _, _, _],
+            ];
+            const state: GoPartSlice = new GoPartSlice(board, [0, 0], 0, MGPOptional.empty(), Phase.COUNTING);
+            const initialNode: GoNode = new MGPNode(null, null, state);
+            const moves: GoMove[] = minimax.getListMoves(initialNode);
+            expect(moves.length).toBe(1);
+            expect(moves.some((m: GoMove) => m.equals(new GoMove(3, 3)))).toBeTrue();
+        });
+    });
+    xit('should getBoardValue according considering alive group who control alone one territory and not considering alive the others', () => {
+        const board: Table<GoPiece> = [
+            [_, X, _, _, _],
+            [X, X, _, _, _],
+            [_, X, _, O, O],
+            [O, X, _, O, _],
+            [_, X, _, O, _],
+        ];
+        const state: GoPartSlice = new GoPartSlice(board, [0, 0], 0, MGPOptional.empty(), Phase.PLAYING);
+        const initialNode: GoNode = new MGPNode(null, null, state);
+        const boardValue: number = minimax.getBoardValue(initialNode).value;
+        expect(boardValue).toBe(3);
     });
 });
