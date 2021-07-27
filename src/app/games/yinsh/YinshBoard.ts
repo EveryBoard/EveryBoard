@@ -6,7 +6,7 @@ import { YinshPiece } from './YinshPiece';
 
 export class YinshBoard extends HexaBoard<YinshPiece> {
     public static SIZE: number = 11;
-    public static EXCLUDED_CASES: ReadonlyArray<number> = [6, 4, 3, 2, 1, 1];
+    public static EXCLUDED_CASES: ReadonlyArray<number> = [6, 4, 3, 2, 1];
 
     public static EMPTY: YinshBoard =
         new YinshBoard(ArrayUtils.createBiArray(YinshBoard.SIZE, YinshBoard.SIZE, YinshPiece.EMPTY));
@@ -27,6 +27,10 @@ export class YinshBoard extends HexaBoard<YinshPiece> {
         } else if (coord.x === YinshBoard.SIZE-1 && coord.y === 0) {
             return false;
         } else if (coord.x === 0 && coord.y === YinshBoard.SIZE-1) {
+            return false;
+        } else if (coord.x === 0 && coord.y === (YinshBoard.SIZE-1)/2) {
+            return false;
+        } else if (coord.x === YinshBoard.SIZE-1 && coord.y === (YinshBoard.SIZE-1)/2) {
             return false;
         }
         return true;

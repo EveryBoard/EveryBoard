@@ -1,5 +1,7 @@
 import { ArrayUtils, Table } from 'src/app/utils/ArrayUtils';
+import { assert } from '../utils/utils';
 import { Coord } from './Coord';
+import { HexaDirection } from './HexaDirection';
 import { HexaLine } from './HexaLine';
 
 /** An hexagonal board encoding,
@@ -153,5 +155,44 @@ export class HexaBoard<T> {
             lines.push(HexaLine.constantS(i));
         }
         return lines;
+    }
+    public getEntranceOnLine(line: HexaLine): Coord {
+        let x: number;
+        let y: number;
+        switch (line.constant) {
+            case 'q':
+                if (this.excludedCases[line.offset] != null) {
+                    y = this.excludedCases[line.offset];
+                } else {
+                    y = 0;
+                }
+                return this.findEntranceFrom(line, new Coord(line.offset, y));
+            case 'r':
+                if (this.excludedCases[line.offset] != null) {
+                    x = this.excludedCases[line.offset];
+                } else {
+                    x = 0;
+                }
+                return this.findEntranceFrom(line, new Coord(x, line.offset));
+            case 's':
+                if (line.offset < this.width) {
+                    return this.findEntranceFrom(line, new Coord(line.offset, 0));
+                } else {
+                    return this.findEntranceFrom(line, new Coord(this.width-1, line.offset-this.width+1));
+                }
+        }
+    }
+    private findEntranceFrom(line: HexaLine, start: Coord): Coord {
+        const dir: HexaDirection = line.getDirection();
+        console.log('finding from ' + start.toString())
+        for (let cur: Coord = start, i: number = 0;
+            i < Math.max(this.width, this.height);
+            cur = cur.getNext(dir), i++) {
+            console.log(cur)
+            if (this.isOnBoard(cur)) {
+                return cur;
+            }
+        }
+        assert(false, 'could not find a board entrance, board must be invalid');
     }
 }

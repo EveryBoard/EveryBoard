@@ -220,6 +220,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
     ReadonlyArray<{ start: Coord, end: Coord, dir: HexaDirection}> {
         const linePortions: { start: Coord, end: Coord, dir: HexaDirection}[] = [];
         state.hexaBoard.allLines().forEach((line: HexaLine) => {
+            console.log(line)
             const linePortion: MGPOptional<{ start: Coord, end: Coord, dir: HexaDirection}> =
                 this.getLinePortionWithAtLeastFivePiecesOfPlayer(state, player, line);
             if (linePortion.isPresent()) {
@@ -232,11 +233,12 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
     : MGPOptional<{ start: Coord, end: Coord, dir: HexaDirection}>
     {
         let consecutives: number = 0;
-        const coord: Coord = line.getEntrance(state.hexaBoard);
+        const coord: Coord = state.hexaBoard.getEntranceOnLine(line);
         const dir: HexaDirection = line.getDirection();
         let start: Coord = coord;
         let cur: Coord;
         for (cur = coord; state.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {
+            console.log({cur})
             const piece: YinshPiece = state.hexaBoard.getAt(cur);
             if (piece.player === player && piece.isRing === false) {
                 if (consecutives === 0) {
@@ -261,6 +263,7 @@ export class YinshRules extends Rules<YinshMove, YinshGameState, YinshLegalitySt
         const captures: YinshCapture[] = [];
         this.getLinePortionsWithAtLeastFivePiecesOfPlayer(state, player)
             .forEach((linePortion: { start: Coord, end: Coord, dir: HexaDirection}) => {
+                console.log({start: linePortion.start, end: linePortion.end, dir: linePortion.dir})
                 for (let cur: Coord = linePortion.start;
                     cur.getDistance(linePortion.end) >= 5;
                     cur = cur.getNext(linePortion.dir)) {

@@ -245,7 +245,7 @@ export class GipfRules extends Rules<GipfMove, GipfPartSlice, GipfLegalityStatus
     : MGPOptional<{ 0: Coord, 1: Coord, 2: HexaDirection}>
     {
         let consecutives: number = 0;
-        const coord: Coord = line.getEntrance(slice.hexaBoard);
+        const coord: Coord = slice.hexaBoard.getEntranceOnLine(line);
         const dir: HexaDirection = line.getDirection();
         let start: Coord = coord;
         for (let cur: Coord = coord; slice.hexaBoard.isOnBoard(cur); cur = cur.getNext(dir)) {

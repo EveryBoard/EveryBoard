@@ -4,6 +4,7 @@ import { Minimax } from 'src/app/jscaip/Minimax';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
+import { Combinatorics } from 'src/app/utils/Combinatorics';
 import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { GipfMinimax } from '../gipf/GipfMinimax';
 import { GipfCapture } from '../gipf/GipfMove';
@@ -38,7 +39,6 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
                     moves.push(new YinshMove([], coord, MGPOptional.empty(), []));
                 }
             });
-
         } else {
             const rules: YinshRules = this.ruler as YinshRules; // TODO: ugly cast, this.rules should be a YinshRules!
             this.getPossibleCaptureCombinations(state)
@@ -65,15 +65,16 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
         const possibleCaptures: YinshCapture[] = rules.getPossibleCaptures(state);
         const ringCoords: Coord[] = this.getRingCoords(state);
         return GipfMinimax.getPossibleCaptureCombinationsFromPossibleCaptures(possibleCaptures)
-            .map((captures: GipfCapture[]): YinshCapture[] => {
-                return captures.map((capture: GipfCapture): YinshCapture[] => {
-                    return ringCoords.map((ringTaken: Coord): YinshCapture => {
-                        return new YinshCapture(capture.capturedCases, ringTaken);
+            .map((captureCombination: GipfCapture[]): YinshCapture[][] => {
+                return Combinatorics.getCombinations(ringCoords, captureCombination.length)
+                    .map((ringsTaken: Coord[]): YinshCapture[] => {
+                        return captureCombination.map((capture: GipfCapture, index: number): YinshCapture => {
+                            return new YinshCapture(capture.capturedCases, ringsTaken[index]);
+                        });
                     });
-                }).reduce((accumulator: YinshCapture[], captures: YinshCapture[]): YinshCapture[] => {
-                    return accumulator.concat(captures);
-                }, []);
-            });
+            }).reduce((accumulator: YinshCapture[][], captures: YinshCapture[][]): YinshCapture[][] => {
+                return accumulator.concat(captures);
+            }, []);
     }
     private getRingMoves(state: YinshGameState): {start: Coord, end: Coord}[] {
         const moves: {start: Coord, end: Coord}[] = [];
@@ -84,7 +85,6 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
                     state.hexaBoard.isOnBoard(cur);
                     cur = cur.getNext(dir)) {
                     const piece: YinshPiece = state.hexaBoard.getAt(cur);
-                    console.log({cur, piece})
                     if (piece === YinshPiece.EMPTY) {
                         moves.push({ start: coord, end: cur });
                         if (pieceSeen) {

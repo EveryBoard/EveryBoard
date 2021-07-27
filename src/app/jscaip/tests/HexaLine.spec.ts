@@ -51,6 +51,8 @@ describe('HexaLine', () => {
             expect(line.contains(coord)).toBeFalse();
         });
     });
+    // TODO: move it to board
+    /*
     describe('getEntrance', () => {
         const board: HexaBoard<number> = HexaBoard.empty(7, 7, [3, 2, 1], 0);
         it('should return the correct entrance for lines with a constant q', () => {
@@ -74,7 +76,7 @@ describe('HexaLine', () => {
             const line2: HexaLine = HexaLine.constantS(8);
             expect(line2.getEntrance(board).equals(new Coord(6, 2))).toBeTrue();
         });
-    });
+    }); */
     describe('getDirection', () => {
         it('should consider lines with constant q going down', () => {
             expect(HexaLine.constantQ(0).getDirection()).toEqual(HexaDirection.DOWN);

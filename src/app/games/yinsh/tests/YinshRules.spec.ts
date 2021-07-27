@@ -576,6 +576,24 @@ describe('YinshRules', () => {
             expect(captures.some((c: YinshCapture): boolean =>
                 c.equals(YinshCapture.of(new Coord(3, 3), new Coord(3, 7), new Coord(-1, -1))))).toBeTrue();
         });
+        it('should detect capture on specific board', () => {
+            const board: YinshBoard = YinshBoard.of([
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, b, _, _],
+                [_, _, _, _, _, _, _, a, _, _, _],
+                [_, _, _, _, _, _, a, _, _, _, _],
+                [_, _, _, _, _, a, _, _, _, _, _],
+                [_, _, _, _, a, _, _, _, _, _, _],
+                [_, _, _, a, _, _, _, _, _, _, _],
+                [_, _, b, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+                [_, _, _, _, _, _, _, _, _, _, _],
+            ]);
+            const state: YinshGameState = new YinshGameState(board, [0, 0], 10);
+            const captures: YinshCapture[] = rules.getPossibleCaptures(state);
+            expect(captures.length).toBe(1);
+        });
     });
     describe('getGameStatus', () => {
         it('should consider initial phase as ongoing', () => {

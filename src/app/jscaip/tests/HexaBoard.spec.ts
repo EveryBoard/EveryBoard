@@ -103,7 +103,7 @@ describe('HexaBoard', () => {
         });
     });
     describe('allLines', () => {
-        it('should countain 21 different lines', () => {
+        it('should contain 21 different lines', () => {
             const lines: ReadonlyArray<HexaLine> = board.allLines();
             expect(lines.length).toEqual(21);
             for (const line1 of lines) {
