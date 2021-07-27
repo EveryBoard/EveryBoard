@@ -2,6 +2,7 @@ import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
+import { GameStatus } from 'src/app/jscaip/Rules';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasPartSlice } from './EpaminondasPartSlice';
 import { EpaminondasNode } from './EpaminondasRules';
@@ -127,16 +128,9 @@ export class AttackEpaminondasMinimax extends EpaminondasMinimax {
 
     public getBoardValue(node: EpaminondasNode): NodeUnheritance {
         const slice: EpaminondasPartSlice = node.gamePartSlice;
-        const zerosInFirstLine: number = slice.count(Player.ZERO, 0);
-        const onesInLastLine: number = slice.count(Player.ONE, 11);
-        if (slice.turn % 2 === 0) {
-            if (zerosInFirstLine > onesInLastLine) {
-                return new NodeUnheritance(Number.MIN_SAFE_INTEGER);
-            }
-        } else {
-            if (onesInLastLine > zerosInFirstLine) {
-                return new NodeUnheritance(Number.MAX_SAFE_INTEGER);
-            }
+        const gameStatus: GameStatus = this.ruler.getGameStatus(node);
+        if (gameStatus.isEndGame) {
+            return new NodeUnheritance(gameStatus.toBoardValue());
         }
         const dominance: number = this.getDominance(slice);
         const defense: number = this.getDefense(slice);

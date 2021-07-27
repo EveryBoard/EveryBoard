@@ -4,9 +4,10 @@ import { MGPNode } from 'src/app/jscaip/MGPNode';
 import { Player } from 'src/app/jscaip/Player';
 import { EpaminondasMove } from '../EpaminondasMove';
 import { EpaminondasPartSlice } from '../EpaminondasPartSlice';
-import { EpaminondasRules } from '../EpaminondasRules';
+import { EpaminondasNode, EpaminondasRules } from '../EpaminondasRules';
 import { PositionalEpaminondasMinimax } from '../PositionalEpaminondasMinimax';
 import { expectSecondStateToBeBetterThanFirst } from 'src/app/utils/tests/TestUtils.spec';
+import { EpaminondasLegalityStatus } from '../epaminondaslegalitystatus';
 
 describe('PositionalEpaminondasMinimax:', () => {
 
@@ -20,10 +21,10 @@ describe('PositionalEpaminondasMinimax:', () => {
         rules = new EpaminondasRules(EpaminondasPartSlice);
         minimax = new PositionalEpaminondasMinimax(rules, 'EpaminondasMinimax');
     });
-    xit('Should propose 114 moves at first turn', () => {
-        expect(minimax.getListMoves(rules.node).length).toBe(114);
+    it('Should filter number of choices', () => {
+        expect(minimax.getListMoves(rules.node).length).toBeLessThan(114);
     });
-    xit('Should consider possible capture the best move', () => {
+    it('Should consider possible capture the best move', () => {
         const board: NumberTable = [
             [X, X, X, X, X, X, X, X, _, _, _, _, _, _],
             [_, O, O, _, _, _, X, X, X, X, _, _, _, _],
@@ -42,9 +43,14 @@ describe('PositionalEpaminondasMinimax:', () => {
         rules.node = new MGPNode(null, null, slice);
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
+
+        const status: EpaminondasLegalityStatus = rules.isLegal(bestMove, slice);
+        const bestSon: EpaminondasNode = new MGPNode(null, bestMove, rules.applyLegalMove(bestMove, slice, status));
+        console.log(minimax.getBoardValue(bestSon));
+
         expect(bestMove).toEqual(expectedMove);
     });
-    it('Should prefer to get near the ennemy line', () => {
+    it('Should prefer to get near the opponent line', () => {
         const greaterBoard: NumberTable = [
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],
             [X, X, X, X, X, X, X, X, X, X, X, X, X, X],

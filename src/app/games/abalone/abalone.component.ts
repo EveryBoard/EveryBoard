@@ -22,9 +22,11 @@ import { AbaloneLegalityStatus, AbaloneRules } from './AbaloneRules';
 
 export class HexaDirArrow {
     public constructor(public startCenter: Coord,
+                       public middle: Coord,
                        public landingCenter: Coord,
                        public landing: Coord,
-                       public dir: HexaDirection) {}
+                       public dir: HexaDirection,
+                       public transformation: string) {}
 }
 
 @Component({
@@ -171,13 +173,27 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
             if (isLegal.legal.isSuccess()) {
                 const firstPieceCenter: Coord = this.getCenterAt(firstPiece);
                 const pointedCenter: Coord = this.getCenterAt(pointed);
+                const middle: Coord = this.getMiddleOfArrow(dir, pointed, pointedCenter);
+                const centerCoord: string = pointedCenter.x + ' ' + pointedCenter.y;
+                const rotation: string = 'rotate(' + (60 * dir.toInt() + 150) + ' ' + centerCoord + ')';
+                const translation: string = 'translate(' + centerCoord + ')';
+                const transformation: string = rotation + ' ' + translation;
                 const arrow: HexaDirArrow = new HexaDirArrow(firstPieceCenter,
+                                                             middle,
                                                              pointedCenter,
                                                              pointed,
-                                                             dir);
+                                                             dir,
+                                                             transformation);
                 this.directions.push(arrow);
             }
         }
+    }
+    private getMiddleOfArrow(dir: HexaDirection, last: Coord, lastCenter: Coord): Coord {
+        const first: Coord = last.getPrevious(dir);
+        const firstCenter: Coord = this.getCenterAt(first);
+        const halfDx: number = (lastCenter.x - firstCenter.x) / 2;
+        const halfDy: number = (lastCenter.y - firstCenter.y) / 2;
+        return new Coord(firstCenter.x + halfDx, firstCenter.y + halfDy);
     }
     public isBoard(c: number): boolean {
         return c !== FourStatePiece.NONE.value;

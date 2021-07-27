@@ -132,6 +132,14 @@ export class EpaminondasRules extends Rules<EpaminondasMove, EpaminondasPartSlic
                 return GameStatus.ONE_WON;
             }
         }
+        const doesZeroOwnPieces: boolean = state.doesOwnPiece(Player.ZERO);
+        if (doesZeroOwnPieces === false) {
+            return GameStatus.ONE_WON;
+        }
+        const doesOneOwnPieces: boolean = state.doesOwnPiece(Player.ONE);
+        if (doesOneOwnPieces === false) {
+            return GameStatus.ZERO_WON;
+        }
         return GameStatus.ONGOING;
     }
 }
