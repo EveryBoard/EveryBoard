@@ -31,9 +31,9 @@ export const abaloneTutorial: DidacticialStep[] = [
         $localize`Pousser`,
         $localize`Pour pousser une pièce, vous devez déplacer au moins deux de vos pièces.
         Pour pousser deux pièces, vous devez déplacer trois de vos pièces.
-        Si une de vos pièces est placée juste après une pièce adverse que vous pousser, pousser sera alors interdit.
+        Si une de vos pièces est placée juste après une pièce adverse que vous poussez, pousser sera alors interdit.
         Vous ne pouvez pas déplacer quatre pièces.
-        Une seule "poussée" vers là droite est possible içi, trouvez là (vous jouez Foncé).`,
+        Une seule "poussée" vers là droite est possible ici, trouvez là (vous jouez Foncé).`,
         new AbaloneGameState([
             [N, N, N, N, _, O, O, X, X],
             [N, N, N, _, _, _, _, _, _],

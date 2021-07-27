@@ -1,4 +1,3 @@
-import { BoardDatas } from 'src/app/jscaip/BoardDatas';
 import { Coord } from 'src/app/jscaip/Coord';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Minimax } from 'src/app/jscaip/Minimax';
@@ -6,12 +5,11 @@ import { NodeUnheritance } from 'src/app/jscaip/NodeUnheritance';
 import { Player } from 'src/app/jscaip/Player';
 import { GameStatus } from 'src/app/jscaip/Rules';
 import { ArrayUtils } from 'src/app/utils/ArrayUtils';
-import { EpaminondasGroupDatasFactory } from './EpaminondasGroupData';
 import { EpaminondasLegalityStatus } from './epaminondaslegalitystatus';
 import { EpaminondasMinimax } from './EpaminondasMinimax';
 import { EpaminondasMove } from './EpaminondasMove';
 import { EpaminondasPartSlice } from './EpaminondasPartSlice';
-import { EpaminondasNode, EpaminondasRules } from './EpaminondasRules';
+import { EpaminondasNode } from './EpaminondasRules';
 
 export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
                                                           EpaminondasPartSlice,
@@ -22,7 +20,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         const moves: EpaminondasMove[] = EpaminondasMinimax.getListMoves(node);
         return this.orderMovesByPhalanxSizeAndFilter(moves, node.gamePartSlice);
     }
-    public orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], state: EpaminondasPartSlice): EpaminondasMove[] {
+    private orderMovesByPhalanxSizeAndFilter(moves: EpaminondasMove[], state: EpaminondasPartSlice): EpaminondasMove[] {
         ArrayUtils.sortByDescending(moves, (move: EpaminondasMove): number => {
             return move.movedPieces;
         });
@@ -38,7 +36,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         }
         return moves;
     }
-    public moveIsCapture(move: EpaminondasMove, state: EpaminondasPartSlice): boolean {
+    private moveIsCapture(move: EpaminondasMove, state: EpaminondasPartSlice): boolean {
         const landing: Coord = move.coord.getNext(move.direction, move.movedPieces + move.stepSize - 1);
         return state.board[landing.y][landing.x] === state.getCurrentEnnemy().value;
     }
@@ -49,30 +47,7 @@ export class PositionalEpaminondasMinimax extends Minimax<EpaminondasMove,
         }
         return new NodeUnheritance(this.getPieceCountThenSupportThenAdvancement(node.gamePartSlice));
     }
-    public getSumOfAvancementTimesGroupSize(state: EpaminondasPartSlice): number {
-        let zeroScore: number = 0;
-        let oneScore: number = 0;
-        const groupDatasFactory: EpaminondasGroupDatasFactory = new EpaminondasGroupDatasFactory();
-        const boardDatas: BoardDatas = BoardDatas.ofBoard(state.board, groupDatasFactory);
-        for (let y: number = 0; y < 12; y++) {
-            for (let x: number = 0; x < 14; x++) {
-                const piece: number = state.getBoardByXY(x, y);
-                if (piece === Player.ZERO.value) {
-                    const avancement: number = Math.pow(2, 12 - y);
-                    const pieceGroup: number = boardDatas.groupIndexes[y][x];
-                    const pieceSupport: number = boardDatas.groups[pieceGroup].coords.length;
-                    zeroScore += avancement * pieceSupport;
-                } else if (piece === Player.ONE.value) {
-                    const avancement: number = Math.pow(2, y + 1);
-                    const pieceGroup: number = boardDatas.groupIndexes[y][x];
-                    const pieceSupport: number = boardDatas.groups[pieceGroup].coords.length;
-                    oneScore += avancement * pieceSupport;
-                }
-            }
-        }
-        return oneScore - zeroScore;
-    }
-    public getPieceCountThenSupportThenAdvancement(state: EpaminondasPartSlice): number {
+    private getPieceCountThenSupportThenAdvancement(state: EpaminondasPartSlice): number {
         const MAX_ADVANCEMENT_SCORE_TOTAL: number = 28 * 12;
         const SCORE_BY_ALIGNEMENT: number = MAX_ADVANCEMENT_SCORE_TOTAL + 1; // OLDLY 13
         const MAX_NUMBER_OF_ALIGNEMENT: number = (24*16) + (4*15);
