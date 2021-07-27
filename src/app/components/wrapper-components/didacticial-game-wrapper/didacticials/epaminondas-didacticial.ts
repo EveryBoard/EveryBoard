@@ -2,6 +2,7 @@ import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
 import { Direction } from 'src/app/jscaip/Direction';
 import { Player } from 'src/app/jscaip/Player';
+import { MGPValidation } from 'src/app/utils/MGPValidation';
 import { DidacticialStep } from '../DidacticialStep';
 
 const _: number = Player.NONE.value;
@@ -11,14 +12,14 @@ export const epaminondasDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Plateau initial`,
         $localize`Ceci est le plateau de départ.
-         La ligne tout en haut est la ligne de départ de Clair.
-         La ligne tout en bas est la ligne de départ de Foncé.`,
+        La ligne tout en haut est la ligne de départ de Clair.
+        La ligne tout en bas est la ligne de départ de Foncé.`,
         EpaminondasPartSlice.getInitialSlice(),
     ),
     DidacticialStep.informational(
         $localize`But du jeu (1/2)`,
         $localize`Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l'adversaire que l'adversaire n'en a sur la ligne de départ du joueur, ce joueur gagne.
-         Ici, c'est au tour du joueur foncé de jouer, il a donc gagné.`,
+        Ici, c'est au tour du joueur foncé de jouer, il a donc gagné.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, O, _, _, X, X, X, X, X, X],
             [_, _, _, _, _, O, _, _, _, _, _, _, X, X],
@@ -52,41 +53,53 @@ export const epaminondasDidacticial: DidacticialStep[] = [
             [_, _, X, X, _, _, _, O, O, _, O, O, O, O],
         ], 1),
     ),
-    DidacticialStep.fromMove(
+    DidacticialStep.fromPredicate(
         $localize`Déplacement de pièce`,
         $localize`Voici le plateau de départ, c'est à Foncé de commencer.
-         Commençons simplement par un déplacement d'une seule pièce.
-         1. Cliquez la pièce sur la colonne la plus à gauche et sur la deuxième rangée en commençant par le bas.
-         2. Cliquez la case au dessus.`,
+        Commençons simplement par un déplacement d'une seule pièce :
+        <ul>
+            <li> 1. Cliquez sur une pièce.</li>
+            <li> 2. Cliquez sur une case voisine libre.</li>
+        </ul>`,
         EpaminondasPartSlice.getInitialSlice(),
-        [new EpaminondasMove(0, 10, 1, 1, Direction.UP)],
+        new EpaminondasMove(0, 10, 1, 1, Direction.UP),
+        (move: EpaminondasMove, state: EpaminondasPartSlice) => {
+            if (move.movedPieces === 1) {
+                return MGPValidation.SUCCESS;
+            } else {
+                return MGPValidation.failure($localize`Félicitation, vous avez un pas d'avance, ce n'est malheureusement pas l'exercice.`);
+            }
+        },
         $localize`Voilà, c'est comme ça qu'on déplace une seule pièce.`,
-        $localize`Raté, recommencez.`,
     ),
     DidacticialStep.fromMove(
         $localize`Déplacement de phalange`,
-        $localize`Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange)?
-         1. Cliquez sur la première pièce (la plus en bas à gauche).
-         2. Cliquez sur la dernière pièce de la phalange (celle juste au dessus pour l'exemple).
-         3. Cliquez une ou deux cases plus haut, pour déplacer toute la phalange de deux cases
-         (soit de la distance maximale légale qui vaut le nombre de pièces déplacées).`,
+        $localize`Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
+        <ul>
+            <li> 1. Cliquez sur la première pièce (la plus en bas à gauche).</li>
+            <li> 2. Cliquez sur la dernière pièce de la phalange (celle juste au dessus pour l'exemple).</li>
+            <li> 3. Cliquez une ou deux cases plus haut, pour déplacer toute la phalange de deux cases
+            (soit de la distance maximale légale qui vaut le nombre de pièces déplacées).</li>
+        </ul>`,
         EpaminondasPartSlice.getInitialSlice(),
         [
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
             new EpaminondasMove(0, 11, 2, 2, Direction.UP)],
         $localize`Bravo !
-         Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
-         Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
-         Il ne peut y avoir ni ennemis ni trous dans la phalange.`,
+        Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
+        Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
+        Il ne peut y avoir ni ennemis ni trous dans la phalange.`,
         $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture`,
         $localize`Pour capturer une phalange ennemie:
-         1. Il faut que celle-ci soit alignée avec la phalange en déplacement.
-         2. Qu'elle soit strictement plus courte.
-         3. Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.
-         Capturez la phalange.`,
+        <ul>
+            <li> 1. Il faut que celle-ci soit alignée avec la phalange en déplacement.</li>
+            <li> 2. Qu'elle soit strictement plus courte.</li>
+            <li> 3. Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.</li>
+        </ul><br/>
+        Capturez la phalange.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, _, _, _, X, X, X, X, X, X],
             [_, _, _, X, _, _, _, _, _, _, _, _, _, _],
