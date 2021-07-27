@@ -24,7 +24,7 @@ import { PentagoGameState } from 'src/app/games/pentago/PentagoGameState';
 import { pentagoDidacticial } from 'src/app/games/pentago/pentago.didacticial';
 import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
 import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
-import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
+import { epaminondasTutorial } from './didacticials/epaminondas-didacticial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { Direction } from 'src/app/jscaip/Direction';
 
@@ -373,7 +373,7 @@ describe('DidacticialGameWrapperComponent', () => {
                 componentTestUtils.findElement('#currentMessage').nativeElement.innerHTML;
             expect(currentMessage).toBe(expectedMessage);
         }));
-        it('Should show congratulation at the end of the didacticial, hide next button', fakeAsync(async() => {
+        it('Should show congratulation and play buttons at the end of the didacticial, hide next button', fakeAsync(async() => {
             // Given a DidacticialStep whose last step has been done
             const didacticial: DidacticialStep[] = [
                 DidacticialStep.forClick(
@@ -406,20 +406,14 @@ describe('DidacticialGameWrapperComponent', () => {
             expect(wrapper.successfulSteps).toBe(0);
         }));
         it('Should allow to restart the whole didacticial when finished', fakeAsync(async() => {
-            // Given a finish tutorial
+            // Given a finished tutorial
             wrapper.startDidacticial([
                 DidacticialStep.informational(
                     'title 0',
                     'instruction 0',
                     QuartoPartSlice.getInitialSlice(),
                 ),
-                DidacticialStep.informational(
-                    'title 1',
-                    'instruction 1',
-                    QuartoPartSlice.getInitialSlice(),
-                ),
             ]);
-            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
             expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
 
             // when clicking restart
@@ -431,6 +425,46 @@ describe('DidacticialGameWrapperComponent', () => {
             expect(currentMessage).toBe(wrapper.steps[0].instruction);
             expect(wrapper.stepFinished.every((v: boolean) => v === false)).toBeTrue();
             expect(wrapper.stepIndex).toEqual(0);
+        }));
+        it('Should redirect to local game when asking for it when finished', fakeAsync(async() => {
+            // Given a finish tutorial
+            wrapper.startDidacticial([
+                DidacticialStep.informational(
+                    'title 0',
+                    'instruction 0',
+                    QuartoPartSlice.getInitialSlice(),
+                ),
+            ]);
+            componentTestUtils.expectElementNotToExist('#playLocallyButton');
+            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+
+            // when clicking play locally
+            spyOn(componentTestUtils.wrapper.router, 'navigate').and.callThrough();
+            expect(await componentTestUtils.clickElement('#playLocallyButton')).toBeTrue();
+
+            // expect navigator to have been called
+            expect(componentTestUtils.wrapper.router.navigate).toHaveBeenCalledWith(['local/Quarto']);
+        }));
+        it('Should redirect to online game when asking for it when finished and user is online', fakeAsync(async() => {
+            // Given a finish tutorial
+            wrapper.startDidacticial([
+                DidacticialStep.informational(
+                    'title 0',
+                    'instruction 0',
+                    QuartoPartSlice.getInitialSlice(),
+                ),
+            ]);
+            componentTestUtils.expectElementNotToExist('#playOnlineButton');
+            expect(await componentTestUtils.clickElement('#nextButton')).toBeTrue();
+
+            // when clicking play locally
+            const compo: DidacticialGameWrapperComponent =
+                componentTestUtils.wrapper as DidacticialGameWrapperComponent;
+            spyOn(compo.gameService, 'createGameAndRedirectOrShowError').and.callThrough();
+            expect(await componentTestUtils.clickElement('#playOnlineButton')).toBeTrue();
+
+            // expect navigator to have been called
+            expect(compo.gameService.createGameAndRedirectOrShowError).toHaveBeenCalledWith('Quarto');
         }));
     });
     describe('DidacticialStep awaiting specific moves', () => {
@@ -891,15 +925,16 @@ describe('DidacticialGameWrapperComponent', () => {
             const stepExpectations: [Rules<Move, GamePartSlice>, DidacticialStep, Move, MGPValidation][] = [
                 [
                     new EpaminondasRules(EpaminondasPartSlice),
-                    epaminondasDidacticial[3],
-                    epaminondasDidacticial[3].solutionMove,
+                    epaminondasTutorial[3],
+                    epaminondasTutorial[3].solutionMove,
                     MGPValidation.SUCCESS,
                 ], [
                     new EpaminondasRules(EpaminondasPartSlice),
-                    epaminondasDidacticial[3],
+                    epaminondasTutorial[3],
                     new EpaminondasMove(0, 11, 2, 1, Direction.UP),
                     MGPValidation.failure($localize`Félicitation, vous avez un pas d'avance, ce n'est malheureusement pas l'exercice.`),
-                ], [
+                ],
+                [
                     new PentagoRules(PentagoGameState),
                     pentagoDidacticial[2],
                     pentagoDidacticial[2].solutionMove,

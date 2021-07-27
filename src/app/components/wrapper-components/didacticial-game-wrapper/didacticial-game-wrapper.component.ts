@@ -15,7 +15,7 @@ import { abaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
 import { awaleDidacticial } from './didacticials/awale-didacticial';
 import { coerceoDidacticial } from './didacticials/coerceo-didacticial';
 import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
-import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
+import { epaminondasTutorial } from './didacticials/epaminondas-didacticial';
 import { encapsuleTutorial } from './didacticials/encapsule-tutorial';
 import { gipfDidacticial } from './didacticials/gipf-didacticial';
 import { goDidacticial } from './didacticials/go-didacticial';
@@ -33,6 +33,7 @@ import { sixDidacticial } from './didacticials/six-didacticial';
 import { tablutDidacticial } from './didacticials/tablut-didacticial';
 import { GamePartSlice } from 'src/app/jscaip/GamePartSlice';
 import { DidacticialFailure } from './DidacticialFailure';
+import { GameService } from 'src/app/services/GameService';
 
 @Component({
     selector: 'app-didacticial-game-wrapper',
@@ -43,7 +44,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
 
     public static VERBOSE: boolean = false;
 
-    public COMPLETED_TUTORIAL_MESSAGE: string = 'Félicitation, vous avez fini le tutoriel.'
+    public COMPLETED_TUTORIAL_MESSAGE: string = $localize`Félicitation, vous avez fini le tutoriel.`;
 
     public steps: DidacticialStep[];
     public successfulSteps: number = 0;
@@ -59,7 +60,8 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
                 router: Router,
                 userService: UserService,
                 authenticationService: AuthenticationService,
-        public cdr: ChangeDetectorRef)
+                public cdr: ChangeDetectorRef,
+                public gameService: GameService)
     {
         super(componentFactoryResolver, actRoute, router, userService, authenticationService);
         display(DidacticialGameWrapperComponent.VERBOSE, 'DidacticialGameWrapperComponent.constructor');
@@ -98,7 +100,7 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
             Coerceo: coerceoDidacticial,
             Dvonn: dvonnDidacticial,
             Encapsule: encapsuleTutorial,
-            Epaminondas: epaminondasDidacticial,
+            Epaminondas: epaminondasTutorial,
             Gipf: gipfDidacticial,
             Go: goDidacticial,
             Kamisado: kamisadoDidacticial,
@@ -255,5 +257,13 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         this.moveAttemptMade = true;
         this.currentMessage = step.successMessage;
         this.cdr.detectChanges();
+    }
+    public playLocally(): void {
+        const game: string = this.actRoute.snapshot.paramMap.get('compo');
+        this.router.navigate(['local/' + game]);
+    }
+    public createGame(): void {
+        const game: string = this.actRoute.snapshot.paramMap.get('compo');
+        this.gameService.createGameAndRedirectOrShowError(game);
     }
 }

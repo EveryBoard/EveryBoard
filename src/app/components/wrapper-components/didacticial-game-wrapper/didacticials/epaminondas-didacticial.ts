@@ -8,7 +8,7 @@ import { DidacticialStep } from '../DidacticialStep';
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
-export const epaminondasDidacticial: DidacticialStep[] = [
+export const epaminondasTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Plateau initial`,
         $localize`Ceci est le plateau de départ.
