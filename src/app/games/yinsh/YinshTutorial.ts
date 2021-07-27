@@ -18,7 +18,8 @@ export const yinshTutorial: DidacticialStep[] = [
         $localize`Le but du jeu à Yinsh est de capturer trois anneaux en tout.
          Le nombre d'anneaux capturés est indiqué en haut à gauche pour le joueur foncé,
          et en bas à droite pour le joueur clair. Ici, foncé à gagné la partie.
-         Notez que sur le plateau vous avez deux types des pièces: des anneaux (pièces creuses) et des marqueurs (pièces entières).`,
+         Notez que sur le plateau vous avez deux types des pièces pour chaque joueur:
+         des anneaux (pièces creuses) et des marqueurs (pièces entières).`,
         new YinshGameState(YinshBoard.of([
             [_, _, _, _, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _, _, _, _],
@@ -36,16 +37,16 @@ export const yinshTutorial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         $localize`Plateau initial et phase de placement`,
         $localize`Le plateau initial est vide.
-Lors des 10 premiers tours, chaque joueur place à son tour un de ses anneaux.
-Cette phase s'arrête dès que tous les anneaux ont été placés.
-Pour placer un de vos anneaux, cliquez simplement sur la case du plateau où vous désirez le placer.`,
+Au début de la partie, chaque joueur place à son tour un de ses anneaux.
+Cette phase s'arrête lorsque que tous les anneaux ont été placés.
+Placez un de vos anneaux en cliquant sur la case du plateau où vous désirez le placer.`,
         new YinshGameState(YinshBoard.EMPTY, [5, 5], 0),
         new YinshMove([], new Coord(5, 5), MGPOptional.empty(), []),
         $localize`Bravo !`),
     DidacticialStep.anyMove(
         $localize`Placer un marqueur`,
         $localize`Une fois la phase initiale terminée et tous vos anneaux présents sur le plateau, il vous faut placer des marqueurs sur le plateau.
-Pour ce faire, placez un marqueur dans un de vos anneaux en cliquant sur cet anneaux.
+Pour ce faire, placez un marqueur dans un de vos anneaux en cliquant sur cet anneau.
 Ensuite, l'anneau doit se déplacer en ligne droite dans n'importe quelle direction.
 Son mouvement est obstrué par les autres anneaux.
 Si vous passez au dessus d'un groupe de marqueurs, votre mouvement doit s'arrêter au premier espace vide qui suit ce groupe.
@@ -69,7 +70,7 @@ Vous jouez foncé, effectuez un mouvement.`,
     DidacticialStep.fromMove(
         $localize`Récupérer un anneau en alignant 5 marqueurs`,
         $localize`Finalement, la seule mécanique qu'il vous manque est de pouvoir récupérer des anneaux afin de marquer des points.
-Pour cela, il faut que vous alignez 5 marqueurs à votre couleurs.
+Pour cela, il faut que vous alignez 5 marqueurs à votre couleur.
 Vous pouvez alors récupérer ces marqueurs en cliquant dessus, et ensuite récupérer un de vos anneaux en cliquant dessus.
 Vous avez alors un point de plus.
 Vous êtes obligés d'effectuer une capture quand elle se présente.
