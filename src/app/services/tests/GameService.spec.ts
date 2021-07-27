@@ -1,4 +1,4 @@
-import { fakeAsync, TestBed } from '@angular/core/testing';
+import { fakeAsync, TestBed, flush } from '@angular/core/testing';
 
 import { GameService, StartingPartConfig } from '../GameService';
 import { PartDAO } from 'src/app/dao/PartDAO';
@@ -111,6 +111,7 @@ describe('GameService', () => {
 
             // when calling it
             expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
+            flush();
 
             // it should toast, and navigate
             expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);

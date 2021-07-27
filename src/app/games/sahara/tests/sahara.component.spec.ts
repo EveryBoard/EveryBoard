@@ -3,18 +3,18 @@ import { SaharaComponent } from '../sahara.component';
 import { Coord } from 'src/app/jscaip/Coord';
 import { SaharaMove } from 'src/app/games/sahara/SaharaMove';
 import { NumberTable } from 'src/app/utils/ArrayUtils';
-import { SaharaPawn } from 'src/app/games/sahara/SaharaPawn';
 import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
 import { ComponentTestUtils } from 'src/app/utils/tests/TestUtils.spec';
 import { RulesFailure } from 'src/app/jscaip/RulesFailure';
 import { SaharaFailure } from '../SaharaFailure';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
 describe('SaharaComponent', () => {
     let componentTestUtils: ComponentTestUtils<SaharaComponent>;
-    const N: number = SaharaPawn.NONE;
-    const O: number = SaharaPawn.BLACK;
-    const X: number = SaharaPawn.WHITE;
-    const _: number = SaharaPawn.EMPTY;
+    const N: number = FourStatePiece.NONE.value;
+    const O: number = FourStatePiece.ZERO.value;
+    const X: number = FourStatePiece.ONE.value;
+    const _: number = FourStatePiece.EMPTY.value;
 
     beforeEach(fakeAsync(async() => {
         componentTestUtils = await ComponentTestUtils.forGame<SaharaComponent>('Sahara');
@@ -67,7 +67,7 @@ describe('SaharaComponent', () => {
     it('should not allow invalid moves', fakeAsync(async() => {
         // given initial board
         await componentTestUtils.expectClickSuccess('#click_0_3');
-        const reason: string = 'Vous pouvez vous déplacer maximum de 2 cases, pas de 3.';
+        const reason: string = 'You can move of up to two cases, not of 3.';
         await componentTestUtils.expectClickFailure('#click_2_2', reason);
     }));
     it('should change selected piece when clicking twice in a row on current player pieces', fakeAsync(async() => {

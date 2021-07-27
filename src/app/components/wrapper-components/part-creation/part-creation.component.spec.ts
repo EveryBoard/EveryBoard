@@ -167,6 +167,7 @@ describe('PartCreationComponent:', () => {
                 joueursDAOMock.update('opponent', { state: 'offline' });
                 testUtils.detectChanges();
                 tick();
+                flush();
 
                 testUtils.expectElementNotToExist('#selected_firstCandidate');
                 expect(component.currentJoiner).toEqual(JoinerMocks.INITIAL.doc);
@@ -281,6 +282,7 @@ describe('PartCreationComponent:', () => {
             await testUtils.whenStable();
             testUtils.detectChanges();
             tick(1);
+            flush();
 
             expect(router.navigate).toHaveBeenCalledWith(['server']);
         }));
@@ -423,6 +425,7 @@ describe('PartCreationComponent:', () => {
 
         testUtils.detectChanges();
         await testUtils.whenStable();
+        flush();
         expect(router.navigate).toHaveBeenCalledWith(['server']);
     }));
     it('should see candidate disappear and reappear if candidates disconnects and reconnects');

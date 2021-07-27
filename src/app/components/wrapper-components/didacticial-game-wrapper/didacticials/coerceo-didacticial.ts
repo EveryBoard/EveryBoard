@@ -1,28 +1,29 @@
 import { CoerceoMove } from 'src/app/games/coerceo/CoerceoMove';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
-import { CoerceoPartSlice, CoerceoPiece } from 'src/app/games/coerceo/CoerceoPartSlice';
+import { CoerceoPartSlice } from 'src/app/games/coerceo/CoerceoPartSlice';
 import { Coord } from 'src/app/jscaip/Coord';
+import { FourStatePiece } from 'src/app/jscaip/FourStatePiece';
 
-const _: number = CoerceoPiece.EMPTY.value;
-const N: number = CoerceoPiece.NONE.value;
-const O: number = CoerceoPiece.ZERO.value;
-const X: number = CoerceoPiece.ONE.value;
+const _: number = FourStatePiece.EMPTY.value;
+const N: number = FourStatePiece.NONE.value;
+const O: number = FourStatePiece.ZERO.value;
+const X: number = FourStatePiece.ONE.value;
 
 export const coerceoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        $localize`Plateau et but du jeu`,
-        $localize`Le Coerceo se joue sur un plateau comme ceci, composé de tuiles hexagonales, comportant chacune 6 triangles.
-         Les triangles sont les cases où les pièces se déplacent tout le long de la partie.
-         Les tuiles sont séparable du reste du plateau (vous verez comment plus tard).
-         Les pièces foncées appartiennent au premier joueur et ne se déplaceront toute la partie que sur les cases foncées,
-         les pièces claire appartiennent au second joueur et ne se déplaceront également que sur les cases claires.
-         Le but du jeu au Coerceo est de capturer toutes les pièces de l'adversaire.`,
+        $localize`Board and aim of the game`,
+        $localize`Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
+         The triangles are the cases along which pieces move during the game.
+         The tiles can be removed from the board (you will see how later).
+         The dark pieces blong to the first player and can only move on the dark cases,
+         while the clear pieces belong to the second player and can only move on the clear cases.
+         The aim of the game is to capture all of the opponent's pieces.`,
         CoerceoPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
-        $localize`Deplacement`,
-        $localize`Pour effectuer un déplacement, il faut:
-        1. Cliquer sur l'une de vos pièces.
+        $localize`Move`,
+        $localize`To move a piece, you need to:
+        1. Click on one of your pieces.
         2. Cliquer sur l'une des cases triangulaires encadrées en jaune.
         Note, vous pouvez passer à travers les pièces adverse.
         Vous jouez en premier, vous jouez donc Foncé, faites n'importe quel déplacement.
@@ -35,7 +36,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         $localize`Capture`,
         $localize`Chaque pièce a trois cases triangulaires voisines (2 sur les bords).
          Quand toutes les cases voisines sauf une sont occupées, et qu'un ennemi vient se déplacer sur cette dernière case libre, votre pièce est capturée !
-         Cependant, il est possible pour un joueur de se placer entre 3 pièces adversaires (ou 2 contre un bord) sans être capturé.
+         Cependant, il est possible pour un joueur de se placer entre 3 pièces adverses (ou 2 contre un bord) sans être capturé.
          Vous jouez clair, effectuez une capture`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],

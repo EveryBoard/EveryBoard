@@ -128,7 +128,7 @@ describe('LocalGameWrapperComponent', () => {
             componentTestUtils.detectChanges();
             await componentTestUtils.fixture.whenStable();
             const aiDepth: string = selectDepth.options[selectDepth.selectedIndex].label;
-            expect(aiDepth).toBe('Niveau 1');
+            expect(aiDepth).toBe('Level 1');
             componentTestUtils.detectChanges();
             await componentTestUtils.fixture.whenStable();
             expect(proposeAIToPlay).toHaveBeenCalledTimes(2);

@@ -8,6 +8,7 @@ import { TablutCase } from '../TablutCase';
 import { Player } from 'src/app/jscaip/Player';
 import { TablutLegalityStatus } from '../TablutLegalityStatus';
 import { MGPNode } from 'src/app/jscaip/MGPNode';
+import { TablutFailure } from '../TablutFailure';
 
 describe('TablutRules', () => {
 
@@ -339,7 +340,7 @@ describe('TablutRules', () => {
         const slice: TablutPartSlice = new TablutPartSlice(board, 1);
         const move: TablutMove = new TablutMove(new Coord(0, 4), new Coord(4, 4));
         const status: TablutLegalityStatus = rules.isLegal(move, slice);
-        expect(status.legal.getReason()).toBe('Les soldats n\'ont pas le droit de se poser sur le throne.');
+        expect(status.legal.getReason()).toBe(TablutFailure.SOLDIERS_CANNOT_SIT_ON_THRONE);
     });
     it('Should consider invader winner when all defender are immobilised', () => {
         const board: number[][] = [

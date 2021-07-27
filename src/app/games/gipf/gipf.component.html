@@ -16,14 +16,14 @@
     <g *ngFor="let case of getAllCoords()">
         <g (click)="onClick(case)"
            id="click_{{ case.x }}_{{ case.y }}">
-            <polyline [attr.points]="getHexaCoordinates(case)"
+            <polyline [attr.points]="getHexaCoordsAt(case)"
                       id="case_{{ case.x }}_{{ case.y }}"
                       [ngClass]="getCaseClass(case)"
                       class="base"
                       stroke-linecap="round"/>
             <circle *ngIf="isPiece(case)"
-                    [attr.cx]="getCenter(case).x"
-                    [attr.cy]="getCenter(case).y"
+                    [attr.cx]="getCenterAt(case).x"
+                    [attr.cy]="getCenterAt(case).y"
                     [attr.r]="getPieceSize()"
                     [ngClass]="getPieceClass(case)"
                     class="base"/>
@@ -34,7 +34,7 @@
        pointer-events="fill"
        class="capturable">
         <g *ngFor="let case of capture.capturedCases">
-            <polyline [attr.points]="getHexaCoordinates(case)"
+            <polyline [attr.points]="getHexaCoordsAt(case)"
                       (click)="onClick(case)"
                       class="no-fill"
                       stroke-linecap="round" />

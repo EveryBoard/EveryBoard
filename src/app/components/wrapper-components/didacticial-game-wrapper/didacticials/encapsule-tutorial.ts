@@ -16,7 +16,7 @@ const Sm: number = new EncapsuleCase(Player.ONE, Player.ZERO, Player.NONE).encod
 const sm: number = new EncapsuleCase(Player.ZERO, Player.ZERO, Player.NONE).encode();
 const Mb: number = new EncapsuleCase(Player.NONE, Player.ONE, Player.ZERO).encode();
 
-export const encapsuleDidacticial: DidacticialStep[] = [
+export const encapsuleTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`But du jeu`,
         $localize`Le but du jeu à Encapsule est d'aligner trois de vos pièces.
@@ -66,7 +66,7 @@ export const encapsuleDidacticial: DidacticialStep[] = [
          De même, il n'est pas possible de déplacer une pièce qui est recouverte par une autre pièce plus grande.
          Finalement, il est interdit de recouvrir une pièce avec une autre pièce plus petite.
          Vous jouez ici avec les foncé et pouvez gagner à ce tour de plusieurs façons,
-         essayez de gagner en effectuant un déplacement.`,
+         essayez de gagner en effectuant un déplacement, et non un placement (c'est à dire en déposant une nouvelle pièce).`,
         new EncapsulePartSlice([
             [Sm, _, S],
             [sm, Mb, B],
@@ -75,7 +75,11 @@ export const encapsuleDidacticial: DidacticialStep[] = [
             EncapsulePiece.MEDIUM_BLACK, EncapsulePiece.BIG_BLACK,
             EncapsulePiece.MEDIUM_WHITE, EncapsulePiece.BIG_WHITE,
         ]),
-        [EncapsuleMove.fromMove(new Coord(0, 1), new Coord(2, 2))],
+        [
+            EncapsuleMove.fromMove(new Coord(0, 1), new Coord(2, 2)),
+            EncapsuleMove.fromMove(new Coord(0, 1), new Coord(0, 2)),
+            EncapsuleMove.fromMove(new Coord(1, 1), new Coord(0, 2)),
+        ],
         $localize`Bravo !`,
         $localize`Raté, réessayez.`),
 ];

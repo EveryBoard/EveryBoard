@@ -17,16 +17,24 @@ export abstract class HexagonalGameComponent<M extends Move,
 
     public abstract hexaLayout: HexaLayout;
 
-    public getHexaCoordinates(coord: Coord): string {
+    public getHexaCoordsBy(x: number, y: number): string {
+        const coord: Coord = new Coord(x, y);
+        return this.getHexaCoordsAt(coord);
+    }
+    public getHexaCoordsAt(coord: Coord): string {
         let desc: string = '';
-        const coords: ReadonlyArray<Coord> = this.hexaLayout.getHexaCoordinates(coord);
+        const coords: ReadonlyArray<Coord> = this.hexaLayout.getHexaCoordsAt(coord);
         for (const corner of coords) {
             desc += corner.x + ' ' + corner.y + ' ';
         }
         desc += coords[0].x + ' ' + coords[0].y;
         return desc;
     }
-    public getCenter(coord: Coord): Coord {
-        return this.hexaLayout.getCenter(coord);
+    public getCenterBy(x: number, y: number): Coord {
+        const coord: Coord = new Coord(x, y);
+        return this.getCenterAt(coord);
+    }
+    public getCenterAt(coord: Coord): Coord {
+        return this.hexaLayout.getCenterAt(coord);
     }
 }

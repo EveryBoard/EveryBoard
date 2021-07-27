@@ -1,25 +1,50 @@
 import { NumberEncoder } from 'src/app/jscaip/Encoder';
-import { MoveCoord } from 'src/app/jscaip/MoveCoord';
+import { Move } from 'src/app/jscaip/Move';
 
-export class AwaleMove extends MoveCoord {
+export class AwaleMove extends Move {
+
+    public static readonly ZERO: AwaleMove = new AwaleMove(0);
+
+    public static readonly ONE: AwaleMove = new AwaleMove(1);
+
+    public static readonly TWO: AwaleMove = new AwaleMove(2);
+
+    public static readonly THREE: AwaleMove = new AwaleMove(3);
+
+    public static readonly FOUR: AwaleMove = new AwaleMove(4);
+
+    public static readonly FIVE: AwaleMove = new AwaleMove(5);
+
+    public static from(x: number): AwaleMove {
+        switch (x) {
+            case 0: return AwaleMove.ZERO;
+            case 1: return AwaleMove.ONE;
+            case 2: return AwaleMove.TWO;
+            case 3: return AwaleMove.THREE;
+            case 4: return AwaleMove.FOUR;
+            case 5: return AwaleMove.FIVE;
+            default: throw new Error('Invalid x for AwaleMove: ' + x);
+        }
+    }
+    private constructor(public readonly x: number) {
+        super();
+    }
     public static encoder: NumberEncoder<AwaleMove> = new class extends NumberEncoder<AwaleMove> {
         public maxValue(): number {
-            return 1*6 + 5;
+            return 5;
         }
         public encodeNumber(move: AwaleMove): number {
-            return (move.coord.y * 6) + move.coord.x;
+            return move.x;
         }
         public decodeNumber(encoded: number): AwaleMove {
-            const x: number = encoded % 6;
-            const y: number = (encoded - x) / 6;
-            return new AwaleMove(x, y);
+            return AwaleMove.from(encoded);
         }
     }
     public equals(o: AwaleMove): boolean {
         if (o === this) return true;
-        return o.coord.equals(this.coord);
+        return o.x === this.x;
     }
     public toString(): string {
-        return 'AwaleMove(' + this.coord.x + ', ' + this.coord.y + ')';
+        return 'AwaleMove(' + this.x + ')';
     }
 }

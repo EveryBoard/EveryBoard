@@ -6,7 +6,7 @@ export class PylosFailure {
 
     public static readonly SHOULD_HAVE_SUPPORTING_PIECES: string = $localize`Your move must have supporting pieces.`;
 
-    public static readonly CANNOT_LAND: string = $localize`You cannot land there.`;
+    public static readonly CANNOT_LAND: string = $localize`You cannot land of this case.`;
 
     public static readonly CANNOT_CAPTURE: string = $localize`You cannot capture.`;
 

@@ -148,9 +148,9 @@ export class SixComponent extends HexagonalGameComponent<SixMove, SixGameState, 
         const commonSize: number = Math.min(verticalSize, horizontalSize);
 
         this.setPieceSize(commonSize);
-        const lefterPiece: Coord = this.hexaLayout.getCenter(abstractScale.lefterPiece);
+        const lefterPiece: Coord = this.hexaLayout.getCenterAt(abstractScale.lefterPiece);
         const left: number = lefterPiece.x - this.hexaLayout.size;
-        const upperPiece: Coord = this.hexaLayout.getCenter(abstractScale.upperPiece);
+        const upperPiece: Coord = this.hexaLayout.getCenterAt(abstractScale.upperPiece);
         const up: number = upperPiece.y - this.hexaLayout.getYOffset();
         return (left - 10) + ' ' + (up - 10) + ' ' +
                (this.CONCRETE_WIDTH + 20) + ' ' +

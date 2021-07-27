@@ -59,7 +59,7 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
         this.firstPiece = new Coord(-15, -1);
         this.lastPiece = new Coord(-15, -1);
         this.hidePreviousMove();
-        if (this.rules.node.move) {
+        if (this.rules.node.move != null) {
             this.showPreviousMove();
         }
         this.board = this.rules.node.gamePartSlice.getCopiedBoard();
@@ -201,7 +201,8 @@ export class EpaminondasComponent extends AbstractGameComponent<EpaminondasMove,
     private getPhalanxLength(firstPiece: Coord, direction: Direction, owner: number): number {
         let length: number = 0;
         while (firstPiece.isInRange(14, 12) &&
-               this.board[firstPiece.y][firstPiece.x] === owner) {
+               this.board[firstPiece.y][firstPiece.x] === owner)
+        {
             length++;
             firstPiece = firstPiece.getNext(direction, 1);
         }
