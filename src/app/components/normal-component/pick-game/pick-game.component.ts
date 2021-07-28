@@ -32,7 +32,7 @@ class GameDescription {
 
     public static readonly ENCAPSULE: string = $localize`An enhanced tic-tac-toe where piece can encapsule other and prevent them to win.`;
 
-    public static readonly EPAMINONDAS: string = $localize`An antiquity-war inspired game. Be the first to pierce ennemy lines!`;
+    public static readonly EPAMINONDAS: string = $localize`An antiquity-war inspired game. Be the first to pierce your opponent's lines!`;
 
     public static readonly GO: string = $localize`The oldest strategy game still practiced widely. A territory control game.`;
 
@@ -42,7 +42,7 @@ class GameDescription {
 
     public static readonly PYLOS: string = $localize`Overlay your pieces and use two game mechanics to conserve your pieces. First player to run out of pieces loose!`;
 
-    public static readonly SAHARA: string = $localize`Immobilize one of your ennemy's pyramids before he immobilize one of yours!`;
+    public static readonly SAHARA: string = $localize`Immobilize one of your opponent's pyramids before he immobilize one of yours!`;
 
     public static readonly SIAM: string = $localize`Be the first to push a mountain out of the board!`;
 
