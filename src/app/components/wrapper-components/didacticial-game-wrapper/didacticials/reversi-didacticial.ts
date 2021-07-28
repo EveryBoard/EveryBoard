@@ -6,13 +6,13 @@ import { DidacticialStep } from '../DidacticialStep';
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
-export const reversiDidacticial: DidacticialStep[] = [
+export const reversiTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`But du jeu`,
         $localize`Les pièces du Reversi sont double face, une face foncée pour le premier joueur, une face claire pour le deuxième.
-         Quand une pièce est retournée, elle change de propriétaire.
-         Le joueur possédant le plus de pièces en fin de partie gagne.
-         Ici, le joueur foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.`,
+        Quand une pièce est retournée, elle change de propriétaire.
+        Le joueur possédant le plus de pièces en fin de partie gagne.
+        Ici, le joueur foncé a 28 points et le joueur clair en a 36, le joueur clair a donc gagné.`,
         new ReversiPartSlice([
             [O, O, O, O, O, O, O, O],
             [O, X, X, X, X, X, X, O],
@@ -27,8 +27,10 @@ export const reversiDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         $localize`Capture (1/2)`,
         $localize`Au début de la partie, les pièces sont placées comme ceci.
-        Pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.
-        Faites n'importe quel mouvement en cliquant pour déposer votre pièce. Le joueur foncé commence.`,
+        Pour qu'un coup soit légal il faut qu'il prenne en sandwich minimum une pièce adverse entre la pièce que vous posez et une de vos pièces.<br/><br/>
+        Faites n'importe quel mouvement en cliquant pour déposer votre pièce.
+        Le joueur foncé commence.<br/><br/>
+        Faites un mouvement!`,
         ReversiPartSlice.getInitialSlice(),
         new ReversiMove(2, 4),
         $localize`Bravo !`,
@@ -36,8 +38,8 @@ export const reversiDidacticial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Capture (2/2)`,
         $localize`Un mouvement peut également capturer une plus grande ligne, et plusieurs lignes à la fois.
-         Vous êtes le joueur clair ici.
-         Jouez en bas à gauche pour voir un exemple.`,
+        Vous êtes le joueur clair ici.<br/><br/>
+        Jouez en bas à gauche pour voir un exemple.`,
         new ReversiPartSlice([
             [_, _, _, _, _, _, _, _],
             [_, _, _, _, _, _, _, _],
@@ -55,7 +57,7 @@ export const reversiDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Passer son tour`,
         $localize`Si, à son tour de jeu, un joueur n'a aucun mouvement lui permettant de capturer une pièce, il est obligé de passer son tour.
-         Si d'aventure le joueur suivant ne savait pas jouer non plus, la partie terminerait avant que le plateau ne soit rempli, et les points seraient décomptés de la façon habituelle.`,
+        Si d'aventure le joueur suivant ne savait pas jouer non plus, la partie terminerait avant que le plateau ne soit rempli, et les points seraient décomptés de la façon habituelle.`,
         new ReversiPartSlice([
             [X, O, O, O, O, O, X, O],
             [O, X, X, X, X, X, X, O],

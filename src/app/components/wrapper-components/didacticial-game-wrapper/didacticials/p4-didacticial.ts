@@ -2,12 +2,12 @@ import { P4Move } from 'src/app/games/p4/P4Move';
 import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 
-export const p4Didacticial: DidacticialStep[] = [
+export const p4Tutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`But du jeu`,
         $localize`Le plateau du Puissance 4 fait 7 colonnes et 6 rangées et est initialement vide.
-         Le premier joueur joue Foncé, le deuxième joue Clair.
-         Le but du du jeu est d'être le premier joueur à aligner 4 de ses pièces (horizontalement, verticalement, ou diagonalement).`,
+        Le premier joueur joue Foncé, le deuxième joue Clair.
+        Le but du du jeu est d'être le premier joueur à aligner 4 de ses pièces (horizontalement, verticalement, ou diagonalement).`,
         P4PartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
@@ -20,7 +20,7 @@ export const p4Didacticial: DidacticialStep[] = [
     DidacticialStep.fromMove(
         $localize`Victoire`,
         $localize`Vous jouez Foncé.
-         Placez votre pion de façon à aligner horizontalement 4 de vos pièces.`,
+        Placez votre pion de façon à aligner horizontalement 4 de vos pièces.`,
         new P4PartSlice([
             [2, 2, 2, 2, 2, 2, 2],
             [2, 2, 2, 2, 2, 2, 2],

@@ -12,21 +12,21 @@ import { DidacticialStep } from './DidacticialStep';
 import { MGPValidation } from 'src/app/utils/MGPValidation';
 
 import { abaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
-import { awaleDidacticial } from './didacticials/awale-didacticial';
-import { coerceoDidacticial } from './didacticials/coerceo-didacticial';
-import { dvonnDidacticial } from './didacticials/dvonn-didacticial';
+import { awaleTutorial } from './didacticials/awale-didacticial';
+import { coerceoTutorial } from './didacticials/coerceo-didacticial';
+import { dvonnTutorial } from './didacticials/dvonn-didacticial';
 import { epaminondasTutorial } from './didacticials/epaminondas-didacticial';
 import { encapsuleTutorial } from './didacticials/encapsule-tutorial';
-import { gipfDidacticial } from './didacticials/gipf-didacticial';
-import { goDidacticial } from './didacticials/go-didacticial';
-import { kamisadoDidacticial } from './didacticials/kamisado-didacticial';
+import { gipfTutorial } from './didacticials/gipf-didacticial';
+import { goTutorial } from './didacticials/go-didacticial';
+import { kamisadoTutorial } from './didacticials/kamisado-didacticial';
 import { linesOfActionDidacticial } from 'src/app/games/lines-of-action/LinesOfActionDidacticial';
-import { p4Didacticial } from './didacticials/p4-didacticial';
+import { p4Tutorial } from './didacticials/p4-didacticial';
 import { pentagoDidacticial } from 'src/app/games/pentago/pentago.didacticial';
-import { pylosDidacticial } from './didacticials/pylos-didacticial';
-import { quartoDidacticial } from './didacticials/quarto-didacticial';
-import { quixoDidacticial } from './didacticials/quixo-didacticial';
-import { reversiDidacticial } from './didacticials/reversi-didacticial';
+import { pylosTutorial } from './didacticials/pylos-didacticial';
+import { quartoTutorial } from './didacticials/quarto-didacticial';
+import { quixoTutorial } from './didacticials/quixo-didacticial';
+import { reversiTutorial } from './didacticials/reversi-didacticial';
 import { saharaDidacticial } from './didacticials/sahara-didacticial';
 import { siamDidacticial } from './didacticials/siam-didacticial';
 import { sixDidacticial } from './didacticials/six-didacticial';
@@ -96,21 +96,21 @@ export class DidacticialGameWrapperComponent extends GameWrapper implements Afte
         const game: string = this.actRoute.snapshot.paramMap.get('compo');
         const didacticials: { [key: string]: DidacticialStep[] } = {
             Abalone: abaloneTutorial,
-            Awale: awaleDidacticial,
-            Coerceo: coerceoDidacticial,
-            Dvonn: dvonnDidacticial,
+            Awale: awaleTutorial,
+            Coerceo: coerceoTutorial,
+            Dvonn: dvonnTutorial,
             Encapsule: encapsuleTutorial,
             Epaminondas: epaminondasTutorial,
-            Gipf: gipfDidacticial,
-            Go: goDidacticial,
-            Kamisado: kamisadoDidacticial,
+            Gipf: gipfTutorial,
+            Go: goTutorial,
+            Kamisado: kamisadoTutorial,
             LinesOfAction: linesOfActionDidacticial,
-            P4: p4Didacticial,
+            P4: p4Tutorial,
             Pentago: pentagoDidacticial,
-            Pylos: pylosDidacticial,
-            Quarto: quartoDidacticial,
-            Quixo: quixoDidacticial,
-            Reversi: reversiDidacticial,
+            Pylos: pylosTutorial,
+            Quarto: quartoTutorial,
+            Quixo: quixoTutorial,
+            Reversi: reversiTutorial,
             Sahara: saharaDidacticial,
             Siam: siamDidacticial,
             Six: sixDidacticial,

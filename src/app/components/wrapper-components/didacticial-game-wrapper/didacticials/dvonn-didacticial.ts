@@ -13,7 +13,7 @@ const X1: DvonnPieceStack = DvonnPieceStack.PLAYER_ONE;
 const O4: DvonnPieceStack = new DvonnPieceStack(Player.ZERO, 4, false);
 const X4: DvonnPieceStack = new DvonnPieceStack(Player.ONE, 4, false);
 
-export const dvonnDidacticial: DidacticialStep[] = [
+export const dvonnTutorial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         $localize`Déplacement`,
         $localize`Au Dvonn, chaque case hexagonale comporte une pile de pièce.

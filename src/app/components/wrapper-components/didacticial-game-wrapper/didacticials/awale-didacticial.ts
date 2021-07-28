@@ -1,7 +1,8 @@
 import { AwaleMove } from 'src/app/games/awale/AwaleMove';
 import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
-export const awaleDidacticial: DidacticialStep[] = [
+
+export const awaleTutorial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         $localize`Distribuer`,
         $localize`L’Awalé est un jeu de distribution et de capture, le but est de capturer le plus de graines possible.
@@ -110,7 +111,6 @@ export const awaleDidacticial: DidacticialStep[] = [
         ], 0, [0, 0]),
         AwaleMove.FIVE,
         $localize`Aussi, dès qu'un joueur ne peut plus jouer, l’autre joueur capture toutes les graines dans son propre camp.
-        Ici, c'était au premier joueur de jouer et joueur deux de récolter toutes les graines restantes.<br/><br/>
-        Faites votre dernier coup.`,
+        Ici, c'était à vous de jouer et au joueur suivant de récolter toutes les graines restantes, en mettant ainsi fin à la partie.`,
     ),
 ];

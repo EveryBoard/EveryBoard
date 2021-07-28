@@ -27,6 +27,56 @@ import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartS
 import { epaminondasTutorial } from './didacticials/epaminondas-didacticial';
 import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
 import { Direction } from 'src/app/jscaip/Direction';
+import { abaloneTutorial } from 'src/app/games/abalone/AbaloneTutorial';
+import { awaleTutorial } from './didacticials/awale-didacticial';
+import { coerceoTutorial } from './didacticials/coerceo-didacticial';
+import { dvonnTutorial } from './didacticials/dvonn-didacticial';
+import { encapsuleTutorial } from './didacticials/encapsule-tutorial';
+import { gipfTutorial } from './didacticials/gipf-didacticial';
+import { goTutorial } from './didacticials/go-didacticial';
+import { kamisadoTutorial } from './didacticials/kamisado-didacticial';
+import { linesOfActionDidacticial } from 'src/app/games/lines-of-action/LinesOfActionDidacticial';
+import { p4Tutorial } from './didacticials/p4-didacticial';
+import { pylosTutorial } from './didacticials/pylos-didacticial';
+import { quartoTutorial } from './didacticials/quarto-didacticial';
+import { quixoTutorial } from './didacticials/quixo-didacticial';
+import { reversiTutorial } from './didacticials/reversi-didacticial';
+import { saharaDidacticial } from './didacticials/sahara-didacticial';
+import { siamDidacticial } from './didacticials/siam-didacticial';
+import { tablutDidacticial } from './didacticials/tablut-didacticial';
+import { AbaloneRules } from 'src/app/games/abalone/AbaloneRules';
+import { AwaleRules } from 'src/app/games/awale/AwaleRules';
+import { CoerceoRules } from 'src/app/games/coerceo/CoerceoRules';
+import { DvonnRules } from 'src/app/games/dvonn/DvonnRules';
+import { EncapsuleRules } from 'src/app/games/encapsule/EncapsuleRules';
+import { GipfRules } from 'src/app/games/gipf/GipfRules';
+import { GoRules } from 'src/app/games/go/GoRules';
+import { KamisadoRules } from 'src/app/games/kamisado/KamisadoRules';
+import { LinesOfActionRules } from 'src/app/games/lines-of-action/LinesOfActionRules';
+import { P4Rules } from 'src/app/games/p4/P4Rules';
+import { PylosRules } from 'src/app/games/pylos/PylosRules';
+import { QuartoRules } from 'src/app/games/quarto/QuartoRules';
+import { QuixoRules } from 'src/app/games/quixo/QuixoRules';
+import { ReversiRules } from 'src/app/games/reversi/ReversiRules';
+import { SaharaRules } from 'src/app/games/sahara/SaharaRules';
+import { SiamRules } from 'src/app/games/siam/SiamRules';
+import { TablutRules } from 'src/app/games/tablut/TablutRules';
+import { AbaloneGameState } from 'src/app/games/abalone/AbaloneGameState';
+import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
+import { CoerceoPartSlice } from 'src/app/games/coerceo/CoerceoPartSlice';
+import { DvonnGameState } from 'src/app/games/dvonn/DvonnGameState';
+import { EncapsulePartSlice } from 'src/app/games/encapsule/EncapsulePartSlice';
+import { GipfPartSlice } from 'src/app/games/gipf/GipfPartSlice';
+import { GoPartSlice } from 'src/app/games/go/GoPartSlice';
+import { KamisadoPartSlice } from 'src/app/games/kamisado/KamisadoPartSlice';
+import { TablutPartSlice } from 'src/app/games/tablut/TablutPartSlice';
+import { SiamPartSlice } from 'src/app/games/siam/SiamPartSlice';
+import { SaharaPartSlice } from 'src/app/games/sahara/SaharaPartSlice';
+import { ReversiPartSlice } from 'src/app/games/reversi/ReversiPartSlice';
+import { QuixoPartSlice } from 'src/app/games/quixo/QuixoPartSlice';
+import { PylosPartSlice } from 'src/app/games/pylos/PylosPartSlice';
+import { P4PartSlice } from 'src/app/games/p4/P4PartSlice';
+import { LinesOfActionState } from 'src/app/games/lines-of-action/LinesOfActionState';
 
 describe('DidacticialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -926,44 +976,18 @@ describe('DidacticialGameWrapperComponent', () => {
                 [
                     new EpaminondasRules(EpaminondasPartSlice),
                     epaminondasTutorial[3],
-                    epaminondasTutorial[3].solutionMove,
-                    MGPValidation.SUCCESS,
-                ], [
-                    new EpaminondasRules(EpaminondasPartSlice),
-                    epaminondasTutorial[3],
                     new EpaminondasMove(0, 11, 2, 1, Direction.UP),
                     MGPValidation.failure($localize`Félicitation, vous avez un pas d'avance, ce n'est malheureusement pas l'exercice.`),
-                ],
-                [
-                    new PentagoRules(PentagoGameState),
-                    pentagoDidacticial[2],
-                    pentagoDidacticial[2].solutionMove,
-                    MGPValidation.SUCCESS,
                 ], [
-                    new PentagoRules(PentagoGameState),
-                    pentagoDidacticial[3],
-                    pentagoDidacticial[3].solutionMove,
-                    MGPValidation.SUCCESS,
-                ], [
-                    new SixRules(SixGameState),
-                    sixDidacticial[4],
-                    sixDidacticial[4].solutionMove,
-                    MGPValidation.SUCCESS,
+                    new EpaminondasRules(EpaminondasPartSlice),
+                    epaminondasTutorial[4],
+                    new EpaminondasMove(0, 10, 1, 1, Direction.UP),
+                    MGPValidation.failure($localize`Raté ! Vous n'avez bougé qu'une pièce.`),
                 ], [
                     new SixRules(SixGameState),
                     sixDidacticial[4],
                     SixMove.fromDeplacement(new Coord(6, 1), new Coord(7, 1)),
                     MGPValidation.failure(SixDidacticialMessages.MOVEMENT_NOT_DISCONNECTING),
-                ], [
-                    new SixRules(SixGameState),
-                    sixDidacticial[5],
-                    sixDidacticial[5].solutionMove,
-                    MGPValidation.SUCCESS,
-                ], [
-                    new SixRules(SixGameState),
-                    sixDidacticial[6],
-                    sixDidacticial[6].solutionMove,
-                    MGPValidation.SUCCESS,
                 ],
             ];
             for (const stepExpectation of stepExpectations) {
@@ -974,6 +998,44 @@ describe('DidacticialGameWrapperComponent', () => {
                 const status: LegalityStatus = rules.isLegal(move, step.state);
                 const state: GamePartSlice = rules.applyLegalMove(move, step.state, status);
                 expect(step.predicate(move, state)).toEqual(validation);
+            }
+        }));
+        it('Should make sure all solutionMove are legal', fakeAsync(async() => {
+            const tutorials: [Rules<Move, GamePartSlice>, DidacticialStep[]][] = [
+                [new AbaloneRules(AbaloneGameState), abaloneTutorial],
+                [new AwaleRules(AwalePartSlice), awaleTutorial],
+                [new CoerceoRules(CoerceoPartSlice), coerceoTutorial],
+                [new DvonnRules(DvonnGameState), dvonnTutorial],
+                [new EncapsuleRules(EncapsulePartSlice), encapsuleTutorial],
+                [new EpaminondasRules(EpaminondasPartSlice), epaminondasTutorial],
+                [new GipfRules(GipfPartSlice), gipfTutorial],
+                [new GoRules(GoPartSlice), goTutorial],
+                [new KamisadoRules(KamisadoPartSlice), kamisadoTutorial],
+                [new LinesOfActionRules(LinesOfActionState), linesOfActionDidacticial],
+                [new P4Rules(P4PartSlice), p4Tutorial],
+                [new PentagoRules(PentagoGameState), pentagoDidacticial],
+                [new PylosRules(PylosPartSlice), pylosTutorial],
+                [new QuartoRules(QuartoPartSlice), quartoTutorial],
+                [new QuixoRules(QuixoPartSlice), quixoTutorial],
+                [new ReversiRules(ReversiPartSlice), reversiTutorial],
+                [new SaharaRules(SaharaPartSlice), saharaDidacticial],
+                [new SiamRules(SiamPartSlice), siamDidacticial],
+                [new SixRules(SixGameState), sixDidacticial],
+                [new TablutRules(TablutPartSlice), tablutDidacticial],
+            ];
+            for (const tutorial of tutorials) {
+                const rules: Rules<Move, GamePartSlice> = tutorial[0];
+                const steps: DidacticialStep[] = tutorial[1];
+                for (const step of steps) {
+                    if (step.solutionMove != null) {
+                        const status: LegalityStatus = rules.isLegal(step.solutionMove, step.state);
+                        expect(status.legal.reason).toBeNull();
+                        if (step.isPredicate()) {
+                            const state: GamePartSlice = rules.applyLegalMove(step.solutionMove, step.state, status);
+                            expect(step.predicate(step.solutionMove, state)).toEqual(MGPValidation.SUCCESS);
+                        }
+                    }
+                }
             }
         }));
     });

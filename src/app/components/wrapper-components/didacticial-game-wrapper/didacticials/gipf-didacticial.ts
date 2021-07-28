@@ -10,7 +10,7 @@ import { DidacticialStep } from '../DidacticialStep';
 const _: GipfPiece = GipfPiece.EMPTY;
 const O: GipfPiece = GipfPiece.PLAYER_ZERO;
 const X: GipfPiece = GipfPiece.PLAYER_ONE;
-export const gipfDidacticial: DidacticialStep[] = [
+export const gipfTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`But du jeu`,
         $localize`Le but du jeu est de capturer les pièces de l'adversaire afin qu'il ne puisse plus jouer.

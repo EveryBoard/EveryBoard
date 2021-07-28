@@ -13,14 +13,14 @@ export const saharaDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Plateau initial`,
         $localize`Le Sâhârâ se joue sur un plateau dont chaque case est triangulaire.
-         Chaque joueur contrôle six pyramides.`,
+        Chaque joueur contrôle six pyramides.`,
         SaharaPartSlice.getInitialSlice(),
     ),
     DidacticialStep.informational(
         $localize`But du jeu`,
         $localize`Au Sâhârâ, le but du jeu est d'immobiliser une des pyramides de l'adversaire.
-         Pour ce faire il faut occuper toutes les cases voisines de celle-ci.
-         Ici, le joueur Clair a perdu car sa pyramide tout à gauche est immobilisée.`,
+        Pour ce faire il faut occuper toutes les cases voisines de celle-ci.
+        Ici, le joueur clair a perdu car sa pyramide tout à gauche est immobilisée.`,
         new SaharaPartSlice([
             [N, N, _, _, X, _, _, O, X, N, N],
             [N, _, _, _, _, _, _, _, _, _, N],
@@ -30,19 +30,19 @@ export const saharaDidacticial: DidacticialStep[] = [
             [N, N, X, O, _, _, _, X, O, N, N],
         ], 3),
     ),
-    DidacticialStep.fromMove(
+    DidacticialStep.anyMove(
         $localize`Déplacement simple`,
         $localize`Pour parvenir à immobiliser l'adversaire, il faut déplacer ses pyramides.
-         Quand une pyramide partage ses arêtes avec des cases claires, elle peut se déplacer dessus (un 'pas').
-         Vous jouez le premier joueur, qui contrôle les pyramides foncées.
-         1. Cliquez sur la pyramide foncée en haut à gauche.
-         2. Cliquez ensuite sur la case en dessous, pour y déplacer votre pyramide.`,
+        Quand une pyramide partage ses arêtes avec des cases claires, elle peut se déplacer dessus (un 'pas').
+        Vous jouez le premier joueur, qui contrôle les pyramides foncées.
+        <ul>
+            <li> 1. Cliquez sur la pyramide (foncée pour ce tour ci).</li>
+            <li> 2. Cliquez ensuite sur une des deux ou trois cases voisines, pour y déplacer votre pyramide.</li>
+        </ul><br/>
+        Faite n'importe quel mouvement.`,
         SaharaPartSlice.getInitialSlice(),
-        [new SaharaMove(new Coord(2, 0), new Coord(2, 1))],
+        new SaharaMove(new Coord(2, 0), new Coord(2, 1)),
         $localize`Bravo !`,
-        $localize`Raté !
-         Vous n'avez pas déplacé la pyramide demandée.
-         Cependant c'est un déplacement légal, donc j'imagine que vous pouvez aller jouer maintenant!`,
     ),
     DidacticialStep.fromMove(
         $localize`Déplacement double`,

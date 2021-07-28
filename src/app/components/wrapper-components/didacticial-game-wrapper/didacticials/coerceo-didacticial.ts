@@ -9,7 +9,7 @@ const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;
 const X: number = FourStatePiece.ONE.value;
 
-export const coerceoDidacticial: DidacticialStep[] = [
+export const coerceoTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Plateau et but du jeu`,
         $localize`Le Coerceo se joue sur un plateau comme ceci, composé de tuiles hexagonales, comportant chacune 6 triangles.
@@ -57,14 +57,14 @@ export const coerceoDidacticial: DidacticialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(3, 4), new Coord(4, 3)),
         ],
         $localize`Bravo !`,
-        $localize`Raté, vous n'avez pas capturé de pièces!`,
+        $localize`Raté, vous n'avez pas capturé de pièce !`,
     ),
     DidacticialStep.fromMove(
         $localize`Gagner une tuile`,
         $localize`Quand une tuile est quittée, elle devient potentiellement enlevable du plateau.
         Pour qu'elle soit enlevée, il faut que trois de ses bords soient libres, et qu'ils soient l'un à côté de l'autre.
         Notez que si une tuile vide, voisine d'une tuile qu'on vient de retirer, devient retirable, elle sera retirée.
-        Par exemple, ci-dessous, en quittant sa tuile le pion foncé le plus haut ne déconnectera pas celle-ci!
+        Par exemple, ci-dessous, en quittant sa tuile le pion foncé le plus haut ne déconnectera pas celle-ci !
         Mais en quittant la tuile en bas à gauche, deux tuiles seront enlevées.<br/><br/>
         Effectuez un mouvement pour récupérer deux tuiles.`,
         new CoerceoPartSlice([
@@ -85,7 +85,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(2, 6), new Coord(3, 7)),
         ],
         $localize`Bravo !`,
-        $localize`Raté, vous n'avez pas récupéré les deux tuiles récupérable!`,
+        $localize`Raté, vous n'avez pas récupéré les deux tuiles récupérable !`,
     ),
     DidacticialStep.fromMove(
         $localize`Échanger une tuile`,
@@ -134,7 +134,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
             CoerceoMove.fromCoordToCoord(new Coord(7, 6), new Coord(8, 5)),
         ],
         $localize`Bravo ! Voyez, votre pièce a perdu sa dernière liberté quand vous avez récupéré la tuile, mais est restée car c'était votre tour.
-        Celle de l'adversaire a disparu car la capture de la tuile lui a enlevé une liberté il ne lui en restait plus!`,
+        Celle de l'adversaire a disparu car la capture de la tuile lui a enlevé une liberté il ne lui en restait plu !`,
         $localize`Raté !`,
     ),
 ];

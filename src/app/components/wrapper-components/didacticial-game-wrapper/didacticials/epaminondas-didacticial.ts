@@ -72,24 +72,28 @@ export const epaminondasTutorial: DidacticialStep[] = [
         },
         $localize`Voilà, c'est comme ça qu'on déplace une seule pièce.`,
     ),
-    DidacticialStep.fromMove(
+    DidacticialStep.fromPredicate(
         $localize`Déplacement de phalange`,
         $localize`Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
         <ul>
-            <li> 1. Cliquez sur la première pièce (la plus en bas à gauche).</li>
-            <li> 2. Cliquez sur la dernière pièce de la phalange (celle juste au dessus pour l'exemple).</li>
-            <li> 3. Cliquez une ou deux cases plus haut, pour déplacer toute la phalange de deux cases
-            (soit de la distance maximale légale qui vaut le nombre de pièces déplacées).</li>
-        </ul>`,
+            <li> 1. Cliquez sur la première pièce.</li>
+            <li> 2. Cliquez sur la dernière pièce de la phalange.</li>
+            <li> 3. Cliquez une des cases encadrées en jaune, elles vous permettent de déplacer au maximum votre phalange d'une distance égale à sa taille.</li>
+        </ul><br/>
+        Faites un déplacement de phalange!`,
         EpaminondasPartSlice.getInitialSlice(),
-        [
-            new EpaminondasMove(0, 11, 2, 1, Direction.UP),
-            new EpaminondasMove(0, 11, 2, 2, Direction.UP)],
+        new EpaminondasMove(0, 11, 2, 1, Direction.UP),
+        (move: EpaminondasMove, state: EpaminondasPartSlice) => {
+            if (move.movedPieces > 1) {
+                return MGPValidation.SUCCESS;
+            } else {
+                return MGPValidation.failure($localize`Raté ! Vous n'avez bougé qu'une pièce.`);
+            }
+        },
         $localize`Bravo !
         Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
         Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
         Il ne peut y avoir ni ennemis ni trous dans la phalange.`,
-        $localize`Raté !`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture`,
