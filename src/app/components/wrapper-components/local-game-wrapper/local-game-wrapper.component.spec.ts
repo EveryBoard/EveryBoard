@@ -215,7 +215,7 @@ describe('LocalGameWrapperComponent', () => {
             expect(() => localGameWrapper.doAIMove(minimax)).toThrowError(errorMessage);
             flush();
         }));
-        fit('should not do an AI move when the game is finished', fakeAsync(async() => {
+        it('should not do an AI move when the game is finished', fakeAsync(async() => {
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
 
             spyOn(componentTestUtils.getComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
