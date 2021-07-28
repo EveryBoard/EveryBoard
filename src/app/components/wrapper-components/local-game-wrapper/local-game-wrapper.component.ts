@@ -88,6 +88,10 @@ export class LocalGameWrapperComponent extends GameWrapper implements AfterViewI
     }
     private getPlayingAI(): Minimax<Move, GamePartSlice> {
         const turn: number = this.gameComponent.rules.node.gamePartSlice.turn % 2;
+        if (this.gameComponent.rules.getGameStatus(this.gameComponent.rules.node).isEndGame) {
+            // No AI is playing when the game is finished
+            return null;
+        }
         return this.gameComponent.availableMinimaxes.find((a: Minimax<Move, GamePartSlice, LegalityStatus>) => {
             return a.name === this.players[turn];
         });
