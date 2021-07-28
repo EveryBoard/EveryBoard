@@ -56,10 +56,6 @@ export class PartCreationComponent implements OnInit, OnDestroy {
     // with the part creation component
     public static VERBOSE: boolean = false;
 
-    // public BLITZ_PART_DURATION: number = PartType.BLITZ_PART_DURATION;
-    // public BLITZ_MOVE_DURATION: number = PartType.BLITZ_MOVE_DURATION;
-    // public NORMAL_PART_DURATION: number = PartType.NORMAL_PART_DURATION;
-    // public NORMAL_MOVE_DURATION: number = PartType.NORMAL_MOVE_DURATION;
     public partType: typeof PartType = PartType;
 
     @Input() partId: NonNullable<string>;
@@ -243,7 +239,7 @@ export class PartCreationComponent implements OnInit, OnDestroy {
         this.router.navigate(['server']);
     }
     private isGameStarted(joiner: IJoiner): boolean {
-        return joiner && (joiner.partStatus === PartStatus.PART_STARTED.value);
+        return joiner != null && (joiner.partStatus === PartStatus.PART_STARTED.value);
     }
     private onGameStarted(joiner: IJoiner) {
         display(PartCreationComponent.VERBOSE, { partCreationComponent_onGameStarted: { joiner } });
