@@ -3,32 +3,32 @@ import { AwalePartSlice } from 'src/app/games/awale/AwalePartSlice';
 import { DidacticialStep } from 'src/app/components/wrapper-components/didacticial-game-wrapper/DidacticialStep';
 export const awaleDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
-        $localize`Distributing`,
-        $localize`Awalé is a game of distribution and capture. Its aim is to capture the most seeds.
-         Let's see how seeds are distributed.
+        $localize`Sowing`,
+        $localize`Awalé is a game of distribution (sowing) and capture. Its goal is to capture the most seeds.
+         Let's see how seeds are sown.
          As you're playing fisrt, the 6 houses on the top are yours.<br/><br>
-         Click on any of them to distribute the seeds it contains: they will be distributed clockwise, one seed per house.`,
+         Click on any of them to sow the seeds it contains: they will be sown clockwise, one seed per house.`,
         AwalePartSlice.getInitialSlice(),
         AwaleMove.ZERO,
         $localize`Look at the 4 houses that follow clockwise the one you picked, they now contain 5 seeds.
-        This is how seeds are distributed:
+        This is how seeds are sown:
         one by one from the house next to the one they come from, clockwise,  Voilà, regardez les 4 maisons suivant la maison choisie dans l’ordre horlogé, elle comptent maintenant 5 graines.`,
     ),
     DidacticialStep.anyMove(
-        $localize`Big distribution`,
+        $localize`Big sowing`,
         $localize`You are now the second player (on the bottom).
         When there are enough seeds to make a full turn, something else happens.<br/><br/>
-        Distribute the house that contains 12 seeds.`,
+        Sow the house that contains 12 seeds.`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 0],
             [0, 12, 0, 0, 0, 0],
         ], 1, [0, 0]),
         AwaleMove.ONE,
-        $localize`See, the house that you distributed has not been refilled, and the distribution immediately continued from the next house (which therefore contains two seeds).`,
+        $localize`See, the house that you sowed has not been refilled, and the sowing immediately continued from the next house (which therefore contains two seeds).`,
     ),
     DidacticialStep.fromMove(
         $localize`Simple capture`,
-        $localize`After distributing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.
+        $localize`After sowing, if the last seed falls in an opponent's house and if there is now two or three seeds in this house, the player captures these two or three seeds.
          Then, te player looks at the preceding house:
          if it is still in the opponent's side and contains two or three seeds, they are also captured.
          This continues until the player's side is reached or there is a different number of seeds from two or three.<br/><br/>
@@ -39,11 +39,11 @@ export const awaleDidacticial: DidacticialStep[] = [
         ], 1, [0, 0]),
         [AwaleMove.ZERO],
         $localize`Well done ! This was a simple capture, now let us see how to make multiple captures.`,
-        $localize`Failed. Try again and distribute from the leftmost house.`,
+        $localize`Failed. Try again and sow from the leftmost house.`,
     ),
     DidacticialStep.fromMove(
         $localize`Multiple captures`,
-        $localize`By distributing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
+        $localize`By sowing from your leftmost house, you will change the number of seeds in a house from 2 to 3, and from the preceding house from 1 to 2.
         As these are consecutive houses, all seeds in them will be captured.<br/><br/>
         Capture them.`,
         new AwalePartSlice([
@@ -105,7 +105,7 @@ export const awaleDidacticial: DidacticialStep[] = [
     DidacticialStep.anyMove(
         $localize`End of the game`,
         $localize`A game is won as soon as one player has captured 25 seeds, as that player has more than half of all the seeds.<br/><br/>
-         Distribute the house on the top right.`,
+         Sow the house on the top right.`,
         new AwalePartSlice([
             [0, 0, 0, 0, 0, 1],
             [0, 1, 2, 3, 4, 4],

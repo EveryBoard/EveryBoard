@@ -63,10 +63,10 @@ describe('LoginComponent', () => {
         it('should map error message nicely', fakeAsync(async() => {
             expectErrorToInduceMessage(
                 'The password is invalid or the user does not have a password.',
-                'This password is incorrect');
+                'This password is incorrect.');
             expectErrorToInduceMessage(
                 'There is no user record corresponding to this identifier. The user may have been deleted.',
-                `This email address has no account on this website`);
+                `This email address has no account on this website.`);
             expectErrorToInduceMessage(
                 'Missing or insufficient permissions.',
                 'You must click the confirmation link that you should have received by email.');

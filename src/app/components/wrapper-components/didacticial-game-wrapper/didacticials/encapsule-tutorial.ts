@@ -18,8 +18,8 @@ const Mb: number = new EncapsuleCase(Player.NONE, Player.ONE, Player.ZERO).encod
 
 export const encapsuleTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
-        $localize`Aim of the game`,
-        $localize`The aim of Encapsule is to align three of your pieces.
+        $localize`Goal of the game`,
+        $localize`The goal of Encapsule is to align three of your pieces.
         Here, we have a victory of the dark player.`,
         new EncapsulePartSlice([
             [s, S, B],

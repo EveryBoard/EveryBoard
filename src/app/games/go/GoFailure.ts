@@ -1,6 +1,6 @@
 export class GoFailure {
 
-    public static readonly ILLEGAL_KO: string = $localize`This move is a ko, you must play somewhere else before you can play in this case.`;
+    public static readonly ILLEGAL_KO: string = $localize`This move is a ko, you must play somewhere else before you can play in this case again.`;
 
     public static readonly CANNOT_PASS_AFTER_PASSED_PHASE: string = $localize`We are not in playing nor in passed phase, you must mark stone as dead or alive or accept current board.`;
 

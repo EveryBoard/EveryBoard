@@ -11,13 +11,13 @@ const X: number = FourStatePiece.ONE.value;
 
 export const coerceoDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        $localize`Board and aim of the game`,
+        $localize`Board and goal of the game`,
         $localize`Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
          The triangles are the cases along which pieces move during the game.
          The tiles can be removed from the board (you will see how later).
          The dark pieces blong to the first player and can only move on the dark cases,
          while the clear pieces belong to the second player and can only move on the clear cases.
-         The aim of the game is to capture all of the opponent's pieces.`,
+         The goal of the game is to capture all of the opponent's pieces.`,
         CoerceoPartSlice.getInitialSlice(),
     ),
     DidacticialStep.anyMove(

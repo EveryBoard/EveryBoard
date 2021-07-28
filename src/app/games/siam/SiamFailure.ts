@@ -2,7 +2,7 @@ export abstract class SiamFailure {
 
     public static readonly NO_REMAINING_PIECE_TO_INSERT: string = $localize`You cannot insert a piece, all your pieces are already on the board.`;
 
-    public static readonly NOT_ENOUGH_FORCE_TO_PUSH: string = $localize`You do not have enough force to push.`;
+    public static readonly NOT_ENOUGH_FORCE_TO_PUSH: string = $localize`You do not have enough strength to push.`;
 
     public static readonly ILLEGAL_ROTATION: string = $localize`You cannot turn and move forward at the same time.`;
 

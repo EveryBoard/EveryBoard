@@ -10,16 +10,17 @@ const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 export const epaminondasDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
-        $localize`Plateau initial`,
-        $localize`Ceci est le plateau de départ.
-        La ligne tout en haut est la ligne de départ de Clair.
-        La ligne tout en bas est la ligne de départ de Foncé.`,
+        $localize`Initial board`,
+        $localize`This is the initial board.
+        The top line is the starting line of Clear.
+        The bottom line is the starting line of Dark.`,
         EpaminondasPartSlice.getInitialSlice(),
     ),
     DidacticialStep.informational(
-        $localize`But du jeu (1/2)`,
-        $localize`Après plusieurs déplacements, si au début de son tour de jeu, un joueur a plus de pièces sur la ligne de départ de l'adversaire que l'adversaire n'en a sur la ligne de départ du joueur, ce joueur gagne.
-        Ici, c'est au tour du joueur foncé de jouer, il a donc gagné.`,
+        $localize`Goal of the game (1/2)`,
+        $localize`After multiple moves, if at the end of its turn, a player has more piece on the opponent's starting line
+        than the number of pieces the opponent has on the player's starting line, the player wins.
+        Here, it's Dark turn to play: Dark has therefore won.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, O, _, _, X, X, X, X, X, X],
             [_, _, _, _, _, O, _, _, _, _, _, _, X, X],
@@ -36,8 +37,9 @@ export const epaminondasDidacticial: DidacticialStep[] = [
         ], 0),
     ),
     DidacticialStep.informational(
-        $localize`But du jeu (2/2)`,
-        $localize`Dans ce cas ci, c'est au tour de Clair, et celui-ci gagne, car il a deux pièces sur la ligne de départ de Foncé, et Foncé n'en a qu'une sur la ligne de départ de Clair.`,
+        $localize`Goal of the game (2/2)`,
+        $localize`Here, it is Clear's turn.
+        Clear wins because they have two pieces on Dark's starting line, and Dark only has one on Clear's starting line.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, O, _, _, _, _, X, X, X, X],
             [_, _, _, _, _, O, _, _, _, _, _, _, _, _],
@@ -54,12 +56,12 @@ export const epaminondasDidacticial: DidacticialStep[] = [
         ], 1),
     ),
     DidacticialStep.fromPredicate(
-        $localize`Déplacement de pièce`,
-        $localize`Voici le plateau de départ, c'est à Foncé de commencer.
-        Commençons simplement par un déplacement d'une seule pièce :
+        $localize`Moving a piece`,
+        $localize`Here is the starting board. Dark plays first.
+        Let's start with moving a single piece:
         <ul>
-            <li> 1. Cliquez sur une pièce.</li>
-            <li> 2. Cliquez sur une case voisine libre.</li>
+            <li> 1. Click on a piece.</li>
+            <li> 2. Click on a empty neighbouring case.</li>
         </ul>`,
         EpaminondasPartSlice.getInitialSlice(),
         new EpaminondasMove(0, 10, 1, 1, Direction.UP),
@@ -67,39 +69,38 @@ export const epaminondasDidacticial: DidacticialStep[] = [
             if (move.movedPieces === 1) {
                 return MGPValidation.SUCCESS;
             } else {
-                return MGPValidation.failure($localize`Félicitation, vous avez un pas d'avance, ce n'est malheureusement pas l'exercice.`);
+                return MGPValidation.failure($localize`Congratulations, you are in advance. But this is not the exercise here, try again.`);
             }
         },
-        $localize`Voilà, c'est comme ça qu'on déplace une seule pièce.`,
+        $localize`This is how you move a single piece.`,
     ),
     DidacticialStep.fromMove(
-        $localize`Déplacement de phalange`,
-        $localize`Maintenant, comment déplacer plusieurs pièces sur une seule ligne (une phalange) :
+        $localize`Moving a phalanx`,
+        $localize`Let us now see how to move multiple pieces along a line, which is called a phalanx :
         <ul>
-            <li> 1. Cliquez sur la première pièce (la plus en bas à gauche).</li>
-            <li> 2. Cliquez sur la dernière pièce de la phalange (celle juste au dessus pour l'exemple).</li>
-            <li> 3. Cliquez une ou deux cases plus haut, pour déplacer toute la phalange de deux cases
-            (soit de la distance maximale légale qui vaut le nombre de pièces déplacées).</li>
+            <li> 1. Click on the first piece of the phalanx (here, the bottom left one).</li>
+            <li> 2. Click on the last piece of the phalanx (in this example, the one just above).</li>
+            <li> 3. Click two cases above in order to move the phalanx by two cases (the maximal legal distance, which equals the number of pieces moved).</li>
         </ul>`,
         EpaminondasPartSlice.getInitialSlice(),
         [
             new EpaminondasMove(0, 11, 2, 1, Direction.UP),
             new EpaminondasMove(0, 11, 2, 2, Direction.UP)],
-        $localize`Bravo !
-        Les pièces déplacées doivent être horizontalement, verticalement, ou diagonalement alignées.
-        Le déplacement doit se faire le long de cette ligne, en avant ou en arrière.
-        Il ne peut y avoir ni ennemis ni trous dans la phalange.`,
-        $localize`Raté !`,
+        $localize`Congratulations !
+        The moved pieces can be horizontally, vertically, or diagonally aligned.
+        The move is made along this axis, forward or backwards.
+        There can be no opponent nor holes in the phalanx.`,
+        $localize`Failed !`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture`,
-        $localize`Pour capturer une phalange ennemie:
+        $localize`In order to capture a phalanx of the opponent:
         <ul>
-            <li> 1. Il faut que celle-ci soit alignée avec la phalange en déplacement.</li>
-            <li> 2. Qu'elle soit strictement plus courte.</li>
-            <li> 3. Que la première pièce de votre phalange atterrisse sur la première pièce rencontrée de la phalange à capturer.</li>
+            <li> 1. It must be aligned with the phalanx you are moving.</li>
+            <li> 2. It must be strictly shorter than your phalanx.</li>
+            <li> 3. The first piece of your phalanx should land on the first piece of the opponent's phalanx that you want to capture.</li>
         </ul><br/>
-        Capturez la phalange.`,
+        Capture a phalanx.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, _, _, _, X, X, X, X, X, X],
             [_, _, _, X, _, _, _, _, _, _, _, _, _, _],
@@ -115,7 +116,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
             [_, _, _, _, _, _, _, O, O, O, O, O, O, O],
         ], 0),
         [new EpaminondasMove(3, 7, 3, 3, Direction.UP)],
-        $localize`Bravo, vous avez réussi.`,
-        $localize`Raté, vous n'avez pas capturé la phalange.`,
+        $localize`Congratulations, you made it!.`,
+        $localize`Failed, you have not captured the phalanx.`,
     ),
 ];

@@ -1,6 +1,6 @@
 export class EpaminondasFailure {
 
-    public static readonly PHALANX_IS_LEAVING_BOARD: string = $localize`The move distance of youh phalanx puts it out of the board.`;
+    public static readonly PHALANX_IS_LEAVING_BOARD: string = $localize`The move distance of your phalanx puts it out of the board.`;
 
     public static readonly SOMETHING_IN_PHALANX_WAY: string = $localize`There is something in the way of your phalanx.`;
 
