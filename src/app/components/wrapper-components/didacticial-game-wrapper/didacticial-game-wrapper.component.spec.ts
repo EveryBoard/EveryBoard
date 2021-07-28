@@ -22,6 +22,11 @@ import { LegalityStatus } from 'src/app/jscaip/LegalityStatus';
 import { PentagoRules } from 'src/app/games/pentago/PentagoRules';
 import { PentagoGameState } from 'src/app/games/pentago/PentagoGameState';
 import { pentagoDidacticial } from 'src/app/games/pentago/pentago.didacticial';
+import { EpaminondasRules } from 'src/app/games/epaminondas/EpaminondasRules';
+import { EpaminondasPartSlice } from 'src/app/games/epaminondas/EpaminondasPartSlice';
+import { epaminondasDidacticial } from './didacticials/epaminondas-didacticial';
+import { EpaminondasMove } from 'src/app/games/epaminondas/EpaminondasMove';
+import { Direction } from 'src/app/jscaip/Direction';
 
 describe('DidacticialGameWrapperComponent', () => {
     let componentTestUtils: ComponentTestUtils<QuartoComponent>;
@@ -885,6 +890,16 @@ describe('DidacticialGameWrapperComponent', () => {
         it('Should make sure than predicate step have healthy behaviors', fakeAsync(async() => {
             const stepExpectations: [Rules<Move, GamePartSlice>, DidacticialStep, Move, MGPValidation][] = [
                 [
+                    new EpaminondasRules(EpaminondasPartSlice),
+                    epaminondasDidacticial[3],
+                    epaminondasDidacticial[3].solutionMove,
+                    MGPValidation.SUCCESS,
+                ], [
+                    new EpaminondasRules(EpaminondasPartSlice),
+                    epaminondasDidacticial[3],
+                    new EpaminondasMove(0, 11, 2, 1, Direction.UP),
+                    MGPValidation.failure($localize`Félicitation, vous avez un pas d'avance, ce n'est malheureusement pas l'exercice.`),
+                ], [
                     new PentagoRules(PentagoGameState),
                     pentagoDidacticial[2],
                     pentagoDidacticial[2].solutionMove,
