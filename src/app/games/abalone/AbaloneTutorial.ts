@@ -12,28 +12,28 @@ const X: number = FourStatePiece.ONE.value;
 
 export const abaloneTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
-        $localize`Plateau initial`,
-        $localize`À l'Abalone, le but du jeu est d'être le premier joueur à pousser 6 pièces adverses en dehors du plateau. Voyons voir comment!`,
+        $localize`Initial board and goal of the game`,
+        $localize`At Abalone, the goal of the game is to be the first player to push 6 opponent's pieces out of the board. Let us see how!`,
         AbaloneGameState.getInitialSlice(),
     ),
     DidacticialStep.anyMove(
-        $localize`Déplacer une pièce`,
-        $localize`Chaque tour, déplacez une, deux ou trois pièces, soit le long de leur alignement, soit par un pas de côté.
-        Pour vos déplacement vous avez donc au maximum à choisir parmis 6 directions.
-        Les trois pièces à déplacer doivent être alignées et immédiatement voisines et atterrir sur des cases vides (sauf pour pousser, ce que nous verrons plus tard).
-        Pour effectuer un déplacement, cliquez sur une de vos pièces, puis cliquez sur une flèche pour choisir sa direction.
-        Vous jouez Foncé, faites n'importe quel mouvement!`,
+        $localize`Moving a piece`,
+        $localize`At each turn, move one, two, or three pieces either along their line, or on their side.
+        For your moves you can therefore choose between 6 directions.
+        The pieces you move must be aligned and consecutive, and the move should land on an empty space (except to push, we will see that later).
+        To make a move, click on one of your pieces, then click on an arrow to choose the move direction.<br/><br/>
+        You're playing Dark, make any move!`,
         AbaloneGameState.getInitialSlice(),
         AbaloneMove.fromSingleCoord(new Coord(2, 6), HexaDirection.UP),
-        $localize`Bravo!`,
+        $localize`Congratulations!`,
     ),
     DidacticialStep.fromMove(
-        $localize`Pousser`,
-        $localize`Pour pousser une pièce, vous devez déplacer au moins deux de vos pièces.
-        Pour pousser deux pièces, vous devez déplacer trois de vos pièces.
-        Si une de vos pièces est placée juste après une pièce adverse que vous poussez, pousser sera alors interdit.
-        Vous ne pouvez pas déplacer quatre pièces.
-        Une seule "poussée" vers là droite est possible ici, trouvez là (vous jouez Foncé).`,
+        $localize`Pushing`,
+        $localize`To push one piece, you must move at least two of your pieces.
+        To push two pieces, you must move three of your pieces.
+        If one of your pieces blocks the push, it will be impossible to push.
+        You cannot move four pieces or more.
+        Only one push towards the right is possible here, find it. (You're playing Dark).`,
         new AbaloneGameState([
             [N, N, N, N, _, O, O, X, X],
             [N, N, N, _, _, _, _, _, _],
@@ -46,7 +46,7 @@ export const abaloneTutorial: DidacticialStep[] = [
             [_, _, O, _, _, N, N, N, N],
         ], 0),
         [AbaloneMove.fromSingleCoord(new Coord(4, 4), HexaDirection.DOWN_RIGHT)],
-        $localize`Bravo ! Vous savez tout ce qu'il faut pour commencer une partie!`,
-        $localize`Raté !`,
+        $localize`Congratulations ! You know everything to start a game!`,
+        $localize`Failed!`,
     ),
 ];
