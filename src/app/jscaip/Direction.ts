@@ -26,14 +26,15 @@ abstract class AbstractDirection extends Vector {
 }
 
 export abstract class DirectionFactory<T extends AbstractDirection> {
+
     public abstract all: ReadonlyArray<T>;
+
     public of(x: number, y: number): T {
         for (const dir of this.all) {
             if (dir.x === x && dir.y === y) return dir;
         }
         throw new DirectionError('Invalid direction');
     }
-
     public fromDelta(dx: number, dy: number): T {
         if (dx === 0 && dy === 0) {
             throw new DirectionError('Invalid direction from static move');
@@ -94,7 +95,7 @@ export abstract class BaseDirection {
     public equals(o: this): boolean {
         return this === o;
     }
-    public toInt(): number {
+    public toInt(): number { console.log('ENFANT DCU PUTIN')
         if (this.x === 0 && this.y === -1) return 0;
         if (this.x === 1 && this.y === 0) return 1;
         if (this.x === 0 && this.y === 1) return 2;

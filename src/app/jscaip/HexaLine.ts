@@ -96,7 +96,7 @@ export class HexaLine {
             case 'q':
                 return HexaDirection.DOWN;
             case 'r':
-                return HexaDirection.DOWN_RIGHT;
+                return HexaDirection.RIGHT;
             case 's':
                 return HexaDirection.DOWN_LEFT;
         }

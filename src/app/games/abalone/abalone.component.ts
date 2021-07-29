@@ -175,7 +175,8 @@ export class AbaloneComponent extends HexagonalGameComponent<AbaloneMove, Abalon
                 const pointedCenter: Coord = this.getCenterAt(pointed);
                 const middle: Coord = this.getMiddleOfArrow(dir, pointed, pointedCenter);
                 const centerCoord: string = pointedCenter.x + ' ' + pointedCenter.y;
-                const rotation: string = 'rotate(' + (60 * dir.toInt() + 150) + ' ' + centerCoord + ')';
+                const angle: number = 60 * HexaDirection.encoder.encodeNumber(dir) + 150;
+                const rotation: string = 'rotate(' + angle + ' ' + centerCoord + ')';
                 const translation: string = 'translate(' + centerCoord + ')';
                 const transformation: string = rotation + ' ' + translation;
                 const arrow: HexaDirArrow = new HexaDirArrow(firstPieceCenter,
