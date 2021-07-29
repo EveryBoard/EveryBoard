@@ -9,6 +9,7 @@ const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
 
 export const quixoTutorial: DidacticialStep[] = [
+
     DidacticialStep.informational(
         $localize`But du jeu`,
         $localize`Au Quixo, le but du jeu est d'aligner 5 de vos pièces.

@@ -25,7 +25,7 @@ export const quartoTutorial: DidacticialStep[] = [
         $localize`Chaque placement se fait en deux étapes: placer la pièce qu'on a en main en cliquant sur une case du plateau,
         et choisir une pièce que l'adversaire devra placer, en cliquant sur une des pièces affichées à droite.
         Si vous préférez, l'ordre inverse est également possible.
-        Gardez juste à l'esprit que le deuxième clic valide le mouvement.<br/>
+        Gardez juste à l'esprit que le deuxième clic valide le mouvement.<br/><br/>
         Effectuez un mouvement.`,
         new QuartoPartSlice([
             [14, 3, 6, 16],
@@ -38,7 +38,7 @@ export const quartoTutorial: DidacticialStep[] = [
     ),
     DidacticialStep.fromMove(
         $localize`Situation`,
-        $localize`Nous avons ici une situation délicate.
+        $localize`Nous avons ici une situation délicate.<br/><br/>
         Analysez bien le plateau et jouez votre coup, en faisant particulièrement attention de ne pas permettre à l'adversaire de l'emporter au prochain coup.`,
         new QuartoPartSlice([
             [15, 14, 13, 16],
