@@ -8,7 +8,7 @@ import { DidacticialStep } from '../DidacticialStep';
 const _: number = Player.NONE.value;
 const O: number = Player.ZERO.value;
 const X: number = Player.ONE.value;
-export const epaminondasDidacticial: DidacticialStep[] = [
+export const epaminondasTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Initial board`,
         $localize`This is the initial board.
@@ -74,7 +74,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
         },
         $localize`This is how you move a single piece.`,
     ),
-    DidacticialStep.fromMove(
+    DidacticialStep.fromPredicate(
         $localize`Moving a phalanx`,
         $localize`Let us now see how to move multiple pieces along a line, which is called a phalanx :
         <ul>
@@ -83,14 +83,18 @@ export const epaminondasDidacticial: DidacticialStep[] = [
             <li> 3. Click two cases above in order to move the phalanx by two cases (the maximal legal distance, which equals the number of pieces moved).</li>
         </ul>`,
         EpaminondasPartSlice.getInitialSlice(),
-        [
-            new EpaminondasMove(0, 11, 2, 1, Direction.UP),
-            new EpaminondasMove(0, 11, 2, 2, Direction.UP)],
+        new EpaminondasMove(0, 11, 2, 1, Direction.UP),
+        (move: EpaminondasMove, state: EpaminondasPartSlice) => {
+            if (move.movedPieces > 1) {
+                return MGPValidation.SUCCESS;
+            } else {
+                return MGPValidation.failure($localize`Failed! You moved only one piece.`);
+            }
+        },
         $localize`Congratulations !
         The moved pieces can be horizontally, vertically, or diagonally aligned.
         The move is made along this axis, forward or backwards.
         There can be no opponent nor holes in the phalanx.`,
-        $localize`Failed !`,
     ),
     DidacticialStep.fromMove(
         $localize`Capture`,

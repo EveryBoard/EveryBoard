@@ -104,9 +104,22 @@ describe('GameService', () => {
         expect(service.joinerService.acceptConfig).toHaveBeenCalled();
     }));
     describe('createGameAndRedirectOrShowError', () => {
+        it('should show toast and navigate when creator is offline', fakeAsync(async() => {
+            spyOn(service.router, 'navigate').and.callThrough();
+            spyOn(service.messageDisplayer, 'infoMessage').and.callThrough();
+            spyOn(service, 'isUserOffline').and.returnValue(true);
+
+            // when calling it
+            expect(await service.createGameAndRedirectOrShowError('whatever')).toBeFalse();
+
+            // it should toast, and navigate
+            expect(service.messageDisplayer.infoMessage).toHaveBeenCalledOnceWith(GameServiceMessages.ALREADY_INGAME);
+            expect(service.router.navigate).toHaveBeenCalledOnceWith(['/login']);
+        }));
         it('should show toast and navigate when creator cannot create game', fakeAsync(async() => {
             spyOn(service.router, 'navigate').and.callThrough();
             spyOn(service.messageDisplayer, 'infoMessage').and.callThrough();
+            spyOn(service, 'isUserOffline').and.returnValue(false);
             spyOn(service, 'canCreateGame').and.returnValue(false);
 
             // when calling it

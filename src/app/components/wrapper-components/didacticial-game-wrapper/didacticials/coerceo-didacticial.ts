@@ -9,7 +9,7 @@ const N: number = FourStatePiece.NONE.value;
 const O: number = FourStatePiece.ZERO.value;
 const X: number = FourStatePiece.ONE.value;
 
-export const coerceoDidacticial: DidacticialStep[] = [
+export const coerceoTutorial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Board and goal of the game`,
         $localize`Coerceo is played on a board like this, composed of hexagonal tiles, each comprising 6 triangles.
@@ -66,7 +66,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         Note that if one empty tile, neighbouring a tile that was just removed, also becomes removable, it will be removed too.
         For example, here, the topmost dark piece will not disconnect its tile whn leaving it.
         But, by leaving the bottom left tile, two tiles will be removed.<br/><br/>
-        Perform a mov that lets you ain two tiles.`,
+        Perform a move that lets you gain two tiles.`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, _, _, _, N, N, N, N, N, N],
             [N, N, N, N, N, N, X, _, _, N, N, N, N, N, N],
