@@ -1,5 +1,4 @@
 import { HexaDirection } from '../HexaDirection';
-import { NumberEncoderTestUtils } from './Encoder.spec';
 
 describe('HexaDirection', () => {
     describe('all', () => {
