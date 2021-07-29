@@ -12,7 +12,7 @@ export const epaminondasDidacticial: DidacticialStep[] = [
     DidacticialStep.informational(
         $localize`Initial board`,
         $localize`This is the initial board.
-        The top line is the starting line of Clear.
+        The top line is the starting line of Light.
         The bottom line is the starting line of Dark.`,
         EpaminondasPartSlice.getInitialSlice(),
     ),
@@ -38,8 +38,8 @@ export const epaminondasDidacticial: DidacticialStep[] = [
     ),
     DidacticialStep.informational(
         $localize`Goal of the game (2/2)`,
-        $localize`Here, it is Clear's turn.
-        Clear wins because they have two pieces on Dark's starting line, and Dark only has one on Clear's starting line.`,
+        $localize`Here, it is Light's turn.
+        Light wins because they have two pieces on Dark's starting line, and Dark only has one on Light's starting line.`,
         new EpaminondasPartSlice([
             [_, _, _, _, _, O, _, _, _, _, X, X, X, X],
             [_, _, _, _, _, O, _, _, _, _, _, _, _, _],

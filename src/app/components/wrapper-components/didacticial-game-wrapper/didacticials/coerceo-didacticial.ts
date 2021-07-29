@@ -16,7 +16,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
          The triangles are the cases along which pieces move during the game.
          The tiles can be removed from the board (you will see how later).
          The dark pieces blong to the first player and can only move on the dark cases,
-         while the clear pieces belong to the second player and can only move on the clear cases.
+         while the light pieces belong to the second player and can only move on the light cases.
          The goal of the game is to capture all of the opponent's pieces.`,
         CoerceoPartSlice.getInitialSlice(),
     ),
@@ -39,7 +39,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         $localize`Every piece has three neighbouring triangular cases (2 on the sides).
         When all neighbouring cases except one are occupied, and one opponent moves to that last free case, your piece is captured!
         However, it is possible to place a piece between 3 of the opponent's pieces (or 2 on the side) without being captured.<br/><br/>
-        You're playing Clear, make a capture.`,
+        You're playing Light, make a capture.`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, O, _, O, N, N, N, N, N, N],
             [N, N, N, O, _, _, _, _, _, O, _, _, N, N, N],
@@ -116,7 +116,7 @@ export const coerceoDidacticial: DidacticialStep[] = [
         $localize`Special capture`,
         $localize`When a tile is removed from the board during your turn, some of the opponent's pieces may have have lost their last free neighbouring cases, they will therefore be captured!
         If this happens to one of your piece during your turn, it would however stay on the board.<br/><br/>
-        A move that demonstrate both of these things can be done on this board by Clear. Try it!<br/><br/>`,
+        A move that demonstrate both of these things can be done on this board by Light. Try it!<br/><br/>`,
         new CoerceoPartSlice([
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
             [N, N, N, N, N, N, N, N, N, N, N, N, N, N, N],
