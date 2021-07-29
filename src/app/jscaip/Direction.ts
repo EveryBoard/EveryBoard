@@ -95,7 +95,7 @@ export abstract class BaseDirection {
     public equals(o: this): boolean {
         return this === o;
     }
-    public toInt(): number { console.log('ENFANT DCU PUTIN')
+    public toInt(): number {
         if (this.x === 0 && this.y === -1) return 0;
         if (this.x === 1 && this.y === 0) return 1;
         if (this.x === 0 && this.y === 1) return 2;

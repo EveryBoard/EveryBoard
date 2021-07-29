@@ -1,4 +1,5 @@
 import { HexaDirection } from '../HexaDirection';
+import { NumberEncoderTestUtils } from './Encoder.spec';
 
 describe('HexaDirection', () => {
     describe('all', () => {
@@ -30,5 +31,6 @@ describe('HexaDirection', () => {
             expect(encoded).toBe(i);
             expect(decoded.equals(dir));
         }
+        expect(HexaDirection.encoder.maxValue()).toBe(5);
     });
 });

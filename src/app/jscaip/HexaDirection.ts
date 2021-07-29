@@ -1,6 +1,6 @@
 import { assert } from 'src/app/utils/utils';
 import { BaseDirection, DirectionFactory } from './Direction';
-import { Encoder, NumberEncoder } from './Encoder';
+import { NumberEncoder } from './Encoder';
 
 class HexaDirectionEncoder extends NumberEncoder<HexaDirection> {
     public maxValue(): number {
@@ -17,7 +17,7 @@ class HexaDirectionEncoder extends NumberEncoder<HexaDirection> {
         }
     }
     public decodeNumber(encoded: number): HexaDirection {
-        assert(encoded <= 5, 'Invalid encoded number for HexaDirection');
+        assert(0 <= encoded && encoded <= 5, 'Invalid encoded number for HexaDirection ' + encoded);
         return HexaDirection.factory.all[encoded];
     }
 }

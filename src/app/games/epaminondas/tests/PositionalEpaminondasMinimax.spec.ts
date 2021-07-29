@@ -44,10 +44,6 @@ describe('PositionalEpaminondasMinimax:', () => {
         const expectedMove: EpaminondasMove = new EpaminondasMove(9, 1, 4, 4, Direction.LEFT);
         const bestMove: EpaminondasMove = rules.node.findBestMove(1, minimax);
 
-        const status: EpaminondasLegalityStatus = rules.isLegal(bestMove, slice);
-        const bestSon: EpaminondasNode = new MGPNode(null, bestMove, rules.applyLegalMove(bestMove, slice, status));
-        console.log(minimax.getBoardValue(bestSon));
-
         expect(bestMove).toEqual(expectedMove);
     });
     it('Should prefer to get near the opponent line', () => {
