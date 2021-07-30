@@ -217,10 +217,12 @@ describe('LocalGameWrapperComponent', () => {
         }));
         it('should not do an AI move when the game is finished', fakeAsync(async() => {
             const localGameWrapper: LocalGameWrapperComponent = componentTestUtils.wrapper as LocalGameWrapperComponent;
-
-            spyOn(componentTestUtils.getComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
             spyOn(localGameWrapper, 'doAIMove');
 
+            // given a game which is finished
+            spyOn(componentTestUtils.getComponent().rules, 'getGameStatus').and.returnValue(GameStatus.ZERO_WON);
+
+            // when selecting an AI for the current player
             const selectAI: HTMLSelectElement = componentTestUtils.findElement('#playerZeroSelect').nativeElement;
             selectAI.value = selectAI.options[1].value;
             selectAI.dispatchEvent(new Event('change'));
@@ -232,6 +234,7 @@ describe('LocalGameWrapperComponent', () => {
             componentTestUtils.detectChanges();
             await componentTestUtils.fixture.whenStable();
 
+            // then it should not try to play
             expect(localGameWrapper.doAIMove).not.toHaveBeenCalled();
         }));
     });

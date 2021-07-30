@@ -9,11 +9,11 @@ export class YinshFailure {
 
     public static readonly CAPTURE_MUST_BE_ALIGNED: string = GipfFailure.CAPTURE_MUST_BE_ALIGNED;
 
-    public static readonly INVALID_CAPTURED_PIECES: string = $localize`Veuillez choisir une capture valide qui contient 5 pièces ou plus.`;
+    public static readonly INVALID_CAPTURED_PIECES: string = $localize`Veuillez choisir une capture valide qui contient exactement 5 marqueurs.`;
 
     public static readonly CAN_ONLY_CAPTURE_YOUR_MARKERS: string = $localize`Vous ne pouvez que capturer vos propres marqueurs.`;
 
-    public static readonly HOLES_IN_CAPTURE: string = $localize`Les pièces capturées doivent être consécutives: votre capture contient un trou.`;
+    public static readonly HOLES_IN_CAPTURE: string = $localize`Les marqueurs capturés doivent être consécutifs: votre capture contient un trou.`;
 
     public static readonly SHOULD_SELECT_PLAYER_RING: string = $localize`Vous devez choisir un de vos propres anneaux à déplacer.`;
 
