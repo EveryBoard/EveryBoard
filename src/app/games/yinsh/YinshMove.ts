@@ -8,7 +8,7 @@ import { MGPOptional } from 'src/app/utils/MGPOptional';
 import { assert, JSONObject, JSONValue, JSONValueWithoutArray } from 'src/app/utils/utils';
 
 // A capture at Yinsh is just like a capture at Gipf, with the only difference
-// that it needs to be of length 5 rather than 4
+// that it needs to be of length 5 rather than 4, and it contains a ring taken
 export class YinshCapture extends GipfCapture {
     public static encoder: Encoder<YinshCapture> = new class extends Encoder<YinshCapture> {
         public encode(capture: YinshCapture): JSONValue {

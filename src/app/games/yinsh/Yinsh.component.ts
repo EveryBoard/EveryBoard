@@ -213,7 +213,6 @@ export class YinshComponent extends HexagonalGameComponent<YinshMove, YinshGameS
         const captures: YinshCapture[] = [];
         this.viewInfo.possibleCaptures.forEach((candidate: YinshCapture) => {
             if (candidate.contains(coord)) {
-                console.log({coord, capture: candidate.toString()})
                 captures.push(candidate);
             }
         });

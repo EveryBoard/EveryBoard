@@ -26,11 +26,6 @@ export class YinshMinimax extends Minimax<YinshMove, YinshGameState, YinshLegali
     }
     public getListMoves(node: YinshNode): YinshMove[] {
         const moves: YinshMove[] = [];
-
-        if (this.ruler.getGameStatus(node).isEndGame) {
-            return moves;
-        }
-
         const state: YinshGameState = node.gamePartSlice;
 
         if (state.isInitialPlacementPhase()) {
